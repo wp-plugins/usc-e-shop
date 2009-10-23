@@ -1,7 +1,7 @@
 <?php
 
 function usces_ajax_send_mail() {
-	global $wpdb;
+	global $wpdb, $usces;
 	
 	$order_para = array(
 			'to_name' => $_POST['name'] . __('Mr/Mrs','usces'),
@@ -389,9 +389,7 @@ function usces_lostmail($url) {
 	} else {
 		$page = 'lostcompletion';
 	}
-//var_dump($message);
-//var_dump($_SESSION["lostmail"]);
-//var_dump($res);
+
 	return $page;
 
 }
@@ -399,15 +397,10 @@ function usces_lostmail($url) {
 function usces_send_mail( $para ) {
 	global $usces;
 
-//	$header = "From: " . mb_convert_encoding($para['from_name'], "SJIS") . "<{$para['from_address']}>\r\n"
-//			."To: " . mb_convert_encoding($para['to_name'], "SJIS") . "<{$para['to_address']}>\r\n"
-//			."Return-Path: {$para['return_path']}\r\n";
 	$header = "From: " . $para['from_name'] . " <{$para['from_address']}>\r\n"
-			."To: " . mb_convert_encoding($para['to_name'], "SJIS") . " <{$para['to_address']}>\r\n"
+//			."To: " . mb_convert_encoding($para['to_name'], "SJIS") . " <{$para['to_address']}>\r\n"
 			."Return-Path: {$para['return_path']}\r\n";
 
-//	$subject = mb_convert_encoding($para['subject'], "EUC-JP");
-//	$message = mb_convert_encoding($para['message'], "EUC-JP");
 	$subject = $para['subject'];
 	$message = $para['message'];
 	
@@ -416,17 +409,8 @@ function usces_send_mail( $para ) {
 	ini_set( "sendmail_from", "" );
 	
 	// 送信実行
-//	$current_inenc = mb_internal_encoding();
-//	$current_lang = mb_language();
-//	mb_internal_encoding("EUC-JP");
-//	mb_language("Japanese");
-
-	//$res = mb_send_mail ( $para['to_address'] , $subject , $message, $header );
 	$res = @wp_mail( $para['to_address'] , $subject , $message, $header );
 	
-//	mb_internal_encoding($current_inenc);
-//	mb_language($current_lang);
-
 	return $res;
 
 }
