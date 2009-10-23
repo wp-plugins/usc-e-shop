@@ -37,7 +37,6 @@ Please see [Welcart Community](http://www.usconsort.com/community/).
 == Screenshots ==
 
 1. admin_itemlist.png
-Item list
 2. admin_management.png
 3. defualt_theme.png
 
