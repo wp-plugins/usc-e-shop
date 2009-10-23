@@ -106,10 +106,10 @@ msgid "shipping setting"
 msgstr "配送設定"
 
 msgid "e-mail setting"
-msgstr "基本設定"
+msgstr "メール設定"
 
 msgid "system setting"
-msgstr "メール設定"
+msgstr "システム設定"
 
 msgid "Backup"
 msgstr "バックアップ"
