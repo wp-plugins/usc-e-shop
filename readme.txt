@@ -36,9 +36,9 @@ Please see [Welcart Community](http://www.usconsort.com/community/).
 
 == Screenshots ==
 
-1. admin_itemlist.png
-2. admin_management.png
-3. defualt_theme.png
+1. Item list page of the admin screen
+2. Order data editing page of the admin screen
+3. An attached default theme
 
 == Changelog ==
 
