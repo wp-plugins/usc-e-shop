@@ -27,7 +27,7 @@ The order that We accepted in a shop is registered with a database not only We c
 **Attention: 
 Welcart writes data on tables such as posts, postmeta, options, terms in the case of a plug in validation. Please take the backup of the existing your blog before making Welcart it effectively to avoid an unexpected situation. 
 
-We guarantee no damage that you take with Welcart. All is a self-responsibility.
+We do not guarantee any damage that you take with Welcart. All is a self-responsibility.
 
 
 == Frequently Asked Questions ==
