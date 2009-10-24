@@ -2,7 +2,7 @@
 　　Welcart for Wordpress
 ******************************************
 
-Welcart  は以下の環境で動作します。
+Welcart(ウェルカート) は以下の環境で動作します。
 
 Wordpress 2.8.0 以上 
 PHP 4.4 以上 
