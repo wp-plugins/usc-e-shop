@@ -9,6 +9,18 @@ div.loopimg {
 }
 div.loopexp {
 }
+
+div.header_explanation {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+div.footer_explanation {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+
 /*******************************************************/
 #cart {
 	width: 100%;
@@ -465,7 +477,7 @@ div.usccart_navi ol.ucart {
 	width: 100%;
 	margin-top: 10px;
 	margin-right: 0px;
-	margin-bottom: 40px;
+	margin-bottom: 10px;
 	margin-left: 0;
 	padding: 0px;
 }

@@ -3,15 +3,20 @@ $html = '<div id="info-confirm">
 	
 	<div class="usccart_navi">
 	<ol class="ucart">
-	<li class="ucart">１.カート</li>
-	<li class="ucart">２.お客様情報</li>
-	<li class="ucart">３.発送・支払方法</li>
-	<li class="ucart usccart_confirm">４.内容確認</li>
+	<li class="ucart">' . __('1.Cart','usces') . '</li>
+	<li class="ucart">' . __('2.Customer Info','usces') . '</li>
+	<li class="ucart">' . __('3.Deli. & Pay.','usces') . '</li>
+	<li class="ucart usccart_confirm">' . __('4.Confirm','usces') . '</li>
 	</ol>
-	</div>
-	<div id="cart">
+	</div>';
 
-	<table cellspacing="0" id="cart_table">
+$html .= '<div class="header_explanation">';
+$header = '';
+$html .= apply_filters('usces_filter_confirm_page_header', $header);
+$html .= '</div>';
+
+$html .= '<div id="cart">
+<table cellspacing="0" id="cart_table">
 		<thead>
 		<tr>
 			<th scope="row" class="num">' . __('No.','usces') . '</th>
@@ -281,6 +286,11 @@ if( $payments['settlement'] != 'acting' ){
 				</form>';
 	}
 }
+
+$html .= '<div class="footer_explanation">';
+$footer = '';
+$html .= apply_filters('usces_filter_confirm_page_footer', $footer);
+$html .= '</div>';
 
 $html .= '</div>';
 	

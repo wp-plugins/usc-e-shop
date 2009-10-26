@@ -53,15 +53,15 @@ function usces_order_confirm_message($order_id) {
 	$res = false;
 
 	if($_POST['mode'] == 'mitumoriConfirmMail'){
-		$msg_body = "\r\n\r\n\r\n" . __('【estimate】','usces') . "\r\n";
+		$msg_body = "\r\n\r\n\r\n" . __('** estimate **','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
-		$msg_body .= __('Request of','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . __('Mr/Mrs','usces') . "\r\n";
+		$msg_body .= __('Request of','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
 		$msg_body .= __('estimate number','usces') . "：" . $order_id . "\r\n";
 	}else{
-		$msg_body = "\r\n\r\n\r\n" . __('【Article order contents】','usces') . "\r\n";
+		$msg_body = "\r\n\r\n\r\n" . __('** Article order contents **','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
-		$msg_body .= __('A buyer','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . __('Mr/Mrs','usces') . "\r\n";
-		$msg_body .= __('An order number','usces') . "：" . $order_id . "\r\n";
+		$msg_body .= __('Buyer','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
+		$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
 	}
 	$msg_body .= __('items','usces') . "　：\r\n";
 
@@ -84,7 +84,7 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= "$itemName $itemCode $sku \r\n";
 		if($optstr != '')
 			$msg_body .= "$optstr\r\n";
-		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice)." ".__('yen','usces')." × " . $cart_row['quantity'] . "\r\n";
+		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice) . " × " . $cart_row['quantity'] . "\r\n";
 	}
 	
 	$msg_body .= "=================================================================\r\n";
@@ -101,7 +101,7 @@ function usces_order_confirm_message($order_id) {
 	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($total_full_price) . __('yen','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
-	$msg_body .= "【" . __('A shipping address','usces') . "】\r\n";
+	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= __('A destination name','usces') . "　　　　：" . $deli['name1'] . $deli['name2'] . __('Mr/Mrs','usces') . "　\r\n";
 	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $deli['zipcode'] . "\r\n";
@@ -110,11 +110,11 @@ function usces_order_confirm_message($order_id) {
 
 	$msg_body .= __('Delivery Time','usces') . "：" . $data['order_delivery_time'] . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
-	$msg_body .= __('WE may not　always be able to deliver the items on time which you desire .','usces') . "　\r\n";
+	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
+	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . "　\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 
-	$msg_body .= "【" . __('A payment method','usces') . "】\r\n";
+	$msg_body .= __('** Payment method **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $payment['name']. "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
@@ -123,15 +123,12 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	}
 	$msg_body .= "\r\n";
-	$msg_body .= __('Transfer','usces') . "【" . __('Others / a demand','usces') . "】\r\n";
+	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $data['order_note'] . "\r\n\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	$msg_body .= "\r\n";
 
-	if($_POST['mode'] == 'mitumoriConfirmMail'){
-		$msg_body .= __('I will inform it of shipment completion by an email.','usces') . "\r\n";
-	}
 	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 
@@ -178,10 +175,10 @@ function usces_send_ordermail($order_id) {
 	$payment = $usces->getPayments( $entry['order']['payment_name'] );
 	$res = false;
 
-	$msg_body = "\r\n\r\n\r\n【" . __('content of ordered items','usces') . "】\r\n";
+	$msg_body = "\r\n\r\n\r\n" . __('** content of ordered items **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('A buyer','usces') . "：　" . $entry['customer']['name1'] . ' ' . $entry['customer']['name2'] . __('Mr/Mrs','usces') . "\r\n";
-	$msg_body .= __('An order number','usces') . "：" . $order_id . "\r\n";
+	$msg_body .= __('Buyer','usces') . "：　" . $entry['customer']['name1'] . ' ' . $entry['customer']['name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
+	$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
 	$msg_body .= __('items','usces') . "　：\r\n";
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
@@ -218,7 +215,7 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($entry['order']['total_full_price']) . __('yen','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
-	$msg_body .= "【" . __('A shipping address','usces') . "】\r\n";
+	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= __('A destination name','usces') . "　　　　：" . $entry['delivery']['name1'] . $entry['delivery']['name2'] . "　" . __('Mr/Mrs','usces') . "\r\n";
 	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $entry['delivery']['zipcode'] . "\r\n";
@@ -227,11 +224,11 @@ function usces_send_ordermail($order_id) {
 
 	$msg_body .= __('Delivery Time','usces') . "：" . $entry['order']['delivery_time'] . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
-	$msg_body .= "　" . __('WE may not　always be able to deliver the items on time which you desire .','usces') . "\r\n";
+	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
+	$msg_body .= "　" . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 
-	$msg_body .= "【" . __('A payment method','usces') . "】\r\n";
+	$msg_body .= __('** Payment method **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $payment['name']. "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
@@ -240,7 +237,7 @@ function usces_send_ordermail($order_id) {
 		$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	}
 	$msg_body .= "\r\n";
-	$msg_body .= "【" . __('Others / a demand','usces') . "】\r\n";
+	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $entry['order']['note'] . "\r\n\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
@@ -311,7 +308,7 @@ function usces_send_inquirymail() {
 		$res0 = usces_send_mail( $para1 );
 	if ( $res0 ) {
 	
-		$subject =  "【" . __('An inquiry','usces') . "】";
+		$subject =  __('** An inquiry **','usces');
 		$message = $_POST['inq_contents'];
 	
 		$para2 = array(
@@ -362,12 +359,11 @@ function usces_lostmail($url) {
 	global $usces;
 	$res = false;
 
-	$subject = "【" . __('A password change','usces') . "】";
-	$message = __('I click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
+	$subject = __('** A password change **','usces');
+	$message = __('Please, click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
 			. $url . "\n\r\n\r\n\r"
 			. "-----------------------------------------------------\n\r"
-			. __('I seem to have you cancel it when the body does not have memorizing to this email','usces') . "\n\r"
-			. __('I ask.','usces') . "\n\r"
+			. __('I seem to have you cancel it when the body does not have memorizing to this email.','usces') . "\n\r"
 			. "-----------------------------------------------------\n\r\n\r\n\r"
 			. $usces->options['mail_data']['footer']['footerlogo'];
 
@@ -384,7 +380,7 @@ function usces_lostmail($url) {
 	$res = usces_send_mail( $para1 );
 	
 	if($res === false) {
-		$usces->error_message = __('An error： 　I was not able to transmit an email.','usces');
+		$usces->error_message = __('Error： I was not able to transmit an email.','usces');
 		$page = 'lostmemberpassword';
 	} else {
 		$page = 'lostcompletion';

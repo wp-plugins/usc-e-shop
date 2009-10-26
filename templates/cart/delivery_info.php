@@ -59,15 +59,21 @@ $html .= '<div id="delivery-info">
 	
 	<div class="usccart_navi">
 	<ol class="ucart">
-	<li class="ucart">１.カート</li>
-	<li class="ucart">２.お客様情報</li>
-	<li class="ucart usccart_delivery">３.発送・支払方法</li>
-	<li class="ucart">４.内容確認</li>
+	<li class="ucart">' . __('1.Cart','usces') . '</li>
+	<li class="ucart">' . __('2.Customer Info','usces') . '</li>
+	<li class="ucart usccart_delivery">' . __('3.Deli. & Pay.','usces') . '</li>
+	<li class="ucart">' . __('4.Confirm','usces') . '</li>
 	</ol>
-	</div>
+	</div>';
+
+$html .= '<div class="header_explanation">';
+$header = '';
+$html .= apply_filters('usces_filter_delivery_page_header', $header);
+$html .= '</div>';
 	
-	<div class="error_message">' . $this->error_message . '</div>
-	<form action="' . USCES_CART_URL . '" method="post">';
+$html .= '<div class="error_message">' . $this->error_message . '</div>';
+
+$html .= '<form action="' . USCES_CART_URL . '" method="post">';
 
 if( EX_DLSELLER !== true ){
 	$html .= '<table class="customer_form">
@@ -152,7 +158,12 @@ $html .= '<tr>
 	<div class="send"><input name="order[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
 	<input name="backCustomer" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;
 	<input name="confirm" type="submit" value="　　次　へ　　" /></div>
-	</form>
-	
-	</div>';
+	</form>';
+
+$html .= '<div class="footer_explanation">';
+$footer = '';
+$html .= apply_filters('usces_filter_delivery_page_footer', $footer);
+$html .= '</div>';
+
+$html .= '</div>';
 ?>

@@ -5,20 +5,34 @@ $html = '<div id="memberpages">
 
 <div class="post">';
 
+$html .= '<div class="header_explanation">';
+$header = '';
+$html .= apply_filters('usces_filter_membercompletion_page_header', $header);
+$html .= '</div>';
+
+
 if ( $member_compmode == 'newcompletion' ) {
-	$html .= '<p>新規ご入会有難うございます。</p>';
+	$html .= '<p>' . __('Thank you in new membership.', 'usces') . '</p>';
 }else if ( $member_compmode == 'editcompletion' ) {
-	$html .= '<p>会員情報を更新いたしました。</p>';
+	$html .= '<p>' . __('Membership information has been updated.', 'usces') . '</p>';
 }else if ( $member_compmode == 'lostcompletion' ) {
-	$html .= '<p>メールを送信いたしました。</p>
-		<p>メールの内容にしたがってパスワードを変更してください。</p>';
+	$html .= '<p>' . __('I transmitted an email.', 'usces') . '</p>
+		<p>' . __('Chenge th epassword according to the e-mail.', 'usces') . '</p>';
 }else if ( $member_compmode == 'changepasscompletion' ) {
-	$html .= '<p>パスワードを変更いたしました。</p>';
+	$html .= '<p>' . __('Password has been changed.', 'usces') . '</p>';
 }
 
-$html .= '<p><a href="' . USCES_MEMBER_URL . '">会員情報ページはこちら</a></p>
+
+$html .= '<div class="footer_explanation">';
+$footer = '';
+$html .= apply_filters('usces_filter_membercompletion_page_footer', $footer);
+$html .= '</div>';
+	
+
+
+$html .= '<p><a href="' . USCES_MEMBER_URL . '">' . __('to vist membership information page', 'usces') . '</a></p>
 	<form action="' . get_option('home') . '" method="post">
-	<div class="send"><input name="top" type="submit" value="トップページへ戻る" /></div>
+	<div class="send"><input name="top" type="submit" value="' . __('Back to the top page.', 'usces') . '" /></div>
 	</form>
 	</div>
 
