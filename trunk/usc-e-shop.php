@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Name: Welcart e-Commerce
+Plugin Name: Welcart e-commerce system
 Plugin URI: http://www.usconsort.com/usces/
 Description: Welcart builds the management system with a net shop on Wordpress.
-Version: 0.2.0
+Version: 0.2.0 r1
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
 
-define('USCES_VERSION', '0.2.0');
+define('USCES_VERSION', '0.2.0 r1');
 define('USCES_DB_ACCESS', '1.1');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_ORDER', '1.6');
@@ -93,6 +93,28 @@ if (version_compare($wp_version, '2.8', '>=')){
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_login");'));
 }
 
+add_filter('usces_filter_cart_page_header', array(&$usces, 'filter_cart_page_header'));
+add_filter('usces_filter_cart_page_footer', array(&$usces, 'filter_cart_page_footer'));
+add_filter('usces_filter_customer_page_header', array(&$usces, 'filter_customer_page_header'));
+add_filter('usces_filter_customer_page_footer', array(&$usces, 'filter_customer_page_footer'));
+add_filter('usces_filter_delivery_page_header', array(&$usces, 'filter_delivery_page_header'));
+add_filter('usces_filter_delivery_page_footer', array(&$usces, 'filter_delivery_page_footer'));
+add_filter('usces_filter_confirm_page_header', array(&$usces, 'filter_confirm_page_header'));
+add_filter('usces_filter_confirm_page_footer', array(&$usces, 'filter_confirm_page_footer'));
+add_filter('usces_filter_cartcompletion_page_header', array(&$usces, 'filter_cartcompletion_page_header'));
+add_filter('usces_filter_cartcompletion_page_footer', array(&$usces, 'filter_cartcompletion_page_footer'));
+add_filter('usces_filter_login_page_header', array(&$usces, 'filter_login_page_header'));
+add_filter('usces_filter_login_page_footer', array(&$usces, 'filter_login_page_footer'));
+add_filter('usces_filter_newmember_page_header', array(&$usces, 'filter_newmember_page_header'));
+add_filter('usces_filter_newmember_page_footer', array(&$usces, 'filter_newmember_page_footer'));
+add_filter('usces_filter_newpass_page_header', array(&$usces, 'filter_newpass_page_header'));
+add_filter('usces_filter_newpass_page_footer', array(&$usces, 'filter_newpass_page_footer'));
+add_filter('usces_filter_changepass_page_header', array(&$usces, 'filter_changepass_page_header'));
+add_filter('usces_filter_changepass_page_footer', array(&$usces, 'filter_changepass_page_footer'));
+add_filter('usces_filter_memberinfo_page_header', array(&$usces, 'filter_memberinfo_page_header'));
+add_filter('usces_filter_memberinfo_page_footer', array(&$usces, 'filter_memberinfo_page_footer'));
+add_filter('usces_filter_membercompletion_page_header', array(&$usces, 'filter_membercompletion_page_header'));
+add_filter('usces_filter_membercompletion_page_footer', array(&$usces, 'filter_membercompletion_page_footer'));
 add_filter('the_content', array(&$usces, 'filter_itemPage'));
 //add_filter('post_link', array(&$usces, 'filter_permalink'));
 //add_filter('page_link', array(&$usces, 'filter_permalink'));

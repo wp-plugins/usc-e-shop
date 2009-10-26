@@ -93,19 +93,21 @@ class usc_e_shop
 		add_object_page('Welcart Shop', 'Welcart Shop', 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
 //		add_submenu_page(USCES_PLUGIN_BASENAME, '商品マスター', '<img src="'.get_option('siteurl').'/wp-content/plugins/usc-e-shop/images/easymoblog2.png" /> 商品マスター', 6, 'usces_itemedit', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('master items','usces'), __('master items','usces'), 6, 'usces_itemedit', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('adds new items','usces'), __('adds new items','usces'), 6, 'usces_itemnew', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('general setting','usces'), __('general setting','usces'), 6, 'usces_initial', array($this, 'admin_setup_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('business days setting','usces'), __('business days setting','usces'), 6, 'usces_schedule', array($this, 'admin_schedule_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('shipping setting','usces'), __('shipping setting','usces'), 6, 'usces_delivery', array($this, 'admin_delivery_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('e-mail setting','usces'), __('e-mail setting','usces'), 6, 'usces_mail', array($this, 'admin_mail_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('system setting','usces'), __('system setting','usces'), 6, 'usces_system', array($this, 'admin_system_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 6, 'usces_itemedit', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 6, 'usces_itemnew', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Settingg','usces'), 6, 'usces_initial', array($this, 'admin_setup_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 6, 'usces_schedule', array($this, 'admin_schedule_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 6, 'usces_delivery', array($this, 'admin_delivery_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 6, 'usces_mail', array($this, 'admin_mail_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 6, 'usces_cart', array($this, 'admin_cart_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 6, 'usces_member', array($this, 'admin_member_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 6, 'usces_system', array($this, 'admin_system_page'));
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
 		
 		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('Order list','usces'), __('Order list','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('register new order estimate','usces'), __('register new order estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('list of members','usces'), __('list of members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
+		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
 	}
 
 
@@ -418,6 +420,67 @@ class usc_e_shop
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_mail.php');	
 
 	}
+	
+	/* Admin Cart Page */
+	function admin_cart_page() {
+
+		$this->options = get_option('usces');
+
+		if(isset($_POST['usces_option_update'])) {
+
+			foreach ( $_POST['header'] as $key => $value ) {
+				$this->options['cart_page_data']['header'][$key] = $value;
+			}
+			foreach ( $_POST['footer'] as $key => $value ) {
+				$this->options['cart_page_data']['footer'][$key] = $value;
+			}
+
+			update_option('usces', $this->options);
+			
+			$this->action_status = 'success';
+			$this->action_message = __('options are updated','usces');
+		} else {
+
+			$this->action_status = 'none';
+			$this->action_message = '';
+		}
+
+
+		
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_cart.php');	
+
+	}
+	
+	/* Admin Member Page */
+	function admin_member_page() {
+
+		$this->options = get_option('usces');
+
+		if(isset($_POST['usces_option_update'])) {
+
+			foreach ( $_POST['header'] as $key => $value ) {
+				$this->options['member_page_data']['header'][$key] = $value;
+			}
+			foreach ( $_POST['footer'] as $key => $value ) {
+				$this->options['member_page_data']['footer'][$key] = $value;
+			}
+
+			update_option('usces', $this->options);
+			
+			$this->action_status = 'success';
+			$this->action_message = __('options are updated','usces');
+		} else {
+
+			$this->action_status = 'none';
+			$this->action_message = '';
+		}
+
+
+		
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_member.php');	
+
+	}
+	
 	
 	/* Admin System Page */
 	function admin_system_page() {
@@ -3485,5 +3548,159 @@ class usc_e_shop
 		return $link;
 	}
 
+	function filter_cart_page_header($html){
+		if( !empty($this->options['cart_page_data']['header']['cart']) ){
+			$html = $this->options['cart_page_data']['header']['cart'];
+		}
+		return $html;
+	}
+	
+	function filter_cart_page_footer($html){
+		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
+			$html = $this->options['cart_page_data']['footer']['cart'];
+		}
+		return $html;
+	}
+	
+	function filter_customer_page_header($html){
+		if( !empty($this->options['cart_page_data']['header']['customer']) ){
+			$html = $this->options['cart_page_data']['header']['customer'];
+		}
+		return $html;
+	}
+	
+	function filter_customer_page_footer($html){
+		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
+			$html = $this->options['cart_page_data']['footer']['customer'];
+		}
+		return $html;
+	}
+	
+	function filter_delivery_page_header($html){
+		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
+			$html = $this->options['cart_page_data']['header']['delivery'];
+		}
+		return $html;
+	}
+	
+	function filter_delivery_page_footer($html){
+		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
+			$html = $this->options['cart_page_data']['footer']['delivery'];
+		}
+		return $html;
+	}
+	
+	function filter_confirm_page_header($html){
+		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
+			$html = $this->options['cart_page_data']['header']['confirm'];
+		}
+		return $html;
+	}
+	
+	function filter_confirm_page_footer($html){
+		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
+			$html = $this->options['cart_page_data']['footer']['confirm'];
+		}
+		return $html;
+	}
+	
+	function filter_cartcompletion_page_header($html){
+		if( !empty($this->options['cart_page_data']['header']['completion']) ){
+			$html = $this->options['cart_page_data']['header']['completion'];
+		}
+		return $html;
+	}
+	
+	function filter_cartcompletion_page_footer($html){
+		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
+			$html = $this->options['cart_page_data']['footer']['completion'];
+		}
+		return $html;
+	}
+	
+	function filter_login_page_header($html){
+		if( !empty($this->options['member_page_data']['header']['login']) ){
+			$html = $this->options['member_page_data']['header']['login'];
+		}
+		return $html;
+	}
+	
+	function filter_login_page_footer($html){
+		if( !empty($this->options['member_page_data']['footer']['login']) ){
+			$html = $this->options['member_page_data']['footer']['login'];
+		}
+		return $html;
+	}
+	
+	function filter_newmember_page_header($html){
+		if( !empty($this->options['member_page_data']['header']['newmember']) ){
+			$html = $this->options['member_page_data']['header']['newmember'];
+		}
+		return $html;
+	}
+	
+	function filter_newmember_page_footer($html){
+		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
+			$html = $this->options['member_page_data']['footer']['newmember'];
+		}
+		return $html;
+	}
+	
+	function filter_newpass_page_header($html){
+		if( !empty($this->options['member_page_data']['header']['newpass']) ){
+			$html = $this->options['member_page_data']['header']['newpass'];
+		}
+		return $html;
+	}
+	
+	function filter_newpass_page_footer($html){
+		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
+			$html = $this->options['member_page_data']['footer']['newpass'];
+		}
+		return $html;
+	}
+	
+	function filter_changepass_page_header($html){
+		if( !empty($this->options['member_page_data']['header']['changepass']) ){
+			$html = $this->options['member_page_data']['header']['changepass'];
+		}
+		return $html;
+	}
+	
+	function filter_changepass_page_footer($html){
+		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
+			$html = $this->options['member_page_data']['footer']['changepass'];
+		}
+		return $html;
+	}
+	
+	function filter_memberinfo_page_header($html){
+		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
+			$html = $this->options['member_page_data']['header']['memberinfo'];
+		}
+		return $html;
+	}
+	
+	function filter_memberinfo_page_footer($html){
+		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
+			$html = $this->options['member_page_data']['footer']['memberinfo'];
+		}
+		return $html;
+	}
+	
+	function filter_membercompletion_page_header($html){
+		if( !empty($this->options['member_page_data']['header']['completion']) ){
+			$html = $this->options['member_page_data']['header']['completion'];
+		}
+		return $html;
+	}
+	
+	function filter_membercompletion_page_footer($html){
+		if( !empty($this->options['member_page_data']['footer']['completion']) ){
+			$html = $this->options['member_page_data']['footer']['completion'];
+		}
+		return $html;
+	}
+	
 }
 ?>

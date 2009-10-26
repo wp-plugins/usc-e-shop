@@ -3,15 +3,19 @@ $html = '<div id="inside-cart">
 
 <div class="usccart_navi">
 <ol class="ucart">
-<li class="ucart usccart_cart">１.カート</li>
-<li class="ucart">２.お客様情報</li>
-<li class="ucart">３.発送・支払方法</li>
-<li class="ucart">４.内容確認</li>
+<li class="ucart usccart_cart">' . __('1.Cart','usces') . '</li>
+<li class="ucart">' . __('2.Customer Info','usces') . '</li>
+<li class="ucart">' . __('3.Deli. & Pay.','usces') . '</li>
+<li class="ucart">' . __('4.Confirm','usces') . '</li>
 </ol>
-</div>
+</div>';
 
+$html .= '<div class="header_explanation">';
+$header = '';
+$html .= apply_filters('usces_filter_cart_page_header', $header);
+$html .= '</div>';
 
-<div class="error_message">' . $usces->error_message . '</div>
+$html .= '<div class="error_message">' . $usces->error_message . '</div>
 
 <form action="' . USCES_CART_URL . '" method="post">';
 
@@ -19,7 +23,7 @@ if($this->cart->num_row() > 0) {
 	
 	$html .= '<div id="cart">';
 	
-	$button = '<div class="upbutton">数量を変更した場合は必ず更新ボタンを押してください。<input name="upButton" type="submit" value="数量更新" onclick="return uscesCart.upCart()"  /></div>';
+	$button = '<div class="upbutton">' . __('Press the `update` button when you change the amount of items.','usces') . '<input name="upButton" type="submit" value="' . __('Quantity renewal','usces') . '" onclick="return uscesCart.upCart()"  /></div>';
 	$html .= apply_filters('usces_filter_cart_upbutton', $button);
 	
 	$html .= '<table cellspacing="0" id="cart_table">
@@ -27,11 +31,11 @@ if($this->cart->num_row() > 0) {
 		<tr>
 			<th scope="row" class="num">No.</th>
 			<th class="thumbnail"> </th>
-			<th>商品</th>
-			<th class="quantity">単価</th>
-			<th class="quantity">数量</th>
-			<th class="subtotal">金額' . $this->getGuidTax() . '</th>
-			<th class="stock">在庫</th>
+			<th>' . __('item name','usces') . '</th>
+			<th class="quantity">' . __('Unit price','usces') . '</th>
+			<th class="quantity">' . __('Quantity','usces') . '</th>
+			<th class="subtotal">' . __('Amount','usces') . $this->getGuidTax() . '</th>
+			<th class="stock">' . __('stock status','usces') . '</th>
 			<th class="action">　</th>
 		</tr>
 		</thead>
@@ -51,7 +55,7 @@ if($this->cart->num_row() > 0) {
 		$skuZaikonum = $this->getItemZaikonum($post_id, $sku);
 		$stockid = $this->getItemZaikoStatusId($post_id, $sku);
 		$stock = $this->getItemZaiko($post_id, $sku);
-		$red = (in_array($stock, array('売切れ','入荷待ち','廃盤'))) ? 'class="signal_red"' : '';
+		$red = (in_array($stock, array(__('sellout','usces'), __('Temporarily out of stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		if (!empty($options)) {
 			$optstr = implode(',', $options);
@@ -67,7 +71,7 @@ if($this->cart->num_row() > 0) {
 			<td class="aright">';
 		if( usces_is_gptekiyo($post_id, $sku, $quantity) ) {
 			$usces_gp = 1;
-			$html .= '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="業務パック割引" /><br />';
+			$html .= '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
 		}
 		$html .= number_format($skuPrice) . '
 			</td>
@@ -92,30 +96,35 @@ if($this->cart->num_row() > 0) {
 	$html .= '</tbody>
 		<tfoot>
 		<tr>
-			<th colspan="5" scope="row" class="aright">商品合計' . $this->getGuidTax() . '</th>
+			<th colspan="5" scope="row" class="aright">' . __('total items','usces') . $this->getGuidTax() . '</th>
 			<th class="aright">' . number_format($this->get_total_price()) . '</th>
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		</tfoot>
 	</table>';
 	if( $usces_gp ) {
-		$html .= '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="業務パック割引" /><br />このマークがある価格は<strong>業務パック割引</strong>が適用されています。';
+		$html .= '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
 	}
 	$html .= '</div>';
 
 } else {
-	$html .= '<div class="no_cart">只今、カートに商品はございません。</div>';
+	$html .= '<div class="no_cart">' . __('There is no items in your cart.','usces') . '</div>';
 }
 
 $html .= $content;
 
 $html .= '<div class="send">
-	<input name="previous" type="button" id="previouscart" onclick="uscesCart.previousCart();" value="買い物を続ける" />&nbsp;&nbsp;';
+	<input name="previous" type="button" id="previouscart" onclick="uscesCart.previousCart();" value="' . __('continue shopping','usces') . '" />&nbsp;&nbsp;';
 if( usces_is_cart() ) {
-	$html .= '<input name="customerinfo" type="submit" value="上記内容でお客様情報入力をする" />';
+	$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '" />';
 }
 $html .= '</div>
-	</form>
+	</form>';
+
+$html .= '<div class="footer_explanation">';
+$footer = '';
+$html .= apply_filters('usces_filter_cart_page_footer', $footer);
+$html .= '</div>';
 	
-	</div>';
+$html .= '</div>';
 ?>

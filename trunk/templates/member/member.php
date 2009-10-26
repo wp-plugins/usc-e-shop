@@ -8,18 +8,18 @@ $html = '<div id="memberpages">
 <div id="memberinfo">
 <table>
 <tr>
-<th scope="row">会員番号</th>
+<th scope="row">' . __('member number', 'usces') . '</th>
 <td class="num">' . $usces_members['ID'] . '</td>
 <td rowspan="3">&nbsp;</td>
-<th>入会日</th>
+<th>' . __('Strated date', 'usces') . '</th>
 <td>' . mysql2date(__('Y/m/d'), $usces_members['registered']) . '</td>
 </tr>
 <tr>
-<th scope="row">氏名</th>
-<td>' . $usces_members['name1'] . '&nbsp;' . $usces_members['name2'] . '&nbsp;様</td>';
+<th scope="row">' . __('Strated date', 'usces') . '</th>
+<td>' . $usces_members['name1'] . '&nbsp;' . $usces_members['name2'] . '&nbsp;' . __('Mr/Mrs', 'usces') . '</td>';
 
 if(usces_is_membersystem_point()){
-	$html .= '<th>現在のポイント</th>
+	$html .= '<th>' . __('The current point', 'usces') . '</th>
 		<td class="num">' . $usces_members['point'] . '</td>';
 }else{
 	$html .= '<th>&nbsp;</th>
@@ -27,32 +27,41 @@ if(usces_is_membersystem_point()){
 }
 $html .= '</tr>
 	<tr>
-	<th scope="row">メールアドレス</th>
+	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
 	<td>' . $usces_members['mailaddress1'] . '</td>
 	<th>&nbsp;</th>
 	<td>&nbsp;</td>
 	</tr>
 	</table>
 	　<br />　
-	<a href="#edit">会員情報編集へ≫</a>
-	<h3>購入履歴</h3>
+	<a href="#edit">' . __('To member information editing', 'usces') . '</a>';
+	
+
+$html .= '<div class="header_explanation">';
+$header = '';
+$html .= apply_filters('usces_filter_memberinfo_page_header', $header);
+$html .= '</div>';
+
+$html .= '<h3>' . __('Purchase history', 'usces') . '</h3>
 	<table>';
+	
+	
 if ( !count($usces_member_history) ) {
 	$html .= '<tr>
-	<td>現在購入履歴はございません。</td>
+	<td>' . __('There is no purchase history for this moment.', 'usces') . '</td>
 	</tr>';
 }
 foreach ( $usces_member_history as $umhs ) {
 	$cart = $umhs['cart'];
 	$html .= '<tr>
-		<th class="historyrow">購入日</th>
-		<th class="historyrow">購入金額</th>
-		<th class="historyrow">使用ポイント</th>
-		<th class="historyrow">特別割引</th>
-		<th class="historyrow">送料</th>
-		<th class="historyrow">代引き手数料</th>
-		<th class="historyrow">消費税</th>
-		<th class="historyrow">獲得ポイント</th>
+		<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
+		<th class="historyrow">' . __('Purchase price', 'usces') . '</th>
+		<th class="historyrow">' . __('Used points', 'usces') . '</th>
+		<th class="historyrow">' . __('Special discount', 'usces') . '</th>
+		<th class="historyrow">' . __('Shipping', 'usces') . '</th>
+		<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
+		<th class="historyrow">' . __('Sales tax', 'usces') . '</th>
+		<th class="historyrow">' . __('points', 'usces') . '</th>
 		</tr>
 		<tr>
 		<td class="date">' . $umhs['date'] . '</td>
@@ -70,10 +79,10 @@ foreach ( $usces_member_history as $umhs ) {
 			<tr>
 			<th scope="row" class="num">No.</th>
 			<th class="thumbnail">&nbsp;</th>
-			<th>商品</th>
-			<th class="price ">単価</th>
-			<th class="quantity">数量</th>
-			<th class="subtotal">金額</th>
+			<th>' . __('items', 'usces') . '</th>
+			<th class="price ">' . __('Unit price', 'usces') . '</th>
+			<th class="quantity">' . __('Quantity', 'usces') . '</th>
+			<th class="subtotal">' . __('Amount', 'usces') . '</th>
 			</tr>';
 			
 	for($i=0; $i<count($cart); $i++) { 
@@ -109,64 +118,71 @@ foreach ( $usces_member_history as $umhs ) {
 
 $html .= '</table>
 
-	<h3><a name="edit">会員情報編集</a></h3>
+	<h3><a name="edit">' . __('Member information editing', 'usces') . '</a></h3>
 	<div class="error_message">' . $this->error_message . '</div>
 	<form action="' . USCES_MEMBER_URL . '" method="post">
 	<table class="customer_form">
 	<tr class="inp1">
-	<th scope="row"><em>*</em>お名前</th>
-	<td>姓<input name="member[name1]" id="name1" type="text" value="' . $usces_members['name1'] . '" /></td>
-	<td>名<input name="member[name2]" id="name2" type="text" value="' . $usces_members['name2'] . '" /></td>
+	<th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
+	<td>' . __('Familly name', 'usces') . '<input name="member[name1]" id="name1" type="text" value="' . $usces_members['name1'] . '" /></td>
+	<td>' . __('Given name', 'usces') . '<input name="member[name2]" id="name2" type="text" value="' . $usces_members['name2'] . '" /></td>
 	</tr>
 	<tr class="inp1">
-	<th scope="row"><em>*</em>フリガナ</th>
-	<td>姓<input name="member[name3]" id="name3" type="text" value="' . $usces_members['name3'] . '" /></td>
-	<td>名<input name="member[name4]" id="name4" type="text" value="' . $usces_members['name4'] . '" /></td>
+	<th scope="row"><em>*</em>' . __('furigana', 'usces') . '</th>
+	<td>' . __('Familly name', 'usces') . '<input name="member[name3]" id="name3" type="text" value="' . $usces_members['name3'] . '" /></td>
+	<td>' . __('Given name', 'usces') . '<input name="member[name4]" id="name4" type="text" value="' . $usces_members['name4'] . '" /></td>
 	</tr>
 	<tr>
-	<th scope="row"><em>*</em>郵便番号</th>
+	<th scope="row"><em>*</em>' . __('Zip/Postal Code', 'usces') . '</th>
 	<td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . $usces_members['zipcode'] . '" />例）100-1000</td>
 	</tr>
 	<tr>
-	<th scope="row"><em>*</em>都道府県</th>
+	<th scope="row"><em>*</em>' . __('Province', 'usces') . '</th>
 	<td colspan="2">' . usces_the_pref( 'member', 'return' ) . '</td>
 	</tr>
 	<tr class="inp2">
-	<th scope="row"><em>*</em>市区郡町村</th>
+	<th scope="row"><em>*</em>' . __('city', 'usces') . '</th>
 	<td colspan="2"><input name="member[address1]" id="address1" type="text" value="' . $usces_members['address1'] . '" />例）横浜市上北町</td>
 	</tr>
 	<tr>
-	<th scope="row"><em>*</em>番地</th>
+	<th scope="row"><em>*</em>' . __('numbers', 'usces') . '</th>
 	<td colspan="2"><input name="member[address2]" id="address2" type="text" value="' . $usces_members['address2'] . '" />例）3-24-555</td>
 	</tr>
 	<tr>
-	<th scope="row">マンション･ビル名</th>
+	<th scope="row">' . __('building name', 'usces') . '</th>
 	<td colspan="2"><input name="member[address3]" id="address3" type="text" value="' . $usces_members['address3'] . '" />例）通販ビル4F</td>
 	</tr>
 	<tr>
-	<th scope="row"><em>*</em>電話番号</th>
+	<th scope="row"><em>*</em>' . __('Phone number', 'usces') . '</th>
 	<td colspan="2"><input name="member[tel]" id="tel" type="text" value="' . $usces_members['tel'] . '" />例）1000-10-1000</td>
 	</tr>
 	<tr>
-	<th scope="row">FAX番号</th>
+	<th scope="row">' . __('FAX number', 'usces') . '</th>
 	<td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . $usces_members['fax'] . '" />例）1000-10-1000</td>
 	</tr>
 	<tr>
-	<th scope="row">パスワード</th>
+	<th scope="row">' . __('password', 'usces') . '</th>
 	<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . $usces_members['password1'] . '" />
-	※変更しない場合は空白のまま</td>
+	' . __('Leave it blank in case of no change.', 'usces') . '</td>
 	</tr>
 	<tr>
-	<th scope="row">パスワード（確認用）</th>
+	<th scope="row">' . __('Password (confirm)', 'usces') . '</th>
 	<td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . $usces_members['password2'] . '" />
-	※変更しない場合は空白のまま</td>
+	' . __('Leave it blank in case of no change.', 'usces') . '</td>
 	</tr>
 	</table>
 	<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
-	<div class="send"><input name="top" type="submit" value="トップページへ戻る" />
-	<input name="editmember" type="submit" value="更新する" /></div>
-	</form>
-	</div>
+	<div class="send"><input name="top" type="submit" value="' . __('Back to the top page.', 'usces') . '" />
+	<input name="editmember" type="submit" value="' . __('update it', 'usces') . '" /></div>
+	</form>';
+	
+
+$html .= '<div class="footer_explanation">';
+$footer = '';
+$html .= apply_filters('usces_filter_memberinfo_page_footer', $footer);
+$html .= '</div>';
+	
+$html .= '</div>
 	</div>
 	</div>';
 ?>
