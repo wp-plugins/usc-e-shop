@@ -1810,4 +1810,7 @@ msgstr "会員情報編集へ≫"
 msgid "Member information editing"
 msgstr "会員情報編集"
 
+msgid "An article category keyword search"
+msgstr "カテゴリー複合検索"
+
 
