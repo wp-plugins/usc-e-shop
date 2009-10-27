@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: USconsort
-Tags: shopping, cart, admin, calendar, manage, plugin, search, sidebar, shortcode, widgets
+Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets
 Requires at least: 2.8
 Tested up to: 2.8.5
 Stable tag: 0.2.0
