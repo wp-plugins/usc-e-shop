@@ -53,7 +53,7 @@ function usces_order_confirm_message($order_id) {
 	$res = false;
 
 	if($_POST['mode'] == 'mitumoriConfirmMail'){
-		$msg_body = "\r\n\r\n\r\n" . __('** estimate **','usces') . "\r\n";
+		$msg_body = "\r\n\r\n\r\n" . __('Estimate','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
 		$msg_body .= __('Request of','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
 		$msg_body .= __('estimate number','usces') . "：" . $order_id . "\r\n";
@@ -96,7 +96,7 @@ function usces_order_confirm_message($order_id) {
 	if ( $payment['settlement'] == 'COD' )
 		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($data['order_cod_fee']) . __('yen','usces') . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$msg_body .= __('a sales tax','usces') . "　　　　　：" . number_format($data['order_tax']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($data['order_tax']) . __('yen','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
 	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($total_full_price) . __('yen','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
@@ -210,7 +210,7 @@ function usces_send_ordermail($order_id) {
 	if ( $payment['settlement'] == 'COD' )
 		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($entry['order']['cod_fee']) . __('yen','usces') . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$msg_body .= __('a sales tax','usces') . "　　　　　：" . number_format($entry['order']['tax']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($entry['order']['tax']) . __('yen','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
 	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($entry['order']['total_full_price']) . __('yen','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";

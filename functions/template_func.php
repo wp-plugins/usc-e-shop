@@ -524,7 +524,8 @@ function usces_the_pref( $flag, $out = '' ){
 		$pref = $usces_members['pref'];
 	
 	$html = "<select name='{$name}' id='pref' class='pref'>\n";
-	$prefs = get_option('usces_pref');
+//	$prefs = get_option('usces_pref');
+	$prefs = $usces->options['province'];
 	foreach($prefs as $value) {
 		$selected = ($pref == $value) ? ' selected="selected"' : '';
 		$html .= "\t<option value='{$value}'{$selected}>{$value}</option>\n";

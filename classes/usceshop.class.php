@@ -31,6 +31,9 @@ class usc_e_shop
 		if(!isset($this->options['divide_item'])) $this->options['divide_item'] = 0;
 		if(!isset($this->options['fukugo_category_orderby'])) $this->options['fukugo_category_orderby'] = 'ID';
 		if(!isset($this->options['fukugo_category_order'])) $this->options['fukugo_category_order'] = 'ASC';
+		if(!isset($this->options['province'])) $this->options['province'] = get_option('usces_pref');
+		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
+		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
 		update_option('usces', $this->options);
 
 		$this->error_message = '';
@@ -77,15 +80,6 @@ class usc_e_shop
 		$this->action_message = $message;
 	}
 
-	function load_plugin_textdomain()
-	{
-        global $wp_version;
-
-        /*if (version_compare($wp_version, '2.6', '<')) // Using old WordPress
-            load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages');
-        else*/
-            load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLDER.'/languages');
-	}
 
 	/******************************************************************************/
 	function add_pages() {
@@ -488,22 +482,39 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+		
+			if($_POST['province'] != ''){
+				$temp_pref = explode("\n", $_POST['province']);
+				for($i=-1; $i<count($temp_pref); $i++){
+					if($i == -1){
+						$usces_pref[] = '-選択-';
+					}else{
+						$usces_pref[] = wp_specialchars(trim($temp_pref[$i]));
+					}
+				}
+			}else{
+				$usces_pref = get_option('usces_pref');
+			}
 
+			$this->options['province'] = $usces_pref;
 			$this->options['divide_item'] = isset($_POST['divide_item']) ? 1 : 0;
 			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? wp_specialchars(trim($_POST['itemimg_anchor_rel'])) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
 			$this->options['fukugo_category_order'] = isset($_POST['fukugo_category_order']) ? $_POST['fukugo_category_order'] : '';
 
-			update_option('usces', $this->options);
 			
 			$this->action_status = 'success';
 			$this->action_message = __('options are updated','usces');
 		} else {
 
+			if( !isset($this->options['province']) || $this->options['province'] == '' ){
+				$this->options['province'] = get_option('usces_pref');
+			}
 			$this->action_status = 'none';
 			$this->action_message = '';
 		}
 
+		update_option('usces', $this->options);
 
 		
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_system.php');	
