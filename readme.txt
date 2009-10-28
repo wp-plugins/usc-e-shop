@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 2.8
 Tested up to: 2.8.5
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 
 Welcart builds the management system with a net shop on Wordpress.
 It's made in Japan.
@@ -50,5 +50,10 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 
 == Changelog ==
 
+= V0.2.0 =[Oct 28, 2009]
+* Added two setting-pages to the Admin menu. By them, you can insert necessary explanations(html) in Cart pages and Member pages.
+* Added option to a system setting pages: It gets possible to limit a sale district by this.
+* Bugfix in sending e-mail: Error, that a sender name was abnormal.
+* Readjusted a localized language file.
 = V0.2.0 =
-* First release. [Oct 23, 2009]
+* Initial release [Oct 23, 2009]
