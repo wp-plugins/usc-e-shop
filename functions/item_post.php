@@ -1043,6 +1043,7 @@ function add_shipping_charge() {
 }
 
 function update_shipping_charge() {
+	global $usces;
 	$options = get_option('usces');
 	$name = htmlspecialchars($_POST['name']);
 	$value = $_POST['value'];
