@@ -1374,7 +1374,7 @@ function item_sku_ajax()
 	$meta = has_item_sku_meta( $_POST['ID'] );
 	
 	$r = '';
-	foreach ( $meta as $entry )
+	foreach ( (array)$meta as $entry )
 		$r .= _list_item_sku_meta_row( $entry );
 	
 	$list = has_item_sku_list();
