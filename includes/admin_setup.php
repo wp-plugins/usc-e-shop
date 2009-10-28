@@ -210,13 +210,13 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_membersystem_state');">会員システム</a></th>
-	    <td width="10"><input name="membersystem_state" id="membersystem_state_activate" type="radio" value="activate"<?php if(!isset($this->options['membersystem_state']) || $this->options['membersystem_state'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_state_activate">利用する</label></td>
+	    <td width="10"><input name="membersystem_state" id="membersystem_state_activate" type="radio" value="activate"<?php if($this->options['membersystem_state'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_state_activate">利用する</label></td>
 	    <td width="10"><input name="membersystem_state" id="membersystem_state_deactivate" type="radio" value="deactivate"<?php if($this->options['membersystem_state'] == 'deactivate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_state_deactivate">利用しない</label></td>
 		<td><div id="ex_membersystem_state" class="explanation">会員（メンバー）システムを利用するか否か。</div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_membersystem_point');">会員ポイント</a></th>
-	    <td width="10"><input name="membersystem_point" id="membersystem_point_activate" type="radio" value="activate"<?php if(!isset($this->options['membersystem_point']) || $this->options['membersystem_point'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_point_activate">付与する</label></td>
+	    <td width="10"><input name="membersystem_point" id="membersystem_point_activate" type="radio" value="activate"<?php if($this->options['membersystem_point'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_point_activate">付与する</label></td>
 	    <td width="10"><input name="membersystem_point" id="membersystem_point_deactivate" type="radio" value="deactivate"<?php if($this->options['membersystem_point'] == 'deactivate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_point_deactivate">付与しない</label></td>
 		<td><div id="ex_membersystem_point" class="explanation">会員システムを利用した場合の、ポイント付与機能を利用するか否か。</div></td>
 	</tr>

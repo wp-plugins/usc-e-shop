@@ -91,8 +91,8 @@ function list_item_sku_meta( $meta ) {
 		<th class="left"><?php _e('SKU code','usces'); ?></th>
 		<th><?php _e('normal price','usces'); ?></th>
 		<th><?php _e('Sale price','usces'); ?></th>
-		<th><?php _e('Stock','usces'); ?></th>
-		<th><?php _e('Stock status','usces'); ?></th>
+		<th><?php _e('stock','usces'); ?></th>
+		<th><?php _e('stock status','usces'); ?></th>
 	</tr>
 	<tr>
 		<th><?php _e('SKU display name ','usces'); ?></th>
@@ -399,8 +399,8 @@ function item_sku_meta_form() {
 	<th class="left"><?php _e('SKU code','usces') ?></th>
 	<th><?php _e('normal price','usces') ?></th>
 	<th><?php _e('Sale price','usces') ?></th>
-	<th><?php _e('Stock','usces') ?></th>
-	<th><?php _e('Stock status','usces') ?></th>
+	<th><?php _e('stock','usces') ?></th>
+	<th><?php _e('stock status','usces') ?></th>
 </tr>
 <tr>
 	<th><?php _e('SKU display name ','usces') ?></th>
@@ -1010,6 +1010,8 @@ function movedown_delivery_method() {
 }
 
 function add_shipping_charge() {
+	global $usces;
+
 	$options = get_option('usces');
 	$name = htmlspecialchars($_POST['name']);
 	$value = $_POST['value'];
@@ -1023,7 +1025,8 @@ function add_shipping_charge() {
 		$newid = 0;
 	}
 	$index = isset($options['shipping_charge']) ? count($options['shipping_charge']) : 0;
-	$prefs = get_option('usces_pref');
+//	$prefs = get_option('usces_pref');
+	$prefs = $usces->options['province'];
 	array_shift($prefs);
 
 	$options['shipping_charge'][$index]['id'] = $newid;
@@ -1044,7 +1047,8 @@ function update_shipping_charge() {
 	$name = htmlspecialchars($_POST['name']);
 	$value = $_POST['value'];
 	$id = (int)$_POST['id'];
-	$prefs = get_option('usces_pref');
+//	$prefs = get_option('usces_pref');
+	$prefs = $usces->options['province'];
 	array_shift($prefs);
 
 	for($i=0; $i<count($options['shipping_charge']); $i++){
@@ -1233,7 +1237,7 @@ function get_order_item( $item_code ) {
 	$r .= "<th>" . __('List price','usces') . $usces->getGuidTax() . "</th>\n";
 	$r .= "<th>" . __('Sale price','usces') . $usces->getGuidTax() . "</th>\n";
 	$r .= "<th>" . __('number of the stock','usces') . "</th>\n";
-	$r .= "<th>" . __('Stock','usces') . "</th>\n";
+	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('A unit','usces') . "</th>\n";
 	$r .= "<th>&nbsp;</th>\n";
 	$r .= "</tr>\n";

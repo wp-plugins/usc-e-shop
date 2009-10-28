@@ -25,7 +25,8 @@ $dataTableNavigation = $DT->GetDataTableNavigation();
 $rows = $DT->rows;
 $status = $DT->get_action_status();
 $message = $DT->get_action_message();
-$pref = get_option('usces_pref');
+//$pref = get_option('usces_pref');
+$pref = $usces->options['province'];
 foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 	$payment_name[$id] = $this->options['payment_method'][$id]['name'];
 }

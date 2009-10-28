@@ -116,7 +116,8 @@ jQuery(document).ready(function($){
 <td class="col3 label">氏名</td><td class="col2"><input name="mem_name1" type="text" class="text short" value="<?php echo $data['mem_name1']; ?>" /><input name="mem_name2" type="text" class="text short" value="<?php echo $data['mem_name2']; ?>" /></td>
 <td class="col3 label">都道府県</td><td class="col2"><select name="mem_pref" class="select">
 <?php
-$prefs = get_option('usces_pref');
+//	$prefs = get_option('usces_pref');
+	$prefs = $usces->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";

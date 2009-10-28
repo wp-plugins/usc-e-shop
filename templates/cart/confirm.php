@@ -229,7 +229,7 @@ $html .= '<tr class="bdc">
 	</table>';
 
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
-if( $payments['settlement'] != 'acting' ){
+if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_full_price'] ){
 	$html .= '<form action="' . USCES_CART_URL . '" method="post">
 		<div class="send"><input name="backDelivery" type="submit" value="お届けお支払方法入力に戻る" />&nbsp;&nbsp;
 		<input name="purchase" type="submit" value="上記内容で注文する" /></div>

@@ -8,6 +8,12 @@ $divide_item = $this->options['divide_item'];
 $itemimg_anchor_rel = $this->options['itemimg_anchor_rel'];
 $fukugo_category_orderby = $this->options['fukugo_category_orderby'];
 $fukugo_category_order = $this->options['fukugo_category_order'];
+$usces_pref = empty($this->options['province']) ? array() : $this->options['province'];
+$province = '';
+for($i=1; $i<count($usces_pref); $i++){
+	$province .= $usces_pref[$i] . "\n";
+}
+$province = trim($province);
 
 ?>
 <script type="text/javascript">
@@ -49,6 +55,13 @@ function toggleVisibility(id) {
 <div class="postbox">
 <h3 class="hndle"><span>システム設定</span></h3>
 <div class="inside">
+<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_province');">都道府県</a></th>
+		<td width="150"><textarea name="province" cols="30" rows="10"><?php echo $province; ?></textarea></td>
+	    <td><div id="ex_province" class="explanation">販売対象地区（都道府県）。改行して1行に一つずつ記入します。<br />初期値は全都道府県が設定してあります。</div></td>
+	</tr>
+</table>
 <table class="form_table">
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');">表示モード</a></th>
