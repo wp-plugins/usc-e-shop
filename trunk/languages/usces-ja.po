@@ -72,7 +72,7 @@ msgstr "取り寄せ中"
 msgid "Cancel"
 msgstr "キャンセル"
 
-msgid "It has sent it out. "
+msgid "It has sent it out."
 msgstr "発送済み"
 
 msgid "An estimate"
@@ -192,7 +192,7 @@ msgstr "エラー：パスワードが違います。"
 msgid "guest"
 msgstr "ゲスト"
 
-msgid "sellout"
+msgid "Sellout"
 msgstr "売切れ"
 
 msgid "Temporarily out of stock"
@@ -300,7 +300,7 @@ msgstr "送料"
 msgid "C.O.D"
 msgstr "代引き手数料"
 
-msgid "Sales tax"
+msgid "consumption tax"
 msgstr "消費税"
 
 msgid "Payment amount"
@@ -1011,11 +1011,17 @@ msgstr "商品オプション"
 msgid "Title of detail page"
 msgstr "詳細ページタイトル"
 
-msgid "only few stocks left for this item."
+msgid "Only few stocks left for this item."
 msgstr "在庫僅少"
 
 msgid "notmal member"
 msgstr "通常会員"
+
+msgid "good member"
+msgstr "優良会員"
+
+msgid "bad member"
+msgstr "不良会員"
 
 msgid "VIP member"
 msgstr "VIP会員"
@@ -1035,10 +1041,10 @@ msgstr "キャンペーン中"
 msgid "Under Maintenance"
 msgstr "メンテナンス中"
 
-msgid "- Select --"
+msgid "-- Select --"
 msgstr "--選択--"
 
-msgid "immediately "
+msgid "immediately"
 msgstr "即日"
 
 msgid "1-2 days"
@@ -1053,89 +1059,104 @@ msgstr "3～5日後"
 msgid "4-6days"
 msgstr "4～6日後"
 
-msgid "about one week later"
+msgid "about 1 week later"
 msgstr "約1週間後"
 
-msgid "about two weeks later"
+msgid "about 2 weeks later"
 msgstr "約2週間後"
 
-msgid "about three weeks later"
-msgstr "約3週間後"
+msgid "about 3 weeks later"
+msgstr "約2週間後"
 
 msgid "after we get new items"
 msgstr "商品入荷後"
 
-msgid "confirmation of order details."
+msgid "Confirmation of order details"
 msgstr "【ご注文内容の確認】"
 
 msgid "An order report"
 msgstr "【受注報告】"
 
-msgid "your question is sent"
+msgid "Your question is sent"
 msgstr "【お問合せを承りました】"
 
-msgid "about your question"
+msgid "About your question"
 msgstr "【お問合せの件】"
 
-msgid "comfirmation of your registration for membership"
+msgid "Comfirmation of your registration for membership"
 msgstr "【ご入会完了のご連絡】"
 
-msgid "information for shipping of your ordered items."
+msgid "Information for shipping of your ordered items"
 msgstr "【商品発送のご連絡】"
 
-msgid "confirmation of your order"
-msgstr "【ご注文内容の確認】"
-
-msgid "confirmation of change for your order details."
+msgid "Confirmation of change for your order details"
 msgstr "【ご注文内容変更の確認】"
 
-msgid "confirmation mail for your transfer."
+msgid "Confirmation mail for your transfer"
 msgstr "【ご入金確認のご連絡】"
 
-msgid "** estimate **"
+msgid "Estimate"
 msgstr "お見積り書"
 
-msgid "confirmatin of your cancellation."
+msgid "Confirmatin of your cancellation"
 msgstr "【ご注文キャンセルの確認】"
 
-msgid "Thank you for choosing 'blog name'. We have received your order. Please check following information. We will inform you by e-mail when we are ready to ship ordered items to you."
-msgstr "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りご注文をお受けいたしましたのでご確認をお願いいたします。商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
+msgid "[]"
+msgstr "【】"
 
-msgid "there is new order by 'blog name'"
-msgstr "blognameの注文が入りました。"
+msgid "Thank you for choosing %s."
+msgstr "この度は %s をご利用下さいまして誠に有難うございます。"
 
-msgid "Thank you for chosing 'blogname'. We have received following e-mail. We will contact you by e-mail soon."
-msgstr "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお問合せをお受けいたしました。準備ができ次第、メールにてご返答させていただきます。しばらくお待ちください。"
+msgid "We have received your order. Please check following information."
+msgstr "下記の通りご注文をお受けいたしましたのでご確認をお願いいたします。"
 
-msgid "Than you for registrating as 'blog name' membership. You can chek your purchase status at section 'membership information'."
-msgstr "この度はblognameの会員にご登録下さいまして誠に有難うございます。「会員情報」にて商品ご購入の履歴が確認できます。"
+msgid "We will inform you by e-mail when we are ready to ship ordered items to you."
+msgstr "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
 
-msgid "Your ordered items have been sent today. It will be delivered by company xxx in couple of days.Please contact us in case you have any problems with receiving your items. "
-msgstr "本日、ご注文の商品を発送いたしました。配送業者は○○運輸となっております。一両日中には到着する予定ですが、万が一届かない場合はご連絡ください。よろしくお願いいたします。またのご利用を待ちいたしております。ありがとうございました"
+msgid "There is new order by %s."
+msgstr "%s の注文が入りました。"
 
-msgid "Thank you for chosing 'blogname'. You have changed your order as following. We will inform you by e-mail when we are ready to send your items."
-msgstr "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りご注文内容を変更いたしましたのでご確認をお願いいたします。商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
+msgid "We have received following e-mail."
+msgstr "下記の通りお問合せをお受けいたしました。"
 
-msgid "Thank you for chosing 'blogname'. Your transfer have been made successfully. We will inform you by e-mail when we are ready to send you items."
-msgstr "この度はblognameをご利用下さいまして誠に有難うございます。ご入金の確認ができましたのでご連絡いたします。商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
+msgid "We will contact you by e-mail soon."
+msgstr "準備ができ次第、メールにてご返答させていただきます。しばらくお待ちください。"
 
-msgid "Thank you for chosing 'blogname'. We will send you following estimate for your items. This estimate is valid for one week. "
-msgstr "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお見積りいたしましたのでご確認をお願いいたします。お見積りの有効期限は一週間となっております。よろしくお願いいたします。"
+msgid "Than you for registrating as %s membership."
+msgstr "この度は %s の会員にご登録下さいまして誠に有難うございます。"
 
-msgid "Thank you for chosing 'blogname'. We have received your cancellationfor your order."
-msgstr "この度はblognameをご利用下さいまして誠に有難うございます。ご注文のキャンセルを承りました。今後ともよろしくお願いいたします。"
+msgid "You can chek your purchase status at section 'membership information'."
+msgstr "「会員情報」にて商品ご購入の履歴が確認できます。"
 
-msgid "Thank you for chosing 'blogname'."
-msgstr "この度はblognameをご利用下さいまして誠に有難うございます。"
+msgid "Your ordered items have been sent today."
+msgstr "本日、ご注文の商品を発送いたしました。"
+
+msgid "It will be delivered by company xxx in couple of days."
+msgstr "配送業者は○○運輸となっております。"
+
+msgid "Please contact us in case you have any problems with receiving your items."
+msgstr "一両日中には到着する予定ですが、万が一届かない場合はご連絡ください。よろしくお願いいたします。"
+
+msgid "You have changed your order as following."
+msgstr "下記の通りご注文内容を変更いたしましたのでご確認をお願いいたします。"
+
+msgid "We will inform you by e-mail when we are ready to send your items."
+msgstr "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
+
+msgid "Your transfer have been made successfully."
+msgstr "ご入金の確認ができましたのでご連絡いたします。"
+
+msgid "We will send you following estimate for your items."
+msgstr "下記の通りお見積りいたしましたのでご確認をお願いいたします。"
+
+msgid "This estimate is valid for one week."
+msgstr "お見積りの有効期限は一週間となっております。よろしくお願いいたします。"
+
+msgid "We have received your cancellationfor your order."
+msgstr "ご注文のキャンセルを承りました。今後ともよろしくお願いいたします。"
 
 msgid "zip code"
 msgstr "〒"
-
-msgid "TEL"
-msgstr "TEL"
-
-msgid "FAX"
-msgstr "FAX"
 
 msgid "contact"
 msgstr "お問合せ"
@@ -1376,9 +1397,6 @@ msgstr "一括削除"
 
 msgid "start"
 msgstr "開始"
-
-msgid "estimate "
-msgstr "お見積り書"
 
 msgid "Thank you for choosing 'blog name' we send you following estimate. "
 msgstr "この度は blogname をご利用下さいましてありがとうございます。下記の通りお見積りいたします。"
@@ -1818,6 +1836,73 @@ msgstr "会員情報編集"
 msgid "An article category keyword search"
 msgstr "商品カテゴリー複合検索"
 
+msgid "The representation supplier settlement"
+msgstr "代行業者決済"
+
+msgid "Payment in installments"
+msgstr "分割払い"
+
+msgid "Normal business"
+msgstr "通常営業中"
+
+#~ msgid ""
+#~ "Than you for registrating as 'blog name' membership. You can chek your "
+#~ "purchase status at section 'membership information'."
+#~ msgstr ""
+#~ "この度はblognameの会員にご登録下さいまして誠に有難うございます。「会員情"
+#~ "報」にて商品ご購入の履歴が確認できます。"
+
+#, fuzzy
+#~ msgid "We will inform you by e-mail when we are ready to send you items."
+#~ msgstr ""
+#~ "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしく"
+#~ "お願いいたします。"
+#~ msgid ""
+#~ "Thank you for chosing 'blogname'. We have received following e-mail. We "
+#~ "will contact you by e-mail soon."
+#~ msgstr ""
+#~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお問合"
+#~ "せをお受けいたしました。準備ができ次第、メールにてご返答させていただきま"
+#~ "す。しばらくお待ちください。"
+#~ msgid ""
+#~ "Thank you for chosing 'blogname'. You have changed your order as "
+#~ "following. We will inform you by e-mail when we are ready to send your "
+#~ "items."
+#~ msgstr ""
+#~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りご注文"
+#~ "内容を変更いたしましたのでご確認をお願いいたします。商品の準備ができ次第、"
+#~ "メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
+#~ msgid ""
+#~ "Thank you for chosing 'blogname'. Your transfer have been made "
+#~ "successfully. We will inform you by e-mail when we are ready to send you "
+#~ "items."
+#~ msgstr ""
+#~ "この度はblognameをご利用下さいまして誠に有難うございます。ご入金の確認がで"
+#~ "きましたのでご連絡いたします。商品の準備ができ次第、メールにて発送のご案内"
+#~ "をさせていただきます。よろしくお願いいたします。"
+#~ msgid ""
+#~ "Thank you for chosing 'blogname'. We will send you following estimate for "
+#~ "your items. This estimate is valid for one week. "
+#~ msgstr ""
+#~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお見積"
+#~ "りいたしましたのでご確認をお願いいたします。お見積りの有効期限は一週間と"
+#~ "なっております。よろしくお願いいたします。"
+#~ msgid "Thank you for chosing 'blogname'."
+#~ msgstr "この度はblognameをご利用下さいまして誠に有難うございます。"
+#~ msgid "TEL"
+#~ msgstr "TEL"
+#~ msgid "FAX"
+#~ msgstr "FAX"
+#~ msgid "Sales tax"
+#~ msgstr "消費税"
+#~ msgid "about three weeks later"
+#~ msgstr "約3週間後"
+#~ msgid "confirmation of your order"
+#~ msgstr "【ご注文内容の確認】"
+#~ msgid "** estimate **"
+#~ msgstr "お見積り書"
+#~ msgid "estimate "
+#~ msgstr "お見積り書"
 #~ msgid "～pt"
 #~ msgstr "～pt"
 #~ msgid "Yen"
@@ -1826,8 +1911,6 @@ msgstr "商品カテゴリー複合検索"
 #~ msgstr "～ポイント"
 #~ msgid "～%"
 #~ msgstr "～%"
-#~ msgid "estimate"
-#~ msgstr "お見積り書"
 #~ msgid "adds new items"
 #~ msgstr "新規商品追加"
 #~ msgid "Stock status"

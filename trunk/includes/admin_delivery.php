@@ -5,7 +5,8 @@ $this->action_status = 'none';
 $this->action_message = '';
 $delivery_method = $this->options['delivery_method'];
 $shipping_charge = $this->options['shipping_charge'];
-$prefs = get_option('usces_pref');
+//	$prefs = get_option('usces_pref');
+	$prefs = $usces->options['province'];
 array_shift($prefs);
 ?>
 <script type="text/javascript">

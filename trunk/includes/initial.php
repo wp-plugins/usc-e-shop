@@ -1,48 +1,53 @@
 <?php
-
-$zaiko_status = array('有り','在庫僅少','売切れ','入荷待ち','廃盤');
+$zaiko_status = array(
+					'0' => __('There are stocks for this item.', 'usces'),
+					'1' => __('Only few stocks left for this item.', 'usces'),
+					'2' => __('Sellout', 'usces'),
+					'3' => __('Temporarily out of stock', 'usces'),
+					'4' => __('Out of print', 'usces')
+					);
 $management_status = array(
-					'estimate' => '見積り',
-					'adminorder' => '管理受注',
-					'noreceipt' => '未入金',
-					'receipted' => '入金済み',
-					'duringorder' => '取り寄せ中',
-					'cancel' => 'キャンセル',
-					'completion' => '発送済み',
+					'estimate' => __('An estimate', 'usces'),
+					'adminorder' => __('Management of Note', 'usces'),
+					'noreceipt' => __('unpaid', 'usces'),
+					'receipted' => __('payment confirmed', 'usces'),
+					'duringorder' => __('temporaly out of stock', 'usces'),
+					'cancel' => __('Cancel', 'usces'),
+					'completion' => __('It has sent it out.', 'usces'),
 					);
 
 $customer_status = array(
-					'0' => '通常会員',
-					'1' => '優良会員',
-					'2' => 'VIP会員',
-					'99' => '不良会員'
+					'0' => __('notmal member', 'usces'),
+					'1' => __('good member', 'usces'),
+					'2' => __('VIP member', 'usces'),
+					'99' => __('bad member', 'usces')
 					);
 
 $payment_structure = array(
-					'acting' => '業者代行決済',
-					'transferAdvance' => '振込み（前払い）',
-					'transferDeferred' => '振込み（後払い）',
-					'COD' => '代金引換',
-					'installment' => '割賦払い'
+					'acting' => __('The representation supplier settlement', 'usces'),
+					'transferAdvance' => __('Transfer (prepayment)', 'usces'),
+					'transferDeferred' => __('Transfer (postpay)', 'usces'),
+					'COD' => __('COD', 'usces'),
+					'installment' => __('Payment in installments', 'usces')
 					);
 
 $display_mode = array(
-					'Usualsale' => '通常営業中',
-					'Promotionsale' => 'キャンペーン中',
-					'Maintenancemode' => 'メンテナンス中'
+					'Usualsale' => __('Normal business', 'usces'),
+					'Promotionsale' => __('During the campaign', 'usces'),
+					'Maintenancemode' => __('Under Maintenance', 'usces')
 					);
 
 $shipping_rule = array(
-					'0' => '--選択--',
-					'1' => '即日',
-					'2' => '1～2日後',
-					'3' => '2～3日後',
-					'4' => '3～5日後',
-					'5' => '4～6日後',
-					'6' => '約1週間後',
-					'7' => '約2週間後',
-					'8' => '約3週間後',
-					'9' => '商品入荷後'
+					'0' => __('-- Select --', 'usces'),
+					'1' => __('immediately', 'usces'),
+					'2' => __('1-2 days', 'usces'),
+					'3' => __('2-3days', 'usces'),
+					'4' => __('3-5days', 'usces'),
+					'5' => __('4-6days', 'usces'),
+					'6' => __('about 1 week later', 'usces'),
+					'7' => __('about 2 weeks later', 'usces'),
+					'8' => __('about 3 weeks later', 'usces'),
+					'9' => __('after we get new items', 'usces')
 					);
 
 //$shipping_charge_structure = array(
@@ -52,57 +57,21 @@ $shipping_rule = array(
 //					);
 
 
-$usces_pref = array(
-				"-選択-",
-				"北海道",
-				"青森県",
-				"岩手県",
-				"宮城県",
-				"秋田県",
-				"山形県",
-				"福島県",
-				"茨城県",
-				"栃木県",
-				"群馬県",
-				"埼玉県",
-				"千葉県",
-				"東京都",
-				"神奈川県",
-				"新潟県",
-				"富山県",
-				"石川県",
-				"福井県",
-				"山梨県",
-				"長野県",
-				"岐阜県",
-				"静岡県",
-				"愛知県",
-				"三重県",
-				"滋賀県",
-				"京都府",
-				"大阪府",
-				"兵庫県",
-				"奈良県",
-				"和歌山県",
-				"鳥取県",
-				"島根県",
-				"岡山県",
-				"広島県",
-				"山口県",
-				"徳島県",
-				"香川県",
-				"愛媛県",
-				"高知県",
-				"福岡県",
-				"佐賀県",
-				"長崎県",
-				"熊本県",
-				"大分県",
-				"宮崎県",
-				"鹿児島県",
-				"沖縄県"
-				);
-
+$province_ja = array("-選択-","北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
+				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
+				"福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府",
+				"大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県",
+				"徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県",
+				"宮崎県","鹿児島県","沖縄県");
+$province_en = array("-- select --","Alabama","Alaska","Arizona","Arkansas","California","Colorado",
+				"Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii",
+				"Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
+				"Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri",
+				"Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York",
+				"North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania",
+				"Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont",
+				"Virginia","Washington","West Virginia","Wisconsin","Wyoming");
+$usces_pref = ( 'ja' == get_locale() ) ? $province_ja : $province_en;
 
 update_option('usces_management_status',$management_status);
 update_option('usces_zaiko_status',$zaiko_status);
@@ -117,48 +86,63 @@ update_option('usces_shipping_rule',$shipping_rule);
 
 $usces_op = get_option('usces');
 
-$usces_op['mail_default']['title']['thankyou'] = "【ご注文内容の確認】";
-$usces_op['mail_default']['title']['order'] = "【受注報告】";
-$usces_op['mail_default']['title']['inquiry'] = "【お問合せを承りました】";
-$usces_op['mail_default']['title']['returninq'] = "【お問合せの件】";
-$usces_op['mail_default']['title']['membercomp'] = "【ご入会完了のご連絡】";
-$usces_op['mail_default']['title']['completionmail'] = "【商品発送のご連絡】";
-$usces_op['mail_default']['title']['ordermail'] = "【ご注文内容の確認】";
-$usces_op['mail_default']['title']['changemail'] = "【ご注文内容変更の確認】";
-$usces_op['mail_default']['title']['receiptmail'] = "【ご入金確認のご連絡】";
-$usces_op['mail_default']['title']['mitumorimail'] = "【お見積り】";
-$usces_op['mail_default']['title']['cancelmail'] = "【ご注文キャンセルの確認】";
-$usces_op['mail_default']['title']['othermail'] = "【】";
+$usces_op['mail_default']['title']['thankyou'] = __('Confirmation of order details', 'usces');
+$usces_op['mail_default']['title']['order'] = __('An order report', 'usces');
+$usces_op['mail_default']['title']['inquiry'] = __('Your question is sent', 'usces');
+$usces_op['mail_default']['title']['returninq'] = __('About your question', 'usces');
+$usces_op['mail_default']['title']['membercomp'] = __('Comfirmation of your registration for membership', 'usces');
+$usces_op['mail_default']['title']['completionmail'] = __('Information for shipping of your ordered items', 'usces');
+$usces_op['mail_default']['title']['ordermail'] = __('Confirmation of order details', 'usces');
+$usces_op['mail_default']['title']['changemail'] = __('Confirmation of change for your order details', 'usces');
+$usces_op['mail_default']['title']['receiptmail'] = __('Confirmation mail for your transfer', 'usces');
+$usces_op['mail_default']['title']['mitumorimail'] = __('Estimate', 'usces');
+$usces_op['mail_default']['title']['cancelmail'] = __('Confirmatin of your cancellation', 'usces');
+$usces_op['mail_default']['title']['othermail'] = "[]";
 
-$usces_op['mail_default']['header']['thankyou'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\n下記の通りご注文をお受けいたしましたのでご確認をお願いいたします。\r\n\r\n商品の準備ができ次第、メールにて発送のご案内をさせていただきます。\r\nよろしくお願いいたします。\r\n\r\n";
-$usces_op['mail_default']['header']['order'] = get_option('blogname') . "の注文が入りました。\r\n\r\n";
-$usces_op['mail_default']['header']['inquiry'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\n下記の通りお問合せをお受けいたしました。\r\n\r\n準備ができ次第、メールにてご返答させていただきます。\r\nしばらくお待ちください。\r\n\r\n";
+$usces_op['mail_default']['header']['thankyou'] = sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['thankyou'] .= __("We have received your order. Please check following information.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['thankyou'] .= __("We will inform you by e-mail when we are ready to ship ordered items to you.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['order'] = sprintf(__('There is new order by %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['inquiry'] = sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['inquiry'] .= __("We have received following e-mail.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['inquiry'] .= __("We will contact you by e-mail soon.", 'usces') . "\r\n\r\n";
 $usces_op['mail_default']['header']['returninq'] = "";
-$usces_op['mail_default']['header']['membercomp'] = "この度は" . get_option('blogname') . "の会員にご登録下さいまして誠に有難うございます。\r\n\r\n「会員情報」にて商品ご購入の履歴が確認できます。\r\n\r\n";
-$usces_op['mail_default']['header']['completionmail'] = "本日、ご注文の商品を発送いたしました。\r\n配送業者は○○運輸となっております。\r\n一両日中には到着する予定ですが、万が一届かない場合はご連絡ください。\r\nよろしくお願いいたします。\r\n\r\nまたのご利用を待ちいたしております。\r\nありがとうございました\r\n";
-$usces_op['mail_default']['header']['ordermail'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\n下記の通りご注文をお受けいたしましたのでご確認をお願いいたします。\r\n\r\n商品の準備ができ次第、メールにて発送のご案内をさせていただきます。\r\nよろしくお願いいたします。\r\n\r\n";
-$usces_op['mail_default']['header']['changemail'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\n下記の通りご注文内容を変更いたしましたのでご確認をお願いいたします。\r\n\r\n商品の準備ができ次第、メールにて発送のご案内をさせていただきます。\r\nよろしくお願いいたします。\r\n\r\n";
-$usces_op['mail_default']['header']['receiptmail'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\nご入金の確認ができましたのでご連絡いたします。\r\n\r\n商品の準備ができ次第、メールにて発送のご案内をさせていただきます。\r\nよろしくお願いいたします。\r\n\r\n";
-$usces_op['mail_default']['header']['mitumorimail'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\n下記の通りお見積りいたしましたのでご確認をお願いいたします。\r\n\r\nお見積りの有効期限は一週間となっております。\r\nよろしくお願いいたします。\r\n\r\n";
-$usces_op['mail_default']['header']['cancelmail'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\nご注文のキャンセルを承りました。\r\n\r\n今後ともよろしくお願いいたします。\r\n\r\n";
-$usces_op['mail_default']['header']['othermail'] = "この度は" . get_option('blogname') . "をご利用下さいまして誠に有難うございます。\r\n\r\n\r\n";
+$usces_op['mail_default']['header']['membercomp'] = sprintf(__('Than you for registrating as %s membership.', 'usces'), get_option('blogname')) . "\r\n\r\n";
+$usces_op['mail_default']['header']['membercomp'] .= __("You can chek your purchase status at section 'membership information'.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['completionmail'] = __("Your ordered items have been sent today.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['completionmail'] .= __("It will be delivered by company xxx in couple of days.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['completionmail'] .= __("Please contact us in case you have any problems with receiving your items.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['ordermail'] = sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['ordermail'] .= __("We have received your order. Please check following information.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['ordermail'] .= __("We will inform you by e-mail when we are ready to ship ordered items to you.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['changemail'] = sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['changemail'] .= __("You have changed your order as following.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['changemail'] .= __("We will inform you by e-mail when we are ready to send your items.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['receiptmail'] =  sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['receiptmail'] .= __("Your transfer have been made successfully.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['receiptmail'] .= __("We will inform you by e-mail when we are ready to send your items.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['mitumorimail'] = sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['mitumorimail'] .= __("We will send you following estimate for your items.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['mitumorimail'] .= __("This estimate is valid for one week.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['cancelmail'] = sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n";
+$usces_op['mail_default']['header']['cancelmail'] .= __("We have received your cancellationfor your order.", 'usces') . "\r\n\r\n";
+$usces_op['mail_default']['header']['othermail'] = sprintf(__('Thank you for choosing %s.', 'usces'), get_option('blogname')) . "\r\n\r\n";
 
-$usces_op['mail_default']['footer']['thankyou'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['order'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['inquiry'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['returninq'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['membercomp'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['completionmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['ordermail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['changemail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['receiptmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['mitumorimail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['cancelmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
-$usces_op['mail_default']['footer']['othermail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . "〒 " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . "お問合せ " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['thankyou'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['order'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['inquiry'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['returninq'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['membercomp'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['completionmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['ordermail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['changemail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['receiptmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['mitumorimail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['cancelmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+$usces_op['mail_default']['footer']['othermail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
 
 
 update_option('usces', $usces_op);
-
 
 
 ?>
