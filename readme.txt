@@ -51,13 +51,13 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 == Changelog ==
 
 = V0.2.1 =
-Oct 28, 2009 
-------------
+28 Oct 2009
+-----------
 * Added two setting-pages to the Admin menu. By them, you can insert necessary explanations(html) in Cart pages and Member pages. 
 * Added option to a system setting pages: It gets possible to limit a sale district by this. 
 * Bugfix in sending e-mail: Error, that a sender name was abnormal. 
 * Readjusted a localized language file. 
 = V0.2.0 =
-Oct 23, 2009 
-------------
+23 Oct 2009 
+-----------
 * Initial release 
