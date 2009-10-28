@@ -117,7 +117,7 @@ jQuery(document).ready(function($){
 <td class="col3 label">都道府県</td><td class="col2"><select name="mem_pref" class="select">
 <?php
 //	$prefs = get_option('usces_pref');
-	$prefs = $usces->options['province'];
+	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";

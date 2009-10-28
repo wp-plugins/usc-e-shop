@@ -552,7 +552,7 @@ for ($i=0; $i<50; $i++) {
 <td class="col2"><select name="customer[pref]" class="select">
 <?php
 //	$prefs = get_option('usces_pref');
-	$prefs = $usces->options['province'];
+	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($data['order_pref'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
@@ -564,7 +564,7 @@ foreach((array)$prefs as $value) {
 <td class="deli"><select name="delivery[pref]">
 <?php
 //	$prefs = get_option('usces_pref');
-	$prefs = $usces->options['province'];
+	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($deli['pref'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
