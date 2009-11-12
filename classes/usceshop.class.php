@@ -86,7 +86,6 @@ class usc_e_shop
 	
 		add_object_page('Welcart Shop', 'Welcart Shop', 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
-//		add_submenu_page(USCES_PLUGIN_BASENAME, '商品マスター', '<img src="'.get_option('siteurl').'/wp-content/plugins/usc-e-shop/images/easymoblog2.png" /> 商品マスター', 6, 'usces_itemedit', array($this, 'item_master_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 6, 'usces_itemedit', array($this, 'item_master_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 6, 'usces_itemnew', array($this, 'item_master_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 6, 'usces_initial', array($this, 'admin_setup_page'));
@@ -128,6 +127,10 @@ class usc_e_shop
 			case 'edit':
 				global $current_user;
 				require_once(USCES_PLUGIN_DIR . '/includes/usces_item_master_edit.php');
+				break;
+			case 'duplicate':
+				$post_id = (int)$_GET['post'];
+				usces_item_dupricate($post_id);
 				break;
 			default:
 				require_once(USCES_PLUGIN_DIR . '/includes/usces_item_master_list.php');
@@ -732,7 +735,7 @@ class usc_e_shop
 	}
 	
 	function main() {
-		
+	
 		//$this->redirect();
 		$this->usces_cookie();
 		$this->update_table();
@@ -1042,7 +1045,7 @@ class usc_e_shop
 			add_action('template_redirect', array($this, 'load_upload_template'));
 			
 		}else{
-		
+
 			add_action('the_post', array($this, 'goDefaultPage'));
 			
 		}
@@ -1149,18 +1152,18 @@ class usc_e_shop
 			
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
 		
-			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE mem_email = %s", $member['mailaddress1']);
+			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
 			$pass = $wpdb->get_var( $query );
 			if ( empty($pass) ) {
 				$this->error_message = 'エラー：　更新できませんでした。';
 				return $mode;
 			} else {
 			
-				$password = !empty($_POST['member']['password1']) ? md5(trim($_POST['member']['password1'])) : $pass;
+				$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
 		    	$query = $wpdb->prepare("UPDATE $member_table SET 
 						mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
 						mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
-						mem_address3 = %s, mem_tel = %s, mem_fax = %s", 
+						mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
 						$password, 
 						trim($_POST['member']['name1']), 
 						trim($_POST['member']['name2']), 
@@ -1172,7 +1175,9 @@ class usc_e_shop
 						trim($_POST['member']['address2']), 
 						trim($_POST['member']['address3']), 
 						trim($_POST['member']['tel']), 
-						trim($_POST['member']['fax']) 
+						trim($_POST['member']['fax']), 
+						trim($_POST['member']['mailaddress']), 
+						$_POST['member_id'] 
 						);
 				$res = $wpdb->query( $query );
 				

@@ -15,7 +15,7 @@ $html = '<div id="memberpages">
 <td>' . mysql2date(__('Y/m/d'), $usces_members['registered']) . '</td>
 </tr>
 <tr>
-<th scope="row">' . __('Strated date', 'usces') . '</th>
+<th scope="row">' . __('Full name', 'usces') . '</th>
 <td>' . $usces_members['name1'] . '&nbsp;' . $usces_members['name2'] . '&nbsp;' . __('Mr/Mrs', 'usces') . '</td>';
 
 if(usces_is_membersystem_point()){
@@ -161,6 +161,10 @@ $html .= '</table>
 	<td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . $usces_members['fax'] . '" />例）1000-10-1000</td>
 	</tr>
 	<tr>
+	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
+	<td colspan="2"><input name="member[mailaddress]" id="fax" type="text" value="' . $usces_members['mailaddress1'] . '" /></td>
+	</tr>
+	<tr>
 	<th scope="row">' . __('password', 'usces') . '</th>
 	<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . $usces_members['password1'] . '" />
 	' . __('Leave it blank in case of no change.', 'usces') . '</td>
@@ -172,6 +176,7 @@ $html .= '</table>
 	</tr>
 	</table>
 	<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
+	<input name="member_id" type="hidden" value="' . $usces_members['ID'] . '" />
 	<div class="send"><input name="top" type="submit" value="' . __('Back to the top page.', 'usces') . '" />
 	<input name="editmember" type="submit" value="' . __('update it', 'usces') . '" /></div>
 	</form>';
