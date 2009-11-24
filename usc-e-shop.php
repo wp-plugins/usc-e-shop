@@ -45,7 +45,7 @@ add_action('activate_' . plugin_basename(__FILE__), array(&$usces, 'set_initial'
 add_action('init', array(&$usces, 'main'));
 add_action('admin_menu', array(&$usces, 'add_pages'));
 add_action('admin_head', array(&$usces, 'admin_head'));
-add_action('wp_print_scripts', array(&$usces, 'shop_head'));
+add_action('wp_head', array(&$usces, 'shop_head'));
 add_action('wp_footer', array(&$usces, 'lastprocessing'));
 //add_action('restrict_manage_posts', array(&$usces, 'postfilter'));
 

@@ -34,6 +34,7 @@ class usc_e_shop
 		if(!isset($this->options['province'])) $this->options['province'] = get_option('usces_pref');
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
+		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
 		update_option('usces', $this->options);
 
 		$this->error_message = '';
@@ -504,6 +505,10 @@ class usc_e_shop
 			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? wp_specialchars(trim($_POST['itemimg_anchor_rel'])) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
 			$this->options['fukugo_category_order'] = isset($_POST['fukugo_category_order']) ? $_POST['fukugo_category_order'] : '';
+			$this->options['settlement_path'] = isset($_POST['settlement_path']) ? stripslashes($_POST['settlement_path']) : '';
+			if($this->options['settlement_path'] == '') $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
+			$sl = substr($this->options['settlement_path'], -1);
+			if($sl != '/' && $sl != '\\') $this->options['settlement_path'] .= '/';
 
 			
 			$this->action_status = 'success';
@@ -757,11 +762,12 @@ class usc_e_shop
 			add_thickbox();
 			wp_enqueue_script('media-upload');
 			wp_enqueue_script('word-count');
-//			wp_enqueue_script( 'admin-comments' );
+			wp_enqueue_script( 'admin-comments' );
 			wp_enqueue_script('autosave');
 		
-			add_action( 'admin_head', 'wp_tiny_mce' );
-			//add_action( 'admin_print_footer_scripts', 'wp_tiny_mce', 25 );
+			//add_action( 'admin_head', 'wp_tiny_mce' );
+			add_action( 'admin_print_footer_scripts', 'wp_tiny_mce', 25 );
+			wp_enqueue_script('quicktags');
 
 		}
 
@@ -891,7 +897,9 @@ class usc_e_shop
 			}
 			
 			$this->cart->entry();
-			$this->error_message = $this->delivery_check();
+			if(isset($_POST['confirm'])){
+				$this->error_message = $this->delivery_check();
+			}
 			$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
 			add_action('the_post', array($this, 'action_cartFilter'));
 		
@@ -921,9 +929,14 @@ class usc_e_shop
 			$this->error_message = $this->zaiko_check();
 			if($this->error_message == '' && 0 < $this->cart->num_row()){
 				$payments = $this->getPayments( $entry['order']['payment_name'] );
-				$total = $entry['total_items_price'] - $entry['2000'] + $entry['shipping_charge'] + $entry['cod_fee'] + $entry['tax'];
-				if( $payments['settlement'] == 'acting' && $total > 0 )
-					$actinc_status = $this->acting_processing($payments['module']);
+				if( $payments['settlement'] == 'acting' && $entry['order']['total_full_price'] > 0 ){
+					$query = '';
+					foreach($_POST as $key => $value){
+						if($key != 'purchase')
+							$query .= '&' . $key . '=' . urlencode($value);
+					}
+					$actinc_status = $this->acting_processing($payments['module'], $query);
+				}
 				
 				if($actinc_status == 'error'){
 					$this->page = 'error';
@@ -944,7 +957,7 @@ class usc_e_shop
 			}
 			$results = usces_check_acting_return();
 			
-			if(  isset($results[0]) && $results[0] == 'duplicate' ){
+			if(  isset($results[0]) && $results[0] === 'duplicate' ){
 				header('location: ' . get_option('home'));
 				exit;
 			}else if( isset($results[0]) && $results[0] ){
@@ -954,6 +967,11 @@ class usc_e_shop
 				$this->page = 'error';
 			}
 			add_action('the_post', array($this, 'action_cartFilter'));
+		
+		}else if(isset($_REQUEST['settlement']) && $_REQUEST['settlement'] == 'epsilon') {
+			require_once($this->options['settlement_path'] . 'epsilon.php');	
+			
+			
 		
 		}else if(isset($_POST['inquiry_button'])) {
 
@@ -2576,24 +2594,25 @@ class usc_e_shop
 	
 	}
 
-	function acting_processing($module) {
+	function acting_processing($module, $query) {
 
 		$module = trim($module);
 		//$usces_entries = $this->cart->get_entry();
 
-		if( empty($module) || !file_exists(USCES_PLUGIN_DIR . '/settlement/' . $module) ) return 'error';
+		if( empty($module) || !file_exists($this->options['settlement_path'] . $module) ) return 'error';
 		
 		
-		include(USCES_PLUGIN_DIR . '/settlement/' . $module);
-		//var_dump($acting_info['send_url']);
-//		$query = '?qs=1';
-//		foreach($_POST as $key => $value){
-//			$query .= '&' . $key . '=' . urlencode($value);
-//		}
-		//header("location: " . USCES_SSL_URL . '/wp-content/plugins/usc-e-shop/settlement/' . $module . $query);
-		if($changeflag == 1){
-			return false;
-		}else{
+		//include(USCES_PLUGIN_DIR . '/settlement/' . $module);
+		if($module == 'paypal.php'){
+			//paypal_check();
+		}else if($module == 'epsilon.php'){
+			if ( $this->use_ssl ) {
+				$redirect = str_replace('http://', 'https://', USCES_CART_URL);
+			}else{
+				$redirect = USCES_CART_URL;
+			}
+			$query .= '&settlement=epsilon&redirect_url=' . urlencode($redirect);
+			header("location: " . $redirect . $query);
 			exit;
 		}
 	}
@@ -2641,6 +2660,20 @@ class usc_e_shop
 			}
 		}
 		return $total_price;
+	}
+	
+	function get_total_quantity( $cart = array() ) {
+		if( empty($cart) )
+			$cart = $this->cart->get_cart();
+	
+		$total_quantity = 0;
+
+		if( !empty($cart) ) {
+			for($i=0; $i<count($cart); $i++) { 
+				$total_quantity += $cart[$i]['quantity'];
+			}
+		}
+		return $total_quantity;
 	}
 	
 	function get_order_point( $mem_id = '', $display_mode = '', $cart = array() ) {

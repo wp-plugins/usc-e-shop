@@ -91,7 +91,8 @@ function usces_order_confirm_message($order_id) {
 	$msg_body .= __('total items','usces') . "　　　　：" . number_format($data['order_item_total_price']) . __('yen','usces') . "\r\n";
 	if ( $data['order_usedpoint'] != 0 )
 		$msg_body .= __('use of points','usces') . "　：" . number_format($data['order_usedpoint']) . __('Point','usces') . "\r\n";
-	$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($data['order_discount']) . __('yen','usces') . "\r\n";
+	if ( $data['order_discount'] != 0 )
+		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($data['order_discount']) . __('yen','usces') . "\r\n";
 	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($data['order_shipping_charge']) . __('yen','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($data['order_cod_fee']) . __('yen','usces') . "\r\n";
@@ -205,7 +206,8 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('total items','usces') . "　　　　：" . number_format($entry['order']['total_items_price']) . __('yen','usces') . "\r\n";
 	if ( $entry['order']['usedpoint'] != 0 )
 		$msg_body .= __('use of points','usces') . "　：" . number_format($entry['order']['usedpoint']) . __('Point','usces') . "\r\n";
-	$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($entry['order']['discount']) . __('yen','usces') . "\r\n";
+	if ( $data['order_discount'] != 0 )
+		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($entry['order']['discount']) . __('yen','usces') . "\r\n";
 	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($entry['order']['shipping_charge']) . __('yen','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($entry['order']['cod_fee']) . __('yen','usces') . "\r\n";
@@ -251,7 +253,7 @@ function usces_send_ordermail($order_id) {
 	$message = $mail_data['header']['thankyou'] . $msg_body . $mail_data['footer']['thankyou'];
 //var_dump($msg_body);exit;
 	$confirm_para = array(
-			'to_name' => $entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"] . '様',
+			'to_name' => $entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"] . __('Mr/Mrs','usces'),
 			'to_address' => $entry['customer']['mailaddress1'], 
 			'from_name' => get_bloginfo('name'),
 			'from_address' => $usces->options['sender_mail'],
@@ -268,7 +270,7 @@ function usces_send_ordermail($order_id) {
 		$order_para = array(
 				'to_name' => __('An order email','usces'),
 				'to_address' => $usces->options['order_mail'], 
-				'from_name' => $entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"] . '様',
+				'from_name' => $entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"] . __('Mr/Mrs','usces'),
 				'from_address' => $entry['customer']['mailaddress1'],
 				'return_path' => $usces->options['error_mail'],
 				'subject' => $subject,
@@ -414,7 +416,7 @@ function usces_send_mail( $para ) {
 
 function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
-	//$wpdb->show_errors();
+	$wpdb->show_errors();
 	
 	$cart = $usces->cart->get_cart();
 	$item_total_price = $usces->get_total_price( $cart );
@@ -1292,8 +1294,95 @@ function usces_check_acting_return() {
 			
 			}
 		break;
-	}
+		case 'paypal':
+			include(USCES_PLUGIN_DIR . '/settlement/paypal.php');
+			$results[0] = paypal_check();
+	
+			break;
+		}
 	
 	return $results;
 }
+
+function usces_item_dupricate($post_id){
+	global $wpdb;
+	if( empty($post_id) ) return;
+	
+	$query = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE ID = %d", $post_id);
+	$post_data = $wpdb->get_row( $query, ARRAY_A );
+	if(!$post_data) return;
+	foreach($post_data as $key => $value){
+		switch( $key ){
+			case 'ID':
+				break;
+			case 'post_date':
+			case 'post_modified':
+				$datas[$key] = date('Y-m-d H:i:s');
+				break;
+			case 'post_date_gmt':
+			case 'post_modified_gmt':
+				$datas[$key] = gmdate('Y-m-d H:i:s');
+				break;
+			case 'post_status':
+				$datas[$key] = 'draft';
+				break;
+			case 'post_name':
+			case 'guid':
+				$datas[$key] = '';
+				break;
+			case 'post_parent':
+			case 'comment_count':
+				$datas[$key] = 0;
+				break;
+			default:
+				$datas[$key] = $value;
+		}
+	}
+	$wpdb->insert( $wpdb->posts, $datas );
+	$ids['ID'] = $wpdb->insert_id;
+	$updatas['post_name'] = $ids['ID'];
+	$updatas['guid'] = get_option('home') . '?p=' . $ids['ID'];
+	$wpdb->update( $wpdb->posts, $updatas, $ids );
+
+	header('Location: ' . USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=edit&amp;post=' . $wpdb->insert_id);
+	exit;
+
+//	foreach ( (array)$post_data as $data ) {
+//		$meta_id = $meta['meta_id'];
+//		$sku = unserialize($meta['meta_value']);
+//		$sku['zaiko'] = (int)$_POST['change']['word']['zaiko'];
+//		$skustr = serialize($sku);
+//		$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $skustr, $meta_id);
+//		$res = $wpdb->query( $query );
+//		if( $res === false ) {
+//			$status = false;
+//		}
+//	}
+//	if ( true === $status ) {
+//		$obj->set_action_status('success', __('I completed collective operation.','usces'));
+//	} elseif ( false === $status ) {
+//		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+//	} else {
+//		$obj->set_action_status('none', '');
+//	}
+//
+//
+//
+//
+//	$query = $wpdb->prepare("DELETE FROM $tableName WHERE ID = %d", $id);
+//	$res = $wpdb->query( $query );
+//	if( $res === false ) {
+//		$status = false;
+//	}
+//	
+//	if ( true === $status ) {
+//		$obj->set_action_status('success', __('I completed collective operation.','usces'));
+//	} elseif ( false === $status ) {
+//		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+//	} else {
+//		$obj->set_action_status('none', '');
+//	}
+}
+
+
 ?>

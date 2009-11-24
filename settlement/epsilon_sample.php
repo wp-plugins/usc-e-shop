@@ -1,4 +1,35 @@
 <?php
+/*
+イプシロン決済モジュール
+
+【手順1】イプシロン・システム情報登録（テスト環境）
+・オーダー情報発信元ホスト情報：ショップのドメイン若しくはIPアドレス
+・決済完了後のリダイレクト先：ショップトップページのURL/usces-cart?acting=epsilon&acting_return=1
+　SSLを利用している場合はhttp//をhttps://にする。また共用SSLの場合はそのURLを指定。
+・[戻る]ボタンの戻り先URL：ショップトップページのURL/usces-cart?confirm=0
+　ショップトップページのURLは上記と同じ
+・エラー発生時の戻り先URL：ショップトップページのURL/usces-cart?acting=epsilon&acting_return=0
+　ショップトップページのURLは上記と同じ
+・タイムアウト情報送信先URL：ショップトップページのURL/usces-cart?acting=epsilon&acting_return=0
+　ショップトップページのURLは上記と同じ
+
+※本番環境ではテスト環境と同じものを設定します。
+
+
+【手順2】このファイルを編集
+・$contract_code ：契約番号を入力
+・$interface_url ：本稼動の場合は本番環境用URLに変更
+・編集後はepsilon.php のファイル名でepsilon_sample.php と同じ場所に保存
+
+
+【手順3】Welcart 管理画面の基本設定ページにて新しい支払方法を追加
+・支払方法名：ショップに表示される支払方法名（必須）
+・説明：ショップに表示される支払方法の説明
+・決済種別：「代行業者決済」を選択
+・決済モジュール：「epsilon.php」と記入
+・「新しい支払方法を追加」ボタンを押して追加を確定
+
+*/
 /*****************************************************************************************************/
 // 契約番号(8桁) オンライン登録時に発行された契約番号を入力してください。
 $contract_code = "00000000";
@@ -19,18 +50,20 @@ $interface_url = 'https://beta.epsilon.jp/cgi-bin/order/receive_order3.cgi';
 $order_number = rand(0,9999999999);
 $memo1 = "";
 $memo2 = "";
-$item_code = $_POST['item_code'];
-$item_name = $_POST['item_name'];
-$item_price = $_POST['item_price'];
-$user_id = $_POST['user_id'];
-$user_name = $_POST['user_name'];
-$user_mail_add = $_POST['user_mail_add'];
+$redirect = urldecode($_GET['redirect_url']);
+$url = parse_url($redirect);
+$item_code = $_GET['item_code'];
+$item_name = mb_convert_encoding(urldecode($_GET['item_name']), 'EUC-JP', 'UTF-8');
+$item_price = $_GET['item_price'];
+$user_id = $_GET['user_id'];
+$user_name = mb_convert_encoding(urldecode($_GET['user_name']), 'EUC-JP', 'UTF-8');
+$user_mail_add = urldecode($_GET['user_mail_add']);
 $changeflag = 0;
 $interface = parse_url($interface_url);
 
 $vars ="contract_code=$contract_code&user_id=$user_id&user_name=$user_name&user_mail_add=$user_mail_add&item_code=$item_code&item_name=$item_name&order_number=$order_number&st_code=$st_code&mission_code=$mission_code&item_price=$item_price&process_code=$process_code&xml=1";
 $header = "POST " . $interface_url . " HTTP/1.1\r\n";
-$header .= "Host: www.usconsort.com\r\n";
+$header .= "Host: " . $url['host'] . "\r\n";
 $header .= "User-Agent: PHP Script\r\n";
 $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
 $header .= "Content-Length: " . strlen($vars) . "\r\n";
@@ -50,17 +83,17 @@ if ($fp){
 		}
 	}
 	fclose($fp);
-
-	if($datas['result'] == 1){
+	
+	if((int)$datas['result'] === 1){
 		header("Location: " . $datas['redirect']);
 		exit;
 	}else{
 		$error = $datas['err_code'] . "'" . $datas['err_detail'] . "'";
-		header("Location: " . USCES_CART_URL.'&acting=epsilon&acting_return=' . $error);
+		header("Location: " . $redirect . "&acting=epsilon&acting_return=" . urlencode($error));
 		exit;
 	}
 }else{
-	header("Location: " . USCES_CART_URL.'&acting=epsilon&acting_return=1');
+		header("Location: " . $redirect . "&acting=epsilon&acting_return=0");
 	exit;
 }
 ?>

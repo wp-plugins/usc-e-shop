@@ -9,6 +9,7 @@ $itemimg_anchor_rel = $this->options['itemimg_anchor_rel'];
 $fukugo_category_orderby = $this->options['fukugo_category_orderby'];
 $fukugo_category_order = $this->options['fukugo_category_order'];
 $usces_pref = empty($this->options['province']) ? array() : $this->options['province'];
+$settlement_path = $this->options['settlement_path'];
 $province = '';
 for($i=1; $i<count($usces_pref); $i++){
 	$province .= $usces_pref[$i] . "\n";
@@ -96,6 +97,13 @@ function toggleVisibility(id) {
 		    <option value="DESC"<?php if($fukugo_category_order == 'DESC') echo ' selected="selected"'; ?>>降順</option>
 		</select></td>
 	    <td><div id="ex_fcat_order" class="explanation">複合カテゴリー検索ページで表示するカテゴリーにおいて、ソート順を選択します。</div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');">決済モジュールパス</a></th>
+		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo $settlement_path; ?>" size="60" /></td>
+	    <td><div id="ex_settlement_path" class="explanation">決済モジュールの設置場所を指定します。初期値はサンプルと同じ場所ですが自動アップグレードの時に削除されてしまいます。これを避けるにはモジュールをプラグインフォルダの外に設置します。</div></td>
 	</tr>
 </table>
 </div>
