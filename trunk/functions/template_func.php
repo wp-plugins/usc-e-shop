@@ -595,7 +595,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			if( $payments['name'] != '' ) {
 				$module = trim($payments['module']);
 				$checked = ($payments['name'] == $value) ? ' checked' : '';
-				if( (empty($module) || !file_exists(USCES_PLUGIN_DIR . '/settlement/' . $module)) && $payments['settlement'] == 'acting' ) {
+				if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 					$checked = '';
 					$html .= "\t<dt><label for='payment_method_{$id}'><input name='order[payment_name]' id='payment_name_{$id}' type='radio' value='{$payments['name']}'{$checked} disabled />{$payments['name']}</label>　<b>（" . __('cannot use this payment method now.','usces') . "）</b></dt>\n";
 				}elseif( $payments['settlement'] == 'acting' ){
@@ -609,7 +609,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			if( $payments['name'] != '' ) {
 				$module = trim($payments['module']);
 				$checked = ($payments['name'] == $value) ? ' checked' : '';
-				if( (empty($module) || !file_exists(USCES_PLUGIN_DIR . '/settlement/' . $module)) && $payments['settlement'] == 'acting' ) {
+				if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 					$checked = '';
 					$html .= "\t<dt><label for='payment_method_{$id}'><input name='order[payment_name]' id='payment_name_{$id}' type='radio' value='{$payments['name']}'{$checked} disabled />{$payments['name']}</label>　<b>（" . __('cannot use this payment method now.','usces') . "）</b></dt>\n";
 				}else{
@@ -986,5 +986,17 @@ function usces_copyright(){
 	global $usces;
 
 	echo $usces->options['copyright'];
+}
+
+function usces_totalprice_in_cart(){
+	global $usces;
+
+	echo number_format($usces->get_total_price());
+}
+
+function usces_totalquantity_in_cart(){
+	global $usces;
+
+	echo number_format($usces->get_total_quantity());
 }
 ?>

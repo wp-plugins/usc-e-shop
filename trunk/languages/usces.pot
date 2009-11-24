@@ -1734,16 +1734,16 @@ msgid "footer"
 msgstr "フッタ"
 
 msgid "1.Cart"
-msgstr "１.カート"
+msgstr "カート"
 
 msgid "2.Customer Info"
-msgstr "２.お客様情報"
+msgstr "お客様情報"
 
 msgid "3.Deli. & Pay."
-msgstr "３.発送・支払方法"
+msgstr "発送・支払方法"
 
 msgid "4.Confirm"
-msgstr "４.内容確認"
+msgstr "内容確認"
 
 msgid " Next "
 msgstr "　　次　へ　　"

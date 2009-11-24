@@ -471,7 +471,7 @@ meta_form(); ?>
 }
 //add_meta_box('postcustom', __('Custom Fields'), 'post_custom_meta_box', 'post', 'normal', 'core');
 
-//do_action('dbx_post_advanced');
+do_action('dbx_post_advanced');
 
 /**
  * Display comment status for post form fields.【ディスカッション】normal core
@@ -552,7 +552,7 @@ function post_author_meta_box($post) {
 <label class="hidden" for="post_author_override"><?php _e('Post Author'); ?></label><?php wp_dropdown_users( array('include' => $authors, 'name' => 'post_author_override', 'selected' => empty($post->ID) ? $user_ID : $post->post_author) ); ?>
 <?php
 }
-add_meta_box('authordiv', __('Post Author'), 'post_author_meta_box', 'post', 'normal', 'core');
+//add_meta_box('authordiv', __('Post Author'), 'post_author_meta_box', 'post', 'normal', 'core');
 endif;
 
 if ( 0 < $post_ID && wp_get_post_revisions( $post_ID ) ) :
@@ -662,7 +662,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <?php if ( 'draft' != $post->post_status ) wp_original_referer_field(true, 'previous'); ?>
 
 <?php echo $form_extra ?>
-<div id="refbutton"><a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">戻る</a></div>
+<div id="refbutton"><!--<a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID; ?>">[<?php _e('make a copy', 'usces'); ?>]</a>--> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('return to item list', 'usces'); ?>]</a></div>
 <div id="poststuff" class="metabox-holder has-right-sidebar">
 
 <div id="side-info-column" class="inner-sidebar">
@@ -824,7 +824,6 @@ endif; ?>
 <?php wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false ); ?>
 <?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 </div>
-
 
 <!-- do_meta_boxes('post', 'normal', $post) -->
 <?php do_meta_boxes('post', 'normal', $post); ?>

@@ -7,5 +7,5 @@ $html = '<div class="loopimg">
 	<div class="loopexp">
 		<div class="field">' . $content . '</div>
 	</div>
-	<div style="clear:both"></div>';
+	';
 ?>

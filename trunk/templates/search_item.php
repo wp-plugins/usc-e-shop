@@ -59,7 +59,7 @@ if (isset($_REQUEST['usces_search'])) {
 					<div class="itemtitle"><a href="' . get_permalink($post->ID) . '">' . $post->post_title . '</a></div>
 					<div class="field">' . $post->post_content . '</div>
 				</div>
-				<div style="clear:both"></div></div>';
+				</div>';
 		}
 		$html .= '</div><!-- searchitems -->';
 		$html .= '<div class="navigation">';
