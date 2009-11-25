@@ -365,7 +365,7 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'order_status' && $value == '発送済み'): ?>
 		<td class="green"><?php echo $value; ?></td>
 		<?php elseif( $key == 'delivery_method'): ?>
-		<td class="green"><?php echo $this->options['delivery_method'][$value]['name']; ?></td>
+		<td class="green"><?php $delivery_method_index = $this->get_delivery_method_index($value); echo $this->options['delivery_method'][$delivery_method_index]['name']; ?></td>
 		<?php elseif( $key == 'payment_name' && $value == '#none#'): ?>
 		<td>&nbsp;</td>
 		<?php else: ?>
