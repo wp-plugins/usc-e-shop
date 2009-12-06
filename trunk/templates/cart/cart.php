@@ -17,7 +17,7 @@ $html .= '</div>';
 
 $html .= '<div class="error_message">' . $usces->error_message . '</div>
 
-<form action="' . USCES_CART_URL . '" method="post">';
+<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 
 if($this->cart->num_row() > 0) {
 	

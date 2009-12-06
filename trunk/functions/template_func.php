@@ -103,14 +103,22 @@ function usces_the_itemSku() {
 	echo $usces->itemsku['key'];
 }
 
-function usces_the_itemPrice() {
+function usces_the_itemPrice($flg = '') {
 	global $usces;
-	echo number_format($usces->itemsku['value']['price']);
+	if($flg == 'return'){
+		return $usces->itemsku['value']['price'];
+	}else{
+		echo number_format($usces->itemsku['value']['price']);
+	}
 }
 
-function usces_the_itemCprice() {
+function usces_the_itemCprice($flg = '') {
 	global $usces;
-	echo $usces->itemsku['value']['cprice'];
+	if($flg == 'return'){
+		return $usces->itemsku['value']['cprice'];
+	}else{
+		echo number_format($usces->itemsku['value']['cprice']);
+	}
 }
 
 function usces_the_itemZaiko( $out = '' ) {

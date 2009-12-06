@@ -114,7 +114,7 @@ $html .= '<tr>
 	</tfoot>
 	</table>';
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' &&  $this->is_member_logged_in() ) {
-	$html .= '<form action="' . USCES_CART_URL . '" method="post">
+	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="error_message">' . $this->error_message . '</div>
 		<table cellspacing="0" id="point_table">
 		<tr>
@@ -230,7 +230,7 @@ $html .= '<tr class="bdc">
 
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_full_price'] ){
-	$html .= '<form action="' . USCES_CART_URL . '" method="post">
+	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="send"><input name="backDelivery" type="submit" value="お届けお支払方法入力に戻る" />&nbsp;&nbsp;
 		<input name="purchase" type="submit" value="上記内容で注文する" /></div>
 		</form>';
@@ -242,10 +242,10 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 	switch($payments['module']){
 		case 'paypal.php':
 			require_once(USCES_PLUGIN_DIR . "/settlement/paypal.php");
-			$html .= '<form action="' . USCES_CART_URL . '" method="post">
+			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;</div>
 				</form>
-				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
 				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
 				<input type="hidden" name="custom" value="' . $this->get_uscesid() . '">
@@ -268,7 +268,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 				</form>';
 			break;
 		case 'epsilon.php':
-			$html .= '<form action="' . USCES_CART_URL . '" method="post">
+			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="user_id" value="' . $member['ID'] . '">
 				<input type="hidden" name="user_name" value="' . $usces_entries['customer']['name1'] . ' ' . $usces_entries['customer']['name2'] . '">
 				<input type="hidden" name="user_mail_add" value="' . $usces_entries['customer']['mailaddress1'] . '">';
@@ -285,7 +285,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 				</form>';
 			break;
 		default:
-			$html .= '<form action="' . USCES_CART_URL . '" method="post">
+			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;
 				<input name="purchase" type="submit" value="上記内容で注文する" /></div>
 				</form>';

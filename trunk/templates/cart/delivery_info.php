@@ -73,7 +73,7 @@ $html .= '</div>';
 	
 $html .= '<div class="error_message">' . $this->error_message . '</div>';
 
-$html .= '<form action="' . USCES_CART_URL . '" method="post">';
+$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 
 if( EX_DLSELLER !== true ){
 	$html .= '<table class="customer_form">

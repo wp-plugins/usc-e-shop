@@ -165,7 +165,8 @@ span.price {
 span.cprice {
 	font-size: 12px;
 	font-weight: normal;
-	text-decoration: line-through;
+	color: #333333;
+	text-decoration: none;
 }
 em.tax {
 	font-size: 0.7em;
@@ -232,6 +233,15 @@ dl.itemGpExp li {
 	font-size: 140%;
 	font-weight: bold;
 	color: #ED5B14;
+	margin: 0px;
+	padding: 0px;
+	text-align: right;
+	width: auto;
+}
+
+#itempage .field .field_cprice {
+	font-size: 100%;
+	color: #333333;
 	margin: 0px;
 	padding: 0px;
 	text-align: right;
@@ -360,6 +370,7 @@ dl.itemGpExp li {
 }
 
 #itempage table.skumulti td.price {
+	text-align: right;
 }
 
 #itempage table.skumulti td.zaiko {
@@ -370,6 +381,7 @@ dl.itemGpExp li {
 }
 
 #itempage table.skumulti td.unit {
+	text-align: center;
 }
 
 #itempage table.skumulti td.button {

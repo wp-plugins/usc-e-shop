@@ -17,8 +17,12 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 	
 	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp;（' . usces_the_itemCode( 'return' ) . '）</h3>
 		<div class="exp">
-		<div class="field">
-		<div class="field_name">販売価格' . $this->getGuidTax() . '</div>
+		<div class="field">';
+	if( $this->itemsku['value']['cprice'] > 0 ){
+		$html .= '<div class="field_name">定価' . $this->getGuidTax() . '</div>
+		<div class="field_cprice">&yen;' . number_format($this->itemsku['value']['cprice']) . '</div>';
+	}
+	$html .= '<div class="field_name">販売価格' . $this->getGuidTax() . '</div>
 		<div class="field_price">&yen;' . number_format($this->itemsku['value']['price']) . '</div>
 		</div>
 		<div class="field">
@@ -46,9 +50,13 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		<thead>
 		<tr>
 		<th rowspan="2" class="thborder">注文番号</th>
-		<th colspan="2">タイトル</th>
-		<th colspan="2">販売価格' . $this->getGuidTax() . '</th>
-		</tr>
+		<th colspan="2">タイトル</th>';
+	if( $this->itemsku['value']['cprice'] > 0 ){
+		$html .= '<th colspan="2">(定価)販売価格' . $this->getGuidTax() . '</th>';
+	}else{
+		$html .= '<th colspan="2">販売価格' . $this->getGuidTax() . '</th>';
+	}
+	$html .= '</tr>
 		<tr>
 		<th class="thborder">在庫</th>
 		<th class="thborder">数量</th>
@@ -67,7 +75,11 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 			}
 		}
 		$html .= '</td>
-			<td colspan="2" class="subborder price"><span class="price">&yen;' . number_format($this->itemsku['value']['price']) . $this->getGuidTax() . '</span><br />' . usces_the_itemGpExp('return') . '</td>
+			<td colspan="2" class="subborder price">';
+		if( $this->itemsku['value']['cprice'] > 0 ){
+			$html .= '<span class="cprice">(&yen;' . number_format($this->itemsku['value']['cprice']) . ')</span>';
+		}			
+		$html .= '<span class="price">&yen;' . number_format($this->itemsku['value']['price']) . $this->getGuidTax() . '</span><br />' . usces_the_itemGpExp('return') . '</td>
 			</tr>
 			<tr>
 			<td class="zaiko">' . usces_the_itemZaiko('return') . '</td>

@@ -13,7 +13,7 @@ if ( usces_is_error_message() ) {
 	$html .= '<div class="error_message">' . $this->error_message . '</div>';
 }
 $html .= '<div class="loginbox">
-<form name="loginform" id="loginform" action="' . USCES_MEMBER_URL . '" method="post">
+<form name="loginform" id="loginform" action="' . USCES_MEMBER_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 <p>
 <label>' . __('e-mail adress', 'usces') . '<br />
 <input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . $this->current_member['email'] . '" size="20" tabindex="10" /></label>

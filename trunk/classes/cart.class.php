@@ -30,7 +30,7 @@ class usces_cart {
 		
 		if ( isset($_POST['quant']) && $_POST['quant'][$post_id][$sku] != '') {
 		
-			$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$post_id][$sku];
+			$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
 			
 		} else {
 		
