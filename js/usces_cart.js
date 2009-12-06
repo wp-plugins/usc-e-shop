@@ -5,8 +5,8 @@
 			
 			var zaikonum = document.getElementById("zaikonum["+post_id+"]["+sku+"]").value;
 			var zaiko = document.getElementById("zaiko["+post_id+"]["+sku+"]").value;
-			if( zaiko != '0' && zaiko != '1' ){
-				alert( uscesL10n.mes_zaiko );
+			if( (zaiko != '0' && zaiko != '1') ||  parseInt(zaikonum) == 0 ){
+				alert("只今在庫切れです。" );
 				return false;
 			}
 			
@@ -14,20 +14,31 @@
 			if(document.getElementById("quant["+post_id+"]["+sku+"]")){
 				var quant = document.getElementById("quant["+post_id+"]["+sku+"]").value;
 				if( quant == '0' || quant == '' || !(uscesCart.isNum(quant))){
-					mes += uscesL10n.mes_quant+"\n";
+					mes += "数量を正しく入力して下さい。\n";
 				}
 				var checknum = '';
+				var checkmode = '';
 				if( parseInt(uscesL10n.itemRestriction) <= parseInt(zaikonum) && uscesL10n.itemRestriction != '' && uscesL10n.itemRestriction != '0' && zaikonum != '' ) {
 					checknum = uscesL10n.itemRestriction;
+					checkmode ='rest';
 				} else if( parseInt(uscesL10n.itemRestriction) > parseInt(zaikonum) && uscesL10n.itemRestriction != '' && uscesL10n.itemRestriction != '0' && zaikonum != '' ) {
 					checknum = zaikonum;
+					checkmode ='zaiko';
 				} else if( (uscesL10n.itemRestriction == '' || uscesL10n.itemRestriction == '0') && zaikonum != '' ) {
 					checknum = zaikonum;
+					checkmode ='zaiko';
 				} else if( uscesL10n.itemRestriction != '' && uscesL10n.itemRestriction != '0' && zaikonum == '' ) {
 					checknum = uscesL10n.itemRestriction;
+					checkmode ='rest';
 				}
+								
+
 				if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
-					mes += uscesL10n.mes_quantover(checknum)+"\n";
+						if(checkmode == 'rest'){
+							mes += "この商品は一度に"+checknum+"までの数量制限が有ります。\n";
+						}else{
+							mes += "この商品の在庫は残り"+checknum+"です。\n";
+						}
 				}
 			}
 			for(i=0; i<uscesL10n.key_opts.length; i++){
@@ -69,27 +80,36 @@
 				zaikonum = $("input[name='zaikonum\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val();
 //				zaiko = $("#stockid\["+i+"\]").val();
 //				if( zaiko != '0' && zaiko != '1' ){
-//					alert( uscesL10n.mes_zaiko );
+//					alert("只今在庫切れです。" );
 //					return false;
 //				}
 		
 				quant = $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val();
 				if( $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']") ){
 					if( quant == '' || !(uscesCart.isNum(quant))){
-						mes += (i+1) + "番の商品の" + uscesL10n.mes_quant + "\n";
+						mes += (i+1) + "番の商品の数量を正しく入力して下さい。\n";
 					}
-					checknum = '';
+					var checknum = '';
+					var checkmode = '';
 					if( parseInt(itemRestriction) <= parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
 						checknum = uscesL10n.itemRestriction;
+						checkmode ='rest';
 					} else if( parseInt(itemRestriction) > parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
 						checknum = zaikonum;
+						checkmode ='zaiko';
 					} else if( (itemRestriction == '' || itemRestriction == '0') && zaikonum != '' ) {
 						checknum = zaikonum;
+						checkmode ='zaiko';
 					} else if( itemRestriction != '' && itemRestriction != '0' && zaikonum == '' ) {
 						checknum = itemRestriction;
+						checkmode ='rest';
 					}
 					if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
-						mes += (i+1) + "番の商品の" + uscesL10n.mes_quantover2(checknum)+"\n";
+						if(checkmode == 'rest'){
+							mes += (i+1) + "番の商品は一度に"+checknum+"までの数量制限が有ります。\n";
+						}else{
+							mes += (i+1) + "番の商品の在庫は残り"+checknum+"です。\n";
+						}
 					}
 				}
 			}

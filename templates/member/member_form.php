@@ -19,7 +19,7 @@ $html .= '</div>';
 
 
 $html .= '<div class="error_message">' . $this->error_message . '</div>
-<form action="' . USCES_MEMBER_URL . '" method="post">
+<form action="' . USCES_MEMBER_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 <table border="0" cellpadding="0" cellspacing="0" class="customer_form">
 <tr>
 <th scope="row"><em>*</em>' . __('e-mail adress', 'usces') . '</th>

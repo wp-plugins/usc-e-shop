@@ -7,7 +7,7 @@ $header = '<p>お買い上げありがとうございました。<br />ご不明
 $html .= apply_filters('usces_filter_cartcompletion_page_header', $header);
 $html .= '</div>';
 
-$html .= '<form action="' . get_option('home') . '" method="post">
+$html .= '<form action="' . get_option('home') . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 <div class="send"><input name="top" type="submit" value="トップページへ戻る" /></div>
 </form>';
 

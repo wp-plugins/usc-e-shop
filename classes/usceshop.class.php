@@ -691,22 +691,10 @@ class usc_e_shop
 			uscesL10n = {
 				post_id: "<?php echo $post->ID; ?>",
 				cart_number: "<?php echo get_option('usces_cart_number'); ?>",
-				mes_zaiko: "<?php echo "只今在庫切れです。"; ?>",
-				mes_quant: "<?php echo "数量を正しく入力して下さい。"; ?>",
 				mes_opts: new Array( <?php echo $mes_opts_str; ?> ),
 				key_opts: new Array( <?php echo $key_opts_str; ?> ), 
 				previous_url: "<?php if(isset($_SESSION['usces_previous_url'])) echo $_SESSION['usces_previous_url']; ?>", 
-				itemRestriction: "<?php echo $itemRestriction[0]; ?>", 
-				mes_quantover: function ( num ) { 
-							if( num == '1' ) {
-								return "この商品の在庫は残り1つです。";
-							} else {
-								return "1から"+num+"の範囲で入力して下さい。";
-							}
-				}, 
-				mes_quantover2: function ( num ) { 
-								return "現在庫は" + num + "です。";
-				}
+				itemRestriction: "<?php echo $itemRestriction[0]; ?>"
 			}
 		/* ]]> */
 		</script>
@@ -865,7 +853,6 @@ class usc_e_shop
 			$this->cart->entry();
 			$_POST['member_regmode'] = 'newmemberfromcart';
 			$this->page = ( $this->regist_member() == 'newcompletion' ) ? 'delivery' : 'customer';
-			$this->page =  'delivery';
 			add_action('the_post', array($this, 'action_cartFilter'));
 		
 		}else if(isset($_POST['deliveryinfo'])) {
@@ -1194,7 +1181,7 @@ class usc_e_shop
 						trim($_POST['member']['address3']), 
 						trim($_POST['member']['tel']), 
 						trim($_POST['member']['fax']), 
-						trim($_POST['member']['mailaddress']), 
+						trim($_POST['member']['mailaddress1']), 
 						$_POST['member_id'] 
 						);
 				$res = $wpdb->query( $query );
@@ -1436,6 +1423,9 @@ class usc_e_shop
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
 			if ( (trim($_POST['member']['password1']) != '' || trim($_POST['member']['password2']) != '') && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= "パスワードが不正です。<br />";
+			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' )
+				$mes .= "メールアドレスが不正です。<br />";
+				
 		} else {
 			if ( trim($_POST['member']['password1']) == '' || trim($_POST['member']['password2']) == '' || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= "パスワードが不正です。<br />";
@@ -2744,17 +2734,20 @@ class usc_e_shop
 		
 		$individual_quant = 0;
 		$total_quant = 0;
-
+		$charges = array();
+		
 		foreach ( $cart as $rows ) {
 			$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
 			$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
-			$charges[] = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
+			$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
 			if($this->getItemIndividualSCharge($rows['post_id'])){
 				$individual_quant += $rows['quantity'];
+				$individual_charge += $rows['quantity'] * $charge;
+			}else{
+				$charges[] = $charge;
 			}
 			$total_quant += $rows['quantity'];
 		}
-		rsort($charges);
 
 		if( $fixed_charge_id >= 0 ){
 			$fix_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
@@ -2766,11 +2759,12 @@ class usc_e_shop
 			}
 		
 		}else{
-			$max_charge = $charges[0];
-			if( $total_quant > $individual_quant ){
-				$charge = $max_charge + $max_charge * $individual_quant;
+			if( count($charges) > 0 ){
+				rsort($charges);
+				$max_charge = $charges[0];
+				$charge = $max_charge + $individual_charge;
 			}else{
-				$charge = $max_charge * $individual_quant;
+				$charge = $individual_charge;
 			}
 		
 		}

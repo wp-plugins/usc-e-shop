@@ -120,7 +120,7 @@ $html .= '</table>
 
 	<h3><a name="edit">' . __('Member information editing', 'usces') . '</a></h3>
 	<div class="error_message">' . $this->error_message . '</div>
-	<form action="' . USCES_MEMBER_URL . '" method="post">
+	<form action="' . USCES_MEMBER_URL . '#edit" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<table class="customer_form">
 	<tr class="inp1">
 	<th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
@@ -162,7 +162,7 @@ $html .= '</table>
 	</tr>
 	<tr>
 	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
-	<td colspan="2"><input name="member[mailaddress]" id="fax" type="text" value="' . $usces_members['mailaddress1'] . '" /></td>
+	<td colspan="2"><input name="member[mailaddress1]" id="fax" type="text" value="' . $usces_members['mailaddress1'] . '" /></td>
 	</tr>
 	<tr>
 	<th scope="row">' . __('password', 'usces') . '</th>
@@ -175,7 +175,7 @@ $html .= '</table>
 	' . __('Leave it blank in case of no change.', 'usces') . '</td>
 	</tr>
 	</table>
-	<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
+	<input name="member_regmode" type="hidden" value="editmemberform" />
 	<input name="member_id" type="hidden" value="' . $usces_members['ID'] . '" />
 	<div class="send"><input name="top" type="submit" value="' . __('Back to the top page.', 'usces') . '" />
 	<input name="editmember" type="submit" value="' . __('update it', 'usces') . '" /></div>
