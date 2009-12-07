@@ -38,7 +38,7 @@ if(usces_is_membersystem_state()){
 	<h5>会員ではない方はこちら▼</h5>';
 }
 
-$html .= '<form action="' . USCES_CART_URL . '" method="post" name="customer_form onKeyDown="if (event.keyCode == 13) {return false;}"">
+$html .= '<form action="' . USCES_CART_URL . '" method="post" name="customer_form" onKeyDown="if (event.keyCode == 13) {return false;}">
 <table border="0" cellpadding="0" cellspacing="0" class="customer_form">
 <tr>
 <th scope="row"><em>*</em>メールアドレス</th>';
