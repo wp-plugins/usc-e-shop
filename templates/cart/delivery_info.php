@@ -73,7 +73,7 @@ $html .= '</div>';
 	
 $html .= '<div class="error_message">' . $this->error_message . '</div>';
 
-$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
+$html .= '<form action="' . USCES_CART_URL . '" method="post">';
 
 if( EX_DLSELLER !== true ){
 	$html .= '<table class="customer_form">
@@ -83,30 +83,30 @@ if( EX_DLSELLER !== true ){
 	if($usces_entries['customer']['delivery_flag'] == 0) {
 		$html .= ' checked';
 	}
-	$html .= ' /> <label for="delivery_flag1">お客様情報と同じ</label></td>
+	$html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="delivery_flag1">お客様情報と同じ</label></td>
 		</tr>
 		<tr>
 		<td><input name="customer[delivery_flag]" id="delivery_flag2" onclick="document.getElementById(\'delivery_table\').style.display = \'inline\'" type="radio" value="1"';
 	if($usces_entries['customer']['delivery_flag'] == 1) {
 		$html .= ' checked';
 	}
-	$html .= '/> <label for="delivery_flag2">別の発送先を指定する</label></td>
+	$html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="delivery_flag2">別の発送先を指定する</label></td>
 		</tr>
 		</table>
 		<table class="customer_form" id="delivery_table">
 		<tr class="inp1">
 		<th width="127" scope="row"><em>*</em>お名前</th>
-		<td width="257">姓<input name="delivery[name1]" id="name1" type="text" value="' . $usces_entries['delivery']['name1'] . '" /></td>
-		<td width="257">名<input name="delivery[name2]" id="name2" type="text" value="' . $usces_entries['delivery']['name2'] . '" /></td>
+		<td width="257">姓<input name="delivery[name1]" id="name1" type="text" value="' . $usces_entries['delivery']['name1'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
+		<td width="257">名<input name="delivery[name2]" id="name2" type="text" value="' . $usces_entries['delivery']['name2'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 		</tr>
 		<tr class="inp1">
 		<th scope="row"><em>*</em>フリガナ</th>
-		<td>姓<input name="delivery[name3]" id="name3" type="text" value="' . $usces_entries['delivery']['name3'] . '" /></td>
-		<td>名<input name="delivery[name4]" id="name4" type="text" value="' . $usces_entries['delivery']['name4'] . '" /></td>
+		<td>姓<input name="delivery[name3]" id="name3" type="text" value="' . $usces_entries['delivery']['name3'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
+		<td>名<input name="delivery[name4]" id="name4" type="text" value="' . $usces_entries['delivery']['name4'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 		</tr>
 		<tr>
 		<th scope="row"><em>*</em>郵便番号</th>
-		<td colspan="2"><input name="delivery[zipcode]" id="zipcode" type="text" value="' . $usces_entries['delivery']['zipcode'] . '" />例）100-1000</td>
+		<td colspan="2"><input name="delivery[zipcode]" id="zipcode" type="text" value="' . $usces_entries['delivery']['zipcode'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />例）100-1000</td>
 		</tr>
 		<tr>
 		<th scope="row"><em>*</em>都道府県</th>
@@ -114,23 +114,23 @@ if( EX_DLSELLER !== true ){
 		</tr>
 		<tr class="inp2">
 		<th scope="row"><em>*</em>市区郡町村</th>
-		<td colspan="2"><input name="delivery[address1]" id="address1" type="text" value="' . $usces_entries['delivery']['address1'] . '" />例）横浜市上北町</td>
+		<td colspan="2"><input name="delivery[address1]" id="address1" type="text" value="' . $usces_entries['delivery']['address1'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />例）横浜市上北町</td>
 		</tr>
 		<tr>
 		<th scope="row"><em>*</em>番地</th>
-		<td colspan="2"><input name="delivery[address2]" id="address2" type="text" value="' . $usces_entries['delivery']['address2'] . '" />例）3-24-555</td>
+		<td colspan="2"><input name="delivery[address2]" id="address2" type="text" value="' . $usces_entries['delivery']['address2'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />例）3-24-555</td>
 		</tr>
 		<tr>
 		<th scope="row">マンション･ビル名</th>
-		<td colspan="2"><input name="delivery[address3]" id="address3" type="text" value="' . $usces_entries['delivery']['address3'] . '" />例）通販ビル4F</td>
+		<td colspan="2"><input name="delivery[address3]" id="address3" type="text" value="' . $usces_entries['delivery']['address3'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />例）通販ビル4F</td>
 		</tr>
 		<tr>
 		<th scope="row"><em>*</em>電話番号</th>
-		<td colspan="2"><input name="delivery[tel]" id="tel" type="text" value="' . $usces_entries['delivery']['tel'] . '" />例）1000-10-1000</td>
+		<td colspan="2"><input name="delivery[tel]" id="tel" type="text" value="' . $usces_entries['delivery']['tel'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />例）1000-10-1000</td>
 		</tr>
 		<tr>
 		<th scope="row">FAX番号</th>
-		<td colspan="2"><input name="delivery[fax]" id="fax" type="text" value="' . $usces_entries['delivery']['fax'] . '" />例）1000-10-1000</td>
+		<td colspan="2"><input name="delivery[fax]" id="fax" type="text" value="' . $usces_entries['delivery']['fax'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />例）1000-10-1000</td>
 		</tr>
 		</table>';
 }
