@@ -667,7 +667,9 @@ class usc_e_shop
 		?>
 
 		<link href="<?php echo $css_url; ?>" rel="stylesheet" type="text/css" />
-
+	<?php if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){ ?>
+		<link href="<?php echo get_stylesheet_directory_uri(); ?>/usces_cart.css" rel="stylesheet" type="text/css" />
+	<?php } ?>
 		<?php 
 		if(isset($post)) : 
 		
@@ -701,7 +703,7 @@ class usc_e_shop
 		<?php endif; ?>
 		<script type='text/javascript' src='<?php echo get_option('siteurl') . '/wp-includes/js/jquery/jquery.js'; ?>'></script>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
-		<?php
+<?php
 	}
 	
 	function admin_head() {

@@ -118,8 +118,6 @@ add_filter('usces_filter_membercompletion_page_footer', array(&$usces, 'filter_m
 add_filter('the_content', array(&$usces, 'filter_itemPage'));
 //add_filter('post_link', array(&$usces, 'filter_permalink'));
 //add_filter('page_link', array(&$usces, 'filter_permalink'));
-if( file_exists(get_stylesheet_directory() . '/usces_cart.css') )
-	add_filter('locale_stylesheet_uri', array(&$usces, 'filter_usces_cart_css'));
 if( $usces->options['itemimg_anchor_rel'] )
 	add_filter('usces_itemimg_anchor_rel', array(&$usces, 'filter_itemimg_anchor_rel'));
 	
