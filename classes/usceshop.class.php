@@ -1157,14 +1157,16 @@ class usc_e_shop
 			
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
 		
-			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
-			$pass = $wpdb->get_var( $query );
-			if ( empty($pass) ) {
-				$this->error_message = 'エラー：　更新できませんでした。';
+			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s AND ID <> %d", 
+						trim($_POST['member']['mailaddress1']), $_POST['member_id']
+					);
+			$id = $wpdb->get_var( $query );
+			if ( !empty($id) ) {
+				$this->error_message = 'このメールアドレスは既に登録されています。';
 				return $mode;
 			} else {
 			
-				$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
+				$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password1']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
 		    	$query = $wpdb->prepare("UPDATE $member_table SET 
 						mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
 						mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 

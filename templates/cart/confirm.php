@@ -241,7 +241,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 	if( count($cart) > 1 ) $send_item_name .= ' その他';
 	switch($payments['module']){
 		case 'paypal.php':
-			require_once(USCES_PLUGIN_DIR . "/settlement/paypal.php");
+			require_once($this->options['settlement_path'] . "paypal.php");
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;</div>
 				</form>
