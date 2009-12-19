@@ -427,6 +427,7 @@ function usces_reg_orderdata( $results = array() ) {
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
 	$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt' : '';
+	if($results['payment_status'] != 'Completed') $status = 'pending';
 	
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
@@ -1272,6 +1273,8 @@ function usces_all_delete_order_data(&$obj){
 }
 
 function usces_check_acting_return() {
+	global $usces;
+
 	$acting = $_GET['acting'];
 	$results = array();
 	switch ( $acting ) {
@@ -1295,11 +1298,11 @@ function usces_check_acting_return() {
 			}
 		break;
 		case 'paypal':
-			include(USCES_PLUGIN_DIR . '/settlement/paypal.php');
-			$results[0] = paypal_check();
+			require_once($usces->options['settlement_path'] . "paypal.php");
+			$results = paypal_check($usces_paypal_url);
 	
 			break;
-		}
+	}
 	
 	return $results;
 }

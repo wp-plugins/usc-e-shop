@@ -245,7 +245,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;</div>
 				</form>
-				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
 				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
 				<input type="hidden" name="custom" value="' . $this->get_uscesid() . '">
@@ -259,6 +259,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 				<input type="hidden" name="amount" value="' . $usces_entries['order']['total_full_price'] . '">
 				<input type="hidden" name="currency_code" value="JPY">
 				<input type="hidden" name="cancel_return" value="' . get_option('siteurl') . '/?page_id=3&confirm">
+				<input type="hidden" name="notify_url" value="' . get_option('siteurl') . '/?page_id=3&acting_return=paypal_ipn&usces=' . $this->get_uscesid() . '">
 				<input type="hidden" name="button_subtype" value="products">
 				<input type="hidden" name="tax_rate" value="0.000">
 				<input type="hidden" name="shipping" value="0">

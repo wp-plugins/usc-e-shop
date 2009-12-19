@@ -13,6 +13,7 @@ class usc_e_shop
 	var $member_status;
 	var $options;
 	var $login_mail, $current_member, $member_form;
+	var $payment_results;
 
 	function usc_e_shop()
 	{
@@ -41,6 +42,7 @@ class usc_e_shop
 		$this->login_mail = '';
 		$this->get_current_member();
 		$this->page = '';
+		$this->payment_results = array();
 
 		//admin_ssl options
 		$this->use_ssl = get_option("admin_ssl_use_ssl") === "1" ? true : false;
@@ -908,7 +910,7 @@ class usc_e_shop
 			$this->page = 'confirm';
 			add_action('the_post', array($this, 'action_cartFilter'));
 		
-		}else if(isset($_REQUEST['purchase'])) {//購入アクション
+		}else if(isset($_REQUEST['purchase'])) {
 		
 			if( false === $this->cart->num_row() ){
 				header('location: ' . get_option('home'));
@@ -940,18 +942,30 @@ class usc_e_shop
 		
 		}else if(isset($_REQUEST['acting_return'])) {
 		
+			if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
+				require_once($this->options['settlement_path'] . 'paypal.php');
+				$ipn_res = paypal_ipn_check($usces_paypal_url);
+				if( $ipn_res[0] === true ){
+					$res = $this->order_processing( $ipn_res );
+				}
+				exit;
+			}
 			if( false === $this->cart->num_row() ){
 				header('location: ' . get_option('home'));
 				exit;
 			}
-			$results = usces_check_acting_return();
-			
-			if(  isset($results[0]) && $results[0] === 'duplicate' ){
+			$this->payment_results = usces_check_acting_return();
+
+			if(  isset($this->payment_results[0]) && $this->payment_results[0] === 'duplicate' ){
 				header('location: ' . get_option('home'));
 				exit;
-			}else if( isset($results[0]) && $results[0] ){
-				$res = $this->order_processing( $results );
-				$this->page = $res;
+			}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
+				if( isset($this->payment_results['payment_status']) ){
+					$this->page = 'ordercompletion';
+				}else{
+					$res = $this->order_processing( $this->payment_results );
+					$this->page = $res;
+				}
 			}else{
 				$this->page = 'error';
 			}
@@ -2598,7 +2612,8 @@ class usc_e_shop
 		
 		//include(USCES_PLUGIN_DIR . '/settlement/' . $module);
 		if($module == 'paypal.php'){
-			//paypal_check();
+			require_once($this->options['settlement_path'] . "paypal.php");
+			paypal_submit();
 		}else if($module == 'epsilon.php'){
 			if ( $this->use_ssl ) {
 				$redirect = str_replace('http://', 'https://', USCES_CART_URL);
