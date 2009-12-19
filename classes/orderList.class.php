@@ -249,6 +249,7 @@ class dataList
 					order_payment_name AS payment_name, 
 					CASE WHEN LOCATE('noreceipt', order_status) > 0 THEN %s 
 						 WHEN LOCATE('receipted', order_status) > 0 THEN %s 
+						 WHEN LOCATE('pending', order_status) > 0 THEN %s 
 						 ELSE %s 
 					END AS receipt_status, 
 					CASE WHEN LOCATE('duringorder', order_status) > 0 THEN %s 
@@ -260,7 +261,7 @@ class dataList
 					END AS order_status, 
 					order_modified 
 					FROM {$this->table}",
-					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), '&nbsp;', __('temporaly out of stock', 'usces'), __('Cancel', 'usces'), __('It has sent it out.', 'usces'), __('An estimate', 'usces'), __('Management of Note', 'usces'), __('new order', 'usces'));
+					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('temporaly out of stock', 'usces'), __('Cancel', 'usces'), __('It has sent it out.', 'usces'), __('An estimate', 'usces'), __('Management of Note', 'usces'), __('new order', 'usces'));
 					
 		$query .= $where . $order;// . $limit;
 		//var_dump($query);

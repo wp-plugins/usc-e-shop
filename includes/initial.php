@@ -14,6 +14,7 @@ $management_status = array(
 					'duringorder' => __('temporaly out of stock', 'usces'),
 					'cancel' => __('Cancel', 'usces'),
 					'completion' => __('It has sent it out.', 'usces'),
+					'pending' => __('Pending', 'usces'),
 					);
 
 $customer_status = array(

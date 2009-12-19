@@ -54,6 +54,8 @@ if($order_action == 'new'){
 		$receipt = 'noreceipt';
 	else if($this->is_status('receipted', $data['order_status']))
 		$receipt = 'receipted';
+	else if($this->is_status('pending', $data['order_status']))
+		$receipt = 'pending';
 	else
 		$receipt = '';
 }
@@ -602,6 +604,7 @@ foreach((array)$prefs as $value) {
 <select name="order[receipt]">
 	<option value='noreceipt'<?php if($receipt == 'noreceipt'){ echo ' selected="selected"';} ?>><?php echo $management_status['noreceipt']; ?></option>
 	<option value='receipted'<?php if($receipt == 'receipted'){ echo ' selected="selected"';} ?>><?php echo $management_status['receipted']; ?></option>
+	<option value='pending'<?php if($receipt == 'pending'){ echo ' selected="selected"';} ?>><?php echo $management_status['pending']; ?></option>
 </select>
 <?php else : ?>
 &nbsp

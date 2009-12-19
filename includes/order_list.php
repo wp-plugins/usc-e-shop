@@ -32,7 +32,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 }
 $ums = get_option('usces_management_status');
 foreach((array)$ums as $key => $value){
-	if($key == 'noreceipt' || $key == 'receipted'){
+	if($key == 'noreceipt' || $key == 'receipted' || $key == 'pending'){
 		$receipt_status[$key] = $value;
 	}else{
 		$order_status[$key] = $value;
@@ -359,6 +359,8 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'total_price' ): ?>
 		<td class="price">&yen;<?php echo number_format($value); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == '未入金'): ?>
+		<td class="red"><?php echo $value; ?></td>
+		<?php elseif( $key == 'receipt_status' && $value == 'Pending'): ?>
 		<td class="red"><?php echo $value; ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == '入金済み'): ?>
 		<td class="green"><?php echo $value; ?></td>
