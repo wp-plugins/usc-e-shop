@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 2.8
 Tested up to: 2.8.5
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 
 Welcart builds the management system with a net shop on Wordpress.
 It's made in Japan.
@@ -50,6 +50,10 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 
 == Changelog ==
 
+= V0.2.2 =
+19 Dec 2009
+-----------
+* Bugfix and others
 = V0.2.1 =
 28 Oct 2009
 -----------

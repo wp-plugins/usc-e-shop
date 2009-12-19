@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*
 Theme Name: uCart Default Theme
 Theme URI: http://www.usconsort.com/usces/
@@ -8,30 +9,22 @@ Tags: USC, e-Shop, cart, shopping, net shop, commerce
 
 */
 
-.clearfix:after {
-  content: ".";
-  display: block;
-  clear: both;
-  height: 0;
-  visibility: hidden;
-}
+.clearfix:after{
+	content: ".";
+	font-size: 0.1em;
+	line-height: 0;
+	display: block;
+	height: 0;
+	visibility: hidden;
+	clear: both;
+} /*IE7以外のモダンブラウザ向け*/
 
-.clearfix {
-  display: inline-table;
-  min-height: 1px;
-}
+.clearfix{display:inline-block;} /*IE7およびMacIE5向け*/
 
-* html .clearfix {
-  height: 1px;
-  /*\*//*/
-  height: auto;
-  overflow: hidden;
-  /**/
-}
-
-.clearfix {
-  display: block;
-}
+/*Hides from IE-mac\*/
+* html .clearfix{height:1%;}
+.clearfix{display:block;}
+/*End hide from IE-mac*/ /*IE6以前向け*/
 
 body {
 	background-color: #F1F3B4;
@@ -162,7 +155,7 @@ form,
 	color: #FFFFCC;
 }
 #header ul.main {
-	height: 56px;
+	/*height: 56px;*/
 	padding: 0px;
 	list-style-type: none;
 	margin: 0px;
