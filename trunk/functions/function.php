@@ -427,7 +427,7 @@ function usces_reg_orderdata( $results = array() ) {
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
 	$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt' : '';
-	if($results['payment_status'] != 'Completed') $status = 'pending';
+	if($results['payment_status'] != 'Completed' && $results['module'] == 'paypal.php') $status = 'pending';
 	
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
