@@ -222,7 +222,7 @@ case 'edit':
 //
 case 'editpost':
 	$post_ID = (int) $_POST['post_ID'];
-	check_admin_referer('update-post_' . $post_ID);
+	//check_admin_referer('update-post_' . $post_ID);
 
 	$post_ID = edit_post();
 

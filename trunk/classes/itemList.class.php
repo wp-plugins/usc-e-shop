@@ -252,7 +252,13 @@ class dataList
 						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemCode') AS item_code, 
 						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemName') AS item_name, 
 						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, 
-						CASE WHEN post.post_status = 'publish' THEN '公開済み' ELSE '非公開' END AS display_status, 
+						CASE post.post_status 
+							WHEN 'publish' THEN '公開済み' 
+							WHEN 'future' THEN '予約済み' 
+							WHEN 'draft' THEN '下書き' 
+							WHEN 'pending' THEN 'レビュー待ち' 
+							ELSE '非公開' 
+						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
 						FROM {$this->table} AS post 
 						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 5) = %s 
@@ -265,7 +271,13 @@ class dataList
 						'item_code' AS item_code, 
 						post.post_title, 
 						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, 
-						CASE WHEN post.post_status = 'publish' THEN '公開済み' ELSE '非公開' END AS display_status, 
+						CASE post.post_status 
+							WHEN 'publish' THEN '公開済み' 
+							WHEN 'future' THEN '予約済み' 
+							WHEN 'draft' THEN '下書き' 
+							WHEN 'pending' THEN 'レビュー待ち' 
+							ELSE '非公開' 
+						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
 						FROM {$this->table} AS post 
 						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 5) = %s 
