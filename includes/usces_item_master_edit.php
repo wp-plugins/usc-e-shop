@@ -304,13 +304,13 @@ case 'delete':
 	break;
 
 case 'preview':
-	check_admin_referer( 'autosave', 'autosavenonce' );
+	//check_admin_referer( 'autosave', 'autosavenonce' );
 
 	$url = post_preview();
 
-//	wp_redirect($url);
-//	exit();
-//	break;
+	wp_redirect($url);
+	exit();
+	break;
 
 default:
 	//wp_redirect('admin.php?page=usces_itemedit');
