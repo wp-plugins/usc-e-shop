@@ -117,8 +117,8 @@ function usces_get_message($post_ID) {
 
 if ( isset( $_POST['deletepost'] ) )
 	$action = 'delete';
-elseif ( isset($_POST['wp-preview']) && 'dopreview' == $_POST['wp-preview'] )
-	$action = 'preview';
+//elseif ( isset($_POST['wp-preview']) && 'dopreview' == $_POST['wp-preview'] )
+//	$action = 'preview';
 
 switch($action) {
 //case 'postajaxpost':
@@ -303,14 +303,14 @@ case 'delete':
 	exit();
 	break;
 
-case 'preview':
-	//check_admin_referer( 'autosave', 'autosavenonce' );
-
-	$url = post_preview();
-
-	wp_redirect($url);
-	exit();
-	break;
+//case 'preview':
+//	check_admin_referer( 'autosave', 'autosavenonce' );
+//
+//	$url = post_preview();
+//
+//	wp_redirect($url);
+//	exit();
+//	break;
 
 default:
 	//wp_redirect('admin.php?page=usces_itemedit');

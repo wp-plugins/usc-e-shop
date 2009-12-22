@@ -86,15 +86,15 @@ function post_submit_meta_box($post) {
 
 <div id="preview-action">
 <?php
-if ( 'publish' == $post->post_status ) {
-	$preview_link = esc_url(get_permalink($post->ID));
-	$preview_button = __('Preview Changes');
-} else {
+//if ( 'publish' == $post->post_status ) {
+//	$preview_link = esc_url(get_permalink($post->ID));
+//	$preview_button = __('Preview Changes');
+//} else {
 	$preview_link = esc_url(apply_filters('preview_post_link', add_query_arg('preview', 'true', get_permalink($post->ID))));
 	$preview_button = __('Preview');
-}
+//}
 ?>
-<a class="preview button" href="<?php echo $preview_link; ?>" target="wp-preview" id="post-preview" tabindex="4"><?php echo $preview_button; ?></a>
+<a class="preview button" href="<?php echo $preview_link; ?>" target="_blank" id="preview" tabindex="4"><?php echo $preview_button; ?></a>
 <input type="hidden" name="wp-preview" id="wp-preview" value="" />
 </div>
 
@@ -102,7 +102,6 @@ if ( 'publish' == $post->post_status ) {
 </div><?php // /minor-publishing-actions ?>
 
 <div id="misc-publishing-actions">
-
 <div class="misc-pub-section<?php if ( !$can_publish ) { echo '  misc-pub-section-last'; } ?>"><label for="post_status"><?php _e('Status:') ?></label>
 <span id="post-status-display">
 <?php
