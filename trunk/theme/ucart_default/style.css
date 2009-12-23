@@ -626,13 +626,13 @@ form,
 	width: 560px;
 	height: 100%;
 	margin-top: 0px;
-	margin-right: auto;
 	margin-bottom: 0px;
-	margin-left: auto;
 	padding: 0px;
 	border-bottom-width: 3px;
 	border-bottom-style: solid;
 	border-bottom-color: #DAD8D1;
+	float: left;
+	margin-left: 10px;
 }
 .center h2 {
 	margin: 0px;
