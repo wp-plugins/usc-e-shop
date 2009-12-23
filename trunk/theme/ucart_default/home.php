@@ -6,6 +6,7 @@
  */
 get_header();
 ?>
+<?php echo get_query_var('page'); ?>
 
 <div class="center">
 <div class="top_image"><img src="<?php bloginfo('template_url'); ?>/images/image_top.jpg" alt="<?php bloginfo('name'); ?>" width="560" height="240" /></div>

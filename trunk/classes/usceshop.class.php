@@ -132,10 +132,6 @@ class usc_e_shop
 				global $current_user;
 				require_once(USCES_PLUGIN_DIR . '/includes/usces_item_master_edit.php');
 				break;
-			case 'duplicate':
-				$post_id = (int)$_GET['post'];
-				usces_item_dupricate($post_id);
-				break;
 			default:
 				require_once(USCES_PLUGIN_DIR . '/includes/usces_item_master_list.php');
 				break;
@@ -743,6 +739,16 @@ class usc_e_shop
 		$this->cart = new usces_cart();
 		
 		$this->controller();
+		
+		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
+			$post_id = (int)$_GET['post'];
+			$new_id = usces_item_dupricate($post_id);
+			$ref = isset($_REQUEST['usces_referer']) ? urlencode($_REQUEST['usces_referer']) : '';
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&action=edit&post=' . $new_id . '&usces_referer=' . $ref;
+			wp_redirect($url);
+			exit;
+		}
+
 
 		if($_REQUEST['page'] == 'usces_itemnew')
 			$_REQUEST['action'] = 'new';
