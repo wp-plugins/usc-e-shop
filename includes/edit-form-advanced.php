@@ -661,7 +661,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <?php if ( 'draft' != $post->post_status ) wp_original_referer_field(true, 'previous'); ?>
 
 <?php echo $form_extra ?>
-<div id="refbutton"><!--<a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID; ?>">[<?php _e('make a copy', 'usces'); ?>]</a>--> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('return to item list', 'usces'); ?>]</a></div>
+<div id="refbutton"><a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID.'&usces_referer='.urlencode($_REQUEST['usces_referer']); ?>">[<?php _e('make a copy', 'usces'); ?>]</a> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('back to item list', 'usces'); ?>]</a></div>
 <div id="poststuff" class="metabox-holder has-right-sidebar">
 
 <div id="side-info-column" class="inner-sidebar">

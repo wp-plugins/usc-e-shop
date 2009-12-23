@@ -1346,45 +1346,108 @@ function usces_item_dupricate($post_id){
 	$updatas['post_name'] = $ids['ID'];
 	$updatas['guid'] = get_option('home') . '?p=' . $ids['ID'];
 	$wpdb->update( $wpdb->posts, $updatas, $ids );
+	
+	$newpost_id = $wpdb->insert_id;
+	
+	$query = $wpdb->prepare("SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+	$meta_data = $wpdb->get_results( $query );
+	if(!$meta_data) return;
+	$valstr = '';
+	foreach($meta_data as $data){
+		
+		$prefix = substr($data->meta_key, 0, 4);
+		$prefix2 = substr($data->meta_key, 0, 11);
+		
+		if( $prefix == 'item' ){
+		
+			switch( $data->meta_key ){
+				case 'itemCode':
+					$value = $data->meta_value . '(copy)';
+					break;
+				default:
+					$value = $data->meta_value;
+			}
+			$key = $data->meta_key;
+			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+		
+		}else if( $prefix == 'isku' ){
+		
+			$value = $data->meta_value;
+			$key = $data->meta_key . '(copy)';
+			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+		
+		}else{
+		
+			$value = $data->meta_value;
+			$key = $data->meta_key;
+			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+		
+		}
 
-	header('Location: ' . USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=edit&amp;post=' . $wpdb->insert_id);
-	exit;
-
-//	foreach ( (array)$post_data as $data ) {
-//		$meta_id = $meta['meta_id'];
-//		$sku = unserialize($meta['meta_value']);
-//		$sku['zaiko'] = (int)$_POST['change']['word']['zaiko'];
-//		$skustr = serialize($sku);
-//		$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $skustr, $meta_id);
-//		$res = $wpdb->query( $query );
-//		if( $res === false ) {
-//			$status = false;
+//		if( $prefix == 'item' ){
+//		
+//			switch( $data->meta_key ){
+//				case 'itemCode':
+//					$value = $data->meta_value . '(copy)';
+//					break;
+//				default:
+//					$value = $data->meta_value;
+//			}
+//			$key = $data->meta_key;
+//			$valstr .= '(' . $newpost_id . ", '_usces_" . $key . "','" . $value . "'),";
+//		
+//		}else if( $prefix == 'isku' ){
+//		
+//			$value = $data->meta_value;
+//			$key = $data->meta_key . '(copy)';
+//			$valstr .= '(' . $newpost_id . ", '_usces_" . $key . "','" . $value . "'),";
+//		
+//		}else if( $prefix2 == '_usces_item' ){
+//		
+//			switch( $data->meta_key ){
+//				case '_usces_itemCode':
+//					$value = $data->meta_value . '(copy)';
+//					break;
+//				default:
+//					$value = $data->meta_value;
+//			}
+//			$key = $data->meta_key;
+//			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+//		
+//		}else if( $prefix == '_usces_isku' ){
+//		
+//			$value = $data->meta_value;
+//			$key = $data->meta_key . '(copy)';
+//			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+//		
 //		}
-//	}
-//	if ( true === $status ) {
-//		$obj->set_action_status('success', __('I completed collective operation.','usces'));
-//	} elseif ( false === $status ) {
-//		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
-//	} else {
-//		$obj->set_action_status('none', '');
-//	}
-//
-//
-//
-//
-//	$query = $wpdb->prepare("DELETE FROM $tableName WHERE ID = %d", $id);
-//	$res = $wpdb->query( $query );
-//	if( $res === false ) {
-//		$status = false;
-//	}
-//	
-//	if ( true === $status ) {
-//		$obj->set_action_status('success', __('I completed collective operation.','usces'));
-//	} elseif ( false === $status ) {
-//		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
-//	} else {
-//		$obj->set_action_status('none', '');
-//	}
+	}
+	$valstr = rtrim($valstr, ',');
+	$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
+	$res = mysql_query($query);
+	if(!$res ) return;
+
+	$query = $wpdb->prepare("SELECT * FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
+	$relation_data = $wpdb->get_results( $query );
+	if(!$relation_data) return;
+
+	foreach($relation_data as $data){
+		$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+						(object_id, term_taxonomy_id, term_order) VALUES 
+						(%d, %d, 0)", 
+						$newpost_id, $data->term_taxonomy_id
+				);
+		$res = mysql_query($query);
+		if( !$res ) return;
+		$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = count + 1 
+						WHERE term_taxonomy_id = %d", 
+						$data->term_taxonomy_id
+				);
+		$res = mysql_query($query);
+		if( !$res ) return;
+	}
+
+	return $newpost_id;
 }
 
 
