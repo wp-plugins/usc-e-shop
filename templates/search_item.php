@@ -52,7 +52,7 @@ if (isset($_REQUEST['usces_search'])) {
 			$my_query->the_post();
 			usces_the_item();
 	
-			$html .= '<div class="itemlist"><div class="loopimg">
+			$html .= '<div class="itemlist clearfix"><div class="loopimg">
 				<a href="' . get_permalink($post->ID) . '">' . usces_the_itemImage(0, 100, 100, $post, 'return') . '</a>
 				</div>
 				<div class="loopexp">

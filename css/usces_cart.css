@@ -8,6 +8,7 @@ div.loopimg {
 	padding-right: 20px;
 }
 div.loopexp {
+	float: left;
 }
 
 div.header_explanation {
@@ -1360,3 +1361,17 @@ ul.ucart_featured_body .thumtitle a,
 }
 
 
+/* End widget style */
+/************************************************************************************/
+/* catbox */
+
+.catbox .post .itemlist {
+	border-bottom: 1px dashed #CCCCCC;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.catbox .post .entry {
+	border-bottom: 1px dashed #CCCCCC;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
