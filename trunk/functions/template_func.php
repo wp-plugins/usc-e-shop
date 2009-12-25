@@ -238,22 +238,63 @@ function usces_the_itemGpExp( $out = '' ) {
 	$html = "<dl class='itemGpExp'>\n<dt>" . __('Business package discount','usces') . "</dt>\n<dd>\n<ul>\n";
 	if(!empty($GpN1) && !empty($GpD1)) {
 		if(empty($GpN2) || empty($GpD2)) {
-			$html .=  "<li>" . $GpN1 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
-			$html .=  "<li>" . 
-						sprintf( "<span class='price'>%4$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s",
-							number_format(round($price * (100 - $GpD1) / 100)), 
+			$html .= "<li>";
+			$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
+						number_format(round($price * (100 - $GpN1) / 100)), 
+						$usces->getGuidTax(),
+						$unit,
+						$GpN1, 
+						'&yen;', 
+						"'price'"
+					);
+			$html .= "</li>\n";
+		} else {
+			//$html .=  "<li>" . $GpN1 . "～" . ($GpN2 - 1) . $unit . __('for ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+			$html .= "<li>";
+			$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
+						number_format(round($price * (100 - $GpD1) / 100)), 
+						$usces->getGuidTax(),
+						$unit,
+						$GpN1, 
+						$GpN2-1, 
+						'&yen;', 
+						"'price'"
+					);
+			$html .= "</li>\n";
+			if(empty($GpN3) || empty($GpD3)) {
+				//$html .=  "<li>" . $GpN2 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD2) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+				$html .= "<li>";
+				$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
+							number_format(round($price * (100 - $GpN2) / 100)), 
 							$usces->getGuidTax(),
 							$unit,
-							$GpN1, 
-							'&yen;'
-						) . "</li>\n";
-		} else {
-			$html .=  "<li>" . $GpN1 . "～" . ($GpN2 - 1) . $unit . __('for ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
-			if(empty($GpN3) || empty($GpD3)) {
-				$html .=  "<li>" . $GpN2 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD2) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+							$GpN2, 
+							'&yen;', 
+							"'price'"
+						);
+				$html .= "</li>\n";
 			} else {
-				$html .= "<li>" .  $GpN2 . "～" . ($GpN3 - 1) . $unit . __('for ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD2) / 100)) . $usces->getGuidTax() . "</span></li>\n";
-				$html .=  "<li>" . $GpN3 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD3) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+				$html .= "<li>";
+				$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
+							number_format(round($price * (100 - $GpD2) / 100)), 
+							$usces->getGuidTax(),
+							$unit,
+							$GpN2, 
+							$GpN3-1, 
+							'&yen;', 
+							"'price'"
+						);
+				$html .= "</li>\n";
+				$html .= "<li>";
+				$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
+							number_format(round($price * (100 - $GpN3) / 100)), 
+							$usces->getGuidTax(),
+							$unit,
+							$GpN3, 
+							'&yen;', 
+							"'price'"
+						);
+				$html .= "</li>\n";
 			}
 		}
 	}
