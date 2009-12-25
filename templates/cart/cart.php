@@ -58,7 +58,7 @@ if($this->cart->num_row() > 0) {
 		$red = (in_array($stock, array(__('sellout','usces'), __('Temporarily out of stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		if (!empty($options)) {
-			$optstr = implode(',', $options);
+//			$optstr = implode(',', $options);
 		} else { 
 			$optstr =  '';
 			$options =  array();
@@ -67,7 +67,11 @@ if($this->cart->num_row() > 0) {
 		$html .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</td>
-			<td class="aleft">' . $itemName . '&nbsp;' . $itemCode . '&nbsp;' . $sku . '<br />' . $optstr . '</td>
+			<td class="aleft">' . $itemName . '&nbsp;' . $itemCode . '&nbsp;' . $sku . '<br />';
+		foreach((array)$options as $key => $value){
+			$html .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+		}
+		$html .= '</td>
 			<td class="aright">';
 		if( usces_is_gptekiyo($post_id, $sku, $quantity) ) {
 			$usces_gp = 1;

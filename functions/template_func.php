@@ -239,6 +239,14 @@ function usces_the_itemGpExp( $out = '' ) {
 	if(!empty($GpN1) && !empty($GpD1)) {
 		if(empty($GpN2) || empty($GpD2)) {
 			$html .=  "<li>" . $GpN1 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+			$html .=  "<li>" . 
+						sprintf( "<span class='price'>%4$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s",
+							number_format(round($price * (100 - $GpD1) / 100)), 
+							$usces->getGuidTax(),
+							$unit,
+							$GpN1, 
+							'&yen;'
+						) . "</li>\n";
 		} else {
 			$html .=  "<li>" . $GpN1 . "～" . ($GpN2 - 1) . $unit . __('for ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
 			if(empty($GpN3) || empty($GpD3)) {
@@ -459,25 +467,29 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$values = maybe_unserialize($value[0]);
 	$means = (int)$values['means'][0];
 	$essential = (int)$values['essential'][0];
-	$selects = explode("\n", $values['value'][0]);
-	$multiple = ($means === 0) ? '' : ' multiple';
-	$sku = $usces->itemsku['key'];
 	$html = '';
-	$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
-	$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple}>\n";
-	if($essential == 1)
-		$html .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
-	$i=0;
-	foreach($selects as $v) {
-		if($i == 0 && $essential == 0) 
-			$selected = ' selected="selected"';
-		else
-			$selected = '';
-		$html .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
-		$i++;
+	$sku = $usces->itemsku['key'];
+	
+	if($means < 2){
+		$selects = explode("\n", $values['value'][0]);
+		$multiple = ($means === 0) ? '' : ' multiple';
+		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
+		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple}>\n";
+		if($essential == 1)
+			$html .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
+		$i=0;
+		foreach($selects as $v) {
+			if($i == 0 && $essential == 0) 
+				$selected = ' selected="selected"';
+			else
+				$selected = '';
+			$html .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
+			$i++;
+		}
+		$html .= "</select>\n";
+	}else{
+		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$name}]' type='text' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_text' />\n";
 	}
-	$html .= "</select>\n";
-
 	if( $out == 'return' ){
 		return $html;
 	}else{

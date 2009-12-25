@@ -13,7 +13,7 @@ class usc_e_shop
 	var $member_status;
 	var $options;
 	var $login_mail, $current_member, $member_form;
-	var $payment_results;
+	var $payment_results, $log_flg;
 
 	function usc_e_shop()
 	{
@@ -678,7 +678,12 @@ class usc_e_shop
 			$key_opts_str = "";
 			if($ioptkeys){
 				foreach($ioptkeys as $key => $value){
-					$mes_opts_str .= "'{$value}を選択してください。',";
+					$optValues = $this->get_itemOptions( $value, $post->ID );
+					if($optValues['means'] < 2){
+						$mes_opts_str .= "'{$value}を選択してください。',";
+					}else{
+						$mes_opts_str .= "'{$value}を入力してください。',";
+					}
 					$key_opts_str .= "'{$value}',";
 				}
 				$mes_opts_str = rtrim($mes_opts_str, ',');
@@ -2505,6 +2510,14 @@ class usc_e_shop
 		if($res)
 			natcasesort($res);
 		return $res;
+	}
+	
+	function get_itemOptions( $key, $post_id ) {
+		$metakey = 'iopt_' . $key;
+		$values = get_post_custom_values( $metakey, $post_id );
+		if(empty($values)) return;
+
+		return unserialize($values[0]);
 	}
 	
 	function get_postIDbyCode( $itemcode ) {

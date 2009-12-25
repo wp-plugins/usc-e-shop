@@ -47,7 +47,7 @@ for($i=0; $i<count($cart); $i++) {
 	$skuPrice = $cart_row['price'];
 	$pictids = $this->get_pictids($itemCode);
 	if (!empty($options)) {
-		$optstr = implode(',', $options);
+//		$optstr = implode(',', $options);
 	} else { 
 		$optstr =  '';
 		$options =  array();
@@ -56,7 +56,11 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= '<tr>
 		<td>' . ($i + 1) . '</td>
 		<td>' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</td>
-		<td class="aleft">' . $itemName . '&nbsp;' . $itemCode . '&nbsp;' . $sku . '<br />' . $optstr . '</td>
+		<td class="aleft">' . $itemName . '&nbsp;' . $itemCode . '&nbsp;' . $sku . '<br />';
+	foreach((array)$options as $key => $value){
+		$html .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+	}
+	$html .= '</td>
 		<td class="aright">' . number_format($skuPrice) . '</td>
 		<td>' . $cart_row['quantity'] . '</td>
 		<td class="aright">' . number_format($skuPrice * $cart_row['quantity']) . '</td>

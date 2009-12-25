@@ -33,9 +33,11 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		</div>' . usces_the_itemGpExp('return') . '
 		<div class="skuform" align="right">';
 	if (usces_is_options()) {
+		$html .= "<table class='item_option'><caption>オプションを指定してください。</caption>\n";
 		while (usces_have_options()) {
-			$html .= $this->itemopt['key'] . usces_the_itemOption(usces_getItemOptName(),'','return');
+			$html .= "<tr><th>" . $this->itemopt['key'] . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
 		}
+		$html .= "</table>\n";
 	}
 	$button = '<div style="margin-top:10px">数量' . usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton('カートへ入れる', 0, 'return') . '</div>';
 	$html .= apply_filters('usces_filter_dlseller_button', $button);
@@ -70,9 +72,14 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 			<td rowspan="2">' . $this->itemsku['key'] . '</td>
 			<td colspan="2" class="skudisp subborder">' . $this->itemsku['value']['disp'];
 		if (usces_is_options()) {
+			$html .= "<table class='item_option'><caption>オプションを指定してください。</caption>\n";
 			while (usces_have_options()) {
-				$html .= '<br />' . usces_the_itemOption(usces_getItemOptName(),'', 'return');
+				$html .= "<tr><th>" . $this->itemopt['key'] . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
 			}
+			$html .= "</table>\n";
+//			while (usces_have_options()) {
+//				$html .= '<br />' . usces_the_itemOption(usces_getItemOptName(),'', 'return');
+//			}
 		}
 		$html .= '</td>
 			<td colspan="2" class="subborder price">';

@@ -1848,6 +1848,9 @@ msgstr "通常営業中"
 msgid "I send a reply email to a visitor. I ask in a few minutes to be able to have you refer in there being the fear that e-mail address is different again when the email from this shop does not arrive."
 msgstr "お客様宛てに返信メールをお送りしております。しばらくしても当店からのメールが届かない場合はメールアドレスが違っている恐れも有りますので、再度お問合せ頂きます様お願い申し上げます。"
 
+msgid "<span class='price'>%4$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s"
+msgstr "%4$s%3$sで1%3$sあたり<span class='price'>%4$s%1$s</span>%2$s"
+
 #~ msgid ""
 #~ "Than you for registrating as 'blog name' membership. You can chek your "
 #~ "purchase status at section 'membership information'."

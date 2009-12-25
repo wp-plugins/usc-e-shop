@@ -1704,4 +1704,6 @@ tr.rowSelection_selected td {
 }
 /*****************************************************************/
 
-
+div.optcheck {
+	padding-left: 10px;
+}
