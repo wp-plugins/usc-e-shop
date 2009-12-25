@@ -676,6 +676,8 @@ class usc_e_shop
 			$ioptkeys = $this->get_itemOptionKey( $post->ID );
 			$mes_opts_str = "";
 			$key_opts_str = "";
+			$opt_means = "";
+			$opt_esse = "";
 			if($ioptkeys){
 				foreach($ioptkeys as $key => $value){
 					$optValues = $this->get_itemOptions( $value, $post->ID );
@@ -685,9 +687,13 @@ class usc_e_shop
 						$mes_opts_str .= "'{$value}を入力してください。',";
 					}
 					$key_opts_str .= "'{$value}',";
+					$opt_means .= "'{$optValues['means']}',";
+					$opt_esse .= "'{$optValues['essential']}',";
 				}
 				$mes_opts_str = rtrim($mes_opts_str, ',');
 				$key_opts_str = rtrim($key_opts_str, ',');
+				$opt_means = rtrim($opt_means, ',');
+				$opt_esse = rtrim($opt_esse, ',');
 			}
 			$itemRestriction = get_post_custom_values('itemRestriction', $post->ID);
 		
@@ -697,6 +703,8 @@ class usc_e_shop
 			uscesL10n = {
 				post_id: "<?php echo $post->ID; ?>",
 				cart_number: "<?php echo get_option('usces_cart_number'); ?>",
+				opt_esse: new Array( <?php echo $opt_esse; ?> ),
+				opt_means: new Array( <?php echo $opt_means; ?> ),
 				mes_opts: new Array( <?php echo $mes_opts_str; ?> ),
 				key_opts: new Array( <?php echo $key_opts_str; ?> ), 
 				previous_url: "<?php if(isset($_SESSION['usces_previous_url'])) echo $_SESSION['usces_previous_url']; ?>", 
