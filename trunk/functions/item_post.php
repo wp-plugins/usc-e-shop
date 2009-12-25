@@ -672,7 +672,7 @@ function up_item_option_meta( $post_ID ) {
 
 	if($optmeans == 0 || $optmeans == 1){
 		$optvalue = isset($_POST['optvalue']) ? explode('\n', stripslashes( $_POST['optvalue'] ) ) : '';
-		foreach((array)$newoptvalue as $v){
+		foreach((array)$optvalue as $v){
 			if(trim( $v ) != '') 
 				$nov[] = trim( $v );
 		}

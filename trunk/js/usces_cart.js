@@ -42,8 +42,12 @@
 				}
 			}
 			for(i=0; i<uscesL10n.key_opts.length; i++){
-				if( document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]") ){
-					if( document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]").value == '#NONE#' ){
+				var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]");
+				if( uscesL10n.opt_esse[i] == '1' ){
+					
+					if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
+						mes += uscesL10n.mes_opts[i]+"\n";
+					}else if( uscesL10n.opt_means[i] >= 2 && skuob.value == '' ){
 						mes += uscesL10n.mes_opts[i]+"\n";
 					}
 				}
