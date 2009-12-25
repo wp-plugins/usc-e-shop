@@ -75,15 +75,16 @@ function usces_order_confirm_message($order_id) {
 		$skuPrice = $cart_row['price'];
 		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
-			$optstr = implode(',', $options);
+//			$optstr = implode(',', $options);
 		} else { 
 			$optstr =  '';
 			$options =  array();
 		}
 		$msg_body .= "------------------------------------------------------------------\r\n";
 		$msg_body .= "$itemName $itemCode $sku \r\n";
-		if($optstr != '')
-			$msg_body .= "$optstr\r\n";
+		foreach((array)$options as $key => $value){
+			$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+		}
 		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice) . " × " . $cart_row['quantity'] . "\r\n";
 	}
 	
@@ -191,15 +192,16 @@ function usces_send_ordermail($order_id) {
 		$skuPrice = $cart_row['price'];
 		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
-			$optstr = implode(',', $options);
+//			$optstr = implode(',', $options);
 		} else { 
 			$optstr =  '';
 			$options =  array();
 		}
 		$msg_body .= "------------------------------------------------------------------\r\n";
 		$msg_body .= "$itemName $itemCode $sku \r\n";
-		if($optstr != '')
-			$msg_body .= "$optstr\r\n";
+		foreach((array)$options as $key => $value){
+			$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+		}
 		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('yen','usces') . " × " . $cart_row['quantity'] . "\r\n";
 	}
 	$msg_body .= "=================================================================\r\n";
@@ -416,7 +418,7 @@ function usces_send_mail( $para ) {
 
 function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
-	$wpdb->show_errors();
+//	$wpdb->show_errors();
 	
 	$cart = $usces->cart->get_cart();
 	$item_total_price = $usces->get_total_price( $cart );
@@ -427,7 +429,10 @@ function usces_reg_orderdata( $results = array() ) {
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
 	$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt' : '';
-	if($results['payment_status'] != 'Completed' && $results['module'] == 'paypal.php') $status = 'pending';
+	$payments = $usces->getPayments($entry['order']['payment_name']);
+	if($results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
+	
+	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return false;
 	
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (

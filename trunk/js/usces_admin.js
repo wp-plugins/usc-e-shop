@@ -33,11 +33,7 @@
 			var id = $("#post_ID").val();
 			var name = $("#optkeyselect").val();
 			var value = $("#newoptvalue").val();
-			if($("input#newoptmeans").attr("checked")){
-				var means = '1';
-			}else{
-				var means = '0';
-			}
+			var means = $("#newoptmeans").val();
 			if($("input#newoptessential").attr("checked")){
 				var essential = '1';
 			}else{
@@ -51,7 +47,7 @@
 					$("tbody#item-opt-list").html( data );
 					$("#optkeyselect").attr({selectedIndex:0});
 					$("#newoptvalue").val("");
-					$("#newoptmeans").attr({checked: false});
+					$("#newoptmeans").attr({selectedIndex:0});
 					$("#newoptessential").attr({checked: false});
 			};
 			$.ajax( s );
@@ -64,11 +60,7 @@
 			var id = $("#post_ID").val();
 			var name = $("#newoptname").val();
 			var value = $("#newoptvalue").val();
-			if($("input#newoptmeans").attr("checked")){
-				var means = '1';
-			}else{
-				var means = '0';
-			}
+			var means = $("#newoptmeans").val();
 			if($("input#newoptessential").attr("checked")){
 				var essential = '1';
 			}else{
@@ -82,7 +74,7 @@
 					$("tbody#item-opt-list").html( data );
 					$("#newoptname").val("");
 					$("#newoptvalue").val("");
-					$("#newoptmeans").attr({checked: false});
+					$("#newoptmeans").attr({selectedIndex:0});
 					$("#newoptessential").attr({checked: false});
 			};
 			$.ajax( s );
@@ -95,11 +87,7 @@
 			ms = document.getElementById('itemopt\['+meta_id+'\]\[means\]');
 			es = document.getElementById('itemopt\['+meta_id+'\]\[essential\]');
 			var value = $(vs).val();
-			if($(ms).attr("checked")){
-				var means = '1';
-			}else{
-				var means = '0';
-			}
+			var means = $(ms).val();
 			if($(es).attr("checked")){
 				var essential = '1';
 			}else{
@@ -123,7 +111,7 @@
 		keyselect : function( key ) {
 			if(key == '#NONE#'){
 				$("#newoptvalue").val("");
-				$("#newoptmeans").attr({checked: false});
+				$("#newoptmeans").attr({selectedIndex:0});
 				$("#newoptessential").attr({checked: false});
 				return;
 			}
@@ -135,11 +123,7 @@
 				var essential = data.substring(1,2);
 				var value = data.substring(2,data.length-1);
 				$("#newoptvalue").val(value);
-				if( means == '1') {
-					$("#newoptmeans").attr({checked: true});
-				}else{
-					$("#newoptmeans").attr({checked: false});
-				}
+				$("#newoptmeans").attr({selectedIndex:means});
 				if( essential == '1') {
 					$("#newoptessential").attr({checked: true});
 				}else{

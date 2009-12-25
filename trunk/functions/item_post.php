@@ -160,6 +160,7 @@ function payment_list( $meta ) {
 function _list_item_option_meta_row( $entry ) {
 	$r = '';
 	$style = '';
+	$means = get_option('usces_item_option_select');
 
 	if ( is_serialized( $entry['meta_value'] ) ) {
 		$entry['meta_value'] = maybe_unserialize( $entry['meta_value'] );
@@ -169,7 +170,15 @@ function _list_item_option_meta_row( $entry ) {
 	
 	$readonly = " readonly='true'";
 	$key = attribute_escape(substr($entry['meta_key'],5));
-	$means = $entry['meta_value']['means'] == 1 ? " checked='checked'" : "";
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue){
+		if($meankey == $entry['meta_value']['means']) {
+			$selected = ' selected="selected"';
+		}else{
+			$selected = '';
+		}
+		$meansoption .= '<option value="' . $meankey . '"' . $selected . '>' . $meanvalue . "</option>\n";
+	}
 	$essential = $entry['meta_value']['essential'] == 1 ? " checked='checked'" : "";
 	$value = '';
 	if(is_array($entry['meta_value']['value'])){
@@ -182,7 +191,7 @@ function _list_item_option_meta_row( $entry ) {
 
 	$r .= "\n\t<tr id='itemopt-{$id}' class='{$style}'>";
 	$r .= "\n\t\t<td class='left'><div><input name='itemopt[{$id}][key]' id='itemopt[{$id}][key]' class='optname' type='text' size='20' value='{$key}'{$readonly} /></div>";
-	$r .= "\n\t\t<div class='optcheck'><input name='itemopt[{$id}][means]' id='itemopt[{$id}][means]' type='checkbox' value='1'{$means} /><label for='itemopt[{$id}][means]'>" . __('Multi-select','usces') . "</label>";
+	$r .= "\n\t\t<div class='optcheck'><select name='itemopt[{$id}][means]' id='itemopt[{$id}][means]'>" . $meansoption . "</select>\n";
 	$r .= "<input name='itemopt[{$id}][essential]' id='itemopt[{$id}][essential]' type='checkbox' value='1'{$essential} /><label for='itemopt[{$id}][essential]'>" . __('Required','usces') . "</label></div>";
 	$r .= "\n\t\t<div class='submit'><input name='deleteitemopt[{$id}]' id='deleteitemopt[{$id}]' type='button' value='".attribute_escape(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"deleteitemopt\", {$id});' />";
 	$r .= "\n\t\t<input name='updateitemopt' id='updateitemopt[{$id}]' type='button' value='".attribute_escape(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"updateitemopt\", {$id});' /></div>";
@@ -286,6 +295,11 @@ function _payment_list_row( $id, $payments ) {
  * common_option_meta_form
  */
 function common_option_meta_form() {
+	$means = get_option('usces_item_option_select');
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue){
+		$meansoption .= '<option value="' . $meankey . '">' . $meanvalue . "</option>\n";
+	}
 ?>
 <p><strong><?php _e('Add a new option','usces') ?>：</strong></p>
 <table id="newmeta">
@@ -300,7 +314,7 @@ function common_option_meta_form() {
 <tr>
 <td class='item-opt-key'>
 <input type="text" id="newoptname" name="newoptname" class="optname" tabindex="7" value="" />
-<div class="optcheck"><input name="newoptmeans" type="checkbox" id="newoptmeans" /><label for='newoptmeans'><?php _e('Multi-select','usces') ?></label>
+<div class="optcheck"><select name='newoptmeans' id='newoptmeans'><?php echo $meansoption; ?></select>
 <input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label></div>
 </td>
 <td class='item-opt-value'><textarea id="newoptvalue" name="newoptvalue" class='optvalue'></textarea></td>
@@ -329,6 +343,11 @@ function item_option_meta_form() {
 		WHERE meta_key LIKE 'iopt\_%' AND post_id = $cart_number 
 		ORDER BY meta_key ASC
 		LIMIT $limit" );
+	$means = get_option('usces_item_option_select');
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue){
+		$meansoption .= '<option value="' . $meankey . '">' . $meanvalue . "</option>\n";
+	}
 ?>
 <p><strong><?php _e('Applicable product options','usces') ?>：</strong></p>
 <table id="newmeta">
@@ -354,7 +373,7 @@ function item_option_meta_form() {
 ?>
 </select>
 <input type="text" id="newoptname" name="newoptname" class="hide-if-js optname" value="" />
-<div class="optcheck"><input name="newoptmeans" type="checkbox" id="newoptmeans" /><label for='newoptmeans'><?php _e('Multi-select','usces') ?></label>
+<div class="optcheck"><select name='newoptmeans' id='newoptmeans'><?php echo $meansoption; ?></select>
 <input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label></div>
 <!--<a href="#postcustomstuff" class="hide-if-no-js" onClick="jQuery('#newoptname, #optkeyselect, #enternew, #cancelnew').toggle();return false;">
 <span id="enternew"><?php _e('Enter new'); ?></span>
@@ -509,13 +528,19 @@ function add_item_option_meta( $post_ID ) {
 	$newoptname = isset($_POST['newoptname']) ? stripslashes( trim( $_POST['newoptname'] ) ) : '';
 	$newoptmeans = isset($_POST['newoptmeans']) ? $_POST['newoptmeans']: 0;
 	$newoptessential = isset($_POST['newoptessential']) ? $_POST['newoptessential']: 0;
-	$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', stripslashes( $_POST['newoptvalue'] ) ) : '';
-	foreach($newoptvalue as $v){
-		if(trim( $v ) != '') 
-			$nov[] = trim( $v );
+
+	if($newoptmeans == 0 || $newoptmeans == 1){
+		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', stripslashes( $_POST['newoptvalue'] ) ) : '';
+		foreach((array)$newoptvalue as $v){
+			if(trim( $v ) != '') 
+				$nov[] = trim( $v );
+		}
+	}else{
+		$newoptvalue = isset($_POST['newoptvalue']) ? stripslashes( $_POST['newoptvalue'] ) : '';
+		$nov = $newoptvalue;
 	}
 
-	if ( ('0' === $newoptvalue || !empty ( $newoptvalue ) ) && ( !empty ( $newoptname) )) {
+	if ( ($newoptmeans >= 2 || '0' === $newoptvalue || !empty ( $newoptvalue )) && !empty ( $newoptname) ) {
 		// We have a key/value pair. If both the select and the
 		// input for the key have data, the input takes precedence:
 
@@ -644,10 +669,16 @@ function up_item_option_meta( $post_ID ) {
 	$optmetaid = isset($_POST['optmetaid']) ? (int)$_POST['optmetaid'] : '';
 	$optmeans = isset($_POST['optmeans']) ? $_POST['optmeans']: 0;
 	$optessential = isset($_POST['optessential']) ? $_POST['optessential']: 0;
-	$optvalue = isset($_POST['optvalue']) ? explode('\n', stripslashes( $_POST['optvalue'] ) ) : '';
-	foreach($optvalue as $v){
-		if(trim( $v ) != '') 
-			$nov[] = trim( $v );
+
+	if($optmeans == 0 || $optmeans == 1){
+		$optvalue = isset($_POST['optvalue']) ? explode('\n', stripslashes( $_POST['optvalue'] ) ) : '';
+		foreach((array)$newoptvalue as $v){
+			if(trim( $v ) != '') 
+				$nov[] = trim( $v );
+		}
+	}else{
+		$optvalue = isset($_POST['optvalue']) ? stripslashes( $_POST['optvalue'] ) : '';
+		$nov = $optvalue;
 	}
 
 	$value['means'] = $optmeans;
@@ -655,7 +686,7 @@ function up_item_option_meta( $post_ID ) {
 	$value['value'] = $nov;
 	$valueserialized = maybe_serialize($value);
 
-	if ('0' === $optvalue || !empty ( $optvalue ) ) {
+	if ( $optmeans >= 2 || '0' === $optvalue || !empty ( $optvalue ) ) {
 		// We have a key/value pair. If both the select and the
 		// input for the key have data, the input takes precedence:
 
@@ -817,8 +848,12 @@ function select_common_option( $post_ID ) {
 	$means = $array['means'];
 	$essential = $array['essential'];
 	$value = '';
-	foreach($array['value'] as $k => $v){
-		$value .= htmlspecialchars($v) . "\n";
+	if($means < 2){
+		foreach($array['value'] as $k => $v){
+			$value .= htmlspecialchars($v) . "\n";
+		}
+	}else{
+			$value .= htmlspecialchars($array['value']) . "\n";
 	}
 	$res = $means . $essential . $value;
 	return $res;

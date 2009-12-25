@@ -50,7 +50,7 @@ $shipping_rule = array(
 					'8' => __('about 3 weeks later', 'usces'),
 					'9' => __('after we get new items', 'usces')
 					);
-
+$item_option_select = array("シングルセレクト", "マルチセレクト", "テキスト");
 //$shipping_charge_structure = array(
 //					'1' => '通常料金',
 //					'2' => '特別料金1',
@@ -81,6 +81,7 @@ update_option('usces_payment_structure',$payment_structure);
 update_option('usces_display_mode',$display_mode);
 update_option('usces_pref',$usces_pref);
 update_option('usces_shipping_rule',$shipping_rule);
+update_option('usces_item_option_select',$item_option_select);
 //update_option('shipping_charge_structure',$shipping_charge_structure);
 
 

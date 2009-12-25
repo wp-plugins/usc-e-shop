@@ -42,6 +42,8 @@ PayPal決済モジュール
 ・「新しい支払方法を追加」ボタンを押して追加を確定
 
 */
+global $usces;
+$usces->log_flg = 0;//0：ログを取らない、1：ログを取る
 /*********************************************************************************/
 	//登録メールアドレス
 $usces_paypal_business = "*********@********.***";
@@ -54,6 +56,7 @@ function paypal_check($usces_paypal_url) {
 	//ID トークン
 	$auth_token = "**********************************************************";
 /*********************************************************************************/
+	settlement_log('PDT開始');
 
 	// read the post from PayPal system and add 'cmd'
 	$req = 'cmd=_notify-synch';
@@ -72,6 +75,7 @@ function paypal_check($usces_paypal_url) {
 	$results = array();
 	if (!$fp) {
 		$results[0] = false;
+		settlement_log('PDT接続エラー');
 	} else {
 		fputs ($fp, $header . $req);
 		// read the body data 
@@ -98,8 +102,10 @@ function paypal_check($usces_paypal_url) {
 				$results[urldecode($key)] = urldecode($val);
 			}
 			$ret = true;
+			settlement_log('PDT[SUCCESS]');
 		}else if (strcmp ($lines[0], "FAIL") == 0) {
 			$results[0] = false;
+			settlement_log("PDT非認証\n\t\t\tPayPalが「FAIL」を返しています。設定を確認してください。");
 		}
 	
 		fclose ($fp);
@@ -108,6 +114,7 @@ function paypal_check($usces_paypal_url) {
 }
 
 function paypal_ipn_check($usces_paypal_url) {
+	settlement_log('IPN開始');
 	// read the post from PayPal system and add 'cmd'
 	$req = 'cmd=_notify-validate';
 	
@@ -124,6 +131,7 @@ function paypal_ipn_check($usces_paypal_url) {
 	$results = array();
 	if (!$fp) {
 		$results[0] = false;
+		settlement_log('IPN接続エラー');
 	} else {
 		fputs ($fp, $header . $req);
 		// read the body data 
@@ -150,8 +158,10 @@ function paypal_ipn_check($usces_paypal_url) {
 				$results[urldecode($key)] = urldecode($val);
 			}
 			$ret = true;
+			settlement_log('IPN[SUCCESS]');
 		}else if (strcmp ($lines[0], "FAIL") == 0) {
 			$results[0] = false;
+			settlement_log("IPN非認証\n\t\t\tPayPalが「FAIL」を返しています。設定を確認してください。");
 		}
 	
 		fclose ($fp);
@@ -159,4 +169,14 @@ function paypal_ipn_check($usces_paypal_url) {
 	return $results;
 }
 
+function settlement_log($log){
+	global $usces;
+	if(!$usces->log_flg) return;
+	
+	$log = date('[Y-m-d H:i:s]') . "\t" . $log . "\n";
+	$file = $usces->options['settlement_path'].'/paypal.log';
+	$fp = fopen($file, 'a');
+	fwrite($fp, $log);
+	fclose($fp);
+}
 ?>

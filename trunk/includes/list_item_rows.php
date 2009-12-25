@@ -111,7 +111,7 @@ function _item_row($a_post, $pending_comments, $mode, $item_headers) {
 	$post_owner = ( $current_user->ID == $post->post_author ? 'self' : 'other' );
 	$curent_url = USCES_ADMIN_URL . $_SERVER['QUERY_STRING'];
 	$edit_link = USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=edit&amp;post='.$post->ID;//get_edit_post_link( $post->ID );
-	$delete_link = USCES_ADMIN_URL . '?page=usces_itemedit&amp;doaction=&amp;action=delete&amp;post[]='.$post->ID;
+	$delete_link = USCES_ADMIN_URL . '?page=usces_itemedit&amp;doaction=&amp;action=delete&amp;post='.$post->ID;
 	$title = _draft_or_post_title();
 	$custom_fields = get_post_custom($post->ID);
 	$item_code = $custom_fields['itemCode'][0];
@@ -212,7 +212,8 @@ function _item_row($a_post, $pending_comments, $mode, $item_headers) {
 				$actions['edit'] = '<a href="' . $edit_link . '" title="' . attribute_escape(__('Edit this post')) . '">' . __('Edit') . '</a>';
 				//$actions['inline hide-if-no-js'] = '<a href="#" class="editinline" title="' . attribute_escape(__('Edit this post inline')) . '">' . __('Quick&nbsp;Edit') . '</a>';
 				//$actions['delete'] = "<a class='submitdelete' title='" . attribute_escape(__('Delete this post')) . "' href='" . wp_nonce_url($delete_link, 'delete-post_' . $post->ID) . "' onclick=\"if ( confirm('" . js_escape(sprintf( ('draft' == $post->post_status) ? __("You are about to delete this draft '%s'\n 'Cancel' to stop, 'OK' to delete.") : __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), $post->post_title )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
-				$actions['delete'] = "<a class='submitdelete' title='" . attribute_escape(__('Delete this post')) . "' href='" . wp_nonce_url("post.php?action=delete&amp;post=$post->ID", 'delete-post_' . $post->ID) . "' onclick=\"if ( confirm('" . js_escape(sprintf( ('draft' == $post->post_status) ? __("You are about to delete this draft '%s'\n 'Cancel' to stop, 'OK' to delete.") : __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), $post->post_title )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
+				//$actions['delete'] = "<a class='submitdelete' title='" . attribute_escape(__('Delete this post')) . "' href='" . wp_nonce_url("post.php?action=delete&amp;post=$post->ID", 'delete-post_' . $post->ID) . "' onclick=\"if ( confirm('" . js_escape(sprintf( ('draft' == $post->post_status) ? __("You are about to delete this draft '%s'\n 'Cancel' to stop, 'OK' to delete.") : __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), $post->post_title )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
+				$actions['delete'] = "<a class='submitdelete' title='" . attribute_escape(__('Delete this post')) . "' href='" . wp_nonce_url($delete_link, 'delete-post_' . $post->ID) . "' onclick=\"if ( confirm('" . js_escape(sprintf( ('draft' == $post->post_status) ? __("You are about to delete this draft '%s'\n 'Cancel' to stop, 'OK' to delete.") : __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), $post->post_title )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 			}
 			if ( in_array($post->post_status, array('pending', 'draft')) ) {
 				if ( current_user_can('edit_post', $post->ID) )

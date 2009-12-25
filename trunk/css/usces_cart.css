@@ -479,6 +479,43 @@ dl.itemGpExp li {
 	margin: 0px;
 }
 
+#itempage table.item_option {
+	border: 1px solid #CCCCCC;
+}
+
+#itempage table.item_option caption {
+	font-weight: normal;
+	text-align: left;
+	margin: 0px;
+	padding-top: 5px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+
+#itempage table.item_option th {
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #CCCCCC;
+	text-align: left;
+	background-color: #F0F0F0;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+#itempage table.item_option td {
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #CCCCCC;
+	text-align: left;
+}
+
 /* End USCES Item single page style */
 /*********************************************************************/
 /* USCES cart page style */
