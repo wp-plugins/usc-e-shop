@@ -791,6 +791,8 @@ class usc_e_shop
 
 	function controller() {
 		global $wp_query;
+		
+		//do_action('usces_test_action');
 
 		if($this->is_maintenance()){
 
@@ -3411,7 +3413,8 @@ class usc_e_shop
 		if($post->post_mime_type != 'item' || !is_single()) return $content;
 		
 		include( USCES_PLUGIN_DIR . '/templates/single_item.php' );
-		$content = $html;
+
+		$content = apply_filters('usces_filter_itemPage', $html);
 
 		return $content;
 	}
@@ -3455,6 +3458,8 @@ class usc_e_shop
 				$html = $content;
 		}
 
+		$html = apply_filters('usces_filter_cartContent', $html);
+
 		$content = $html;
 		
 		remove_filter('the_title', array($this, 'filter_cartTitle'));
@@ -3497,6 +3502,7 @@ class usc_e_shop
 			$newtitle = $title;
 		}
 	
+		$newtitle = apply_filters('usces_filter_cartTitle', $newtitle);
 		return $newtitle;
 	}
 	

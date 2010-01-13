@@ -25,8 +25,8 @@
 
 	
 	<div class="navigation">
-	<div class="alignleft"><?php next_posts_link(__('&laquo; next article', 'usces')); ?></div>
-	<div class="alignright"><?php previous_posts_link(__('Previous aorticle&raquo;', 'usces')); ?></div>
+	<div class="alignleft"><?php next_posts_link(__('next article &raquo;', 'usces')); ?></div>
+	<div class="alignright"><?php previous_posts_link(__('&laquo; Previous aorticle', 'usces')); ?></div>
 	</div>
 	
 	<?php while (have_posts()) : the_post(); ?>
@@ -45,8 +45,8 @@
 	<?php endwhile; ?>
 	
 	<div class="navigation">
-	<div class="alignleft"><?php next_posts_link(__('&laquo; Older Entries', 'kubrick')); ?></div>
-	<div class="alignright"><?php previous_posts_link(__('Newer Entries &raquo;', 'kubrick')); ?></div>
+	<div class="alignleft"><?php next_posts_link(__('next article &raquo;', 'usces')); ?></div>
+	<div class="alignright"><?php previous_posts_link(__('&laquo; Previous aorticle', 'usces')); ?></div>
 	</div>
 
 <?php else : ?>

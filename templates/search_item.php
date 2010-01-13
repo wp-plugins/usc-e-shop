@@ -39,10 +39,10 @@ if (isset($_REQUEST['usces_search'])) {
 	
 		$html .= '<div class="navigation">';
 		if( $uscpaged > 1 ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">&laquo;前のページ</a>';
+			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">'.__('next article &raquo;', 'usces').'</a>';
 		}
-		if( $uscpaged < $wp_query->max_num_pages ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">次のページ&raquo;</a>';
+		if( $uscpaged < $my_query->max_num_pages ) {
+			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">'.__('&laquo; Previous aorticle', 'usces').'</a>';
 		}
 		$html .= '</div>
 	
@@ -64,10 +64,10 @@ if (isset($_REQUEST['usces_search'])) {
 		$html .= '</div><!-- searchitems -->';
 		$html .= '<div class="navigation">';
 		if( $uscpaged > 1 ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">&laquo;前のページ</a>';
+			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">'.__('next article &raquo;', 'usces').'</a>';
 		}
-		if( $uscpaged < $wp_query->max_num_pages ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">次のページ&raquo;</a>';
+		if( $uscpaged < $my_query->max_num_pages ) {
+			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">'.__('&laquo; Previous aorticle', 'usces').'</a>';
 		}
 		$html .= '</div>';
 	}	

@@ -1,4 +1,3 @@
-
 <?php
 /**
  * @package WordPress
@@ -6,7 +5,6 @@
  */
 get_header();
 ?>
-<?php echo get_query_var('page'); ?>
 
 <div class="center">
 <div class="top_image"><img src="<?php bloginfo('template_url'); ?>/images/image_top.jpg" alt="<?php bloginfo('name'); ?>" width="560" height="240" /></div>
@@ -14,10 +12,11 @@ get_header();
 <div class="clearfix">
 
 
-<?php $paged = get_query_var('paged'); ?>
-<?php $posts_per_page = 8; ?>
-<?php $order = 'DESC'; ?>
-<?php query_posts('category_name=itemreco&status=post&paged=' . $paged . '&posts_per_page=' . $posts_per_page . '&order='. $order); ?>
+<?php //$paged = get_query_var('paged'); ?>
+<?php //$posts_per_page = 8; ?>
+<?php //$order = 'DESC'; ?>
+<?php //query_posts('category_name=itemreco&status=post&paged=' . $paged . '&posts_per_page=' . $posts_per_page . '&order='. $order); ?>
+<?php query_posts('category_name=itemreco&status=post'); ?>
 <?php if (have_posts()) : while (have_posts()) : the_post(); usces_the_item(); ?>
 <?php //remove_filter('the_excerpt', array($usces, 'filter_cartContent'), 20); ?>
 <?php //remove_filter('the_content', array($usces, 'filter_cartContent'), 20); ?>
@@ -37,7 +36,7 @@ get_header();
 <?php endif; ?>
 </div>
 
-<?php posts_nav_link(' &#8212; ', __('&laquo; 前のページ'), __('次のページ &raquo;')); ?>
+<?php //posts_nav_link(' &#8212; ', __('&laquo; 前のページ'), __('次のページ &raquo;')); ?>
 
 </div>
 

@@ -80,7 +80,7 @@ jQuery(function($){
 		}else if( coll == 'display_status' ){
 			mes = 'チェックされた商品の表示状況を、すべて「' + $("select[name='change\[word\]\[display_status\]'] option:selected").html() + '」に変更します。'+"\n\nよろしいですか？";
 		}else if(coll == 'delete'){
-			mes = "チェックされた商品を一括削除します。\n\nよろしいですか？";
+			mes = "チェックされた商品を一括完全削除します。\n\nよろしいですか？";
 		}else{
 			$("#itemlistaction").val('');
 			return false;
@@ -144,7 +144,11 @@ jQuery(function($){
 				label = '';
 				html = '<select name="search[word][display_status]" class="searchselect">';
 				html += '<option value="公開済み"<?php if("公開済み" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>公開済み</option>';
+				html += '<option value="予約済み"<?php if("予約済み" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>予約済み</option>';
+				html += '<option value="下書き"<?php if("下書き" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>下書き</option>';
+				html += '<option value="レビュー待ち"<?php if("レビュー待ち" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>レビュー待ち</option>';
 				html += '<option value="非公開"<?php if("非公開" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>非公開</option>';
+				html += '<option value="ゴミ箱"<?php if("ゴミ箱" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>ゴミ箱の中</option>';
 				html += '</select>';
 			} 
 			
@@ -309,6 +313,7 @@ jQuery(document).ready(function($){
 <?php foreach ( (array)$rows as $array ) :
 		$pctid = $this->get_pictids($array['item_code']); 
 		$sku_values = unserialize($array['sku_value']);
+		$post = get_post($array['ID']);
 ?>
 	<tr>
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
@@ -334,7 +339,22 @@ jQuery(document).ready(function($){
 			<ul class="item_list_navi">
 				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>">編集</a></li>
 				<li>&nbsp;|&nbsp;</li>
-				<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');">削除</a></li>
+				<!--<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');">削除</a></li>-->
+<?php
+			if ( current_user_can('delete_post', $post->ID) ) {
+				if ( 'trash' == $post->post_status ){
+					$actions['untrash'] = "<li><a title='" . esc_attr(__('Restore this post from the Trash')) . "' href='" . wp_nonce_url("post.php?action=untrash&amp;post=$post->ID", 'untrash-post_' . $post->ID) . "'>" . __('Restore') . "</a></li><li>&nbsp;|&nbsp;</li>";
+					echo $actions['untrash'];
+				}elseif ( EMPTY_TRASH_DAYS ){
+					$actions['trash'] = "<li><a class='submitdelete' title='" . esc_attr(__('Move this post to the Trash')) . "' href='" . get_delete_post_link($post->ID) . "'>" . __('Trash') . "</a></li>";
+					echo $actions['trash'];
+				}
+				if ( 'trash' == $post->post_status || !EMPTY_TRASH_DAYS ){
+					$actions['delete'] = "<li><a class='submitdelete' title='" . esc_attr(__('Delete this post permanently')) . "' href='" . wp_nonce_url("post.php?action=delete&amp;post=$post->ID", 'delete-post_' . $post->ID) . "'>" . __('Delete Permanently') . "</a></li>";
+					echo $actions['delete'];
+				}
+			}
+?>
 			</ul>
 			</td>
 			

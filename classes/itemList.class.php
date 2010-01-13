@@ -257,6 +257,7 @@ class dataList
 							WHEN 'future' THEN '予約済み' 
 							WHEN 'draft' THEN '下書き' 
 							WHEN 'pending' THEN 'レビュー待ち' 
+							WHEN 'trash' THEN 'ゴミ箱' 
 							ELSE '非公開' 
 						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
@@ -276,6 +277,7 @@ class dataList
 							WHEN 'future' THEN '予約済み' 
 							WHEN 'draft' THEN '下書き' 
 							WHEN 'pending' THEN 'レビュー待ち' 
+							WHEN 'trash' THEN 'ゴミ箱' 
 							ELSE '非公開' 
 						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
@@ -301,7 +303,7 @@ class dataList
 	function SetTotalRow()
 	{
 		global $wpdb;
-		$query = "SELECT COUNT(ID) AS ct FROM {$this->table} WHERE post_mime_type = 'item'";
+		$query = "SELECT COUNT(ID) AS ct FROM {$this->table} WHERE post_mime_type = 'item' AND post_status <> 'trash'";
 		$res = $wpdb->get_var($query);
 		$this->totalRow = $res;
 	}
@@ -337,7 +339,7 @@ class dataList
 			else
 				$str = 'WHERE ' . $this->searchSql . " AND post.post_mime_type = 'item' AND post.post_type = 'post' GROUP BY post.ID";
 		}else{
-			$str = "WHERE post.post_mime_type = 'item' AND post.post_type = 'post' GROUP BY post.ID";
+			$str = "WHERE post.post_mime_type = 'item' AND post.post_type = 'post' AND post.post_status <> 'trash' GROUP BY post.ID";
 		}
 		return $str;
 	}
@@ -347,31 +349,35 @@ class dataList
 		switch ($this->arr_search['column']) {
 			case 'item_code':
 				$column = 'item_code';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['item_code']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['item_code']) . "%' AND post_status <> 'trash'";
 				break;
 			case 'item_name':
 				$column = 'item_name';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['item_name']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['item_name']) . "%' AND post_status <> 'trash'";
 				break;
 			case 'post_title':
 				$column = 'post_title';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['post_title']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['post_title']) . "%' AND post_status <> 'trash'";
 				break;
 			case 'zaiko_num':
 				$column = 'meta.meta_value';
-				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('"zaikonum";i:0') . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('"zaikonum";s:1:"0"')."%')";
+				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('"zaikonum";i:0') . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('"zaikonum";s:1:"0"')."%') AND post_status <> 'trash'";
 				break;
 			case 'zaiko':
 				$column = 'meta.meta_value';
-				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";s:1:"'.$this->arr_search['word']['zaiko']) . "%')";
+				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";s:1:"'.$this->arr_search['word']['zaiko']) . "%') AND post_status <> 'trash'";
 				break;
 			case 'category':
 				$column = 'te.name';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['category']) . "'";
+				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['category']) . "' AND post_status <> 'trash'";
 				break;
 			case 'display_status':
 				$column = 'display_status';
 				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['display_status']) . "'";
+				break;
+			case 'post_status':
+				$column = 'post_status';
+				$this->searchSql = $column . " = 'trash'";
 				break;
 		}
 //		if($this->arr_search['column'] == 'none' || $this->arr_search['column'] == '' || $this->arr_search['word'] == '')

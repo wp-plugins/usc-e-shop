@@ -42,7 +42,7 @@
 <li><?php if(usces_is_login()){echo usces_the_member_name().' 様';}else{echo 'account name';} ?></li>
 <li><?php echo usces_loginout(); ?></li>
 <?php if(usces_is_login()): ?>
-<li><a href="<?php echo USCES_MEMBER_URL; ?>"><?php _e('mombership information','usces') ?></a></li>
+<li><a href="<?php echo USCES_MEMBER_URL; ?>"><?php _e('membership information','usces') ?></a></li>
 <?php endif; ?>
 <?php endif; ?>
 <?php if(usces_is_cart()): ?>

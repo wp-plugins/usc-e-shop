@@ -1463,7 +1463,7 @@ msgstr "新商品"
 msgid "Special price"
 msgstr "特価品"
 
-msgid "mombership information"
+msgid "membership information"
 msgstr "会員情報"
 
 msgid "Cart"
@@ -1513,6 +1513,12 @@ msgstr "前のページ"
 
 msgid "next page"
 msgstr "次のページ"
+
+msgid "next article &raquo;"
+msgstr "次のページ &raquo;"
+
+msgid "&laquo; Previous aorticle"
+msgstr "&laquo; 前のページ"
 
 msgid "cart"
 msgstr "カート"
