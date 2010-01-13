@@ -220,14 +220,14 @@ if( EX_DLSELLER !== true ){
 	$html .= '<tr>
 		<th>配送方法</th><td>' . usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
 		</tr>
-		<tr>
+		<tr class="bdc">
 		<th>配送希望時間帯</th><td>' . $usces_entries['order']['delivery_time'] . '</td>
 		</tr>';
 }	
-$html .= '<tr class="bdc">
+$html .= '<tr>
 	<th>お支払方法</th><td>' . $usces_entries['order']['payment_name'] . '</td>
 	</tr>
-	<tr>
+	<tr class="bdc">
 	<th>備考</th><td>' . nl2br($usces_entries['order']['note']) . '</td>
 	</tr>
 	</table>';

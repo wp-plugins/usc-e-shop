@@ -228,7 +228,7 @@ if ( $can_publish ) : // Contributors don't get to choose the date of publish ?>
 <div id="delete-action">
 <?php
 if ( ( 'edit' == $action ) && current_user_can('delete_post', $post->ID) ) { ?>
-<a class="submitdelete deletion" href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=$post->ID", 'delete-post_' . $post->ID); ?>" onclick="if ( confirm('<?php echo esc_js(sprintf( ('draft' == $post->post_status) ? __("You are about to delete this draft '%s'\n  'Cancel' to stop, 'OK' to delete.") : __("You are about to delete this post '%s'\n  'Cancel' to stop, 'OK' to delete."), $post->post_title )); ?>') ) {return true;}return false;"><?php _e('Delete'); ?></a>
+<a class="submitdelete deletion" href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=$post->ID", 'delete-post_' . $post->ID); ?>" onclick="if ( confirm('<?php echo esc_js(sprintf( ('draft' == $post->post_status) ? __("You are about to delete this draft '%s'\n  'Cancel' to stop, 'OK' to delete.") : __("You are about to delete this post '%s'\n  'Cancel' to stop, 'OK' to delete."), $post->post_title )); ?>') ) {return true;}return false;"><?php _e('Delete Permanently'); ?></a>
 <?php } ?>
 </div>
 
@@ -775,6 +775,19 @@ item_option_meta_form();
 </div>
 </div>
 
+<?php if ( defined('USCES_EX_PLUGIN') ){ ?>
+<div id="itemoption" class="postbox">
+<h3 class="hndle"><span>EXプラグイン･オプション</span></h3>
+<div class="inside">
+<div id="postoptcustomstuff">
+<?php 
+	apply_filters('usces_ex_plugin_options', &$expo, $post->ID);
+	echo $expo;
+?>
+</div>
+</div>
+</div>
+<?php } ?>
 <!--</div>--><!--end of meta-box-sortables--> 
 
 <div id="titlediv">

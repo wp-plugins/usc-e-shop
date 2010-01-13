@@ -7,12 +7,12 @@ $cal1 = new calendarData();
 $cal1->setToday($todayyy, $todaymm, $todaydd);
 $cal1->setCalendarData();
 //翌月
-list($nextyy, $nextmm, $nextdd) = getAfterMonth($todayyy, $todaymm, $todaydd, 1);
+list($nextyy, $nextmm, $nextdd) = getAfterMonth($todayyy, $todaymm, 1, 1);
 $cal2 = new calendarData();
 $cal2->setToday($nextyy, $nextmm, $nextdd);
 $cal2->setCalendarData();
 //翌々月
-list($lateryy, $latermm, $laterdd) = getAfterMonth($todayyy, $todaymm, $todaydd, 2);
+list($lateryy, $latermm, $laterdd) = getAfterMonth($todayyy, $todaymm, 1, 2);
 $cal3 = new calendarData();
 $cal3->setToday($lateryy, $latermm, $laterdd);
 $cal3->setCalendarData();
