@@ -70,7 +70,11 @@ class usces_cart {
 			if ( $_POST['quant'][$index][$post_id][$sku] != '') {
 		
 				$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$index][$post_id][$sku];
-				$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
+				if( isset($_POST['order_action']) ){
+					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
+				}else{
+					$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
+				}
 				$_SESSION['usces_cart'][$this->serial]['price'] = $price;
 			
 			}

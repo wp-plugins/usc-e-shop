@@ -33,10 +33,14 @@ $arr_header = $DT->GetListheaders();
 $dataTableNavigation = $DT->GetDataTableNavigation();
 $rows = $DT->rows;
 $zaiko_status = get_option('usces_zaiko_status');
-$status = $DT->get_action_status();
-$message = $DT->get_action_message();
+$status = isset($_REQUEST['usces_status']) ? $_REQUEST['usces_status'] : $DT->get_action_status();
+$message = isset($_REQUEST['usces_message']) ? urldecode($_REQUEST['usces_message']) : $DT->get_action_message();
 $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 ?>
+<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
+<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.resizable.js"></script>
+<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.draggable.js"></script>
+<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.dialog.js"></script>
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
@@ -188,6 +192,30 @@ jQuery(function($){
 	};
 
 
+	/******************************************************************/
+	// ダイアログ生成
+	/******************************************************************/
+	$("#upload_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 350,
+		modal: true,
+		buttons: {
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		},
+		close: function() {
+			$("#usces_upcsv").val('');
+		}
+	});
+	$('#up_dlg').click(function() {
+			$('#upload_dialog').dialog( 'option' , 'title' , '商品一括登録' );
+			$('#upload_dialog').dialog( 'option' , 'width' , 500 );
+			$('#dialogExp').html( '規定のCSVをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。' );
+			$('#upload_dialog').dialog( 'open' );
+	});
+
 });
 
 function toggleVisibility(id) {
@@ -289,6 +317,7 @@ jQuery(document).ready(function($){
 		<td id="changelabel"></td>
 		<td id="changefield"></td>
 		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="開始" />
+		<!--<a href="#" id="up_dlg">商品一括登録</a>-->
 		</td>
 		</tr>
 		</table>
@@ -419,5 +448,17 @@ jQuery(document).ready(function($){
 
 </div>
 </form>
+<div id="upload_dialog">
+	<p id="dialogExp"></p>
+	<form action="<?php echo USCES_ADMIN_URL; ?>" method="post" enctype="multipart/form-data" name="upform" id="upform">
+	<input name="usces_upcsv" type="file" id="usces_upcsv" style="width:100%" />
+	<input name="itemcsv" type="submit" id="upcsv" value="登録開始" />
+	<input name="page" type="hidden" value="usces_itemedit" />
+	<input name="action" type="hidden" value="itemcsv" />
+	</form>
+	<p>アップロード完了後に表示が更新されます。</p>
+	<p>	登録状況はログ（usc-e-shop/logs/itemcsv_log.txt）をご覧下さい。<br />ログはアップロードごとに上書き更新されます。</p>
+</div>
+
 </div><!--usces_admin-->
 </div><!--wrap-->
