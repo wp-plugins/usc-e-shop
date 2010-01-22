@@ -1455,5 +1455,432 @@ function usces_item_dupricate($post_id){
 	return $newpost_id;
 }
 
+function usces_item_uploadcsv(){
+	global $wpdb;
+	
+	$workfile = $_FILES["usces_upcsv"]["tmp_name"];
+	$lines = array();
+	$total_num = 0;
+	$comp_num = 0;
+	$err_num = 0;
+	$min_field_num = 29;
+	$log = '';
+	$pre_code = '';
+	$res = array();
+	$date_pattern = "/(\d{4})-(\d{2}|\d)-(\d{2}|\d) (\d{2}):(\d{2}|\d):(\d{2}|\d)/";
+	
+	if ( !is_uploaded_file($workfile) ) {
+		$res['status'] = 'error';
+		$res['message'] = 'ファイルをアップロードできませんでした。';
+		return $res;
+	}
 
+	//拡張子チェック
+	list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
+	if( $fext != 'csv' && $fext != 'zip' ) {
+		$res['status'] = 'error';
+		$res['message'] = '対応しないファイルがアップロードされました。'.$fname.'.'.$fext;
+		return $res;
+	}
+	
+	//zip解凍
+	if($fext == 'zip'){
+		
+	
+	
+	//			$workfile = 
+	}
+	
+	//ログ準備
+	if ( ! ($fpi = fopen (USCES_PLUGIN_DIR.'/logs/itemcsv_log.txt', "w"))) {
+		$res['status'] = 'error';
+		$res['message'] = 'ログファイルを準備できませんでした。';
+		return $res;
+	}
+	//データ読み込み
+	if ( ! ($fpo = fopen ($workfile, "r"))) {
+		$res['status'] = 'error';
+		$res['message'] = 'ファイルが開けません。'.$fname.'.'.$fext;
+		return $res;
+	}
+	
+	while (! feof ($fpo)) {
+		$temp = fgets ($fpo, 10240);
+		if( 5 < strlen($temp) )
+			$lines[] = $temp;
+	}
+	$total_num = count($lines);
+
+	//データチェック&登録
+	foreach($lines as $rows_num => $line){
+		$logtemp = '';
+		$datas = explode(',', $line);
+		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
+			$err_num++;
+			$logtemp .= "No." . ($rows_num+1) . "\tカラム数が異常です\r\n";
+			$log .= $logtemp;
+			continue;
+		}
+		foreach($datas as $key => $data){
+			$data = trim(mb_convert_encoding($data, 'UTF-8', 'SJIS'));
+			switch($key){
+				case 0:
+					if( 0 == strlen($data) )
+						$logtemp .= "No." . ($rows_num+1) . "\t商品コードが未入力です\r\n";
+					break;
+				case 1:
+					if( 0 == strlen($data) )
+						$logtemp .= "No." . ($rows_num+1) . "\t商品名が未入力です\r\n";
+					break;
+				case 2:
+					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t購入制限数の値が異常です\r\n";
+					}
+					break;
+				case 3:
+					if( !preg_match("/^[0-9]+$/", $data) ){
+						$logtemp .= "No." . ($rows_num+1) . "\tポイント率の値が異常です\r\n";
+					}
+					break;
+				case 4:
+					if( !preg_match("/^[0-9]+$/", $data) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引1-数の値が異常です\r\n";
+					}
+					break;
+				case 5:
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[($key-1)] && 1 > $data ) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引1-率が異常です\r\n";
+					}
+					break;
+				case 6:
+					if( !preg_match("/^[0-9]+$/", $data) || ($datas[($key-2)] >= $data && 0 != $data) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引2-数の値が異常です\r\n";
+					}
+					break;
+				case 7:
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[($key-1)] && 1 > $data ) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引2-率の値が異常です\r\n";
+					}
+					break;
+				case 8:
+					if( !preg_match("/^[0-9]+$/", $data) || ($datas[($key-2)] >= $data && 0 != $data) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引3-数の値が異常です\r\n";
+					}
+					break;
+				case 9:
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[($key-1)] && 1 > $data ) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引3-率の値が異常です\r\n";
+					}
+					break;
+				case 10:
+					if( !preg_match("/^[0-9]+$/", $data) || 9 < $data ){
+						$logtemp .= "No." . ($rows_num+1) . "\t発送日目安の値が異常です\r\n";
+					}
+					break;
+				case 11:
+				case 12:
+					break;
+				case 13:
+					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
+						$logtemp .= "No." . ($rows_num+1) . "\t送料個別課金の値が異常です\r\n";
+					}
+					break;
+				case 14:
+				case 15:
+				case 16:
+					break;
+				case 17:
+					$array17 = array('publish', 'future', 'draft', 'pending');
+					if( !in_array($data, $array17) || '' == $data ){
+						$logtemp .= "No." . ($rows_num+1) . "\t表示状態の値が異常です\r\n";
+					}
+					break;
+				case 18:
+					if( 'future' == $datas[($key-1)] && ('' == $data || '0000-00-00 00:00:00' == $data) ){
+						if( preg_match($date_pattern, $data, $match) ){
+							if( checkdate($match[2], $match[3], $match[1]) && 
+										(0 < $match[4] && 24 > $match[4]) && 
+										(0 < $match[5] && 60 > $match[5]) && 
+										(0 < $match[6] && 60 > $match[6]) ){
+								$logtemp .= "";
+							}else{
+								$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
+							}
+								
+						}else{
+							$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
+						}
+					}else if( '' != $data || '0000-00-00 00:00:00' != $data ){
+						if( strtotime($data) === false || strtotime($data) == -1 )
+							$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
+					}
+					break;
+				case 19:
+					if( 0 == strlen($data) )
+						$logtemp .= "No." . ($rows_num+1) . "\tカテゴリーが未入力です\r\n";
+					break;
+				case 20:
+					break;
+				case 21:
+					if( 0 == strlen($data) )
+						$logtemp .= "No." . ($rows_num+1) . "\tSKUコードが未入力です\r\n";
+					break;
+				case 22:
+				case 23:
+					break;
+				case 24:
+					if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) ){
+						$logtemp .= "No." . ($rows_num+1) . "\t売価の値が異常です\r\n";
+					}
+					break;
+				case 25:
+					break;
+				case 26:
+					if( !preg_match("/^[0-9]+$/", $data) || 4 < $data ){
+						$logtemp .= "No." . ($rows_num+1) . "\t在庫状態の値が異常です\r\n";
+					}
+					break;
+				case 27:
+					break;
+				case 28:
+					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
+						$logtemp .= "No." . ($rows_num+1) . "\t業務パック適用の値が異常です\r\n";
+					}
+					break;
+			}
+		}
+		$opnum = ceil((count($datas) - $min_field_num) / 4);
+		for($i=0; $i<$opnum; $i++){
+			for($o=1; $o<=4; $o++){
+				$key = ($min_field_num-1)+$o+($i*4);
+				switch($o){
+					case 1:
+						if( isset($datas[$key]) && 0 == strlen($datas[$key]) )
+							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションのオプション名の値が未入力です\r\n";
+						break;
+					case 2:
+						if( isset($datas[$key]) && (!preg_match("/^[0-9]+$/", $datas[$key]) || 2 < $datas[$key]) ){
+							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションの入力フィールドの値が異常です\r\n";
+						}
+						break;
+					case 3:
+						if( isset($datas[$key]) && (!preg_match("/^[0-9]+$/", $datas[$key]) || 1 < $datas[$key]) ){
+							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションの必須項目の値が異常です\r\n";
+						}
+						break;
+					case 4:
+						if( isset($datas[$key]) && (2 != $datas[($key-2)] && 0 == strlen($datas[$key])) ){
+							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションのセレクト値の値が未入力です\r\n";
+						}
+						break;
+				}
+			}
+		}
+		if( 0 < strlen($logtemp) ){
+			$err_num++;
+			$log .= $logtemp;
+			$pre_code = $datas[0];
+			continue;
+		}
+		
+		//wp_postsデータ登録;
+		$wpdb->show_errors();
+		$cdatas = array();
+		$post_fields = array();
+		if( $pre_code != $datas[0] ){
+		
+			//postsの追加
+			$query = "SHOW FIELDS FROM $wpdb->posts";
+			$results = $wpdb->get_results( $query, ARRAY_A );
+			foreach($results as $ind => $rows){
+				$post_fields[] = $rows['Field'];
+			}
+			foreach($post_fields as $key){
+				switch( $key ){
+					case 'ID':
+						break;
+					case 'post_author':
+						$cdatas[$key] = 1;
+						break;
+					case 'post_date':
+					case 'post_modified':
+						if( $datas[18] == "" || $datas[18] == "0000-00-00 00:00:00" ){
+							$cdatas[$key] = date('Y-m-d H:i:s');
+						}else{
+							$cdatas[$key] = $datas[18];
+						}
+						break;
+					case 'post_date_gmt':
+					case 'post_modified_gmt':
+						if( $datas[18] == "" || $datas[18] == "0000-00-00 00:00:00" ){
+							$datas[$key] = gmdate('Y-m-d H:i:s');
+						}else{
+							$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($datas[18]));
+						}
+						break;
+					case 'post_content':
+						$cdatas[$key] = trim(mb_convert_encoding($datas[15], 'UTF-8', 'SJIS'));
+						break;
+					case 'post_title':
+						$cdatas[$key] = trim(mb_convert_encoding($datas[14], 'UTF-8', 'SJIS'));
+						break;
+					case 'post_excerpt':
+						$cdatas[$key] = trim(mb_convert_encoding($datas[16], 'UTF-8', 'SJIS'));
+						break;
+					case 'post_status':
+						$cdatas[$key] = $datas[17];
+						break;
+					case 'comment_status':
+					case 'ping_status':
+						$cdatas[$key] = 'close';
+						break;
+					case 'post_password':
+					case 'post_name':
+					case 'to_ping':
+					case 'pinged':
+					case 'post_content_filtered':
+					case 'guid':
+						$cdatas[$key] = '';
+						break;
+					case 'post_parent':
+					case 'menu_order':
+					case 'comment_count':
+						$cdatas[$key] = 0;
+						break;
+					case 'post_type':
+						$cdatas[$key] = 'post';
+						break;
+					case 'post_mime_type':
+						$cdatas[$key] = 'item';
+						break;
+					default:
+						$cdatas[$key] = '';
+				}
+			}
+			$wpdb->insert( $wpdb->posts, $cdatas );
+			$post_id = $wpdb->insert_id;
+			if( $post_id == NULL ){
+				$err_num++;
+				$log .= "No." . ($rows_num+1) . "\tデータベースに登録できませんでした\r\n";
+				$pre_code = $datas[0];
+				continue;
+			}
+			//postmetaの追加
+			$valstr = '';
+			$itemDeliveryMethod = explode(';',  $datas[11]);
+			$valstr .= '(' . $post_id . ", 'itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[0], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", 'itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[1], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", 'itemRestriction','" . $datas[2] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemPointrate','" . $datas[3] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemGpNum1','" . $datas[4] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemGpDis1','" . $datas[5] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemGpNum2','" . $datas[6] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemGpDis2','" . $datas[7] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemGpDis3','" . $datas[8] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemGpNum3','" . $datas[9] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemShipping','" . $datas[10] . "'),";
+			$valstr .= '(' . $post_id . ", 'itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
+			$valstr .= '(' . $post_id . ", 'itemShippingCharge','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[12], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", 'itemIndividualSCharge','" . $datas[13] . "'),";
+			
+			$meta_key = 'isku_' . trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'));
+			$sku['cprice'] = $datas[23];
+			$sku['price'] = $datas[24];
+			$sku['zaikonum'] = $datas[25];
+			$sku['zaiko'] = $datas[26];
+			$sku['disp'] = trim(mb_convert_encoding($datas[22], 'UTF-8', 'SJIS'));
+			$sku['unit'] = trim(mb_convert_encoding($datas[27], 'UTF-8', 'SJIS'));
+			$sku['gptekiyo'] = $datas[28];
+			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
+			
+			for($i=0; $i<$opnum; $i++){
+				for($o=1; $o<=4; $o++){
+					$key = ($min_field_num-1)+$o+($i*4);
+					if( !isset($datas[$key]) )
+						break 2;
+
+					switch($o){
+						case 1:
+							$ometa_key = 'iopt_' . trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
+							break;
+						case 2:
+							$opt['means'] = $datas[$key];
+							break;
+						case 3:
+							$opt['essential'] = $datas[$key];
+							break;
+						case 4:
+							if( !empty($datas[$key]) ) {
+								$opt['value'] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$kye], 'UTF-8', 'SJIS')));
+							}else{
+								$opt['value'] = "";
+							}
+							break;
+					}
+				}
+				$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(serialize($opt)) . "'),";
+			}
+			print_r($valstr);
+			$valstr = rtrim($valstr, ',');
+			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
+			$dbres = mysql_query($query) or die(mysql_error());
+			
+			//term_relationshipsの追加、term_taxonomyの更新
+			$categories = explode(';', $datas[19]);
+			$tags = explode(';', $datas[20]);
+			$terms = array_merge((array)$categories, (array)$tags);
+			foreach($terms as $data){
+				$query = $wpdb->prepare("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy 
+										WHERE term_id = %d", $data);
+				$term_taxonomy_id = $wpdb->get_var( $query );
+				if($term_taxonomy_id == NULL) continue;
+
+				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+								(object_id, term_taxonomy_id, term_order) VALUES 
+								(%d, %d, 0)", 
+								$post_id, $term_taxonomy_id
+						);
+				$dbres = mysql_query($query);
+				if( !$dbres ) continue;
+				
+				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
+										WHERE term_taxonomy_id = %d", $term_taxonomy_id);
+				$tct = $wpdb->get_var( $query );
+				
+				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
+								WHERE term_taxonomy_id = %d", 
+								$tct, $term_taxonomy_id
+						);
+				$dbres = mysql_query($query);
+			}
+			
+			//postsの更新
+			$ids['ID'] = $post_id;
+			$updatas['post_name'] = $post_id;
+			$updatas['guid'] = get_option('home') . '?p=' . $post_id;
+			$wpdb->update( $wpdb->posts, $updatas, $ids );
+			
+		}else{
+		
+		
+		
+		
+		
+		}
+		
+		
+		$comp_num++;
+		$pre_code = $datas[0];
+	}
+	
+	flock($fpi, LOCK_EX);
+	fputs($fpi, mb_convert_encoding($log, 'SJIS', 'UTF-8'));
+	flock($fpi, LOCK_UN);
+	fclose($fpo);
+	fclose($fpi);
+
+	$res['status'] = 'success';
+	$res['message'] = $total_num.'件中 '.$comp_num.'件登録完了、'.$err_num.'件未登録。';
+	return $res;
+}
 ?>

@@ -751,8 +751,6 @@ class usc_e_shop
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
 		
-		$this->controller();
-		
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
 			$post_id = (int)$_GET['post'];
 			$new_id = usces_item_dupricate($post_id);
@@ -760,8 +758,15 @@ class usc_e_shop
 			$url = USCES_ADMIN_URL . '?page=usces_itemedit&action=edit&post=' . $new_id . '&usces_referer=' . $ref;
 			wp_redirect($url);
 			exit;
+		}else if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'itemcsv' ){
+			$res = usces_item_uploadcsv();
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			wp_redirect($url);
+			exit;
 		}
 
+		$this->controller();
+		
 
 		if($_REQUEST['page'] == 'usces_itemnew')
 			$_REQUEST['action'] = 'new';
@@ -1173,7 +1178,7 @@ class usc_e_shop
 	
 		$_SESSION['usces_lostmail'] = wp_specialchars(trim($_POST['loginmail']));
 		$id = session_id();
-		$uri = get_option('home') . '/usces-member?uscesmode=changepassword&usces=' . $id;
+		$uri = USCES_MEMBER_URL . '&uscesmode=changepassword';
 		$res = usces_lostmail($uri);
 		return $res;
 	
