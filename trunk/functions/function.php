@@ -1125,13 +1125,36 @@ function usces_all_delete_itemdata(&$obj){
 
 	$ids = $_POST['listcheck'];
 	$status = true;
-	foreach ( (array)$ids as $post_id ):
+	foreach ( (array)$ids as $post_id ){
 		$query = $wpdb->prepare("DELETE FROM $wpdb->posts WHERE ID = %d", $post_id);
 		$res = $wpdb->query( $query );
-		if( $res === false ) {
-			$status = false;
+		if( $res !== false ) {
+			$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+			$res = $wpdb->query( $query );
+			if( $res === false ) {
+				$status = false;
+			}
+			$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
+			$res = $wpdb->query( $query );
+			if( $res === false ) {
+				$status = false;
+			}
+			$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
+			$res = $wpdb->query( $query );
+			if( $res === false ) {
+				$status = false;
+			}
+			$query = "SELECT term_taxonomy_id, COUNT(*) AS ct FROM $wpdb->term_relationships 
+					GROUP BY term_taxonomy_id";
+			$relation_data = $wpdb->get_results( $query, ARRAY_A);
+			foreach((array)$relation_data as $rows){
+				
+				$term_ids['term_taxonomy_id'] = $rows['term_taxonomy_id'];
+				$updatas['count'] = $rows['ct'];
+				$wpdb->update( $wpdb->term_taxonomy, $updatas, $term_ids );
+			}
 		}
-	endforeach;
+	}
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
@@ -1515,7 +1538,8 @@ function usces_item_uploadcsv(){
 	foreach($lines as $rows_num => $line){
 		$logtemp = '';
 		$datas = explode(',', $line);
-		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
+//		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
+		if( $min_field_num > count($datas) ){
 			$err_num++;
 			$logtemp .= "No." . ($rows_num+1) . "\tカラム数が異常です\r\n";
 			$log .= $logtemp;
@@ -1610,8 +1634,8 @@ function usces_item_uploadcsv(){
 						}else{
 							$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
 						}
-					}else if( '' != $data || '0000-00-00 00:00:00' != $data ){
-						if( strtotime($data) === false || strtotime($data) == -1 )
+					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
+						if( !preg_match($date_pattern, $data, $match) || strtotime($data) === false || strtotime($data) == -1 )
 							$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
 					}
 					break;
@@ -1622,8 +1646,18 @@ function usces_item_uploadcsv(){
 				case 20:
 					break;
 				case 21:
-					if( 0 == strlen($data) )
+					if( 0 == strlen($data) ){
 						$logtemp .= "No." . ($rows_num+1) . "\tSKUコードが未入力です\r\n";
+					}else if( $pre_code == $datas[0] ){
+						$query = $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta 
+												WHERE post_id = %d AND meta_key = %s", 
+												$post_id, 
+												'isku_'.trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'))
+								);
+						$meta_id = $wpdb->get_var( $query );
+						if($meta_id !== NULL)
+							$logtemp .= "No." . ($rows_num+1) . "\tSKUが重複しています\r\n";
+					}
 					break;
 				case 22:
 				case 23:
@@ -1653,23 +1687,28 @@ function usces_item_uploadcsv(){
 		for($i=0; $i<$opnum; $i++){
 			for($o=1; $o<=4; $o++){
 				$key = ($min_field_num-1)+$o+($i*4);
+				if( isset($datas[$key]) ){
+					$value = trim($datas[$key]);
+				}else{
+					$value = NULL;
+				}
 				switch($o){
 					case 1:
-						if( isset($datas[$key]) && 0 == strlen($datas[$key]) )
-							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションのオプション名の値が未入力です\r\n";
+//						if( isset($datas[$key]) && 0 == strlen($datas[$key]) )
+//							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションのオプション名の値が未入力です\r\n";
 						break;
 					case 2:
-						if( isset($datas[$key]) && (!preg_match("/^[0-9]+$/", $datas[$key]) || 2 < $datas[$key]) ){
+						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 2 < (int)$value) ){
 							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションの入力フィールドの値が異常です\r\n";
 						}
 						break;
 					case 3:
-						if( isset($datas[$key]) && (!preg_match("/^[0-9]+$/", $datas[$key]) || 1 < $datas[$key]) ){
+						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 1 < (int)$value) ){
 							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションの必須項目の値が異常です\r\n";
 						}
 						break;
 					case 4:
-						if( isset($datas[$key]) && (2 != $datas[($key-2)] && 0 == strlen($datas[$key])) ){
+						if( ($value != NULL && $value == '') && (2 > $datas[($key-2)] && 0 < strlen($datas[($key-2)])) ){
 							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションのセレクト値の値が未入力です\r\n";
 						}
 						break;
@@ -1687,6 +1726,10 @@ function usces_item_uploadcsv(){
 		$wpdb->show_errors();
 		$cdatas = array();
 		$post_fields = array();
+		$sku = array();
+		$opt = array();
+		$valstr = '';
+
 		if( $pre_code != $datas[0] ){
 		
 			//postsの追加
@@ -1704,7 +1747,7 @@ function usces_item_uploadcsv(){
 						break;
 					case 'post_date':
 					case 'post_modified':
-						if( $datas[18] == "" || $datas[18] == "0000-00-00 00:00:00" ){
+						if( $datas[18] == '' || $datas[18] == '0000-00-00 00:00:00' ){
 							$cdatas[$key] = date('Y-m-d H:i:s');
 						}else{
 							$cdatas[$key] = $datas[18];
@@ -1712,8 +1755,8 @@ function usces_item_uploadcsv(){
 						break;
 					case 'post_date_gmt':
 					case 'post_modified_gmt':
-						if( $datas[18] == "" || $datas[18] == "0000-00-00 00:00:00" ){
-							$datas[$key] = gmdate('Y-m-d H:i:s');
+						if( $datas[18] == '' || $datas[18] == '0000-00-00 00:00:00' ){
+							$cdatas[$key] = gmdate('Y-m-d H:i:s');
 						}else{
 							$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($datas[18]));
 						}
@@ -1766,7 +1809,6 @@ function usces_item_uploadcsv(){
 				continue;
 			}
 			//postmetaの追加
-			$valstr = '';
 			$itemDeliveryMethod = explode(';',  $datas[11]);
 			$valstr .= '(' . $post_id . ", 'itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[0], 'UTF-8', 'SJIS'))) . "'),";
 			$valstr .= '(' . $post_id . ", 'itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[1], 'UTF-8', 'SJIS'))) . "'),";
@@ -1794,11 +1836,16 @@ function usces_item_uploadcsv(){
 			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
 			
 			for($i=0; $i<$opnum; $i++){
+				$opflg = true;
 				for($o=1; $o<=4; $o++){
 					$key = ($min_field_num-1)+$o+($i*4);
-					if( !isset($datas[$key]) )
+					if( !isset($datas[$key]) ){
 						break 2;
-
+					}
+					if( $o == 1 && $datas[$key] == '' ){
+						$opflg = false;
+						break 1;
+					}
 					switch($o){
 						case 1:
 							$ometa_key = 'iopt_' . trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
@@ -1811,27 +1858,28 @@ function usces_item_uploadcsv(){
 							break;
 						case 4:
 							if( !empty($datas[$key]) ) {
-								$opt['value'] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$kye], 'UTF-8', 'SJIS')));
+								//$opt['value'] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$kye], 'UTF-8', 'SJIS')));
+								$opt['value'] = trim(mb_convert_encoding($datas[$kye], 'UTF-8', 'SJIS'));
 							}else{
 								$opt['value'] = "";
 							}
 							break;
 					}
 				}
-				$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(serialize($opt)) . "'),";
+				if( $opflg == true )
+					$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(serialize($opt)) . "'),";
 			}
-			print_r($valstr);
+//			print_r($valstr);
 			$valstr = rtrim($valstr, ',');
 			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
 			$dbres = mysql_query($query) or die(mysql_error());
 			
 			//term_relationshipsの追加、term_taxonomyの更新
+			//カテゴリー
 			$categories = explode(';', $datas[19]);
-			$tags = explode(';', $datas[20]);
-			$terms = array_merge((array)$categories, (array)$tags);
-			foreach($terms as $data){
+			foreach((array)$categories as $category){
 				$query = $wpdb->prepare("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy 
-										WHERE term_id = %d", $data);
+										WHERE term_id = %d", $category);
 				$term_taxonomy_id = $wpdb->get_var( $query );
 				if($term_taxonomy_id == NULL) continue;
 
@@ -1840,7 +1888,7 @@ function usces_item_uploadcsv(){
 								(%d, %d, 0)", 
 								$post_id, $term_taxonomy_id
 						);
-				$dbres = mysql_query($query);
+				$dbres = $wpdb->query($query);
 				if( !$dbres ) continue;
 				
 				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
@@ -1851,7 +1899,29 @@ function usces_item_uploadcsv(){
 								WHERE term_taxonomy_id = %d", 
 								$tct, $term_taxonomy_id
 						);
-				$dbres = mysql_query($query);
+				$dbres = $wpdb->query($query);
+			}
+			//タグ
+			$tags = explode(';', $datas[20]);
+			foreach((array)$tags as $tag){
+				$term_ids = wp_insert_term( $tag, 'post_tag' );
+			
+				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+								(object_id, term_taxonomy_id, term_order) VALUES 
+								(%d, %d, 0)", 
+								$post_id, $term_ids['term_id']
+						);
+				$dbres = $wpdb->query($query);
+				
+				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
+										WHERE term_taxonomy_id = %d", $term_taxonomy_id);
+				$tct = $wpdb->get_var( $query );
+				
+				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
+								WHERE term_taxonomy_id = %d", 
+								$tct, $term_taxonomy_id
+						);
+				$dbres = $wpdb->query($query);
 			}
 			
 			//postsの更新
@@ -1861,10 +1931,20 @@ function usces_item_uploadcsv(){
 			$wpdb->update( $wpdb->posts, $updatas, $ids );
 			
 		}else{
-		
-		
-		
-		
+			$valstr = '';
+			$meta_key = 'isku_' . trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'));
+			$sku['cprice'] = $datas[23];
+			$sku['price'] = $datas[24];
+			$sku['zaikonum'] = $datas[25];
+			$sku['zaiko'] = $datas[26];
+			$sku['disp'] = trim(mb_convert_encoding($datas[22], 'UTF-8', 'SJIS'));
+			$sku['unit'] = trim(mb_convert_encoding($datas[27], 'UTF-8', 'SJIS'));
+			$sku['gptekiyo'] = $datas[28];
+			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
+			
+			$valstr = rtrim($valstr, ',');
+			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
+			$dbres = mysql_query($query) or die(mysql_error());
 		
 		}
 		
@@ -1880,7 +1960,7 @@ function usces_item_uploadcsv(){
 	fclose($fpi);
 
 	$res['status'] = 'success';
-	$res['message'] = $total_num.'件中 '.$comp_num.'件登録完了、'.$err_num.'件未登録。';
+	$res['message'] = $total_num.'行中 '.$comp_num.'行登録完了、'.$err_num.'行未登録。';
 	return $res;
 }
 ?>
