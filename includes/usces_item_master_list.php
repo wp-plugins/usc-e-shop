@@ -317,7 +317,7 @@ jQuery(document).ready(function($){
 		<td id="changelabel"></td>
 		<td id="changefield"></td>
 		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="開始" />
-		<!--<a href="#" id="up_dlg">商品一括登録</a>-->
+		<a href="#" id="up_dlg">商品一括登録</a>
 		</td>
 		</tr>
 		</table>
