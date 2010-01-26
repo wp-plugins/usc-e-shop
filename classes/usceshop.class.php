@@ -615,7 +615,7 @@ class usc_e_shop
 		$value = serialize($values);
 		$timeout = time()+365*86400;
 		$domain = $_SERVER['HTTP_HOST'];
-		$res = setcookie('usces_cookie', $value, $timeout, '/', $domain);
+		$res = setcookie('usces_cookie', $value, $timeout, SITECOOKIEPATH, $domain);
 	}
 	
 	function get_cookie() {

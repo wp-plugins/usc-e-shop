@@ -1904,24 +1904,27 @@ function usces_item_uploadcsv(){
 			//タグ
 			$tags = explode(';', $datas[20]);
 			foreach((array)$tags as $tag){
-				$term_ids = wp_insert_term( $tag, 'post_tag' );
-			
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
-								(object_id, term_taxonomy_id, term_order) VALUES 
-								(%d, %d, 0)", 
-								$post_id, $term_ids['term_id']
-						);
-				$dbres = $wpdb->query($query);
+				$tag = trim($tag);
+				if( $tag != '' ){
+					$term_ids = wp_insert_term( $tag, 'post_tag' );
 				
-				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
-										WHERE term_taxonomy_id = %d", $term_taxonomy_id);
-				$tct = $wpdb->get_var( $query );
-				
-				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
-								WHERE term_taxonomy_id = %d", 
-								$tct, $term_taxonomy_id
-						);
-				$dbres = $wpdb->query($query);
+					$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+									(object_id, term_taxonomy_id, term_order) VALUES 
+									(%d, %d, 0)", 
+									$post_id, $term_ids['term_id']
+							);
+					$dbres = $wpdb->query($query);
+					
+					$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
+											WHERE term_taxonomy_id = %d", $term_taxonomy_id);
+					$tct = $wpdb->get_var( $query );
+					
+					$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
+									WHERE term_taxonomy_id = %d", 
+									$tct, $term_taxonomy_id
+							);
+					$dbres = $wpdb->query($query);
+				}
 			}
 			
 			//postsの更新
