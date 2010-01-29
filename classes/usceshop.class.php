@@ -719,6 +719,11 @@ class usc_e_shop
 	}
 	
 	function admin_head() {
+		$payments_str = '';
+		foreach ( (array)$this->options['payment_method'] as $id => $array ) {
+			$payments_str .= "{$this->options['payment_method'][$id]['name']}: '{$this->options['payment_method'][$id]['settlement']}',";
+		}
+		$payments_str = rtrim($payments_str, ',');
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
@@ -730,7 +735,10 @@ class usc_e_shop
 				purchase_limit: "<?php echo $this->options['purchase_limit']; ?>", 
 				point_rate: "<?php echo $this->options['point_rate']; ?>",
 				shipping_rule: "<?php echo $this->options['shipping_rule']; ?>" 
-			}
+			};
+			uscesPayments = {
+				<?php echo $payments_str; ?>
+			};
 		/* ]]> */
 		</script>
 		<script type='text/javascript' src='<?php echo USCES_PLUGIN_URL; ?>/js/usces_admin.js'></script>
@@ -1790,6 +1798,7 @@ class usc_e_shop
 				order_modified VARCHAR( 20 ) NULL ,
 				order_status VARCHAR( 255 ) NULL ,
 				order_check VARCHAR( 255 ) NULL ,
+				order_delidue_date VARCHAR( 30 ) NULL ,
 				order_delivery_method INT( 10 ) NOT NULL DEFAULT -1,
 				KEY order_email ( order_email ) ,  
 				KEY order_name1 ( order_name1 ) ,  
@@ -1916,6 +1925,7 @@ class usc_e_shop
 				order_modified VARCHAR( 20 ) NULL ,
 				order_status VARCHAR( 255 ) NULL ,
 				order_check VARCHAR( 255 ) NULL ,
+				order_delidue_date VARCHAR( 30 ) NULL ,
 				order_delivery_method INT( 10 ) NOT NULL DEFAULT -1,
 				KEY order_email ( order_email ) ,  
 				KEY order_name1 ( order_name1 ) ,  
