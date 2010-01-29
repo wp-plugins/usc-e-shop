@@ -83,7 +83,8 @@ jQuery(function($){
 <?php } ?>
 
 	$("#order_payment_name").change(function () {
-		if( $("select[name='order\[payment_name\]'] option:selected").val() == '銀行振り込み'){
+		var pay_name = $("select[name='order\[payment_name\]'] option:selected").val();
+		if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
 			var label = '入金状況';
 			var html = "<select name='order[receipt]'>\n";
 			html += "<option value='noreceipt'><?php echo $management_status['noreceipt']; ?></option>\n";
@@ -544,8 +545,8 @@ if( !$this->options['delivery_time'] == '' ) {
     <option value="#none#">通知しない</option>
 <?php
 for ($i=0; $i<50; $i++) {
-	$date = date('Y	年m月d日', mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
-	$selected = ($data['delidue_date'] == $date) ? ' selected="selected"' : '';
+	$date = date('Y年m月d日', mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
+	$selected = ($data['order_delidue_date'] == $date) ? ' selected="selected"' : '';
 	echo "\t<option value='{$date}'{$selected}>{$date}</option>\n";
 }
 ?>

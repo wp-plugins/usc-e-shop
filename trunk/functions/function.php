@@ -111,10 +111,18 @@ function usces_order_confirm_message($order_id) {
 	$msg_body .= __('Phone number','usces') . "　　：" . $deli['tel'] . "\r\n";
 
 	$msg_body .= __('Delivery Time','usces') . "：" . $data['order_delivery_time'] . "\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
-	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . "　\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+	if ( $data['order_delidue_date'] == NULL || $data['order_delidue_date'] == '#none#' ) {
+		$msg_body .= "\r\n";
+	}else{
+		$msg_body .= '発送予定日' . "　　：" . $data['order_delidue_date'] . "\r\n";
+		$msg_body .= "※発送予定日とは商品を出荷する日で、到着日ではございません。\r\n";
+		$msg_body .= "\r\n";
+	}
+	$msg_body .= "\r\n";
+
+//	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
+//	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . "　\r\n";
+//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 
 	$msg_body .= __('** Payment method **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
@@ -128,11 +136,11 @@ function usces_order_confirm_message($order_id) {
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $data['order_note'] . "\r\n\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
-	$msg_body .= "\r\n";
+//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= "\r\n";
 
-	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
+//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
@@ -227,10 +235,11 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('Phone number','usces') . "　　：" . $entry['delivery']['tel'] . "\r\n";
 
 	$msg_body .= __('Delivery Time','usces') . "：" . $entry['order']['delivery_time'] . "\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
-	$msg_body .= "　" . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= "------------------------------------------------------------------\r\n";
+//	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
+//	$msg_body .= "　" . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
+//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+	$msg_body .= "\r\n";
 
 	$msg_body .= __('** Payment method **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
@@ -244,12 +253,12 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $entry['order']['note'] . "\r\n\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
-	$msg_body .= "\r\n";
+//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= "\r\n";
 
-	$msg_body .= __('I will inform it of shipment completion by an email.','usces') . "\r\n";
-	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
-	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= __('I will inform it of shipment completion by an email.','usces') . "\r\n";
+//	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
+//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 
 	$subject = $mail_data['title']['thankyou'];
 	$message = $mail_data['header']['thankyou'] . $msg_body . $mail_data['footer']['thankyou'];
@@ -441,7 +450,7 @@ function usces_reg_orderdata( $results = array() ) {
 					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, NOW(), %s, %s)", 
 					$member['ID'], 
 					$entry['customer']['mailaddress1'], 
 					$entry['customer']['name1'], 
@@ -469,7 +478,6 @@ function usces_reg_orderdata( $results = array() ) {
 					$entry['order']['shipping_charge'], 
 					$entry['order']['cod_fee'], 
 					$entry['order']['tax'], 
-					date('Y-m-d H:i:s'), 
 					null, 
 					$status
 				);
@@ -547,7 +555,7 @@ function usces_new_orderdata() {
 					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, NOW(), %s, %s)", 
 					$member['ID'], 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
@@ -575,7 +583,6 @@ function usces_new_orderdata() {
 					$_POST['order']['shipping_charge'], 
 					$_POST['order']['cod_fee'], 
 					$_POST['order']['tax'], 
-					date('Y-m-d H:i:s'), 
 					null, 
 					$status
 				);
@@ -763,7 +770,7 @@ function usces_update_orderdata() {
 					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
 					`order_delivery_method`=%d, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%d, `order_getpoint`=%d, `order_usedpoint`=%d, 
 					`order_discount`=%d, `order_shipping_charge`=%d, `order_cod_fee`=%d, `order_tax`=%d, `order_modified`=%s, 
-					`order_status`=%s, `order_check`=%s 
+					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
 				WHERE ID = %d", 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
@@ -792,6 +799,7 @@ function usces_update_orderdata() {
 					$_POST['order']['tax'], 
 					$order_modified, 
 					$status,
+					$_POST['order']['delidue_date'], 
 					$ordercheck,
 					$ID
 				);
