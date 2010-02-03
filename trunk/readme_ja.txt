@@ -1,10 +1,10 @@
 ******************************************
-　　Welcart for Woedpress
+　　Welcart for Wordpress
 ******************************************
 
 Welcart(ウェルカート)は以下の環境で動作します。
 
-Wordpress 2.8.0 以上 
+Wordpress 2.9.0 以上 
 PHP 4.4 以上 
 MySQL 5.0 以上 
 Apache を推奨 
@@ -46,7 +46,7 @@ php_flag  output_buffering off
 php_value output_handler none
 php_value default_charset none
 php_value mbstring.language “Japanese”
-php_value mbstring.internal_encoding “EUC-JP”
+php_value mbstring.internal_encoding “EUC-JP”(or "UTF-8")
 php_value mbstring.http_input “pass”
 php_value mbstring.http_output “pass”
 php_flag  mbstring.encoding_translation Off
@@ -56,9 +56,7 @@ php_flag  mbstring.encoding_translation Off
 
 【PHPがセーフモードになっているサーバーの場合】
 
-セーフモードでの細かいテストがまだ行われていません。Welcart の管理画面＞ホームにて、
-ご利用の環境・PHPのバージョンに（セーフモード）と書かれていた場合は検証がすむまで
-テスト稼動ということでお願いいたします。
+Welcart はPHPセーフモードでの運用を推奨していません。
 
 セーフモードではテーマの自動インストールが行われません。
 プラグインフォルダ”usc-e-shop”内の”theme”フォルダの中に”ucart_default”が
@@ -76,6 +74,19 @@ Apache 2.0
 
 
 【更新履歴】
+
+Welcart 0.3　2010/2/3
+　・商品のCSVデータによる一括登録機能を追加
+　・商品マスター・リスト画面において、Wordpress2.9の「ゴミ箱」に対応
+　・商品オプションにテキスト入力タイプを追加
+　・新規商品追加ページでの複写追加機能を追加
+　・paypal決済モジュールを追加
+　・「All in One SEO Pack」が使えるよう修正
+　・管理メールに発送予定日が入るよう変更。これに伴いデータベーステーブルusces_order にカラムを追加
+　・自動送信メールのボディーにある説明文を一部削除
+　・商品の公開日時が変更ができない不具合を修正
+　・その他不具合を修正
+
 
 Welcart 0.2.2　2009/12/19
 　・会員情報ページにてメールアドレスを変更して更新した場合の重複チェックを追加
