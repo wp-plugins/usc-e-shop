@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
-Requires at least: 2.8
-Tested up to: 2.8.5
-Stable tag: 0.2.2
+Requires at least: 2.9
+Tested up to: 2.9.1
+Stable tag: 0.3
 
 Welcart builds the management system with a net shop on Wordpress.
 It's made in Japan.
@@ -22,7 +22,7 @@ As for the cart, correspondence is possible for the complicated sale that differ
 The order that We accepted in a shop is registered with a database not only We contact a manager by an email and can confirm the details with an order management screen. The change addition of order contents is possible, and you can cope with adaptation to circumstances in the various situation with a management screen. In addition, an estimate and order contents for change, a shipment completion email can transmit a message with one click from an order screen, and it is it with the design that aimed at the reduction of the duties burden of the manager. 
 
 
-[Welcart Support(Japanese)](http://www.usconsort.com/usces/).
+[Welcart Online Help(Japanese)](http://www.usconsort.com/usces/).
 
 [Welcart Community(Japanese)](http://www.usconsort.com/community/).
 
@@ -50,6 +50,14 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 
 == Changelog ==
 
+= V0.3 =
+3 Feb 2010
+-----------
+* This version is still only Japanese
+* A collective registration function by the CSV data of the article was added to the list of articles page of the management screen.
+* A copying additional function was added to the new article addition page of the management screen.
+* Added paypal settlement module
+* Revised other malfunction
 = V0.2.2 =
 19 Dec 2009
 -----------

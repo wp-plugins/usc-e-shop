@@ -33,7 +33,7 @@ class dataList
 		//$this->parent_term = $parent_term;
 		$this->rows = array();
 
-		$this->maxRow = 10;
+		$this->maxRow = 20;
 		$this->naviMaxButton = 11;
 		$this->firstPage = 1;
 		$this->action_status = 'none';
