@@ -1,6 +1,6 @@
 <?php
 /**
- * @package WordPress
+ * @package Welcart
  * @subpackage uCart Default Theme
  */
 if ( function_exists('register_sidebar') ) {

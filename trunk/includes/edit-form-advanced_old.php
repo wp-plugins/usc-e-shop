@@ -242,8 +242,8 @@ if ( !in_array( $post->post_status, array('publish', 'future', 'private') ) || 0
 	<input name="publish" type="submit" class="button-primary" id="publish" tabindex="5" accesskey="p" value="<?php _e('Submit for Review') ?>" />
 <?php endif; ?>
 <?php } else { ?>
-	<input name="original_publish" type="hidden" id="original_publish" value="データを保存" />
-	<input name="save" type="submit" class="button-primary" id="publish" tabindex="5" accesskey="p" value="データを保存" />
+	<input name="original_publish" type="hidden" id="original_publish" value="<?php _e('Save the data', 'usces'); ?>" />
+	<input name="save" type="submit" class="button-primary" id="publish" tabindex="5" accesskey="p" value="<?php _e('Save the data', 'usces'); ?>" />
 <?php } ?>
 </div>
 <div class="clear"></div>
@@ -310,7 +310,7 @@ foreach ( get_object_taxonomies('post') as $tax_name ) {
 		$taxonomy = get_taxonomy($tax_name);
 		$label = isset($taxonomy->label) ? esc_attr($taxonomy->label) : $tax_name;
 
-		add_meta_box('tagsdiv-' . $tax_name, 'タグ', 'post_tags_meta_box', 'post', 'side', 'core');
+		add_meta_box('tagsdiv-' . $tax_name, __('tag', 'usces'), 'post_tags_meta_box', 'post', 'side', 'core');
 	}
 }
 
@@ -354,7 +354,7 @@ function post_item_pict_box($post) {
 	</div>
 <?php
 }
-add_meta_box('item-main-pict', '商品画像', 'post_item_pict_box', 'post', 'side', 'high');
+add_meta_box('item-main-pict', __('Item image', 'usces'), 'post_item_pict_box', 'post', 'side', 'high');
 
 /**
  * Display post categories form fields.【カテゴリー】side core
@@ -428,7 +428,7 @@ function post_password_meta_box($post) {
 function post_excerpt_meta_box($post) {
 ?>
 <label class="hidden" for="excerpt"><?php _e('Excerpt') ?></label><textarea rows="1" cols="40" name="excerpt" tabindex="6" id="excerpt"><?php echo $post->post_excerpt ?></textarea>
-<p>抜粋は商品説明の要約です。</p>
+<p><?php _e('This excerpt is a summary of the product description.', 'usces'); ?></p>
 <?php
 }
 add_meta_box('postexcerpt', __('Excerpt'), 'post_excerpt_meta_box', 'post', 'normal', 'core');
@@ -673,7 +673,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <?php if ( 'draft' != $post->post_status ) wp_original_referer_field(true, 'previous'); ?>
 
 <?php echo $form_extra ?>
-<div id="refbutton"><a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">戻る</a></div>
+<div id="refbutton"><a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>"><?php _e('Back', 'usces'); ?></a></div>
 <div id="poststuff" class="metabox-holder has-right-sidebar">
 
 <div id="side-info-column" class="inner-sidebar">
@@ -691,34 +691,34 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <div id="postitemcustomstuff">
 <table class="iteminfo_table">
 <tr>
-<th>商品コード</th>
+<th><?php _e('item code', 'usces'); ?></th>
 <td><input type="text" name="itemCode" id="itemCode" class="itemCode" value="<?php echo $itemCode[0]; ?>" />
 <input type="hidden" name="itemCode_nonce" id="itemCode_nonce" value="<?php echo wp_create_nonce( 'itemCode_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>商品名</th>
+<th><?php _e('item name', 'usces'); ?></th>
 <td><input type="text" name="itemName" id="itemName" class="itemName" value="<?php echo $itemName[0]; ?>" />
 <input type="hidden" name="itemName_nonce" id="itemName_nonce" value="<?php echo wp_create_nonce( 'itemName_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>購入制限数</th>
+<th><?php _e('Limited amount for purchase', 'usces'); ?></th>
 <td><input type="text" name="itemRestriction" id="itemRestriction" class="itemRestriction" value="<?php echo $itemRestriction[0]; ?>" />個まで
 <input type="hidden" name="itemRestriction_nonce" id="itemRestriction_nonce" value="<?php echo wp_create_nonce( 'itemRestriction_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>ポイント率</th>
-<td><input type="text" name="itemPointrate" id="itemPointrate" class="itemPointrate" value="<?php echo $itemPointrate[0]; ?>" />%<em>（整数）</em>
+<th><?php _e('Percentage of points', 'usces'); ?></th>
+<td><input type="text" name="itemPointrate" id="itemPointrate" class="itemPointrate" value="<?php echo $itemPointrate[0]; ?>" />%<em>(<?php _e('Integer', 'usces'); ?>)</em>
 <input type="hidden" name="itemPointrate_nonce" id="itemPointrate_nonce" value="<?php echo wp_create_nonce( 'itemPointrate_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th rowspan="3">業務パック割引</th>
-<td>1.<input type="text" name="itemGpNum1" id="itemGpNum1" class="itemPointrate" value="<?php echo $itemGpNum1[0]; ?>" />個以上で<input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" />％引き（単価）</td>
+<th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
+<td>1.<input type="text" name="itemGpNum1" id="itemGpNum1" class="itemPointrate" value="<?php echo $itemGpNum1[0]; ?>" />個以上で<input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 <tr>
-<td>2.<input type="text" name="itemGpNum2" id="itemGpNum2" class="itemPointrate" value="<?php echo $itemGpNum2[0]; ?>" />個以上で<input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" />％引き（単価）</td>
+<td>2.<input type="text" name="itemGpNum2" id="itemGpNum2" class="itemPointrate" value="<?php echo $itemGpNum2[0]; ?>" />個以上で<input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 <tr>
-<td>3.<input type="text" name="itemGpNum3" id="itemGpNum3" class="itemPointrate" value="<?php echo $itemGpNum3[0]; ?>" />個以上で<input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" />％引き（単価）</td>
+<td>3.<input type="text" name="itemGpNum3" id="itemGpNum3" class="itemPointrate" value="<?php echo $itemGpNum3[0]; ?>" />個以上で<input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 </table>
 </div>
@@ -726,7 +726,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <div id="postitemcustomstuff">
 <table class="iteminfo_table">
 <tr>
-<th>発送日目安</th>
+<th><?php _e('estimated shipping date', 'usces'); ?></th>
 <td><select name="itemShipping" id="itemShipping" class="itemShipping">
 <?php foreach( (array)$this->shipping_rule as $key => $label){ $selected = $key == $itemShipping[0] ? ' selected="selected"' : ''; ?>
 	<option value="<?php echo $key; ?>"<?php echo $selected; ?>><?php echo $label; ?></option>
@@ -735,7 +735,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <!--<input type="text" name="itemShipping " id="itemShipping" class="itemShipping" value="<?php echo $itemShipping[0]; ?>" />-->
 <input type="hidden" name="itemShipping_nonce" id="itemShipping_nonce" value="<?php echo wp_create_nonce( 'itemShipping_nonce' ); ?>" /></td>
 </tr>
-<th>配送方法</th>
+<th><?php _e('shipping option','usces'); ?></th>
 <td>
 <?php foreach( (array)$this->options['delivery_method'] as $deli){ ?>
 <label for="itemDeliveryMethod[<?php echo $deli['id']; ?>]"><input name="itemDeliveryMethod[<?php echo $deli['id']; ?>]" id="itemDeliveryMethod[<?php echo $deli['id']; ?>]" type="checkbox" value="<?php echo $deli['id']; ?>"<?php if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) echo ' checked="checked"'; ?> /><?php echo $deli['name']; ?></label>
@@ -743,7 +743,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 </td>
 </tr>
 <tr>
-<th>送料</th>
+<th><?php _e('Shipping', 'usces'); ?></th>
 <td><select name="itemShippingCharge" id="itemShippingCharge" class="itemShippingCharge">
 <?php foreach( (array)$this->options['shipping_charge'] as $cahrge){ $selected = $cahrge['id'] == $itemShippingCharge[0] ? ' selected="selected"' : ''; ?>
 	<option value="<?php echo $cahrge['id']; ?>"<?php echo $selected; ?>><?php echo $cahrge['name']; ?></option>
@@ -760,7 +760,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <!--<div class="meta-box-sortables">-->
 
 <div id="itemsku" class="postbox">
-<h3 class="hndle"><span>SKU　価格</span></h3>
+<h3 class="hndle"><span>SKU　<?php _e('Price', 'usces'); ?></span></h3>
 <div class="inside">
 <div id="postskucustomstuff"><div id="skuajax-response"></div>
 <?php
@@ -773,7 +773,7 @@ item_sku_meta_form();
 </div>
 
 <div id="itemoption" class="postbox">
-<h3 class="hndle"><span>商品オプション</span></h3>
+<h3 class="hndle"><span><?php _e('options for items', 'usces'); ?></span></h3>
 <div class="inside">
 <div id="postoptcustomstuff"><div id="ajax-response"></div>
 <?php
@@ -788,7 +788,7 @@ item_option_meta_form();
 <!--</div>--><!--end of meta-box-sortables--> 
 
 <div id="titlediv">
-<div id="titlewrap"><strong>詳細ページタイトル</strong>
+<div id="titlewrap"><strong><?php _e('Title of detail page', 'usces'); ?></strong>
 	<input type="text" name="post_title" size="30" tabindex="1" value="<?php echo attribute_escape($post->post_title); ?>" id="title" autocomplete="off" />
 </div>
 <div class="inside">

@@ -281,15 +281,16 @@ function post_tags_meta_box($post, $box) {
 	<p><?php _e('Add or remove tags'); ?></p>
 	<textarea name="<?php echo "tax_input[$tax_name]"; ?>" class="the-tags" id="tax-input[<?php echo $tax_name; ?>]"><?php echo esc_attr(get_terms_to_edit( $post->ID, $tax_name )); ?></textarea></div>
 
-	<span class="ajaxtag hide-if-no-js">
+	<div class="ajaxtag hide-if-no-js">
 		<label class="screen-reader-text" for="new-tag-<?php echo $tax_name; ?>"><?php echo $box['title']; ?></label>
-		<input type="text" id="new-tag-<?php echo $tax_name; ?>" name="newtag[<?php echo $tax_name; ?>]" class="newtag form-input-tip" size="16" autocomplete="off" value="<?php esc_attr_e('Add new tag'); ?>" />
+		<div class="taghint"><?php _e('Add new tag'); ?></div>
+		<input type="text" id="new-tag-<?php echo $tax_name; ?>" name="newtag[<?php echo $tax_name; ?>]" class="newtag form-input-tip" size="16" autocomplete="off" value="" />
 		<input type="button" class="button tagadd" value="<?php esc_attr_e('Add'); ?>" tabindex="3" />
-	</span></div>
+	</div></div>
 	<p class="howto"><?php echo $helps; ?></p>
 	<div class="tagchecklist"></div>
 </div>
-<p class="tagcloud-link hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-<?php echo $tax_name; ?>"><?php printf( __('Choose from the most used tags in %s'), $box['title'] ); ?></a></p>
+<p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-<?php echo $tax_name; ?>"><?php printf( __('Choose from the most used tags in %s'), $box['title'] ); ?></a></p>
 <?php
 }
 
@@ -299,7 +300,7 @@ foreach ( get_object_taxonomies('post') as $tax_name ) {
 		$taxonomy = get_taxonomy($tax_name);
 		$label = isset($taxonomy->label) ? esc_attr($taxonomy->label) : $tax_name;
 
-		add_meta_box('tagsdiv-' . $tax_name, 'タグ', 'post_tags_meta_box', 'post', 'side', 'core');
+		add_meta_box('tagsdiv-' . $tax_name, __('tag', 'usces'), 'post_tags_meta_box', 'post', 'side', 'core');
 	}
 }
 
@@ -343,7 +344,7 @@ function post_item_pict_box($post) {
 	</div>
 <?php
 }
-add_meta_box('item-main-pict', '商品画像', 'post_item_pict_box', 'post', 'side', 'high');
+add_meta_box('item-main-pict', __('Item image', 'usces'), 'post_item_pict_box', 'post', 'side', 'high');
 
 /**
  * Display post categories form fields.【カテゴリー】side core
@@ -355,37 +356,38 @@ add_meta_box('item-main-pict', '商品画像', 'post_item_pict_box', 'post', 'si
 function post_categories_meta_box($post) {
 ?>
 <ul id="category-tabs">
-	<li class="ui-tabs-selected"><a href="#categories-all" tabindex="3">商品の階層カテゴリー</a></li>
-	<li class="hide-if-no-js"><a href="#categories-pop" tabindex="3"><?php _e( 'Most Used' ); ?></a></li>
+	<li class="tabs"><a href="#categories-all" tabindex="3"><?php _e('The hierarchy category of the item', 'usces'); ?></a></li>
+	<!--<li class="hide-if-no-js"><a href="#categories-pop" tabindex="3"><?php _e( 'Most Used' ); ?></a></li>-->
 </ul>
 
-<div id="categories-pop" class="ui-tabs-panel" style="display: none;">
+<!--<div id="categories-pop" class="tabs-panel" style="display: none;">
 	<ul id="categorychecklist-pop" class="categorychecklist form-no-clear" >
-		<?php $popular_ids = wp_popular_terms_checklist('category'); ?>
+<?php $popular_ids = wp_popular_terms_checklist('category'); ?>
 	</ul>
-</div>
+</div>-->
 
-<div id="categories-all" class="ui-tabs-panel">
+<div id="categories-all" class="tabs-panel">
 	<ul id="categorychecklist" class="list:category categorychecklist form-no-clear">
-		<?php wp_category_checklist($post->ID, USCES_ITEM_CAT_PARENT_ID, false, $popular_ids) ?>
+<?php wp_category_checklist($post->ID, USCES_ITEM_CAT_PARENT_ID, false, false, NULL, false) ?>
 	</ul>
 </div>
 
 <?php if ( current_user_can('manage_categories') ) : ?>
-<div id="category-adder" class="wp-hidden-children">
+<!--<div id="category-adder" class="wp-hidden-children">
 	<h4><a id="category-add-toggle" href="#category-add" class="hide-if-no-js" tabindex="3"><?php _e( '+ Add New Category' ); ?></a></h4>
 	<p id="category-add" class="wp-hidden-child">
-		<label class="hidden" for="newcat"><?php _e( 'Add New Category' ); ?></label><input type="text" name="newcat" id="newcat" class="form-required form-input-tip" value="<?php _e( 'New category name' ); ?>" tabindex="3" aria-required="true"/>
-		<label class="hidden" for="newcat_parent"><?php _e('Parent category'); ?>:</label><?php wp_dropdown_categories( array( 'hide_empty' => 0, 'name' => 'newcat_parent', 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => __('Parent category'), 'tab_index' => 3 ) ); ?>
-		<input type="button" id="category-add-sumbit" class="add:categorychecklist:category-add button" value="<?php _e( 'Add' ); ?>" tabindex="3" />
-		<?php wp_nonce_field( 'add-category', '_ajax_nonce', false ); ?>
-		<span id="category-ajax-response"></span>
-	</p>
-</div>
+	<label class="screen-reader-text" for="newcat"><?php _e( 'Add New Category' ); ?></label><input type="text" name="newcat" id="newcat" class="form-required form-input-tip" value="<?php esc_attr_e( 'New category name' ); ?>" tabindex="3" aria-required="true"/>
+	<label class="screen-reader-text" for="newcat_parent"><?php _e('Parent category'); ?>:</label><?php wp_dropdown_categories( array( 'hide_empty' => 0, 'name' => 'newcat_parent', 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => __('Parent category') ) ); ?>
+	<input type="button" id="category-add-sumbit" class="add:categorychecklist:category-add button" value="<?php esc_attr_e( 'Add' ); ?>" tabindex="3" />
+<?php	wp_nonce_field( 'add-category', '_ajax_nonce', false ); ?>
+	<span id="category-ajax-response"></span></p>
+</div>-->
 <?php
 endif;
 
 }
+
+
 add_meta_box('categorydiv', __('Categories'), 'post_categories_meta_box', 'post', 'side', 'core');
 
 /**
@@ -417,7 +419,7 @@ function post_password_meta_box($post) {
 function post_excerpt_meta_box($post) {
 ?>
 <label class="screen-reader-text" for="excerpt"><?php _e('Excerpt') ?></label><textarea rows="1" cols="40" name="excerpt" tabindex="6" id="excerpt"><?php echo $post->post_excerpt ?></textarea>
-<p>抜粋は商品説明の要約です。</p>
+<p><?php _e('This excerpt is a summary of the product description.', 'usces'); ?></p>
 <?php
 }
 add_meta_box('postexcerpt', __('Excerpt'), 'post_excerpt_meta_box', 'post', 'normal', 'core');
@@ -679,34 +681,34 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <div id="postitemcustomstuff">
 <table class="iteminfo_table">
 <tr>
-<th>商品コード</th>
+<th><?php _e('item code', 'usces'); ?></th>
 <td><input type="text" name="itemCode" id="itemCode" class="itemCode" value="<?php echo $itemCode[0]; ?>" />
 <input type="hidden" name="itemCode_nonce" id="itemCode_nonce" value="<?php echo wp_create_nonce( 'itemCode_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>商品名</th>
+<th><?php _e('item name', 'usces'); ?></th>
 <td><input type="text" name="itemName" id="itemName" class="itemName" value="<?php echo $itemName[0]; ?>" />
 <input type="hidden" name="itemName_nonce" id="itemName_nonce" value="<?php echo wp_create_nonce( 'itemName_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>購入制限数</th>
+<th><?php _e('Limited amount for purchase', 'usces'); ?></th>
 <td><input type="text" name="itemRestriction" id="itemRestriction" class="itemRestriction" value="<?php echo $itemRestriction[0]; ?>" />個まで
 <input type="hidden" name="itemRestriction_nonce" id="itemRestriction_nonce" value="<?php echo wp_create_nonce( 'itemRestriction_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>ポイント率</th>
-<td><input type="text" name="itemPointrate" id="itemPointrate" class="itemPointrate" value="<?php echo $itemPointrate[0]; ?>" />%<em>（整数）</em>
+<th><?php _e('Percentage of points', 'usces'); ?></th>
+<td><input type="text" name="itemPointrate" id="itemPointrate" class="itemPointrate" value="<?php echo $itemPointrate[0]; ?>" />%<em>(<?php _e('Integer', 'usces'); ?>)</em>
 <input type="hidden" name="itemPointrate_nonce" id="itemPointrate_nonce" value="<?php echo wp_create_nonce( 'itemPointrate_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th rowspan="3">業務パック割引</th>
-<td>1.<input type="text" name="itemGpNum1" id="itemGpNum1" class="itemPointrate" value="<?php echo $itemGpNum1[0]; ?>" />個以上で<input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" />％引き（単価）</td>
+<th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
+<td>1.<input type="text" name="itemGpNum1" id="itemGpNum1" class="itemPointrate" value="<?php echo $itemGpNum1[0]; ?>" />個以上で<input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 <tr>
-<td>2.<input type="text" name="itemGpNum2" id="itemGpNum2" class="itemPointrate" value="<?php echo $itemGpNum2[0]; ?>" />個以上で<input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" />％引き（単価）</td>
+<td>2.<input type="text" name="itemGpNum2" id="itemGpNum2" class="itemPointrate" value="<?php echo $itemGpNum2[0]; ?>" />個以上で<input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 <tr>
-<td>3.<input type="text" name="itemGpNum3" id="itemGpNum3" class="itemPointrate" value="<?php echo $itemGpNum3[0]; ?>" />個以上で<input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" />％引き（単価）</td>
+<td>3.<input type="text" name="itemGpNum3" id="itemGpNum3" class="itemPointrate" value="<?php echo $itemGpNum3[0]; ?>" />個以上で<input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 </table>
 </div>
@@ -714,7 +716,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <div id="postitemcustomstuff">
 <table class="iteminfo_table">
 <tr>
-<th>発送日目安</th>
+<th><?php _e('estimated shipping date', 'usces'); ?></th>
 <td><select name="itemShipping" id="itemShipping" class="itemShipping">
 <?php foreach( (array)$this->shipping_rule as $key => $label){ $selected = $key == $itemShipping[0] ? ' selected="selected"' : ''; ?>
 	<option value="<?php echo $key; ?>"<?php echo $selected; ?>><?php echo $label; ?></option>
@@ -724,7 +726,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <input type="hidden" name="itemShipping_nonce" id="itemShipping_nonce" value="<?php echo wp_create_nonce( 'itemShipping_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>配送方法</th>
+<th><?php _e('shipping option','usces'); ?></th>
 <td>
 <?php foreach( (array)$this->options['delivery_method'] as $deli){ ?>
 <label for="itemDeliveryMethod[<?php echo $deli['id']; ?>]"><input name="itemDeliveryMethod[<?php echo $deli['id']; ?>]" id="itemDeliveryMethod[<?php echo $deli['id']; ?>]" type="checkbox" value="<?php echo $deli['id']; ?>"<?php if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) echo ' checked="checked"'; ?> /><?php echo $deli['name']; ?></label>
@@ -732,7 +734,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 </td>
 </tr>
 <tr>
-<th>送料</th>
+<th><?php _e('Shipping', 'usces'); ?></th>
 <td><select name="itemShippingCharge" id="itemShippingCharge" class="itemShippingCharge">
 <?php foreach( (array)$this->options['shipping_charge'] as $cahrge){ $selected = $cahrge['id'] == $itemShippingCharge[0] ? ' selected="selected"' : ''; ?>
 	<option value="<?php echo $cahrge['id']; ?>"<?php echo $selected; ?>><?php echo $cahrge['name']; ?></option>
@@ -741,7 +743,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <input type="hidden" name="itemShippingCharge_nonce" id="itemShippingCharge_nonce" value="<?php echo wp_create_nonce( 'itemShippingCharge_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th>送料個別課金</th>
+<th><?php _e('Postage individual charging', 'usces'); ?></th>
 <td><input name="itemIndividualSCharge" id="itemIndividualSCharge" type="checkbox" value="1"<?php if($itemIndividualSCharge[0]) echo ' checked="checked"'; ?> /></td>
 </tr>
 </table>
@@ -750,7 +752,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <!--<div class="meta-box-sortables">-->
 
 <div id="itemsku" class="postbox">
-<h3 class="hndle"><span>SKU　価格</span></h3>
+<h3 class="hndle"><span>SKU　<?php _e('Price', 'usces'); ?></span></h3>
 <div class="inside">
 <div id="postskucustomstuff"><div id="skuajax-response"></div>
 <?php
@@ -763,7 +765,7 @@ item_sku_meta_form();
 </div>
 
 <div id="itemoption" class="postbox">
-<h3 class="hndle"><span>商品オプション</span></h3>
+<h3 class="hndle"><span><?php _e('options for items', 'usces'); ?></span></h3>
 <div class="inside">
 <div id="postoptcustomstuff"><div id="ajax-response"></div>
 <?php
@@ -777,12 +779,12 @@ item_option_meta_form();
 
 <?php if ( defined('USCES_EX_PLUGIN') ){ ?>
 <div id="itemoption" class="postbox">
-<h3 class="hndle"><span>EXプラグイン･オプション</span></h3>
+<h3 class="hndle"><span><?php _e('Options for EX-plugin', 'usces'); ?></span></h3>
 <div class="inside">
 <div id="postoptcustomstuff">
 <?php 
-	apply_filters('usces_ex_plugin_options', &$expo, $post->ID);
-	echo $expo;
+	apply_filters('usces_ex_plugin_options', &$usces_expo, $post->ID, 'A', 'B');
+	echo $usces_expo;
 ?>
 </div>
 </div>
@@ -791,7 +793,7 @@ item_option_meta_form();
 <!--</div>--><!--end of meta-box-sortables--> 
 
 <div id="titlediv">
-<div id="titlewrap"><strong>詳細ページタイトル</strong>
+<div id="titlewrap"><strong><?php _e('Title of detail page', 'usces'); ?></strong>
 	<input type="text" name="post_title" size="30" tabindex="1" value="<?php echo esc_attr( htmlspecialchars( $post->post_title ) ); ?>" id="title" autocomplete="off" />
 </div>
 <div class="inside">

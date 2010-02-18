@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: USC ECommerce Shop\n"
+"Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
 "PO-Revision-Date: 2009-01-20 00:00+0900\n"
@@ -51,6 +51,18 @@ msgstr "CSVの形式が不正です！"
 
 msgid "Published"
 msgstr "公開済み"
+
+msgid "Draft"
+msgstr "下書き"
+
+msgid "Pending Review"
+msgstr "レビュー待ち"
+
+msgid "Scheduled"
+msgstr "予約済み"
+
+msgid "Trash"
+msgstr "ゴミ箱"
 
 msgid "Closed"
 msgstr "非公開"
@@ -148,8 +160,11 @@ msgstr "会員情報を更新しました。"
 msgid "options are updated"
 msgstr "オプションを更新しました"
 
-msgid "chose the value"
-msgstr "valueを選択してください。"
+msgid "Chose the %s"
+msgstr "%sを選択してください。"
+
+msgid "Input the %s"
+msgstr "%sを入力してください。"
 
 msgid "temporaly out of stock now"
 msgstr "只今在庫切れです。"
@@ -157,11 +172,17 @@ msgstr "只今在庫切れです。"
 msgid "enter the correct amount"
 msgstr "数量を正しく入力して下さい。"
 
+msgid "'enter the correct amount for the No.' + (i+1) + ' item'"
+msgstr "(i+1) + '番の商品の数量を正しく入力して下さい。'"
+
 msgid "enter in between 1 to num"
 msgstr "1からnumの範囲で入力して下さい。"
 
 msgid "Import is cmpleted"
 msgstr "インポートが完了しました。"
+
+msgid "Import was not completed."
+msgstr "エラー：インポートが完了しませんでした。"
 
 msgid "Failed in update due to time-out"
 msgstr "タイムアウトのためパスワードを更新できませんでした。"
@@ -175,14 +196,17 @@ msgstr "エラー：更新できませんでした。"
 msgid "This e-mail address has been already registered."
 msgstr "このメールアドレスは既に登録されています。"
 
-msgid "Error: enter the pass word"
-msgstr "エラー：パスワードを入力してください。"
+msgid "<b>Error:</b> Enter the pass word."
+msgstr "<b>エラー:</b> パスワードを入力してください。"
 
-msgid "Error:e-mail address is not correct"
-msgstr "エラー：メールアドレスが違います。"
+msgid "<b>Error:</b> E-mail address is not correct."
+msgstr "<b>エラー:</b>  メールアドレスが違います。"
 
-msgid "Error: pass word is not correct"
-msgstr "エラー：パスワードが違います。"
+msgid "<b>Error:</b> Pass word is not correct."
+msgstr "<b>エラー:</b>  パスワードが違います。"
+
+msgid "Item genre"
+msgstr "商品ジャンル"
 
 msgid "guest"
 msgstr "ゲスト"
@@ -226,6 +250,9 @@ msgstr "番地を入力してください。"
 msgid "enter phone numbers"
 msgstr "電話番号を入力してください。"
 
+msgid "chose one from delivery method."
+msgstr "配送方法を選択してください。"
+
 msgid "chose one from payment options."
 msgstr "支払方法を選択してください。"
 
@@ -238,20 +265,20 @@ msgstr "利用できる上限値を超えています。"
 msgid "There is no items in your cart."
 msgstr "只今、カートに商品はございません。"
 
+msgid "It is the e-mail address that there is not."
+msgstr "存在しないメールアドレスです。"
+
 msgid "Dummy page for fotter nabigation"
 msgstr "フッタナビ用ダミーページ"
 
 msgid "Dummy page for maine nabigation"
 msgstr "メインナビ用ダミーページ"
 
-msgid "items"
+msgid "Items"
 msgstr "商品"
 
-msgid "items recommended"
+msgid "Items recommended"
 msgstr "お勧め商品"
-
-msgid "new arrival"
-msgstr "新着商品"
 
 msgid "(Tax)"
 msgstr "（税別）"
@@ -259,8 +286,8 @@ msgstr "（税別）"
 msgid "(Tax included)"
 msgstr "（税込）"
 
-msgid "Mr/Mrs"
-msgstr "様"
+msgid "Mr/Mrs %s"
+msgstr "%s 様"
 
 msgid "Request of"
 msgstr "ご依頼者"
@@ -274,17 +301,14 @@ msgstr "【商品ご注文内容】"
 msgid "Unit price"
 msgstr "単価"
 
-msgid "～yen"
-msgstr "～円"
+msgid "dollars"
+msgstr "円"
 
 msgid "total items"
 msgstr "商品合計"
 
 msgid "use of points"
 msgstr "ご利用ポイント"
-
-msgid "Point"
-msgstr "ポイント"
 
 msgid "Special discount"
 msgstr "特別割引"
@@ -310,7 +334,7 @@ msgstr "宛名"
 msgid "Zip/Postal Code"
 msgstr "郵便番号"
 
-msgid "An address"
+msgid "Address"
 msgstr "住所"
 
 msgid "Phone number"
@@ -340,16 +364,10 @@ msgstr "通常価"
 msgid "Sale price"
 msgstr "売価"
 
-msgid "number of the stock"
-msgstr "在庫"
-
-msgid "Status"
-msgstr "ステータス"
-
 msgid "SKU display name "
 msgstr "SKU表示名"
 
-msgid "A unit"
+msgid "unit"
 msgstr "単位"
 
 msgid "Apply business package"
@@ -367,8 +385,14 @@ msgstr "決済種別"
 msgid "Payment module"
 msgstr "決済モジュール"
 
+msgid "Single-select"
+msgstr "シングルセレクト"
+
 msgid "Multi-select"
 msgstr "マルチセレクト"
+
+msgid "Text"
+msgstr "テキスト"
 
 msgid "Required"
 msgstr "必須項目"
@@ -442,6 +466,9 @@ msgstr "数量"
 msgid "No preference"
 msgstr "指定しない"
 
+msgid "Non-request"
+msgstr "指定しない"
+
 msgid "sending completed"
 msgstr "送信完了しました"
 
@@ -472,9 +499,6 @@ msgstr "ログイン"
 msgid "Log out"
 msgstr "ログアウト"
 
-msgid "uCart back-up"
-msgstr "uCart shop バックアップ"
-
 msgid "Export"
 msgstr "エクスポート"
 
@@ -484,10 +508,10 @@ msgstr "エクスポート開始"
 msgid "Import"
 msgstr "インポート"
 
-msgid "Start Start importing"
+msgid "Start importing"
 msgstr "インポート開始"
 
-msgid "Baxk-up functions is now under testing."
+msgid "Back-up functions is now under testing."
 msgstr "バックアップ機能は現在テスト中です。"
 
 msgid "Please set the shipping price"
@@ -508,17 +532,11 @@ msgstr "配送方法「delname」を削除します。よろしいですか？"
 msgid "Not fixing shipping."
 msgstr "送料を固定しない"
 
-msgid "yen"
-msgstr "円"
+msgid "'Are you sure of deleting shipping [' + delname + ']?'"
+msgstr "'送料「'+delname+'」を削除します。よろしいですか？'"
 
-msgid "Are you sure of deleting shipping 'Delname'?"
-msgstr "送料「delname」を削除します。よろしいですか？"
-
-msgid "Are you sure of setting shiping to ～yen for all the prefecture?"
-msgstr "各都道府県の送料をcharge円に一括設定します。よろしいですか？"
-
-msgid "uCart shop shipping option"
-msgstr "uCart shop 配送設定"
+msgid "'Are you sure of setting shiping to ' + charge + ' dollars for all the prefecture?'"
+msgstr "'各都道府県の送料を' + charge + '円に一括設定します。よろしいですか？'"
 
 msgid "shipping option"
 msgstr "配送方法"
@@ -529,14 +547,32 @@ msgstr "（説明）"
 msgid "New item"
 msgstr "新規追加"
 
-msgid "Shipping name"
-msgstr "配送名"
+msgid "New addition"
+msgstr "新規追加"
+
+msgid "Shipping charge name"
+msgstr "送料名"
+
+msgid "You can choose the shipping every item."
+msgstr "商品ごとに送料を選ぶことができます。"
 
 msgid "Deliverly time"
 msgstr "指定時間帯"
 
 msgid "Raise the priority"
 msgstr "優先順位を上げる"
+
+msgid "Lower the priority"
+msgstr "優先順位を下げる"
+
+msgid "Postage fixation"
+msgstr "送料固定"
+
+msgid "Please make entry of appointment time to a party by one."
+msgstr "配送業者の指定時間帯を一行に一つずつ記入。"
+
+msgid "It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'."
+msgstr "送料固定を選択すると上記料金設定に固定されます。「固定しない」の場合は商品に設定された送料が適用されます。"
 
 msgid "This is an e-mail which will be sent aytomatically to your customers at the contact from customer."
 msgstr "問い合わせ時に、お客様宛てに自動送信するメールです。"
@@ -580,11 +616,8 @@ msgstr "その他のメール（管理画面より送信）"
 msgid "e-mail which will be sent on temporaly basis"
 msgstr "臨時で送信するメール。"
 
-msgid "edit the setting"
+msgid "change decision"
 msgstr "設定を更新"
-
-msgid "set the uCart buisiness days"
-msgstr "uCart shop 営業日設定"
 
 msgid "Campaign Schedule"
 msgstr "キャンペーン･スケジュール"
@@ -631,7 +664,7 @@ msgstr "火"
 msgid "Wed"
 msgstr "水"
 
-msgid "Thurs"
+msgid "Thu"
 msgstr "木"
 
 msgid "Fri"
@@ -652,26 +685,29 @@ msgstr "翌月"
 msgid "Month after next month"
 msgstr "翌々月"
 
-msgid "general setting of ucart shop"
-msgstr "uCart shop 基本設定"
-
 msgid "Business settings"
 msgstr "営業設定"
 
 msgid "Display Modes"
 msgstr "表示モード"
 
-msgid "Normal operating -Normal display"
-msgstr "・通常営業 --- 通常の表示"
+msgid "<strong>Normal operating</strong> -Normal display"
+msgstr "<strong>・通常営業</strong> --- 通常の表示"
 
-msgid "Campaign--Showing the campaige mode"
-msgstr "・キャンペーン --- キャンペーンモードの表示"
+msgid "<strong>Campaign</strong>--Showing the campaige mode"
+msgstr "<strong>・キャンペーン</strong> --- キャンペーンモードの表示"
 
-msgid "Maintenance ---Showing  maintenance page. Administrater is able to see the page with normal display."
-msgstr "・メンテナンス --- メンテナンスページを表示。ログインした管理者は通常表示でページを確認できます。"
+msgid "<strong>Maintenance</strong> ---Showing  maintenance page. Administrater is able to see the page with normal display."
+msgstr "<strong>・メンテナンス</strong> --- メンテナンスページを表示。ログインした管理者は通常表示でページを確認できます。"
 
 msgid "Campaign target items"
 msgstr "キャンペーン対象"
+
+msgid "This is a category of the objects to add a privilege to in the case of a campaign mode. You can choose a campaign object article freely by installing a 'campaign' category for an article."
+msgstr "キャンペーンモードの際、特典を付ける対象のカテゴリ。商品に対して「キャンペーン」カテゴリを設置しておくことによって自由にキャンペーン対象商品を選択できる。"
+
+msgid "Example)"
+msgstr "例）"
 
 msgid "all the items"
 msgstr "全商品"
@@ -685,16 +721,16 @@ msgstr "ポイント"
 msgid "times"
 msgstr "倍"
 
-msgid "Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers."
+msgid "'Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers."
 msgstr "「ポイント」は会員のみの特典でポイント率の倍率を指定。<br />「割引」は全購入者が対象で値引率を指定。"
 
 msgid "%"
 msgstr "％"
 
-msgid "Configuration of management and display mode of store."
+msgid "Configuration of management and display mode of shop."
 msgstr "ショップの表示モードや運営方法などの設定"
 
-msgid "Store setting"
+msgid "Shop setting"
 msgstr "ショップ設定"
 
 msgid "The company name"
@@ -709,20 +745,23 @@ msgstr "FAX番号"
 msgid "E-mail address for ordering"
 msgstr "受注用メールアドレス"
 
-msgid "[Required] the administrator's e-mail address to receive the order"
-msgstr "【必須】注文内容を受け取るための管理者のメールアドレス。"
+msgid "<em>[Required]</em> the administrator's e-mail address to receive the order"
+msgstr "<em>【必須】</em>注文内容を受け取るための管理者のメールアドレス。"
 
 msgid "Contact e-mail address"
 msgstr "問合せメールアドレス"
 
-msgid "[Required] the administrator's e-mail address to receive the contact meils."
-msgstr "【必須】問い合わせ内容を受け取るための管理者のメールアドレス。"
+msgid "<em>[Required]</em> the administrator's e-mail address to receive the contact meils."
+msgstr "<em>【必須】</em>問い合わせ内容を受け取るための管理者のメールアドレス。"
 
 msgid "Sender's e-mail address"
 msgstr "送信元メールアドレス"
 
-msgid "[Required] the sender's e-mail address to send 'thank you e-mail' to cuscomers."
-msgstr "【必須】購入者にサンキューメールを送る際の送信者アドレス。"
+msgid "<em>[Required]</em> the sender's e-mail address to send 'thank you e-mail' to cuscomers."
+msgstr "<em>【必須】</em>購入者にサンキューメールを送る際の送信者アドレス。"
+
+msgid "<em>[Required]</em>The transmission of a message ahead of the error email."
+msgstr "<em>【必須】</em>メールが不達の場合のエラーメールの送信先。"
 
 msgid "Address for Error mail"
 msgstr "エラーメールアドレス"
@@ -733,17 +772,17 @@ msgstr "コピーライト"
 msgid "Conditions for free shipping"
 msgstr "送料無料条件"
 
-msgid "Above～"
-msgstr "～以上"
+msgid "Above"
+msgstr "以上"
 
 msgid "Total purchase prise to have free shipping. Leave it blank if it is not necessary."
 msgstr "送料無料となる合計購入金額。必要ない場合は空白"
 
-msgid "initial value of limitation number of purchase"
+msgid "default limitation number of purchase"
 msgstr "購入制限数初期値"
 
-msgid "maximum amount ～."
-msgstr "～個まで"
+msgid "maximum amount"
+msgstr "個まで"
 
 msgid "initial value at registration of items. Leave it blank if it is not necessary."
 msgstr "商品登録時の初期値。必要ない場合は空白"
@@ -791,7 +830,7 @@ msgid "not to use"
 msgstr "利用しない"
 
 msgid "Would you like to use membership system or not?"
-msgstr "会員システムを利用するか否か。"
+msgstr "会員（メンバー）システムを利用するか否か。"
 
 msgid "membership points"
 msgstr "会員ポイント"
@@ -823,8 +862,8 @@ msgstr "支払方法"
 msgid "** Payment method **"
 msgstr "【お支払方法】"
 
-msgid "[Required] possible payment method"
-msgstr "【必須】取り扱い可能な支払方法<"
+msgid "<em>[Required]</em>possible payment method"
+msgstr "<em>【必須】</em>取り扱い可能な支払方法"
 
 msgid "Common Options"
 msgstr "共通オプション"
@@ -832,14 +871,11 @@ msgstr "共通オプション"
 msgid "Conditions which will be selected at the purchase. You can use the options which you hve registered here, as an option in the master items."
 msgstr "購入の際に選択される条件。ここで登録されたオプションが商品マスターのオプションとして利用できます。"
 
-msgid "Home for uCart shop"
-msgstr "uCart shop ホーム"
-
 msgid "Special Benefits"
 msgstr "特典"
 
-msgid "〜times more(limited to members)"
-msgstr "～倍、会員のみ"
+msgid " times (limited to members)"
+msgstr "倍、会員のみ"
 
 msgid "applied material"
 msgstr "対象"
@@ -851,18 +887,21 @@ msgid "Cart page"
 msgstr "カートページ"
 
 msgid "Membership page"
-msgstr "会員ページ"
+msgstr "メンバーページ"
+
+msgid "Membership"
+msgstr "メンバー"
 
 msgid "There is no news for this moment."
 msgstr "現在、お知らせはありません。"
 
-msgid "number of orderd items & amount of orderd items"
+msgid "number & amount of order"
 msgstr "受注数・金額"
 
-msgid "number of orderd items"
+msgid "number of order"
 msgstr "受注数 "
 
-msgid "amount of orderd items"
+msgid "amount of order"
 msgstr "受注金額"
 
 msgid "today"
@@ -874,19 +913,22 @@ msgstr "昨年同月"
 msgid "information for registration of items"
 msgstr "商品登録情報"
 
-msgid "item amount"
+msgid "number of item"
 msgstr "商品数"
 
-msgid "total SKU number"
+msgid "SKU total number"
 msgstr "SKU総数"
 
-msgid "There are stocks for this item."
+msgid "OK-stocks"
 msgstr "在庫有り"
+
+msgid "OK"
+msgstr "有り"
 
 msgid "List of items without stock"
 msgstr "在庫数 0 の商品一覧"
 
-msgid "PC environment"
+msgid "Your environment"
 msgstr "ご利用の環境"
 
 msgid "Software Version"
@@ -895,22 +937,16 @@ msgstr "ソフトウェア・バージョン"
 msgid "Server"
 msgstr "サーバー"
 
-msgid "MySQL"
-msgstr "MySQL"
-
-msgid "PHP"
-msgstr "PHP"
+msgid "Safe mode"
+msgstr "セーフモード"
 
 msgid "Amount"
 msgstr "金額"
 
-msgid "Total items"
-msgstr "商品合計"
-
 msgid "Used points"
 msgstr "使用ポイント"
 
-msgid "Canpanign disnount"
+msgid "Campaign disnount"
 msgstr "キャンペーン割引"
 
 msgid "Total Amount"
@@ -925,8 +961,8 @@ msgstr "利用するポイント"
 msgid "Use the points"
 msgstr "ポイントを使用する"
 
-msgid "e-mail address(confirmation)"
-msgstr "メールアドレス（再入力）"
+msgid "Re-input"
+msgstr "再入力"
 
 msgid "Familly name"
 msgstr "姓"
@@ -947,9 +983,9 @@ msgid "numbers"
 msgstr "番地"
 
 msgid "building name"
-msgstr "マンション･ビル名"
+msgstr "ビル名"
 
-msgid "this mark shows the required items"
+msgid "This mark shows the required items."
 msgstr "このマークは必須項目です。"
 
 msgid "Please make sure that your e-mail address is correct."
@@ -961,7 +997,7 @@ msgstr "数量を変更した場合は必ず更新ボタンを押してくださ
 msgid "The price with this mark applys to Business pack discount."
 msgstr "このマークがある価格は業務パック割引が適用されています。"
 
-msgid "Save the data."
+msgid "Save the data"
 msgstr "データを保存"
 
 msgid "Item image"
@@ -988,8 +1024,8 @@ msgstr "購入制限数"
 msgid "Percentage of points"
 msgstr "ポイント率"
 
-msgid "(Integer)"
-msgstr "（整数）"
+msgid "Integer"
+msgstr "整数"
 
 msgid "〜％ discount at the purchase of more then 〜units."
 msgstr "～個以上で～％引き（単価）"
@@ -998,7 +1034,7 @@ msgid "estimated shipping date"
 msgstr "発送日目安"
 
 msgid "SKU price"
-msgstr "SKU　価格"
+msgstr "SKU価格"
 
 msgid "options for items"
 msgstr "商品オプション"
@@ -1029,6 +1065,9 @@ msgstr "振込み（後払い）"
 
 msgid "COD"
 msgstr "代金引換"
+
+msgid "COD fee"
+msgstr "代引手数料"
 
 msgid "During the campaign"
 msgstr "キャンペーン中"
@@ -1096,9 +1135,6 @@ msgstr "【お見積り】"
 msgid "Confirmatin of your cancellation"
 msgstr "【ご注文キャンセルの確認】"
 
-msgid "[]"
-msgstr "【】"
-
 msgid "Thank you for choosing %s."
 msgstr "この度は %s をご利用下さいまして誠に有難うございます。"
 
@@ -1106,7 +1142,7 @@ msgid "We have received your order. Please check following information."
 msgstr "下記の通りご注文をお受けいたしましたのでご確認をお願いいたします。"
 
 msgid "We will inform you by e-mail when we are ready to ship ordered items to you."
-msgstr "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。\r\nよろしくお願いいたします。"
+msgstr "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
 
 
 msgid "There is new order by %s."
@@ -1157,23 +1193,17 @@ msgstr "〒"
 msgid "contact"
 msgstr "お問合せ"
 
-msgid "SKU"
-msgstr "ＳＫＵ"
-
 msgid "Categories"
 msgstr "カテゴリー"
 
 msgid "Registration date"
 msgstr "登録日"
 
-msgid "Edit uCart Management membership data."
-msgstr "uCart Management 会員データ編集"
+msgid "Edit membership data"
+msgstr "会員データ編集"
 
-msgid "Update Confirmed"
-msgstr "更新確定"
-
-msgid "When you change amount, please click “Edit' before you finish your process."
-msgstr "値を変更した場合は必ず最後に「更新確定」ボタンを押してください。"
+msgid "When you change amount, please click 'Edit' before you finish your process."
+msgstr "値を変更した場合は必ず最後に「設定を更新」ボタンを押してください。"
 
 msgid "membership number"
 msgstr "会員No"
@@ -1184,14 +1214,11 @@ msgstr "ランク"
 msgid "name"
 msgstr "氏名"
 
-msgid "Your current PT"
+msgid "current point"
 msgstr "保有PT"
 
 msgid "Strated date"
 msgstr "入会日"
-
-msgid "Building name"
-msgstr "ビル名"
 
 msgid "There is no purchase history for this moment."
 msgstr "現在購入履歴はございません。"
@@ -1205,26 +1232,20 @@ msgstr "購入日"
 msgid "Purchase price"
 msgstr "購入金額"
 
-msgid "points"
+msgid "Acquired points"
 msgstr "獲得ポイント"
 
 msgid "e-mail"
 msgstr "Eメール"
 
-msgid "Are you sure of deleting your membership number'member_id'?"
-msgstr "会員No member_id を削除します。よろしいですか？"
+msgid "'Are you sure of deleting your membership number ' + member_id + ' ?'"
+msgstr "'会員No ' + member_id + 'を削除します。よろしいですか？'"
 
-msgid "A list of uCart management members."
-msgstr "uCart management 会員リスト"
-
-msgid "Search Items"
+msgid "search fields"
 msgstr "検索項目"
 
 msgid "key words"
 msgstr "キーワード"
-
-msgid "Bank transfer"
-msgstr "銀行振り込み"
 
 msgid "Transfer"
 msgstr "振り込み"
@@ -1238,13 +1259,13 @@ msgstr "閉じる"
 msgid "Mail for Shipping"
 msgstr "発送完了メール"
 
-msgid "Mail for confirmation of order."
+msgid "Mail for confirmation of order"
 msgstr "注文確認メール"
 
 msgid "Mail for confiemation of change"
 msgstr "変更確認メール"
 
-msgid "Mail for confirmation of transter."
+msgid "Mail for confirmation of transter"
 msgstr "入金確認メール"
 
 msgid "estimate mail"
@@ -1253,10 +1274,10 @@ msgstr "見積りメール"
 msgid "Cancelling mail"
 msgstr "キャンセルメール"
 
-msgid "Other mails"
+msgid "Other mail"
 msgstr "その他のメール"
 
-msgid "e-mail has been sent."
+msgid "E-mail has been sent."
 msgstr "メールの送信が完了しました。"
 
 msgid "Failure in sending e-mails."
@@ -1265,8 +1286,8 @@ msgstr "メールは送信できませんでした。"
 msgid "Are you sure of deleting items?"
 msgstr "商品を削除します。よろしいですか？"
 
-msgid "edit the uCart management order data"
-msgstr "uCart management 受注データ編集"
+msgid "Edit order data"
+msgstr "受注データ編集"
 
 msgid "show the mail/print field"
 msgstr "メール・印刷フィールド表示"
@@ -1277,8 +1298,8 @@ msgstr "見積書印刷"
 msgid "print the invoice"
 msgstr "納品書印刷"
 
-msgid "when there is any change, please make 'confirm change' before you send or print."
-msgstr "※変更がある場合は「更新確定」してから送信・印刷を行ってください。"
+msgid "When there is any change, please press the 'change decision' before you send or print."
+msgstr "※変更がある場合は「設定の更新」を押してから送信・印刷を行ってください。"
 
 msgid "order details"
 msgstr "受注明細"
@@ -1304,17 +1325,14 @@ msgstr "通知しない"
 msgid "The correspondence situation"
 msgstr "対応状況"
 
-msgid "on sale"
+msgid "normal sale"
 msgstr "通常セール"
 
 msgid "Sale Campaign"
 msgstr "キャンペーンセール"
 
-msgid "~% Discount"
-msgstr "～%引き"
-
-msgid "〜times more. Limited to members."
-msgstr "～倍、会員のみ"
+msgid "% Discount"
+msgstr "%引き"
 
 msgid "Notes"
 msgstr "備考"
@@ -1322,7 +1340,7 @@ msgstr "備考"
 msgid "Current stock"
 msgstr "現在庫"
 
-msgid "Added items"
+msgid "Add item"
 msgstr "商品追加"
 
 msgid "granted points"
@@ -1340,7 +1358,7 @@ msgstr "商品コードを入力して「取得」ボタンを押して下さい
 msgid "Obtain"
 msgstr "取得"
 
-msgid "Check the mail and click 'Send'"
+msgid "Check the mail and click 'send'"
 msgstr "メールの内容を確認して「送信」ボタンを押して下さい。"
 
 msgid "Client name"
@@ -1364,20 +1382,17 @@ msgstr "処理状態"
 msgid "Choose the data."
 msgstr "データが選択されていません。"
 
-msgid "Transfer status of the items which you have checked will be changed in to order_reciept. Do you agree?"
-msgstr "チェックされたデータの入金状況をorder_recieptに変更します。よろしいですか？"
+msgid "'Transfer status of the items which you have checked will be changed in to ' + %s + '. %sDo you agree?'"
+msgstr "'チェックされたデータの入金状況を「' + %s + '」に変更します。%sよろしいですか？'"
 
-msgid "Data status which you have cheked will be changed in to order_recipt. Do you agree?"
-msgstr "チェックされたデータの処理状態を、すべてorder_statusに変更します。よろしいですか？"
+msgid "'Data status which you have cheked will be changed in to ' + %s + '. %sDo you agree?'"
+msgstr "'チェックされたデータの処理状態を、すべて「' + %s + '」に変更します。%sよろしいですか？'"
 
 msgid "Are you sure of deleting all the checked data in bulk?"
 msgstr "チェックされたデータを一括削除します。よろしいですか？"
 
-msgid "Are you sure of deleting an order 'No order number'?"
-msgstr "注文No order_id を削除します。よろしいですか？"
-
-msgid "A list of received order for uCart management"
-msgstr "uCart management 受注リスト"
+msgid "'Are you sure of deleting an order number ' + order_id + ' ?'"
+msgstr "'注文No ' + order_id + ' を削除します。よろしいですか？'"
 
 msgid "Oparation in bulk"
 msgstr "一括操作"
@@ -1385,7 +1400,7 @@ msgstr "一括操作"
 msgid "Edit the receiving money status"
 msgstr "入金状態の変更"
 
-msgid "edit of status process"
+msgid "Edit of status process"
 msgstr "処理状態の変更"
 
 msgid "Delete in bulk"
@@ -1394,8 +1409,8 @@ msgstr "一括削除"
 msgid "start"
 msgstr "開始"
 
-msgid "Thank you for choosing 'blog name' we send you following estimate. "
-msgstr "この度は blogname をご利用下さいましてありがとうございます。下記の通りお見積りいたします。"
+msgid "Thank you for choosing '%s' we send you following estimate. "
+msgstr "この度は %s をご利用下さいましてありがとうございます。下記の通りお見積りいたします。"
 
 msgid "Valid:7days"
 msgstr "有効期間：7日間"
@@ -1403,8 +1418,8 @@ msgstr "有効期間：7日間"
 msgid "Invoices"
 msgstr "納品書"
 
-msgid "Thak you for choosing 'blog name'. We deliver your items as following."
-msgstr "この度は blogname をご利用下さいましてありがとうございます。下記の通り納品いたします。"
+msgid "Thak you for choosing '%s'. We deliver your items as following."
+msgstr "この度は %s をご利用下さいましてありがとうございます。下記の通り納品いたします。"
 
 msgid "date of receiving the order"
 msgstr "受注日"
@@ -1412,11 +1427,11 @@ msgstr "受注日"
 msgid "payment division"
 msgstr "お支払い区分"
 
-msgid "mmddyyyy"
+msgid "Mj, Y"
 msgstr "Y年m月d日"
 
-msgid "edit information of uCart shop items"
-msgstr "uCart shop 商品情報編集"
+msgid "Edit item"
+msgstr "商品情報編集"
 
 msgid "display status"
 msgstr "表示状態"
@@ -1424,20 +1439,23 @@ msgstr "表示状態"
 msgid "no items are selected"
 msgstr "商品が選択されていません。"
 
-msgid "Stock status of items which you have checked will be changed into 'Zaiko' Stock status of each SKU will be all shown as 'Zaiko' Do you agree with this oparation?"
-msgstr "チェックされた商品の在庫状況をzaikoに変更します。ＳＫＵごとの在庫状態がすべてzaikoとなります。よろしいですか？"
+msgid "'Stock status of items which you have checked will be changed into ' + %s + ' Stock status of each SKU will be all shown as ' + %s + ' Do you agree with this oparation?'"
+msgstr "'チェックされた商品の在庫状況を「' + %s + '」に変更します。ＳＫＵごとの在庫状態がすべて「' + %s + '」となります。よろしいですか？'"
 
-msgid "Are you sure of changing all the items you have checked in to display-status?"
-msgstr "チェックされた商品の表示状況を、すべてdisplay_statusに変更します。よろしいですか？"
+msgid "'Are you sure of changing all the items you have checked in to ' + %s + ' ?'"
+msgstr "'チェックされた商品の表示状況を、すべて「' + %s + '」に変更します。よろしいですか？'"
 
 msgid "Are you sure of deleting all the items you have checked in bulk?"
 msgstr "チェックされた商品を一括削除します。よろしいですか？"
 
-msgid "Are you aure of deleting the item, item code item_id ?"
-msgstr "商品コード item_id の商品を削除します。よろしいですか？"
+msgid "'Are you sure of deleting the item, item code ' + item_id + ' ?'"
+msgstr "'商品コード ' + item_id + 'の商品を削除します。よろしいですか？'"
 
-msgid "uCart shop, item list"
-msgstr "uCart shop 商品リスト"
+msgid "'Are you sure of deleting the delivery method ' + delname + ' ?'"
+msgstr "'配送方法「'+delname+'」を削除します。よろしいですか？'"
+
+msgid "Item list"
+msgstr "商品リスト"
 
 msgid "items without stock"
 msgstr "在庫数０の商品"
@@ -1445,7 +1463,7 @@ msgstr "在庫数０の商品"
 msgid "Changes in stock status"
 msgstr "在庫状態の変更"
 
-msgid "edit the display status"
+msgid "Edit the display status"
 msgstr "表示状態の変更"
 
 msgid "edit "
@@ -1463,11 +1481,8 @@ msgstr "新商品"
 msgid "Special price"
 msgstr "特価品"
 
-msgid "membership information"
+msgid "Membership information"
 msgstr "会員情報"
-
-msgid "Cart"
-msgstr "カートの中"
 
 msgid "Proceed to checkout"
 msgstr "精算する"
@@ -1478,7 +1493,7 @@ msgstr "商品詳細へ"
 msgid "Visit/Contact Us"
 msgstr "ご相談・お問い合わせ"
 
-msgid "Product Category"
+msgid "Item Category"
 msgstr "商品カテゴリー"
 
 msgid "artist"
@@ -1505,35 +1520,35 @@ msgstr "カテゴリー : AND検索"
 msgid "Search"
 msgstr "検索開始"
 
+msgid "Cancellation"
+msgstr "解除"
+
 msgid "Search results"
 msgstr "検索結果"
 
-msgid "Previous page"
-msgstr "前のページ"
-
-msgid "next page"
-msgstr "次のページ"
-
-msgid "next article &raquo;"
-msgstr "次のページ &raquo;"
-
-msgid "&laquo; Previous aorticle"
+msgid "&laquo; Previous page"
 msgstr "&laquo; 前のページ"
 
-msgid "cart"
+msgid "next page &raquo;"
+msgstr "次のページ &raquo;"
+
+msgid "Next article &raquo;"
+msgstr "次のページ &raquo;"
+
+msgid "&laquo; Previous article"
+msgstr "&laquo; 前のページ"
+
+msgid "Cart"
 msgstr "カート"
 
 msgid "Customer Information"
 msgstr "お客様情報"
 
-msgid "Shipping /Payment options"
+msgid "Shipping / Payment options"
 msgstr "発送・支払方法"
 
 msgid "Confirmation"
 msgstr "内容確認"
-
-msgid "inside of the cart"
-msgstr "カートの中身"
 
 msgid "continue shopping"
 msgstr "買い物を続ける"
@@ -1541,7 +1556,7 @@ msgstr "買い物を続ける"
 msgid "Enter customer information as mentioned above."
 msgstr "上記内容でお客様情報入力をする"
 
-msgid "it has been sent succesfully."
+msgid "It has been sent succesfully."
 msgstr "送信が完了しました"
 
 msgid "Thank you for shopping."
@@ -1552,6 +1567,9 @@ msgstr "ご不明な点などがございましたら、お問合せよりご連
 
 msgid "Back to the top page."
 msgstr "トップページへ戻る"
+
+msgid "Back to payment method page."
+msgstr "お届けお支払方法入力に戻る"
 
 msgid "Shipping address information"
 msgstr "配送先情報"
@@ -1622,14 +1640,14 @@ msgstr "会員登録情報"
 msgid "member number"
 msgstr "会員番号"
 
-msgid "To ～"
-msgstr "～様"
-
 msgid "Leave it blank in case of no change."
 msgstr "※変更しない場合は空白のまま"
 
 msgid "update it"
 msgstr "更新する"
+
+msgid "New enrollment form"
+msgstr "新規入会フォーム"
 
 msgid "All your personal information  will be protected and handled with carefull attention."
 msgstr "この新規入会フォームより送信いただく、個人情報の取り扱いにつきましては細心の注意を払っております。"
@@ -1686,7 +1704,7 @@ msgid "Add to a cart"
 msgstr "カートに入れる"
 
 msgid "to the cart"
-msgstr "カゴへ"
+msgstr "カートへ"
 
 msgid "see the details"
 msgstr "詳細を見る"
@@ -1763,9 +1781,6 @@ msgstr "【ご注文内容】"
 msgid "Buyer"
 msgstr "ご購入者"
 
-msgid "Order number"
-msgstr "受注番号"
-
 msgid "** Others / a demand **"
 msgstr "【その他】"
 
@@ -1781,8 +1796,11 @@ msgstr "【お問合せ】"
 msgid "An inquiry email"
 msgstr "お問合せメール"
 
-msgid "** A password change **"
+msgid "Change password"
 msgstr "パスワード変更"
+
+msgid "The new password acquisition"
+msgstr "新パスワード取得"
 
 msgid "Please, click the following URL, and please change a password."
 msgstr "下記のURLをクリックしてパスワードの変更を行ってください。"
@@ -1848,11 +1866,356 @@ msgid "Normal business"
 msgstr "通常営業中"
 
 msgid "I send a reply email to a visitor. I ask in a few minutes to be able to have you refer in there being the fear that e-mail address is different again when the email from this shop does not arrive."
-msgstr "お客様宛てに返信メールをお送りしております。しばらくしても当店からのメールが届かない場合はメールアドレスが違っている恐れも有りますので、再度お問合せ頂きます様お願い申し上げます。"
+msgstr "お客様宛てに返信メールをお送りしております。しばらくしても当店からのメールが届かない場合はメールアドレスが違っている恐れもありますので、再度お問合せ頂きます様お願い申し上げます。"
 
 msgid "<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s"
 msgstr "%4$s%3$s以上で1%3$sあたり<span class=%6$s>%5$s%1$s</span>%2$s"
 
 msgid "<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s"
 msgstr "%4$s～%5$s%3$sで1%3$sあたり<span class=%7$s>%6$s%1$s</span>%2$s"
+
+msgid "$"
+msgstr "￥"
+
+msgid "cases"
+msgstr "件"
+
+msgid "Completion"
+msgstr "完了"
+
+msgid "Error"
+msgstr "エラー"
+
+msgid "'AND' search by categories"
+msgstr "商品カテゴリー複合検索"
+
+msgid "'This article is limited by '+checknum+' at a time.'"
+msgstr "'この商品は一度に'+checknum+'までの数量制限が有ります。'"
+
+msgid "'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'"
+msgstr "(i+1) + '番の商品は一度に'+checknum+'までの数量制限が有ります。'"
+
+msgid "'Stock is remainder '+checknum+'.'"
+msgstr "'この商品の在庫は残り'+checknum+'です。'"
+
+msgid "'Stock of No.' + (i+1) + ' item is remainder '+checknum+'.'"
+msgstr "(i+1) + '番の商品の在庫は残り'+checknum+'です。'"
+
+msgid "* A shipment due date is a day to ship an article, and it's not the arrival day."
+msgstr "※発送予定日とは商品を出荷する日で、到着日ではございません。"
+
+msgid "The file was not uploaded."
+msgstr "ファイルをアップロードできませんでした。"
+
+msgid "The file is not supported."
+msgstr "対応しないファイルがアップロードされました。"
+
+msgid "The log file was not prepared for."
+msgstr "ログファイルを準備できませんでした。"
+
+msgid "A file does not open."
+msgstr "ファイルが開けません。"
+
+msgid "The number of the columns is abnormal."
+msgstr "カラム数が異常です"
+
+msgid "An item cord is non-input."
+msgstr "商品コードが未入力です"
+
+msgid "An item name is non-input."
+msgstr "商品名が未入力です"
+
+msgid "A value of the purchase limit number is abnormal."
+msgstr "購入制限数の値が異常です"
+
+msgid "A value of the point rate is abnormal."
+msgstr "ポイント率の値が異常です"
+
+msgid "umerical value is abnormality."
+msgstr "数の値が異常です"
+
+msgid "rate is abnormal."
+msgstr "率が異常です"
+
+msgid "A value of the shipment day is abnormal."
+msgstr "発送日目安の値が異常です"
+
+msgid "A value of the postage individual charging is abnormal."
+msgstr "送料個別課金の値が異常です"
+
+msgid "A value of the display status is abnormal."
+msgstr "表示状態の値が異常です"
+
+msgid "A value of the schedule is abnormal."
+msgstr "公開日時の値が異常です"
+
+msgid "A category is non-input."
+msgstr "カテゴリーが未入力です"
+
+msgid "A SKU cord is non-input."
+msgstr "SKUコードが未入力です"
+
+msgid "A SKU cord repeats."
+msgstr "SKUが重複しています"
+
+msgid "A value of the sale price is abnormal."
+msgstr "売価の値が異常です"
+
+msgid "A value of the stock status is abnormal."
+msgstr "在庫状態の値が異常です"
+
+msgid "The value of the duties pack application is abnormal."
+msgstr "業務パック適用の値が異常です"
+
+msgid "Option name of No.%s option is non-input."
+msgstr "第%sオプションのオプション名の値が未入力です"
+
+msgid "Option-entry-field of No.%s option is abnormal."
+msgstr "第%sオプションの入力フィールドの値が異常です"
+
+msgid "Option-required-item of No.%s option is abnormal."
+msgstr "第%sオプションの必須項目の値が異常です"
+
+msgid "Option-select of No.%s option is non-input."
+msgstr "第%sオプションのセレクト値の値が未入力です"
+
+msgid "The data were not registered with a database."
+msgstr "データベースに登録できませんでした"
+
+msgid "%2$s of %1$s lines registration completion, %3$s lines error."
+msgstr "%1$s行中 %2$s行登録完了、%3$s行未登録。'"
+
+msgid "SMTP server host"
+msgstr "SMTPサーバーホスト"
+
+msgid "Host name"
+msgstr "ホスト名"
+
+msgid "This is a field setting the host name of a server for email transmission of a message. When the transmission of a message is not possible in localhost, a SMTP server is necessary."
+msgstr "メール送信用サーバーのホスト名を設定します。localhost で送信ができない場合はSMTPサーバーが必要になります。"
+
+msgid "Thanks email(automatic transmission)"
+msgstr "サンキューメール（自動送信）"
+
+msgid "Order email(automatic transmission)"
+msgstr "受注メール（自動送信）"
+
+msgid "Inquiry receptionist email(automatic transmission)"
+msgstr "問い合わせ受付メール（自動送信）"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "This is an email transmitting a message for a visitor at the time of an order."
+msgstr "受注時にお客様に対して自動送信するメールです。"
+
+msgid "This is an email transmitting a message for owner of shop(%s)."
+msgstr "受注時に受注用メールアドレス（%s）に対して送信するメールです。"
+
+msgid "This is an email transmitted manual operation to than a management screen, when the shipment of the article was completed."
+msgstr "管理画面より発送完了登録した際に手動送信するメール。"
+
+msgid "This is an email transmitted manual operation to than a management screen, when you registered a new order."
+msgstr "管理画面より新規受注を登録した際に手動送信するメール。"
+
+msgid "This is an email transmitted manual operation to than a management screen, when you  registered an estimate."
+msgstr "管理画面より見積り登録した際に手動送信するメール。"
+
+msgid "The district where sale is possible"
+msgstr "販売対象地区"
+
+msgid "One line one by one."
+msgstr "改行して1行に一つずつ記入します。<br />初期値は全都道府県が設定してあります。"
+
+msgid "Not display an article in blog"
+msgstr "ループ表示の際、商品を分離して表示する"
+
+msgid "In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item."
+msgstr "ショップにて、複数の投稿が表示されるループ表示の際、商品データを表示させるかどうかを設定します。"
+
+msgid "rel attribute"
+msgstr "rel属性"
+
+msgid "In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin."
+msgstr "商品詳細ページにて、Lightboxなどプラグインを利用してイメージを表示させるためのアンカータグ用rel属性を指定します。"
+
+msgid "compound category sort item"
+msgstr "複合カテゴリーソート項目"
+
+msgid "category ID"
+msgstr "カテゴリーID"
+
+msgid "category name"
+msgstr "カテゴリー名"
+
+msgid "In a category to display in a compound category search page, you can choose an object to sort."
+msgstr "複合カテゴリー検索ページで表示するカテゴリーにおいて、ソートする対象を選択します。"
+
+msgid "compound category sort order"
+msgstr "複合カテゴリーソート項目"
+
+msgid "Ascending"
+msgstr "昇順"
+
+msgid "Descendin"
+msgstr "降順"
+
+msgid "In a category to display in a compound category search page, you can choose sort order."
+msgstr "複合カテゴリー検索ページで表示するカテゴリーにおいて、ソートする対象を選択します。"
+
+msgid "settlement module path"
+msgstr "決済モジュールパス"
+
+msgid "This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder."
+msgstr "決済モジュールの設置場所を指定します。初期値はサンプルと同じ場所ですが自動アップグレードの時に削除されてしまいます。これを避けるにはモジュールをプラグインフォルダの外に設置します。"
+
+msgid "The hierarchy category of the item"
+msgstr "商品の階層カテゴリー"
+
+msgid "Postage individual charging"
+msgstr "送料個別課金"
+
+msgid "Options for EX-plugin"
+msgstr "EXプラグイン･オプション"
+
+msgid "Push 'change decision' button, to be settled with an order number."
+msgstr "「設定を更新」ボタンを押して注文Noを確定して下さい。"
+
+msgid "Order number"
+msgstr "注文番号"
+
+msgid "Status"
+msgstr "ステイタス"
+
+msgid "estimate order"
+msgstr "見積り受注"
+
+msgid "Collective registration item"
+msgstr "商品一括登録"
+
+msgid "Upload prescribed CSV and perform the collective registration of the article.<br />Please choose a file, and push the registration start."
+msgstr "規定のCSVをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。"
+
+msgid "Indication is updated after upload completion."
+msgstr "アップロード完了後に表示が更新されます。"
+
+msgid "Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload."
+msgstr "登録状況はログ（usc-e-shop/logs/itemcsv_log.txt）をご覧下さい。<br />ログはアップロードごとに上書き更新されます。"
+
+msgid "IPN Start"
+msgstr "IPN開始"
+
+msgid "IPN Connection Error"
+msgstr "IPN接続エラー"
+
+msgid "PDT Refusal"
+msgstr "PDT非認証"
+
+msgid "IPN Refusal"
+msgstr "IPN非認証"
+
+msgid "PayPal gives back 'FAIL'. Please confirm setting."
+msgstr "PayPalが「FAIL」を返しています。設定を確認してください。"
+
+msgid "<p>The settlement is not completed.<br />Please remit the price from the PayPal Maia count page.After receipt of money confirmation, I will prepare for the article shipment.</p>"
+msgstr "<p>お取引は完了しておりません。<br />PayPalマイアカウント･ページから代金をご送金ください。ご入金確認後、商品発送の準備をさせていただきます。</p>"
+
+msgid "Checkout"
+msgstr "上記内容で注文する"
+
+msgid "and others"
+msgstr "、他"
+
+msgid "The member please enter at here."
+msgstr "会員の方はこちら▼"
+
+msgid "The nonmember please enter at here."
+msgstr "会員ではない方はこちら▼"
+
+msgid "When you enroll newly, please fill it out."
+msgstr "新規会員登録する場合にご記入ください。"
+
+msgid "To the next while enrolling"
+msgstr "会員登録しながら次へ"
+
+msgid "Revise member information, and to next"
+msgstr "会員情報を修正して次へ"
+
+msgid "Maintaining now"
+msgstr "只今メンテナンス中です。"
+
+msgid "Please wait for a while."
+msgstr "しばらくお待ちください。"
+
+msgid "Please appoint an option."
+msgstr "オプションを指定してください。"
+
+msgid "An article concerned"
+msgstr "関連商品"
+
+msgid "display of icon"
+msgstr "アイコンの表示"
+
+msgid "number of indication"
+msgstr "表示数"
+
+msgid "automatic count"
+msgstr "自動集計"
+
+msgid "Indication"
+msgstr "表示する"
+
+msgid "Non-indication"
+msgstr "表示しない"
+
+msgid "automatic list"
+msgstr "集計リストを表示"
+
+msgid "handwriting list"
+msgstr "手書きリストを表示"
+
+msgid "Please input an article cord."
+msgstr "商品コードを入力してください"
+
+msgid "Calendar"
+msgstr "カレンダー"
+
+msgid "The setting of the business day, In a 'business day setting' page of the admin screen."
+msgstr "営業日の設定はWelcartショップの「営業日設定」で行います"
+
+msgid "parent category(slug)"
+msgstr "親カテゴリー（スラッグ）"
+
+msgid "category slug"
+msgstr "カテゴリー（スラッグ）"
+
+msgid "Pssword Lost and Found"
+msgstr "パスワード紛失取り扱い"
+
+msgid "Lost your password?"
+msgstr "パスワードをお忘れですか？"
+
+msgid "Remember Me"
+msgstr "ログイン情報を記憶"
+
+msgid "Page"
+msgstr "ページ"
+
+msgid "Page ID(comma separate)"
+msgstr "ページID(複数はカンマ区切り)"
+
+msgid "Post"
+msgstr "ポスト"
+
+msgid "The article was not found."
+msgstr "該当する商品は見つかりませんでした。"
+
+msgid "make a copy"
+msgstr "複写して新規"
+
+msgid "back to item list"
+msgstr "商品リストに戻る"
+
+msgid "same as"
+msgstr "一括設定"
 

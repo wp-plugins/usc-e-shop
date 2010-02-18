@@ -41,7 +41,7 @@ class dataList
 
 		$this->SetParamByQuery();
 
-		$this->arr_period = array('当月', '先月', '過去1週間', '過去30日', '過去90日', '全て');
+		$this->arr_period = array(__('this month', 'usces'), __('Last month', 'usces'), __('The past one week', 'usces'), __('Last 30 days', 'usces'), __('Last 90days', 'usces'), __('All', 'usces'));
 
 
 	}
@@ -251,14 +251,14 @@ class dataList
 			$query = $wpdb->prepare("SELECT 
 						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemCode') AS item_code, 
 						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemName') AS item_name, 
-						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, 
+						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, post.post_status, 
 						CASE post.post_status 
-							WHEN 'publish' THEN '公開済み' 
-							WHEN 'future' THEN '予約済み' 
-							WHEN 'draft' THEN '下書き' 
-							WHEN 'pending' THEN 'レビュー待ち' 
-							WHEN 'trash' THEN 'ゴミ箱' 
-							ELSE '非公開' 
+							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
+							WHEN 'future' THEN '" . __('Scheduled', 'usces') . "' 
+							WHEN 'draft' THEN '" . __('Draft', 'usces') . "' 
+							WHEN 'pending' THEN '" . __('Pending Review', 'usces') . "' 
+							WHEN 'trash' THEN '" . __('Trash', 'usces') . "' 
+							ELSE '" . __('Closed', 'usces') . "' 
 						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
 						FROM {$this->table} AS post 
@@ -271,14 +271,14 @@ class dataList
 			$query = $wpdb->prepare("SELECT 
 						'item_code' AS item_code, 
 						post.post_title, 
-						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, 
+						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, post.post_status, 
 						CASE post.post_status 
-							WHEN 'publish' THEN '公開済み' 
-							WHEN 'future' THEN '予約済み' 
-							WHEN 'draft' THEN '下書き' 
-							WHEN 'pending' THEN 'レビュー待ち' 
-							WHEN 'trash' THEN 'ゴミ箱' 
-							ELSE '非公開' 
+							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
+							WHEN 'future' THEN '" . __('Scheduled', 'usces') . "' 
+							WHEN 'draft' THEN '" . __('Draft', 'usces') . "' 
+							WHEN 'pending' THEN '" . __('Pending Review', 'usces') . "' 
+							WHEN 'trash' THEN '" . __('Trash', 'usces') . "' 
+							ELSE '" . __('Closed', 'usces') . "' 
 						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
 						FROM {$this->table} AS post 
@@ -416,7 +416,7 @@ class dataList
 		
 		$html = '';
 		$html .= '<ul class="clearfix">'."\n";
-		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' 件</li>' . "\n";
+		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' '.__('cases', 'usces').'' . "\n";
 		if(($this->currentPage == 1) || ($this->selectedRow == 0)){
 			$html .= '<li class="navigationStr">first&lt;&lt;</li>' . "\n";
 			$html .= '<li class="navigationStr">prev&lt;</li>'."\n";
@@ -441,12 +441,12 @@ class dataList
 			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_itemedit&changePage=' . $this->lastPage . '">&gt;&gt;last</a></li>'."\n";
 		}
 		if($this->searchSwitchStatus == 'OFF'){
-			$html .= '<li class="navigationStr"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">操作フィールド表示</a>'."\n";
+			$html .= '<li class="navigationStr"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('Show the Operation field', 'usces') . '</a>'."\n";
 		}else{
-			$html .= '<li class="navigationStr"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">操作フィールド非表示</a>'."\n";
+			$html .= '<li class="navigationStr"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('hide the Operation field', 'usces') . '</a>'."\n";
 		}
 
-		$html .= '<li class="refresh"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_itemedit&refresh">最新の情報に更新</a></li>' . "\n";
+		$html .= '<li class="refresh"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_itemedit&refresh">' . __('updates it to latest information', 'usces') . '</a></li>' . "\n";
 		$html .= '</ul>'."\n";
 
 		$this->dataTableNavigation = $html;

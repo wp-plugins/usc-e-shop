@@ -1,6 +1,6 @@
 <?php
 $zaiko_status = array(
-					'0' => __('There are stocks for this item.', 'usces'),
+					'0' => __('OK-stocks', 'usces'),
 					'1' => __('Only few stocks left for this item.', 'usces'),
 					'2' => __('Sellout', 'usces'),
 					'3' => __('Temporarily out of stock', 'usces'),
@@ -50,7 +50,7 @@ $shipping_rule = array(
 					'8' => __('about 3 weeks later', 'usces'),
 					'9' => __('after we get new items', 'usces')
 					);
-$item_option_select = array("シングルセレクト", "マルチセレクト", "テキスト");
+$item_option_select = array(__('Single-select','usces'), __('Multi-select','usces'), __('Text','usces'));
 //$shipping_charge_structure = array(
 //					'1' => '通常料金',
 //					'2' => '特別料金1',
@@ -58,13 +58,13 @@ $item_option_select = array("シングルセレクト", "マルチセレクト",
 //					);
 
 
-$province_ja = array("-選択-","北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
+$province_ja = array(__('-- Select --', 'usces'),"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
 				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
 				"福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府",
 				"大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県",
 				"徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県",
 				"宮崎県","鹿児島県","沖縄県");
-$province_en = array("-- select --","Alabama","Alaska","Arizona","Arkansas","California","Colorado",
+$province_en = array(__('-- Select --', 'usces'),"Alabama","Alaska","Arizona","Arkansas","California","Colorado",
 				"Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii",
 				"Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
 				"Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri",
@@ -82,6 +82,7 @@ update_option('usces_display_mode',$display_mode);
 update_option('usces_pref',$usces_pref);
 update_option('usces_shipping_rule',$shipping_rule);
 update_option('usces_item_option_select',$item_option_select);
+update_option('usces_currency_symbol',__('$', 'usces'));
 //update_option('shipping_charge_structure',$shipping_charge_structure);
 
 

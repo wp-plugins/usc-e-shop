@@ -9,13 +9,13 @@ if ( ! defined('ABSPATH') ) die();
 $item_headers = array(
 				'cb' => '<input type="checkbox" />',
 				'pict' => '&nbsp;',
-				'title' => '商品',
-				'sku' => 'ＳＫＵ',
-				'price' => '価格',
-				'zaikonum' => '在庫',
-				'zaiko' => 'ステイタス',
-				'categories' => 'カテゴリー',
-				'date' => '登録日'
+				'title' => __('Items','usces'),
+				'sku' => 'SKU',
+				'price' => __('Price','usces'),
+				'zaikonum' => __('stock', 'usces'),
+				'zaiko' => __('stock status', 'usces'),
+				'categories' => __('Categories', 'usces'),
+				'date' => __('Registration date', 'usces')
 				);
 $zaiko_status = get_option('usces_zaiko_status');
 ?>

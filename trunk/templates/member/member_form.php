@@ -41,13 +41,15 @@ $html .= '<div class="error_message">' . $this->error_message . '</div>
 <th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
 <td>' . __('Familly name', 'usces') . '<input name="member[name1]" id="name1" type="text" value="' . $usces_members['name1'] . '" /></td>
 <td>' . __('Given name', 'usces') . '<input name="member[name2]" id="name2" type="text" value="' . $usces_members['name2'] . '" /></td>
-</tr>
-<tr class="inp1">
-<th scope="row"><em>*</em>' . __('furigana', 'usces') . '</th>
-<td>' . __('Familly name', 'usces') . '<input name="member[name3]" id="name3" type="text" value="' . $usces_members['name3'] . '" /></td>
-<td>' . __('Given name', 'usces') . '<input name="member[name4]" id="name4" type="text" value="' . $usces_members['name4'] . '" /></td>
-</tr>
-<tr>
+</tr>';
+if( USCES_JP ){
+	$html .= '<tr class="inp1">
+	<th scope="row">' . __('furigana', 'usces') . '</th>
+	<td>' . __('Familly name', 'usces') . '<input name="member[name3]" id="name3" type="text" value="' . $usces_members['name3'] . '" /></td>
+	<td>' . __('Given name', 'usces') . '<input name="member[name4]" id="name4" type="text" value="' . $usces_members['name4'] . '" /></td>
+	</tr>';
+}
+$html .= '<tr>
 <th scope="row"><em>*</em>' . __('Zip/Postal Code', 'usces') . '</th>
 <td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . $usces_members['zipcode'] . '" />例）100-1000</td>
 </tr>

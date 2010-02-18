@@ -31,7 +31,7 @@ function toggleVisibility(id) {
 </script>
 <div class="wrap">
 <div class="usces_admin">
-<h2>Welcart Shop メール設定<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2>Welcart Shop <?php _e('E-mail Setting','usces'); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
 		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
@@ -39,304 +39,304 @@ function toggleVisibility(id) {
 	</div>
 </div>
 <form action="" method="post" name="option_form" id="option_form">
-<input name="usces_option_update" type="submit" class="button" value="設定を更新" />
+<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
-<h3 class="hndle"><span>SMTPサーバーホスト</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_smtp_host');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('SMTP server host','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_smtp_host');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">ホスト名</th>
+	    <th width="150"><?php _e('Host name','usces'); ?></th>
 	    <td><input name="smtp_hostname" id="smtp_hostname" type="text" class="mail_title" value="<?php echo $smtp_hostname; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_smtp_host" class="explanation">メール送信用サーバーのホスト名を設定します。localhost で送信ができない場合はSMTPサーバーが必要になります。</div>
+<div id="ex_smtp_host" class="explanation"><?php _e('This is a field setting the host name of a server for email transmission of a message. When the transmission of a message is not possible in localhost, a SMTP server is necessary.','usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>サンキューメール（自動送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_thakyou_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Thanks email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_thakyou_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[thankyou]" id="title[thankyou]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['thankyou']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[thankyou]" id="header[thankyou]" class="mail_header"><?php echo $mail_datas['header']['thankyou']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[thankyou]" id="footer[thankyou]" class="mail_footer"/><?php echo $mail_datas['footer']['thankyou']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[thankyou]" id="footer[thankyou]" class="mail_footer"><?php echo $mail_datas['footer']['thankyou']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_thakyou_mail" class="explanation">受注時にお客様に対して自動送信するメールです。</div>
+<div id="ex_thakyou_mail" class="explanation"><?php _e('This is an email transmitting a message for a visitor at the time of an order.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>受注メール（自動送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Order email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[order]" id="title[order]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['order']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[order]" id="header[order]" class="mail_header"><?php echo $mail_datas['header']['order']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[order]" id="footer[order]" class="mail_footer"/><?php echo $mail_datas['footer']['order']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[order]" id="footer[order]" class="mail_footer"><?php echo $mail_datas['footer']['order']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_order_mail" class="explanation">受注時に受注用メールアドレス（<?php echo $this->options['order_mail']; ?>）に対して送信するメールです。</div>
+<div id="ex_order_mail" class="explanation"><?php _e(sprintf('This is an email transmitting a message for owner of shop(%s).', $this->options['order_mail']), 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>問い合わせ受付メール（自動送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Inquiry receptionist email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[inquiry]" id="title[inquiry]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['inquiry']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[inquiry]" id="header[inquiry]" class="mail_header"><?php echo $mail_datas['header']['inquiry']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[inquiry]" id="footer[inquiry]" class="mail_footer"/><?php echo $mail_datas['footer']['inquiry']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[inquiry]" id="footer[inquiry]" class="mail_footer"><?php echo $mail_datas['footer']['inquiry']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_inquiry_mail" class="explanation">問い合わせ時に、お客様宛てに自動送信するメールです。</div>
+<div id="ex_inquiry_mail" class="explanation"><?php _e('This is an e-mail which will be sent aytomatically to your customers at the contact from customer.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>入会完了のご連絡メール（自動送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_membercomp_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Conformation e-mail of membership registeration.', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_membercomp_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[membercomp]" id="title[membercomp]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['membercomp']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[membercomp]" id="header[membercomp]" class="mail_header"><?php echo $mail_datas['header']['membercomp']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[membercomp]" id="footer[membercomp]" class="mail_footer"/><?php echo $mail_datas['footer']['membercomp']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[membercomp]" id="footer[membercomp]" class="mail_footer"><?php echo $mail_datas['footer']['membercomp']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_membercomp_mail" class="explanation">会員登録が完了した際に自動送信されるメールです。</div>
+<div id="ex_membercomp_mail" class="explanation"><?php _e('This is an e-mail which will be snnt automatically to your customers when their membership registration is completed.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 
 <div class="postbox">
-<h3 class="hndle"><span>発送完了メール（管理画面より送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_completionmail_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Shipping complete email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_completionmail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[completionmail]" id="title[completionmail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['completionmail']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[completionmail]" id="header[completionmail]" class="mail_header"><?php echo $mail_datas['header']['completionmail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[completionmail]" id="footer[completionmail]" class="mail_footer"/><?php echo $mail_datas['footer']['completionmail']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[completionmail]" id="footer[completionmail]" class="mail_footer"><?php echo $mail_datas['footer']['completionmail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_completionmail_mail" class="explanation">管理画面より発送完了登録した際に手動送信するメール。</div>
+<div id="ex_completionmail_mail" class="explanation"><?php _e('This is an email transmitted manual operation to than a management screen, when the shipment of the article was completed.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>ご注文確認メール（管理画面より送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_ordermail_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Order confirmation email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_ordermail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[ordermail]" id="title[ordermail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['ordermail']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[ordermail]" id="header[ordermail]" class="mail_header"><?php echo $mail_datas['header']['ordermail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[ordermail]" id="footer[ordermail]" class="mail_footer"/><?php echo $mail_datas['footer']['ordermail']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[ordermail]" id="footer[ordermail]" class="mail_footer"><?php echo $mail_datas['footer']['ordermail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_ordermail_mail" class="explanation">管理画面より新規受注を登録した際に手動送信するメール。</div>
+<div id="ex_ordermail_mail" class="explanation"><?php _e('This is an email transmitted manual operation to than a management screen, when you registered a new order.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>ご注文内容変更の確認メール（管理画面より送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_changemail_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Confirmation mail for change of orders. (sent by admin.)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_changemail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[changemail]" id="title[changemail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['changemail']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[changemail]" id="header[changemail]" class="mail_header"><?php echo $mail_datas['header']['changemail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[changemail]" id="footer[changemail]" class="mail_footer"/><?php echo $mail_datas['footer']['changemail']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[changemail]" id="footer[changemail]" class="mail_footer"><?php echo $mail_datas['footer']['changemail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_changemail_mail" class="explanation">管理画面より受注内容を変更した際に手動送信するメール。</div>
+<div id="ex_changemail_mail" class="explanation"><?php _e('This is an e-mail which will be sent manually from admin screen, when there is changes of order.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>ご入金確認のご連絡メール（管理画面より送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_receiptmail_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Mail for Confirmation of payment. ( sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_receiptmail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[receiptmail]" id="title[receiptmail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['receiptmail']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[receiptmail]" id="header[receiptmail]" class="mail_header"><?php echo $mail_datas['header']['receiptmail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[receiptmail]" id="footer[receiptmail]" class="mail_footer"/><?php echo $mail_datas['footer']['receiptmail']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[receiptmail]" id="footer[receiptmail]" class="mail_footer"><?php echo $mail_datas['footer']['receiptmail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_receiptmail_mail" class="explanation">振込み入金を確認した際に手動送信するメール。</div>
+<div id="ex_receiptmail_mail" class="explanation"><?php _e('This is an e-mail which will be sent to customers when their transfer payment is confirmed.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>お見積りメール（管理画面より送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_mitumorimail_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Estimate email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_mitumorimail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[mitumorimail]" id="title[mitumorimail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['mitumorimail']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[mitumorimail]" id="header[mitumorimail]" class="mail_header"><?php echo $mail_datas['header']['mitumorimail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[mitumorimail]" id="footer[mitumorimail]" class="mail_footer"/><?php echo $mail_datas['footer']['mitumorimail']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[mitumorimail]" id="footer[mitumorimail]" class="mail_footer"><?php echo $mail_datas['footer']['mitumorimail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_mitumorimail_mail" class="explanation">管理画面より見積り登録した際に手動送信するメール。</div>
+<div id="ex_mitumorimail_mail" class="explanation"><?php _e('This is an email transmitted manual operation to than a management screen, when you  registered an estimate.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>ご注文キャンセルの確認メール（管理画面より送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_cancelmail_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('E-mail for confirmation of cancellation. (sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_cancelmail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[cancelmail]" id="title[cancelmail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['cancelmail']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[cancelmail]" id="header[cancelmail]" class="mail_header"><?php echo $mail_datas['header']['cancelmail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[cancelmail]" id="footer[cancelmail]" class="mail_footer"/><?php echo $mail_datas['footer']['cancelmail']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[cancelmail]" id="footer[cancelmail]" class="mail_footer"><?php echo $mail_datas['footer']['cancelmail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_cancelmail_mail" class="explanation">受注をキャンセルした際に手動送信するメール。</div>
+<div id="ex_cancelmail_mail" class="explanation"><?php _e('This is an e-mail which will be sent when order has been canselled.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>その他のメール（管理画面より送信）</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_othermail_mail');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Other e-mails(sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_othermail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150">タイトル</th>
+	    <th width="150"><?php _e('Title', 'usces'); ?></th>
 	    <td><input name="title[othermail]" id="title[othermail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['othermail']; ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>ヘッダ</th>
+	    <th><?php _e('header', 'usces'); ?></th>
 	    <td><textarea name="header[othermail]" id="header[othermail]" class="mail_header"><?php echo $mail_datas['header']['othermail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th>フッタ</th>
-	    <td><textarea name="footer[othermail]" id="footer[othermail]" class="mail_footer"/><?php echo $mail_datas['footer']['othermail']; ?></textarea></td>
+	    <th><?php _e('footer', 'usces'); ?></th>
+	    <td><textarea name="footer[othermail]" id="footer[othermail]" class="mail_footer"><?php echo $mail_datas['footer']['othermail']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_othermail_mail" class="explanation">臨時で送信するメール。</div>
+<div id="ex_othermail_mail" class="explanation"><?php _e('e-mail which will be sent on temporaly basis', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 
 
 </div><!--poststuff-->
-<input name="usces_option_update" type="submit" class="button" value="設定を更新" />
+<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->

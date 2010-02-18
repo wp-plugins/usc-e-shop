@@ -80,11 +80,14 @@ jQuery(function($){
 		var coll = $("#changeselect").val();
 		var mes = '';
 		if( coll == 'zaiko' ){
-			mes = 'チェックされた商品の在庫状況を「' + $("select[name='change\[word\]\[zaiko\]'] option:selected").html() + '」に変更します。'+"\nＳＫＵごとの在庫状態がすべて「" + $("select[name='change\[word\]\[zaiko\]'] option:selected").html() + "」となります。\n\nよろしいですか？";
+			mes = <?php echo sprintf(__("'Stock status of items which you have checked will be changed into ' + %s + ' Stock status of each SKU will be all shown as ' + %s + ' Do you agree with this oparation?'", 'usces'),
+							'$("select\[name=\"change\[word\]\[zaiko\]\"\] option:selected").html()',
+							'$("select\[name=\"change\[word\]\[zaiko\]\"\] option:selected").html()'); ?>;
 		}else if( coll == 'display_status' ){
-			mes = 'チェックされた商品の表示状況を、すべて「' + $("select[name='change\[word\]\[display_status\]'] option:selected").html() + '」に変更します。'+"\n\nよろしいですか？";
+			mes = <?php echo sprintf(__("'Are you sure of changing all the items you have checked in to ' + %s + ' ?'", 'usces'),
+							'$("select\[name=\"change\[word\]\[display_status\]\"\] option:selected").html()'); ?>;
 		}else if(coll == 'delete'){
-			mes = "チェックされた商品を一括完全削除します。\n\nよろしいですか？";
+			mes = <?php _e("'Are you sure of deleting all the items you have checked in bulk?'", 'usces'); ?>;
 		}else{
 			$("#itemlistaction").val('');
 			return false;
@@ -105,13 +108,13 @@ jQuery(function($){
 			var column = $("#searchselect").val();
 			
 			if( column == 'item_name' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][item_name]" type="text" value="<?php echo wp_specialchars($arr_search['word']['item_name']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'item_code' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][item_code]" type="text" value="<?php echo wp_specialchars($arr_search['word']['item_code']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'post_title' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][post_title]" type="text" value="<?php echo wp_specialchars($arr_search['word']['post_title']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'zaiko_num' ) {
 				label = '';
@@ -147,12 +150,12 @@ jQuery(function($){
 			}else if( column == 'display_status' ) {
 				label = '';
 				html = '<select name="search[word][display_status]" class="searchselect">';
-				html += '<option value="公開済み"<?php if("公開済み" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>公開済み</option>';
-				html += '<option value="予約済み"<?php if("予約済み" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>予約済み</option>';
-				html += '<option value="下書き"<?php if("下書き" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>下書き</option>';
-				html += '<option value="レビュー待ち"<?php if("レビュー待ち" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>レビュー待ち</option>';
-				html += '<option value="非公開"<?php if("非公開" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>非公開</option>';
-				html += '<option value="ゴミ箱"<?php if("ゴミ箱" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>ゴミ箱の中</option>';
+				html += '<option value="<?php _e('Published', 'usces'); ?>"<?php if( __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
+				html += '<option value="<?php _e('Scheduled', 'usces'); ?>"<?php if( __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
+				html += '<option value="<?php _e('Draft', 'usces'); ?>"<?php if( __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
+				html += '<option value="<?php _e('Pending Review', 'usces'); ?>"<?php if( __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
+				html += '<option value="<?php _e('Closed', 'usces'); ?>"<?php if( __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
+				html += '<option value="<?php _e('Trash', 'usces'); ?>"<?php if( __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
 				html += '</select>';
 			} 
 			
@@ -177,8 +180,8 @@ jQuery(function($){
 			}else if( column == 'display_status' ) {
 				label = '';
 				html = '<select name="change[word][display_status]" class="searchselect">';
-				html += '<option value="publish">公開済み</option>';
-				html += '<option value="private">非公開</option>';
+				html += '<option value="publish"><?php _e('Published', 'usces'); ?></option>';
+				html += '<option value="private"><?php _e('Closed', 'usces'); ?></option>';
 				html += '</select>';
 			}else if( column == 'delete' ) {
 				label = '';
@@ -210,9 +213,9 @@ jQuery(function($){
 		}
 	});
 	$('#up_dlg').click(function() {
-			$('#upload_dialog').dialog( 'option' , 'title' , '商品一括登録' );
+			$('#upload_dialog').dialog( 'option' , 'title' , '<?php _e('Collective registration item', 'usces'); ?>' );
 			$('#upload_dialog').dialog( 'option' , 'width' , 500 );
-			$('#dialogExp').html( '規定のCSVをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。' );
+			$('#dialogExp').html( '<?php _e('Upload prescribed CSV and perform the collective registration of the article.<br />Please choose a file, and push the registration start.', 'usces'); ?>' );
 			$('#upload_dialog').dialog( 'open' );
 	});
 
@@ -231,7 +234,7 @@ function toggleVisibility(id) {
 };
 
 function deleteconfirm(item_id){
-	if(confirm('商品コード '+item_id+' の商品を削除します。よろしいですか？')){
+	if(confirm(<?php _e("'Are you sure of deleting the item, item code ' + item_id + ' ?'", 'usces'); ?>)){
 		return true;
 	}else{
 		return false;
@@ -249,7 +252,7 @@ jQuery(document).ready(function($){
 	});
 	if(	$("#searchSwitchStatus").val() == 'OFF'){
 		$("#searchBox").css("display", "none");
-		$("#searchVisiLink").html('操作フィールド表示');
+		$("#searchVisiLink").html('<?php _e('Show the Operation field', 'usces'); ?>');
 	} else {
 		$("#searchBox").css("display", "block");
 		$("#searchVisiLink").css("display", "none");
@@ -262,7 +265,7 @@ jQuery(document).ready(function($){
 <div class="wrap">
 <div class="usces_admin">
 <form action="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit'; ?>" method="post" name="tablesearch">
-<h2>Welcart Shop 商品リスト<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2>Welcart Shop <?php _e('Item list','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
@@ -278,7 +281,7 @@ jQuery(document).ready(function($){
 <div id="searchBox">
 		<table id="search_table">
 		<tr>
-		<td>検索項目</td>
+		<td><?php _e('search fields', 'usces'); ?></td>
 		<td><select name="search[column]" class="searchselect" id="searchselect">
 		    <option value="none"> </option>
 <?php foreach ($arr_column as $key => $value):
@@ -290,7 +293,7 @@ jQuery(document).ready(function($){
 		if( $value != 'sku_key' && $value != 'price' ) :
 ?>
 	<?php if( $value == 'zaiko_num' ){ ?>
-		    <option value="<?php echo $value ?>"<?php echo $selected ?>>在庫数０の商品</option>
+		    <option value="<?php echo $value ?>"<?php echo $selected ?>><?php _e('items without stock', 'usces'); ?></option>
 	<?php }else if( USCES_MYSQL_VERSION < 5 && $value == 'item_code' ){ continue; ?>
 	<?php }else{ ?>
 		    <option value="<?php echo $value ?>"<?php echo $selected ?>><?php echo $key ?></option>
@@ -299,25 +302,25 @@ jQuery(document).ready(function($){
     	</select></td>
 		<td id="searchlabel"></td>
 		<td id="searchfield"></td>
-		<td><input name="searchIn" type="submit" class="searchbutton" value="検索" />
-		<input name="searchOut" type="submit" class="searchbutton" value="解除" />
+		<td><input name="searchIn" type="submit" class="searchbutton" value="<?php _e('Search', 'usces'); ?>" />
+		<input name="searchOut" type="submit" class="searchbutton" value="<?php _e('Cancellation', 'usces'); ?>" />
 		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo $DT->searchSwitchStatus; ?>" />
 		</td>
 		</tr>
 		</table>
 		<table id="change_table">
 		<tr>
-		<td>一括操作</td>
+		<td><?php _e('Oparation in bulk', 'usces'); ?></td>
 		<td><select name="allchange[column]" class="searchselect" id="changeselect">
 		    <option value="none"> </option>
-		    <option value="zaiko">在庫状態の変更</option>
-		    <option value="display_status">表示状態の変更</option>
-		    <option value="delete">一括削除</option>
+		    <option value="zaiko"><?php _e('Changes in stock status', 'usces'); ?></option>
+		    <option value="display_status"><?php _e('Edit the display status', 'usces'); ?></option>
+		    <option value="delete"><?php _e('Delete in bulk', 'usces'); ?></option>
     	</select></td>
 		<td id="changelabel"></td>
 		<td id="changefield"></td>
-		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="開始" />
-		<a href="#" id="up_dlg">商品一括登録</a>
+		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="<?php _e('start', 'usces'); ?>" />
+		<a href="#" id="up_dlg"><?php _e('Collective registration item', 'usces'); ?></a>
 		</td>
 		</tr>
 		</table>
@@ -366,9 +369,9 @@ jQuery(document).ready(function($){
 				&nbsp;
 			<?php endif; ?>
 			<ul class="item_list_navi">
-				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>">編集</a></li>
+				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>"><?php _e('edit', 'usces'); ?></a></li>
 				<li>&nbsp;|&nbsp;</li>
-				<!--<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');">削除</a></li>-->
+				<!--<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>-->
 <?php
 			if ( current_user_can('delete_post', $post->ID) ) {
 				if ( 'trash' == $post->post_status ){
@@ -394,9 +397,9 @@ jQuery(document).ready(function($){
 				&nbsp;
 			<?php endif; ?>
 			<ul class="item_list_navi">
-				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>">編集</a></li>
+				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>"><?php _e('edit', 'usces'); ?></a></li>
 				<li>&nbsp;|&nbsp;</li>
-				<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');">削除</a></li>
+				<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>
 			</ul>
 			</td>
 			
@@ -456,8 +459,8 @@ jQuery(document).ready(function($){
 	<input name="page" type="hidden" value="usces_itemedit" />
 	<input name="action" type="hidden" value="itemcsv" />
 	</form>
-	<p>アップロード完了後に表示が更新されます。</p>
-	<p>	登録状況はログ（usc-e-shop/logs/itemcsv_log.txt）をご覧下さい。<br />ログはアップロードごとに上書き更新されます。</p>
+	<p><?php _e('Indication is updated after upload completion.', 'usces'); ?></p>
+	<p><?php _e('Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload.', 'usces'); ?></p>
 </div>
 
 </div><!--usces_admin-->

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @package Welcart
+ * @subpackage uCart Default Theme
+ */
+?>
 <?php get_header(); ?>
 
 <div class="center"><!-- single -->

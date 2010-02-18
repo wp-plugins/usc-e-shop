@@ -13,16 +13,16 @@ $cal2->setToday($nextyy, $nextmm, $nextdd);
 $cal2->setCalendarData();
 ?>
 <table cellspacing="0" id="wp-calendar" class="usces_calendar">
-<caption>今月(<?php echo  $todayyy.'年'.$todaymm.'月'; ?>)</caption>
+<caption><?php _e('current month', 'usces'); ?>(<?php echo  $todayyy.'年'.$todaymm.'月'; ?>)</caption>
 <thead>
 	<tr>
-		<th>日</th>
-		<th>月</th>
-		<th>火</th>
-		<th>水</th>
-		<th>木</th>
-		<th>金</th>
-		<th>土</th>
+		<th><?php _e('Sun', 'usces'); ?></th>
+		<th><?php _e('Mon', 'usces'); ?></th>
+		<th><?php _e('Tue', 'usces'); ?></th>
+		<th><?php _e('Wed', 'usces'); ?></th>
+		<th><?php _e('Thu', 'usces'); ?></th>
+		<th><?php _e('Fri', 'usces'); ?></th>
+		<th><?php _e('Sat', 'usces'); ?></th>
 	</tr>
 </thead>
 <tbody>
@@ -43,16 +43,16 @@ $cal2->setCalendarData();
 </tbody>
 </table>
 <table cellspacing="0" id="wp-calendar" class="usces_calendar">
-<caption>翌月(<?php echo  $nextyy.'年'.$nextmm.'月'; ?>)</caption>
+<caption><?php _e('Next month', 'usces'); ?>(<?php echo  $nextyy.'年'.$nextmm.'月'; ?>)</caption>
 <thead>
 	<tr>
-		<th>日</th>
-		<th>月</th>
-		<th>火</th>
-		<th>水</th>
-		<th>木</th>
-		<th>金</th>
-		<th>土</th>
+		<th><?php _e('Sun', 'usces'); ?></th>
+		<th><?php _e('Mon', 'usces'); ?></th>
+		<th><?php _e('Tue', 'usces'); ?></th>
+		<th><?php _e('Wed', 'usces'); ?></th>
+		<th><?php _e('Thu', 'usces'); ?></th>
+		<th><?php _e('Fri', 'usces'); ?></th>
+		<th><?php _e('Sat', 'usces'); ?></th>
 	</tr>
 </thead>
 <tbody>
@@ -72,4 +72,4 @@ $cal2->setCalendarData();
 <?php endfor; ?>
 </tbody>
 </table>
-(<span class="business_days_exp_box" style="background-color:#FFECCE">　　</span>  発送業務休日)
+(<span class="business_days_exp_box" style="background-color:#FFECCE">　　</span>  <?php _e('Holiday for Shipping Operations', 'usces'); ?>)

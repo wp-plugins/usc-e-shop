@@ -74,8 +74,8 @@ function list_item_sku_meta( $meta ) {
 		<th>' . __('SKU code','usces') . '</th>
 		<th>' . __('normal price','usces') . '</th>
 		<th>' . __('Sale price','usces') . '</th>
-		<th>' . __('number of the stock','usces') . '</th>
-		<th>' . __('Status','usces') . '</th>
+		<th>' . __('stock','usces') . '</th>
+		<th>' . __('stock status', 'usces') . '</th>
 	</tr>
 	</thead>
 	<tbody id="item-sku-list">
@@ -96,7 +96,7 @@ function list_item_sku_meta( $meta ) {
 	</tr>
 	<tr>
 		<th><?php _e('SKU display name ','usces'); ?></th>
-		<th><?php _e('A unit','usces'); ?></th>
+		<th><?php _e('unit','usces'); ?></th>
 		<th colspan="2">　</th>
 		<th><?php _e('Apply business package','usces'); ?></th>
 	</tr>
@@ -380,7 +380,7 @@ function item_option_meta_form() {
 <span id="cancelnew" class="hidden"><?php _e('Cancel'); ?></span></a>
 --><?php } else { ?>
 <!--<input type="text" id="newoptname" name="newoptname" class="item-opt-key" tabindex="7" value="" />
-<input name="newoptmeans" type="checkbox" id="newoptmeans" class="item-opt-means" /><label for='newoptmeans'>マルチセレクト</label></div>
+<input name="newoptmeans" type="checkbox" id="newoptmeans" class="item-opt-means" /><label for='newoptmeans'><?php _e('Multi-select','usces') ?></label></div>
 -->
 <?php _e('Please create a common option.','usces') ?>
 <?php } ?>
@@ -423,7 +423,7 @@ function item_sku_meta_form() {
 </tr>
 <tr>
 	<th><?php _e('SKU display name ','usces') ?></th>
-	<th><?php _e('A unit','usces') ?></th>
+	<th><?php _e('unit','usces') ?></th>
 	<th colspan="2">　</th>
 	<th><?php _e('Apply business package','usces') ?></th>
 </tr>
@@ -1272,9 +1272,9 @@ function get_order_item( $item_code ) {
 	$r .= "<th>" . __('title','usces') . "</th>\n";
 	$r .= "<th>" . __('List price','usces') . $usces->getGuidTax() . "</th>\n";
 	$r .= "<th>" . __('Sale price','usces') . $usces->getGuidTax() . "</th>\n";
-	$r .= "<th>" . __('number of the stock','usces') . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
-	$r .= "<th>" . __('A unit','usces') . "</th>\n";
+	$r .= "<th>" . __('stock','usces') . "</th>\n";
+	$r .= "<th>" . __('unit','usces') . "</th>\n";
 	$r .= "<th>&nbsp;</th>\n";
 	$r .= "</tr>\n";
 	$r .= "</thead>\n";
@@ -1291,8 +1291,8 @@ function get_order_item( $item_code ) {
 		$r .= "<tr>\n";
 		$r .= "<td rowspan='2'>" . $sku . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
-		$r .= "<td><span class='cprice'>&yen;" . $cprice . "</span></td>\n";
-		$r .= "<td><span class='price'>&yen;" . $price . "</span></td>\n";
+		$r .= "<td><span class='cprice'>" . __('$', 'usces') . $cprice . "</span></td>\n";
+		$r .= "<td><span class='price'>" . __('$', 'usces') . $price . "</span></td>\n";
 		$r .= "<td>" . $zaiko . "</td>\n";
 		$r .= "<td>" . $zaikonum . "</td>\n";
 //			$r .= "<td>" . usces_the_itemQuant() . "</td>\n";
@@ -1497,6 +1497,12 @@ function item_save_metadata() {
 	}
 	$itemIndividualSCharge = isset($_POST['itemIndividualSCharge']) ? 1 : 0;
 	update_post_meta($post_id, 'itemIndividualSCharge', $itemIndividualSCharge);
+	
+	if(isset($_POST['wcexp'])){
+		$wcexp = serialize($_POST['wcexp']);
+		update_post_meta($post_id, '_wcexp', $wcexp);
+	}
+
 	
    return ;
 }

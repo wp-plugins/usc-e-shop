@@ -19,27 +19,27 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		<div class="exp">
 		<div class="field">';
 	if( $this->itemsku['value']['cprice'] > 0 ){
-		$html .= '<div class="field_name">定価' . $this->getGuidTax() . '</div>
-		<div class="field_cprice">&yen;' . number_format($this->itemsku['value']['cprice']) . '</div>';
+		$html .= '<div class="field_name">' . __('List price', 'usces') . $this->getGuidTax() . '</div>
+		<div class="field_cprice">' . __('$', 'usces') . number_format($this->itemsku['value']['cprice']) . '</div>';
 	}
-	$html .= '<div class="field_name">販売価格' . $this->getGuidTax() . '</div>
-		<div class="field_price">&yen;' . number_format($this->itemsku['value']['price']) . '</div>
+	$html .= '<div class="field_name">'.__('selling price', 'usces') . $this->getGuidTax() . '</div>
+		<div class="field_price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</div>
 		</div>
 		<div class="field">
-		在庫：' . usces_the_itemZaiko('return') . '
+		' . __('stock status', 'usces') . '：' . usces_the_itemZaiko('return') . '
 		</div>
 		
 		' . $content . '
 		</div>' . usces_the_itemGpExp('return') . '
 		<div class="skuform" align="right">';
 	if (usces_is_options()) {
-		$html .= "<table class='item_option'><caption>オプションを指定してください。</caption>\n";
+		$html .= "<table class='item_option'><caption>".__('Please appoint an option.', 'usces')."</caption>\n";
 		while (usces_have_options()) {
 			$html .= "<tr><th>" . $this->itemopt['key'] . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
 		}
 		$html .= "</table>\n";
 	}
-	$button = '<div style="margin-top:10px">数量' . usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton('カートへ入れる', 0, 'return') . '</div>';
+	$button = '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>';
 	$html .= apply_filters('usces_filter_dlseller_button', $button);
 	$html .= '</div>';
 	
@@ -51,18 +51,18 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		<table class="skumulti">
 		<thead>
 		<tr>
-		<th rowspan="2" class="thborder">注文番号</th>
+		<th rowspan="2" class="thborder">'.__('order number', 'usces').'</th>
 		<th colspan="2">タイトル</th>';
 	if( $this->itemsku['value']['cprice'] > 0 ){
-		$html .= '<th colspan="2">(定価)販売価格' . $this->getGuidTax() . '</th>';
+		$html .= '<th colspan="2">('.__('List price', 'usces').')'.__('selling price', 'usces') . $this->getGuidTax() . '</th>';
 	}else{
-		$html .= '<th colspan="2">販売価格' . $this->getGuidTax() . '</th>';
+		$html .= '<th colspan="2">'.__('selling price', 'usces') . $this->getGuidTax() . '</th>';
 	}
 	$html .= '</tr>
 		<tr>
-		<th class="thborder">在庫</th>
-		<th class="thborder">数量</th>
-		<th class="thborder">単位</th>
+		<th class="thborder">'.__('stock status', 'usces').'</th>
+		<th class="thborder">'.__('Quantity', 'usces').'</th>
+		<th class="thborder">'.__('unit', 'usces').'</th>
 		<th class="thborder">&nbsp;</th>
 		</tr>
 		</thead>
@@ -72,7 +72,7 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 			<td rowspan="2">' . $this->itemsku['key'] . '</td>
 			<td colspan="2" class="skudisp subborder">' . $this->itemsku['value']['disp'];
 		if (usces_is_options()) {
-			$html .= "<table class='item_option'><caption>オプションを指定してください。</caption>\n";
+			$html .= "<table class='item_option'><caption>".__('Please appoint an option.', 'usces')."</caption>\n";
 			while (usces_have_options()) {
 				$html .= "<tr><th>" . $this->itemopt['key'] . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
 			}
@@ -84,15 +84,15 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		$html .= '</td>
 			<td colspan="2" class="subborder price">';
 		if( $this->itemsku['value']['cprice'] > 0 ){
-			$html .= '<span class="cprice">(&yen;' . number_format($this->itemsku['value']['cprice']) . ')</span>';
+			$html .= '<span class="cprice">(' . __('$', 'usces') . number_format($this->itemsku['value']['cprice']) . ')</span>';
 		}			
-		$html .= '<span class="price">&yen;' . number_format($this->itemsku['value']['price']) . $this->getGuidTax() . '</span><br />' . usces_the_itemGpExp('return') . '</td>
+		$html .= '<span class="price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . $this->getGuidTax() . '</span><br />' . usces_the_itemGpExp('return') . '</td>
 			</tr>
 			<tr>
 			<td class="zaiko">' . usces_the_itemZaiko('return') . '</td>
 			<td class="quant">' . usces_the_itemQuant('return') . '</td>
 			<td class="unit">' . $this->itemsku['value']['unit'] . '</td>
-			<td class="button">' . usces_the_itemSkuButton('カートへ入れる', 0, 'return') . '</td>
+			<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>
 			</tr>';
 	}
 	$html .= '</tbody>
@@ -113,7 +113,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 	$html .= '<div class="assistance_item">';
 	$assistanceposts = get_posts('include='.usces_get_assistance_id_list($post->ID));
 	if ($assistanceposts) {
-		$html .= '<h3>' . usces_the_itemCode( 'return' ) . '専用オプション品</h3>
+		$html .= '<h3>' . usces_the_itemCode( 'return' ) . __('An article concerned', 'usces').'</h3>
 			<ul class="clearfix">';
 		foreach ($assistanceposts as $post) {
 			setup_postdata($post);
@@ -127,7 +127,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 				$html .= '￥' . usces_the_firstPrice('return');
 			}
 			$html .= '<br />
-				&raquo; <a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . $post->post_title . '">詳細を見る</a></p>
+				&raquo; <a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . $post->post_title . '">'.__('see the details', 'usces').'</a></p>
 				</div>
 				</div></li>';
 		}

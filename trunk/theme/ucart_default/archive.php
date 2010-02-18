@@ -1,3 +1,9 @@
+<?php
+/**
+ * @package Welcart
+ * @subpackage uCart Default Theme
+ */
+?>
 <?php get_header(); ?>
 
 <div class="center">
@@ -25,8 +31,8 @@
 
 	
 	<div class="navigation">
-	<div class="alignleft"><?php next_posts_link(__('next article &raquo;', 'usces')); ?></div>
-	<div class="alignright"><?php previous_posts_link(__('&laquo; Previous aorticle', 'usces')); ?></div>
+	<div class="alignleft"><?php next_posts_link(__('Next article &raquo;', 'usces')); ?></div>
+	<div class="alignright"><?php previous_posts_link(__('&laquo; Previous article', 'usces')); ?></div>
 	</div>
 	
 	<?php while (have_posts()) : the_post(); ?>
@@ -45,8 +51,8 @@
 	<?php endwhile; ?>
 	
 	<div class="navigation">
-	<div class="alignleft"><?php next_posts_link(__('next article &raquo;', 'usces')); ?></div>
-	<div class="alignright"><?php previous_posts_link(__('&laquo; Previous aorticle', 'usces')); ?></div>
+	<div class="alignleft"><?php next_posts_link(__('Next article &raquo;', 'usces')); ?></div>
+	<div class="alignright"><?php previous_posts_link(__('&laquo; Previous article', 'usces')); ?></div>
 	</div>
 
 <?php else : ?>

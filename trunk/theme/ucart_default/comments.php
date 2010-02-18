@@ -1,7 +1,7 @@
 <?php
 /**
- * @package WordPress
- * @subpackage Classic_Theme
+ * @package Welcart
+ * @subpackage uCart Default Theme
  */
 
 if ( post_password_required() ) : ?>

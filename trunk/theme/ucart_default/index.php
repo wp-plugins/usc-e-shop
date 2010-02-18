@@ -1,7 +1,7 @@
 <?php
 /**
- * @package WordPress
- * @subpackage USC e-Shop Theme
+ * @package Welcart
+ * @subpackage uCart Default Theme
  */
 get_header();
 ?>

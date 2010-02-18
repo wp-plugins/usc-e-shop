@@ -38,7 +38,7 @@ function toggleVisibility(id) {
 	</div>
 </div>
 <form action="" method="post" name="option_form" id="option_form">
-<input name="usces_option_update" type="submit" class="button" value="<?php _e('edit the setting','usces'); ?>" />
+<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
@@ -52,7 +52,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[login]" id="footer[login]" class="mail_footer"/><?php echo $member_page_datas['footer']['login']; ?></textarea></td>
+	    <td><textarea name="footer[login]" id="footer[login]" class="mail_footer"><?php echo $member_page_datas['footer']['login']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -72,7 +72,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[newmember]" id="footer[newmember]" class="mail_footer"/><?php echo $member_page_datas['footer']['newmember']; ?></textarea></td>
+	    <td><textarea name="footer[newmember]" id="footer[newmember]" class="mail_footer"><?php echo $member_page_datas['footer']['newmember']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -92,7 +92,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[newpass]" id="footer[newpass]" class="mail_footer"/><?php echo $member_page_datas['footer']['newpass']; ?></textarea></td>
+	    <td><textarea name="footer[newpass]" id="footer[newpass]" class="mail_footer"><?php echo $member_page_datas['footer']['newpass']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -112,7 +112,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[changepass]" id="footer[changepass]" class="mail_footer"/><?php echo $member_page_datas['footer']['changepass']; ?></textarea></td>
+	    <td><textarea name="footer[changepass]" id="footer[changepass]" class="mail_footer"><?php echo $member_page_datas['footer']['changepass']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -132,7 +132,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[memberinfo]" id="footer[memberinfo]" class="mail_footer"/><?php echo $member_page_datas['footer']['memberinfo']; ?></textarea></td>
+	    <td><textarea name="footer[memberinfo]" id="footer[memberinfo]" class="mail_footer"><?php echo $member_page_datas['footer']['memberinfo']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -152,7 +152,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[completion]" id="footer[completion]" class="mail_footer"/><?php echo $member_page_datas['footer']['completion']; ?></textarea></td>
+	    <td><textarea name="footer[completion]" id="footer[completion]" class="mail_footer"><?php echo $member_page_datas['footer']['completion']; ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -163,7 +163,7 @@ function toggleVisibility(id) {
 
 
 </div><!--poststuff-->
-<input name="usces_option_update" type="submit" class="button" value="<?php _e('edit the setting','usces'); ?>" />
+<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->

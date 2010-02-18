@@ -64,7 +64,7 @@ jQuery(function($){
 	
 	$("#delivery_method_charge").click(function () {
 		if(shipping_charge.length == 0){
-			alert('送料を設定してください。');
+			alert('<?php _e('Please set the shipping price', 'usces'); ?>');
 		}
 	});
 
@@ -73,7 +73,7 @@ jQuery(function($){
 		$("#delivery_method_name").html('<input name="delivery_method_name" type="text" value="" />');
 		$("#delivery_method_name2").html('');
 		$("#delivery_method_time").val('');
-		$("#delivery_method_button").html('<input name="cancel_delivery_method" id="cancel_delivery_method" type="button" value="キャンセル" onclick="operation.disp_delivery_method(0);" /><input name="add_delivery_method" id="add_delivery_method" type="button" value="追加" onclick="operation.add_delivery_method();" />');
+		$("#delivery_method_button").html('<input name="cancel_delivery_method" id="cancel_delivery_method" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_delivery_method(0);" /><input name="add_delivery_method" id="add_delivery_method" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_delivery_method();" />');
 		$("input[name='delivery_method_name']").focus().select();
 		operation.make_delivery_method_charge(-1);
 	});
@@ -94,12 +94,12 @@ jQuery(function($){
 		if(shipping_charge.length === 0) return false;
 		var valuehtml = '';
 		for(var i=0; i<pref.length; i++){
-			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' />円</div>\n";
+			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php _e('dollars', 'usces'); ?></div>\n";
 		}
 		$("#shipping_charge_name").html('<input name="shipping_charge_name" type="text" value="" />');
 		$("#shipping_charge_name2").html('');
 		$("#shipping_charge_value").html(valuehtml);
-		$("#shipping_charge_button").html('<input name="cancel_shipping_charge" id="cancel_shipping_charge" type="button" value="キャンセル" onclick="operation.disp_shipping_charge(0);" /><input name="add_shipping_charge" id="add_shipping_charge" type="button" value="追加" onclick="operation.add_shipping_charge();" />');
+		$("#shipping_charge_button").html('<input name="cancel_shipping_charge" id="cancel_shipping_charge" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_shipping_charge(0);" /><input name="add_shipping_charge" id="add_shipping_charge" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_shipping_charge();" />');
 		$("input[name='shipping_charge_name']").focus().select();
 	});
 	
@@ -121,7 +121,7 @@ jQuery(function($){
 				$("#delivery_method_name").html('<input name="delivery_method_name" type="text" value="" />');
 				$("#delivery_method_name2").html('');
 				$("#delivery_method_time").val('');
-				$("#delivery_method_button").html('<input name="add_delivery_method" id="add_delivery_method" type="button" value="追加" onclick="operation.add_delivery_method();" />');
+				$("#delivery_method_button").html('<input name="add_delivery_method" id="add_delivery_method" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_delivery_method();" />');
 				operation.make_delivery_method_charge(-1);
 			}else{
 				var name_select = '<select name="delivery_method_name_select" id="delivery_method_name_select" onchange="operation.onchange_delivery_select(this.selectedIndex);">'+"\n";
@@ -136,7 +136,7 @@ jQuery(function($){
 				$("#delivery_method_name").html(name_select);
 				$("#delivery_method_name2").html('<input name="delivery_method_name" type="text" value="'+delivery_method[selected]['name']+'" />');
 				$("#delivery_method_time").val(delivery_method[selected]['time']);
-				$("#delivery_method_button").html("<input name='delete_delivery_method' id='delete_delivery_method' type='button' value='削除' onclick='operation.delete_delivery_method();' /><input name='update_delivery_method' id='update_delivery_method' type='button' value='更新' onclick='operation.update_delivery_method();' />");
+				$("#delivery_method_button").html("<input name='delete_delivery_method' id='delete_delivery_method' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_delivery_method();' /><input name='update_delivery_method' id='update_delivery_method' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_delivery_method();' />");
 				operation.make_delivery_method_charge(get_delivery_method_charge(selected_method));
 			}
 		},
@@ -201,7 +201,7 @@ jQuery(function($){
 		
 		delete_delivery_method : function() {
 			var delname = $("#delivery_method_name_select option:selected").html();
-			if(!confirm('配送方法「'+delname+'」を削除します。\n\nよろしいですか？')) return false;
+			if(!confirm(<?php _e("'Are you sure of deleting the delivery method ' + delname + ' ?'", 'usces'); ?>)) return false;
 			
 			$("#delivery_method_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#delivery_method_name_select option:selected").val();
@@ -232,9 +232,9 @@ jQuery(function($){
 		make_delivery_method_charge : function(selected) {
 			var option = '<select name="delivery_method_charge" id="delivery_method_charge">'+"\n";
 			if(selected === -1){
-				option += '<option value="-1" selected="selected">送料を固定しない</option>'+"\n";
+				option += '<option value="-1" selected="selected"><?php _e('Not fixing shipping.', 'usces'); ?></option>'+"\n";
 			}else{
-				option += '<option value="-1">送料を固定しない</option>'+"\n";
+				option += '<option value="-1"><?php _e('Not fixing shipping.', 'usces'); ?></option>'+"\n";
 			}
 			for(var i=0; i<shipping_charge.length; i++){
 				if(selected === shipping_charge[i]['id']){
@@ -320,12 +320,12 @@ jQuery(function($){
 			var valuehtml = '';
 			if(shipping_charge.length === 0) {
 				for(var i=0; i<pref.length; i++){
-					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' />円</div>\n";
+					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php _e('dollars', 'usces'); ?></div>\n";
 				}
 				$("#shipping_charge_name").html('<input name="shipping_charge_name" type="text" value="" />');
 				$("#shipping_charge_name2").html('');
 				$("#shipping_charge_value").html(valuehtml);
-				$("#shipping_charge_button").html('<input name="add_shipping_charge" id="add_shipping_charge" type="button" value="追加" onclick="operation.add_shipping_charge();" />');
+				$("#shipping_charge_button").html('<input name="add_shipping_charge" id="add_shipping_charge" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_shipping_charge();" />');
 			}else{
 				var selected = 0;
 				var name_select = '<select name="shipping_charge_name_select" id="shipping_charge_name_select" onchange="operation.onchange_shipping_charge(this.selectedIndex);">'+"\n";
@@ -339,12 +339,12 @@ jQuery(function($){
 				}
 				name_select += "</select>\n";
 				for(var i=0; i<pref.length; i++){
-					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='" + shipping_charge[selected]['value'][pref[i]] + "' class='charge_text' />円</div>\n";
+					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='" + shipping_charge[selected]['value'][pref[i]] + "' class='charge_text' /><?php _e('dollars', 'usces'); ?></div>\n";
 				}
 				$("#shipping_charge_name").html(name_select);
 				$("#shipping_charge_name2").html('<input name="shipping_charge_name" type="text" value="'+shipping_charge[selected]['name']+'" />');
 				$("#shipping_charge_value").html(valuehtml);
-				$("#shipping_charge_button").html("<input name='delete_shipping_charge' id='delete_shipping_charge' type='button' value='削除' onclick='operation.delete_shipping_charge();' /><input name='update_shipping_charge' id='update_shipping_charge' type='button' value='更新' onclick='operation.update_shipping_charge();' />");
+				$("#shipping_charge_button").html("<input name='delete_shipping_charge' id='delete_shipping_charge' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_shipping_charge();' /><input name='update_shipping_charge' id='update_shipping_charge' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_shipping_charge();' />");
 			}
 		},
 		
@@ -416,7 +416,7 @@ jQuery(function($){
 		
 		delete_shipping_charge : function() {
 			var delname = $("#shipping_charge_name_select option:selected").html();
-			if(!confirm('送料「'+delname+'」を削除します。\n\nよろしいですか？')) return false;
+			if(!confirm(<?php _e("'Are you sure of deleting shipping [' + delname + ']?'", 'usces'); ?>)) return false;
 			
 			$("#shipping_charge_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#shipping_charge_name_select option:selected").val();
@@ -447,7 +447,7 @@ jQuery(function($){
 		allCharge : function () {
 			var charge = $("#allcharge").val();
 			if(charge == '') return;
-			confirm('各都道府県の送料を'+charge+'円に一括設定します。'+"\n\n"+'よろしいですか？');
+			confirm(<?php _e("'Are you sure of setting shiping to ' + charge + ' dollars for all the prefecture?'", 'usces'); ?>);
 			for(var i=0; i<pref.length; i++){
 				$("input[name='shipping_charge_value\[" + pref[i] + "\]']").val(charge);
 			}
@@ -484,7 +484,7 @@ jQuery(document).ready(function($){
 </script>
 <div class="wrap">
 <div class="usces_admin">
-<h2>Welcart Shop 配送設定<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2>Welcart Shop <?php _e('Shipping Setting','usces'); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
 		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
@@ -494,20 +494,20 @@ jQuery(document).ready(function($){
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
-<h3 class="hndle"><span>配送方法</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_method');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('shipping option','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_method');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
 	    <th>&nbsp;</th>
-	    <td><a href="#" id="new_delivery_method_action">新規追加</a></td>
+	    <td><a href="#" id="new_delivery_method_action"><?php _e('New addition', 'usces'); ?></a></td>
 	    <th class="sec"></th>
 	    <td></td>
 		<td></td>
 	</tr>
 	<tr>
-	    <th>配送名</th>
+	    <th><?php _e('Shipping name', 'usces'); ?></th>
 	    <td width="150" height="30" id="delivery_method_name"></td>
-	    <th class="sec">指定時間帯</th>
+	    <th class="sec"><?php _e('Deliverly time', 'usces'); ?></th>
 	    <td rowspan="5"><textarea name="delivery_method_time" class="long_txt" id="delivery_method_time"></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
@@ -525,18 +525,18 @@ jQuery(document).ready(function($){
 	</tr>
 	<tr>
 	    <th></th>
-	    <td><a href="#" id="moveup_action">優先順位を上げる</a></td>
+	    <td><a href="#" id="moveup_action"><?php _e('Raise the priority', 'usces'); ?></a></td>
 	    <th rowspan="2" class="sec"></th>
 		<td rowspan="2"></td>
 	</tr>
 	<tr>
 	    <th></th>
-	    <td><a href="#" id="movedown_action">優先順位を下げる</a></td>
+	    <td><a href="#" id="movedown_action"><?php _e('Lower the priority', 'usces'); ?></a></td>
 	</tr>
 	<tr>
 	    <th></th>
 	    <td></td>
-	    <th class="sec">送料固定</th>
+	    <th class="sec"><?php _e('Postage fixation', 'usces'); ?></th>
 	    <td id="delivery_method_charge_td"></td>
 		<td>&nbsp;</td>
 	</tr>
@@ -544,33 +544,32 @@ jQuery(document).ready(function($){
 	    <th></th>
 	    <td></td>
 	    <th class="sec"></th>
-	    <td>送料固定を選択すると上記料金設定に固定されます。「固定しない」の場合は商品に設定された送料が適用されます。
-		</td>
+	    <td><?php _e("It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'.", 'usces'); ?></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 
 <hr size="1" color="#CCCCCC" />
-<div id="ex_delivery_method" class="explanation">配送業者の指定時間帯を一行に一つずつ記入。</div>
+<div id="ex_delivery_method" class="explanation"><?php _e('Please make entry of appointment time to a party by one.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span>送料</span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');">（説明）</a></h3>
+<h3 class="hndle"><span><?php _e('Shipping', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
 	    <th>&nbsp;</th>
-	    <td><a href="#" id="new_shipping_charge_action">新規追加</a></td>
+	    <td><a href="#" id="new_shipping_charge_action"><?php _e('New addition', 'usces'); ?></a></td>
 	    <th class="sec"></th>
 	    <td></td>
 		<td></td>
 	</tr>
 	<tr>
-	    <th>送料名</th>
+	    <th><?php _e('Shipping charge name', 'usces'); ?></th>
 	    <td width="150" height="30" id="shipping_charge_name"></td>
-	    <th class="sec">送料</th>
-	    <td><label class="shipping_charge_label"><input name="allbutton" type="button" class="allbutton" onclick="operation.allCharge();" value="一括設定"  /></label><input name="allcharge" id="allcharge" type="text" class='charge_text' />円</td>
+	    <th class="sec"><?php _e('Shipping', 'usces'); ?></th>
+	    <td><label class="shipping_charge_label"><input name="allbutton" type="button" class="allbutton" onclick="operation.allCharge();" value="一括設定"  /></label><input name="allcharge" id="allcharge" type="text" class='charge_text' /><?php _e('dollars', 'usces'); ?></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
@@ -589,7 +588,7 @@ jQuery(document).ready(function($){
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_shipping_charge" class="explanation">3種類の送料を商品ごとに選ぶことができます。</div>
+<div id="ex_shipping_charge" class="explanation"><?php _e('You can choose the shipping every item.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 

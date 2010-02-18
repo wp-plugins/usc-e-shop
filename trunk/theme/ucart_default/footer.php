@@ -1,7 +1,7 @@
 <?php
 /**
- * @package WordPress
- * @subpackage USC e-Shop Theme
+ * @package Welcart
+ * @subpackage uCart Default Theme
  */
 ?>
 <!-- begin footer -->
@@ -17,7 +17,7 @@
 </ul>
 </div>
 <p class="copyright"><?php usces_copyright(); ?></p>
-<p class="credit"><cite><a href="http://www.usconsort.com/">Powered by Welcart USconsort</a></cite></p>
+<p class="credit"><cite><a href="http://www.usconsort.com/">Powered by Welcart</a></cite></p>
 </div>
 </div><!-- end of wrap -->
 

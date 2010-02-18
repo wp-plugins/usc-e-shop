@@ -193,7 +193,7 @@ case 'edit':
 //		}
 //	}
 
-	$title = 'Welcart Shop 商品情報編集';//__('Edit Post');
+	$title = 'Welcart Shop '.__('Edit item', 'usces');
 
 	if ( !current_user_can('edit_post', $post_ID) )
 		die ( __('You are not allowed to edit this post.') );
@@ -226,7 +226,7 @@ case 'editpost':
 
 	$post_ID = edit_post();
 
-	$title = 'Welcart Shop 商品情報編集';//__('Edit Post');
+	$title = 'Welcart Shop '.__('Edit item', 'usces');
 
 	if ( !current_user_can('edit_post', $post_ID) )
 		die ( __('You are not allowed to edit this post.') );
@@ -264,7 +264,7 @@ case 'editpost':
 	break;
 
 case 'new':
-	$title = 'Welcart Shop 新規商品追加';
+	$title = 'Welcart Shop ' . __('Add New Item', 'usces');
 	$editing = true;
 	
 	if ( current_user_can('edit_pages') ) {

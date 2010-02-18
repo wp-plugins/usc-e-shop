@@ -1,4 +1,4 @@
-// JavaScript Document eショップ
+// JavaScript
 (function($) {
 	itemOpt = {
 		settings: {
@@ -440,7 +440,7 @@
 		},
 
 		getmailmessage : function( flag ) {
-			$("#sendmailmessage").val( '読み込み中・・・' );
+			$("#sendmailmessage").val( uscesL10n.now_loading );
 			var order_id = $("input[name='order_id']").val();
 			var s = orderItem.settings;
 			s.data = "action=order_item_ajax&mode=" + flag + "&order_id=" + order_id;

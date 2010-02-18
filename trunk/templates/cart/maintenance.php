@@ -2,8 +2,8 @@
 $html = '<div id="maintenance-page">
 
 <div class="post">
-<p>只今メンテナンス中です。</p>
-<p>しばらくお待ちください。</p>
+<p>'.__('Maintaining now', 'usces').'</p>
+<p>'.__('Please wait for a while.', 'usces').'</p>
 </div>
 
 </div>';
