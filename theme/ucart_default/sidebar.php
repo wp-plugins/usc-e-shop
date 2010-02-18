@@ -1,7 +1,7 @@
 <?php
 /**
- * @package WordPress
- * @subpackage USC e-Shop Theme
+ * @package Welcart
+ * @subpackage uCart Default Theme
  */
 ?>
 <!-- begin left sidebar -->
@@ -21,7 +21,7 @@
 		</li></ul>
 	</li>
 	<li id="ucart_category-0" class="widget widget_ucart_category">
-		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/category2.png" alt="<?php _e('Product Category','usces') ?>" width="24" height="24" /><?php _e('Product Category','usces') ?></div>
+		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/category2.png" alt="<?php _e('Item Category','usces') ?>" width="24" height="24" /><?php _e('Item Category','usces') ?></div>
 		<ul class="ucart_widget_body">
 		<?php $cats = get_category_by_slug('itemgenre'); ?>
 		<?php wp_list_categories('orderby=id&use_desc_for_title=0&child_of='.$cats->term_id.'&title_li='); ?>
@@ -50,7 +50,7 @@
 	if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar(2) ) : ?>
 	
 	<li id="ucart_featured-0" class="widget widget_ucart_featured">
-		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/osusume.png" alt="<?php _e('items recommended','usces') ?>" width="24" height="24" /><?php _e('items recommended','usces') ?></div>
+		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/osusume.png" alt="<?php _e('Items recommended','usces') ?>" width="24" height="24" /><?php _e('Items recommended','usces') ?></div>
 		<ul class="ucart_widget_body"><li>
 			<?php
 			$offset = usces_posts_random_offset(get_posts('category='.usces_get_cat_id( 'itemreco' )));

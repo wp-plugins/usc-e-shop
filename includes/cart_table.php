@@ -1,16 +1,16 @@
 <div id="cart">
-<div class="upbutton">数量を変更した場合は必ず更新ボタンを押してください。<input name="upButton" type="submit" value="<?php echo '数量更新'; ?>" onclick="return uscesCart.upCart()"  />
+<div class="upbutton"><?php _e("Press the `update` button when you change the amount of items.", 'usces'); ?><input name="upButton" type="submit" value="<?php _e('Quantity renewal', 'usces'); ?>" onclick="return uscesCart.upCart()"  />
 </div>
 <table cellspacing="0" id="cart_table">
 	<thead>
 	<tr>
 		<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
 		<th class="thumbnail"> <?php //echo __('thumbnail','usces'); ?></th>
-		<th>商品<?php //echo __('item','usces'); ?></th>
-		<th class="price">単価<?php //echo __('price','usces'); ?></th>
-		<th class="quantity">数量<?php //echo __('quantity','usces'); ?></th>
-		<th class="subtotal">金額<?php //echo __('subtotal','usces'); ?></th>
-		<th class="stock">在庫<?php //echo __('stock','usces'); ?></th>
+		<th><?php _e('Items','usces'); ?></th>
+		<th class="price"><?php _e('Unit price','usces'); ?></th>
+		<th class="quantity"><?php _e('Quantity','usces'); ?></th>
+		<th class="subtotal"><?php _e('Amount','usces'); ?></th>
+		<th class="stock"><?php _e('stock','usces'); ?></th>
 		<th class="action">　<?php //echo __('action','usces'); ?></th>
 	</tr>
 	</thead>
@@ -32,7 +32,7 @@
 		$skuZaikonum = $this->getItemZaikonum($post_id, $sku);
 		$stockid = $this->getItemZaikoStatusId($post_id, $sku);
 		$stock = $this->getItemZaiko($post_id, $sku);
-		$red = (in_array($stock, array('売切れ','入荷待ち','廃盤'))) ? 'class="signal_red"' : '';
+		$red = (in_array($stock, array(__('Sellout', 'usces'), __('Temporarily out of stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		if (!empty($options)) {
 			$optstr = implode(',', $options);
@@ -48,7 +48,7 @@
 		<td class="aleft"><?php echo $itemName; ?>&nbsp;<?php echo $itemCode; ?>&nbsp;<?php echo $sku; ?><br /><?php echo $optstr; ?></td>
 		<td class="aright">
 		<?php if( usces_is_gptekiyo($post_id, $sku, $quantity) ) : $usces_gp = 1; ?>
-		<img src="<?php echo bloginfo('template_url') . '/images/gp.gif'; ?>" alt="業務パック割引" />
+		<img src="<?php echo bloginfo('template_url') . '/images/gp.gif'; ?>" alt="<?php _e('Business package discount', 'usces'); ?>" />
 		<?php endif; ?>
 		<?php echo number_format($skuPrice); ?>
 		</td>
@@ -74,13 +74,13 @@
 	</tbody>
 	<tfoot>
 	<tr>
-		<th colspan="5" scope="row" class="aright">商品合計<?php //echo __('Items total price','usces'); ?></th>
+		<th colspan="5" scope="row" class="aright"><?php _e('total items','usces'); ?></th>
 		<th class="aright"><?php echo number_format($this->get_total_price()); ?></th>
 		<th colspan="2">&nbsp;</th>
 	</tr>
 	</tfoot>
 </table>
 <?php if( $usces_gp ) : ?>
-<img src="<?php echo bloginfo('template_url') . '/images/gp.gif'; ?>" alt="業務パック割引" />このマークがある価格は<strong>業務パック割引</strong>が適用されています。
+<img src="<?php echo bloginfo('template_url') . '/images/gp.gif'; ?>" alt="<?php _e('Business package discount', 'usces'); ?>" />このマークがある価格は<strong>業務パック割引</strong>が適用されています。
 <?php endif; ?>
 </div>

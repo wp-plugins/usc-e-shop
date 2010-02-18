@@ -21,16 +21,17 @@ $html .= '<div id="cart">
 		<tr>
 			<th scope="row" class="num">' . __('No.','usces') . '</th>
 			<th class="thumbnail">　</th>
-			<th>商品</th>
-			<th class="price">単価</th>
-			<th class="quantity">数量</th>
-			<th class="subtotal">金額</th>
+			<th>' . __('Items','usces') . '</th>
+			<th class="price">' . __('Unit price','usces') . '</th>
+			<th class="quantity">'.__('Quantity', 'usces').'</th>
+			<th class="subtotal">'.__('Amount', 'usces').'</th>
 			<th class="action"></th>
 		</tr>
 		</thead>
 		<tbody>';
 
-$member = $this->get_member();
+$memid = $this->get_member();
+$member = empty($memid) ? 9999999 : $memid;
 $usces_entries = $this->cart->get_entry();
 $this->set_cart_fees( $member, $usces_entries );
 
@@ -73,45 +74,45 @@ for($i=0; $i<count($cart); $i++) {
 $html .= '</tbody>
 	<tfoot>
 	<tr>
-		<th colspan="5" class="aright">商品合計</th>
+		<th colspan="5" class="aright">'.__('total items', 'usces').'</th>
 		<th class="aright">' . number_format($usces_entries['order']['total_items_price']) . '</th>
 		<th>&nbsp;</th>
 	</tr>';
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($usces_entries['order']['usedpoint']) ) {
 	$html .= '<tr>
-		<td colspan="5" class="aright">使用ポイント</td>
+		<td colspan="5" class="aright">'.__('Used points', 'usces').'</td>
 		<td class="aright" style="color:#FF0000">' . number_format($usces_entries['order']['usedpoint']) . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['discount']) ) {
 	$html .= '<tr>
-		<td colspan="5" class="aright">キャンペーン割引</td>
+		<td colspan="5" class="aright">'.__('Campaign disnount', 'usces').'</td>
 		<td class="aright" style="color:#FF0000">' . number_format($usces_entries['order']['discount']) . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 $html .= '<tr>
-	<td colspan="5" class="aright">送料</td>
+	<td colspan="5" class="aright">'.__('Shipping', 'usces').'</td>
 	<td class="aright">' . number_format($usces_entries['order']['shipping_charge']) . '</td>
 	<td>&nbsp;</td>
 	</tr>';
 if( !empty($usces_entries['order']['cod_fee']) ) {
 	$html .= '<tr>
-		<td colspan="5" class="aright">代引手数料</td>
+		<td colspan="5" class="aright">'.__('COD fee', 'usces').'</td>
 		<td class="aright">' . number_format($usces_entries['order']['cod_fee']) . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) ) {
 	$html .= '<tr>
-		<td colspan="5" class="aright">消費税</td>
+		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
 		<td class="aright">' . number_format($usces_entries['order']['tax']) . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 $html .= '<tr>
-	<th colspan="5" class="aright">総合計金額</th>
+	<th colspan="5" class="aright">'.__('Total Amount', 'usces').'</th>
 	<th class="aright">' . number_format($usces_entries['order']['total_full_price']) . '</th>
 	<th>&nbsp;</th>
 	</tr>
@@ -122,15 +123,15 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 		<div class="error_message">' . $this->error_message . '</div>
 		<table cellspacing="0" id="point_table">
 		<tr>
-		<td>現在のポイント</td>
+		<td>'.__('The current point', 'usces').'</td>
 		<td><span class="point">' . $member['point'] . '</span>pt</td>
 		</tr>
 		<tr>
-		<td>利用するポイント</td>
+		<td>'.__('Points you are using here', 'usces').'</td>
 		<td><input name="order[usedpoint]" class="used_point" type="text" value="' . $usces_entries['order']['usedpoint'] . '" />pt</td>
 		</tr>
 		<tr>
-		<td colspan="2"><input name="use_point" type="submit" value="ポイントを使用する" /></td>
+		<td colspan="2"><input name="use_point" type="submit" value="'.__('Use the points', 'usces').'" /></td>
 		</tr>
 	</table>
 	</form>';
@@ -139,115 +140,119 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 $html .= '</div>
 	<table id="confirm_table">
 	<tr class="ttl">
-	<td colspan="2"><h3>お客様情報</h3></td>
+	<td colspan="2"><h3>'.__('Customer Information', 'usces').'</h3></td>
 	</tr>
 	<tr>
-	<th>メールアドレス</th>
+	<th>'.__('e-mail adress', 'usces').'</th>
 	<td>' . $usces_entries['customer']['mailaddress1'] . '</td>
 	</tr>
 	<tr class="bdc">
-	<th>お名前</th>
+	<th>'.__('Full name', 'usces').'</th>
 	<td>' . $usces_entries['customer']['name1'] . ' ' . $usces_entries['customer']['name2'] . '</td>
-	</tr>
-	<tr>
-	<th>フリガナ</th>
+	</tr>';
+if( USCES_JP ){
+	$html .= '<tr>
+	<th>'.__('furigana', 'usces').'</th>
 	<td>' . $usces_entries['customer']['name3'] . ' ' . $usces_entries['customer']['name4'] . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>郵便番号</th>
+	</tr>';
+}
+$html .= '<tr class="bdc">
+	<th>'.__('Zip/Postal Code', 'usces').'</th>
 	<td>' . $usces_entries['customer']['zipcode'] . '</td>
 	</tr>
 	<tr>
-	<th>都道府県</th>
+	<th>'.__('Province', 'usces').'</th>
 	<td>' . $usces_entries['customer']['pref'] . '</td>
 	</tr>
 	<tr class="bdc">
-	<th>市区郡町村</th>
+	<th>'.__('city', 'usces').'</th>
 	<td>' . $usces_entries['customer']['address1'] . '</td>
 	</tr>
 	<tr>
-	<th>番地</th>
+	<th>'.__('numbers', 'usces').'</th>
 	<td>' . $usces_entries['customer']['address2'] . '</td>
 	</tr>
 	<tr class="bdc">
-	<th>マンション･ビル名</th>
+	<th>'.__('building name', 'usces').'</th>
 	<td>' . $usces_entries['customer']['address3'] . '</td>
 	</tr>
 	<tr>
-	<th>電話番号</th>
+	<th>'.__('Phone number', 'usces').'</th>
 	<td>' . $usces_entries['customer']['tel'] . '</td>
 	</tr>
 	<tr class="bdc">
-	<th>FAX番号</th>
+	<th>'.__('FAX number', 'usces').'</th>
 	<td>' . $usces_entries['customer']['fax'] . '</td>
 	</tr>
 	<tr class="ttl">';
 if( EX_DLSELLER !== true ){
-	$html .= '<td colspan="2"><h3>配送先情報</h3></td>
+	$html .= '<td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td>
 		</tr>
 		<tr>
-		<th>お名前</th><td>' . $usces_entries['delivery']['name1'] . ' ' . $usces_entries['delivery']['name2'] . '</td>
+		<th>'.__('Full name', 'usces').'</th><td>' . $usces_entries['delivery']['name1'] . ' ' . $usces_entries['delivery']['name2'] . '</td>
+		</tr>';
+	if( USCES_JP ){
+		$html .= '<tr class="bdc">
+		<th>'.__('furigana', 'usces').'</th><td>' . $usces_entries['delivery']['name3'] . ' ' . $usces_entries['delivery']['name4'] . '</td>
+		</tr>';
+	}
+	$html .= '<tr>
+		<th>'.__('Zip/Postal Code', 'usces').'</th><td>' . $usces_entries['delivery']['zipcode'] . '</td>
 		</tr>
 		<tr class="bdc">
-		<th>フリガナ</th><td>' . $usces_entries['delivery']['name3'] . ' ' . $usces_entries['delivery']['name4'] . '</td>
+		<th>'.__('Province', 'usces').'</th><td>' . $usces_entries['delivery']['pref'] . '</td>
 		</tr>
 		<tr>
-		<th>郵便番号</th><td>' . $usces_entries['delivery']['zipcode'] . '</td>
+		<th>'.__('city', 'usces').'</th><td>' . $usces_entries['delivery']['address1'] . '</td>
 		</tr>
 		<tr class="bdc">
-		<th>都道府県</th><td>' . $usces_entries['delivery']['pref'] . '</td>
+		<th>'.__('numbers', 'usces').'</th><td>' . $usces_entries['delivery']['address2'] . '</td>
 		</tr>
 		<tr>
-		<th>市区郡町村</th><td>' . $usces_entries['delivery']['address1'] . '</td>
+		<th>'.__('building name', 'usces').'</th><td>' . $usces_entries['delivery']['address3'] . '</td>
 		</tr>
 		<tr class="bdc">
-		<th>番地</th><td>' . $usces_entries['delivery']['address2'] . '</td>
+		<th>'.__('Phone number', 'usces').'</th><td>' . $usces_entries['delivery']['tel'] . '</td>
 		</tr>
 		<tr>
-		<th>マンション･ビル名</th><td>' . $usces_entries['delivery']['address3'] . '</td>
-		</tr>
-		<tr class="bdc">
-		<th>電話番号</th><td>' . $usces_entries['delivery']['tel'] . '</td>
-		</tr>
-		<tr>
-		<th>FAX番号</th><td>' . $usces_entries['delivery']['fax'] . '</td>
+		<th>'.__('FAX number', 'usces').'</th><td>' . $usces_entries['delivery']['fax'] . '</td>
 		</tr>
 		<tr>';
 }
-$html .= '<td class="ttl" colspan="2"><h3>その他</h3></td>
+$html .= '<td class="ttl" colspan="2"><h3>'.__('Others', 'usces').'</h3></td>
 	</tr>';
 if( EX_DLSELLER !== true ){
 	$html .= '<tr>
-		<th>配送方法</th><td>' . usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
+		<th>'.__('shipping option', 'usces').'</th><td>' . usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
 		</tr>
 		<tr class="bdc">
-		<th>配送希望時間帯</th><td>' . $usces_entries['order']['delivery_time'] . '</td>
+		<th>'.__('Delivery Time', 'usces').'</th><td>' . $usces_entries['order']['delivery_time'] . '</td>
 		</tr>';
 }	
 $html .= '<tr>
-	<th>お支払方法</th><td>' . $usces_entries['order']['payment_name'] . '</td>
+	<th>'.__('payment method', 'usces').'</th><td>' . $usces_entries['order']['payment_name'] . '</td>
 	</tr>
 	<tr class="bdc">
-	<th>備考</th><td>' . nl2br($usces_entries['order']['note']) . '</td>
+	<th>'.__('Notes', 'usces').'</th><td>' . nl2br($usces_entries['order']['note']) . '</td>
 	</tr>
 	</table>';
 
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_full_price'] ){
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-		<div class="send"><input name="backDelivery" type="submit" value="お届けお支払方法入力に戻る" />&nbsp;&nbsp;
-		<input name="purchase" type="submit" value="上記内容で注文する" /></div>
+		<div class="send"><input name="backDelivery" type="submit" value="'.__('Back to payment method page.', 'usces').'" />&nbsp;&nbsp;
+		<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>
 		</form>';
 }else{
 	//$notify_url = urlencode(USCES_CART_URL . '&purchase');
 	$send_item_code = $this->getItemCode($cart[0]['post_id']);
 	$send_item_name = $this->getItemName($cart[0]['post_id']);
-	if( count($cart) > 1 ) $send_item_name .= ' その他';
+	if( count($cart) > 1 ) $send_item_name .= ' '.__('Others', 'usces');
 	switch($payments['module']){
 		case 'paypal.php':
 			require_once($this->options['settlement_path'] . "paypal.php");
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<div class="send"><input name="backDelivery" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;</div>
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;</div>
 				</form>
 				<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
@@ -255,7 +260,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 				<input type="hidden" name="custom" value="' . $this->get_uscesid() . '">
 				<input type="hidden" name="lc" value="JP">';
 			if( 1 < count($cart) ) {
-				$html .= '<input type="hidden" name="item_name" value="' . $send_item_name . '、他">';
+				$html .= '<input type="hidden" name="item_name" value="' . $send_item_name . __('and others', 'usces') . '">';
 			}else{
 				$html .= '<input type="hidden" name="item_name" value="' . $send_item_name . '">';
 			}
@@ -279,20 +284,20 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 				<input type="hidden" name="user_mail_add" value="' . $usces_entries['customer']['mailaddress1'] . '">';
 			if( 1 < count($cart) ) {
 				$html .= '<input type="hidden" name="item_code" value="99999999">
-					<input type="hidden" name="item_name" value="' . $send_item_name . '、他">';
+					<input type="hidden" name="item_name" value="' . $send_item_name . __('and others', 'usces') . '">';
 			}else{
 				$html .= '<input type="hidden" name="item_code" value="' . $send_item_code . '">
 					<input type="hidden" name="item_name" value="' . $send_item_name . '">';
 			}
 			$html .= '<input type="hidden" name="item_price" value="' . $usces_entries['order']['total_full_price'] . '">
-				<div class="send"><input name="backDelivery" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="上記内容で注文する" /></div>
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
+				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>
 				</form>';
 			break;
 		default:
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<div class="send"><input name="backDelivery" type="submit" value="　　戻　る　　" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="上記内容で注文する" /></div>
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
+				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>
 				</form>';
 	}
 }

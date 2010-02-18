@@ -15,33 +15,33 @@ $items_num = $this->get_items_num();
 <div class="wrap">
 <div class="usces_admin">
 
-<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/warehause1.png" />-->Welcart Shop ホーム<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/warehause1.png" />-->Welcart Shop <?php _e('Home','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 
 <div class="usces_admin_right">
 
 <div class="usces_side_box">
-<h5>表示モード:</h5>
+<h5><?php _e('Display Modes','usces'); ?>:</h5>
 <div class="dispmode <?php echo $display_mode; ?>"><?php echo $this->display_mode[$display_mode]; ?></div>
 <?php if ( $display_mode == 'Promotionsale' ) : ?>
-<span>特典:</span><?php echo $this->options["campaign_privilege"]; ?>（<?php if($this->options["campaign_privilege"] == 'discount'){echo $this->options["privilege_discount"].'%引き';}elseif($this->options["campaign_privilege"] == 'point'){echo $this->options["privilege_point"].'倍、会員のみ';} ?>）<br />
-<span>対象:</span><?php echo get_cat_name($this->options["campaign_category"]); ?><br />
-<span>期間:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo $this->options["campaign_schedule"]['start']['day']; ?>～<?php echo $this->options["campaign_schedule"]['end']['year']; ?>/<?php echo $this->options["campaign_schedule"]['end']['month']; ?>/<?php echo $this->options["campaign_schedule"]['end']['day']; ?>
+<span><?php _e('Special Benefits', 'usces'); ?>:</span><?php echo $this->options["campaign_privilege"]; ?>（<?php if($this->options["campaign_privilege"] == 'discount'){echo $this->options["privilege_discount"].__('% Discount', 'usces');}elseif($this->options["campaign_privilege"] == 'point'){echo $this->options["privilege_point"].__(" times (limited to members)", 'usces');} ?>）<br />
+<span><?php _e('applied material', 'usces'); ?>:</span><?php echo get_cat_name($this->options["campaign_category"]); ?><br />
+<span><?php _e('Period', 'usces'); ?>:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo $this->options["campaign_schedule"]['start']['day']; ?>～<?php echo $this->options["campaign_schedule"]['end']['year']; ?>/<?php echo $this->options["campaign_schedule"]['end']['month']; ?>/<?php echo $this->options["campaign_schedule"]['end']['day']; ?>
 <?php endif; ?>
 </div>
 
 <?php if( $this->isAdnminSSL() ) : ?>
 <div class="usces_side_box">
-<h5>カートページ:</h5>
+<h5><?php _e('Cart page', 'usces'); ?>:</h5>
 <div class="urlBox"><?php echo '?page_id=' . USCES_CART_NUMBER; ?></div>
-<h5>メンバーページ:</h5>
+<h5><?php _e('Membership page', 'usces'); ?>:</h5>
 <div class="urlBox"><?php echo '?page_id=' . USCES_MEMBER_NUMBER; ?></div>
 </div>
 <?php endif; ?>
 
 <div class="chui">
 <ul>
-<?php if (empty($items)) echo '<li>現在、お知らせはありません。</li>';
+<?php if (empty($items)) echo '<li>'.__('There is no news for this moment.', 'usces').'</li>';
 else
 foreach ( $items as $item ) : ?>
 <li>
@@ -56,35 +56,35 @@ foreach ( $items as $item ) : ?>
 </div><!--usces_admin_right-->
 
 <div class="usces_admin_left">
-<h4>受注数・金額</h4>
+<h4><?php _e('number & amount of order', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">
 <tr>
-<th>&nbsp;</th><th>受注数</th><th>受注金額</th>
+<th>&nbsp;</th><th><?php _e('number of order', 'usces'); ?></th><th><?php _e('amount of order', 'usces'); ?></th>
 </tr>
 <tr>
-<td>今日：</td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('today')); ?></td>
+<td><?php _e('today', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('today')); ?></td>
 </tr>
 <tr>
-<td>今月：</td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('thismonth')); ?></td>
+<td><?php _e('current month', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('thismonth')); ?></td>
 </tr>
 <tr>
-<td>昨年同月：</td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('lastyear')); ?></td>
+<td><?php _e('Same date in last year', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('lastyear')); ?></td>
 </tr>
 </table>
 </div>
-<h4>商品登録情報</h4>
+<h4><?php _e('information for registration of items', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">
 <tr>
-<th>商品数</th><th colspan="5">SKU総数</th>
+<th><?php _e('number of item', 'usces'); ?></th><th colspan="5"><?php _e('SKU total number', 'usces'); ?></th>
 </tr>
 <tr>
 <td rowspan="3" class="bignum"><?php echo number_format($items_num); ?></td><td colspan="5" class="bignum"><?php echo number_format(count($data['data'])); ?></td>
 </tr>
 <tr>
 <?php foreach($this->zaiko_status as $value): ?>
-<th><?php if($value == '有り') {echo '在庫有り';}else{echo $value;} ?></th>
+<th><?php if($value == __('OK', 'usces')) {echo __('OK-stocks', 'usces');}else{echo $value;} ?></th>
 <?php endforeach; ?>
 </tr>
 <tr>
@@ -93,7 +93,7 @@ foreach ( $items as $item ) : ?>
 <?php endforeach; ?>
 </tr>
 <tr>
-<th colspan="6">在庫数 0 の商品一覧</th>
+<th colspan="6"><?php _e('List of items without stock', 'usces'); ?></th>
 </tr>
 <?php foreach((array)$data['data'] as $value): if($value['num'] === "0"): ?>
 <tr>
@@ -102,20 +102,20 @@ foreach ( $items as $item ) : ?>
 <?php endif; endforeach; ?>
 </table>
 </div>
-<h4>ご利用の環境</h4>
+<h4><?php _e('Your environment', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">
 <tr>
-<th>&nbsp;</th><th colspan="2">ソフトウェア・バージョン</th>
+<th>&nbsp;</th><th colspan="2"><?php _e('Software Version', 'usces'); ?></th>
 </tr>
 <tr>
-<td>サーバー</td><td colspan="2"><?php echo $_SERVER['SERVER_SOFTWARE']; ?></td>
+<td><?php _e('Server', 'usces'); ?></td><td colspan="2"><?php echo $_SERVER['SERVER_SOFTWARE']; ?></td>
 </tr>
 <tr>
 <td>MySQL</td><td colspan="2"><?php echo mysql_get_server_info(); ?></td>
 </tr>
 <tr>
-<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "（セーフモード）"; ?></td>
+<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "(".__('Safe mode', 'usces').")"; ?></td>
 </tr>
 </table>
 </div>

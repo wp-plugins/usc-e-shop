@@ -61,7 +61,7 @@ foreach ( $usces_member_history as $umhs ) {
 		<th class="historyrow">' . __('Shipping', 'usces') . '</th>
 		<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
 		<th class="historyrow">' . __('consumption tax', 'usces') . '</th>
-		<th class="historyrow">' . __('points', 'usces') . '</th>
+		<th class="historyrow">' . __('Acquired points', 'usces') . '</th>
 		</tr>
 		<tr>
 		<td class="date">' . $umhs['date'] . '</td>
@@ -79,7 +79,7 @@ foreach ( $usces_member_history as $umhs ) {
 			<tr>
 			<th scope="row" class="num">No.</th>
 			<th class="thumbnail">&nbsp;</th>
-			<th>' . __('items', 'usces') . '</th>
+			<th>' . __('Items', 'usces') . '</th>
 			<th class="price ">' . __('Unit price', 'usces') . '</th>
 			<th class="quantity">' . __('Quantity', 'usces') . '</th>
 			<th class="subtotal">' . __('Amount', 'usces') . '</th>
@@ -126,13 +126,15 @@ $html .= '</table>
 	<th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
 	<td>' . __('Familly name', 'usces') . '<input name="member[name1]" id="name1" type="text" value="' . $usces_members['name1'] . '" /></td>
 	<td>' . __('Given name', 'usces') . '<input name="member[name2]" id="name2" type="text" value="' . $usces_members['name2'] . '" /></td>
-	</tr>
-	<tr class="inp1">
-	<th scope="row"><em>*</em>' . __('furigana', 'usces') . '</th>
+	</tr>';
+if( USCES_JP ){
+	$html .= '<tr class="inp1">
+	<th scope="row">' . __('furigana', 'usces') . '</th>
 	<td>' . __('Familly name', 'usces') . '<input name="member[name3]" id="name3" type="text" value="' . $usces_members['name3'] . '" /></td>
 	<td>' . __('Given name', 'usces') . '<input name="member[name4]" id="name4" type="text" value="' . $usces_members['name4'] . '" /></td>
-	</tr>
-	<tr>
+	</tr>';
+}
+$html .= '<tr>
 	<th scope="row"><em>*</em>' . __('Zip/Postal Code', 'usces') . '</th>
 	<td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . $usces_members['zipcode'] . '" />例）100-1000</td>
 	</tr>

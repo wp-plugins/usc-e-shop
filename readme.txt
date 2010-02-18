@@ -5,21 +5,26 @@ Requires at least: 2.9
 Tested up to: 2.9.1
 Stable tag: 0.3
 
-Welcart builds the management system with a net shop on Wordpress.
-It's made in Japan.
+Welcart assists you to build online shop system.
+It is developed in Japan.
 
 == Description ==
 
-Welcart is an e-commerce system born in Japan.
-It possesses not only the simple shopping cart but also the functions such as order management or the member management. Abundant attached wedget supports your shop.
+Welcart is a program made in Japan, which assists you to build e-commerce system on Wordpress.
+
+It has not only simple shopping cart function but also other functions necessary to run your store, such as "Order management function" and "membership function".
+Welcart corresponds to various types of Wordpress template. 8 wedgets included in the program will help your blog to become an online shop.
 
 = Cart system =
 
-As for the cart, correspondence is possible for the complicated sale that different condition choice needs every article. In addition, a price at the time of the supplier purchase can differentiate it by using the "duties pack discount" function. In addition, the introduction of "the membership system", the choice of "the delivery method", the grant of the "campaign" privilege possess various functions.
+A cart responds to the complex sales; the sales of multiple items each of which you require individual selections of specific conditions. Also, "duties pack discount" function makes it possible to set different prices for supplier purchase.
+
+Furthermore, it has many other functions useful for your store. For example, you can have "Membership system", "selection of shipping condition", and grant "special benefit" to your customers.
 
 = Admin screen =
 
-The order that We accepted in a shop is registered with a database not only We contact a manager by an email and can confirm the details with an order management screen. The change addition of order contents is possible, and you can cope with adaptation to circumstances in the various situation with a management screen. In addition, an estimate and order contents for change, a shipment completion email can transmit a message with one click from an order screen, and it is it with the design that aimed at the reduction of the duties burden of the manager. 
+Orders made on online shop will be transmitted to manager by e-mail. At the same time, orders will be registered in database so that you will be able to check their details on order management screen. On the order management screen, you can edit contents of customer's order. You can send various e-mails such as estimate, confirmation of changes, shipping, from order screen by just clicking icons. This system reduces business burden of manager.
+ 
 
 
 [Welcart Online Help(Japanese)](http://www.usconsort.com/usces/).
@@ -33,9 +38,10 @@ The order that We accepted in a shop is registered with a database not only We c
 
 = Attention =
  
-Welcart writes data on tables such as posts, postmeta, options, terms in the case of a plug in validation. Please take the backup of the existing your blog before making Welcart it effectively to avoid an unexpected situation. 
+In the process of activation of plugin, Welcart writes data on tables such as postmeta, options, and terms. When you install a blog existing already, to avoid unexpected damages or any other unexpected situation, backing up is strongly recommended.
 
-We do not guarantee any damage that you take with Welcart. All is a self-responsibility.
+Welcart is not responsible or does not have any guarantee for any kind of damage that you get by using or installing Welcart. 
+All the procedures must be done with self-responsibility of each user.
 
 
 == Frequently Asked Questions ==
@@ -44,8 +50,8 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 
 == Screenshots ==
 
-1. Item list page of the admin screen
-2. Order data editing page of the admin screen
+1. Page for Item List on the admin screen
+2. Page for editing orders on the admin screen
 3. An attached default theme
 
 == Changelog ==
@@ -58,18 +64,3 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 * A copying additional function was added to the new article addition page of the management screen.
 * Added paypal settlement module
 * Revised other malfunction
-= V0.2.2 =
-19 Dec 2009
------------
-* Bugfix and others
-= V0.2.1 =
-28 Oct 2009
------------
-* Added two setting-pages to the Admin menu. By them, you can insert necessary explanations(html) in Cart pages and Member pages. 
-* Added option to a system setting pages: It gets possible to limit a sale district by this. 
-* Bugfix in sending e-mail: Error, that a sender name was abnormal. 
-* Readjusted a localized language file. 
-= V0.2.0 =
-23 Oct 2009 
------------
-* Initial release 

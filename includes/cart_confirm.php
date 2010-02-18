@@ -3,10 +3,10 @@
 		<tr>
 			<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
 			<th class="thumbnail">　<?php //echo __('thumbnail','usces'); ?></th>
-			<th>商品<?php //echo __('item','usces'); ?></th>
-			<th class="price">単価<?php //echo __('price','usces'); ?></th>
-			<th class="quantity">数量<?php //echo __('quantity','usces'); ?></th>
-			<th class="subtotal">金額<?php //echo __('subtotal','usces'); ?></th>
+			<th><?php _e('Items','usces'); ?></th>
+			<th class="price"><?php _e('Unit price','usces'); ?></th>
+			<th class="quantity"><?php _e('Quantity','usces'); ?></th>
+			<th class="subtotal"><?php _e('Amount','usces'); ?></th>
 			<th class="action"></th>
 		</tr>
 		</thead>
@@ -51,26 +51,26 @@
 		</tbody>
 		<tfoot>
 		<tr>
-			<th colspan="5" class="aright">商品合計<?php //echo __('Item total price','usces'); ?></th>
+			<th colspan="5" class="aright"><?php _e('total items','usces'); ?></th>
 			<th class="aright"><?php echo number_format($entries['order']['total_items_price']); ?></th>
 			<th>&nbsp;</th>
 		</tr>
 <?php if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($entries['order']['usedpoint']) ) : ?>
 		<tr>
-			<td colspan="5" class="aright">使用ポイント<?php //echo __('Use point','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
 			<td class="aright" style="color:#FF0000"><?php echo number_format($entries['order']['usedpoint']); ?></td>
 			<td>&nbsp;</td>
 		</tr>
 <?php endif; ?>
 <?php if( !empty($entries['order']['discount']) ) : ?>
 		<tr>
-			<td colspan="5" class="aright">キャンペーン割引<?php //echo __('Descount','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
 			<td class="aright" style="color:#FF0000"><?php echo number_format($entries['order']['discount']); ?></td>
 			<td>&nbsp;</td>
 		</tr>
 <?php endif; ?>
 		<tr>
-			<td colspan="5" class="aright">送料<?php //echo __('Delivery fee','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
 			<td class="aright"><?php echo number_format($entries['order']['shipping_charge']); ?></td>
 			<td>&nbsp;</td>
 		</tr>
@@ -85,7 +85,7 @@
 ?>
 <?php if( !empty($entries['order']['tax']) ) : ?>
 		<tr>
-			<td colspan="5" class="aright">消費税<?php //echo __('Tax','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
 			<td class="aright"><?php echo number_format($entries['order']['tax']); ?></td>
 			<td>&nbsp;</td>
 		</tr>
@@ -93,7 +93,7 @@
 	endif;
 ?>
 		<tr>
-			<th colspan="5" class="aright">総合計金額<?php //echo __('Total price','usces'); ?></th>
+			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th class="aright"><?php echo number_format($entries['order']['total_full_price']); ?></th>
 			<th>&nbsp;</th>
 		</tr>
@@ -104,15 +104,15 @@
 <div class="error_message"><?php echo $this->error_message; ?></div>
 	<table cellspacing="0" id="point_table">
 		<tr>
-		<td>現在のポイント</td>
+		<td><?php _e('The current point', 'usces'); ?></td>
 		<td><span class="point"><?php echo $member['point']; ?></span>pt</td>
 		</tr>
 		<tr>
-		<td>利用するポイント</td>
+		<td><?php _e('Points you are using here', 'usces'); ?></td>
 		<td><input name="order[usedpoint]" class="used_point" type="text" value="<?php echo $entries['order']['usedpoint']; ?>" />pt</td>
 		</tr>
 		<tr>
-		<td colspan="2"><input name="use_point" type="submit" value="ポイントを使用する" /></td>
+		<td colspan="2"><input name="use_point" type="submit" value="<?php _e('Use the points', 'usces'); ?>" /></td>
 		</tr>
 	</table>
 </form>

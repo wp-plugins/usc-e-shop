@@ -424,7 +424,7 @@ class dataList
 		
 		$html = '';
 		$html .= '<ul class="clearfix">'."\n";
-		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' ' . __('ken', 'usces') . '</li>' . "\n";
+		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' ' . __('cases', 'usces') . '</li>' . "\n";
 		if(($this->currentPage == 1) || ($this->selectedRow == 0)){
 			$html .= '<li class="navigationStr">first&lt;&lt;</li>' . "\n";
 			$html .= '<li class="navigationStr">prev&lt;</li>'."\n";

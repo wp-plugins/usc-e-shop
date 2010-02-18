@@ -274,15 +274,17 @@ function usces_pdfSetHeader(&$pdf, $data) {
 	$border = 0;//セルのボーダー初期値
 
 	if($_REQUEST['type'] == 'mitumori') {
-		$title = 'お見積り書';
-		$message = "この度は ".get_option('blogname')." をご利用下さいましてありがとうございます。\n下記の通りお見積りいたします。";
-		$juchubi = '有効期間：7日間';
+		$title = __('Estimate', 'usces');
+		$message = sprintf(__("Thank you for choosing '%s' we send you following estimate. ", 'usces'),
+						get_option('blogname'));
+		$juchubi = __('Valid:7days', 'usces');
 		$siharai = ' ';
 	} elseif($_REQUEST['type'] == 'nohin') {
-		$title = '納品書';
-		$message = "この度は ".get_option('blogname')." をご利用下さいましてありがとうございます。\n下記の通り納品いたします。";
-		$juchubi = '受注日：'.$data->order['date'];
-		$siharai = 'お支払い区分：'.$data->order['payment_name'];
+		$title = __('Invoices', 'usces');
+		$message = sprintf(__("Thak you for choosing '%s'. We deliver your items as following.", 'usces'),
+						get_option('blogname'));
+		$juchubi = __('date of receiving the order', 'usces').' : '.$data->order['date'];
+		$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 	}
 	
 	if( $usces->options['print_size'] == 'A4' ) {
@@ -294,7 +296,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 日付
 		$pdf->SetFont(GOTHIC, '', 9);
 		$pdf->SetXY(15, 17);
-		$pdf->Cell(30, 4, usces_conv_euc(date('Y年m月d日')), $border, 0, 'L', 1);
+		$pdf->Cell(30, 4, usces_conv_euc(date(__( 'M j, Y', 'usces' ))), $border, 0, 'L', 1);
 	
 		// 注文No
 		$pdf->SetFont(GOTHIC, '', 10);
@@ -409,7 +411,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 日付
 		$pdf->SetFont(GOTHIC, '', 9);
 		$pdf->SetXY(15, 17);
-		$pdf->Cell(30, 4, usces_conv_euc(date('Y年m月d日')), $border, 0, 'L', 1);
+		$pdf->Cell(30, 4, usces_conv_euc(date(__( 'M j, Y', 'usces' ))), $border, 0, 'L', 1);
 	
 		// 注文No
 		$pdf->SetFont(GOTHIC, '', 10);

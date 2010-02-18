@@ -105,7 +105,7 @@ function paypal_check($usces_paypal_url) {
 			settlement_log('PDT[SUCCESS]');
 		}else if (strcmp ($lines[0], "FAIL") == 0) {
 			$results[0] = false;
-			settlement_log("PDT非認証\n\t\t\tPayPalが「FAIL」を返しています。設定を確認してください。");
+			settlement_log(__('PDT Refusal', 'usces') . "\n\t\t\t" . __("PayPal gives back 'FAIL'. Please confirm setting.", 'usces'));
 		}
 	
 		fclose ($fp);
@@ -114,7 +114,7 @@ function paypal_check($usces_paypal_url) {
 }
 
 function paypal_ipn_check($usces_paypal_url) {
-	settlement_log('IPN開始');
+	settlement_log(__('IPN Start', 'usces'));
 	// read the post from PayPal system and add 'cmd'
 	$req = 'cmd=_notify-validate';
 	
@@ -131,7 +131,7 @@ function paypal_ipn_check($usces_paypal_url) {
 	$results = array();
 	if (!$fp) {
 		$results[0] = false;
-		settlement_log('IPN接続エラー');
+		settlement_log(__('IPN Connection Error', 'usces'));
 	} else {
 		fputs ($fp, $header . $req);
 		// read the body data 
@@ -161,7 +161,7 @@ function paypal_ipn_check($usces_paypal_url) {
 			settlement_log('IPN[SUCCESS]');
 		}else if (strcmp ($lines[0], "FAIL") == 0) {
 			$results[0] = false;
-			settlement_log("IPN非認証\n\t\t\tPayPalが「FAIL」を返しています。設定を確認してください。");
+			settlement_log(__('IPN Refusal', 'usces') . "\n\t\t\t" . __("PayPal gives back 'FAIL'. Please confirm setting.", 'usces'));
 		}
 	
 		fclose ($fp);

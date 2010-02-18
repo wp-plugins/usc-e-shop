@@ -4,17 +4,17 @@ global $wpdb;
 
 $tableName = $wpdb->prefix . "usces_order";
 $arr_column = array(
-			'注文No' => 'ID', 
-			'日付' => 'date', 
-			'会員No' => 'mem_id', 
-			'氏名' => 'name', 
-			'地区' => 'pref', 
-			'配送方法' => 'delivery_method', 
-			'金額' => 'total_price', 
-			'支払方法' => 'payment_name', 
-			'入金状況' => 'receipt_status', 
-			'処理状態' => 'order_status', 
-			'発送日' => 'order_modified');
+			__('Order number', 'usces') => 'ID', 
+			__('date', 'usces') => 'date', 
+			__('membership number', 'usces') => 'mem_id', 
+			__('name', 'usces') => 'name', 
+			__('Region', 'usces') => 'pref', 
+			__('shipping option', 'usces') => 'delivery_method', 
+			__('Amount', 'usces') => 'total_price', 
+			__('payment method', 'usces') => 'payment_name', 
+			__('transfer statement', 'usces') => 'receipt_status', 
+			__('Processing', 'usces') => 'order_status', 
+			__('shpping date', 'usces') => 'order_modified');
 
 $DT = new dataList($tableName, $arr_column);
 $res = $DT->MakeTable();
@@ -38,7 +38,7 @@ foreach((array)$ums as $key => $value){
 		$order_status[$key] = $value;
 	}
 }
-$order_status['new'] = '新規受付';
+$order_status['new'] = __('new order', 'usces');
 $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 ?>
 <script type="text/javascript">
@@ -73,18 +73,22 @@ jQuery(function($){
 
 	$("#collective_change").click(function () {
 		if( $("input[name*='listcheck']:checked").length == 0 ) {
-			alert("データが選択されていません。");
+			alert("<?php _e('Choose the data.', 'usces'); ?>");
 			$("#oederlistaction").val('');
 			return false;
 		}
 		var coll = $("#changeselect").val();
 		var mes = '';
 		if( coll == 'order_reciept' ){
-			mes = 'チェックされたデータの入金状況を「' + $("select[name='change\[word\]\[order_reciept\]'] option:selected").html() + '」に変更します。\n\nよろしいですか？';
+			mes = <?php echo sprintf(__("'Transfer status of the items which you have checked will be changed in to ' + %s + '. %sDo you agree?'", 'usces'), 
+							'$("select\[name=\"change\[word\]\[order_reciept\]\"\] option:selected").html()',
+							'\n\n'); ?>;
 		}else if( coll == 'order_status' ){
-			mes = 'チェックされたデータの処理状態を、すべて「' + $("select[name='change\[word\]\[order_status\]'] option:selected").html() + '」に変更します。'+"\n\nよろしいですか？";
+			mes = <?php echo sprintf(__("'Data status which you have cheked will be changed in to ' + %s + '. %sDo you agree?'", 'usces'), 
+							'$("select\[name=\"change\[word\]\[order_status\]\"\] option:selected").html()',
+							'\n\n'); ?>;
 		}else if(coll == 'delete'){
-			mes = "チェックされたデータを一括削除します。\n\nよろしいですか？";
+			mes = '<?php _e('Are you sure of deleting all the checked data in bulk?', 'usces'); ?>';
 		}else{
 			$("#oederlistaction").val('');
 			return false;
@@ -105,19 +109,19 @@ jQuery(function($){
 			var column = $("#searchselect").val();
 			
 			if( column == 'ID' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][ID]" type="text" value="<?php echo $arr_search['word']['ID'] ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'date' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][date]" type="text" value="<?php echo $arr_search['word']['date'] ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'mem_id' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][mem_id]" type="text" value="<?php echo $arr_search['word']['mem_id'] ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'name' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][name]" type="text" value="<?php echo $arr_search['word']['name'] ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'order_modified' ) {
-				label = 'キーワード';
+				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][order_modified]" type="text" value="<?php echo $arr_search['word']['order_modified'] ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'pref' ) {
 				label = '';
@@ -237,7 +241,7 @@ function toggleVisibility(id) {
 };
 
 function deleteconfirm(order_id){
-	if(confirm('注文No '+order_id+' を削除します。よろしいですか？')){
+	if(confirm(<?php _e("'Are you sure of deleting an order number ' + order_id + ' ?'", 'usces'); ?>)){
 		return true;
 	}else{
 		return false;
@@ -254,7 +258,7 @@ jQuery(document).ready(function($){
 	});
 	if(	$("#searchSwitchStatus").val() == 'OFF'){
 		$("#searchBox").css("display", "none");
-		$("#searchVisiLink").html('操作フィールド表示');
+		$("#searchVisiLink").html('<?php _e('Show the Operation field', 'usces'); ?>');
 	} else {
 		$("#searchBox").css("display", "block");
 		$("#searchVisiLink").css("display", "none");
@@ -268,7 +272,7 @@ jQuery(document).ready(function($){
 <div class="usces_admin">
 <form action="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist'; ?>" method="post" name="tablesearch">
 
-<h2>Welcart Management 受注リスト<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2>Welcart Management <?php _e('Order List','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
@@ -284,7 +288,7 @@ jQuery(document).ready(function($){
 <div id="searchBox">
 		<table id="search_table">
 		<tr>
-		<td>検索項目</td>
+		<td><?php _e('search fields', 'usces'); ?></td>
 		<td><select name="search[column]" class="searchselect" id="searchselect">
 		    <option value="none"> </option>
 <?php foreach ((array)$arr_column as $key => $value):
@@ -300,15 +304,15 @@ jQuery(document).ready(function($){
     	</select></td>
 		<td id="searchlabel"></td>
 		<td id="searchfield"></td>
-		<td><input name="searchIn" type="submit" class="searchbutton" value="検索" />
-		<input name="searchOut" type="submit" class="searchbutton" value="解除" />
+		<td><input name="searchIn" type="submit" class="searchbutton" value="<?php _e('Search', 'usces'); ?>" />
+		<input name="searchOut" type="submit" class="searchbutton" value="<?php _e('Cancellation', 'usces'); ?>" />
 		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo $DT->searchSwitchStatus; ?>" />
 		</td>
 		</tr>
 		</table>
 		<table id="period_table">
 		<tr>
-		<td>期間</td>
+		<td><?php _e('Period', 'usces'); ?></td>
 		<td><select name="search[period]" class="searchselect">
 <?php foreach ((array)$DT->arr_period as $key => $value):
 		if($key == $arr_search['period']){
@@ -324,16 +328,16 @@ jQuery(document).ready(function($){
 		</table>
 		<table id="change_table">
 		<tr>
-		<td>一括操作</td>
+		<td><?php _e('Oparation in bulk', 'usces'); ?></td>
 		<td><select name="allchange[column]" class="searchselect" id="changeselect">
 		    <option value="none"> </option>
-		    <option value="order_reciept">入金状態の変更</option>
-		    <option value="order_status">処理状態の変更</option>
-		    <option value="delete">一括削除</option>
+		    <option value="order_reciept"><?php _e('Edit the receiving money status', 'usces'); ?></option>
+		    <option value="order_status"><?php _e('Edit of status process', 'usces'); ?></option>
+		    <option value="delete"><?php _e('Delete in bulk', 'usces'); ?></option>
     	</select></td>
 		<td id="changelabel"></td>
 		<td id="changefield"></td>
-		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="開始" />
+		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="<?php _e('start', 'usces'); ?>" />
 		</td>
 		</tr>
 		</table>
@@ -357,14 +361,14 @@ jQuery(document).ready(function($){
 		<?php if( $key == 'ID' ): ?>
 		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo $value; ?></a></td>
 		<?php elseif( $key == 'total_price' ): ?>
-		<td class="price">&yen;<?php echo number_format($value); ?></td>
-		<?php elseif( $key == 'receipt_status' && $value == '未入金'): ?>
+		<td class="price"><?php _e('$', 'usces'); ?><?php echo number_format($value); ?></td>
+		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
 		<td class="red"><?php echo $value; ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == 'Pending'): ?>
 		<td class="red"><?php echo $value; ?></td>
-		<?php elseif( $key == 'receipt_status' && $value == '入金済み'): ?>
+		<?php elseif( $key == 'receipt_status' && $value == __('payment confirmed', 'usces')): ?>
 		<td class="green"><?php echo $value; ?></td>
-		<?php elseif( $key == 'order_status' && $value == '発送済み'): ?>
+		<?php elseif( $key == 'order_status' && $value == __('It has sent it out.', 'usces')): ?>
 		<td class="green"><?php echo $value; ?></td>
 		<?php elseif( $key == 'delivery_method'): ?>
 		<td class="green"><?php $delivery_method_index = $this->get_delivery_method_index($value); echo $this->options['delivery_method'][$delivery_method_index]['name']; ?></td>
@@ -374,7 +378,7 @@ jQuery(document).ready(function($){
 		<td><?php echo $value; ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
-	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=delete&order_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;">削除</span></a></td>
+	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=delete&order_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;"><?php _e('Delete', 'usces'); ?></span></a></td>
 	</tr>
 <?php endforeach; ?>
 </table>

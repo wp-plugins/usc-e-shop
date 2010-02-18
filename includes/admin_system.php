@@ -42,7 +42,7 @@ function toggleVisibility(id) {
 </script>
 <div class="wrap">
 <div class="usces_admin">
-<h2>Welcart Shop システム設定<?php //echo __('Welcart shop system setup','usces'); ?></h2>
+<h2>Welcart Shop <?php _e('System Setting','usces'); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
 		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
@@ -50,60 +50,60 @@ function toggleVisibility(id) {
 	</div>
 </div>
 <form action="" method="post" name="option_form" id="option_form">
-<input name="usces_option_update" type="submit" class="button" value="設定を更新" />
+<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
-<h3 class="hndle"><span>システム設定</span></h3>
+<h3 class="hndle"><span><?php _e('System Setting','usces'); ?></span></h3>
 <div class="inside">
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_province');">都道府県</a></th>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_province');"><?php _e('Province', 'usces'); ?></a></th>
 		<td width="150"><textarea name="province" cols="30" rows="10"><?php echo $province; ?></textarea></td>
-	    <td><div id="ex_province" class="explanation">販売対象地区（都道府県）。改行して1行に一つずつ記入します。<br />初期値は全都道府県が設定してあります。</div></td>
+	    <td><div id="ex_province" class="explanation"><?php _e('The district where sale is possible', 'usces'); ?>(<?php _e('Province', 'usces'); ?>) <?php _e('One line one by one.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');">表示モード</a></th>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');"><?php _e('Display Modes','usces'); ?></a></th>
 		<?php $checked = $divide_item == 1 ? ' checked="checked"' : ''; ?>
 		<td width="10"><input name="divide_item" type="checkbox" id="divide_item" value="<?php echo $divide_item; ?>"<?php echo $checked; ?> /></td>
-		<td width="300"><label for="divide_item">ループ表示の際、商品を分離して表示する</label></td>
-	    <td><div id="ex_divide_item" class="explanation">ショップにて、複数の投稿が表示されるループ表示の際、商品データを表示させるかどうかを設定します。</div></td>
+		<td width="300"><label for="divide_item"><?php _e('Not display an article in blog', 'usces'); ?></label></td>
+	    <td><div id="ex_divide_item" class="explanation"><?php _e('In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_itemimg_anchor_rel');">rel属性</a></th>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_itemimg_anchor_rel');"><?php _e('rel attribute', 'usces'); ?></a></th>
 		<td width="30">rel="</td>
 		<td width="100"><input name="itemimg_anchor_rel" id="itemimg_anchor_rel" type="text" value="<?php echo $itemimg_anchor_rel; ?>" /></td>
 		<td width="10">"</td>
-	    <td><div id="ex_itemimg_anchor_rel" class="explanation">商品詳細ページにて、Lightboxなどプラグインを利用してイメージを表示させるためのアンカータグ用rel属性を指定します。</div></td>
+	    <td><div id="ex_itemimg_anchor_rel" class="explanation"><?php _e('In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_orderby');">複合カテゴリーソート項目</a></th>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_orderby');"><?php _e('compound category sort item', 'usces'); ?></a></th>
 		<td width="10"><select name="fukugo_category_orderby" id="fukugo_category_orderby">
-		    <option value="ID"<?php if($fukugo_category_orderby == 'ID') echo ' selected="selected"'; ?>>カテゴリーID</option>
-		    <option value="name"<?php if($fukugo_category_orderby == 'name') echo ' selected="selected"'; ?>>カテゴリー名</option>
+		    <option value="ID"<?php if($fukugo_category_orderby == 'ID') echo ' selected="selected"'; ?>><?php _e('category ID', 'usces'); ?></option>
+		    <option value="name"<?php if($fukugo_category_orderby == 'name') echo ' selected="selected"'; ?>><?php _e('category name', 'usces'); ?></option>
 		</select></td>
-	    <td><div id="ex_fcat_orderby" class="explanation">複合カテゴリー検索ページで表示するカテゴリーにおいて、ソートする対象を選択します。</div></td>
+	    <td><div id="ex_fcat_orderby" class="explanation"><?php _e('In a category to display in a compound category search page, you can choose an object to sort.', 'usces'); ?></div></td>
 	</tr>
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_order');">複合カテゴリーソート順</a></th>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_order');"><?php _e('compound category sort order', 'usces'); ?></a></th>
 		<td width="10"><select name="fukugo_category_order" id="fukugo_category_order">
-		    <option value="ASC"<?php if($fukugo_category_order == 'ASC') echo ' selected="selected"'; ?>>昇順</option>
-		    <option value="DESC"<?php if($fukugo_category_order == 'DESC') echo ' selected="selected"'; ?>>降順</option>
+		    <option value="ASC"<?php if($fukugo_category_order == 'ASC') echo ' selected="selected"'; ?>><?php _e('Ascending', 'usces'); ?></option>
+		    <option value="DESC"<?php if($fukugo_category_order == 'DESC') echo ' selected="selected"'; ?>><?php _e('Descendin', 'usces'); ?></option>
 		</select></td>
-	    <td><div id="ex_fcat_order" class="explanation">複合カテゴリー検索ページで表示するカテゴリーにおいて、ソート順を選択します。</div></td>
+	    <td><div id="ex_fcat_order" class="explanation"><?php _e('In a category to display in a compound category search page, you can choose sort order.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');">決済モジュールパス</a></th>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');"><?php _e('settlement module path', 'usces'); ?></a></th>
 		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo $settlement_path; ?>" size="60" /></td>
-	    <td><div id="ex_settlement_path" class="explanation">決済モジュールの設置場所を指定します。初期値はサンプルと同じ場所ですが自動アップグレードの時に削除されてしまいます。これを避けるにはモジュールをプラグインフォルダの外に設置します。</div></td>
+	    <td><div id="ex_settlement_path" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
 	</tr>
 </table>
 </div>
@@ -114,7 +114,7 @@ function toggleVisibility(id) {
 
 
 
-<input name="usces_option_update" type="submit" class="button" value="設定を更新" />
+<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <input type="hidden" id="post_ID" name="post_ID" value="<?php echo USCES_CART_NUMBER ?>" />
 </form>
 </div><!--usces_admin-->

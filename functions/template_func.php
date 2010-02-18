@@ -4,6 +4,11 @@ function usces_guid_tax() {
 	echo $usces->getGuidTax();
 }
 
+function usces_currency_symbol() {
+	global $usces;
+	echo $usces->getCurrencySymbol();
+}
+
 function usces_is_error_message() {
 	global $usces;
 	if ( $usces->error_message != '' )
@@ -244,12 +249,12 @@ function usces_the_itemGpExp( $out = '' ) {
 						$usces->getGuidTax(),
 						$unit,
 						$GpN1, 
-						'&yen;', 
+						__('$', 'usces'), 
 						"'price'"
 					);
 			$html .= "</li>\n";
 		} else {
-			//$html .=  "<li>" . $GpN1 . "～" . ($GpN2 - 1) . $unit . __('for ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+			//$html .=  "<li>" . $GpN1 . "～" . ($GpN2 - 1) . $unit . __('for ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>" . __('$', 'usces') . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
 			$html .= "<li>";
 			$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
 						number_format(round($price * (100 - $GpD1) / 100)), 
@@ -257,19 +262,19 @@ function usces_the_itemGpExp( $out = '' ) {
 						$unit,
 						$GpN1, 
 						$GpN2-1, 
-						'&yen;', 
+						__('$', 'usces'), 
 						"'price'"
 					);
 			$html .= "</li>\n";
 			if(empty($GpN3) || empty($GpD3)) {
-				//$html .=  "<li>" . $GpN2 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>&yen;" . number_format(round($price * (100 - $GpD2) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+				//$html .=  "<li>" . $GpN2 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>" . __('$', 'usces') . number_format(round($price * (100 - $GpD2) / 100)) . $usces->getGuidTax() . "</span></li>\n";
 				$html .= "<li>";
 				$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
 							number_format(round($price * (100 - $GpD2) / 100)), 
 							$usces->getGuidTax(),
 							$unit,
 							$GpN2, 
-							'&yen;', 
+							__('$', 'usces'), 
 							"'price'"
 						);
 				$html .= "</li>\n";
@@ -281,7 +286,7 @@ function usces_the_itemGpExp( $out = '' ) {
 							$unit,
 							$GpN2, 
 							$GpN3-1, 
-							'&yen;', 
+							__('$', 'usces'), 
 							"'price'"
 						);
 				$html .= "</li>\n";
@@ -291,7 +296,7 @@ function usces_the_itemGpExp( $out = '' ) {
 							$usces->getGuidTax(),
 							$unit,
 							$GpN3, 
-							'&yen;', 
+							__('$', 'usces'), 
 							"'price'"
 						);
 				$html .= "</li>\n";
@@ -350,7 +355,7 @@ function usces_the_itemSkuTable($colum = '', $buttonValue = '' ) {
 	global $post, $usces;
 	
 	if($colum = ''){
-		$colum = 'sku = ' . __('size','usces') . ', price = ' . __('Price','usces') . ', zaiko = ' . __('number of the stock','usces');
+		$colum = 'sku = ' . __('size','usces') . ', price = ' . __('Price','usces') . ', zaiko = ' . __('stock','usces');
 	}
 	
 	if($buttonValue = ''){

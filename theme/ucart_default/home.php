@@ -1,6 +1,6 @@
 <?php
 /**
- * @package WordPress
+ * @package Welcart
  * @subpackage uCart Default Theme
  */
 get_header();
@@ -8,7 +8,7 @@ get_header();
 
 <div class="center">
 <div class="top_image"><img src="<?php bloginfo('template_url'); ?>/images/image_top.jpg" alt="<?php bloginfo('name'); ?>" width="560" height="240" /></div>
-<div class="title"><?php _e('items recommended','usces') ?></div>
+<div class="title"><?php _e('Items recommended','usces') ?></div>
 <div class="clearfix">
 
 
@@ -24,7 +24,7 @@ get_header();
 	<div class="thumimg"><a href="<?php the_permalink() ?>"><?php usces_the_itemImage($number = 0, $width = 108, $height = 108 ); ?></a></div>
 	<div class="thumtitle"><a href="<?php the_permalink() ?>" rel="bookmark"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</a></div>
 <?php if (usces_is_skus()) : ?>
-	<div class="price">&yen;<?php usces_the_firstPrice(); ?><?php usces_guid_tax(); ?></div>
+	<div class="price"><?php _e('$', 'usces'); ?><?php usces_the_firstPrice(); ?><?php usces_guid_tax(); ?></div>
 <?php endif; ?>
 
 </div>
@@ -36,7 +36,7 @@ get_header();
 <?php endif; ?>
 </div>
 
-<?php //posts_nav_link(' &#8212; ', __('&laquo; 前のページ'), __('次のページ &raquo;')); ?>
+<?php //posts_nav_link(' &#8212; ', __("&laquo; Previous page", 'usces'), __("next page &raquo;", 'usces')); ?>
 
 </div>
 

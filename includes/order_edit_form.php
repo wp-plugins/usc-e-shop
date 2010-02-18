@@ -85,7 +85,7 @@ jQuery(function($){
 	$("#order_payment_name").change(function () {
 		var pay_name = $("select[name='order\[payment_name\]'] option:selected").val();
 		if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
-			var label = '入金状況';
+			var label = '<?php _e('transfer statement', 'usces'); ?>';
 			var html = "<select name='order[receipt]'>\n";
 			html += "<option value='noreceipt'><?php echo $management_status['noreceipt']; ?></option>\n";
 			html += "<option value='receipted'><?php echo $management_status['receipted']; ?></option>\n";
@@ -106,7 +106,7 @@ jQuery(function($){
 		resizable: true,
 		modal: true,
 		buttons: {
-			'閉じる': function() {
+			'<?php _e('close', 'usces'); ?>': function() {
 				$(this).dialog('close');
 			}
 		},
@@ -117,7 +117,7 @@ jQuery(function($){
 	});
 	$('#addCartButton').click(function() {
 		if($("input[name='order_id']").val() == ''){
-			alert("「更新確定」ボタンを押して注文Noを確定して下さい。");
+			alert("<?php _e("Push 'change decision' button, to be settled with an order number.", 'usces'); ?>");
 			return;
 		}
 		$('#addItemDialog').dialog('open');
@@ -134,7 +134,7 @@ jQuery(function($){
 		resizable: true,
 		modal: true,
 		buttons: {
-			'閉じる': function() {
+			'<?php _e('close', 'usces'); ?>': function() {
 				$(this).dialog('close');
 			}
 		},
@@ -149,7 +149,7 @@ jQuery(function($){
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
 		$("#sendmailsubject").val('<?php echo $this->options['mail_data']['title']['completionmail']; ?>');
 		$('#mailChecked').val('completionmail');
-		$('#mailSendDialog').dialog('option', 'title', '発送完了メール');
+		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for Shipping', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
 	});
 	$('#orderConfirmMail').click(function() {
@@ -158,7 +158,7 @@ jQuery(function($){
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
 		$("#sendmailsubject").val('<?php echo $this->options['mail_data']['title']['ordermail']; ?>');
 		$('#mailChecked').val('ordermail');
-		$('#mailSendDialog').dialog('option', 'title', '注文確認メール');
+		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for confirmation of order', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
 	});
 	$('#changeConfirmMail').click(function() {
@@ -167,7 +167,7 @@ jQuery(function($){
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
 		$("#sendmailsubject").val('<?php echo $this->options['mail_data']['title']['changemail']; ?>');
 		$('#mailChecked').val('changemail');
-		$('#mailSendDialog').dialog('option', 'title', '変更確認メール');
+		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for confiemation of change', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
 	});
 	$('#receiptConfirmMail').click(function() {
@@ -176,7 +176,7 @@ jQuery(function($){
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
 		$("#sendmailsubject").val('<?php echo $this->options['mail_data']['title']['receiptmail']; ?>');
 		$('#mailChecked').val('receiptmail');
-		$('#mailSendDialog').dialog('option', 'title', '入金確認メール');
+		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for confirmation of transter', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
 	});
 	$('#mitumoriConfirmMail').click(function() {
@@ -185,7 +185,7 @@ jQuery(function($){
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
 		$("#sendmailsubject").val('<?php echo $this->options['mail_data']['title']['mitumorimail']; ?>');
 		$('#mailChecked').val('mitumorimail');
-		$('#mailSendDialog').dialog('option', 'title', '見積りメール');
+		$('#mailSendDialog').dialog('option', 'title', '<?php _e('estimate mail', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
 	});
 	$('#cancelConfirmMail').click(function() {
@@ -194,7 +194,7 @@ jQuery(function($){
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
 		$("#sendmailsubject").val('<?php echo $this->options['mail_data']['title']['cancelmail']; ?>');
 		$('#mailChecked').val('cancelmail');
-		$('#mailSendDialog').dialog('option', 'title', 'キャンセルメール');
+		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Cancelling mail', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
 	});
 	$('#otherConfirmMail').click(function() {
@@ -203,7 +203,7 @@ jQuery(function($){
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
 		$("#sendmailsubject").val('<?php echo $this->options['mail_data']['title']['othermail']; ?>');
 		$('#mailChecked').val('othermail');
-		$('#mailSendDialog').dialog('option', 'title', 'その他のメール');
+		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Other mail', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
 	});
 	
@@ -259,7 +259,7 @@ jQuery(function($){
 		make_delivery_time : function(selected) {
 			var option = '';
 			if(selected == -1){
-				option += '<option value="指定しない">指定しない</option>' + "\n";
+				option += '<option value="<?php _e('Non-request', 'usces'); ?>"><?php _e('Non-request', 'usces'); ?></option>' + "\n";
 			}else{
 				for(var i=0; i<delivery_time[selected].length; i++){
 					if( delivery_time[selected][i] == selected_delivery_time ) {
@@ -312,7 +312,7 @@ jQuery(function($){
 																}
 															});
 					$('#mailSendAlert fieldset').dialog('option', 'title', 'SUCCESS');
-					$('#mailSendAlert fieldset').html('<p>メールの送信が完了しました。</p>');
+					$('#mailSendAlert fieldset').html('<p><?php _e('E-mail has been sent.', 'usces'); ?></p>');
 					$('#mailSendAlert').dialog('open');
 					
 				}else if(data == 'error'){
@@ -322,7 +322,7 @@ jQuery(function($){
 																}
 															});
 					$('#mailSendAlert fieldset').dialog('option', 'title', 'ERROR');
-					$('#mailSendAlert fieldset').html('<p>メールは送信できませんでした。</p>');
+					$('#mailSendAlert fieldset').html('<p><?php _e('Failure in sending e-mails.', 'usces'); ?></p>');
 					$('#mailSendAlert').dialog('open');
 				}
 			};
@@ -333,7 +333,7 @@ jQuery(function($){
 															}
 														});
 				$('#mailSendAlert fieldset').dialog('option', 'title', 'ERROR');
-				$('#mailSendAlert fieldset').html('<p>メールは送信できませんでした。</p>');
+				$('#mailSendAlert fieldset').html('<p><?php _e('Failure in sending e-mails.', 'usces'); ?></p>');
 				$('#mailSendAlert').dialog('open');
 			};
 			$.ajax( s );
@@ -425,7 +425,7 @@ jQuery(document).ready(function($){
 	$("#order_tax").bind("change", function(){ orderfunc.sumPrice(); });
 	
 	function delConfirm(){
-		if(confirm('商品を削除します。よろしいですか？')){
+		if(confirm('<?php _e('Are you sure of deleting items?', 'usces'); ?>')){
 			return true;
 		}else{
 			return false;
@@ -439,7 +439,7 @@ jQuery(document).ready(function($){
 <div class="usces_admin">
 <form action="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action='.$oa; ?>" method="post" name="editpost">
 
-<h2>Welcart Management 受注データ編集<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2>Welcart Management <?php _e('Edit order data','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
@@ -448,45 +448,46 @@ jQuery(document).ready(function($){
 	</div>
 </div>
 <div class="mailVisiLink">
-<a style="cursor:pointer;" id="mailVisiLink" onclick="toggleVisibility('mailBox');">メール・印刷フィールド表示</a><br /><a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">戻る</a>
+<a style="cursor:pointer;" id="mailVisiLink" onclick="toggleVisibility('mailBox');"><?php _e('show the mail/print field', 'usces'); ?></a><br /><a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>"><?php _e('Back', 'usces'); ?></a>
 </div>
-<div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php echo '更新確定'; ?>" />値を変更した場合は必ず最後に「更新確定」ボタンを押してください。</div>
+<div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 <div id="mailBox">
 <table>
 <tr>
-<td><input name="check[ordermail]" type="checkbox" value="ordermail"<?php if(isset($ordercheck['ordermail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="orderConfirmMail">注文確認メール</a></td>
-<td><input name="check[changemail]" type="checkbox" value="changemail"<?php if(isset($ordercheck['changemail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="changeConfirmMail">変更確認メール</a></td>
-<td><input name="check[receiptmail]" type="checkbox" value="receiptmail"<?php if(isset($ordercheck['receiptmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="receiptConfirmMail">入金確認メール</a></td>
-<td><input name="check[mitumorimail]" type="checkbox" value="mitumorimail"<?php if(isset($ordercheck['mitumorimail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="mitumoriConfirmMail">見積りメール</a></td>
-<td><input name="check[cancelmail]" type="checkbox" value="cancelmail"<?php if(isset($ordercheck['cancelmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="cancelConfirmMail">キャンセルメール</a></td>
-<td><input name="check[othermail]" type="checkbox" value="othermail"<?php if(isset($ordercheck['othermail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="otherConfirmMail">その他のメール</a></td>
+<td><input name="check[ordermail]" type="checkbox" value="ordermail"<?php if(isset($ordercheck['ordermail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="orderConfirmMail"><?php _e('Mail for confirmation of order', 'usces'); ?></a></td>
+<td><input name="check[changemail]" type="checkbox" value="changemail"<?php if(isset($ordercheck['changemail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="changeConfirmMail"><?php _e('Mail for confiemation of change', 'usces'); ?></a></td>
+<td><input name="check[receiptmail]" type="checkbox" value="receiptmail"<?php if(isset($ordercheck['receiptmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="receiptConfirmMail"><?php _e('Mail for confirmation of transter', 'usces'); ?></a></td>
+<td><input name="check[mitumorimail]" type="checkbox" value="mitumorimail"<?php if(isset($ordercheck['mitumorimail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="mitumoriConfirmMail"><?php _e('estimate mail', 'usces'); ?></a></td>
+<td><input name="check[cancelmail]" type="checkbox" value="cancelmail"<?php if(isset($ordercheck['cancelmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="cancelConfirmMail"><?php _e('Cancelling mail', 'usces'); ?></a></td>
+<td><input name="check[othermail]" type="checkbox" value="othermail"<?php if(isset($ordercheck['othermail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="otherConfirmMail"><?php _e('Other mail', 'usces'); ?></a></td>
 </tr>
 <tr>
-<td><input name="check[completionmail]" type="checkbox" value="completionmail"<?php if(isset($ordercheck['completionmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="completionMail">発送完了メール</a></td>
-<td><input name="check[mitumoriprint]" type="checkbox" value="mitumoriprint"<?php if(isset($ordercheck['mitumoriprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="mitumoriprint">見積書印刷</a></td>
-<td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint">納品書印刷</a></td>
-<td colspan="7"><span style="color:#CC3300">※変更がある場合は「更新確定」してから送信・印刷を行ってください。</span></td>
+<td><input name="check[completionmail]" type="checkbox" value="completionmail"<?php if(isset($ordercheck['completionmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="completionMail"><?php _e('Mail for Shipping', 'usces'); ?></a></td>
+<td><input name="check[mitumoriprint]" type="checkbox" value="mitumoriprint"<?php if(isset($ordercheck['mitumoriprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="mitumoriprint"><?php _e('print out the estimate', 'usces'); ?></a></td>
+<td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint"><?php _e('print the invoice', 'usces'); ?></a></td>
+<td colspan="7"><span style="color:#CC3300"><?php _e("When there is any change, please press the 'change decision' before you send or print.", 'usces'); ?></span></td>
 </tr>
 </table>
 </div>
 <div class="info_head">
 <table>
-<td colspan="6" class="midasi0">受注明細</td>
+<tr>
+<td colspan="6" class="midasi0"><?php _e('order details', 'usces'); ?></td>
 </tr>
 <tr>
-<td class="label border">注文No</td><td class="col1 border"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
-<td class="col3 label border">注文日時</td><td class="col2 border"><div class="rod long"><?php echo $data['order_date']; ?></div></td>
-<td class="label border">発送日</td><td class="border"><div class="rod long"><?php echo $data['order_modified']; ?>&nbsp;</div></td>
+<td class="label border"><?php _e('Order number', 'usces'); ?></td><td class="col1 border"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
+<td class="col3 label border"><?php _e('order date', 'usces'); ?></td><td class="col2 border"><div class="rod long"><?php echo $data['order_date']; ?></div></td>
+<td class="label border"><?php _e('shpping date', 'usces'); ?></td><td class="border"><div class="rod long"><?php echo $data['order_modified']; ?>&nbsp;</div></td>
 </tr>
 <tr>
-<td class="label">会員No</td><td class="col1"><div class="rod large short"><?php echo $data['mem_id']; ?></div></td>
+<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo $data['mem_id']; ?></div></td>
 <td class="col3 label">e-mail</td><td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo $data['order_email']; ?>" /></td>
-<td colspan="2" class="midasi1">発送先</td>
+<td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
 </tr>
 <tr>
-<td class="label">支払方法</td>
+<td class="label"><?php _e('payment method', 'usces'); ?></td>
 <td class="col1"><select name="order[payment_name]" id="order_payment_name">
-    <option value="#none#">-選択-</option>
+    <option value="#none#"><?php _e('-- Select --', 'usces'); ?></option>
 <?php 
 if( $this->options['payment_method'] ) {
 	foreach ((array)$this->options['payment_method'] as $payments) {
@@ -496,15 +497,15 @@ if( $this->options['payment_method'] ) {
     <option value="<?php echo $payments['name']; ?>"<?php echo $selected; ?>><?php echo $payments['name']; ?></option>
 <?php } } } ?>
 </select></td>
-<td class="col3 label">氏名</td>
+<td class="col3 label"><?php _e('name', 'usces'); ?></td>
 <td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php echo $data['order_name1']; ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php echo $data['order_name2']; ?>" /></td>
-<td class="label deli">氏名</td>
+<td class="label deli"><?php _e('name', 'usces'); ?></td>
 <td class="deli"><input name="delivery[name1]" type="text" class="text short" value="<?php echo $deli['name1']; ?>" /><input name="delivery[name2]" type="text" class="text short" value="<?php echo $deli['name2']; ?>" /></td>
 </tr>
 <tr>
-<td class="label">配送方法</td>
+<td class="label"><?php _e('shipping option','usces'); ?></td>
 <td class="col1"><select name="order[delivery_method]" id="delivery_method_select">
-	<option value="-1">指定しない</option>
+	<option value="-1"><?php _e('Non-request', 'usces'); ?></option>
 <?php
 foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 	$selected = $order_delivery_method == $delivery['id'] ? ' selected="selected"' : '';
@@ -512,15 +513,17 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 }
 ?>
 </select></td>
-<td class="col3 label">フリガナ</td>
+<?php if( USCES_JP ): ?>
+<td class="col3 label"><?php _e('furigana', 'usces'); ?></td>
 <td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php echo $data['order_name3']; ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php echo $data['order_name4']; ?>" /></td>
-<td class="label deli">フリガナ</td>
+<td class="label deli"><?php _e('furigana', 'usces'); ?></td>
 <td class="deli"><input name="delivery[name3]" type="text" class="text short" value="<?php echo $deli['name3']; ?>" /><input name="delivery[name4]" type="text" class="text short" value="<?php echo $deli['name4']; ?>" /></td>
 </tr>
+<?php endif; ?>
 <tr>
-<td class="label">配送時間帯</td>
+<td class="label"><?php _e('delivery time', 'usces'); ?></td>
 <td class="col1"><select name="order[delivery_time]" id="delivery_time_select">
-	<option value='指定しない'>指定しない</option>
+	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
 <?php
 if( !$this->options['delivery_time'] == '' ) {
 	$array = explode("\n", $this->options['delivery_time']);
@@ -534,24 +537,24 @@ if( !$this->options['delivery_time'] == '' ) {
 }
 ?>
 </select></td>
-<td class="col3 label">郵便番号</td>
+<td class="col3 label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
 <td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php echo $data['order_zip']; ?>" /></td>
-<td class="label deli">郵便番号</td>
+<td class="label deli"><?php _e('Zip/Postal Code', 'usces'); ?></td>
 <td class="deli"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo $deli['zipcode']; ?>" /></td>
 </tr>
 <tr>
-<td class="label">発送予定日</td>
+<td class="label"><?php _e('Shipping date', 'usces'); ?></td>
 <td class="col1"><select name="order[delidue_date]">
-    <option value="#none#">通知しない</option>
+    <option value="#none#"><?php _e('Not notified', 'usces'); ?></option>
 <?php
 for ($i=0; $i<50; $i++) {
-	$date = date('Y年m月d日', mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
+	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
 	$selected = ($data['order_delidue_date'] == $date) ? ' selected="selected"' : '';
 	echo "\t<option value='{$date}'{$selected}>{$date}</option>\n";
 }
 ?>
 </select></td>
-<td class="col3 label">都道府県</td>
+<td class="col3 label"><?php _e('Province', 'usces'); ?></td>
 <td class="col2"><select name="customer[pref]" class="select">
 <?php
 //	$prefs = get_option('usces_pref');
@@ -563,7 +566,7 @@ foreach((array)$prefs as $value) {
 ?>
 </select>
 </td>
-<td class="label deli">都道府県</td>
+<td class="label deli"><?php _e('Province', 'usces'); ?></td>
 <td class="deli"><select name="delivery[pref]">
 <?php
 //	$prefs = get_option('usces_pref');
@@ -577,29 +580,29 @@ foreach((array)$prefs as $value) {
 </td>
 </tr>
 <tr>
-<td colspan="2" class="midasi3">ステイタス</td>
-<td class="col3 label">市区郡町村</td>
+<td colspan="2" class="midasi3"><?php _e('Status', 'usces'); ?></td>
+<td class="col3 label"><?php _e('city', 'usces'); ?></td>
 <td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php echo $data['order_address1']; ?>" /></td>
-<td class="label deli">市区郡町村</td>
+<td class="label deli"><?php _e('city', 'usces'); ?></td>
 <td class="deli"><input name="delivery[address1]" type="text" class="text long" value="<?php echo $deli['address1']; ?>" /></td>
 </tr>
 <tr>
-<td class="label status">対応状況</td>
+<td class="label status"><?php _e('The correspondence situation', 'usces'); ?></td>
 <td class="col1 status">
 <select name="order[taio]">
-	<option value='#none#'>新規受付</option>";
+	<option value='#none#'><?php _e('new order', 'usces'); ?></option>";
 	<option value='duringorder'<?php if($taio == 'duringorder'){ echo 'selected="selected"';} ?>><?php echo $management_status['duringorder']; ?></option>";
 	<option value='cancel'<?php if($taio == 'cancel'){ echo 'selected="selected"';} ?>><?php echo $management_status['cancel']; ?></option>";
 	<option value='completion'<?php if($taio == 'completion'){ echo 'selected="selected"';} ?>><?php echo $management_status['completion']; ?></option>";
 </select>
 </td>
-<td class="col3 label">番地</td>
+<td class="col3 label"><?php _e('numbers', 'usces'); ?></td>
 <td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php echo $data['order_address2']; ?>" /></td>
-<td class="label deli">番地</td>
+<td class="label deli"><?php _e('numbers', 'usces'); ?></td>
 <td class="deli"><input name="delivery[address2]" type="text" class="text long" value="<?php echo $deli['address2']; ?>" /></td>
 </tr>
 <tr>
-<td class="label status" id="receiptlabel"><?php if($receipt != ''){echo '入金状況';}else{echo '&nbsp';} ?></td>
+<td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>
 <td class="col1 status" id="receiptbox">
 <?php if($receipt != '') : ?>
 <select name="order[receipt]">
@@ -610,13 +613,13 @@ foreach((array)$prefs as $value) {
 <?php else : ?>
 &nbsp
 <?php endif; ?></td>
-<td class="col3 label">ビル名</td>
+<td class="col3 label"><?php _e('building name', 'usces'); ?></td>
 <td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php echo $data['order_address3']; ?>" /></td>
-<td class="label deli">ビル名</td>
+<td class="label deli"><?php _e('building name', 'usces'); ?></td>
 <td class="deli"><input name="delivery[address3]" type="text" class="text long" value="<?php echo $deli['address3']; ?>" /></td>
 </tr>
 <tr>
-<td class="label status"><?php if($admin != ''){echo '見積り受注';}else{echo '&nbsp';} ?></td>
+<td class="label status"><?php if($admin != ''){echo __('estimate order', 'usces');}else{echo '&nbsp';} ?></td>
 <td class="col1 status">
 <?php if($admin != '') : ?>
 <select name="order[admin]">
@@ -626,27 +629,27 @@ foreach((array)$prefs as $value) {
 <?php else : ?>
 &nbsp
 <?php endif; ?></td>
-<td class="col3 label">電話番号</td>
+<td class="col3 label"><?php _e('Phone number', 'usces'); ?></td>
 <td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php echo $data['order_tel']; ?>" /></td>
-<td class="label deli">電話番号</td>
+<td class="label deli"><?php _e('Phone number', 'usces'); ?></td>
 <td class="deli"><input name="delivery[tel]" type="text" class="text long" value="<?php echo $deli['tel']; ?>" /></td>
 </tr>
 <tr>
 <td colspan="2" rowspan="2" class="status">
-<div class="midasi2"><?php if($condition['display_mode'] == 'Usualsale'){echo '通常セール';}elseif($condition['display_mode'] == 'Promotionsale'){echo 'キャンペーンセール';} ?></div>
+<div class="midasi2"><?php if($condition['display_mode'] == 'Usualsale'){echo __('normal sale', 'usces');}elseif($condition['display_mode'] == 'Promotionsale'){echo __('Sale Campaign', 'usces');} ?></div>
 <div class="condition">
 <?php if ( $condition['display_mode'] == 'Promotionsale' ) : ?>
-<span>特典：</span><?php echo $condition["campaign_privilege"]; ?>（<?php if($condition["campaign_privilege"] == 'discount'){echo $condition["privilege_discount"].'%引き';}elseif($condition["campaign_privilege"] == 'point'){echo $condition["privilege_point"].'倍、会員のみ';} ?>）<br />
-<span>対象：</span><?php if($condition["campaign_category"] == 0){echo 全商品;} else {echo get_cat_name($condition["campaign_category"]);} ?><br />
+<span><?php _e('Special Benefits', 'usces'); ?>：</span><?php echo $condition["campaign_privilege"]; ?>（<?php if($condition["campaign_privilege"] == 'discount'){echo $condition["privilege_discount"].__('% Discount', 'usces');}elseif($condition["campaign_privilege"] == 'point'){echo $condition["privilege_point"].__(" times (limited to members)", 'usces');} ?>）<br />
+<span><?php _e('applied material', 'usces'); ?>：</span><?php if($condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo get_cat_name($condition["campaign_category"]);} ?><br />
 <?php endif; ?>
 </div></td>
-<td class="col3 label">FAX番号</td>
+<td class="col3 label"><?php _e('FAX number', 'usces'); ?></td>
 <td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php echo $data['order_fax']; ?>" /></td>
-<td class="label deli border">FAX番号</td>
+<td class="label deli border"><?php _e('FAX number', 'usces'); ?></td>
 <td class="deli border"><input name="delivery[fax]" type="text" class="text long" value="<?php echo $deli['fax']; ?>" /></td>
 </tr>
 <tr>
-<td class="col3 label">備考</td>
+<td class="col3 label"><?php _e('Notes', 'usces'); ?></td>
 <td colspan="3" class="col2"><textarea name="order[note]"><?php echo $data['order_note']; ?></textarea></td>
 </tr>
 </table>
@@ -655,19 +658,19 @@ foreach((array)$prefs as $value) {
 <table cellspacing="0" id="cart_table">
 	<thead>
 		<tr>
-			<th colspan="5" class="aright">総合計金額<?php //echo __('Total price','usces'); ?></th>
+			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th id="total_full_top" class="aright">&nbsp;</th>
 			<th colspan="2">&nbsp;</th>
 		</tr>
 	<tr>
 		<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
 		<th class="thumbnail"> <?php //echo __('thumbnail','usces'); ?></th>
-		<th>商品<?php //echo __('item','usces'); ?></th>
-		<th class="price">単価<?php //echo __('price','usces'); ?></th>
-		<th class="quantity">数量<?php //echo __('quantity','usces'); ?></th>
-		<th class="subtotal">金額<?php //echo __('subtotal','usces'); ?></th>
-		<th class="stock">現在庫<?php //echo __('stock','usces'); ?></th>
-		<th class="action"><input name="addButton" id="addCartButton" class="addCartButton" type="button" value="商品追加" /></th>
+		<th><?php _e('Items','usces'); ?></th>
+		<th class="price"><?php _e('Unit price','usces'); ?></th>
+		<th class="quantity"><?php _e('Quantity','usces'); ?></th>
+		<th class="subtotal"><?php _e('Amount','usces'); ?></th>
+		<th class="stock"><?php _e('Current stock', 'usces'); ?></th>
+		<th class="action"><input name="addButton" id="addCartButton" class="addCartButton" type="button" value="<?php _e('Add item', 'usces'); ?>" /></th>
 	</tr>
 	</thead>
 	<tbody id="orderitemlist">
@@ -682,7 +685,7 @@ foreach((array)$prefs as $value) {
 		$itemName = $this->getItemName($post_id);
 		$skuPrice = $cart_row['price'];
 		$stock = $this->getItemZaiko($post_id, $sku);
-		$red = (in_array($stock, array('売切れ','入荷待ち','廃盤'))) ? 'class="signal_red"' : '';
+		$red = (in_array($stock, array(__('Sellout', 'usces'), __('Temporarily out of stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		if (!empty($options) && is_array($options)) {
 			$optstr = implode(',', $options);
@@ -705,7 +708,7 @@ foreach((array)$prefs as $value) {
 		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $key; ?>" />
 		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
 		<?php } ?>
-		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="削除" />
+		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
 		</td>
 	</tr>
 <?php 
@@ -714,45 +717,45 @@ foreach((array)$prefs as $value) {
 	</tbody>
 		<tfoot>
 		<tr>
-			<th colspan="5" class="aright">商品合計<?php //echo __('Item total price','usces'); ?></th>
+			<th colspan="5" class="aright"><?php _e('total items','usces'); ?></th>
 			<th id="item_total" class="aright">&nbsp;</th>
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright">使用ポイント<?php //echo __('Use point','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
 			<td class="aright" style="color:#FF0000"><input name="order[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {echo $data['order_usedpoint']; } else { echo '0'; } ?>" /></td>
-			<td>付与ポイント</td>
+			<td><?php _e('granted points', 'usces'); ?></td>
 			<td class="aright" style="color:#FF0000"><input name="order[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {echo $data['order_getpoint']; } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright">キャンペーン割引<?php //echo __('Descount','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
 			<td class="aright" style="color:#FF0000"><input name="order[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo $data['order_discount']; } else { echo '0'; } ?>" /></td>
-			<td colspan="2">※割引は-（マイナス）で入力します。&nbsp;</td>
+			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright">送料<?php //echo __('Delivery fee','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
 			<td class="aright"><input name="order[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo $data['order_shipping_charge']; } else { echo '0'; } ?>" /></td>
-			<td colspan="2">※自動計算されません。&nbsp;</td>
+			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright">代引手数料<?php //echo __('COD Fee','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('COD fee','usces'); ?></td>
 			<td class="aright"><input name="order[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo $data['order_cod_fee']; } else { echo '0'; } ?>" /></td>
-			<td colspan="2">※自動計算されません。&nbsp;</td>
+			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright">消費税<?php //echo __('Tax','usces'); ?></td>
+			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
 			<td class="aright"><input name="order[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo $data['order_tax']; } else { echo '0'; } ?>" /></td>
-			<td colspan="2">※自動計算されません。&nbsp;</td>
+			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
-			<th colspan="5" class="aright">総合計金額<?php //echo __('Total price','usces'); ?></th>
+			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th id="total_full" class="aright">&nbsp;</th>
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		</tfoot>
 </table>
 </div>
-<div class="ordernavi"><input name="upButton2" class="upButton" type="submit" value="<?php echo '更新確定'; ?>" />値を変更した場合は必ず最後に「更新確定」ボタンを押してください。</div>
+<div class="ordernavi"><input name="upButton2" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 
 <input name="order_action" type="hidden" value="<?php echo $oa; ?>" />
 <input name="order_id" id="order_id" type="hidden" value="<?php echo $data['ID']; ?>" />
@@ -762,15 +765,15 @@ foreach((array)$prefs as $value) {
 
 
 
-<div id="addItemDialog" title="商品追加">
+<div id="addItemDialog" title="<?php _e('Add item', 'usces'); ?>">
 	<div id="order-response"></div>
 	<fieldset>
 	<div class="clearfix">
 		<div class="dialogsearch">
-		<p>商品コードを入力して「取得」ボタンを押して下さい。</p>
-		<label for="name">商品コード</label>
+		<p><?php _e("Enter the item code, then press 'Obtain'", 'usces'); ?></p>
+		<label for="name"><?php _e('item code', 'usces'); ?></label>
 		<input type="text" name="newitemcode" id="newitemcode" class="text" />
-		<input name="getitem" type="button" value="取得" onclick="if( jQuery('#newitemcode').val() == '' ) return; orderItem.getitem();" />
+		<input name="getitem" type="button" value="<?php _e('Obtain', 'usces'); ?>" onclick="if( jQuery('#newitemcode').val() == '' ) return; orderItem.getitem();" />
 		</div>
 		<div id="newitemform">
 		</div>
@@ -783,10 +786,10 @@ foreach((array)$prefs as $value) {
 <div id="mailSendDialog" title="">
 	<div id="order-response"></div>
 	<fieldset>
-		<p>メールの内容を確認して「送信」ボタンを押して下さい。</p>
-		<label>メールアドレス</label><input type="text" name="sendmailaddress" id="sendmailaddress" class="text" /><br />
-		<label>お客様名</label><input type="text" name="sendmailname" id="sendmailname" class="text" /><br />
-		<label>件名</label><input type="text" name="sendmailsubject" id="sendmailsubject" class="text" /><input name="sendmail" id="sendmail" type="button" value="送信" /><br />
+		<p><?php _e("Check the mail and click 'send'", 'usces'); ?></p>
+		<label><?php _e('e-mail adress', 'usces'); ?></label><input type="text" name="sendmailaddress" id="sendmailaddress" class="text" /><br />
+		<label><?php _e('Client name', 'usces'); ?></label><input type="text" name="sendmailname" id="sendmailname" class="text" /><br />
+		<label><?php _e('subject', 'usces'); ?></label><input type="text" name="sendmailsubject" id="sendmailsubject" class="text" /><input name="sendmail" id="sendmail" type="button" value="<?php _e('send', 'usces'); ?>" /><br />
 		<textarea name="sendmailmessage" id="sendmailmessage" cols="" rows=""></textarea>
 		<input name="mailChecked" id="mailChecked" type="hidden" />
 	</fieldset>

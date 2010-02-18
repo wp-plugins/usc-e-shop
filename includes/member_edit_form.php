@@ -87,7 +87,7 @@ jQuery(document).ready(function($){
 <div class="usces_admin">
 <form action="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action='.$oa; ?>" method="post" name="editpost">
 
-<h2>Welcart Management 会員データ編集<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2>Welcart Management <?php _e('Edit membership data','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
@@ -95,17 +95,17 @@ jQuery(document).ready(function($){
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>
-<div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php echo '更新確定'; ?>" />値を変更した場合は必ず最後に「更新確定」ボタンを押してください。</div>
+<div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 <div class="info_head">
 <div class="error_message"><?php echo $this->error_message; ?></div>
 <table>
 <tr>
-<td class="label">会員No</td><td class="col1"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
+<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
 <td class="col3 label">e-mail</td><td class="col2"><input name="mem_email" type="text" class="text long" value="<?php echo $data['mem_email']; ?>" /></td>
-<td class="col3 label">郵便番号</td><td class="col2"><input name="mem_zip" type="text" class="text short" value="<?php echo $data['mem_zip']; ?>" /></td>
+<td class="col3 label"><?php _e('Zip/Postal Code', 'usces'); ?></td><td class="col2"><input name="mem_zip" type="text" class="text short" value="<?php echo $data['mem_zip']; ?>" /></td>
 </tr>
 <tr>
-<td class="label">ランク</td><td class="col1"><select name="mem_status">
+<td class="label"><?php _e('Rank', 'usces'); ?></td><td class="col1"><select name="mem_status">
 <?php 
 	foreach ((array)$this->member_status as $rk => $rv) {
 		$selected = ($rk == $data['mem_status']) ? ' selected="selected"' : '';
@@ -113,8 +113,8 @@ jQuery(document).ready(function($){
     <option value="<?php echo $rk; ?>"<?php echo $selected; ?>><?php echo $rv; ?></option>
 <?php } ?>
 </select></td>
-<td class="col3 label">氏名</td><td class="col2"><input name="mem_name1" type="text" class="text short" value="<?php echo $data['mem_name1']; ?>" /><input name="mem_name2" type="text" class="text short" value="<?php echo $data['mem_name2']; ?>" /></td>
-<td class="col3 label">都道府県</td><td class="col2"><select name="mem_pref" class="select">
+<td class="col3 label"><?php _e('name', 'usces'); ?></td><td class="col2"><input name="mem_name1" type="text" class="text short" value="<?php echo $data['mem_name1']; ?>" /><input name="mem_name2" type="text" class="text short" value="<?php echo $data['mem_name2']; ?>" /></td>
+<td class="col3 label"><?php _e('Province', 'usces'); ?></td><td class="col2"><select name="mem_pref" class="select">
 <?php
 //	$prefs = get_option('usces_pref');
 	$prefs = $this->options['province'];
@@ -125,19 +125,21 @@ foreach((array)$prefs as $value) {
 ?>
 </select></td></tr>
 <tr>
-<td class="label">保有PT</td><td class="col1"><input name="mem_point" type="text" class="text right short" value="<?php echo $data['mem_point']; ?>" /></td>
-<td class="col3 label">フリガナ</td><td class="col2"><input name="mem_name3" type="text" class="text short" value="<?php echo $data['mem_name3']; ?>" /><input name="mem_name4" type="text" class="text short" value="<?php echo $data['mem_name4']; ?>" /></td>
-<td class="col3 label">市区郡町村</td><td class="col2"><input name="mem_address1" type="text" class="text long" value="<?php echo $data['mem_address1']; ?>" /></td>
+<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="mem_point" type="text" class="text right short" value="<?php echo $data['mem_point']; ?>" /></td>
+<?php if( USCES_JP ): ?>
+<td class="col3 label"><?php _e('furigana', 'usces'); ?></td><td class="col2"><input name="mem_name3" type="text" class="text short" value="<?php echo $data['mem_name3']; ?>" /><input name="mem_name4" type="text" class="text short" value="<?php echo $data['mem_name4']; ?>" /></td>
+<?php endif; ?>
+<td class="col3 label"><?php _e('city', 'usces'); ?></td><td class="col2"><input name="mem_address1" type="text" class="text long" value="<?php echo $data['mem_address1']; ?>" /></td>
 </tr>
 <tr>
-<td class="label">入会日</td><td class="col1"><div class="rod shortm"><?php echo substr($data['mem_registered'],0,4).'年'.substr($data['mem_registered'],5,2).'月'.substr($data['mem_registered'],8,2).'日'; ?></div></td>
-<td class="col3 label">電話番号</td><td class="col2"><input name="mem_tel" type="text" class="text long" value="<?php echo $data['mem_tel']; ?>" /></td>
-<td class="col3 label">番地</td><td class="col2"><input name="mem_address2" type="text" class="text long" value="<?php echo $data['mem_address2']; ?>" /></td>
+<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo substr($data['mem_registered'],0,4).'年'.substr($data['mem_registered'],5,2).'月'.substr($data['mem_registered'],8,2).'日'; ?></div></td>
+<td class="col3 label"><?php _e('Phone number', 'usces'); ?></td><td class="col2"><input name="mem_tel" type="text" class="text long" value="<?php echo $data['mem_tel']; ?>" /></td>
+<td class="col3 label"><?php _e('numbers', 'usces'); ?></td><td class="col2"><input name="mem_address2" type="text" class="text long" value="<?php echo $data['mem_address2']; ?>" /></td>
 </tr>
 <tr>
 <td colspan="2">&nbsp;</td>
-<td class="col3 label">FAX番号</td><td class="col2"><input name="mem_fax" type="text" class="text long" value="<?php echo $data['mem_fax']; ?>" /></td>
-<td class="col3 label">ビル名</td><td class="col2"><input name="mem_address3" type="text" class="text long" value="<?php echo $data['mem_address3']; ?>" /></td>
+<td class="col3 label"><?php _e('FAX number', 'usces'); ?></td><td class="col2"><input name="mem_fax" type="text" class="text long" value="<?php echo $data['mem_fax']; ?>" /></td>
+<td class="col3 label"><?php _e('building name', 'usces'); ?></td><td class="col2"><input name="mem_address3" type="text" class="text long" value="<?php echo $data['mem_address3']; ?>" /></td>
 </tr>
 </table>
 </div>
@@ -145,19 +147,19 @@ foreach((array)$prefs as $value) {
 <table>
 <?php if ( !count($usces_member_history) ) : ?>
 <tr>
-<td>現在購入履歴はございません。</td>
+<td><?php _e('There is no purchase history for this moment.', 'usces'); ?></td>
 </tr>
 <?php endif; ?>
 <?php foreach ( (array)$usces_member_history as $umhs ) :	$cart = $umhs['cart']; ?>
 <tr>
-<th class="historyrow">購入日</th>
-<th class="historyrow">購入金額</th>
-<th class="historyrow">使用ポイント</th>
-<th class="historyrow">特別割引</th>
-<th class="historyrow">送料</th>
-<th class="historyrow">代引き手数料</th>
-<th class="historyrow">消費税</th>
-<th class="historyrow">獲得ポイント</th>
+<th class="historyrow"><?php _e('Purchase date', 'usces'); ?></th>
+<th class="historyrow"><?php _e('Purchase price', 'usces'); ?></th>
+<th class="historyrow"><?php _e('Used points','usces'); ?></th>
+<th class="historyrow"><?php _e('Special discount', 'usces'); ?></th>
+<th class="historyrow"><?php _e('Shipping', 'usces'); ?></th>
+<th class="historyrow"><?php _e('C.O.D', 'usces'); ?></th>
+<th class="historyrow"><?php _e('consumption tax', 'usces'); ?></th>
+<th class="historyrow"><?php _e('Acquired points', 'usces'); ?></th>
 </tr>
 <tr>
 <td><?php echo $umhs['date']; ?></td>
@@ -175,10 +177,10 @@ foreach((array)$prefs as $value) {
 	<tr>
 	<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
 	<th class="thumbnail">&nbsp;</th>
-	<th>商品</th>
-	<th class="price ">単価</th>
-	<th class="quantity">数量</th>
-	<th class="subtotal">金額</th>
+	<th><?php _e('Items','usces'); ?></th>
+	<th class="price "><?php _e('Unit price','usces'); ?></th>
+	<th class="quantity"><?php _e('Quantity','usces'); ?></th>
+	<th class="subtotal"><?php _e('Amount','usces'); ?></th>
 	</tr>
 	<?php
 	for($i=0; $i<count($cart); $i++) { 

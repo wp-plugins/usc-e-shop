@@ -18,9 +18,9 @@ function newsubmit() {
 $html .= '<div id="searchbox">
 <form name="searchindetail" action="' . USCES_CART_URL . '&page=search_item" method="post">
 <div class="field">
-<label class="outlabel">カテゴリー : AND検索</label>' . usces_categories_checkbox('return') . '
+<label class="outlabel">'.__('Categories', 'usces').' : AND検索</label>' . usces_categories_checkbox('return') . '
 </div>
-<input name="usces_search_button" type="submit" value="検索開始" onclick="newsubmit()" />
+<input name="usces_search_button" type="submit" value="'.__('Search', 'usces').'" onclick="newsubmit()" />
 <input name="paged" id="usces_paged" type="hidden" value="' . $uscpaged . '" />
 <input name="usces_search" type="hidden" />
 </form>';
@@ -33,16 +33,16 @@ if (isset($_REQUEST['usces_search'])) {
 	$my_query = new WP_Query( array('category__and' => $catresult, 'posts_per_page' => 10, 'paged' => $uscpaged) );
 	
 	
-	$html .= '<div class="title">検索結果</div>';
+	$html .= '<div class="title">'.__('Search results', 'usces').'</div>';
 	
 	if ($my_query->have_posts()) {
 	
 		$html .= '<div class="navigation">';
 		if( $uscpaged > 1 ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">'.__('next article &raquo;', 'usces').'</a>';
+			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">'.__('Next article &raquo;', 'usces').'</a>';
 		}
 		if( $uscpaged < $my_query->max_num_pages ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">'.__('&laquo; Previous aorticle', 'usces').'</a>';
+			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">'.__('&laquo; Previous article', 'usces').'</a>';
 		}
 		$html .= '</div>
 	
@@ -64,10 +64,10 @@ if (isset($_REQUEST['usces_search'])) {
 		$html .= '</div><!-- searchitems -->';
 		$html .= '<div class="navigation">';
 		if( $uscpaged > 1 ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">'.__('next article &raquo;', 'usces').'</a>';
+			$html .= '<a style="cursor:pointer;" onclick="usces_prepage();">'.__('Next article &raquo;', 'usces').'</a>';
 		}
 		if( $uscpaged < $my_query->max_num_pages ) {
-			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">'.__('&laquo; Previous aorticle', 'usces').'</a>';
+			$html .= '<a style="cursor:pointer;" onclick="usces_nextpage();">'.__('&laquo; Previous article', 'usces').'</a>';
 		}
 		$html .= '</div>';
 	}	

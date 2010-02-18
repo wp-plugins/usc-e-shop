@@ -73,7 +73,7 @@ class usc_e_shop
 		$this->shipping_rule = get_option('usces_shipping_rule');
 		//$this->shipping_charge_structure = get_option('shipping_charge_structure');
 		define('USCES_MYSQL_VERSION', (int)substr(mysql_get_server_info(), 0, 1));
-
+		define('USCES_JP', ('ja' == get_locale() ? true : false));
 		
 	}
 	
@@ -682,9 +682,9 @@ class usc_e_shop
 				foreach($ioptkeys as $key => $value){
 					$optValues = $this->get_itemOptions( $value, $post->ID );
 					if($optValues['means'] < 2){
-						$mes_opts_str .= "'{$value}を選択してください。',";
+						$mes_opts_str .= "'" . sprintf(__("Chose the %s", 'usces'), $value) . "',";
 					}else{
-						$mes_opts_str .= "'{$value}を入力してください。',";
+						$mes_opts_str .= "'" . sprintf(__("Input the %s", 'usces'), $value) . "',";
 					}
 					$key_opts_str .= "'{$value}',";
 					$opt_means .= "'{$optValues['means']}',";
@@ -701,6 +701,7 @@ class usc_e_shop
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
+				ajaxurl: "<?php echo USCES_WP_PLUGIN_URL; ?>",
 				post_id: "<?php echo $post->ID; ?>",
 				cart_number: "<?php echo get_option('usces_cart_number'); ?>",
 				opt_esse: new Array( <?php echo $opt_esse; ?> ),
@@ -713,8 +714,146 @@ class usc_e_shop
 		/* ]]> */
 		</script>
 		<?php endif; ?>
-		<script type='text/javascript' src='<?php echo get_option('siteurl') . '/wp-includes/js/jquery/jquery.js'; ?>'></script>
+		<!--<script type='text/javascript' src='<?php echo get_option('siteurl') . '/wp-includes/js/jquery/jquery.js'; ?>'></script>-->
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
+		<?php if( isset($post) && ((USCES_CART_NUMBER == $post->ID) || ('item' == $post->post_mime_type && is_single())) ) : ?>
+		<script type='text/javascript'>
+		(function($) {
+		uscesCart = {
+			intoCart : function (post_id, sku) {
+				
+				var zaikonum = document.getElementById("zaikonum["+post_id+"]["+sku+"]").value;
+				var zaiko = document.getElementById("zaiko["+post_id+"]["+sku+"]").value;
+				if( (zaiko != '0' && zaiko != '1') ||  parseInt(zaikonum) == 0 ){
+					alert('<?php _e('temporaly out of stock now', 'usces'); ?>');
+					return false;
+				}
+				
+				var mes = '';
+				if(document.getElementById("quant["+post_id+"]["+sku+"]")){
+					var quant = document.getElementById("quant["+post_id+"]["+sku+"]").value;
+					if( quant == '0' || quant == '' || !(uscesCart.isNum(quant))){
+						mes += "<?php _e('enter the correct amount', 'usces'); ?>\n";
+					}
+					var checknum = '';
+					var checkmode = '';
+					if( parseInt(uscesL10n.itemRestriction) <= parseInt(zaikonum) && uscesL10n.itemRestriction != '' && uscesL10n.itemRestriction != '0' && zaikonum != '' ) {
+						checknum = uscesL10n.itemRestriction;
+						checkmode ='rest';
+					} else if( parseInt(uscesL10n.itemRestriction) > parseInt(zaikonum) && uscesL10n.itemRestriction != '' && uscesL10n.itemRestriction != '0' && zaikonum != '' ) {
+						checknum = zaikonum;
+						checkmode ='zaiko';
+					} else if( (uscesL10n.itemRestriction == '' || uscesL10n.itemRestriction == '0') && zaikonum != '' ) {
+						checknum = zaikonum;
+						checkmode ='zaiko';
+					} else if( uscesL10n.itemRestriction != '' && uscesL10n.itemRestriction != '0' && zaikonum == '' ) {
+						checknum = uscesL10n.itemRestriction;
+						checkmode ='rest';
+					}
+									
+	
+					if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
+							if(checkmode == 'rest'){
+								mes += <?php _e("'This article is limited by '+checknum+' at a time.'", 'usces'); ?>+"\n";
+							}else{
+								mes += <?php _e("'Stock is remainder '+checknum+'.'", 'usces'); ?>+"\n";
+							}
+					}
+				}
+				for(i=0; i<uscesL10n.key_opts.length; i++){
+					var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]");
+					if( uscesL10n.opt_esse[i] == '1' ){
+						
+						if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
+							mes += uscesL10n.mes_opts[i]+"\n";
+						}else if( uscesL10n.opt_means[i] >= 2 && skuob.value == '' ){
+							mes += uscesL10n.mes_opts[i]+"\n";
+						}
+					}
+				}
+				if( mes != '' ){
+					alert( mes );
+					return false;
+				}else{
+					return true;
+				}
+			},
+			
+			upCart : function () {
+				
+				var zaikoob = $("input[name*='zaikonum']");
+				var quantob = $("input[name*='quant']");
+				var postidob = $("input[name*='itempostid']");
+				var skuob = $("input[name*='itemsku']");
+				
+				var zaikonum = '';
+				var zaiko = '';
+				var quant = '';
+				var mes = '';
+				var checknum = '';
+				var post_id = '';
+				var sku = '';
+				var itemRestriction = '';
+				
+				var ct = zaikoob.length;
+				for(var i=0; i< ct; i++){
+					post_id = postidob[i].value;
+					sku = skuob[i].value;
+					itemRestriction = $("input[name='itemRestriction\[" + i + "\]']").val();
+					zaikonum = $("input[name='zaikonum\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val();
+			
+					quant = $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val();
+					if( $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']") ){
+						if( quant == '' || !(uscesCart.isNum(quant))){
+							mes += <?php _e("'enter the correct amount for the No.' + (i+1) + ' item'", 'usces'); ?>+"\n";
+						}
+						var checknum = '';
+						var checkmode = '';
+						if( parseInt(itemRestriction) <= parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
+							checknum = uscesL10n.itemRestriction;
+							checkmode ='rest';
+						} else if( parseInt(itemRestriction) > parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
+							checknum = zaikonum;
+							checkmode ='zaiko';
+						} else if( (itemRestriction == '' || itemRestriction == '0') && zaikonum != '' ) {
+							checknum = zaikonum;
+							checkmode ='zaiko';
+						} else if( itemRestriction != '' && itemRestriction != '0' && zaikonum == '' ) {
+							checknum = itemRestriction;
+							checkmode ='rest';
+						}
+						if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
+							if(checkmode == 'rest'){
+								mes += <?php _e("'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'", 'usces'); ?>+"\n";
+							}else{
+								mes += <?php _e("'Stock of No.' + (i+1) + ' item is remainder '+checknum+'.'", 'usces'); ?>+"\n";
+							}
+						}
+					}
+				}
+	
+				if( mes != '' ){
+					alert( mes );
+					return false;
+				}else{
+					return true;
+				}
+			},
+			
+			previousCart : function () {
+				location.href = uscesL10n.previous_url; 
+			},
+			
+			isNum : function (num) {
+				if (num.match(/[^0-9]/g)) {
+					return false;
+				}
+				return true;
+			}
+		};
+		})(jQuery);
+		</script>
+		<?php endif; ?>
 <?php
 	}
 	
@@ -734,7 +873,8 @@ class usc_e_shop
 				cart_number: "<?php echo get_option('usces_cart_number'); ?>", 
 				purchase_limit: "<?php echo $this->options['purchase_limit']; ?>", 
 				point_rate: "<?php echo $this->options['point_rate']; ?>",
-				shipping_rule: "<?php echo $this->options['shipping_rule']; ?>" 
+				shipping_rule: "<?php echo $this->options['shipping_rule']; ?>", 
+				now_loading: "<?php _e('now loading', 'usces'); ?>" 
 			};
 			uscesPayments = {
 				<?php echo $payments_str; ?>
@@ -795,6 +935,8 @@ class usc_e_shop
 			wp_enqueue_script('quicktags');
 
 		}
+		
+		wp_enqueue_script('jquery');
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
 			require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');
@@ -1136,10 +1278,10 @@ class usc_e_shop
 		$res = usces_import_xml();
 		if ( $res === false ) :
 			$this->action_status = 'error';
-			//$this->action_message = 'エラー：インポートが完了しませんでした。';
+			//$this->action_message = __('Import was not completed.', 'usces');
 		else :
 			$this->action_status = 'success';
-			$this->action_message = 'インポートが完了しました。';
+			$this->action_message = __('Import is cmpleted', 'usces');
 		endif;
 		
 //		require_once(USCES_PLUGIN_DIR . '/includes/admin_backup.php');	
@@ -1161,7 +1303,7 @@ class usc_e_shop
 		global $wpdb;
 
 		if ( !isset($_SESSION['usces_lostmail']) ) :
-			$this->error_message = 'タイムアウトのためパスワードを更新できませんでした。';
+			$this->error_message = __('Failed in update due to time-out', 'usces');
 			return 'login';
 		else :
 		
@@ -1173,7 +1315,7 @@ class usc_e_shop
 			//$res = $wpdb->last_results;
 
 			if ( $res === false ) :
-				$this->error_message = 'エラー：パスワードを更新できませんでした。';
+				$this->error_message = __('Error: failure in updating password', 'usces');
 				return 'login';
 			else :
 				return 'changepasscompletion';
@@ -1213,7 +1355,7 @@ class usc_e_shop
 					);
 			$id = $wpdb->get_var( $query );
 			if ( !empty($id) ) {
-				$this->error_message = 'このメールアドレスは既に登録されています。';
+				$this->error_message = __('This e-mail address has been already registered.', 'usces');
 				return $mode;
 			} else {
 			
@@ -1248,7 +1390,7 @@ class usc_e_shop
 			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s", trim($_POST['member']['mailaddress1']));
 			$id = $wpdb->get_var( $query );
 			if ( !empty($id) ) {
-				$this->error_message = 'このメールアドレスは既に登録されています。';
+				$this->error_message = __('This e-mail address has been already registered.', 'usces');
 				return $mode;
 			} else {
 			
@@ -1293,7 +1435,7 @@ class usc_e_shop
 			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s", trim($_POST['customer']['mailaddress1']));
 			$id = $wpdb->get_var( $query );
 			if ( !empty($id) ) {
-				$this->error_message = 'このメールアドレスは既に登録されています。';
+				$this->error_message = __('This e-mail address has been already registered.', 'usces');
 				return $mode;
 			} else {
 			
@@ -1371,7 +1513,7 @@ class usc_e_shop
 			return 'login';
 		} else if ( $_POST['loginpass'] == '' ) {
 			$this->current_member['email'] = wp_specialchars(trim($_POST['loginmail']));
-			$this->error_message = '<b>エラー:</b> パスワードを入力してください。';
+			$this->error_message = __('<b>Error:</b> Enter the pass word.', 'usces');
 			return 'login';
 		} else {
 			$email = trim($_POST['loginmail']);
@@ -1383,14 +1525,14 @@ class usc_e_shop
 			
 			if ( !$id ) {
 				$this->current_member['email'] = htmlspecialchars($email);
-				$this->error_message = '<b>エラー:</b>  メールアドレスが違います。';
+				$this->error_message = __('<b>Error:</b> E-mail address is not correct.', 'usces');
 				return 'login';
 			} else {
 				$query = $wpdb->prepare("SELECT * FROM $member_table WHERE mem_email = %s AND mem_pass = %s", $email, $pass);
 				$member = $wpdb->get_row( $query, ARRAY_A );
 				if ( empty($member) ) {
 					$this->current_member['email'] = htmlspecialchars($email);
-					$this->error_message = '<b>エラー:</b>  パスワードが違います。';
+					$this->error_message = __('<b>Error:</b> Pass word is not correct.', 'usces');
 					return 'login';
 				} else {
 					$_SESSION['usces_member']['ID'] = $member['ID'];
@@ -1443,7 +1585,7 @@ class usc_e_shop
 			$this->current_member['name'] = $_SESSION['usces_member']['name1'] . ' ' . $_SESSION['usces_member']['name2'];
 		} else {
 			$this->current_member['id'] = 0;
-			$this->current_member['name'] = 'ゲスト';
+			$this->current_member['name'] = __('guest', 'usces');
 		}
 	}
 
@@ -1462,9 +1604,9 @@ class usc_e_shop
 			$post_id = $cart_row['post_id'];
 			$sku = $cart_row['sku'];
 			$stock = $this->getItemZaiko($post_id, $sku);
-			$red = (in_array($stock, array('売切れ','入荷待ち','廃盤'))) ? 'red' : '';
+			$red = (in_array($stock, array(__('Sellout', 'usces'), __('Temporarily out of stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
 		}
-		$mes = $red == '' ? '' : '恐れ入りますが、商品が売り切れました。';
+		$mes = $red == '' ? '' : __('Sorry, this item is sold out.', 'usces');
 		return $mes;	
 	}
 	
@@ -1475,31 +1617,31 @@ class usc_e_shop
 		}
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
 			if ( (trim($_POST['member']['password1']) != '' || trim($_POST['member']['password2']) != '') && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
-				$mes .= "パスワードが不正です。<br />";
+				$mes .= __('pass word is not correct', 'usces') . "<br />";
 			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' )
-				$mes .= "メールアドレスが不正です。<br />";
+				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 				
 		} else {
 			if ( trim($_POST['member']['password1']) == '' || trim($_POST['member']['password2']) == '' || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
-				$mes .= "パスワードが不正です。<br />";
+				$mes .= __('pass word is not correct', 'usces') . "<br />";
 			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' || trim($_POST['member']['mailaddress2']) == '' || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
-				$mes .= "メールアドレスが不正です。<br />";
+				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 			
 		}
 		if ( trim($_POST["member"]["name1"]) == "" )
-			$mes .= "名前が不正です。";
-		if ( trim($_POST["member"]["name3"]) == "" )
-			$mes .= "フリカナが不正です。<br />";
+			$mes .= __('Name is not correct', 'usces');
+//		if ( trim($_POST["member"]["name3"]) == "" && USCES_JP )
+//			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["member"]["zipcode"]) == "" )
-			$mes .= "郵便番号が不正です。<br />";
+			$mes .= __('postal code is not correct', 'usces') . "<br />";
 		if ( $_POST["member"]["pref"] == "-選択-" )
-			$mes .= "都道府県を選択してください。<br />";
+			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( trim($_POST["member"]["address1"]) == "" )
-			$mes .= "市区郡町村を入力してください。<br />";
+			$mes .= __('enter the city name', 'usces') . "<br />";
 		if ( trim($_POST["member"]["address2"]) == "" )
-			$mes .= "番地を入力してください。<br />";
+			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["member"]["tel"]) == "" )
-			$mes .= "電話番号を入力してください。<br />";
+			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
 		return $mes;
 	}
@@ -1507,23 +1649,23 @@ class usc_e_shop
 	function member_check_fromcart() {
 		$mes = '';
 		if ( trim($_POST['customer']['password1']) == '' || trim($_POST['customer']['password2']) == '' || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
-			$mes .= "パスワードが不正です。<br />";
+			$mes .= __('pass word is not correct', 'usces') . "<br />";
 		if ( !strstr($_POST['customer']['mailaddress1'], '@') || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
-			$mes .= "メールアドレスが不正です。<br />";
+			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["name1"]) == "" )
-			$mes .= "名前が不正です。";
-		if ( trim($_POST["customer"]["name3"]) == "" )
-			$mes .= "フリカナが不正です。<br />";
+			$mes .= __('Name is not correct', 'usces');
+//		if ( trim($_POST["customer"]["name3"]) == "" && USCES_JP )
+//			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["zipcode"]) == "" )
-			$mes .= "郵便番号が不正です。<br />";
+			$mes .= __('postal code is not correct', 'usces') . "<br />";
 		if ( $_POST["customer"]["pref"] == "-選択-" )
-			$mes .= "都道府県を選択してください。<br />";
+			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["address1"]) == "" )
-			$mes .= "市区郡町村を入力してください。<br />";
+			$mes .= __('enter the city name', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["address2"]) == "" )
-			$mes .= "番地を入力してください。<br />";
+			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["tel"]) == "" )
-			$mes .= "電話番号を入力してください。<br />";
+			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
 		return $mes;
 	}
@@ -1531,21 +1673,21 @@ class usc_e_shop
 	function admin_member_check() {
 		$mes = '';
 		if ( !is_email( trim($_POST["mem_email"]) ) )
-			$mes .= "メールアドレスが不正です。<br />";
+			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["mem_name1"]) == "" )
-			$mes .= "名前が不正です。<br />";
-		if ( trim($_POST["mem_name3"]) == "" )
-			$mes .= "フリカナが不正です。<br />";
+			$mes .= __('Name is not correct', 'usces') . "<br />";
+//		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
+//			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["mem_zip"]) == "" )
-			$mes .= "郵便番号が不正です。<br />";
+			$mes .= __('postal code is not correct', 'usces') . "<br />";
 		if ( $_POST["mem_pref"] == "-選択-" )
-			$mes .= "都道府県を選択してください。<br />";
+			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( trim($_POST["mem_address1"]) == "" )
-			$mes .= "市区郡町村を入力してください。<br />";
+			$mes .= __('enter the city name', 'usces') . "<br />";
 		if ( trim($_POST["mem_address2"]) == "" )
-			$mes .= "番地を入力してください。<br />";
+			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["mem_tel"]) == "" )
-			$mes .= "電話番号を入力してください。<br />";
+			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
 		return $mes;
 	}
@@ -1553,21 +1695,21 @@ class usc_e_shop
 	function customer_check() {
 		$mes = '';
 		if ( !strstr($_POST['customer']['mailaddress1'], '@') || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
-			$mes .= "メールアドレスが不正です。<br />";
+			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["name1"]) == "" )
-			$mes .= "名前が不正です。";
-		if ( trim($_POST["customer"]["name3"]) == "" )
-			$mes .= "フリカナが不正です。<br />";
+			$mes .= __('Name is not correct', 'usces');
+//		if ( trim($_POST["customer"]["name3"]) == "" && USCES_JP )
+//			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["zipcode"]) == "" )
-			$mes .= "郵便番号が不正です。<br />";
-		if ( $_POST["customer"]["pref"] == "-選択-" )
-			$mes .= "都道府県を選択してください。<br />";
+			$mes .= __('postal code is not correct', 'usces') . "<br />";
+		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') )
+			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["address1"]) == "" )
-			$mes .= "市区郡町村を入力してください。<br />";
+			$mes .= __('enter the city name', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["address2"]) == "" )
-			$mes .= "番地を入力してください。<br />";
+			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["tel"]) == "" )
-			$mes .= "電話番号を入力してください。<br />";
+			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
 		return $mes;
 	}
@@ -1576,22 +1718,24 @@ class usc_e_shop
 		$mes = '';
 		if ( $_POST['customer']['delivery_flag'] == '1' ) {
 			if ( trim($_POST["delivery"]["name1"]) == "" )
-				$mes .= "1名前が不正です。";
-			if ( trim($_POST["delivery"]["name3"]) == "" )
-				$mes .= "フリカナが不正です。<br />";
+				$mes .= __('Name is not correct', 'usces');
+//			if ( trim($_POST["delivery"]["name3"]) == "" && USCES_JP )
+//				$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 			if ( trim($_POST["delivery"]["zipcode"]) == "" )
-				$mes .= "郵便番号が不正です。<br />";
-			if ( $_POST["delivery"]["pref"] == "-選択-" )
-				$mes .= "都道府県を選択してください。<br />";
+				$mes .= __('postal code is not correct', 'usces') . "<br />";
+			if ( $_POST["delivery"]["pref"] == __('-- Select --', 'usces') )
+				$mes .= __('enter the prefecture', 'usces') . "<br />";
 			if ( trim($_POST["delivery"]["address1"]) == "" )
-				$mes .= "市区郡町村を入力してください。<br />";
+				$mes .= __('enter the city name', 'usces') . "<br />";
 			if ( trim($_POST["delivery"]["address2"]) == "" )
-				$mes .= "番地を入力してください。<br />";
+				$mes .= __('enter house numbers', 'usces') . "<br />";
 			if ( trim($_POST["delivery"]["tel"]) == "" )
-				$mes .= "電話番号を入力してください。<br />";
+				$mes .= __('enter phone numbers', 'usces') . "<br />";
 		}
+		if ( !isset($_POST['order']['delivery_method']) || (empty($_POST['order']['delivery_method']) && $_POST['order']['delivery_method'] != 0) )
+			$mes .= __('chose one from delivery method.', 'usces') . "<br />";
 		if ( !isset($_POST['order']['payment_name']) )
-			$mes .= "支払方法を選択してください。<br />";
+			$mes .= __('chose one from payment options.', 'usces') . "<br />";
 	
 		return $mes;
 	}
@@ -1601,9 +1745,9 @@ class usc_e_shop
 		$this->set_cart_fees( $member, &$entries );
 		$mes = '';
 		if ( trim($_POST['order']["usedpoint"]) == "" || !(int)$_POST['order']["usedpoint"] || (int)$_POST['order']["usedpoint"] < 0 ) {
-			$mes .= "値が不正です。半角数字で入力して下さい。<br />";
+			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 		} elseif ( trim($_POST['order']["usedpoint"]) > $member['point'] || trim($_POST['order']["usedpoint"]) > $entries['order']['total_price']) {
-			$mes .= "利用できる上限値を超えています。<br />";
+			$mes .= __('You have exceeded the maximum available.', 'usces') . "<br />";
 			$_POST['order']["usedpoint"] = 0;
 		}
 
@@ -1613,9 +1757,9 @@ class usc_e_shop
 	function lostpass_mailaddcheck() {
 		$mes = '';
 		if ( !strstr($_POST['loginmail'], '@') || trim($_POST['loginmail']) == '' ) {
-			$mes .= "メールアドレスが不正です。<br />";
+			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		}elseif( !$this->is_member($_POST['loginmail']) ){
-			$mes .= "存在しないメールアドレスです。<br />";
+			$mes .= __('It is the e-mail address that there is not.', 'usces') . "<br />";
 		}
 
 		return $mes;
@@ -1624,7 +1768,7 @@ class usc_e_shop
 	function changepass_check() {
 		$mes = '';
 		if ( trim($_POST['loginpass1']) == '' || trim($_POST['loginpass2']) == '' || (trim($_POST['loginpass1']) != trim($_POST['loginpass2'])))
-			$mes .= "パスワードが不正です。<br />";
+			$mes .= __('pass word is not correct', 'usces') . "<br />";
 
 		return $mes;
 	}
@@ -1677,7 +1821,7 @@ class usc_e_shop
 		if($this->cart->num_row() > 0) {
 			include (USCES_PLUGIN_DIR . '/includes/cart_table.php');
 		} else {
-			echo "<div class='no_cart'>只今、カートに商品はございません。</div>\n";
+			echo "<div class='no_cart'>" . __('There is no items in your cart.', 'usces') . "</div>\n";
 		}
 	}
 
@@ -1685,7 +1829,7 @@ class usc_e_shop
 		if($this->cart->num_row() > 0) {
 			include (USCES_PLUGIN_DIR . '/includes/cart_confirm.php');
 		} else {
-			echo "<div class='no_cart'>只今、カートに商品はございません。</div>\n";
+			echo "<div class='no_cart'>" . __('There is no items in your cart.', 'usces') . "</div>\n";
 		}
 	}
 
@@ -2002,7 +2146,7 @@ class usc_e_shop
 				VALUES (%d, %s, %s, %s, %s, %s, %s, 
 				%s, %s, %s, %s, %s, %s, %s, %s, 
 				%s, %d, %s, %d, %s, %s, %d)", 
-				1, $datetime, $datetime_gmt, '', 'カート', '', 'publish', 
+				1, $datetime, $datetime_gmt, '', __('Cart', 'usces'), '', 'publish', 
 				'closed', 'closed', '', USCES_CART_FOLDER, '', '', $datetime, $datetime_gmt, 
 				'', 0, '', 0, 'page', '', 0);
 			$wpdb->query($query);
@@ -2026,7 +2170,7 @@ class usc_e_shop
 				VALUES (%d, %s, %s, %s, %s, %s, %s, 
 				%s, %s, %s, %s, %s, %s, %s, %s, 
 				%s, %d, %s, %d, %s, %s, %d)", 
-				1, $datetime, $datetime_gmt, '', 'メンバー', '', 'publish', 
+				1, $datetime, $datetime_gmt, '', __('Membership', 'usces'), '', 'publish', 
 				'closed', 'closed', '', USCES_MEMBER_FOLDER, '', '', $datetime, $datetime_gmt, 
 				'', 0, '', 0, 'page', '', 0);
 			$wpdb->query($query);
@@ -2164,7 +2308,7 @@ class usc_e_shop
 		$item_parent = $wpdb->get_var( $query );
 		if($item_parent === NULL) {
 			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				'商品', 'item', 0);
+				__('Items', 'usces'), 'item', 0);
 			$wpdb->query($query);
 			$item_parent = $wpdb->insert_id;
 			if( $item_parent !== NULL ) {
@@ -2180,7 +2324,7 @@ class usc_e_shop
 		$item_id = $wpdb->get_var( $query );
 		if($item_id === NULL) {
 			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				'お勧め商品', 'itemreco', 0);
+				__('Items recommended', 'usces'), 'itemreco', 0);
 			$wpdb->query($query);
 			$item_id = $wpdb->insert_id;
 			if( $item_id !== NULL ) {
@@ -2195,7 +2339,7 @@ class usc_e_shop
 		$item_id = $wpdb->get_var( $query );
 		if($item_id === NULL) {
 			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				'新着商品', 'itemnew', 0);
+				__('New items', 'usces'), 'itemnew', 0);
 			$wpdb->query($query);
 			$item_id = $wpdb->insert_id;
 			if( $item_id !== NULL ) {
@@ -2210,7 +2354,7 @@ class usc_e_shop
 		$item_id = $wpdb->get_var( $query );
 		if($item_id === NULL) {
 			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				'商品ジャンル', 'itemgenre', 0);
+				__('Item genre', 'usces'), 'itemgenre', 0);
 			$wpdb->query($query);
 			$item_id = $wpdb->insert_id;
 			if( $item_id !== NULL ) {
@@ -2225,7 +2369,7 @@ class usc_e_shop
 		$item_id = $wpdb->get_var( $query );
 		if($item_id === NULL) {
 			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				'特価品', 'itemdiscount', 0);
+				__('Special price', 'usces'), 'itemdiscount', 0);
 			$wpdb->query($query);
 			$item_id = $wpdb->insert_id;
 			if( $item_id !== NULL ) {
@@ -2289,9 +2433,9 @@ class usc_e_shop
 	
 	function getGuidTax() {
 		if ( (int)$this->options['tax_rate'] > 0 )
-			return '<em class="tax">（税別）</em>';
+			return '<em class="tax">'.__('(Tax)', 'usces').'</em>';
 		else
-			return '<em class="tax">（税込）</em>';
+			return '<em class="tax">'.__('(Tax included)', 'usces').'</em>';
 	}
 
 	function getItemCode($post_id) {
@@ -2747,7 +2891,8 @@ class usc_e_shop
 			} elseif ( $this->options['campaign_privilege'] == 'point' ) {
 				foreach ( $cart as $rows ) {
 					$rate = get_post_custom_values('itemPointrate', $rows['post_id']);
-					$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
+					//$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
+					$price = $rows['price'] * $rows['quantity'];
 					$cats = $this->get_post_term_ids($rows['post_id'], 'category');
 					if ( in_array($this->options['campaign_category'], $cats) )
 						$point += $price * $rate[0] / 100 * $this->options['privilege_point'];
@@ -2758,7 +2903,8 @@ class usc_e_shop
 		} else {
 			foreach ( $cart as $rows ) {
 				$rate = get_post_custom_values('itemPointrate', $rows['post_id']);
-				$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
+				//$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
+				$price = $rows['price'] * $rows['quantity'];
 				$point += $price * $rate[0] / 100;
 			}
 		}
@@ -3324,6 +3470,10 @@ class usc_e_shop
 		return $match;
 	}
 
+	function getCurrencySymbol(){
+		return get_option('usces_currency_symbol');
+	}
+
 	//shortcode---------------------------------------
 	function sc_company_name() {
 		return htmlspecialchars($this->options['company_name']);
@@ -3401,7 +3551,7 @@ class usc_e_shop
 		extract(shortcode_atts(array(
 			'item' => '',
 			'sku' => '',
-			'value' => 'カートへ',
+			'value' => __('to the cart', 'usces'),
 		), $atts));
 	
 		$post_id = $this->get_ID_byItemName($item);
@@ -3428,8 +3578,10 @@ class usc_e_shop
 		if($post->post_mime_type != 'item' || !is_single()) return $content;
 		
 		include( USCES_PLUGIN_DIR . '/templates/single_item.php' );
-
-		$content = apply_filters('usces_filter_itemPage', $html);
+		
+		
+		
+		$content = apply_filters('usces_filter_itemPage', $html, $post->ID);
 
 		return $content;
 	}
@@ -3484,31 +3636,31 @@ class usc_e_shop
 
 	function filter_cartTitle($title) {
 
-		if( $title == 'Cart' || $title == 'カート' ){
+		if( $title == 'Cart' || $title == __('Cart', 'usces') ){
 			switch($this->page){
 				case 'cart':
-					$newtitle = 'カート' ;
+					$newtitle = __('Cart', 'usces');
 					break;
 				case 'customer':
-					$newtitle = 'お客様情報';
+					$newtitle = __('Customer Information', 'usces');
 					break;
 				case 'delivery':
-					$newtitle = '配送・支払方法';
+					$newtitle = __('Shipping / Payment options', 'usces');
 					break;
 				case 'confirm':
-					$newtitle = '確認';
+					$newtitle = __('Confirmation', 'usces');
 					break;
 				case 'ordercompletion':
-					$newtitle = '完了';
+					$newtitle = __('Completion', 'usces');
 					break;
 				case 'error':
-					$newtitle = 'エラー';
+					$newtitle = __('Error', 'usces');
 					break;
 				case 'search_item':
-					$newtitle = '商品カテゴリー複合検索';
+					$newtitle = __("'AND' search by categories", 'usces');
 					break;
 				case 'maintenance':
-					$newtitle = 'メンテナンス中';
+					$newtitle = __('Under Maintenance', 'usces');
 					break;
 				default:
 					$newtitle = $title;
@@ -3558,7 +3710,7 @@ class usc_e_shop
 					include( USCES_PLUGIN_DIR . '/templates/member/completion.php' );
 					break;
 				case 'newmemberform':
-					$member_form_title = '新規入会フォーム';
+					$member_form_title = __('New enrollment form', 'usces');
 					$member_regmode = 'newmemberform';
 					include( USCES_PLUGIN_DIR . '/templates/member/member_form.php' );
 					break;
@@ -3577,28 +3729,28 @@ class usc_e_shop
 
 	function filter_memberTitle($title) {
 
-		if( $title == 'Member' || $title == 'メンバー' ){
+		if( $title == 'Member' || $title == __('Membership', 'usces') ){
 			switch($this->page){
 				case 'login':
-					$newtitle = '会員ログイン';
+					$newtitle = __('Log-in for members', 'usces');
 					break;
 				case 'newmemberform':
-					$newtitle = '新規入会フォーム';
+					$newtitle = __('New enrollment form', 'usces');
 					break;
 				case 'lostmemberpassword':
-					$newtitle = '新パスワード取得';
+					$newtitle = __('The new password acquisition', 'usces');
 					break;
 				case 'changepassword':
-					$newtitle = 'パスワード変更';
+					$newtitle = __('Change password', 'usces');
 					break;
 				case 'newcompletion':
 				case 'editcompletion':
 				case 'lostcompletion':
 				case 'changepasscompletion':
-					$newtitle = '完了';
+					$newtitle = __('Completion', 'usces');
 					break;
 				case 'error':
-					$newtitle = 'エラー';
+					$newtitle = __('Error', 'usces');
 					break;
 				default:
 					$newtitle = $title;

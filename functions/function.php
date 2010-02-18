@@ -63,9 +63,9 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= __('Buyer','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
 		$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
 	}
-	$msg_body .= __('items','usces') . "　：\r\n";
+	$msg_body .= __('Items','usces') . "　：\r\n";
 
-	foreach ( $cart as $cart_row ) {
+	foreach ( (array)$cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = $cart_row['sku'];
 		$quantity = $cart_row['quantity'];
@@ -89,33 +89,33 @@ function usces_order_confirm_message($order_id) {
 	}
 	
 	$msg_body .= "=================================================================\r\n";
-	$msg_body .= __('total items','usces') . "　　　　：" . number_format($data['order_item_total_price']) . __('yen','usces') . "\r\n";
+	$msg_body .= __('total items','usces') . "　　　　：" . number_format($data['order_item_total_price']) . __('dollars','usces') . "\r\n";
 	if ( $data['order_usedpoint'] != 0 )
-		$msg_body .= __('use of points','usces') . "　：" . number_format($data['order_usedpoint']) . __('Point','usces') . "\r\n";
+		$msg_body .= __('use of points','usces') . "　：" . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($data['order_discount']) . __('yen','usces') . "\r\n";
-	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($data['order_shipping_charge']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($data['order_discount']) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($data['order_shipping_charge']) . __('dollars','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($data['order_cod_fee']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($data['order_cod_fee']) . __('dollars','usces') . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($data['order_tax']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($data['order_tax']) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($total_full_price) . __('yen','usces') . "\r\n";
+	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($total_full_price) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
 	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= __('A destination name','usces') . "　　　　：" . $deli['name1'] . $deli['name2'] . __('Mr/Mrs','usces') . "　\r\n";
 	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $deli['zipcode'] . "\r\n";
-	$msg_body .= __('An address','usces') . "　　　　：" . $deli['pref'] . $deli['address1'] . $deli['address2'] . "　" . $deli['address3'] . "\r\n";
+	$msg_body .= __('Address','usces') . "　　　　：" . $deli['pref'] . $deli['address1'] . $deli['address2'] . "　" . $deli['address3'] . "\r\n";
 	$msg_body .= __('Phone number','usces') . "　　：" . $deli['tel'] . "\r\n";
 
 	$msg_body .= __('Delivery Time','usces') . "：" . $data['order_delivery_time'] . "\r\n";
 	if ( $data['order_delidue_date'] == NULL || $data['order_delidue_date'] == '#none#' ) {
 		$msg_body .= "\r\n";
 	}else{
-		$msg_body .= '発送予定日' . "　　：" . $data['order_delidue_date'] . "\r\n";
-		$msg_body .= "※発送予定日とは商品を出荷する日で、到着日ではございません。\r\n";
+		$msg_body .= __('Shipping date', 'usces') . "　　：" . $data['order_delidue_date'] . "\r\n";
+		$msg_body .= __("* A shipment due date is a day to ship an article, and it's not the arrival day.", 'usces') . "\r\n";
 		$msg_body .= "\r\n";
 	}
 	$msg_body .= "\r\n";
@@ -189,7 +189,7 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= __('Buyer','usces') . "：　" . $entry['customer']['name1'] . ' ' . $entry['customer']['name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
 	$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
-	$msg_body .= __('items','usces') . "　：\r\n";
+	$msg_body .= __('Items','usces') . "　：\r\n";
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = $cart_row['sku'];
@@ -210,28 +210,28 @@ function usces_send_ordermail($order_id) {
 		foreach((array)$options as $key => $value){
 			$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
 		}
-		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('yen','usces') . " × " . $cart_row['quantity'] . "\r\n";
+		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('dollars','usces') . " × " . $cart_row['quantity'] . "\r\n";
 	}
 	$msg_body .= "=================================================================\r\n";
-	$msg_body .= __('total items','usces') . "　　　　：" . number_format($entry['order']['total_items_price']) . __('yen','usces') . "\r\n";
+	$msg_body .= __('total items','usces') . "　　　　：" . number_format($entry['order']['total_items_price']) . __('dollars','usces') . "\r\n";
 	if ( $entry['order']['usedpoint'] != 0 )
-		$msg_body .= __('use of points','usces') . "　：" . number_format($entry['order']['usedpoint']) . __('Point','usces') . "\r\n";
+		$msg_body .= __('use of points','usces') . "　：" . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($entry['order']['discount']) . __('yen','usces') . "\r\n";
-	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($entry['order']['shipping_charge']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($entry['order']['discount']) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($entry['order']['shipping_charge']) . __('dollars','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($entry['order']['cod_fee']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($entry['order']['cod_fee']) . __('dollars','usces') . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($entry['order']['tax']) . __('yen','usces') . "\r\n";
+		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($entry['order']['tax']) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($entry['order']['total_full_price']) . __('yen','usces') . "\r\n";
+	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($entry['order']['total_full_price']) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
 	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= __('A destination name','usces') . "　　　　：" . $entry['delivery']['name1'] . $entry['delivery']['name2'] . "　" . __('Mr/Mrs','usces') . "\r\n";
 	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $entry['delivery']['zipcode'] . "\r\n";
-	$msg_body .= __('An address','usces') . "　　　　：" . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . "　" . $entry['delivery']['address3'] . "\r\n";
+	$msg_body .= __('Address','usces') . "　　　　：" . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . "　" . $entry['delivery']['address3'] . "\r\n";
 	$msg_body .= __('Phone number','usces') . "　　：" . $entry['delivery']['tel'] . "\r\n";
 
 	$msg_body .= __('Delivery Time','usces') . "：" . $entry['order']['delivery_time'] . "\r\n";
@@ -372,7 +372,7 @@ function usces_lostmail($url) {
 	global $usces;
 	$res = false;
 
-	$subject = __('** A password change **','usces');
+	$subject = __('Change password','usces');
 	$message = __('Please, click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
 			. $url . "\n\r\n\r\n\r"
 			. "-----------------------------------------------------\n\r"
@@ -958,7 +958,7 @@ function usces_import_xml() {
 
 	
 	//category item post
-	$slug = urlencode(__('items','usces'));
+	$slug = urlencode(__('Items','usces'));
 	$query = $wpdb->prepare("SELECT tr.object_id FROM $wpdb->terms AS t 
 								INNER JOIN $wpdb->term_relationships AS tr ON tr.term_taxonomy_id = t.term_id 
 								WHERE t.slug = %s", $slug);
@@ -1502,7 +1502,7 @@ function usces_item_uploadcsv(){
 	
 	if ( !is_uploaded_file($workfile) ) {
 		$res['status'] = 'error';
-		$res['message'] = 'ファイルをアップロードできませんでした。';
+		$res['message'] = __('The file was not uploaded.', 'usces');
 		return $res;
 	}
 
@@ -1510,7 +1510,7 @@ function usces_item_uploadcsv(){
 	list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
 	if( $fext != 'csv' && $fext != 'zip' ) {
 		$res['status'] = 'error';
-		$res['message'] = '対応しないファイルがアップロードされました。'.$fname.'.'.$fext;
+		$res['message'] =  __('The file is not supported.', 'usces').$fname.'.'.$fext;
 		return $res;
 	}
 	
@@ -1525,13 +1525,13 @@ function usces_item_uploadcsv(){
 	//ログ準備
 	if ( ! ($fpi = fopen (USCES_PLUGIN_DIR.'/logs/itemcsv_log.txt', "w"))) {
 		$res['status'] = 'error';
-		$res['message'] = 'ログファイルを準備できませんでした。';
+		$res['message'] = __('The log file was not prepared for.', 'usces');
 		return $res;
 	}
 	//データ読み込み
 	if ( ! ($fpo = fopen ($workfile, "r"))) {
 		$res['status'] = 'error';
-		$res['message'] = 'ファイルが開けません。'.$fname.'.'.$fext;
+		$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
 		return $res;
 	}
 	
@@ -1544,12 +1544,13 @@ function usces_item_uploadcsv(){
 
 	//データチェック&登録
 	foreach($lines as $rows_num => $line){
+		$datas = array();
 		$logtemp = '';
 		$datas = explode(',', $line);
 //		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
 		if( $min_field_num > count($datas) ){
 			$err_num++;
-			$logtemp .= "No." . ($rows_num+1) . "\tカラム数が異常です\r\n";
+			$logtemp .= "No." . ($rows_num+1) . "\t".__('The number of the columns is abnormal.', 'usces')."\r\n";
 			$log .= $logtemp;
 			continue;
 		}
@@ -1558,55 +1559,55 @@ function usces_item_uploadcsv(){
 			switch($key){
 				case 0:
 					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t商品コードが未入力です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('An item cord is non-input.', 'usces')."\r\n";
 					break;
 				case 1:
 					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t商品名が未入力です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('An item name is non-input.', 'usces')."\r\n";
 					break;
 				case 2:
 					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t購入制限数の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the purchase limit number is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 3:
 					if( !preg_match("/^[0-9]+$/", $data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\tポイント率の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the point rate is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 4:
 					if( !preg_match("/^[0-9]+$/", $data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引1-数の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('umerical value is abnormality.', 'usces')."\r\n";
 					}
 					break;
 				case 5:
 					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[($key-1)] && 1 > $data ) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引1-率が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('rate is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 6:
 					if( !preg_match("/^[0-9]+$/", $data) || ($datas[($key-2)] >= $data && 0 != $data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引2-数の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('umerical value is abnormality.', 'usces')."\r\n";
 					}
 					break;
 				case 7:
 					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[($key-1)] && 1 > $data ) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引2-率の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('rate is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 8:
 					if( !preg_match("/^[0-9]+$/", $data) || ($datas[($key-2)] >= $data && 0 != $data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引3-数の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('umerical value is abnormality.', 'usces')."\r\n";
 					}
 					break;
 				case 9:
 					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[($key-1)] && 1 > $data ) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t業務パック割引3-率の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('rate is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 10:
 					if( !preg_match("/^[0-9]+$/", $data) || 9 < $data ){
-						$logtemp .= "No." . ($rows_num+1) . "\t発送日目安の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the shipment day is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 11:
@@ -1614,7 +1615,7 @@ function usces_item_uploadcsv(){
 					break;
 				case 13:
 					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
-						$logtemp .= "No." . ($rows_num+1) . "\t送料個別課金の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the postage individual charging is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 14:
@@ -1624,7 +1625,7 @@ function usces_item_uploadcsv(){
 				case 17:
 					$array17 = array('publish', 'future', 'draft', 'pending');
 					if( !in_array($data, $array17) || '' == $data ){
-						$logtemp .= "No." . ($rows_num+1) . "\t表示状態の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 18:
@@ -1636,26 +1637,26 @@ function usces_item_uploadcsv(){
 										(0 < $match[6] && 60 > $match[6]) ){
 								$logtemp .= "";
 							}else{
-								$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
+								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 							}
 								
 						}else{
-							$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
+							$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 						}
 					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
 						if( !preg_match($date_pattern, $data, $match) || strtotime($data) === false || strtotime($data) == -1 )
-							$logtemp .= "No." . ($rows_num+1) . "\t公開日時の値が異常です\r\n";
+							$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 19:
 					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\tカテゴリーが未入力です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A category is non-input.', 'usces')."\r\n";
 					break;
 				case 20:
 					break;
 				case 21:
 					if( 0 == strlen($data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\tSKUコードが未入力です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A SKU cord is non-input.', 'usces')."\r\n";
 					}else if( $pre_code == $datas[0] ){
 						$query = $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta 
 												WHERE post_id = %d AND meta_key = %s", 
@@ -1664,7 +1665,7 @@ function usces_item_uploadcsv(){
 								);
 						$meta_id = $wpdb->get_var( $query );
 						if($meta_id !== NULL)
-							$logtemp .= "No." . ($rows_num+1) . "\tSKUが重複しています\r\n";
+							$logtemp .= "No." . ($rows_num+1) . "\t".__('A SKU cord repeats.', 'usces')."\r\n";
 					}
 					break;
 				case 22:
@@ -1672,21 +1673,21 @@ function usces_item_uploadcsv(){
 					break;
 				case 24:
 					if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t売価の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the sale price is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 25:
 					break;
 				case 26:
 					if( !preg_match("/^[0-9]+$/", $data) || 4 < $data ){
-						$logtemp .= "No." . ($rows_num+1) . "\t在庫状態の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the stock status is abnormal.', 'usces')."\r\n";
 					}
 					break;
 				case 27:
 					break;
 				case 28:
 					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
-						$logtemp .= "No." . ($rows_num+1) . "\t業務パック適用の値が異常です\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('The value of the duties pack application is abnormal.', 'usces')."\r\n";
 					}
 					break;
 			}
@@ -1703,21 +1704,21 @@ function usces_item_uploadcsv(){
 				switch($o){
 					case 1:
 //						if( isset($datas[$key]) && 0 == strlen($datas[$key]) )
-//							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションのオプション名の値が未入力です\r\n";
+//							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces')."\r\n";
 						break;
 					case 2:
 						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 2 < (int)$value) ){
-							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションの入力フィールドの値が異常です\r\n";
+							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces')."\r\n";
 						}
 						break;
 					case 3:
 						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 1 < (int)$value) ){
-							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションの必須項目の値が異常です\r\n";
+							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-required-item of No.%s option is abnormal.', ($i+1)), 'usces')."\r\n";
 						}
 						break;
 					case 4:
 						if( ($value != NULL && $value == '') && (2 > $datas[($key-2)] && 0 < strlen($datas[($key-2)])) ){
-							$logtemp .= "No." . ($rows_num+1) . "\t第" . ($i+1) . "オプションのセレクト値の値が未入力です\r\n";
+							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-select of No.%s option is non-input.', ($i+1)), 'usces')."\r\n";
 						}
 						break;
 				}
@@ -1812,7 +1813,7 @@ function usces_item_uploadcsv(){
 			$post_id = $wpdb->insert_id;
 			if( $post_id == NULL ){
 				$err_num++;
-				$log .= "No." . ($rows_num+1) . "\tデータベースに登録できませんでした\r\n";
+				$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
 				$pre_code = $datas[0];
 				continue;
 			}
@@ -1845,12 +1846,13 @@ function usces_item_uploadcsv(){
 			
 			for($i=0; $i<$opnum; $i++){
 				$opflg = true;
+				$opt = array();
 				for($o=1; $o<=4; $o++){
 					$key = ($min_field_num-1)+$o+($i*4);
-					if( !isset($datas[$key]) ){
-						break 2;
-					}
-					if( $o == 1 && $datas[$key] == '' ){
+//					if( !isset($datas[$key]) ){
+//						break 2;
+//					}
+					if( $o === 1 && $datas[$key] == '' ){
 						$opflg = false;
 						break 1;
 					}
@@ -1859,18 +1861,18 @@ function usces_item_uploadcsv(){
 							$ometa_key = 'iopt_' . trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
 							break;
 						case 2:
-							$opt['means'] = $datas[$key];
+							$opt['means'] = (int)$datas[$key];
 							break;
 						case 3:
-							$opt['essential'] = $datas[$key];
+							$opt['essential'] = (int)$datas[$key];
 							break;
 						case 4:
 							if( !empty($datas[$key]) ) {
-								//$opt['value'] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$kye], 'UTF-8', 'SJIS')));
-								$opt['value'] = trim(mb_convert_encoding($datas[$kye], 'UTF-8', 'SJIS'));
+								$opt['value'][0] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS')));
 							}else{
-								$opt['value'] = "";
+								$opt['value'][0] = "";
 							}
+							 
 							break;
 					}
 				}
@@ -1971,7 +1973,7 @@ function usces_item_uploadcsv(){
 	fclose($fpi);
 
 	$res['status'] = 'success';
-	$res['message'] = $total_num.'行中 '.$comp_num.'行登録完了、'.$err_num.'行未登録。';
+	$res['message'] = __(sprintf('%2$s of %1$s lines registration completion, %3$s lines error.',$total_num,$comp_num,$err_num), 'usces');
 	return $res;
 }
 ?>

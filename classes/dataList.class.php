@@ -37,7 +37,7 @@ class dataList
 
 		$this->SetParamByQuery();
 
-		$this->arr_period = array('当月', '先月', '過去1週間', '過去30日', '過去90日', '全て');
+		$this->arr_period = array(__('this month', 'usces'), __('Last month', 'usces'), __('The past one week', 'usces'), __('Last 30 days', 'usces'), __('Last 90days', 'usces'), __('All', 'usces'));
 
 
 	}
@@ -625,12 +625,12 @@ class dataList
 			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $this->lastPage . '">&gt;&gt;last</a></li>'."\n";
 		}
 		if($this->searchSwitchStatus == 'OFF'){
-			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">操作フィールド表示</a>'."\n";
+			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('Show the Operation field', 'usces') . '</a>'."\n";
 		}else{
-			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">操作フィールド非表示</a>'."\n";
+			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('hide the Operation field', 'usces') . '</a>'."\n";
 		}
 
-		$html .= '<li class="refresh"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&refresh">最新の情報に更新</a></li>' . "\n";
+		$html .= '<li class="refresh"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&refresh">' . __('updates it to latest information', 'usces') . '</a></li>' . "\n";
 		$html .= '</ul>'."\n";
 
 		$this->dataTableNavigation = $html;

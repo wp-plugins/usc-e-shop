@@ -17,14 +17,14 @@ Tags: USC, e-Shop, cart, shopping, net shop, commerce
 	height: 0;
 	visibility: hidden;
 	clear: both;
-} /*IE7以外のモダンブラウザ向け*/
+}
 
-.clearfix{display:inline-block;} /*IE7およびMacIE5向け*/
+.clearfix{display:inline-block;}
 
 /*Hides from IE-mac\*/
 * html .clearfix{height:1%;}
 .clearfix{display:block;}
-/*End hide from IE-mac*/ /*IE6以前向け*/
+/*End hide from IE-mac*/
 
 body {
 	background-color: #F1F3B4;

@@ -643,7 +643,7 @@ class dataTable
 		$sel = '';
 		$str = '';
 		$str .= '<form action="' . $_SERVER['PHP_SELF'] . '" method="post" name="listpattern" id="listpattern" >' . "\n";
-		$str .= 'リストパターン';
+		$str .= __('Pattern List', 'usces');
 		$sel .= '<select name="changeListPattern" id="listPattern" onchange="onChange_listPattern()">' . "\n";
 		for($i=0; $i<count($this->listPatternRows); $i++){
 			if($this->listPatternRows[$i]['id'] == $this->listPatternId){
@@ -685,7 +685,7 @@ class dataTable
 		
 		$html = '';
 		$html .= '<ul class="clearfix">'."\n";
-		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' 件</li>' . "\n";
+		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' '.__('cases', 'usces').'</li>' . "\n";
 		if(($this->currentPage == 1) || ($this->selectedRow == 0)){
 			$html .= '<li class="navigationStr">first&lt;&lt;</li>' . "\n";
 			$html .= '<li class="navigationStr">prev&lt;</li>'."\n";
@@ -710,12 +710,12 @@ class dataTable
 			$html .= '<li class="navigationStr"><a href="' . $_SERVER['PHP_SELF'] . '?changePage=' . $this->lastPage . '">&gt;&gt;last</a></li>'."\n";
 		}
 		if($this->searchSwitchStatus == 'OFF'){
-			$html .= '<li class="rowsnum"><a href="#" id="searchSwitch">サーチ表示</a>'."\n";
+			$html .= '<li class="rowsnum"><a href="#" id="searchSwitch">' . __('Display Search', 'usces') . '</a>'."\n";
 		}else{
-			$html .= '<li class="rowsnum"><a href="#" id="searchSwitch">サーチ非表示</a>'."\n";
+			$html .= '<li class="rowsnum"><a href="#" id="searchSwitch">' . __('Hide Search', 'usces') . '</a>'."\n";
 		}
 
-		$html .= '<li class="refresh"><a href="' . $_SERVER['PHP_SELF'] . '?refresh">最新の情報に更新</a></li>' . "\n";
+		$html .= '<li class="refresh"><a href="' . $_SERVER['PHP_SELF'] . '?refresh">' . __('updates it to latest information', 'usces') . '</a></li>' . "\n";
 		$html .= '</ul>'."\n";
 
 		$this->dataTableNavigation = $html;
@@ -959,7 +959,7 @@ class dataTable
 			$rows = explode(',', $line);
 			if(count($rows) != 15){
 				break;
-				$this->errorMes = 'ERROR : CSVの形式が不正です！';
+				$this->errorMes = 'ERROR : ' . __('CSV format is invalid!', 'usces');
 				return FALSE;
 			}
 			$values .= "(NULL,";

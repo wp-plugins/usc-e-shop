@@ -9,13 +9,13 @@ global $wpdb;
 
 $tableName = $wpdb->prefix . "usces_member";
 $arr_column = array(
-			'会員No' => 'ID', 
-			'氏名' => 'name', 
-			'住所' => 'address', 
-			'電話番号' => 'tel', 
-			'Eメール' => 'email', 
-			'入会日' => 'date', 
-			'保有PT' => 'point');
+			__('membership number', 'usces') => 'ID', 
+			__('name', 'usces') => 'name', 
+			__('Address', 'usces') => 'address', 
+			__('Phone number', 'usces') => 'tel', 
+			__('e-mail', 'usces') => 'email', 
+			__('Strated date', 'usces') => 'date', 
+			__('current point', 'usces') => 'point');
 
 $DT = new dataList($tableName, $arr_column);
 $res = $DT->MakeTable();
@@ -54,7 +54,7 @@ function toggleVisibility(id) {
 };
 
 function deleteconfirm(member_id){
-	if(confirm('会員No '+member_id+' を削除します。よろしいですか？')){
+	if(confirm(<?php _e("'Are you sure of deleting your membership number ' + member_id + ' ?'", 'usces'); ?>)){
 		return true;
 	}else{
 		return false;
@@ -71,7 +71,7 @@ jQuery(document).ready(function($){
 	});
 	if(	$("#searchSwitchStatus").val() == 'OFF'){
 		$("#searchBox").css("display", "none");
-		$("#searchVisiLink").html('操作フィールド表示');
+		$("#searchVisiLink").html('<?php _e('Show the Operation field', 'usces'); ?>');
 	} else {
 		$("#searchBox").css("display", "block");
 		$("#searchVisiLink").css("display", "none");
@@ -82,7 +82,7 @@ jQuery(document).ready(function($){
 <div class="wrap">
 <div class="usces_admin">
 
-<h2>Welcart Management 会員リスト<?php //echo __('USC e-Shop Options','usces'); ?></h2>
+<h2>Welcart Management <?php _e('List of Members','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
@@ -99,7 +99,7 @@ jQuery(document).ready(function($){
 	<form action="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist'; ?>" method="post" name="tablesearch">
 		<table id="search_table">
 		<tr>
-		<td>検索項目</td>
+		<td><?php _e('search fields', 'usces'); ?></td>
 		<td><select name="search[column]" class="searchselect">
 		    <option value="none"> </option>
 <?php foreach ((array)$arr_column as $key => $value):
@@ -112,10 +112,10 @@ jQuery(document).ready(function($){
 		    <option value="<?php echo $value ?>"<?php echo $selected ?>><?php echo $key ?></option>
 <?php endforeach; ?>
     	</select></td>
-		<td>キーワード</td>
+		<td><?php _e('key words', 'usces'); ?></td>
 		<td><input name="search[word]" type="text" value="<?php echo $arr_search['word'] ?>" class="searchword" maxlength="50" /></td>
-		<td><input name="searchIn" type="submit" class="searchbutton" value="検索" />
-		<input name="searchOut" type="submit" class="searchbutton" value="解除" />
+		<td><input name="searchIn" type="submit" class="searchbutton" value="<?php _e('Search', 'usces'); ?>" />
+		<input name="searchOut" type="submit" class="searchbutton" value="<?php _e('Cancellation', 'usces'); ?>" />
 		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo $DT->searchSwitchStatus; ?>" />
 		</td>
 		</tr>
@@ -144,7 +144,7 @@ jQuery(document).ready(function($){
 		<td><?php echo $value; ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
-	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=delete&member_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;">削除</span></a></td>
+	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=delete&member_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;"><?php _e('Delete', 'usces'); ?></span></a></td>
 	</tr>
 <?php endforeach; ?>
 </table>
