@@ -2255,3 +2255,18 @@ msgstr "SKUコードの表示"
 msgid "Position of SKU code"
 msgstr "SKUコードの位置"
 
+msgid "WordPress address (SSL)"
+msgstr "WordPress のアドレス (SSL)"
+
+msgid "Blog address (SSL)"
+msgstr "ブログのアドレス (SSL)"
+
+msgid "https://*WordPress address*<br />You can use common use SSL."
+msgstr "Wordpressの一般設定の「WordPress address (URL)」をhttps://から始まるようにして設定します。共用ドメインも利用できます。"
+
+msgid "https://*Blog address*<br />You can use common use SSL."
+msgstr "Wordpressの一般設定の「Blog address (URL)」をhttps://から始まるようにして設定します。共用ドメインも利用できます。"
+
+msgid "Please decide whether you use SSL"
+msgstr "SSLを利用する場合はチェックを付けてください。"
+
