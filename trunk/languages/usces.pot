@@ -634,11 +634,17 @@ msgstr "月"
 msgid "day"
 msgstr "日"
 
-msgid "h"
+msgid "hour"
 msgstr "時"
 
 msgid "min"
 msgstr "分"
+
+msgid "%2$s/%1$s"
+msgstr "%1$s年%2$s月"
+
+msgid "%2$s %3$s, %1$s"
+msgstr "%1$s年%2$s月%3$s日"
 
 msgid "date and time of termination"
 msgstr "終了日時"
@@ -2218,4 +2224,34 @@ msgstr "商品リストに戻る"
 
 msgid "same as"
 msgstr "一括設定"
+
+msgid "Rule of the column for a item name"
+msgstr "商品名の表示ルール"
+
+msgid "You can appoint indication, non-indication, sort of the item name to show the cart.<br />This rule is applied as brand names such as a cart page, contents confirmation page, a member information purchase history, an email, a written estimate, the statement of delivery."
+msgstr "カートなどに表示する商品名の表示・非表示、及び表示の並び順を指定します。<br />このルールはカートページ、内容確認ページ、会員情報購入履歴、メール、見積書、納品書などの商品名として適用されます。"
+
+msgid "Indication of item name"
+msgstr "商品名の表示"
+
+msgid "Position of item name"
+msgstr "商品名の位置"
+
+msgid "Indication of item code"
+msgstr "商品コードの表示"
+
+msgid "Position of item code"
+msgstr "商品コードの位置"
+
+msgid "Indication of SKU name"
+msgstr "SKU名の表示"
+
+msgid "Position of SKU name"
+msgstr "SKU名の位置"
+
+msgid "Indication of SKU code"
+msgstr "SKUコードの表示"
+
+msgid "Position of SKU code"
+msgstr "SKUコードの位置"
 

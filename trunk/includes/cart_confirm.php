@@ -27,19 +27,18 @@
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
+		$cartItemName = $this->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
 		$pictids = $this->get_pictids($itemCode);
-		if (!empty($options)) {
-			$optstr = implode(',', $options);
-		} else { 
-			$optstr =  '';
-			$options =  array();
+		$optstr =  '';
+		foreach((array)$options as $key => $value){
+			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
 		}
 ?>
 		<tr>
 			<td><?php echo $i + 1; ?></td>
 			<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-			<td class="aleft"><?php echo $itemName; ?>&nbsp;<?php echo $itemCode; ?>&nbsp;<?php echo $sku; ?><br /><?php echo $optstr; ?></td>
+			<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
 			<td class="aright"><?php echo number_format($skuPrice); ?></td>
 			<td><?php echo $cart_row['quantity']; ?></td>
 			<td class="aright"><?php echo number_format($skuPrice * $cart_row['quantity']); ?></td>

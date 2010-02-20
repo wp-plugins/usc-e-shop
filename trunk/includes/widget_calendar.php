@@ -13,7 +13,7 @@ $cal2->setToday($nextyy, $nextmm, $nextdd);
 $cal2->setCalendarData();
 ?>
 <table cellspacing="0" id="wp-calendar" class="usces_calendar">
-<caption><?php _e('current month', 'usces'); ?>(<?php echo  $todayyy.'年'.$todaymm.'月'; ?>)</caption>
+<caption><?php _e('current month', 'usces'); ?>(<?php echo sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm); ?>)</caption>
 <thead>
 	<tr>
 		<th><?php _e('Sun', 'usces'); ?></th>
@@ -43,7 +43,7 @@ $cal2->setCalendarData();
 </tbody>
 </table>
 <table cellspacing="0" id="wp-calendar" class="usces_calendar">
-<caption><?php _e('Next month', 'usces'); ?>(<?php echo  $nextyy.'年'.$nextmm.'月'; ?>)</caption>
+<caption><?php _e('Next month', 'usces'); ?>(<?php echo sprintf(__('%2$s/%1$s', 'usces'),$nextyy,$nextmm); ?>)</caption>
 <thead>
 	<tr>
 		<th><?php _e('Sun', 'usces'); ?></th>

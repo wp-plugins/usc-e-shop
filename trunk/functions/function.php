@@ -4,7 +4,7 @@ function usces_ajax_send_mail() {
 	global $wpdb, $usces;
 	
 	$order_para = array(
-			'to_name' => $_POST['name'] . __('Mr/Mrs','usces'),
+			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_POST['name']),
 			'to_address' => $_POST['mailaddress'], 
 			'from_name' => get_option('blogname'), 
 			'from_address' => $usces->options['order_mail'], 
@@ -55,12 +55,12 @@ function usces_order_confirm_message($order_id) {
 	if($_POST['mode'] == 'mitumoriConfirmMail'){
 		$msg_body = "\r\n\r\n\r\n" . __('Estimate','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
-		$msg_body .= __('Request of','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
+		$msg_body .= __('Request of','usces') . "：　" . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
 		$msg_body .= __('estimate number','usces') . "：" . $order_id . "\r\n";
 	}else{
 		$msg_body = "\r\n\r\n\r\n" . __('** Article order contents **','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
-		$msg_body .= __('Buyer','usces') . "：　" . $data['order_name1'] . ' ' . $data['order_name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
+		$msg_body .= __('Buyer','usces') . "：　" . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
 		$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
 	}
 	$msg_body .= __('Items','usces') . "　：\r\n";
@@ -72,6 +72,7 @@ function usces_order_confirm_message($order_id) {
 		$options = $cart_row['options'];
 		$itemCode = $usces->getItemCode($post_id);
 		$itemName = $usces->getItemName($post_id);
+		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
 		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
@@ -81,7 +82,7 @@ function usces_order_confirm_message($order_id) {
 			$options =  array();
 		}
 		$msg_body .= "------------------------------------------------------------------\r\n";
-		$msg_body .= "$itemName $itemCode $sku \r\n";
+		$msg_body .= "$cartItemName \r\n";
 		foreach((array)$options as $key => $value){
 			$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
 		}
@@ -105,7 +106,7 @@ function usces_order_confirm_message($order_id) {
 	
 	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('A destination name','usces') . "　　　　：" . $deli['name1'] . $deli['name2'] . __('Mr/Mrs','usces') . "　\r\n";
+	$msg_body .= __('A destination name','usces') . "　　　　：" . sprintf(__('Mr/Mrs %s', 'usces'), ($deli['name1'] . ' ' . $deli['name2'])) . "　\r\n";
 	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $deli['zipcode'] . "\r\n";
 	$msg_body .= __('Address','usces') . "　　　　：" . $deli['pref'] . $deli['address1'] . $deli['address2'] . "　" . $deli['address3'] . "\r\n";
 	$msg_body .= __('Phone number','usces') . "　　：" . $deli['tel'] . "\r\n";
@@ -187,7 +188,7 @@ function usces_send_ordermail($order_id) {
 
 	$msg_body = "\r\n\r\n\r\n" . __('** content of ordered items **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('Buyer','usces') . "：　" . $entry['customer']['name1'] . ' ' . $entry['customer']['name2'] . ' ' . __('Mr/Mrs','usces') . "\r\n";
+	$msg_body .= __('Buyer','usces') . "：　" . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['customer']['name1'] . ' ' . $entry['customer']['name2'])) . "\r\n";
 	$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
 	$msg_body .= __('Items','usces') . "　：\r\n";
 	foreach ( $cart as $cart_row ) {
@@ -197,6 +198,7 @@ function usces_send_ordermail($order_id) {
 		$options = $cart_row['options'];
 		$itemCode = $usces->getItemCode($post_id);
 		$itemName = $usces->getItemName($post_id);
+		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
 		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
@@ -206,7 +208,7 @@ function usces_send_ordermail($order_id) {
 			$options =  array();
 		}
 		$msg_body .= "------------------------------------------------------------------\r\n";
-		$msg_body .= "$itemName $itemCode $sku \r\n";
+		$msg_body .= "$cartItemName \r\n";
 		foreach((array)$options as $key => $value){
 			$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
 		}
@@ -229,7 +231,7 @@ function usces_send_ordermail($order_id) {
 	
 	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('A destination name','usces') . "　　　　：" . $entry['delivery']['name1'] . $entry['delivery']['name2'] . "　" . __('Mr/Mrs','usces') . "\r\n";
+	$msg_body .= __('A destination name','usces') . "　　　　：" . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['delivery']['name1'] . ' ' . $entry['delivery']['name2'])) . "\r\n";
 	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $entry['delivery']['zipcode'] . "\r\n";
 	$msg_body .= __('Address','usces') . "　　　　：" . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . "　" . $entry['delivery']['address3'] . "\r\n";
 	$msg_body .= __('Phone number','usces') . "　　：" . $entry['delivery']['tel'] . "\r\n";
@@ -264,7 +266,7 @@ function usces_send_ordermail($order_id) {
 	$message = $mail_data['header']['thankyou'] . $msg_body . $mail_data['footer']['thankyou'];
 //var_dump($msg_body);exit;
 	$confirm_para = array(
-			'to_name' => $entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"] . __('Mr/Mrs','usces'),
+			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
 			'to_address' => $entry['customer']['mailaddress1'], 
 			'from_name' => get_bloginfo('name'),
 			'from_address' => $usces->options['sender_mail'],
@@ -276,12 +278,16 @@ function usces_send_ordermail($order_id) {
 	if ( usces_send_mail( $confirm_para ) ) {
 	
 		$subject = $mail_data['title']['order'];
-		$message = $mail_data['header']['order'] . $msg_body . $mail_data['footer']['order'];
+		$message = $mail_data['header']['order'] . $msg_body
+		 . $mail_data['footer']['order']
+		 . "\n----------------------------------------------------\n"
+		 . "REMOTE_ADDR : " . $_SERVER['REMOTE_ADDR']
+		 . "\n----------------------------------------------------\n";
 		
 		$order_para = array(
 				'to_name' => __('An order email','usces'),
 				'to_address' => $usces->options['order_mail'], 
-				'from_name' => $entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"] . __('Mr/Mrs','usces'),
+				'from_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
 				'from_address' => $entry['customer']['mailaddress1'],
 				'return_path' => $usces->options['error_mail'],
 				'subject' => $subject,
@@ -309,7 +315,7 @@ function usces_send_inquirymail() {
 	$message = $mail_data['header']['inquiry'] . "\r\n\r\n" . $inq_contents . "\r\n\r\n" . $mail_data['footer']['inquiry'];
 
 	$para1 = array(
-			'to_name' => $inq_name . __('Mr/Mrs','usces'),
+			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $inq_name),
 			'to_address' => $inq_mailaddress, 
 			'from_name' => get_bloginfo('name'),
 			'from_address' => $usces->options['sender_mail'],
@@ -327,7 +333,7 @@ function usces_send_inquirymail() {
 		$para2 = array(
 				'to_name' => __('An inquiry email','usces'),
 				'to_address' => $usces->options['inquiry_mail'], 
-				'from_name' => $inq_name . __('Mr/Mrs','usces'),
+				'from_name' => sprintf(__('Mr/Mrs %s', 'usces'), $inq_name),
 				'from_address' => $inq_mailaddress,
 				'return_path' => $usces->options['error_mail'],
 				'subject' => $subject,
@@ -353,7 +359,7 @@ function usces_send_regmembermail() {
 	$mailaddress1 = wp_specialchars(trim($_POST['member']['mailaddress1']));
 
 	$para1 = array(
-			'to_name' => $name . __('Mr/Mrs','usces'),
+			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $name),
 			'to_address' => $mailaddress1, 
 			'from_name' => get_bloginfo('name'),
 			'from_address' => $usces->options['sender_mail'],
@@ -381,7 +387,7 @@ function usces_lostmail($url) {
 			. $usces->options['mail_data']['footer']['footerlogo'];
 
 	$para1 = array(
-			'to_name' => $_SESSION["usces_lostmail"] . __('Mr/Mrs','usces'),
+			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_SESSION["usces_lostmail"]),
 			'to_address' => $_SESSION["usces_lostmail"], 
 			'from_name' => get_bloginfo('name'),
 			'from_address' => $usces->options['sender_mail'],

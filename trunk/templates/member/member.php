@@ -16,7 +16,7 @@ $html = '<div id="memberpages">
 </tr>
 <tr>
 <th scope="row">' . __('Full name', 'usces') . '</th>
-<td>' . $usces_members['name1'] . '&nbsp;' . $usces_members['name2'] . '&nbsp;' . __('Mr/Mrs', 'usces') . '</td>';
+<td>' . sprintf(__('Mr/Mrs %s', 'usces'), ($usces_members['name1'] . ' ' . $usces_members['name2'])) . '</td>';
 
 if(usces_is_membersystem_point()){
 	$html .= '<th>' . __('The current point', 'usces') . '</th>
@@ -93,19 +93,18 @@ foreach ( $usces_member_history as $umhs ) {
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
+		$cartItemName = $this->getCartItemName($post_id, $sku);
 		$skuPrice = $this->getItemPrice($post_id, $sku);
 		$pictids = $this->get_pictids($itemCode);
-		if (!empty($options)) {
-			$optstr = implode(',', $options);
-		} else { 
-			$optstr =  '';
-			$options =  array();
+		$optstr =  '';
+		foreach((array)$options as $key => $value){
+			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
 		}
 			
 		$html .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
-			<td class="aleft"><a href="' . get_permalink($post_id) . '">' . $itemName . '&nbsp;' . $itemCode . '&nbsp;' . $sku . '<br />' . $optstr . '</a></td>
+			<td class="aleft"><a href="' . get_permalink($post_id) . '">' . $cartItemName . '<br />' . $optstr . '</a></td>
 			<td class="rightnum">' . number_format($skuPrice) . '</td>
 			<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
 			<td class="rightnum">' . number_format($skuPrice * $cart_row['quantity']) . '</td>

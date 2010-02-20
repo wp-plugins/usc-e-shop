@@ -15,7 +15,7 @@ class Welcart_calendar extends WP_Widget {
         $title = $instance['title'] == '' ? 'Welcart '.__('Business Calendar', 'usces') : $instance['title'];
         $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/calendar.png" alt="' . $title . '" width="24" height="24" />';
-		if($icon == 1) $before_title .= '<img src="' . USCES_PLUGIN_URL . '/images/calendar.png" alt="' . $title . '" width="24" height="24" />';
+		if($icon == 1) $before_title .= '<img src="' . USCES_FRONT_PLUGIN_URL . '/images/calendar.png" alt="' . $title . '" width="24" height="24" />';
         ?>
               <?php echo $before_widget; ?>
                   <?php echo $before_title
