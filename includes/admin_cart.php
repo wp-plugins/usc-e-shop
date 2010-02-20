@@ -4,6 +4,11 @@ $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
 $cart_page_datas = $this->options['cart_page_data'];
+$indi_item_name = $this->options['indi_item_name'];
+$pos_item_name = $this->options['pos_item_name'];
+foreach($indi_item_name as $key => $value){
+	$checked_item_name[$key] = $indi_item_name[$key] == 1 ? ' checked="checked"' : ''; 
+}
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -40,6 +45,40 @@ function toggleVisibility(id) {
 <form action="" method="post" name="option_form" id="option_form">
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
+
+<div class="postbox">
+<h3 class="hndle"><span><?php _e('Rule of the column for a item name','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_item_indication');"><?php _e('(Explain)','usces'); ?></a></h3>
+<div class="inside">
+<table class="form_table">
+	<tr>
+	    <th><?php _e('Indication of item name','usces'); ?></th>
+	    <td><input name="indication[item_name]" type="checkbox" id="indi_item_name" value="<?php echo $indi_item_name['item_name']; ?>"<?php echo $checked_item_name['item_name']; ?> /></td>
+	    <th><?php _e('Position of item name','usces'); ?></th>
+		<td><input name="position[item_name]" type="text" id="pos_item_name" value="<?php echo $pos_item_name['item_name']; ?>" />(<?php _e('numeric','usces'); ?>)</td>
+	</tr>
+	<tr>
+	    <th><?php _e('Indication of item code','usces'); ?></th>
+	    <td><input name="indication[item_code]" type="checkbox" id="indi_item_code" value="<?php echo $indi_item_name['item_code']; ?>"<?php echo $checked_item_name['item_code']; ?> /></td>
+	    <th><?php _e('Position of item code','usces'); ?></th>
+		<td><input name="position[item_code]" type="text" id="pos_item_code" value="<?php echo $pos_item_name['item_code']; ?>" />(<?php _e('numeric','usces'); ?>)</td>
+	</tr>
+	<tr>
+	    <th><?php _e('Indication of SKU name','usces'); ?></th>
+	    <td><input name="indication[sku_name]" type="checkbox" id="indi_sku_name" value="<?php echo $indi_item_name['sku_name']; ?>"<?php echo $checked_item_name['sku_name']; ?> /></td>
+	    <th><?php _e('Position of SKU name','usces'); ?></th>
+		<td><input name="position[sku_name]" type="text" id="pos_sku_name" value="<?php echo $pos_item_name['sku_name']; ?>" />(<?php _e('numeric','usces'); ?>)</td>
+	</tr>
+	<tr>
+	    <th><?php _e('Indication of SKU code','usces'); ?></th>
+	    <td><input name="indication[sku_code]" type="checkbox" id="indi_sku_code" value="<?php echo $indi_item_name['sku_code']; ?>"<?php echo $checked_item_name['sku_code']; ?> /></td>
+	    <th><?php _e('Position of SKU code','usces'); ?></th>
+		<td><input name="position[sku_code]" type="text" id="pos_sku_code" value="<?php echo $pos_item_name['sku_code']; ?>" />(<?php _e('numeric','usces'); ?>)</td>
+	</tr>
+</table>
+<hr size="1" color="#CCCCCC" />
+<div id="ex_item_indication" class="explanation"><?php _e('You can appoint indication, non-indication, sort of the item name to show the cart.<br />This rule is applied as brand names such as a cart page, contents confirmation page, a member information purchase history, an email, a written estimate, the statement of delivery.','usces'); ?></div>
+</div>
+</div><!--postbox-->
 
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('Explanation in a Cart page','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_cart_page');"><?php _e('(Explain)','usces'); ?></a></h3>

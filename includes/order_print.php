@@ -114,16 +114,22 @@ function usces_pdf_out(&$pdf, $data){
 		$d = $cnt * 9.7;
 	
 		$post_id = $cart_row['post_id'];
+		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+		$optstr =  '';
+		foreach((array)$cart_row['options'] as $key => $value){
+			$optstr .= $key . '=' . $value . ','; 
+		}
+		$optstr = rtrim($optstr, ',');
 		$HB = usces_conv_euc($cart_row['sku']);
-		$HM = usces_conv_euc($usces->getItemName($post_id).' '.$usces->getItemSkuDisp($post_id, $cart_row['sku']));
+		$HM = usces_conv_euc($cartItemName);
 		//$optstr = implode($cart_row['options']);
-		$OP = usces_conv_euc(implode('、', (array)$cart_row['options']));
+		$OP = usces_conv_euc($optstr);
 		$SR = number_format($cart_row['quantity']);
 		$TI = usces_conv_euc($usces->getItemSkuUnit($post_id, $cart_row['sku']));
 		$TK = number_format($cart_row['price']);
 		$SK = number_format($cart_row['price']*$cart_row['quantity']);
 		$HM1 = mb_substr($HM, 0, 18);
-		$HM2 = mb_substr((mb_substr($HM, 18) . '／' . $OP), 0, 18);
+		$HM2 = mb_substr((mb_substr($HM, 18) . '/' . $OP), 0, 18);
 		$HMm = $HM . usces_conv_euc('/') . $OP;
 		if( strlen($HMm) <= 70 ){
 			$HMsize = 9;

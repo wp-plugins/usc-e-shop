@@ -755,9 +755,9 @@ function usces_the_delivery_time( $value = '', $out = '' ){
 function usces_the_campaign_schedule($flag, $kind){
 	global $usces;
 	$startdate = $usces->options['campaign_schedule']['start']['year'] . __('year','usces') . $usces->options['campaign_schedule']['start']['month'] . __('month','usces') . $usces->options['campaign_schedule']['start']['day'] . __('day','usces');
-	$starttime = $usces->options['campaign_schedule']['start']['hour'] . __('h','usces') . $usces->options['campaign_schedule']['start']['min'] . __('min','usces');
+	$starttime = $usces->options['campaign_schedule']['start']['hour'] . __('hour','usces') . $usces->options['campaign_schedule']['start']['min'] . __('min','usces');
 	$enddate = $usces->options['campaign_schedule']['end']['year'] . __('year','usces') . $usces->options['campaign_schedule']['end']['month'] . __('month','usces') . $usces->options['campaign_schedule']['end']['day'] . __('day','usces');
-	$endtime = $usces->options['campaign_schedule']['end']['hour'] . __('h','usces') . $usces->options['campaign_schedule']['end']['min'] . __('min','usces');
+	$endtime = $usces->options['campaign_schedule']['end']['hour'] . __('hour','usces') . $usces->options['campaign_schedule']['end']['min'] . __('min','usces');
 	if( 'start' == $flag ) {
 		if( 'date' == $kind ) {
 			echo $startdate;

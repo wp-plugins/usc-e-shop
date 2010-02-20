@@ -49,7 +49,6 @@ $usces_member_history = $this->get_member_history($ID);
 //	$receipt = '';
 
 ?>
-<script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/jquery-1.3.2.min.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/jquery-ui-1.7.1.custom.min.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/bgiframe/jquery.bgiframe.min.js'; ?>'></script>
 <script type="text/javascript">
@@ -132,7 +131,7 @@ foreach((array)$prefs as $value) {
 <td class="col3 label"><?php _e('city', 'usces'); ?></td><td class="col2"><input name="mem_address1" type="text" class="text long" value="<?php echo $data['mem_address1']; ?>" /></td>
 </tr>
 <tr>
-<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo substr($data['mem_registered'],0,4).'年'.substr($data['mem_registered'],5,2).'月'.substr($data['mem_registered'],8,2).'日'; ?></div></td>
+<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php _e(sprintf('%2$s %3$s, %1$s',substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2)), 'usces'); ?></div></td>
 <td class="col3 label"><?php _e('Phone number', 'usces'); ?></td><td class="col2"><input name="mem_tel" type="text" class="text long" value="<?php echo $data['mem_tel']; ?>" /></td>
 <td class="col3 label"><?php _e('numbers', 'usces'); ?></td><td class="col2"><input name="mem_address2" type="text" class="text long" value="<?php echo $data['mem_address2']; ?>" /></td>
 </tr>
@@ -191,20 +190,19 @@ foreach((array)$prefs as $value) {
 	$options = $cart_row['options'];
 	$itemCode = $this->getItemCode($post_id);
 	$itemName = $this->getItemName($post_id);
+	$cartItemName = $this->getCartItemName($post_id, $sku);
 	$skuPrice = $this->getItemPrice($post_id, $sku);
 	$pictids = $this->get_pictids($itemCode);
-	if (!empty($options)) {
-	$optstr = implode(',', $options);
-	} else { 
 	$optstr =  '';
-	$options =  array();
+	foreach((array)$options as $key => $value){
+		$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
 	}
 	
 	?>
 	<tr>
 	<td><?php echo $i + 1; ?></td>
 	<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-	<td class="aleft"><?php echo $itemName; ?>&nbsp;<?php echo $itemCode; ?>&nbsp;<?php echo $sku; ?><br /><?php echo $optstr; ?></td>
+	<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
 	<td class="rightnum"><?php echo number_format($skuPrice); ?></td>
 	<td class="rightnum"><?php echo number_format($cart_row['quantity']); ?></td>
 	<td class="rightnum"><?php echo number_format($skuPrice * $cart_row['quantity']); ?></td>

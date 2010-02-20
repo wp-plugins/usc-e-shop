@@ -152,7 +152,7 @@ function cangeWday3(id, c) {
 	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['start']['hour'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
-		<td><?php _e('h','usces'); ?></td>
+		<td><?php _e('hour','usces'); ?></td>
 	    <td><select name="campaign_schedule[start][min]">
 <?php for($i=0; $i<12; $i++) : ?>
 	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['min']['hour'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
@@ -187,7 +187,7 @@ function cangeWday3(id, c) {
 	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['end']['hour'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
-		<td><?php _e('h','usces'); ?></td>
+		<td><?php _e('hour','usces'); ?></td>
 	    <td><select name="campaign_schedule[end][min]">
 <?php for($i=0; $i<12; $i++) : ?>
 	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['min']['hour'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
@@ -206,7 +206,7 @@ function cangeWday3(id, c) {
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th><?php _e('current month', 'usces'); ?><br /><?php echo  $todayyy.'年'.$todaymm.'月'; ?></th>
+	    <th><?php _e('current month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm); ?></th>
 	    <td>
 		<table cellspacing="0" id="calendar1" class="calendar">
 			<tr>
@@ -238,7 +238,7 @@ function cangeWday3(id, c) {
 		<td><span class="business_days_exp_box" style="background-color:#DFFFDD">　　</span><?php _e('Working day', 'usces'); ?><br /><span class="business_days_exp_box" style="background-color:#FFECCE">　　</span><?php _e('Holiday for Shipping Operations', 'usces'); ?></td>
 	</tr>
 	<tr>
-	    <th><?php _e('Next month', 'usces'); ?><br /><?php echo  $nextyy.'年'.$nextmm.'月'; ?></th>
+	    <th><?php _e('Next month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$nextyy,$nextmm); ?></th>
 	    <td>
 		<table cellspacing="0" id="calendar2" class="calendar">
 			<tr>
@@ -270,7 +270,7 @@ function cangeWday3(id, c) {
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-	    <th><?php _e('Month after next month', 'usces'); ?><br /><?php echo  $lateryy.'年'.$latermm.'月'; ?></th>
+	    <th><?php _e('Month after next month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$lateryy,$latermm); ?></th>
 	    <td>
 		<table cellspacing="0" id="calendar3" class="calendar">
 			<tr>

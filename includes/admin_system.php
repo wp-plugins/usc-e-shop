@@ -15,6 +15,9 @@ for($i=1; $i<count($usces_pref); $i++){
 	$province .= $usces_pref[$i] . "\n";
 }
 $province = trim($province);
+$use_ssl = $this->options['use_ssl'];
+$ssl_url = $this->options['ssl_url'];
+$ssl_url_admin = $this->options['ssl_url_admin'];
 
 ?>
 <script type="text/javascript">
@@ -104,6 +107,29 @@ function toggleVisibility(id) {
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');"><?php _e('settlement module path', 'usces'); ?></a></th>
 		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo $settlement_path; ?>" size="60" /></td>
 	    <td><div id="ex_settlement_path" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_ssl');"><?php _e('Use SSL','usces'); ?></a></th>
+		<?php $checked = $use_ssl == 1 ? ' checked="checked"' : ''; ?>
+		<td width="10"><input name="use_ssl" type="checkbox" id="use_ssl" value="<?php echo $use_ssl; ?>"<?php echo $checked; ?> /></td>
+		<td width="300"><label for="use_ssl"><?php _e('Not display an article in blog', 'usces'); ?></label></td>
+	    <td><div id="ex_use_ssl" class="explanation"><?php _e('In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url_admin');"><?php _e('SSL URL', 'usces'); ?></a></th>
+		<td><input name="ssl_url_admin" type="text" id="ssl_url_admin" value="<?php echo $ssl_url_admin; ?>" size="60" /></td>
+	    <td><div id="ex_ssl_url_admin" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url');"><?php _e('SSL URL', 'usces'); ?></a></th>
+		<td><input name="ssl_url" type="text" id="ssl_url" value="<?php echo $ssl_url; ?>" size="60" /></td>
+	    <td><div id="ex_ssl_url" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
 	</tr>
 </table>
 </div>

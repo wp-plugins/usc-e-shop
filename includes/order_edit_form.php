@@ -61,7 +61,6 @@ if($order_action == 'new'){
 }
 
 ?>
-<script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/jquery-1.3.2.min.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/jquery-ui-1.7.1.custom.min.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/bgiframe/jquery.bgiframe.min.js'; ?>'></script>
 <script type="text/javascript">
@@ -683,22 +682,21 @@ foreach((array)$prefs as $value) {
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
+		$cartItemName = $this->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
 		$stock = $this->getItemZaiko($post_id, $sku);
 		$red = (in_array($stock, array(__('Sellout', 'usces'), __('Temporarily out of stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
-		if (!empty($options) && is_array($options)) {
-			$optstr = implode(',', $options);
-		} else { 
-			$optstr =  '';
-			$options =  array();
+		$optstr =  '';
+		foreach((array)$options as $key => $value){
+			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
 		}
 			
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-		<td class="aleft"><?php echo $itemName; ?>&nbsp;<?php echo $itemCode; ?>&nbsp;<?php echo $sku; ?><br /><?php echo $optstr; ?></td>
+		<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
 		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text price" type="text" value="<?php echo $skuPrice; ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text quantity" type="text" value="<?php echo $cart_row['quantity']; ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>

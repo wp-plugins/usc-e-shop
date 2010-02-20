@@ -26,6 +26,7 @@
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
+		$cartItemName = $this->getCartItemName($post_id, $sku);
 		//$skuPrice = $this->getItemPrice($post_id, $sku);
 		$itemRestriction = $this->getItemRestriction($post_id);
 		$skuPrice = $cart_row['price'];
@@ -34,18 +35,16 @@
 		$stock = $this->getItemZaiko($post_id, $sku);
 		$red = (in_array($stock, array(__('Sellout', 'usces'), __('Temporarily out of stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
-		if (!empty($options)) {
-			$optstr = implode(',', $options);
-		} else { 
-			$optstr =  '';
-			$options =  array();
+		$optstr =  '';
+		foreach((array)$options as $key => $value){
+			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
 		}
 			
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-		<td class="aleft"><?php echo $itemName; ?>&nbsp;<?php echo $itemCode; ?>&nbsp;<?php echo $sku; ?><br /><?php echo $optstr; ?></td>
+		<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
 		<td class="aright">
 		<?php if( usces_is_gptekiyo($post_id, $sku, $quantity) ) : $usces_gp = 1; ?>
 		<img src="<?php echo bloginfo('template_url') . '/images/gp.gif'; ?>" alt="<?php _e('Business package discount', 'usces'); ?>" />

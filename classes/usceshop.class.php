@@ -17,6 +17,7 @@ class usc_e_shop
 
 	function usc_e_shop()
 	{
+		global $post;
 	
 		$this->usces_session_start();
 
@@ -36,6 +37,17 @@ class usc_e_shop
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
 		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
+		if(!isset($this->options['use_ssl'])) $this->options['use_ssl'] = 0;
+		if(!isset($this->options['indi_item_name'])){
+			$this->options['indi_item_name']['item_name'] = 1;
+			$this->options['indi_item_name']['item_code'] = 1;
+			$this->options['indi_item_name']['sku_name'] = 1;
+			$this->options['indi_item_name']['sku_code'] = 1;
+			$this->options['pos_item_name']['item_name'] = 1;
+			$this->options['pos_item_name']['item_code'] = 2;
+			$this->options['pos_item_name']['sku_name'] = 3;
+			$this->options['pos_item_name']['sku_code'] = 4;
+		}
 		update_option('usces', $this->options);
 
 		$this->error_message = '';
@@ -45,26 +57,43 @@ class usc_e_shop
 		$this->payment_results = array();
 
 		//admin_ssl options
-		$this->use_ssl = get_option("admin_ssl_use_ssl") === "1" ? true : false;
-		$use_shared = get_option("admin_ssl_use_shared") === "1" && $this->use_ssl ? true : false;
-		$shared_url = get_option("admin_ssl_shared_url");
+//		$this->use_ssl = get_option("admin_ssl_use_ssl") === "1" ? true : false;
+//		$use_shared = get_option("admin_ssl_use_shared") === "1" && $this->use_ssl ? true : false;
+//		$shared_url = get_option("admin_ssl_shared_url");
 		
-		if ( $use_shared ) {
-			$ssl_url = str_replace('/wp-admin/', '', $shared_url);
-		} else {
-			$ssl_url = str_replace('http://', 'https://', get_option('home'));
+		$this->use_ssl = $this->options['use_ssl'];
+//		if ( $use_shared ) {
+//			$ssl_url = str_replace('/wp-admin/', '', $shared_url);
+//		} else {
+//			$ssl_url = str_replace('http://', 'https://', get_option('home'));
+//		}
+		if ( $this->use_ssl ) {
+			$ssl_url = $this->options['ssl_url'];
+			$ssl_url_admin = $this->options['ssl_url_admin'];
+			define('USCES_FRONT_PLUGIN_URL', $ssl_url_admin . '/wp-content/plugins/' . USCES_PLUGIN_FOLDER);
+			add_filter('page_link', array($this, 'usces_ssl_page_link'));
+			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_contents_link'));
+			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
+			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
+			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
+			define('USCES_SSL_URL', $ssl_url);
+			define('USCES_SSL_URL_ADMIN', $ssl_url_admin);
+		}else{
+			define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
+			define('USCES_SSL_URL', get_option('home'));
+			define('USCES_SSL_URL_ADMIN', get_option('siteurl'));
 		}
+
 		define('USCES_CART_NUMBER', get_option('usces_cart_number'));
 		define('USCES_MEMBER_NUMBER', get_option('usces_member_number'));
 		if($this->use_ssl) {
-			define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
-			define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
+			define('USCES_CART_URL', $ssl_url . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
+			define('USCES_MEMBER_URL', $ssl_url . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
 		} else {
 			define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
 			define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
 		}
 		define('USCES_ITEM_CAT_PARENT_ID', get_option('usces_item_cat_parent_id'));
-		define('USCES_SSL_URL', $ssl_url);
 		
 		$this->zaiko_status = get_option('usces_zaiko_status');
 		$this->member_status = get_option('usces_customer_status');
@@ -77,6 +106,47 @@ class usc_e_shop
 		
 	}
 	
+	function is_cart_or_member_page($link)
+	{
+		$search = array(('page_id='.USCES_CART_NUMBER), '/usces-cart', ('page_id='.USCES_MEMBER_NUMBER), '/usces-member');
+		$flag = false;
+		foreach($search as $value){
+			if( strpos($link, $value) )
+				$flag = true;
+		}
+		return $flag;
+	}
+	
+	function usces_ssl_page_link($link)
+	{
+		if( $this->is_cart_or_member_page($link) ){
+			$fronts = parse_url(get_option('home'));
+			$homes = parse_url(USCES_SSL_URL);
+			$site = str_replace(($fronts['scheme'].'://'), '', get_option('home'));
+			$sslsite = str_replace(($homes['scheme'].'://'), '', USCES_SSL_URL);
+			$link = str_replace($site, $sslsite, $link);
+			$link = str_replace('http://', 'https://', $link);
+		}
+		return $link;
+	}
+
+	function usces_ssl_contents_link($link)
+	{
+		$req = explode('/wp-content/',$link);
+		$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
+		return $link;
+	}
+
+	function usces_ssl_script_link($link)
+	{
+		$fronts = parse_url(get_option('siteurl'));
+		$admins = parse_url(USCES_SSL_URL_ADMIN);
+		$site = str_replace(($fronts['scheme'].'://'), '', get_option('siteurl'));
+		$sslsite = str_replace(($admins['scheme'].'://'), '', USCES_SSL_URL_ADMIN);
+		$link = str_replace($site, $sslsite, $link);
+		return $link;
+	}
+
 	function set_action_status($status, $message)
 	{
 		$this->action_status = $status;
@@ -425,6 +495,12 @@ class usc_e_shop
 
 		if(isset($_POST['usces_option_update'])) {
 
+			foreach ( $this->options['indi_item_name'] as $key => $value ) {
+				$this->options['indi_item_name'][$key] = isset($_POST['indication'][$key]) ? 1 : 0;
+			}
+			foreach ( $_POST['position'] as $key => $value ) {
+				$this->options['pos_item_name'][$key] = $value;
+			}
 			foreach ( $_POST['header'] as $key => $value ) {
 				$this->options['cart_page_data']['header'][$key] = $value;
 			}
@@ -508,6 +584,10 @@ class usc_e_shop
 			if($this->options['settlement_path'] == '') $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
 			$sl = substr($this->options['settlement_path'], -1);
 			if($sl != '/' && $sl != '\\') $this->options['settlement_path'] .= '/';
+			$this->options['use_ssl'] = isset($_POST['use_ssl']) ? 1 : 0;
+			$this->options['ssl_url'] = isset($_POST['ssl_url']) ? stripslashes(rtrim($_POST['ssl_url'], '/')) : '';
+			$this->options['ssl_url_admin'] = isset($_POST['ssl_url_admin']) ? stripslashes(rtrim($_POST['ssl_url_admin'], '/')) : '';
+			if( $this->options['ssl_url'] == '' || $this->options['ssl_url_admin'] == '' ) $this->options['use_ssl'] = 0;
 
 			
 			$this->action_status = 'success';
@@ -661,7 +741,7 @@ class usc_e_shop
 		global $post, $current_user;
 		get_currentuserinfo();
 		
-		$css_url = USCES_PLUGIN_URL . '/css/usces_cart.css';
+		$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
 		$this->member_name = ( is_user_logged_in() ) ? get_usermeta($current_user->ID,'first_name').get_usermeta($current_user->ID,'last_name') : '';
 		?>
 
@@ -672,7 +752,7 @@ class usc_e_shop
 		<?php 
 		if(isset($post)) : 
 		
-			$javascript_url = USCES_PLUGIN_URL . '/js/usces_cart.js';
+			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
 			$ioptkeys = $this->get_itemOptionKey( $post->ID );
 			$mes_opts_str = "";
 			$key_opts_str = "";
@@ -701,7 +781,7 @@ class usc_e_shop
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
-				ajaxurl: "<?php echo USCES_WP_PLUGIN_URL; ?>",
+				ajaxurl: "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php",
 				post_id: "<?php echo $post->ID; ?>",
 				cart_number: "<?php echo get_option('usces_cart_number'); ?>",
 				opt_esse: new Array( <?php echo $opt_esse; ?> ),
@@ -714,7 +794,6 @@ class usc_e_shop
 		/* ]]> */
 		</script>
 		<?php endif; ?>
-		<!--<script type='text/javascript' src='<?php echo get_option('siteurl') . '/wp-includes/js/jquery/jquery.js'; ?>'></script>-->
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
 		<?php if( isset($post) && ((USCES_CART_NUMBER == $post->ID) || ('item' == $post->post_mime_type && is_single())) ) : ?>
 		<script type='text/javascript'>
@@ -935,7 +1014,7 @@ class usc_e_shop
 			wp_enqueue_script('quicktags');
 
 		}
-		
+
 		wp_enqueue_script('jquery');
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
@@ -3472,6 +3551,42 @@ class usc_e_shop
 
 	function getCurrencySymbol(){
 		return get_option('usces_currency_symbol');
+	}
+
+	function getCartItemName($post_id, $sku){
+		$name_arr = array();
+		$name_str = '';
+		
+		foreach($this->options['indi_item_name'] as $key => $value){
+			if($value){
+				$pos = (int)$this->options['pos_item_name'][$key];
+				$ind = ($pos === 0) ? 'A' : $pos;
+				switch($key){
+					case 'item_name':
+						$name_arr[$ind][$key] = $this->getItemName($post_id);
+						break;
+					case 'item_code':
+						$name_arr[$ind][$key] = $this->getItemCode($post_id);
+						break;
+					case 'sku_name':
+						$name_arr[$ind][$key] = $this->getItemSkuDisp($post_id, $sku);
+						break;
+					case 'sku_code':
+						$name_arr[$ind][$key] = $sku;
+						break;
+				}
+			}
+			
+		}
+		ksort($name_arr);
+		foreach($name_arr as $vals){
+			foreach($vals as $key => $value){
+			
+				$name_str .= $value . ' ';
+			}
+		}
+		
+		return trim($name_str);
 	}
 
 	//shortcode---------------------------------------

@@ -50,6 +50,7 @@ if($this->cart->num_row() > 0) {
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
+		$cartItemName = $this->getCartItemName($post_id, $sku);
 		$itemRestriction = $this->getItemRestriction($post_id);
 		$skuPrice = $cart_row['price'];
 		$skuZaikonum = $this->getItemZaikonum($post_id, $sku);
@@ -67,7 +68,7 @@ if($this->cart->num_row() > 0) {
 		$html .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</td>
-			<td class="aleft">' . $itemName . '&nbsp;' . $itemCode . '&nbsp;' . $sku . '<br />';
+			<td class="aleft">' . $cartItemName . '<br />';
 		foreach((array)$options as $key => $value){
 			$html .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
 		}
