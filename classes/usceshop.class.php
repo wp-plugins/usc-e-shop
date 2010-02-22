@@ -781,15 +781,15 @@ class usc_e_shop
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
-				ajaxurl: "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php",
-				post_id: "<?php echo $post->ID; ?>",
-				cart_number: "<?php echo get_option('usces_cart_number'); ?>",
-				opt_esse: new Array( <?php echo $opt_esse; ?> ),
-				opt_means: new Array( <?php echo $opt_means; ?> ),
-				mes_opts: new Array( <?php echo $mes_opts_str; ?> ),
-				key_opts: new Array( <?php echo $key_opts_str; ?> ), 
-				previous_url: "<?php if(isset($_SESSION['usces_previous_url'])) echo $_SESSION['usces_previous_url']; ?>", 
-				itemRestriction: "<?php echo $itemRestriction[0]; ?>"
+				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php",
+				'post_id': "<?php echo $post->ID; ?>",
+				'cart_number': "<?php echo get_option('usces_cart_number'); ?>",
+				'opt_esse': new Array( <?php echo $opt_esse; ?> ),
+				'opt_means': new Array( <?php echo $opt_means; ?> ),
+				'mes_opts': new Array( <?php echo $mes_opts_str; ?> ),
+				'key_opts': new Array( <?php echo $key_opts_str; ?> ), 
+				'previous_url': "<?php if(isset($_SESSION['usces_previous_url'])) echo $_SESSION['usces_previous_url']; ?>", 
+				'itemRestriction': "<?php echo $itemRestriction[0]; ?>"
 			}
 		/* ]]> */
 		</script>
@@ -939,25 +939,23 @@ class usc_e_shop
 	function admin_head() {
 		$payments_str = '';
 		foreach ( (array)$this->options['payment_method'] as $id => $array ) {
-			$payments_str .= "{$this->options['payment_method'][$id]['name']}: '{$this->options['payment_method'][$id]['settlement']}',";
+			$payments_str .= "'" . $this->options['payment_method'][$id]['name'] . "': '" . $this->options['payment_method'][$id]['settlement'] . "', ";
 		}
-		$payments_str = rtrim($payments_str, ',');
+		$payments_str = rtrim($payments_str, ', ');
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
-				requestFile: "<?php echo get_option('siteurl'); ?>/wp-admin/admin-ajax.php",
-				cart_number: "<?php echo get_option('usces_cart_number'); ?>", 
-				purchase_limit: "<?php echo $this->options['purchase_limit']; ?>", 
-				point_rate: "<?php echo $this->options['point_rate']; ?>",
-				shipping_rule: "<?php echo $this->options['shipping_rule']; ?>", 
-				now_loading: "<?php _e('now loading', 'usces'); ?>" 
+				'requestFile': "<?php echo get_option('siteurl'); ?>/wp-admin/admin-ajax.php",
+				'cart_number': "<?php echo get_option('usces_cart_number'); ?>", 
+				'purchase_limit': "<?php echo $this->options['purchase_limit']; ?>", 
+				'point_rate': "<?php echo $this->options['point_rate']; ?>",
+				'shipping_rule': "<?php echo $this->options['shipping_rule']; ?>", 
+				'now_loading': "<?php _e('now loading', 'usces'); ?>" 
 			};
-			uscesPayments = {
-				<?php echo $payments_str; ?>
-			};
+			uscesPayments = {<?php echo $payments_str; ?>};
 		/* ]]> */
 		</script>
 		<script type='text/javascript' src='<?php echo USCES_PLUGIN_URL; ?>/js/usces_admin.js'></script>
