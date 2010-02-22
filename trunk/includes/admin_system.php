@@ -114,7 +114,7 @@ function toggleVisibility(id) {
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_ssl');"><?php _e('Use SSL','usces'); ?></a></th>
 		<?php $checked = $use_ssl == 1 ? ' checked="checked"' : ''; ?>
 		<td width="10"><input name="use_ssl" type="checkbox" id="use_ssl" value="<?php echo $use_ssl; ?>"<?php echo $checked; ?> /></td>
-		<td width="300"><label for="use_ssl"><?php _e('Not display an article in blog', 'usces'); ?></label></td>
+		<td width="300">&nbsp;</td>
 	    <td><div id="ex_use_ssl" class="explanation"><?php _e('Please decide whether you use SSL', 'usces'); ?></div></td>
 	</tr>
 </table>
