@@ -76,8 +76,10 @@ class usc_e_shop
 			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
+			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
 			define('USCES_SSL_URL', $ssl_url);
 			define('USCES_SSL_URL_ADMIN', $ssl_url_admin);
+			
 		}else{
 			define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
 			define('USCES_SSL_URL', get_option('home'));
@@ -122,8 +124,18 @@ class usc_e_shop
 		if( $this->is_cart_or_member_page($link) ){
 			$fronts = parse_url(get_option('home'));
 			$homes = parse_url(USCES_SSL_URL);
-			$site = str_replace(($fronts['scheme'].'://'), '', get_option('home'));
-			$sslsite = str_replace(($homes['scheme'].'://'), '', USCES_SSL_URL);
+			if(empty($fronts['scheme'])){
+				$frontsscheme = 'http://';
+			}else{
+				$frontsscheme = $fronts['scheme'].'://';
+			}
+			if(empty($homes['scheme'])){
+				$homesscheme = 'https://';
+			}else{
+				$homesscheme = $homes['scheme'].'://';
+			}
+			$site = str_replace($frontsscheme, '', get_option('home'));
+			$sslsite = str_replace($homesscheme, '', USCES_SSL_URL);
 			$link = str_replace($site, $sslsite, $link);
 			$link = str_replace('http://', 'https://', $link);
 		}
@@ -139,11 +151,16 @@ class usc_e_shop
 
 	function usces_ssl_script_link($link)
 	{
-		$fronts = parse_url(get_option('siteurl'));
-		$admins = parse_url(USCES_SSL_URL_ADMIN);
-		$site = str_replace(($fronts['scheme'].'://'), '', get_option('siteurl'));
-		$sslsite = str_replace(($admins['scheme'].'://'), '', USCES_SSL_URL_ADMIN);
-		$link = str_replace($site, $sslsite, $link);
+		if(strpos($link, '/wp-content/') !== false){
+			$req = explode('/wp-content/',$link, 2);
+			$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
+		}else if(strpos($link, '/wp-includes/') !== false){
+			$req = explode('/wp-includes/',$link, 2);
+			$link = USCES_SSL_URL_ADMIN . '/wp-includes/' . $req[1];
+		}else if(strpos($link, '/wp-admin/') !== false){
+			$req = explode('/wp-admin/',$link, 2);
+			$link = USCES_SSL_URL_ADMIN . '/wp-admin/' . $req[1];
+		}
 		return $link;
 	}
 
@@ -1013,6 +1030,8 @@ class usc_e_shop
 
 		}
 
+//		wp_register_style('WelcartStylesheet', WP_PLUGIN_URL . '/usc-e-shop/css/usces_cart.css');
+//		wp_enqueue_style('WelcartStylesheet');
 		wp_enqueue_script('jquery');
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
