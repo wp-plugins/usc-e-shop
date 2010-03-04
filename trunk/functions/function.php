@@ -94,7 +94,7 @@ function usces_order_confirm_message($order_id) {
 	if ( $data['order_usedpoint'] != 0 )
 		$msg_body .= __('use of points','usces') . "　：" . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($data['order_discount']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('Special Price','usces') . "　　　　：" . number_format($data['order_discount']) . __('dollars','usces') . "\r\n";
 	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($data['order_shipping_charge']) . __('dollars','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($data['order_cod_fee']) . __('dollars','usces') . "\r\n";
@@ -219,7 +219,7 @@ function usces_send_ordermail($order_id) {
 	if ( $entry['order']['usedpoint'] != 0 )
 		$msg_body .= __('use of points','usces') . "　：" . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$msg_body .= __('Special discount','usces') . "　　　　：" . number_format($entry['order']['discount']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('Special Price','usces') . "　　　　：" . number_format($entry['order']['discount']) . __('dollars','usces') . "\r\n";
 	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($entry['order']['shipping_charge']) . __('dollars','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($entry['order']['cod_fee']) . __('dollars','usces') . "\r\n";

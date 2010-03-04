@@ -13,7 +13,7 @@ $cal2->setToday($nextyy, $nextmm, $nextdd);
 $cal2->setCalendarData();
 ?>
 <table cellspacing="0" id="wp-calendar" class="usces_calendar">
-<caption><?php _e('current month', 'usces'); ?>(<?php echo sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm); ?>)</caption>
+<caption><?php _e('This month', 'usces'); ?>(<?php echo sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm); ?>)</caption>
 <thead>
 	<tr>
 		<th><?php _e('Sun', 'usces'); ?></th>

@@ -66,7 +66,7 @@ foreach ( $items as $item ) : ?>
 <td><?php _e('today', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('today')); ?></td>
 </tr>
 <tr>
-<td><?php _e('current month', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('thismonth')); ?></td>
+<td><?php _e('This month', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('thismonth')); ?></td>
 </tr>
 <tr>
 <td><?php _e('Same date in last year', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('lastyear')); ?></td>
@@ -84,7 +84,7 @@ foreach ( $items as $item ) : ?>
 </tr>
 <tr>
 <?php foreach($this->zaiko_status as $value): ?>
-<th><?php if($value == __('OK', 'usces')) {echo __('OK-stocks', 'usces');}else{echo $value;} ?></th>
+<th><?php if($value == __('OK', 'usces')) {echo __('In Stock', 'usces');}else{echo $value;} ?></th>
 <?php endforeach; ?>
 </tr>
 <tr>

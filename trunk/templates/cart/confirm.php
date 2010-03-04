@@ -31,7 +31,7 @@ $html .= '<div id="cart">
 		<tbody>';
 
 $memid = $this->get_member();
-$member = empty($memid) ? 9999999 : $memid;
+$member = ( 1 > (int)$memid ) ? 0 : $memid;
 $usces_entries = $this->cart->get_entry();
 $this->set_cart_fees( $member, $usces_entries );
 

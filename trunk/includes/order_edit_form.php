@@ -685,7 +685,7 @@ foreach((array)$prefs as $value) {
 		$cartItemName = $this->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
 		$stock = $this->getItemZaiko($post_id, $sku);
-		$red = (in_array($stock, array(__('Sellout', 'usces'), __('Temporarily out of stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
+		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
 		foreach((array)$options as $key => $value){

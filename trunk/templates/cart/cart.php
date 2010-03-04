@@ -56,7 +56,7 @@ if($this->cart->num_row() > 0) {
 		$skuZaikonum = $this->getItemZaikonum($post_id, $sku);
 		$stockid = $this->getItemZaikoStatusId($post_id, $sku);
 		$stock = $this->getItemZaiko($post_id, $sku);
-		$red = (in_array($stock, array(__('sellout','usces'), __('Temporarily out of stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
+		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		if (!empty($options)) {
 //			$optstr = implode(',', $options);

@@ -1,9 +1,9 @@
 <?php
 $zaiko_status = array(
-					'0' => __('OK-stocks', 'usces'),
-					'1' => __('Only few stocks left for this item.', 'usces'),
-					'2' => __('Sellout', 'usces'),
-					'3' => __('Temporarily out of stock', 'usces'),
+					'0' => __('In Stock', 'usces'),
+					'1' => __('A Few Stock', 'usces'),
+					'2' => __('Sold Out', 'usces'),
+					'3' => __('Out Of Stock', 'usces'),
 					'4' => __('Out of print', 'usces')
 					);
 $management_status = array(
