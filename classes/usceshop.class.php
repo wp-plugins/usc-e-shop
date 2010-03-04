@@ -72,7 +72,7 @@ class usc_e_shop
 			$ssl_url_admin = $this->options['ssl_url_admin'];
 			define('USCES_FRONT_PLUGIN_URL', $ssl_url_admin . '/wp-content/plugins/' . USCES_PLUGIN_FOLDER);
 			add_filter('page_link', array($this, 'usces_ssl_page_link'));
-			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_contents_link'));
+			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
 			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
@@ -146,6 +146,12 @@ class usc_e_shop
 	{
 		$req = explode('/wp-content/',$link);
 		$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
+		return $link;
+	}
+
+	function usces_ssl_attachment_link($link)
+	{
+		$link = str_replace(get_option('siteurl'), USCES_SSL_URL_ADMIN, $link);
 		return $link;
 	}
 
@@ -1609,7 +1615,7 @@ class usc_e_shop
 			return 'login';
 		} else if ( $_POST['loginpass'] == '' ) {
 			$this->current_member['email'] = wp_specialchars(trim($_POST['loginmail']));
-			$this->error_message = __('<b>Error:</b> Enter the pass word.', 'usces');
+			$this->error_message = __('<b>Error:</b> Enter the password.', 'usces');
 			return 'login';
 		} else {
 			$email = trim($_POST['loginmail']);
@@ -1628,7 +1634,7 @@ class usc_e_shop
 				$member = $wpdb->get_row( $query, ARRAY_A );
 				if ( empty($member) ) {
 					$this->current_member['email'] = htmlspecialchars($email);
-					$this->error_message = __('<b>Error:</b> Pass word is not correct.', 'usces');
+					$this->error_message = __('<b>Error:</b> Password is not correct.', 'usces');
 					return 'login';
 				} else {
 					$_SESSION['usces_member']['ID'] = $member['ID'];
@@ -1700,7 +1706,7 @@ class usc_e_shop
 			$post_id = $cart_row['post_id'];
 			$sku = $cart_row['sku'];
 			$stock = $this->getItemZaiko($post_id, $sku);
-			$red = (in_array($stock, array(__('Sellout', 'usces'), __('Temporarily out of stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
+			$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
 		}
 		$mes = $red == '' ? '' : __('Sorry, this item is sold out.', 'usces');
 		return $mes;	
@@ -1713,13 +1719,13 @@ class usc_e_shop
 		}
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
 			if ( (trim($_POST['member']['password1']) != '' || trim($_POST['member']['password2']) != '') && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
-				$mes .= __('pass word is not correct', 'usces') . "<br />";
+				$mes .= __('Password is not correct.', 'usces') . "<br />";
 			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 				
 		} else {
 			if ( trim($_POST['member']['password1']) == '' || trim($_POST['member']['password2']) == '' || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
-				$mes .= __('pass word is not correct', 'usces') . "<br />";
+				$mes .= __('Password is not correct.', 'usces') . "<br />";
 			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' || trim($_POST['member']['mailaddress2']) == '' || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 			
@@ -1745,7 +1751,7 @@ class usc_e_shop
 	function member_check_fromcart() {
 		$mes = '';
 		if ( trim($_POST['customer']['password1']) == '' || trim($_POST['customer']['password2']) == '' || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
-			$mes .= __('pass word is not correct', 'usces') . "<br />";
+			$mes .= __('Password is not correct.', 'usces') . "<br />";
 		if ( !strstr($_POST['customer']['mailaddress1'], '@') || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["name1"]) == "" )
@@ -1864,7 +1870,7 @@ class usc_e_shop
 	function changepass_check() {
 		$mes = '';
 		if ( trim($_POST['loginpass1']) == '' || trim($_POST['loginpass2']) == '' || (trim($_POST['loginpass1']) != trim($_POST['loginpass2'])))
-			$mes .= __('pass word is not correct', 'usces') . "<br />";
+			$mes .= __('Password is not correct.', 'usces') . "<br />";
 
 		return $mes;
 	}
@@ -2529,9 +2535,9 @@ class usc_e_shop
 	
 	function getGuidTax() {
 		if ( (int)$this->options['tax_rate'] > 0 )
-			return '<em class="tax">'.__('(Tax)', 'usces').'</em>';
+			return '<em class="tax">'.__('(Excl. Tax)', 'usces').'</em>';
 		else
-			return '<em class="tax">'.__('(Tax included)', 'usces').'</em>';
+			return '<em class="tax">'.__('(Incl. Tax)', 'usces').'</em>';
 	}
 
 	function getItemCode($post_id) {

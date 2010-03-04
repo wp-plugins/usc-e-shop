@@ -206,7 +206,7 @@ function cangeWday3(id, c) {
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th><?php _e('current month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm); ?></th>
+	    <th><?php _e('This month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm); ?></th>
 	    <td>
 		<table cellspacing="0" id="calendar1" class="calendar">
 			<tr>

@@ -57,7 +57,7 @@ foreach ( $usces_member_history as $umhs ) {
 		<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
 		<th class="historyrow">' . __('Purchase price', 'usces') . '</th>
 		<th class="historyrow">' . __('Used points', 'usces') . '</th>
-		<th class="historyrow">' . __('Special discount', 'usces') . '</th>
+		<th class="historyrow">' . __('Special Price', 'usces') . '</th>
 		<th class="historyrow">' . __('Shipping', 'usces') . '</th>
 		<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
 		<th class="historyrow">' . __('consumption tax', 'usces') . '</th>

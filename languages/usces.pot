@@ -10,8 +10,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "this month"
-msgstr "当月"
+msgid "This month"
+msgstr "今月"
 
 msgid "Last month"
 msgstr "先月"
@@ -196,13 +196,13 @@ msgstr "エラー：更新できませんでした。"
 msgid "This e-mail address has been already registered."
 msgstr "このメールアドレスは既に登録されています。"
 
-msgid "<b>Error:</b> Enter the pass word."
+msgid "<b>Error:</b> Enter the password."
 msgstr "<b>エラー:</b> パスワードを入力してください。"
 
 msgid "<b>Error:</b> E-mail address is not correct."
 msgstr "<b>エラー:</b>  メールアドレスが違います。"
 
-msgid "<b>Error:</b> Pass word is not correct."
+msgid "<b>Error:</b> Password is not correct."
 msgstr "<b>エラー:</b>  パスワードが違います。"
 
 msgid "Item genre"
@@ -211,10 +211,10 @@ msgstr "商品ジャンル"
 msgid "guest"
 msgstr "ゲスト"
 
-msgid "Sellout"
+msgid "Sold Out"
 msgstr "売切れ"
 
-msgid "Temporarily out of stock"
+msgid "Out Of Stock"
 msgstr "入荷待ち"
 
 msgid "Out of print"
@@ -223,7 +223,7 @@ msgstr "廃盤"
 msgid "Sorry, this item is sold out."
 msgstr "恐れ入りますが、商品が売り切れました。"
 
-msgid "pass word is not correct"
+msgid "Password is not correct."
 msgstr "パスワードが不正です。"
 
 msgid "e-mail address is not correct"
@@ -280,10 +280,10 @@ msgstr "商品"
 msgid "Items recommended"
 msgstr "お勧め商品"
 
-msgid "(Tax)"
+msgid "(Excl. Tax)"
 msgstr "（税別）"
 
-msgid "(Tax included)"
+msgid "(Incl. Tax)"
 msgstr "（税込）"
 
 msgid "Mr/Mrs %s"
@@ -310,7 +310,7 @@ msgstr "商品合計"
 msgid "use of points"
 msgstr "ご利用ポイント"
 
-msgid "Special discount"
+msgid "Special Price"
 msgstr "特別割引"
 
 msgid "Shipping"
@@ -655,14 +655,11 @@ msgstr "キャンペーンの開催期間を予約します。"
 msgid "Business Calendar"
 msgstr "営業日カレンダー"
 
-msgid "current month"
-msgstr "今月"
-
 msgid "Sun"
 msgstr "日"
 
-msgid "Mon "
-msgstr "月　"
+msgid "Mon"
+msgstr "月"
 
 msgid "Tue"
 msgstr "火"
@@ -925,7 +922,7 @@ msgstr "商品数"
 msgid "SKU total number"
 msgstr "SKU総数"
 
-msgid "OK-stocks"
+msgid "In Stock"
 msgstr "在庫有り"
 
 msgid "OK"
@@ -1048,7 +1045,7 @@ msgstr "商品オプション"
 msgid "Title of detail page"
 msgstr "詳細ページタイトル"
 
-msgid "Only few stocks left for this item."
+msgid "A Few Stock"
 msgstr "在庫僅少"
 
 msgid "notmal member"
