@@ -692,7 +692,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 </tr>
 <tr>
 <th><?php _e('Limited amount for purchase', 'usces'); ?></th>
-<td><input type="text" name="itemRestriction" id="itemRestriction" class="itemRestriction" value="<?php echo $itemRestriction[0]; ?>" />個まで
+<td><?php printf(__('limit by%s%s%s', 'usces'), '<input type="text" name="itemRestriction" id="itemRestriction" class="itemRestriction" value="', $itemRestriction[0], '" />'); ?>
 <input type="hidden" name="itemRestriction_nonce" id="itemRestriction_nonce" value="<?php echo wp_create_nonce( 'itemRestriction_nonce' ); ?>" /></td>
 </tr>
 <tr>
@@ -702,13 +702,13 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 </tr>
 <tr>
 <th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
-<td>1.<input type="text" name="itemGpNum1" id="itemGpNum1" class="itemPointrate" value="<?php echo $itemGpNum1[0]; ?>" />個以上で<input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
+<td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', $itemGpNum1[0], '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" /><?php _e('%discount','usces'); ?>（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 <tr>
-<td>2.<input type="text" name="itemGpNum2" id="itemGpNum2" class="itemPointrate" value="<?php echo $itemGpNum2[0]; ?>" />個以上で<input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
+<td>2.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum2', '" id="', 'itemGpNum2', '" class="itemPointrate"', 'value="', $itemGpNum2[0], '" />'); ?><input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" /><?php _e('%discount','usces'); ?>（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 <tr>
-<td>3.<input type="text" name="itemGpNum3" id="itemGpNum3" class="itemPointrate" value="<?php echo $itemGpNum3[0]; ?>" />個以上で<input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" />％引き（<?php _e('Unit price','usces'); ?>）</td>
+<td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', $itemGpNum3[0], '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" /><?php _e('%discount','usces'); ?>（<?php _e('Unit price','usces'); ?>）</td>
 </tr>
 </table>
 </div>
