@@ -42,6 +42,7 @@ $post = get_post($post_ID);
 		
 
 $usces = new usc_e_shop();
+$usces->regist_action();
 
 require_once(USCES_PLUGIN_DIR."/functions/template_func.php");
 

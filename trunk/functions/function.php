@@ -517,7 +517,7 @@ function usces_reg_orderdata( $results = array() ) {
 				if ( is_array($value) )
 					 $value = serialize($value);
 				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
-											VALUES (%d, %s, %s, %s)", $order_id, $key, $value);
+											VALUES (%d, %s, %s)", $order_id, $key, $value);
 				$wpdb->query( $mquery );
 			}
 		}
@@ -696,11 +696,17 @@ $wpdb->show_errors();
 function usces_delete_orderdata() {
 	global $wpdb, $usces;
 	if(!isset($_REQUEST['order_id']) || $_REQUEST['order_id'] == '') return 0;
-	$order_table_name = $wpdb->prefix . "usces_order";
+	$order_table = $wpdb->prefix . "usces_order";
+	$order_meta_table = $wpdb->prefix . "usces_order_meta";
 	$ID = $_REQUEST['order_id'];
 
-	$query = $wpdb->prepare("DELETE FROM $order_table_name WHERE ID = %d", $ID);
+	$query = $wpdb->prepare("DELETE FROM $order_table WHERE ID = %d", $ID);
 	$res = $wpdb->query( $query );
+	
+	if($res){
+		$query = $wpdb->prepare("DELETE FROM $order_meta_table WHERE order_id = %d", $ID);
+		$res = $wpdb->query( $query );
+	}
 	
 	return $res;
 }
@@ -1296,6 +1302,7 @@ function usces_all_delete_order_data(&$obj){
 	global $wpdb;
 
 	$tableName = $wpdb->prefix . "usces_order";
+	$tableMetaName = $wpdb->prefix . "usces_order_meta";
 	$ids = $_POST['listcheck'];
 	$status = true;
 	foreach ( (array)$ids as $id ):
@@ -1303,6 +1310,9 @@ function usces_all_delete_order_data(&$obj){
 		$res = $wpdb->query( $query );
 		if( $res === false ) {
 			$status = false;
+		}else{
+			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $ID);
+			$metares = $wpdb->query( $metaquery );
 		}
 	endforeach;
 	if ( true === $status ) {
@@ -1981,5 +1991,14 @@ function usces_item_uploadcsv(){
 	$res['status'] = 'success';
 	$res['message'] = __(sprintf('%2$s of %1$s lines registration completion, %3$s lines error.',$total_num,$comp_num,$err_num), 'usces');
 	return $res;
+}
+
+function usces_register_action($handle, $type, $key, $value, $function){
+	global $usces;
+	$usces->action[$handle] = array('type'=>$type, 'key'=>$key, 'value'=>$value, 'function'=>$function);
+}
+function usces_deregister_action(){
+	global $usces;
+	unset($usces->action[$handle]);
 }
 ?>

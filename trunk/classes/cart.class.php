@@ -84,32 +84,16 @@ class usces_cart {
 	}
 	
 	// cinCart_upload ****************************************************************
-	function inCart_upload( $index, $num, $file ){
+	function inCart_advance( $index, $name, $key, $value ){
 	
 	
 		$i = 0;
-		foreach($_SESSION['usces_cart'] as $serial => $value){
+		foreach($_SESSION['usces_cart'] as $serial => $w){
 			if($i == $index){
-				$_SESSION['usces_cart'][$serial]['uploads'][$num] = $file;
+				$_SESSION['usces_cart'][$serial]['advance'][$name][$key] = $value;
 			}
 			$i++;
 		}
-	}
-
-	// check completin upload ****************************************************************
-	function check_completin_upload( $index ){
-	
-	
-//		$i = 0;
-//		foreach($_SESSION['usces_cart'] as $serial => $value){
-//			if($i == $index){
-//				$ids = array_keys($vs);
-//				$post_id = $ids[0];
-//			
-//		}
-
-	
-	
 	}
 
 	// get data by index ****************************************************************
@@ -215,7 +199,7 @@ class usces_cart {
 		$row['options'] = $array[$ids[0]][$skus[0]];
 		$row['price'] = $_SESSION['usces_cart'][$serial]['price'];
 		$row['quantity'] = $_SESSION['usces_cart'][$serial]['quant'];
-		$row['uploads'] = isset($_SESSION['usces_cart'][$serial]['uploads']) ? $_SESSION['usces_cart'][$serial]['uploads'] : array();
+		$row['advance'] = isset($_SESSION['usces_cart'][$serial]['advance']) ? $_SESSION['usces_cart'][$serial]['advance'] : array();
 		
 		return $row;
 	}
@@ -361,6 +345,10 @@ class usces_cart {
 		}
 		
 		return $realprice;
+	}
+	
+	function set_pre_order_id($id){
+		$_SESSION['usces_entry']['reserve']['pre_order_id'] = $id;
 	}
 }
 ?>
