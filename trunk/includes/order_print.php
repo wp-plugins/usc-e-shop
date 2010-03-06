@@ -116,8 +116,10 @@ function usces_pdf_out(&$pdf, $data){
 		$post_id = $cart_row['post_id'];
 		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
 		$optstr =  '';
-		foreach((array)$cart_row['options'] as $key => $value){
-			$optstr .= $key . '=' . $value . ','; 
+		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
+			foreach($cart_row['options'] as $key => $value){
+				$optstr .= $key . '=' . $value . ','; 
+			}
 		}
 		$optstr = rtrim($optstr, ',');
 		$HB = usces_conv_euc($cart_row['sku']);
