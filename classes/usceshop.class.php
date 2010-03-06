@@ -6,7 +6,7 @@ class usc_e_shop
 	var $page;   //page action
 	var $cart;          //cart object
 	var $use_ssl;       //ssl flag
-	var $action_status;
+	var $action, $action_status;
 	var $action_message, $error_message;
 	var $itemskus, $itemsku, $itemopts, $itemopt;
 	var $zaiko_status, $payment_structure, $display_mode, $shipping_rule, $shipping_charge_structure;
@@ -230,7 +230,6 @@ class usc_e_shop
 				break;
 		}
 	}
-	
 	
 	/* order list page */
 	function order_list_page() {
@@ -1012,8 +1011,10 @@ class usc_e_shop
 			wp_redirect($url);
 			exit;
 		}
-
-		$this->controller();
+		
+		
+		$this->ad_controller();
+		//$this->controller();
 		
 
 		if($_REQUEST['page'] == 'usces_itemnew')
@@ -1036,8 +1037,6 @@ class usc_e_shop
 
 		}
 
-//		wp_register_style('WelcartStylesheet', WP_PLUGIN_URL . '/usc-e-shop/css/usces_cart.css');
-//		wp_enqueue_style('WelcartStylesheet');
 		wp_enqueue_script('jquery');
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
@@ -1045,311 +1044,706 @@ class usc_e_shop
 		}
 		
 	}
+	
+	function regist_action(){
+		usces_register_action('inCart', 'post', 'inCart', NULL, array($this, 'inCart'));
+		usces_register_action('upButton', 'post', 'upButton', NULL, array($this, 'upButton'));
+		usces_register_action('delButton', 'post', 'delButton', NULL, array($this, 'delButton'));
+		usces_register_action('backCart', 'post', 'backCart', NULL, array($this, 'backCart'));
+		usces_register_action('customerinfo', 'request', 'customerinfo', NULL, array($this, 'customerinfo'));
+		usces_register_action('backCustomer', 'post', 'backCustomer', NULL, array($this, 'backCustomer'));
+		usces_register_action('customerlogin', 'post', 'customerlogin', NULL, array($this, 'customerlogin'));
+		usces_register_action('reganddeliveryinfo', 'post', 'reganddeliveryinfo', NULL, array($this, 'reganddeliveryinfo'));
+		usces_register_action('deliveryinfo', 'post', 'deliveryinfo', NULL, array($this, 'deliveryinfo'));
+		usces_register_action('backDelivery', 'post', 'backDelivery', NULL, array($this, 'backDelivery'));
+		usces_register_action('confirm', 'request', 'confirm', NULL, array($this, 'confirm'));
+		usces_register_action('use_point', 'post', 'use_point', NULL, array($this, 'use_point'));
+		usces_register_action('backConfirm', 'post', 'backConfirm', NULL, array($this, 'backConfirm'));
+		usces_register_action('purchase', 'request', 'purchase', NULL, array($this, 'purchase'));
+		usces_register_action('acting_return', 'request', 'acting_return', NULL, array($this, 'acting_return'));
+		usces_register_action('settlement_epsilon', 'request', 'settlement', 'epsilon', array($this, 'settlement_epsilon'));
+		usces_register_action('inquiry_button', 'post', 'inquiry_button', NULL, array($this, 'inquiry_button'));
+		usces_register_action('member_login', 'request', 'member_login', NULL, array($this, 'member_login_page'));
+		usces_register_action('regmember', 'request', 'regmember', NULL, array($this, 'regmember'));
+		usces_register_action('editmember', 'request', 'editmember', NULL, array($this, 'editmember'));
+		usces_register_action('page_login', 'get', 'page', 'login', array($this, 'member_login_page'));
+		usces_register_action('page_logout', 'get', 'page', 'logout', array($this, 'page_logout'));
+		usces_register_action('page_lostmemberpassword', 'get', 'page', 'lostmemberpassword', array($this, 'page_lostmemberpassword'));
+		usces_register_action('lostpassword', 'request', 'lostpassword', NULL, array($this, 'lostpassword'));
+		usces_register_action('uscesmode_changepassword', 'request', 'uscesmode', 'changepassword', array($this, 'uscesmode_changepassword'));
+		usces_register_action('changepassword', 'request', 'changepassword', NULL, array($this, 'changepassword_page'));
+		usces_register_action('page_newmember', 'get', 'page', 'newmember', array($this, 'page_newmember'));
+		usces_register_action('usces_export', 'post', 'usces_export', NULL, array($this, 'usces_export'));
+		usces_register_action('usces_import', 'post', 'usces_import', NULL, array($this, 'usces_import'));
+		usces_register_action('page_search_item', 'get', 'page', 'search_item', array($this, 'page_search_item'));
+	}
 
-	function controller() {
-		global $wp_query;
-		
-		//do_action('usces_test_action');
-
+	function ad_controller(){
 		if($this->is_maintenance()){
-
-			$this->page = 'maintenance';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		}else if(isset($_POST['inCart'])) {
-
-//			if( EX_DLSELLER === true ){
-//				dlseller_controller();
-//			}else{
-				$this->page = 'cart';
-				$this->cart->inCart();
-				add_action('the_post', array($this, 'action_cartFilter'));
-//			}
-			
-		}else if(isset($_POST['upButton'])) {
-		
-			$this->page = 'cart';
-			$this->cart->upCart();
-			add_action('the_post', array($this, 'action_cartFilter'));
-			
-		}else if(isset($_POST['delButton'])) {
-		
-			$this->page = 'cart';
-			$this->cart->del_row();
-			add_action('the_post', array($this, 'action_cartFilter'));
-			
-		}else if(isset($_POST['backCart'])) {
-		
-			$this->page = 'cart';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_REQUEST['customerinfo'])) {
-
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->cart->entry();
-			$this->error_message = $this->zaiko_check();
-			if($this->error_message == ''){
-				if($this->is_member_logged_in()){
-					$this->page = 'delivery';
-				}else{
-					$this->page = 'customer';
-				}
-			}else{
-				$this->page = 'cart';
-			}
-			if ( !$this->cart->is_order_condition() ) {
-				$order_conditions = $this->get_condition();
-				$this->cart->set_order_condition($order_conditions);
-			}
-			add_action('the_post', array($this, 'action_cartFilter'));
-
-		}else if(isset($_POST['backCustomer'])) {
-		
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->page = 'customer';
-			add_action('the_post', array($this, 'action_cartFilter'));
-//			$this->cart->entry();
-//			$this->error_message = $this->delivery_check();
-//			$this->page = ($this->error_message == '') ? 'customer' : 'delivery';
-		
-		}else if(isset($_POST['customerlogin'])) {
-
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->cart->entry();
-			$this->page = ($this->member_login() == 'member') ? 'delivery' : 'customer';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_POST['reganddeliveryinfo'])) {
-
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->cart->entry();
-			$_POST['member_regmode'] = 'newmemberfromcart';
-			$this->page = ( $this->regist_member() == 'newcompletion' ) ? 'delivery' : 'customer';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_POST['deliveryinfo'])) {
-
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->cart->entry();
-			$this->error_message = $this->customer_check();
-			$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_POST['backDelivery'])) {
-		
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->page = 'delivery';
-			add_action('the_post', array($this, 'action_cartFilter'));
-//			$this->cart->entry();
-		
-		}else if(isset($_REQUEST['confirm'])) {
-		
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			
-			$this->cart->entry();
-			if(isset($_POST['confirm'])){
-				$this->error_message = $this->delivery_check();
-			}
-			$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_POST['use_point'])) {
-		
-			$this->error_message = $this->point_check();
-			$this->cart->entry();
-			$this->page = 'confirm';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_POST['backConfirm'])) {
-		
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->page = 'confirm';
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_REQUEST['purchase'])) {
-		
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$entry = $this->cart->get_entry();
-			$this->error_message = $this->zaiko_check();
-			if($this->error_message == '' && 0 < $this->cart->num_row()){
-				$payments = $this->getPayments( $entry['order']['payment_name'] );
-				if( $payments['settlement'] == 'acting' && $entry['order']['total_full_price'] > 0 ){
-					$query = '';
-					foreach($_POST as $key => $value){
-						if($key != 'purchase')
-							$query .= '&' . $key . '=' . urlencode($value);
-					}
-					$actinc_status = $this->acting_processing($payments['module'], $query);
-				}
-				
-				if($actinc_status == 'error'){
-					$this->page = 'error';
-				}else{
-					$res = $this->order_processing();
-					$this->page = $res;
-				}
-			}else{
-				$this->page = 'cart';
-			}
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_REQUEST['acting_return'])) {
-		
-			if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
-				require_once($this->options['settlement_path'] . 'paypal.php');
-				$ipn_res = paypal_ipn_check($usces_paypal_url);
-				if( $ipn_res[0] === true ){
-					$res = $this->order_processing( $ipn_res );
-				}
-				exit;
-			}
-			if( false === $this->cart->num_row() ){
-				header('location: ' . get_option('home'));
-				exit;
-			}
-			$this->payment_results = usces_check_acting_return();
-
-			if(  isset($this->payment_results[0]) && $this->payment_results[0] === 'duplicate' ){
-				header('location: ' . get_option('home'));
-				exit;
-			}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
-				if( isset($this->payment_results['payment_status']) ){
-					$this->page = 'ordercompletion';
-				}else{
-					$res = $this->order_processing( $this->payment_results );
-					$this->page = $res;
-				}
-			}else{
-				$this->page = 'error';
-			}
-			add_action('the_post', array($this, 'action_cartFilter'));
-		
-		}else if(isset($_REQUEST['settlement']) && $_REQUEST['settlement'] == 'epsilon') {
-			require_once($this->options['settlement_path'] . 'epsilon.php');	
-			
-			
-		
-		}else if(isset($_POST['inquiry_button'])) {
-
-			$res = $this->inquiry_processing();
-			$this->page = $res;
-		
-		}else if(isset($_REQUEST['member_login'])) {
-			
-			$res = $this->member_login();
-			$this->page = $res;
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if(isset($_REQUEST['regmember'])) {
-
-			$res = $this->regist_member();
-			$this->page = $res;
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if(isset($_REQUEST['editmember'])) {
-
-			$res = $this->regist_member();
-			$this->page = $res;
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if( isset($_GET['page']) && $_GET['page'] == 'logout' ) {
-
-			$this->member_logout();
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if( isset($_GET['page']) && $_GET['page'] == 'lostmemberpassword' ) {
-
-			$this->page = 'lostmemberpassword';
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if( isset($_REQUEST['lostpassword']) ) {
-
-			$this->error_message = $this->lostpass_mailaddcheck();
-			if ( $this->error_message != '' ) {
-				$this->page = 'lostmemberpassword';
-			} else {
-				$res = $this->lostmail();
-				$this->page = $res;//'lostcompletion';
-			}
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if( isset($_REQUEST['uscesmode']) && $_REQUEST['uscesmode'] == 'changepassword') {
-
-			$this->page = 'changepassword';
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if( isset($_REQUEST['changepassword']) ) {
-
-			$this->error_message = $this->changepass_check();
-			if ( $this->error_message != '' ) {
-				$this->page = 'changepassword';
-			} else {
-				$res = $this->changepassword();
-				$this->page = $res;//'changepasscompletion';
-			}
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if( isset($_GET['page']) && $_GET['page'] == 'newmember') {
-
-			$this->page = 'newmemberform';
-			add_action('the_post', array($this, 'action_memberFilter'));
-		
-		}else if( isset($_POST['usces_export']) ) {
-
-			$this->export();
-
-		}else if( isset($_POST['usces_import']) ) {
-
-			$this->import();
-
-		}else if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'search_item') {
-
-			$this->page = 'search_item';
-			add_action('template_redirect', array($this, 'action_search_item'));
-			add_action('the_post', array($this, 'action_cartFilter'));
-			
-		}else if( isset($_REQUEST['usces_upload_page']) ) {
-
-			add_action('template_redirect', array($this, 'load_upload_template'));
-			
-		}else if( isset($_REQUEST['usces_upload']) ) {
-			
-			if(function_exists('usces_upload')) usces_upload();
-				
-			add_action('template_redirect', array($this, 'load_upload_template'));
-			
+			$this->maintenance();
 		}else{
-
-			add_action('the_post', array($this, 'goDefaultPage'));
-			
+			$flg = 0;
+			foreach( $this->action as $action ){
+				extract($action);
+				switch($type){
+					case 'post':
+						if( empty($value) ){
+							if( isset($_POST[$key]) ){
+								$res = call_user_func($function);
+								$flg = 1;
+							}
+						}else{
+							if( isset($_POST[$key]) && $_POST[$key] == $value ){
+								call_user_func($function);
+								$flg = 1;
+							}
+						}
+						break;
+					case 'get':
+						if( empty($value) ){
+							if( isset($_GET[$key]) ){
+								call_user_func($function);
+								$flg = 1;
+							}
+						}else{
+							if( isset($_GET[$key]) && $_GET[$key] == $value ){
+								call_user_func($function);
+								$flg = 1;
+							}
+						}
+						break;
+					case 'request':
+						if( empty($value) ){
+							if( isset($_REQUEST[$key]) ){
+								call_user_func($function);
+								$flg = 1;
+							}
+						}else{
+							if( isset($_REQUEST[$key]) && $_REQUEST[$key] == $value ){
+								call_user_func($function);
+								$flg = 1;
+							}
+						}
+						break;
+				}
+			}
+			if( !$flg ) $this->default_page();
 		}
 	}
+
+	//action function------------------------------------------------------------
+	function maintenance(){
+		$this->page = 'maintenance';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+
+	function inCart(){
+		global $wp_query;
+		$this->page = 'cart';
+		$this->cart->inCart();
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function upButton(){
+		global $wp_query;
+		$this->page = 'cart';
+		$this->cart->upCart();
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function delButton(){
+		global $wp_query;
+		$this->page = 'cart';
+		$this->cart->del_row();
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function backCart(){
+		global $wp_query;
+		$this->page = 'cart';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function customerinfo(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->cart->entry();
+		$this->error_message = $this->zaiko_check();
+		if($this->error_message == ''){
+			if($this->is_member_logged_in()){
+				$this->page = 'delivery';
+			}else{
+				$this->page = 'customer';
+			}
+		}else{
+			$this->page = 'cart';
+		}
+		if ( !$this->cart->is_order_condition() ) {
+			$order_conditions = $this->get_condition();
+			$this->cart->set_order_condition($order_conditions);
+		}
+		add_action('the_post', array($this, 'action_cartFilter'));
+
+	}
+	
+	function backCustomer(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->page = 'customer';
+		add_action('the_post', array($this, 'action_cartFilter'));
+//		$this->cart->entry();
+//		$this->error_message = $this->delivery_check();
+//		$this->page = ($this->error_message == '') ? 'customer' : 'delivery';
+	}
+	
+	function customerlogin(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->cart->entry();
+		$this->page = ($this->member_login() == 'member') ? 'delivery' : 'customer';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function reganddeliveryinfo(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->cart->entry();
+		$_POST['member_regmode'] = 'newmemberfromcart';
+		$this->page = ( $this->regist_member() == 'newcompletion' ) ? 'delivery' : 'customer';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function deliveryinfo(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->cart->entry();
+		$this->error_message = $this->customer_check();
+		$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function backDelivery(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->page = 'delivery';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function confirm(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		
+		$this->cart->entry();
+		$this->set_reserve_pre_order_id();
+		if(isset($_POST['confirm'])){
+			$this->error_message = $this->delivery_check();
+		}
+		$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function use_point(){
+		global $wp_query;
+		$this->error_message = $this->point_check();
+		$this->cart->entry();
+		$this->page = 'confirm';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function backConfirm(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->page = 'confirm';
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function purchase(){
+		global $wp_query;
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$entry = $this->cart->get_entry();
+		$this->error_message = $this->zaiko_check();
+		if($this->error_message == '' && 0 < $this->cart->num_row()){
+			$payments = $this->getPayments( $entry['order']['payment_name'] );
+			if( $payments['settlement'] == 'acting' && $entry['order']['total_full_price'] > 0 ){
+				$query = '';
+				foreach($_POST as $key => $value){
+					if($key != 'purchase')
+						$query .= '&' . $key . '=' . urlencode($value);
+				}
+				$actinc_status = $this->acting_processing($payments['module'], $query);
+			}
+			
+			if($actinc_status == 'error'){
+				$this->page = 'error';
+			}else{
+				$res = $this->order_processing();
+				$this->page = $res;
+			}
+		}else{
+			$this->page = 'cart';
+		}
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function acting_return(){
+		global $wp_query;
+		if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
+			require_once($this->options['settlement_path'] . 'paypal.php');
+			$ipn_res = paypal_ipn_check($usces_paypal_url);
+			if( $ipn_res[0] === true ){
+				$res = $this->order_processing( $ipn_res );
+			}
+			exit;
+		}
+		if( false === $this->cart->num_row() ){
+			header('location: ' . get_option('home'));
+			exit;
+		}
+		$this->payment_results = usces_check_acting_return();
+
+		if(  isset($this->payment_results[0]) && $this->payment_results[0] === 'duplicate' ){
+			header('location: ' . get_option('home'));
+			exit;
+		}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
+			if( isset($this->payment_results['payment_status']) ){
+				$this->page = 'ordercompletion';
+			}else{
+				$res = $this->order_processing( $this->payment_results );
+				$this->page = $res;
+			}
+		}else{
+			$this->page = 'error';
+		}
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function settlement_epsilon(){
+		global $wp_query;
+		require_once($this->options['settlement_path'] . 'epsilon.php');	
+	}
+	
+	function inquiry_button(){
+		$res = $this->inquiry_processing();
+		$this->page = $res;
+	}
+	
+	function member_login_page(){
+		global $wp_query;
+		$res = $this->member_login();
+		$this->page = $res;
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function regmember(){
+		global $wp_query;
+		$res = $this->regist_member();
+		$this->page = $res;
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function editmember(){
+		global $wp_query;
+		$res = $this->regist_member();
+		$this->page = $res;
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function page_logout(){
+		global $wp_query;
+		$this->member_logout();
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function page_lostmemberpassword(){
+		global $wp_query;
+		$this->page = 'lostmemberpassword';
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function lostpassword(){
+		global $wp_query;
+		$this->error_message = $this->lostpass_mailaddcheck();
+		if ( $this->error_message != '' ) {
+			$this->page = 'lostmemberpassword';
+		} else {
+			$res = $this->lostmail();
+			$this->page = $res;//'lostcompletion';
+		}
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function uscesmode_changepassword(){
+		global $wp_query;
+		$this->page = 'changepassword';
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function changepassword_page(){
+		global $wp_query;
+		$this->error_message = $this->changepass_check();
+		if ( $this->error_message != '' ) {
+			$this->page = 'changepassword';
+		} else {
+			$res = $this->changepassword();
+			$this->page = $res;//'changepasscompletion';
+		}
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function page_newmember(){
+		global $wp_query;
+		$this->page = 'newmemberform';
+		add_action('the_post', array($this, 'action_memberFilter'));
+	}
+	
+	function usces_export(){
+		$this->export();
+	}
+	
+	function usces_import(){
+		$this->import();
+	}
+	
+	function page_search_item(){
+		global $wp_query;
+		$this->page = 'search_item';
+		add_action('template_redirect', array($this, 'action_search_item'));
+		add_action('the_post', array($this, 'action_cartFilter'));
+	}
+	
+	function default_page(){
+		global $wp_query;
+		add_action('the_post', array($this, 'goDefaultPage'));
+	}
+	//--------------------------------------------------------------------------------------
+	
+//	function controller() {
+//		global $wp_query;
+//		
+//		//do_action('usces_test_action');
+//
+//		if($this->is_maintenance()){
+//
+//			$this->page = 'maintenance';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		}else if(isset($_POST['inCart'])) {
+//
+////			if( EX_DLSELLER === true ){
+////				dlseller_controller();
+////			}else{
+//				$this->page = 'cart';
+//				$this->cart->inCart();
+//				add_action('the_post', array($this, 'action_cartFilter'));
+////			}
+//			
+//		}else if(isset($_POST['upButton'])) {
+//		
+//			$this->page = 'cart';
+//			$this->cart->upCart();
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//			
+//		}else if(isset($_POST['delButton'])) {
+//		
+//			$this->page = 'cart';
+//			$this->cart->del_row();
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//			
+//		}else if(isset($_POST['backCart'])) {
+//		
+//			$this->page = 'cart';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_REQUEST['customerinfo'])) {
+//
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->cart->entry();
+//			$this->error_message = $this->zaiko_check();
+//			if($this->error_message == ''){
+//				if($this->is_member_logged_in()){
+//					$this->page = 'delivery';
+//				}else{
+//					$this->page = 'customer';
+//				}
+//			}else{
+//				$this->page = 'cart';
+//			}
+//			if ( !$this->cart->is_order_condition() ) {
+//				$order_conditions = $this->get_condition();
+//				$this->cart->set_order_condition($order_conditions);
+//			}
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//
+//		}else if(isset($_POST['backCustomer'])) {
+//		
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->page = 'customer';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+////			$this->cart->entry();
+////			$this->error_message = $this->delivery_check();
+////			$this->page = ($this->error_message == '') ? 'customer' : 'delivery';
+//		
+//		}else if(isset($_POST['customerlogin'])) {
+//
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->cart->entry();
+//			$this->page = ($this->member_login() == 'member') ? 'delivery' : 'customer';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_POST['reganddeliveryinfo'])) {
+//
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->cart->entry();
+//			$_POST['member_regmode'] = 'newmemberfromcart';
+//			$this->page = ( $this->regist_member() == 'newcompletion' ) ? 'delivery' : 'customer';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_POST['deliveryinfo'])) {
+//
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->cart->entry();
+//			$this->error_message = $this->customer_check();
+//			$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_POST['backDelivery'])) {
+//		
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->page = 'delivery';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+////			$this->cart->entry();
+//		
+//		}else if(isset($_REQUEST['confirm'])) {
+//		
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			
+//			$this->cart->entry();
+//			$this->set_reserve_pre_order_id();
+//			if(isset($_POST['confirm'])){
+//				$this->error_message = $this->delivery_check();
+//			}
+//			$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_POST['use_point'])) {
+//		
+//			$this->error_message = $this->point_check();
+//			$this->cart->entry();
+//			$this->page = 'confirm';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_POST['backConfirm'])) {
+//		
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->page = 'confirm';
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_REQUEST['purchase'])) {
+//		
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$entry = $this->cart->get_entry();
+//			$this->error_message = $this->zaiko_check();
+//			if($this->error_message == '' && 0 < $this->cart->num_row()){
+//				$payments = $this->getPayments( $entry['order']['payment_name'] );
+//				if( $payments['settlement'] == 'acting' && $entry['order']['total_full_price'] > 0 ){
+//					$query = '';
+//					foreach($_POST as $key => $value){
+//						if($key != 'purchase')
+//							$query .= '&' . $key . '=' . urlencode($value);
+//					}
+//					$actinc_status = $this->acting_processing($payments['module'], $query);
+//				}
+//				
+//				if($actinc_status == 'error'){
+//					$this->page = 'error';
+//				}else{
+//					$res = $this->order_processing();
+//					$this->page = $res;
+//				}
+//			}else{
+//				$this->page = 'cart';
+//			}
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_REQUEST['acting_return'])) {
+//		
+//			if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
+//				require_once($this->options['settlement_path'] . 'paypal.php');
+//				$ipn_res = paypal_ipn_check($usces_paypal_url);
+//				if( $ipn_res[0] === true ){
+//					$res = $this->order_processing( $ipn_res );
+//				}
+//				exit;
+//			}
+//			if( false === $this->cart->num_row() ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}
+//			$this->payment_results = usces_check_acting_return();
+//
+//			if(  isset($this->payment_results[0]) && $this->payment_results[0] === 'duplicate' ){
+//				header('location: ' . get_option('home'));
+//				exit;
+//			}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
+//				if( isset($this->payment_results['payment_status']) ){
+//					$this->page = 'ordercompletion';
+//				}else{
+//					$res = $this->order_processing( $this->payment_results );
+//					$this->page = $res;
+//				}
+//			}else{
+//				$this->page = 'error';
+//			}
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//		
+//		}else if(isset($_REQUEST['settlement']) && $_REQUEST['settlement'] == 'epsilon') {
+//			require_once($this->options['settlement_path'] . 'epsilon.php');	
+//			
+//			
+//		
+//		}else if(isset($_POST['inquiry_button'])) {
+//
+//			$res = $this->inquiry_processing();
+//			$this->page = $res;
+//		
+//		}else if(isset($_REQUEST['member_login'])) {
+//			
+//			$res = $this->member_login();
+//			$this->page = $res;
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if(isset($_REQUEST['regmember'])) {
+//
+//			$res = $this->regist_member();
+//			$this->page = $res;
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if(isset($_REQUEST['editmember'])) {
+//
+//			$res = $this->regist_member();
+//			$this->page = $res;
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if( isset($_GET['page']) && $_GET['page'] == 'logout' ) {
+//
+//			$this->member_logout();
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if( isset($_GET['page']) && $_GET['page'] == 'lostmemberpassword' ) {
+//
+//			$this->page = 'lostmemberpassword';
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if( isset($_REQUEST['lostpassword']) ) {
+//
+//			$this->error_message = $this->lostpass_mailaddcheck();
+//			if ( $this->error_message != '' ) {
+//				$this->page = 'lostmemberpassword';
+//			} else {
+//				$res = $this->lostmail();
+//				$this->page = $res;//'lostcompletion';
+//			}
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if( isset($_REQUEST['uscesmode']) && $_REQUEST['uscesmode'] == 'changepassword') {
+//
+//			$this->page = 'changepassword';
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if( isset($_REQUEST['changepassword']) ) {
+//
+//			$this->error_message = $this->changepass_check();
+//			if ( $this->error_message != '' ) {
+//				$this->page = 'changepassword';
+//			} else {
+//				$res = $this->changepassword();
+//				$this->page = $res;//'changepasscompletion';
+//			}
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if( isset($_GET['page']) && $_GET['page'] == 'newmember') {
+//
+//			$this->page = 'newmemberform';
+//			add_action('the_post', array($this, 'action_memberFilter'));
+//		
+//		}else if( isset($_POST['usces_export']) ) {
+//
+//			$this->export();
+//
+//		}else if( isset($_POST['usces_import']) ) {
+//
+//			$this->import();
+//
+//		}else if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'search_item') {
+//
+//			$this->page = 'search_item';
+//			add_action('template_redirect', array($this, 'action_search_item'));
+//			add_action('the_post', array($this, 'action_cartFilter'));
+//			
+//		}else if( isset($_REQUEST['usces_upload']) ){
+//
+//			usces_upload01();
+//
+//			
+//		}else{
+//
+//			add_action('the_post', array($this, 'goDefaultPage'));
+//			
+//		}
+//	}
 	
 	function goDefaultPage(){
 		global $post;
@@ -3611,8 +4005,14 @@ class usc_e_shop
 		
 		return trim($name_str);
 	}
+	
+	function set_reserve_pre_order_id(){
+		$entry = $this->cart->get_entry();
+		$id = ( isset($entry['reserve']['pre_order_id']) && !empty($entry['reserve']['pre_order_id']) ) ? $entry['reserve']['pre_order_id'] : uniqid();
+		$this->cart->set_pre_order_id($id);
+	}
 
-	//shortcode---------------------------------------
+	//shortcode-----------------------------------------------------------------------------
 	function sc_company_name() {
 		return htmlspecialchars($this->options['company_name']);
 	}
