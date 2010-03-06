@@ -83,8 +83,10 @@ function usces_order_confirm_message($order_id) {
 		}
 		$msg_body .= "------------------------------------------------------------------\r\n";
 		$msg_body .= "$cartItemName \r\n";
-		foreach((array)$options as $key => $value){
-			$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+		if( is_array($options) && count($options) > 0 ){
+			foreach($options as $key => $value){
+				$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+			}
 		}
 		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice) . " × " . $cart_row['quantity'] . "\r\n";
 	}
@@ -209,8 +211,10 @@ function usces_send_ordermail($order_id) {
 		}
 		$msg_body .= "------------------------------------------------------------------\r\n";
 		$msg_body .= "$cartItemName \r\n";
-		foreach((array)$options as $key => $value){
-			$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+		if( is_array($options) && count($options) > 0 ){
+			foreach($options as $key => $value){
+				$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+			}
 		}
 		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('dollars','usces') . " × " . $cart_row['quantity'] . "\r\n";
 	}

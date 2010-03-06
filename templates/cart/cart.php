@@ -69,8 +69,10 @@ if($this->cart->num_row() > 0) {
 			<td>' . ($i + 1) . '</td>
 			<td>' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</td>
 			<td class="aleft">' . $cartItemName . '<br />';
-		foreach((array)$options as $key => $value){
-			$html .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+		if( is_array($options) && count($options) > 0 ){
+			foreach($options as $key => $value){
+				$html .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+			}
 		}
 		$html .= '</td>
 			<td class="aright">';

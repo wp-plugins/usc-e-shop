@@ -97,8 +97,10 @@ foreach ( $usces_member_history as $umhs ) {
 		$skuPrice = $this->getItemPrice($post_id, $sku);
 		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
-		foreach((array)$options as $key => $value){
-			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+		if( is_array($options) && count($options) > 0 ){
+			foreach($options as $key => $value){
+				$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+			}
 		}
 			
 		$html .= '<tr>

@@ -1,4 +1,5 @@
 <?php
+
 $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
@@ -688,8 +689,10 @@ foreach((array)$prefs as $value) {
 		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
-		foreach((array)$options as $key => $value){
-			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+		if( is_array($options) && count($options) > 0 ){
+			foreach($options as $key => $value){
+				$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+			}
 		}
 			
 ?>
@@ -707,6 +710,7 @@ foreach((array)$prefs as $value) {
 		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
 		<?php } ?>
 		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
+		<?php do_action('usces_admin_order_cart_button', $ID, $i); ?>
 		</td>
 	</tr>
 <?php 

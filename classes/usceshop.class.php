@@ -4003,6 +4003,8 @@ class usc_e_shop
 			}
 		}
 		
+		$name_str = apply_filters('usces_admin_order_item_name', $name_str);
+		
 		return trim($name_str);
 	}
 	
