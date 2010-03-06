@@ -1030,8 +1030,14 @@ msgstr "ポイント率"
 msgid "Integer"
 msgstr "整数"
 
-msgid "〜％ discount at the purchase of more then 〜units."
-msgstr "～個以上で～％引き（単価）"
+msgid "limit by%s%s%s"
+msgstr "%s%s%s個まで"
+
+msgid "in more than%s%s%s%s%s %s%s%s,"
+msgstr "%s%s%s%s%s %s%s%s個以上で"
+
+msgid "%discount"
+msgstr "％引き"
 
 msgid "estimated shipping date"
 msgstr "発送日目安"
@@ -2266,4 +2272,7 @@ msgstr "Wordpressの一般設定の「Blog address (URL)」をhttps://から始�
 
 msgid "Please decide whether you use SSL"
 msgstr "SSLを利用する場合はチェックを付けてください。"
+
+msgid "Shipping name"
+msgstr "配送名"
 

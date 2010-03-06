@@ -569,7 +569,7 @@ jQuery(document).ready(function($){
 	    <th><?php _e('Shipping charge name', 'usces'); ?></th>
 	    <td width="150" height="30" id="shipping_charge_name"></td>
 	    <th class="sec"><?php _e('Shipping', 'usces'); ?></th>
-	    <td><label class="shipping_charge_label"><input name="allbutton" type="button" class="allbutton" onclick="operation.allCharge();" value="一括設定"  /></label><input name="allcharge" id="allcharge" type="text" class='charge_text' /><?php _e('dollars', 'usces'); ?></td>
+	    <td><label class="shipping_charge_label"><input name="allbutton" type="button" class="allbutton" onclick="operation.allCharge();" value="<?php _e('same as', 'usces'); ?>"  /></label><input name="allcharge" id="allcharge" type="text" class='charge_text' /><?php _e('dollars', 'usces'); ?></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
