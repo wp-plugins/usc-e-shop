@@ -1,5 +1,5 @@
 <?php
-$html = $_SESSION['usces_entry']['reserve']['pre_order_id'] . 'aaaa<div id="info-confirm">
+$html = '<div id="info-confirm">
 	
 	<div class="usccart_navi">
 	<ol class="ucart">
