@@ -56,6 +56,16 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 
 == Changelog ==
 
+= V0.4 =
+8 Mar 2010
+-----------
+* You got possible to use SSL in the Cart page and the Member page
+* A function to be able to change the display specifications of the item name of the cart page has been added
+* A function to write the IP address of the buyer in 'Order-mail' has been added
+* Internationalization was almost completed
+* Some error in JavaScript have been fixed
+* Revised other malfunction
+
 = V0.3 =
 3 Feb 2010
 -----------

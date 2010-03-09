@@ -37,9 +37,6 @@ require_once(USCES_PLUGIN_DIR."/functions/item_post.php");
 require_once(USCES_PLUGIN_DIR."/functions/function.php");
 require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");
 
-$post_ID = (int) $_GET['post'];
-$post = get_post($post_ID);
-		
 
 $usces = new usc_e_shop();
 $usces->regist_action();

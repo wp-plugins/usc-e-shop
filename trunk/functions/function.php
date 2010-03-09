@@ -2001,7 +2001,7 @@ function usces_register_action($handle, $type, $key, $value, $function){
 	global $usces;
 	$usces->action[$handle] = array('type'=>$type, 'key'=>$key, 'value'=>$value, 'function'=>$function);
 }
-function usces_deregister_action(){
+function usces_deregister_action($handle){
 	global $usces;
 	unset($usces->action[$handle]);
 }

@@ -265,7 +265,6 @@ case 'editpost':
 
 case 'new':
 	$title = 'Welcart Shop ' . __('Add New Item', 'usces');
-	$editing = true;
 	
 	if ( current_user_can('edit_pages') ) {
 		$action = 'post';

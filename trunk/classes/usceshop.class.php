@@ -108,6 +108,44 @@ class usc_e_shop
 		
 	}
 	
+	function get_default_post_to_edit() {
+		global $post;
+		
+		$post_title = '';
+		if ( !empty( $_REQUEST['post_title'] ) )
+			$post_title = esc_html( stripslashes( $_REQUEST['post_title'] ));
+	
+		$post_content = '';
+		if ( !empty( $_REQUEST['content'] ) )
+			$post_content = esc_html( stripslashes( $_REQUEST['content'] ));
+	
+		$post_excerpt = '';
+		if ( !empty( $_REQUEST['excerpt'] ) )
+			$post_excerpt = esc_html( stripslashes( $_REQUEST['excerpt'] ));
+	
+		$post->ID = 0;
+		$post->post_name = '';
+		$post->post_author = '';
+		$post->post_date = '';
+		$post->post_date_gmt = '';
+		$post->post_password = '';
+		$post->post_status = 'draft';
+		$post->post_type = 'post';
+		$post->to_ping = '';
+		$post->pinged = '';
+		$post->comment_status = get_option( 'default_comment_status' );
+		$post->ping_status = get_option( 'default_ping_status' );
+		$post->post_pingback = get_option( 'default_pingback_flag' );
+		$post->post_category = get_option( 'default_category' );
+		$post->post_content = apply_filters( 'default_content', $post_content);
+		$post->post_title = apply_filters( 'default_title', $post_title );
+		$post->post_excerpt = apply_filters( 'default_excerpt', $post_excerpt);
+		$post->page_template = 'default';
+		$post->post_parent = 0;
+		$post->menu_order = 0;
+	
+		return $post;
+	}
 	function is_cart_or_member_page($link)
 	{
 		$search = array(('page_id='.USCES_CART_NUMBER), '/usces-cart', ('page_id='.USCES_MEMBER_NUMBER), '/usces-member');
@@ -989,7 +1027,9 @@ class usc_e_shop
 	}
 	
 	function main() {
-	
+		global $wpdb, $wp_locale;
+		global $wp_query;
+
 		//$this->redirect();
 		$this->usces_cookie();
 		$this->update_table();
@@ -1017,11 +1057,29 @@ class usc_e_shop
 		//$this->controller();
 		
 
-		if($_REQUEST['page'] == 'usces_itemnew')
-			$_REQUEST['action'] = 'new';
 		
-		if( isset($_REQUEST['page']) && ($_REQUEST['action'] == 'edit' || $_REQUEST['action'] == 'new' || $_REQUEST['action'] == 'editpost')) {
+		if($_GET['page'] == 'usces_itemnew')
+			$itemnew = 'new';
 		
+		wp_enqueue_script('jquery');
+		
+		if( isset($_REQUEST['page']) && ($_REQUEST['action'] == 'edit' || $itemnew == 'new' || $_REQUEST['action'] == 'editpost')) {
+		
+			global $editing, $post;
+			if($_REQUEST['action'] != 'editpost' && $itemnew == 'new'){
+				$post = $this->get_default_post_to_edit();
+			}else{
+				if(isset($_GET['post'])){
+					$post_ID =  (int) $_GET['post'];
+					$post = get_post($post_ID);
+				}else{
+					$post_ID =  isset($_REQUEST['post_ID']) ? (int) $_REQUEST['post_ID'] : 0;
+					if(!empty($post_ID))
+						$post = get_post($post_ID);
+				}
+			}
+			$editing = true;
+			wp_enqueue_script('autosave');
 			wp_enqueue_script('post');
 			//if ( user_can_richedit() )
 			wp_enqueue_script('editor');
@@ -1029,7 +1087,6 @@ class usc_e_shop
 			wp_enqueue_script('media-upload');
 			wp_enqueue_script('word-count');
 			wp_enqueue_script( 'admin-comments' );
-			wp_enqueue_script('autosave');
 		
 			//add_action( 'admin_head', 'wp_tiny_mce' );
 			add_action( 'admin_print_footer_scripts', 'wp_tiny_mce', 25 );
@@ -1037,7 +1094,6 @@ class usc_e_shop
 
 		}
 
-		wp_enqueue_script('jquery');
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
 			require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');
@@ -4012,6 +4068,21 @@ class usc_e_shop
 		$entry = $this->cart->get_entry();
 		$id = ( isset($entry['reserve']['pre_order_id']) && !empty($entry['reserve']['pre_order_id']) ) ? $entry['reserve']['pre_order_id'] : uniqid();
 		$this->cart->set_pre_order_id($id);
+	}
+
+	function get_current_pre_order_id(){
+		$entry = $this->cart->get_entry();
+		$id = ( isset($entry['reserve']['pre_order_id']) && !empty($entry['reserve']['pre_order_id']) ) ? $entry['reserve']['pre_order_id'] : NULL;
+		return $id;
+	}
+
+	function get_reserve($order_id, $key){
+		global $wpdb;
+		$order_meta_table_name = $wpdb->prefix . "usces_order_meta";
+		$query = $wpdb->prepare("SELECT meta_value FROM $order_meta_table_name WHERE order_id = %d AND meta_key = %s", 
+								$order_id, $key);
+		$res = $wpdb->get_var($query);
+		return $res;
 	}
 
 	//shortcode-----------------------------------------------------------------------------
