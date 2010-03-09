@@ -1998,11 +1998,11 @@ function usces_item_uploadcsv(){
 }
 
 function usces_register_action($handle, $type, $key, $value, $function){
-	global $usces;
-	$usces->action[$handle] = array('type'=>$type, 'key'=>$key, 'value'=>$value, 'function'=>$function);
+	global $usces_action;
+	$usces_action[$handle] = array('type'=>$type, 'key'=>$key, 'value'=>$value, 'function'=>$function);
 }
 function usces_deregister_action($handle){
-	global $usces;
-	unset($usces->action[$handle]);
+	global $usces_action;
+	unset($usces_action[$handle]);
 }
 ?>
