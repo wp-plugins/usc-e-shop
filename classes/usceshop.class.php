@@ -1028,9 +1028,9 @@ class usc_e_shop
 	
 	function main() {
 		global $wpdb, $wp_locale;
-		global $wp_query;
+		global $wp_query, $usces_action;
 
-		//$this->redirect();
+	//$this->redirect();
 		$this->usces_cookie();
 		$this->update_table();
 		
@@ -1102,55 +1102,70 @@ class usc_e_shop
 	}
 	
 	function regist_action(){
-		usces_register_action('inCart', 'post', 'inCart', NULL, array($this, 'inCart'));
-		usces_register_action('upButton', 'post', 'upButton', NULL, array($this, 'upButton'));
-		usces_register_action('delButton', 'post', 'delButton', NULL, array($this, 'delButton'));
-		usces_register_action('backCart', 'post', 'backCart', NULL, array($this, 'backCart'));
-		usces_register_action('customerinfo', 'request', 'customerinfo', NULL, array($this, 'customerinfo'));
-		usces_register_action('backCustomer', 'post', 'backCustomer', NULL, array($this, 'backCustomer'));
-		usces_register_action('customerlogin', 'post', 'customerlogin', NULL, array($this, 'customerlogin'));
-		usces_register_action('reganddeliveryinfo', 'post', 'reganddeliveryinfo', NULL, array($this, 'reganddeliveryinfo'));
-		usces_register_action('deliveryinfo', 'post', 'deliveryinfo', NULL, array($this, 'deliveryinfo'));
-		usces_register_action('backDelivery', 'post', 'backDelivery', NULL, array($this, 'backDelivery'));
-		usces_register_action('confirm', 'request', 'confirm', NULL, array($this, 'confirm'));
-		usces_register_action('use_point', 'post', 'use_point', NULL, array($this, 'use_point'));
-		usces_register_action('backConfirm', 'post', 'backConfirm', NULL, array($this, 'backConfirm'));
-		usces_register_action('purchase', 'request', 'purchase', NULL, array($this, 'purchase'));
-		usces_register_action('acting_return', 'request', 'acting_return', NULL, array($this, 'acting_return'));
-		usces_register_action('settlement_epsilon', 'request', 'settlement', 'epsilon', array($this, 'settlement_epsilon'));
-		usces_register_action('inquiry_button', 'post', 'inquiry_button', NULL, array($this, 'inquiry_button'));
-		usces_register_action('member_login', 'request', 'member_login', NULL, array($this, 'member_login_page'));
-		usces_register_action('regmember', 'request', 'regmember', NULL, array($this, 'regmember'));
-		usces_register_action('editmember', 'request', 'editmember', NULL, array($this, 'editmember'));
-		usces_register_action('page_login', 'get', 'page', 'login', array($this, 'member_login_page'));
-		usces_register_action('page_logout', 'get', 'page', 'logout', array($this, 'page_logout'));
-		usces_register_action('page_lostmemberpassword', 'get', 'page', 'lostmemberpassword', array($this, 'page_lostmemberpassword'));
-		usces_register_action('lostpassword', 'request', 'lostpassword', NULL, array($this, 'lostpassword'));
-		usces_register_action('uscesmode_changepassword', 'request', 'uscesmode', 'changepassword', array($this, 'uscesmode_changepassword'));
-		usces_register_action('changepassword', 'request', 'changepassword', NULL, array($this, 'changepassword_page'));
-		usces_register_action('page_newmember', 'get', 'page', 'newmember', array($this, 'page_newmember'));
-		usces_register_action('usces_export', 'post', 'usces_export', NULL, array($this, 'usces_export'));
-		usces_register_action('usces_import', 'post', 'usces_import', NULL, array($this, 'usces_import'));
-		usces_register_action('page_search_item', 'get', 'page', 'search_item', array($this, 'page_search_item'));
+		usces_register_action('inCart', 'post', 'inCart', NULL, 'inCart');
+		usces_register_action('upButton', 'post', 'upButton', NULL, 'upButton');
+		usces_register_action('delButton', 'post', 'delButton', NULL, 'delButton');
+		usces_register_action('backCart', 'post', 'backCart', NULL, 'backCart');
+		usces_register_action('customerinfo', 'request', 'customerinfo', NULL, 'customerinfo');
+		usces_register_action('backCustomer', 'post', 'backCustomer', NULL, 'backCustomer');
+		usces_register_action('customerlogin', 'post', 'customerlogin', NULL, 'customerlogin');
+		usces_register_action('reganddeliveryinfo', 'post', 'reganddeliveryinfo', NULL, 'reganddeliveryinfo');
+		usces_register_action('deliveryinfo', 'post', 'deliveryinfo', NULL, 'deliveryinfo');
+		usces_register_action('backDelivery', 'post', 'backDelivery', NULL, 'backDelivery');
+		usces_register_action('confirm', 'request', 'confirm', NULL, 'confirm');
+		usces_register_action('use_point', 'post', 'use_point', NULL, 'use_point');
+		usces_register_action('backConfirm', 'post', 'backConfirm', NULL, 'backConfirm');
+		usces_register_action('purchase', 'request', 'purchase', NULL, 'purchase');
+		usces_register_action('acting_return', 'request', 'acting_return', NULL, 'acting_return');
+		usces_register_action('settlement_epsilon', 'request', 'settlement', 'epsilon', 'settlement_epsilon');
+		usces_register_action('inquiry_button', 'post', 'inquiry_button', NULL, 'inquiry_button');
+		usces_register_action('member_login', 'request', 'member_login', NULL, 'member_login_page');
+		usces_register_action('regmember', 'request', 'regmember', NULL, 'regmember');
+		usces_register_action('editmember', 'request', 'editmember', NULL, 'editmember');
+		usces_register_action('page_login', 'get', 'page', 'login', 'member_login_page');
+		usces_register_action('page_logout', 'get', 'page', 'logout', 'page_logout');
+		usces_register_action('page_lostmemberpassword', 'get', 'page', 'lostmemberpassword', 'page_lostmemberpassword');
+		usces_register_action('lostpassword', 'request', 'lostpassword', NULL, 'lostpassword');
+		usces_register_action('uscesmode_changepassword', 'request', 'uscesmode', 'changepassword', 'uscesmode_changepassword');
+		usces_register_action('changepassword', 'request', 'changepassword', NULL, 'changepassword_page');
+		usces_register_action('page_newmember', 'get', 'page', 'newmember', 'page_newmember');
+		usces_register_action('usces_export', 'post', 'usces_export', NULL, 'usces_export');
+		usces_register_action('usces_import', 'post', 'usces_import', NULL, 'usces_import');
+		usces_register_action('page_search_item', 'get', 'page', 'search_item', 'page_search_item');
 	}
 
 	function ad_controller(){
+		global $usces_action;
 		if($this->is_maintenance()){
 			$this->maintenance();
 		}else{
+			$action_array = array('inCart', 'upButton', 'delButton', 'backCart', 'customerinfo', 'backCustomer', 
+			'customerlogin', 'reganddeliveryinfo', 'deliveryinfo', 'backDelivery', 'confirm', 'use_point', 
+			'backConfirm', 'purchase', 'acting_return', 'settlement_epsilon', 'inquiry_button', 'member_login', 
+			'regmember', 'editmember', 'page_login', 'page_logout', 'page_lostmemberpassword', 'lostpassword', 
+			'uscesmode_changepassword', 'changepassword', 'page_newmember', 'usces_export', 'usces_import', 
+			'page_search_item');
 			$flg = 0;
-			foreach( $this->action as $action ){
+			foreach( $usces_action as $handle => $action ){
 				extract($action);
 				switch($type){
 					case 'post':
 						if( empty($value) ){
 							if( isset($_POST[$key]) ){
-								$res = call_user_func($function);
+								if(in_array($handle, $action_array)){
+									$res = call_user_func(array($this, $function));
+								}else{
+									$res = call_user_func($function);
+								}
 								$flg = 1;
 							}
 						}else{
 							if( isset($_POST[$key]) && $_POST[$key] == $value ){
-								call_user_func($function);
+								if(in_array($handle, $action_array)){
+									$res = call_user_func(array($this, $function));
+								}else{
+									$res = call_user_func($function);
+								}
 								$flg = 1;
 							}
 						}
@@ -1158,12 +1173,20 @@ class usc_e_shop
 					case 'get':
 						if( empty($value) ){
 							if( isset($_GET[$key]) ){
-								call_user_func($function);
+								if(in_array($handle, $action_array)){
+									$res = call_user_func(array($this, $function));
+								}else{
+									$res = call_user_func($function);
+								}
 								$flg = 1;
 							}
 						}else{
 							if( isset($_GET[$key]) && $_GET[$key] == $value ){
-								call_user_func($function);
+								if(in_array($handle, $action_array)){
+									$res = call_user_func(array($this, $function));
+								}else{
+									$res = call_user_func($function);
+								}
 								$flg = 1;
 							}
 						}
@@ -1171,12 +1194,20 @@ class usc_e_shop
 					case 'request':
 						if( empty($value) ){
 							if( isset($_REQUEST[$key]) ){
-								call_user_func($function);
+								if(in_array($handle, $action_array)){
+									$res = call_user_func(array($this, $function));
+								}else{
+									$res = call_user_func($function);
+								}
 								$flg = 1;
 							}
 						}else{
 							if( isset($_REQUEST[$key]) && $_REQUEST[$key] == $value ){
-								call_user_func($function);
+								if(in_array($handle, $action_array)){
+									$res = call_user_func(array($this, $function));
+								}else{
+									$res = call_user_func($function);
+								}
 								$flg = 1;
 							}
 						}
