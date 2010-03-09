@@ -14,6 +14,7 @@
 $post_ID = isset($post_ID) ? (int) $post_ID : 0;
 
 $action = isset($action) ? $action : '';
+
 if ( isset($_GET['message']) )
 	$_GET['message'] = absint( $_GET['message'] );
 $messages[1] = sprintf(__('Post updated. <a href="%s">View post</a>'), get_permalink($post_ID));
@@ -219,6 +220,7 @@ if ( $can_publish ) : // Contributors don't get to choose the date of publish ?>
 </div><?php // /misc-pub-section ?>
 <?php endif; ?>
 
+<?php do_action('post_submitbox_misc_actions'); ?>
 </div>
 <div class="clear"></div>
 </div>

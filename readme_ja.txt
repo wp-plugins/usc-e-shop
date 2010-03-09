@@ -5,20 +5,15 @@
 Welcart(ウェルカート)は以下の環境で動作します。
 
 Wordpress 2.9.0 以上 
-PHP 4.4 以上 
+PHP 4.4 以上 （セーフモード非対応）
 MySQL 5.0 以上 
 Apache を推奨 
 文字コード　UTF-8
 
+
 【インストール】
 解凍して得られたフォルダ「usc-e-shop」をWordpressのpluginsフォルダの中に設置してください。
 アップデートする場合は「usc-e-shop」を上書きします。
-
-テーマも更新する場合は、Wordpressのthemesフォルダの中にあるucart_defaultを
-削除して、Welcartプラグインを再有効化（停止する→使用する）することで
-更新されたテーマがインストールされます。
-（PHPセーフモードの場合は手動で転送する必要があります）
-この作業を行うとucart_defaultテーマは初期の状態になってしまうのでご注意下さい。
 
 
 
@@ -33,38 +28,6 @@ Welcartを使用中に起こった如何なる損害も自己責任となります。
 
 
 
-【日本語が正常に表示されない場合】
-
-Worpressをインストールした際、日本語のタイトルが表示されない、また日本語で
-記事を投稿しようとしても登録されない場合は、文字コードなどの設定が原因の
-可能性があります。
-.htaccessの利用が可能な場合は下記の内容を.htaccessに追記してみてください。
-
-日本語（UTF-8）でWordpressを利用する場合の.htaccessの設定例
-
-php_flag  output_buffering off
-php_value output_handler none
-php_value default_charset none
-php_value mbstring.language “Japanese”
-php_value mbstring.internal_encoding “EUC-JP”(or "UTF-8")
-php_value mbstring.http_input “pass”
-php_value mbstring.http_output “pass”
-php_flag  mbstring.encoding_translation Off
-
-
-
-
-【PHPがセーフモードになっているサーバーの場合】
-
-Welcart はPHPセーフモードでの運用を推奨していません。
-
-セーフモードではテーマの自動インストールが行われません。
-プラグインフォルダ”usc-e-shop”内の”theme”フォルダの中に”ucart_default”が
-有りますので、FTPにてWordpressのthemesフォルダに設置してください。
-
-
-
-
 【開発環境】
 
 OS　Windows2003
@@ -74,6 +37,13 @@ Apache 2.0
 
 
 【更新履歴】
+Welcart 0.4　2010/3/8
+　・単独でSSLが使えるよう修正
+　・カートページの商品名の表示仕様を変更できるよう機能を追加
+　・受注メールに購入者のIPアドレスを記載するよう修正
+　・インターナショナリゼーション完了
+　・JavaScriptエラーによる不具合を修正
+　・その他不具合を修正
 
 Welcart 0.3　2010/2/3
 　・商品のCSVデータによる一括登録機能を追加
@@ -86,7 +56,6 @@ Welcart 0.3　2010/2/3
 　・自動送信メールのボディーにある説明文を一部削除
 　・商品の公開日時が変更ができない不具合を修正
 　・その他不具合を修正
-
 
 Welcart 0.2.2　2009/12/19
 　・会員情報ページにてメールアドレスを変更して更新した場合の重複チェックを追加
