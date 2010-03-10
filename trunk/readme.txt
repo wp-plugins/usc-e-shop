@@ -2,8 +2,8 @@
 Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 2.9
-Tested up to: 2.9.1
-Stable tag: 0.3
+Tested up to: 2.9.2
+Stable tag: 0.4
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -57,20 +57,11 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 == Changelog ==
 
 = V0.4 =
-8 Mar 2010
+10 Mar 2010
 -----------
-* You got possible to use SSL in the Cart page and the Member page
-* A function to be able to change the display specifications of the item name of the cart page has been added
-* A function to write the IP address of the buyer in 'Order-mail' has been added
-* Internationalization was almost completed
-* Some error in JavaScript have been fixed
-* Revised other malfunction
-
-= V0.3 =
-3 Feb 2010
------------
-* This version is still only Japanese
-* A collective registration function by the CSV data of the article was added to the list of articles page of the management screen.
-* A copying additional function was added to the new article addition page of the management screen.
-* Added paypal settlement module
-* Revised other malfunction
+* It's now possible to use SSL on the Cart and Member pages
+* Added function to change display specifications of the item name of the Cart page
+* Added function to write the IP address of the buyer in 'Order-mail'
+* Internationalization is almost complete
+* Errors in JavaScript have been fixed
+* Fixed other malfunctions
