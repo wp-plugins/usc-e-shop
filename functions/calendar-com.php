@@ -1,13 +1,13 @@
 <?php
 function getToday() {
-	// GMT+0900
-	$time = time() + (3600 * 9);
-	$hour = gmdate("H", $time);
-	$minute = gmdate("i", $time);
-	$second = gmdate("s", $time);
-	$month = gmdate("n", $time);
-	$day = gmdate("j", $time);
-	$year = gmdate("Y", $time);
+	$time = current_time('timestamp');
+	$datetimestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+	$hour = (int)substr($datetimestr, 11, 2);
+	$minute = (int)substr($datetimestr, 14, 2);
+	$second = (int)substr($datetimestr, 17, 2);
+	$month = (int)substr($datetimestr, 5, 2);
+	$day = (int)substr($datetimestr, 8, 2);
+	$year = (int)substr($datetimestr, 0, 4);
 	$timestamp = mktime($hour, $minute, $second, $month, $day, $year);
 
 	$dateAry = getdate($timestamp);

@@ -173,7 +173,7 @@ function settlement_log($log){
 	global $usces;
 	if(!$usces->log_flg) return;
 	
-	$log = date('[Y-m-d H:i:s]') . "\t" . $log . "\n";
+	$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
 	$file = $usces->options['settlement_path'].'/paypal.log';
 	$fp = fopen($file, 'a');
 	fwrite($fp, $log);

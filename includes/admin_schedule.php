@@ -17,7 +17,7 @@ $cal3 = new calendarData();
 $cal3->setToday($lateryy, $latermm, $laterdd);
 $cal3->setCalendarData();
 
-
+$yearstr = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 4);
 
 $status = $this->action_status;
 $message = $this->action_message;
@@ -129,8 +129,8 @@ function cangeWday3(id, c) {
 	    <th><?php _e('starting time','usces'); ?></th>
 	    <td><select name="campaign_schedule[start][year]">
 	    		<option value="0"<?php if($this->options['campaign_schedule']['start']['year'] == 0) echo ' selected="selected"'; ?>></option>
-	    		<option value="<?php echo date('Y'); ?>"<?php if($this->options['campaign_schedule']['start']['year'] == date('Y')) echo ' selected="selected"'; ?>><?php echo date('Y'); ?></option>
-	    		<option value="<?php echo date('Y')+1; ?>"<?php if($this->options['campaign_schedule']['start']['year'] == (date('Y')+1)) echo ' selected="selected"'; ?>><?php echo date('Y')+1; ?></option>
+	    		<option value="<?php echo $yearstr; ?>"<?php if($this->options['campaign_schedule']['start']['year'] == $yearstr) echo ' selected="selected"'; ?>><?php echo $yearstr; ?></option>
+	    		<option value="<?php echo $yearstr+1; ?>"<?php if($this->options['campaign_schedule']['start']['year'] == ($yearstr+1)) echo ' selected="selected"'; ?>><?php echo $yearstr+1; ?></option>
 		</select></td>
 		<td><?php _e('year','usces'); ?></td>
 	    <td><select name="campaign_schedule[start][month]">
@@ -164,8 +164,8 @@ function cangeWday3(id, c) {
 	    <th><?php _e('date and time of termination','usces'); ?></th>
 	    <td><select name="campaign_schedule[end][year]">
 	    		<option value="0"<?php if($this->options['campaign_schedule']['end']['year'] == 0) echo ' selected="selected"'; ?>></option>
-	    		<option value="<?php echo date('Y'); ?>"<?php if($this->options['campaign_schedule']['end']['year'] == date('Y')) echo ' selected="selected"'; ?>><?php echo date('Y'); ?></option>
-	    		<option value="<?php echo date('Y')+1; ?>"<?php if($this->options['campaign_schedule']['end']['year'] == (date('Y')+1)) echo ' selected="selected"'; ?>><?php echo date('Y')+1; ?></option>
+	    		<option value="<?php echo $yearstr; ?>"<?php if($this->options['campaign_schedule']['end']['year'] == $yearstr) echo ' selected="selected"'; ?>><?php echo $yearstr; ?></option>
+	    		<option value="<?php echo $yearstr+1; ?>"<?php if($this->options['campaign_schedule']['end']['year'] == ($yearstr+1)) echo ' selected="selected"'; ?>><?php echo $yearstr+1; ?></option>
 		</select></td>
 		<td><?php _e('year','usces'); ?></td>
 	    <td><select name="campaign_schedule[end][month]">

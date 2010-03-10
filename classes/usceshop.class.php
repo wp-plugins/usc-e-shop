@@ -767,23 +767,23 @@ class usc_e_shop
 		global $wpdb;
 		$table_name = $wpdb->prefix . "usces_access";
 
-		$query = $wpdb->prepare("SELECT ID FROM $table_name WHERE acc_date = %s", date('Y-m-d'));
+		$query = $wpdb->prepare("SELECT ID FROM $table_name WHERE acc_date = %s", substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
 		$res = $wpdb->get_var( $query );
 		$wpdb->show_errors();
 		if(empty($res)){
 			if( $flag == '' ){
-				$query = $wpdb->prepare("INSERT INTO $table_name (acc_type, acc_num1, acc_num2, acc_str1, acc_str2, acc_date) VALUES(%s, %d, %d, %s, %s, %s)", 'visiter', 1, 0, NULL, NULL, date('Y-m-d'));
+				$query = $wpdb->prepare("INSERT INTO $table_name (acc_type, acc_num1, acc_num2, acc_str1, acc_str2, acc_date) VALUES(%s, %d, %d, %s, %s, %s)", 'visiter', 1, 0, NULL, NULL, substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
 				$wpdb->query( $query );
 			}elseif( $flag == 'first' ){
-				$query = $wpdb->prepare("INSERT INTO $table_name (acc_type, acc_num1, acc_num2, acc_str1, acc_str2, acc_date) VALUES(%s, %d, %d, %s, %s, %s)", 'visiter', 0, 1, NULL, NULL, date('Y-m-d'));
+				$query = $wpdb->prepare("INSERT INTO $table_name (acc_type, acc_num1, acc_num2, acc_str1, acc_str2, acc_date) VALUES(%s, %d, %d, %s, %s, %s)", 'visiter', 0, 1, NULL, NULL, substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
 				$wpdb->query( $query );
 			}
 		}else{
 			if( $flag == '' ){
-				$query = $wpdb->prepare("UPDATE $table_name SET acc_num1 = acc_num1 + 1 WHERE acc_date = %s", date('Y-m-d'));
+				$query = $wpdb->prepare("UPDATE $table_name SET acc_num1 = acc_num1 + 1 WHERE acc_date = %s", substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
 				$wpdb->query( $query );
 			}elseif( $flag == 'first' ){
-				$query = $wpdb->prepare("UPDATE $table_name SET acc_num2 = acc_num2 + 1 WHERE acc_date = %s", date('Y-m-d'));
+				$query = $wpdb->prepare("UPDATE $table_name SET acc_num2 = acc_num2 + 1 WHERE acc_date = %s", substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
 				$wpdb->query( $query );
 			}
 		}
@@ -1871,7 +1871,7 @@ class usc_e_shop
 	}
 
 	function export() {
-		$filename = 'usces.' . date('Y-m-d') . '.xml';
+		$filename = 'usces.' . substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10) . '.xml';
 	
 		header('Content-Description: File Transfer');
 		header("Content-Disposition: attachment; filename=$filename");
@@ -2003,7 +2003,7 @@ class usc_e_shop
 						trim($_POST['member']['fax']), 
 						'',
 						'',
-						date('Y-m-d H:i:s'),
+						get_date_from_gmt(gmdate('Y-m-d H:i:s', time())),
 						'');
 				$res = $wpdb->query( $query );
 				
@@ -2048,7 +2048,7 @@ class usc_e_shop
 						trim($_POST['customer']['fax']), 
 						'',
 						'',
-						date('Y-m-d H:i:s'),
+						get_date_from_gmt(gmdate('Y-m-d H:i:s', time())),
 						'');
 				$res = $wpdb->query( $query );
 				
@@ -2715,8 +2715,8 @@ class usc_e_shop
 	function set_default_page()
 	{
 		global $wpdb;
-		$datetime = date('Y-m-d H:i:s');
-		$datetime_gmt = date('Y-m-d H:i:s', time()-32400);
+		$datetime = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+		$datetime_gmt = gmdate('Y-m-d H:i:s', time());
 
 		//cart_page
 		$query = $wpdb->prepare("SELECT ID from $wpdb->posts where post_name = %s", USCES_CART_FOLDER);
@@ -3752,15 +3752,19 @@ class usc_e_shop
 
 	function get_visiter( $period ) {
 		global $wpdb;
+		$datestr = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
+		$yearstr = substr($datestr, 0, 4);
+		$monthstr = substr($datestr, 5, 2);
+		$daystr = substr($datestr, 8, 2);
 		if($period == 'today') {
-			$date = date('Y-m-d');
-			$today = date('Y-m-d');
+			$date = $datestr;
+			$today = $datestr;
 		}else if($period == 'thismonth') {
 			$date = date('Y-m-01');
-			$today = date('Y-m-d');
+			$today = $datestr;
 		}else if($period == 'lastyear') {
-			$date = date('Y-m-01', mktime(0, 0, 0, date('m'), 1, date('Y')-1));
-			$today = date('Y-m-01', mktime(0, 0, 0, date('m'), date('d'), date('Y')-1));
+			$date = date('Y-m-01', mktime(0, 0, 0, (int)$monthstr, 1, (int)$yearstr-1));
+			$today = date('Y-m-01', mktime(0, 0, 0, (int)$monthstr, (int)$daystr, (int)$yearstr-1));
 		}
 		$table_name = $wpdb->prefix . 'usces_access';
 		
@@ -3775,15 +3779,19 @@ class usc_e_shop
 
 	function get_fvisiter( $period ) {
 		global $wpdb;
+		$datestr = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
+		$yearstr = substr($datestr, 0, 4);
+		$monthstr = substr($datestr, 5, 2);
+		$daystr = substr($datestr, 8, 2);
 		if($period == 'today') {
-			$date = date('Y-m-d');
-			$today = date('Y-m-d');
+			$date = $datestr;
+			$today = $datestr;
 		}else if($period == 'thismonth') {
 			$date = date('Y-m-01');
-			$today = date('Y-m-d');
+			$today = $datestr;
 		}else if($period == 'lastyear') {
-			$date = date('Y-m-01', mktime(0, 0, 0, date('m'), 1, date('Y')-1));
-			$today = date('Y-m-01', mktime(0, 0, 0, date('m'), date('d'), date('Y')-1));
+			$date = date('Y-m-01', mktime(0, 0, 0, (int)$monthstr, 1, (int)$yearstr-1));
+			$today = date('Y-m-01', mktime(0, 0, 0, (int)$monthstr, (int)$daystr, (int)$yearstr-1));
 		}
 		$table_name = $wpdb->prefix . 'usces_access';
 		
@@ -3798,15 +3806,19 @@ class usc_e_shop
 	
 	function get_order_num( $period ) {
 		global $wpdb;
+		$datestr = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
+		$yearstr = substr($datestr, 0, 4);
+		$monthstr = substr($datestr, 5, 2);
+		$daystr = substr($datestr, 8, 2);
 		if($period == 'today') {
-			$date = date('Y-m-d 00:00:00');
-			$today = date('Y-m-d 23:59:59');
+			$date = date('Y-m-d 00:00:00', current_time('timestamp'));
+			$today = date('Y-m-d 23:59:59', current_time('timestamp'));
 		}else if($period == 'thismonth') {
-			$date = date('Y-m-01 00:00:00');
-			$today = date('Y-m-d 23:59:59');
+			$date = date('Y-m-01 00:00:00', current_time('timestamp'));
+			$today = date('Y-m-d 23:59:59', current_time('timestamp'));
 		}else if($period == 'lastyear') {
-			$date = date('Y-m-01 00:00:00', mktime(0, 0, 0, date('m'), 1, date('Y')-1));
-			$today = date('Y-m-01 23:59:59', mktime(0, 0, 0, date('m'), date('d'), date('Y')-1));
+			$date = date('Y-m-01 00:00:00', mktime(0, 0, 0, (int)$monthstr, 1, (int)$yearstr-1));
+			$today = date('Y-m-01 23:59:59', mktime(0, 0, 0, (int)$monthstr, (int)$daystr, (int)$yearstr-1));
 		}
 		$table_name = $wpdb->prefix . 'usces_order';
 		
@@ -3821,15 +3833,19 @@ class usc_e_shop
 
 	function get_order_amount( $period ) {
 		global $wpdb;
+		$datestr = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
+		$yearstr = substr($datestr, 0, 4);
+		$monthstr = substr($datestr, 5, 2);
+		$daystr = substr($datestr, 8, 2);
 		if($period == 'today') {
-			$date = date('Y-m-d 00:00:00');
-			$today = date('Y-m-d 23:59:59');
+			$date = date('Y-m-d 00:00:00', current_time('timestamp'));
+			$today = date('Y-m-d 23:59:59', current_time('timestamp'));
 		}else if($period == 'thismonth') {
-			$date = date('Y-m-01 00:00:00');
-			$today = date('Y-m-d 23:59:59');
+			$date = date('Y-m-01 00:00:00', current_time('timestamp'));
+			$today = date('Y-m-d 23:59:59', current_time('timestamp'));
 		}else if($period == 'lastyear') {
-			$date = date('Y-m-01 00:00:00', mktime(0, 0, 0, date('m'), 1, date('Y')-1));
-			$today = date('Y-m-01 23:59:59', mktime(0, 0, 0, date('m'), date('d'), date('Y')-1));
+			$date = date('Y-m-01 00:00:00', mktime(0, 0, 0, (int)$monthstr, 1, (int)$yearstr-1));
+			$today = date('Y-m-01 23:59:59', mktime(0, 0, 0, (int)$monthstr, (int)$daystr, (int)$yearstr-1));
 		}
 		$table_name = $wpdb->prefix . 'usces_order';
 		
@@ -3904,11 +3920,15 @@ class usc_e_shop
 	
 	function get_bestseller_ids( $days = "" ){
 		global $wpdb;
+		$datestr = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
+		$yearstr = substr($datestr, 0, 4);
+		$monthstr = substr($datestr, 5, 2);
+		$daystr = substr($datestr, 8, 2);
 		$res = array();
 		$order_table_name = $wpdb->prefix . "usces_order";
 		$where = "";
 		if($days != ''){
-			$order_date = date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), (date('d')-$days), date('Y')));
+			$order_date = date('Y-m-d H:i:s', mktime(0, 0, 0, (int)$monthstr, ((int)$daystr-$days), (int)$yearstr));
 			$where = " WHERE order_date >= '{$order_date}'";
 		}
 		$query = "SELECT order_cart FROM {$order_table_name}" . $where;

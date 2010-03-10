@@ -460,7 +460,7 @@ function usces_reg_orderdata( $results = array() ) {
 					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, NOW(), %s, %s)", 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
 					$member['ID'], 
 					$entry['customer']['mailaddress1'], 
 					$entry['customer']['name1'], 
@@ -488,6 +488,7 @@ function usces_reg_orderdata( $results = array() ) {
 					$entry['order']['shipping_charge'], 
 					$entry['order']['cod_fee'], 
 					$entry['order']['tax'], 
+					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
 					null, 
 					$status
 				);
@@ -565,7 +566,7 @@ function usces_new_orderdata() {
 					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, NOW(), %s, %s)", 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
 					$member['ID'], 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
@@ -593,6 +594,7 @@ function usces_new_orderdata() {
 					$_POST['order']['shipping_charge'], 
 					$_POST['order']['cod_fee'], 
 					$_POST['order']['tax'], 
+					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
 					null, 
 					$status
 				);
@@ -775,7 +777,7 @@ function usces_update_orderdata() {
 	$receipt = isset($entry['order']['receipt']) ? $entry['order']['receipt'] : '';
 	$admin = isset($entry['order']['admin']) ? $entry['order']['admin'] : '';
 	$status = $usces->make_status( $taio, $receipt, $admin );
-	$order_modified = $taio == 'completion' ? date('Y-m-d') : '';
+	$order_modified = $taio == 'completion' ? substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10) : '';
 	$ordercheck = isset($_POST['check']) ? serialize($_POST['check']) : '';
 	
 //$wpdb->show_errors();
@@ -1376,7 +1378,7 @@ function usces_item_dupricate($post_id){
 				break;
 			case 'post_date':
 			case 'post_modified':
-				$datas[$key] = date('Y-m-d H:i:s');
+				$datas[$key] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 				break;
 			case 'post_date_gmt':
 			case 'post_modified_gmt':
@@ -1777,7 +1779,7 @@ function usces_item_uploadcsv(){
 					case 'post_date':
 					case 'post_modified':
 						if( $datas[18] == '' || $datas[18] == '0000-00-00 00:00:00' ){
-							$cdatas[$key] = date('Y-m-d H:i:s');
+							$cdatas[$key] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 						}else{
 							$cdatas[$key] = $datas[18];
 						}
