@@ -34,10 +34,12 @@ class usces_cart {
 			
 		} else {
 		
-			if ( isset($_SESSION['usces_cart'][$this->serial]) && EX_DLSELLER !== true )
+			if ( isset($_SESSION['usces_cart'][$this->serial]) )
 				$_SESSION['usces_cart'][$this->serial]['quant'] += 1;
 			else
 				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
+				
+			$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filter('usces_dlseller_incart_quant', $_SESSION['usces_cart'][$this->serial]['quant']);
 
 		}
 		

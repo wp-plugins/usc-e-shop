@@ -699,7 +699,7 @@ foreach((array)$prefs as $value) {
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-		<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
+		<td class="aleft"><?php echo $cartItemName; ?><?php do_action('usces_admin_order_item_name', $ID, $i); ?><br /><?php echo $optstr; ?></td>
 		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text price" type="text" value="<?php echo $skuPrice; ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text quantity" type="text" value="<?php echo $cart_row['quantity']; ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>

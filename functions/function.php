@@ -2003,8 +2003,19 @@ function usces_register_action($handle, $type, $key, $value, $function){
 	global $usces_action;
 	$usces_action[$handle] = array('type'=>$type, 'key'=>$key, 'value'=>$value, 'function'=>$function);
 }
+
 function usces_deregister_action($handle){
 	global $usces_action;
 	unset($usces_action[$handle]);
+}
+
+function usces_get_wcexp($post_id, $name=''){
+	$wcexp = get_post_meta($post_id, '_wcexp', true);
+	if( empty($name) ){
+		$value = ( $wcexp !== false ) ? $wcexp : '';
+	}else{
+		$value = ($wcexp !== false && isset($wcexp[$name])) ? $wcexp[$name] : '';
+	}
+	return $value;
 }
 ?>

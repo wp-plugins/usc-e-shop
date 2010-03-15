@@ -55,7 +55,7 @@ class dataTable
 	//Constructor
 	function dataTable($dbConnection, $databaseName, $tableName)
 	{
-		@session_start();
+		//@session_start();
 
 		$this->dbCon = $dbConnection;
 		mysql_select_db($databaseName, $dbConnection);

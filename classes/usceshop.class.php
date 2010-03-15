@@ -3359,7 +3359,7 @@ class usc_e_shop
 	}
 	
 	function order_processing( $results = array() ) {
-		
+		do_action('usces_pre_reg_orderdata');
 		//データベース登録(function.php)
 		$order_id = usces_reg_orderdata( $results );
 		//var_dump($order_id);exit;
@@ -4110,7 +4110,7 @@ class usc_e_shop
 			}
 		}
 		
-		$name_str = apply_filters('usces_admin_order_item_name', $name_str);
+		$name_str = apply_filters('usces_admin_order_item_name_filter', $name_str);
 		
 		return trim($name_str);
 	}
