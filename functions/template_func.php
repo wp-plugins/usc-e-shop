@@ -137,6 +137,17 @@ function usces_the_itemZaiko( $out = '' ) {
 	}
 }
 
+function usces_the_itemZaikoNum( $out = '' ) {
+	global $usces;
+	$num = $usces->itemsku['value']['zaikonum'];
+	
+	if( $out == 'return' ){
+		return $num;
+	}else{
+		echo $num;
+	}
+}
+
 function usces_the_itemSkuDisp() {
 	global $usces;
 	echo $usces->itemsku['value']['disp'];
@@ -342,7 +353,8 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 	$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$num}\" />\n";
 	$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
 	$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
-	$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"{$type}\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" onclick=\"return uscesCart.intoCart('{$post_id}','{$sku}')\" />";
+	$button = "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"{$type}\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" onclick=\"return uscesCart.intoCart('{$post_id}','{$sku}')\" />";
+	$html .= apply_filters('usces_filter_inCart_button', $button, $post_id, $sku, $type);
 
 	if( $out == 'return' ){
 		return $html;

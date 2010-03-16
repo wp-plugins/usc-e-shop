@@ -17,7 +17,8 @@ class Welcart_bestseller extends WP_Widget {
         $rows_num = $instance['rows_num'] == '' ? 10 : $instance['rows_num'];
         $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/best-seller.png" alt="' . $title . '" width="24" height="24" />';
-		if($icon == 1) $before_title .= '<img src="' . USCES_FRONT_PLUGIN_URL . '/images/best-seller.png" alt="' . $title . '" width="24" height="24" />';
+		$img_path = file_exists(get_template_directory().'/images/bestseller.png') ? get_template_directory_uri().'/images/bestseller.png' : USCES_FRONT_PLUGIN_URL . '/images/bestseller.png';
+		if($icon == 1) $before_title .= '<img src="' . $img_path . '" alt="' . $title . '" />';
 		$list = $instance['list'] == '' ? 1 : (int)$instance['list'];
         ?>
               <?php echo $before_widget; ?>

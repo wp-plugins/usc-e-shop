@@ -39,8 +39,7 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		}
 		$html .= "</table>\n";
 	}
-	$button = '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>';
-	$html .= apply_filters('usces_filter_dlseller_button', $button);
+	$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>';
 	$html .= '</div>';
 	
 } elseif(usces_sku_num() > 1) { //SKUが複数の場合

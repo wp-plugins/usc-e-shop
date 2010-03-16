@@ -1531,306 +1531,6 @@ class usc_e_shop
 	}
 	//--------------------------------------------------------------------------------------
 	
-//	function controller() {
-//		global $wp_query;
-//		
-//		//do_action('usces_test_action');
-//
-//		if($this->is_maintenance()){
-//
-//			$this->page = 'maintenance';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		}else if(isset($_POST['inCart'])) {
-//
-////			if( EX_DLSELLER === true ){
-////				dlseller_controller();
-////			}else{
-//				$this->page = 'cart';
-//				$this->cart->inCart();
-//				add_action('the_post', array($this, 'action_cartFilter'));
-////			}
-//			
-//		}else if(isset($_POST['upButton'])) {
-//		
-//			$this->page = 'cart';
-//			$this->cart->upCart();
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//			
-//		}else if(isset($_POST['delButton'])) {
-//		
-//			$this->page = 'cart';
-//			$this->cart->del_row();
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//			
-//		}else if(isset($_POST['backCart'])) {
-//		
-//			$this->page = 'cart';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_REQUEST['customerinfo'])) {
-//
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->cart->entry();
-//			$this->error_message = $this->zaiko_check();
-//			if($this->error_message == ''){
-//				if($this->is_member_logged_in()){
-//					$this->page = 'delivery';
-//				}else{
-//					$this->page = 'customer';
-//				}
-//			}else{
-//				$this->page = 'cart';
-//			}
-//			if ( !$this->cart->is_order_condition() ) {
-//				$order_conditions = $this->get_condition();
-//				$this->cart->set_order_condition($order_conditions);
-//			}
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//
-//		}else if(isset($_POST['backCustomer'])) {
-//		
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->page = 'customer';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-////			$this->cart->entry();
-////			$this->error_message = $this->delivery_check();
-////			$this->page = ($this->error_message == '') ? 'customer' : 'delivery';
-//		
-//		}else if(isset($_POST['customerlogin'])) {
-//
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->cart->entry();
-//			$this->page = ($this->member_login() == 'member') ? 'delivery' : 'customer';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_POST['reganddeliveryinfo'])) {
-//
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->cart->entry();
-//			$_POST['member_regmode'] = 'newmemberfromcart';
-//			$this->page = ( $this->regist_member() == 'newcompletion' ) ? 'delivery' : 'customer';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_POST['deliveryinfo'])) {
-//
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->cart->entry();
-//			$this->error_message = $this->customer_check();
-//			$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_POST['backDelivery'])) {
-//		
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->page = 'delivery';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-////			$this->cart->entry();
-//		
-//		}else if(isset($_REQUEST['confirm'])) {
-//		
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			
-//			$this->cart->entry();
-//			$this->set_reserve_pre_order_id();
-//			if(isset($_POST['confirm'])){
-//				$this->error_message = $this->delivery_check();
-//			}
-//			$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_POST['use_point'])) {
-//		
-//			$this->error_message = $this->point_check();
-//			$this->cart->entry();
-//			$this->page = 'confirm';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_POST['backConfirm'])) {
-//		
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->page = 'confirm';
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_REQUEST['purchase'])) {
-//		
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$entry = $this->cart->get_entry();
-//			$this->error_message = $this->zaiko_check();
-//			if($this->error_message == '' && 0 < $this->cart->num_row()){
-//				$payments = $this->getPayments( $entry['order']['payment_name'] );
-//				if( $payments['settlement'] == 'acting' && $entry['order']['total_full_price'] > 0 ){
-//					$query = '';
-//					foreach($_POST as $key => $value){
-//						if($key != 'purchase')
-//							$query .= '&' . $key . '=' . urlencode($value);
-//					}
-//					$actinc_status = $this->acting_processing($payments['module'], $query);
-//				}
-//				
-//				if($actinc_status == 'error'){
-//					$this->page = 'error';
-//				}else{
-//					$res = $this->order_processing();
-//					$this->page = $res;
-//				}
-//			}else{
-//				$this->page = 'cart';
-//			}
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_REQUEST['acting_return'])) {
-//		
-//			if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
-//				require_once($this->options['settlement_path'] . 'paypal.php');
-//				$ipn_res = paypal_ipn_check($usces_paypal_url);
-//				if( $ipn_res[0] === true ){
-//					$res = $this->order_processing( $ipn_res );
-//				}
-//				exit;
-//			}
-//			if( false === $this->cart->num_row() ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}
-//			$this->payment_results = usces_check_acting_return();
-//
-//			if(  isset($this->payment_results[0]) && $this->payment_results[0] === 'duplicate' ){
-//				header('location: ' . get_option('home'));
-//				exit;
-//			}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
-//				if( isset($this->payment_results['payment_status']) ){
-//					$this->page = 'ordercompletion';
-//				}else{
-//					$res = $this->order_processing( $this->payment_results );
-//					$this->page = $res;
-//				}
-//			}else{
-//				$this->page = 'error';
-//			}
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//		
-//		}else if(isset($_REQUEST['settlement']) && $_REQUEST['settlement'] == 'epsilon') {
-//			require_once($this->options['settlement_path'] . 'epsilon.php');	
-//			
-//			
-//		
-//		}else if(isset($_POST['inquiry_button'])) {
-//
-//			$res = $this->inquiry_processing();
-//			$this->page = $res;
-//		
-//		}else if(isset($_REQUEST['member_login'])) {
-//			
-//			$res = $this->member_login();
-//			$this->page = $res;
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if(isset($_REQUEST['regmember'])) {
-//
-//			$res = $this->regist_member();
-//			$this->page = $res;
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if(isset($_REQUEST['editmember'])) {
-//
-//			$res = $this->regist_member();
-//			$this->page = $res;
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if( isset($_GET['page']) && $_GET['page'] == 'logout' ) {
-//
-//			$this->member_logout();
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if( isset($_GET['page']) && $_GET['page'] == 'lostmemberpassword' ) {
-//
-//			$this->page = 'lostmemberpassword';
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if( isset($_REQUEST['lostpassword']) ) {
-//
-//			$this->error_message = $this->lostpass_mailaddcheck();
-//			if ( $this->error_message != '' ) {
-//				$this->page = 'lostmemberpassword';
-//			} else {
-//				$res = $this->lostmail();
-//				$this->page = $res;//'lostcompletion';
-//			}
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if( isset($_REQUEST['uscesmode']) && $_REQUEST['uscesmode'] == 'changepassword') {
-//
-//			$this->page = 'changepassword';
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if( isset($_REQUEST['changepassword']) ) {
-//
-//			$this->error_message = $this->changepass_check();
-//			if ( $this->error_message != '' ) {
-//				$this->page = 'changepassword';
-//			} else {
-//				$res = $this->changepassword();
-//				$this->page = $res;//'changepasscompletion';
-//			}
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if( isset($_GET['page']) && $_GET['page'] == 'newmember') {
-//
-//			$this->page = 'newmemberform';
-//			add_action('the_post', array($this, 'action_memberFilter'));
-//		
-//		}else if( isset($_POST['usces_export']) ) {
-//
-//			$this->export();
-//
-//		}else if( isset($_POST['usces_import']) ) {
-//
-//			$this->import();
-//
-//		}else if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'search_item') {
-//
-//			$this->page = 'search_item';
-//			add_action('template_redirect', array($this, 'action_search_item'));
-//			add_action('the_post', array($this, 'action_cartFilter'));
-//			
-//		}else if( isset($_REQUEST['usces_upload']) ){
-//
-//			usces_upload01();
-//
-//			
-//		}else{
-//
-//			add_action('the_post', array($this, 'goDefaultPage'));
-//			
-//		}
-//	}
 	
 	function goDefaultPage(){
 		global $post;
@@ -4239,9 +3939,8 @@ class usc_e_shop
 		global $post;
 		if($post->post_mime_type != 'item' || !is_single()) return $content;
 		
-		include( USCES_PLUGIN_DIR . '/templates/single_item.php' );
-		
-		
+		$temp_path = apply_filters('usces_template_path_single_item', USCES_PLUGIN_DIR . '/templates/single_item.php');
+		include( $temp_path );
 		
 		$content = apply_filters('usces_filter_itemPage', $html, $post->ID);
 
@@ -4253,32 +3952,41 @@ class usc_e_shop
 		
 		switch($this->page){
 			case 'cart':
-				include( USCES_PLUGIN_DIR . '/templates/cart/cart.php' );
+				$temp_path = apply_filters('usces_template_path_cart', USCES_PLUGIN_DIR . '/templates/cart/cart.php');
+				include( $temp_path );
 				break;
 			case 'customer':
-				include( USCES_PLUGIN_DIR . '/templates/cart/customer_info.php' );
+				$temp_path = apply_filters('usces_template_path_customer', USCES_PLUGIN_DIR . '/templates/cart/customer_info.php');
+				include( $temp_path );
 				break;
 			case 'delivery':
-				include( USCES_PLUGIN_DIR . '/templates/cart/delivery_info.php' );
+				$temp_path = apply_filters('usces_template_path_delivery', USCES_PLUGIN_DIR . '/templates/cart/delivery_info.php');
+				include( $temp_path );
 				break;
 			case 'confirm':
-				include( USCES_PLUGIN_DIR . '/templates/cart/confirm.php' );
+				$temp_path = apply_filters('usces_template_path_confirm', USCES_PLUGIN_DIR . '/templates/cart/confirm.php');
+				include( $temp_path );
 				break;
 			case 'ordercompletion':
-				include( USCES_PLUGIN_DIR . '/templates/cart/completion.php' );
+				$temp_path = apply_filters('usces_template_path_ordercompletion', USCES_PLUGIN_DIR . '/templates/cart/completion.php');
+				include( $temp_path );
 				break;
 			case 'error':
-				include( USCES_PLUGIN_DIR . '/templates/cart/error.php' );
+				$temp_path = apply_filters('usces_template_path_error', USCES_PLUGIN_DIR . '/templates/cart/error.php');
+				include( $temp_path );
 				break;
 			case 'maintenance':
-				include( USCES_PLUGIN_DIR . '/templates/cart/maintenance.php' );
+				$temp_path = apply_filters('usces_template_path_maintenance', USCES_PLUGIN_DIR . '/templates/cart/maintenance.php');
+				include( $temp_path );
 				break;
 			case 'search_item':
-				include( USCES_PLUGIN_DIR . '/templates/search_item.php' );
+				$temp_path = apply_filters('usces_template_path_search_item', USCES_PLUGIN_DIR . '/templates/search_item.php');
+				include( $temp_path );
 				break;
 			case 'wp_search':
 				if($post->post_mime_type == 'item'){
-					include( USCES_PLUGIN_DIR . '/templates/wp_search_item.php' );
+					$temp_path = apply_filters('usces_template_path_wp_search', USCES_PLUGIN_DIR . '/templates/wp_search_item.php');
+					include( $temp_path );
 				}else{
 					$html = $content;
 				}
@@ -4301,28 +4009,28 @@ class usc_e_shop
 		if( $title == 'Cart' || $title == __('Cart', 'usces') ){
 			switch($this->page){
 				case 'cart':
-					$newtitle = __('Cart', 'usces');
+					$newtitle = apply_filters('usces_filter_title_cart', __('Cart', 'usces'));
 					break;
 				case 'customer':
-					$newtitle = __('Customer Information', 'usces');
+					$newtitle = apply_filters('usces_filter_title_customer', __('Customer Information', 'usces'));
 					break;
 				case 'delivery':
-					$newtitle = __('Shipping / Payment options', 'usces');
+					$newtitle = apply_filters('usces_filter_title_delivery', __('Shipping / Payment options', 'usces'));
 					break;
 				case 'confirm':
-					$newtitle = __('Confirmation', 'usces');
+					$newtitle = apply_filters('usces_filter_title_confirm', __('Confirmation', 'usces'));
 					break;
 				case 'ordercompletion':
-					$newtitle = __('Completion', 'usces');
+					$newtitle = apply_filters('usces_filter_title_ordercompletion', __('Completion', 'usces'));
 					break;
 				case 'error':
-					$newtitle = __('Error', 'usces');
+					$newtitle = apply_filters('usces_filter_title_error', __('Error', 'usces'));
 					break;
 				case 'search_item':
-					$newtitle = __("'AND' search by categories", 'usces');
+					$newtitle = apply_filters('usces_filter_title_search_item', __("'AND' search by categories", 'usces'));
 					break;
 				case 'maintenance':
-					$newtitle = __('Under Maintenance', 'usces');
+					$newtitle = apply_filters('usces_filter_title_maintenance', __('Under Maintenance', 'usces'));
 					break;
 				default:
 					$newtitle = $title;
