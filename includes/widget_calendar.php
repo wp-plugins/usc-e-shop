@@ -32,7 +32,8 @@ $cal2->setCalendarData();
 	$mday = $cal1->getDateText($i, $d);
 	if ($mday != "") {
 		$business = $usces->options['business_days'][$todayyy][$todaymm][$mday];
-		$style = ($business == 1) ? "" : ' style="background-color:#FFECCE; color:#ff0000;"'; ?>
+		//$style = ($business == 1) ? "" : ' style="background-color:#FFECCE; color:#ff0000;"';
+		$style = ($business == 1) ? "" : ' class="businessday"'; ?>
 		<td<?php echo $style; ?>><?php echo $mday; ?></td>
 <?php } else { ?>
 		<td>&nbsp;</td>
@@ -62,7 +63,8 @@ $cal2->setCalendarData();
 	$mday = $cal2->getDateText($i, $d);
 	if ($mday != "") {
 		$business = $usces->options['business_days'][$nextyy][$nextmm][$mday];
-		$style = ($business == 1) ? "" : ' style="background-color:#FFECCE; color:#ff0000;"'; ?>
+		//$style = ($business == 1) ? "" : ' style="background-color:#FFECCE; color:#ff0000;"';
+		$style = ($business == 1) ? "" : ' class="businessday"'; ?>
 		<td<?php echo $style; ?>><?php echo $mday; ?></td>
 <?php } else { ?>
 		<td>&nbsp;</td>
@@ -72,4 +74,4 @@ $cal2->setCalendarData();
 <?php endfor; ?>
 </tbody>
 </table>
-(<span class="business_days_exp_box" style="background-color:#FFECCE">　　</span>  <?php _e('Holiday for Shipping Operations', 'usces'); ?>)
+(<span class="business_days_exp_box businessday">　　</span>  <?php _e('Holiday for Shipping Operations', 'usces'); ?>)

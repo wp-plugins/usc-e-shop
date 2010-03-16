@@ -1413,3 +1413,7 @@ ul.ucart_featured_body .thumtitle a,
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+.businessday {
+	background-color: #FFECCE;
+	color: #ff0000;
+}
