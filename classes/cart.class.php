@@ -39,7 +39,7 @@ class usces_cart {
 			else
 				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
 				
-			$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filter('usces_filter_inCart_quant', $_SESSION['usces_cart'][$this->serial]['quant']);
+			$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filters('usces_filter_inCart_quant', $_SESSION['usces_cart'][$this->serial]['quant']);
 
 		}
 		
