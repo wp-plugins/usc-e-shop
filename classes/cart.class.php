@@ -124,6 +124,7 @@ class usces_cart {
 		$sku = $skus[0];
 		
 		$this->up_serialize($index, $post_id, $sku);
+		do_action('usces_cart_del_row', $index);
 		
 		if(isset($_SESSION['usces_cart'][$this->serial]))
 			unset($_SESSION['usces_cart'][$this->serial]);

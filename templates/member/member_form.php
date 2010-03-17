@@ -19,7 +19,7 @@ $html .= '</div>';
 
 
 $html .= '<div class="error_message">' . $this->error_message . '</div>
-<form action="' . USCES_MEMBER_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+<form action="' . apply_filters('usces_filter_newmember_form_action', USCES_MEMBER_URL) . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 <table border="0" cellpadding="0" cellspacing="0" class="customer_form">
 <tr>
 <th scope="row"><em>*</em>' . __('e-mail adress', 'usces') . '</th>
@@ -78,9 +78,12 @@ $html .= '<tr>
 <td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . $usces_members['fax'] . '" />例）1000-10-1000</td>
 </tr>
 </table>
-<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
-<div class="send"><input name="regmember" type="submit" value="' . __('transmit a message', 'usces') . '" /></div>
-</form>';
+<input name="member_regmode" type="hidden" value="' . $member_regmode . '" /><div class="send">';
+$newmemberbutton = '<input name="regmember" type="submit" value="' . __('transmit a message', 'usces') . '" />';
+$html .= apply_filters('usces_filter_newmember_button', $newmemberbutton);
+$html .= '</div>';
+$html = apply_filters('usces_filter_newmember_inform', $html);
+$html .= '</form>';
 
 
 $html .= '<div class="footer_explanation">';

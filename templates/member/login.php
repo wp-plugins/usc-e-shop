@@ -34,7 +34,7 @@ $html .= '</form>
 </p>
 <p id="nav">';
 if ( ! usces_is_login() ) {
-	$html .= '<a href="' . USCES_MEMBER_URL . '&page=newmember" title="' . __('New enrollment for membership.', 'usces') . '">' . __('New enrollment for membership.', 'usces') . '</a>';
+	$html .= '<a href="' . USCES_MEMBER_URL . apply_filters('usces_filter_newmember_urlquery', '&page=newmember') . '" title="' . __('New enrollment for membership.', 'usces') . '">' . __('New enrollment for membership.', 'usces') . '</a>';
 }
 $html .= '</p>
 

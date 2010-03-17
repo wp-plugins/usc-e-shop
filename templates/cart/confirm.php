@@ -21,7 +21,7 @@ $html .= '<div id="cart">
 		<thead>
 		<tr>
 			<th scope="row" class="num">' . __('No.','usces') . '</th>
-			<th class="thumbnail">　</th>
+			<th class="thumbnail">&nbsp;&nbsp;</th>
 			<th>' . __('Items','usces') . '</th>
 			<th class="price">' . __('Unit price','usces') . '</th>
 			<th class="quantity">'.__('Quantity', 'usces').'</th>

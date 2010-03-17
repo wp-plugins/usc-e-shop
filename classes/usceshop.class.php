@@ -1036,7 +1036,7 @@ class usc_e_shop
 		global $wpdb, $wp_locale;
 		global $wp_query, $usces_action;
 
-	//$this->redirect();
+		do_action('usces_main');
 		$this->usces_cookie();
 		$this->update_table();
 		
@@ -1380,6 +1380,10 @@ class usc_e_shop
 			header('location: ' . get_option('home'));
 			exit;
 		}
+
+		if( !do_action('usces_purchase_check') ) return;
+		
+		do_action('usces_purchase_validate');
 		$entry = $this->cart->get_entry();
 		$this->error_message = $this->zaiko_check();
 		if($this->error_message == '' && 0 < $this->cart->num_row()){
