@@ -4015,7 +4015,7 @@ class usc_e_shop
 		if( $title == 'Cart' || $title == __('Cart', 'usces') ){
 			switch($this->page){
 				case 'cart':
-					$newtitle = apply_filters('usces_filter_title_cart', __('Cart', 'usces'));
+					$newtitle = apply_filters('usces_filter_title_cart', __('In the cart', 'usces'));
 					break;
 				case 'customer':
 					$newtitle = apply_filters('usces_filter_title_customer', __('Customer Information', 'usces'));

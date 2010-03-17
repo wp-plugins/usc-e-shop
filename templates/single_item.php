@@ -136,6 +136,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 	$html .= '</div>';
 }
 
+$html = apply_filters('usces_filter_single_item_inform', $html);
 $html .= '
 	</form>
 	</div><!-- end of itemspage -->';

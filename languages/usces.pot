@@ -1715,6 +1715,9 @@ msgstr "カートに入れる"
 msgid "to the cart"
 msgstr "カートへ"
 
+msgid "In the cart"
+msgstr "カートの中"
+
 msgid "see the details"
 msgstr "詳細を見る"
 

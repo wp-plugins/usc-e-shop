@@ -14,6 +14,7 @@ $html .= '<div class="header_explanation">';
 $header = '';
 $html .= apply_filters('usces_filter_confirm_page_header', $header);
 $html .= '</div>';
+$html .= '<div class="error_message">' . $this->error_message . '</div>';
 
 $html .= '<div id="cart">
 <table cellspacing="0" id="cart_table">
@@ -136,8 +137,9 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 		<tr>
 		<td colspan="2"><input name="use_point" type="submit" value="'.__('Use the points', 'usces').'" /></td>
 		</tr>
-	</table>
-	</form>';
+	</table>';
+	$html = apply_filters('usces_filter_confirm_point_inform', $html);
+	$html .= '</form>';
 }
  
 $html .= '</div>
@@ -244,8 +246,7 @@ $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_full_price'] ){
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="send"><input name="backDelivery" type="submit" value="'.__('Back to payment method page.', 'usces').'" />&nbsp;&nbsp;
-		<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>
-		</form>';
+		<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
 }else{
 	//$notify_url = urlencode(USCES_CART_URL . '&purchase');
 	$send_item_code = $this->getItemCode($cart[0]['post_id']);
@@ -255,8 +256,9 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 		case 'paypal.php':
 			require_once($this->options['settlement_path'] . "paypal.php");
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;</div>
-				</form>
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>
 				<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
 				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
@@ -277,8 +279,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 				<input type="hidden" name="shipping" value="0">
 				<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
 				<div class="send"><input type="image" src="https://www.paypal.com/ja_JP/JP/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - オンラインで安全・簡単にお支払い">
-				<img alt="" border="0" src="https://www.paypal.com/ja_JP/i/scr/pixel.gif" width="1" height="1"></div>
-				</form>';
+				<img alt="" border="0" src="https://www.paypal.com/ja_JP/i/scr/pixel.gif" width="1" height="1"></div>';
 			break;
 		case 'epsilon.php':
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -294,18 +295,17 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 			}
 			$html .= '<input type="hidden" name="item_price" value="' . $usces_entries['order']['total_full_price'] . '">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>
-				</form>';
+				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
 			break;
 		default:
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>
-				</form>';
+				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
 	}
 }
 
-$html .= '<div class="footer_explanation">';
+$html = apply_filters('usces_filter_confirm_inform', $html);
+$html .= '</form><div class="footer_explanation">';
 $footer = '';
 $html .= apply_filters('usces_filter_confirm_page_footer', $footer);
 $html .= '</div>';

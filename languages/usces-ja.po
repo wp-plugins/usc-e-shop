@@ -1552,7 +1552,7 @@ msgid "&laquo; Previous article"
 msgstr "&laquo; 前のページ"
 
 msgid "Cart"
-msgstr "カートの中"
+msgstr "カート"
 
 msgid "Customer Information"
 msgstr "お客様情報"
@@ -1718,6 +1718,9 @@ msgstr "カートに入れる"
 
 msgid "to the cart"
 msgstr "カゴへ"
+
+msgid "In the cart"
+msgstr "カートの中"
 
 msgid "see the details"
 msgstr "詳細を見る"

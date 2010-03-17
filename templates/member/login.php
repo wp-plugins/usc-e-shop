@@ -12,7 +12,7 @@ if ( usces_is_error_message() ) {
 	$html .= '<div class="error_message">' . $this->error_message . '</div>';
 }
 $html .= '<div class="loginbox">
-<form name="loginform" id="loginform" action="' . USCES_MEMBER_URL . '" method="post">
+<form name="loginform" id="loginform" action="' . apply_filters('usces_filter_login_form_action', USCES_MEMBER_URL) . '" method="post">
 <p>
 <label>' . __('e-mail adress', 'usces') . '<br />
 <input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . usces_remembername('return') . '" size="20" tabindex="10" /></label>
@@ -22,10 +22,12 @@ $html .= '<div class="loginbox">
 <input type="password" name="loginpass" id="loginpass" class="loginpass" value="' . usces_rememberpass('return') . '" size="20" tabindex="20" /></label>
 </p>
 <p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever" tabindex="90"' . usces_remembercheck('return') . ' /> ' . __('memorize login information', 'usces') . '</label></p>
-<p class="submit">
-<input type="submit" name="member_login" id="member_login" value="' . __('Log-in', 'usces') . '" tabindex="100" />
-</p>
-</form>
+<p class="submit">';
+$loginbutton = '<input type="submit" name="member_login" id="member_login" value="' . __('Log-in', 'usces') . '" tabindex="100" />';
+$html .= apply_filters('usces_filter_login_button', $loginbutton);
+$html .= '</p>';
+$html = apply_filters('usces_filter_login_inform', $html);
+$html .= '</form>
 
 <p id="nav">
 <a href="' . USCES_MEMBER_URL . '&page=lostmemberpassword" title="' . __('Did you forget your password?', 'usces') . '">' . __('Did you forget your password?', 'usces') . '</a>

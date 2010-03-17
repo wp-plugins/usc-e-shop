@@ -125,8 +125,9 @@ $html .= '<div class="send">
 if( usces_is_cart() ) {
 	$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '" />';
 }
-$html .= '</div>
-	</form>';
+$html .= '</div>';
+$html = apply_filters('usces_filter_cart_inform', $html);
+$html .= '</form>';
 
 $html .= '<div class="footer_explanation">';
 $footer = '';
