@@ -1381,7 +1381,7 @@ class usc_e_shop
 			exit;
 		}
 
-		if( !do_action('usces_purchase_check') ) return;
+		if( !do_action('usces_purchase_check', true) ) return;
 		
 		do_action('usces_purchase_validate');
 		$entry = $this->cart->get_entry();
