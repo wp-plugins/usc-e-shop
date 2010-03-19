@@ -766,6 +766,9 @@ function usces_update_orderdata() {
 	$usces->cart->upCart();
 	if(isset($_POST['delButton'])) {
 		$usces->cart->del_row();
+		$indexs = array_keys($_POST['delButton']);
+		$index = $indexs[0];
+		do_action('usces_admin_delete_orderrow', $ID, $index );
 	}
 	$cart = $usces->cart->get_cart();
 	$usces->cart->entry();

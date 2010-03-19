@@ -180,7 +180,7 @@ $html .= '<tr>
 	</table>
 	<input name="member_regmode" type="hidden" value="editmemberform" />
 	<input name="member_id" type="hidden" value="' . $usces_members['ID'] . '" />
-	<div class="send"><input name="top" type="submit" value="' . __('Back to the top page.', 'usces') . '" />
+	<div class="send"><input name="top" type="button"  onclick="location.href=\'' . get_option('home') . '\'" value="' . __('Back to the top page.', 'usces') . '" />
 	<input name="editmember" type="submit" value="' . __('update it', 'usces') . '" /></div>
 	</form>';
 	

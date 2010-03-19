@@ -681,6 +681,7 @@ foreach((array)$prefs as $value) {
 		$sku = $cart_row['sku'];
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
+		$advance = serialize($cart_row['advance']);
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
 		$cartItemName = $this->getCartItemName($post_id, $sku);
@@ -709,6 +710,7 @@ foreach((array)$prefs as $value) {
 		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $key; ?>" />
 		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
 		<?php } ?>
+		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo $advance; ?>" />
 		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
 		<?php do_action('usces_admin_order_cart_button', $ID, $i); ?>
 		</td>

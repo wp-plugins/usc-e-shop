@@ -565,7 +565,11 @@ function usces_is_cart() {
 	global $usces;
 	
 	if($usces->cart->num_row() > 0)
-		return true;
+		if( apply_filters('usces_is_cart_check', true) ) {
+			return true;
+		}else{
+			return false;
+		}
 	else
 		return false;
 		

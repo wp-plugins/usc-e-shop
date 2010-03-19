@@ -72,6 +72,7 @@ class usces_cart {
 			if ( $_POST['quant'][$index][$post_id][$sku] != '') {
 		
 				$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$index][$post_id][$sku];
+				$_SESSION['usces_cart'][$this->serial]['advance'] = unserialize($_POST['advance'][$index][$post_id][$sku]);
 				if( isset($_POST['order_action']) ){
 					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
 				}else{
@@ -85,7 +86,7 @@ class usces_cart {
 //		ksort($_SESSION['usces_cart'], SORT_STRING);
 	}
 	
-	// cinCart_upload ****************************************************************
+	// inCart_advance ****************************************************************
 	function inCart_advance( $index, $name, $key, $value ){
 	
 	

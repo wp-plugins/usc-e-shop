@@ -1381,7 +1381,7 @@ class usc_e_shop
 			exit;
 		}
 
-		if( !do_action('usces_purchase_check', true) ) return;
+		if( !apply_filters('usces_purchase_check', true) ) return;
 		
 		do_action('usces_purchase_validate');
 		$entry = $this->cart->get_entry();
@@ -1716,10 +1716,12 @@ class usc_e_shop
 						get_date_from_gmt(gmdate('Y-m-d H:i:s', time())),
 						'');
 				$res = $wpdb->query( $query );
-				
+			
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
-				if($res !== false) usces_send_regmembermail();
+				if($res !== false) 
+					$mser = usces_send_regmembermail();
+				
 				return 'newcompletion';
 			}
 			
@@ -1862,6 +1864,53 @@ class usc_e_shop
 					return 'member';
 				}
 			}
+		}
+	}
+
+	function member_just_login($email, $pass) {
+		global $wpdb;
+		$pass = md5($pass);
+		$member_table = $wpdb->prefix . "usces_member";
+
+		$query = $wpdb->prepare("SELECT * FROM $member_table WHERE mem_email = %s AND mem_pass = %s", $email, $pass);
+		$member = $wpdb->get_row( $query, ARRAY_A );
+		if ( empty($member) ) {
+			$this->current_member['email'] = htmlspecialchars($email);
+			$this->error_message = __('<b>Error:</b> Password is not correct.', 'usces');
+			return 'login';
+		} else {
+			$_SESSION['usces_member']['ID'] = $member['ID'];
+			$_SESSION['usces_member']['mailaddress1'] = $member['mem_email'];
+			$_SESSION['usces_member']['mailaddress2'] = $member['mem_email'];
+			$_SESSION['usces_member']['point'] = $member['mem_point'];
+			$_SESSION['usces_member']['name1'] = $member['mem_name1'];
+			$_SESSION['usces_member']['name2'] = $member['mem_name2'];
+			$_SESSION['usces_member']['name3'] = $member['mem_name3'];
+			$_SESSION['usces_member']['name4'] = $member['mem_name4'];
+			$_SESSION['usces_member']['zipcode'] = $member['mem_zip'];
+			$_SESSION['usces_member']['pref'] = $member['mem_pref'];
+			$_SESSION['usces_member']['address1'] = $member['mem_address1'];
+			$_SESSION['usces_member']['address2'] = $member['mem_address2'];
+			$_SESSION['usces_member']['address3'] = $member['mem_address3'];
+			$_SESSION['usces_member']['tel'] = $member['mem_tel'];
+			$_SESSION['usces_member']['fax'] = $member['mem_fax'];
+			$_SESSION['usces_member']['delivery_flag'] = $member['mem_delivery_flag'];
+			$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
+			$_SESSION['usces_member']['registered'] = $member['mem_registered'];
+			$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+			$this->get_current_member();
+			
+			$cookie = $this->get_cookie();
+			if(isset($_POST['rememberme']) && $cookie){
+				$cookie['name'] = $email;
+				$cookie['pass'] = trim($_POST['loginpass']);
+				$this->set_cookie($cookie);
+			}else{
+				$cookie['name'] = '';
+				$cookie['pass'] = '';
+				$this->set_cookie($cookie);
+			}
+			return 'member';
 		}
 	}
 
