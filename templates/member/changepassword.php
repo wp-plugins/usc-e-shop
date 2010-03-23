@@ -11,7 +11,7 @@ if($this->error_message != '') {
 	$html .= '<div class="error_message">' . $this->error_message . '</div>';
 }
 $html .= '<div class="loginbox">
-<form name="loginform" id="loginform" action="' . get_option('home') . '/usces-member" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+<form name="loginform" id="loginform" action="' . USCES_MEMBER_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<p>
 		<label>' . __('password', 'usces') . '<br />
 		<input type="password" name="loginpass1" id="loginpass1" class="loginpass" value="" size="20" tabindex="20" /></label>
