@@ -223,6 +223,9 @@ msgstr "廃盤"
 msgid "Sorry, this item is sold out."
 msgstr "恐れ入りますが、商品が売り切れました。"
 
+msgid "Sorry, stock is insufficient."
+msgstr "恐れ入りますが、在庫が足りなくなりました。"
+
 msgid "Password is not correct."
 msgstr "パスワードが不正です。"
 

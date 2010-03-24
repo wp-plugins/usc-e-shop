@@ -1945,10 +1945,18 @@ class usc_e_shop
 			$cart_row = $cart[$i];
 			$post_id = $cart_row['post_id'];
 			$sku = $cart_row['sku'];
+			$quant = ( isset($_POST['quant']) ) ? $_POST['quant'][$i][$post_id][$sku] : $cart_row['quantity'];
 			$stock = $this->getItemZaiko($post_id, $sku);
+			$zaikonum = $this->getItemZaikoNum($post_id, $sku);
 			$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
 		}
-		$mes = $red == '' ? '' : __('Sorry, this item is sold out.', 'usces');
+		if( $red != '' ){
+			$mes = __('Sorry, this item is sold out.', 'usces');
+		}else if( $zaikonum < $quant ){
+			$mes = __('Sorry, stock is insufficient.', 'usces');
+		}else{
+			$mes = '';
+		}
 		return $mes;	
 	}
 	

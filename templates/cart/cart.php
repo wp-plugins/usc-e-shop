@@ -15,7 +15,7 @@ $header = '';
 $html .= apply_filters('usces_filter_cart_page_header', $header);
 $html .= '</div>';
 
-$html .= '<div class="error_message">' . $usces->error_message . '</div>
+$html .= '<div class="error_message">' . $this->error_message . '</div>
 
 <form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 
