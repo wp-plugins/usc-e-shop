@@ -72,7 +72,7 @@ class usces_cart {
 			if ( $_POST['quant'][$index][$post_id][$sku] != '') {
 		
 				$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$index][$post_id][$sku];
-				$_SESSION['usces_cart'][$this->serial]['advance'] = unserialize($_POST['advance'][$index][$post_id][$sku]);
+				$_SESSION['usces_cart'][$this->serial]['advance'] = $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]);
 				if( isset($_POST['order_action']) ){
 					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
 				}else{
@@ -87,16 +87,23 @@ class usces_cart {
 	}
 	
 	// inCart_advance ****************************************************************
-	function inCart_advance( $index, $name, $key, $value ){
-	
-	
-		$i = 0;
-		foreach($_SESSION['usces_cart'] as $serial => $w){
-			if($i == $index){
-				$_SESSION['usces_cart'][$serial]['advance'][$name][$key] = $value;
-			}
-			$i++;
-		}
+	function inCart_advance( $serial, $name, $key, $value ){
+		$_SESSION['usces_cart'][$serial]['advance'][$name][$key] = $value;
+	}
+
+	// serialize ****************************************************************
+	function wc_serialize( $value ){
+		$out = NULL;
+		if( !empty($value) )
+			$out = urlencode(serialize($value));
+		return $out;
+	}
+
+	function wc_unserialize( $str ){
+		$out = array();
+		if( !empty($str) )
+			$out = unserialize(urldecode($str));
+		return $out;
 	}
 
 	// get data by index ****************************************************************
@@ -198,6 +205,7 @@ class usces_cart {
 		$ids = array_keys($array);
 		$skus = array_keys($array[$ids[0]]);
 
+		$row['serial'] = $serial;
 		$row['post_id'] = $ids[0];
 		$row['sku'] = $skus[0];
 		$row['options'] = $array[$ids[0]][$skus[0]];

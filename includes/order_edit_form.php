@@ -681,7 +681,7 @@ foreach((array)$prefs as $value) {
 		$sku = $cart_row['sku'];
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
-		$advance = serialize($cart_row['advance']);
+		$advance = $this->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
 		$cartItemName = $this->getCartItemName($post_id, $sku);
@@ -692,7 +692,8 @@ foreach((array)$prefs as $value) {
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+				if( !empty($key) )
+					$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
 			}
 		}
 			

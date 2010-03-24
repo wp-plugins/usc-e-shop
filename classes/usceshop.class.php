@@ -6,7 +6,7 @@ class usc_e_shop
 	var $page;   //page action
 	var $cart;          //cart object
 	var $use_ssl;       //ssl flag
-	var $action, $action_status;
+	var $action, $action_status, $error_status;
 	var $action_message, $error_message;
 	var $itemskus, $itemsku, $itemopts, $itemopt;
 	var $zaiko_status, $payment_structure, $display_mode, $shipping_rule, $shipping_charge_structure;
@@ -2852,7 +2852,7 @@ class usc_e_shop
 	
 	function getItemSku($post_id, $index = '') {
 		$fields = get_post_custom($post_id);
-		foreach($fields as $key => $value){
+		foreach((array)$fields as $key => $value){
 			if( preg_match('/^isku_/', $key, $match) ){
 				$key = substr($key, 5);
 				$skus[] = $key;
@@ -2870,7 +2870,7 @@ class usc_e_shop
 	
 	function getItemPrice($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
-		foreach($fields as $key => $value){
+		foreach((array)$fields as $key => $value){
 			if( preg_match('/^isku_/', $key, $match) ){
 				$key = substr($key, 5);
 				$values = maybe_unserialize($value[0]);
@@ -2929,7 +2929,7 @@ class usc_e_shop
 	
 	function updateItemZaiko($post_id, $skukey, $status) {
 		$fields = get_post_custom($post_id);
-		foreach($fields as $key => $value){
+		foreach((array)$fields as $key => $value){
 			$turekey = 'isku_'.$skukey;
 			if( $key == $turekey ){
 				$values = maybe_unserialize($value[0]);
@@ -2942,7 +2942,7 @@ class usc_e_shop
 	
 	function getItemZaikoNum($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
-		foreach($fields as $key => $value){
+		foreach((array)$fields as $key => $value){
 			if( preg_match('/^isku_/', $key, $match) ){
 				$key = substr($key, 5);
 				$values = maybe_unserialize($value[0]);
@@ -2961,7 +2961,7 @@ class usc_e_shop
 	
 	function updateItemZaikoNum($post_id, $skukey, $num) {
 		$fields = get_post_custom($post_id);
-		foreach($fields as $key => $value){
+		foreach((array)$fields as $key => $value){
 			$turekey = 'isku_'.$skukey;
 			if( $key == $turekey ){
 				$values = maybe_unserialize($value[0]);
@@ -2974,7 +2974,7 @@ class usc_e_shop
 	
 	function getItemSkuDisp($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
-		foreach($fields as $key => $value){
+		foreach((array)$fields as $key => $value){
 			if( preg_match('/^isku_/', $key, $match) ){
 				$key = substr($key, 5);
 				$values = maybe_unserialize($value[0]);
@@ -2993,7 +2993,7 @@ class usc_e_shop
 	
 	function getItemSkuUnit($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
-		foreach($fields as $key => $value){
+		foreach((array)$fields as $key => $value){
 			if( preg_match('/^isku_/', $key, $match) ){
 				$key = substr($key, 5);
 				$values = maybe_unserialize($value[0]);
@@ -3014,7 +3014,7 @@ class usc_e_shop
 		$custom_field_keys = get_post_custom_keys( $post_id );
 		if(empty($custom_field_keys)) return;
 		
-		foreach ( $custom_field_keys as $key => $value ) {
+		foreach ( (array)$custom_field_keys as $key => $value ) {
 			if ( 'iopt_' == substr($value,0 , 5) )
 				$res[] = substr($value, 5);
 		}
@@ -3052,7 +3052,7 @@ class usc_e_shop
 	function get_skus( $post_id, $output='' ) {
 		$fields = get_post_custom($post_id);
 		ksort($fields);
-		foreach($fields as $k => $v){
+		foreach((array)$fields as $k => $v){
 			if( preg_match('/^isku_/', $k, $match) ){
 				$values = maybe_unserialize($v[0]);
 				$key[] = substr($k, 5);
@@ -3108,7 +3108,7 @@ class usc_e_shop
 	function getPaymentMethod( $name ) {
 		$res = array();
 		$payments = $this->options['payment_method'];
-		foreach ( $payments as $payment ) {
+		foreach ( (array)$payments as $payment ) {
 			if($name = $payment['name']) {
 				$res = $payment;
 				break;

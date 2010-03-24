@@ -118,7 +118,8 @@ function usces_pdf_out(&$pdf, $data){
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
 			foreach($cart_row['options'] as $key => $value){
-				$optstr .= $key . '=' . $value . ','; 
+				if( !empty($key) )
+					$optstr .= $key . '=' . $value . ','; 
 			}
 		}
 		$optstr = rtrim($optstr, ',');

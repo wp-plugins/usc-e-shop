@@ -837,6 +837,12 @@ div.usccart_navi li.usccart_confirm {
 	border-top-style: solid;
 	border-top-color: #ff6600;
 }
+#info-confirm .error_message {
+	font-size: 13px;
+	line-height: 26px;
+	font-weight: bold;
+	color: #ff0000;
+}
 #info-confirm .post {
 	background-color: #ffffff;
 	width: auto;
