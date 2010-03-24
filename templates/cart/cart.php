@@ -48,6 +48,7 @@ if($this->cart->num_row() > 0) {
 		$sku = $cart_row['sku'];
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
+		$advance = $this->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
 		$cartItemName = $this->getCartItemName($post_id, $sku);
@@ -95,6 +96,7 @@ if($this->cart->num_row() > 0) {
 			<input name="itemsku[' . $i . ']" type="hidden" value="' . $sku . '" />
 			<input name="zaikonum[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . $skuZaikonum . '" />
 			<input name="skuPrice[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . $skuPrice . '" />
+			<input name="advance[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . $advance . '" />
 			<input name="delButton[' . $i . '][' . $post_id . '][' . $sku . ']" class="delButton" type="submit" value="' . __('Delete','usces') . '" />
 			</td>
 		</tr>';
