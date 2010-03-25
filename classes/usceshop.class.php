@@ -1952,7 +1952,7 @@ class usc_e_shop
 		}
 		if( $red != '' ){
 			$mes = __('Sorry, this item is sold out.', 'usces');
-		}else if( $zaikonum < $quant ){
+		}else if( $zaikonum != '' && $zaikonum < $quant ){
 			$mes = __('Sorry, stock is insufficient.', 'usces');
 		}else{
 			$mes = '';
