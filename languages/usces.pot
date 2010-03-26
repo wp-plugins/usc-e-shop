@@ -346,6 +346,9 @@ msgstr "電話番号"
 msgid "Delivery Time"
 msgstr "配送希望時間"
 
+msgid "Delivery Method"
+msgstr "配送方法"
+
 msgid "** WE may not always be able to deliver the items on time which you desire."
 msgstr "※ご希望の時間帯にお届けできない場合があります。"
 

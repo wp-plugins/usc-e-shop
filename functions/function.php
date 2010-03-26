@@ -121,6 +121,11 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= __("* A shipment due date is a day to ship an article, and it's not the arrival day.", 'usces') . "\r\n";
 		$msg_body .= "\r\n";
 	}
+	$deli_meth = (int)$entry['order']['delivery_method'];
+	if( $deli_meth > 0 ){
+		$deli_index = $usces->get_delivery_method_index($deli_meth);
+		$msg_body .= __('Delivery Method','usces') . "：" . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+	}
 	$msg_body .= "\r\n";
 
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
@@ -131,9 +136,10 @@ function usces_order_confirm_message($order_id) {
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $payment['name']. "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
-		$msg_body .= __('Transfer','usces') . "　：\r\n";
-		$msg_body .= $usces->options['transferee'] . "\r\n";
-		$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+		$transferee = __('Transfer','usces') . "　：\r\n";
+		$transferee .= $usces->options['transferee'] . "\r\n";
+		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
+		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	}
 	$msg_body .= "\r\n";
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
@@ -241,6 +247,11 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('Phone number','usces') . "　　：" . $entry['delivery']['tel'] . "\r\n";
 
 	$msg_body .= __('Delivery Time','usces') . "：" . $entry['order']['delivery_time'] . "\r\n";
+	$deli_meth = (int)$entry['order']['delivery_method'];
+	if( $deli_meth > 0 ){
+		$deli_index = $usces->get_delivery_method_index($deli_meth);
+		$msg_body .= __('Delivery Method','usces') . "：" . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+	}
 //	$msg_body .= "------------------------------------------------------------------\r\n";
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= "　" . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
@@ -251,9 +262,10 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $payment['name']. "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
-		$msg_body .= __('Transfer','usces') . "　：\r\n";
-		$msg_body .= $usces->options['transferee'] . "\r\n";
-		$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+		$transferee = __('Transfer','usces') . "　：\r\n";
+		$transferee .= $usces->options['transferee'] . "\r\n";
+		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
+		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	}
 	$msg_body .= "\r\n";
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";

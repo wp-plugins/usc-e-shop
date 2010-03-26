@@ -286,10 +286,10 @@ class usc_e_shop
 				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');	
 				break;
 			case 'editpost':
-				do_action('usces_pre_update_orderdata');
+				do_action('usces_pre_update_orderdata', $_REQUEST['order_id']);
 				$res = usces_update_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_update_orderdata');
+					do_action('usces_after_update_orderdata', $_REQUEST['order_id']);
 					$this->set_action_status('success', __('order date is updated','usces').' <a href="'.stripslashes( $_POST['usces_referer'] ).'">'.__('back to the summary','usces').'</a>');
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
@@ -318,10 +318,10 @@ class usc_e_shop
 				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
 				break;
 			case 'delete':
-				do_action('usces_pre_delete_orderdata');
+				do_action('usces_pre_delete_orderdata', $_REQUEST['order_id']);
 				$res = usces_delete_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_delete_orderdata');
+					do_action('usces_after_delete_orderdata', $_REQUEST['order_id']);
 					$this->set_action_status('success', __('the order date is deleted','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
