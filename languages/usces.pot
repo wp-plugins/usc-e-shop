@@ -2285,3 +2285,6 @@ msgstr "SSLを利用する場合はチェックを付けてください。"
 msgid "Shipping name"
 msgstr "配送名"
 
+msgid "There is not a choice."
+msgstr "指定できません"
+

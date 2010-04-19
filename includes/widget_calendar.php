@@ -33,8 +33,18 @@ $cal2->setCalendarData();
 	if ($mday != "") {
 		$business = $usces->options['business_days'][$todayyy][$todaymm][$mday];
 		//$style = ($business == 1) ? "" : ' style="background-color:#FFECCE; color:#ff0000;"';
-		$style = ($business == 1) ? "" : ' class="businessday"'; ?>
-		<td<?php echo $style; ?>><?php echo $mday; ?></td>
+		if($mday == $todaydd){
+			$tostyle = 'businesstoday';
+		}else{
+			$tostyle = '';
+		}
+		if($business == 0){
+			$style = 'businessday ';
+		}else{
+			$style = '';
+		}
+?>
+		<td class="<?php echo $style . $tostyle; ?>"><?php echo $mday; ?></td>
 <?php } else { ?>
 		<td>&nbsp;</td>
 <?php } ?>

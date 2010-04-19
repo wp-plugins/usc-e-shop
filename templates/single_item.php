@@ -24,13 +24,12 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 	}
 	$html .= '<div class="field_name">'.__('selling price', 'usces') . $this->getGuidTax() . '</div>
 		<div class="field_price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</div>
-		</div>
-		<div class="field">
-		' . __('stock status', 'usces') . '：' . usces_the_itemZaiko('return') . '
-		</div>
+		</div>';
+	$singlestock = '<div class="field">' . __('stock status', 'usces') . '：' . usces_the_itemZaiko('return') . '</div>';
+	$html .= apply_filters('single_item_stock_field', $singlestock);
 		
-		' . $content . '
-		</div>' . usces_the_itemGpExp('return') . '
+	$html .= $content;
+	$html .= '</div>' . usces_the_itemGpExp('return') . '
 		<div class="skuform" align="right">';
 	if (usces_is_options()) {
 		$html .= "<table class='item_option'><caption>".__('Please appoint an option.', 'usces')."</caption>\n";
@@ -112,8 +111,9 @@ if (usces_get_assistance_id_list($post->ID)) {
 	$html .= '<div class="assistance_item">';
 	$assistanceposts = get_posts('include='.usces_get_assistance_id_list($post->ID));
 	if ($assistanceposts) {
-		$html .= '<h3>' . usces_the_itemCode( 'return' ) . __('An article concerned', 'usces').'</h3>
-			<ul class="clearfix">';
+		$assistance_item_title = '<h3>' . usces_the_itemCode( 'return' ) . __('An article concerned', 'usces').'</h3>';
+		$html .= apply_filters('usces_assistance_item_title', $assistance_item_title);
+		$html .= '<ul class="clearfix">';
 		foreach ($assistanceposts as $post) {
 			setup_postdata($post);
 			usces_the_item();

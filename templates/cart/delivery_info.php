@@ -45,6 +45,9 @@ if( EX_DLSELLER !== true ){
 							}
 						}
 					}
+					if(option == ''){
+						option = '<option value=\"" . __('There is not a choice.', 'usces') . "\">' + '" . __('There is not a choice.', 'usces') . "' + '</option>';
+					}
 					$(\"#delivery_time_select\").html(option);
 				}
 			};

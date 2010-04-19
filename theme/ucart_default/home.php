@@ -5,12 +5,10 @@
  */
 get_header();
 ?>
-
 <div class="center">
 <div class="top_image"><img src="<?php bloginfo('template_url'); ?>/images/image_top.jpg" alt="<?php bloginfo('name'); ?>" width="560" height="240" /></div>
 <div class="title"><?php _e('Items recommended','usces') ?></div>
 <div class="clearfix">
-
 
 <?php //$paged = get_query_var('paged'); ?>
 <?php //$posts_per_page = 8; ?>

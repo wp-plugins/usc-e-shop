@@ -54,6 +54,7 @@ if ( !count($usces_member_history) ) {
 foreach ( $usces_member_history as $umhs ) {
 	$cart = $umhs['cart'];
 	$html .= '<tr>
+		<th class="historyrow">' . __('Order number', 'usces') . '</th>
 		<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
 		<th class="historyrow">' . __('Purchase price', 'usces') . '</th>
 		<th class="historyrow">' . __('Used points', 'usces') . '</th>
@@ -64,6 +65,7 @@ foreach ( $usces_member_history as $umhs ) {
 		<th class="historyrow">' . __('Acquired points', 'usces') . '</th>
 		</tr>
 		<tr>
+		<td class="rightnum">' . $umhs['ID'] . '</td>
 		<td class="date">' . $umhs['date'] . '</td>
 		<td class="rightnum">' . number_format($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']) . '</td>
 		<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>
@@ -74,7 +76,7 @@ foreach ( $usces_member_history as $umhs ) {
 		<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>
 		</tr>
 		<tr>
-		<td class="retail" colspan="8">
+		<td class="retail" colspan="9">
 			<table id="retail_table">
 			<tr>
 			<th scope="row" class="num">No.</th>

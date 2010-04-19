@@ -705,6 +705,10 @@ div.usccart_navi li.usccart_confirm {
 	margin-left: 0px;
 	margin-right: 3px;
 }
+#customer-info .customer_form em {
+	font-style: normal;
+	color: #ff0000;
+}
 #customer-info .send {
 	text-align: center;
 	width: auto;
@@ -1404,7 +1408,11 @@ ul.ucart_featured_body .thumtitle a,
 	width: 100%;
 }
 
-
+.widget_welcart_post p {
+	margin-top: 0px;
+	margin-bottom: 3px;
+	line-height: 1.1em;
+}
 /* End widget style */
 /************************************************************************************/
 /* catbox */
@@ -1422,4 +1430,8 @@ ul.ucart_featured_body .thumtitle a,
 .businessday {
 	background-color: #FFECCE;
 	color: #ff0000;
+}
+.businesstoday {
+	color: #000000;
+	font-weight: bold;
 }

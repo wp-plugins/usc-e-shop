@@ -71,7 +71,7 @@ class usc_e_shop
 			$ssl_url = $this->options['ssl_url'];
 			$ssl_url_admin = $this->options['ssl_url_admin'];
 			define('USCES_FRONT_PLUGIN_URL', $ssl_url_admin . '/wp-content/plugins/' . USCES_PLUGIN_FOLDER);
-			add_filter('page_link', array($this, 'usces_ssl_page_link'));
+			add_filter('page_link', array(&$this, 'usces_ssl_page_link'));
 			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
 			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
@@ -159,51 +159,65 @@ class usc_e_shop
 	
 	function usces_ssl_page_link($link)
 	{
-		if( $this->is_cart_or_member_page($link) ){
-			$fronts = parse_url(get_option('home'));
-			$homes = parse_url(USCES_SSL_URL);
-			if(empty($fronts['scheme'])){
-				$frontsscheme = 'http://';
-			}else{
-				$frontsscheme = $fronts['scheme'].'://';
-			}
-			if(empty($homes['scheme'])){
-				$homesscheme = 'https://';
-			}else{
-				$homesscheme = $homes['scheme'].'://';
-			}
-			$site = str_replace($frontsscheme, '', get_option('home'));
-			$sslsite = str_replace($homesscheme, '', USCES_SSL_URL);
-			$link = str_replace($site, $sslsite, $link);
-			$link = str_replace('http://', 'https://', $link);
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+//			$fronts = parse_url(get_option('home'));
+//			$homes = parse_url(USCES_SSL_URL);
+//			if(empty($fronts['scheme'])){
+//				$frontsscheme = 'http://';
+//			}else{
+//				$frontsscheme = $fronts['scheme'].'://';
+//			}
+//			if(empty($homes['scheme'])){
+//				$homesscheme = 'https://';
+//			}else{
+//				$homesscheme = $homes['scheme'].'://';
+//			}
+//			$site = str_replace($frontsscheme, '', get_option('home'));
+//			$sslsite = str_replace($homesscheme, '', USCES_SSL_URL);
+//			$link = str_replace($site, $sslsite, $link);
+//			$link = str_replace('http://', 'https://', $link);
+			if( strpos($link, '/usces-cart') )
+				$link = USCES_CART_URL;
+			if( strpos($link, '/usces-member') )
+				$link = USCES_MEMBER_URL;
+				
+//			$link = str_replace('/usces-cart', ('/?page_id='.USCES_CART_NUMBER), $link);
+//			$link = str_replace('/usces-member', ('/?page_id='.USCES_MEMBER_NUMBER), $link);
+				
 		}
 		return $link;
 	}
 
 	function usces_ssl_contents_link($link)
 	{
-		$req = explode('/wp-content/',$link);
-		$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+			$req = explode('/wp-content/',$link);
+			$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
+		}
 		return $link;
 	}
 
 	function usces_ssl_attachment_link($link)
 	{
-		$link = str_replace(get_option('siteurl'), USCES_SSL_URL_ADMIN, $link);
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+			$link = str_replace(get_option('siteurl'), USCES_SSL_URL_ADMIN, $link);
+		}
 		return $link;
 	}
 
 	function usces_ssl_script_link($link)
 	{
-		if(strpos($link, '/wp-content/') !== false){
-			$req = explode('/wp-content/',$link, 2);
-			$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
-		}else if(strpos($link, '/wp-includes/') !== false){
-			$req = explode('/wp-includes/',$link, 2);
-			$link = USCES_SSL_URL_ADMIN . '/wp-includes/' . $req[1];
-		}else if(strpos($link, '/wp-admin/') !== false){
-			$req = explode('/wp-admin/',$link, 2);
-			$link = USCES_SSL_URL_ADMIN . '/wp-admin/' . $req[1];
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+			if(strpos($link, '/wp-content/') !== false){
+				$req = explode('/wp-content/',$link, 2);
+				$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
+			}else if(strpos($link, '/wp-includes/') !== false){
+				$req = explode('/wp-includes/',$link, 2);
+				$link = USCES_SSL_URL_ADMIN . '/wp-includes/' . $req[1];
+			}else if(strpos($link, '/wp-admin/') !== false){
+				$req = explode('/wp-admin/',$link, 2);
+				$link = USCES_SSL_URL_ADMIN . '/wp-admin/' . $req[1];
+			}
 		}
 		return $link;
 	}
@@ -807,7 +821,13 @@ class usc_e_shop
 		global $post, $current_user;
 		get_currentuserinfo();
 		
-		$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+			$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
+			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
+		}else{
+			$css_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER . '/css/usces_cart.css';
+			$javascript_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDERL . '/js/usces_cart.js';
+		}
 		$this->member_name = ( is_user_logged_in() ) ? get_usermeta($current_user->ID,'first_name').get_usermeta($current_user->ID,'last_name') : '';
 		?>
 
@@ -818,7 +838,6 @@ class usc_e_shop
 		<?php 
 		if(isset($post)) : 
 		
-			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
 			$ioptkeys = $this->get_itemOptionKey( $post->ID );
 			$mes_opts_str = "";
 			$key_opts_str = "";
@@ -949,7 +968,7 @@ class usc_e_shop
 			
 					quant = $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val();
 					if( $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']") ){
-						if( quant == '' || !(uscesCart.isNum(quant))){
+						if( quant == '0' || quant == '' || !(uscesCart.isNum(quant))){
 							mes += <?php _e("'enter the correct amount for the No.' + (i+1) + ' item'", 'usces'); ?>+"\n";
 						}
 						var checknum = '';
@@ -977,6 +996,66 @@ class usc_e_shop
 					}
 				}
 	
+				if( mes != '' ){
+					alert( mes );
+					return false;
+				}else{
+					return true;
+				}
+			},
+			
+			cartNext : function () {
+			
+				var zaikoob = $("input[name*='zaikonum']");
+				var quantob = $("input[name*='quant']");
+				var postidob = $("input[name*='itempostid']");
+				var skuob = $("input[name*='itemsku']");
+				
+				var zaikonum = '';
+				var zaiko = '';
+				var quant = '';
+				var mes = '';
+				var checknum = '';
+				var post_id = '';
+				var sku = '';
+				var itemRestriction = '';
+				
+				var ct = zaikoob.length;
+				for(var i=0; i< ct; i++){
+					post_id = postidob[i].value;
+					sku = skuob[i].value;
+					itemRestriction = $("input[name='itemRestriction\[" + i + "\]']").val();
+					zaikonum = $("input[name='zaikonum\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val();
+			
+					quant = $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val();
+					if( $("input[name='quant\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']") ){
+						if( quant == '0' || quant == '' || !(uscesCart.isNum(quant))){
+							mes += <?php _e("'enter the correct amount for the No.' + (i+1) + ' item'", 'usces'); ?>+"\n";
+						}
+						var checknum = '';
+						var checkmode = '';
+						if( parseInt(itemRestriction) <= parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
+							checknum = uscesL10n.itemRestriction;
+							checkmode ='rest';
+						} else if( parseInt(itemRestriction) > parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
+							checknum = zaikonum;
+							checkmode ='zaiko';
+						} else if( (itemRestriction == '' || itemRestriction == '0') && zaikonum != '' ) {
+							checknum = zaikonum;
+							checkmode ='zaiko';
+						} else if( itemRestriction != '' && itemRestriction != '0' && zaikonum == '' ) {
+							checknum = itemRestriction;
+							checkmode ='rest';
+						}
+						if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
+							if(checkmode == 'rest'){
+								mes += <?php _e("'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'", 'usces'); ?>+"\n";
+							}else{
+								mes += <?php _e("'Stock of No.' + (i+1) + ' item is remainder '+checknum+'.'", 'usces'); ?>+"\n";
+							}
+						}
+					}
+				}
 				if( mes != '' ){
 					alert( mes );
 					return false;
@@ -3416,7 +3495,7 @@ class usc_e_shop
 		global $wpdb;
 		$order_table = $wpdb->prefix . "usces_order";
 	
-		$query = $wpdb->prepare("SELECT order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
+		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
 								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
 							FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
 		$results = $wpdb->get_results( $query );
@@ -3427,6 +3506,7 @@ class usc_e_shop
 			if(strpos($value->order_status, 'cancel') === false && strpos($value->order_status, 'estimate') === false){
 		
 				$res[] = array(
+							'ID' => $value->ID,
 							'cart' => unserialize($value->order_cart),
 							'condition' => unserialize($value->order_condition),
 							'getpoint' => $value->order_getpoint,

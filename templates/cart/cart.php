@@ -68,7 +68,7 @@ if($this->cart->num_row() > 0) {
 				
 		$html .= '<tr>
 			<td>' . ($i + 1) . '</td>
-			<td>' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</td>
+			<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
 			<td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
@@ -125,7 +125,7 @@ $html .= $content;
 $html .= '<div class="send">
 	<input name="previous" type="button" id="previouscart" onclick="uscesCart.previousCart();" value="' . __('continue shopping','usces') . '" />&nbsp;&nbsp;';
 if( usces_is_cart() ) {
-	$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '" />';
+	$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '"  onclick="return uscesCart.cartNext()" />';
 }
 $html .= '</div>';
 $html = apply_filters('usces_filter_cart_inform', $html);

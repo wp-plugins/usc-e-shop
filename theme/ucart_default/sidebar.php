@@ -12,7 +12,7 @@
 	if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) : ?>
 	
 	<li id="ucart_search-0" class="widget widget_ucart_search">
-		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/find.png" alt="<?php _e('keyword search','usces') ?>" width="24" height="24" /><?php _e('keyword search','usces') ?></div>
+		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/search.png" alt="<?php _e('keyword search','usces') ?>" width="24" height="24" /><?php _e('keyword search','usces') ?></div>
 		<ul class="ucart_widget_body"><li>
 		<form method="get" id="searchform" action="<?php bloginfo('home'); ?>" >
 		<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" />
@@ -21,7 +21,7 @@
 		</li></ul>
 	</li>
 	<li id="ucart_category-0" class="widget widget_ucart_category">
-		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/category2.png" alt="<?php _e('Item Category','usces') ?>" width="24" height="24" /><?php _e('Item Category','usces') ?></div>
+		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/category.png" alt="<?php _e('Item Category','usces') ?>" width="24" height="24" /><?php _e('Item Category','usces') ?></div>
 		<ul class="ucart_widget_body">
 		<?php $cats = get_category_by_slug('itemgenre'); ?>
 		<?php wp_list_categories('orderby=id&use_desc_for_title=0&child_of='.$cats->term_id.'&title_li='); ?>
@@ -64,7 +64,7 @@
  	</li>
 	
 	<li id="ucart_bestseller-0" class="widget widget_ucart_bestseller">
-		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/best-seller.png" alt="<?php _e('best seller','usces') ?>" width="24" height="24" /><?php _e('best seller','usces') ?></div>
+		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/bestseller.png" alt="<?php _e('best seller','usces') ?>" width="24" height="24" /><?php _e('best seller','usces') ?></div>
 		<ul class="ucart_widget_body">
 		<?php usces_list_bestseller(10); ?>
 		</ul>

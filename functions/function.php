@@ -723,7 +723,7 @@ function usces_delete_orderdata() {
 	
 	if($res){
 		$query = $wpdb->prepare("DELETE FROM $order_meta_table WHERE order_id = %d", $ID);
-		$res = $wpdb->query( $query );
+		$wpdb->query( $query );
 	}
 	
 	return $res;

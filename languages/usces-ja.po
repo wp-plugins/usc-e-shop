@@ -2289,6 +2289,9 @@ msgstr "SSLを利用する場合はチェックを付けてください。"
 msgid "Shipping name"
 msgstr "配送名"
 
+msgid "There is not a choice."
+msgstr "指定できません"
+
 #~ msgid "〜％ discount at the purchase of more then 〜units."
 #~ msgstr "～個以上で～％引き（単価）"
 #~ msgid "Only few stocks left for this item."

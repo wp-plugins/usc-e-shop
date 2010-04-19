@@ -918,16 +918,20 @@ function usces_remembercheck( $out = '' ){
 			echo '';
 	}
 }
-function usces_shippingchargeTR() {
+function usces_shippingchargeTR( $index='' ) {
 	global $usces;
-	$loop = $usces->options['shipping_charges'][1];
-	foreach ($loop as $pref => $value) {
-		echo "<tr><th>" . $pref . "</th>\n";
-		foreach ($usces->options['shipping_charges'] as $i => $p) {
-			echo "<td class='rightnum'>" . number_format($usces->options['shipping_charges'][$i][$pref]) . "</td>\n";
-		}
-		echo "</tr>\n";
+	if($index == ""){
+		$index = 0;
 	}
+	$list = '';
+	if( !isset($usces->options['shipping_charge'][$index]) ) return;
+	$shipping_charge = $usces->options['shipping_charge'][$index];
+	foreach ($shipping_charge['value'] as $pref => $value) {
+		$list .= "<tr><th>" . $pref . "</th>\n";
+		$list .= "<td class='rightnum'>" . number_format($value) . "</td>\n";
+		$list .= "</tr>\n";
+	}
+	echo $list;
 }
 function usces_sc_shipping_charge() {
 	global $usces;
@@ -973,7 +977,8 @@ function usces_list_bestseller($num, $days = ''){
 	for($i=0; $i<$num; $i++){
 		if(isset($ids[$i])){
 			$post = get_post($ids[$i]);
-			$htm .= "<li><a href='" . get_permalink($ids[$i]) . "'>" . $post->post_title . "</a></li>\n";
+			$disp_text = apply_filters('usces_widget_bestseller_auto_text', wp_specialchars($post->post_title), $ids[$i]);
+			$htm .= "<li><a href='" . get_permalink($ids[$i]) . "'>" . $disp_text . "</a></li>\n";
 		}
 	}
 	$htm .= "</ul>\n";
