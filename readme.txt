@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 2.9
 Tested up to: 2.9.2
-Stable tag: 0.4.2
+Stable tag: 0.4.3
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -55,6 +55,13 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 3. An attached default theme
 
 == Changelog ==
+
+= V0.4.3 =
+20 Apr 2010
+-----------
+* Fixed the malfunction that a purchase procedure is possible with amount as 0
+* Fixed the malfunction that images or style-sheets go through SSL entirely in the page of non-SSL
+* Fixed the malfunction that cannot access the cart pages, when I use the Permalinks in the case of "Common use SSL"
 
 = V0.4.2 =
 25 Mar 2010
