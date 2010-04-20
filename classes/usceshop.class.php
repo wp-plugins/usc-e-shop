@@ -3964,7 +3964,7 @@ class usc_e_shop
 	
 	function set_reserve_pre_order_id(){
 		$entry = $this->cart->get_entry();
-		$id = ( isset($entry['reserve']['pre_order_id']) && !empty($entry['reserve']['pre_order_id']) ) ? $entry['reserve']['pre_order_id'] : uniqid();
+		$id = ( isset($entry['reserve']['pre_order_id']) && !empty($entry['reserve']['pre_order_id']) ) ? $entry['reserve']['pre_order_id'] : uniqid('');
 		$this->cart->set_pre_order_id($id);
 	}
 
@@ -4119,7 +4119,7 @@ class usc_e_shop
 				include( $temp_path );
 				break;
 			case 'error':
-				$temp_path = apply_filters('usces_template_path_error', USCES_PLUGIN_DIR . '/templates/cart/error.php');
+				$temp_path = apply_filters('usces_template_path_carterror', USCES_PLUGIN_DIR . '/templates/cart/error.php');
 				include( $temp_path );
 				break;
 			case 'maintenance':
@@ -4171,7 +4171,7 @@ class usc_e_shop
 					$newtitle = apply_filters('usces_filter_title_ordercompletion', __('Completion', 'usces'));
 					break;
 				case 'error':
-					$newtitle = apply_filters('usces_filter_title_error', __('Error', 'usces'));
+					$newtitle = apply_filters('usces_filter_title_carterror', __('Error', 'usces'));
 					break;
 				case 'search_item':
 					$newtitle = apply_filters('usces_filter_title_search_item', __("'AND' search by categories", 'usces'));
@@ -4206,33 +4206,40 @@ class usc_e_shop
 		if( $this->is_member_logged_in() ) {
 		
 			$member_regmode = 'editmemberform';
-			include( USCES_PLUGIN_DIR . '/templates/member/member.php' );
+			$temp_path = apply_filters('usces_template_path_member', USCES_PLUGIN_DIR . '/templates/member/member.php');
+			include( $temp_path );
 		
 		} else {
 		
 			switch($this->page){
 				case 'login':
-					include( USCES_PLUGIN_DIR . '/templates/member/login.php' );
+					$temp_path = apply_filters('usces_template_path_login', USCES_PLUGIN_DIR . '/templates/member/login.php');
+					include( $temp_path );
 					break;
 				case 'lostmemberpassword':
-					include( USCES_PLUGIN_DIR . '/templates/member/lostpassword.php' );
+					$temp_path = apply_filters('usces_template_path_lostpassword', USCES_PLUGIN_DIR . '/templates/member/lostpassword.php');
+					include( $temp_path );
 					break;
 				case 'changepassword':
-					include( USCES_PLUGIN_DIR . '/templates/member/changepassword.php' );
+					$temp_path = apply_filters('usces_template_path_changepassword', USCES_PLUGIN_DIR . '/templates/member/changepassword.php');
+					include( $temp_path );
 					break;
 				case 'newcompletion':
 				case 'editcompletion':
 				case 'lostcompletion':
 				case 'changepasscompletion':
-					include( USCES_PLUGIN_DIR . '/templates/member/completion.php' );
+					$temp_path = apply_filters('usces_template_path_membercompletion', USCES_PLUGIN_DIR . '/templates/member/completion.php');
+					include( $temp_path );
 					break;
 				case 'newmemberform':
-					$member_form_title = __('New enrollment form', 'usces');
+					$member_form_title = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces'));
 					$member_regmode = 'newmemberform';
-					include( USCES_PLUGIN_DIR . '/templates/member/member_form.php' );
+					$temp_path = apply_filters('usces_template_path_member_form', USCES_PLUGIN_DIR . '/templates/member/member_form');
+					include( $temp_path );
 					break;
 				default:
-					include( USCES_PLUGIN_DIR . '/templates/member/login.php' );
+					$temp_path = apply_filters('usces_template_path_login', USCES_PLUGIN_DIR . '/templates/member/login.php');
+					include( $temp_path );
 			}
 		
 		}
@@ -4249,25 +4256,25 @@ class usc_e_shop
 		if( $title == 'Member' || $title == __('Membership', 'usces') ){
 			switch($this->page){
 				case 'login':
-					$newtitle = __('Log-in for members', 'usces');
+					$newtitle = apply_filters('usces_filter_title_login', __('Log-in for members', 'usces'));
 					break;
 				case 'newmemberform':
-					$newtitle = __('New enrollment form', 'usces');
+					$newtitle = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces'));
 					break;
 				case 'lostmemberpassword':
-					$newtitle = __('The new password acquisition', 'usces');
+					$newtitle = apply_filters('usces_filter_title_lostmemberpassword', __('The new password acquisition', 'usces'));
 					break;
 				case 'changepassword':
-					$newtitle = __('Change password', 'usces');
+					$newtitle = apply_filters('usces_filter_title_changepassword', __('Change password', 'usces'));
 					break;
 				case 'newcompletion':
 				case 'editcompletion':
 				case 'lostcompletion':
 				case 'changepasscompletion':
-					$newtitle = __('Completion', 'usces');
+					$newtitle = apply_filters('usces_filter_title_changepasscompletion', __('Completion', 'usces'));
 					break;
 				case 'error':
-					$newtitle = __('Error', 'usces');
+					$newtitle = apply_filters('usces_filter_title_membererror', __('Error', 'usces'));
 					break;
 				default:
 					$newtitle = $title;
