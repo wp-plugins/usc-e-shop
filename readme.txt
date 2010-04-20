@@ -27,9 +27,9 @@ Orders made on online shop will be transmitted to manager by e-mail. At the same
  
 
 
-[Welcart Online Help(Japanese)](http://www.usconsort.com/usces/).
+[Welcart Online Help(Japanese)](http://www.welcart.com/documents/).
 
-[Welcart Community(Japanese)](http://www.usconsort.com/community/).
+[Welcart Community(Japanese)](http://www.welcart.com/wc-com/).
 
 == Installation ==
 
