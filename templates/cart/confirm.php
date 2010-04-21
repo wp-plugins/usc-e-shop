@@ -31,8 +31,8 @@ $html .= '<div id="cart">
 		</thead>
 		<tbody>';
 
-$memid = $this->get_member();
-$member = ( 1 > (int)$memid ) ? 0 : $memid;
+$member = $this->get_member();
+$memid = ( empty($member['ID']) ) ? 999999999 : $member['ID'];
 $usces_entries = $this->cart->get_entry();
 $this->set_cart_fees( $member, $usces_entries );
 
@@ -283,15 +283,15 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 			break;
 		case 'epsilon.php':
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<input type="hidden" name="user_id" value="' . $member['ID'] . '">
+				<input type="hidden" name="user_id" value="' . $memid . '">
 				<input type="hidden" name="user_name" value="' . $usces_entries['customer']['name1'] . ' ' . $usces_entries['customer']['name2'] . '">
 				<input type="hidden" name="user_mail_add" value="' . $usces_entries['customer']['mailaddress1'] . '">';
 			if( 1 < count($cart) ) {
 				$html .= '<input type="hidden" name="item_code" value="99999999">
-					<input type="hidden" name="item_name" value="' . $send_item_name . __('and others', 'usces') . '">';
+					<input type="hidden" name="item_name" value="' . substr($send_item_name, 0, 50) . ' ' . __('and others', 'usces') . '">';
 			}else{
 				$html .= '<input type="hidden" name="item_code" value="' . $send_item_code . '">
-					<input type="hidden" name="item_name" value="' . $send_item_name . '">';
+					<input type="hidden" name="item_name" value="' . substr($send_item_name, 0, 64) . '">';
 			}
 			$html .= '<input type="hidden" name="item_price" value="' . $usces_entries['order']['total_full_price'] . '">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;

@@ -4234,7 +4234,7 @@ class usc_e_shop
 				case 'newmemberform':
 					$member_form_title = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces'));
 					$member_regmode = 'newmemberform';
-					$temp_path = apply_filters('usces_template_path_member_form', USCES_PLUGIN_DIR . '/templates/member/member_form');
+					$temp_path = apply_filters('usces_template_path_member_form', USCES_PLUGIN_DIR . '/templates/member/member_form.php');
 					include( $temp_path );
 					break;
 				default:
