@@ -72,8 +72,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th>' . __('SKU code','usces') . '</th>
-		<th>' . __('normal price','usces') . '</th>
-		<th>' . __('Sale price','usces') . '</th>
+		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '</th>
+		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL) . '</th>
 		<th>' . __('stock','usces') . '</th>
 		<th>' . __('stock status', 'usces') . '</th>
 	</tr>
@@ -89,8 +89,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th class="left"><?php _e('SKU code','usces'); ?></th>
-		<th><?php _e('normal price','usces'); ?></th>
-		<th><?php _e('Sale price','usces'); ?></th>
+		<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
+		<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
 		<th><?php _e('stock','usces'); ?></th>
 		<th><?php _e('stock status','usces'); ?></th>
 	</tr>
@@ -416,8 +416,8 @@ function item_sku_meta_form() {
 <thead>
 <tr>
 	<th class="left"><?php _e('SKU code','usces') ?></th>
-	<th><?php _e('normal price','usces') ?></th>
-	<th><?php _e('Sale price','usces') ?></th>
+	<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
+	<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
 	<th><?php _e('stock','usces') ?></th>
 	<th><?php _e('stock status','usces') ?></th>
 </tr>
@@ -1270,8 +1270,10 @@ function get_order_item( $item_code ) {
 	$r .= "<tr>\n";
 	$r .= "<th>" . __('order number','usces') . "</th>\n";
 	$r .= "<th>" . __('title','usces') . "</th>\n";
-	$r .= "<th>" . __('List price','usces') . $usces->getGuidTax() . "</th>\n";
-	$r .= "<th>" . __('Sale price','usces') . $usces->getGuidTax() . "</th>\n";
+	$usces_listprice = __('List price', 'usces') . $usces->getGuidTax();
+	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), $usces->getGuidTax()) . "</th>\n";
+	$usces_sellingprice = __('Sale price','usces') . $usces->getGuidTax();
+	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), $usces->getGuidTax()) . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('unit','usces') . "</th>\n";

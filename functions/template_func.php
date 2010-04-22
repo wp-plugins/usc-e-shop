@@ -1085,4 +1085,10 @@ function usces_totalquantity_in_cart(){
 
 	echo number_format($usces->get_total_quantity());
 }
+
+function usces_get_page_mode(){
+	global $usces;
+
+	return $usces->page;
+}
 ?>

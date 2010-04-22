@@ -19,10 +19,12 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		<div class="exp">
 		<div class="field">';
 	if( $this->itemsku['value']['cprice'] > 0 ){
-		$html .= '<div class="field_name">' . __('List price', 'usces') . $this->getGuidTax() . '</div>
+		$usces_listprice = __('List price', 'usces') . $this->getGuidTax();
+		$html .= '<div class="field_name">' . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), $this->getGuidTax()) . '</div>
 		<div class="field_cprice">' . __('$', 'usces') . number_format($this->itemsku['value']['cprice']) . '</div>';
 	}
-	$html .= '<div class="field_name">'.__('selling price', 'usces') . $this->getGuidTax() . '</div>
+	$usces_sellingprice = __('selling price', 'usces') . $this->getGuidTax();
+	$html .= '<div class="field_name">' . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), $this->getGuidTax()) . '</div>
 		<div class="field_price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</div>
 		</div>';
 	$singlestock = '<div class="field">' . __('stock status', 'usces') . '：' . usces_the_itemZaiko('return') . '</div>';
@@ -42,7 +44,7 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 	$html .= '</div>';
 	
 } elseif(usces_sku_num() > 1) { //SKUが複数の場合
-	
+	usces_have_skus();
 	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp;（' . usces_the_itemCode( 'return' ) . '）</h3>
 		<div class="exp">' . $content . '</div>
 		<div class="skuform">
@@ -52,9 +54,11 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		<th rowspan="2" class="thborder">'.__('order number', 'usces').'</th>
 		<th colspan="2">タイトル</th>';
 	if( $this->itemsku['value']['cprice'] > 0 ){
-		$html .= '<th colspan="2">('.__('List price', 'usces').')'.__('selling price', 'usces') . $this->getGuidTax() . '</th>';
+		$usces_bothprice = '('.__('List price', 'usces').')'.__('selling price', 'usces') . $this->getGuidTax();
+		$html .= '<th colspan="2">'.apply_filters('usces_filter_bothprice_label', $usces_bothprice, __('List price', 'usces'), __('selling price', 'usces'), $this->getGuidTax()) . '</th>';
 	}else{
-		$html .= '<th colspan="2">'.__('selling price', 'usces') . $this->getGuidTax() . '</th>';
+		$usces_sellingprice = __('selling price', 'usces') . $this->getGuidTax();
+		$html .= '<th colspan="2">'.apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), $this->getGuidTax()) . '</th>';
 	}
 	$html .= '</tr>
 		<tr>
@@ -65,7 +69,7 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		</tr>
 		</thead>
 		<tbody>';
-	while (usces_have_skus()) {
+	do {
 		$html .= '<tr>
 			<td rowspan="2">' . $this->itemsku['key'] . '</td>
 			<td colspan="2" class="skudisp subborder">' . $this->itemsku['value']['disp'];
@@ -84,7 +88,7 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 		if( $this->itemsku['value']['cprice'] > 0 ){
 			$html .= '<span class="cprice">(' . __('$', 'usces') . number_format($this->itemsku['value']['cprice']) . ')</span>';
 		}			
-		$html .= '<span class="price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . $this->getGuidTax() . '</span><br />' . usces_the_itemGpExp('return') . '</td>
+		$html .= '<span class="price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</span><br />' . usces_the_itemGpExp('return') . '</td>
 			</tr>
 			<tr>
 			<td class="zaiko">' . usces_the_itemZaiko('return') . '</td>
@@ -92,7 +96,7 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 			<td class="unit">' . $this->itemsku['value']['unit'] . '</td>
 			<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>
 			</tr>';
-	}
+	} while (usces_have_skus());
 	$html .= '</tbody>
 		</table>
 		</div>';

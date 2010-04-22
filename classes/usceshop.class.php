@@ -4339,154 +4339,154 @@ class usc_e_shop
 		if( !empty($this->options['cart_page_data']['header']['cart']) ){
 			$html = $this->options['cart_page_data']['header']['cart'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_cart_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
 			$html = $this->options['cart_page_data']['footer']['cart'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_customer_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['customer']) ){
 			$html = $this->options['cart_page_data']['header']['customer'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_customer_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
 			$html = $this->options['cart_page_data']['footer']['customer'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_delivery_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
 			$html = $this->options['cart_page_data']['header']['delivery'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_delivery_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
 			$html = $this->options['cart_page_data']['footer']['delivery'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_confirm_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
 			$html = $this->options['cart_page_data']['header']['confirm'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_confirm_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
 			$html = $this->options['cart_page_data']['footer']['confirm'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_cartcompletion_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['completion']) ){
 			$html = $this->options['cart_page_data']['header']['completion'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_cartcompletion_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
 			$html = $this->options['cart_page_data']['footer']['completion'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_login_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['login']) ){
 			$html = $this->options['member_page_data']['header']['login'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_login_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['login']) ){
 			$html = $this->options['member_page_data']['footer']['login'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_newmember_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newmember']) ){
 			$html = $this->options['member_page_data']['header']['newmember'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_newmember_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
 			$html = $this->options['member_page_data']['footer']['newmember'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_newpass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newpass']) ){
 			$html = $this->options['member_page_data']['header']['newpass'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_newpass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
 			$html = $this->options['member_page_data']['footer']['newpass'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_changepass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['changepass']) ){
 			$html = $this->options['member_page_data']['header']['changepass'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_changepass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
 			$html = $this->options['member_page_data']['footer']['changepass'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_memberinfo_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
 			$html = $this->options['member_page_data']['header']['memberinfo'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_memberinfo_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
 			$html = $this->options['member_page_data']['footer']['memberinfo'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_membercompletion_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['completion']) ){
 			$html = $this->options['member_page_data']['header']['completion'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 	function filter_membercompletion_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['completion']) ){
 			$html = $this->options['member_page_data']['footer']['completion'];
 		}
-		return $html;
+		return stripslashes($html);
 	}
 	
 }
