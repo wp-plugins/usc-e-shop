@@ -283,6 +283,9 @@ msgstr "商品"
 msgid "Items recommended"
 msgstr "お勧め商品"
 
+msgid "items recommended"
+msgstr "お勧め商品"
+
 msgid "(Excl. Tax)"
 msgstr "（税別）"
 
