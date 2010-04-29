@@ -190,50 +190,46 @@ $html .= '<tr class="bdc">
 	<td>' . $usces_entries['customer']['fax'] . '</td>
 	</tr>
 	<tr class="ttl">';
-if( EX_DLSELLER !== true ){
-	$html .= '<td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td>
-		</tr>
-		<tr>
-		<th>'.__('Full name', 'usces').'</th><td>' . $usces_entries['delivery']['name1'] . ' ' . $usces_entries['delivery']['name2'] . '</td>
-		</tr>';
-	if( USCES_JP ){
-		$html .= '<tr class="bdc">
-		<th>'.__('furigana', 'usces').'</th><td>' . $usces_entries['delivery']['name3'] . ' ' . $usces_entries['delivery']['name4'] . '</td>
-		</tr>';
-	}
-	$html .= '<tr>
-		<th>'.__('Zip/Postal Code', 'usces').'</th><td>' . $usces_entries['delivery']['zipcode'] . '</td>
-		</tr>
-		<tr class="bdc">
-		<th>'.__('Province', 'usces').'</th><td>' . $usces_entries['delivery']['pref'] . '</td>
-		</tr>
-		<tr>
-		<th>'.__('city', 'usces').'</th><td>' . $usces_entries['delivery']['address1'] . '</td>
-		</tr>
-		<tr class="bdc">
-		<th>'.__('numbers', 'usces').'</th><td>' . $usces_entries['delivery']['address2'] . '</td>
-		</tr>
-		<tr>
-		<th>'.__('building name', 'usces').'</th><td>' . $usces_entries['delivery']['address3'] . '</td>
-		</tr>
-		<tr class="bdc">
-		<th>'.__('Phone number', 'usces').'</th><td>' . $usces_entries['delivery']['tel'] . '</td>
-		</tr>
-		<tr>
-		<th>'.__('FAX number', 'usces').'</th><td>' . $usces_entries['delivery']['fax'] . '</td>
-		</tr>
-		<tr>';
+$html .= '<td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td>
+	</tr>
+	<tr>
+	<th>'.__('Full name', 'usces').'</th><td>' . $usces_entries['delivery']['name1'] . ' ' . $usces_entries['delivery']['name2'] . '</td>
+	</tr>';
+if( USCES_JP ){
+	$html .= '<tr class="bdc">
+	<th>'.__('furigana', 'usces').'</th><td>' . $usces_entries['delivery']['name3'] . ' ' . $usces_entries['delivery']['name4'] . '</td>
+	</tr>';
 }
+$html .= '<tr>
+	<th>'.__('Zip/Postal Code', 'usces').'</th><td>' . $usces_entries['delivery']['zipcode'] . '</td>
+	</tr>
+	<tr class="bdc">
+	<th>'.__('Province', 'usces').'</th><td>' . $usces_entries['delivery']['pref'] . '</td>
+	</tr>
+	<tr>
+	<th>'.__('city', 'usces').'</th><td>' . $usces_entries['delivery']['address1'] . '</td>
+	</tr>
+	<tr class="bdc">
+	<th>'.__('numbers', 'usces').'</th><td>' . $usces_entries['delivery']['address2'] . '</td>
+	</tr>
+	<tr>
+	<th>'.__('building name', 'usces').'</th><td>' . $usces_entries['delivery']['address3'] . '</td>
+	</tr>
+	<tr class="bdc">
+	<th>'.__('Phone number', 'usces').'</th><td>' . $usces_entries['delivery']['tel'] . '</td>
+	</tr>
+	<tr>
+	<th>'.__('FAX number', 'usces').'</th><td>' . $usces_entries['delivery']['fax'] . '</td>
+	</tr>
+	<tr>';
 $html .= '<td class="ttl" colspan="2"><h3>'.__('Others', 'usces').'</h3></td>
 	</tr>';
-if( EX_DLSELLER !== true ){
-	$html .= '<tr>
-		<th>'.__('shipping option', 'usces').'</th><td>' . usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
-		</tr>
-		<tr class="bdc">
-		<th>'.__('Delivery Time', 'usces').'</th><td>' . $usces_entries['order']['delivery_time'] . '</td>
-		</tr>';
-}	
+$html .= '<tr>
+	<th>'.__('shipping option', 'usces').'</th><td>' . usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
+	</tr>
+	<tr class="bdc">
+	<th>'.__('Delivery Time', 'usces').'</th><td>' . $usces_entries['order']['delivery_time'] . '</td>
+	</tr>';
 $html .= '<tr>
 	<th>'.__('payment method', 'usces').'</th><td>' . $usces_entries['order']['payment_name'] . '</td>
 	</tr>
@@ -272,8 +268,8 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 			$html .= '<input type="hidden" name="item_number" value="">
 				<input type="hidden" name="amount" value="' . $usces_entries['order']['total_full_price'] . '">
 				<input type="hidden" name="currency_code" value="JPY">
-				<input type="hidden" name="cancel_return" value="' . get_option('siteurl') . '/?page_id=3&confirm">
-				<input type="hidden" name="notify_url" value="' . get_option('siteurl') . '/?page_id=3&acting_return=paypal_ipn&usces=' . $this->get_uscesid() . '">
+				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . '&confirm">
+				<input type="hidden" name="notify_url" value="' . USCES_CART_URL . '&acting_return=paypal_ipn&usces=' . $this->get_uscesid() . '">
 				<input type="hidden" name="button_subtype" value="products">
 				<input type="hidden" name="tax_rate" value="0.000">
 				<input type="hidden" name="shipping" value="0">
@@ -311,5 +307,4 @@ $html .= apply_filters('usces_filter_confirm_page_footer', $footer);
 $html .= '</div>';
 
 $html .= '</div>';
-	
 ?>

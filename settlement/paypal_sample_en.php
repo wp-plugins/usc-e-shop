@@ -121,6 +121,23 @@ function paypal_ipn_check($usces_paypal_url) {
 	$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
 	$fp = fsockopen ($usces_paypal_url, 80, $errno, $errstr, 30);
 
+	$item_name = $_POST['item_name'];
+	$item_number = $_POST['item_number'];
+	$payment_status = $_POST['payment_status'];
+	$payment_amount = $_POST['mc_gross'];
+	$payment_currency = $_POST['mc_currency'];
+	$txn_id = $_POST['txn_id'];
+	$receiver_email = $_POST['receiver_email'];
+	$payer_email = $_POST['payer_email'];
+	settlement_log($item_name);
+	settlement_log($item_number);
+	settlement_log($payment_status);
+	settlement_log($payment_amount);
+	settlement_log($payment_currency);
+	settlement_log($txn_id);
+	settlement_log($receiver_email);
+	settlement_log($payer_email);
+
 	$results = array();
 	if (!$fp) {
 		$results[0] = false;
@@ -146,10 +163,7 @@ function paypal_ipn_check($usces_paypal_url) {
 		$keyarray = array();
 		if (strcmp ($lines[0], "VERIFIED") == 0) {
 			$results[0] = true;
-			for ($i=1; $i<count($lines);$i++){
-				list($key,$val) = explode("=", $lines[$i]);
-				$results[urldecode($key)] = urldecode($val);
-			}
+			$results['payment_status'] = $payment_status;
 			$ret = true;
 			settlement_log('IPN[SUCCESS]');
 		}else if (strcmp ($lines[0], "FAIL") == 0) {
