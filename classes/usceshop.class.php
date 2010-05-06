@@ -1994,7 +1994,7 @@ class usc_e_shop
 	}
 
 	function member_logout() {
-		unset($_SESSION['usces_member']);
+		unset($_SESSION['usces_member'], $_SESSION['usces_entry']);
 		wp_redirect(get_option('home'));
 		exit;
 	}
