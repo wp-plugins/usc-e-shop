@@ -1,13 +1,16 @@
 <?php
-/*define('MAGPIE_FETCH_TIME_OUT', 10);
+define('MAGPIE_FETCH_TIME_OUT', 10);
 define('MAGPIE_CACHE_ON', false);
 include_once(ABSPATH . WPINC . '/rss.php');
-$rss1 = @fetch_rss('http://www.usconsort.com/usces/archives/category/information/feed');
-$items1 = @array_slice($rss1->items, 0, 3);
-$rss2 = @fetch_rss('http://www.usconsort.com/usces/archives/category/development/feed');
-$items2 = @array_slice($rss2->items, 0, 1);
-$items = @array_merge($items2, $items1);
-*/
+$vcfeed = @fetch_rss('http://www.welcart.com/archives/category/version_check/feed');
+$vc_content = @array_slice($vcfeed->items, 0, 1);
+preg_match('/.+{version_check_start}(.+){version_check_end}.+/', $vc_content[0]['content']['encoded'], $matches);
+if( empty($matches[1]) ){
+	$vcparse = NULL;
+}else{
+	parse_str($matches[1], $vcparse);
+}
+
 $display_mode = $this->options['display_mode'];
 $data = $this->get_items_skus();
 $items_num = $this->get_items_num();
@@ -39,20 +42,19 @@ $items_num = $this->get_items_num();
 </div>
 <?php endif; ?>
 
-<!--<div class="chui">
+<div class="chui">
 <ul>
-<?php if (empty($items)) echo '<li>'.__('There is no news for this moment.', 'usces').'</li>';
-else
-foreach ( $items as $item ) : ?>
-<li>
-<h3><a href='<?php echo $item['link']; ?>' title='<?php echo $item['title']; ?>'><?php echo $item['title']; ?></a></h3>
-<?php echo $item['content']['encoded']; ?>
+<?php if ( $vcparse !== NULL && $vcparse['flag'] == 'ok' &&  'ja' == get_locale() ) : ?>
+<li><?php echo $vcparse['#038;mes_ja']; ?></li>
+<?php elseif ( $vcparse !== NULL && $vcparse['flag'] == 'ok' &&  'ja' != get_locale() ) : ?>
+<li><?php echo $vcparse['#038;mes_en']; ?></li>
+<?php else: ?>
+<li><?php _e('There is no news for this moment.', 'usces'); ?></li>
+<?php endif; ?>
 
-</li>
-<?php endforeach; ?>
 </ul>
 </div>
--->
+
 </div><!--usces_admin_right-->
 
 <div class="usces_admin_left">
