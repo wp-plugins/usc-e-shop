@@ -91,7 +91,7 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 }
 if( !empty($usces_entries['order']['discount']) ) {
 	$html .= '<tr>
-		<td colspan="5" class="aright">'.__('Campaign disnount', 'usces').'</td>
+		<td colspan="5" class="aright">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</td>
 		<td class="aright" style="color:#FF0000">' . number_format($usces_entries['order']['discount']) . '</td>
 		<td>&nbsp;</td>
 	</tr>';

@@ -3357,7 +3357,9 @@ class usc_e_shop
 				$discount = 0;
 		}
 
-		return ceil($discount * -1);
+		$discount = ceil($discount * -1);
+		$discount = apply_filters('usces_order_discount', $discount, $cart);
+		return $discount;
 	} 
 
 	function getShippingCharge( $pref, $cart = array(), $entry = array() ) {
