@@ -1,13 +1,13 @@
 <?php
-define('MAGPIE_FETCH_TIME_OUT', 10);
+/*define('MAGPIE_FETCH_TIME_OUT', 10);
 define('MAGPIE_CACHE_ON', false);
 include_once(ABSPATH . WPINC . '/rss.php');
 $rss1 = @fetch_rss('http://www.usconsort.com/usces/archives/category/information/feed');
 $items1 = @array_slice($rss1->items, 0, 3);
 $rss2 = @fetch_rss('http://www.usconsort.com/usces/archives/category/development/feed');
 $items2 = @array_slice($rss2->items, 0, 1);
-$items = array_merge($items2, $items1);
-
+$items = @array_merge($items2, $items1);
+*/
 $display_mode = $this->options['display_mode'];
 $data = $this->get_items_skus();
 $items_num = $this->get_items_num();
@@ -39,7 +39,7 @@ $items_num = $this->get_items_num();
 </div>
 <?php endif; ?>
 
-<div class="chui">
+<!--<div class="chui">
 <ul>
 <?php if (empty($items)) echo '<li>'.__('There is no news for this moment.', 'usces').'</li>';
 else
@@ -52,7 +52,7 @@ foreach ( $items as $item ) : ?>
 <?php endforeach; ?>
 </ul>
 </div>
-
+-->
 </div><!--usces_admin_right-->
 
 <div class="usces_admin_left">
