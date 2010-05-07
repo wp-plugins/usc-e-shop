@@ -127,9 +127,9 @@ jQuery(function($){
 				var name_select = '<select name="delivery_method_name_select" id="delivery_method_name_select" onchange="operation.onchange_delivery_select(this.selectedIndex);">'+"\n";
 				for(var i=0; i<delivery_method.length; i++){
 					if(selected === i){
-						name_select += '<option value="'+delivery_method[i]['id']+'" selected="selected">'+(i+1)+' : '+delivery_method[i]['name']+'</option>'+"\n";
+						name_select += '<option value="'+delivery_method[i]['id']+'" selected="selected">'+(i)+' : '+delivery_method[i]['name']+'</option>'+"\n";
 					}else{
-						name_select += '<option value="'+delivery_method[i]['id']+'">'+(i+1)+' : '+delivery_method[i]['name']+'</option>'+"\n";
+						name_select += '<option value="'+delivery_method[i]['id']+'">'+(i)+' : '+delivery_method[i]['name']+'</option>'+"\n";
 					}
 				}
 				name_select += "</select>\n";
