@@ -315,7 +315,7 @@ function post_item_pict_box($post) {
 	if(!$custom_fields){
 			$item_picts[0] = wp_get_attachment_image( NULL, array(260, 200), true );
 	}else{
-		$item_code = $custom_fields['itemCode'][0];
+		$item_code = $custom_fields['_itemCode'][0];
 		$codestr = $item_code . '%';
 		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title LIKE %s AND post_type = 'attachment' ORDER BY post_title", $codestr);
 		$item_pictids = $wpdb->get_col( $query );
@@ -633,21 +633,21 @@ if ( 0 == $post_ID)
 else
 	wp_nonce_field('update-post_' .  $post_ID);
 	
-$itemCode = get_post_custom_values('itemCode', $post_ID);
-$itemName = get_post_custom_values('itemName', $post_ID);
-$itemRestriction = get_post_custom_values('itemRestriction', $post_ID);
-$itemPointrate = get_post_custom_values('itemPointrate', $post_ID);
-$itemGpNum1 = get_post_custom_values('itemGpNum1', $post_ID);
-$itemGpNum2 = get_post_custom_values('itemGpNum2', $post_ID);
-$itemGpNum3 = get_post_custom_values('itemGpNum3', $post_ID);
-$itemGpDis1 = get_post_custom_values('itemGpDis1', $post_ID);
-$itemGpDis2 = get_post_custom_values('itemGpDis2', $post_ID);
-$itemGpDis3 = get_post_custom_values('itemGpDis3', $post_ID);
+$itemCode = get_post_custom_values('_itemCode', $post_ID);
+$itemName = get_post_custom_values('_itemName', $post_ID);
+$itemRestriction = get_post_custom_values('_itemRestriction', $post_ID);
+$itemPointrate = get_post_custom_values('_itemPointrate', $post_ID);
+$itemGpNum1 = get_post_custom_values('_itemGpNum1', $post_ID);
+$itemGpNum2 = get_post_custom_values('_itemGpNum2', $post_ID);
+$itemGpNum3 = get_post_custom_values('_itemGpNum3', $post_ID);
+$itemGpDis1 = get_post_custom_values('_itemGpDis1', $post_ID);
+$itemGpDis2 = get_post_custom_values('_itemGpDis2', $post_ID);
+$itemGpDis3 = get_post_custom_values('_itemGpDis3', $post_ID);
 
-$itemShipping = get_post_custom_values('itemShipping', $post_ID);
-$itemDeliveryMethod = get_post_custom_values('itemDeliveryMethod', $post_ID);
-$itemShippingCharge = get_post_custom_values('itemShippingCharge', $post_ID);
-$itemIndividualSCharge = get_post_custom_values('itemIndividualSCharge', $post_ID);
+$itemShipping = get_post_custom_values('_itemShipping', $post_ID);
+$itemDeliveryMethod = get_post_custom_values('_itemDeliveryMethod', $post_ID);
+$itemShippingCharge = get_post_custom_values('_itemShippingCharge', $post_ID);
+$itemIndividualSCharge = get_post_custom_values('_itemIndividualSCharge', $post_ID);
 $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 
 ?>

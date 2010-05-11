@@ -354,7 +354,7 @@ jQuery(document).ready(function($){
 			$skus = $this->get_skus( $array['ID'], 'ARRAY_A' );
 	?>
 		<?php if( $key == 'item_code') : ?>
-			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
+			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('_itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
 			<td class="item">
 			<?php if( $value != '' ) : ?> 
 				<strong><?php echo wp_specialchars($value); ?></strong>

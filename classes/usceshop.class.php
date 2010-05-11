@@ -860,7 +860,7 @@ class usc_e_shop
 				$opt_means = rtrim($opt_means, ',');
 				$opt_esse = rtrim($opt_esse, ',');
 			}
-			$itemRestriction = get_post_custom_values('itemRestriction', $post->ID);
+			$itemRestriction = get_post_custom_values('_itemRestriction', $post->ID);
 		
 		?>
 		<script type='text/javascript'>
@@ -2265,6 +2265,8 @@ class usc_e_shop
 	//
 	function set_initial()
 	{
+		usces_metakey_change();
+		
 		$this->set_default_theme();
 		$this->set_default_page();
 		$this->set_default_categories();
@@ -2868,80 +2870,80 @@ class usc_e_shop
 	}
 
 	function getItemCode($post_id) {
-		$str = get_post_custom_values('itemCode', $post_id);
+		$str = get_post_custom_values('_itemCode', $post_id);
 		return $str[0];
 	}
 	
 	function getItemName($post_id) {
-		$str = get_post_custom_values('itemName', $post_id);
+		$str = get_post_custom_values('_itemName', $post_id);
 		return $str[0];
 	}
 	
 	function getItemRestriction($post_id) {
-		$str = get_post_custom_values('itemRestriction', $post_id);
+		$str = get_post_custom_values('_itemRestriction', $post_id);
 		return $str[0];
 	}
 	
 	function getItemPointrate($post_id) {
-		$str = get_post_custom_values('itemPointrate', $post_id);
+		$str = get_post_custom_values('_itemPointrate', $post_id);
 		return $str[0];
 	}
 	
 	function getItemShipping($post_id) {
-		$str = get_post_custom_values('itemShipping', $post_id);
+		$str = get_post_custom_values('_itemShipping', $post_id);
 		return $str[0];
 	}
 	
 	function getItemShippingCharge($post_id) {
-		$str = get_post_custom_values('itemShippingCharge', $post_id);
+		$str = get_post_custom_values('_itemShippingCharge', $post_id);
 		return (int)$str[0];
 	}
 	
 	function getItemDeliveryMethod($post_id) {
-		$str = get_post_custom_values('itemDeliveryMethod', $post_id);
+		$str = get_post_custom_values('_itemDeliveryMethod', $post_id);
 		return unserialize($str[0]);
 	}
 	
 	function getItemIndividualSCharge($post_id) {
-		$str = get_post_custom_values('itemIndividualSCharge', $post_id);
+		$str = get_post_custom_values('_itemIndividualSCharge', $post_id);
 		return $str[0];
 	}
 	
 	function getItemGpNum1($post_id) {
-		$str = get_post_custom_values('itemGpNum1', $post_id);
+		$str = get_post_custom_values('_itemGpNum1', $post_id);
 		return $str[0];
 	}
 	
 	function getItemGpNum2($post_id) {
-		$str = get_post_custom_values('itemGpNum2', $post_id);
+		$str = get_post_custom_values('_itemGpNum2', $post_id);
 		return $str[0];
 	}
 	
 	function getItemGpNum3($post_id) {
-		$str = get_post_custom_values('itemGpNum3', $post_id);
+		$str = get_post_custom_values('_itemGpNum3', $post_id);
 		return $str[0];
 	}
 	
 	function getItemGpDis1($post_id) {
-		$str = get_post_custom_values('itemGpDis1', $post_id);
+		$str = get_post_custom_values('_itemGpDis1', $post_id);
 		return $str[0];
 	}
 	
 	function getItemGpDis2($post_id) {
-		$str = get_post_custom_values('itemGpDis2', $post_id);
+		$str = get_post_custom_values('_itemGpDis2', $post_id);
 		return $str[0];
 	}
 	
 	function getItemGpDis3($post_id) {
-		$str = get_post_custom_values('itemGpDis3', $post_id);
+		$str = get_post_custom_values('_itemGpDis3', $post_id);
 		return $str[0];
 	}
 	
 	function getItemSku($post_id, $index = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			if( preg_match('/^isku_/', $key, $match) ){
-				$key = substr($key, 5);
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
 				$skus[] = $key;
 			}
 		}
@@ -2958,8 +2960,8 @@ class usc_e_shop
 	function getItemPrice($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			if( preg_match('/^isku_/', $key, $match) ){
-				$key = substr($key, 5);
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
 				$skus[$key] = (float)str_replace(',', '', $values['price']);
 			}
@@ -2977,8 +2979,8 @@ class usc_e_shop
 	function getItemZaiko($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			if( preg_match('/^isku_/', $key, $match) ){
-				$key = substr($key, 5);
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
 				$num = $values['zaiko'];
 				$skus[$key] = $this->zaiko_status[$num];
@@ -2997,8 +2999,8 @@ class usc_e_shop
 	function getItemZaikoStatusId($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			if( preg_match('/^isku_/', $key, $match) ){
-				$key = substr($key, 5);
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
 				$num = $values['zaiko'];
 				$skus[$key] = $num;
@@ -3017,7 +3019,7 @@ class usc_e_shop
 	function updateItemZaiko($post_id, $skukey, $status) {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			$turekey = 'isku_'.$skukey;
+			$turekey = '_isku_'.$skukey;
 			if( $key == $turekey ){
 				$values = maybe_unserialize($value[0]);
 				$values['zaiko'] = $status;
@@ -3030,8 +3032,8 @@ class usc_e_shop
 	function getItemZaikoNum($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			if( preg_match('/^isku_/', $key, $match) ){
-				$key = substr($key, 5);
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
 				$skus[$key] = $values['zaikonum'];
 			}
@@ -3049,7 +3051,7 @@ class usc_e_shop
 	function updateItemZaikoNum($post_id, $skukey, $num) {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			$turekey = 'isku_'.$skukey;
+			$turekey = '_isku_'.$skukey;
 			if( $key == $turekey ){
 				$values = maybe_unserialize($value[0]);
 				$values['zaikonum'] = $num;
@@ -3062,8 +3064,8 @@ class usc_e_shop
 	function getItemSkuDisp($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			if( preg_match('/^isku_/', $key, $match) ){
-				$key = substr($key, 5);
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
 				$skus[$key] = $values['disp'];
 			}
@@ -3081,8 +3083,8 @@ class usc_e_shop
 	function getItemSkuUnit($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
-			if( preg_match('/^isku_/', $key, $match) ){
-				$key = substr($key, 5);
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
 				$skus[$key] = $values['unit'];
 			}
@@ -3102,8 +3104,8 @@ class usc_e_shop
 		if(empty($custom_field_keys)) return;
 		
 		foreach ( (array)$custom_field_keys as $key => $value ) {
-			if ( 'iopt_' == substr($value,0 , 5) )
-				$res[] = substr($value, 5);
+			if ( '_iopt_' == substr($value,0 , 6) )
+				$res[] = substr($value, 6);
 		}
 		if($res)
 			natcasesort($res);
@@ -3111,7 +3113,7 @@ class usc_e_shop
 	}
 	
 	function get_itemOptions( $key, $post_id ) {
-		$metakey = 'iopt_' . $key;
+		$metakey = '_iopt_' . $key;
 		$values = get_post_custom_values( $metakey, $post_id );
 		if(empty($values)) return;
 
@@ -3140,9 +3142,9 @@ class usc_e_shop
 		$fields = get_post_custom($post_id);
 		ksort($fields);
 		foreach((array)$fields as $k => $v){
-			if( preg_match('/^isku_/', $k, $match) ){
+			if( preg_match('/^_isku_/', $k, $match) ){
 				$values = maybe_unserialize($v[0]);
-				$key[] = substr($k, 5);
+				$key[] = substr($k, 6);
 				$cprice[] = $values['cprice'];
 				$price[] = $values['price'];
 				$zaiko[] = $values['zaiko'];
@@ -3151,13 +3153,13 @@ class usc_e_shop
 				$unit[] = $values['unit'];
 				$gptekiyo[] = $values['gptekiyo'];
 				
-				$res[substr($k, 5)]['cprice'] = $values['cprice'];
-				$res[substr($k, 5)]['price'] = $values['price'];
-				$res[substr($k, 5)]['zaiko'] = $values['zaiko'];
-				$res[substr($k, 5)]['zaikonum'] = $values['zaikonum'];
-				$res[substr($k, 5)]['disp'] = $values['disp'];
-				$res[substr($k, 5)]['unit'] = $values['unit'];
-				$res[substr($k, 5)]['gptekiyo'] = $values['gptekiyo'];
+				$res[substr($k, 6)]['cprice'] = $values['cprice'];
+				$res[substr($k, 6)]['price'] = $values['price'];
+				$res[substr($k, 6)]['zaiko'] = $values['zaiko'];
+				$res[substr($k, 6)]['zaikonum'] = $values['zaikonum'];
+				$res[substr($k, 6)]['disp'] = $values['disp'];
+				$res[substr($k, 6)]['unit'] = $values['unit'];
+				$res[substr($k, 6)]['gptekiyo'] = $values['gptekiyo'];
 			}
 		}
 		if($output == 'ARRAY_A'){
@@ -3319,7 +3321,7 @@ class usc_e_shop
 				$point = 0;
 			} elseif ( $this->options['campaign_privilege'] == 'point' ) {
 				foreach ( $cart as $rows ) {
-					$rate = get_post_custom_values('itemPointrate', $rows['post_id']);
+					$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
 					//$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
 					$price = $rows['price'] * $rows['quantity'];
 					$cats = $this->get_post_term_ids($rows['post_id'], 'category');
@@ -3331,7 +3333,7 @@ class usc_e_shop
 			}
 		} else {
 			foreach ( $cart as $rows ) {
-				$rate = get_post_custom_values('itemPointrate', $rows['post_id']);
+				$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
 				//$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
 				$price = $rows['price'] * $rows['quantity'];
 				$point += $price * $rate[0] / 100;
@@ -3554,7 +3556,7 @@ class usc_e_shop
 	
 	function get_ID_byItemName($itemname, $status = 'publish') {
 		global $wpdb;
-		$meta_key = 'itemCode';
+		$meta_key = '_itemCode';
 		$query = $wpdb->prepare("SELECT p.ID  FROM $wpdb->posts AS p 
 									INNER JOIN $wpdb->postmeta AS pm ON p.ID = pm.post_id 
 									WHERE p.post_status = %s AND pm.meta_key = %s AND meta_value = %s ", $status, $meta_key, $itemname);
@@ -3718,10 +3720,10 @@ class usc_e_shop
 		global $wpdb;
 		
 		$query = $wpdb->prepare("SELECT ID, meta_key, meta_value FROM {$wpdb->posts} 
-									INNER JOIN {$wpdb->postmeta} ON ID = post_id AND SUBSTRING(meta_key, 1, 5) = %s 
+									INNER JOIN {$wpdb->postmeta} ON ID = post_id AND SUBSTRING(meta_key, 1, 6) = %s 
 									WHERE post_mime_type = %s AND post_status = %s 
 									ORDER BY ID, meta_key", 
-									'isku_', 'item', 'publish');
+									'_isku_', 'item', 'publish');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		
 		$sku = array();
@@ -3730,7 +3732,7 @@ class usc_e_shop
 			$sku['data'][$key]['ID'] = $value['ID'];
 			$sku['data'][$key]['code'] = $this->getItemCode($value['ID']);
 			$sku['data'][$key]['name'] = $this->getItemName($value['ID']);
-			$sku['data'][$key]['sku'] = substr($value['meta_key'], 5);
+			$sku['data'][$key]['sku'] = substr($value['meta_key'], 6);
 			$sku['data'][$key]['num'] = $this->getItemZaikoNum($value['ID'], $sku['data'][$key]['sku']);
 			$status[] = $this->getItemZaiko($value['ID'], $sku['data'][$key]['sku']);
 		}

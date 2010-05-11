@@ -248,9 +248,7 @@ class dataList
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
 		
 		if(USCES_MYSQL_VERSION >= 5){			
-			$query = $wpdb->prepare("SELECT 
-						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemCode') AS item_code, 
-						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemName') AS item_name, 
+			$query = $wpdb->prepare("SELECT mc.meta_value AS item_code, mn.meta_value AS item_name, 
 						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, post.post_status, 
 						CASE post.post_status 
 							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
@@ -262,11 +260,32 @@ class dataList
 						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
 						FROM {$this->table} AS post 
-						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 5) = %s 
+						LEFT JOIN $wpdb->postmeta AS mc ON post.ID = mc.post_id AND mc.meta_key = '_itemCode' 
+						LEFT JOIN $wpdb->postmeta AS mn ON post.ID = mn.post_id AND mn.meta_key = '_itemName' 
+						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 6) = %s 
 						LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
 						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
 						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
-						'isku_');
+						'_isku_');
+//			$query = $wpdb->prepare("SELECT 
+//						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = '_itemCode') AS item_code, 
+//						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = '_itemName') AS item_name, 
+//						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, post.post_status, 
+//						CASE post.post_status 
+//							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
+//							WHEN 'future' THEN '" . __('Scheduled', 'usces') . "' 
+//							WHEN 'draft' THEN '" . __('Draft', 'usces') . "' 
+//							WHEN 'pending' THEN '" . __('Pending Review', 'usces') . "' 
+//							WHEN 'trash' THEN '" . __('Trash', 'usces') . "' 
+//							ELSE '" . __('Closed', 'usces') . "' 
+//						END AS display_status, 
+//						post.post_type, post.post_mime_type, post.ID 
+//						FROM {$this->table} AS post 
+//						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 6) = %s 
+//						LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
+//						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
+//						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
+//						'_isku_');
 		} else {
 			$query = $wpdb->prepare("SELECT 
 						'item_code' AS item_code, 
@@ -282,11 +301,11 @@ class dataList
 						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
 						FROM {$this->table} AS post 
-						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 5) = %s 
+						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 6) = %s 
 						LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
 						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
 						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
-						'isku_');
+						'_isku_');
 		}
 					
 		$query .= $where . $order;// . $limit;
@@ -313,17 +332,17 @@ class dataList
 //		global $wpdb;
 //		$where = $this->GetWhere();
 //		$query = $wpdb->prepare("SELECT 
-//					(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemCode') AS item_code, 
-//					(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = 'itemName') AS item_name, 
+//					(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = '_itemCode') AS item_code, 
+//					(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = '_itemName') AS item_name, 
 //					meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, 
 //					CASE WHEN post.post_status = 'publish' THEN '公開済み' ELSE '非公開' END AS display_status, 
 //					post.post_type, post.post_mime_type, post.ID 
 //					(FROM {$this->table} AS post 
-//					LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 5) = %s 
+//					LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 6) = %s 
 //					LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
 //					LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id) 
 //					LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
-//					'isku_');
+//					'_isku_');
 //					
 //		$query .= $where;
 //		$rows = $wpdb->get_results($query, ARRAY_A);

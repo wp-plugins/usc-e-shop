@@ -7,7 +7,7 @@ function has_item_option_meta( $postid ) {
 
 	return $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
 			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE '%s' 
-			ORDER BY meta_key", $postid, 'iopt\_%'), ARRAY_A );
+			ORDER BY meta_key", $postid, '_iopt_%'), ARRAY_A );
 
 }
 
@@ -19,7 +19,7 @@ function has_item_sku_meta( $postid ) {
 
 	return $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
 			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE '%s' 
-			ORDER BY meta_key", $postid, 'isku\_%'), ARRAY_A );
+			ORDER BY meta_key", $postid, '_isku_%'), ARRAY_A );
 
 }
 
@@ -169,7 +169,7 @@ function _list_item_option_meta_row( $entry ) {
 	}
 	
 	$readonly = " readonly='true'";
-	$key = attribute_escape(substr($entry['meta_key'],5));
+	$key = attribute_escape(substr($entry['meta_key'],6));
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
 		if($meankey == $entry['meta_value']['means']) {
@@ -215,7 +215,7 @@ function _list_item_sku_meta_row( $entry ) {
 	}
 	
 	$readonly = "";
-	$key = attribute_escape(substr($entry['meta_key'],5));
+	$key = attribute_escape(substr($entry['meta_key'],6));
 	$cprice = $entry['meta_value']['cprice'];
 	$price = $entry['meta_value']['price'];
 	$zaikonum = $entry['meta_value']['zaikonum'];
@@ -340,7 +340,7 @@ function item_option_meta_form() {
 	$keys = $wpdb->get_col( "
 		SELECT meta_key
 		FROM $wpdb->postmeta
-		WHERE meta_key LIKE 'iopt\_%' AND post_id = $cart_number 
+		WHERE meta_key LIKE '_iopt_%' AND post_id = $cart_number 
 		ORDER BY meta_key ASC
 		LIMIT $limit" );
 	$means = get_option('usces_item_option_select');
@@ -367,7 +367,7 @@ function item_option_meta_form() {
 <?php
 
 	foreach ( $keys as $key ) {
-		$key = attribute_escape( substr($key, 5) );
+		$key = attribute_escape( substr($key, 6) );
 		echo "\n<option value='$key'>$key</option>";
 	}
 ?>
@@ -407,7 +407,7 @@ function item_sku_meta_form() {
 	$keys = $wpdb->get_col( "
 		SELECT meta_key
 		FROM $wpdb->postmeta
-		WHERE meta_key LIKE 'isku\_%' 
+		WHERE meta_key LIKE '_isku_%' 
 		GROUP BY meta_key 
 		LIMIT $limit" );
 ?>
@@ -552,7 +552,7 @@ function add_item_option_meta( $post_ID ) {
 
 		wp_cache_delete($post_ID, 'post_meta');
 		
-		$metakey = 'iopt_' . $metakey;
+		$metakey = '_iopt_' . $metakey;
 		$value['means'] = $newoptmeans;
 		$value['essential'] = $newoptessential;
 		$value['value'] = $nov;
@@ -596,7 +596,7 @@ function add_item_sku_meta( $post_ID ) {
 
 		wp_cache_delete($post_ID, 'post_meta');
 		
-		$metakey = 'isku_' . $metakey;
+		$metakey = '_isku_' . $metakey;
 		$value['cprice'] = $newskucprice;
 		$value['price'] = $newskuprice;
 		$value['zaikonum'] = $newskuzaikonum;
@@ -733,7 +733,7 @@ function up_item_sku_meta( $post_ID ) {
 
 		wp_cache_delete($post_ID, 'post_meta');
 		
-		$metakey = 'isku_' . $skuname;
+		$metakey = '_isku_' . $skuname;
 		
 		$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_key = %s, meta_value = %s WHERE meta_id = %d", $metakey, $valueserialized, $skumetaid) );
 		return $res;
@@ -835,7 +835,7 @@ function del_payment_method() {
 function select_common_option( $post_ID ) {
 	global $wpdb;
 	
-	$key = isset($_POST['key']) ? 'iopt_' . stripslashes( $_POST['key'] ) : '';
+	$key = isset($_POST['key']) ? '_iopt_' . stripslashes( $_POST['key'] ) : '';
 	if(!$post_ID || !$key) return ;
 	
 	$meta_value = $wpdb->get_var( $wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = %s AND meta_key = '%s' ORDER BY meta_id", $post_ID, $key) );
@@ -862,7 +862,7 @@ function select_common_option( $post_ID ) {
 function select_item_sku( $post_ID ) {
 	global $wpdb;
 	
-	$key = isset($_POST['key']) ? 'isku_' . stripslashes( $_POST['key'] ) : '';
+	$key = isset($_POST['key']) ? '_isku_' . stripslashes( $_POST['key'] ) : '';
 	if(!$key) return ;
 	
 	$meta_value = $wpdb->get_var( $wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '%s' GROUP BY meta_key LIMIT 1", $key) );
@@ -886,11 +886,11 @@ function has_item_sku_list() {
 
 	$meta = $wpdb->get_col( $wpdb->prepare("SELECT meta_key 
 			FROM $wpdb->postmeta WHERE meta_key LIKE '%s' 
-			GROUP BY meta_key", 'isku\_%'));
+			GROUP BY meta_key", '_isku_%'));
 			
 	$r = "\t<option value='#NONE#'>" . __('- Select --','usces') . "</option>\n";
 	foreach ( $meta as $key ){
-		$key = substr($key, 5);
+		$key = substr($key, 6);
 		$r .= "\t<option value='{$key}'>{$key}</option>\n";
 	}
 	
@@ -1318,7 +1318,7 @@ function get_order_item( $item_code ) {
 		$r .= "<td colspan='7'>\n";
 		foreach ($optkeys as $optkey) :
 			
-			$key = 'iopt_' . $optkey;
+			$key = '_iopt_' . $optkey;
 			$value = get_post_custom_values($key, $post_id);
 			if(!$value) continue;
 			$values = maybe_unserialize($value[0]);
@@ -1442,63 +1442,63 @@ function item_save_metadata() {
 
 	if(isset($_POST['itemName'])){
 		$itemName = wp_specialchars($_POST['itemName']);
-		update_post_meta($post_id, 'itemName', $itemName);
+		update_post_meta($post_id, '_itemName', $itemName);
 		$usces->set_item_mime($post_id, 'item');
 	}
 	if(isset($_POST['itemCode'])){
 		$itemCode = wp_specialchars($_POST['itemCode']);
-		update_post_meta($post_id, 'itemCode', $itemCode);
+		update_post_meta($post_id, '_itemCode', $itemCode);
 	}
 	if(isset($_POST['itemRestriction'])){
 		$itemRestriction = wp_specialchars($_POST['itemRestriction']);
-		update_post_meta($post_id, 'itemRestriction', $itemRestriction);
+		update_post_meta($post_id, '_itemRestriction', $itemRestriction);
 	}
 	if(isset($_POST['itemPointrate'])){
 		$itemPointrate = (int)$_POST['itemPointrate'];
-		update_post_meta($post_id, 'itemPointrate', $itemPointrate);
+		update_post_meta($post_id, '_itemPointrate', $itemPointrate);
 	}
 	if(isset($_POST['itemGpNum1'])){
 		$itemGpNum1 = (int)$_POST['itemGpNum1'];
-		update_post_meta($post_id, 'itemGpNum1', $itemGpNum1);
+		update_post_meta($post_id, '_itemGpNum1', $itemGpNum1);
 	}
 	if(isset($_POST['itemGpNum2'])){
 		$itemGpNum2 = (int)$_POST['itemGpNum2'];
-		update_post_meta($post_id, 'itemGpNum2', $itemGpNum2);
+		update_post_meta($post_id, '_itemGpNum2', $itemGpNum2);
 	}
 	if(isset($_POST['itemGpNum3'])){
 		$itemGpNum3 = (int)$_POST['itemGpNum3'];
-		update_post_meta($post_id, 'itemGpNum3', $itemGpNum3);
+		update_post_meta($post_id, '_itemGpNum3', $itemGpNum3);
 	}
 	if(isset($_POST['itemGpDis1'])){
 		$itemGpDis1 = (int)$_POST['itemGpDis1'];
-		update_post_meta($post_id, 'itemGpDis1', $itemGpDis1);
+		update_post_meta($post_id, '_itemGpDis1', $itemGpDis1);
 	}
 	if(isset($_POST['itemGpDis2'])){
 		$itemGpDis2 = (int)$_POST['itemGpDis2'];
-		update_post_meta($post_id, 'itemGpDis2', $itemGpDis2);
+		update_post_meta($post_id, '_itemGpDis2', $itemGpDis2);
 	}
 	if(isset($_POST['itemGpDis3'])){
 		$itemGpDis3 = (int)$_POST['itemGpDis3'];
-		update_post_meta($post_id, 'itemGpDis3', $itemGpDis3);
+		update_post_meta($post_id, '_itemGpDis3', $itemGpDis3);
 	}
 	
 	if(isset($_POST['itemShipping'])){
 		$itemShipping = wp_specialchars($_POST['itemShipping']);
-		update_post_meta($post_id, 'itemShipping', $itemShipping);
+		update_post_meta($post_id, '_itemShipping', $itemShipping);
 	}
 	if(isset($_POST['itemDeliveryMethod'])){
 		$itemDeliveryMethod = array();
 		foreach( (array)$_POST["itemDeliveryMethod"] as $dmid){ 
 				$itemDeliveryMethod[] = $dmid;
 		} 
-		update_post_meta($post_id, 'itemDeliveryMethod', $itemDeliveryMethod);
+		update_post_meta($post_id, '_itemDeliveryMethod', $itemDeliveryMethod);
 	}
 	if(isset($_POST['itemShippingCharge'])){
 		$itemShippingCharge = wp_specialchars($_POST['itemShippingCharge']);
-		update_post_meta($post_id, 'itemShippingCharge', $itemShippingCharge);
+		update_post_meta($post_id, '_itemShippingCharge', $itemShippingCharge);
 	}
 	$itemIndividualSCharge = isset($_POST['itemIndividualSCharge']) ? 1 : 0;
-	update_post_meta($post_id, 'itemIndividualSCharge', $itemIndividualSCharge);
+	update_post_meta($post_id, '_itemIndividualSCharge', $itemIndividualSCharge);
 	
 	if(isset($_POST['wcexp'])){
 		$wcexp = serialize($_POST['wcexp']);

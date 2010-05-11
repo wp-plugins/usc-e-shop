@@ -29,7 +29,7 @@ function usces_the_itemCode( $out = '' ) {
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('itemCode', $post_id);
+	$str = get_post_custom_values('_itemCode', $post_id);
 	
 	if( $out == 'return' ){
 		return $str[0];
@@ -42,7 +42,7 @@ function usces_the_itemName( $out = '' ) {
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('itemName', $post_id);
+	$str = get_post_custom_values('_itemName', $post_id);
 	
 	if( $out == 'return' ){
 		return $str[0];
@@ -60,12 +60,12 @@ function usces_the_item(){
 	
 	$fields = get_post_custom($post_id);
 	foreach($fields as $key => $value){
-		if( preg_match('/^isku_/', $key, $match) ){
-			$key = substr($key, 5);
+		if( preg_match('/^_isku_/', $key, $match) ){
+			$key = substr($key, 6);
 			$values = maybe_unserialize($value[0]);
 			$usces->itemskus[$key] = $values;
-		} else if( preg_match('/^iopt_/', $key, $match) ){
-			$key = substr($key, 5);
+		} else if( preg_match('/^_iopt_/', $key, $match) ){
+			$key = substr($key, 6);
 			$values = maybe_unserialize($value[0]);
 			$usces->itemopts[$key] = $values;
 		}
@@ -390,8 +390,8 @@ function usces_the_itemSkuTable($colum = '', $buttonValue = '' ) {
 	$fields = get_post_custom($post_id);
 	$rows = array();
 	foreach($fields as $key => $value){
-		if( preg_match('/^isku_/', $key, $match) ){
-			$key = substr($key, 5);
+		if( preg_match('/^_isku_/', $key, $match) ){
+			$key = substr($key, 6);
 			$values = maybe_unserialize($value[0]);
 			$values['sku'] = $key;
 			$values['zaiko'] = $usces->zaiko_status[$values['zaiko']];
@@ -434,9 +434,9 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 
 	$post_id = $post->ID;
 	
-	$code =  get_post_custom_values('itemCode', $post_id);
+	$code =  get_post_custom_values('_itemCode', $post_id);
 	if(!$code) return false;
-	$name = get_post_custom_values('itemName', $post_id);
+	$name = get_post_custom_values('_itemName', $post_id);
 	$pictids = $usces->get_pictids($code[0]);
 	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
 	$alt = 'alt="'.$name[0].'"';
@@ -452,9 +452,9 @@ function usces_the_itemImageURL($number = 0, $out = '' ) {
 	global $post, $usces;
 	$post_id = $post->ID;
 	
-	$code =  get_post_custom_values('itemCode', $post_id);
+	$code =  get_post_custom_values('_itemCode', $post_id);
 	if(!$code) return false;
-	$name = get_post_custom_values('itemName', $post_id);
+	$name = get_post_custom_values('_itemName', $post_id);
 	$pictids = $usces->get_pictids($code[0]);
 	$html = wp_get_attachment_url( $pictids[$number] );
 	if($out == 'return'){
@@ -469,9 +469,9 @@ function usces_get_itemSubImageNums() {
 	$post_id = $post->ID;
 	$res = array();
 	
-	$code =  get_post_custom_values('itemCode', $post_id);
+	$code =  get_post_custom_values('_itemCode', $post_id);
 	if(!$code) return false;
-	$name = get_post_custom_values('itemName', $post_id);
+	$name = get_post_custom_values('_itemName', $post_id);
 	$pictids = $usces->get_pictids($code[0]);
 	for($i=1; $i<count($pictids); $i++){
 		$res[] = $i;
@@ -518,7 +518,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 
 	if($label == '#default#')
 		$label = $name;
-	$key = 'iopt_' . $name;
+	$key = '_iopt_' . $name;
 	$value = get_post_custom_values($key, $post_id);
 	if(!$value) return false;
 	$values = maybe_unserialize($value[0]);

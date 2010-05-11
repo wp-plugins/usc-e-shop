@@ -114,13 +114,13 @@ function _item_row($a_post, $pending_comments, $mode, $item_headers) {
 	$delete_link = USCES_ADMIN_URL . '?page=usces_itemedit&amp;doaction=&amp;action=delete&amp;post='.$post->ID;
 	$title = _draft_or_post_title();
 	$custom_fields = get_post_custom($post->ID);
-	$item_code = $custom_fields['itemCode'][0];
-	$item_name = $custom_fields['itemName'][0];
+	$item_code = $custom_fields['_itemCode'][0];
+	$item_name = $custom_fields['_itemName'][0];
 	$item_pictid = get_pictid($item_code);
 	$item_sumnail = wp_get_attachment_image( $item_pictid, array(60, 60), true );//'<img src="#" height="60" width="60" alt="" />';
 	foreach($custom_fields as $key => $value){
-		if(substr($key, 0, 5) == 'isku_'){
-			$key = substr($key, 5);
+		if(substr($key, 0, 6) == '_isku_'){
+			$key = substr($key, 6);
 			$item_skus[$key] = maybe_unserialize($value[0]);
 		}
 	}

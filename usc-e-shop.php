@@ -33,6 +33,7 @@ load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLD
 
 require_once(USCES_PLUGIN_DIR."/includes/initial.php");
 require_once(USCES_PLUGIN_DIR."/functions/calendar-com.php");
+require_once(USCES_PLUGIN_DIR."/functions/utility.php");
 require_once(USCES_PLUGIN_DIR."/functions/item_post.php");
 require_once(USCES_PLUGIN_DIR."/functions/function.php");
 require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");

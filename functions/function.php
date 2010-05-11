@@ -890,7 +890,7 @@ function usces_export_xml() {
 ?>
 	<usces><?php echo serialize($options); ?></usces>
 	<usces_management_status><?php echo serialize(get_option('usces_management_status')); ?></usces_management_status>
-	<usces_zaiko_status<?php echo serialize(get_option('usces_zaiko_status')); ?></usces_zaiko_status>
+	<usces_zaiko_status><?php echo serialize(get_option('usces_zaiko_status')); ?></usces_zaiko_status>
 	<usces_customer_status><?php echo serialize(get_option('usces_customer_status')); ?></usces_customer_status>
 	<usces_payment_structure><?php echo serialize(get_option('usces_payment_structure')); ?></usces_payment_structure>
 	<usces_display_mode><?php echo serialize(get_option('usces_display_mode')); ?></usces_display_mode>
@@ -1007,7 +1007,7 @@ function usces_import_xml() {
 	foreach ( $item_id as $id ) {
 	
 		$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
-									WHERE (SUBSTRING(meta_key,1,5) = 'iopt_' OR SUBSTRING(meta_key,1,5) = 'isku_') AND post_id = %d", $id);
+									WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", $id);
 		$metas = $wpdb->get_results( $query, ARRAY_A );
 
 		if(!empty($metas)) {
@@ -1023,7 +1023,7 @@ function usces_import_xml() {
 	}
 
 	$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
-								WHERE (SUBSTRING(meta_key,1,5) = 'iopt_' OR SUBSTRING(meta_key,1,5) = 'isku_') AND post_id = %d", USCES_CART_NUMBER);
+								WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", USCES_CART_NUMBER);
 	$metas = $wpdb->get_results( $query, ARRAY_A );
 
 	if(!empty($metas)) {
@@ -1115,7 +1115,7 @@ function usces_all_change_zaiko(&$obj) {
 	$ids = $_POST['listcheck'];
 	$status = true;
 	foreach ( (array)$ids as $post_id ):
-		$query = $wpdb->prepare("SELECT * FROM $wpdb->postmeta WHERE post_id = %d AND SUBSTRING(meta_key, 1, 5) = 'isku_'", $post_id);
+		$query = $wpdb->prepare("SELECT * FROM $wpdb->postmeta WHERE post_id = %d AND SUBSTRING(meta_key, 1, 6) = '_isku_'", $post_id);
 		$metas = $wpdb->get_results( $query, ARRAY_A );
 		if(!$metas) continue;
 		foreach ( (array)$metas as $meta ) {
@@ -1428,13 +1428,13 @@ function usces_item_dupricate($post_id){
 	$valstr = '';
 	foreach($meta_data as $data){
 		
-		$prefix = substr($data->meta_key, 0, 4);
+		$prefix = substr($data->meta_key, 0, 5);
 		$prefix2 = substr($data->meta_key, 0, 11);
 		
 		if( $prefix == 'item' ){
 		
 			switch( $data->meta_key ){
-				case 'itemCode':
+				case '_itemCode':
 					$value = $data->meta_value . '(copy)';
 					break;
 				default:
@@ -1443,7 +1443,7 @@ function usces_item_dupricate($post_id){
 			$key = $data->meta_key;
 			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
 		
-		}else if( $prefix == 'isku' ){
+		}else if( $prefix == '_isku' ){
 		
 			$value = $data->meta_value;
 			$key = $data->meta_key . '(copy)';
@@ -1460,7 +1460,7 @@ function usces_item_dupricate($post_id){
 //		if( $prefix == 'item' ){
 //		
 //			switch( $data->meta_key ){
-//				case 'itemCode':
+//				case '_itemCode':
 //					$value = $data->meta_value . '(copy)';
 //					break;
 //				default:
@@ -1469,7 +1469,7 @@ function usces_item_dupricate($post_id){
 //			$key = $data->meta_key;
 //			$valstr .= '(' . $newpost_id . ", '_usces_" . $key . "','" . $value . "'),";
 //		
-//		}else if( $prefix == 'isku' ){
+//		}else if( $prefix == '_isku' ){
 //		
 //			$value = $data->meta_value;
 //			$key = $data->meta_key . '(copy)';
@@ -1698,7 +1698,7 @@ function usces_item_uploadcsv(){
 						$query = $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta 
 												WHERE post_id = %d AND meta_key = %s", 
 												$post_id, 
-												'isku_'.trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'))
+												'_isku_'.trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'))
 								);
 						$meta_id = $wpdb->get_var( $query );
 						if($meta_id !== NULL)
@@ -1856,22 +1856,22 @@ function usces_item_uploadcsv(){
 			}
 			//postmetaの追加
 			$itemDeliveryMethod = explode(';',  $datas[11]);
-			$valstr .= '(' . $post_id . ", 'itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[0], 'UTF-8', 'SJIS'))) . "'),";
-			$valstr .= '(' . $post_id . ", 'itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[1], 'UTF-8', 'SJIS'))) . "'),";
-			$valstr .= '(' . $post_id . ", 'itemRestriction','" . $datas[2] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemPointrate','" . $datas[3] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemGpNum1','" . $datas[4] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemGpDis1','" . $datas[5] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemGpNum2','" . $datas[6] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemGpDis2','" . $datas[7] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemGpDis3','" . $datas[8] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemGpNum3','" . $datas[9] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemShipping','" . $datas[10] . "'),";
-			$valstr .= '(' . $post_id . ", 'itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
-			$valstr .= '(' . $post_id . ", 'itemShippingCharge','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[12], 'UTF-8', 'SJIS'))) . "'),";
-			$valstr .= '(' . $post_id . ", 'itemIndividualSCharge','" . $datas[13] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[0], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[1], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", '_itemRestriction','" . $datas[2] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemPointrate','" . $datas[3] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemGpNum1','" . $datas[4] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemGpDis1','" . $datas[5] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemGpNum2','" . $datas[6] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemGpDis2','" . $datas[7] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemGpDis3','" . $datas[8] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemGpNum3','" . $datas[9] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemShipping','" . $datas[10] . "'),";
+			$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
+			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[12], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", '_itemIndividualSCharge','" . $datas[13] . "'),";
 			
-			$meta_key = 'isku_' . trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'));
+			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'));
 			$sku['cprice'] = $datas[23];
 			$sku['price'] = $datas[24];
 			$sku['zaikonum'] = $datas[25];
@@ -1895,7 +1895,7 @@ function usces_item_uploadcsv(){
 					}
 					switch($o){
 						case 1:
-							$ometa_key = 'iopt_' . trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
+							$ometa_key = '_iopt_' . trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
 							break;
 						case 2:
 							$opt['means'] = (int)$datas[$key];
@@ -1982,7 +1982,7 @@ function usces_item_uploadcsv(){
 			
 		}else{
 			$valstr = '';
-			$meta_key = 'isku_' . trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'));
+			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[21], 'UTF-8', 'SJIS'));
 			$sku['cprice'] = $datas[23];
 			$sku['price'] = $datas[24];
 			$sku['zaikonum'] = $datas[25];
