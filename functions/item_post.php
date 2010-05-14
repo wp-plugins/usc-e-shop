@@ -302,7 +302,7 @@ function common_option_meta_form() {
 	}
 ?>
 <p><strong><?php _e('Add a new option','usces') ?>：</strong></p>
-<table id="newmeta">
+<table id="newmeta2">
 <thead>
 <tr>
 <th class="left"><label for="metakeyselect"><?php _e('option name','usces') ?></label></th>
@@ -350,7 +350,7 @@ function item_option_meta_form() {
 	}
 ?>
 <p><strong><?php _e('Applicable product options','usces') ?>：</strong></p>
-<table id="newmeta">
+<table id="newmeta2">
 <thead>
 <tr>
 <th class="left"><label for="metakeyselect"><?php _e('option name','usces') ?></label></th>
@@ -478,7 +478,7 @@ function payment_form() {
 	global $usces;
 ?>
 <p><strong><?php _e('Add a new method forpayment ','usces') ?>：</strong></p>
-<table id="newmeta">
+<table id="newmeta2">
 <thead>
 <tr>
 <th class="left"><?php _e('A payment method name','usces') ?></th>

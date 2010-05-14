@@ -51,6 +51,20 @@ function usces_the_itemName( $out = '' ) {
 	}
 }
 
+function usces_the_point_rate( $out = '' ){
+	global $post;
+	$post_id = $post->ID;
+
+	$str = get_post_custom_values('_itemPointrate', $post_id);
+	$rate = (int)$str[0];
+	
+	if( $out == 'return' ){
+		return $rate;
+	}else{
+		echo $rate;
+	}
+}
+
 function usces_the_item(){
 	global $usces, $post;
 	$usces->itemskus = array();
@@ -663,6 +677,21 @@ function usces_the_postage_privilege(){
 function usces_the_start_point(){
 	global $usces;
 	echo $usces->options['start_point'];
+}
+
+function usces_point_rate( $post_id = NULL, $out = '' ){
+	global $usces;
+	if(  $post_id = NULL ){
+		$rate = $usces->options['point_rate'];
+	}else{
+		$str = get_post_custom_values('_itemPointrate', $post_id);
+		$rate = (int)$str[0];
+	}
+	if( $out == 'return' ){
+		return $rate;
+	}else{
+		echo $rate;
+	}
 }
 
 function usces_the_payment_method( $value = '', $out = '' ){

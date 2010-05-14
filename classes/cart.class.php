@@ -45,10 +45,12 @@ class usces_cart {
 		
 		
 		if ( isset($_POST['skuPrice']) && $_POST['skuPrice'][$post_id][$sku] != '') {
-		
 			$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
 			$_SESSION['usces_cart'][$this->serial]['price'] = $price;
-			
+		}
+		
+		if ( isset($_POST['advance']) ) {
+			$_SESSION['usces_cart'][$this->serial]['advance'] = $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]);
 		}
 		
 //		ksort($_SESSION['usces_cart'], SORT_STRING);

@@ -1431,7 +1431,7 @@ function usces_item_dupricate($post_id){
 		$prefix = substr($data->meta_key, 0, 5);
 		$prefix2 = substr($data->meta_key, 0, 11);
 		
-		if( $prefix == 'item' ){
+		if( $prefix == '_item' ){
 		
 			switch( $data->meta_key ){
 				case '_itemCode':
@@ -2032,5 +2032,10 @@ function usces_get_wcexp($post_id, $name=''){
 		$value = ($wcexp !== false && isset($wcexp[$name])) ? $wcexp[$name] : '';
 	}
 	return $value;
+}
+
+function usces_update_check_admin($result){
+	$result = true;
+	return $result;
 }
 ?>

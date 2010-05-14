@@ -285,13 +285,13 @@ function usces_pdfSetHeader(&$pdf, $data) {
 	if($_REQUEST['type'] == 'mitumori') {
 		$title = __('Estimate', 'usces');
 		$message = sprintf(__("Thank you for choosing '%s' we send you following estimate. ", 'usces'),
-						get_option('blogname'));
+						apply_filters('usces_filter_publisher', get_option('blogname')));
 		$juchubi = __('Valid:7days', 'usces');
 		$siharai = ' ';
 	} elseif($_REQUEST['type'] == 'nohin') {
 		$title = __('Invoices', 'usces');
 		$message = sprintf(__("Thak you for choosing '%s'. We deliver your items as following.", 'usces'),
-						get_option('blogname'));
+						apply_filters('usces_filter_publisher', get_option('blogname')));
 		$juchubi = __('date of receiving the order', 'usces').' : '.$data->order['date'];
 		$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 	}

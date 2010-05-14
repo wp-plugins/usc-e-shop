@@ -10,10 +10,12 @@
 
 /** WordPress Administration Bootstrap */
 //require_once('admin.php');
+/* 30 **************************************/
+global $wp_version;
+/***************************************/
 
 //$parent_file = 'admin.php?page=usces_itemedit';
 //$submenu_file = 'admin.php?page=usces_itemedit';
-
 wp_reset_vars(array('action', 'safe_mode', 'withcomments', 'posts', 'content', 'edited_post_title', 'comment_error', 'profile', 'trackback_url', 'excerpt', 'showcomments', 'commentstart', 'commentend', 'commentorder'));
 
 /**
@@ -161,47 +163,59 @@ case 'edit':
 		wp_redirect("post.php");
 		exit();
 	}
-	$post_ID = $p = (int) $_GET['post'];
-	$post = get_post($post_ID);
-
-	if ( empty($post->ID) ) wp_die( __("You attempted to edit a post that doesn't exist. Perhaps it was deleted?") );
-
-	if ( 'post' != $post->post_type ) {
-		wp_redirect( get_edit_post_link( $post->ID, 'url' ) );
-		exit();
-	}
-
-//	wp_enqueue_script('post');
-//	if ( user_can_richedit() )
-//		wp_enqueue_script('editor');
-//	add_thickbox();
-//	wp_enqueue_script('media-upload');
-//	wp_enqueue_script('word-count');
-//	wp_enqueue_script( 'admin-comments' );
-//	enqueue_comment_hotkeys_js();
-//
-//	if ( current_user_can('edit_post', $post_ID) ) {
-//		if ( $last = wp_check_post_lock( $post->ID ) ) {
-//			$last_user = get_userdata( $last );
-//			$last_user_name = $last_user ? $last_user->display_name : __('Somebody');
-//			$message = sprintf( __( 'Warning: %s is currently editing this post' ), wp_specialchars( $last_user_name ) );
-//			$message = str_replace( "'", "\'", "<div class='error'><p>$message</p></div>" );
-//			add_action('admin_notices', create_function( '', "echo '$message';" ) );
-//		} else {
-//			wp_set_post_lock( $post->ID );
-//			wp_enqueue_script('autosave');
-//		}
-//	}
 
 	$title = 'Welcart Shop '.__('Edit item', 'usces');
 
-	if ( !current_user_can('edit_post', $post_ID) )
-		die ( __('You are not allowed to edit this post.') );
-
-	$post = get_post_to_edit($post_ID);
 	$this->action_status = 'none';
 
-	include(USCES_PLUGIN_DIR."/includes/edit-form-advanced.php");
+	if ( version_compare($wp_version, '3.0-beta', '>') ){
+		global $post;
+		if ( $post ) {
+			$post_type_object = get_post_type_object($post->post_type);
+			if ( $post_type_object ) {
+				$post_type = $post->post_type;
+				$current_screen->post_type = $post->post_type;
+				$current_screen->id = $current_screen->post_type;
+			}
+			$post_id = $post->ID;
+			$post_ID = $post->ID;
+		}
+	
+		$p = $post_id;
+	
+		if ( empty($post->ID) )
+			wp_die( __('You attempted to edit an item that doesn&#8217;t exist. Perhaps it was deleted?') );
+	
+		if ( !current_user_can($post_type_object->edit_cap, $post_id) )
+			wp_die( __('You are not allowed to edit this item.') );
+	
+		if ( 'trash' == $post->post_status )
+			wp_die( __('You can&#8217;t edit this item because it is in the Trash. Please restore it and try again.') );
+	
+		if ( null == $post_type_object )
+			wp_die( __('Unknown post type.') );
+	
+		$post_type = $post->post_type;
+		$title = sprintf(__('Edit %s'), $post_type_object->singular_label);
+		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+		
+	}else{
+	
+		$post_ID = $p = (int) $_GET['post'];
+		$post = get_post($post_ID);
+	
+		if ( empty($post->ID) ) wp_die( __("You attempted to edit a post that doesn't exist. Perhaps it was deleted?") );
+	
+		if ( 'post' != $post->post_type ) {
+			wp_redirect( get_edit_post_link( $post->ID, 'url' ) );
+			exit();
+		}
+		if ( !current_user_can('edit_post', $post_ID) )
+			die ( __('You are not allowed to edit this post.') );
+	
+		$post = get_post_to_edit($post_ID);
+		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced.php");
+	}
 
 	break;
 
@@ -221,17 +235,42 @@ case 'edit':
 //	wp_update_attachment_metadata( $post_id, $newmeta );
 //
 case 'editpost':
-	$post_ID = (int) $_POST['post_ID'];
-	//check_admin_referer('update-post_' . $post_ID);
 
-	$post_ID = edit_post();
+		global $post;
+		if ( $post ) {
+			$post_type_object = get_post_type_object($post->post_type);
+			if ( $post_type_object ) {
+				$post_type = $post->post_type;
+				$current_screen->post_type = $post->post_type;
+				$current_screen->id = $current_screen->post_type;
+			}
+			$post_id = $post->ID;
+			$post_ID = $post->ID;
+		}
+		$title = 'Welcart Shop '.__('Edit item', 'usces');
+	
+		if ( !current_user_can('edit_post', $post_ID) )
+			die ( __('You are not allowed to edit this post.') );
+	
+	if ( version_compare($wp_version, '3.0-beta', '>') ){
+		add_action('check_admin_referer', 'usces_update_check_admin');
 
-	$title = 'Welcart Shop '.__('Edit item', 'usces');
-
-	if ( !current_user_can('edit_post', $post_ID) )
-		die ( __('You are not allowed to edit this post.') );
-
+		check_admin_referer('update-' . $post_type . '_' . $post_id);
+		$post_id = edit_post();
+		$post_ID = $post_id;
+var_dump($post_id);
 	$post = get_post_to_edit($post_ID);
+	
+		//redirect_post($post_id); // Send user on their way while we keep working
+		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+	}else{
+	
+		$post_ID = edit_post();
+	$post = get_post_to_edit($post_ID);
+	
+		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced.php");
+	}
+	
 	
 	if ( ( isset($_POST['save']) || isset($_POST['publish']) ) ) {
 		if ( isset($_POST['_wp_original_http_referer']) && strpos( $_POST['_wp_original_http_referer'], '/wp-admin/post.php') === false && strpos( $_POST['_wp_original_http_referer'], '/wp-admin/post-new.php') === false ) {
@@ -255,24 +294,36 @@ case 'editpost':
 	} else {
 		$this->action_message = __('Post updated.');
 	}
-		$this->action_status = 'success';
-
-
-	include(USCES_PLUGIN_DIR."/includes/edit-form-advanced.php");
+	$this->action_status = 'success';
 //	redirect_post($post_ID); // Send user on their way while we keep working
 //	exit();
 	break;
 
 case 'new':
+
 	$title = 'Welcart Shop ' . __('Add New Item', 'usces');
 	
-	if ( current_user_can('edit_pages') ) {
-		$action = 'post';
-		$post = get_default_post_to_edit();
 
-		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced.php");
-	
+	if ( version_compare($wp_version, '3.0-beta', '>') ){
+		global $post;
+		if ( !isset($_GET['post_type']) )
+			$post_type = 'post';
+		elseif ( in_array( $_GET['post_type'], get_post_types( array('public' => true ) ) ) )
+			$post_type = $_GET['post_type'];
+		else
+			wp_die( __('Invalid post type') );
+		
+		$action = 'post';
+		$post_ID = $post->ID;
+		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+	}else{
+		if ( current_user_can('edit_pages') ) {
+			$action = 'post';
+			$post = get_default_post_to_edit();
+			include(USCES_PLUGIN_DIR."/includes/edit-form-advanced.php");
+		}
 	}
+
 
 	break;
 
@@ -306,8 +357,8 @@ case 'delete':
 //	check_admin_referer( 'autosave', 'autosavenonce' );
 //
 //	$url = post_preview();
-//
-//	wp_redirect($url);
+//var_dump($url);
+////	wp_redirect($url);
 //	exit();
 //	break;
 

@@ -31,6 +31,7 @@ define('USCES_ADMIN_URL', get_option('siteurl') . '/wp-admin/admin.php');
 	
 load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLDER.'/languages');
 
+require_once(USCES_PLUGIN_DIR."/includes/redirect.php");
 require_once(USCES_PLUGIN_DIR."/includes/initial.php");
 require_once(USCES_PLUGIN_DIR."/functions/calendar-com.php");
 require_once(USCES_PLUGIN_DIR."/functions/utility.php");
@@ -46,6 +47,7 @@ require_once(USCES_PLUGIN_DIR."/functions/template_func.php");
 
 add_action('activate_' . plugin_basename(__FILE__), array(&$usces, 'set_initial'));
 add_action('init', array(&$usces, 'main'), 10);
+add_action('admin_init', 'usces_redirect', 10);
 add_action('admin_menu', array(&$usces, 'add_pages'));
 add_action('admin_head', array(&$usces, 'admin_head'));
 add_action('wp_head', array(&$usces, 'shop_head'));

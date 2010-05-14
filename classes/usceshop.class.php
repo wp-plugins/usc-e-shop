@@ -108,6 +108,58 @@ class usc_e_shop
 		
 	}
 	
+	function get_default_post_to_edit30( $post_type = 'post', $create_in_db = false ) {
+		global $wpdb;
+	
+		$post_title = '';
+		if ( !empty( $_REQUEST['post_title'] ) )
+			$post_title = esc_html( stripslashes( $_REQUEST['post_title'] ));
+	
+		$post_content = '';
+		if ( !empty( $_REQUEST['content'] ) )
+			$post_content = esc_html( stripslashes( $_REQUEST['content'] ));
+	
+		$post_excerpt = '';
+		if ( !empty( $_REQUEST['excerpt'] ) )
+			$post_excerpt = esc_html( stripslashes( $_REQUEST['excerpt'] ));
+	
+		if ( $create_in_db ) {
+			// Cleanup old auto-drafts more than 7 days old
+			$old_posts = $wpdb->get_col( "SELECT ID FROM $wpdb->posts WHERE post_status = 'auto-draft' AND DATE_SUB( NOW(), INTERVAL 7 DAY ) > post_date" );
+			foreach ( (array) $old_posts as $delete )
+				wp_delete_post( $delete, true ); // Force delete
+			$post = get_post( wp_insert_post( array( 'post_title' => __( 'Auto Draft' ), 'post_type' => $post_type, 'post_status' => 'auto-draft' ) ) );
+		} else {
+			$post->ID = 0;
+			$post->post_author = '';
+			$post->post_date = '';
+			$post->post_date_gmt = '';
+			$post->post_password = '';
+			$post->post_type = $post_type;
+			$post->post_status = 'draft';
+			$post->to_ping = '';
+			$post->pinged = '';
+			if ( 'page' == $post_type ) {
+				$post->comment_status = get_option( 'default_comment_status_page' );
+			} else {
+				$post->comment_status = get_option( 'default_comment_status' );
+			}
+			$post->ping_status = get_option( 'default_ping_status' );
+			$post->post_pingback = get_option( 'default_pingback_flag' );
+			$post->post_category = get_option( 'default_category' );
+			$post->page_template = 'default';
+			$post->post_parent = 0;
+			$post->menu_order = 0;
+		}
+	
+		$post->post_content = apply_filters( 'default_content', $post_content, $post );
+		$post->post_title   = apply_filters( 'default_title',   $post_title, $post   );
+		$post->post_excerpt = apply_filters( 'default_excerpt', $post_excerpt, $post );
+		$post->post_name = '';
+	
+		return $post;
+	}
+
 	function get_default_post_to_edit() {
 		global $post;
 		
@@ -1112,8 +1164,8 @@ class usc_e_shop
 	}
 	
 	function main() {
-		global $wpdb, $wp_locale;
-		global $wp_query, $usces_action;
+		global $wpdb, $wp_locale, $wp_version;
+		global $wp_query, $usces_action, $post, $action;
 
 		do_action('usces_main');
 		$this->usces_cookie();
@@ -1122,6 +1174,7 @@ class usc_e_shop
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
+		
 		
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
 			$post_id = (int)$_GET['post'];
@@ -1152,16 +1205,71 @@ class usc_e_shop
 		
 			global $editing, $post;
 			if($_REQUEST['action'] != 'editpost' && $itemnew == 'new'){
-				$post = $this->get_default_post_to_edit();
-			}else{
-				if(isset($_GET['post'])){
-					$post_ID =  (int) $_GET['post'];
-					$post = get_post($post_ID);
+				if ( version_compare($wp_version, '3.0-beta', '>') ){
+					if ( !isset($_GET['post_type']) )
+						$post_type = 'post';
+					elseif ( in_array( $_GET['post_type'], get_post_types( array('public' => true ) ) ) )
+						$post_type = $_GET['post_type'];
+					else
+						wp_die( __('Invalid post type') );
+					$post_type_object = get_post_type_object($post_type);
+					$editing = true;
+//					if ( current_user_can($post_type_object->edit_type_cap) ) {
+						$post = $this->get_default_post_to_edit30( $post_type, true );
+						$post_ID = $post->ID;
+//					}
+					
 				}else{
-					$post_ID =  isset($_REQUEST['post_ID']) ? (int) $_REQUEST['post_ID'] : 0;
-					if(!empty($post_ID))
-						$post = get_post($post_ID);
+					$post = $this->get_default_post_to_edit();
 				}
+			}else{
+				if ( version_compare($wp_version, '3.0-beta', '>') ){
+					if ( isset($_GET['post']) )
+						$post_id = (int) $_GET['post'];
+					elseif ( isset($_POST['post_ID']) )
+						$post_id = (int) $_POST['post_ID'];
+					else
+						$post_id = 0;
+					$post_ID = $post_id;
+					$post = null;
+					$post_type_object = null;
+					$post_type = null;
+					if ( $post_id ) {
+						$post = get_post($post_id);
+						if ( $post ) {
+							$post_type_object = get_post_type_object($post->post_type);
+							if ( $post_type_object ) {
+								$post_type = $post->post_type;
+								$current_screen->post_type = $post->post_type;
+								$current_screen->id = $current_screen->post_type;
+							}
+						}
+					} elseif ( isset($_POST['post_type']) ) {
+						$post_type_object = get_post_type_object($_POST['post_type']);
+						if ( $post_type_object ) {
+							$post_type = $post_type_object->name;
+							$current_screen->post_type = $post_type;
+							$current_screen->id = $current_screen->post_type;
+						}
+					}
+					
+
+					$post = get_post( $post_id, OBJECT, 'edit' );
+					if ( $post->post_type == 'page' )
+						$post->page_template = get_post_meta( $id, '_wp_page_template', true );
+						
+				}else{
+					if(isset($_GET['post'])){
+						$post_ID =  (int) $_GET['post'];
+						$post = get_post($post_ID);
+					}else{
+						$post_ID =  isset($_REQUEST['post_ID']) ? (int) $_REQUEST['post_ID'] : 0;
+						if(!empty($post_ID))
+							$post = get_post($post_ID);
+					}
+				}
+//		global $wp_query, $usces_action, $post;
+
 			}
 			$editing = true;
 			wp_enqueue_script('autosave');
