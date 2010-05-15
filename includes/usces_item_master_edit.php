@@ -237,6 +237,12 @@ case 'edit':
 case 'editpost':
 
 		global $post;
+		$title = 'Welcart Shop '.__('Edit item', 'usces');
+	
+		if ( !current_user_can('edit_post', $post_ID) )
+			die ( __('You are not allowed to edit this post.') );
+	
+	if ( version_compare($wp_version, '3.0-beta', '>') ){
 		if ( $post ) {
 			$post_type_object = get_post_type_object($post->post_type);
 			if ( $post_type_object ) {
@@ -247,18 +253,12 @@ case 'editpost':
 			$post_id = $post->ID;
 			$post_ID = $post->ID;
 		}
-		$title = 'Welcart Shop '.__('Edit item', 'usces');
-	
-		if ( !current_user_can('edit_post', $post_ID) )
-			die ( __('You are not allowed to edit this post.') );
-	
-	if ( version_compare($wp_version, '3.0-beta', '>') ){
 		add_action('check_admin_referer', 'usces_update_check_admin');
 
 		check_admin_referer('update-' . $post_type . '_' . $post_id);
 		$post_id = edit_post();
 		$post_ID = $post_id;
-var_dump($post_id);
+
 	$post = get_post_to_edit($post_ID);
 	
 		//redirect_post($post_id); // Send user on their way while we keep working

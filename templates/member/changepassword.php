@@ -14,14 +14,14 @@ $html .= '<div class="loginbox">
 <form name="loginform" id="loginform" action="' . USCES_MEMBER_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<p>
 		<label>' . __('password', 'usces') . '<br />
-		<input type="password" name="loginpass1" id="loginpass1" class="loginpass" value="" size="20" tabindex="20" /></label>
+		<input type="password" name="loginpass1" id="loginpass1" class="loginpass" value="" size="20" /></label>
 	</p>
 	<p>
 		<label>' . __('Password (confirm)', 'usces') . '<br />
-		<input type="password" name="loginpass2" id="loginpass2" class="loginpass" value="" size="20" tabindex="20" /></label>
+		<input type="password" name="loginpass2" id="loginpass2" class="loginpass" value="" size="20" /></label>
 	</p>
 	<p class="submit">
-		<input type="submit" name="changepassword" id="member_login" value="' . __('Register', 'usces') . '" tabindex="100" />
+		<input type="submit" name="changepassword" id="member_login" value="' . __('Register', 'usces') . '" />
 	</p>
 </form>
 </div>';

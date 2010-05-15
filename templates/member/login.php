@@ -15,15 +15,15 @@ $html .= '<div class="loginbox">
 <form name="loginform" id="loginform" action="' . apply_filters('usces_filter_login_form_action', USCES_MEMBER_URL) . '" method="post">
 <p>
 <label>' . __('e-mail adress', 'usces') . '<br />
-<input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . usces_remembername('return') . '" size="20" tabindex="10" /></label>
+<input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . usces_remembername('return') . '" size="20" /></label>
 </p>
 <p>
 <label>' . __('password', 'usces') . '<br />
-<input type="password" name="loginpass" id="loginpass" class="loginpass" value="' . usces_rememberpass('return') . '" size="20" tabindex="20" /></label>
+<input type="password" name="loginpass" id="loginpass" class="loginpass" value="' . usces_rememberpass('return') . '" size="20" /></label>
 </p>
-<p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever" tabindex="90"' . usces_remembercheck('return') . ' /> ' . __('memorize login information', 'usces') . '</label></p>
+<p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever"' . usces_remembercheck('return') . ' /> ' . __('memorize login information', 'usces') . '</label></p>
 <p class="submit">';
-$loginbutton = '<input type="submit" name="member_login" id="member_login" value="' . __('Log-in', 'usces') . '" tabindex="100" />';
+$loginbutton = '<input type="submit" name="member_login" id="member_login" value="' . __('Log-in', 'usces') . '" />';
 $html .= apply_filters('usces_filter_login_button', $loginbutton);
 $html .= '</p>';
 $html = apply_filters('usces_filter_login_inform', $html);

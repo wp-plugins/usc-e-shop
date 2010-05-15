@@ -1829,41 +1829,34 @@ class usc_e_shop
 			return $mode;
 			
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
-		
-			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s AND ID <> %d", 
-						trim($_POST['member']['mailaddress1']), $_POST['member_id']
-					);
-			$id = $wpdb->get_var( $query );
-			if ( !empty($id) ) {
-				$this->error_message = __('This e-mail address has been already registered.', 'usces');
-				return $mode;
-			} else {
+	
+		$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
+		$pass = $wpdb->get_var( $query );
+
+		$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
+		$query = $wpdb->prepare("UPDATE $member_table SET 
+				mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
+				mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
+				mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
+				$password, 
+				trim($_POST['member']['name1']), 
+				trim($_POST['member']['name2']), 
+				trim($_POST['member']['name3']), 
+				trim($_POST['member']['name4']), 
+				trim($_POST['member']['zipcode']), 
+				trim($_POST['member']['pref']), 
+				trim($_POST['member']['address1']), 
+				trim($_POST['member']['address2']), 
+				trim($_POST['member']['address3']), 
+				trim($_POST['member']['tel']), 
+				trim($_POST['member']['fax']), 
+				trim($_POST['member']['mailaddress1']), 
+				$_POST['member_id'] 
+				);
+			$res = $wpdb->query( $query );
 			
-				$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password1']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
-		    	$query = $wpdb->prepare("UPDATE $member_table SET 
-						mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
-						mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
-						mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
-						$password, 
-						trim($_POST['member']['name1']), 
-						trim($_POST['member']['name2']), 
-						trim($_POST['member']['name3']), 
-						trim($_POST['member']['name4']), 
-						trim($_POST['member']['zipcode']), 
-						trim($_POST['member']['pref']), 
-						trim($_POST['member']['address1']), 
-						trim($_POST['member']['address2']), 
-						trim($_POST['member']['address3']), 
-						trim($_POST['member']['tel']), 
-						trim($_POST['member']['fax']), 
-						trim($_POST['member']['mailaddress1']), 
-						$_POST['member_id'] 
-						);
-				$res = $wpdb->query( $query );
-				
-				$this->get_current_member();
-				return 'editmemberform';
-			}
+			$this->get_current_member();
+			return 'editmemberform';
 			
 		} elseif ( $_POST['member_regmode'] == 'newmemberform' ) {
 

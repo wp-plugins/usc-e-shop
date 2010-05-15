@@ -16,10 +16,10 @@ $html .= '<div class="loginbox">
 <form name="loginform" id="loginform" action="' . USCES_MEMBER_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 <p>
 <label>' . __('e-mail adress', 'usces') . '<br />
-<input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . $this->current_member['email'] . '" size="20" tabindex="10" /></label>
+<input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . $this->current_member['email'] . '" size="20" /></label>
 </p>
 <p class="submit">
-<input type="submit" name="lostpassword" id="member_login" value="' . __('Obtain new password', 'usces') . '" tabindex="100" />
+<input type="submit" name="lostpassword" id="member_login" value="' . __('Obtain new password', 'usces') . '" />
 </p>
 </form>
 <div>' . __('Chenge th epassword according to the e-mail.', 'usces') . '</div>

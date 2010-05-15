@@ -450,11 +450,17 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 	$code =  get_post_custom_values('_itemCode', $post_id);
 	if(!$code) return false;
+	
 	$name = get_post_custom_values('_itemName', $post_id);
+	
 	$pictids = $usces->get_pictids($code[0]);
 	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
-	$alt = 'alt="'.$name[0].'"';
-	$html = preg_replace('/alt=\"\"/', $alt, $html);
+	$alt = 'alt="'.$code[0].'"';
+	$alt = apply_filters('usces_filter_img_alt', $alt, $post_id);
+	$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
+	$title = 'title="'.$name[0].'"';
+	$title = apply_filters('usces_filter_img_title', $title, $post_id);
+	$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 	if($out == 'return'){
 		return $html;
 	}else{
