@@ -79,11 +79,12 @@ class usc_e_shop
 			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
 			define('USCES_SSL_URL', $ssl_url);
 			define('USCES_SSL_URL_ADMIN', $ssl_url_admin);
-			
+			define('USCES_COOKIEPATH', preg_replace('|https?://[^/]+|i', '', $ssl_url . '/' ) );
 		}else{
 			define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
 			define('USCES_SSL_URL', get_option('home'));
 			define('USCES_SSL_URL_ADMIN', get_option('siteurl'));
+			define('USCES_COOKIEPATH', COOKIEPATH);
 		}
 
 		define('USCES_CART_NUMBER', get_option('usces_cart_number'));
@@ -827,7 +828,7 @@ class usc_e_shop
 		$value = serialize($values);
 		$timeout = time()+365*86400;
 		$domain = $_SERVER['HTTP_HOST'];
-		$res = setcookie('usces_cookie', $value, $timeout, COOKIEPATH, $domain);
+		$res = setcookie('usces_cookie', $value, $timeout, USCES_COOKIEPATH, $domain);
 	}
 	
 	function get_cookie() {
