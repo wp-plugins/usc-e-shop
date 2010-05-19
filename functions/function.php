@@ -517,6 +517,8 @@ function usces_reg_orderdata( $results = array() ) {
 		
 	else :
 	
+		$usces->cart->set_order_entry( array('ID' => $order_id) );
+	
 		if ( $member['ID'] ) {
 		
 			$mquery = $wpdb->prepare(

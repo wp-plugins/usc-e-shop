@@ -343,6 +343,7 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <tr>
 <td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', $itemGpNum3[0], '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
 </tr>
+<?php apply_filters('usces_item_master_first_section', NULL, $post_ID); ?>
 </table>
 </div>
 

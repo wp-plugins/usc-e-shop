@@ -1962,11 +1962,18 @@ class usc_e_shop
 		}
 	}
 
-	function is_member_logged_in() {
-		if( isset($_SESSION['usces_member']['ID']) )
-			return true;
-		else
-			return false;
+	function is_member_logged_in( $id = false ) {
+		if( $id === false ){
+			if( isset($_SESSION['usces_member']['ID']) )
+				return true;
+			else
+				return false;
+		}else{
+			if( isset($_SESSION['usces_member']['ID']) && $_SESSION['usces_member']['ID'] == $id )
+				return true;
+			else
+				return false;
+		}
 	}
 
 	function is_member($email) {
@@ -2116,6 +2123,72 @@ class usc_e_shop
 		foreach ( $_SESSION['usces_member'] as $key => $vlue ) {
 			$res[$key] = htmlspecialchars($vlue);
 		}
+		return $res;
+	}
+
+	function is_order($mid, $oid) {
+		global $wpdb;
+		
+		$table = $wpdb->prefix . "usces_order";
+		$query = $wpdb->prepare("SELECT ID FROM $table WHERE ID = %d AND mem_id = %d", $oid, $mid);
+		$mem_id = $wpdb->get_var( $query );
+		if ( empty($mem_id) ) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	function is_purchased_item($mid, $post_id) {
+		global $wpdb;
+		$res = false;
+		
+		$history = $this->get_member_history($mid);
+		foreach ( $history as $umhs ) {
+			$cart = $umhs['cart'];
+			for($i=0; $i<count($cart); $i++) { 
+				$cart_row = $cart[$i];
+				if($cart_row['post_id'] == $post_id){
+					$res = true;
+					break 2;
+				}
+			}
+		
+		}
+			return $res;
+	}
+	
+	function get_order_data($order_id) {
+		global $wpdb;
+		$order_table = $wpdb->prefix . "usces_order";
+	
+		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
+								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
+							FROM $order_table WHERE ID = %d", $order_id);
+		$value = $wpdb->get_row( $query );
+	
+		if( $value == NULL ) {
+			return false;
+		}else{
+			$res =array();
+		}
+		if(strpos($value->order_status, 'cancel') !== false || strpos($value->order_status, 'estimate') !== false){
+			return false;
+		}
+		
+		$res = array(
+					'ID' => $value->ID,
+					'cart' => unserialize($value->order_cart),
+					'condition' => unserialize($value->order_condition),
+					'getpoint' => $value->order_getpoint,
+					'usedpoint' => $value->order_usedpoint,
+					'discount' => $value->order_discount,
+					'shipping_charge' => $value->order_shipping_charge,
+					'cod_fee' => $value->order_cod_fee,
+					'tax' => $value->order_tax,
+					'date' => mysql2date(__('Y/m/d'), $value->order_date)
+					);
+
 		return $res;
 	}
 
