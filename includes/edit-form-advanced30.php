@@ -108,7 +108,7 @@ if ( 'auto-draft' == $post->post_status ) {
 $post_type_object = get_post_type_object($post_type);
 
 // All meta boxes should be defined and added before the first do_meta_boxes() call (or potentially during the do_meta_boxes action).
-require_once('./includes/meta-boxes.php');
+require_once(USCES_PLUGIN_DIR.'/includes/meta-boxes.php');
 
 add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', $post_type, 'side', 'core');
 

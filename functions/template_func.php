@@ -832,6 +832,28 @@ function usces_the_confirm() {
 
 function usces_the_inquiry_form() {
 	global $usces;
+	$error_message = '';
+	if( isset($_POST['inq_name']) && '' != trim($_POST['inq_name']) ) {
+		$inq_name = wp_specialchars(trim($_POST['inq_name']));
+	}else{
+		$inq_name = '';
+		if($usces->page == 'deficiency')
+			$error_message .= __('Please input your name.', 'usces') . "<br />";
+	}
+	if( isset($_POST['inq_mailaddress']) && '' != trim($_POST['inq_mailaddress']) ) {
+		$inq_mailaddress = wp_specialchars(trim($_POST['inq_mailaddress']));
+	}else{
+		$inq_mailaddress = '';
+		if($usces->page == 'deficiency')
+			$error_message .= __('Please input your e-mail address.', 'usces') . "<br />";
+	}
+	if( isset($_POST['inq_contents']) && '' != trim($_POST['inq_contents']) ) {
+		$inq_contents = wp_specialchars(trim($_POST['inq_contents']));
+	}else{
+		$inq_contents = '';
+		if($usces->page == 'deficiency')
+			$error_message .= __('Please input contents.', 'usces');
+	}
 
 	if($usces->page == 'inquiry_comp') :
 ?>
@@ -844,19 +866,22 @@ function usces_the_inquiry_form() {
 <?php 
 	else :
 ?>
+<?php if( !empty($error_message) ): ?>
+<div class="error_message"><?php echo $error_message; ?></div>
+<?php endif; ?>
 <form name="inquiry_form" action="<?php //echo USCES_CART_URL; ?>" method="post">
 <table border="0" cellpadding="0" cellspacing="0" class="inquiry_table">
 <tr>
 <th scope="row"><?php _e('Full name','usces') ?></th>
-<td><input name="inq_name" type="text" class="inquiry_name" /></td>
+<td><input name="inq_name" type="text" class="inquiry_name" value="<?php echo $inq_name; ?>" /></td>
 </tr>
 <tr>
 <th scope="row"><?php _e('e-mail adress','usces') ?></th>
-<td><input name="inq_mailaddress" type="text" class="inquiry_mailaddress" /></td>
+<td><input name="inq_mailaddress" type="text" class="inquiry_mailaddress" value="<?php echo $inq_mailaddress; ?>" /></td>
 </tr>
 <tr>
 <th scope="row"><?php _e('contents','usces') ?></th>
-<td><textarea name="inq_contents" class="inquiry_contents"></textarea></td>
+<td><textarea name="inq_contents" class="inquiry_contents"><?php echo $inq_contents; ?></textarea></td>
 </tr>
 </table>
 <div class="send"><input name="inquiry_button" type="submit" value="<?php _e('Admit to send it with this information.','usces') ?>" /></div>

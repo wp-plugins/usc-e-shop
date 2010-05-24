@@ -2295,6 +2295,15 @@ msgstr "配送名"
 msgid "There is not a choice."
 msgstr "指定できません"
 
+msgid "Please input your name."
+msgstr "※お名前を入力して下さい。"
+
+msgid "Please input your e-mail address."
+msgstr "※メールアドレスを入力して下さい。"
+
+msgid "Please input contents."
+msgstr "※内容を入力して下さい。"
+
 #~ msgid "〜％ discount at the purchase of more then 〜units."
 #~ msgstr "～個以上で～％引き（単価）"
 #~ msgid "Only few stocks left for this item."

@@ -325,7 +325,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 郵便番号
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 36.5);
-		$pdf->Cell(62.5, 3.5, $data->customer['zip'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['zip'], $border, 0, 'L', 1));
 	
 		// 都道府県
 		$pdf->SetFont(GOTHIC, '', 10);
@@ -345,17 +345,17 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 電話
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 57);
-		$pdf->Cell(62.5, 3.5, $data->customer['tel'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['tel'], $border, 0, 'L', 1));
 	
 		// FAX
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 63.7);
-		$pdf->Cell(62.5, 3.5, $data->customer['fax'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['fax'], $border, 0, 'L', 1));
 	
 		// E-mail
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 70.4);
-		$pdf->Cell(62.5, 3.5, $data->customer['email'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['email'], $border, 0, 'L', 1));
 		
 		// サイト名
 		$pdf->SetFont(GOTHIC, '', 11);
@@ -440,7 +440,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 郵便番号
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 36.5);
-		$pdf->Cell(62.5, 3.5, $data->customer['zip'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['zip'], $border, 0, 'L', 1));
 	
 		// 都道府県
 		$pdf->SetFont(GOTHIC, '', 10);
@@ -460,17 +460,17 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 電話
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 57);
-		$pdf->Cell(62.5, 3.5, $data->customer['tel'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['tel'], $border, 0, 'L', 1));
 	
 		// FAX
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 63.7);
-		$pdf->Cell(62.5, 3.5, $data->customer['fax'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['fax'], $border, 0, 'L', 1));
 	
 		// E-mail
 		$pdf->SetFont(GOTHIC, '', 10);
 		$pdf->SetXY(34, 70.4);
-		$pdf->Cell(62.5, 3.5, $data->customer['email'], $border, 0, 'L', 1);
+		$pdf->Cell(62.5, 3.5, usces_conv_euc($data->customer['email'], $border, 0, 'L', 1));
 		
 		// サイト名
 		$pdf->SetFont(GOTHIC, '', 11);

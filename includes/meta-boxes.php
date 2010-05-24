@@ -297,25 +297,25 @@ function post_categories_meta_box( $post, $box ) {
 	<div id="taxonomy-<?php echo $taxonomy; ?>" class="categorydiv">
 		<ul id="<?php echo $taxonomy; ?>-tabs" class="category-tabs">
 			<li class="tabs"><a href="#<?php echo $taxonomy; ?>-all" tabindex="3"><?php printf( __( 'All %s' ), $tax->label ); ?></a></li>
-			<li class="hide-if-no-js"><a href="#<?php echo $taxonomy; ?>-pop" tabindex="3"><?php _e( 'Most Used' ); ?></a></li>
+			<!--<li class="hide-if-no-js"><a href="#<?php echo $taxonomy; ?>-pop" tabindex="3"><?php _e( 'Most Used' ); ?></a></li>-->
 		</ul>
 
-		<div id="<?php echo $taxonomy; ?>-pop" class="tabs-panel" style="display: none;">
+<!--		<div id="<?php echo $taxonomy; ?>-pop" class="tabs-panel" style="display: none;">
 			<ul id="<?php echo $taxonomy; ?>checklist-pop" class="categorychecklist form-no-clear" >
 				<?php $popular_ids = wp_popular_terms_checklist($taxonomy); ?>
 			</ul>
 		</div>
-
+-->
 		<div id="<?php echo $taxonomy; ?>-all" class="tabs-panel">
 			<?php	
             $name = ( $taxonomy == 'category' ) ? 'post_category' : 'tax_input[' . $taxonomy . ']';
             echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
             ?>
 			<ul id="<?php echo $taxonomy; ?>checklist" class="list:<?php echo $taxonomy?> categorychecklist form-no-clear">
-				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids ) ) ?>
+				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids, 'descendants_and_self' => USCES_ITEM_CAT_PARENT_ID ) ) ?>
 			</ul>
 		</div>
-	<?php if ( !current_user_can($tax->assign_cap) ) : ?>
+<!--	<?php if ( !current_user_can($tax->assign_cap) ) : ?>
 	<p><em><?php _e('You cannot modify this Taxonomy.'); ?></em></p>
 	<?php endif; ?>
 	<?php if ( current_user_can($tax->edit_cap) ) : ?>
@@ -330,7 +330,7 @@ function post_categories_meta_box( $post, $box ) {
 				</p>
 			</div>
 		<?php endif; ?>
-	</div>
+-->	</div>
 	<?php
 }
 
@@ -436,8 +436,9 @@ function post_comment_meta_box_thead($result) {
  * @param object $post
  */
 function post_comment_meta_box($post) {
-	global $wpdb, $post_ID;
-
+	global $wpdb;
+	
+	$post_ID = $post->ID;
 	$total = $wpdb->get_var($wpdb->prepare("SELECT count(1) FROM $wpdb->comments WHERE comment_post_ID = '%d' AND ( comment_approved = '0' OR comment_approved = '1')", $post_ID));
 
 	if ( 1 > $total ) {
