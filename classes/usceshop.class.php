@@ -212,7 +212,7 @@ class usc_e_shop
 	
 	function usces_ssl_page_link($link)
 	{
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+//		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
 //			$fronts = parse_url(get_option('home'));
 //			$homes = parse_url(USCES_SSL_URL);
 //			if(empty($fronts['scheme'])){
@@ -229,15 +229,15 @@ class usc_e_shop
 //			$sslsite = str_replace($homesscheme, '', USCES_SSL_URL);
 //			$link = str_replace($site, $sslsite, $link);
 //			$link = str_replace('http://', 'https://', $link);
-			if( strpos($link, '/usces-cart') )
+			if( strpos($link, '/usces-cart') || strpos($link, 'page_id='.USCES_CART_NUMBER) )
 				$link = USCES_CART_URL;
-			if( strpos($link, '/usces-member') )
+			if( strpos($link, '/usces-member') || strpos($link, 'page_id='.USCES_MEMBER_NUMBER) )
 				$link = USCES_MEMBER_URL;
 				
 //			$link = str_replace('/usces-cart', ('/?page_id='.USCES_CART_NUMBER), $link);
 //			$link = str_replace('/usces-member', ('/?page_id='.USCES_MEMBER_NUMBER), $link);
 				
-		}
+//		}
 		return $link;
 	}
 
