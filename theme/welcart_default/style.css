@@ -130,6 +130,7 @@ p.discprition {
 	font-size: 12px;
 }
 /* -- mainnavi -- */
+div.mainnavi,
 ul.mainnavi {
 	padding: 0px;
 	margin: 0px;
@@ -137,11 +138,13 @@ ul.mainnavi {
 	background-repeat: repeat-x;
 	background-color: #000;
 }
+div.mainnavi ul li,
 ul.mainnavi li {
 	padding: 0px;
 	margin: 0px;
 	float: left;
 }
+div.mainnavi li a,
 ul.mainnavi li a {
 	width: 121px;
 	height: 36px;
@@ -156,6 +159,7 @@ ul.mainnavi li a {
 	font-size: 13px;
 	text-align: center;
 }
+div.mainnavi li a:hover,
 ul.mainnavi li a:hover {
 	background-position: 0px 0px;
 	text-decoration: none;
