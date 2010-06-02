@@ -56,6 +56,15 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 
 == Changelog ==
 
+= V0.5 =
+3 Jun 2010
+-----------
+* Now a new default theme, 'Welcart Default Theme 1.0'
+* It supported WordPress3.0
+* Custom Field came to be usable
+* Now comment on the product
+* Fixed other malfunctions
+
 = V0.4.4 =
 21 Apr 2010
 -----------

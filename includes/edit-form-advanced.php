@@ -718,37 +718,50 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 
 <div id="postitemcustomstuff">
 <table class="iteminfo_table">
-<tr>
-<th><?php _e('estimated shipping date', 'usces'); ?></th>
-<td><select name="itemShipping" id="itemShipping" class="itemShipping">
-<?php foreach( (array)$this->shipping_rule as $key => $label){ $selected = $key == $itemShipping[0] ? ' selected="selected"' : ''; ?>
-	<option value="<?php echo $key; ?>"<?php echo $selected; ?>><?php echo $label; ?></option>
-<?php } ?>
-</select>
-<!--<input type="text" name="itemShipping " id="itemShipping" class="itemShipping" value="<?php echo $itemShipping[0]; ?>" />-->
-<input type="hidden" name="itemShipping_nonce" id="itemShipping_nonce" value="<?php echo wp_create_nonce( 'itemShipping_nonce' ); ?>" /></td>
+<?php
+$second_section = '<tr>
+<th>' . __('estimated shipping date', 'usces') . '</th>
+<td><select name="itemShipping" id="itemShipping" class="itemShipping">';
+foreach( (array)$this->shipping_rule as $key => $label){ 
+	$selected = $key == $itemShipping[0] ? ' selected="selected"' : '';
+	$second_section .= '<option value="' . $key . '"' . $selected . '>' . $label . '</option>';
+}
+$second_section .= '</select>
+<input type="hidden" name="itemShipping_nonce" id="itemShipping_nonce" value="' . wp_create_nonce( 'itemShipping_nonce' ) . '" /></td>
 </tr>
 <tr>
-<th><?php _e('shipping option','usces'); ?></th>
-<td>
-<?php foreach( (array)$this->options['delivery_method'] as $deli){ ?>
-<label for="itemDeliveryMethod[<?php echo $deli['id']; ?>]"><input name="itemDeliveryMethod[<?php echo $deli['id']; ?>]" id="itemDeliveryMethod[<?php echo $deli['id']; ?>]" type="checkbox" value="<?php echo $deli['id']; ?>"<?php if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) echo ' checked="checked"'; ?> /><?php echo $deli['name']; ?></label>
-<?php } ?>
-</td>
+<th>' . __('shipping option','usces') . '</th>
+<td>';
+foreach( (array)$this->options['delivery_method'] as $deli){
+	$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . $deli['id'] . '"';
+	if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) {
+		$second_section .= ' checked="checked"';
+	}
+	$second_section .= ' />' . $deli['name'] . '</label>';
+}
+$second_section .= '</td>
 </tr>
 <tr>
-<th><?php _e('Shipping', 'usces'); ?></th>
-<td><select name="itemShippingCharge" id="itemShippingCharge" class="itemShippingCharge">
-<?php foreach( (array)$this->options['shipping_charge'] as $cahrge){ $selected = $cahrge['id'] == $itemShippingCharge[0] ? ' selected="selected"' : ''; ?>
-	<option value="<?php echo $cahrge['id']; ?>"<?php echo $selected; ?>><?php echo $cahrge['name']; ?></option>
-<?php } ?>
-</select>
-<input type="hidden" name="itemShippingCharge_nonce" id="itemShippingCharge_nonce" value="<?php echo wp_create_nonce( 'itemShippingCharge_nonce' ); ?>" /></td>
+<th>' . __('Shipping', 'usces') . '</th>
+<td><select name="itemShippingCharge" id="itemShippingCharge" class="itemShippingCharge">';
+foreach( (array)$this->options['shipping_charge'] as $cahrge){
+	$selected = $cahrge['id'] == $itemShippingCharge[0] ? ' selected="selected"' : '';
+	$second_section .= '<option value="' . $cahrge['id'] . '"' . $selected . '>' . $cahrge['name'] . '</option>';
+}
+$second_section .= '</select>
+<input type="hidden" name="itemShippingCharge_nonce" id="itemShippingCharge_nonce" value="' . wp_create_nonce( 'itemShippingCharge_nonce' ) . '" /></td>
 </tr>
 <tr>
-<th><?php _e('Postage individual charging', 'usces'); ?></th>
-<td><input name="itemIndividualSCharge" id="itemIndividualSCharge" type="checkbox" value="1"<?php if($itemIndividualSCharge[0]) echo ' checked="checked"'; ?> /></td>
-</tr>
+<th>' . __('Postage individual charging', 'usces') . '</th>
+<td><input name="itemIndividualSCharge" id="itemIndividualSCharge" type="checkbox" value="1"';
+if($itemIndividualSCharge[0]){
+	$second_section .= ' checked="checked"';
+}
+$second_section .= ' /></td>
+</tr>';
+$second_section = apply_filters('usces_item_master_second_section', $second_section, $post_ID);
+echo $second_section;
+?>
 </table>
 </div>
 

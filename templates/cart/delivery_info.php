@@ -161,7 +161,7 @@ $html .= '<tr>
 	<td colspan="2"><textarea name="order[note]" cols="" rows="" id="note">' . $usces_entries['order']['note'] . '</textarea></td>
 	</tr>
 	</table>
-	
+
 	<div class="send"><input name="order[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
 	<input name="backCustomer" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
 	<input name="confirm" type="submit" value="'.__(' Next ', 'usces').'" /></div>

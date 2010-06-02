@@ -70,7 +70,11 @@ class usc_e_shop
 		if ( $this->use_ssl ) {
 			$ssl_url = $this->options['ssl_url'];
 			$ssl_url_admin = $this->options['ssl_url_admin'];
-			define('USCES_FRONT_PLUGIN_URL', $ssl_url_admin . '/wp-content/plugins/' . USCES_PLUGIN_FOLDER);
+			if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+				define('USCES_FRONT_PLUGIN_URL', $ssl_url_admin . '/wp-content/plugins/' . USCES_PLUGIN_FOLDER);
+			}else{
+				define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
+			}
 			add_filter('page_link', array(&$this, 'usces_ssl_page_link'));
 			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
 			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
@@ -2197,6 +2201,33 @@ class usc_e_shop
 		return $res;
 	}
 
+	function get_orderIDs_by_postID($post_id) {
+		global $wpdb;
+		$order_table = $wpdb->prefix . "usces_order";
+	
+		$query = "SELECT ID, order_cart, order_status FROM $order_table";
+		$rows = $wpdb->get_query( $query, ARRAY_A );
+	
+		if( $value == NULL ) {
+			return false;
+		}else{
+			foreach($rows as $row){
+				if(strpos($row['order_status'], 'cancel') !== false || strpos($row['order_status'], 'estimate') !== false){
+					continue;
+				}else{
+					$carts = unserialize($row['order_cart']);
+					foreach($carts as $cart){
+						if( $post_id == $cart['post_id'] ){
+							$res[] = $row['ID'];
+							break;
+						}
+					}
+				}
+			}
+		}
+		return $res;
+	}
+
 	function zaiko_check() {
 		$red = '';
 		$cart = $this->cart->get_cart();
@@ -2713,8 +2744,8 @@ class usc_e_shop
 	
 	function set_default_theme()
 	{
-		$themepath = USCES_WP_CONTENT_DIR.'/themes/ucart_default';
-		$resourcepath = USCES_WP_CONTENT_DIR.'/plugins/usc-e-shop/theme/ucart_default';
+		$themepath = USCES_WP_CONTENT_DIR.'/themes/welcart_default';
+		$resourcepath = USCES_WP_CONTENT_DIR.'/plugins/usc-e-shop/theme/welcart_default';
 		if( file_exists($themepath) ) return false;
 		if(!file_exists($resourcepath) ) return false;
 		
@@ -3719,7 +3750,8 @@ class usc_e_shop
 							'shipping_charge' => $value->order_shipping_charge,
 							'cod_fee' => $value->order_cod_fee,
 							'tax' => $value->order_tax,
-							'date' => mysql2date(__('Y/m/d'), $value->order_date)
+							'date' => mysql2date(__('Y/m/d'), $value->order_date),
+							'order_date' => $value->order_date
 							);
 				$i++;
 			
