@@ -887,7 +887,13 @@ try{
 }catch(e){}
 
 jQuery(document).ready(function($){
-$("#in-category-"+<?php echo USCES_ITEM_CAT_PARENT_ID; ?>).attr({checked: "checked"});
+	$("#in-category-"+<?php echo USCES_ITEM_CAT_PARENT_ID; ?>).attr({checked: "checked"});
+
+	$('#itemCode').blur( 
+						function() { 
+							if ( $("#itemCode").val().length == 0 ) return;
+							uscesItem.newdraft($('#itemCode').val());
+						});
 
 });
 </script>
