@@ -456,21 +456,16 @@
 	uscesItem = {
 		
 		newdraft : function(itemCode) {
-			if(jQuery("#title").val().length == 0) {
-				jQuery("#title").val(itemCode)
+			if(jQuery("#title").val().length == 0 || jQuery("#title").val() == '') {
+				$("#title").val(itemCode);
 			}
 			autosave();
 			
 		},
 		
 		cahngepict : function(code) {
-			jQuery("div#item-select-pict").html(code);
+			$("div#item-select-pict").html(code);
 		}
 	};
 	
 })(jQuery);
-
-jQuery(document).ready( function($) {
-	jQuery('#itemCode').blur( function() { if ( (jQuery("#post_ID").val() > 0) || (jQuery("#itemCode").val().length == 0) ) return; uscesItem.newdraft($('#itemCode').val()); } );
-});
-

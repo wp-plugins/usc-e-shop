@@ -14,7 +14,7 @@ function post_submit_meta_box($post) {
 
 	$post_type = $post->post_type;
 	$post_type_object = get_post_type_object($post_type);
-	$can_publish = current_user_can($post_type_object->publish_cap);
+	$can_publish = current_user_can($post_type_object->cap->publish_posts);
 ?>
 <div class="submitbox" id="submitpost">
 
@@ -247,16 +247,16 @@ function post_tags_meta_box($post, $box) {
 	$helps      = isset( $taxonomy->helps      ) ? esc_attr( $taxonomy->helps ) : esc_attr__('Separate tags with commas.');
 	$help_hint  = isset( $taxonomy->help_hint  ) ? $taxonomy->help_hint         : __('Add new tag');
 	$help_nojs  = isset( $taxonomy->help_nojs  ) ? $taxonomy->help_nojs         : __('Add or remove tags');
-	$help_cloud = isset( $taxonomy->help_cloud ) ? $taxonomy->help_cloud        : __('Choose from the most used tags in %s');
+	$help_cloud = isset( $taxonomy->help_cloud ) ? $taxonomy->help_cloud        : __('Choose from the most used tags');
 
-	$disabled = !current_user_can($taxonomy->assign_cap) ? 'disabled="disabled"' : '';
+	$disabled = !current_user_can($taxonomy->cap->assign_terms) ? 'disabled="disabled"' : '';
 ?>
 <div class="tagsdiv" id="<?php echo $tax_name; ?>">
 	<div class="jaxtag">
 	<div class="nojs-tags hide-if-js">
 	<p><?php echo $help_nojs; ?></p>
-	<textarea name="<?php echo "tax_input[$tax_name]"; ?>" class="the-tags" id="tax-input[<?php echo $tax_name; ?>]" <?php echo $disabled; ?>><?php echo esc_attr(get_terms_to_edit( $post->ID, $tax_name )); ?></textarea></div>
- 	<?php if ( current_user_can($taxonomy->assign_cap) ) : ?>
+	<textarea name="<?php echo "tax_input[$tax_name]"; ?>" rows="3" cols="20" class="the-tags" id="tax-input-<?php echo $tax_name; ?>" <?php echo $disabled; ?>><?php echo esc_attr(get_terms_to_edit( $post->ID, $tax_name )); ?></textarea></div>
+ 	<?php if ( current_user_can($taxonomy->cap->assign_terms) ) : ?>
 	<div class="ajaxtag hide-if-no-js">
 		<label class="screen-reader-text" for="new-tag-<?php echo $tax_name; ?>"><?php echo $box['title']; ?></label>
 		<div class="taghint"><?php echo $help_hint; ?></div>
@@ -268,10 +268,10 @@ function post_tags_meta_box($post, $box) {
 	</div>
 	<div class="tagchecklist"></div>
 </div>
-<?php if ( current_user_can($taxonomy->assign_cap) ) : ?>
-<p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-<?php echo $tax_name; ?>"><?php printf( $help_cloud, $box['title'] ); ?></a></p>
+<?php if ( current_user_can($taxonomy->cap->assign_terms) ) : ?>
+<p class="hide-if-no-js"><a href="#titlediv" class="tagcloud-link" id="link-<?php echo $tax_name; ?>"><?php echo $help_cloud; ?></a></p>
 <?php else : ?>
-<p><em><?php _e('You cannot modify this Taxonomy.'); ?></em></p>
+<p><em><?php _e('You cannot modify this taxonomy.'); ?></em></p>
 <?php endif; ?>
 <?php
 }
@@ -296,7 +296,7 @@ function post_categories_meta_box( $post, $box ) {
 	?>
 	<div id="taxonomy-<?php echo $taxonomy; ?>" class="categorydiv">
 		<ul id="<?php echo $taxonomy; ?>-tabs" class="category-tabs">
-			<li class="tabs"><a href="#<?php echo $taxonomy; ?>-all" tabindex="3"><?php printf( __( 'All %s' ), $tax->label ); ?></a></li>
+			<li class="tabs"><a href="#<?php echo $taxonomy; ?>-all" tabindex="3"><?php echo $tax->labels->all_items; ?></a></li>
 			<!--<li class="hide-if-no-js"><a href="#<?php echo $taxonomy; ?>-pop" tabindex="3"><?php _e( 'Most Used' ); ?></a></li>-->
 		</ul>
 
@@ -307,7 +307,7 @@ function post_categories_meta_box( $post, $box ) {
 		</div>
 -->
 		<div id="<?php echo $taxonomy; ?>-all" class="tabs-panel">
-			<?php	
+			<?php
             $name = ( $taxonomy == 'category' ) ? 'post_category' : 'tax_input[' . $taxonomy . ']';
             echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
             ?>
@@ -315,17 +315,28 @@ function post_categories_meta_box( $post, $box ) {
 				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids, 'descendants_and_self' => USCES_ITEM_CAT_PARENT_ID ) ) ?>
 			</ul>
 		</div>
-<!--	<?php if ( !current_user_can($tax->assign_cap) ) : ?>
-	<p><em><?php _e('You cannot modify this Taxonomy.'); ?></em></p>
+<!--	<?php if ( !current_user_can($tax->cap->assign_terms) ) : ?>
+	<p><em><?php _e('You cannot modify this taxonomy.'); ?></em></p>
 	<?php endif; ?>
-	<?php if ( current_user_can($tax->edit_cap) ) : ?>
+	<?php if ( current_user_can($tax->cap->edit_terms) ) : ?>
 			<div id="<?php echo $taxonomy; ?>-adder" class="wp-hidden-children">
-				<h4><a id="<?php echo $taxonomy; ?>-add-toggle" href="#<?php echo $taxonomy; ?>-add" class="hide-if-no-js" tabindex="3"><?php printf( __( '+ Add New %s' ), $tax->singular_label ); ?></a></h4>
+				<h4>
+					<a id="<?php echo $taxonomy; ?>-add-toggle" href="#<?php echo $taxonomy; ?>-add" class="hide-if-no-js" tabindex="3">
+						<?php
+							/* translators: %s: add new taxonomy label */
+							printf( __( '+ %s' ), $tax->labels->add_new_item );
+						?>
+					</a>
+				</h4>
 				<p id="<?php echo $taxonomy; ?>-add" class="category-add wp-hidden-child">
-					<label class="screen-reader-text" for="new<?php echo $taxonomy; ?>"><?php printf( __( 'Add New %s' ), $tax->singular_label ); ?></label><input type="text" name="new<?php echo $taxonomy; ?>" id="new<?php echo $taxonomy; ?>" class="form-required form-input-tip" value="<?php echo esc_attr( sprintf( 'New %s Name', $tax->singular_label ) ); ?>" tabindex="3" aria-required="true"/>
-					<label class="screen-reader-text" for="new<?php echo $taxonomy; ?>_parent"><?php printf( __('Parent %s'), $tax->singular_label ); ?>:</label><?php wp_dropdown_categories( array( 'taxonomy' => $taxonomy, 'hide_empty' => 0, 'name' => 'new'.$taxonomy.'_parent', 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => sprintf( __('&mdash; Parent %s &mdash;'), $tax->singular_label ), 'tab_index' => 3 ) ); ?>
-					<input type="button" id="<?php echo $taxonomy; ?>-add-submit" class="add:<?php echo $taxonomy ?>checklist:<?php echo $taxonomy ?>-add button category-add-sumbit" value="<?php esc_attr_e( 'Add' ); ?>" tabindex="3" />
-					<?php wp_nonce_field( 'add-'.$taxonomy, '_ajax_nonce', false ); ?>
+					<label class="screen-reader-text" for="new<?php echo $taxonomy; ?>"><?php echo $tax->labels->add_new_item; ?></label>
+					<input type="text" name="new<?php echo $taxonomy; ?>" id="new<?php echo $taxonomy; ?>" class="form-required form-input-tip" value="<?php echo esc_attr( $tax->labels->new_item_name ); ?>" tabindex="3" aria-required="true"/>
+					<label class="screen-reader-text" for="new<?php echo $taxonomy; ?>_parent">
+						<?php echo $tax->labels->parent_item_colon; ?>
+					</label>
+					<?php wp_dropdown_categories( array( 'taxonomy' => $taxonomy, 'hide_empty' => 0, 'name' => 'new'.$taxonomy.'_parent', 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax->labels->parent_item . ' &mdash;', 'tab_index' => 3 ) ); ?>
+					<input type="button" id="<?php echo $taxonomy; ?>-add-submit" class="add:<?php echo $taxonomy ?>checklist:<?php echo $taxonomy ?>-add button category-add-sumbit" value="<?php echo esc_attr( $tax->labels->add_new_item ); ?>" tabindex="3" />
+					<?php wp_nonce_field( 'add-'.$taxonomy, '_ajax_nonce-add-'.$taxonomy, false ); ?>
 					<span id="<?php echo $taxonomy; ?>-ajax-response"></span>
 				</p>
 			</div>
@@ -409,8 +420,8 @@ function post_comment_status_meta_box($post) {
 ?>
 <input name="advanced_view" type="hidden" value="1" />
 <p class="meta-options">
-	<label for="comment_status" class="selectit"><input name="comment_status" type="checkbox" id="comment_status" value="open" <?php checked($post->comment_status, 'open'); ?> /><?php _e('Allow Comments.') ?></label><br />
-	<label for="ping_status" class="selectit"><input name="ping_status" type="checkbox" id="ping_status" value="open" <?php checked($post->ping_status, 'open'); ?> /><?php printf( __('Allow <a href="%s" target="_blank">trackbacks and pingbacks</a> on this page.'),__('http://codex.wordpress.org/Introduction_to_Blogging#Managing_Comments')); ?></label>
+	<label for="comment_status" class="selectit"><input name="comment_status" type="checkbox" id="comment_status" value="open" <?php checked($post->comment_status, 'open'); ?> /> <?php _e( 'Allow comments.' ) ?></label><br />
+	<label for="ping_status" class="selectit"><input name="ping_status" type="checkbox" id="ping_status" value="open" <?php checked($post->ping_status, 'open'); ?> /> <?php printf( __( 'Allow <a href="%s" target="_blank">trackbacks and pingbacks</a> on this page.' ), __( 'http://codex.wordpress.org/Introduction_to_Blogging#Managing_Comments' ) ); ?></label>
 </p>
 <?php
 }
@@ -436,9 +447,8 @@ function post_comment_meta_box_thead($result) {
  * @param object $post
  */
 function post_comment_meta_box($post) {
-	global $wpdb;
-	
-	$post_ID = $post->ID;
+	global $wpdb, $post_ID;
+
 	$total = $wpdb->get_var($wpdb->prepare("SELECT count(1) FROM $wpdb->comments WHERE comment_post_ID = '%d' AND ( comment_approved = '0' OR comment_approved = '1')", $post_ID));
 
 	if ( 1 > $total ) {
@@ -524,30 +534,28 @@ function post_revisions_meta_box($post) {
 function page_attributes_meta_box($post) {
 	$post_type_object = get_post_type_object($post->post_type);
 	if ( $post_type_object->hierarchical ) {
-		$pages = wp_dropdown_pages(array('post_type' => $post->post_type, 'exclude_tree' => $post->ID, 'selected' => $post->post_parent, 'name' => 'parent_id', 'show_option_none' => __('Main Page (no parent)'), 'sort_column'=> 'menu_order, post_title', 'echo' => 0));
+		$pages = wp_dropdown_pages(array('post_type' => $post->post_type, 'exclude_tree' => $post->ID, 'selected' => $post->post_parent, 'name' => 'parent_id', 'show_option_none' => __('(no parent)'), 'sort_column'=> 'menu_order, post_title', 'echo' => 0));
 		if ( ! empty($pages) ) {
 ?>
-<h5><?php _e('Parent') ?></h5>
-<label class="screen-reader-text" for="parent_id"><?php _e('Page Parent') ?></label>
+<p><strong><?php _e('Parent') ?></strong></p>
+<label class="screen-reader-text" for="parent_id"><?php _e('Parent') ?></label>
 <?php echo $pages; ?>
-<p><?php _e('You can arrange your pages in hierarchies. For example, you could have an &#8220;About&#8221; page that has &#8220;Life Story&#8221; and &#8220;My Dog&#8221; pages under it. There are no limits to how deeply nested you can make pages.'); ?></p>
 <?php
 		} // end empty pages check
 	} // end hierarchical check.
-	if ( 0 != count( get_page_templates() ) ) {
+	if ( 'page' == $post->post_type && 0 != count( get_page_templates() ) ) {
 		$template = !empty($post->page_template) ? $post->page_template : false;
 		?>
-<h5><?php _e('Template') ?></h5>
+<p><strong><?php _e('Template') ?></strong></p>
 <label class="screen-reader-text" for="page_template"><?php _e('Page Template') ?></label><select name="page_template" id="page_template">
 <option value='default'><?php _e('Default Template'); ?></option>
 <?php page_template_dropdown($template); ?>
 </select>
-<p><?php _e('Some themes have custom templates you can use for certain pages that might have additional features or custom layouts. If so, you&#8217;ll see them above.'); ?></p>
 <?php
 	} ?>
-<h5><?php _e('Order') ?></h5>
-<p><label class="screen-reader-text" for="menu_order"><?php _e('Page Order') ?></label><input name="menu_order" type="text" size="4" id="menu_order" value="<?php echo esc_attr($post->menu_order) ?>" /></p>
-<p><?php _e('Pages are usually ordered alphabetically, but you can put a number above to change the order pages appear in.'); ?></p>
+<p><strong><?php _e('Order') ?></strong></p>
+<p><label class="screen-reader-text" for="menu_order"><?php _e('Order') ?></label><input name="menu_order" type="text" size="4" id="menu_order" value="<?php echo esc_attr($post->menu_order) ?>" /></p>
+<p><?php if ( 'page' == $post->post_type ) _e( 'Need help? Use the Help tab in the upper right of your screen.' ); ?></p>
 <?php
 }
 
@@ -882,6 +890,4 @@ function post_thumbnail_meta_box() {
 	$thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
 	echo _wp_post_thumbnail_html( $thumbnail_id );
 }
-
-
 

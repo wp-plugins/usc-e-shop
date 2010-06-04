@@ -186,7 +186,7 @@ case 'edit':
 		if ( empty($post->ID) )
 			wp_die( __('You attempted to edit an item that doesn&#8217;t exist. Perhaps it was deleted?') );
 	
-		if ( !current_user_can($post_type_object->edit_cap, $post_id) )
+		if ( !current_user_can($post_type_object->cap->edit_post, $post_id) )
 			wp_die( __('You are not allowed to edit this item.') );
 	
 		if ( 'trash' == $post->post_status )

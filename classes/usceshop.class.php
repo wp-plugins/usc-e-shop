@@ -144,11 +144,7 @@ class usc_e_shop
 			$post->post_status = 'draft';
 			$post->to_ping = '';
 			$post->pinged = '';
-			if ( 'page' == $post_type ) {
-				$post->comment_status = get_option( 'default_comment_status_page' );
-			} else {
-				$post->comment_status = get_option( 'default_comment_status' );
-			}
+			$post->comment_status = get_option( 'default_comment_status' );
 			$post->ping_status = get_option( 'default_ping_status' );
 			$post->post_pingback = get_option( 'default_pingback_flag' );
 			$post->post_category = get_option( 'default_category' );
@@ -292,14 +288,14 @@ class usc_e_shop
 	
 		add_object_page('Welcart Shop', 'Welcart Shop', 10, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 10, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 2, 'usces_itemedit', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 2, 'usces_itemnew', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 3, 'usces_initial', array($this, 'admin_setup_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 3, 'usces_schedule', array($this, 'admin_schedule_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 3, 'usces_delivery', array($this, 'admin_delivery_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 3, 'usces_mail', array($this, 'admin_mail_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 3, 'usces_cart', array($this, 'admin_cart_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 3, 'usces_member', array($this, 'admin_member_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 10, 'usces_itemedit', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 10, 'usces_itemnew', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 10, 'usces_initial', array($this, 'admin_setup_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 10, 'usces_schedule', array($this, 'admin_schedule_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 10, 'usces_delivery', array($this, 'admin_delivery_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 10, 'usces_mail', array($this, 'admin_mail_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 10, 'usces_cart', array($this, 'admin_cart_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 10, 'usces_member', array($this, 'admin_member_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 10, 'usces_system', array($this, 'admin_system_page'));
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
 		
