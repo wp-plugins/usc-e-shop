@@ -33,8 +33,8 @@ class Welcart_login extends WP_Widget {
 		<label><?php _e('e-mail adress', 'usces'); ?><br />
 		<input type="text" name="loginmail" id="loginmailw" class="loginmail" value="<?php echo usces_remembername('return'); ?>" size="20" /></label><br />
 		<label><?php _e('password', 'usces'); ?><br />
-		<input type="password" name="loginpass" id="loginpassw" class="loginpass" value="<?php echo usces_rememberpass('return'); ?>" size="20" /></label><br />
-		<label><input name="rememberme" type="checkbox" id="remembermew" value="forever"<?php echo usces_remembercheck('return'); ?> /> <?php _e('Remember Me', 'usces'); ?></label></p>
+		<input type="password" name="loginpass" id="loginpassw" class="loginpass" size="20" /></label><br />
+		<label><input name="rememberme" type="checkbox" id="remembermew" value="forever" /> <?php _e('Remember Me', 'usces'); ?></label></p>
 		<p class="submit">
 		<input type="submit" name="member_login" id="member_loginw" value="<?php _e('Log-in', 'usces'); ?>" />
 		</p>

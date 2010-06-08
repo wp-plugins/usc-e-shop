@@ -19,9 +19,9 @@ $html .= '<div class="loginbox">
 </p>
 <p>
 <label>' . __('password', 'usces') . '<br />
-<input type="password" name="loginpass" id="loginpass" class="loginpass" value="' . usces_rememberpass('return') . '" size="20" /></label>
+<input type="password" name="loginpass" id="loginpass" class="loginpass" size="20" /></label>
 </p>
-<p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever"' . usces_remembercheck('return') . ' /> ' . __('memorize login information', 'usces') . '</label></p>
+<p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever" /> ' . __('memorize login information', 'usces') . '</label></p>
 <p class="submit">';
 $loginbutton = '<input type="submit" name="member_login" id="member_login" value="' . __('Log-in', 'usces') . '" />';
 $html .= apply_filters('usces_filter_login_button', $loginbutton);
