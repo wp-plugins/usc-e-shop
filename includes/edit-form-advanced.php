@@ -732,12 +732,17 @@ $second_section .= '</select>
 <tr>
 <th>' . __('shipping option','usces') . '</th>
 <td>';
-foreach( (array)$this->options['delivery_method'] as $deli){
-	$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . $deli['id'] . '"';
-	if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) {
-		$second_section .= ' checked="checked"';
+$delivery_methods = (array)$this->options['delivery_method'];
+if( count($delivery_methods) === 0 ){
+	$second_section .= '※ 配送設定を行ってから商品登録を行ってください！';
+}else{
+	foreach( $delivery_methods as $deli){
+		$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . $deli['id'] . '"';
+		if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) {
+			$second_section .= ' checked="checked"';
+		}
+		$second_section .= ' />' . $deli['name'] . '</label>';
 	}
-	$second_section .= ' />' . $deli['name'] . '</label>';
 }
 $second_section .= '</td>
 </tr>

@@ -214,7 +214,7 @@ if ( 'post' == $post_type ) {
 	'<p>' . __('<strong>Post editor</strong> - Enter the text for your post. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your post text. You can insert media files by clicking the icons above the post editor and following the directions.') . '</p>' .
 	'<p>' . __('<strong>Publish</strong> - You can set the terms of publishing your post in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting a post or making it stay at the top of your blog indefinitely (sticky). Publish (immediately) allows you to set a future or past date and time, so you can schedule a post to be published in the future or backdate a post.') . '</p>' .
 	'<p>' . __('<strong>Featured Image</strong> - This allows you to associate an image with your post without inserting it. This is usually useful only if your theme makes use of the featured image as a post thumbnail on the home page, a custom header, etc.') . '</p>' .
-	'<p>' . __('<strong>Send Trackbacks</strong> - Trackbacks are a way to notify legacy blog systems that you��ve linked to them. Enter the URL(s) you want to send trackbacks. If you link to other WordPress sites they&#8217;ll be notified automatically using pingbacks, and this field is unnecessary.') . '</p>' .
+	'<p>' . __('<strong>Send Trackbacks</strong> - Trackbacks are a way to notify legacy blog systems that you’ve linked to them. Enter the URL(s) you want to send trackbacks. If you link to other WordPress sites they&#8217;ll be notified automatically using pingbacks, and this field is unnecessary.') . '</p>' .
 	'<p>' . __('<strong>Discussion</strong> - You can turn comments and pings on or off, and if there are comments on the post, you can see them here and moderate them.') . '</p>' .
 	'<p>' . sprintf(__('You can also create posts with the <a href="%s">Press This bookmarklet</a>.'), 'options-writing.php') . '</p>' .
 	'<p><strong>' . __('For more information:') . '</strong></p>' .
@@ -383,12 +383,17 @@ $second_section .= '</select>
 <tr>
 <th>' . __('shipping option','usces') . '</th>
 <td>';
-foreach( (array)$this->options['delivery_method'] as $deli){
-	$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . $deli['id'] . '"';
-	if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) {
-		$second_section .= ' checked="checked"';
+$delivery_methods = (array)$this->options['delivery_method'];
+if( count($delivery_methods) === 0 ){
+	$second_section .= '※ 配送設定を行ってから商品登録を行ってください！';
+}else{
+	foreach( $delivery_methods as $deli){
+		$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . $deli['id'] . '"';
+		if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) {
+			$second_section .= ' checked="checked"';
+		}
+		$second_section .= ' />' . $deli['name'] . '</label>';
 	}
-	$second_section .= ' />' . $deli['name'] . '</label>';
 }
 $second_section .= '</td>
 </tr>

@@ -491,6 +491,8 @@ jQuery(document).ready(function($){
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>
+<p>※ 配送設定は商品登録よりも前に行う必要があります。<br />
+※ 商品登録後に配送方法の追加・削除を行った場合は全商品の更新が必要となりますのでご注意ください。</p>
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">

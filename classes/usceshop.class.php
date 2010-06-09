@@ -67,6 +67,9 @@ class usc_e_shop
 //		} else {
 //			$ssl_url = str_replace('http://', 'https://', get_option('home'));
 //		}
+		define('USCES_CART_NUMBER', get_option('usces_cart_number'));
+		define('USCES_MEMBER_NUMBER', get_option('usces_member_number'));
+
 		if ( $this->use_ssl ) {
 			$ssl_url = $this->options['ssl_url'];
 			$ssl_url_admin = $this->options['ssl_url_admin'];
@@ -91,8 +94,6 @@ class usc_e_shop
 			define('USCES_COOKIEPATH', COOKIEPATH);
 		}
 
-		define('USCES_CART_NUMBER', get_option('usces_cart_number'));
-		define('USCES_MEMBER_NUMBER', get_option('usces_member_number'));
 		if($this->use_ssl) {
 			define('USCES_CART_URL', $ssl_url . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
 			define('USCES_MEMBER_URL', $ssl_url . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());

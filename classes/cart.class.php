@@ -261,7 +261,7 @@ class usces_cart {
 				$_SESSION['usces_entry']['delivery'][$key] = wp_specialchars($value);
 		}
 		
-		if(isset($_POST['customer']['delivery_flag']) && $_POST['customer']['delivery_flag'] == 0)	{	
+		if(isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 0)	{	
 			foreach( $_SESSION['usces_entry']['customer'] as $key => $value )
 				$_SESSION['usces_entry']['delivery'][$key] = wp_specialchars($value);
 		}

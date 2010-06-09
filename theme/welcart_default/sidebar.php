@@ -106,9 +106,5 @@
 <?php endif; ?>
 </ul>
 
-
-</ul> 
-
-
 </div>
 <!-- end right sidebar -->
