@@ -2,8 +2,7 @@
 $usces_entries = $this->cart->get_entry();
 $html = '';
 
-if( EX_DLSELLER !== true ){
-	if($usces_entries['customer']['delivery_flag'] == 0) {
+	if($usces_entries['delivery']['delivery_flag'] == 0) {
 		
 		$html .= '
 			<script type="text/javascript">
@@ -59,7 +58,6 @@ if( EX_DLSELLER !== true ){
 		});
 		</script>";
 	}
-}
 $html .= '<div id="delivery-info">
 	
 	<div class="usccart_navi">
@@ -80,19 +78,18 @@ $html .= '<div class="error_message">' . $this->error_message . '</div>';
 
 $html .= '<form action="' . USCES_CART_URL . '" method="post">';
 
-if( EX_DLSELLER !== true ){
 	$html .= '<table class="customer_form">
 		<tr>
 		<th rowspan="2" scope="row">'.__('shipping address', 'usces').'</th>
-		<td><input name="customer[delivery_flag]" type="radio" id="delivery_flag1" onclick="document.getElementById(\'delivery_table\').style.display = \'none\';" value="0"';
-	if($usces_entries['customer']['delivery_flag'] == 0) {
+		<td><input name="delivery[delivery_flag]" type="radio" id="delivery_flag1" onclick="document.getElementById(\'delivery_table\').style.display = \'none\';" value="0"';
+	if($usces_entries['delivery']['delivery_flag'] == 0) {
 		$html .= ' checked';
 	}
 	$html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="delivery_flag1">'.__('same as customer information', 'usces').'</label></td>
 		</tr>
 		<tr>
-		<td><input name="customer[delivery_flag]" id="delivery_flag2" onclick="document.getElementById(\'delivery_table\').style.display = \'inline\'" type="radio" value="1"';
-	if($usces_entries['customer']['delivery_flag'] == 1) {
+		<td><input name="delivery[delivery_flag]" id="delivery_flag2" onclick="document.getElementById(\'delivery_table\').style.display = \'table\'" type="radio" value="1"';
+	if($usces_entries['delivery']['delivery_flag'] == 1) {
 		$html .= ' checked';
 	}
 	$html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="delivery_flag2">'.__('Chose another shipping address.', 'usces').'</label></td>
@@ -140,9 +137,7 @@ if( EX_DLSELLER !== true ){
 		<td colspan="2"><input name="delivery[fax]" id="fax" type="text" value="' . $usces_entries['delivery']['fax'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />例）1000-10-1000</td>
 		</tr>
 		</table>';
-}
 $html .= '<table class="customer_form" id="time">';
-if( EX_DLSELLER !== true ){
 	$html .= '<tr>
 		<th scope="row">'.__('shipping option', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
@@ -151,7 +146,6 @@ if( EX_DLSELLER !== true ){
 		<th scope="row">'.__('Delivery Time', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ) . '</td>
 		</tr>';
-}
 $html .= '<tr>
 	<th scope="row"><em>*</em>'.__('payment method', 'usces').'</th>
 	<td colspan="2">' . usces_the_payment_method( $usces_entries['order']['payment_name'], 'return' ) . '</td>
