@@ -93,7 +93,6 @@ class usc_e_shop
 			define('USCES_SSL_URL_ADMIN', get_option('siteurl'));
 			define('USCES_COOKIEPATH', COOKIEPATH);
 		}
-
 		if($this->use_ssl) {
 			define('USCES_CART_URL', $ssl_url . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
 			define('USCES_MEMBER_URL', $ssl_url . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
@@ -205,18 +204,30 @@ class usc_e_shop
 		$search = array(('page_id='.USCES_CART_NUMBER), '/usces-cart', ('page_id='.USCES_MEMBER_NUMBER), '/usces-member');
 		$flag = false;
 		foreach($search as $value){
-			if( strpos($link, $value) )
-				$flag = true;
+			if( strpos($link, $value) ){
+				if( $value == ('page_id='.USCES_CART_NUMBER) ||  $value == ('page_id='.USCES_MEMBER_NUMBER) ){
+					$parts = parse_url($link);
+					parse_str($parts['query'], $query);
+					if( $query['page_id'] == USCES_CART_NUMBER || $query['page_id'] == USCES_MEMBER_NUMBER ){
+						$flag = true;
+					}
+				}else{
+					$flag = true;
+				}
+			}
 		}
 		return $flag;
 	}
 	
 	function usces_ssl_page_link($link)
 	{
-		if( strpos($link, '/usces-cart') || strpos($link, 'page_id='.USCES_CART_NUMBER) )
+		$parts = parse_url($link);
+		parse_str($parts['query'], $query);
+		
+		if( strpos($link, '/usces-cart') || $query['page_id'] == USCES_CART_NUMBER ) 
 			$link = USCES_CART_URL;
 			
-		if( strpos($link, '/usces-member') || strpos($link, 'page_id='.USCES_MEMBER_NUMBER) )
+		if( strpos($link, '/usces-member') || $query['page_id'] == USCES_MEMBER_NUMBER )
 			$link = USCES_MEMBER_URL;
 		
 		return $link;
@@ -783,6 +794,9 @@ class usc_e_shop
 			//$this->uscesdc($sessid);
 			session_id($sessid);
 		}
+		$timeout = 0;
+		$domain = $_SERVER['HTTP_HOST'];
+		@session_set_cookie_params($timeout, USCES_COOKIEPATH, $domain);
 		@session_start();
 		
 	}
@@ -1765,6 +1779,7 @@ class usc_e_shop
 		die();
 	
 	}
+
 
 	function changepassword() {
 		global $wpdb;
