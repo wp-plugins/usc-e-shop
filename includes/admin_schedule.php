@@ -1,17 +1,17 @@
 <?php
 require_once(USCES_PLUGIN_DIR . '/classes/calendar.class.php');
 
-//当月
-list($todayyy, $todaymm, $todaydd) = getToday();	// 今日
+//cur
+list($todayyy, $todaymm, $todaydd) = getToday();
 $cal1 = new calendarData();
 $cal1->setToday($todayyy, $todaymm, $todaydd);
 $cal1->setCalendarData();
-//翌月
+//next
 list($nextyy, $nextmm, $nextdd) = getAfterMonth($todayyy, $todaymm, 1, 1);
 $cal2 = new calendarData();
 $cal2->setToday($nextyy, $nextmm, $nextdd);
 $cal2->setCalendarData();
-//翌々月
+//aft
 list($lateryy, $latermm, $laterdd) = getAfterMonth($todayyy, $todaymm, 1, 2);
 $cal3 = new calendarData();
 $cal3->setToday($lateryy, $latermm, $laterdd);
@@ -122,7 +122,7 @@ function cangeWday3(id, c) {
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Campaign Schedule','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_campaign_schedule');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Campaign Schedule','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_campaign_schedule');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -202,7 +202,7 @@ function cangeWday3(id, c) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Business Calendar', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Business Calendar', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -235,7 +235,7 @@ function cangeWday3(id, c) {
 <?php endfor; ?>
 		</table>
 		</td>
-		<td><span class="business_days_exp_box" style="background-color:#DFFFDD">　　</span><?php _e('Working day', 'usces'); ?><br /><span class="business_days_exp_box" style="background-color:#FFECCE">　　</span><?php _e('Holiday for Shipping Operations', 'usces'); ?></td>
+		<td><span class="business_days_exp_box" style="background-color:#DFFFDD">  </span><?php _e('Working day', 'usces'); ?><br /><span class="business_days_exp_box" style="background-color:#FFECCE">  </span><?php _e('Holiday for Shipping Operations', 'usces'); ?></td>
 	</tr>
 	<tr>
 	    <th><?php _e('Next month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$nextyy,$nextmm); ?></th>

@@ -18,7 +18,7 @@ function newsubmit() {
 $html .= '<div id="searchbox">
 <form name="searchindetail" action="' . USCES_CART_URL . '&page=search_item" method="post">
 <div class="field">
-<label class="outlabel">'.__('Categories', 'usces').' : AND検索</label>' . usces_categories_checkbox('return') . '
+<label class="outlabel">'.__('Categories: AND Search', 'usces').'</label>' . usces_categories_checkbox('return') . '
 </div>
 <input name="usces_search_button" type="submit" value="'.__('Search', 'usces').'" onclick="newsubmit()" />
 <input name="paged" id="usces_paged" type="hidden" value="' . $uscpaged . '" />

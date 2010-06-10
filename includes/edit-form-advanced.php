@@ -349,7 +349,7 @@ function post_item_pict_box($post) {
 add_meta_box('item-main-pict', __('Item image', 'usces'), 'post_item_pict_box', 'post', 'side', 'high');
 
 /**
- * Display post categories form fields.【カテゴリー】side core
+ * Display post categories form fields.[cartegory]side core
  *
  * @since 2.6.0
  *
@@ -412,7 +412,7 @@ function post_password_meta_box($post) {
 // add_meta_box('passworddiv', __('Privacy Options'), 'post_password_meta_box', 'post', 'side', 'core');
 
 /**
- * Display post excerpt form fields.【抜粋】normal core
+ * Display post excerpt form fields.[excerpt]normal core
  *
  * @since 2.6.0
  *
@@ -427,7 +427,7 @@ function post_excerpt_meta_box($post) {
 add_meta_box('postexcerpt', __('Excerpt'), 'post_excerpt_meta_box', 'post', 'normal', 'core');
 
 /**
- * Display trackback links form fields.【トラックバック】normal core
+ * Display trackback links form fields.[trackback]normal core
  *
  * @since 2.6.0
  *
@@ -454,7 +454,7 @@ if ( ! empty($pings) )
 //add_meta_box('trackbacksdiv', __('Send Trackbacks'), 'post_trackback_meta_box', 'post', 'normal', 'core');
 
 /**
- * Display custom fields for the post form fields.【カスタムフィールド】normal core
+ * Display custom fields for the post form fields.[custom fields]normal core
  *
  * @since 2.6.0
  *
@@ -477,7 +477,7 @@ meta_form(); ?>
 do_action('dbx_post_advanced');
 
 /**
- * Display comment status for post form fields.【ディスカッション】normal core
+ * Display comment status for post form fields.[comment]normal core
  *
  * @since 2.6.0
  *
@@ -671,7 +671,6 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <div id="side-info-column" class="inner-sidebar">
 <div id="item-main-pict">
 </div>
-<!-- 【公開】side core、【タグ】side core、【カテゴリー】side core、【かすたむ】side adbance　出力 -->
 <?php do_action('submitpost_box'); ?>
 
 <?php $side_meta_boxes = do_meta_boxes('post', 'side', $post); ?>
@@ -704,13 +703,13 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 </tr>
 <tr>
 <th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
-<td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', $itemGpNum1[0], '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" /><?php _e('%discount','usces'); ?>（<?php _e('Unit price','usces'); ?>）</td>
+<td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', $itemGpNum1[0], '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" /><?php _e('%discount','usces'); ?> (<?php _e('Unit price','usces'); ?>) </td>
 </tr>
 <tr>
-<td>2.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum2', '" id="', 'itemGpNum2', '" class="itemPointrate"', 'value="', $itemGpNum2[0], '" />'); ?><input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" /><?php _e('%discount','usces'); ?>（<?php _e('Unit price','usces'); ?>）</td>
+<td>2.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum2', '" id="', 'itemGpNum2', '" class="itemPointrate"', 'value="', $itemGpNum2[0], '" />'); ?><input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" /><?php _e('%discount','usces'); ?> (<?php _e('Unit price','usces'); ?>) </td>
 </tr>
 <tr>
-<td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', $itemGpNum3[0], '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" /><?php _e('%discount','usces'); ?>（<?php _e('Unit price','usces'); ?>）</td>
+<td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', $itemGpNum3[0], '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" /><?php _e('%discount','usces'); ?> (<?php _e('Unit price','usces'); ?>) </td>
 </tr>
 <?php apply_filters('usces_item_master_first_section', NULL, $post_ID); ?>
 </table>
@@ -734,7 +733,7 @@ $second_section .= '</select>
 <td>';
 $delivery_methods = (array)$this->options['delivery_method'];
 if( count($delivery_methods) === 0 ){
-	$second_section .= '※ 配送設定を行ってから商品登録を行ってください！';
+	$second_section .= __('* Please register an item, after you finished delivery setting!','usces');
 }else{
 	foreach( $delivery_methods as $deli){
 		$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . $deli['id'] . '"';
@@ -773,7 +772,7 @@ echo $second_section;
 <!--<div class="meta-box-sortables">-->
 
 <div id="itemsku" class="postbox">
-<h3 class="hndle"><span>SKU　<?php _e('Price', 'usces'); ?></span></h3>
+<h3 class="hndle"><span>SKU <?php _e('Price', 'usces'); ?></span></h3>
 <div class="inside">
 <div id="postskucustomstuff"><div id="skuajax-response"></div>
 <?php
@@ -831,7 +830,6 @@ endif; ?>
 
 <div id="<?php echo user_can_richedit() ? 'postdivrich' : 'postdiv'; ?>" class="postarea">
 
-<!-- テキストエディター出力 -->
 <?php the_editor($post->post_content); ?>
 
 <table id="post-status-info" cellspacing="0"><tbody><tr>
@@ -852,7 +850,6 @@ endif; ?>
 	</td>
 </tr></tbody></table>
 
-<!-- wp_nonce_field追加 -->
 <?php wp_nonce_field( 'autosave', 'autosavenonce', false ); ?>
 <?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 <?php wp_nonce_field( 'getpermalink', 'getpermalinknonce', false ); ?>

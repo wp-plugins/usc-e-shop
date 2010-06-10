@@ -55,15 +55,15 @@ function usces_order_confirm_message($order_id) {
 	if($_POST['mode'] == 'mitumoriConfirmMail'){
 		$msg_body = "\r\n\r\n\r\n" . __('Estimate','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
-		$msg_body .= __('Request of','usces') . "：　" . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
-		$msg_body .= __('estimate number','usces') . "：" . $order_id . "\r\n";
+		$msg_body .= __('Request of','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+		$msg_body .= __('estimate number','usces') . " : " . $order_id . "\r\n";
 	}else{
 		$msg_body = "\r\n\r\n\r\n" . __('** Article order contents **','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
-		$msg_body .= __('Buyer','usces') . "：　" . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
-		$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
+		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+		$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
 	}
-	$msg_body .= __('Items','usces') . "　：\r\n";
+	$msg_body .= __('Items','usces') . " : \r\n";
 
 	foreach ( (array)$cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
@@ -88,55 +88,55 @@ function usces_order_confirm_message($order_id) {
 				$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
 			}
 		}
-		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice) . " × " . $cart_row['quantity'] . "\r\n";
+		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	
 	$msg_body .= "=================================================================\r\n";
-	$msg_body .= __('total items','usces') . "　　　　：" . number_format($data['order_item_total_price']) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('total items','usces') . "    : " . number_format($data['order_item_total_price']) . __('dollars','usces') . "\r\n";
 	if ( $data['order_usedpoint'] != 0 )
-		$msg_body .= __('use of points','usces') . "　：" . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
+		$msg_body .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$msg_body .= __('Special Price','usces') . "　　　　：" . number_format($data['order_discount']) . __('dollars','usces') . "\r\n";
-	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($data['order_shipping_charge']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('Special Price','usces') . "    : " . number_format($data['order_discount']) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('Shipping','usces') . "     : " . number_format($data['order_shipping_charge']) . __('dollars','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($data['order_cod_fee']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('C.O.D','usces') . "  : " . number_format($data['order_cod_fee']) . __('dollars','usces') . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($data['order_tax']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('consumption tax','usces') . "    : " . number_format($data['order_tax']) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($total_full_price) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('Payment amount','usces') . "  : " . number_format($total_full_price) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
 	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('A destination name','usces') . "　　　　：" . sprintf(__('Mr/Mrs %s', 'usces'), ($deli['name1'] . ' ' . $deli['name2'])) . "　\r\n";
-	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $deli['zipcode'] . "\r\n";
-	$msg_body .= __('Address','usces') . "　　　　：" . $deli['pref'] . $deli['address1'] . $deli['address2'] . "　" . $deli['address3'] . "\r\n";
-	$msg_body .= __('Phone number','usces') . "　　：" . $deli['tel'] . "\r\n";
+	$msg_body .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($deli['name1'] . ' ' . $deli['name2'])) . " \r\n";
+	$msg_body .= __('Zip/Postal Code','usces') . "  : " . $deli['zipcode'] . "\r\n";
+	$msg_body .= __('Address','usces') . "    : " . $deli['pref'] . $deli['address1'] . $deli['address2'] . " " . $deli['address3'] . "\r\n";
+	$msg_body .= __('Phone number','usces') . "  : " . $deli['tel'] . "\r\n";
 
-	$msg_body .= __('Delivery Time','usces') . "：" . $data['order_delivery_time'] . "\r\n";
+	$msg_body .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
 	if ( $data['order_delidue_date'] == NULL || $data['order_delidue_date'] == '#none#' ) {
 		$msg_body .= "\r\n";
 	}else{
-		$msg_body .= __('Shipping date', 'usces') . "　　：" . $data['order_delidue_date'] . "\r\n";
+		$msg_body .= __('Shipping date', 'usces') . "  : " . $data['order_delidue_date'] . "\r\n";
 		$msg_body .= __("* A shipment due date is a day to ship an article, and it's not the arrival day.", 'usces') . "\r\n";
 		$msg_body .= "\r\n";
 	}
 	$deli_meth = (int)$entry['order']['delivery_method'];
 	if( $deli_meth > 0 ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
-		$msg_body .= __('Delivery Method','usces') . "：" . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+		$msg_body .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
 	$msg_body .= "\r\n";
 
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
-//	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . "　\r\n";
+//	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . " \r\n";
 //	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 
 	$msg_body .= __('** Payment method **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $payment['name']. "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
-		$transferee = __('Transfer','usces') . "　：\r\n";
+		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
@@ -196,9 +196,9 @@ function usces_send_ordermail($order_id) {
 
 	$msg_body = "\r\n\r\n\r\n" . __('** content of ordered items **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('Buyer','usces') . "：　" . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['customer']['name1'] . ' ' . $entry['customer']['name2'])) . "\r\n";
-	$msg_body .= __('Order number','usces') . "：" . $order_id . "\r\n";
-	$msg_body .= __('Items','usces') . "　：\r\n";
+	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['customer']['name1'] . ' ' . $entry['customer']['name2'])) . "\r\n";
+	$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
+	$msg_body .= __('Items','usces') . " : \r\n";
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = $cart_row['sku'];
@@ -222,39 +222,39 @@ function usces_send_ordermail($order_id) {
 				$msg_body .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
 			}
 		}
-		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('dollars','usces') . " × " . $cart_row['quantity'] . "\r\n";
+		$msg_body .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('dollars','usces') . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	$msg_body .= "=================================================================\r\n";
-	$msg_body .= __('total items','usces') . "　　　　：" . number_format($entry['order']['total_items_price']) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('total items','usces') . "    : " . number_format($entry['order']['total_items_price']) . __('dollars','usces') . "\r\n";
 	if ( $entry['order']['usedpoint'] != 0 )
-		$msg_body .= __('use of points','usces') . "　：" . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
+		$msg_body .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$msg_body .= __('Special Price','usces') . "　　　　：" . number_format($entry['order']['discount']) . __('dollars','usces') . "\r\n";
-	$msg_body .= __('Shipping','usces') . "　　　　　：" . number_format($entry['order']['shipping_charge']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('Special Price','usces') . "    : " . number_format($entry['order']['discount']) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('Shipping','usces') . "     : " . number_format($entry['order']['shipping_charge']) . __('dollars','usces') . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$msg_body .= __('C.O.D','usces') . "　　：" . number_format($entry['order']['cod_fee']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('C.O.D','usces') . "  : " . number_format($entry['order']['cod_fee']) . __('dollars','usces') . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$msg_body .= __('consumption tax','usces') . "　　　　　：" . number_format($entry['order']['tax']) . __('dollars','usces') . "\r\n";
+		$msg_body .= __('consumption tax','usces') . "     : " . number_format($entry['order']['tax']) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n";
-	$msg_body .= __('Payment amount','usces') . "　　：" . number_format($entry['order']['total_full_price']) . __('dollars','usces') . "\r\n";
+	$msg_body .= __('Payment amount','usces') . "  : " . number_format($entry['order']['total_full_price']) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
 	$msg_body .= __('** A shipping address **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('A destination name','usces') . "　　　　：" . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['delivery']['name1'] . ' ' . $entry['delivery']['name2'])) . "\r\n";
-	$msg_body .= __('Zip/Postal Code','usces') . "　　：" . $entry['delivery']['zipcode'] . "\r\n";
-	$msg_body .= __('Address','usces') . "　　　　：" . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . "　" . $entry['delivery']['address3'] . "\r\n";
-	$msg_body .= __('Phone number','usces') . "　　：" . $entry['delivery']['tel'] . "\r\n";
+	$msg_body .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['delivery']['name1'] . ' ' . $entry['delivery']['name2'])) . "\r\n";
+	$msg_body .= __('Zip/Postal Code','usces') . "  : " . $entry['delivery']['zipcode'] . "\r\n";
+	$msg_body .= __('Address','usces') . "    : " . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . " " . $entry['delivery']['address3'] . "\r\n";
+	$msg_body .= __('Phone number','usces') . "  : " . $entry['delivery']['tel'] . "\r\n";
 
-	$msg_body .= __('Delivery Time','usces') . "：" . $entry['order']['delivery_time'] . "\r\n";
+	$msg_body .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
 	$deli_meth = (int)$entry['order']['delivery_method'];
 	if( $deli_meth > 0 ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
-		$msg_body .= __('Delivery Method','usces') . "：" . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+		$msg_body .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
 //	$msg_body .= "------------------------------------------------------------------\r\n";
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
-//	$msg_body .= "　" . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
+//	$msg_body .= " " . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
 //	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	$msg_body .= "\r\n";
 
@@ -262,7 +262,7 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= $payment['name']. "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
-		$transferee = __('Transfer','usces') . "　：\r\n";
+		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
@@ -415,7 +415,7 @@ function usces_lostmail($url) {
 	$res = usces_send_mail( $para1 );
 	
 	if($res === false) {
-		$usces->error_message = __('Error： I was not able to transmit an email.','usces');
+		$usces->error_message = __('Error: I was not able to transmit an email.','usces');
 		$page = 'lostmemberpassword';
 	} else {
 		$page = 'lostcompletion';
@@ -439,7 +439,6 @@ function usces_send_mail( $para ) {
 	ini_set( "smtp_port", 25 );
 	ini_set( "sendmail_from", "" );
 	
-	// 送信実行
 	$res = @wp_mail( $para['to_address'] , $subject , $message, $header );
 	
 	return $res;
@@ -649,7 +648,7 @@ function usces_new_orderdata() {
 //	
 //	endif;
 //	
-//	//在庫引き落とし
+//	//zaiko
 //	foreach($cart as $cartrow){
 //		$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
 //		if($zaikonum == '') continue;
@@ -871,7 +870,7 @@ return $res;
 //	
 //	endif;
 //	
-//	//在庫引き落とし
+//	//zaiko
 //	foreach($cart as $cartrow){
 //		$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
 //		if($zaikonum == '') continue;
@@ -1135,7 +1134,7 @@ function usces_all_change_zaiko(&$obj) {
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
-		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
 	} else {
 		$obj->set_action_status('none', '');
 	}
@@ -1157,7 +1156,7 @@ function usces_all_change_itemdisplay(&$obj){
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
-		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
 	} else {
 		$obj->set_action_status('none', '');
 	}
@@ -1201,7 +1200,7 @@ function usces_all_delete_itemdata(&$obj){
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
-		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
 	} else {
 		$obj->set_action_status('none', '');
 	}
@@ -1233,7 +1232,7 @@ function usces_all_change_order_reciept(&$obj){
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
-		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
 	} else {
 		$obj->set_action_status('none', '');
 	}
@@ -1315,7 +1314,7 @@ function usces_all_change_order_status(&$obj){
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
-		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
 	} else {
 		$obj->set_action_status('none', '');
 	}
@@ -1341,7 +1340,7 @@ function usces_all_delete_order_data(&$obj){
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
-		$obj->set_action_status('error', __('ERROR： I was not able to complete collective operation','usces'));
+		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
 	} else {
 		$obj->set_action_status('none', '');
 	}
@@ -1545,7 +1544,7 @@ function usces_item_uploadcsv(){
 		return $res;
 	}
 
-	//拡張子チェック
+	//check ext
 	list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
 	if( $fext != 'csv' && $fext != 'zip' ) {
 		$res['status'] = 'error';
@@ -1553,7 +1552,7 @@ function usces_item_uploadcsv(){
 		return $res;
 	}
 	
-	//zip解凍
+	//zip unpack
 	if($fext == 'zip'){
 		
 	
@@ -1561,13 +1560,13 @@ function usces_item_uploadcsv(){
 	//			$workfile = 
 	}
 	
-	//ログ準備
+	//log
 	if ( ! ($fpi = fopen (USCES_PLUGIN_DIR.'/logs/itemcsv_log.txt', "w"))) {
 		$res['status'] = 'error';
 		$res['message'] = __('The log file was not prepared for.', 'usces');
 		return $res;
 	}
-	//データ読み込み
+	//read data
 	if ( ! ($fpo = fopen ($workfile, "r"))) {
 		$res['status'] = 'error';
 		$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
@@ -1581,7 +1580,7 @@ function usces_item_uploadcsv(){
 	}
 	$total_num = count($lines);
 
-	//データチェック&登録
+	//data check & reg
 	foreach($lines as $rows_num => $line){
 		$datas = array();
 		$logtemp = '';
@@ -1770,7 +1769,7 @@ function usces_item_uploadcsv(){
 			continue;
 		}
 		
-		//wp_postsデータ登録;
+		//wp_posts data reg;
 		$wpdb->show_errors();
 		$cdatas = array();
 		$post_fields = array();
@@ -1780,7 +1779,7 @@ function usces_item_uploadcsv(){
 
 		if( $pre_code != $datas[0] ){
 		
-			//postsの追加
+			//add posts
 			$query = "SHOW FIELDS FROM $wpdb->posts";
 			$results = $wpdb->get_results( $query, ARRAY_A );
 			foreach($results as $ind => $rows){
@@ -1856,7 +1855,7 @@ function usces_item_uploadcsv(){
 				$pre_code = $datas[0];
 				continue;
 			}
-			//postmetaの追加
+			//add postmeta
 			$itemDeliveryMethod = explode(';',  $datas[11]);
 			$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[0], 'UTF-8', 'SJIS'))) . "'),";
 			$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[1], 'UTF-8', 'SJIS'))) . "'),";
@@ -1923,8 +1922,8 @@ function usces_item_uploadcsv(){
 			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
 			$dbres = mysql_query($query) or die(mysql_error());
 			
-			//term_relationshipsの追加、term_taxonomyの更新
-			//カテゴリー
+			//add term_relationships, edit term_taxonomy
+			//category
 			$categories = explode(';', $datas[19]);
 			foreach((array)$categories as $category){
 				$query = $wpdb->prepare("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy 
@@ -1950,7 +1949,7 @@ function usces_item_uploadcsv(){
 						);
 				$dbres = $wpdb->query($query);
 			}
-			//タグ
+			//tag
 			$tags = explode(';', $datas[20]);
 			foreach((array)$tags as $tag){
 				$tag = trim($tag);
@@ -1976,7 +1975,7 @@ function usces_item_uploadcsv(){
 				}
 			}
 			
-			//postsの更新
+			//edit posts
 			$ids['ID'] = $post_id;
 			$updatas['post_name'] = $post_id;
 			$updatas['guid'] = get_option('home') . '?p=' . $post_id;

@@ -43,7 +43,7 @@ function toggleVisibility(id) {
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('SMTP server host','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_smtp_host');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('SMTP server host','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_smtp_host');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -58,7 +58,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Thanks email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_thakyou_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Thanks email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_thakyou_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -83,7 +83,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Order email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Order email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -108,7 +108,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Inquiry receptionist email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Inquiry receptionist email(automatic transmission)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -133,7 +133,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Conformation e-mail of membership registeration.', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_membercomp_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Conformation e-mail of membership registeration.', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_membercomp_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -159,7 +159,7 @@ function toggleVisibility(id) {
 
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Shipping complete email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_completionmail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Shipping complete email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_completionmail_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -184,7 +184,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Order confirmation email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_ordermail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Order confirmation email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_ordermail_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -209,7 +209,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Confirmation mail for change of orders. (sent by admin.)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_changemail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Confirmation mail for change of orders. (sent by admin.)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_changemail_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -234,7 +234,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Mail for Confirmation of payment. ( sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_receiptmail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Mail for Confirmation of payment. ( sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_receiptmail_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -259,7 +259,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Estimate email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_mitumorimail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Estimate email (sent from the admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_mitumorimail_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -284,7 +284,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('E-mail for confirmation of cancellation. (sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_cancelmail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('E-mail for confirmation of cancellation. (sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_cancelmail_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -309,7 +309,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Other e-mails(sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_othermail_mail');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Other e-mails(sent from admin)', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_othermail_mail');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>

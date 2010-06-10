@@ -497,10 +497,10 @@ class dataList
 		foreach ($this->columns as $key => $value){
 			if($value == $this->sortColumn){
 				if($this->sortSwitchs[$value] == 'ASC'){
-					$str = '▲';
+					$str = __('[ASC]', 'usces');
 					$switch = 'DESC';
 				}else{
-					$str = '▼';
+					$str = __('[DESC]', 'usces');
 					$switch = 'ASC';
 				}
 				if( (USCES_MYSQL_VERSION >= 5 AND ($value == 'item_name' || $value == 'item_code')) || (USCES_MYSQL_VERSION < 5 AND $value == 'post_title') || $value == 'display_status' )

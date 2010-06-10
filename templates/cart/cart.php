@@ -36,7 +36,7 @@ if($this->cart->num_row() > 0) {
 			<th class="quantity">' . __('Quantity','usces') . '</th>
 			<th class="subtotal">' . __('Amount','usces') . $this->getGuidTax() . '</th>
 			<th class="stock">' . __('stock status','usces') . '</th>
-			<th class="action">　</th>
+			<th class="action"> </th>
 		</tr>
 		</thead>
 		<tbody>';

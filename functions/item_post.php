@@ -97,7 +97,7 @@ function list_item_sku_meta( $meta ) {
 	<tr>
 		<th><?php _e('SKU display name ','usces'); ?></th>
 		<th><?php _e('unit','usces'); ?></th>
-		<th colspan="2">　</th>
+		<th colspan="2"> </th>
 		<th><?php _e('Apply business package','usces'); ?></th>
 	</tr>
 	</thead>
@@ -245,8 +245,8 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-sku-cprice rowbottom'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
-	$r .= "\n\t\t<td class='item-sku-price rowbottom'>　</td>";
-	$r .= "\n\t\t<td class='item-sku-zaikonum rowbottom'>　</td>";
+	$r .= "\n\t\t<td class='item-sku-price rowbottom'> </td>";
+	$r .= "\n\t\t<td class='item-sku-zaikonum rowbottom'> </td>";
 	$r .= "\n\t\t<td class='item-sku-zaiko rowbottom'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
 	$r .= "\n\t\t\t<option value='0'";
 	$r .= ($skugptekiyo == 0) ? " selected='selected'" : "";
@@ -301,7 +301,7 @@ function common_option_meta_form() {
 		$meansoption .= '<option value="' . $meankey . '">' . $meanvalue . "</option>\n";
 	}
 ?>
-<p><strong><?php _e('Add a new option','usces') ?>：</strong></p>
+<p><strong><?php _e('Add a new option','usces') ?> : </strong></p>
 <table id="newmeta2">
 <thead>
 <tr>
@@ -349,7 +349,7 @@ function item_option_meta_form() {
 		$meansoption .= '<option value="' . $meankey . '">' . $meanvalue . "</option>\n";
 	}
 ?>
-<p><strong><?php _e('Applicable product options','usces') ?>：</strong></p>
+<p><strong><?php _e('Applicable product options','usces') ?> : </strong></p>
 <table id="newmeta2">
 <thead>
 <tr>
@@ -411,7 +411,7 @@ function item_sku_meta_form() {
 		GROUP BY meta_key 
 		LIMIT $limit" );
 ?>
-<p><strong><?php _e('Add new SKU','usces') ?>：</strong></p>
+<p><strong><?php _e('Add new SKU','usces') ?> : </strong></p>
 <table id="newsku">
 <thead>
 <tr>
@@ -424,7 +424,7 @@ function item_sku_meta_form() {
 <tr>
 	<th><?php _e('SKU display name ','usces') ?></th>
 	<th><?php _e('unit','usces') ?></th>
-	<th colspan="2">　</th>
+	<th colspan="2"> </th>
 	<th><?php _e('Apply business package','usces') ?></th>
 </tr>
 </thead>
@@ -477,7 +477,7 @@ function item_sku_meta_form() {
 function payment_form() {
 	global $usces;
 ?>
-<p><strong><?php _e('Add a new method forpayment ','usces') ?>：</strong></p>
+<p><strong><?php _e('Add a new method forpayment ','usces') ?> : </strong></p>
 <table id="newmeta2">
 <thead>
 <tr>

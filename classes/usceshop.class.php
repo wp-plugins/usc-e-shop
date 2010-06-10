@@ -353,7 +353,7 @@ class usc_e_shop
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
-					$this->set_action_status('error', 'ERROR：'.__('failure in update','usces'));
+					$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 				}
 				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
 				break;
@@ -366,7 +366,7 @@ class usc_e_shop
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
-					$this->set_action_status('error', 'ERROR：'.__('failure in addition','usces'));
+					$this->set_action_status('error', 'ERROR : '.__('failure in addition','usces'));
 				}
 				$_REQUEST['order_action'] = 'edit';
 				$order_action = $_REQUEST['order_action'];
@@ -385,7 +385,7 @@ class usc_e_shop
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
-					$this->set_action_status('error', 'ERROR：'.__('failure in delete','usces'));
+					$this->set_action_status('error', 'ERROR : '.__('failure in delete','usces'));
 				}
 			default:
 				require_once(USCES_PLUGIN_DIR . '/includes/order_list.php');	
@@ -410,7 +410,7 @@ class usc_e_shop
 					} elseif ( 0 === $res ) {
 						$this->set_action_status('none', '');
 					} else {
-						$this->set_action_status('error', 'ERROR：'.__('failure in update','usces'));
+						$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 					}
 				}
 				require_once(USCES_PLUGIN_DIR . '/includes/member_edit_form.php');	
@@ -425,7 +425,7 @@ class usc_e_shop
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
-					$this->set_action_status('error', 'ERROR：'.__('failure in delete','usces'));
+					$this->set_action_status('error', 'ERROR : '.__('failure in delete','usces'));
 				}
 			default:
 				require_once(USCES_PLUGIN_DIR . '/includes/member_list.php');	
@@ -691,7 +691,7 @@ class usc_e_shop
 				$temp_pref = explode("\n", $_POST['province']);
 				for($i=-1; $i<count($temp_pref); $i++){
 					if($i == -1){
-						$usces_pref[] = '-選択-';
+						$usces_pref[] = __('-- Select --','usces');
 					}else{
 						$usces_pref[] = wp_specialchars(trim($temp_pref[$i]));
 					}
@@ -2311,7 +2311,7 @@ class usc_e_shop
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["member"]["zipcode"]) == "" )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["member"]["pref"] == "-選択-" )
+		if ( $_POST["member"]["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( trim($_POST["member"]["address1"]) == "" )
 			$mes .= __('enter the city name', 'usces') . "<br />";
@@ -2335,7 +2335,7 @@ class usc_e_shop
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["zipcode"]) == "" )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["customer"]["pref"] == "-選択-" )
+		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["address1"]) == "" )
 			$mes .= __('enter the city name', 'usces') . "<br />";
@@ -2357,7 +2357,7 @@ class usc_e_shop
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["mem_zip"]) == "" )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["mem_pref"] == "-選択-" )
+		if ( $_POST["mem_pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( trim($_POST["mem_address1"]) == "" )
 			$mes .= __('enter the city name', 'usces') . "<br />";
@@ -2862,117 +2862,6 @@ class usc_e_shop
 		}
 		update_option('usces_member_number', $member_number);
 		
-		//footernavi page
-/*		$footernaviid = usces_get_page_ID_by_pname( 'usces-footernavi', 'return' );
-		if( $footernaviid === NULL ) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->posts 
-				(post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, 
-				comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, 
-				post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
-				VALUES (%d, %s, %s, %s, %s, %s, %s, 
-				%s, %s, %s, %s, %s, %s, %s, %s, 
-				%s, %d, %s, %d, %s, %s, %d)", 
-				1, $datetime, $datetime_gmt, '', 'フッタナビ用ダミーページ', '', 'publish', 
-				'closed', 'closed', '', 'usces-footernavi', '', '', $datetime, $datetime_gmt, 
-				'', 0, '', 0, 'page', '', 0);
-			$wpdb->query($query);
-			$ser_id = $wpdb->insert_id;
-			if( $ser_id !== NULL ) {
-				$xml = USCES_PLUGIN_DIR . '/includes/initial_data.xml';
-				$match = $this->get_initial_data($xml);
-				foreach($match as $data){
-					$title = $data[1];
-					$status = $data[2];
-					$name = $data[3];
-					$content = $data[4];
-					if( $name == 'usces-privacy' || $name == 'usces-company' || $name == 'usces-law' ) {
-						$query2 = $wpdb->prepare("INSERT INTO $wpdb->posts 
-							(post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, 
-							comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, 
-							post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
-							VALUES (%d, %s, %s, %s, %s, %s, %s, 
-							%s, %s, %s, %s, %s, %s, %s, %s, 
-							%s, %d, %s, %d, %s, %s, %d)", 
-							1, $datetime, $datetime_gmt, $content, $title, '', $status, 
-							'closed', 'closed', '', $name, '', '', $datetime, $datetime_gmt, 
-							'', $ser_id, '', 0, 'page', '', 0);
-						$wpdb->query($query2);
-					}
-				}
-			}
-		}
-		
-		//mainnavi page
-		$mainnaviid = usces_get_page_ID_by_pname( 'usces-mainnavi', 'return' );
-		if( $mainnaviid === NULL ) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->posts 
-				(post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, 
-				comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, 
-				post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
-				VALUES (%d, %s, %s, %s, %s, %s, %s, 
-				%s, %s, %s, %s, %s, %s, %s, %s, 
-				%s, %d, %s, %d, %s, %s, %d)", 
-				1, $datetime, $datetime_gmt, '', 'メインナビ用ダミーページ', '', 'publish', 
-				'closed', 'closed', '', 'usces-mainnavi', '', '', $datetime, $datetime_gmt, 
-				'', 0, '', 0, 'page', '', 0);
-			$wpdb->query($query);
-			$ser_id = $wpdb->insert_id;
-			if( $ser_id !== NULL ) {
-				$xml = USCES_PLUGIN_DIR . '/includes/initial_data.xml';
-				$match = $this->get_initial_data($xml);
-				foreach($match as $data){
-					$title = $data[1];
-					$status = $data[2];
-					$name = $data[3];
-					$content = $data[4];
-					if( $name == 'usces-inquiry' || $name == 'usces-guid' ) {
-						$query2 = $wpdb->prepare("INSERT INTO $wpdb->posts 
-							(post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, 
-							comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, 
-							post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
-							VALUES (%d, %s, %s, %s, %s, %s, %s, 
-							%s, %s, %s, %s, %s, %s, %s, %s, 
-							%s, %d, %s, %d, %s, %s, %d)", 
-							1, $datetime, $datetime_gmt, $content, $title, '', $status, 
-							'closed', 'closed', '', $name, '', '', $datetime, $datetime_gmt, 
-							'', $ser_id, '', 0, 'page', '', 0);
-						$wpdb->query($query2);
-						$meta_id = $wpdb->insert_id;
-						if( $meta_id !== NULL && $name == 'usces-inquiry' ) {
-							$query3 = $wpdb->prepare("INSERT INTO $wpdb->postmeta 
-								(post_id, meta_key, meta_value) VALUES (%d, %s, %s)", 
-								$meta_id, '_wp_page_template', 'inquiry.php');
-							$wpdb->query($query3);
-						}
-					}
-				}
-			}
-		}
-		
-		//search in detail page
-		$searchid = usces_get_page_ID_by_pname( 'usces-search-in-detail', 'return' );
-		if( $searchid === NULL ) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->posts 
-				(post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, 
-				comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, 
-				post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
-				VALUES (%d, %s, %s, %s, %s, %s, %s, 
-				%s, %s, %s, %s, %s, %s, %s, %s, 
-				%s, %d, %s, %d, %s, %s, %d)", 
-				1, $datetime, $datetime_gmt, '', 'Search in detail', '', 'publish', 
-				'closed', 'closed', '', 'usces-search-in-detail', '', '', $datetime, $datetime_gmt, 
-				'', 0, '', 0, 'page', '', 0);
-			$wpdb->query($query);
-			$ser_id = $wpdb->insert_id;
-			if( $ser_id !== NULL ) {
-				$query2 = $wpdb->prepare("INSERT INTO $wpdb->postmeta 
-					(post_id, meta_key, meta_value) VALUES (%d, %s, %s)", 
-					$ser_id, '_wp_page_template', 'uscesearch.php');
-				$wpdb->query($query2);
-			}
-		}
-*/		
-		
 	}
 	
 	function set_default_categories()
@@ -3042,52 +2931,6 @@ class usc_e_shop
 				$wpdb->query($query);
 			}
 		}
-
-		//item_discount
-/*		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemdiscount'";
-		$item_id = $wpdb->get_var( $query );
-		if($item_id === NULL) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				__('Special price', 'usces'), 'itemdiscount', 0);
-			$wpdb->query($query);
-			$item_id = $wpdb->insert_id;
-			if( $item_id !== NULL ) {
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
-				$wpdb->query($query);
-			}
-		}
-
-		//news
-		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'news'";
-		$item_id = $wpdb->get_var( $query );
-		if($item_id === NULL) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				'お知らせ', 'news', 0);
-			$wpdb->query($query);
-			$item_id = $wpdb->insert_id;
-			if( $item_id !== NULL ) {
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', 0, 0);
-				$wpdb->query($query);
-			}
-		}
-
-		//blog
-		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'blog'";
-		$item_id = $wpdb->get_var( $query );
-		if($item_id === NULL) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				'ブログ', 'blog', 0);
-			$wpdb->query($query);
-			$item_id = $wpdb->insert_id;
-			if( $item_id !== NULL ) {
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', 0, 0);
-				$wpdb->query($query);
-			}
-		}
-*/
 	}
 
 	function set_item_mime($post_id, $str)
@@ -3476,11 +3319,11 @@ class usc_e_shop
 	
 	function order_processing( $results = array() ) {
 		do_action('usces_pre_reg_orderdata');
-		//データベース登録(function.php)
+		//db(function.php)
 		$order_id = usces_reg_orderdata( $results );
 		//var_dump($order_id);exit;
 		if ( $order_id ) {
-			//メール送信処理(function.php)
+			//mail(function.php)
 			$mail_res = usces_send_ordermail( $order_id );
 			return 'ordercompletion';
 		
@@ -3523,16 +3366,6 @@ class usc_e_shop
 		else
 			return 'inquiry_error';
 	}
-	
-//	function widget_usces_register() {
-//		if ( function_exists('register_sidebar_widget') )
-//			register_sidebar_widget('usces カレンダー', array($this, 'usces_calendar'));	
-//	
-//	}
-//	
-//	function usces_calendar() {
-//	
-//	}
 	
 	function lastprocessing() {
 		
@@ -4322,7 +4155,7 @@ class usc_e_shop
 		if($min == $max){
 			$res = number_format($min);
 		}else{
-			$res = number_format($min) . '～' . number_format($max);
+			$res = number_format($min) . __(' - ', 'usces') . number_format($max);
 		}
 		return $res;
 	}

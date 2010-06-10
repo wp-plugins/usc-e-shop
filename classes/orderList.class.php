@@ -486,10 +486,10 @@ class dataList
 		foreach ($this->columns as $key => $value){
 			if($value == $this->sortColumn){
 				if($this->sortSwitchs[$value] == 'ASC'){
-					$str = '▲';
+					$str = __('[ASC]', 'usces');
 					$switch = 'DESC';
 				}else{
-					$str = '▼';
+					$str = __('[DESC]', 'usces');
 					$switch = 'ASC';
 				}
 				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changeSort=' . $value . '&switch=' . $switch . '"><span class="sortcolumn">' . $key . ' ' . $str . '</span></a>';

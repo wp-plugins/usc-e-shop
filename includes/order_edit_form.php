@@ -639,8 +639,8 @@ foreach((array)$prefs as $value) {
 <div class="midasi2"><?php if($condition['display_mode'] == 'Usualsale'){echo __('normal sale', 'usces');}elseif($condition['display_mode'] == 'Promotionsale'){echo __('Sale Campaign', 'usces');} ?></div>
 <div class="condition">
 <?php if ( $condition['display_mode'] == 'Promotionsale' ) : ?>
-<span><?php _e('Special Benefits', 'usces'); ?>：</span><?php echo $condition["campaign_privilege"]; ?>（<?php if($condition["campaign_privilege"] == 'discount'){echo $condition["privilege_discount"].__('% Discount', 'usces');}elseif($condition["campaign_privilege"] == 'point'){echo $condition["privilege_point"].__(" times (limited to members)", 'usces');} ?>）<br />
-<span><?php _e('applied material', 'usces'); ?>：</span><?php if($condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo get_cat_name($condition["campaign_category"]);} ?><br />
+<span><?php _e('Special Benefits', 'usces'); ?> : </span><?php echo $condition["campaign_privilege"]; ?> (<?php if($condition["campaign_privilege"] == 'discount'){echo $condition["privilege_discount"].__('% Discount', 'usces');}elseif($condition["campaign_privilege"] == 'point'){echo $condition["privilege_point"].__(" times (limited to members)", 'usces');} ?>) <br />
+<span><?php _e('applied material', 'usces'); ?> : </span><?php if($condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo get_cat_name($condition["campaign_category"]);} ?><br />
 <?php endif; ?>
 </div></td>
 <td class="col3 label"><?php _e('FAX number', 'usces'); ?></td>

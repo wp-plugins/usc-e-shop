@@ -279,7 +279,7 @@ function usces_the_itemGpExp( $out = '' ) {
 					);
 			$html .= "</li>\n";
 		} else {
-			//$html .=  "<li>" . $GpN1 . "～" . ($GpN2 - 1) . $unit . __('for ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>" . __('$', 'usces') . number_format(round($price * (100 - $GpD1) / 100)) . $usces->getGuidTax() . "</span></li>\n";
+
 			$html .= "<li>";
 			$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
 						number_format(round($price * (100 - $GpD1) / 100)), 
@@ -713,7 +713,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 				$checked = ($payments['name'] == $value) ? ' checked' : '';
 				if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 					$checked = '';
-					$html .= "\t".'<dt><label for="payment_method_{$id}"><input name="order[payment_name]" id="payment_name_{$id}" type="radio" value="'.$payments['name'].'"{$checked} disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name'].'</label>　<b>（' . __('cannot use this payment method now.','usces') . "）</b></dt>\n";
+					$html .= "\t".'<dt><label for="payment_method_{$id}"><input name="order[payment_name]" id="payment_name_{$id}" type="radio" value="'.$payments['name'].'"{$checked} disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name'].'</label> <b> (' . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
 				}elseif( $payments['settlement'] == 'acting' ){
 					$html .= "\t".'<dt><label for="payment_method_{$id}"><input name="order[payment_name]" id="payment_name_{$id}" type="radio" value="'.$payments['name'].'"{$checked} onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
 				}
@@ -727,7 +727,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 				$checked = ($payments['name'] == $value) ? ' checked' : '';
 				if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 					$checked = '';
-					$html .= "\t".'<dt><label for="payment_method_{$id}"><input name="order[payment_name]" id="payment_name_{$id}" type="radio" value="'.$payments['name'].'"{$checked} disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label>　<b>（" . __('cannot use this payment method now.','usces') . "）</b></dt>\n";
+					$html .= "\t".'<dt><label for="payment_method_{$id}"><input name="order[payment_name]" id="payment_name_{$id}" type="radio" value="'.$payments['name'].'"{$checked} disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
 				}else{
 					$html .= "\t".'<dt><label for="payment_method_{$id}"><input name="order[payment_name]" id="payment_name_{$id}" type="radio" value="'.$payments['name'].'"{$checked} onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
 				}
@@ -783,15 +783,6 @@ function usces_the_delivery_time( $value = '', $out = '' ){
 	
 	//$array = explode("\n", $usces->options['delivery_time']);
 	$html = "<select name='order[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
-//	$html .= "\t<option value='指定しない'>指定しない</option>\n";
-//	foreach ($array as $delivery) {
-//		$delivery = trim($delivery);
-//		if( $delivery != '' ) {
-//			//$deliverys[] = $delivery;
-//			$selected = ($delivery == $value) ? ' selected="selected"' : '';
-//			$html .= "\t<option value='{$delivery}'{$selected}>{$delivery}</option>\n";
-//		}
-//	}
 
 	$html .= "</select>\n";
 	

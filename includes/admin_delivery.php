@@ -491,12 +491,12 @@ jQuery(document).ready(function($){
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>
-<p>※ 配送設定は商品登録よりも前に行う必要があります。<br />
-※ 商品登録後に配送方法の追加・削除を行った場合は全商品の更新が必要となりますのでご注意ください。</p>
+<p><?php _e('* It is necessary to perform the delivery setting before than the item registration.','usces'); ?><br />
+<?php _e('* When you performed the addition and deletion of the delivery method after item registration, please be careful because the update of all items is necessary.','usces'); ?></p>
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('shipping option','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_method');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('shipping option','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_method');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -557,7 +557,7 @@ jQuery(document).ready(function($){
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Shipping', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Shipping', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');"> 8<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>

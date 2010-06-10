@@ -41,7 +41,7 @@ function toggleVisibility(id) {
 <div id="poststuff" class="metabox-holder">
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Business settings','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('business_setting');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Business settings','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('business_setting');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 <?php 
@@ -88,7 +88,7 @@ function toggleVisibility(id) {
 		<td rowspan="2"><div id="ex_cat_privilege" class="explanation"><?php _e("'Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
-	    <td><input name="cat_privilege" type="radio" id="privilege_discount" value="discount"<?php if($this->options['campaign_privilege'] == 'discount') echo 'checked="checked"'; ?> /></td><td><label for="privilege_discount">割引</label></td><td><input name="discount_num" type="text" class="short_str" value="<?php echo $this->options['privilege_discount']; ?>" />%</td>
+	    <td><input name="cat_privilege" type="radio" id="privilege_discount" value="discount"<?php if($this->options['campaign_privilege'] == 'discount') echo 'checked="checked"'; ?> /></td><td><label for="privilege_discount"><?php _e('Disnount', 'usces'); ?></label></td><td><input name="discount_num" type="text" class="short_str" value="<?php echo $this->options['privilege_discount']; ?>" />%</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
@@ -97,7 +97,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Shop setting', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('shop_setting');">（<?php _e('explanation', 'usces'); ?>）</a></h3>
+<h3 class="hndle"><span><?php _e('Shop setting', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('shop_setting');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -113,12 +113,12 @@ function toggleVisibility(id) {
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_address1');"><?php _e('Address', 'usces'); ?>1</a></th>
 	    <td><input name="address1" type="text" class="long_str" value="<?php echo $this->options['address1']; ?>" /></td>
-		<td><div id="ex_address1" class="explanation"><?php _e('Example)', 'usces'); ?>東京都渋谷区通販町1035</div></td>
+		<td><div id="ex_address1" class="explanation"><?php _e('Example)', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_address2');"><?php _e('Address', 'usces'); ?>2</a></th>
 	    <td><input name="address2" type="text" class="long_str" value="<?php echo $this->options['address2']; ?>" /></td>
-		<td><div id="ex_address2" class="explanation"><?php _e('Example)', 'usces'); ?>通販ビル4F</div></td>
+		<td><div id="ex_address2" class="explanation"><?php _e('Example)', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tel_number');"><?php _e('Phone number', 'usces'); ?></a></th>
@@ -131,22 +131,22 @@ function toggleVisibility(id) {
 		<td><div id="ex_fax_number" class="explanation"><?php _e('Example)', 'usces'); ?>100-100-10000</div></td>
 	</tr>
 	<tr>
-	    <th><em>＊ </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');"><?php _e('E-mail address for ordering', 'usces'); ?></a></th>
+	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');"><?php _e('E-mail address for ordering', 'usces'); ?></a></th>
 	    <td><input name="order_mail" type="text" class="long_str" value="<?php echo $this->options['order_mail']; ?>" /></td>
 		<td><div id="ex_order_mail" class="explanation"><?php _e("<em>[Required]</em> the administrator's e-mail address to receive the order", 'usces'); ?></div></td>
 	</tr>
 	<tr>
-	    <th><em>＊ </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_mail');"><?php _e('Contact e-mail address', 'usces'); ?></a></th>
+	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_mail');"><?php _e('Contact e-mail address', 'usces'); ?></a></th>
 	    <td><input name="inquiry_mail" type="text" class="long_str" value="<?php echo $this->options['inquiry_mail']; ?>" /></td>
 		<td><div id="ex_inquiry_mail" class="explanation"><?php _e("<em>[Required]</em> the administrator's e-mail address to receive the contact meils.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
-	    <th><em>＊ </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_sender_mail');"><?php _e("Sender's e-mail address", 'usces'); ?></a></th>
+	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_sender_mail');"><?php _e("Sender's e-mail address", 'usces'); ?></a></th>
 	    <td><input name="sender_mail" type="text" class="long_str" value="<?php echo $this->options['sender_mail']; ?>" /></td>
 		<td><div id="ex_sender_mail" class="explanation"><?php _e("<em>[Required]</em> the sender's e-mail address to send 'thank you e-mail' to cuscomers.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
-	    <th><em>＊ </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_error_mail');"><?php _e('Address for Error mail', 'usces'); ?></a></th>
+	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_error_mail');"><?php _e('Address for Error mail', 'usces'); ?></a></th>
 	    <td><input name="error_mail" type="text" class="long_str" value="<?php echo $this->options['error_mail']; ?>" /></td>
 		<td><div id="ex_error_mail" class="explanation"><?php _e("<em>[Required]</em>The transmission of a message ahead of the error email.", 'usces'); ?></div></td>
 	</tr>

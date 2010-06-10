@@ -728,10 +728,10 @@ class dataTable
 			$userHeaderKey = $this->displayColumns[$i];
 			if($this->displayColumns[$i] == $this->sortColumn){
 				if($this->sortSwitchs[$this->sortColumn] == 'ASC'){
-					$str = 'ве';
+					$str = __('[ASC]', 'usces');
 					$switch = 'DESC';
 				}else{
-					$str = 'вз';
+					$str = __('[DESC]', 'usces');
 					$switch = 'ASC';
 				}
 				$this->headers[$i] = '<a href="' . $_SERVER['PHP_SELF'] . '?changeSort=' . $this->displayColumns[$i] . '&switch=' . $switch . '"><span class="sortcolumn">' . $this->userHeaderNames[$userHeaderKey] . ' ' . $str . '</span></a>';

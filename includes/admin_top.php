@@ -27,9 +27,9 @@ $items_num = $this->get_items_num();
 <h5><?php _e('Display Modes','usces'); ?>:</h5>
 <div class="dispmode <?php echo $display_mode; ?>"><?php echo $this->display_mode[$display_mode]; ?></div>
 <?php if ( $display_mode == 'Promotionsale' ) : ?>
-<span><?php _e('Special Benefits', 'usces'); ?>:</span><?php echo $this->options["campaign_privilege"]; ?>（<?php if($this->options["campaign_privilege"] == 'discount'){echo $this->options["privilege_discount"].__('% Discount', 'usces');}elseif($this->options["campaign_privilege"] == 'point'){echo $this->options["privilege_point"].__(" times (limited to members)", 'usces');} ?>）<br />
+<span><?php _e('Special Benefits', 'usces'); ?>:</span><?php echo $this->options["campaign_privilege"]; ?> (<?php if($this->options["campaign_privilege"] == 'discount'){echo $this->options["privilege_discount"].__('% Discount', 'usces');}elseif($this->options["campaign_privilege"] == 'point'){echo $this->options["privilege_point"].__(" times (limited to members)", 'usces');} ?>) <br />
 <span><?php _e('applied material', 'usces'); ?>:</span><?php echo get_cat_name($this->options["campaign_category"]); ?><br />
-<span><?php _e('Period', 'usces'); ?>:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo $this->options["campaign_schedule"]['start']['day']; ?>～<?php echo $this->options["campaign_schedule"]['end']['year']; ?>/<?php echo $this->options["campaign_schedule"]['end']['month']; ?>/<?php echo $this->options["campaign_schedule"]['end']['day']; ?>
+<span><?php _e('Period', 'usces'); ?>:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo $this->options["campaign_schedule"]['start']['day']; ?><?php__(' - ', 'usces')?><?php echo $this->options["campaign_schedule"]['end']['year']; ?>/<?php echo $this->options["campaign_schedule"]['end']['month']; ?>/<?php echo $this->options["campaign_schedule"]['end']['day']; ?>
 <?php endif; ?>
 </div>
 
@@ -65,13 +65,13 @@ $items_num = $this->get_items_num();
 <th>&nbsp;</th><th><?php _e('number of order', 'usces'); ?></th><th><?php _e('amount of order', 'usces'); ?></th>
 </tr>
 <tr>
-<td><?php _e('today', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('today')); ?></td>
+<td><?php _e('today', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('today')); ?></td>
 </tr>
 <tr>
-<td><?php _e('This month', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('thismonth')); ?></td>
+<td><?php _e('This month', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('thismonth')); ?></td>
 </tr>
 <tr>
-<td><?php _e('Same date in last year', 'usces'); ?>：</td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('lastyear')); ?></td>
+<td><?php _e('Same date in last year', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('lastyear')); ?></td>
 </tr>
 </table>
 </div>

@@ -274,7 +274,7 @@ if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_
 				<input type="hidden" name="tax_rate" value="0.000">
 				<input type="hidden" name="shipping" value="0">
 				<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
-				<div class="send"><input type="image" src="https://www.paypal.com/ja_JP/JP/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - オンラインで安全・簡単にお支払い">
+				<div class="send"><input type="image" src="https://www.paypal.com/ja_JP/JP/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal">
 				<img alt="" border="0" src="https://www.paypal.com/ja_JP/i/scr/pixel.gif" width="1" height="1"></div>';
 			break;
 		case 'epsilon.php':

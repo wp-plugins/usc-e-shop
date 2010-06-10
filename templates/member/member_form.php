@@ -51,7 +51,7 @@ if( USCES_JP ){
 }
 $html .= '<tr>
 <th scope="row"><em>*</em>' . __('Zip/Postal Code', 'usces') . '</th>
-<td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . $usces_members['zipcode'] . '" />例）100-1000</td>
+<td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . $usces_members['zipcode'] . '" />100-1000</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('Province', 'usces') . '</th>
@@ -59,23 +59,23 @@ $html .= '<tr>
 </tr>
 <tr class="inp2">
 <th scope="row"><em>*</em>' . __('city', 'usces') . '</th>
-<td colspan="2"><input name="member[address1]" id="address1" type="text" value="' . $usces_members['address1'] . '" />例）横浜市上北町</td>
+<td colspan="2"><input name="member[address1]" id="address1" type="text" value="' . $usces_members['address1'] . '" />' . __('Kitakami Yokohama', 'usces') . '</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('numbers', 'usces') . '</th>
-<td colspan="2"><input name="member[address2]" id="address2" type="text" value="' . $usces_members['address2'] . '" />例）3-24-555</td>
+<td colspan="2"><input name="member[address2]" id="address2" type="text" value="' . $usces_members['address2'] . '" />3-24-555</td>
 </tr>
 <tr>
 <th scope="row">' . __('building name', 'usces') . '</th>
-<td colspan="2"><input name="member[address3]" id="address3" type="text" value="' . $usces_members['address3'] . '" />例）通販ビル4F</td>
+<td colspan="2"><input name="member[address3]" id="address3" type="text" value="' . $usces_members['address3'] . '" />' . __('tuhanbuild 4F', 'usces') . '</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('Phone number', 'usces') . '</th>
-<td colspan="2"><input name="member[tel]" id="tel" type="text" value="' . $usces_members['tel'] . '" />例）1000-10-1000</td>
+<td colspan="2"><input name="member[tel]" id="tel" type="text" value="' . $usces_members['tel'] . '" />1000-10-1000</td>
 </tr>
 <tr>
 <th scope="row">' . __('FAX number', 'usces') . '</th>
-<td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . $usces_members['fax'] . '" />例）1000-10-1000</td>
+<td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . $usces_members['fax'] . '" />1000-10-1000</td>
 </tr>
 </table>
 <input name="member_regmode" type="hidden" value="' . $member_regmode . '" /><div class="send">';

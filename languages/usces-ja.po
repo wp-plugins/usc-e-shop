@@ -966,6 +966,9 @@ msgstr "使用ポイント"
 msgid "Campaign disnount"
 msgstr "キャンペーン割引"
 
+msgid "Disnount"
+msgstr "割引"
+
 msgid "Total Amount"
 msgstr "総合計金額"
 
@@ -1833,8 +1836,8 @@ msgstr "下記のURLをクリックしてパスワードを変更してくださ
 msgid "I seem to have you cancel it when the body does not have memorizing to this email."
 msgstr "このメールに身に覚えが無い場合は破棄していただくようお願い申し上げます。"
 
-msgid "Error： I was not able to transmit an email."
-msgstr "エラー：　メールを送信できませんでした。"
+msgid "Error: I was not able to transmit an email."
+msgstr "エラー：　メールを送信できませんでした"
 
 msgid "Explanation in a Login page"
 msgstr "ログインページに挿入する説明書き"
@@ -2304,6 +2307,39 @@ msgstr "※メールアドレスを入力して下さい。"
 msgid "Please input contents."
 msgstr "※内容を入力して下さい。"
 
+msgid " - "
+msgstr "～"
+
+msgid "* It is necessary to perform the delivery setting before than the item registration."
+msgstr "※ 配送設定は商品登録よりも前に行う必要があります。"
+
+msgid "* When you performed the addition and deletion of the delivery method after item registration, please be careful because the update of all items is necessary."
+msgstr "※ 商品登録後に配送方法の追加・削除を行った場合は全商品の更新が必要となりますのでご注意ください。"
+
+msgid "* Please register an item, after you finished delivery setting!"
+msgstr "※ 配送設定を行ってから商品登録を行ってください！"
+
+msgid "[ASC]"
+msgstr "▲"
+
+msgid "[DESC]"
+msgstr "▼"
+
+msgid " * "
+msgstr " × "
+
+msgid "ERROR: I was not able to complete collective operation"
+msgstr "エラー：処理を正常に完了できませんでした。"
+
+msgid "*"
+msgstr "＊"
+
+msgid "Kitakami Yokohama"
+msgstr "横浜市上北町"
+
+msgid "tuhanbuild 4F"
+msgstr "通販ビル4F"
+
 #~ msgid "〜％ discount at the purchase of more then 〜units."
 #~ msgstr "～個以上で～％引き（単価）"
 #~ msgid "Only few stocks left for this item."
@@ -2494,8 +2530,6 @@ msgstr "※内容を入力して下さい。"
 #~ msgstr "お願いいたします。"
 #~ msgid "I completed collective operation."
 #~ msgstr "一括操作を完了しました。"
-#~ msgid "ERROR： I was not able to complete collective operation"
-#~ msgstr "ERROR：一括操作を完了できませんでした"
 #~ msgid "ken"
 #~ msgstr "件"
 

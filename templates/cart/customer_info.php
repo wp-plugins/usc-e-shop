@@ -94,7 +94,7 @@ $html .= '<tr>
 </tr>
 <tr class="inp2">
 <th scope="row"><em>*</em>'.__('city', 'usces').'</th>
-<td colspan="2"><input name="customer[address1]" id="address1" type="text" value="' . $usces_entries['customer']['address1'] . '" />'.__('Example)', 'usces').'横浜市上北町</td>
+<td colspan="2"><input name="customer[address1]" id="address1" type="text" value="' . $usces_entries['customer']['address1'] . '" />'.__('Example)', 'usces').__('Kitakami Yokohama', 'usces').'</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>'.__('numbers', 'usces').'</th>
@@ -102,7 +102,7 @@ $html .= '<tr>
 </tr>
 <tr>
 <th scope="row">'.__('building name', 'usces').'</th>
-<td colspan="2"><input name="customer[address3]" id="address3" type="text" value="' . $usces_entries['customer']['address3'] . '" />'.__('Example)', 'usces').'通販ビル4F</td>
+<td colspan="2"><input name="customer[address3]" id="address3" type="text" value="' . $usces_entries['customer']['address3'] . '" />'.__('Example)', 'usces').__('tuhanbuild 4F', 'usces').'</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>'.__('Phone number', 'usces').'</th>

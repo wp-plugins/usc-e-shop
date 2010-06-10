@@ -54,8 +54,8 @@ class Welcart_login extends WP_Widget {
 		
 		
 <!--		<form method="get" id="searchform" action="<?php bloginfo('home'); ?>" >
-		<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" value="検索" />
-		<div><a href="<?php echo USCES_CART_URL; ?>&page=search_item">商品カテゴリー複合検索&gt;</a></div>
+		<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" value="<?php _e('Search', 'usces'); ?>" />
+		<div><a href="<?php echo USCES_CART_URL; ?>&page=search_item"><?php _e('An article category keyword search', 'usces'); ?>&gt;</a></div>
 		</form>
 -->		</li></ul>
 				  

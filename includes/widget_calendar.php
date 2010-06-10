@@ -1,12 +1,12 @@
 <?php
 require_once(USCES_PLUGIN_DIR . '/classes/calendar.class.php');
 
-//当月
-list($todayyy, $todaymm, $todaydd) = getToday();	// 今日
+//cur
+list($todayyy, $todaymm, $todaydd) = getToday();
 $cal1 = new calendarData();
 $cal1->setToday($todayyy, $todaymm, $todaydd);
 $cal1->setCalendarData();
-//翌月
+//next
 list($nextyy, $nextmm, $nextdd) = getAfterMonth($todayyy, $todaymm, 1, 1);
 $cal2 = new calendarData();
 $cal2->setToday($nextyy, $nextmm, $nextdd);
@@ -84,4 +84,4 @@ $cal2->setCalendarData();
 <?php endfor; ?>
 </tbody>
 </table>
-(<span class="business_days_exp_box businessday">　　</span>  <?php _e('Holiday for Shipping Operations', 'usces'); ?>)
+(<span class="business_days_exp_box businessday">  </span>  <?php _e('Holiday for Shipping Operations', 'usces'); ?>)

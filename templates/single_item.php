@@ -12,10 +12,10 @@ $html = apply_filters('usces_itemimg_anchor_rel', $html);
 $html .= '>' . usces_the_itemImage(0, 200, 250, $post, 'return') . '</a>
 	</div>';
 	
-if(usces_sku_num() === 1) { //SKUが1つの場合
+if(usces_sku_num() === 1) { //1SKU
 	usces_have_skus();
 	
-	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp;（' . usces_the_itemCode( 'return' ) . '）</h3>
+	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp; (' . usces_the_itemCode( 'return' ) . ') </h3>
 		<div class="exp">
 		<div class="field">';
 	if( $this->itemsku['value']['cprice'] > 0 ){
@@ -27,7 +27,7 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 	$html .= '<div class="field_name">' . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), $this->getGuidTax()) . '</div>
 		<div class="field_price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</div>
 		</div>';
-	$singlestock = '<div class="field">' . __('stock status', 'usces') . '：' . usces_the_itemZaiko('return') . '</div>';
+	$singlestock = '<div class="field">' . __('stock status', 'usces') . ' : ' . usces_the_itemZaiko('return') . '</div>';
 	$html .= apply_filters('single_item_stock_field', $singlestock);
 		
 	$html .= $content;
@@ -43,16 +43,16 @@ if(usces_sku_num() === 1) { //SKUが1つの場合
 	$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>';
 	$html .= '</div>';
 	
-} elseif(usces_sku_num() > 1) { //SKUが複数の場合
+} elseif(usces_sku_num() > 1) { //some SKU
 	usces_have_skus();
-	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp;（' . usces_the_itemCode( 'return' ) . '）</h3>
+	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp; (' . usces_the_itemCode( 'return' ) . ') </h3>
 		<div class="exp">' . $content . '</div>
 		<div class="skuform">
 		<table class="skumulti">
 		<thead>
 		<tr>
 		<th rowspan="2" class="thborder">'.__('order number', 'usces').'</th>
-		<th colspan="2">タイトル</th>';
+		<th colspan="2">'.__('Title', 'usces').'</th>';
 	if( $this->itemsku['value']['cprice'] > 0 ){
 		$usces_bothprice = '('.__('List price', 'usces').')'.__('selling price', 'usces') . $this->getGuidTax();
 		$html .= '<th colspan="2">'.apply_filters('usces_filter_bothprice_label', $usces_bothprice, __('List price', 'usces'), __('selling price', 'usces'), $this->getGuidTax()) . '</th>';
@@ -127,7 +127,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 				<h4>' . usces_the_itemName('return') . '</h4>' . $post->post_excerpt . '
 				<p>';
 			if (usces_is_skus()) {
-				$html .= '￥' . usces_the_firstPrice('return');
+				$html .= __('$', 'usces') . usces_the_firstPrice('return');
 			}
 			$html .= '<br />
 				&raquo; <a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . $post->post_title . '">'.__('see the details', 'usces').'</a></p>

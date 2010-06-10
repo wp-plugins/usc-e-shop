@@ -81,8 +81,6 @@ function item_rows($mode, $item_headers, $posts = array() ) {
 			$comment_pending_count[$post->ID] = 0;
 
 		/*******************************************************/
-		// 商品カテゴリー以外を省く
-		//
 		/********************************************************/
 		if($usces->is_item( $post )) {
 		//if($usces->is_item( $post->ID ))
