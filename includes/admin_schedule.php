@@ -235,7 +235,7 @@ function cangeWday3(id, c) {
 <?php endfor; ?>
 		</table>
 		</td>
-		<td><span class="business_days_exp_box" style="background-color:#DFFFDD">  </span><?php _e('Working day', 'usces'); ?><br /><span class="business_days_exp_box" style="background-color:#FFECCE">  </span><?php _e('Holiday for Shipping Operations', 'usces'); ?></td>
+		<td><span class="business_days_exp_box" style="background-color:#DFFFDD">&nbsp;&nbsp;&nbsp;</span><?php _e('Working day', 'usces'); ?><br /><span class="business_days_exp_box" style="background-color:#FFECCE">&nbsp;&nbsp;&nbsp;</span><?php _e('Holiday for Shipping Operations', 'usces'); ?></td>
 	</tr>
 	<tr>
 	    <th><?php _e('Next month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$nextyy,$nextmm); ?></th>
