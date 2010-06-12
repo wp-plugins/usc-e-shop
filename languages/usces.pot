@@ -2336,3 +2336,5 @@ msgstr "横浜市上北町"
 msgid "tuhanbuild 4F"
 msgstr "通販ビル4F"
 
+msgid "numeric"
+msgstr "数値"
