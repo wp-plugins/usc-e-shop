@@ -29,7 +29,7 @@ $items_num = $this->get_items_num();
 <?php if ( $display_mode == 'Promotionsale' ) : ?>
 <span><?php _e('Special Benefits', 'usces'); ?>:</span><?php echo $this->options["campaign_privilege"]; ?> (<?php if($this->options["campaign_privilege"] == 'discount'){echo $this->options["privilege_discount"].__('% Discount', 'usces');}elseif($this->options["campaign_privilege"] == 'point'){echo $this->options["privilege_point"].__(" times (limited to members)", 'usces');} ?>) <br />
 <span><?php _e('applied material', 'usces'); ?>:</span><?php echo get_cat_name($this->options["campaign_category"]); ?><br />
-<span><?php _e('Period', 'usces'); ?>:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo $this->options["campaign_schedule"]['start']['day']; ?><?php__(' - ', 'usces')?><?php echo $this->options["campaign_schedule"]['end']['year']; ?>/<?php echo $this->options["campaign_schedule"]['end']['month']; ?>/<?php echo $this->options["campaign_schedule"]['end']['day']; ?>
+<span><?php _e('Period', 'usces'); ?>:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo $this->options["campaign_schedule"]['start']['day']; ?><?php _e(' - ', 'usces'); ?><?php echo $this->options["campaign_schedule"]['end']['year']; ?>/<?php echo $this->options["campaign_schedule"]['end']['month']; ?>/<?php echo $this->options["campaign_schedule"]['end']['day']; ?>
 <?php endif; ?>
 </div>
 
@@ -45,9 +45,9 @@ $items_num = $this->get_items_num();
 <div class="chui">
 <ul>
 <?php if ( $vcparse !== NULL && $vcparse['flag'] == 'ok' &&  'ja' == get_locale() ) : ?>
-<li><?php echo $vcparse['#038;mes_ja']; ?></li>
+<li><?php echo $vcparse['amp;mes_ja']; ?></li>
 <?php elseif ( $vcparse !== NULL && $vcparse['flag'] == 'ok' &&  'ja' != get_locale() ) : ?>
-<li><?php echo $vcparse['#038;mes_en']; ?></li>
+<!--<li><?php echo $vcparse['amp;mes_en']; ?></li>-->
 <?php else: ?>
 <li><?php _e('There is no news for this moment.', 'usces'); ?></li>
 <?php endif; ?>
