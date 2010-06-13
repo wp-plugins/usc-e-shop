@@ -794,9 +794,9 @@ class usc_e_shop
 			//$this->uscesdc($sessid);
 			session_id($sessid);
 		}
-		$timeout = 0;
-		$domain = $_SERVER['HTTP_HOST'];
-		@session_set_cookie_params($timeout, USCES_COOKIEPATH, $domain);
+		//$timeout = 0;
+		//$domain = $_SERVER['HTTP_HOST'];
+		//@session_set_cookie_params($timeout, USCES_COOKIEPATH, $domain);
 		@session_start();
 		
 	}
