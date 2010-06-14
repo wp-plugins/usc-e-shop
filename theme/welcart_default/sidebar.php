@@ -50,6 +50,7 @@
 <ul>
 <?php 	/* Widgetized sidebar, if you have the plugin installed. */
 	if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar(2) ) : ?>
+	<?php if(usces_is_membersystem_state()): ?>
 	<li id="welcart_login-3" class="widget widget_welcart_login">
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/login.png" alt="<?php _e('Log-in','usces') ?>" /><?php _e('Log-in','usces') ?></div>
 		<ul class="welcart_login_body welcart_widget_body"><li>
@@ -77,6 +78,7 @@
 		</li>
 		</ul>
 	</li>
+	<?php endif; ?>
 	<li id="welcart_featured-3" class="widget widget_welcart_featured">
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/osusume.png" alt="<?php _e('Items recommended','usces') ?>" /><?php _e('Items recommended','usces') ?></div>
 		<ul class="welcart_featured_body welcart_widget_body">
@@ -94,14 +96,15 @@
  	</li>
 	<li id="welcart_bestseller-3" class="widget widget_welcart_bestseller">
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/bestseller.png" alt="<?php _e('best seller','usces') ?>" width="24" height="24" /><?php _e('best seller','usces') ?></div>
+		<ul class="welcart_widget_body"> 
 		<?php usces_list_bestseller(10); ?>
+		</ul> 
 	</li>
 	<li id="welcart_page-2" class="widget widget_welcart_page">
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/page.png" alt="<?php _e('page','usces') ?>" /><?php _e('page','usces') ?></div>					  
-		<ul class="ucart_widget_body"> 
+		<ul class="welcart_widget_body"> 
 		<?php wp_list_pages('title_li=') ; ?>
 		</ul> 
-	
 	</li>
 <?php endif; ?>
 </ul>

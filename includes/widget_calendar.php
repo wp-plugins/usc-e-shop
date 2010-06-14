@@ -84,4 +84,4 @@ $cal2->setCalendarData();
 <?php endfor; ?>
 </tbody>
 </table>
-(<span class="business_days_exp_box businessday">  </span>  <?php _e('Holiday for Shipping Operations', 'usces'); ?>)
+(<span class="business_days_exp_box businessday">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;<?php _e('Holiday for Shipping Operations', 'usces'); ?>)

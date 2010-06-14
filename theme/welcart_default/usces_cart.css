@@ -4,3 +4,7 @@
 #itempage .assistance_item li {
 	width: 267px;
 }
+#wp-calendar td.businessday {
+	background-color: #FFECCE;
+	color: #F00;
+}

@@ -19,7 +19,7 @@ $html = '';
 		$html .= 'selected_delivery_time = \'' . $usces_entries['order']['delivery_time'] . '\';
 			var delivery_time = [];delivery_time[0] = [];';
 		foreach($this->options['delivery_method'] as $dmid => $dm){
-			$lines = split("\n", $dm['time']);
+			$lines = explode("\n", $dm['time']);
 			$html .= 'delivery_time[' . $dm['id'] . '] = [];';
 			foreach((array)$lines as $line){
 				if(trim($line) != ''){
