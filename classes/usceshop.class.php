@@ -2319,6 +2319,8 @@ class usc_e_shop
 			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["member"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
+			
+		$mes = apply_filters('usces_filter_member_check', $mes);
 	
 		return $mes;
 	}
@@ -2344,6 +2346,8 @@ class usc_e_shop
 		if ( trim($_POST["customer"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
+		$mes = apply_filters('usces_filter_member_check_fromcart', $mes);
+
 		return $mes;
 	}
 
@@ -2388,6 +2392,8 @@ class usc_e_shop
 		if ( trim($_POST["customer"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
+		$mes = apply_filters('usces_filter_customer_check', $mes);
+
 		return $mes;
 	}
 
@@ -2414,6 +2420,8 @@ class usc_e_shop
 		if ( !isset($_POST['order']['payment_name']) )
 			$mes .= __('chose one from payment options.', 'usces') . "<br />";
 	
+		$mes = apply_filters('usces_filter_delivery_check', $mes);
+
 		return $mes;
 	}
 
