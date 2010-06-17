@@ -121,7 +121,7 @@ foreach ( $usces_member_history as $umhs ) {
 
 $html .= '</table>
 
-	<h3><a name="edit">' . __('Member information editing', 'usces') . '</a></h3>
+	<h3><a name="edit"></a>' . __('Member information editing', 'usces') . '</h3>
 	<div class="error_message">' . $this->error_message . '</div>
 	<form action="' . USCES_MEMBER_URL . '#edit" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<table class="customer_form">

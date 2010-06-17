@@ -88,6 +88,18 @@ function usces_the_item(){
 	ksort($usces->itemskus, SORT_STRING);
 	return;
 }
+
+function usces_get_itemMeta($metakey, $post_id, $out = ''){
+	$str = get_post_custom_values($metakey, $post_id);
+	$value = $str[0];
+	
+	if( $out == 'return' ){
+		return $value;
+	}else{
+		echo $value;
+	}
+}
+
 function usces_sku_num() {
 	global $usces;
 	
