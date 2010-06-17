@@ -219,6 +219,26 @@ class usc_e_shop
 		return $flag;
 	}
 	
+	function is_cart_page($link)
+	{
+		$search = array(('page_id='.USCES_CART_NUMBER), '/usces-cart' );
+		$flag = false;
+		foreach($search as $value){
+			if( strpos($link, $value) ){
+				if( $value == ('page_id='.USCES_CART_NUMBER) ){
+					$parts = parse_url($link);
+					parse_str($parts['query'], $query);
+					if( $query['page_id'] == USCES_CART_NUMBER ){
+						$flag = true;
+					}
+				}else{
+					$flag = true;
+				}
+			}
+		}
+		return $flag;
+	}
+	
 	function usces_ssl_page_link($link)
 	{
 		$parts = parse_url($link);
@@ -4294,7 +4314,7 @@ class usc_e_shop
 					$newtitle = apply_filters('usces_filter_title_maintenance', __('Under Maintenance', 'usces'));
 					break;
 				default:
-					$newtitle = $title;
+					$newtitle = apply_filters('usces_filter_title_cart_default', $title);
 			}
 		}else{
 			$newtitle = $title;
@@ -4391,7 +4411,7 @@ class usc_e_shop
 					$newtitle = apply_filters('usces_filter_title_membererror', __('Error', 'usces'));
 					break;
 				default:
-					$newtitle = $title;
+					$newtitle = apply_filters('usces_filter_title_member_default', $title);
 			}
 		}else{
 			$newtitle = $title;
