@@ -46,11 +46,12 @@ class usces_cart {
 		
 		if ( isset($_POST['skuPrice']) && $_POST['skuPrice'][$post_id][$sku] != '') {
 			$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
+			$price = apply_filters('usces_filter_inCart_price', $price, $post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
 			$_SESSION['usces_cart'][$this->serial]['price'] = $price;
 		}
 		
 		if ( isset($_POST['advance']) ) {
-			$_SESSION['usces_cart'][$this->serial]['advance'] = $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]);
+			$_SESSION['usces_cart'][$this->serial]['advance'] = $this->wc_serialize($_POST['advance']);
 		}
 		
 //		ksort($_SESSION['usces_cart'], SORT_STRING);
@@ -79,6 +80,7 @@ class usces_cart {
 					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
 				}else{
 					$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
+					$price = apply_filters('usces_filter_upCart_price', $price, $post_id, $sku, $index);
 				}
 				$_SESSION['usces_cart'][$this->serial]['price'] = $price;
 			
@@ -309,11 +311,18 @@ class usces_cart {
 		
 	}
 	// get realprice ***************************************************************
-	function get_realprice($post_id, $sku, $quant) {
+	function get_realprice($post_id, $sku, $quant, $price = NULL) {
 		global $usces;
 		
 		$skus = $usces->get_skus( $post_id, 'ARRAY_A' );
-		if( !$skus[$sku]['gptekiyo'] ) return $skus[$sku]['price'];
+		
+		if($price === NULL) {
+			$p = $skus[$sku]['price'];
+		} else {
+			$p = $price;
+		}
+		
+		if( !$skus[$sku]['gptekiyo'] ) return $p;
 		
 		$GpN1 = $usces->getItemGpNum1($post_id);
 		$GpN2 = $usces->getItemGpNum2($post_id);
@@ -324,36 +333,36 @@ class usces_cart {
 	
 		if( empty($GpN1) || empty($GpD1) ) {
 		
-				$realprice = $skus[$sku]['price'];
+				$realprice = $p;
 				
 		}else if( (!empty($GpN1) && !empty($GpD1)) && (empty($GpN2) || empty($GpD2)) ) {
 		
 			if( $quant >= $GpN1 ) {
-				$realprice = round($skus[$sku]['price'] * (100 - $GpD1) / 100);
+				$realprice = round($p * (100 - $GpD1) / 100);
 			}else{
-				$realprice = $skus[$sku]['price'];
+				$realprice = $p;
 			}
 			
 		}else if( (!empty($GpN1) && !empty($GpD1)) && (!empty($GpN2) && !empty($GpD2)) && (empty($GpN3) || empty($GpD3)) ) {
 		
 			if( $quant >= $GpN2 ) {
-				$realprice = round($skus[$sku]['price'] * (100 - $GpD2) / 100);
+				$realprice = round($p * (100 - $GpD2) / 100);
 			}else if( $quant >= $GpN1 && $quant < $GpN2 ) {
-				$realprice = round($skus[$sku]['price'] * (100 - $GpD1) / 100);
+				$realprice = round($p * (100 - $GpD1) / 100);
 			}else{
-				$realprice = $skus[$sku]['price'];
+				$realprice = $p;
 			}
 			
 		}else if( (!empty($GpN1) && !empty($GpD1)) && (!empty($GpN2) && !empty($GpD2)) && (!empty($GpN3) && !empty($GpD3)) ) {
 		
 			if( $quant >= $GpN3 ) {
-				$realprice = round($skus[$sku]['price'] * (100 - $GpD3) / 100);
+				$realprice = round($p * (100 - $GpD3) / 100);
 			}else if( $quant >= $GpN2 && $quant < $GpN3 ) {
-				$realprice = round($skus[$sku]['price'] * (100 - $GpD2) / 100);
+				$realprice = round($p * (100 - $GpD2) / 100);
 			}else if( $quant >= $GpN1 && $quant < $GpN2 ) {
-				$realprice = round($skus[$sku]['price'] * (100 - $GpD1) / 100);
+				$realprice = round($p * (100 - $GpD1) / 100);
 			}else{
-				$realprice = $skus[$sku]['price'];
+				$realprice = $p;
 			}
 			
 		}
