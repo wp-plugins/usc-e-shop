@@ -1,7 +1,7 @@
 <?php
 /**
  * <meta content="charset=UTF-8">
- * @package WordPress
+ * @package Welcart
  * @subpackage Welcart Default Theme
  */
 ?>
@@ -33,7 +33,7 @@
 	<p class="discprition"><?php bloginfo('description'); ?></p>
 	
 	<?php if(function_exists('wp_nav_menu')): ?>
-		<?php wp_nav_menu(array('$format' => '','menu_class' => 'mainnavi clearfix')); ?>
+		<?php wp_nav_menu(array('menu_class' => 'mainnavi clearfix', 'theme_location' => 'header')); ?>
 	<?php else: ?>
 		<ul class="mainnavi clearfix">
 			<li><a href="<?php bloginfo('url'); ?>/"><?php _e('top page','usces') ?></a></li>

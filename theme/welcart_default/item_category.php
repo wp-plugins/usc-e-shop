@@ -2,7 +2,7 @@
 /*
 Template Name: Item category template
  * <meta content="charset=UTF-8">
- * @package WordPress
+ * @package Welcart
  * @subpackage Welcart Default Theme
 */
 get_header();

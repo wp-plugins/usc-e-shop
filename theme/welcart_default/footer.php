@@ -1,7 +1,7 @@
 <?php
 /**
  * <meta content="charset=UTF-8">
- * @package WordPress
+ * @package Welcart
  * @subpackage Welcart Default Theme
  */
 ?>
@@ -11,7 +11,7 @@
 
 <div id="footer">
 <?php if(function_exists('wp_nav_menu')): ?>
-	<?php wp_nav_menu(array('$format' => '','menu_class' => 'footernavi clearfix')); ?>
+	<?php wp_nav_menu(array('menu_class' => 'footernavi clearfix', 'theme_location' => 'footer')); ?>
 <?php else: ?>
 	<ul class="footernavi clearfix">
 		<li><a href="<?php bloginfo('url'); ?>/"><?php _e('top page','usces') ?></a></li>

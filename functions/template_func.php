@@ -1041,7 +1041,8 @@ function usces_list_bestseller($num, $days = ''){
 		if(isset($ids[$i])){
 			$post = get_post($ids[$i]);
 			$disp_text = apply_filters('usces_widget_bestseller_auto_text', wp_specialchars($post->post_title), $ids[$i]);
-			$htm .= "<li><a href='" . get_permalink($ids[$i]) . "'>" . $disp_text . "</a></li>\n";
+			$list = "<li><a href='" . get_permalink($ids[$i]) . "'>" . $disp_text . "</a></li>\n";
+			$htm .= apply_filters('usces_filter_bestseller', $list, $ids[$i], $i);
 		}
 	}
 	$htm .= "</ul>\n";

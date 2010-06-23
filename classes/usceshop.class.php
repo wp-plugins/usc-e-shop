@@ -2212,10 +2212,14 @@ class usc_e_shop
 		$history = $this->get_member_history($mid);
 		foreach ( $history as $umhs ) {
 			$cart = $umhs['cart'];
+			$status = $umhs['order_status'];
 			for($i=0; $i<count($cart); $i++) { 
 				$cart_row = $cart[$i];
-				if($cart_row['post_id'] == $post_id){
+				if($cart_row['post_id'] == $post_id && ('noreceipt' != $status && 'pending' != $status) ){
 					$res = true;
+					break 2;
+				}elseif($cart_row['post_id'] == $post_id && ('noreceipt' == $status || 'pending' == $status) ){
+					$res = 'noreceipt';
 					break 2;
 				}
 			}
@@ -3648,6 +3652,7 @@ class usc_e_shop
 							'shipping_charge' => $value->order_shipping_charge,
 							'cod_fee' => $value->order_cod_fee,
 							'tax' => $value->order_tax,
+							'order_status' => $value->order_status,
 							'date' => mysql2date(__('Y/m/d'), $value->order_date),
 							'order_date' => $value->order_date
 							);
@@ -4281,6 +4286,7 @@ class usc_e_shop
 		$content = $html;
 		
 		remove_filter('the_title', array($this, 'filter_cartTitle'));
+		remove_filter('the_title', array($this, 'filter_memberTitle'));
 
 		return $content;
 	}
@@ -4380,6 +4386,7 @@ class usc_e_shop
 		
 		$content = $html;
 		
+		remove_filter('the_title', array($this, 'filter_cartTitle'));
 		remove_filter('the_title', array($this, 'filter_memberTitle'));
 
 		return $content;

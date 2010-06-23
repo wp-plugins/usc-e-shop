@@ -2338,3 +2338,12 @@ msgstr "通販ビル4F"
 
 msgid "numeric"
 msgstr "数値"
+
+msgid "Header Navigation"
+msgstr "ヘッダー・ナビゲーション"
+
+msgid "Sidebar Navigation"
+msgstr "サイドバー・ナビゲーション"
+
+msgid "Footer Navigation"
+msgstr "フッター・ナビゲーション"

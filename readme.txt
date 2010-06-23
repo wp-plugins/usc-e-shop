@@ -57,6 +57,11 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 == Changelog ==
 
 = V0.5 =
+23 Jun 2010
+-----------
+* Fixed some malfunctions
+
+= V0.5 =
 12 Jun 2010
 -----------
 * Now a new default theme, 'Welcart Default Theme 1.0'
