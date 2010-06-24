@@ -3,7 +3,7 @@
 Plugin Name: Welcart e-Commerce
 Plugin URI: http://www.welcart.com/
 Description: Welcart builds the management system with a net shop on Wordpress.
-Version: 0.5
+Version: 0.5.1
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
