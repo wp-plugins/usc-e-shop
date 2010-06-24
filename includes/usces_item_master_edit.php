@@ -196,7 +196,7 @@ case 'edit':
 			wp_die( __('Unknown post type.') );
 	
 		$post_type = $post->post_type;
-		$title = sprintf(__('Edit %s'), $post_type_object->singular_label);
+		//$title = sprintf(__('Edit %s'), $post_type_object->singular_label);
 		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
 		
 	}else{
