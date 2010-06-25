@@ -78,7 +78,7 @@ class usc_e_shop
 			}else{
 				define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
 			}
-			add_filter('page_link', array(&$this, 'usces_ssl_page_link'));
+			add_filter('home_url', array(&$this, 'usces_ssl_page_link'));
 			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
 			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
@@ -243,6 +243,8 @@ class usc_e_shop
 	{
 		$parts = parse_url($link);
 		parse_str($parts['query'], $query);
+		
+		$link = str_replace('https://', 'http://', $link);
 		
 		if( strpos($link, '/usces-cart') || $query['page_id'] == USCES_CART_NUMBER ) 
 			$link = USCES_CART_URL;
@@ -4286,7 +4288,6 @@ class usc_e_shop
 		$content = $html;
 		
 		remove_filter('the_title', array($this, 'filter_cartTitle'));
-		remove_filter('the_title', array($this, 'filter_memberTitle'));
 
 		return $content;
 	}
@@ -4319,6 +4320,9 @@ class usc_e_shop
 				case 'maintenance':
 					$newtitle = apply_filters('usces_filter_title_maintenance', __('Under Maintenance', 'usces'));
 					break;
+				case 'login':
+					$newtitle = apply_filters('usces_filter_title_login', __('Log-in for members', 'usces'));
+					break;
 				default:
 					$newtitle = apply_filters('usces_filter_title_cart_default', $title);
 			}
@@ -4331,7 +4335,7 @@ class usc_e_shop
 	}
 	
 	function action_cartFilter(){
-		add_filter('the_title', array($this, 'filter_cartTitle'));
+		add_filter('the_title', array($this, 'filter_cartTitle'),20);
 		add_filter('the_content', array($this, 'filter_cartContent'),21);
 	}
 		
@@ -4386,7 +4390,6 @@ class usc_e_shop
 		
 		$content = $html;
 		
-		remove_filter('the_title', array($this, 'filter_cartTitle'));
 		remove_filter('the_title', array($this, 'filter_memberTitle'));
 
 		return $content;
@@ -4424,11 +4427,12 @@ class usc_e_shop
 			$newtitle = $title;
 		}
 	
+		$newtitle = apply_filters('usces_filter_memberTitle', $newtitle);
 		return $newtitle;
 	}
 	
 	function action_memberFilter(){
-		add_filter('the_title', array($this, 'filter_memberTitle'));
+		add_filter('the_title', array($this, 'filter_memberTitle'),20);
 		add_filter('the_content', array($this, 'filter_memberContent'),20);
 	}
 
