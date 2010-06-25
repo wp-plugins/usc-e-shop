@@ -60,6 +60,7 @@ function usces_order_confirm_message($order_id) {
 	}else{
 		$msg_body = "\r\n\r\n\r\n" . __('** Article order contents **','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
+		$msg_body .= apply_filters('usces_filter_order_confirm_mail_first', NULL, $data);
 		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
 		$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
 	}
@@ -106,27 +107,29 @@ function usces_order_confirm_message($order_id) {
 	$msg_body .= __('Payment amount','usces') . "  : " . number_format($total_full_price) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
-	$msg_body .= __('** A shipping address **','usces') . "\r\n";
-	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($deli['name1'] . ' ' . $deli['name2'])) . " \r\n";
-	$msg_body .= __('Zip/Postal Code','usces') . "  : " . $deli['zipcode'] . "\r\n";
-	$msg_body .= __('Address','usces') . "    : " . $deli['pref'] . $deli['address1'] . $deli['address2'] . " " . $deli['address3'] . "\r\n";
-	$msg_body .= __('Phone number','usces') . "  : " . $deli['tel'] . "\r\n";
+	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
+	$msg_shipping .= "******************************************************************\r\n";
+	$msg_shipping .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($deli['name1'] . ' ' . $deli['name2'])) . " \r\n";
+	$msg_shipping .= __('Zip/Postal Code','usces') . "  : " . $deli['zipcode'] . "\r\n";
+	$msg_shipping .= __('Address','usces') . "    : " . $deli['pref'] . $deli['address1'] . $deli['address2'] . " " . $deli['address3'] . "\r\n";
+	$msg_shipping .= __('Phone number','usces') . "  : " . $deli['tel'] . "\r\n";
 
-	$msg_body .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
+	$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
 	if ( $data['order_delidue_date'] == NULL || $data['order_delidue_date'] == '#none#' ) {
-		$msg_body .= "\r\n";
+		$msg_shipping .= "\r\n";
 	}else{
-		$msg_body .= __('Shipping date', 'usces') . "  : " . $data['order_delidue_date'] . "\r\n";
-		$msg_body .= __("* A shipment due date is a day to ship an article, and it's not the arrival day.", 'usces') . "\r\n";
-		$msg_body .= "\r\n";
+		$msg_shipping .= __('Shipping date', 'usces') . "  : " . $data['order_delidue_date'] . "\r\n";
+		$msg_shipping .= __("* A shipment due date is a day to ship an article, and it's not the arrival day.", 'usces') . "\r\n";
+		$msg_shipping .= "\r\n";
 	}
 	$deli_meth = (int)$entry['order']['delivery_method'];
 	if( $deli_meth > 0 ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
-		$msg_body .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+		$msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
-	$msg_body .= "\r\n";
+	$msg_shipping .= "\r\n";
+	
+	$msg_body .= apply_filters('usces_filter_order_confirm_mail_shipping', $msg_shipping, $data);
 
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . " \r\n";
@@ -150,6 +153,8 @@ function usces_order_confirm_message($order_id) {
 
 //	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
 //	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+
+	$msg_body .= apply_filters('usces_filter_order_confirm_mail_body', NULL, $data);
 
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
@@ -187,7 +192,12 @@ function usces_order_confirm_message($order_id) {
 }
 
 function usces_send_ordermail($order_id) {
-	global $usces;
+	global $usces, $wpdb;
+	
+	$tableName = $wpdb->prefix . "usces_order";
+	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
+	$data = $wpdb->get_row( $query, ARRAY_A );
+
 	$cart = $usces->cart->get_cart();
 	$entry = $usces->cart->get_entry();
 	$mail_data = $usces->options['mail_data'];
@@ -196,6 +206,7 @@ function usces_send_ordermail($order_id) {
 
 	$msg_body = "\r\n\r\n\r\n" . __('** content of ordered items **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
+	$msg_body .= apply_filters('usces_filter_send_order_mail_first', NULL, $data);
 	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['customer']['name1'] . ' ' . $entry['customer']['name2'])) . "\r\n";
 	$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
 	$msg_body .= __('Items','usces') . " : \r\n";
@@ -239,24 +250,25 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('Payment amount','usces') . "  : " . number_format($entry['order']['total_full_price']) . __('dollars','usces') . "\r\n";
 	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
 	
-	$msg_body .= __('** A shipping address **','usces') . "\r\n";
-	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['delivery']['name1'] . ' ' . $entry['delivery']['name2'])) . "\r\n";
-	$msg_body .= __('Zip/Postal Code','usces') . "  : " . $entry['delivery']['zipcode'] . "\r\n";
-	$msg_body .= __('Address','usces') . "    : " . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . " " . $entry['delivery']['address3'] . "\r\n";
-	$msg_body .= __('Phone number','usces') . "  : " . $entry['delivery']['tel'] . "\r\n";
+	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
+	$msg_shipping .= "******************************************************************\r\n";
+	$msg_shipping .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['delivery']['name1'] . ' ' . $entry['delivery']['name2'])) . "\r\n";
+	$msg_shipping .= __('Zip/Postal Code','usces') . "  : " . $entry['delivery']['zipcode'] . "\r\n";
+	$msg_shipping .= __('Address','usces') . "    : " . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . " " . $entry['delivery']['address3'] . "\r\n";
+	$msg_shipping .= __('Phone number','usces') . "  : " . $entry['delivery']['tel'] . "\r\n";
 
-	$msg_body .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
+	$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
 	$deli_meth = (int)$entry['order']['delivery_method'];
 	if( $deli_meth > 0 ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
-		$msg_body .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+		$msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
 //	$msg_body .= "------------------------------------------------------------------\r\n";
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= " " . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
 //	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
-	$msg_body .= "\r\n";
+	$msg_shipping .= "\r\n";
+	$msg_body .= apply_filters('usces_filter_send_order_mail_shipping', $msg_shipping, $data);
 
 	$msg_body .= __('** Payment method **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
@@ -277,6 +289,8 @@ function usces_send_ordermail($order_id) {
 //	$msg_body .= __('I will inform it of shipment completion by an email.','usces') . "\r\n";
 //	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
 //	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+
+	$msg_body .= apply_filters('usces_filter_send_order_mail_body', NULL, $data);
 
 	$subject = $mail_data['title']['thankyou'];
 	$message = $mail_data['header']['thankyou'] . $msg_body . $mail_data['footer']['thankyou'];
@@ -436,7 +450,9 @@ function usces_send_mail( $para ) {
 	$message = $para['message'];
 	
 	ini_set( "SMTP", "{$usces->options['smtp_hostname']}" );
-	ini_set( "smtp_port", 25 );
+	if( !ini_get( "smtp_port" ) ){
+		ini_set( "smtp_port", 25 );
+	}
 	ini_set( "sendmail_from", "" );
 	
 	$res = @wp_mail( $para['to_address'] , $subject , $message, $header );
