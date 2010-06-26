@@ -21,8 +21,10 @@ class usc_e_shop
 	
 		$this->usces_session_start();
 
-		if ( !isset($_SESSION['usces_member']) )
+		if ( !isset($_SESSION['usces_member']) ){
 			$_SESSION['usces_member'] = array();
+			clean_term_cache( "", 'category' );
+		}
 
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : '';
 		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
@@ -2554,6 +2556,8 @@ class usc_e_shop
 		$this->set_default_categories();
 		$this->create_table();
 		$this->update_table();
+
+
 	}
 	
 	function create_table()
@@ -2927,7 +2931,7 @@ class usc_e_shop
 			$item_cat_id = wp_insert_category($item_cat);	
 		}
 		update_option('usces_item_cat_parent_id', $item_cat_id);	
-
+		$ids[] = $item_cat_id;
 		//item_reco
 //		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemreco'";
 //		$item_id = $wpdb->get_var( $query );
@@ -2946,7 +2950,8 @@ class usc_e_shop
 		$itemreco_id = $idObj->term_id;
 		if( !$itemreco_id ) {
 			$itemreco_cat = array('cat_name' => __('Items recommended', 'usces'), 'category_description' => '', 'category_nicename' => 'itemreco', 'category_parent' => $item_cat_id);
-			wp_insert_category($itemreco_cat);	
+			$itemreco_cat_id = wp_insert_category($itemreco_cat);	
+			$ids[] = $itemreco_cat_id;
 		}
 
 		//item_new
@@ -2967,7 +2972,8 @@ class usc_e_shop
 		$itemnew_id = $idObj->term_id;
 		if( !$itemnew_id ) {
 			$itemnew_cat = array('cat_name' => __('New items', 'usces'), 'category_description' => '', 'category_nicename' => 'itemnew', 'category_parent' => $item_cat_id);
-			wp_insert_category($itemnew_cat);	
+			$itemnew_cat_id = wp_insert_category($itemnew_cat);	
+			$ids[] = $itemnew_cat_id;
 		}
 
 		//item_category
@@ -2988,8 +2994,18 @@ class usc_e_shop
 		$itemgenre_id = $idObj->term_id;
 		if( !$itemgenre_id ) {
 			$itemgenre_cat = array('cat_name' => __('Item genre', 'usces'), 'category_description' => '', 'category_nicename' => 'itemgenre', 'category_parent' => $item_cat_id);
-			wp_insert_category($itemgenre_cat);	
+			$itemgenre_cat_id = wp_insert_category($itemgenre_cat);	
+			$ids[] = $itemgenre_cat_id;
 		}
+		
+//		$children = array();
+//		$terms = get_terms('category', array('get' => 'all', 'orderby' => 'id', 'fields' => 'id=>parent'));
+//
+//		foreach ( $terms as $term_id => $parent ) {
+//			if ( $parent > 0 )
+//				$children[$parent][] = $term_id;
+//		}
+//		update_option("category_children", $children);
 	}
 
 	function set_item_mime($post_id, $str)
