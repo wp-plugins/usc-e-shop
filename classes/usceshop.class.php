@@ -21,8 +21,10 @@ class usc_e_shop
 	
 		$this->usces_session_start();
 
-		if ( !isset($_SESSION['usces_member']) )
+		if ( !isset($_SESSION['usces_member']) ){
 			$_SESSION['usces_member'] = array();
+			clean_term_cache( "", 'category' );
+		}
 
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : '';
 		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
@@ -2554,6 +2556,8 @@ class usc_e_shop
 		$this->set_default_categories();
 		$this->create_table();
 		$this->update_table();
+
+
 	}
 	
 	function create_table()
@@ -2906,65 +2910,102 @@ class usc_e_shop
 		//$wpdb->show_errors();
 
 		//item_parent
-		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'item'";
-		$item_parent = $wpdb->get_var( $query );
-		if($item_parent === NULL) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				__('Items', 'usces'), 'item', 0);
-			$wpdb->query($query);
-			$item_parent = $wpdb->insert_id;
-			if( $item_parent !== NULL ) {
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-					VALUES (%d, %s, %s, %d, %d)", $item_parent, 'category', '', 0, 0);
-				$wpdb->query($query);
-			}
+//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'item'";
+//		$item_parent = $wpdb->get_var( $query );
+//		if($item_parent === NULL) {
+//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
+//				__('Items', 'usces'), 'item', 0);
+//			$wpdb->query($query);
+//			$item_parent = $wpdb->insert_id;
+//			if( $item_parent !== NULL ) {
+//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
+//					VALUES (%d, %s, %s, %d, %d)", $item_parent, 'category', '', 0, 0);
+//				$wpdb->query($query);
+//			}
+//		}
+//		update_option('usces_item_cat_parent_id', $item_parent);
+		$idObj = get_category_by_slug('item'); 
+		$item_cat_id = $idObj->term_id;
+		if( !$item_cat_id ) {
+			$item_cat = array('cat_name' => __('Items', 'usces'), 'category_description' => '', 'category_nicename' => 'item', 'category_parent' => 0);
+			$item_cat_id = wp_insert_category($item_cat);	
 		}
-		update_option('usces_item_cat_parent_id', $item_parent);
-
+		update_option('usces_item_cat_parent_id', $item_cat_id);	
+		$ids[] = $item_cat_id;
 		//item_reco
-		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemreco'";
-		$item_id = $wpdb->get_var( $query );
-		if($item_id === NULL) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				__('Items recommended', 'usces'), 'itemreco', 0);
-			$wpdb->query($query);
-			$item_id = $wpdb->insert_id;
-			if( $item_id !== NULL ) {
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
-				$wpdb->query($query);
-			}
+//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemreco'";
+//		$item_id = $wpdb->get_var( $query );
+//		if($item_id === NULL) {
+//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
+//				__('Items recommended', 'usces'), 'itemreco', 0);
+//			$wpdb->query($query);
+//			$item_id = $wpdb->insert_id;
+//			if( $item_id !== NULL ) {
+//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
+//					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
+//				$wpdb->query($query);
+//			}
+//		}
+		$idObj = get_category_by_slug('itemreco'); 
+		$itemreco_id = $idObj->term_id;
+		if( !$itemreco_id ) {
+			$itemreco_cat = array('cat_name' => __('Items recommended', 'usces'), 'category_description' => '', 'category_nicename' => 'itemreco', 'category_parent' => $item_cat_id);
+			$itemreco_cat_id = wp_insert_category($itemreco_cat);	
+			$ids[] = $itemreco_cat_id;
 		}
 
 		//item_new
-		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemnew'";
-		$item_id = $wpdb->get_var( $query );
-		if($item_id === NULL) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				__('New items', 'usces'), 'itemnew', 0);
-			$wpdb->query($query);
-			$item_id = $wpdb->insert_id;
-			if( $item_id !== NULL ) {
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
-				$wpdb->query($query);
-			}
+//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemnew'";
+//		$item_id = $wpdb->get_var( $query );
+//		if($item_id === NULL) {
+//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
+//				__('New items', 'usces'), 'itemnew', 0);
+//			$wpdb->query($query);
+//			$item_id = $wpdb->insert_id;
+//			if( $item_id !== NULL ) {
+//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
+//					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
+//				$wpdb->query($query);
+//			}
+//		}
+		$idObj = get_category_by_slug('itemnew'); 
+		$itemnew_id = $idObj->term_id;
+		if( !$itemnew_id ) {
+			$itemnew_cat = array('cat_name' => __('New items', 'usces'), 'category_description' => '', 'category_nicename' => 'itemnew', 'category_parent' => $item_cat_id);
+			$itemnew_cat_id = wp_insert_category($itemnew_cat);	
+			$ids[] = $itemnew_cat_id;
 		}
 
 		//item_category
-		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemgenre'";
-		$item_id = $wpdb->get_var( $query );
-		if($item_id === NULL) {
-			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-				__('Item genre', 'usces'), 'itemgenre', 0);
-			$wpdb->query($query);
-			$item_id = $wpdb->insert_id;
-			if( $item_id !== NULL ) {
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
-				$wpdb->query($query);
-			}
+//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemgenre'";
+//		$item_id = $wpdb->get_var( $query );
+//		if($item_id === NULL) {
+//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
+//				__('Item genre', 'usces'), 'itemgenre', 0);
+//			$wpdb->query($query);
+//			$item_id = $wpdb->insert_id;
+//			if( $item_id !== NULL ) {
+//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
+//					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
+//				$wpdb->query($query);
+//			}
+//		}
+		$idObj = get_category_by_slug('itemgenre'); 
+		$itemgenre_id = $idObj->term_id;
+		if( !$itemgenre_id ) {
+			$itemgenre_cat = array('cat_name' => __('Item genre', 'usces'), 'category_description' => '', 'category_nicename' => 'itemgenre', 'category_parent' => $item_cat_id);
+			$itemgenre_cat_id = wp_insert_category($itemgenre_cat);	
+			$ids[] = $itemgenre_cat_id;
 		}
+		
+//		$children = array();
+//		$terms = get_terms('category', array('get' => 'all', 'orderby' => 'id', 'fields' => 'id=>parent'));
+//
+//		foreach ( $terms as $term_id => $parent ) {
+//			if ( $parent > 0 )
+//				$children[$parent][] = $term_id;
+//		}
+//		update_option("category_children", $children);
 	}
 
 	function set_item_mime($post_id, $str)
