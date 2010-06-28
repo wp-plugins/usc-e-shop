@@ -855,29 +855,45 @@ class usc_e_shop
 		return $values;
 	}
 	
-	function cnt_access( $flag = '' ) {
+	function get_access( $key, $type, $date ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . "usces_access";
 
-		$query = $wpdb->prepare("SELECT ID FROM $table_name WHERE acc_date = %s", substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
-		$res = $wpdb->get_var( $query );
-		$wpdb->show_errors();
-		if(empty($res)){
-			if( $flag == '' ){
-				$query = $wpdb->prepare("INSERT INTO $table_name (acc_type, acc_num1, acc_num2, acc_str1, acc_str2, acc_date) VALUES(%s, %d, %d, %s, %s, %s)", 'visiter', 1, 0, NULL, NULL, substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
-				$wpdb->query( $query );
-			}elseif( $flag == 'first' ){
-				$query = $wpdb->prepare("INSERT INTO $table_name (acc_type, acc_num1, acc_num2, acc_str1, acc_str2, acc_date) VALUES(%s, %d, %d, %s, %s, %s)", 'visiter', 0, 1, NULL, NULL, substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
-				$wpdb->query( $query );
-			}
+		$query = $wpdb->prepare("SELECT acc_value FROM $table_name WHERE acc_key = %s AND acc_type = %s AND acc_date = %s", $key, $type, $date);
+		$value = $wpdb->get_var( $query );
+		if( !$value ){
+			$res = NULL;
 		}else{
-			if( $flag == '' ){
-				$query = $wpdb->prepare("UPDATE $table_name SET acc_num1 = acc_num1 + 1 WHERE acc_date = %s", substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
-				$wpdb->query( $query );
-			}elseif( $flag == 'first' ){
-				$query = $wpdb->prepare("UPDATE $table_name SET acc_num2 = acc_num2 + 1 WHERE acc_date = %s", substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10));
-				$wpdb->query( $query );
-			}
+			$res = unserialize($value);
+		}
+		
+		return $res;
+	}
+	
+	function get_access_piriod( $key, $type, $startday, $endday ) {
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_access";
+
+		$query = $wpdb->prepare("SELECT acc_type, acc_value, acc_date FROM $table_name WHERE acc_key = %s AND acc_type = %s AND (acc_date => %s AND acc_date =< %s", $key, $type, $startday, $endday);
+		$res = $wpdb->query( $query, ARRAY_A );
+	var_dump($res);
+		
+		return $res;
+	}
+	
+	function update_access( $array ) {
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_access";
+
+		$query = $wpdb->prepare("SELECT ID FROM $table_name WHERE acc_key = %s AND acc_type = %s AND acc_date = %s", $array['acc_key'], $array['acc_type'], $array['acc_date']);
+		$res = $wpdb->get_var( $query );
+		//$wpdb->show_errors();
+		if(empty($res)){
+			$query = $wpdb->prepare("INSERT INTO $table_name (acc_key, acc_type, acc_value, acc_date) VALUES(%s, %s, %s, %s)", $array['acc_key'], $array['acc_type'], serialize($array['acc_value']), $array['acc_date']);
+			$wpdb->query( $query );
+		}else{
+			$query = $wpdb->prepare("UPDATE $table_name SET acc_value = %s WHERE acc_key = %s AND acc_type = %s AND acc_date = %s", serialize($array['acc_value']), $array['acc_key'], $array['acc_type'], $array['acc_date']);
+			$wpdb->query( $query );
 		}
 	}
 	
@@ -2582,12 +2598,12 @@ class usc_e_shop
 		
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_type VARCHAR( 20 ) NOT NULL ,
-				acc_num1 INT( 11 ) NOT NULL DEFAULT '0',
-				acc_num2 INT( 11 ) NOT NULL DEFAULT '0',
-				acc_str1 VARCHAR( 100 ) NULL ,
-				acc_str2 VARCHAR( 100 ) NULL ,
+				acc_key VARCHAR( 20 ) NOT NULL ,
+				acc_type VARCHAR( 20 ) NULL ,
+				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
+				KEY acc_key ( acc_key ),  
+				KEY acc_type ( acc_type ),  
 				KEY acc_date ( acc_date )  
 				) ENGINE = MYISAM AUTO_INCREMENT=0 $charset_collate;";
 		
@@ -2709,12 +2725,12 @@ class usc_e_shop
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_type VARCHAR( 20 ) NOT NULL ,
-				acc_num1 INT( 11 ) NOT NULL DEFAULT '0',
-				acc_num2 INT( 11 ) NOT NULL DEFAULT '0',
-				acc_str1 VARCHAR( 100 ) NULL ,
-				acc_str2 VARCHAR( 100 ) NULL ,
+				acc_key VARCHAR( 20 ) NOT NULL ,
+				acc_type VARCHAR( 20 ) NULL ,
+				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
+				KEY acc_key ( acc_key ),  
+				KEY acc_type ( acc_type ),  
 				KEY acc_date ( acc_date )  
 				) ENGINE = MYISAM;";
 			
@@ -4259,6 +4275,7 @@ class usc_e_shop
 		$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
 		$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
 		$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" onclick=\"return uscesCart.intoCart('{$post_id}','{$sku}')\" />";
+		$html = apply_filters('usces_filter_single_item_inform', $html);
 		$html .= "</form>";
 	
 		return $html;
