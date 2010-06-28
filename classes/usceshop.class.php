@@ -873,10 +873,9 @@ class usc_e_shop
 	function get_access_piriod( $key, $type, $startday, $endday ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . "usces_access";
-
-		$query = $wpdb->prepare("SELECT acc_type, acc_value, acc_date FROM $table_name WHERE acc_key = %s AND acc_type = %s AND (acc_date => %s AND acc_date =< %s", $key, $type, $startday, $endday);
-		$res = $wpdb->query( $query, ARRAY_A );
-	var_dump($res);
+		//$wpdb->show_errors();
+		$query = $wpdb->prepare("SELECT acc_type, acc_value, acc_date FROM $table_name WHERE acc_key = %s AND acc_type = %s AND (acc_date >= %s AND acc_date <= %s)", $key, $type, $startday, $endday);
+		$res = $wpdb->get_results( $query, ARRAY_A );
 		
 		return $res;
 	}
