@@ -302,23 +302,23 @@ class usc_e_shop
 	function add_pages() {
 
 	
-		add_object_page('Welcart Shop', 'Welcart Shop', 10, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 10, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 10, 'usces_itemedit', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 10, 'usces_itemnew', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 10, 'usces_initial', array($this, 'admin_setup_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 10, 'usces_schedule', array($this, 'admin_schedule_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 10, 'usces_delivery', array($this, 'admin_delivery_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 10, 'usces_mail', array($this, 'admin_mail_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 10, 'usces_cart', array($this, 'admin_cart_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 10, 'usces_member', array($this, 'admin_member_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 10, 'usces_system', array($this, 'admin_system_page'));
+		add_object_page('Welcart Shop', 'Welcart Shop', 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 6, 'usces_itemedit', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 6, 'usces_itemnew', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 6, 'usces_initial', array($this, 'admin_setup_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 6, 'usces_schedule', array($this, 'admin_schedule_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 6, 'usces_delivery', array($this, 'admin_delivery_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 6, 'usces_mail', array($this, 'admin_mail_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 6, 'usces_cart', array($this, 'admin_cart_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 6, 'usces_member', array($this, 'admin_member_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 6, 'usces_system', array($this, 'admin_system_page'));
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
 		
-		add_object_page('Welcart Management', 'Welcart Management', 10, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 10, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 10, 'usces_ordernew', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 10, 'usces_memberlist', array($this, 'member_list_page'));
+		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
 	}
 
 
@@ -4273,7 +4273,7 @@ class usc_e_shop
 		$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$zaiko}\" />\n";
 		$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
 		$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
-		$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" onclick=\"return uscesCart.intoCart('{$post_id}','{$sku}')\" />";
+		$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
 		$html = apply_filters('usces_filter_single_item_inform', $html);
 		$html .= "</form>";
 	

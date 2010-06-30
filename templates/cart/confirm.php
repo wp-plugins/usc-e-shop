@@ -58,8 +58,10 @@ for($i=0; $i<count($cart); $i++) {
 
 	$html .= '<tr>
 		<td>' . ($i + 1) . '</td>
-		<td>' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</td>
-		<td class="aleft">' . $cartItemName . '<br />';
+		<td>';
+	$cart_thumbnail = wp_get_attachment_image( $pictids[0], array(60, 60), true );
+	$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
 	if( is_array($options) && count($options) > 0 ){
 		foreach($options as $key => $value){
 			$html .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
