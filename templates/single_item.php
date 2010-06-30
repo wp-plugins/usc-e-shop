@@ -9,7 +9,10 @@ $html = '
 
 $html = apply_filters('usces_itemimg_anchor_rel', $html);
 
-$html .= '>' . usces_the_itemImage(0, 200, 250, $post, 'return') . '</a>
+$html .= '>';
+$itemImage = usces_the_itemImage(0, 200, 250, $post, 'return');
+$html .= apply_filters('usces_filter_the_itemImage', $itemImage, $post);
+$html .= '</a>
 	</div>';
 	
 if(usces_sku_num() === 1) { //1SKU
@@ -107,7 +110,10 @@ $imageid = usces_get_itemSubImageNums();
 foreach ( $imageid as $id ) {
 	$html .= '<a href="' . usces_the_itemImageURL($id, 'return') . '"';
 	$html = apply_filters('usces_itemimg_anchor_rel', $html);
-	$html .= '>' . usces_the_itemImage($id, 137, 200, $post, 'return') . '</a>';
+	$html .= '>';
+	$itemImage = usces_the_itemImage($id, 137, 200, $post, 'return');
+	$html .= apply_filters('usces_filter_the_SubImage', $itemImage, $post);
+	$html .= '</a>';
 }
 $html .= '</div>';
 
