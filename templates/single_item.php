@@ -112,7 +112,7 @@ foreach ( $imageid as $id ) {
 	$html = apply_filters('usces_itemimg_anchor_rel', $html);
 	$html .= '>';
 	$itemImage = usces_the_itemImage($id, 137, 200, $post, 'return');
-	$html .= apply_filters('usces_filter_the_SubImage', $itemImage, $post);
+	$html .= apply_filters('usces_filter_the_SubImage', $itemImage, $post, $id);
 	$html .= '</a>';
 }
 $html .= '</div>';
