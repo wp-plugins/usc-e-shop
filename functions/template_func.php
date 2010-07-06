@@ -38,8 +38,10 @@ function usces_the_itemCode( $out = '' ) {
 	}
 }
 
-function usces_the_itemName( $out = '' ) {
-	global $post;
+function usces_the_itemName( $out = '', $post = NULL ) {
+	if($post == NULL)
+		global $post;
+		
 	$post_id = $post->ID;
 
 	$str = get_post_custom_values('_itemName', $post_id);
@@ -194,8 +196,10 @@ function usces_the_firstSku() {
 	echo $fields['key'][0];
 }
 
-function usces_the_firstPrice( $out = '' ) {
-	global $post, $usces;
+function usces_the_firstPrice( $out = '', $post = NULL ) {
+	global $usces;
+	if($post == NULL)
+		global $post;
 	$post_id = $post->ID;
 	
 	

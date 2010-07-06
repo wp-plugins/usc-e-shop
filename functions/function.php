@@ -378,15 +378,15 @@ function usces_send_inquirymail() {
 
 }
 
-function usces_send_regmembermail() {
+function usces_send_regmembermail($user) {
 	global $usces;
 	$res = false;
 	$mail_data = $usces->options['mail_data'];
 
 	$subject =  $mail_data['title']['membercomp'];
 	$message = $mail_data['header']['membercomp'] . $mail_data['footer']['membercomp'];
-	$name = wp_specialchars(trim($_POST['member']['name1'])) . wp_specialchars(trim($_POST['member']['name2']));
-	$mailaddress1 = wp_specialchars(trim($_POST['member']['mailaddress1']));
+	$name = wp_specialchars(trim($user['name1'])) . wp_specialchars(trim($user['name2']));
+	$mailaddress1 = wp_specialchars(trim($user['mailaddress1']));
 
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $name),

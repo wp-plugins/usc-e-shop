@@ -1940,8 +1940,10 @@ class usc_e_shop
 			
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
-				if($res !== false) 
-					$mser = usces_send_regmembermail();
+				if($res !== false) {
+					$user = $_POST['member'];
+					$mser = usces_send_regmembermail($user);
+				}
 				
 				return 'newcompletion';
 			}
@@ -1989,6 +1991,8 @@ class usc_e_shop
 				//$this->get_current_member();
 				if( $res ) {
 					//usces_send_regmembermail();
+					$user = $_POST['customer'];
+					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
 					$_POST['loginpass'] = trim($_POST['customer']['password1']);
 					if( $this->member_login() == 'member' ){
