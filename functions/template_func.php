@@ -500,6 +500,50 @@ function usces_the_itemImageURL($number = 0, $out = '' ) {
 	}
 }
 
+function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
+	global $usces;
+	if($post == '') global $post;
+
+	$post_id = $post->ID;
+	
+	$code =  get_post_custom_values('_itemCode', $post_id);
+	if(!$code) return false;
+	
+	$name = get_post_custom_values('_itemName', $post_id);
+	
+	$pictids = $usces->get_pictids($code[0]);
+	$attach_ob = get_post($pictids[$number]);
+	$excerpt = esc_html($attach_ob->post_excerpt);
+
+	if($out == 'return'){
+		return $excerpt;
+	}else{
+		echo $excerpt;
+	}
+}
+
+function usces_the_itemImageDescription($number = 0, $post = '', $out = '' ) {
+	global $usces;
+	if($post == '') global $post;
+
+	$post_id = $post->ID;
+	
+	$code =  get_post_custom_values('_itemCode', $post_id);
+	if(!$code) return false;
+	
+	$name = get_post_custom_values('_itemName', $post_id);
+	
+	$pictids = $usces->get_pictids($code[0]);
+	$attach_ob = get_post($pictids[$number]);
+	$excerpt = esc_html($attach_ob->post_content);
+
+	if($out == 'return'){
+		return $excerpt;
+	}else{
+		echo $excerpt;
+	}
+}
+
 function usces_get_itemSubImageNums() {
 	global $post, $usces;
 	$post_id = $post->ID;
