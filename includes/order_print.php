@@ -360,7 +360,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// サイト名
 		$pdf->SetFont(GOTHIC, '', 11);
 		$pdf->SetXY(100, 36.5);
-		$pdf->Cell(65, 5, apply_filters('usces_filter_publisher', get_option('blogname'))), $border, 0, 'C', 1);
+		$pdf->Cell(65, 5, usces_conv_euc(apply_filters('usces_filter_publisher', get_option('blogname'))), $border, 0, 'C', 1);
 		
 		// サイトURL
 		$pdf->SetFont(GOTHIC, '', 9);
@@ -475,7 +475,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// サイト名
 		$pdf->SetFont(GOTHIC, '', 11);
 		$pdf->SetXY(100, 36.5);
-		$pdf->Cell(65, 5, apply_filters('usces_filter_publisher', get_option('blogname'))), $border, 0, 'C', 1);
+		$pdf->Cell(65, 5, usces_conv_euc(apply_filters('usces_filter_publisher', get_option('blogname'))), $border, 0, 'C', 1);
 		
 		// サイトURL
 		$pdf->SetFont(GOTHIC, '', 9);
