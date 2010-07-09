@@ -1199,8 +1199,8 @@ class usc_e_shop
 	}
 	
 	function main() {
-		global $wpdb, $wp_locale, $wp_version;
-		global $wp_query, $usces_action, $post, $action;
+		global $wpdb, $wp_locale, $wp_version, $post_ID;
+		global $wp_query, $usces_action, $post, $action, $editing;
 
 		do_action('usces_main');
 		$this->usces_cookie();
@@ -1238,7 +1238,6 @@ class usc_e_shop
 		
 		if( isset($_REQUEST['page']) && ($_REQUEST['action'] == 'edit' || $itemnew == 'new' || $_REQUEST['action'] == 'editpost')) {
 		
-			global $editing, $post;
 			if($_REQUEST['action'] != 'editpost' && $itemnew == 'new'){
 				if ( version_compare($wp_version, '3.0-beta', '>') ){
 					if ( !isset($_GET['post_type']) )
@@ -1289,9 +1288,9 @@ class usc_e_shop
 					}
 					
 
-					$post = get_post( $post_id, OBJECT, 'edit' );
-					if ( $post->post_type == 'page' )
-						$post->page_template = get_post_meta( $id, '_wp_page_template', true );
+//					$post = get_post( $post_id, OBJECT, 'edit' );
+//					if ( $post->post_type == 'page' )
+//						$post->page_template = get_post_meta( $id, '_wp_page_template', true );
 						
 				}else{
 					if(isset($_GET['post'])){
@@ -1316,7 +1315,7 @@ class usc_e_shop
 			wp_enqueue_script('word-count');
 			wp_enqueue_script( 'admin-comments' );
 		
-			//add_action( 'admin_head', 'wp_tiny_mce' );
+//			add_action( 'admin_head', 'wp_tiny_mce' );
 			add_action( 'admin_print_footer_scripts', 'wp_tiny_mce', 25 );
 			wp_enqueue_script('quicktags');
 

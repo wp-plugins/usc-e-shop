@@ -5,23 +5,22 @@
  * @package WordPress
  * @subpackage Administration
  */
-
 // don't load directly
 if ( !defined('ABSPATH') )
 	die('-1');
 
-wp_enqueue_script('post');
-
-if ( post_type_supports($post_type, 'editor') ) {
-	if ( user_can_richedit() )
-		wp_enqueue_script('editor');
-	wp_enqueue_script('word-count');
-}
-
-if ( post_type_supports($post_type, 'editor') || post_type_supports($post_type, 'thumbnail') ) {
-	add_thickbox();
-	wp_enqueue_script('media-upload');
-}
+//wp_enqueue_script('post');
+//
+//if ( post_type_supports($post_type, 'editor') ) {
+//	if ( user_can_richedit() )
+//		wp_enqueue_script('editor');
+//	wp_enqueue_script('word-count');
+//}
+//
+//if ( post_type_supports($post_type, 'editor') || post_type_supports($post_type, 'thumbnail') ) {
+//	add_thickbox();
+//	wp_enqueue_script('media-upload');
+//}
 
 /**
  * Post ID global
@@ -266,10 +265,10 @@ jQuery(function($){
 <form name="post" action="" method="post" id="post">
 <?php
 
-if ( 0 == $post_ID)
-	wp_nonce_field('add-post');
-else
-	wp_nonce_field('update-post_' .  $post_ID);
+//if ( 0 == $post_ID)
+//	wp_nonce_field('add-post');
+//else
+//	wp_nonce_field('update-post_' .  $post_ID);
 	
 $itemCode = get_post_custom_values('_itemCode', $post_ID);
 $itemName = get_post_custom_values('_itemName', $post_ID);
