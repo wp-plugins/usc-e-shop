@@ -954,9 +954,9 @@ function usces_the_calendar() {
 function usces_loginout() {
 	global $usces;
 	if ( !$usces->is_member_logged_in() )
-		echo '<a href="' . USCES_MEMBER_URL . '&page=login">' . __('Log-in','usces') . '</a>';
+		echo '<a href="' . USCES_MEMBER_URL . '&page=login">' . apply_filters('usces_filter_loginlink_label', __('Log-in','usces')) . '</a>';
 	else
-		echo '<a href="' . USCES_MEMBER_URL . '&page=logout">' . __('Log out','usces') . '</a>';
+		echo '<a href="' . USCES_MEMBER_URL . '&page=logout">' . apply_filters('usces_filter_logoutlink_label', __('Log out','usces')) . '</a>';
 }
 
 function usces_is_login() {
@@ -1202,5 +1202,16 @@ function usces_get_page_mode(){
 	global $usces;
 
 	return $usces->page;
+}
+
+function usces_is_cat_of_item( $cat_id ){
+	global $usces;
+	$ids = $usces->get_item_cat_ids();
+	$ids[] = USCES_ITEM_CAT_PARENT_ID;
+	if(in_array($cat_id, $ids)){
+		return true;
+	}else{
+		return false;
+	}
 }
 ?>

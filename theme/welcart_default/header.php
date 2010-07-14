@@ -45,7 +45,7 @@
 	<ul class="subnavi clearfix">
 		<?php if(usces_is_membersystem_state()): ?>
 		<li><?php if(usces_is_login()){printf(__('Mr/Mrs %s', 'usces'), usces_the_member_name());}else{echo 'guest';} ?></li>
-		<li><?php echo usces_loginout(); ?></li>
+		<li><?php usces_loginout(); ?></li>
 		<?php if(usces_is_login()): ?>
 		<li><a href="<?php echo USCES_MEMBER_URL; ?>"><?php _e('Membership information','usces') ?></a></li>
 		<?php endif; ?>

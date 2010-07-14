@@ -2568,7 +2568,7 @@ class usc_e_shop
 	//
 	function set_initial()
 	{
-		usces_metakey_change();
+		$rets = usces_metakey_change();
 		
 		$this->set_default_theme();
 		$this->set_default_page();
@@ -3027,6 +3027,15 @@ class usc_e_shop
 //		update_option("category_children", $children);
 	}
 
+	function get_item_cat_ids(){
+		$args = array('child_of' => USCES_ITEM_CAT_PARENT_ID, 'hide_empty' => 0, 'hierarchical' => 0);
+		$categories = get_categories( $args );
+		foreach($categories as $category){
+			$ids[] = $category->term_id;
+		}
+		return $ids;
+	}
+	
 	function set_item_mime($post_id, $str)
 	{
 		global $wpdb;
@@ -3393,7 +3402,7 @@ class usc_e_shop
 	
 	function getItemIds() {
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT ID  FROM $wpdb->posts WHERE post_mime_type = %s", 'item');
+		$query = $wpdb->prepare("SELECT ID  FROM $wpdb->posts WHERE post_status = %s AND post_mime_type = %s", 'publish', 'item');
 		$ids = $wpdb->get_col( $query );
 		if( empty($ids) ) $ids = array();
 		return $ids;

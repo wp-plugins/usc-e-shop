@@ -39,13 +39,14 @@ require_once(USCES_PLUGIN_DIR."/functions/item_post.php");
 require_once(USCES_PLUGIN_DIR."/functions/function.php");
 require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");
 
-
+global $usces;
 $usces = new usc_e_shop();
 $usces->regist_action();
 
 require_once(USCES_PLUGIN_DIR."/functions/template_func.php");
 
-add_action('activate_' . plugin_basename(__FILE__), array(&$usces, 'set_initial'));
+register_activation_hook( __FILE__, array(&$usces, 'set_initial') );
+//add_action('activate_' . plugin_basename(__FILE__), array(&$usces, 'set_initial'));
 add_action('init', array(&$usces, 'main'), 10);
 add_action('admin_init', 'usces_redirect', 10);
 add_action('admin_menu', array(&$usces, 'add_pages'));
