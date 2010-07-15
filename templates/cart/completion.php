@@ -1,4 +1,8 @@
 <?php
+global $usces;
+$entry = $usces->cart->get_entry();
+$cart = $usces->cart->get_cart();
+
 $html = '<h2>'.__('It has been sent succesfully.', 'usces').'</h2>
 <div class="post">';
 
@@ -24,7 +28,7 @@ if(isset($this->payment_results['payment_status'])){
 }
 $html .= '<div class="header_explanation">';
 $header = '<p>'.__('Thank you for shopping.', 'usces').'<br />'.__("If you have any questions, please contact us by 'Contact'.", 'usces').'</p>';
-$html .= apply_filters('usces_filter_cartcompletion_page_header', $header);
+$html .= apply_filters('usces_filter_cartcompletion_page_header', $header, $entry, $cart);
 $html .= '</div>';
 
 $html .= '<form action="' . get_option('home') . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -33,7 +37,7 @@ $html .= '<form action="' . get_option('home') . '" method="post" onKeyDown="if 
 
 $html .= '<div class="footer_explanation">';
 $footer = '';
-$html .= apply_filters('usces_filter_cartcompletion_page_footer', $footer);
+$html .= apply_filters('usces_filter_cartcompletion_page_footer', $footer, $entry, $cart);
 $html .= '</div>';
 
 $html .= '</div>';
