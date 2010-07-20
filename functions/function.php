@@ -27,6 +27,19 @@ function usces_ajax_send_mail() {
 		//$checkfield = 'OK';
 		$query = $wpdb->prepare("UPDATE $tableName SET `order_check`=%s WHERE ID = %d", serialize($checkfield), $order_id);
 		$wpdb->query( $query );
+
+		$bcc_para = array(
+				'to_name' => 'Shop Admin',
+				'to_address' => $usces->options['sender_mail'], 
+				'from_name' => 'Welcart Auto BCC', 
+				'from_address' => 'Welcart', 
+				'return_path' => $usces->options['error_mail'],
+				'subject' => $_POST['subject'],
+				'message' => $_POST['message']
+				);
+		
+		usces_send_mail( $bcc_para );
+
 		return 'success';
 	}else{
 		return 'error';
@@ -455,7 +468,11 @@ function usces_send_mail( $para ) {
 	}
 	ini_set( "sendmail_from", "" );
 	
-	$res = @wp_mail( $para['to_address'] , $subject , $message, $header );
+	if( is_email( $para['to_address'] ) ){
+		$res = @wp_mail( $para['to_address'] , $subject , $message, $header );
+	}else{
+		$res = false;
+	}
 	
 	return $res;
 

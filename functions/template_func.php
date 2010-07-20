@@ -885,21 +885,25 @@ function usces_the_inquiry_form() {
 	global $usces;
 	$error_message = '';
 	if( isset($_POST['inq_name']) && '' != trim($_POST['inq_name']) ) {
-		$inq_name = wp_specialchars(trim($_POST['inq_name']));
+		$inq_name = esc_html(trim($_POST['inq_name']));
 	}else{
 		$inq_name = '';
 		if($usces->page == 'deficiency')
 			$error_message .= __('Please input your name.', 'usces') . "<br />";
 	}
-	if( isset($_POST['inq_mailaddress']) && '' != trim($_POST['inq_mailaddress']) ) {
+	if( isset($_POST['inq_mailaddress']) && is_email(trim($_POST['inq_mailaddress'])) ) {
 		$inq_mailaddress = wp_specialchars(trim($_POST['inq_mailaddress']));
+	}elseif( isset($_POST['inq_mailaddress']) && !is_email(trim($_POST['inq_mailaddress'])) ) {
+		$inq_mailaddress = esc_html(trim($_POST['inq_mailaddress']));
+		if($usces->page == 'deficiency')
+			$error_message .= __('e-mail address is not correct', 'usces') . "<br />";
 	}else{
 		$inq_mailaddress = '';
 		if($usces->page == 'deficiency')
 			$error_message .= __('Please input your e-mail address.', 'usces') . "<br />";
 	}
 	if( isset($_POST['inq_contents']) && '' != trim($_POST['inq_contents']) ) {
-		$inq_contents = wp_specialchars(trim($_POST['inq_contents']));
+		$inq_contents = esc_html(trim($_POST['inq_contents']));
 	}else{
 		$inq_contents = '';
 		if($usces->page == 'deficiency')

@@ -1668,7 +1668,7 @@ class usc_e_shop
 	}
 	
 	function inquiry_button(){
-		if( isset($_POST['inq_name']) && '' != trim($_POST['inq_name']) && isset($_POST['inq_mailaddress']) && '' != trim($_POST['inq_mailaddress']) && isset($_POST['inq_contents']) && '' != trim($_POST['inq_contents']) ){
+		if( isset($_POST['inq_name']) && '' != trim($_POST['inq_name']) && isset($_POST['inq_mailaddress']) && is_email( trim($_POST['inq_mailaddress']) ) && '' != trim($_POST['inq_contents']) ){
 			$res = $this->inquiry_processing();
 		}else{
 			$res = 'deficiency';
