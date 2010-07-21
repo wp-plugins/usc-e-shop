@@ -84,4 +84,7 @@ $cal2->setCalendarData();
 <?php endfor; ?>
 </tbody>
 </table>
-(<span class="business_days_exp_box businessday">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;<?php _e('Holiday for Shipping Operations', 'usces'); ?>)
+<?php
+$afterword = '(<span class="business_days_exp_box businessday">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;' . __('Holiday for Shipping Operations', 'usces') . ')'."\n";
+echo apply_filters( 'usces_filter_widget_calendar', $afterword);
+?>
