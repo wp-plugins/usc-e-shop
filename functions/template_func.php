@@ -1108,10 +1108,11 @@ function usces_list_post( $slug, $rownum ){
 	$li = '';
 	$infolist = get_posts('category='.$cat_id.'&numberposts='.$rownum.'&order=DESC&orderby=post_date');
 	foreach ($infolist as $post) :
-		$li .= "<li>\n";
-		$li .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . $post->post_title . "</a></div>\n";
-		$li .= "<p>" . $post->post_excerpt . "</p>\n";
-		$li .= "</li>\n";
+		$list = "<li>\n";
+		$list .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . $post->post_title . "</a></div>\n";
+		$list .= "<p>" . $post->post_excerpt . "</p>\n";
+		$list .= "</li>\n";
+		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
 	endforeach;
 	echo $li;
 }
