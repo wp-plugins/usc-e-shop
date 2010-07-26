@@ -2389,3 +2389,21 @@ msgstr "お問合せフォームのページID"
 
 msgid "When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry."
 msgstr "SSL を通したWelcart お問合せフォームを利用したい場合、そのpage_id を指定します。上記SSL の設定が必要です。<br />SSL を通す必要が無い場合は空白にしておきます。<br />パーマリンクを使用している場合、このページのパーマリンクは　usces-inquiry　でなくてはいけません。"
+
+msgid "Tags:"
+msgstr "タグ："
+
+msgid "Comments Closed"
+msgstr "コメントは受付けておりません"
+
+msgid "Posted in %s"
+msgstr "カテゴリー：%s"
+
+msgid "No Comments &#187;"
+msgstr "コメントはありません &#187;"
+
+msgid "1 Comment &#187;"
+msgstr "コメント 1件 &#187;"
+
+msgid "% Comments &#187;"
+msgstr "コメント %件 &#187;"
