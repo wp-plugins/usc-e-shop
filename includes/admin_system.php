@@ -18,7 +18,7 @@ $province = trim($province);
 $use_ssl = $this->options['use_ssl'];
 $ssl_url = $this->options['ssl_url'];
 $ssl_url_admin = $this->options['ssl_url_admin'];
-
+$inquiry_id = $this->options['inquiry_id'];
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -130,6 +130,13 @@ function toggleVisibility(id) {
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url');"><?php _e('Blog address (SSL)', 'usces'); ?></a></th>
 		<td><input name="ssl_url" type="text" id="ssl_url" value="<?php echo $ssl_url; ?>" size="60" /></td>
 	    <td><div id="ex_ssl_url" class="explanation"><?php _e('https://*Blog address*<br />You can use common use SSL.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('お問合せフォームのページID', 'usces'); ?></a></th>
+		<td><input name="inquiry_id" type="text" id="inquiry_id" value="<?php echo $inquiry_id; ?>" size="7" /></td>
+	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('SSL を通したWelcart お問合せフォームを利用したい場合、そのpage_id を指定します。上記SSL の設定が必要です。<br />SSL を通す必要が無い場合は空白にしておきます。', 'usces'); ?></div></td>
 	</tr>
 </table>
 </div>

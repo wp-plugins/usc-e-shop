@@ -2072,4 +2072,50 @@ function usces_update_check_admin($result){
 	$result = true;
 	return $result;
 }
+
+function usces_setup_cod_ajax(){
+	global $usces;
+	$usces->options = get_option('usces');
+	$message = '';
+	
+	$usces->options['cod_type'] = isset($_POST['cod_type']) ? $_POST['cod_type'] : 'fix';
+	if( isset($_POST['cod_fee']) )
+		$usces->options['cod_fee'] = (int)$_POST['cod_fee'];
+		
+	if( 'change' == $usces->options['cod_type'] ){
+		if( isset($_POST['cod_first_amount']) ){
+			$usces->options['cod_first_amount'] = (int)$_POST['cod_first_amount'];
+			if( 0 === (int)$_POST['cod_first_amount'] )
+				$message = __('There is the item where a value is dirty.', 'usces');
+		}
+		if( isset($_POST['cod_first_fee']) ){
+			$usces->options['cod_first_fee'] = (int)$_POST['cod_first_fee'];
+			if( 0 === (int)$_POST['cod_first_fee'] )
+				$message = __('There is the item where a value is dirty.', 'usces');
+		}
+		if( isset($_POST['cod_end_fee']) ){
+			$usces->options['cod_end_fee'] = (int)$_POST['cod_end_fee'];
+			if( 0 === (int)$_POST['cod_end_fee'] )
+				$message = __('There is the item where a value is dirty.', 'usces');
+		}
+		
+		if( isset($_POST['cod_amounts']) ){
+			for($i=0; $i<count((array)$_POST['cod_amounts']); $i++){
+				$usces->options['cod_amounts'][$i] = (int)$_POST['cod_amounts'][$i];
+				$usces->options['cod_fees'][$i] = (int)$_POST['cod_fees'][$i];
+				if( 0 === (int)$_POST['cod_amounts'][$i] || 0 === (int)$_POST['cod_fees'][$i] )
+					$message = __('There is the item where a value is dirty.', 'usces');
+			}
+		}
+	}
+
+	
+	if( '' == $message ){
+		$r = 'success';
+		update_option('usces', $usces->options);
+	}else{
+		$r = '<span style="color:red;">' . $message . '</span>';
+	}
+	die( $r );
+}
 ?>

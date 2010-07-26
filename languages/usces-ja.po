@@ -2304,6 +2304,9 @@ msgstr "※お名前を入力して下さい。"
 msgid "Please input your e-mail address."
 msgstr "※メールアドレスを入力して下さい。"
 
+msgid "E-mail address is not correct."
+msgstr "※メールアドレスが不正です。"
+
 msgid "Please input contents."
 msgstr "※内容を入力して下さい。"
 
@@ -2351,6 +2354,39 @@ msgstr "サイドバー・ナビゲーション"
 
 msgid "Footer Navigation"
 msgstr "フッター・ナビゲーション"
+
+msgid "Please be settled for a fee in spite of Update."
+msgstr "「更新」を押して手数料を確定してください。"
+
+msgid "Type of the fee"
+msgstr "手数料のタイプ"
+
+msgid "Fee"
+msgstr "手数料"
+
+msgid "A purchase amount"
+msgstr "お買い上げ金額"
+
+msgid "Fixation C.O.D."
+msgstr "固定額"
+
+msgid "Variable C.O.D."
+msgstr "変動額"
+
+msgid "Add row"
+msgstr "行追加"
+
+msgid "Delete row"
+msgstr "行削除"
+
+msgid "C.O.D. Detailed setting"
+msgstr "代引き手数料　詳細設定"
+
+msgid "Detailed setting"
+msgstr "詳細設定"
+
+msgid "There is the item where a value is dirty."
+msgstr "値が不正な項目が有ります。"
 
 #~ msgid "〜％ discount at the purchase of more then 〜units."
 #~ msgstr "～個以上で～％引き（単価）"

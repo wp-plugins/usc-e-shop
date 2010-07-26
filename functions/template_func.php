@@ -1088,7 +1088,7 @@ function usces_get_page_ID_by_pname( $post_name, $return = 'echo' ){
 function usces_list_bestseller($num, $days = ''){
 	global $usces;
 	$ids = $usces->get_bestseller_ids( $days );
-	$htm = "<ul>\n";
+	$htm = "";
 	for($i=0; $i<$num; $i++){
 		if(isset($ids[$i])){
 			$post = get_post($ids[$i]);
@@ -1097,7 +1097,6 @@ function usces_list_bestseller($num, $days = ''){
 			$htm .= apply_filters('usces_filter_bestseller', $list, $ids[$i], $i);
 		}
 	}
-	$htm .= "</ul>\n";
 	echo $htm;
 }
 

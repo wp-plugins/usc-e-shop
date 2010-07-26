@@ -1707,3 +1707,69 @@ tr.rowSelection_selected td {
 div.optcheck {
 	padding-left: 10px;
 }
+
+/*******************************************************************/
+#cod_dialog .short_str {
+	width: 100px;
+	text-align: right;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+
+#cod_type_table {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#cod_type_table .radio {
+	padding-right: 2px;
+	padding-left: 20px;
+}
+
+#cod_change_table,
+#cod_fix_table {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#cod_change_table td {
+	border: 1px solid #CCCCCC;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+#cod_change_table th {
+	background-color: #CCCCCC;
+	padding: 3px;
+}
+
+#cod_change_table td.cod_f,
+#cod_change_table td.cod_e,
+#cod_change_table td.cod_cod {
+	text-align: right;
+	padding-right: 3px;
+	padding-left: 3px;
+}
+
+#cod_change_table td.cod_m {
+	text-align: center;
+	padding-right: 3px;
+	padding-left: 3px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+
+#cod_change_table td.cod_f {
+	width: 100px;
+}
+
+#cod_change_table td.cod_f,
+#cod_change_table td.cod_e {
+	background-color: #EFEFEF;
+}
+
+#cod_change_table td.cod_cod {
+	background-color: #CCCCCC;
+}

@@ -98,6 +98,7 @@ class usc_e_shop
 		if($this->use_ssl) {
 			define('USCES_CART_URL', $ssl_url . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
 			define('USCES_MEMBER_URL', $ssl_url . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
+			define('USCES_INQUIRY_URL', $ssl_url . '/?page_id=' . $this->options['inquiry_id'] . '&usces=' . $this->get_uscesid());
 		} else {
 			define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
 			define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
@@ -241,6 +242,29 @@ class usc_e_shop
 		return $flag;
 	}
 	
+	function is_inquiry_page($link)
+	{
+		if( empty($this->options['inquiry_id']) )
+			return false;
+		
+		$search = array(('page_id='.$this->options['inquiry_id']), '/usces-inquiry' );
+		$flag = false;
+		foreach($search as $value){
+			if( strpos($link, $value) ){
+				if( $value == ('page_id='.$this->options['inquiry_id']) ){
+					$parts = parse_url($link);
+					parse_str($parts['query'], $query);
+					if( $query['page_id'] == $this->options['inquiry_id'] ){
+						$flag = true;
+					}
+				}else{
+					$flag = true;
+				}
+			}
+		}
+		return $flag;
+	}
+	
 	function usces_ssl_page_link($link)
 	{
 		$parts = parse_url($link);
@@ -254,12 +278,15 @@ class usc_e_shop
 		if( strpos($link, '/usces-member') || $query['page_id'] == USCES_MEMBER_NUMBER )
 			$link = USCES_MEMBER_URL;
 		
+		if( !empty($this->options['inquiry_id']) && (strpos($link, '/usces-member') || $query['page_id'] == $this->options['inquiry_id']) )
+			$link = USCES_INQUIRY_URL;
+		
 		return $link;
 	}
 
 	function usces_ssl_contents_link($link)
 	{
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || is_inquiry_page($_SERVER['REQUEST_URI'])){
 			$req = explode('/wp-content/',$link);
 			$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
 		}
@@ -268,7 +295,7 @@ class usc_e_shop
 
 	function usces_ssl_attachment_link($link)
 	{
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$link = str_replace(get_option('siteurl'), USCES_SSL_URL_ADMIN, $link);
 		}
 		return $link;
@@ -276,7 +303,7 @@ class usc_e_shop
 
 	function usces_ssl_script_link($link)
 	{
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			if(strpos($link, '/wp-content/') !== false){
 				$req = explode('/wp-content/',$link, 2);
 				$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
@@ -504,7 +531,9 @@ class usc_e_shop
 			$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? wp_specialchars($_POST['shipping_rule']) : '';
 			$this->options['tax_rate'] = isset($_POST['tax_rate']) ? (int)$_POST['tax_rate'] : '';
 			$this->options['tax_method'] = isset($_POST['tax_method']) ? wp_specialchars($_POST['tax_method']) : '';
-			$this->options['cod_fee'] = isset($_POST['cod_fee']) ? wp_specialchars($_POST['cod_fee']) : '';
+	
+			$this->options['cod_type'] = isset($_POST['cod_type']) ? $_POST['cod_type'] : 'fix';
+
 			$this->options['transferee'] = isset($_POST['transferee']) ? wp_specialchars($_POST['transferee']) : '';
 			$this->options['copyright'] = isset($_POST['copyright']) ? wp_specialchars($_POST['copyright']) : '';
 			$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? wp_specialchars($_POST['membersystem_state']) : '';
@@ -737,6 +766,7 @@ class usc_e_shop
 			$this->options['ssl_url'] = isset($_POST['ssl_url']) ? stripslashes(rtrim($_POST['ssl_url'], '/')) : '';
 			$this->options['ssl_url_admin'] = isset($_POST['ssl_url_admin']) ? stripslashes(rtrim($_POST['ssl_url_admin'], '/')) : '';
 			if( $this->options['ssl_url'] == '' || $this->options['ssl_url_admin'] == '' ) $this->options['use_ssl'] = 0;
+			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 
 			
 			$this->action_status = 'success';
@@ -1181,6 +1211,7 @@ class usc_e_shop
 		/* <![CDATA[ */
 			uscesL10n = {
 				'requestFile': "<?php echo get_option('siteurl'); ?>/wp-admin/admin-ajax.php",
+				'USCES_PLUGIN_URL': "<?php echo USCES_PLUGIN_URL; ?>",
 				'cart_number': "<?php echo get_option('usces_cart_number'); ?>", 
 				'purchase_limit': "<?php echo $this->options['purchase_limit']; ?>", 
 				'point_rate': "<?php echo $this->options['point_rate']; ?>",
@@ -1191,11 +1222,33 @@ class usc_e_shop
 		/* ]]> */
 		</script>
 		<script type='text/javascript' src='<?php echo USCES_PLUGIN_URL; ?>/js/usces_admin.js'></script>
-		
-	<?php if($this->action_status == 'edit' || $this->action_status == 'editpost'){ ?>
+<?php
+		if($this->action_status == 'edit' || $this->action_status == 'editpost'){
+?>
 			<link rel='stylesheet' href='<?php echo get_option('siteurl'); ?>/wp-includes/js/thickbox/thickbox.css' type='text/css' media='all' />
 <?php
 		}
+		if( isset($_REQUEST['page']) ){
+			switch( $_REQUEST['page'] ){
+				case 'usces_initial':
+?>
+					<script type='text/javascript'>
+					/* <![CDATA[ */
+						usces_ini = {
+							'cod_type': "<?php if( 'change' == $this->options['cod_type'] ) {echo 'change';}else{echo 'fix';} ?>",
+							'cod_type_fix': "<?php _e('Fixation C.O.D.', 'usces'); ?>",
+							'cod_type_change': "<?php _e('Variable C.O.D.', 'usces'); ?>",
+							'cod_unit': "<?php _e('dollars', 'usces'); ?>",
+							'cod_failure': "<?php _e('failure in update', 'usces'); ?>",
+							'cod_updated': "<?php _e('options are updated', 'usces'); ?>"
+						};
+/* ]]> */
+					</script>
+<?php
+					break;
+			}
+		}
+
 	}
 	
 	function main() {
@@ -1209,7 +1262,6 @@ class usc_e_shop
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
-		
 		
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
 			$post_id = (int)$_GET['post'];
@@ -1321,6 +1373,15 @@ class usc_e_shop
 
 		}
 
+		
+		if( isset($_REQUEST['page']) ){
+			switch( $_REQUEST['page'] ){
+				case 'usces_initial':
+					$js = USCES_FRONT_PLUGIN_URL.'/js/usces_initial.js';
+					wp_enqueue_script('usces_initial.js', $js, array('jquery-ui-dialog'));
+					break;
+			}
+		}
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
 			require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');
@@ -3620,10 +3681,32 @@ class usc_e_shop
 
 	}
 	
-	function getCODFee($payment_name) {
+	function getCODFee($payment_name, $amount_by_cod) {
 		$payments = $this->getPayments($payment_name);
-		$fee = $payments['settlement'] == 'COD' ? $this->options['cod_fee'] : 0;
-
+		if( 'COD' != $payments['settlement'] )
+			return 0;
+	
+		if( 'change' != $this->options['cod_type'] )
+			return $this->options['cod_fee'];
+			
+		$price = $amount_by_cod + $this->getTax( $amount_by_cod );
+		if( $price <= $this->options['cod_first_amount'] )
+			return $this->options['cod_first_fee'];
+			
+		if( isset($this->options['cod_amounts']) ){
+			$last = count( $this->options['cod_amounts'] ) - 1;
+			if( $price > $this->options['cod_amounts'][$last] )
+				return 	$this->options['cod_end_fee'];
+			
+			$fee = 0;
+			foreach( $this->options['cod_amounts'] as $key => $value ){
+				if( $price <= $value ){
+					$fee = $this->options['cod_fees'][$key];
+					break;
+				}
+			}
+		}
+			
 		return $fee;
 	}
 	
@@ -3649,10 +3732,11 @@ class usc_e_shop
 			$shipping_charge = 0;
 		}
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
-		$cod_fee = $this->getCODFee($entries['order']['payment_name']);
+		$discount = $this->get_order_discount();
+		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
+		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$get_point = $this->get_order_point( $member['ID'] );
 		$use_point = $entries['order']['usedpoint'];
-		$discount = $this->get_order_discount();
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 		$tax = $this->getTax( $total_price );
 		$total_full_price = $total_price + $tax;

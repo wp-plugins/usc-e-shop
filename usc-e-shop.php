@@ -62,6 +62,7 @@ add_action( 'wp_ajax_payment_ajax', 'payment_ajax' );
 add_action( 'wp_ajax_item_option_ajax', 'item_option_ajax' );
 add_action( 'wp_ajax_item_sku_ajax', 'item_sku_ajax' );
 add_action( 'wp_ajax_shop_options_ajax', 'shop_options_ajax' );
+add_action( 'wp_ajax_setup_cod_ajax', 'usces_setup_cod_ajax' );
 
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));
 add_shortcode('company_name', array(&$usces, 'sc_company_name'));

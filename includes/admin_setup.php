@@ -196,9 +196,11 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_cod_fee');"><?php _e('C.O.D', 'usces'); ?></a></th>
-	    <td><input name="cod_fee" type="text" class="short_str" value="<?php echo $this->options['cod_fee']; ?>" /><?php _e('dollars', 'usces'); ?></td>
+	    <td id="cod_type_field"></td><td><input type="button" name="button_cod_detail" value="<?php _e('Detailed setting', 'usces'); ?>" id="detailed_setting" /></td>
 		<td><div id="ex_cod_fee" class="explanation"><?php _e('Cost for C.O.D. leave it blank if it in not necessary.', 'usces'); ?></div></td>
 	</tr>
+</table>
+<table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_transferee');"><?php _e('Account information for transfer', 'usces'); ?></a></th>
 	    <td><textarea name="transferee" class="long_txt"><?php echo $this->options['transferee']; ?></textarea></td>
@@ -276,6 +278,60 @@ function toggleVisibility(id) {
 
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <input type="hidden" id="post_ID" name="post_ID" value="<?php echo USCES_CART_NUMBER ?>" />
+
+
+<?php
+if( 'change' == $this->options['cod_type'] ) {
+	$cod_type = 'change';
+}else{
+	$cod_type = 'fix';
+}
+?>
+<div id="cod_dialog" title="<?php _e('C.O.D. Detailed setting', 'usces'); ?>"> 
+	<p id="cod-response"><?php _e('Please be settled for a fee in spite of Update.', 'usces'); ?></p> 
+ 
+	<fieldset> 
+	<table id="cod_type_table">
+		<tr><th><?php _e('Type of the fee', 'usces'); ?></th><td class="radio"><input name="cod_type" id="cod_type_fix" type="radio" value="fix"<?php if( 'fix' == $cod_type) echo ' checked="checked"'; ?> /></td><td><label for="cod_type_fix"><?php _e('Fixation C.O.D.', 'usces'); ?></label></td><td class="radio"><input name="cod_type" id="cod_type_change" type="radio" value="change"<?php if( 'change' == $cod_type) echo ' checked="checked"'; ?> /></td><td><label for="cod_type_change"><?php _e('Variable C.O.D.', 'usces'); ?></label></td></tr>
+	</table>
+	<table id="cod_fix_table">
+		<tr><th><?php _e('Fee', 'usces'); ?></th><td><input name="cod_fee" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php echo $this->options['cod_fee']; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+	</table>
+	<div id="cod_change_table">
+	<input name="addrow" id="add_row" type="button" value="<?php _e('Add row', 'usces'); ?>" /><input name="delrow" type="button" id="del_row" value="<?php _e('Delete row', 'usces'); ?>" />
+	<table>
+		<thead>
+			<tr><th colspan="3"><?php _e('A purchase amount', 'usces'); ?></th><th><?php _e('Fee', 'usces'); ?></th></tr>
+			<tr><td class="cod_f">0<?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_first_amount" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php echo $this->options['cod_first_amount']; ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_first_fee" type="text" class="short_str" value="<?php echo $this->options['cod_first_fee']; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+		</thead>
+		<tbody id="cod_change_field">
+<?php
+	if( isset($this->options['cod_amounts']) && isset($this->options['cod_fees']) ){
+		foreach ( (array)$this->options['cod_amounts'] as $key => $value ){
+?>
+			<tr id="tr_<?php echo $key; ?>"><td class="cod_f"><span id="amount_<?php echo $key; ?>"><?php if( $key === 0 ){echo ($this->options['cod_first_amount'] + 1);}else{echo ($value + 1);} ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts[<?php echo $key; ?>]" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php  echo $value; ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_fees[<?php echo $key; ?>]" type="text" class="short_str" value="<?php echo $this->options['cod_fees'][$key]; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+<?php			
+		} 
+	}
+	if( !isset($this->options['cod_amounts']) || empty($this->options['cod_amounts']) ){
+		$end_amount = $this->options['cod_first_amount'] + 1;
+	}else{
+		$cod_last = count($this->options['cod_amounts']) - 1;
+		$end_amount = $this->options['cod_amounts'][$cod_last] + 1;
+	}
+?>
+		</tbody>
+		<tfoot>
+			<tr><td class="cod_f"><span id="end_amount"><?php echo $end_amount; ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td>&nbsp;</td><td class="cod_cod"><input name="cod_end_fee" type="text" class="short_str" value="<?php echo $this->options['cod_end_fee']; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+		</tfoot>
+	</table>
+	</div>
+	</fieldset> 
+</div> 
+
+
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->
+
+ 
