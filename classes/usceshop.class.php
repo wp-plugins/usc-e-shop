@@ -278,7 +278,7 @@ class usc_e_shop
 		if( strpos($link, '/usces-member') || $query['page_id'] == USCES_MEMBER_NUMBER )
 			$link = USCES_MEMBER_URL;
 		
-		if( !empty($this->options['inquiry_id']) && (strpos($link, '/usces-member') || $query['page_id'] == $this->options['inquiry_id']) )
+		if( !empty($this->options['inquiry_id']) && (strpos($link, '/usces-inquiry') || $query['page_id'] == $this->options['inquiry_id']) )
 			$link = USCES_INQUIRY_URL;
 		
 		return $link;
@@ -286,7 +286,7 @@ class usc_e_shop
 
 	function usces_ssl_contents_link($link)
 	{
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || is_inquiry_page($_SERVER['REQUEST_URI'])){
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI'])){
 			$req = explode('/wp-content/',$link);
 			$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];
 		}
@@ -295,7 +295,7 @@ class usc_e_shop
 
 	function usces_ssl_attachment_link($link)
 	{
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || is_inquiry_page($_SERVER['REQUEST_URI']) ){
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$link = str_replace(get_option('siteurl'), USCES_SSL_URL_ADMIN, $link);
 		}
 		return $link;
@@ -303,7 +303,7 @@ class usc_e_shop
 
 	function usces_ssl_script_link($link)
 	{
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || is_inquiry_page($_SERVER['REQUEST_URI']) ){
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			if(strpos($link, '/wp-content/') !== false){
 				$req = explode('/wp-content/',$link, 2);
 				$link = USCES_SSL_URL_ADMIN . '/wp-content/' . $req[1];

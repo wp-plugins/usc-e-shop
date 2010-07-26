@@ -134,9 +134,9 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('お問合せフォームのページID', 'usces'); ?></a></th>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('The page_id of the inquiry-form', 'usces'); ?></a></th>
 		<td><input name="inquiry_id" type="text" id="inquiry_id" value="<?php echo $inquiry_id; ?>" size="7" /></td>
-	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('SSL を通したWelcart お問合せフォームを利用したい場合、そのpage_id を指定します。上記SSL の設定が必要です。<br />SSL を通す必要が無い場合は空白にしておきます。', 'usces'); ?></div></td>
+	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry.', 'usces'); ?></div></td>
 	</tr>
 </table>
 </div>
