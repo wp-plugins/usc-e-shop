@@ -24,7 +24,7 @@ if (isset($_REQUEST['usces_search'])) {
 	$catresult = usces_search_categories(); 
 	$search_query = array('category__and' => $catresult, 'posts_per_page' => 10, 'paged' => $uscpaged);
 	$search_query = apply_filters('usces_filter_search_query', $search_query);
-	//var_dump($search_query);
+
 	$my_query = new WP_Query( $search_query );
 	
 	$html .= '<div class="title">'.__('Search results', 'usces') . '&nbsp;&nbsp;' . number_format($my_query->found_posts) . __('cases', 'usces') . '</div>';
@@ -58,7 +58,7 @@ if (isset($_REQUEST['usces_search'])) {
 		}
 		$itemhtml .= '</div><!-- searchitems -->';
 		$html .= apply_filters('usces_filter_search_result', $itemhtml, $my_query);
-		
+
 		$html .= '<div class="navigation clearfix">';
 		if( $uscpaged > 1 ) {
 			$html .= '<a style="float:left; cursor:pointer;" onclick="usces_prepage();">'.__('&laquo; Previous article', 'usces').'</a>';
