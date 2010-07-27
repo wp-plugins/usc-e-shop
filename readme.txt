@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 2.9
 Tested up to: 3.0
-Stable tag: 0.5.2
+Stable tag: 0.6
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -55,6 +55,15 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 3. An attached default theme
 
 == Changelog ==
+
+= V0.6 =
+27 Jul 2010
+-----------
+* Improved to be able to set a COD mail fee step by step
+* The SSL correspondence of the Welcart inquiry form
+* Improved so that it is done the report of a management email transmitting a message by order data editing to a manager
+* Rrevised the malfunction that the link of the eye catch image is not over by media library at the time of the article editing
+* Improved so that a report email reaches the manager at the time of a sign-in
 
 = V0.5.2 =
 24 Jun 2010

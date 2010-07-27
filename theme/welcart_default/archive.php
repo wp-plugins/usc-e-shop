@@ -11,15 +11,15 @@ get_header();
 
 <?php $post = $posts[0]; // Hack. Set $post so that the_date() works. ?>
 <?php /* If this is a category archive */ if (is_category()) { ?>
-<h2 class="pagetitle"><?php printf(__('%s', 'kubrick'), single_cat_title('', false)); ?></h2>
+<h2 class="pagetitle"><?php printf(__('%s', 'usces'), single_cat_title('', false)); ?></h2>
 <?php /* If this is a tag archive */ } elseif( is_tag() ) { ?>
-<h2 class="pagetitle"><?php printf(__('Posts Tagged &#8216;%s&#8217;', 'kubrick'), single_tag_title('', false) ); ?></h2>
+<h2 class="pagetitle"><?php printf(__('Posts Tagged &#8216;%s&#8217;', 'usces'), single_tag_title('', false) ); ?></h2>
 <?php /* If this is a daily archive */ } elseif (is_day()) { ?>
-<h2 class="pagetitle"><?php printf(_c('Archive for %s|Daily archive page', 'kubrick'), get_the_time(__('F jS, Y', 'kubrick'))); ?></h2>
+<h2 class="pagetitle"><?php printf(_c('Archive for %s|Daily archive page', 'usces'), get_the_time(__('Y/m/d'))); ?></h2>
 <?php /* If this is a monthly archive */ } elseif (is_month()) { ?>
-<h2 class="pagetitle"><?php printf(_c('Archive for %s|Monthly archive page', 'kubrick'), get_the_time(__('F, Y', 'kubrick'))); ?></h2>
+<h2 class="pagetitle"><?php printf(_c('Archive for %s|Monthly archive page', 'kubrick'), get_the_time(__('Y/m/d'))); ?></h2>
 <?php /* If this is a yearly archive */ } elseif (is_year()) { ?>
-<h2 class="pagetitle"><?php printf(_c('Archive for %s|Yearly archive page', 'kubrick'), get_the_time(__('Y', 'kubrick'))); ?></h2>
+<h2 class="pagetitle"><?php printf(_c('Archive for %s|Yearly archive page', 'kubrick'), get_the_time(__('Y/m/d'))); ?></h2>
 <?php /* If this is an author archive */ } elseif (is_author()) { ?>
 <h2 class="pagetitle"><?php _e('Author Archive', 'kubrick'); ?></h2>
 <?php /* If this is a paged archive */ } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) { ?>

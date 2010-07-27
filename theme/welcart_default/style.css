@@ -99,12 +99,6 @@ div.aligncenter {
 	margin-left: auto;
 	margin-right: auto;
 }
-.error_message {
-	color: #ff0000;
-	font-size: 13px;
-	font-weight: bold;
-	line-height: 20px;
-}
 /* base CSS End */
 /*********************************************************************/
 /* wrap CSS Start */
@@ -144,32 +138,75 @@ ul.mainnavi {
 	background-repeat: repeat-x;
 	background-color: #000;
 }
-div.mainnavi ul li,
-ul.mainnavi li {
-	padding: 0px;
-	margin: 0px;
-	float: left;
-}
-div.mainnavi li a,
-ul.mainnavi li a {
-	width: 121px;
-	height: 36px;
-	padding: 20px 5px 0px 5px;
-	margin: 0px;
-	display: block;
-	background-image: url('images/button_main_navi.jpg');
-	background-repeat: no-repeat;
-	background-position: -131px 0px;
-	color: #FFF;
-	font-weight: bold;
-	font-size: 13px;
-	text-align: center;
-}
-div.mainnavi li a:hover,
-ul.mainnavi li a:hover {
-	background-position: 0px 0px;
-	text-decoration: none;
-}
+	div.mainnavi ul li,
+	ul.mainnavi li {
+		padding: 0px;
+		margin: 0px;
+		float: left;
+		position: relative;
+	}
+		div.mainnavi li a,
+		ul.mainnavi li a {
+			width: 121px;
+			height: 36px;
+			padding: 20px 5px 0px 5px;
+			margin: 0px;
+			display: block;
+			background-image: url('images/button_main_navi.jpg');
+			background-repeat: no-repeat;
+			background-position: -131px 0px;
+			color: #FFF;
+			font-weight: bold;
+			font-size: 13px;
+			text-align: center;
+		}
+			div.mainnavi li a:hover,
+			ul.mainnavi li a:hover {
+				background-position: 0px 0px;
+				text-decoration: none;
+			}
+		div.mainnavi ul ul,
+		ul.mainnavi ul {
+			display:none;
+			position:absolute;
+			top:56px;
+			left:0;
+			float:left;
+			box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+			-moz-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+			-webkit-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+			z-index: 99999;
+		}
+			div.mainnavi ul ul li,
+			ul.mainnavi ul li {
+				min-width: 111px;	
+			}
+			div.mainnavi ul ul ul,
+			ul.mainnavi ul ul {
+				left:100%;
+				top:0;
+			}
+			div.mainnavi ul ul a,
+			ul.mainnavi ul a {
+				background-image: url('images/main_navi_bg.jpg');
+				background-repeat: repeat-x;
+				background-color: #000;
+				height:auto;
+				line-height:1em;
+				padding:10px;
+				width: 111px;
+			}
+			div.mainnavi li:hover > a,
+			div.mainnavi ul ul :hover > a,
+			ul.mainnavi li:hover > a,
+			ul.mainnavi ul :hover > a {
+				color:#fff;
+				background:#333;
+			}
+			div.mainnavi ul li:hover > ul,
+			ul.mainnavi li:hover > ul {
+				display:block;
+			}
 /* -- subnavi -- */
 ul.subnavi {
 	height: 29px;
