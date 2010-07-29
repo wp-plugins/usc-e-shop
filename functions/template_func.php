@@ -896,7 +896,7 @@ function usces_the_inquiry_form() {
 	}elseif( isset($_POST['inq_mailaddress']) && !is_email(trim($_POST['inq_mailaddress'])) ) {
 		$inq_mailaddress = esc_html(trim($_POST['inq_mailaddress']));
 		if($usces->page == 'deficiency')
-			$error_message .= __('e-mail address is not correct', 'usces') . "<br />";
+			$error_message .= __('E-mail address is not correct', 'usces') . "<br />";
 	}else{
 		$inq_mailaddress = '';
 		if($usces->page == 'deficiency')

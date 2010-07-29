@@ -237,6 +237,10 @@ msgstr "パスワードが不正です。"
 msgid "e-mail address is not correct"
 msgstr "メールアドレスが不正です。"
 
+#, fuzzy
+msgid "E-mail address is not correct"
+msgstr "※メールアドレスが不正です。"
+
 msgid "Name is not correct"
 msgstr "名前が不正です。"
 
@@ -2409,9 +2413,14 @@ msgstr "コメントはありません &#187;"
 msgid "1 Comment &#187;"
 msgstr "コメント 1件 &#187;"
 
-msgid "% Comments &#187;"
-msgstr "コメント %件 &#187;"
+msgid "Posts Tagged &#8216;%s&#8217;"
+msgstr "タグ &#8216;%s&#8217; に属する投稿;"
 
+msgid "Archive for %s|Daily archive page"
+msgstr "%s の記事"
+
+#~ msgid "% Comments &#187;"
+#~ msgstr "コメント %件 &#187;"
 #~ msgid "〜％ discount at the purchase of more then 〜units."
 #~ msgstr "～個以上で～％引き（単価）"
 #~ msgid "Only few stocks left for this item."

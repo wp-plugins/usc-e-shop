@@ -232,6 +232,9 @@ msgstr "パスワードが不正です。"
 msgid "e-mail address is not correct"
 msgstr "メールアドレスが不正です。"
 
+msgid "E-mail address is not correct"
+msgstr "※メールアドレスが不正です。"
+
 msgid "Name is not correct"
 msgstr "名前が不正です。"
 
