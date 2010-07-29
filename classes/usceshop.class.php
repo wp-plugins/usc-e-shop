@@ -75,7 +75,7 @@ class usc_e_shop
 		if ( $this->use_ssl ) {
 			$ssl_url = $this->options['ssl_url'];
 			$ssl_url_admin = $this->options['ssl_url_admin'];
-			if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+			if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 				define('USCES_FRONT_PLUGIN_URL', $ssl_url_admin . '/wp-content/plugins/' . USCES_PLUGIN_FOLDER);
 			}else{
 				define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
