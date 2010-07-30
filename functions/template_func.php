@@ -373,6 +373,7 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 	$num = $usces->itemsku['value']['zaiko'];
 	$gptekiyo = $usces->itemsku['value']['gptekiyo'];
 	$skuPrice = $usces->getItemPrice($post_id, $sku);
+	$value = apply_filters( 'usces_filter_incart_button_label', $value);
 	
 	if($type == 1)
 		$type = 'button';
