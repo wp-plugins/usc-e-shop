@@ -2090,12 +2090,12 @@ function usces_setup_cod_ajax(){
 		}
 		if( isset($_POST['cod_first_fee']) ){
 			$usces->options['cod_first_fee'] = (int)$_POST['cod_first_fee'];
-			if( 0 === (int)$_POST['cod_first_fee'] )
+			if( 0 === (int)$_POST['cod_first_fee'] && 0 !== $_POST['cod_first_fee'])
 				$message = __('There is the item where a value is dirty.', 'usces');
 		}
 		if( isset($_POST['cod_end_fee']) ){
 			$usces->options['cod_end_fee'] = (int)$_POST['cod_end_fee'];
-			if( 0 === (int)$_POST['cod_end_fee'] )
+			if( 0 === (int)$_POST['cod_end_fee'] && 0 !== (int)$_POST['cod_end_fee'] )
 				$message = __('There is the item where a value is dirty.', 'usces');
 		}
 		

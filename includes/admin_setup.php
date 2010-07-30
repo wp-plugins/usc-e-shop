@@ -309,7 +309,7 @@ if( 'change' == $this->options['cod_type'] ) {
 	if( isset($this->options['cod_amounts']) && isset($this->options['cod_fees']) ){
 		foreach ( (array)$this->options['cod_amounts'] as $key => $value ){
 ?>
-			<tr id="tr_<?php echo $key; ?>"><td class="cod_f"><span id="amount_<?php echo $key; ?>"><?php if( $key === 0 ){echo ($this->options['cod_first_amount'] + 1);}else{echo ($value + 1);} ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts[<?php echo $key; ?>]" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php  echo $value; ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_fees[<?php echo $key; ?>]" type="text" class="short_str" value="<?php echo $this->options['cod_fees'][$key]; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+			<tr id="tr_<?php echo $key; ?>"><td class="cod_f"><span id="amount_<?php echo $key; ?>"><?php if( $key === 0 ){echo ($this->options['cod_first_amount'] + 1);}else{echo ($this->options['cod_amounts'][($key-1)] + 1);} ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts[<?php echo $key; ?>]" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php  echo $value; ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_fees[<?php echo $key; ?>]" type="text" class="short_str" value="<?php echo $this->options['cod_fees'][$key]; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
 <?php			
 		} 
 	}
