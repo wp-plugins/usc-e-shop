@@ -97,7 +97,7 @@ function list_item_sku_meta( $meta ) {
 	<tr>
 		<th><?php _e('SKU display name ','usces'); ?></th>
 		<th><?php _e('unit','usces'); ?></th>
-		<th colspan="2"> </th>
+		<th colspan="2"><?php echo ( defined('WCEX_DLSELLER') ) ? __('Charging type','usces') : ''; ?> </th>
 		<th><?php _e('Apply business package','usces'); ?></th>
 	</tr>
 	</thead>
@@ -213,7 +213,7 @@ function _list_item_sku_meta_row( $entry ) {
 	} else {
 		return;
 	}
-	
+	var_dump($entry['meta_value']);
 	$readonly = "";
 	$key = attribute_escape(substr($entry['meta_key'],6));
 	$cprice = $entry['meta_value']['cprice'];
@@ -223,9 +223,21 @@ function _list_item_sku_meta_row( $entry ) {
 	$skudisp = $entry['meta_value']['disp'];
 	$skuunit = $entry['meta_value']['unit'];
 	$skugptekiyo = $entry['meta_value']['gptekiyo'];
+	$charging_type = $entry['meta_value']['charging_type'];
 	$id = (int) $entry['meta_id'];
 	$zaikoselectarray = get_option('usces_zaiko_status');
+	if( defined('WCEX_DLSELLER') ){
+		$advance_field = '
+	<select id="itemsku[' . $id . '][charging_type]" name="itemsku[' . $id . '][charging_type]" class="charging_type">
+		<option value=""' . ( (empty($charging_type)) ? ' selected="selected"' : '' ) . '>' . __('一括課金（即日）','usces') . '</option>
+		<option value="1"' . ( ('1' === $charging_type) ? ' selected="selected"' : '' ) . '>' . __('月次課金（翌月1日）','usces') . '</option>
+		<option value="2"' . ( ('2' === $charging_type) ? ' selected="selected"' : '' ) . '>' . __('年次課金（翌月1日）','usces') . '</option>
+	</select>';
 
+	}else{
+		$advance_field = '';
+	}
+	
 	$r .= "\n\t<tr id='itemsku-{$id}' class='{$style}'>";
 	$r .= "\n\t\t<td class='item-sku-key'><input name='itemsku[{$id}][key]' id='itemsku[{$id}][key]' class='skuname' type='text' value='{$key}'{$readonly} /></td>";
 	$r .= "\n\t\t<td class='item-sku-cprice'><input name='itemsku[{$id}][cprice]' id='itemsku[{$id}][cprice]' class='skuprice' type='text' value='{$cprice}' /></td>";
@@ -245,8 +257,7 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-sku-cprice rowbottom'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
-	$r .= "\n\t\t<td class='item-sku-price rowbottom'> </td>";
-	$r .= "\n\t\t<td class='item-sku-zaikonum rowbottom'> </td>";
+	$r .= "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>" . $advance_field . "</td>";
 	$r .= "\n\t\t<td class='item-sku-zaiko rowbottom'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
 	$r .= "\n\t\t\t<option value='0'";
 	$r .= ($skugptekiyo == 0) ? " selected='selected'" : "";
@@ -424,7 +435,7 @@ function item_sku_meta_form() {
 <tr>
 	<th><?php _e('SKU display name ','usces') ?></th>
 	<th><?php _e('unit','usces') ?></th>
-	<th colspan="2"> </th>
+	<th colspan="2"><?php echo ( defined('WCEX_DLSELLER') ) ? __('Charging type','usces') : ''; ?> </th>
 	<th><?php _e('Apply business package','usces') ?></th>
 </tr>
 </thead>
@@ -451,7 +462,15 @@ function item_sku_meta_form() {
 <tr>
 <td class='item-sku-key'><input type="text" id="newskudisp" name="newskudisp" class="newskudisp"value="" /></td>
 <td class='item-sku-cprice'><input type="text" id="newskuunit" name="newskuunit" class='newskuunit' /></td>
-<td class='item-sku-price'></td>
+<td class='item-sku-price'>
+<?php if( defined('WCEX_DLSELLER') ): ?>
+	<select id="newcharging_type" name="newcharging_type" class="newcharging_type">
+		<option value=""><?php _e('一括課金（即日）','usces'); ?></option>
+		<option value="1"><?php _e('月次課金（翌月1日）','usces'); ?></option>
+		<option value="2"><?php _e('年次課金（翌月1日）','usces'); ?></option>
+	</select>
+<?php endif; ?>
+</td>
 <td class='item-sku-zaikonum'></td>
 <td class='item-sku-zaiko'>
 <select id="newskugptekiyo" name="newskugptekiyo" class="newskugptekiyo">
@@ -583,6 +602,7 @@ function add_item_sku_meta( $post_ID ) {
 	$newskudisp = isset($_POST['newskudisp']) ? stripslashes( trim( $_POST['newskudisp'] ) ) : '';
 	$newskuunit = isset($_POST['newskuunit']) ? stripslashes( trim( $_POST['newskuunit'] ) ) : '';
 	$newskugptekiyo = isset($_POST['newskugptekiyo']) ? $_POST['newskugptekiyo'] : '';
+	$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : '';
 
 
 	if ( $newskuname != '' && $newskuprice != '' && $newskuzaikoselect != '') {
@@ -604,6 +624,7 @@ function add_item_sku_meta( $post_ID ) {
 		$value['disp'] = $newskudisp;
 		$value['unit'] = $newskuunit;
 		$value['gptekiyo'] = $newskugptekiyo;
+		$value['charging_type'] = $newcharging_type;
 		$unique = true;
 
 		add_post_meta($post_ID, $metakey, $value, $unique);
@@ -719,6 +740,7 @@ function up_item_sku_meta( $post_ID ) {
 	$skudisp = isset($_POST['skudisp']) ? stripslashes( $_POST['skudisp'] ): '';
 	$skuunit = isset($_POST['skuunit']) ? stripslashes( $_POST['skuunit'] ): '';
 	$skugptekiyo = isset($_POST['skugptekiyo']) ? (int)$_POST['skugptekiyo'] : 0;
+	$charging_type = isset($_POST['charging_type']) ? (int)$_POST['charging_type'] : 0;
 
 	$value['cprice'] = $skucprice;
 	$value['price'] = $skuprice;
@@ -727,6 +749,7 @@ function up_item_sku_meta( $post_ID ) {
 	$value['disp'] = $skudisp;
 	$value['unit'] = $skuunit;
 	$value['gptekiyo'] = $skugptekiyo;
+	$value['charging_type'] = $charging_type;
 	$valueserialized = maybe_serialize($value);
 
 	if ( $skumetaid != '' && $skuname != '' ) {

@@ -1,61 +1,10 @@
 <?php 
 $usces_entries = $this->cart->get_entry();
+$usces_secure_link = get_option('usces_secure_link');
 $html = '';
 
-$html .= '
-	<script type="text/javascript">
-	var selected_delivery_method = \'\';
-	var selected_delivery_time = \'\';
+require_once( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
 
-	jQuery(function($){';
-if($usces_entries['order']['delivery_method'] === NULL){
-	$default_deli = $this->get_available_delivery_method();
-	$html .= 'selected_delivery_method = \'' . $default_deli[0] . '\';';
-}else{
-	$html .= 'selected_delivery_method = \'' . $usces_entries['order']['delivery_method'] . '\';';
-}
-$html .= 'selected_delivery_time = \'' . $usces_entries['order']['delivery_time'] . '\';
-	var delivery_time = [];delivery_time[0] = [];';
-foreach($this->options['delivery_method'] as $dmid => $dm){
-	$lines = explode("\n", $dm['time']);
-	$html .= 'delivery_time[' . $dm['id'] . '] = [];';
-	foreach((array)$lines as $line){
-		if(trim($line) != ''){
-			$html .= 'delivery_time[' . $dm['id'] . '].push("' . trim($line) . '");';
-		}
-	}
-}
-$html .= "
-	$('#delivery_method_select').change(function() {
-		orderfunc.make_delivery_time(($('#delivery_method_select option:selected').val()-0));
-		});
-		
-		orderfunc = {
-			make_delivery_time : function(selected) {
-				var option = '';
-				if(delivery_time[selected] != undefined){
-					for(var i=0; i<delivery_time[selected].length; i++){
-						if( delivery_time[selected][i] == selected_delivery_time ) {
-							option += '<option value=\"' + delivery_time[selected][i] + '\" selected=\"selected\">' + delivery_time[selected][i] + '</option>';
-						}else{
-							option += '<option value=\"' + delivery_time[selected][i] + '\">' + delivery_time[selected][i] + '</option>';
-						}
-					}
-				}
-				if(option == ''){
-					option = '<option value=\"" . __('There is not a choice.', 'usces') . "\">' + '" . __('There is not a choice.', 'usces') . "' + '</option>';
-				}
-				$(\"#delivery_time_select\").html(option);
-			}
-		};
-	});
-	jQuery(document).ready(function($){";
-if($usces_entries['delivery']['delivery_flag'] == 0) {
-	$html .= "$(\"#delivery_table\").css({display: \"none\"});";
-}
-$html .= "orderfunc.make_delivery_time(selected_delivery_method);
-		});
-		</script>";
 $html .= '<div id="delivery-info">
 	
 	<div class="usccart_navi">
@@ -148,6 +97,12 @@ $html .= '<tr>
 	<th scope="row"><em>*</em>'.__('payment method', 'usces').'</th>
 	<td colspan="2">' . usces_the_payment_method( $usces_entries['order']['payment_name'], 'return' ) . '</td>
 	</tr>
+	</table>';
+	
+require_once( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
+	
+	
+$html .= '<table class="customer_form" id="notes_table">
 	<tr>
 	<th scope="row">'.__('Notes', 'usces').'</th>
 	<td colspan="2"><textarea name="order[note]" cols="" rows="" id="note">' . $usces_entries['order']['note'] . '</textarea></td>

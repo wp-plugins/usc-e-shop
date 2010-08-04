@@ -767,33 +767,17 @@ function usces_the_payment_method( $value = '', $out = '' ){
 
 	$html = "<dl>\n";
 	
-	if( EX_DLSELLER === true ){
-		foreach ($usces->options['payment_method'] as $id => $payments) {
-			if( $payments['name'] != '' ) {
-				$module = trim($payments['module']);
-				$checked = ($payments['name'] == $value) ? ' checked' : '';
-				if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
-					$checked = '';
-					$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name'].'</label> <b> (' . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
-				}elseif( $payments['settlement'] == 'acting' ){
-					$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
-				}
-				$html .= "\t<dd>{$payments['explanation']}</dd>\n";
+	foreach ($usces->options['payment_method'] as $id => $payments) {
+		if( $payments['name'] != '' ) {
+			$module = trim($payments['module']);
+			$checked = ($payments['name'] == $value) ? ' checked' : '';
+			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
+				$checked = '';
+				$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
+			}else{
+				$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
 			}
-		}
-	}else{
-		foreach ($usces->options['payment_method'] as $id => $payments) {
-			if( $payments['name'] != '' ) {
-				$module = trim($payments['module']);
-				$checked = ($payments['name'] == $value) ? ' checked' : '';
-				if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
-					$checked = '';
-					$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
-				}else{
-					$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
-				}
-				$html .= "\t<dd>{$payments['explanation']}</dd>\n";
-			}
+			$html .= "\t<dd>{$payments['explanation']}</dd>\n";
 		}
 	}
 

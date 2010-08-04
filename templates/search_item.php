@@ -78,9 +78,12 @@ if (isset($_REQUEST['usces_search'])) {
 $html .= '<form name="searchindetail" action="' . USCES_CART_URL . '&page=search_item" method="post">
 <div class="field">
 <label class="outlabel">'.__('Categories: AND Search', 'usces').'</label>' . usces_categories_checkbox('return') . '
-</div>
-<input name="usces_search_button" type="submit" value="'.__('Search', 'usces').'" onclick="newsubmit()" />
-<input name="paged" id="usces_paged" type="hidden" value="' . $uscpaged . '" />
+</div>';
+
+$usces_search_button = '<input name="usces_search_button" class="usces_search_button" type="submit" value="'.__('Search', 'usces').'" onclick="newsubmit()" />';
+$html .= apply_filters('usces_filter_search_button', $usces_search_button);
+
+$html .= '<input name="paged" id="usces_paged" type="hidden" value="' . $uscpaged . '" />
 <input name="usces_search" type="hidden" />
 </form>';
 $html .= '</div><!-- searchbox -->';

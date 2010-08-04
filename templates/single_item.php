@@ -45,6 +45,7 @@ if(usces_sku_num() === 1) { //1SKU
 	}
 	$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>';
 	$html .= '</div>';
+	$html .= apply_filters('single_item_single_sku_after_field', NULL);
 	
 } elseif(usces_sku_num() > 1) { //some SKU
 	usces_have_skus();
@@ -103,6 +104,7 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= '</tbody>
 		</table>
 		</div>';
+	$html .= apply_filters('single_item_multi_sku_after_field', NULL);
 }
 	
 $html .= '<div class="itemsubimg">';

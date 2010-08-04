@@ -11,6 +11,7 @@ Author URI: http://www.uscons.co.jp/
 define('USCES_VERSION', '0.6');
 define('USCES_DB_ACCESS', '1.2');
 define('USCES_DB_MEMBER', '1.1');
+define('USCES_DB_MEMBER_META', '1.0');
 define('USCES_DB_ORDER', '1.7');
 define('USCES_DB_ORDER_META', '1.1');
 
@@ -38,6 +39,7 @@ require_once(USCES_PLUGIN_DIR."/functions/utility.php");
 require_once(USCES_PLUGIN_DIR."/functions/item_post.php");
 require_once(USCES_PLUGIN_DIR."/functions/function.php");
 require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");
+require_once(USCES_PLUGIN_DIR."/functions/hoock_func.php");
 
 global $usces;
 $usces = new usc_e_shop();
@@ -129,5 +131,9 @@ if( $usces->options['itemimg_anchor_rel'] )
 	add_filter('usces_itemimg_anchor_rel', array(&$usces, 'filter_itemimg_anchor_rel'));
 	
 add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
+
+
+
+add_filter('usces_filter_delivery_check', 'usces_delivery_secure_check', 10);
 
 ?>

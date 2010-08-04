@@ -1154,6 +1154,7 @@ div.usccart_navi li.usccart_confirm {
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
 	border-bottom-color: #660000;
+	float: none;
 }
 
 #memberinfo .send {

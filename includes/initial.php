@@ -74,15 +74,19 @@ $province_en = array(__('-- Select --', 'usces'),"Alabama","Alaska","Arizona","A
 				"Virginia","Washington","West Virginia","Wisconsin","Wyoming");
 $usces_pref = ( 'ja' == get_locale() ) ? $province_ja : $province_en;
 
+$usces_secure_link = array('zeus');
+
 update_option('usces_management_status',$management_status);
 update_option('usces_zaiko_status',$zaiko_status);
 update_option('usces_customer_status',$customer_status);
-update_option('usces_payment_structure',$payment_structure);
+if( !get_option('usces_payment_structure') )
+	update_option('usces_payment_structure',$payment_structure);
 update_option('usces_display_mode',$display_mode);
 update_option('usces_pref',$usces_pref);
 update_option('usces_shipping_rule',$shipping_rule);
 update_option('usces_item_option_select',$item_option_select);
 update_option('usces_currency_symbol',__('$', 'usces'));
+update_option('usces_secure_link', $usces_secure_link);
 //update_option('shipping_charge_structure',$shipping_charge_structure);
 
 

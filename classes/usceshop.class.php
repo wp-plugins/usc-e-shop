@@ -19,6 +19,7 @@ class usc_e_shop
 	{
 		global $post;
 	
+		do_action('usces_construct');
 		$this->usces_session_start();
 
 		if ( !isset($_SESSION['usces_member']) ){
@@ -340,6 +341,7 @@ class usc_e_shop
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 6, 'usces_cart', array($this, 'admin_cart_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 6, 'usces_member', array($this, 'admin_member_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 6, 'usces_system', array($this, 'admin_system_page'));
+		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Settlement Setting','usces'), __('Settlement Setting','usces'), 10, 'usces_settlement', array($this, 'admin_settlement_page'));
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
 		
 		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_orderlist', array($this, 'order_list_page'));
@@ -785,6 +787,121 @@ class usc_e_shop
 		
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_system.php');	
 
+	}
+	
+	/* Settlement Setting Page */
+	function admin_settlement_page() {
+	
+		$this->action_status = 'none';
+		$this->action_message = '';
+
+		$options = get_option('usces');
+
+	
+		if( isset($_POST['usces_option_update']) ) {
+			$mes = '';
+		
+			switch( $_POST['acting'] ){
+				case 'zeus':
+					unset( $options['acting_settings']['zeus'] );
+					$options['acting_settings']['zeus']['send_url'] = $_POST['send_url'];
+					$options['acting_settings']['zeus']['ipaddrs'] = $_POST['ipaddrs'];
+					$options['acting_settings']['zeus']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['zeus']['clientip'] = trim($_POST['clientip']);
+					$options['acting_settings']['zeus']['howpay'] = $_POST['howpay'];
+					$options['acting_settings']['zeus']['bank_activate'] = $_POST['bank_activate'];
+					$options['acting_settings']['zeus']['bank_order_no'] = $_POST['bank_order_no'];
+					$options['acting_settings']['zeus']['bank_tracking_no'] = $_POST['bank_tracking_no'];
+					$options['acting_settings']['zeus']['bank_url'] = $_POST['bank_url'];
+
+					if( '' == trim($_POST['clientip']) )
+						$mes .= '※IPコードを入力して下さい<br />';
+					if( '' == trim($_POST['bank_order_no']) )
+						$mes .= '※オーダーナンバーを入力して下さい<br />';
+					if( '' == trim($_POST['bank_tracking_no']) )
+						$mes .= '※受付番号を入力して下さい<br />';
+					if( !isset($_POST['send_url']) || empty($_POST['send_url']) || !isset($_POST['ipaddrs']) || empty($_POST['ipaddrs']) || !isset($_POST['bank_url']) || empty($_POST['bank_url']) )
+						$mes .= '※設定が不正です！<br />';
+
+					if( '' == $mes ){			
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['zeus']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['zeus']['card_activate'] ){
+							$this->payment_structure['acting_zeus_card'] = 'カード決済（ZEUS）';
+						}else{
+							unset($this->payment_structure['acting_zeus_card']);
+						}
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります','usces');
+						$options['acting_settings']['zeus']['activate'] = 'off';
+						unset($this->payment_structure['acting_zeus_card']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure',$this->payment_structure);
+					break;
+					
+				case 'remise':
+					unset( $options['acting_settings']['remise'] );
+					$options['acting_settings']['remise']['plan'] = $_POST['plan'];
+					$options['acting_settings']['remise']['SHOPCO'] = $_POST['SHOPCO'];
+					$options['acting_settings']['remise']['HOSTID'] = $_POST['HOSTID'];
+					$options['acting_settings']['remise']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['remise']['payquick'] = $_POST['payquick'];
+					$options['acting_settings']['remise']['howpay'] = $_POST['howpay'];
+					$options['acting_settings']['remise']['continuation'] = $_POST['continuation'];
+					$options['acting_settings']['remise']['conv_activate'] = $_POST['conv_activate'];
+					$options['acting_settings']['remise']['S_PAYDATE'] = $_POST['S_PAYDATE'];
+					$options['acting_settings']['remise']['send_url_mbl'] = $_POST['send_url_mbl'];
+					$options['acting_settings']['remise']['send_url_pc'] = $_POST['send_url_pc'];
+					$options['acting_settings']['remise']['REMARKS3'] = $_POST['REMARKS3'];
+
+					if( '0' === $_POST['plan_remise'] )
+						$mes .= '※サービスプランを選択してください<br />';
+					if( '' == trim($_POST['SHOPCO']) )
+						$mes .= '※加盟店コードを入力して下さい<br />';
+					if( '' == trim($_POST['HOSTID']) )
+						$mes .= '※ホスト番号を入力して下さい<br />';
+					if( isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] && empty($_POST['S_PAYDATE']) )
+						$mes .= '※支払期限を入力して下さい<br />';
+					if( !isset($_POST['send_url_mbl']) || empty($_POST['send_url_mbl']) || !isset($_POST['send_url_pc']) || empty($_POST['send_url_pc']) || !isset($_POST['REMARKS3']) || empty($_POST['REMARKS3']) )
+						$mes .= '※設定が不正です！<br />';
+
+					if( '' == $mes ){			
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['remise']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['remise']['card_activate'] ){
+							$this->payment_structure['acting_remise_card'] = 'カード決済（ルミーズ）';
+						}else{
+							unset($this->payment_structure['acting_remise_card']);
+						}
+						if( 'on' == $options['acting_settings']['remise']['conv_activate'] ){
+							$this->payment_structure['acting_remise_conv'] = 'コンビニ決済（ルミーズ）';
+						}else{
+							unset($this->payment_structure['acting_remise_conv']);
+						}
+
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります','usces');
+						$options['acting_settings']['remise']['activate'] = 'off';
+						unset($this->payment_structure['acting_remise_card']);
+						unset($this->payment_structure['acting_remise_conv']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure',$this->payment_structure);
+					break;
+			}
+			
+
+			update_option('usces', $options);
+		}
+			
+		
+		$this->options = get_option('usces');
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_settlement.php');	
 	}
 	
 	/********************************************************************************/
@@ -1263,6 +1380,8 @@ class usc_e_shop
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
 		
+		do_action('usces_after_cart_instant');
+		
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
 			$post_id = (int)$_GET['post'];
 			$new_id = usces_item_dupricate($post_id);
@@ -1374,11 +1493,20 @@ class usc_e_shop
 		}
 
 		
-		if( isset($_REQUEST['page']) ){
+		if( is_admin() && isset($_REQUEST['page']) ){
 			switch( $_REQUEST['page'] ){
+			
 				case 'usces_initial':
 					$js = USCES_FRONT_PLUGIN_URL.'/js/usces_initial.js';
 					wp_enqueue_script('usces_initial.js', $js, array('jquery-ui-dialog'));
+					break;
+					
+				case 'usces_settlement':
+					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+//					$item_list_layoutUrl = USCES_FRONT_PLUGIN_URL.'/js/usces_dumy.js';
+//					wp_enqueue_script('usces_dumy', $item_list_layoutUrl, array('jquery-ui-tabs'), '1.0' );
 					break;
 			}
 		}
@@ -1670,13 +1798,14 @@ class usc_e_shop
 		$this->error_message = $this->zaiko_check();
 		if($this->error_message == '' && 0 < $this->cart->num_row()){
 			$payments = $this->getPayments( $entry['order']['payment_name'] );
-			if( $payments['settlement'] == 'acting' && $entry['order']['total_full_price'] > 0 ){
+			if( substr($payments['settlement'], 0, 6) == 'acting' && $entry['order']['total_full_price'] > 0 ){
+				$acting_flg = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
 				$query = '';
 				foreach($_POST as $key => $value){
 					if($key != 'purchase')
 						$query .= '&' . $key . '=' . urlencode($value);
 				}
-				$actinc_status = $this->acting_processing($payments['module'], $query);
+				$actinc_status = $this->acting_processing($acting_flg, $query);
 			}
 			
 			if($actinc_status == 'error'){
@@ -2653,6 +2782,7 @@ class usc_e_shop
 		
 		$access_table = $wpdb->prefix . "usces_access";
 		$member_table = $wpdb->prefix . "usces_member";
+		$member_meta_table = $wpdb->prefix . "usces_member_meta";
 		$order_table = $wpdb->prefix . "usces_order";
 		$order_meta_table = $wpdb->prefix . "usces_order_meta";
 		
@@ -2704,6 +2834,22 @@ class usc_e_shop
 		
 			dbDelta($sql);
 			add_option("usces_db_member", USCES_DB_MEMBER);
+		}
+		if($wpdb->get_var("show tables like '$member_meta_table'") != $member_meta_table) {
+		
+			$sql = "CREATE TABLE " . $member_meta_table . " (
+				mmeta_id bigint(20) NOT NULL auto_increment,
+				member_id bigint(20) NOT NULL default '0',
+
+				meta_key varchar(255) default NULL,
+				meta_value longtext,
+				PRIMARY KEY  (mmeta_id),
+				KEY order_id (member_id),
+				KEY meta_key (meta_key)
+				) ENGINE = MYISAM $charset_collate;";
+		
+			dbDelta($sql);
+			add_option("usces_db_member_meta", USCES_DB_MEMBER_META);
 		}
 		if($wpdb->get_var("show tables like '$order_table'") != $order_table) {
 		
@@ -2831,6 +2977,21 @@ class usc_e_shop
 			
 			dbDelta($sql);
 			update_option( "usces_db_member", USCES_DB_MEMBER );
+		}
+		if( $member_meta_ver != USCES_DB_MEMBER_META ) {
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			$sql = "CREATE TABLE " . $member_meta_table . " (
+				mmeta_id bigint(20) NOT NULL auto_increment,
+				member_id bigint(20) NOT NULL default '0',
+				meta_key varchar(255) default NULL,
+				meta_value longtext,
+				PRIMARY KEY  (mmeta_id),
+				KEY order_id (member_id),
+				KEY meta_key (meta_key)
+				) ENGINE = MYISAM';";
+		
+			dbDelta($sql);
+			update_option("usces_db_member_meta", USCES_DB_MEMBER_META);
 		}
 		if( $order_ver != USCES_DB_ORDER ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -3461,9 +3622,20 @@ class usc_e_shop
 			return false;
 	}
 	
-	function getItemIds() {
+	function getItemIds( $end_type ) {
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT ID  FROM $wpdb->posts WHERE post_status = %s AND post_mime_type = %s", 'publish', 'item');
+		if( 'front' == $end_type )
+			$query = $wpdb->prepare("SELECT ID  FROM $wpdb->posts WHERE post_status = %s AND post_mime_type = %s", 'publish', 'item');
+		if( 'back' == $end_type )
+			$query = $wpdb->prepare("SELECT ID  FROM $wpdb->posts WHERE post_mime_type = %s", 'item');
+		$ids = $wpdb->get_col( $query );
+		if( empty($ids) ) $ids = array();
+		return $ids;
+	}
+	
+	function getNotItemIds() {
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT ID  FROM $wpdb->posts WHERE post_status = %s AND post_mime_type <> %s", 'publish', 'item');
 		$ids = $wpdb->get_col( $query );
 		if( empty($ids) ) $ids = array();
 		return $ids;
@@ -3497,19 +3669,26 @@ class usc_e_shop
 	
 	}
 
-	function acting_processing($module, $query) {
+	function acting_processing($acting_flg, $query) {
 
-		$module = trim($module);
+		$acting_flg = trim($acting_flg);
 		//$usces_entries = $this->cart->get_entry();
 
-		if( empty($module) || !file_exists($this->options['settlement_path'] . $module) ) return 'error';
+		if( empty($acting_flg) || !file_exists($this->options['settlement_path'] . $acting_flg) ) return 'error';
 		
 		
-		//include(USCES_PLUGIN_DIR . '/settlement/' . $module);
-		if($module == 'paypal.php'){
+		//include(USCES_PLUGIN_DIR . '/settlement/' . $acting_flg);
+		if($acting_flg == 'paypal.php'){
+			if( !file_exists($this->options['settlement_path'] . $acting_flg) )
+				return 'error';
+				
 			require_once($this->options['settlement_path'] . "paypal.php");
 			paypal_submit();
-		}else if($module == 'epsilon.php'){
+			
+		}else if($acting_flg == 'epsilon.php'){
+			if( !file_exists($this->options['settlement_path'] . $acting_flg) )
+				return 'error';
+
 			if ( $this->use_ssl ) {
 				$redirect = str_replace('http://', 'https://', USCES_CART_URL);
 			}else{
@@ -3518,6 +3697,67 @@ class usc_e_shop
 			$query .= '&settlement=epsilon&redirect_url=' . urlencode($redirect);
 			header("location: " . $redirect . $query);
 			exit;
+			
+		}else if($acting_flg == 'acting_zeus_card'){
+		
+			$acting_opts = $this->options['acting_settings']['zeus'];
+			$interface = parse_url($acting_opts['card_url']);
+
+
+			$vars = '?send=mall';
+			$vars = '&clientip=' . esc_html($acting_opts['clid']);
+			$vars = '&cardnumber=' . $_POST['cardnumber'];
+			$vars = '&expyy=' . $_POST['expyy'];
+			$vars = '&expmm=' . $_POST['expmm'];
+			$vars = '&telno=' . urldecode($_POST['telno']);
+			$vars = '&email=' . urldecode($_POST['email']);
+			$vars = '&sendid=' . $_POST['sendid'];
+			$vars = '&username=' . urldecode($_POST['username']);
+			$vars = '&money=' . $_POST['money'];
+			$vars = '&sendpoint=' . $_POST['sendpoint'];
+			$vars = '&printord=' . $_POST['printord'];
+			if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
+				$vars = '&div=' . $_POST['div'];
+			}
+
+
+			$header = "POST " . $acting_opts['card_url'] . " HTTP/1.1\r\n";
+			$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
+			$header .= "User-Agent: PHP Script\r\n";
+			$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+			$header .= "Content-Length: " . strlen($vars) . "\r\n";
+			$header .= "Connection: close\r\n\r\n";
+			$header .= $vars;
+			$fp = fsockopen($interface['host'],80,$errno,$errstr,30);
+			
+			if ($fp){
+				fwrite($fp, $header);
+				while ( !feof($fp) ) {
+					$scr = fgets($fp, 1024);
+					preg_match_all("/<result\s(.*)\s\/>/", $scr, $match, PREG_SET_ORDER);
+				
+					if(!empty($match[0][1])){
+						list($key, $value) = explode('=', $match[0][1]);
+						$datas[$key] = mb_convert_encoding(urldecode(trim($value, '"')), "UTF-8", "auto");
+					}
+				}
+				fclose($fp);
+				
+				//var_dump($datas);
+//				if((int)$datas['result'] === 1){
+//					header("Location: " . $datas['redirect']);
+//					exit;
+//				}else{
+//					$error = $datas['err_code'] . "'" . $datas['err_detail'] . "'";
+//					header("Location: " . $redirect . "&acting=epsilon&acting_return=" . urlencode($error));
+//					exit;
+//				}
+			}else{
+//					header("Location: " . $redirect . "&acting=epsilon&acting_return=0");
+				echo 'NG';
+			}
+			exit;
+
 		}
 	}
 
@@ -4277,6 +4517,61 @@ class usc_e_shop
 		return $res;
 	}
 
+	function save_order_acting_data($rand){
+		global $wpdb;
+		$data = serialize(array( 'cart' => $this->cart->get_cart(), 'entry' => $this->cart->get_entry() ));
+		$table_name = $wpdb->prefix . "usces_access";
+		$query = $wpdb->prepare("INSERT INTO  $table_name (acc_type, acc_str1, acc_date, acc_key, acc_value) 
+								VALUES(%s, %s, now(), %s, %s)", 
+								'acting_data', 
+								session_id(), 
+								$rand, 
+								$data								
+								);
+		$res = $wpdb->query($query);
+		return $res;
+	}
+
+	function set_payquickid($key, $pcid){
+		global $wpdb;
+
+		if( empty($pcid) ) return;
+		if( !$this->is_member_logged_in() ) return;
+		
+		$member = $this->get_member();
+
+		$table_name = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("SELECT meta_value FROM $table_name WHERE member_id = %d AND meta_key = %s", 
+								$member['ID'], $key);
+		$res = $wpdb->get_var($query);
+		if($res != NULL){
+			$query = $wpdb->prepare("UPDATE $table_name SET meta_value = %s WHERE member_id = %d AND meta_key = %s", 
+									$pcid, 
+									$member['ID'], 
+									$key
+									);
+			$res2 = $wpdb->query($query);
+		}else{
+			$query = $wpdb->prepare("INSERT INTO  $table_name (member_id, meta_key, meta_value) 
+									VALUES(%d, %s, %s)", 
+									$member['ID'], 
+									$key, 
+									$pcid
+									);
+			$res2 = $wpdb->query($query);
+		}
+		return $res2;
+	}
+
+	function get_payquickid($key, $member_id){
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("SELECT meta_value FROM $table_name WHERE member_id = %d AND meta_key = %s", 
+								$member_id, $key);
+		$res = $wpdb->get_var($query);
+		return $res;
+	}
+
 	//shortcode-----------------------------------------------------------------------------
 	function sc_company_name() {
 		return htmlspecialchars($this->options['company_name']);
@@ -4598,15 +4893,18 @@ class usc_e_shop
 	function filter_divide_item(){
 		global $wp_query;
 
-		$ids = $this->getItemIds();
 
 		if( $this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin() ){
-			$wp_query->query_vars['post__not_in'] = $ids; 
+			$ids = $this->getItemIds( 'front' );
+			$wp_query->query_vars['post__not_in'] = $ids;
+			
 		}
 		if( is_admin() ){
+			$ids = $this->getItemIds( 'back' );
 			//$wp_query->query_vars['category__not_in'] = array(USCES_ITEM_CAT_PARENT_ID); 
 			$wp_query->query_vars['post__not_in'] = $ids;
 		}
+		do_action( 'usces_action_divide_item');
 	}
 
 	function load_upload_template(){

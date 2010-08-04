@@ -482,10 +482,11 @@ function usces_send_mail( $para ) {
 function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
 //	$wpdb->show_errors();
-	
+
 	$cart = $usces->cart->get_cart();
-	$item_total_price = $usces->get_total_price( $cart );
 	$entry = $usces->cart->get_entry();
+
+	$item_total_price = $usces->get_total_price( $cart );
 	$member = $usces->get_member();
 	$order_table_name = $wpdb->prefix . "usces_order";
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
@@ -495,7 +496,7 @@ function usces_reg_orderdata( $results = array() ) {
 	$payments = $usces->getPayments($entry['order']['payment_name']);
 	if($results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
 	
-	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return false;
+	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
 	
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
@@ -826,7 +827,15 @@ function usces_update_orderdata() {
 	$receipt = isset($entry['order']['receipt']) ? $entry['order']['receipt'] : '';
 	$admin = isset($entry['order']['admin']) ? $entry['order']['admin'] : '';
 	$status = $usces->make_status( $taio, $receipt, $admin );
-	$order_modified = $taio == 'completion' ? substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10) : '';
+	if( $taio == 'completion' ){
+		if( 'update' == $_POST['up_modified'] ){
+			$order_modified =  substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
+		}else{
+			$order_modified =  $_POST['modified'];
+		}
+	}else{
+		$order_modified = '';
+	}
 	$ordercheck = isset($_POST['check']) ? serialize($_POST['check']) : '';
 	
 //$wpdb->show_errors();
@@ -1404,10 +1413,21 @@ function usces_check_acting_return() {
 			
 			}
 		break;
+		
 		case 'paypal':
 			require_once($usces->options['settlement_path'] . "paypal.php");
 			$results = paypal_check($usces_paypal_url);
 	
+			break;
+			
+		case 'remise_card':
+			$results = $_POST;
+			if( $_REQUEST['acting_return'] ){
+				$results[0] = 1;
+			}else{
+				$results[0] = 0;
+			}
+			$results['payment_status'] = 1;
 			break;
 	}
 	
@@ -2118,4 +2138,19 @@ function usces_setup_cod_ajax(){
 	}
 	die( $r );
 }
+
+function usces_get_order_acting_data($rand){
+	global $wpdb;
+
+	$table_name = $wpdb->prefix . "usces_access";
+	$query = $wpdb->prepare("SELECT acc_str1 AS sesid, acc_value AS order_data FROM $table_name WHERE acc_key = %s", $rand);
+	$res = $wpdb->get_row($query, ARRAY_A);
+	if($res == NULL){
+		return false;
+	}else{
+		return $res;
+	}
+}
+
+
 ?>

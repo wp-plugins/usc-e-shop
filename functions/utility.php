@@ -72,4 +72,53 @@ function usces_metakey_change(){
 
 	return $rets;
 }
+
+function usces_log($log, $file){
+	global $usces;
+		
+	$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
+	$file_path = USCES_PLUGIN_DIR . '/logs/' . $file;
+	$fp = fopen($file_path, 'a');
+	fwrite($fp, $log);
+	fclose($fp);
+}
+
+
+function usces_delivery_secure_check( $mes ){
+	global $usces;
+	$usces_secure_link = get_option('usces_secure_link');
+	$paymod_id = '';
+	
+	foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
+		if( $array['name'] == $_POST['order']['payment_name']){
+			$settlement = $array['settlement'];
+			break;
+		}
+	}	
+
+	switch( $settlement ){
+		case 'acting_zeus_card':
+			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) != 4 )
+				$mes .= __('カード番号が不正です', 'usces') . "<br />";
+			
+			if ( '' == $_POST["expyy"] )
+				$mes .= __('カードの有効年を選択してください', 'usces') . "<br />";
+				
+			if ( '' == $_POST["expmm"] )
+				$mes .= __('カードの有効月を選択してください', 'usces') . "<br />";
+				
+			if ( '' == trim($_POST["username"]) )
+				$mes .= __('カード名義を入力してください', 'usces') . "<br />";
+				
+			if ( '0' == $_POST["howpay"] && '' == $_POST["cbrand"] )
+				$mes .= __('カードブランドを選択してください', 'usces') . "<br />";
+				
+			if ( 'zeus' != $_POST['acting'] )
+				$mes .= __('カード決済データが不正です！', 'usces');
+			 
+			break;
+	}
+	
+	return $mes;
+}
 ?>

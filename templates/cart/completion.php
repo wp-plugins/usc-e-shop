@@ -6,7 +6,10 @@ $cart = $usces->cart->get_cart();
 $html = '<h2>'.__('It has been sent succesfully.', 'usces').'</h2>
 <div class="post">';
 
-if(isset($this->payment_results['payment_status'])){
+if(isset($this->payment_results['X-TRANID']) ){ //remise
+	if( '0:0000' != $_POST['X-R_CODE'])
+		$html .= '<div>エラーコード：' .  $_POST['X-R_CODE'] . '</div>';
+}elseif(isset($this->payment_results['mc_gross']) ){ //PayPal
 	$html .= '<div id="status_table"><h5>PayPal</h5>
 		<table>';
 	$html .= '<tr><th>'.__('Purchase date', 'usces').'</th><td>' . $this->payment_results['payment_date'] . "</td></tr>\n";

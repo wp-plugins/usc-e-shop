@@ -240,70 +240,10 @@ $html .= '<tr>
 	</tr>
 	</table>';
 
-$payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
-if( 'acting' != $payments['settlement']  || 0 == $usces_entries['order']['total_full_price'] ){
-	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-		<div class="send"><input name="backDelivery" type="submit" value="'.__('Back to payment method page.', 'usces').'" />&nbsp;&nbsp;
-		<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
-}else{
-	//$notify_url = urlencode(USCES_CART_URL . '&purchase');
-	$send_item_code = $this->getItemCode($cart[0]['post_id']);
-	$send_item_name = $this->getItemName($cart[0]['post_id']);
-	if( count($cart) > 1 ) $send_item_name .= ' '.__('Others', 'usces');
-	switch($payments['module']){
-		case 'paypal.php':
-			require_once($this->options['settlement_path'] . "paypal.php");
-			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
-			$html .= '</form>
-				<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<input type="hidden" name="cmd" value="_xclick">
-				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
-				<input type="hidden" name="custom" value="' . $this->get_uscesid() . '">
-				<input type="hidden" name="lc" value="JP">';
-			if( 1 < count($cart) ) {
-				$html .= '<input type="hidden" name="item_name" value="' . $send_item_name . __('and others', 'usces') . '">';
-			}else{
-				$html .= '<input type="hidden" name="item_name" value="' . $send_item_name . '">';
-			}
-			$html .= '<input type="hidden" name="item_number" value="">
-				<input type="hidden" name="amount" value="' . $usces_entries['order']['total_full_price'] . '">
-				<input type="hidden" name="currency_code" value="JPY">
-				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . '&confirm">
-				<input type="hidden" name="notify_url" value="' . USCES_CART_URL . '&acting_return=paypal_ipn&usces=' . $this->get_uscesid() . '">
-				<input type="hidden" name="button_subtype" value="products">
-				<input type="hidden" name="tax_rate" value="0.000">
-				<input type="hidden" name="shipping" value="0">
-				<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
-				<div class="send"><input type="image" src="https://www.paypal.com/ja_JP/JP/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal">
-				<img alt="" border="0" src="https://www.paypal.com/ja_JP/i/scr/pixel.gif" width="1" height="1"></div>';
-			break;
-		case 'epsilon.php':
-			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<input type="hidden" name="user_id" value="' . $memid . '">
-				<input type="hidden" name="user_name" value="' . $usces_entries['customer']['name1'] . ' ' . $usces_entries['customer']['name2'] . '">
-				<input type="hidden" name="user_mail_add" value="' . $usces_entries['customer']['mailaddress1'] . '">';
-			if( 1 < count($cart) ) {
-				$html .= '<input type="hidden" name="item_code" value="99999999">
-					<input type="hidden" name="item_name" value="' . substr($send_item_name, 0, 50) . ' ' . __('and others', 'usces') . '">';
-			}else{
-				$html .= '<input type="hidden" name="item_code" value="' . $send_item_code . '">
-					<input type="hidden" name="item_name" value="' . substr($send_item_name, 0, 64) . '">';
-			}
-			$html .= '<input type="hidden" name="item_price" value="' . $usces_entries['order']['total_full_price'] . '">
-				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
-			break;
-		default:
-			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
-	}
-}
+require_once( USCES_PLUGIN_DIR . "/includes/purchase_button.php");
 
-$html = apply_filters('usces_filter_confirm_inform', $html);
-$html .= '</form><div class="footer_explanation">';
+
+$html .= '<div class="footer_explanation">';
 $footer = '';
 $html .= apply_filters('usces_filter_confirm_page_footer', $footer);
 $html .= '</div>';
