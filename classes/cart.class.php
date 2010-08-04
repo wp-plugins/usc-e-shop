@@ -46,7 +46,7 @@ class usces_cart {
 		
 		if ( isset($_POST['skuPrice']) && $_POST['skuPrice'][$post_id][$sku] != '') {
 			$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
-			$price = apply_filters('usces_filter_inCart_price', $this->serial);
+			$price = apply_filters('usces_filter_inCart_price', $price, $this->serial);
 			$_SESSION['usces_cart'][$this->serial]['price'] = $price;
 		}
 		
