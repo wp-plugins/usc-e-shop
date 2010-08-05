@@ -3496,6 +3496,25 @@ class usc_e_shop
 		}
 	}
 	
+	function getItemSkuChargingType($post_id, $skukey = '') {
+		$fields = get_post_custom($post_id);
+		foreach((array)$fields as $key => $value){
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
+				$values = maybe_unserialize($value[0]);
+				$skus[$key] = $values['charging_type'];
+			}
+		}
+		if(!$skus) return false;
+		if($skukey == ''){
+			return $skus;
+		}else if(isset($skus[$skukey])){
+			return $skus[$skukey];
+		}else{
+			return false;
+		}
+	}
+	
 	function getItemSkuUnit($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
@@ -4532,7 +4551,7 @@ class usc_e_shop
 		return $res;
 	}
 
-	function set_payquickid($key, $pcid){
+	function set_member_meta_value($key, $pcid){
 		global $wpdb;
 
 		if( empty($pcid) ) return;
@@ -4563,7 +4582,7 @@ class usc_e_shop
 		return $res2;
 	}
 
-	function get_payquickid($key, $member_id){
+	function get_member_meta_value($key, $member_id){
 		global $wpdb;
 		$table_name = $wpdb->prefix . "usces_member_meta";
 		$query = $wpdb->prepare("SELECT meta_value FROM $table_name WHERE member_id = %d AND meta_key = %s", 
