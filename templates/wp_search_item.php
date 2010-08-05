@@ -8,4 +8,5 @@ $html = '<div class="loopimg">
 		<div class="field">' . $content . '</div>
 	</div>
 	';
+$html = apply_filters( 'usces_filter_item_list_loopimg', $html);
 ?>
