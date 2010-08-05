@@ -37,7 +37,10 @@ function usces_action_acting_transaction(){
 			usces_log('remise : Failure reg order data', 'acting_transaction.log');
 			die('error');
 		}else{
-			$usces->set_payquickid('remise_pcid', $_POST['X-PAYQUICKID']);
+			if( isset($_POST['X-PAYQUICKID']) )
+				$usces->set_member_meta_value('remise_pcid', $_POST['X-PAYQUICKID']);
+			if( isset($_POST['X-AC_MEMBERID']) )
+				$usces->set_member_meta_value('remise_memid', $_POST['X-AC_MEMBERID']);
 			$mail_res = usces_send_ordermail( $order_id );
 			die('<SDBKDATA>STATUS=800</SDBKDATA>');
 		}

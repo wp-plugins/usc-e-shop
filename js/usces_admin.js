@@ -180,7 +180,7 @@
 			var skudisp = $("#newskudisp").val();
 			var skuunit = $("#newskuunit").val();
 			var skugptekiyo = $("#newskugptekiyo").val();
-			var skucharging_type = $("#newcharging_type option:selected").val();
+			var charging_type = $("#newcharging_type option:selected").val();
 			
 			var s = itemSku.settings;
 			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + name + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + zaiko + "&newskudisp=" + skudisp + "&newskuunit=" + skuunit + "&newskugptekiyo=" + skugptekiyo + "&newcharging_type=" + charging_type;
@@ -226,7 +226,6 @@
 			var skuunit = $(us).val();
 			var skugptekiyo = $(gs).val();
 			var charging_type = $(ct).val();
-			alert(charging_type);
 			var s = itemSku.settings;
 			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + zaiko + "&skuname=" + name + "&skudisp=" + skudisp + "&skuunit=" + skuunit + "&skugptekiyo=" + skugptekiyo + "&charging_type=" + charging_type + "&skumetaid=" + meta_id;
 			$.ajax( s );

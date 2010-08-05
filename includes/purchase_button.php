@@ -89,6 +89,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_remise_card':
+			$charging_type = $this->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 			$acting_opts = $this->options['acting_settings']['remise'];
 			$this->save_order_acting_data($rand);
 			$html .= '<form action="' . $acting_opts['send_url_pc'] . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -107,12 +108,12 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				';
 			if( 'on' == $acting_opts['payquick'] && $this->is_member_logged_in() ){
 				$member = $this->get_member();
-				$pcid = $this->get_payquickid('remise_pcid', $member['ID']);
+				$pcid = $this->get_member_meta_value('remise_pcid', $member['ID']);
 				$html .= '<input type="hidden" name="PAYQUICK" value="1">';
 				if( $pcid != NULL )
 					$html .= '<input type="hidden" name="PAYQUICKID" value="' . $pcid . '">';
 			}
-			if( 'on' == $acting_opts['howpay'] && isset($_POST['div']) && '0' !== $_POST['div'] ){	
+			if( 'on' == $acting_opts['howpay'] && isset($_POST['div']) && '0' !== $_POST['div'] && 0 === (int)$charging_type ){	
 				$html .= '<input type="hidden" name="div" value="' . $_POST['div'] . '">';
 				switch( $_POST['div'] ){
 					case '1':
@@ -124,6 +125,27 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 						break;
 				}
 			}
+			if( 0 !== (int)$charging_type ){	
+				$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+				$html .= '<input type="hidden" name="AUTOCHARGE" value="1">';
+				$html .= '<input type="hidden" name="AC_S_KAIIN_NO" value="' . $member['ID'] . '">';
+//				$html .= '<input type="hidden" name="AC_NAME" value="' . mb_convert_encoding($usces_entries['customer']['name1'].$usces_entries['customer']['name2'], 'SJIS', 'UTF-8') . '">';
+//				$html .= '<input type="hidden" name="AC_KANA" value="' . mb_convert_encoding($usces_entries['customer']['name3'].$usces_entries['customer']['name4'], 'SJIS', 'UTF-8') . '">';
+				$html .= '<input type="hidden" name="AC_TEL" value="' . str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')) . '">';
+				$html .= '<input type="hidden" name="AC_AMOUNT" value="' . $usces_entries['order']['total_full_price'] . '">';
+				$html .= '<input type="hidden" name="AC_TOTAL" value="' . $usces_entries['order']['total_full_price'] . '">';
+				switch( (int)$charging_type ){
+					case '1':
+						$html .= '<input type="hidden" name="AC_NEXT_DATE" value="' . date('Ymd', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))) . '">';
+						$html .= '<input type="hidden" name="AC_INTERVAL" value="1M">';
+						break;
+					case '2':
+						$html .= '<input type="hidden" name="AC_NEXT_DATE" value="' . date('Ymd', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))) . '">';
+						$html .= '<input type="hidden" name="AC_INTERVAL" value="12M">';
+						break;
+				}
+			}
+
 			$html .= '
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
 				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';

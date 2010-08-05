@@ -2414,3 +2414,6 @@ msgstr "タグ &#8216;%s&#8217; に属する投稿;"
 msgid "Archive for %s|Daily archive page"
 msgstr "%s の記事"
 
+msgid "Settlement Setting"
+msgstr "クレジット決済設定"
+

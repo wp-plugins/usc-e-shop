@@ -237,7 +237,6 @@ msgstr "パスワードが不正です。"
 msgid "e-mail address is not correct"
 msgstr "メールアドレスが不正です。"
 
-#, fuzzy
 msgid "E-mail address is not correct"
 msgstr "※メールアドレスが不正です。"
 
@@ -2418,6 +2417,9 @@ msgstr "タグ &#8216;%s&#8217; に属する投稿;"
 
 msgid "Archive for %s|Daily archive page"
 msgstr "%s の記事"
+
+msgid "Settlement Setting"
+msgstr "クレジット決済設定"
 
 #~ msgid "% Comments &#187;"
 #~ msgstr "コメント %件 &#187;"

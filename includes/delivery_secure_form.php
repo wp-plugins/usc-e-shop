@@ -116,10 +116,12 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				
 			case 'acting_remise_card':
 				$paymod_id = 'remise';
-				
+				$charging_type = $this->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
+
 				if( 'on' != $this->options['acting_settings'][$paymod_id]['card_activate'] 
 					|| 'on' != $this->options['acting_settings'][$paymod_id]['howpay'] 
-					|| 'on' != $this->options['acting_settings'][$paymod_id]['activate'] )
+					|| 'on' != $this->options['acting_settings'][$paymod_id]['activate'] 
+					|| 0 !== (int)$charging_type )
 					continue;
 					
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '0';

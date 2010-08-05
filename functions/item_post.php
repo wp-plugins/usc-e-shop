@@ -213,7 +213,6 @@ function _list_item_sku_meta_row( $entry ) {
 	} else {
 		return;
 	}
-	var_dump($entry['meta_value']);
 	$readonly = "";
 	$key = attribute_escape(substr($entry['meta_key'],6));
 	$cprice = $entry['meta_value']['cprice'];
@@ -229,9 +228,9 @@ function _list_item_sku_meta_row( $entry ) {
 	if( defined('WCEX_DLSELLER') ){
 		$advance_field = '
 	<select id="itemsku[' . $id . '][charging_type]" name="itemsku[' . $id . '][charging_type]" class="charging_type">
-		<option value=""' . ( (empty($charging_type)) ? ' selected="selected"' : '' ) . '>' . __('一括課金（即日）','usces') . '</option>
-		<option value="1"' . ( ('1' === $charging_type) ? ' selected="selected"' : '' ) . '>' . __('月次課金（翌月1日）','usces') . '</option>
-		<option value="2"' . ( ('2' === $charging_type) ? ' selected="selected"' : '' ) . '>' . __('年次課金（翌月1日）','usces') . '</option>
+		<option value=""' . ( (0 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('一括課金（即日）','usces') . '</option>
+		<option value="1"' . ( (1 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('月次課金（翌月1日）','usces') . '</option>
+		<option value="2"' . ( (2 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('年次課金（翌月1日）','usces') . '</option>
 	</select>';
 
 	}else{

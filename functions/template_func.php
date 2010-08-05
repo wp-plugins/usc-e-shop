@@ -1203,4 +1203,37 @@ function usces_is_cat_of_item( $cat_id ){
 		return false;
 	}
 }
+
+function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
+		
+	$cfields = get_post_custom($post_id);
+	switch( $type ){
+		case 'list':
+			$html = '<ul class="item_custom_field">'."\n";
+			foreach( $cfields as $key => $value ){
+				if( '_' != substr($key, 0, 1) ){
+					$html .= '<li>' . $key . ' : ' . $value[0] . '</li>'."\n";
+				}
+			}
+			$html .= '</ul>'."\n";
+			break;
+
+		case 'table':
+			$html = '<table class="item_custom_field">'."\n";
+			foreach($cfields as $key => $value){
+				if( '_' != substr($key, 0, 1) ){
+					$html .= '<tr><th>' . $key . '</th><td>' . $value[0] . '</td>'."\n";
+				}
+			}
+			$html .= '</table>'."\n";
+			break;
+	}
+	$html = apply_filters( 'usces_filter_item_custom', $html, $post_id);
+	
+	if( 'return' == $out){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
 ?>
