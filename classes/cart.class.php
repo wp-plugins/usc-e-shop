@@ -80,7 +80,7 @@ class usces_cart {
 					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
 				}else{
 					$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
-					$price = apply_filters('usces_filter_upCart_price', $price, $post_id, $sku, $index);
+					$price = apply_filters('usces_filter_upCart_price', $price, $this->serial, $index);
 				}
 				$_SESSION['usces_cart'][$this->serial]['price'] = $price;
 			
