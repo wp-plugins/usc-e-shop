@@ -15,6 +15,8 @@ $management_status = array(
 					'cancel' => __('Cancel', 'usces'),
 					'completion' => __('It has sent it out.', 'usces'),
 					'pending' => __('Pending', 'usces'),
+					'continuation' => __('Continuation', 'usces'),
+					'termination' => __('Termination', 'usces'),
 					);
 
 $customer_status = array(
@@ -51,6 +53,14 @@ $shipping_rule = array(
 					'9' => __('after we get new items', 'usces')
 					);
 $item_option_select = array(__('Single-select','usces'), __('Multi-select','usces'), __('Text','usces'));
+
+$usces_custom_order_select = array(
+					'0' => __('シングルセレクト', 'usces'),
+					'2' => __('テキスト', 'usces'),
+					'3' => __('ラジオボタン', 'usces'),
+					'4' => __('チェックボックス', 'usces')
+					);
+
 //$shipping_charge_structure = array(
 //					'1' => '通常料金',
 //					'2' => '特別料金1',
@@ -76,6 +86,7 @@ $usces_pref = ( 'ja' == get_locale() ) ? $province_ja : $province_en;
 
 $usces_secure_link = array('zeus');
 
+
 update_option('usces_management_status',$management_status);
 update_option('usces_zaiko_status',$zaiko_status);
 update_option('usces_customer_status',$customer_status);
@@ -85,6 +96,8 @@ update_option('usces_display_mode',$display_mode);
 update_option('usces_pref',$usces_pref);
 update_option('usces_shipping_rule',$shipping_rule);
 update_option('usces_item_option_select',$item_option_select);
+update_option('usces_custom_order_select', $usces_custom_order_select);
+
 update_option('usces_currency_symbol',__('$', 'usces'));
 update_option('usces_secure_link', $usces_secure_link);
 //update_option('shipping_charge_structure',$shipping_charge_structure);

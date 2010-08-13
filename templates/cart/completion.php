@@ -1,47 +1,25 @@
 <?php
-global $usces;
-$entry = $usces->cart->get_entry();
-$cart = $usces->cart->get_cart();
+$entry = $this->cart->get_entry();
+$cart = $this->cart->get_cart();
+$html = '';
 
-$html = '<h2>'.__('It has been sent succesfully.', 'usces').'</h2>
-<div class="post">';
-
-if(isset($this->payment_results['X-TRANID']) ){ //remise
-	if( '0:0000' != $_POST['X-R_CODE'])
-		$html .= '<div>エラーコード：' .  $_POST['X-R_CODE'] . '</div>';
-}elseif(isset($this->payment_results['mc_gross']) ){ //PayPal
-	$html .= '<div id="status_table"><h5>PayPal</h5>
-		<table>';
-	$html .= '<tr><th>'.__('Purchase date', 'usces').'</th><td>' . $this->payment_results['payment_date'] . "</td></tr>\n";
-	$html .= '<tr><th>'.__('Status', 'usces').'</th><td>' . $this->payment_results['payment_status'] . "</td></tr>\n";
-	$html .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . $this->payment_results['first_name'] . $this->payment_results['last_name'] . "</td></tr>\n";
-	$html .= '<tr><th>'.__('e-mail', 'usces').'</th><td>' . $this->payment_results['payer_email'] . "</td></tr>\n";
-	$html .= '<tr><th>' . __('Items','usces') . '</th><td>' . $this->payment_results['item_name'] . "</td></tr>\n";
-	$html .= '<tr><th>'.__('Payment amount', 'usces').'</th><td>' . $this->payment_results['mc_gross'] . "</td></tr>\n";
-	$html .= '</table>';
-	
-	if($this->payment_results['payment_status'] != 'Completed'){
-		$html .= __('<p>The settlement is not completed.<br />Please remit the price from the PayPal Maia count page.After receipt of money confirmation, I will prepare for the article shipment.</p>', 'usces') . "\n";
-	}
-	$html .= "</div>\n";
-//	foreach($this->payment_results as $kye => $value){
-//		if($kye == 'custom') urldecode($value);
-//		$html .= $kye . ' = ' . $value . "<br />\n";
-//	}
-}
-$html .= '<div class="header_explanation">';
+$html .= '<h3>'.__('It has been sent succesfully.', 'usces').'</h3>'."\n";
+$html .= '<div class="post">'."\n";
+$html .= '<div class="header_explanation">'."\n";
 $header = '<p>'.__('Thank you for shopping.', 'usces').'<br />'.__("If you have any questions, please contact us by 'Contact'.", 'usces').'</p>';
-$html .= apply_filters('usces_filter_cartcompletion_page_header', $header, $entry, $cart);
-$html .= '</div>';
+$html .= apply_filters('usces_filter_cartcompletion_page_header', $header, $entry, $cart)."\n";
+$html .= '</div><!-- header_explanation -->'."\n";
 
-$html .= '<form action="' . get_option('home') . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-<div class="send"><input name="top" type="submit" value="'.__('Back to the top page.', 'usces').'" /></div>
-</form>';
+require_once( USCES_PLUGIN_DIR . "/includes/completion_settlement.php");
 
-$html .= '<div class="footer_explanation">';
+$html .= '<div class="footer_explanation">'."\n";
 $footer = '';
-$html .= apply_filters('usces_filter_cartcompletion_page_footer', $footer, $entry, $cart);
-$html .= '</div>';
+$html .= apply_filters('usces_filter_cartcompletion_page_footer', $footer, $entry, $cart)."\n";
+$html .= '</div><!-- footer_explanation -->'."\n";
 
-$html .= '</div>';
+$html .= '<form action="' . get_option('home') . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">'."\n";
+$html .= '<div class="send"><input name="top" type="submit" value="'.__('Back to the top page.', 'usces').'" /></div>'."\n";
+$html .= '</form>'."\n";
+
+$html .= '</div><!-- post -->'."\n";
 ?>

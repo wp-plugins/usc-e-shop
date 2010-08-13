@@ -100,7 +100,10 @@ $html .= '<tr>
 	</table>';
 	
 require_once( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
-	
+//20100809ysk start
+require_once( USCES_PLUGIN_DIR . "/includes/delivery_custom_order_form.php");
+//20100809ysk end
+
 	
 $html .= '<table class="customer_form" id="notes_table">
 	<tr>

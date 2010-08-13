@@ -68,21 +68,27 @@ function toggleVisibility(id) {
 	<form action="" method="post" name="zeus_form" id="zeus_form">
 		<table class="settle_table">
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clid_zeus');"><?php _e('IPコード', 'usces'); ?></a></th>
-				<td><input name="clientip" type="text" id="clid_zeus" value="<?php echo $opts['zeus']['clientip']; ?>" size="20" /></td>
-				<td><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるIPコード（半角数字）', 'usces'); ?></div></td>
-			</tr>
-		</table>
-		<table class="settle_table">
-			<tr>
 				<th>クレジットカード決済</th>
 				<td><input name="card_activate" type="radio" id="card_activate_zeus_1" value="on"<?php if( $opts['zeus']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_zeus_1">利用する</label></td>
 				<td><input name="card_activate" type="radio" id="card_activate_zeus_2" value="off"<?php if( $opts['zeus']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_zeus_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clid_zeus');"><?php _e('カード決済IPコード', 'usces'); ?></a></th>
+				<td colspan="4"><input name="clientip" type="text" id="clid_zeus" value="<?php echo $opts['zeus']['clientip']; ?>" size="20" /></td>
+				<td><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_quickcharge_zeus');">クイックチャージ</a></th>
+				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_1" value="on"<?php if( $opts['zeus']['quickcharge'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_1">利用する</label></td>
+				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_2" value="off"<?php if( $opts['zeus']['quickcharge'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_2">利用しない</label></td>
+				<td><div id="ex_quickcharge_zeus" class="explanation"><?php _e('ログインして一度購入したメンバーは、次の購入時にはカード番号を入力する必要がなくなります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th>お客様の支払方法</th>
 				<td><input name="howpay" type="radio" id="howpay_zeus_1" value="on"<?php if( $opts['zeus']['howpay'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_1">分割払いに対応する</label></td>
 				<td><input name="howpay" type="radio" id="howpay_zeus_2" value="off"<?php if( $opts['zeus']['howpay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_2">一括払いのみ</label></td>
+				<td></td>
 			</tr>
 		</table>
 		<table class="settle_table">
@@ -93,18 +99,13 @@ function toggleVisibility(id) {
 				<td><div id="ex_bank_zeus" class="explanation"><?php _e('銀行振り込み支払いの自動照会機能です。振込みが有った場合、自動的に入金済みになり、入金確認メールが自動送信されます。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_order_no_zeus');"><?php _e('オーダーナンバー', 'usces'); ?></a></th>
-				<td colspan="4"><input name="bank_order_no" type="text" id="bank_order_no_zeus" value="<?php echo $opts['zeus']['bank_order_no']; ?>" size="20" /></td>
-				<td><div id="ex_bank_order_no_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるシリアルナンバー（半角数字）', 'usces'); ?></div></td>
-			</tr>
-			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_tracking_no_zeus');"><?php _e('受付番号', 'usces'); ?></a></th>
-				<td colspan="4"><input name="bank_tracking_no" type="text" id="bank_tracking_no_zeus" value="<?php echo $opts['zeus']['bank_tracking_no']; ?>" size="20" /></td>
-				<td><div id="ex_bank_tracking_no_zeus" class="explanation"><?php _e('契約時にZEUSから発行される振込用受付番号（半角数字）', 'usces'); ?></div></td>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clid_zeus');"><?php _e('入金お任せIPコード', 'usces'); ?></a></th>
+				<td colspan="4"><input name="clientip_bank" type="text" id="clid_zeus" value="<?php echo $opts['zeus']['clientip_bank']; ?>" size="20" /></td>
+				<td><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行される入金お任せサービス用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<input name="bank_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/ebank.cgi" />
-		<input name="send_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/secure.cgi" />
+		<input name="card_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/secure.cgi" />
 		<input name="ipaddrs[]" type="hidden" value="210.164.6.67" />
 		<input name="ipaddrs[]" type="hidden" value="202.221.139.50" />
 		<input name="acting" type="hidden" value="zeus" />
@@ -183,8 +184,14 @@ function toggleVisibility(id) {
 				<td><div id="ex_continuation_remise" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくは「ルミーズ」にお問合せください。', 'usces'); ?></div></td>
 			</tr>
 			<?php endif; ?>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_pc_ope_remise');">稼働環境(PC)</a></th>
+				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_1" value="test"<?php if( $opts['remise']['card_pc_ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="card_pc_ope_remise_1">テスト環境</label></td>
+				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_2" value="public"<?php if( $opts['remise']['card_pc_ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="card_pc_ope_remise_2">本番環境</label></td>
+				<td><div id="ex_card_pc_ope_remise" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
+			</tr>
 		</table>
-<!--		<table class="settle_table">
+		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_remise');">コンビニ・電子マネー決済</a></th>
 				<td><input name="conv_activate" type="radio" id="conv_activate_remise_1" value="on"<?php if( $opts['remise']['conv_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_remise_1">利用する</label></td>
@@ -196,9 +203,21 @@ function toggleVisibility(id) {
 				<td colspan="4"><input name="S_PAYDATE" type="text" id="S_PAYDATE_remise" value="<?php echo $opts['remise']['S_PAYDATE']; ?>" size="5" maxlength="3" />日</td>
 				<td><div id="ex_paydate_remise" class="explanation"><?php _e('日数を設定します。（半角数字）', 'usces'); ?></div></td>
 			</tr>
-		</table>-->
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_pc_ope_remise');">稼働環境(PC)</a></th>
+				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_1" value="test"<?php if( $opts['remise']['conv_pc_ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="conv_pc_ope_remise_1">テスト環境</label></td>
+				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_2" value="public"<?php if( $opts['remise']['conv_pc_ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="conv_pc_ope_remise_2">本番環境</label></td>
+				<td><div id="ex_conv_pc_ope_remise" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<input name="send_url_cvs_mbl" type="hidden" value="https://test.remise.jp/rpgw2/mbl/cvs/paycvs.aspx" />
+		<input name="send_url_cvs_pc" type="hidden" value="https://test.remise.jp/rpgw2/pc/cvs/paycvs.aspx" />
 		<input name="send_url_mbl" type="hidden" value="https://test.remise.jp/rpgw2/mbl/card/paycard.aspx" />
 		<input name="send_url_pc" type="hidden" value="https://test.remise.jp/rpgw2/pc/card/paycard.aspx" />
+		<input name="send_url_cvs_mbl_test" type="hidden" value="https://test.remise.jp/rpgw2/mbl/cvs/paycvs.aspx" />
+		<input name="send_url_cvs_pc_test" type="hidden" value="https://test.remise.jp/rpgw2/pc/cvs/paycvs.aspx" />
+		<input name="send_url_mbl_test" type="hidden" value="https://test.remise.jp/rpgw2/mbl/card/paycard.aspx" />
+		<input name="send_url_pc_test" type="hidden" value="https://test.remise.jp/rpgw2/pc/card/paycard.aspx" />
 		<input name="REMARKS3" type="hidden" value="A0000875" />
 		<input name="acting" type="hidden" value="remise" />
 		<input name="usces_option_update" type="submit" class="button" value="ルミーズの設定を更新する" />

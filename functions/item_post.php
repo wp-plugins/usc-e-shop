@@ -1573,5 +1573,130 @@ function usces_count_posts( $type = 'post', $perm = '' ) {
 	return $stats;
 }
 
+//20100809ysk start
+/**
+ * custom order meta row
+ */
+function _list_custom_order_meta_row($key, $entry) {
+	$r = '';
+	$style = '';
+
+	$name = $entry['name'];
+	$means = get_option('usces_custom_order_select');
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue) {
+		if($meankey == $entry['means']) {
+			$selected = ' selected="selected"';
+		} else {
+			$selected = '';
+		}
+		$meansoption .= '<option value="'.$meankey.'"'.$selected.'>'.$meanvalue."</option>\n";
+	}
+	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
+	$value = '';
+	if(is_array($entry['value'])) {
+		foreach($entry['value'] as $k => $v) {
+			$value .= htmlspecialchars($v)."\n";
+		}
+	}
+	$value = trim($value);
+
+	$r .= "\n\t<tr id='csod-{$key}' class='{$style}'>";
+	$r .= "\n\t\t<td class='left'><div><input type='text' name='csod[{$key}][key]' id='csod[{$key}][key]' class='optname' size='20' value='{$key}' readonly /></div>";
+	$r .= "\n\t\t<div><input type='text' name='csod[{$key}][name]' id='csod[{$key}][name]' class='optname' size='20' value='{$name}' /></div>";
+	$r .= "\n\t\t<div class='optcheck'><select name='csod[{$key}][means]' id='csod[{$key}][means]'>".$meansoption."</select>\n";
+	$r .= "<input type='checkbox' name='csod[{$key}][essential]' id='csod[{$key}][essential]' value='1'{$essential} /><label for='csod[{$key}][essential]'>".__('Required','usces')."</label></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='deletecsod[{$key}]' id='deletecsod[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customOrder.del(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='updatecsod' id='updatecsod[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customOrder.upd(\"{$key}\");' /></div>";
+	$r .= "</td>";
+	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csod[{$key}][value]' id='csod[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
+	return $r;
+}
+
+/**
+ * custom order
+ */
+function has_custom_order_meta() {
+	$usecs_custom_order_field = get_option('usecs_custom_order_field');
+	$custom_order = ($usecs_custom_order_field) ? unserialize($usecs_custom_order_field) : array();
+	return $custom_order;
+}
+
+function custom_order_ajax() {
+
+	if($_POST['action'] != 'custom_order_ajax') die(0);
+
+	$meta = has_custom_order_meta();
+
+	if(isset($_POST['add'])) {
+		$newcsodkey = isset($_POST['newcsodkey']) ? stripslashes(trim($_POST['newcsodkey'])) : '';
+		$newcsodname = isset($_POST['newcsodname']) ? stripslashes(trim($_POST['newcsodname'])) : '';
+		$newcsodmeans = isset($_POST['newcsodmeans']) ? $_POST['newcsodmeans'] : 0;
+		$newcsodessential = isset($_POST['newcsodessential']) ? $_POST['newcsodessential'] : 0;
+
+		if($newcsodmeans == 2) {//テキスト
+			$newcsodvalue = isset($_POST['newcsodvalue']) ? stripslashes($_POST['newcsodvalue']) : '';
+			$nv = $newcsodvalue;
+
+		} else {
+			$newcsodvalue = isset($_POST['newcsodvalue']) ? explode('\n', stripslashes($_POST['newcsodvalue'])) : '';
+			foreach((array)$newcsodvalue as $v) {
+				if(trim($v) != '') 
+					$nv[] = trim($v);
+			}
+		}
+
+		if(!array_key_exists($newcsodkey, $meta)) {
+			if(($newcsodmeans >= 2 || '0' === $newcsodvalue || !empty($newcsodvalue)) && !empty($newcsodkey) && !empty($newcsodname)) {
+				$meta[$newcsodkey]['name'] = $newcsodname;
+				$meta[$newcsodkey]['means'] = $newcsodmeans;
+				$meta[$newcsodkey]['essential'] = $newcsodessential;
+				$meta[$newcsodkey]['value'] = $nv;
+				update_option('usecs_custom_order_field', serialize($meta));
+			}
+		}
+
+	} elseif(isset($_POST['update'])) {
+		$csodkey = isset($_POST['csodkey']) ? stripslashes(trim($_POST['csodkey'])) : '';
+		$csodname = isset($_POST['csodname']) ? stripslashes(trim($_POST['csodname'])) : '';
+		$csodmeans = isset($_POST['csodmeans']) ? $_POST['csodmeans'] : 0;
+		$csodessential = isset($_POST['csodessential']) ? $_POST['csodessential'] : 0;
+
+		if($csodmeans == 2) {//テキスト
+			$csodvalue = isset($_POST['csodvalue']) ? stripslashes($_POST['csodvalue']) : '';
+			$nv = $csodvalue;
+
+		} else {
+			$csodvalue = isset($_POST['csodvalue']) ? explode('\n', stripslashes($_POST['csodvalue'])) : '';
+			foreach((array)$csodvalue as $v) {
+				if(trim($v) != '') 
+					$nv[] = trim($v);
+			}
+		}
+
+		if($csodmeans >= 2 || '0' === $csodvalue || !empty($csodvalue)) {
+			$meta[$csodkey]['name'] = $csodname;
+			$meta[$csodkey]['means'] = $csodmeans;
+			$meta[$csodkey]['essential'] = $csodessential;
+			$meta[$csodkey]['value'] = $nv;
+			update_option('usecs_custom_order_field', serialize($meta));
+		}
+
+	} elseif(isset($_POST['delete'])) {
+		$csodkey = isset($_POST['csodkey']) ? $_POST['csodkey'] : '';
+		unset($meta[$csodkey]);
+		update_option('usecs_custom_order_field', serialize($meta));
+	}
+
+	$r = '';
+	foreach($meta as $key => $entry) 
+		$r .= _list_custom_order_meta_row($key, $entry);
+
+	//REGEX BUG: but it'll return info
+	// Compose JavaScript for return
+	die($r);
+}
+//20100809ysk end
+
 
 ?>

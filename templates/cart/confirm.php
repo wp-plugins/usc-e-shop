@@ -233,12 +233,11 @@ $html .= '<tr>
 	<th>'.__('Delivery Time', 'usces').'</th><td>' . $usces_entries['order']['delivery_time'] . '</td>
 	</tr>';
 $html .= '<tr>
-	<th>'.__('payment method', 'usces').'</th><td>' . $usces_entries['order']['payment_name'] . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>'.__('Notes', 'usces').'</th><td>' . nl2br($usces_entries['order']['note']) . '</td>
-	</tr>
-	</table>';
+	<th>'.__('payment method', 'usces').'</th><td>' . $usces_entries['order']['payment_name'] . usces_payment_detail($usces_entries) . '</td>
+	</tr>';
+	
+require_once( USCES_PLUGIN_DIR . "/includes/confirm_custom_order_form.php");
+$html .= '</table>';
 
 require_once( USCES_PLUGIN_DIR . "/includes/purchase_button.php");
 

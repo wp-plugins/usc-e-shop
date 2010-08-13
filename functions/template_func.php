@@ -75,7 +75,7 @@ function usces_the_item(){
 	
 	
 	$fields = get_post_custom($post_id);
-	foreach($fields as $key => $value){
+	foreach((array)$fields as $key => $value){
 		if( preg_match('/^_isku_/', $key, $match) ){
 			$key = substr($key, 6);
 			$values = maybe_unserialize($value[0]);
@@ -764,24 +764,33 @@ function usces_point_rate( $post_id = NULL, $out = '' ){
 function usces_the_payment_method( $value = '', $out = '' ){
 	global $usces;
 	if( !$usces->options['payment_method'] ) return;
+	
+	$cart = $usces->cart->get_cart();
+	$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 
 	$html = "<dl>\n";
-	
+	$list = '';
 	foreach ($usces->options['payment_method'] as $id => $payments) {
+		if( $charging_type ){
+			if( 'acting_remise_card' != $payments['settlement'] ) continue;
+		}
 		if( $payments['name'] != '' ) {
 			$module = trim($payments['module']);
 			$checked = ($payments['name'] == $value) ? ' checked' : '';
 			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 				$checked = '';
-				$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
 			}else{
-				$html .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
 			}
-			$html .= "\t<dd>{$payments['explanation']}</dd>\n";
+			$list .= "\t<dd>{$payments['explanation']}</dd>\n";
 		}
 	}
 
-	$html .= "</dl>\n";
+	$html .= $list . "</dl>\n";
+	
+	if( empty($list) )
+		$html = '‚Ü‚¾‚¨x•¥•û–@‚Ì€”õ‚ª‚Å‚«‚Ä‚¨‚è‚Ü‚¹‚ñB<br />ŠÇ—Ò‚É‚¨–â‡‚¹‚¢‚­‚¾‚³‚¢B'."\n";
 	
 	if( $out == 'return' ){
 		return $html;
@@ -1209,23 +1218,33 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 	$cfields = get_post_custom($post_id);
 	switch( $type ){
 		case 'list':
+			$list = '';
 			$html = '<ul class="item_custom_field">'."\n";
 			foreach( $cfields as $key => $value ){
-				if( '_' != substr($key, 0, 1) ){
-					$html .= '<li>' . $key . ' : ' . $value[0] . '</li>'."\n";
+				if( '_' != substr($key, 0, 1) && 'usces_' != substr($key, 0, 6) ){
+					$list .= '<li>' . $key . ' : ' . nl2br($value[0]) . '</li>'."\n";
 				}
 			}
-			$html .= '</ul>'."\n";
+			if(empty($list)){
+				$html = '';
+			}else{
+				$html .= $list . '</ul>'."\n";
+			}
 			break;
 
 		case 'table':
+			$list = '';
 			$html = '<table class="item_custom_field">'."\n";
 			foreach($cfields as $key => $value){
-				if( '_' != substr($key, 0, 1) ){
-					$html .= '<tr><th>' . $key . '</th><td>' . $value[0] . '</td>'."\n";
+				if( '_' != substr($key, 0, 1) && 'usces_' != substr($key, 0, 6) ){
+					$list .= '<tr><th>' . $key . '</th><td>' . nl2br($value[0]) . '</td>'."\n";
 				}
 			}
-			$html .= '</table>'."\n";
+			if(empty($list)){
+				$html = '';
+			}else{
+				$html .= $list . '</table>'."\n";
+			}
 			break;
 	}
 	$html = apply_filters( 'usces_filter_item_custom', $html, $post_id);

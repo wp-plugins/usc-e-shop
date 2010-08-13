@@ -121,4 +121,168 @@ function usces_delivery_secure_check( $mes ){
 	
 	return $mes;
 }
+
+function usces_get_conv_name($code){
+	switch($code){
+		case 'D001':
+			$name = 'セブンイレブン';
+			break;
+		case 'D002':
+			$name = 'ローソン';
+			break;
+		case 'D015':
+			$name = 'セイコーマート';
+			break;
+		case 'D405':
+			$name = 'ペイジー';
+			break;
+		case 'D003':
+			$name = 'サンクス';
+			break;
+		case 'D004':
+			$name = 'サークルK';
+			break;
+		case 'D005':
+			$name = 'ミニストップ';
+			break;
+		case 'D010':
+			$name = 'デイリーヤマザキ';
+			break;
+		case 'D011':
+			$name = 'ヤマザキデイリーストア';
+			break;
+		case 'D030':
+			$name = 'ファミリーマート';
+			break;
+		case 'D401':
+			$name = 'CyberEdy';
+			break;
+		case 'D404':
+			$name = '楽天銀行';
+			break;
+		case 'D406':
+			$name = 'ジャパネット銀行';
+			break;
+		case 'D451':
+			$name = 'ウェブマネー';
+			break;
+		case 'D452':
+			$name = 'ビットキャッシュ';
+			break;
+		case 'P901':
+			$name = 'コンビニ払込票';
+			break;
+		case 'P902':
+			$name = 'コンビニ払込票（郵便振替対応）';
+			break;
+		default:
+			$name = '';
+	}
+	return $name;
+}
+
+function usces_payment_detail($usces_entries){
+	$payments = usces_get_payments_by_name( $usces_entries['order']['payment_name'] );
+	$acting_flag = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
+	$str = '';
+	switch( $acting_flag ){
+		case 'paypal.php':
+			break;
+		
+		case 'epsilon.php':
+			break;
+		
+		case 'acting_zeus_card':
+			$div_name = 'div_' . $_POST['cbrand'];
+			if( isset($_POST['howpay']) && '1' === $_POST['howpay'] ){
+				$str = '　一括払い';
+			}else{
+				switch($_POST[$div_name]){
+					case '01':
+						$str = '　一括払い';
+						break;
+					case '99':
+						$str = '　分割（リボ払い）';
+						break;
+					case '03':
+						$str = '　分割（3回）';
+						break;
+					case '05':
+						$str = '　分割（5回）';
+						break;
+					case '06':
+						$str = '　分割（6回）';
+						break;
+					case '10':
+						$str = '　分割（10回）';
+						break;
+					case '12':
+						$str = '　分割（12回）';
+						break;
+					case '15':
+						$str = '　分割（15回）';
+						break;
+					case '18':
+						$str = '　分割（18回）';
+						break;
+					case '20':
+						$str = '　分割（20回）';
+						break;
+					case '24':
+						$str = '　分割（24回）';
+						break;
+				}
+			}
+			break;
+		
+		case 'acting_zeus_bank':
+			break;
+		
+		case 'acting_remise_card':
+			if( isset( $_POST['div'] ) ){
+				switch($_POST['div']){
+					case '0':
+						$str = '　一括払い';
+						break;
+					case '1':
+						$str = '　分割（2回）';
+						break;
+					case '2':
+						$str = '　分割（リボ払い）';
+						break;
+				}
+			}
+			break;
+		
+		case 'acting_remise_conv':
+			break;
+	}
+	return $str;
+}
+
+function usces_filter_delivery_check_custom_order() {
+	global $usces;
+	$args = func_get_args();
+	$mes = $args[0];
+
+	$meta = has_custom_order_meta();
+	foreach($meta as $key => $entry) {
+		$name = $entry['name'];
+		$means = $entry['means'];
+		$essential = $entry['essential'];
+
+		if($essential == 1) {
+			if($means == 2) {//テキスト
+				if(trim($_POST['custom_order'][$key]) == "")
+					$mes .= __($name.'を入力してください。', 'usces')."<br />";
+			} else {
+				if(!isset($_POST['custom_order'][$key]))
+					$mes .= __($name.'を選択してください。', 'usces')."<br />";
+			}
+		}
+	}
+
+	return $mes;
+}
+
 ?>

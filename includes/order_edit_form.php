@@ -41,6 +41,10 @@ if($order_action == 'new'){
 		$taio = 'cancel';
 	else if($this->is_status('completion', $data['order_status']))
 		$taio = 'completion';
+	else if($this->is_status('continuation', $data['order_status']))
+		$taio = 'continuation';
+	else if($this->is_status('termination', $data['order_status']))
+		$taio = 'termination';
 	else
 		$taio = 'new';
 		
@@ -424,8 +428,8 @@ jQuery(document).ready(function($){
 	$("#order_cod_fee").bind("change", function(){ orderfunc.sumPrice(); });
 	$("#order_tax").bind("change", function(){ orderfunc.sumPrice(); });
 	$("input[name*='upButton']").click(function(){
-		if( 'completion' == $("#order_taio option:selected").val() && '<?php echo substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10); ?>' != $('#modified').val() ){
-			if( confirm("<?php _e("発送日を今日の日付に変更しますか？", 'usces'); ?>\n<?php _e("発送日を変更せずに更新する場合はキャンセルを押してください。", 'usces'); ?>") ){
+		if( ('completion' == $("#order_taio option:selected").val() || 'continuation' == $("#order_taio option:selected").val()) && '<?php echo substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10); ?>' != $('#modified').val() ){
+			if( confirm("<?php _e("更新日を今日の日付に変更しますか？", 'usces'); ?>\n<?php _e("更新日日を変更せずに更新する場合はキャンセルを押してください。", 'usces'); ?>") ){
 				$('#up_modified').val('update');
 			}else{
 				$('#up_modified').val('');
@@ -487,7 +491,7 @@ jQuery(document).ready(function($){
 <tr>
 <td class="label border"><?php _e('Order number', 'usces'); ?></td><td class="col1 border"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
 <td class="col3 label border"><?php _e('order date', 'usces'); ?></td><td class="col2 border"><div class="rod long"><?php echo $data['order_date']; ?></div></td>
-<td class="label border"><?php _e('shpping date', 'usces'); ?></td><td class="border"><div id="order_modified" class="rod long"><?php echo $data['order_modified']; ?></div></td>
+<td class="label border"><?php _e('Date Modified', 'usces'); ?></td><td class="border"><div id="order_modified" class="rod long"><?php echo $data['order_modified']; ?></div></td>
 </tr>
 <tr>
 <td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo $data['mem_id']; ?></div></td>
@@ -604,6 +608,8 @@ foreach((array)$prefs as $value) {
 	<option value='duringorder'<?php if($taio == 'duringorder'){ echo 'selected="selected"';} ?>><?php echo $management_status['duringorder']; ?></option>
 	<option value='cancel'<?php if($taio == 'cancel'){ echo 'selected="selected"';} ?>><?php echo $management_status['cancel']; ?></option>
 	<option value='completion'<?php if($taio == 'completion'){ echo 'selected="selected"';} ?>><?php echo $management_status['completion']; ?></option>
+	<option value='continuation'<?php if($taio == 'continuation'){ echo 'selected="selected"';} ?>><?php echo $management_status['continuation']; ?></option>
+	<option value='termination'<?php if($taio == 'termination'){ echo 'selected="selected"';} ?>><?php echo $management_status['termination']; ?></option>
 </select>
 </td>
 <td class="col3 label"><?php _e('numbers', 'usces'); ?></td>

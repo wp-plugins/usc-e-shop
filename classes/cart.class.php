@@ -277,6 +277,12 @@ class usces_cart {
 			foreach( $_POST['reserve'] as $key => $value )
 				$_SESSION['usces_entry']['reserve'][$key] = wp_specialchars($value);
 		}
+//20100809ysk start
+		if(isset($_POST['custom_order'])) {
+			foreach( $_POST['custom_order'] as $key => $value )
+				$_SESSION['usces_entry']['custom_order'][$key] = wp_specialchars($value);
+		}
+//20100809ysk end
 	}
 
 	// get entry information ***************************************************************
@@ -307,6 +313,12 @@ class usces_cart {
 		else
 			$res['condition'] = NULL;
 
+//20100809ysk start
+		if(isset($_SESSION['usces_entry']['custom_order']))
+			$res['custom_order'] = $_SESSION['usces_entry']['custom_order'];
+		else
+			$res['custom_order'] = NULL;
+//20100809ysk end
 		return $res;
 		
 	}

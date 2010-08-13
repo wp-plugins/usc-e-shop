@@ -111,12 +111,35 @@ foreach($payments_arr as $pn => $pm ){
 			if('on' == $this->options['acting_settings'][$pm]['howpay']){
 				$html .= "
 				$(\"input[name='howpay']\").change(function() {
+					if( '' != $(\"select[name='cbrand'] option:selected\").val() ){
+						$(\"#div_" . $pm . "\").css({\"display\": \"\"});
+					}
 					if( '1' == $(\"input[name='howpay']:checked\").val() ){
 						$(\"#cbrand_" . $pm . "\").css({\"display\": \"none\"});
 						$(\"#div_" . $pm . "\").css({\"display\": \"none\"});
 					}else{
 						$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
-						$(\"#div_" . $pm . "\").css({\"display\": \"\"});
+					}
+				});
+		
+				$(\"select[name='cbrand']\").change(function() {
+					$(\"#div_" . $pm . "\").css({\"display\": \"\"});
+					if( '1' == $(\"select[name='cbrand'] option:selected\").val() ){
+						$(\"#brand1\").css({\"display\": \"\"});
+						$(\"#brand2\").css({\"display\": \"none\"});
+						$(\"#brand3\").css({\"display\": \"none\"});
+					}else if( '2' == $(\"select[name='cbrand'] option:selected\").val() ){
+						$(\"#brand1\").css({\"display\": \"none\"});
+						$(\"#brand2\").css({\"display\": \"\"});
+						$(\"#brand3\").css({\"display\": \"none\"});
+					}else if( '3' == $(\"select[name='cbrand'] option:selected\").val() ){
+						$(\"#brand1\").css({\"display\": \"none\"});
+						$(\"#brand2\").css({\"display\": \"none\"});
+						$(\"#brand3\").css({\"display\": \"\"});
+					}else{
+						$(\"#brand1\").css({\"display\": \"none\"});
+						$(\"#brand2\").css({\"display\": \"none\"});
+						$(\"#brand3\").css({\"display\": \"none\"});
 					}
 				});
 		
@@ -127,6 +150,25 @@ foreach($payments_arr as $pn => $pm ){
 					$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
 					$(\"#div_" . $pm . "\").css({\"display\": \"\"});
 				}				
+
+				if( '1' == $(\"select[name='cbrand'] option:selected\").val() ){
+					$(\"#brand1\").css({\"display\": \"\"});
+					$(\"#brand2\").css({\"display\": \"none\"});
+					$(\"#brand3\").css({\"display\": \"none\"});
+				}else if( '2' == $(\"select[name='cbrand'] option:selected\").val() ){
+					$(\"#brand1\").css({\"display\": \"none\"});
+					$(\"#brand2\").css({\"display\": \"\"});
+					$(\"#brand3\").css({\"display\": \"none\"});
+				}else if( '3' == $(\"select[name='cbrand'] option:selected\").val() ){
+					$(\"#brand1\").css({\"display\": \"none\"});
+					$(\"#brand2\").css({\"display\": \"none\"});
+					$(\"#brand3\").css({\"display\": \"\"});
+				}else{
+					$(\"#brand1\").css({\"display\": \"none\"});
+					$(\"#brand2\").css({\"display\": \"none\"});
+					$(\"#brand3\").css({\"display\": \"none\"});
+				}
+
 				\n";
 			}
 			break;

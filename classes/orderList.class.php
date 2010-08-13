@@ -257,11 +257,13 @@ class dataList
 						 WHEN LOCATE('completion', order_status) > 0 THEN %s
 						 WHEN LOCATE('estimate', order_status) > 0 THEN %s 
 						 WHEN LOCATE('adminorder', order_status) > 0 THEN %s 
+						 WHEN LOCATE('continuation', order_status) > 0 THEN %s 
+						 WHEN LOCATE('termination', order_status) > 0 THEN %s 
 						 ELSE %s 
 					END AS order_status, 
 					order_modified 
 					FROM {$this->table}",
-					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('temporaly out of stock', 'usces'), __('Cancel', 'usces'), __('It has sent it out.', 'usces'), __('An estimate', 'usces'), __('Management of Note', 'usces'), __('new order', 'usces'));
+					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('temporaly out of stock', 'usces'), __('Cancel', 'usces'), __('It has sent it out.', 'usces'), __('An estimate', 'usces'), __('Management of Note', 'usces'), __('Continuation', 'usces'), __('Termination', 'usces'), __('new order', 'usces'));
 					
 		$query .= $where . $order;// . $limit;
 		//var_dump($query);

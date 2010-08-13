@@ -452,6 +452,41 @@ function usces_lostmail($url) {
 
 }
 
+//function usces_send_receipted_mail( $order_id, $acting ) {
+//	global $usces;
+//	$res = false;
+//
+//	$subject = __('Change password','usces');
+//	$message = __('Please, click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
+//			. $url . "\n\r\n\r\n\r"
+//			. "-----------------------------------------------------\n\r"
+//			. __('I seem to have you cancel it when the body does not have memorizing to this email.','usces') . "\n\r"
+//			. "-----------------------------------------------------\n\r\n\r\n\r"
+//			. $usces->options['mail_data']['footer']['footerlogo'];
+//
+//	$para1 = array(
+//			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_SESSION["usces_lostmail"]),
+//			'to_address' => $_SESSION["usces_lostmail"], 
+//			'from_name' => get_bloginfo('name'),
+//			'from_address' => $usces->options['sender_mail'],
+//			'return_path' => $usces->options['error_mail'],
+//			'subject' => $subject,
+//			'message' => $message
+//			);
+//
+//	$res = usces_send_mail( $para1 );
+//	
+//	if($res === false) {
+//		$usces->error_message = __('Error: I was not able to transmit an email.','usces');
+//		$page = 'lostmemberpassword';
+//	} else {
+//		$page = 'lostcompletion';
+//	}
+//
+//	return $page;
+//
+//}
+
 function usces_send_mail( $para ) {
 	global $usces;
 
@@ -485,6 +520,9 @@ function usces_reg_orderdata( $results = array() ) {
 
 	$cart = $usces->cart->get_cart();
 	$entry = $usces->cart->get_entry();
+	
+	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
+	$charging_flag = (  0 < (int)$chargings ) ? true : false;
 
 	$item_total_price = $usces->get_total_price( $cart );
 	$member = $usces->get_member();
@@ -492,7 +530,13 @@ function usces_reg_orderdata( $results = array() ) {
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
-	$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt' : '';
+	if( $charging_flag ){
+		$status = 'continuation';
+		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
+	}else{
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv'  || $set['settlement'] == 'acting_zeus_bank' ) ? 'noreceipt' : '';
+		$order_modified = NULL;
+	}
 	$payments = $usces->getPayments($entry['order']['payment_name']);
 	if($results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
 	
@@ -534,7 +578,7 @@ function usces_reg_orderdata( $results = array() ) {
 					$entry['order']['cod_fee'], 
 					$entry['order']['tax'], 
 					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
-					null, 
+					$order_modified, 
 					$status
 				);
 
@@ -572,6 +616,12 @@ function usces_reg_orderdata( $results = array() ) {
 											VALUES (%d, %s, %s)", $order_id, $key, $value);
 				$wpdb->query( $mquery );
 			}
+		}
+	
+		if ( isset($_REQUEST['X-S_TORIHIKI_NO']) ) {
+			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
+										VALUES (%d, %s, %s)", $order_id, 'settlement_id', $_REQUEST['X-S_TORIHIKI_NO']);
+			$wpdb->query( $mquery );
 		}
 	
 	endif;
@@ -827,7 +877,7 @@ function usces_update_orderdata() {
 	$receipt = isset($entry['order']['receipt']) ? $entry['order']['receipt'] : '';
 	$admin = isset($entry['order']['admin']) ? $entry['order']['admin'] : '';
 	$status = $usces->make_status( $taio, $receipt, $admin );
-	if( $taio == 'completion' ){
+	if( $taio == 'completion' || $taio == 'continuation' ){
 		if( 'update' == $_POST['up_modified'] ){
 			$order_modified =  substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 		}else{
@@ -1420,9 +1470,38 @@ function usces_check_acting_return() {
 	
 			break;
 			
+		case 'zeus_card':
+			$results = $_POST;
+			if( $_REQUEST['acting_return'] ){
+				$results[0] = 1;
+			}else{
+				$results[0] = 0;
+			}
+			$results['payment_status'] = 1;
+			break;
+			
 		case 'remise_card':
 			$results = $_POST;
 			if( $_REQUEST['acting_return'] ){
+				$results[0] = 1;
+			}else{
+				$results[0] = 0;
+			}
+			$results['payment_status'] = 1;
+			break;
+			
+		case 'remise_conv':
+			$results = $_GET;
+			if( $_REQUEST['acting_return'] && isset($_REQUEST['X-JOB_ID']) ){
+				$results[0] = 1;
+			}else{
+				$results[0] = 0;
+			}
+			break;
+			
+		default:
+			$results = $_GET;
+			if( $_REQUEST['result'] ){
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;

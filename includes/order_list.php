@@ -14,7 +14,7 @@ $arr_column = array(
 			__('payment method', 'usces') => 'payment_name', 
 			__('transfer statement', 'usces') => 'receipt_status', 
 			__('Processing', 'usces') => 'order_status', 
-			__('shpping date', 'usces') => 'order_modified');
+			__('Date Modified', 'usces') => 'order_modified');
 
 $DT = new dataList($tableName, $arr_column);
 $res = $DT->MakeTable();

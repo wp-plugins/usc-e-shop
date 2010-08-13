@@ -26,7 +26,7 @@ class Welcart_category extends WP_Widget {
 					  
 		<ul class="ucart_widget_body">
 		<?php $cats = get_category_by_slug($cat_slug); ?>
-		<?php wp_list_categories('orderby=id&use_desc_for_title=0&child_of='.$cats->term_id.'&title_li='); ?>
+		<?php wp_list_categories('orderby=ID&use_desc_for_title=0&child_of='.$cats->term_id.'&title_li='); ?>
  		</ul>
 				  
               <?php echo $after_widget; ?>

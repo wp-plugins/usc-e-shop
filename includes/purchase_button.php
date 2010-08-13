@@ -7,6 +7,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="send"><input name="backDelivery" type="submit" value="'.__('Back to payment method page.', 'usces').'" />&nbsp;&nbsp;
 		<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
+	$html = apply_filters('usces_filter_confirm_inform', $html);
+	$html .= '</form>';
 }else{
 	//$notify_url = urlencode(USCES_CART_URL . '&purchase');
 	$send_item_code = $this->getItemCode($cart[0]['post_id']);
@@ -44,6 +46,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
 				<div class="send"><input type="image" src="' . $scheme . 'www.paypal.com/ja_JP/JP/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal">
 				<img alt="" border="0" src="' . $scheme . 'www.paypal.com/ja_JP/i/scr/pixel.gif" width="1" height="1"></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
 			break;
 			
 		case 'epsilon.php':
@@ -61,38 +65,84 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '<input type="hidden" name="item_price" value="' . $usces_entries['order']['total_full_price'] . '">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
 				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
 			break;
 			
 		case 'acting_zeus_card':
 			$acting_opts = $this->options['acting_settings']['zeus'];
-			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-				<input type="hidden" name="cardnumber" value="' . esc_html($_POST['cnum1']) . esc_html($_POST['cnum2']) . esc_html($_POST['cnum3']) . esc_html($_POST['cnum4']) . '">
-				<input type="hidden" name="expyy" value="' . $_POST['expyy'] . '">
-				<input type="hidden" name="expmm" value="' . $_POST['expmm'] . '">
-				<input type="hidden" name="telno" value="' . str_replace('-', '', $usces_entries['customer']['tel']) . '">
+			$this->save_order_acting_data($rand);
+			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
+			$member = $this->get_member();
+			$pcid = $this->get_member_meta_value('zeus_pcid', $member['ID']);
+			if( $pcid == '8888888888888888' && $this->is_member_logged_in() ){
+				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
+				$html .= '<input type="hidden" name="expyy" value="' . $_POST['expyy'] . '">
+					<input type="hidden" name="expmm" value="' . $_POST['expmm'] . '">';
+			}else{
+				$html .= '<input type="hidden" name="cardnumber" value="' . esc_html($_POST['cnum1']) . esc_html($_POST['cnum2']) . esc_html($_POST['cnum3']) . esc_html($_POST['cnum4']) . '">';
+				$html .= '<input type="hidden" name="expyy" value="' . $_POST['expyy'] . '">
+					<input type="hidden" name="expmm" value="' . $_POST['expmm'] . '">';
+			}
+			$html .= '<input type="hidden" name="telno" value="' . str_replace('-', '', $usces_entries['customer']['tel']) . '">
 				<input type="hidden" name="email" value="' . $usces_entries['customer']['mailaddress1'] . '">
 				<input type="hidden" name="sendid" value="' . $memid . '">
 				<input type="hidden" name="username" value="' . esc_html($_POST['username']) . '">
 				<input type="hidden" name="money" value="' . $usces_entries['order']['total_full_price'] . '">
-				<input type="hidden" name="sendpoint" value="' . $_GET['usces'] . '">
+				<input type="hidden" name="sendpoint" value="' . $rand . '">
 				<input type="hidden" name="printord" value="yes">';
 			if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
 				$html .= '<input type="hidden" name="howpay" value="' . $_POST['howpay'] . '">';
-				$html .= '<input type="hidden" name="div" value="' . $_POST['div'] . '">';
+				$html .= '<input type="hidden" name="cbrand" value="' . $_POST['cbrand'] . '">';
+				$div_name = 'div_' . $_POST['cbrand'];
+				$html .= '<input type="hidden" name="div" value="' . $_POST[$div_name] . '">';
+				$html .= '<input type="hidden" name="div_1" value="' . $_POST['div_1'] . '">';
+				$html .= '<input type="hidden" name="div_2" value="' . $_POST['div_2'] . '">';
+				$html .= '<input type="hidden" name="div_3" value="' . $_POST['div_3'] . '">';
 			}
-			$html .= '<input type="hidden" name="cnum1" value="' . esc_html($_POST['cnum1']) . '">
+			$html .= '
+				<input type="hidden" name="cnum1" value="' . esc_html($_POST['cnum1']) . '">
 				<input type="hidden" name="cnum2" value="' . esc_html($_POST['cnum2']) . '">
 				<input type="hidden" name="cnum3" value="' . esc_html($_POST['cnum3']) . '">
 				<input type="hidden" name="cnum4" value="' . esc_html($_POST['cnum4']) . '">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
 				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			break;
+			
+		case 'acting_zeus_bank':
+			$acting_opts = $this->options['acting_settings']['zeus'];
+			$this->save_order_acting_data($rand);
+			$html .= '<form action="' . $acting_opts['bank_url'] . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">';
+			$html .= '
+				<input type="hidden" name="clientip" value="' . $acting_opts['clientip_bank'] . '">
+				<input type="hidden" name="act" value="order">
+				<input type="hidden" name="money" value="' . $usces_entries['order']['total_full_price'] . '">
+				<input type="hidden" name="username" value="' . trim($usces_entries['customer']['name3']) . trim($usces_entries['customer']['name4']) . '">
+				<input type="hidden" name="telno" value="' . str_replace('-', '', $usces_entries['customer']['tel']) . '">
+				<input type="hidden" name="email" value="' . $usces_entries['customer']['mailaddress1'] . '">
+				<input type="hidden" name="sendid" value="' . $memid . '">
+				<input type="hidden" name="sendpoint" value="' . $rand . '">
+				<input type="hidden" name="siteurl" value="' . get_option('home') . '">
+				<input type="hidden" name="sitestr" value="「' . get_option('blogname') . '」トップページへ">
+				';
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" onClick="document.charset=\'Shift_JIS\'; document.purchase_form.submit();" /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>'."\n";
 			break;
 			
 		case 'acting_remise_card':
 			$charging_type = $this->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 			$acting_opts = $this->options['acting_settings']['remise'];
 			$this->save_order_acting_data($rand);
-			$html .= '<form action="' . $acting_opts['send_url_pc'] . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+			$send_url = ('public' == $acting_opts['card_pc_ope']) ? $acting_opts['send_url_pc'] : $acting_opts['send_url_pc_test'];
+			$html .= '<form name="purchase_form" action="' . $send_url . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="SHOPCO" value="' . $acting_opts['SHOPCO'] . '" />
 				<input type="hidden" name="HOSTID" value="' . $acting_opts['HOSTID'] . '" />
 				<input type="hidden" name="REMARKS3" value="' . $acting_opts['REMARKS3'] . '" />
@@ -129,8 +179,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 				$html .= '<input type="hidden" name="AUTOCHARGE" value="1">';
 				$html .= '<input type="hidden" name="AC_S_KAIIN_NO" value="' . $member['ID'] . '">';
-//				$html .= '<input type="hidden" name="AC_NAME" value="' . mb_convert_encoding($usces_entries['customer']['name1'].$usces_entries['customer']['name2'], 'SJIS', 'UTF-8') . '">';
-//				$html .= '<input type="hidden" name="AC_KANA" value="' . mb_convert_encoding($usces_entries['customer']['name3'].$usces_entries['customer']['name4'], 'SJIS', 'UTF-8') . '">';
+				$html .= '<input type="hidden" name="AC_NAME" value="' . $usces_entries['customer']['name1'].$usces_entries['customer']['name2'] . '">';
+//				$html .= '<input type="hidden" name="AC_KANA" value="' . $usces_entries['customer']['name3'].$usces_entries['customer']['name4'] . '">';
 				$html .= '<input type="hidden" name="AC_TEL" value="' . str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')) . '">';
 				$html .= '<input type="hidden" name="AC_AMOUNT" value="' . $usces_entries['order']['total_full_price'] . '">';
 				$html .= '<input type="hidden" name="AC_TOTAL" value="' . $usces_entries['order']['total_full_price'] . '">';
@@ -146,40 +196,46 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				}
 			}
 
-			$html .= '
-				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" onClick="document.charset=\'Shift_JIS\'; document.purchase_form.submit();" /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>'."\n";
 			break;
 			
 		case 'acting_remise_conv':
 			$datestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 			$acting_opts = $this->options['acting_settings']['remise'];
 			$this->save_order_acting_data($rand);
-			$html .= '<form action="' . $acting_opts['send_url_pc'] . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+			$send_url = ('public' == $acting_opts['conv_pc_ope']) ? $acting_opts['send_url_cvs_pc'] : $acting_opts['send_url_cvs_pc_test'];
+			$html .= '<form name="purchase_form" action="' . $send_url . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="SHOPCO" value="' . $acting_opts['SHOPCO'] . '" />
 				<input type="hidden" name="HOSTID" value="' . $acting_opts['HOSTID'] . '" />
 				<input type="hidden" name="REMARKS3" value="' . $acting_opts['REMARKS3'] . '" />
 				<input type="hidden" name="S_TORIHIKI_NO" value="' . $rand . '" />
-				<input type="hidden" name="NAME1" value="' . mb_convert_encoding($usces_entries['customer']['name1'], 'SJIS', 'UTF-8') . '" />
-				<input type="hidden" name="NAME2" value="' . mb_convert_encoding($usces_entries['customer']['name2'], 'SJIS', 'UTF-8') . '" />
-				<input type="hidden" name="KANA1" value="' . mb_convert_encoding($usces_entries['customer']['name3'], 'SJIS', 'UTF-8') . '" />
-				<input type="hidden" name="KANA2" value="' . mb_convert_encoding($usces_entries['customer']['name4'], 'SJIS', 'UTF-8') . '" />
+				<input type="hidden" name="NAME1" value="' . $usces_entries['customer']['name1'] . '" />
+				<input type="hidden" name="NAME2" value="' . $usces_entries['customer']['name2'] . '" />
+				<input type="hidden" name="KANA1" value="' . $usces_entries['customer']['name3'] . '" />
+				<input type="hidden" name="KANA2" value="' . $usces_entries['customer']['name4'] . '" />
 				<input type="hidden" name="YUBIN1" value="' . substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 0, 3) . '" />
 				<input type="hidden" name="YUBIN2" value="' . substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 3, 4) . '" />
-				<input type="hidden" name="ADD1" value="' . mb_convert_encoding($usces_entries['customer']['pref'] . $usces_entries['customer']['address1'], 'SJIS', 'UTF-8') . '" />
-				<input type="hidden" name="ADD2" value="' . mb_convert_encoding($usces_entries['customer']['address2'], 'SJIS', 'UTF-8') . '" />
-				<input type="hidden" name="ADD3" value="' . mb_convert_encoding($usces_entries['customer']['address3'], 'SJIS', 'UTF-8') . '" />
+				<input type="hidden" name="ADD1" value="' . $usces_entries['customer']['pref'] . $usces_entries['customer']['address1'] . '" />
+				<input type="hidden" name="ADD2" value="' . $usces_entries['customer']['address2'] . '" />
+				<input type="hidden" name="ADD3" value="' . $usces_entries['customer']['address3'] . '" />
 				<input type="hidden" name="TEL" value="' . str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')) . '" />
 				<input type="hidden" name="MAIL" value="' . $usces_entries['customer']['mailaddress1'] . '" />
 				<input type="hidden" name="TOTAL" value="' . $usces_entries['order']['total_full_price'] . '" />
 				<input type="hidden" name="TAX" value="" />
 				<input type="hidden" name="S_PAYDATE" value="' . date('Ymd', mktime(0,0,0,substr($datestr, 5, 2),substr($datestr, 8, 2)+$acting_opts['S_PAYDATE'],substr($datestr, 0, 4))) . '" />
 				<input type="hidden" name="SEIYAKUDATE" value="' . date('Ymd', mktime(0,0,0,substr($datestr, 5, 2),substr($datestr, 8, 2),substr($datestr, 0, 4))) . '" />
-				<input type="hidden" name="BIKO" value="' . mb_convert_encoding($usces_entries['order']['note'], 'SJIS', 'UTF-8') . '" />
-				<input type="hidden" name="PAY_CSV" value="D001" />
+				<input type="hidden" name="BIKO" value="' . $usces_entries['order']['note'] . '" />
+				
 				';
 			$mname_01 = '商品総額';
-			$html .= '<input type="hidden" name="MNAME_01" value="' . mb_convert_encoding($mname_01, 'SJIS', 'UTF-8') . '" />
+			$html .= '<input type="hidden" name="MNAME_01" value="' . $mname_01 . '" />
 				<input type="hidden" name="MSUM_01" value="' . $usces_entries['order']['total_full_price'] . '" />
 				<input type="hidden" name="MNAME_02" value="" />
 				<input type="hidden" name="MSUM_02" value="0" />
@@ -201,16 +257,19 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . '&confirm=1" />
 				';
 			$html .= '
+				<input type="hidden" name="dummy" value="&#65533;" />
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
-				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
+				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" onClick="document.charset=\'Shift_JIS\'; document.purchase_form.submit();" /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
 			break;
 			
 		default:
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
 				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'" /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
 	}
 }
-$html = apply_filters('usces_filter_confirm_inform', $html);
-$html .= '</form>';
 ?>

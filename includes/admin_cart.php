@@ -25,6 +25,73 @@ jQuery(function($){
 	$("#aAdditionalURLs").click(function () {
 		$("#AdditionalURLs").toggle();
 	});
+
+	//20100809ysk start
+	var $tabs = $('#uscestabs').tabs({
+		cookie: {
+			// store cookie for a day, without, it would be a session cookie
+			expires: 1
+		}
+	});
+
+	customOrder = {
+		settings: {
+			url: uscesL10n.requestFile,
+			type: 'POST',
+			cache: false,
+			success: function(data, dataType) {
+				$("tbody#item-opt-list").html(data);
+			},
+			error: function(msg) {
+				$("#ajax-response").html(msg);
+			}
+		},
+
+		add: function() {
+			if($("#newcsodkey").val() == '' || $("#newcsodname").val() == '') return;
+
+			var key = $("#newcsodkey").val();
+			var name = $("#newcsodname").val();
+			var value = $("#newcsodvalue").val();
+			var means = $("#newcsodmeans").val();
+			var essential = ($("input#newcsodessential").attr("checked")) ? '1' : '0';
+
+			var s = customOrder.settings;
+			s.data = "action=custom_order_ajax&add=1&newcsodkey="+key+"&newcsodname="+name+"&newcsodvalue="+value+"&newcsodmeans="+means+"&newcsodessential="+essential;
+			s.success = function(data, dataType) {
+				$("table#optlist-table").removeAttr("style");
+				$("tbody#item-opt-list").html(data);
+				$("#newcsodkey").val("");
+				$("#newcsodname").val("");
+				$("#newcsodvalue").val("");
+				$("#newcsodmeans").attr({selectedIndex: 0});
+				$("#newcsodessential").attr({checked: false});
+			};
+			$.ajax(s);
+			return false;
+		},
+
+		upd: function(key) {
+			var name = $(':input[name="csod['+key+'][name]"]').val();
+			var value = $(':input[name="csod['+key+'][value]"]').val();
+			var means = $(':input[name="csod['+key+'][means]"]').val();
+			var essential = ($(':input[name="csod['+key+'][essential]"]').attr("checked")) ? '1' : '0';
+
+			var s = customOrder.settings;
+			s.data = "action=custom_order_ajax&update=1&csodkey="+key+"&csodname="+name+"&csodvalue="+value+"&csodmeans="+means+"&csodessential="+essential;
+			$.ajax(s);
+			return false;
+		},
+
+		del: function(key) {
+			var s = customOrder.settings;
+			s.data = "action=custom_order_ajax&delete=1&csodkey="+key;
+			$.ajax(s);
+			return false;
+		}
+	};
+	//20100809ysk end
+
 });
 
 function toggleVisibility(id) {
@@ -47,6 +114,17 @@ function toggleVisibility(id) {
 <form action="" method="post" name="option_form" id="option_form">
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
+
+<!--20100809ysk start-->
+<div id="uscestabs">
+	<ul>
+		<li><a href="#cart_page_setting_1"><?php _e('Rule of the column for a item name','usces'); ?></a></li>
+		<li><a href="#cart_page_setting_2"><?php _e('Explanation in a Cart page','usces'); ?></a></li>
+		<li><a href="#cart_page_setting_3"><?php _e('custom order','usces'); ?></a></li>
+	</ul>
+
+<div id="cart_page_setting_1">
+<!--20100809ysk end-->
 
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('Rule of the column for a item name','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_item_indication');"><?php _e('(Explain)','usces'); ?></a></h3>
@@ -81,6 +159,12 @@ function toggleVisibility(id) {
 <div id="ex_item_indication" class="explanation"><?php _e('You can appoint indication, non-indication, sort of the item name to show the cart.<br />This rule is applied as brand names such as a cart page, contents confirmation page, a member information purchase history, an email, a written estimate, the statement of delivery.','usces'); ?></div>
 </div>
 </div><!--postbox-->
+
+<!--20100809ysk start-->
+</div><!--cart_page_setting_1-->
+
+<div id="cart_page_setting_2">
+<!--20100809ysk end-->
 
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('Explanation in a Cart page','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_cart_page');"><?php _e('(Explain)','usces'); ?></a></h3>
@@ -182,6 +266,84 @@ function toggleVisibility(id) {
 </div>
 </div><!--postbox-->
 
+<!--20100809ysk start-->
+</div><!--cart_page_setting_2-->
+
+<?php
+	$meta = has_custom_order_meta();
+	$display = (empty($meta)) ? ' style="display: none;"' : '';
+	$means = get_option('usces_custom_order_select');
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue) {
+		$meansoption .= '<option value="'.$meankey.'">'.$meanvalue."</option>\n";
+	}
+?>
+<div id="cart_page_setting_3">
+	<div class="postbox">
+	<h3 class="hndle"><span><?php _e('Custom Order Options', 'usces'); ?><a style="cursor:pointer;" onclick="toggleVisibility('ex_custom_order');"><?php _e('(Explain)','usces'); ?></a></span></h3>
+	<div class="inside">
+	<div id="postoptcustomstuff"><div id="ajax-response"></div>
+	<table id="optlist-table" class="list"<?php echo $display; ?>>
+		<thead>
+		<tr>
+		<th class="left"><?php _e('key name','usces') ?></th>
+		<th rowspan="2"><?php _e('selected amount','usces') ?></th>
+		</tr>
+		<tr>
+		<th class="left"><?php _e('field name','usces') ?></th>
+		</tr>
+		</thead>
+		<tbody id="item-opt-list">
+<?php
+	if(empty($meta)) {
+?>
+			<tr><td></td></tr>
+<?php
+	} else {
+		foreach($meta as $key => $entry) 
+			echo _list_custom_order_meta_row($key, $entry);
+	}
+?>
+		</tbody>
+	</table>
+
+	<p><strong><?php _e('Add a new custom order option','usces') ?> : </strong></p>
+	<table id="newmeta2">
+		<thead>
+		<tr>
+		<th class="left"><?php _e('key name','usces') ?></th>
+		<th rowspan="2"><?php _e('selected amount','usces') ?></th>
+		</tr>
+		<tr>
+		<th class="left"><?php _e('field name','usces') ?></th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr>
+		<td class='item-opt-key'>
+		<input type="text" name="newcsodkey" id="newcsodkey" class="optname" value="" />
+		<input type="text" name="newcsodname" id="newcsodname" class="optname" value="" />
+		<div class="optcheck"><select name='newcsodmeans' id='newcsodmeans'><?php echo $meansoption; ?></select>
+		<input type="checkbox" name="newcsodessential" id="newcsodessential" /><label for='newcsodessential'><?php _e('Required','usces') ?></label></div>
+		</td>
+		<td class='item-opt-value'><textarea name="newcsodvalue" id="newcsodvalue" class='optvalue'></textarea></td>
+		</tr>
+
+		<tr><td colspan="2" class="submit">
+		<input type="button" name="add_custom_order" id="add_custom_order" value="<?php _e('Add custom order options','usces') ?>" onclick="customOrder.add();" />
+		</td></tr>
+		</tbody>
+	</table>
+
+	<hr size="1" color="#CCCCCC" />
+	<div id="ex_custom_order" class="explanation"><?php _e("Conditions which will be selected at the purchase. You can use the options which you hve registered here, as an option in the master items.", 'usces'); ?></div>
+	</div>
+	</div>
+	</div><!--postbox-->
+</div><!--cart_page_setting_3-->
+</div><!--tabs-->
+<!--20100809ysk end-->
 
 </div><!--poststuff-->
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />

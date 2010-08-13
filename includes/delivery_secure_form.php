@@ -21,44 +21,60 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
 				
-				$html .= '
-				<table class="customer_form" id="' . $paymod_id . '">
-					<tr>
-					<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
-					<td colspan="2"><input name="cnum1" type="text" size="6" maxlength="4" value="' . $cnum1 . '" />-<input name="cnum2" type="text" size="6" maxlength="4" value="' . $cnum2 . '" />-<input name="cnum3" type="text" size="6" maxlength="4" value="' . $cnum3 . '" />-<input name="cnum4" type="text" size="6" maxlength="4" value="' . $cnum4 . '" /></td>
-					</tr>
-					<tr>
-					<th scope="row">'.__('カード有効期限', 'usces').'</th>
-					<td colspan="2">
-					<select name="expyy">
-						<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
-					';
-				for($i=0; $i<5; $i++){
-					$year = date('Y') - 1 + $i;
-					$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
+				$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
+				
+				$pcid = NULL;
+				if( $this->is_member_logged_in() ){
+					$member = $this->get_member();
+					$pcid = $this->get_member_meta_value('remise_pcid', $member['ID']);
 				}
-				$html .= '
-					</select>年 
-					<select name="expmm">
-						<option value=""' . (empty($expmm) ? ' selected="selected"' : '') . '>----</option>
-						<option value="01"' . (('01' == $expmm) ? ' selected="selected"' : '') . '> 1</option>
-						<option value="02"' . (('02' == $expmm) ? ' selected="selected"' : '') . '> 2</option>
-						<option value="03"' . (('03' == $expmm) ? ' selected="selected"' : '') . '> 3</option>
-						<option value="04"' . (('04' == $expmm) ? ' selected="selected"' : '') . '> 4</option>
-						<option value="05"' . (('05' == $expmm) ? ' selected="selected"' : '') . '> 5</option>
-						<option value="06"' . (('06' == $expmm) ? ' selected="selected"' : '') . '> 6</option>
-						<option value="07"' . (('07' == $expmm) ? ' selected="selected"' : '') . '> 7</option>
-						<option value="08"' . (('08' == $expmm) ? ' selected="selected"' : '') . '> 8</option>
-						<option value="09"' . (('09' == $expmm) ? ' selected="selected"' : '') . '> 9</option>
-						<option value="10"' . (('10' == $expmm) ? ' selected="selected"' : '') . '>10</option>
-						<option value="11"' . (('11' == $expmm) ? ' selected="selected"' : '') . '>11</option>
-						<option value="12"' . (('12' == $expmm) ? ' selected="selected"' : '') . '>12</option>
-					</select>月</td>
-					</tr>
-					<tr>
-					<th scope="row">'.__('カード名義', 'usces').'</th>
-					<td colspan="2"><input name="username" type="text" size="30" value="' . $username . '" />(半角英字)</td>
-					</tr>';
+				if( 'on' == $this->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
+					$html .= '<input name="cnum1" type="hidden" value="8888" />
+					<input name="cnum2" type="hidden" value="8888" />
+					<input name="cnum3" type="hidden" value="8888" />
+					<input name="cnum4" type="hidden" value="8888" />
+					<input name="expyy" type="hidden" value="2010" />
+					<input name="expmm" type="hidden" value="01" />
+					<input name="username" type="hidden" value="QUICKCHARGE" />';
+					
+				}else{
+					$html .= '<tr>
+						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
+						<td colspan="2"><input name="cnum1" type="text" size="6" maxlength="4" value="' . $cnum1 . '" />-<input name="cnum2" type="text" size="6" maxlength="4" value="' . $cnum2 . '" />-<input name="cnum3" type="text" size="6" maxlength="4" value="' . $cnum3 . '" />-<input name="cnum4" type="text" size="6" maxlength="4" value="' . $cnum4 . '" /></td>
+						</tr>
+						<tr>
+						<th scope="row">'.__('カード有効期限', 'usces').'</th>
+						<td colspan="2">
+						<select name="expyy">
+							<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
+						';
+					for($i=0; $i<5; $i++){
+						$year = date('Y') - 1 + $i;
+						$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
+					}
+					$html .= '
+						</select>年 
+						<select name="expmm">
+							<option value=""' . (empty($expmm) ? ' selected="selected"' : '') . '>----</option>
+							<option value="01"' . (('01' == $expmm) ? ' selected="selected"' : '') . '> 1</option>
+							<option value="02"' . (('02' == $expmm) ? ' selected="selected"' : '') . '> 2</option>
+							<option value="03"' . (('03' == $expmm) ? ' selected="selected"' : '') . '> 3</option>
+							<option value="04"' . (('04' == $expmm) ? ' selected="selected"' : '') . '> 4</option>
+							<option value="05"' . (('05' == $expmm) ? ' selected="selected"' : '') . '> 5</option>
+							<option value="06"' . (('06' == $expmm) ? ' selected="selected"' : '') . '> 6</option>
+							<option value="07"' . (('07' == $expmm) ? ' selected="selected"' : '') . '> 7</option>
+							<option value="08"' . (('08' == $expmm) ? ' selected="selected"' : '') . '> 8</option>
+							<option value="09"' . (('09' == $expmm) ? ' selected="selected"' : '') . '> 9</option>
+							<option value="10"' . (('10' == $expmm) ? ' selected="selected"' : '') . '>10</option>
+							<option value="11"' . (('11' == $expmm) ? ' selected="selected"' : '') . '>11</option>
+							<option value="12"' . (('12' == $expmm) ? ' selected="selected"' : '') . '>12</option>
+						</select>月</td>
+						</tr>
+						<tr>
+						<th scope="row">'.__('カード名義', 'usces').'</th>
+						<td colspan="2"><input name="username" type="text" size="30" value="' . $username . '" />(半角英字)</td>
+						</tr>';
+				}	
 					
 				if( 'on' == $this->options['acting_settings'][$paymod_id]['howpay'] ){
 				
@@ -84,7 +100,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 					<tr id="div_zeus">
 					<th scope="row">'.__('分割回数', 'usces').'</th>
 					<td colspan="2">
-					<select name="div" id="brand1">
+					<select name="div_1" id="brand1">
 						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
 						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 						<option value="03"' . (('03' == $cbrand) ? ' selected="selected"' : '') . '>3回</option>
@@ -97,11 +113,11 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 						<option value="20"' . (('20' == $cbrand) ? ' selected="selected"' : '') . '>20回</option>
 						<option value="24"' . (('24' == $cbrand) ? ' selected="selected"' : '') . '>24回</option>
 					</select>
-					<select name="div" id="brand2">
+					<select name="div_2" id="brand2">
 						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
 						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 					</select>
-					<select name="div" id="brand3">
+					<select name="div_2" id="brand3">
 						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
 					</select>
 					</td>

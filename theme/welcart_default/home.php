@@ -11,7 +11,7 @@ get_header();
 	<div class="title"><?php _e('Items recommended','usces') ?></div>
 	<div class="clearfix">
 	
-	<?php query_posts('category_name=itemreco&post_status=publish&post_mime=item'); ?>
+	<?php query_posts('category_name=itemreco&post_status=publish&post_mime=item&topitemreco=1'); ?>
 	<?php if (have_posts()) : while (have_posts()) : the_post(); usces_the_item(); ?>
 	<div class="thumbnail_box">
 		<div class="thumimg"><a href="<?php the_permalink() ?>"><?php usces_the_itemImage($number = 0, $width = 108, $height = 108 ); ?></a></div>
