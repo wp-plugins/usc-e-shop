@@ -10,7 +10,8 @@ $management_status = get_option('usces_management_status');
 $oa = 'editpost';
 
 $ID = $_REQUEST['member_id'];
-
+$member_metas = $this->get_member_meta($ID);
+ksort($member_metas);
 global $wpdb;
 
 $tableName = $wpdb->prefix . "usces_member";
@@ -18,6 +19,17 @@ $query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $ID);
 $data = $wpdb->get_row( $query, ARRAY_A );
 
 $usces_member_history = $this->get_member_history($ID);
+
+//20100818ysk start
+$csmb_meta = usces_has_custom_field_meta('member');
+if(is_array($csmb_meta)) {
+	$keys = array_keys($csmb_meta);
+	foreach($keys as $key) {
+		$csmb_key = 'csmb_'.$key;
+		$csmb_meta[$key]['data'] = maybe_unserialize($this->get_member_meta_value($csmb_key, $ID));
+	}
+}
+//20100818ysk end
 
 //$deli = unserialize($data['order_delivery']);
 //$cart = unserialize($data['order_cart']);
@@ -97,12 +109,100 @@ jQuery(document).ready(function($){
 <div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 <div class="info_head">
 <div class="error_message"><?php echo $this->error_message; ?></div>
-<table>
+<table class="mem_wrap">
 <tr>
 <td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
-<td class="col3 label">e-mail</td><td class="col2"><input name="mem_email" type="text" class="text long" value="<?php echo $data['mem_email']; ?>" /></td>
-<td class="col3 label"><?php _e('Zip/Postal Code', 'usces'); ?></td><td class="col2"><input name="mem_zip" type="text" class="text short" value="<?php echo $data['mem_zip']; ?>" /></td>
-</tr>
+<td colspan="2" rowspan="5" class="mem_col2">
+<table class="mem_info">
+		<tr>
+				<td class="label">e-mail</td>
+				<td><input name="mem_email" type="text" class="text long" value="<?php echo $data['mem_email']; ?>" /></td>
+		</tr>
+		<?php
+//20100818ysk start
+		usces_admin_custom_field_input($csmb_meta, 'member', 'name_pre');
+//20100818ysk end
+		?>
+		<tr>
+				<td class="label"><?php _e('name', 'usces'); ?></td>
+				<td><input name="mem_name1" type="text" class="text short" value="<?php echo $data['mem_name1']; ?>" />		<input name="mem_name2" type="text" class="text short" value="<?php echo $data['mem_name2']; ?>" /></td>
+		</tr>
+		<tr>
+				<td class="label"><?php _e('furigana', 'usces'); ?></td>
+				<td><input name="mem_name3" type="text" class="text short" value="<?php echo $data['mem_name3']; ?>" />		<input name="mem_name4" type="text" class="text short" value="<?php echo $data['mem_name4']; ?>" /></td>
+		</tr>
+		<?php
+//20100818ysk start
+		usces_admin_custom_field_input($csmb_meta, 'member', 'name_after');
+//20100818ysk end
+		?>
+		<tr>
+				<td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
+				<td><span class="col2">
+						<input name="mem_zip" type="text" class="text short" value="<?php echo $data['mem_zip']; ?>" />
+				</span></td>
+		</tr>
+		<tr>
+				<td class="label"><?php _e('Province', 'usces'); ?></td>
+				<td><span class="col2">
+						<select name="mem_pref" class="select">
+								<?php
+//	$prefs = get_option('usces_pref');
+	$prefs = $this->options['province'];
+foreach((array)$prefs as $value) {
+	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
+	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
+}
+?>
+						</select>
+				</span></td>
+		</tr>
+		<tr>
+				<td class="label"><?php _e('city', 'usces'); ?></td>
+				<td><span class="col2">
+						<input name="mem_address1" type="text" class="text long" value="<?php echo $data['mem_address1']; ?>" />
+				</span></td>
+		</tr>
+		<tr>
+				<td class="label"><?php _e('numbers', 'usces'); ?></td>
+				<td><span class="col2">
+						<input name="mem_address2" type="text" class="text long" value="<?php echo $data['mem_address2']; ?>" />
+				</span></td>
+		</tr>
+		<tr>
+				<td class="label"><?php _e('building name', 'usces'); ?></td>
+				<td><span class="col2">
+						<input name="mem_address3" type="text" class="text long" value="<?php echo $data['mem_address3']; ?>" />
+				</span></td>
+		</tr>
+		<tr>
+				<td class="label"><?php _e('Phone number', 'usces'); ?></td>
+				<td><input name="mem_tel" type="text" class="text long" value="<?php echo $data['mem_tel']; ?>" /></td>
+		</tr>
+		<tr>
+				<td class="label"><?php _e('FAX number', 'usces'); ?></td>
+				<td><input name="mem_fax" type="text" class="text long" value="<?php echo $data['mem_fax']; ?>" /></td>
+		</tr>
+		<?php
+//20100818ysk start
+		usces_admin_custom_field_input($csmb_meta, 'member', 'fax_after');
+//20100818ysk end
+		?>
+</table>
+</td>
+<td colspan="2" rowspan="5" class="mem_col3">
+<table class="mem_info">
+<?php foreach($member_metas as $value){ ?>
+		<tr>
+				<td class="label"><?php echo $value['meta_key']; ?></td>
+				<td><div class="rod_left"><?php echo $value['meta_value']; ?></div></td>
+		</tr>
+<?php } ?>
+</table>
+
+
+</td>
+		</tr>
 <tr>
 <td class="label"><?php _e('Rank', 'usces'); ?></td><td class="col1"><select name="mem_status">
 <?php 
@@ -112,33 +212,17 @@ jQuery(document).ready(function($){
     <option value="<?php echo $rk; ?>"<?php echo $selected; ?>><?php echo $rv; ?></option>
 <?php } ?>
 </select></td>
-<td class="col3 label"><?php _e('name', 'usces'); ?></td><td class="col2"><input name="mem_name1" type="text" class="text short" value="<?php echo $data['mem_name1']; ?>" /><input name="mem_name2" type="text" class="text short" value="<?php echo $data['mem_name2']; ?>" /></td>
-<td class="col3 label"><?php _e('Province', 'usces'); ?></td><td class="col2"><select name="mem_pref" class="select">
-<?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
-}
-?>
-</select></td></tr>
+</tr>
 <tr>
 <td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="mem_point" type="text" class="text right short" value="<?php echo $data['mem_point']; ?>" /></td>
 <?php if( USCES_JP ): ?>
-<td class="col3 label"><?php _e('furigana', 'usces'); ?></td><td class="col2"><input name="mem_name3" type="text" class="text short" value="<?php echo $data['mem_name3']; ?>" /><input name="mem_name4" type="text" class="text short" value="<?php echo $data['mem_name4']; ?>" /></td>
 <?php endif; ?>
-<td class="col3 label"><?php _e('city', 'usces'); ?></td><td class="col2"><input name="mem_address1" type="text" class="text long" value="<?php echo $data['mem_address1']; ?>" /></td>
 </tr>
 <tr>
-<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php _e(sprintf('%2$s %3$s, %1$s',substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2)), 'usces'); ?></div></td>
-<td class="col3 label"><?php _e('Phone number', 'usces'); ?></td><td class="col2"><input name="mem_tel" type="text" class="text long" value="<?php echo $data['mem_tel']; ?>" /></td>
-<td class="col3 label"><?php _e('numbers', 'usces'); ?></td><td class="col2"><input name="mem_address2" type="text" class="text long" value="<?php echo $data['mem_address2']; ?>" /></td>
+<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo sprintf(__('%2$s %3$s, %1$s', 'usces'),substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2)); ?></div></td>
 </tr>
 <tr>
 <td colspan="2">&nbsp;</td>
-<td class="col3 label"><?php _e('FAX number', 'usces'); ?></td><td class="col2"><input name="mem_fax" type="text" class="text long" value="<?php echo $data['mem_fax']; ?>" /></td>
-<td class="col3 label"><?php _e('building name', 'usces'); ?></td><td class="col2"><input name="mem_address3" type="text" class="text long" value="<?php echo $data['mem_address3']; ?>" /></td>
 </tr>
 </table>
 </div>

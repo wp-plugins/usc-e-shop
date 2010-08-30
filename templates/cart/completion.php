@@ -1,4 +1,32 @@
 <?php
+
+add_filter('usces_filter_conversion_tracking', 'usces_test_conversion', 10, 3);
+function usces_test_conversion(){
+	$script = '<!-- Google Code for &#36092;&#20837; Conversion Page -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1007005965;
+var google_conversion_language = "ja";
+var google_conversion_format = "2";
+var google_conversion_color = "ffffff";
+var google_conversion_label = "iSVACIP24wEQjeKW4AM";
+var google_conversion_value = 0;
+if (3000) {
+  google_conversion_value = 3000;
+}
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/1007005965/?value=3000&amp;label=iSVACIP24wEQjeKW4AM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>';
+	return $script;
+}
+
+
 $entry = $this->cart->get_entry();
 $cart = $this->cart->get_cart();
 $html = '';
@@ -22,4 +50,5 @@ $html .= '<div class="send"><input name="top" type="submit" value="'.__('Back to
 $html .= '</form>'."\n";
 
 $html .= '</div><!-- post -->'."\n";
+$html .= apply_filters('usces_filter_conversion_tracking', NULL, $entry, $cart)."\n";
 ?>

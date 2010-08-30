@@ -230,7 +230,6 @@ function _list_item_sku_meta_row( $entry ) {
 	<select id="itemsku[' . $id . '][charging_type]" name="itemsku[' . $id . '][charging_type]" class="charging_type">
 		<option value=""' . ( (0 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('一括課金（即日）','usces') . '</option>
 		<option value="1"' . ( (1 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('月次課金（翌月1日）','usces') . '</option>
-		<option value="2"' . ( (2 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('年次課金（翌月1日）','usces') . '</option>
 	</select>';
 
 	}else{
@@ -1606,97 +1605,283 @@ function _list_custom_order_meta_row($key, $entry) {
 	$r .= "\n\t\t<div><input type='text' name='csod[{$key}][name]' id='csod[{$key}][name]' class='optname' size='20' value='{$name}' /></div>";
 	$r .= "\n\t\t<div class='optcheck'><select name='csod[{$key}][means]' id='csod[{$key}][means]'>".$meansoption."</select>\n";
 	$r .= "<input type='checkbox' name='csod[{$key}][essential]' id='csod[{$key}][essential]' value='1'{$essential} /><label for='csod[{$key}][essential]'>".__('Required','usces')."</label></div>";
-	$r .= "\n\t\t<div class='submit'><input type='button' name='deletecsod[{$key}]' id='deletecsod[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customOrder.del(\"{$key}\");' />";
-	$r .= "\n\t\t<input type='button' name='updatecsod' id='updatecsod[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customOrder.upd(\"{$key}\");' /></div>";
+//20100818ysk start
+	//$r .= "\n\t\t<div class='submit'><input type='button' name='deletecsod[{$key}]' id='deletecsod[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customOrder.del(\"{$key}\");' />";
+	//$r .= "\n\t\t<input type='button' name='updatecsod' id='updatecsod[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customOrder.upd(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csod[{$key}]' id='del_csod[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delOrder(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_csod[{$key}]' id='upd_csod[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updOrder(\"{$key}\");' /></div>";
+//20100818ysk end
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csod[{$key}][value]' id='csod[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;
 }
+//20100809ysk end
 
+//20100818ysk start
 /**
- * custom order
+ * has custom field meta
  */
-function has_custom_order_meta() {
-	$usecs_custom_order_field = get_option('usecs_custom_order_field');
-	$custom_order = ($usecs_custom_order_field) ? unserialize($usecs_custom_order_field) : array();
-	return $custom_order;
+function usces_has_custom_field_meta($fieldname) {
+	switch($fieldname) {
+	case 'order':
+		$field = 'usces_custom_order_field';
+		break;
+	case 'customer':
+		$field = 'usces_custom_customer_field';
+		break;
+	case 'delivery':
+		$field = 'usces_custom_delivery_field';
+		break;
+	case 'member':
+		$field = 'usces_custom_member_field';
+		break;
+	default:
+		return array();
+	}
+	$fields = get_option($fieldname);
+	$meta = ($fields) ? unserialize($fields) : array();
+	return $meta;
 }
 
-function custom_order_ajax() {
+/**
+ * custom field ajax
+ */
+function custom_field_ajax() {
 
-	if($_POST['action'] != 'custom_order_ajax') die(0);
+	if($_POST['action'] != 'custom_field_ajax') die(0);
+	switch($_POST['field']) {
+	case 'order':
+		$field = 'usces_custom_order_field';
+		break;
+	case 'customer':
+		$field = 'usces_custom_customer_field';
+		break;
+	case 'delivery':
+		$field = 'usces_custom_delivery_field';
+		break;
+	case 'member':
+		$field = 'usces_custom_member_field';
+		break;
+	default:
+		die(0);
+	}
 
-	$meta = has_custom_order_meta();
+	$meta = usces_has_custom_field_meta($field);
 
 	if(isset($_POST['add'])) {
-		$newcsodkey = isset($_POST['newcsodkey']) ? stripslashes(trim($_POST['newcsodkey'])) : '';
-		$newcsodname = isset($_POST['newcsodname']) ? stripslashes(trim($_POST['newcsodname'])) : '';
-		$newcsodmeans = isset($_POST['newcsodmeans']) ? $_POST['newcsodmeans'] : 0;
-		$newcsodessential = isset($_POST['newcsodessential']) ? $_POST['newcsodessential'] : 0;
+		$newkey = isset($_POST['newkey']) ? stripslashes(trim($_POST['newkey'])) : '';
+		$newname = isset($_POST['newname']) ? stripslashes(trim($_POST['newname'])) : '';
+		$newmeans = isset($_POST['newmeans']) ? $_POST['newmeans'] : 0;
+		$newessential = isset($_POST['newessential']) ? $_POST['newessential'] : 0;
+		$newposition = isset($_POST['newposition']) ? $_POST['newposition'] : '';
 
-		if($newcsodmeans == 2) {//テキスト
-			$newcsodvalue = isset($_POST['newcsodvalue']) ? stripslashes($_POST['newcsodvalue']) : '';
-			$nv = $newcsodvalue;
+		if($newmeans == 2) {//Text
+			$newvalue = isset($_POST['newvalue']) ? stripslashes($_POST['newvalue']) : '';
+			$nv = $newvalue;
 
 		} else {
-			$newcsodvalue = isset($_POST['newcsodvalue']) ? explode('\n', stripslashes($_POST['newcsodvalue'])) : '';
-			foreach((array)$newcsodvalue as $v) {
+			$newvalue = isset($_POST['newvalue']) ? explode('\n', stripslashes($_POST['newvalue'])) : '';
+			foreach((array)$newvalue as $v) {
 				if(trim($v) != '') 
 					$nv[] = trim($v);
 			}
 		}
 
-		if(!array_key_exists($newcsodkey, $meta)) {
-			if(($newcsodmeans >= 2 || '0' === $newcsodvalue || !empty($newcsodvalue)) && !empty($newcsodkey) && !empty($newcsodname)) {
-				$meta[$newcsodkey]['name'] = $newcsodname;
-				$meta[$newcsodkey]['means'] = $newcsodmeans;
-				$meta[$newcsodkey]['essential'] = $newcsodessential;
-				$meta[$newcsodkey]['value'] = $nv;
-				update_option('usecs_custom_order_field', serialize($meta));
+		if(!array_key_exists($newkey, $meta)) {
+			if(($newmeans >= 2 || '0' === $newvalue || !empty($newvalue)) && !empty($newkey) && !empty($newname)) {
+				$meta[$newkey]['name'] = $newname;
+				$meta[$newkey]['means'] = $newmeans;
+				$meta[$newkey]['essential'] = $newessential;
+				$meta[$newkey]['value'] = $nv;
+				if($newposition != '') $meta[$newkey]['position'] = $newposition;
+				update_option($field, serialize($meta));
 			}
 		}
 
 	} elseif(isset($_POST['update'])) {
-		$csodkey = isset($_POST['csodkey']) ? stripslashes(trim($_POST['csodkey'])) : '';
-		$csodname = isset($_POST['csodname']) ? stripslashes(trim($_POST['csodname'])) : '';
-		$csodmeans = isset($_POST['csodmeans']) ? $_POST['csodmeans'] : 0;
-		$csodessential = isset($_POST['csodessential']) ? $_POST['csodessential'] : 0;
+		$key = isset($_POST['key']) ? stripslashes(trim($_POST['key'])) : '';
+		$name = isset($_POST['name']) ? stripslashes(trim($_POST['name'])) : '';
+		$means = isset($_POST['means']) ? $_POST['means'] : 0;
+		$essential = isset($_POST['essential']) ? $_POST['essential'] : 0;
+		$position = isset($_POST['position']) ? $_POST['position'] : '';
 
-		if($csodmeans == 2) {//テキスト
-			$csodvalue = isset($_POST['csodvalue']) ? stripslashes($_POST['csodvalue']) : '';
-			$nv = $csodvalue;
+		if($means == 2) {//Text
+			$value = isset($_POST['value']) ? stripslashes($_POST['value']) : '';
+			$nv = $value;
 
 		} else {
-			$csodvalue = isset($_POST['csodvalue']) ? explode('\n', stripslashes($_POST['csodvalue'])) : '';
-			foreach((array)$csodvalue as $v) {
+			$value = isset($_POST['value']) ? explode('\n', stripslashes($_POST['value'])) : '';
+			foreach((array)$value as $v) {
 				if(trim($v) != '') 
 					$nv[] = trim($v);
 			}
 		}
 
-		if($csodmeans >= 2 || '0' === $csodvalue || !empty($csodvalue)) {
-			$meta[$csodkey]['name'] = $csodname;
-			$meta[$csodkey]['means'] = $csodmeans;
-			$meta[$csodkey]['essential'] = $csodessential;
-			$meta[$csodkey]['value'] = $nv;
-			update_option('usecs_custom_order_field', serialize($meta));
+		if($means >= 2 || '0' === $value || !empty($value)) {
+			$meta[$key]['name'] = $name;
+			$meta[$key]['means'] = $means;
+			$meta[$key]['essential'] = $essential;
+			$meta[$key]['value'] = $nv;
+			if($position != '') $meta[$key]['position'] = $position;
+			update_option($field, serialize($meta));
 		}
 
 	} elseif(isset($_POST['delete'])) {
-		$csodkey = isset($_POST['csodkey']) ? $_POST['csodkey'] : '';
-		unset($meta[$csodkey]);
-		update_option('usecs_custom_order_field', serialize($meta));
+		$key = isset($_POST['key']) ? $_POST['key'] : '';
+		unset($meta[$key]);
+		update_option($field, serialize($meta));
 	}
 
 	$r = '';
-	foreach($meta as $key => $entry) 
-		$r .= _list_custom_order_meta_row($key, $entry);
+	switch($_POST['field']) {
+	case 'order':
+		foreach($meta as $key => $entry) 
+			$r .= _list_custom_order_meta_row($key, $entry);
+		break;
+	case 'customer':
+		foreach($meta as $key => $entry) 
+			$r .= _list_custom_customer_meta_row($key, $entry);
+		break;
+	case 'delivery':
+		foreach($meta as $key => $entry) 
+			$r .= _list_custom_delivery_meta_row($key, $entry);
+		break;
+	case 'member':
+		foreach($meta as $key => $entry) 
+			$r .= _list_custom_member_meta_row($key, $entry);
+		break;
+	}
 
 	//REGEX BUG: but it'll return info
 	// Compose JavaScript for return
 	die($r);
 }
-//20100809ysk end
 
+/**
+ * list custom customer meta row
+ */
+function _list_custom_customer_meta_row($key, $entry) {
+	$r = '';
+	$style = '';
+
+	$name = $entry['name'];
+	$means = get_option('usces_custom_customer_select');
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue) {
+		$selected = ($meankey == $entry['means']) ? " selected='selected'" : "";
+		$meansoption .= "<option value='".$meankey."'".$selected.">".$meanvalue."</option>\n";
+	}
+	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
+	$value = '';
+	if(is_array($entry['value'])) {
+		foreach($entry['value'] as $k => $v) {
+			$value .= htmlspecialchars($v)."\n";
+		}
+	}
+	$value = trim($value);
+	$positions = get_option('usces_custom_field_position_select');
+	$positionsoption = '';
+	foreach($positions as $poskey => $posvalue) {
+		$selected = ($poskey == $entry['position']) ? " selected='selected'" : "";
+		$positionsoption .= "<option value='".$poskey."'".$selected.">".$posvalue."</option>\n";
+	}
+
+	$r .= "\n\t<tr id='cscs-{$key}' class='{$style}'>";
+	$r .= "\n\t\t<td class='left'><div><input type='text' name='cscs[{$key}][key]' id='cscs[{$key}][key]' class='optname' size='20' value='{$key}' readonly /></div>";
+	$r .= "\n\t\t<div><input type='text' name='cscs[{$key}][name]' id='cscs[{$key}][name]' class='optname' size='20' value='{$name}' /></div>";
+	$r .= "\n\t\t<div class='optcheck'><select name='cscs[{$key}][means]' id='cscs[{$key}][means]'>".$meansoption."</select>\n";
+	$r .= "<input type='checkbox' name='cscs[{$key}][essential]' id='cscs[{$key}][essential]' value='1'{$essential} /><label for='cscs[{$key}][essential]'>".__('Required','usces')."</label>\n";
+	$r .= "<select name='cscs[{$key}][position]' id='cscs[{$key}][position]'>".$positionsoption."</select></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_cscs[{$key}]' id='del_cscs[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delCustomer(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_cscs[{$key}]' id='upd_cscs[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updCustomer(\"{$key}\");' /></div>";
+	$r .= "</td>";
+	$r .= "\n\t\t<td class='item-opt-value'><textarea name='cscs[{$key}][value]' id='cscs[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
+	return $r;
+}
+
+/**
+ * list custom delivery meta row
+ */
+function _list_custom_delivery_meta_row($key, $entry) {
+	$r = '';
+	$style = '';
+
+	$name = $entry['name'];
+	$means = get_option('usces_custom_delivery_select');
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue) {
+		$selected = ($meankey == $entry['means']) ? " selected='selected'" : "";
+		$meansoption .= "<option value='".$meankey."'".$selected.">".$meanvalue."</option>\n";
+	}
+	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
+	$value = '';
+	if(is_array($entry['value'])) {
+		foreach($entry['value'] as $k => $v) {
+			$value .= htmlspecialchars($v)."\n";
+		}
+	}
+	$value = trim($value);
+	$positions = get_option('usces_custom_field_position_select');
+	$positionsoption = '';
+	foreach($positions as $poskey => $posvalue) {
+		$selected = ($poskey == $entry['position']) ? " selected='selected'" : "";
+		$positionsoption .= "<option value='".$poskey."'".$selected.">".$posvalue."</option>\n";
+	}
+
+	$r .= "\n\t<tr id='csde-{$key}' class='{$style}'>";
+	$r .= "\n\t\t<td class='left'><div><input type='text' name='csde[{$key}][key]' id='csde[{$key}][key]' class='optname' size='20' value='{$key}' readonly /></div>";
+	$r .= "\n\t\t<div><input type='text' name='csde[{$key}][name]' id='csde[{$key}][name]' class='optname' size='20' value='{$name}' /></div>";
+	$r .= "\n\t\t<div class='optcheck'><select name='csde[{$key}][means]' id='csde[{$key}][means]'>".$meansoption."</select>\n";
+	$r .= "<input type='checkbox' name='csde[{$key}][essential]' id='csde[{$key}][essential]' value='1'{$essential} /><label for='csde[{$key}][essential]'>".__('Required','usces')."</label>\n";
+	$r .= "<select name='csde[{$key}][position]' id='csde[{$key}][position]'>".$positionsoption."</select></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csde[{$key}]' id='del_csde[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delDelivery(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_csde[{$key}]' id='upd_csde[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updDelivery(\"{$key}\");' /></div>";
+	$r .= "</td>";
+	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csde[{$key}][value]' id='csde[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
+	return $r;
+}
+
+/**
+ * list custom member meta row
+ */
+function _list_custom_member_meta_row($key, $entry) {
+	$r = '';
+	$style = '';
+
+	$name = $entry['name'];
+	$means = get_option('usces_custom_member_select');
+	$meansoption = '';
+	foreach($means as $meankey => $meanvalue) {
+		$selected = ($meankey == $entry['means']) ? " selected='selected'" : "";
+		$meansoption .= "<option value='".$meankey."'".$selected.">".$meanvalue."</option>\n";
+	}
+	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
+	$value = '';
+	if(is_array($entry['value'])) {
+		foreach($entry['value'] as $k => $v) {
+			$value .= htmlspecialchars($v)."\n";
+		}
+	}
+	$value = trim($value);
+	$positions = get_option('usces_custom_field_position_select');
+	$positionsoption = '';
+	foreach($positions as $poskey => $posvalue) {
+		$selected = ($poskey == $entry['position']) ? " selected='selected'" : "";
+		$positionsoption .= "<option value='".$poskey."'".$selected.">".$posvalue."</option>\n";
+	}
+
+	$r .= "\n\t<tr id='csmb-{$key}' class='{$style}'>";
+	$r .= "\n\t\t<td class='left'><div><input type='text' name='csmb[{$key}][key]' id='csmb[{$key}][key]' class='optname' size='20' value='{$key}' readonly /></div>";
+	$r .= "\n\t\t<div><input type='text' name='csmb[{$key}][name]' id='csmb[{$key}][name]' class='optname' size='20' value='{$name}' /></div>";
+	$r .= "\n\t\t<div class='optcheck'><select name='csmb[{$key}][means]' id='csmb[{$key}][means]'>".$meansoption."</select>\n";
+	$r .= "<input type='checkbox' name='csmb[{$key}][essential]' id='csmb[{$key}][essential]' value='1'{$essential} /><label for='csmb[{$key}][essential]'>".__('Required','usces')."</label>\n";
+	$r .= "<select name='csmb[{$key}][position]' id='csmb[{$key}][position]'>".$positionsoption."</select></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csmb[{$key}]' id='del_csmb[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delMember(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_csmb[{$key}]' id='upd_csmb[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updMember(\"{$key}\");' /></div>";
+	$r .= "</td>";
+	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csmb[{$key}][value]' id='csmb[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
+	return $r;
+}
+//20100818ysk end
 
 ?>

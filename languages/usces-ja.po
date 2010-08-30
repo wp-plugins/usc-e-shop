@@ -1554,6 +1554,9 @@ msgstr "解除"
 msgid "Search results"
 msgstr "検索結果"
 
+msgid "Search Results"
+msgstr "検索結果"
+
 msgid "&laquo; Previous page"
 msgstr "&laquo; 前のページ"
 
@@ -2240,6 +2243,9 @@ msgstr "ポスト"
 
 msgid "The article was not found."
 msgstr "該当する商品は見つかりませんでした。"
+
+msgid "No posts found."
+msgstr "該当する項目は見つかりませんでした。"
 
 msgid "make a copy"
 msgstr "複写して新規"

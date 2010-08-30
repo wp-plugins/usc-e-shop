@@ -54,12 +54,39 @@ $shipping_rule = array(
 					);
 $item_option_select = array(__('Single-select','usces'), __('Multi-select','usces'), __('Text','usces'));
 
-$usces_custom_order_select = array(
-					'0' => __('シングルセレクト', 'usces'),
-					'2' => __('テキスト', 'usces'),
-					'3' => __('ラジオボタン', 'usces'),
-					'4' => __('チェックボックス', 'usces')
+//20100818ysk start
+//20100809ysk start
+$custom_order_select = array(
+					'0' => __('Single-select', 'usces'),
+					'2' => __('Text', 'usces'),
+					'3' => __('Radio-button', 'usces'),
+					'4' => __('Check-box', 'usces')
 					);
+//20100809ysk end
+$custom_customer_select = array(
+					'0' => __('Single-select', 'usces'),
+					'2' => __('Text', 'usces'),
+					'3' => __('Radio-button', 'usces'),
+					'4' => __('Check-box', 'usces')
+					);
+$custom_delivery_select = array(
+					'0' => __('Single-select', 'usces'),
+					'2' => __('Text', 'usces'),
+					'3' => __('Radio-button', 'usces'),
+					'4' => __('Check-box', 'usces')
+					);
+$custom_member_select = array(
+					'0' => __('Single-select', 'usces'),
+					'2' => __('Text', 'usces'),
+					'3' => __('Radio-button', 'usces'),
+					'4' => __('Check-box', 'usces')
+					);
+$custom_field_position_select = array(
+					'name_pre' => __('Previous the name', 'usces'),
+					'name_after' => __('After the name', 'usces'),
+					'fax_after' => __('After the fax', 'usces')
+					);
+//20100818ysk end
 
 //$shipping_charge_structure = array(
 //					'1' => '通常料金',
@@ -96,7 +123,15 @@ update_option('usces_display_mode',$display_mode);
 update_option('usces_pref',$usces_pref);
 update_option('usces_shipping_rule',$shipping_rule);
 update_option('usces_item_option_select',$item_option_select);
-update_option('usces_custom_order_select', $usces_custom_order_select);
+//20100809ysk start
+update_option('usces_custom_order_select', $custom_order_select);
+//20100809ysk end
+//20100818ysk start
+update_option('usces_custom_customer_select', $custom_customer_select);
+update_option('usces_custom_delivery_select', $custom_delivery_select);
+update_option('usces_custom_member_select', $custom_member_select);
+update_option('usces_custom_field_position_select', $custom_field_position_select);
+//20100818ysk end
 
 update_option('usces_currency_symbol',__('$', 'usces'));
 update_option('usces_secure_link', $usces_secure_link);

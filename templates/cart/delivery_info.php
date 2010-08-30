@@ -42,8 +42,11 @@ $html .= '<form action="' . USCES_CART_URL . '" method="post">';
 	$html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="delivery_flag2">'.__('Chose another shipping address.', 'usces').'</label></td>
 		</tr>
 		</table>
-		<table class="customer_form" id="delivery_table">
-		<tr class="inp1">
+		<table class="customer_form" id="delivery_table">';
+//20100818ysk start
+	$html .= usces_custom_field_input($usces_entries, 'delivery', 'name_pre', 'return');
+//20100818ysk end
+	$html .= '<tr class="inp1">
 		<th width="127" scope="row"><em>*</em>'.__('Full name', 'usces').'</th>
 		<td width="257">'.__('Familly name', 'usces').'<input name="delivery[name1]" id="name1" type="text" value="' . $usces_entries['delivery']['name1'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 		<td width="257">'.__('Given name', 'usces').'<input name="delivery[name2]" id="name2" type="text" value="' . $usces_entries['delivery']['name2'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
@@ -55,6 +58,9 @@ $html .= '<form action="' . USCES_CART_URL . '" method="post">';
 		<td>'.__('Given name', 'usces').'<input name="delivery[name4]" id="name4" type="text" value="' . $usces_entries['delivery']['name4'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 		</tr>';
 	}
+//20100818ysk start
+	$html .= usces_custom_field_input($usces_entries, 'delivery', 'name_after', 'return');
+//20100818ysk end
 	$html .= '<tr>
 		<th scope="row"><em>*</em>'.__('Zip/Postal Code', 'usces').'</th>
 		<td colspan="2"><input name="delivery[zipcode]" id="zipcode" type="text" value="' . $usces_entries['delivery']['zipcode'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />100-1000</td>
@@ -82,8 +88,11 @@ $html .= '<form action="' . USCES_CART_URL . '" method="post">';
 		<tr>
 		<th scope="row">'.__('FAX number', 'usces').'</th>
 		<td colspan="2"><input name="delivery[fax]" id="fax" type="text" value="' . $usces_entries['delivery']['fax'] . '" onKeyDown="if (event.keyCode == 13) {return false;}" />1000-10-1000</td>
-		</tr>
-		</table>';
+		</tr>';
+//20100818ysk start
+$html .= usces_custom_field_input($usces_entries, 'delivery', 'fax_after', 'return');
+//20100818ysk end
+$html .= '</table>';
 $html .= '<table class="customer_form" id="time">';
 	$html .= '<tr>
 		<th scope="row">'.__('shipping option', 'usces').'</th>
@@ -100,9 +109,22 @@ $html .= '<tr>
 	</table>';
 	
 require_once( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
+//20100818ysk start
 //20100809ysk start
-require_once( USCES_PLUGIN_DIR . "/includes/delivery_custom_order_form.php");
+//require_once( USCES_PLUGIN_DIR . "/includes/delivery_custom_order_form.php");
+//$meta = has_custom_order_meta();
+$meta = usces_has_custom_field_meta('order');
+if(!empty($meta) and is_array($meta)) {
+	$html .= '
+	<table class="customer_form" id="custom_order">';
+
+	$html .= usces_custom_field_input($usces_entries, 'order', '', 'return');
+
+	$html .= '
+	</table>';
+}
 //20100809ysk end
+//20100818ysk end
 
 	
 $html .= '<table class="customer_form" id="notes_table">
@@ -113,8 +135,8 @@ $html .= '<table class="customer_form" id="notes_table">
 	</table>
 
 	<div class="send"><input name="order[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
-	<input name="backCustomer" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;
-	<input name="confirm" type="submit" value="'.__(' Next ', 'usces').'" /></div>
+	<input name="backCustomer" type="submit" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_prebutton', NULL) . ' />&nbsp;&nbsp;
+	<input name="confirm" type="submit" value="'.__(' Next ', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_nextbutton', NULL) . ' /></div>
 	</form>';
 
 $html .= '<div class="footer_explanation">';

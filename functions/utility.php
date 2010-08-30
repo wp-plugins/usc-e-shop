@@ -84,7 +84,7 @@ function usces_log($log, $file){
 }
 
 
-function usces_delivery_secure_check( $mes ){
+function usces_filter_delivery_secure_check( $mes ){
 	global $usces;
 	$usces_secure_link = get_option('usces_secure_link');
 	$paymod_id = '';
@@ -260,23 +260,21 @@ function usces_payment_detail($usces_entries){
 	return $str;
 }
 
-function usces_filter_delivery_check_custom_order() {
+//20100818ysk start
+function usces_filter_delivery_check_custom_order( $mes ) {
 	global $usces;
-	$args = func_get_args();
-	$mes = $args[0];
 
-	$meta = has_custom_order_meta();
+	$meta = usces_has_custom_field_meta('order');
 	foreach($meta as $key => $entry) {
-		$name = $entry['name'];
-		$means = $entry['means'];
 		$essential = $entry['essential'];
-
 		if($essential == 1) {
-			if($means == 2) {//テキスト
+			$name = $entry['name'];
+			$means = $entry['means'];
+			if($means == 2) {//Text
 				if(trim($_POST['custom_order'][$key]) == "")
 					$mes .= __($name.'を入力してください。', 'usces')."<br />";
 			} else {
-				if(!isset($_POST['custom_order'][$key]))
+				if(!isset($_POST['custom_order'][$key]) or $_POST['custom_order'][$key] == "#NONE#")
 					$mes .= __($name.'を選択してください。', 'usces')."<br />";
 			}
 		}
@@ -284,5 +282,85 @@ function usces_filter_delivery_check_custom_order() {
 
 	return $mes;
 }
+
+function usces_filter_customer_check_custom_customer( $mes ) {
+	global $usces;
+
+	$meta = usces_has_custom_field_meta('customer');
+	foreach($meta as $key => $entry) {
+		$essential = $entry['essential'];
+		if($essential == 1) {
+			$name = $entry['name'];
+			$means = $entry['means'];
+			if($means == 2) {//Text
+				if(trim($_POST['custom_customer'][$key]) == "")
+					$mes .= __($name.'を入力してください。', 'usces')."<br />";
+			} else {
+				if(!isset($_POST['custom_customer'][$key]) or $_POST['custom_customer'][$key] == "#NONE#")
+					$mes .= __($name.'を選択してください。', 'usces')."<br />";
+			}
+		}
+	}
+
+	return $mes;
+}
+
+function usces_filter_delivery_check_custom_delivery( $mes ) {
+	global $usces;
+
+	if( $_POST['delivery']['delivery_flag'] == '1' ) {
+		$meta = usces_has_custom_field_meta('delivery');
+		foreach($meta as $key => $entry) {
+			$essential = $entry['essential'];
+			if($essential == 1) {
+				$name = $entry['name'];
+				$means = $entry['means'];
+				if($means == 2) {//Text
+					if(trim($_POST['custom_delivery'][$key]) == "")
+						$mes .= __($name.'を入力してください。', 'usces')."<br />";
+				} else {
+					if(!isset($_POST['custom_delivery'][$key]) or $_POST['custom_delivery'][$key] == "#NONE#")
+						$mes .= __($name.'を選択してください。', 'usces')."<br />";
+				}
+			}
+		}
+	}
+
+	return $mes;
+}
+
+function usces_filter_member_check_custom_member( $mes ) {
+	global $usces;
+
+	unset($_SESSION['usces_member']['custom_member']);
+	if(isset($_POST['custom_member'])) {
+		foreach( $_POST['custom_member'] as $key => $value )
+			if( is_array($value) ) {
+				foreach( $value as $k => $v ) 
+					$_SESSION['usces_member']['custom_member'][$key][wp_specialchars($v)] = wp_specialchars($v);
+			} else {
+				$_SESSION['usces_member']['custom_member'][$key] = wp_specialchars($value);
+			}
+	}
+
+	$meta = usces_has_custom_field_meta('member');
+	foreach($meta as $key => $entry) {
+		$essential = $entry['essential'];
+		if($essential == 1) {
+			$name = $entry['name'];
+			$means = $entry['means'];
+			if($means == 2) {//Text
+				if(trim($_POST['custom_member'][$key]) == "")
+					$mes .= __($name.'を入力してください。', 'usces')."<br />";
+			} else {
+				if(!isset($_POST['custom_member'][$key]) or $_POST['custom_member'][$key] == "#NONE#")
+					$mes .= __($name.'を選択してください。', 'usces')."<br />";
+			}
+		}
+	}
+
+	return $mes;
+}
+//20100818ysk end
 
 ?>

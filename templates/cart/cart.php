@@ -125,9 +125,9 @@ if($this->cart->num_row() > 0) {
 $html .= $content;
 
 $html .= '<div class="send">
-	<input name="previous" type="button" id="previouscart" onclick="uscesCart.previousCart();" value="' . __('continue shopping','usces') . '" />&nbsp;&nbsp;';
+	<input name="previous" type="button" id="previouscart" value="' . __('continue shopping','usces') . '"' . apply_filters('usces_filter_cart_prebutton', ' onclick="uscesCart.previousCart();"') . ' />&nbsp;&nbsp;';
 if( usces_is_cart() ) {
-	$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '"  onclick="return uscesCart.cartNext()" />';
+	$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', ' onclick="return uscesCart.cartNext();"') . ' />';
 }
 $html .= '</div>';
 $html = apply_filters('usces_filter_cart_inform', $html);

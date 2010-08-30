@@ -469,6 +469,7 @@
 		cahngepict : function(code) {
 			$("div#item-select-pict").html(code);
 		}
+		
 	};
 	
 })(jQuery);

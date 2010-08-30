@@ -96,7 +96,8 @@ foreach ( $usces_member_history as $umhs ) {
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
 		$cartItemName = $this->getCartItemName($post_id, $sku);
-		$skuPrice = $this->getItemPrice($post_id, $sku);
+		//$skuPrice = $this->getItemPrice($post_id, $sku);
+		$skuPrice = $cart_row['price'];
 		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
@@ -124,8 +125,11 @@ $html .= '</table>
 	<h3><a name="edit"></a>' . __('Member information editing', 'usces') . '</h3>
 	<div class="error_message">' . $this->error_message . '</div>
 	<form action="' . USCES_MEMBER_URL . '#edit" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-	<table class="customer_form">
-	<tr class="inp1">
+	<table class="customer_form">';
+//20100818ysk start
+$html .= usces_custom_field_input($usces_members, 'member', 'name_pre', 'return');
+//20100818ysk end
+$html .= '<tr class="inp1">
 	<th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
 	<td>' . __('Familly name', 'usces') . '<input name="member[name1]" id="name1" type="text" value="' . $usces_members['name1'] . '" /></td>
 	<td>' . __('Given name', 'usces') . '<input name="member[name2]" id="name2" type="text" value="' . $usces_members['name2'] . '" /></td>
@@ -137,6 +141,9 @@ if( USCES_JP ){
 	<td>' . __('Given name', 'usces') . '<input name="member[name4]" id="name4" type="text" value="' . $usces_members['name4'] . '" /></td>
 	</tr>';
 }
+//20100818ysk start
+$html .= usces_custom_field_input($usces_members, 'member', 'name_after', 'return');
+//20100818ysk end
 $html .= '<tr>
 	<th scope="row"><em>*</em>' . __('Zip/Postal Code', 'usces') . '</th>
 	<td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . $usces_members['zipcode'] . '" />100-1000</td>
@@ -164,8 +171,11 @@ $html .= '<tr>
 	<tr>
 	<th scope="row">' . __('FAX number', 'usces') . '</th>
 	<td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . $usces_members['fax'] . '" />1000-10-1000</td>
-	</tr>
-	<tr>
+	</tr>';
+//20100818ysk start
+$html .= usces_custom_field_input($usces_members, 'member', 'fax_after', 'return');
+//20100818ysk end
+$html .= '<tr>
 	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
 	<td colspan="2"><input name="member[mailaddress1]" id="fax" type="text" value="' . $usces_members['mailaddress1'] . '" /></td>
 	</tr>

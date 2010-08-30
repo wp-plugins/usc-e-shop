@@ -19,6 +19,7 @@ class usc_e_shop
 	{
 		global $post;
 	
+	
 		do_action('usces_construct');
 		$this->usces_session_start();
 
@@ -81,12 +82,6 @@ class usc_e_shop
 			}else{
 				define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
 			}
-			add_filter('home_url', array(&$this, 'usces_ssl_page_link'));
-			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
-			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
-			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
-			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
-			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
 			define('USCES_SSL_URL', $ssl_url);
 			define('USCES_SSL_URL_ADMIN', $ssl_url_admin);
 			define('USCES_COOKIEPATH', preg_replace('|https?://[^/]+|i', '', $ssl_url . '/' ) );
@@ -100,12 +95,19 @@ class usc_e_shop
 			define('USCES_CART_URL', $ssl_url . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
 			define('USCES_MEMBER_URL', $ssl_url . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
 			define('USCES_INQUIRY_URL', $ssl_url . '/?page_id=' . $this->options['inquiry_id'] . '&usces=' . $this->get_uscesid());
+			add_filter('home_url', array($this, 'usces_ssl_page_link'));
+			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
+			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
+			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
+			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
+			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
 		} else {
 			define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
 			define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
+			define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
 		}
 		define('USCES_ITEM_CAT_PARENT_ID', get_option('usces_item_cat_parent_id'));
-		
+
 		$this->zaiko_status = get_option('usces_zaiko_status');
 		$this->member_status = get_option('usces_customer_status');
 		$this->payment_structure = get_option('usces_payment_structure');
@@ -208,6 +210,7 @@ class usc_e_shop
 		$search = array(('page_id='.USCES_CART_NUMBER), '/usces-cart', ('page_id='.USCES_MEMBER_NUMBER), '/usces-member');
 		$flag = false;
 		foreach($search as $value){
+			$parts = array();
 			if( strpos($link, $value) ){
 				if( $value == ('page_id='.USCES_CART_NUMBER) ||  $value == ('page_id='.USCES_MEMBER_NUMBER) ){
 					$parts = parse_url($link);
@@ -343,11 +346,13 @@ class usc_e_shop
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 6, 'usces_system', array($this, 'admin_system_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Settlement Setting','usces'), __('Settlement Setting','usces'), 10, 'usces_settlement', array($this, 'admin_settlement_page'));
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
+		do_action('usces_action_shop_admin_menue');
 		
 		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_orderlist', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
+		do_action('usces_action_management_admin_menue');
 	}
 
 
@@ -474,7 +479,7 @@ class usc_e_shop
 			case 'delete':
 				$res = usces_delete_memberdata();
 				if ( 1 === $res ) {
-					$this->set_action_status('success', __('the order date is deleted','usces'));
+					$this->set_action_status('success', __('the member data is deleted','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
@@ -497,7 +502,7 @@ class usc_e_shop
 
 	}
 	
-	/* Shop Setup Page */
+	/* Shop Top Page */
 	function admin_top_page() {
 
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_top.php');	
@@ -534,7 +539,7 @@ class usc_e_shop
 			$this->options['tax_rate'] = isset($_POST['tax_rate']) ? (int)$_POST['tax_rate'] : '';
 			$this->options['tax_method'] = isset($_POST['tax_method']) ? wp_specialchars($_POST['tax_method']) : '';
 	
-			$this->options['cod_type'] = isset($_POST['cod_type']) ? $_POST['cod_type'] : 'fix';
+			$this->options['cod_type'] = isset($this->options['cod_type']) ? $this->options['cod_type'] : 'fix';
 
 			$this->options['transferee'] = isset($_POST['transferee']) ? wp_specialchars($_POST['transferee']) : '';
 			$this->options['copyright'] = isset($_POST['copyright']) ? wp_specialchars($_POST['copyright']) : '';
@@ -806,19 +811,28 @@ class usc_e_shop
 					unset( $options['acting_settings']['zeus'] );
 					$options['acting_settings']['zeus']['card_url'] = $_POST['card_url'];
 					$options['acting_settings']['zeus']['ipaddrs'] = $_POST['ipaddrs'];
+					$options['acting_settings']['zeus']['pay_cvs'] = $_POST['pay_cvs'];
 					$options['acting_settings']['zeus']['card_activate'] = $_POST['card_activate'];
 					$options['acting_settings']['zeus']['quickcharge'] = $_POST['quickcharge'];
 					$options['acting_settings']['zeus']['clientip'] = trim($_POST['clientip']);
 					$options['acting_settings']['zeus']['howpay'] = $_POST['howpay'];
 					$options['acting_settings']['zeus']['bank_activate'] = $_POST['bank_activate'];
 					$options['acting_settings']['zeus']['clientip_bank'] = trim($_POST['clientip_bank']);
+					$options['acting_settings']['zeus']['testid_bank'] = trim($_POST['testid_bank']);
 					$options['acting_settings']['zeus']['bank_url'] = $_POST['bank_url'];
+					$options['acting_settings']['zeus']['conv_activate'] = $_POST['conv_activate'];
+					$options['acting_settings']['zeus']['clientip_conv'] = trim($_POST['clientip_conv']);
+					$options['acting_settings']['zeus']['testid_conv'] = trim($_POST['testid_conv']);
+					$options['acting_settings']['zeus']['test_type_conv'] = ( '' == $_POST['testid_conv'] || !isset($_POST['test_type']) ) ? '0' : $_POST['test_type'];
+					$options['acting_settings']['zeus']['conv_url'] = $_POST['conv_url'];
 
 					if( '' == trim($_POST['clientip']) && 'on' == $_POST['card_activate'] )
 						$mes .= '※カード決済IPコードを入力して下さい<br />';
 					if( '' == trim($_POST['clientip_bank']) && 'on' == $_POST['bank_activate'] )
 						$mes .= '※入金お任せIPコードを入力して下さい<br />';
-					if( !isset($_POST['card_url']) || empty($_POST['card_url']) || !isset($_POST['ipaddrs']) || empty($_POST['ipaddrs']) || !isset($_POST['bank_url']) || empty($_POST['bank_url']) )
+					if( '' == trim($_POST['clientip_conv']) && 'on' == $_POST['conv_activate'] )
+						$mes .= '※コンビニ決済IPコードを入力して下さい<br />';
+					if( !isset($_POST['card_url']) || empty($_POST['card_url']) || !isset($_POST['ipaddrs']) || empty($_POST['ipaddrs']) || !isset($_POST['bank_url']) || empty($_POST['bank_url']) || !isset($_POST['conv_url']) || empty($_POST['conv_url']) )
 						$mes .= '※設定が不正です！<br />';
 
 					if( '' == $mes ){			
@@ -832,6 +846,11 @@ class usc_e_shop
 						}
 						if( 'on' == $options['acting_settings']['zeus']['bank_activate'] ){
 							$this->payment_structure['acting_zeus_bank'] = '入金お任せ（ZEUS）';
+						}else{
+							unset($this->payment_structure['acting_zeus_bank']);
+						}
+						if( 'on' == $options['acting_settings']['zeus']['conv_activate'] ){
+							$this->payment_structure['acting_zeus_conv'] = 'コンビニ決済（ZEUS）';
 						}else{
 							unset($this->payment_structure['acting_zeus_bank']);
 						}
@@ -876,7 +895,11 @@ class usc_e_shop
 						$mes .= '※ホスト番号を入力して下さい<br />';
 					if( isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] && empty($_POST['S_PAYDATE']) )
 						$mes .= '※支払期限を入力して下さい<br />';
-					if( !isset($_POST['send_url_mbl']) || empty($_POST['send_url_mbl']) || !isset($_POST['send_url_pc']) || empty($_POST['send_url_pc']) || !isset($_POST['REMARKS3']) || empty($_POST['REMARKS3']) )
+					if( isset($_POST['card_pc_ope']) && 'public' == $_POST['card_pc_ope'] && empty($_POST['send_url_pc']) )
+						$mes .= '※クレジットカード決済の本番URLを入力して下さい<br />';
+					if( isset($_POST['conv_pc_ope']) && 'public' == $_POST['conv_pc_ope'] && empty($_POST['send_url_cvs_pc']) )
+						$mes .= '※コンビニ・電子マネー決済の本番URLを入力して下さい<br />';
+					if( !isset($_POST['REMARKS3']) || empty($_POST['REMARKS3']) )
 						$mes .= '※設定が不正です！<br />';
 
 					if( '' == $mes ){			
@@ -971,9 +994,14 @@ class usc_e_shop
 
 	function usces_session_start() {
 
+		if(defined( 'USCES_KEY' )){
+			session_name( USCES_KEY );
+		}else{
+			session_name();
+		}
 		if(isset($_GET['usces']) && ($_GET['usces'] != '')) {
 			$sessid = $_GET['usces'];
-			//$this->uscesdc($sessid);
+			$this->uscesdc($sessid);
 			session_id($sessid);
 		}
 		//$timeout = 0;
@@ -1054,11 +1082,11 @@ class usc_e_shop
 		}
 	}
 	
-	function get_uscesid() {
+	function get_uscesid( $flag = true) {
 
 		$sessname = session_name();
 		$sessid = isset($_REQUEST[$sessname]) ? $_REQUEST[$sessname] : session_id();
-		//$this->uscescv($sessid);
+		$this->uscescv($sessid, $flag);
 		return $sessid;
 	}
 	
@@ -1543,6 +1571,13 @@ class usc_e_shop
 					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
 					break;
 //20100809ysk end
+//20100818ysk start
+				case 'usces_member':
+					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					break;
+//20100818ysk end
 			}
 		}
 
@@ -1680,6 +1715,7 @@ class usc_e_shop
 		$this->page = 'cart';
 		$this->cart->inCart();
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 	}
 	
 	function upButton(){
@@ -1687,6 +1723,7 @@ class usc_e_shop
 		$this->page = 'cart';
 		$this->cart->upCart();
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 	}
 	
 	function delButton(){
@@ -1694,12 +1731,14 @@ class usc_e_shop
 		$this->page = 'cart';
 		$this->cart->del_row();
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 	}
 	
 	function backCart(){
 		global $wp_query;
 		$this->page = 'cart';
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 	}
 	
 	function customerinfo(){
@@ -1712,19 +1751,25 @@ class usc_e_shop
 		$this->error_message = $this->zaiko_check();
 		if($this->error_message == ''){
 			if($this->is_member_logged_in()){
-				$this->page = 'delivery';
+//20100818ysk start
+				//$this->page = 'delivery';
+				$this->error_message = has_custom_customer_field_essential();
+				$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
+//20100818ysk end
+				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 			}else{
 				$this->page = 'customer';
+				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
 			}
 		}else{
 			$this->page = 'cart';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 		}
 		if ( !$this->cart->is_order_condition() ) {
 			$order_conditions = $this->get_condition();
 			$this->cart->set_order_condition($order_conditions);
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
-
 	}
 	
 	function backCustomer(){
@@ -1735,6 +1780,7 @@ class usc_e_shop
 		}
 		$this->page = 'customer';
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
 //		$this->cart->entry();
 //		$this->error_message = $this->delivery_check();
 //		$this->page = ($this->error_message == '') ? 'customer' : 'delivery';
@@ -1746,8 +1792,25 @@ class usc_e_shop
 			header('location: ' . get_option('home'));
 			exit;
 		}
-		$this->cart->entry();
-		$this->page = ($this->member_login() == 'member') ? 'delivery' : 'customer';
+//20100818ysk start
+		//$this->cart->entry();
+		//$this->page = ($this->member_login() == 'member') ? 'delivery' : 'customer';
+		if($this->member_login() == 'member') {
+			$this->cart->entry();
+			$this->error_message = has_custom_customer_field_essential();
+			if($this->error_message == ''){
+				$this->page = 'delivery';
+				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
+			}else{
+				$this->page = 'customer';
+				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
+			}
+		} else {
+			$this->cart->entry();
+			$this->page = 'customer';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
+		}
+//20100818ysk end
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -1759,7 +1822,14 @@ class usc_e_shop
 		}
 		$this->cart->entry();
 		$_POST['member_regmode'] = 'newmemberfromcart';
-		$this->page = ( $this->regist_member() == 'newcompletion' ) ? 'delivery' : 'customer';
+
+		if( $this->regist_member() == 'newcompletion' ){
+			$this->page = 'delivery';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
+		}else{
+			$this->page = 'customer';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
+		}
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -1771,7 +1841,14 @@ class usc_e_shop
 		}
 		$this->cart->entry();
 		$this->error_message = $this->customer_check();
-		$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
+
+		if( $this->error_message == '' ){
+			$this->page = 'delivery';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
+		}else{
+			$this->page = 'customer';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
+		}
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -1782,6 +1859,7 @@ class usc_e_shop
 			exit;
 		}
 		$this->page = 'delivery';
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -1791,13 +1869,20 @@ class usc_e_shop
 			header('location: ' . get_option('home'));
 			exit;
 		}
-		
+
 		$this->cart->entry();
 		$this->set_reserve_pre_order_id();
 		if(isset($_POST['confirm'])){
 			$this->error_message = $this->delivery_check();
 		}
 		$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
+		if( $this->error_message == '' ){
+			$this->page = 'confirm';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
+		}else{
+			$this->page = 'delivery';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
+		}
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -1806,6 +1891,7 @@ class usc_e_shop
 		$this->error_message = $this->point_check();
 		$this->cart->entry();
 		$this->page = 'confirm';
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -1816,6 +1902,7 @@ class usc_e_shop
 			exit;
 		}
 		$this->page = 'confirm';
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -1845,12 +1932,20 @@ class usc_e_shop
 			
 			if($actinc_status == 'error'){
 				$this->page = 'error';
+				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 			}else{
 				$res = $this->order_processing();
-				$this->page = $res;
+				if( 'ordercompletion' == $res ){
+					$this->page = 'ordercompletion';
+					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
+				}else{
+					$this->page = 'error';
+					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
+				}
 			}
 		}else{
 			$this->page = 'cart';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
@@ -1878,12 +1973,20 @@ class usc_e_shop
 		}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
 			if( isset($this->payment_results['payment_status']) ){
 				$this->page = 'ordercompletion';
+				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
 			}else{
 				$res = $this->order_processing( $this->payment_results );
-				$this->page = $res;
+				if( 'ordercompletion' == $res ){
+					$this->page = 'ordercompletion';
+					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
+				}else{
+					$this->page = 'error';
+					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
+				}
 			}
 		}else{
 			$this->page = 'error';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
@@ -1906,21 +2009,43 @@ class usc_e_shop
 	function member_login_page(){
 		global $wp_query;
 		$res = $this->member_login();
-		$this->page = $res;
+		if( 'member' == $res ){
+			$this->page = 'member';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_member');
+		}elseif( 'login' == $res ){
+			$this->page = 'login';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_login');
+		}
 		add_action('the_post', array($this, 'action_memberFilter'));
 	}
 	
 	function regmember(){
 		global $wp_query;
 		$res = $this->regist_member();
-		$this->page = $res;
+		if( 'editmemberform' == $res ){
+			$this->page = 'editmemberform';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_editmemberform');
+		}elseif( 'newcompletion' == $res ){
+			$this->page = 'newcompletion';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_newcompletion');
+		}else{
+			$this->page = $res;
+		}
 		add_action('the_post', array($this, 'action_memberFilter'));
 	}
 	
 	function editmember(){
 		global $wp_query;
 		$res = $this->regist_member();
-		$this->page = $res;
+		if( 'editmemberform' == $res ){
+			$this->page = 'editmemberform';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_editmemberform');
+		}elseif( 'newcompletion' == $res ){
+			$this->page = 'newcompletion';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_newcompletion');
+		}else{
+			$this->page = $res;
+		}
 		add_action('the_post', array($this, 'action_memberFilter'));
 	}
 	
@@ -1969,6 +2094,7 @@ class usc_e_shop
 	function page_newmember(){
 		global $wp_query;
 		$this->page = 'newmemberform';
+		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_newmemberform');
 		add_action('the_post', array($this, 'action_memberFilter'));
 	}
 	
@@ -2086,6 +2212,7 @@ class usc_e_shop
 		$member = $this->get_member();
 		$mode = $_POST['member_regmode'];
 		$member_table = $wpdb->prefix . "usces_member";
+		$member_meta_table = $wpdb->prefix . "usces_member_meta";
 			
 		$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
 		
@@ -2120,6 +2247,16 @@ class usc_e_shop
 				$_POST['member_id'] 
 				);
 			$res = $wpdb->query( $query );
+			if( $res !== false ){
+//20100818ysk start
+				$res = $this->reg_custom_member($_POST['member_id']);
+//20100818ysk end
+				$meta_keys = "'zeus_pcid', 'remise_pcid'";
+				$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
+						$_POST['member_id'] 
+						);
+				$res = $wpdb->query( $query );
+			}
 			
 			$this->get_current_member();
 			return 'editmemberform';
@@ -2166,6 +2303,9 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
+//20100818ysk start
+					$res = $this->reg_custom_member($wpdb->insert_id);
+//20100818ysk end
 					$user = $_POST['member'];
 					$mser = usces_send_regmembermail($user);
 				}
@@ -2214,7 +2354,10 @@ class usc_e_shop
 				
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
-				if( $res ) {
+				if($res !== false) {
+//20100818ysk start
+					$res = $this->reg_custom_member($wpdb->insert_id);
+//20100818ysk end
 					//usces_send_regmembermail();
 					$user = $_POST['customer'];
 					$mser = usces_send_regmembermail($user);
@@ -2302,6 +2445,9 @@ class usc_e_shop
 					$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+//20100818ysk start
+					$this->set_session_custom_member($member['ID']);
+//20100818ysk end
 					$this->get_current_member();
 					
 					return 'member';
@@ -2352,6 +2498,9 @@ class usc_e_shop
 					$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+//20100818ysk start
+					$this->set_session_custom_member($member['ID']);
+//20100818ysk end
 					$this->get_current_member();
 					
 					if( isset($_POST['rememberme']) ){
@@ -2400,6 +2549,9 @@ class usc_e_shop
 			$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 			$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 			$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+//20100818ysk start
+			$this->set_session_custom_member($member['ID']);
+//20100818ysk end
 			$this->get_current_member();
 			
 //			$cookie = $this->get_cookie();
@@ -2435,8 +2587,13 @@ class usc_e_shop
 	}
 
 	function get_member() {
-		foreach ( $_SESSION['usces_member'] as $key => $vlue ) {
-			$res[$key] = htmlspecialchars($vlue);
+		foreach ( $_SESSION['usces_member'] as $key => $value ) {
+//20100818ysk start
+			if(is_array($_SESSION['usces_member'][$key])) 
+				$res[$key] = $value;
+			else
+//20100818ysk end
+				$res[$key] = htmlspecialchars($value);
 		}
 		return $res;
 	}
@@ -2481,9 +2638,7 @@ class usc_e_shop
 		global $wpdb;
 		$order_table = $wpdb->prefix . "usces_order";
 	
-		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
-								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status, order_modified 
-							FROM $order_table WHERE ID = %d", $order_id);
+		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $order_id);
 
 		if( 'direct' == $mode ){
 			$value = $wpdb->get_row( $query, ARRAY_A );
@@ -2680,7 +2835,7 @@ class usc_e_shop
 
 	function delivery_check() {
 		$mes = '';
-		if ( $_POST['customer']['delivery_flag'] == '1' ) {
+		if ( $_POST['delivery']['delivery_flag'] == '1' ) {
 			if ( trim($_POST["delivery"]["name1"]) == "" )
 				$mes .= __('Name is not correct', 'usces');
 //			if ( trim($_POST["delivery"]["name3"]) == "" && USCES_JP )
@@ -3302,6 +3457,24 @@ class usc_e_shop
 		return $ids;
 	}
 	
+	function get_item_cat_genre_ids( $post_id ){
+		$genre = get_category_by_slug( 'itemgenre' );
+		$genre_id = $genre->term_id;
+		$args = array('child_of' => $genre_id, 'hide_empty' => 0, 'hierarchical' => 0);
+		$categories = get_categories( $args );
+		foreach($categories as $category){
+			$ids[] = $category->term_id;
+		}
+		$allcats = get_the_category( $post_id );
+		foreach($allcats as $cat){
+			$all_ids[] = $cat->term_id;
+		}
+		$all_ids = 
+		$results = array_intersect($ids, $all_ids);
+		
+		return $results;
+	}
+	
 	function set_item_mime($post_id, $str)
 	{
 		global $wpdb;
@@ -3815,6 +3988,75 @@ class usc_e_shop
 			}
 			exit;
 
+		}else if($acting_flg == 'acting_zeus_conv'){
+		
+			$acting_opts = $this->options['acting_settings']['zeus'];
+			$interface = parse_url($acting_opts['conv_url']);
+
+
+			$vars .= 'clientip=' . $acting_opts['clientip_conv'];
+			$vars .= '&act=' . $_POST['act'];
+			$vars .= '&money=' . $_POST['money'];
+			$vars .= '&username=' . mb_convert_encoding($_POST['username'], 'SJIS', 'UTF-8');
+			$vars .= '&telno=' . str_replace('-', '', $_POST['telno']);
+			$vars .= '&email=' . $_POST['email'];
+			$vars .= '&pay_cvs=' . $_POST['pay_cvs'];
+			$vars .= '&sendid=' . $_POST['sendid'];
+			$vars .= '&sendpoint=' . $_POST['sendpoint'];
+			if( '' != $acting_opts['testid_conv'] ){	
+				$vars .= '&testid=' . $acting_opts['testid_conv'];
+				$vars .= '&test_type=' . $acting_opts['test_type_conv'];
+			}
+
+
+			$header = "POST " . $interface['path'] . " HTTP/1.1\r\n";
+			$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
+			$header .= "User-Agent: PHP Script\r\n";
+			$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+			$header .= "Content-Length: " . strlen($vars) . "\r\n";
+			$header .= "Connection: close\r\n\r\n";
+			$header .= $vars;
+			$fp = fsockopen('ssl://'.$interface['host'],443,$errno,$errstr,30);
+			
+			if ($fp){
+				fwrite($fp, $header);
+				while ( !feof($fp) ) {
+					$scr = fgets($fp, 1024);
+					$page .= $scr;
+					if( false !== strpos( $scr, 'order_no') )
+						$qstr .= trim($scr) . '&';
+					if( false !== strpos( $scr, 'pay_no1') )
+						$qstr .= trim($scr) . '&';
+					if( false !== strpos( $scr, 'pay_no2') )
+						$qstr .= trim($scr) . '&';
+					if( false !== strpos( $scr, 'pay_limit') )
+						$qstr .= trim($scr) . '&';
+					if( false !== strpos( $scr, 'pay_url') )
+						$qstr .= trim($scr) . '&';
+					if( false !== strpos( $scr, 'error_code') )
+						$qstr .= trim($scr) . '&';
+					if( false !== strpos( $scr, 'sendpoint') )
+						$qstr .= trim($scr) . '&';
+				}
+				$qstr .= 'pay_cvs=' . $_POST['pay_cvs'];
+				fclose($fp);
+				//usces_log('zeus page : '.$page, 'acting_transaction.log');
+
+				if( strpos( $page, 'Success_order') ){
+					//usces_log('zeus query : '.$qstr, 'acting_transaction.log');
+					header("Location: " . USCES_CART_URL . '&acting=zeus_conv&acting_return=1&' . $qstr);
+					exit;
+				}else{
+					usces_log('zeus data NG : '.$page, 'acting_transaction.log');
+					header("Location: " . USCES_CART_URL . '&acting=zeus_conv&acting_return=0');
+					exit;
+				}
+			}else{
+				usces_log('zeus : sockopen NG', 'acting_transaction.log');
+				header("Location: " . USCES_CART_URL . '&acting=zeus_conv&acting_return=0');
+			}
+			exit;
+
 		}
 	}
 
@@ -4155,37 +4397,48 @@ class usc_e_shop
 		return $id;
 	
 	}
+
+	function uscescv( &$sessid, $flag ) {
 	
-	function uscescv( &$sessid ) {
-		
 		$chars = '';
 		$i=0;
 		$h=0;
 		while($h<strlen($sessid)){
 			if(0 == $i % 3){
-				$chars .= base_convert($i, 10, 36);
+				$chars .= base_convert($i, 9, 36);
 			}else{
 				$chars .= substr($sessid, $h, 1);
 				$h++;
 			}
 			$i++;
 		}
-		$sessid = $chars;
+		if( $flag ){
+			$sessid = $chars . '_' . $_SERVER['REMOTE_ADDR'];
+		}else{
+			$sessid = $chars . '_acting';
+		}
+		$sessid = urlencode(base64_encode($sessid));
 		//var_dump($sessid);
 	}
 	
 	function uscesdc( &$sessid ) {
+		$sessid = base64_decode(urldecode($sessid));
+		//var_dump($sessid);
+		list($sess, $addr) = explode('_', $sessid);
+		if( $addr != $_SERVER['REMOTE_ADDR'] && $addr != 'acting' ) {
+			$sessid = '';
+			return;
+		}
 		$chars = '';
 		$h=0;
-		while($h<strlen($sessid)){
-			if(0 != $i % 3){
-				$chars .= substr($sessid, $h, 1);
+		while($h<strlen($sess)){
+			if(0 != $h % 3){
+				$chars .= substr($sess, $h, 1);
 			}
 			$h++;
 		}
 		$sessid = $chars;
 		
-		//var_dump($sessid);
 	}
 
 	function get_visiter( $period ) {
@@ -4574,6 +4827,73 @@ class usc_e_shop
 		return $res;
 	}
 
+//20100818ysk start
+//20100816ysk start
+	//function get_order_meta($order_id, $key) {
+	function get_order_meta_value($key, $order_id) {
+		global $wpdb;
+		$order_meta_table_name = $wpdb->prefix . "usces_order_meta";
+		$query = $wpdb->prepare("SELECT meta_value FROM $order_meta_table_name WHERE order_id = %d AND meta_key = %s", 
+								$order_id, $key);
+		$res = $wpdb->get_var($query);
+		return $res;
+	}
+//20100816ysk end
+	function set_order_meta_value($key, $meta_value, $order_id) {
+		global $wpdb;
+
+		//if( empty($meta_value) ) return;
+		if( empty($order_id) ) return;
+
+		$table_name = $wpdb->prefix . "usces_order_meta";
+		$query = $wpdb->prepare("SELECT count(*) FROM $table_name WHERE order_id = %d AND meta_key = %s", 
+								$order_id, $key);
+		$res = $wpdb->get_var($query);
+		if(0 < $res) {
+			$query = $wpdb->prepare("UPDATE $table_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", 
+									$meta_value, 
+									$order_id, 
+									$key
+									);
+			$res2 = $wpdb->query($query);
+		} else {
+			$query = $wpdb->prepare("INSERT INTO  $table_name (order_id, meta_key, meta_value) 
+									VALUES(%d, %s, %s)", 
+									$order_id, 
+									$key, 
+									$meta_value
+									);
+			$res2 = $wpdb->query($query);
+		}
+		return $res2;
+	}
+
+	function set_session_custom_member($member_id) {
+		unset($_SESSION['usces_member']['custom_member']);
+		$meta = usces_has_custom_field_meta('member');
+		if(is_array($meta)) {
+			$keys = array_keys($meta);
+			foreach($keys as $key) {
+				$csmb_key = 'csmb_'.$key;
+				$_SESSION['usces_member']['custom_member'][$key] = maybe_unserialize($this->get_member_meta_value($csmb_key, $member_id));
+			}
+		}
+	}
+
+	function reg_custom_member($member_id) {
+		if( !empty($_POST['custom_member']) ) {
+			foreach( $_POST['custom_member'] as $key => $value ) {
+				$csmb_key = 'csmb_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$res = $this->set_member_meta_value($csmb_key, $value, $member_id);
+				if(false === $res) 
+					return false;
+			}
+		}
+	}
+//20100818ysk end
+
 	function save_order_acting_data($rand){
 		global $wpdb;
 		$data = serialize(array( 'cart' => $this->cart->get_cart(), 'entry' => $this->cart->get_entry() ));
@@ -4581,7 +4901,7 @@ class usc_e_shop
 		$query = $wpdb->prepare("INSERT INTO  $table_name (acc_type, acc_str1, acc_date, acc_key, acc_value) 
 								VALUES(%s, %s, now(), %s, %s)", 
 								'acting_data', 
-								session_id(), 
+								$this->get_uscesid(false), 
 								$rand, 
 								$data								
 								);
@@ -4589,36 +4909,42 @@ class usc_e_shop
 		return $res;
 	}
 
-	function set_member_meta_value($key, $pcid){
+//20100818ysk start
+	function set_member_meta_value($key, $meta_value, $member_id = ''){
 		global $wpdb;
 
-		if( empty($pcid) ) return;
-		if( !$this->is_member_logged_in() ) return;
-		
-		$member = $this->get_member();
+		//if( empty($meta_value) ) return;
+		if('' === $member_id) {
+			if( !$this->is_member_logged_in() ) return;
+			$member = $this->get_member();
+			$member_id = $member['ID'];
+		}
 
 		$table_name = $wpdb->prefix . "usces_member_meta";
-		$query = $wpdb->prepare("SELECT meta_value FROM $table_name WHERE member_id = %d AND meta_key = %s", 
-								$member['ID'], $key);
+		//$query = $wpdb->prepare("SELECT meta_value FROM $table_name WHERE member_id = %d AND meta_key = %s", 
+		$query = $wpdb->prepare("SELECT count(*) FROM $table_name WHERE member_id = %d AND meta_key = %s", 
+								$member_id, $key);
 		$res = $wpdb->get_var($query);
-		if($res != NULL){
+		//if($res != NULL){
+		if(0 < $res){
 			$query = $wpdb->prepare("UPDATE $table_name SET meta_value = %s WHERE member_id = %d AND meta_key = %s", 
-									$pcid, 
-									$member['ID'], 
+									$meta_value, 
+									$member_id, 
 									$key
 									);
 			$res2 = $wpdb->query($query);
 		}else{
 			$query = $wpdb->prepare("INSERT INTO  $table_name (member_id, meta_key, meta_value) 
 									VALUES(%d, %s, %s)", 
-									$member['ID'], 
+									$member_id, 
 									$key, 
-									$pcid
+									$meta_value
 									);
 			$res2 = $wpdb->query($query);
 		}
 		return $res2;
 	}
+//20100818ysk end
 
 	function get_member_meta_value($key, $member_id){
 		global $wpdb;
@@ -4628,7 +4954,44 @@ class usc_e_shop
 		$res = $wpdb->get_var($query);
 		return $res;
 	}
-
+	
+	function get_member_meta($member_id){
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("SELECT * FROM $table_name WHERE member_id = %d AND meta_key NOT LIKE %s", $member_id, 'cumb_%');
+		$res = $wpdb->get_results($query, ARRAY_A);
+		return $res;
+	}
+	
+	function get_settle_info_field( $order_id ){
+		global $wpdb;
+		$fields = array();
+		$table_name = $wpdb->prefix . "usces_order_meta";
+		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s)", 
+								$order_id, 'acting_%', 'settlement_id');
+		$res = $wpdb->get_results($query, ARRAY_A);
+		if( !$res )
+			return $fields;
+			
+		foreach( $res as $value ){
+			if( 'settlement_id' == $value['meta_key'] ){
+				$meta_values = maybe_unserialize($value['meta_value']);
+				if( is_array($meta_values) ){
+					foreach( $meta_values as $key => $meta_value ){
+						$fields[$key] = $meta_value;
+					}
+				}else{
+					$fields['settlement_id'] = $meta_values;
+				}
+			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){
+				$meta_values = unserialize($value['meta_value']);
+				foreach( $meta_values as $key => $meta_value ){
+					$fields[$key] = $meta_value;
+				}
+			}
+		}
+		return $fields;
+	}
 	//shortcode-----------------------------------------------------------------------------
 	function sc_company_name() {
 		return htmlspecialchars($this->options['company_name']);

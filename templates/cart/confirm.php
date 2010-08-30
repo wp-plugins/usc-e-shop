@@ -152,8 +152,11 @@ $html .= '</div>
 	<tr>
 	<th>'.__('e-mail adress', 'usces').'</th>
 	<td>' . $usces_entries['customer']['mailaddress1'] . '</td>
-	</tr>
-	<tr class="bdc">
+	</tr>';
+//20100818ysk start
+$html .= usces_custom_field_info($usces_entries, 'customer', 'name_pre', 'return');
+//20100818ysk end
+$html .= '<tr class="bdc">
 	<th>'.__('Full name', 'usces').'</th>
 	<td>' . $usces_entries['customer']['name1'] . ' ' . $usces_entries['customer']['name2'] . '</td>
 	</tr>';
@@ -163,6 +166,9 @@ if( USCES_JP ){
 	<td>' . $usces_entries['customer']['name3'] . ' ' . $usces_entries['customer']['name4'] . '</td>
 	</tr>';
 }
+//20100818ysk start
+$html .= usces_custom_field_info($usces_entries, 'customer', 'name_after', 'return');
+//20100818ysk end
 $html .= '<tr class="bdc">
 	<th>'.__('Zip/Postal Code', 'usces').'</th>
 	<td>' . $usces_entries['customer']['zipcode'] . '</td>
@@ -190,11 +196,17 @@ $html .= '<tr class="bdc">
 	<tr class="bdc">
 	<th>'.__('FAX number', 'usces').'</th>
 	<td>' . $usces_entries['customer']['fax'] . '</td>
-	</tr>
-	<tr class="ttl">';
+	</tr>';
+//20100818ysk start
+$html .= usces_custom_field_info($usces_entries, 'customer', 'fax_after', 'return');
+//20100818ysk end
+$html .= '<tr class="ttl">';
 $html .= '<td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td>
-	</tr>
-	<tr>
+	</tr>';
+//20100818ysk start
+$html .= usces_custom_field_info($usces_entries, 'delivery', 'name_pre', 'return');
+//20100818ysk end
+$html .= '<tr>
 	<th>'.__('Full name', 'usces').'</th><td>' . $usces_entries['delivery']['name1'] . ' ' . $usces_entries['delivery']['name2'] . '</td>
 	</tr>';
 if( USCES_JP ){
@@ -202,6 +214,9 @@ if( USCES_JP ){
 	<th>'.__('furigana', 'usces').'</th><td>' . $usces_entries['delivery']['name3'] . ' ' . $usces_entries['delivery']['name4'] . '</td>
 	</tr>';
 }
+//20100818ysk start
+$html .= usces_custom_field_info($usces_entries, 'delivery', 'name_after', 'return');
+//20100818ysk end
 $html .= '<tr>
 	<th>'.__('Zip/Postal Code', 'usces').'</th><td>' . $usces_entries['delivery']['zipcode'] . '</td>
 	</tr>
@@ -222,8 +237,11 @@ $html .= '<tr>
 	</tr>
 	<tr>
 	<th>'.__('FAX number', 'usces').'</th><td>' . $usces_entries['delivery']['fax'] . '</td>
-	</tr>
-	<tr>';
+	</tr>';
+//20100818ysk start
+$html .= usces_custom_field_info($usces_entries, 'delivery', 'fax_after', 'return');
+//20100818ysk end
+$html .= '<tr>';
 $html .= '<td class="ttl" colspan="2"><h3>'.__('Others', 'usces').'</h3></td>
 	</tr>';
 $html .= '<tr>
@@ -232,11 +250,17 @@ $html .= '<tr>
 	<tr class="bdc">
 	<th>'.__('Delivery Time', 'usces').'</th><td>' . $usces_entries['order']['delivery_time'] . '</td>
 	</tr>';
+
 $html .= '<tr>
 	<th>'.__('payment method', 'usces').'</th><td>' . $usces_entries['order']['payment_name'] . usces_payment_detail($usces_entries) . '</td>
 	</tr>';
-	
-require_once( USCES_PLUGIN_DIR . "/includes/confirm_custom_order_form.php");
+//20100818ysk start
+//require_once( USCES_PLUGIN_DIR . "/includes/confirm_custom_order_form.php");
+$html .= usces_custom_field_info($usces_entries, 'order', '', 'return');
+$html .= '<tr>
+	<th>'.__('Notes', 'usces').'</th><td>' . nl2br($usces_entries['order']['note']) . '</td>
+	</tr>';
+//20100818ysk end
 $html .= '</table>';
 
 require_once( USCES_PLUGIN_DIR . "/includes/purchase_button.php");

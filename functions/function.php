@@ -59,8 +59,6 @@ function usces_order_confirm_message($order_id) {
 	$total_full_price = $data['order_item_total_price'] - $data['order_usedpoint'] + $data['order_discount'] + $data['order_shipping_charge'] + $data['order_cod_fee'] + $data['order_tax'];
 
 
-//	$cart = $usces->cart->get_cart();
-//	$entry = $usces->cart->get_entry();
 	$mail_data = $usces->options['mail_data'];
 	$payment = $usces->getPayments( $data['order_payment_name'] );
 	$res = false;
@@ -135,7 +133,7 @@ function usces_order_confirm_message($order_id) {
 		$msg_shipping .= __("* A shipment due date is a day to ship an article, and it's not the arrival day.", 'usces') . "\r\n";
 		$msg_shipping .= "\r\n";
 	}
-	$deli_meth = (int)$entry['order']['delivery_method'];
+	$deli_meth = (int)$data['order_delivery_method'];
 	if( $deli_meth > 0 ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
 		$msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
@@ -157,6 +155,11 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	}
+	
+//20100818ysk start
+	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id );
+//20100818ysk end
+	
 	$msg_body .= "\r\n";
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
@@ -292,6 +295,11 @@ function usces_send_ordermail($order_id) {
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	}
+
+//20100818ysk start
+	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id );
+//20100818ysk end
+
 	$msg_body .= "\r\n";
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
@@ -452,6 +460,99 @@ function usces_lostmail($url) {
 
 }
 
+//20100818ysk start
+function usces_mail_custom_field_info( $custom_field, $position, $id ) {
+	global $usces;
+
+	$msg_body = '';
+	switch($custom_field) {
+	case 'order':
+		$field = 'usces_custom_order_field';
+		$cs = 'csod_';
+		break;
+	case 'customer':
+		$field = 'usces_custom_customer_field';
+		$cs = 'cscs_';
+		break;
+	case 'delivery':
+		$field = 'usces_custom_delivery_field';
+		$cs = 'csde_';
+		break;
+	case 'member':
+		$field = 'usces_custom_member_field';
+		$cs = 'csmb_';
+		break;
+	default:
+		return $msg_body;
+	}
+
+	$meta = usces_has_custom_field_meta($field);
+
+	if(!empty($meta) and is_array($meta)) {
+		$keys = array_keys($meta);
+		switch($custom_field) {
+		case 'order':
+			$msg_body .= "\r\n";
+			$msg_body .= __('** Custom order fields **','usces') . "\r\n";
+			$msg_body .= "******************************************************************\r\n";
+			foreach($keys as $key) {
+				$value = maybe_unserialize($usces->get_order_meta_value($cs.$key, $id));
+				if(is_array($value)) {
+					$concatval = '';
+					$c = '';
+					foreach($value as $v) {
+						$concatval .= $c.$v;
+						$c = ', ';
+					}
+					$value = $concatval;
+				}
+				$msg_body .= $meta[$key]['name']."  : ".$value."\r\n";
+			}
+			break;
+
+		case 'customer':
+		case 'delivery':
+			foreach($keys as $key) {
+				if($meta[$key]['position'] == $position) {
+					$value = maybe_unserialize($usces->get_order_meta_value($cs.$key, $id));
+					if(is_array($value)) {
+						$concatval = '';
+						$c = '';
+						foreach($value as $v) {
+							$concatval .= $c.$v;
+							$c = ', ';
+						}
+						$value = $concatval;
+					}
+					$msg_body .= $meta[$key]['name']."  : ".$value."\r\n";
+				}
+			}
+			break;
+
+		case 'member':
+			foreach($keys as $key) {
+				if($meta[$key]['position'] == $position) {
+					$value = maybe_unserialize($usces->get_member_meta_value($cs.$key, $id));
+					if(is_array($value)) {
+						$concatval = '';
+						$c = '';
+						foreach($value as $v) {
+							$concatval .= $c.$v;
+							$c = ', ';
+						}
+						$value = $concatval;
+					}
+					$msg_body .= $meta[$key]['name']."  : ".$value."\r\n";
+				}
+			}
+			break;
+		}
+	}
+
+	return $msg_body;
+}
+//20100818ysk end
+
 //function usces_send_receipted_mail( $order_id, $acting ) {
 //	global $usces;
 //	$res = false;
@@ -517,9 +618,11 @@ function usces_send_mail( $para ) {
 function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
 //	$wpdb->show_errors();
-
+	
 	$cart = $usces->cart->get_cart();
 	$entry = $usces->cart->get_entry();
+	if( empty($cart) )
+		return 0;
 	
 	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 	$charging_flag = (  0 < (int)$chargings ) ? true : false;
@@ -534,7 +637,7 @@ function usces_reg_orderdata( $results = array() ) {
 		$status = 'continuation';
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv'  || $set['settlement'] == 'acting_zeus_bank' ) ? 'noreceipt' : '';
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' ) ? 'noreceipt' : '';
 		$order_modified = NULL;
 	}
 	$payments = $usces->getPayments($entry['order']['payment_name']);
@@ -582,11 +685,15 @@ function usces_reg_orderdata( $results = array() ) {
 					$status
 				);
 
-	$wpdb->query( $query );
-//	$wpdb->print_error();
+	$res = $wpdb->query( $query );
+//$wpdb->print_error();
 //	echo $query;
 //	exit;
-	$order_id = $wpdb->insert_id;
+	if( $res === false){
+		$order_id = false;
+	}else{
+		$order_id = $wpdb->insert_id;
+	}
 	
 	if ( !$order_id ) :
 	
@@ -618,21 +725,71 @@ function usces_reg_orderdata( $results = array() ) {
 			}
 		}
 	
+//20100818ysk start
+		if( !empty($entry['custom_order']) ) {
+			foreach( $entry['custom_order'] as $key => $value ) {
+				$csod_key = 'csod_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$usces->set_order_meta_value($csod_key, $value, $order_id);
+			}
+		}
+		if( !empty($entry['custom_customer']) ) {
+			foreach( $entry['custom_customer'] as $key => $value ) {
+				$cscs_key = 'cscs_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$usces->set_order_meta_value($cscs_key, $value, $order_id);
+			}
+		}
+		if( !empty($entry['custom_delivery']) ) {
+			foreach( $entry['custom_delivery'] as $key => $value ) {
+				$csde_key = 'csde_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$usces->set_order_meta_value($csde_key, $value, $order_id);
+			}
+		}
+//20100818ysk end
+
 		if ( isset($_REQUEST['X-S_TORIHIKI_NO']) ) {
 			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
 										VALUES (%d, %s, %s)", $order_id, 'settlement_id', $_REQUEST['X-S_TORIHIKI_NO']);
 			$wpdb->query( $mquery );
+			$limitofcard = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 2) . substr($_REQUEST['X-EXPIRE'], 2, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 0, 2);
+			$usces->set_member_meta_value('partofcard', $_REQUEST['X-PARTOFCARD']);
+			$usces->set_member_meta_value('limitofcard', $limitofcard);
 		}
 	
-	endif;
+		if ( 'zeus_conv' == $usces->payment_results['acting'] ) {
+			$zeus_convs = array(
+								'acting' => 'zeus_conv',
+								'pay_cvs' => $_REQUEST['pay_cvs'],
+								'order_no' => $_REQUEST['order_no'],
+								'money' => $_REQUEST['money'],
+								'pay_no1' => $_REQUEST['pay_no1'],
+								'pay_no2' => $_REQUEST['pay_no2'],
+								'pay_limit' => $_REQUEST['pay_limit'],
+								'status' => $_REQUEST['status'],
+								'error_code' => $_REQUEST['error_code']
+								);
+			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
+										VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], serialize($zeus_convs) );
+			$wpdb->query( $mquery );
+		}
 	
-	foreach($cart as $cartrow){
-		$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
-		if($zaikonum == '') continue;
-		$zaikonum = $zaikonum - $cartrow['quantity'];
-		$usces->updateItemZaikoNum( $cartrow['post_id'], $cartrow['sku'], $zaikonum );
-		if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
-	}
+		foreach($cart as $cartrow){
+			$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
+			if($zaikonum == '') continue;
+			$zaikonum = $zaikonum - $cartrow['quantity'];
+			$usces->updateItemZaikoNum( $cartrow['post_id'], $cartrow['sku'], $zaikonum );
+			if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
+		}
+		
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_flag'=>$charging_flag);
+		do_action('usces_action_reg_orderdata', $args);
+	
+	endif;
 	
 	return $order_id;
 	
@@ -740,6 +897,38 @@ function usces_new_orderdata() {
 //		$usces->updateItemZaikoNum( $cartrow['post_id'], $cartrow['sku'], $zaikonum );
 //		if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
 //	}
+//20100818ysk start
+	if( !$order_id ) :
+
+		return false;
+
+	else :
+		if( !empty($_POST['custom_order']) ) {
+			foreach( $_POST['custom_order'] as $key => $value ) {
+				$csod_key = 'csod_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$usces->set_order_meta_value($csod_key, $value, $order_id);
+			}
+		}
+		if( !empty($_POST['custom_customer']) ) {
+			foreach( $_POST['custom_customer'] as $key => $value ) {
+				$cscs_key = 'cscs_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$usces->set_order_meta_value($cscs_key, $value, $order_id);
+			}
+		}
+		if( !empty($_POST['custom_delivery']) ) {
+			foreach( $_POST['custom_delivery'] as $key => $value ) {
+				$csde_key = 'csde_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$usces->set_order_meta_value($csde_key, $value, $order_id);
+			}
+		}
+	endif;
+//20100818ysk end
 	
 	$usces->cart->crear_cart();
 	return $res;
@@ -750,10 +939,19 @@ function usces_delete_memberdata() {
 	global $wpdb, $usces;
 	if(!isset($_REQUEST['member_id']) || $_REQUEST['member_id'] == '') return 0;
 	$member_table_name = $wpdb->prefix . "usces_member";
+//20100818ysk start
+	$member_table_meta_name = $wpdb->prefix . "usces_member_meta";
+//20100818ysk end
 	$ID = $_REQUEST['member_id'];
 
 	$query = $wpdb->prepare("DELETE FROM $member_table_name WHERE ID = %d", $ID);
 	$res = $wpdb->query( $query );
+//20100818ysk start
+	if($res) {
+		$query = $wpdb->prepare("DELETE FROM $member_table_meta_name WHERE member_id = %d", $ID);
+		$wpdb->query( $query );
+	}
+//20100818ysk end
 	
 	return $res;
 }
@@ -762,10 +960,13 @@ function usces_update_memberdata() {
 	global $wpdb, $usces;
 	
 	$member_table_name = $wpdb->prefix . "usces_member";
+//20100818ysk start
+	$member_table_meta_name = $wpdb->prefix . "usces_member_meta";
+//20100818ysk end
 
 	$ID = (int)$_REQUEST['member_id'];
 
-$wpdb->show_errors();
+//$wpdb->show_errors();
 	$query = $wpdb->prepare(
 				"UPDATE $member_table_name SET 
 					`mem_email`=%s, `mem_status`=%s, `mem_point`=%d, `mem_name1`=%s, `mem_name2`=%s, 
@@ -789,10 +990,34 @@ $wpdb->show_errors();
 					$ID
 				);
 
-	$res = $wpdb->query( $query );
-
+//20100818ysk start
+	//$res = $wpdb->query( $query );
+	$res[0] = $wpdb->query( $query );
+	if(false === $res[0]) 
+		return false;
+	$i = 1;
+	if( !empty($_POST['custom_member']) ) {
+		foreach( $_POST['custom_member'] as $key => $value ) {
+			$csmb_key = 'csmb_'.$key;
+			if( is_array($value) ) 
+				 $value = serialize($value);
+			$res[$i] = $usces->set_member_meta_value($csmb_key, $value, $ID);
+			if(false === $res[$i]) 
+				return false;
+			$i++;
+		}
+	}
 	
-	return $res;
+	$meta_keys = "'zeus_pcid', 'remise_pcid'";
+	$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
+			$_POST['member_id'] 
+			);
+	$res[$i] = $wpdb->query( $query );
+	
+	$result = ( 0 < array_sum($res) ) ? 1 : 0;
+	//return $res;
+	return $result;
+//20100818ysk end
 		
 }
 
@@ -930,7 +1155,47 @@ function usces_update_orderdata() {
 					$ID
 				);
 
-	$res = $wpdb->query( $query );
+//20100818ysk start
+	//$res = $wpdb->query( $query );
+	$res[0] = $wpdb->query( $query );
+	if(false === $res[0]) 
+		return false;
+	$i = 1;
+	if( !empty($_POST['custom_order']) ) {
+		foreach( $_POST['custom_order'] as $key => $value ) {
+			$csod_key = 'csod_'.$key;
+			if( is_array($value) ) 
+				 $value = serialize($value);
+			$res[$i] = $usces->set_order_meta_value($csod_key, $value, $ID);
+			if(false === $res[$i]) 
+				return false;
+			$i++;
+		}
+	}
+	if( !empty($_POST['custom_customer']) ) {
+		foreach( $_POST['custom_customer'] as $key => $value ) {
+			$cscs_key = 'cscs_'.$key;
+			if( is_array($value) ) 
+				 $value = serialize($value);
+			$res[$i] = $usces->set_order_meta_value($cscs_key, $value, $ID);
+			if(false === $res[$i]) 
+				return false;
+			$i++;
+		}
+	}
+	if( !empty($_POST['custom_delivery']) ) {
+		foreach( $_POST['custom_delivery'] as $key => $value ) {
+			$csde_key = 'csde_'.$key;
+			if( is_array($value) ) 
+				 $value = serialize($value);
+			$res[$i] = $usces->set_order_meta_value($csde_key, $value, $ID);
+			if(false === $res[$i]) 
+				return false;
+			$i++;
+		}
+	}
+	$result = ( 0 < array_sum($res) ) ? 1 : 0;
+//20100818ysk end
 
 	$usces->cart->crear_cart();
 	
@@ -1472,6 +1737,16 @@ function usces_check_acting_return() {
 			
 		case 'zeus_card':
 			$results = $_POST;
+			if( $_REQUEST['acting_return'] ){
+				$results[0] = 1;
+			}else{
+				$results[0] = 0;
+			}
+			$results['payment_status'] = 1;
+			break;
+			
+		case 'zeus_conv':
+			$results = $_GET;
 			if( $_REQUEST['acting_return'] ){
 				$results[0] = 1;
 			}else{
@@ -2231,5 +2506,84 @@ function usces_get_order_acting_data($rand){
 	}
 }
 
+function usces_trackPageview_cart($push){
+	$push[] = "'_trackPageview','/wc_cart'";
+	return $push;
+}
 
+function usces_trackPageview_customer($push){
+	$push[] = "'_trackPageview','/wc_customer'";
+	return $push;
+}
+
+function usces_trackPageview_delivery($push){
+	$push[] = "'_trackPageview','/wc_delivery'";
+	return $push;
+}
+
+function usces_trackPageview_confirm($push){
+	$push[] = "'_trackPageview','/wc_confirm'";
+	return $push;
+}
+
+function usces_trackPageview_ordercompletion($push){
+	global $usces;
+	$sesdata = $usces->cart->get_entry();
+	$order_id = $sesdata['order']['ID'];
+	$data = $usces->get_order_data($order_id, 'direct');
+	$cart = unserialize($data['order_cart']);
+	$total_price = $usces->get_total_price( $cart ) - $data['order_discount'];
+	
+	$push[] = "'_trackPageview','/wc_ordercompletion'";
+	$push[] = "'_addTrans', '" . $order_id . "', '" . get_bloginfo('name') . "', '" . $total_price . "', '" . $data['order_tax'] . "', '" . $data['order_shipping_charge'] . "', '" . $data['order_address1'].$data['order_address2'] . "', '" . $data['order_pref'] . "', '" . get_locale() . "'";
+	for($i=0; $i<count($cart); $i++) { 
+		$cart_row = $cart[$i];
+		$post_id = $cart_row['post_id'];
+		$sku = $cart_row['sku'];
+		$quantity = $cart_row['quantity'];
+//		$options = $cart_row['options'];
+//		$advance = $usces->cart->wc_serialize($cart_row['advance']);
+//		$itemCode = $usces->getItemCode($post_id);
+		$itemName = $usces->getItemName($post_id);
+//		$cartItemName = $usces->getCartItemName($post_id, $sku);
+		$skuPrice = $cart_row['price'];
+		$cats = $usces->get_item_cat_genre_ids( $post_id );
+		sort($cats);
+		$category = get_cat_name( $cats[0] );
+		$push[] = "'_addItem', '" . $order_id . "', '" . $sku . "', '" . $itemName . "', '" . $category . "', '" . $skuPrice . "', '" . $quantity . "'";
+	}
+	$push[] = "'_trackTrans'";
+
+	return $push;
+}
+
+function usces_trackPageview_error($push){
+	$push[] = "'_trackPageview','/wc_error'";
+	return $push;
+}
+
+function usces_trackPageview_member($push){
+	$push[] = "'_trackPageview','/wc_member'";
+	return $push;
+}
+
+function usces_trackPageview_login($push){
+	$push[] = "'_trackPageview','/wc_login'";
+	return $push;
+}
+
+function usces_trackPageview_editmemberform($push){
+	$push[] = "'_trackPageview','/wc_editmemberform'";
+	return $push;
+}
+
+function usces_trackPageview_newcompletion($push){
+	$push[] = "'_trackPageview','/wc_newcompletion'";
+	return $push;
+}
+
+function usces_trackPageview_newmemberform($push){
+	$push[] = "'_trackPageview','/wc_newmemberform'";
+	return $push;
+}
 ?>

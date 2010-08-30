@@ -1227,12 +1227,13 @@ tr.rowSelection_selected td {
 	color: #000000;
 }
 
+.info_body table,
 .info_head table {
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
 	border: 1px solid #999999;
-	border-collapse: collapse;
+	border-spacing:0;
 }
 
 .long {
@@ -1272,6 +1273,66 @@ tr.rowSelection_selected td {
 	line-height: 24px;
 	padding-right: 5px;
 	padding-left: 5px;
+}
+.info_head table .rod_left {
+	background-color: #FFFFEC;
+	border: 1px solid #7F9DB9;
+	text-align: left;
+	line-height: 24px;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+.info_head table .deli_info {
+	border-bottom: 1px dotted #CCCCCC;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+}
+
+.info_head table .cus_info {
+	border-right: 1px dotted #CCCCCC;
+	border-left: 1px dotted #CCCCCC;
+	border-top-width: 0px;
+	border-top-style: none;
+	border-bottom: 1px dotted #CCCCCC;
+}
+
+.info_head table .mem_wrap {
+	border: 1px solid #CCCCCC;
+}
+
+.info_head table .mem_info {
+	border-top-width: 0px;
+	border-top-style: none;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	margin: 0px;
+	padding: 0px;
+	height: auto;
+	width: auto;
+}
+
+.info_head .order_custom_wrap{
+	border-right: 1px dotted #CCCCCC;
+	border-top-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+
+.info_head .settle_info_wrap{
+	border-style: none;
+}
+
+.info_head .wrap_td {
+	margin: 0px;
+	padding: 0px;
 }
 
 .info_head td {
@@ -1336,10 +1397,18 @@ tr.rowSelection_selected td {
 }
 
 .info_head td.label {
-	width: 80px;
+	width: 90px;
 	text-align: right;
 	font-size: 11px;
 	color: #666666;
+}
+.info_head .order_custom_wrap td.label,
+.info_head .settle_info_wrap td.label{
+	width: 120px;
+	border-right: 1px dotted #CCCCCC;
+	border-top-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
 }
 
 .info_head td.col1 {
@@ -1347,15 +1416,31 @@ tr.rowSelection_selected td {
 }
 
 .info_head td.col2 {
-	border-right-width: 1px;
-	border-right-style: dotted;
-	border-right-color: #999999;
 }
 
 .info_head td.col3 {
+}
+
+.info_head td.mem_col2 {
+	border-right-width: 1px;
 	border-left-width: 1px;
+	border-right-style: dotted;
 	border-left-style: dotted;
-	border-left-color: #999999;
+	border-right-color: #CCCCCC;
+	border-left-color: #CCCCCC;
+	margin: 0px;
+	padding: 5px;
+	vertical-align: top;
+}
+
+.info_head td.mem_col3 {
+	border-right-style: none;
+	border-left-style: none;
+	border-top-style: none;
+	border-bottom-style: none;
+	margin: 0px;
+	padding: 5px;
+	vertical-align: top;
 }
 
 .info_head td input.text {
@@ -1370,7 +1455,7 @@ tr.rowSelection_selected td {
 	padding: 5px;
 	margin: 0px;
 	height: 2.5em;
-	width: 490px;
+	width: 500px;
 	line-height: 1em;
 }
 * html .info_head td input.text {

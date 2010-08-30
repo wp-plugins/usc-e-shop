@@ -356,7 +356,7 @@ function usces_the_itemGpExp( $out = '' ) {
 function usces_the_itemQuant( $out = '' ) {
 	global $usces, $post;
 	$post_id = $post->ID;
-	$html = "<input name=\"quant[{$post_id}][{$usces->itemsku['key']}]\" type=\"text\" id=\"quant[{$post_id}][{$usces->itemsku['key']}]\" class=\"skuquantity\" value=\"1\" />";
+	$html = "<input name=\"quant[{$post_id}][{$usces->itemsku['key']}]\" type=\"text\" id=\"quant[{$post_id}][{$usces->itemsku['key']}]\" class=\"skuquantity\" value=\"1\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
 		
 	if( $out == 'return' ){
 		return $html;
@@ -612,7 +612,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		$selects = explode("\n", $values['value'][0]);
 		$multiple = ($means === 0) ? '' : ' multiple';
 		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
-		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple}>\n";
+		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
 		if($essential == 1)
 			$html .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
 		$i=0;
@@ -626,7 +626,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		}
 		$html .= "</select>\n";
 	}else{
-		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$name}]' type='text' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_text' />\n";
+		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$name}]' type='text' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" />\n";
 	}
 	if( $out == 'return' ){
 		return $html;
@@ -790,7 +790,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$html .= $list . "</dl>\n";
 	
 	if( empty($list) )
-		$html = '�܂����x�����@�̏������ł��Ă���܂���B<br />�Ǘ��҂ɂ��⍇�������������B'."\n";
+		$html = 'まだお支払方法の準備ができておりません。<br />管理者にお問合せいください。'."\n";
 	
 	if( $out == 'return' ){
 		return $html;
@@ -1255,4 +1255,423 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 		echo $html;
 	}
 }
+
+function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
+	global $usces;
+	$str = '';
+	$fields = $usces->get_settle_info_field( $order_id );
+	foreach($fields as $key => $value){
+		if( 'acting' == $key )
+			$acting = $value;
+			
+		if( !in_array($key, array(
+								'order_no','tracking_no','status','error_message','money',
+								'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
+								'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE')) ){
+			continue;
+		}
+
+		switch($acting){
+			case 'zeus_bank':
+				if( 'status' == $key){
+					if( '01' == $value ){
+						$value = '受付中';
+					}elseif( '02' == $value ){
+						$value = '未入金';
+					}elseif( '03' == $value ){
+						$value = '入金済';
+					}elseif( '04' == $value ){
+						$value = 'エラー';
+					}elseif( '05' == $value ){
+						$value = '入金失敗';
+					}
+				}elseif( 'error_message' == $key){
+					if( '0002' == $value ){
+						$value = '入金不足';
+					}elseif( '0003' == $value ){
+						$value = '過剰入金';
+					}
+				}
+				break;
+			case 'zeus_conv':
+				if( 'pay_cvs' == $key){
+					if( 'D001' == $value ){
+						$value = 'セブンイレブン';
+					}elseif( 'D002' == $value ){
+						$value = 'ローソン';
+					}elseif( 'D030' == $value ){
+						$value = 'ファミリーマート';
+					}elseif( 'D040' == $value ){
+						$value = 'サークルKサンクス';
+					}elseif( 'D015' == $value ){
+						$value = 'セイコーマート';
+					}
+				}elseif( 'status' == $key){
+					if( '01' == $value ){
+						$value = '未入金';
+					}elseif( '02' == $value ){
+						$value = '申込エラー';
+					}elseif( '03' == $value ){
+						$value = '期日切';
+					}elseif( '04' == $value ){
+						$value = '入金済';
+					}elseif( '05' == $value ){
+						$value = '売上確定';
+					}elseif( '06' == $value ){
+						$value = '入金取消';
+					}elseif( '11' == $value ){
+						$value = 'キャンセル後入金';
+					}elseif( '12' == $value ){
+						$value = 'キャンセル後売上';
+					}elseif( '13' == $value ){
+						$value = 'キャンセル後取消';
+					}
+				}elseif( 'pay_limit' == $key){
+					$value = substr($value, 0, 4).'年' . substr($value, 4, 2).'月' . substr($value, 6, 2).'日';
+				}
+				break;
+		}
+		switch($type){
+			case 'nl':
+				$str .= $key . ' : ' . $value . "<br />\n";
+				break;
+				
+			case 'tr':
+				$str .= '<tr><td class="label">' . $key . '</td><td>' . $value . "</td></tr>\n";
+				break;
+				
+			case 'li':
+				$str .= '<li>' . $key . ' : ' . $value . "</li>\n";
+				break;
+		}
+	}
+	if( 'return' == $out){
+		return $str;
+	}else{
+		echo $str;
+	}
+}
+
+//20100818ysk start
+function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) {
+
+	$html = '';
+	switch($custom_field) {
+	case 'order':
+		$label = 'custom_order';
+		$field = 'usces_custom_order_field';
+		break;
+	case 'customer':
+		$label = 'custom_customer';
+		$field = 'usces_custom_customer_field';
+		break;
+	case 'delivery':
+		$label = 'custom_delivery';
+		$field = 'usces_custom_delivery_field';
+		break;
+	case 'member':
+		$label = 'custom_member';
+		$field = 'usces_custom_member_field';
+		break;
+	default:
+		return;
+	}
+
+	$meta = usces_has_custom_field_meta($field);
+
+	if(!empty($meta) and is_array($meta)) {
+		foreach($meta as $key => $entry) {
+			if($custom_field == 'order' or $entry['position'] == $position) {
+				$name = $entry['name'];
+				$means = $entry['means'];
+				$essential = $entry['essential'];
+				$value = '';
+				if(is_array($entry['value'])) {
+					foreach($entry['value'] as $k => $v) {
+						$value .= htmlspecialchars($v)."\n";
+					}
+				}
+				$value = trim($value);
+
+				$e = ($essential == 1) ? '<em>*</em>' : '';
+				$html .= '
+					<tr>
+					<th scope="row">'.$e.$name.'</th>';
+				switch($means) {
+				case 0://シングルセレクト
+				case 1://マルチセレクト
+					$selects = explode("\n", $value);
+					$multiple = ($means == 0) ? '' : ' multiple';
+					$multiple_array = ($means == 0) ? '' : '[]';
+					$html .= '
+						<td colspan="2">
+						<select name="'.$label.'['.$key.']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+					if($essential == 1) 
+						$html .= '
+							<option value="#NONE#">'.__('Choose','usces').'</option>';
+					foreach($selects as $v) {
+						$selected = ($data[$label][$key] == $v) ? ' selected' : '';
+						$html .= '
+							<option value="'.$v.'"'.$selected.'>'.$v.'</option>';
+					}
+					$html .= '
+						</select></td>';
+					break;
+				case 2://テキスト
+					$html .= '
+						<td colspan="2"><input type="text" name="'.$label.'['.$key.']" size="30" value="'.$data[$label][$key].'" /></td>';
+					break;
+				case 3://ラジオボタン
+					$selects = explode("\n", $value);
+					$html .= '
+						<td colspan="2">';
+					foreach($selects as $v) {
+						$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+						$html .= '
+						<input type="radio" name="'.$label.'['.$key.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+					}
+					$html .= '
+						</td>';
+					break;
+				case 4://チェックボックス
+					$selects = explode("\n", $value);
+					$html .= '
+						<td colspan="2">';
+					foreach($selects as $v) {
+						if(is_array($data[$label][$key])) {
+							$checked = (array_key_exists($v, $data[$label][$key])) ? ' checked' : '';
+						} else {
+							$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+						}
+						$html .= '
+						<input type="checkbox" name="'.$label.'['.$key.']['.$v.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+					}
+					$html .= '
+						</td>';
+					break;
+				}
+				$html .= '
+					</tr>';
+			}
+		}
+	}
+
+	if($out == 'return') {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
+
+function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
+
+	$html = '';
+	switch($custom_field) {
+	case 'order':
+		$label = 'custom_order';
+		$field = 'usces_custom_order_field';
+		break;
+	case 'customer':
+		$label = 'custom_customer';
+		$field = 'usces_custom_customer_field';
+		break;
+	case 'delivery':
+		$label = 'custom_delivery';
+		$field = 'usces_custom_delivery_field';
+		break;
+	case 'member':
+		$label = 'custom_member';
+		$field = 'usces_custom_member_field';
+		break;
+	default:
+		return;
+	}
+
+	$meta = usces_has_custom_field_meta($field);
+
+	if(!empty($meta) and is_array($meta)) {
+		foreach($meta as $key => $entry) {
+			if($custom_field == 'order' or $entry['position'] == $position) {
+				$name = $entry['name'];
+				$means = $entry['means'];
+
+				$html .= '<tr>
+					<th>'.$name.'</th>
+					<td>';
+					switch($means) {
+					case 0://シングルセレクト
+					case 2://テキスト
+					case 3://ラジオボタン
+						$html .= $data[$label][$key];
+						break;
+					case 1://マルチセレクト
+					case 4://チェックボックス
+						if(is_array($data[$label][$key])) {
+							$c = '';
+							foreach($data[$label][$key] as $v) {
+								$html .= $c.$v;
+								$c = ', ';
+							}
+						} else {
+							$html .= $data[$label][$key];
+						}
+						break;
+					}
+				$html .= '
+					</td>
+					</tr>';
+			}
+		}
+	}
+
+	if($out == 'return') {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
+
+function usces_admin_custom_field_input( $meta, $custom_field, $position, $out = '' ) {
+
+	$html = '';
+	switch($custom_field) {
+	case 'order':
+		$label = 'custom_order';
+		$class = '';
+		break;
+	case 'customer':
+		$label = 'custom_customer';
+		$class = ' class="col2"';
+		break;
+	case 'delivery':
+		$label = 'custom_delivery';
+		$class = ' class="col3"';
+		break;
+	case 'member':
+		$label = 'custom_member';
+		$class = '';
+		break;
+	default:
+		return;
+	}
+
+	//$meta = usces_has_custom_field_meta($field);
+
+	if(!empty($meta) and is_array($meta)) {
+		foreach($meta as $key => $entry) {
+			if($custom_field == 'order' or $entry['position'] == $position) {
+				$name = $entry['name'];
+				$means = $entry['means'];
+				$essential = $entry['essential'];
+				$value = '';
+				if(is_array($entry['value'])) {
+					foreach($entry['value'] as $k => $v) {
+						$value .= htmlspecialchars($v)."\n";
+					}
+				}
+				$value = trim($value);
+				$data = $entry['data'];
+
+				$html .= '
+					<tr>
+					<td class="label">'.$name.'</td>';
+				switch($means) {
+				case 0://シングルセレクト
+				case 1://マルチセレクト
+					$selects = explode("\n", $value);
+					$multiple = ($means == 0) ? '' : ' multiple';
+					$multiple_array = ($means == 0) ? '' : '[]';
+					$html .= '
+						<td'.$class.'>
+						<select name="'.$label.'['.$key.']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+					if($essential == 1) 
+						$html .= '
+							<option value="#NONE#">'.__('Choose','usces').'</option>';
+					foreach($selects as $v) {
+						$selected = ($data == $v) ? ' selected' : '';
+						$html .= '
+							<option value="'.$v.'"'.$selected.'>'.$v.'</option>';
+					}
+					$html .= '
+						</select></td>';
+					break;
+				case 2://テキスト
+					$html .= '
+						<td'.$class.'><input type="text" name="'.$label.'['.$key.']" size="30" value="'.$data.'" /></td>';
+					break;
+				case 3://ラジオボタン
+					$selects = explode("\n", $value);
+					$html .= '
+						<td'.$class.'>';
+					foreach($selects as $v) {
+						$checked = ($data == $v) ? ' checked' : '';
+						$html .= '
+						<input type="radio" name="'.$label.'['.$key.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+					}
+					$html .= '
+						</td>';
+					break;
+				case 4://チェックボックス
+					$selects = explode("\n", $value);
+					$html .= '
+						<td'.$class.'>';
+					foreach($selects as $v) {
+						if(is_array($data)) {
+							$checked = (array_key_exists($v, $data)) ? ' checked' : '';
+						} else {
+							$checked = ($data == $v) ? ' checked' : '';
+						}
+						$html .= '
+						<input type="checkbox" name="'.$label.'['.$key.']['.$v.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+					}
+					$html .= '
+						</td>';
+					break;
+				}
+				$html .= '
+					</tr>';
+			}
+		}
+	}
+
+	if($out == 'return') {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
+
+function has_custom_customer_field_essential() {
+
+	$mes = '';
+	$essential = array();
+
+	$csmb_meta = usces_has_custom_field_meta('member');
+	if(!empty($csmb_meta) and is_array($csmb_meta)) {
+		foreach($csmb_meta as $key => $entry) {
+			if($entry['essential'] == 1) {
+				$essential[$key] = $key;
+			}
+		}
+	}
+	if(!empty($essential)) {
+		$cscs_meta = usces_has_custom_field_meta('customer');
+		if(!empty($cscs_meta) and is_array($cscs_meta)) {
+			foreach($cscs_meta as $key => $entry) {
+				if($entry['essential'] == 1) {
+					if(!array_key_exists($key, $essential)) {
+						if($entry['means'] == 2) {//Text
+							$mes .= __($entry['name'].'を入力してください。', 'usces')."<br />";
+						} else {
+							$mes .= __($entry['name'].'を選択してください。', 'usces')."<br />";
+						}
+					}
+				}
+			}
+		}
+	}
+	return $mes;
+}
+//20100818ysk end
+
 ?>

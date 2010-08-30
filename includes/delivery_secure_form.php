@@ -21,6 +21,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
 				
+				$html .= '<input type="hidden" name="acting" value="zeus">'."\n";
 				$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
 				
 				$pcid = NULL;
@@ -127,6 +128,33 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				}
 					
 				$html .= '
+				</table>';
+				break;
+				
+			case 'acting_zeus_conv':
+				$paymod_id = 'zeus';
+				
+				if( 'on' != $this->options['acting_settings'][$paymod_id]['conv_activate'] 
+					|| 'on' != $this->options['acting_settings'][$paymod_id]['activate'] )
+					continue;
+					
+					
+				$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : 'D001';
+				
+				$html .= '
+				<table class="customer_form" id="' . $paymod_id . '_conv">
+					<tr>
+					<th scope="row">'.__('お支払いに利用するコンビニ', 'usces').'</th>
+					<td colspan="2">
+					<select name="pay_cvs" id="pay_cvs_zeus">
+						<option value="D001"' . (('D001' == $pay_cvs) ? ' selected="selected"' : '') . '>セブンイレブン</option>
+						<option value="D002"' . (('D002' == $pay_cvs) ? ' selected="selected"' : '') . '>ローソン</option>
+						<option value="D030"' . (('D030' == $pay_cvs) ? ' selected="selected"' : '') . '>ファミリーマート</option>
+						<option value="D040"' . (('D040' == $pay_cvs) ? ' selected="selected"' : '') . '>サークルKサンクス</option>
+						<option value="D015"' . (('D015' == $pay_cvs) ? ' selected="selected"' : '') . '>セイコーマート</option>
+					</select>
+					</td>
+					</tr>
 				</table>';
 				break;
 				

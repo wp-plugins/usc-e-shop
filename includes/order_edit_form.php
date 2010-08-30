@@ -15,17 +15,22 @@ if($order_action == 'new'){
 	$receipt = '';
 	$ordercheck = array();
 	$order_delivery_method = -1;
+//20100818ysk start
+	$csod_meta = usces_has_custom_field_meta('order');
+	$cscs_meta = usces_has_custom_field_meta('customer');
+	$csde_meta = usces_has_custom_field_meta('delivery');
+//20100818ysk end
 
 }else{
 
 	$oa = 'editpost';
 
-	$ID = $_REQUEST['order_id'];
+	$order_id = $_REQUEST['order_id'];
 	
 	global $wpdb;
 	
 	$tableName = $wpdb->prefix . "usces_order";
-	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $ID);
+	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
 	$data = $wpdb->get_row( $query, ARRAY_A );
 
 	$deli = unserialize($data['order_delivery']);
@@ -63,6 +68,33 @@ if($order_action == 'new'){
 		$receipt = 'pending';
 	else
 		$receipt = '';
+		
+//20100818ysk start
+	$csod_meta = usces_has_custom_field_meta('order');
+	if(is_array($csod_meta)) {
+		$keys = array_keys($csod_meta);
+		foreach($keys as $key) {
+			$csod_key = 'csod_'.$key;
+			$csod_meta[$key]['data'] = maybe_unserialize($this->get_order_meta_value($csod_key, $order_id));
+		}
+	}
+	$cscs_meta = usces_has_custom_field_meta('customer');
+	if(is_array($cscs_meta)) {
+		$keys = array_keys($cscs_meta);
+		foreach($keys as $key) {
+			$cscs_key = 'cscs_'.$key;
+			$cscs_meta[$key]['data'] = maybe_unserialize($this->get_order_meta_value($cscs_key, $order_id));
+		}
+	}
+	$csde_meta = usces_has_custom_field_meta('delivery');
+	if(is_array($csde_meta)) {
+		$keys = array_keys($csde_meta);
+		foreach($keys as $key) {
+			$csde_key = 'csde_'.$key;
+			$csde_meta[$key]['data'] = maybe_unserialize($this->get_order_meta_value($csde_key, $order_id));
+		}
+	}
+//20100818ysk end
 }
 
 ?>
@@ -406,7 +438,7 @@ function pdfWindow( type ) {
 	var y = (screen.height - wy) / 2;
 	x = 0;
 	y = 0;
-	printWin = window.open("<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$ID; ?>"+"&type="+type,"sub","left="+x+",top="+y+",width="+wx+",height="+wy+",scrollbars=yes");
+	printWin = window.open("<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>"+"&type="+type,"sub","left="+x+",top="+y+",width="+wx+",height="+wy+",scrollbars=yes");
 }
 
 jQuery(document).ready(function($){
@@ -495,7 +527,73 @@ jQuery(document).ready(function($){
 </tr>
 <tr>
 <td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo $data['mem_id']; ?></div></td>
-<td class="col3 label">e-mail</td><td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo $data['order_email']; ?>" /></td>
+<td colspan="2" rowspan="9" class="wrap_td">
+	<table border="0" cellspacing="0" class="cus_info">
+    <tr>
+        <td class="label">e-mail<th>
+        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo $data['order_email']; ?>" /></td>
+    </tr>
+	<?php
+//20100818ysk start
+	usces_admin_custom_field_input($cscs_meta, 'customer', 'name_pre');
+//20100818ysk end
+	?>
+    <tr>
+        <td class="label"><?php _e('name', 'usces'); ?> <th>
+        <td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php echo $data['order_name1']; ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php echo $data['order_name2']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('furigana', 'usces'); ?><th>
+        <td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php echo $data['order_name3']; ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php echo $data['order_name4']; ?>" /></td>
+    </tr>
+	<?php
+//20100818ysk start
+	usces_admin_custom_field_input($cscs_meta, 'customer', 'name_after');
+//20100818ysk end
+	?>
+    <tr>
+        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?><th>
+        <td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php echo $data['order_zip']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('Province', 'usces'); ?><th>
+        <td class="col2"><select name="customer[pref]" class="select">
+        <?php
+//	$prefs = get_option('usces_pref');
+	$prefs = $this->options['province'];
+foreach((array)$prefs as $value) {
+	$selected = ($data['order_pref'] == $value) ? ' selected="selected"' : '';
+	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
+}
+?>
+        </select></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('city', 'usces'); ?><th>
+        <td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php echo $data['order_address1']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('numbers', 'usces'); ?><th>
+        <td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php echo $data['order_address2']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('building name', 'usces'); ?><th>
+        <td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php echo $data['order_address3']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('Phone number', 'usces'); ?><th>
+        <td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php echo $data['order_tel']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('FAX number', 'usces'); ?><th>
+        <td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php echo $data['order_fax']; ?>" /></td>
+    </tr>
+	<?php
+//20100818ysk start
+	usces_admin_custom_field_input($cscs_meta, 'customer', 'fax_after');
+//20100818ysk end
+	?>
+</table></td>
 <td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
 </tr>
 <tr>
@@ -511,10 +609,69 @@ if( $this->options['payment_method'] ) {
     <option value="<?php echo $payments['name']; ?>"<?php echo $selected; ?>><?php echo $payments['name']; ?></option>
 <?php } } } ?>
 </select></td>
-<td class="col3 label"><?php _e('name', 'usces'); ?></td>
-<td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php echo $data['order_name1']; ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php echo $data['order_name2']; ?>" /></td>
-<td class="label deli"><?php _e('name', 'usces'); ?></td>
-<td class="deli"><input name="delivery[name1]" type="text" class="text short" value="<?php echo $deli['name1']; ?>" /><input name="delivery[name2]" type="text" class="text short" value="<?php echo $deli['name2']; ?>" /></td>
+<td colspan="2" rowspan="8" class="wrap_td">
+<table border="0" cellspacing="0" class="deli_info">
+	<?php
+//20100818ysk start
+	usces_admin_custom_field_input($csde_meta, 'delivery', 'name_pre');
+//20100818ysk end
+	?>
+    <tr>
+        <td class="label"><?php _e('name', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[name1]" type="text" class="text short" value="<?php echo $deli['name1']; ?>" />    <input name="delivery[name2]" type="text" class="text short" value="<?php echo $deli['name2']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('furigana', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[name3]" type="text" class="text short" value="<?php echo $deli['name3']; ?>" />    <input name="delivery[name4]" type="text" class="text short" value="<?php echo $deli['name4']; ?>" /></td>
+    </tr>
+	<?php
+//20100818ysk start
+	usces_admin_custom_field_input($csde_meta, 'delivery', 'name_after');
+//20100818ysk end
+	?>
+    <tr>
+        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo $deli['zipcode']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('Province', 'usces'); ?><th>
+        <td class="col3"><select name="delivery[pref]">
+    <?php
+//	$prefs = get_option('usces_pref');
+	$prefs = $this->options['province'];
+foreach((array)$prefs as $value) {
+	$selected = ($deli['pref'] == $value) ? ' selected="selected"' : '';
+	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
+}
+?>
+    </select></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('city', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[address1]" type="text" class="text long" value="<?php echo $deli['address1']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('numbers', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[address2]" type="text" class="text long" value="<?php echo $deli['address2']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('building name', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[address3]" type="text" class="text long" value="<?php echo $deli['address3']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('Phone number', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[tel]" type="text" class="text long" value="<?php echo $deli['tel']; ?>" /></td>
+    </tr>
+    <tr>
+        <td class="label"><?php _e('FAX number', 'usces'); ?><th>
+        <td class="col3"><input name="delivery[fax]" type="text" class="text long" value="<?php echo $deli['fax']; ?>" /></td>
+    </tr>
+	<?php
+//20100818ysk start
+	usces_admin_custom_field_input($csde_meta, 'delivery', 'fax_after');
+//20100818ysk end
+	?>
+</table></td>
 </tr>
 <tr>
 <td class="label"><?php _e('shipping option','usces'); ?></td>
@@ -528,10 +685,6 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 ?>
 </select></td>
 <?php if( USCES_JP ): ?>
-<td class="col3 label"><?php _e('furigana', 'usces'); ?></td>
-<td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php echo $data['order_name3']; ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php echo $data['order_name4']; ?>" /></td>
-<td class="label deli"><?php _e('furigana', 'usces'); ?></td>
-<td class="deli"><input name="delivery[name3]" type="text" class="text short" value="<?php echo $deli['name3']; ?>" /><input name="delivery[name4]" type="text" class="text short" value="<?php echo $deli['name4']; ?>" /></td>
 </tr>
 <?php endif; ?>
 <tr>
@@ -551,10 +704,6 @@ if( !$this->options['delivery_time'] == '' ) {
 }
 ?>
 </select></td>
-<td class="col3 label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-<td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php echo $data['order_zip']; ?>" /></td>
-<td class="label deli"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-<td class="deli"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo $deli['zipcode']; ?>" /></td>
 </tr>
 <tr>
 <td class="label"><?php _e('Shipping date', 'usces'); ?></td>
@@ -568,37 +717,9 @@ for ($i=0; $i<50; $i++) {
 }
 ?>
 </select></td>
-<td class="col3 label"><?php _e('Province', 'usces'); ?></td>
-<td class="col2"><select name="customer[pref]" class="select">
-<?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($data['order_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
-}
-?>
-</select>
-</td>
-<td class="label deli"><?php _e('Province', 'usces'); ?></td>
-<td class="deli"><select name="delivery[pref]">
-<?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($deli['pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
-}
-?>
-</select>
-</td>
 </tr>
 <tr>
 <td colspan="2" class="midasi3"><?php _e('Status', 'usces'); ?></td>
-<td class="col3 label"><?php _e('city', 'usces'); ?></td>
-<td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php echo $data['order_address1']; ?>" /></td>
-<td class="label deli"><?php _e('city', 'usces'); ?></td>
-<td class="deli"><input name="delivery[address1]" type="text" class="text long" value="<?php echo $deli['address1']; ?>" /></td>
 </tr>
 <tr>
 <td class="label status"><?php _e('The correspondence situation', 'usces'); ?></td>
@@ -610,12 +731,7 @@ foreach((array)$prefs as $value) {
 	<option value='completion'<?php if($taio == 'completion'){ echo 'selected="selected"';} ?>><?php echo $management_status['completion']; ?></option>
 	<option value='continuation'<?php if($taio == 'continuation'){ echo 'selected="selected"';} ?>><?php echo $management_status['continuation']; ?></option>
 	<option value='termination'<?php if($taio == 'termination'){ echo 'selected="selected"';} ?>><?php echo $management_status['termination']; ?></option>
-</select>
-</td>
-<td class="col3 label"><?php _e('numbers', 'usces'); ?></td>
-<td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php echo $data['order_address2']; ?>" /></td>
-<td class="label deli"><?php _e('numbers', 'usces'); ?></td>
-<td class="deli"><input name="delivery[address2]" type="text" class="text long" value="<?php echo $deli['address2']; ?>" /></td>
+</select></td>
 </tr>
 <tr>
 <td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>
@@ -629,10 +745,6 @@ foreach((array)$prefs as $value) {
 <?php else : ?>
 &nbsp
 <?php endif; ?></td>
-<td class="col3 label"><?php _e('building name', 'usces'); ?></td>
-<td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php echo $data['order_address3']; ?>" /></td>
-<td class="label deli"><?php _e('building name', 'usces'); ?></td>
-<td class="deli"><input name="delivery[address3]" type="text" class="text long" value="<?php echo $deli['address3']; ?>" /></td>
 </tr>
 <tr>
 <td class="label status"><?php if($admin != ''){echo __('estimate order', 'usces');}else{echo '&nbsp';} ?></td>
@@ -645,13 +757,9 @@ foreach((array)$prefs as $value) {
 <?php else : ?>
 &nbsp
 <?php endif; ?></td>
-<td class="col3 label"><?php _e('Phone number', 'usces'); ?></td>
-<td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php echo $data['order_tel']; ?>" /></td>
-<td class="label deli"><?php _e('Phone number', 'usces'); ?></td>
-<td class="deli"><input name="delivery[tel]" type="text" class="text long" value="<?php echo $deli['tel']; ?>" /></td>
 </tr>
 <tr>
-<td colspan="2" rowspan="2" class="status">
+<td colspan="2" class="status">
 <div class="midasi2"><?php if($condition['display_mode'] == 'Usualsale'){echo __('normal sale', 'usces');}elseif($condition['display_mode'] == 'Promotionsale'){echo __('Sale Campaign', 'usces');} ?></div>
 <div class="condition">
 <?php if ( $condition['display_mode'] == 'Promotionsale' ) : ?>
@@ -659,17 +767,40 @@ foreach((array)$prefs as $value) {
 <span><?php _e('applied material', 'usces'); ?> : </span><?php if($condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo get_cat_name($condition["campaign_category"]);} ?><br />
 <?php endif; ?>
 </div></td>
-<td class="col3 label"><?php _e('FAX number', 'usces'); ?></td>
-<td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php echo $data['order_fax']; ?>" /></td>
-<td class="label deli border"><?php _e('FAX number', 'usces'); ?></td>
-<td class="deli border"><input name="delivery[fax]" type="text" class="text long" value="<?php echo $deli['fax']; ?>" /></td>
-</tr>
-<tr>
-<td class="col3 label"><?php _e('Notes', 'usces'); ?></td>
-<td colspan="3" class="col2"><textarea name="order[note]"><?php echo $data['order_note']; ?></textarea></td>
+<td class="label"><?php _e('Notes', 'usces'); ?></td>
+<td colspan="3"><textarea name="order[note]"><?php echo $data['order_note']; ?></textarea></td>
 </tr>
 </table>
 </div>
+<?php //if( $this->has_order_custom_info( $order_id ) ): ?>
+<div class="info_head">
+<table>
+<tr>
+<td class="midasi0">Order Custom Field</td>
+<td class="midasi0">Settlement Information</td>
+</tr>
+<tr>
+<td class="wrap_td">
+<table class="order_custom_wrap">
+<tr>
+<?php
+//20100818ysk start
+usces_admin_custom_field_input($csod_meta, 'order', '');
+//20100818ysk end
+?>
+</tr>
+
+</table>
+</td>
+<td class="wrap_td">
+<table class="settle_info_wrap">
+<?php usces_settle_info_field( $order_id, 'tr' ); ?>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<?php //endif; ?>
 <div id="cart">
 <table cellspacing="0" id="cart_table">
 	<thead>
@@ -717,7 +848,7 @@ foreach((array)$prefs as $value) {
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-		<td class="aleft"><?php echo $cartItemName; ?><?php do_action('usces_admin_order_item_name', $ID, $i); ?><br /><?php echo $optstr; ?></td>
+		<td class="aleft"><?php echo $cartItemName; ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
 		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text price" type="text" value="<?php echo $skuPrice; ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text quantity" type="text" value="<?php echo $cart_row['quantity']; ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>
@@ -729,7 +860,7 @@ foreach((array)$prefs as $value) {
 		<?php } ?>
 		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo $advance; ?>" />
 		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
-		<?php do_action('usces_admin_order_cart_button', $ID, $i); ?>
+		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
 		</td>
 	</tr>
 <?php 

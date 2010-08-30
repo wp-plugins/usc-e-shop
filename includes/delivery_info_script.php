@@ -39,6 +39,15 @@ foreach ( (array)$this->options['payment_method'] as $array ) {
 				$payments_arr[] = $paymod_base;
 			}
 			break;
+		case 'acting_zeus_conv':
+			$paymod_base = 'zeus';
+			if( 'on' == $this->options['acting_settings'][$paymod_base]['conv_activate'] 
+				&& 'on' == $this->options['acting_settings'][$paymod_base]['activate'] ){
+			
+				$payments_str .= "'" . $array['name'] . "': '" . $paymod_base . "_conv', ";
+				$payments_arr[] = $paymod_base.'_conv';
+			}
+			break;
 		case 'acting_remise_card':
 			$paymod_base = 'remise';
 			if( 'on' == $this->options['acting_settings'][$paymod_base]['card_activate'] 
