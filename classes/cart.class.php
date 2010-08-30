@@ -251,7 +251,7 @@ class usces_cart {
 	function entry() {
 	
 		if(isset($_SESSION['usces_member']['ID']) && !empty($_SESSION['usces_member']['ID'])) {
-			foreach( $_SESSION['usces_member'] as $key => $value )
+			foreach( $_SESSION['usces_member'] as $key => $value ){
 //20100818ysk start
 				if($key === 'custom_member') {
 					foreach( $_SESSION['usces_member']['custom_member'] as $mbkey => $mbvalue ) {
