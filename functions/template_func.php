@@ -1377,7 +1377,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 		return;
 	}
 
-	$meta = usces_has_custom_field_meta($field);
+	$meta = usces_has_custom_field_meta($custom_field);
 
 	if(!empty($meta) and is_array($meta)) {
 		foreach($meta as $key => $entry) {
@@ -1487,7 +1487,7 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 		return;
 	}
 
-	$meta = usces_has_custom_field_meta($field);
+	$meta = usces_has_custom_field_meta($custom_field);
 
 	if(!empty($meta) and is_array($meta)) {
 		foreach($meta as $key => $entry) {
@@ -1555,7 +1555,6 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 		return;
 	}
 
-	//$meta = usces_has_custom_field_meta($field);
 
 	if(!empty($meta) and is_array($meta)) {
 		foreach($meta as $key => $entry) {

@@ -1110,7 +1110,7 @@ class usc_e_shop
 	<?php } ?>
 		<?php 
 		if(isset($post)) : 
-		
+
 			$ioptkeys = $this->get_itemOptionKey( $post->ID );
 			$mes_opts_str = "";
 			$key_opts_str = "";
@@ -1134,7 +1134,6 @@ class usc_e_shop
 				$opt_esse = rtrim($opt_esse, ',');
 			}
 			$itemRestriction = get_post_custom_values('_itemRestriction', $post->ID);
-			
 			$chargings = $this->getItemSkuChargingType($post->ID);
 			$charging_flag = false;
 			foreach( (array)$chargings as $value ){
@@ -1264,7 +1263,7 @@ class usc_e_shop
 						var checknum = '';
 						var checkmode = '';
 						if( parseInt(itemRestriction) <= parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
-							checknum = uscesL10n.itemRestriction;
+							checknum = itemRestriction;
 							checkmode ='rest';
 						} else if( parseInt(itemRestriction) > parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
 							checknum = zaikonum;
@@ -1325,7 +1324,7 @@ class usc_e_shop
 						var checknum = '';
 						var checkmode = '';
 						if( parseInt(itemRestriction) <= parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
-							checknum = uscesL10n.itemRestriction;
+							checknum = itemRestriction;
 							checkmode ='rest';
 						} else if( parseInt(itemRestriction) > parseInt(zaikonum) && itemRestriction != '' && itemRestriction != '0' && zaikonum != '' ) {
 							checknum = zaikonum;
@@ -1337,6 +1336,7 @@ class usc_e_shop
 							checknum = itemRestriction;
 							checkmode ='rest';
 						}
+
 						if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
 							if(checkmode == 'rest'){
 								mes += <?php _e("'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'", 'usces'); ?>+"\n";
@@ -4958,7 +4958,7 @@ class usc_e_shop
 	function get_member_meta($member_id){
 		global $wpdb;
 		$table_name = $wpdb->prefix . "usces_member_meta";
-		$query = $wpdb->prepare("SELECT * FROM $table_name WHERE member_id = %d AND meta_key NOT LIKE %s", $member_id, 'cumb_%');
+		$query = $wpdb->prepare("SELECT * FROM $table_name WHERE member_id = %d AND meta_key NOT LIKE %s", $member_id, 'csmb_%');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		return $res;
 	}

@@ -530,7 +530,7 @@ jQuery(document).ready(function($){
 <td colspan="2" rowspan="9" class="wrap_td">
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
-        <td class="label">e-mail<th>
+        <td class="label">e-mail</td>
         <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo $data['order_email']; ?>" /></td>
     </tr>
 	<?php
@@ -539,11 +539,11 @@ jQuery(document).ready(function($){
 //20100818ysk end
 	?>
     <tr>
-        <td class="label"><?php _e('name', 'usces'); ?> <th>
+        <td class="label"><?php _e('name', 'usces'); ?> </td>
         <td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php echo $data['order_name1']; ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php echo $data['order_name2']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('furigana', 'usces'); ?><th>
+        <td class="label"><?php _e('furigana', 'usces'); ?></td>
         <td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php echo $data['order_name3']; ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php echo $data['order_name4']; ?>" /></td>
     </tr>
 	<?php
@@ -552,11 +552,11 @@ jQuery(document).ready(function($){
 //20100818ysk end
 	?>
     <tr>
-        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?><th>
+        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
         <td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php echo $data['order_zip']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('Province', 'usces'); ?><th>
+        <td class="label"><?php _e('Province', 'usces'); ?></td>
         <td class="col2"><select name="customer[pref]" class="select">
         <?php
 //	$prefs = get_option('usces_pref');
@@ -569,23 +569,23 @@ foreach((array)$prefs as $value) {
         </select></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('city', 'usces'); ?><th>
+        <td class="label"><?php _e('city', 'usces'); ?></td>
         <td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php echo $data['order_address1']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('numbers', 'usces'); ?><th>
+        <td class="label"><?php _e('numbers', 'usces'); ?></td>
         <td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php echo $data['order_address2']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('building name', 'usces'); ?><th>
+        <td class="label"><?php _e('building name', 'usces'); ?></td>
         <td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php echo $data['order_address3']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('Phone number', 'usces'); ?><th>
+        <td class="label"><?php _e('Phone number', 'usces'); ?></td>
         <td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php echo $data['order_tel']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('FAX number', 'usces'); ?><th>
+        <td class="label"><?php _e('FAX number', 'usces'); ?></td>
         <td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php echo $data['order_fax']; ?>" /></td>
     </tr>
 	<?php
@@ -617,11 +617,11 @@ if( $this->options['payment_method'] ) {
 //20100818ysk end
 	?>
     <tr>
-        <td class="label"><?php _e('name', 'usces'); ?><th>
+        <td class="label"><?php _e('name', 'usces'); ?></td>
         <td class="col3"><input name="delivery[name1]" type="text" class="text short" value="<?php echo $deli['name1']; ?>" />    <input name="delivery[name2]" type="text" class="text short" value="<?php echo $deli['name2']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('furigana', 'usces'); ?><th>
+        <td class="label"><?php _e('furigana', 'usces'); ?></td>
         <td class="col3"><input name="delivery[name3]" type="text" class="text short" value="<?php echo $deli['name3']; ?>" />    <input name="delivery[name4]" type="text" class="text short" value="<?php echo $deli['name4']; ?>" /></td>
     </tr>
 	<?php
@@ -630,11 +630,11 @@ if( $this->options['payment_method'] ) {
 //20100818ysk end
 	?>
     <tr>
-        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?><th>
+        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
         <td class="col3"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo $deli['zipcode']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('Province', 'usces'); ?><th>
+        <td class="label"><?php _e('Province', 'usces'); ?></td>
         <td class="col3"><select name="delivery[pref]">
     <?php
 //	$prefs = get_option('usces_pref');
@@ -647,23 +647,23 @@ foreach((array)$prefs as $value) {
     </select></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('city', 'usces'); ?><th>
+        <td class="label"><?php _e('city', 'usces'); ?></td>
         <td class="col3"><input name="delivery[address1]" type="text" class="text long" value="<?php echo $deli['address1']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('numbers', 'usces'); ?><th>
+        <td class="label"><?php _e('numbers', 'usces'); ?></td>
         <td class="col3"><input name="delivery[address2]" type="text" class="text long" value="<?php echo $deli['address2']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('building name', 'usces'); ?><th>
+        <td class="label"><?php _e('building name', 'usces'); ?></td>
         <td class="col3"><input name="delivery[address3]" type="text" class="text long" value="<?php echo $deli['address3']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('Phone number', 'usces'); ?><th>
+        <td class="label"><?php _e('Phone number', 'usces'); ?></td>
         <td class="col3"><input name="delivery[tel]" type="text" class="text long" value="<?php echo $deli['tel']; ?>" /></td>
     </tr>
     <tr>
-        <td class="label"><?php _e('FAX number', 'usces'); ?><th>
+        <td class="label"><?php _e('FAX number', 'usces'); ?></td>
         <td class="col3"><input name="delivery[fax]" type="text" class="text long" value="<?php echo $deli['fax']; ?>" /></td>
     </tr>
 	<?php

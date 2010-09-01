@@ -1638,7 +1638,7 @@ function usces_has_custom_field_meta($fieldname) {
 	default:
 		return array();
 	}
-	$fields = get_option($fieldname);
+	$fields = get_option($field);
 	$meta = ($fields) ? unserialize($fields) : array();
 	return $meta;
 }
@@ -1666,7 +1666,7 @@ function custom_field_ajax() {
 		die(0);
 	}
 
-	$meta = usces_has_custom_field_meta($field);
+	$meta = usces_has_custom_field_meta($_POST['field']);
 
 	if(isset($_POST['add'])) {
 		$newkey = isset($_POST['newkey']) ? stripslashes(trim($_POST['newkey'])) : '';

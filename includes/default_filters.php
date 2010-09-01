@@ -16,7 +16,7 @@ add_action( 'wp_ajax_item_sku_ajax', 'item_sku_ajax' );
 add_action( 'wp_ajax_shop_options_ajax', 'shop_options_ajax' );
 add_action( 'wp_ajax_setup_cod_ajax', 'usces_setup_cod_ajax' );
 //20100809ysk start
-add_action( 'wp_ajax_custom_order_ajax', 'custom_order_ajax' );
+add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 //20100809ysk end
 
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));

@@ -486,7 +486,7 @@ function usces_mail_custom_field_info( $custom_field, $position, $id ) {
 		return $msg_body;
 	}
 
-	$meta = usces_has_custom_field_meta($field);
+	$meta = usces_has_custom_field_meta($custom_field);
 
 	if(!empty($meta) and is_array($meta)) {
 		$keys = array_keys($meta);
@@ -1199,7 +1199,7 @@ function usces_update_orderdata() {
 
 	$usces->cart->crear_cart();
 	
-return $res;
+return $result;
 		
 //	else :
 //	

@@ -272,11 +272,11 @@ function toggleVisibility(id) {
 <div id="poststuff" class="metabox-holder">
 
 <!--20100809ysk start-->
-<div id="uscestabs">
+<div id="uscestabs_cart">
 	<ul>
 		<li><a href="#cart_page_setting_1"><?php _e('Rule of the column for a item name','usces'); ?></a></li>
 		<li><a href="#cart_page_setting_2"><?php _e('Explanation in a Cart page','usces'); ?></a></li>
-		<li><a href="#cart_page_setting_3"><?php _e('custom order','usces'); ?></a></li>
+		<li><a href="#cart_page_setting_3"><?php _e('Custom order field','usces'); ?></a></li>
 <!--20100818ysk start-->
 		<li><a href="#cart_page_setting_4"><?php _e('Custom customer field','usces'); ?></a></li>
 		<li><a href="#cart_page_setting_5"><?php _e('Custom delivery field','usces'); ?></a></li>
