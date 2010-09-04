@@ -322,7 +322,7 @@ function toggleVisibility(id) {
 	</table>
 
 	<hr size="1" color="#CCCCCC" />
-	<div id="ex_custom_member" class="explanation"><?php _e("Conditions which will be selected at the purchase. You can use the options which you hve registered here, as an option in the master items.", 'usces'); ?></div>
+	<div id="ex_custom_member" class="explanation"><?php _e("You can add an arbitrary field to the member information page.", 'usces'); ?></div>
 	</div>
 	</div>
 	</div><!--postbox-->

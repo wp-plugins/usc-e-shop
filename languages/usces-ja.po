@@ -1338,6 +1338,9 @@ msgstr "注文日時"
 msgid "shpping date"
 msgstr "発送日"
 
+msgid "Date Modified"
+msgstr "処理日"
+
 msgid "shipping address"
 msgstr "発送先"
 
@@ -1494,7 +1497,7 @@ msgstr "在庫状態の変更"
 msgid "Edit the display status"
 msgstr "表示状態の変更"
 
-msgid "edit "
+msgid "edit"
 msgstr "編集"
 
 msgid "now loading"
@@ -2427,6 +2430,83 @@ msgstr "%s の記事"
 msgid "Settlement Setting"
 msgstr "クレジット決済設定"
 
+msgid "Custom order field"
+msgstr "カスタム・オーダーフィールド"
+
+msgid "Custom customer field"
+msgstr "カスタム・カスタマーフィールド"
+
+msgid "Custom delivery field"
+msgstr "カスタム・デリバリーフィールド"
+
+msgid "Custom member field"
+msgstr "カスタム・メンバーフィールド"
+
+msgid "key name"
+msgstr "フィールドキー"
+
+msgid "field name"
+msgstr "フィールド名"
+
+msgid "Add a new custom order field"
+msgstr "新規カスタム・カスタマーフィールド追加"
+
+msgid "Add a new custom customer field"
+msgstr "新規カスタム・カスタマーフィールド追加"
+
+msgid "Add a new custom delivery field"
+msgstr "新規カスタム・デリバリーフィールド追加"
+
+msgid "Add a new custom member field"
+msgstr "新規カスタム・メンバーフィールド追加"
+
+msgid "Add custom order field"
+msgstr "新規追加"
+
+msgid "Add custom customer field"
+msgstr "新規追加"
+
+msgid "Add custom delivery field"
+msgstr "新規追加"
+
+msgid "Add custom member field"
+msgstr "新規追加"
+
+msgid "Radio-button"
+msgstr "ラジオボタン"
+
+msgid "Check-box"
+msgstr "チェックボックス"
+
+msgid "Previous the name"
+msgstr "名前の前に挿入"
+
+msgid "After the name"
+msgstr "名前の後に挿入"
+
+msgid "After the fax"
+msgstr "FAX番号の後に挿入"
+
+msgid "You can add an arbitrary field to customer information."
+msgstr "お客様情報に任意のフィールドを追加します。"
+
+msgid "You can add an arbitrary field to the page of the payment method."
+msgstr "支払方法のページに任意のフィールドを追加します。"
+
+msgid "You can add an arbitrary field to delivery information."
+msgstr "発送先情報に任意のフィールドを追加します。"
+
+msgid "You can add an arbitrary field to the member information page."
+msgstr "会員情報ページに任意のフィールドを追加します。"
+
+msgid "cannot use this payment method now"
+msgstr "現在この支払方法はご利用できません"
+
+msgid "Charging type"
+msgstr "課金タイプ"
+
+#~ msgid "Period(months)"
+#~ msgstr "契約期間（月数）"
 #~ msgid "% Comments &#187;"
 #~ msgstr "コメント %件 &#187;"
 #~ msgid "〜％ discount at the purchase of more then 〜units."
@@ -2607,8 +2687,6 @@ msgstr "クレジット決済設定"
 #~ msgstr "～はまだ登録されていません。"
 #~ msgid "par"
 #~ msgstr "あたり"
-#~ msgid "cannot use this payment method now."
-#~ msgstr "現在この支払方法はご利用できません。"
 #~ msgid "A buyer"
 #~ msgstr "ご購入者"
 #~ msgid "An order number"

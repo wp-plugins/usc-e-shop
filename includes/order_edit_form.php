@@ -523,7 +523,7 @@ jQuery(document).ready(function($){
 <tr>
 <td class="label border"><?php _e('Order number', 'usces'); ?></td><td class="col1 border"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
 <td class="col3 label border"><?php _e('order date', 'usces'); ?></td><td class="col2 border"><div class="rod long"><?php echo $data['order_date']; ?></div></td>
-<td class="label border"><?php _e('Date Modified', 'usces'); ?></td><td class="border"><div id="order_modified" class="rod long"><?php echo $data['order_modified']; ?></div></td>
+<td class="label border"><?php echo apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ); ?></td><td class="border"><div id="order_modified" class="rod long"><?php echo $data['order_modified']; ?></div></td>
 </tr>
 <tr>
 <td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo $data['mem_id']; ?></div></td>
