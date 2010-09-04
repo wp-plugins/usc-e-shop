@@ -4182,6 +4182,7 @@ class usc_e_shop
 		$individual_quant = 0;
 		$total_quant = 0;
 		$charges = array();
+		$individual_charges = array();
 		
 		foreach ( $cart as $rows ) {
 			$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
@@ -4189,35 +4190,22 @@ class usc_e_shop
 			$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
 			if($this->getItemIndividualSCharge($rows['post_id'])){
 				$individual_quant += $rows['quantity'];
-				$individual_charge += $rows['quantity'] * $charge;
+				$individual_charges[] = $rows['quantity'] * $charge;
 			}else{
 				$charges[] = $charge;
 			}
 			$total_quant += $rows['quantity'];
 		}
 
-		if( $fixed_charge_id >= 0 ){
-			$fix_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
-			$fix_charge = $this->options['shipping_charge'][$fix_charge_index]['value'][$pref];
-			if( $total_quant > $individual_quant ){
-				$charge = $fix_charge + $fix_charge * $individual_quant;
-			}else{
-				$charge = $fix_charge * $individual_quant;
-			}
-		
+		if( count($charges) > 0 ){
+			rsort($charges);
+			$max_charge = $charges[0];
+			$charge = $max_charge + array_sum($individual_charges);
 		}else{
-			if( count($charges) > 0 ){
-				rsort($charges);
-				$max_charge = $charges[0];
-				$charge = $max_charge + $individual_charge;
-			}else{
-				$charge = $individual_charge;
-			}
-		
+			$charge = array_sum($individual_charges);
 		}
 		
 		return $charge;
-
 	}
 	
 	function getCODFee($payment_name, $amount_by_cod) {
