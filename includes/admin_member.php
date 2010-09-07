@@ -3,7 +3,7 @@ $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
-$member_page_datas = $this->options['member_page_data'];
+$member_page_datas = stripslashes_deep($this->options['member_page_data']);
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -123,7 +123,7 @@ function toggleVisibility(id) {
 <!--20100818ysk start-->
 <div id="uscestabs_member">
 	<ul>
-		<li><a href="#member_page_setting_1"><?php _e('Rule of the column for a item name','usces'); ?></a></li>
+		<li><a href="#member_page_setting_1"><?php _e('Explanation in Member page','usces'); ?></a></li>
 		<li><a href="#member_page_setting_2"><?php _e('Custom member field','usces'); ?></a></li>
 	</ul>
 

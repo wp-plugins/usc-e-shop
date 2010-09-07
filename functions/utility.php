@@ -54,7 +54,7 @@ function usces_metakey_change(){
 	if( $wpdb->query( $mquery ) )
 		$rets[] = 1;
 
-	$mquery = "UPDATE $tableName SET meta_key = REPLACE(meta_key, 'temShipping', '_itemShipping') WHERE meta_key LIKE 'itemShipping'";
+	$mquery = "UPDATE $tableName SET meta_key = REPLACE(meta_key, 'itemShipping', '_itemShipping') WHERE meta_key LIKE 'itemShipping'";
 	if( $wpdb->query( $mquery ) )
 		$rets[] = 1;
 

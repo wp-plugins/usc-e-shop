@@ -1778,6 +1778,9 @@ msgstr "完了ページに挿入する説明書き"
 msgid "You can set additional explanation to insert in a completion page."
 msgstr "完了ページに挿入する追加説明を設定できます。"
 
+msgid "Explanation in Member page"
+msgstr "会員関連ページに挿入する説明書き"
+
 msgid "Member Page Setting"
 msgstr "会員ページ設定"
 
