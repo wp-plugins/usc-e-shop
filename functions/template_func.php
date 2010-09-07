@@ -202,23 +202,28 @@ function usces_the_firstPrice( $out = '', $post = NULL ) {
 		global $post;
 	$post_id = $post->ID;
 	
-	
 	$fields = $usces->get_skus( $post_id );
 	
 	if($out == 'return'){
-		return number_format($fields['price'][0]);
+		return $fields['price'][0];
 	}else{
 		echo number_format($fields['price'][0]);
 	}
 }
 
-function usces_the_firstCprice() {
-	global $post, $usces;
+function usces_the_firstCprice( $out = '', $post = NULL ) {
+	global $usces;
+	if($post == NULL)
+		global $post;
 	$post_id = $post->ID;
 	
-	
 	$fields = $usces->get_skus( $post_id );
-	echo $fields['cprice'][0];
+	
+	if($out == 'return'){
+		return $fields['cprice'][0];
+	}else{
+		echo number_format($fields['cprice'][0]);
+	}
 }
 
 function usces_the_firstZaiko() {
@@ -1221,7 +1226,7 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 			$list = '';
 			$html = '<ul class="item_custom_field">'."\n";
 			foreach( $cfields as $key => $value ){
-				if( '_' != substr($key, 0, 1) && 'usces_' != substr($key, 0, 6) ){
+				if( 'wccs_' == substr($key, 0, 6) ){
 					$list .= '<li>' . $key . ' : ' . nl2br($value[0]) . '</li>'."\n";
 				}
 			}
@@ -1236,7 +1241,7 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 			$list = '';
 			$html = '<table class="item_custom_field">'."\n";
 			foreach($cfields as $key => $value){
-				if( '_' != substr($key, 0, 1) && 'usces_' != substr($key, 0, 6) ){
+				if( 'wccs_' == substr($key, 0, 6) ){
 					$list .= '<tr><th>' . $key . '</th><td>' . nl2br($value[0]) . '</td>'."\n";
 				}
 			}
