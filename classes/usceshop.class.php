@@ -287,7 +287,6 @@ class usc_e_shop
 		
 		return $link;
 	}
-
 	function usces_ssl_contents_link($link)
 	{
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI'])){
@@ -1094,7 +1093,7 @@ class usc_e_shop
 		global $post, $current_user;
 		get_currentuserinfo();
 		
-		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
 			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
 		}else{
