@@ -1227,7 +1227,7 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 			$html = '<ul class="item_custom_field">'."\n";
 			foreach( $cfields as $key => $value ){
 				if( 'wccs_' == substr($key, 0, 6) ){
-					$list .= '<li>' . $key . ' : ' . nl2br($value[0]) . '</li>'."\n";
+					$list .= '<li>' . substr($key, 6) . ' : ' . nl2br($value[0]) . '</li>'."\n";
 				}
 			}
 			if(empty($list)){
@@ -1242,7 +1242,7 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 			$html = '<table class="item_custom_field">'."\n";
 			foreach($cfields as $key => $value){
 				if( 'wccs_' == substr($key, 0, 6) ){
-					$list .= '<tr><th>' . $key . '</th><td>' . nl2br($value[0]) . '</td>'."\n";
+					$list .= '<tr><th>' . substr($key, 6) . '</th><td>' . nl2br($value[0]) . '</td>'."\n";
 				}
 			}
 			if(empty($list)){
