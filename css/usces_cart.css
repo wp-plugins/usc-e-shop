@@ -827,6 +827,7 @@ div.usccart_navi li.usccart_confirm {
 #delivery-info #time {
 	margin-top: 10px;
 }
+#delivery-info #time textarea,
 #delivery-info .notes {
 	height: 100px;
 	width: 94%;
