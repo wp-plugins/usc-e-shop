@@ -130,7 +130,7 @@ if(!empty($meta) and is_array($meta)) {
 $html .= '<table class="customer_form" id="notes_table">
 	<tr>
 	<th scope="row">'.__('Notes', 'usces').'</th>
-	<td colspan="2"><textarea name="order[note]" cols="" rows="" id="note">' . $usces_entries['order']['note'] . '</textarea></td>
+	<td colspan="2"><textarea name="order[note]" id="note" class="notes">' . $usces_entries['order']['note'] . '</textarea></td>
 	</tr>
 	</table>
 

@@ -827,7 +827,7 @@ div.usccart_navi li.usccart_confirm {
 #delivery-info #time {
 	margin-top: 10px;
 }
-#delivery-info #time textarea {
+#delivery-info .notes {
 	height: 100px;
 	width: 94%;
 }
@@ -920,7 +920,7 @@ div.usccart_navi li.usccart_confirm {
 	background-color: #ffffef;
 }
 #confirm_table .bdc {
-	background-color: #edf6ff;
+	background-color: #FFFFFF;
 }
 #info-confirm .send {
 	text-align: center;
