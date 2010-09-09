@@ -1133,21 +1133,16 @@ class usc_e_shop
 				$opt_esse = rtrim($opt_esse, ',');
 			}
 			$itemRestriction = get_post_custom_values('_itemRestriction', $post->ID);
-			$chargings = $this->getItemSkuChargingType($post->ID);
-			$charging_flag = false;
-			foreach( (array)$chargings as $value ){
-				if(  0 < (int)$value ) $charging_flag = true;
-			}
 		
 		?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
+				<?php echo apply_filters('usces_filter_uscesL10n', $uscesL10n, $post->ID); ?>
 				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php",
 				'post_id': "<?php echo $post->ID; ?>",
 				'cart_number': "<?php echo get_option('usces_cart_number'); ?>",
 				'is_cart_row': <?php echo ( (0 < $this->cart->num_row()) ? 'true' : 'false'); ?>,
-				'is_autocharge_item': <?php echo ( ($charging_flag) ? 'true' : 'false'); ?>,
 				'opt_esse': new Array( <?php echo $opt_esse; ?> ),
 				'opt_means': new Array( <?php echo $opt_means; ?> ),
 				'mes_opts': new Array( <?php echo $mes_opts_str; ?> ),
@@ -1218,16 +1213,7 @@ class usc_e_shop
 					alert( mes );
 					return false;
 				}else{
-
-					if( uscesL10n.is_cart_row && uscesL10n.is_autocharge_item ){
-						if(confirm('<?php _e('この商品をカートに入れる場合は、\n現在のカートをクリアしなくてはいけません。\n\nカートをクリアしてよろしいですか？', 'usces'); ?>')){
-							return true;
-						}else{
-							return false;
-						}
-					}else{
-						return true;
-					}
+					<?php echo apply_filters('usces_filter_js_intoCart', "return true\n", $post->ID); ?>
 				}
 			},
 			

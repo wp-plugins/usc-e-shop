@@ -2504,3 +2504,9 @@ msgstr "現在この支払方法はご利用できません"
 msgid "Charging type"
 msgstr "課金タイプ"
 
+msgid "Continuation"
+msgstr "継続課金"
+
+msgid "Termination"
+msgstr "継続課金解除"
+

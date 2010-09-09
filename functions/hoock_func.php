@@ -6,8 +6,10 @@ add_action('usces_after_cart_instant', 'usces_action_acting_transaction', 10);
 function usces_action_acting_construct(){
 
 	if(isset($_POST['X-TRANID']) && !isset($_POST['OPT'])){//remise
-		if( 'remise payment gateway2.4.2.1' != $_SERVER['HTTP_USER_AGENT'] )
+		if( 'remise payment gateway2.4.2.1' != $_SERVER['HTTP_USER_AGENT'] ){
+			usces_log('remise card : ' . $_SERVER['HTTP_USER_AGENT'], 'acting_transaction.log');
 			die(0);
+		}
 		
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		$datas = usces_get_order_acting_data($rand);

@@ -1251,6 +1251,20 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 				$html .= $list . '</table>'."\n";
 			}
 			break;
+
+		case 'notag':
+			$list = '';
+			foreach($cfields as $key => $value){
+				if( 'wccs_' == substr($key, 0, 5) ){
+					$list .= substr($key, 5) . ' : ' . nl2br($value[0]) . "\r\n";
+				}
+			}
+			if(empty($list)){
+				$html = '';
+			}else{
+				$html = $list;
+			}
+			break;
 	}
 	$html = apply_filters( 'usces_filter_item_custom', $html, $post_id);
 	

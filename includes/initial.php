@@ -15,8 +15,8 @@ $management_status = array(
 					'cancel' => __('Cancel', 'usces'),
 					'completion' => __('It has sent it out.', 'usces'),
 					'pending' => __('Pending', 'usces'),
-					'continuation' => __('Continuation', 'usces'),
-					'termination' => __('Termination', 'usces'),
+//					'continuation' => __('Continuation', 'usces'),
+//					'termination' => __('Termination', 'usces'),
 					);
 
 $customer_status = array(

@@ -49,7 +49,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 						<select name="expyy">
 							<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
 						';
-					for($i=0; $i<5; $i++){
+					for($i=0; $i<10; $i++){
 						$year = date('Y') - 1 + $i;
 						$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
 					}

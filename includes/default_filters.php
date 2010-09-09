@@ -1,10 +1,12 @@
 <?php
-add_action('init', array(&$usces, 'main'), 10);
-add_action('init', 'usces_redirect', 10);
-add_action('admin_menu', array(&$usces, 'add_pages'));
-add_action('admin_head', array(&$usces, 'admin_head'));
-add_action('wp_head', array(&$usces, 'shop_head'));
-add_action('wp_footer', array(&$usces, 'lastprocessing'));
+add_action( 'init', array(&$usces, 'main'), 10);
+add_action( 'init', 'usces_redirect', 10);
+add_action( 'admin_menu', array(&$usces, 'add_pages'));
+add_action( 'admin_head', array(&$usces, 'admin_head'));
+add_action( 'wp_head', array(&$usces, 'shop_head'));
+add_action( 'wp_footer', array(&$usces, 'lastprocessing'));
+add_action('wp_dashboard_setup', 'usces_dashboard_setup' );	
+//add_action( 'login_head', 'usces_admin_login_head' );
 //add_action('restrict_manage_posts', array(&$usces, 'postfilter'));
 
 add_action('save_post', 'item_save_metadata');
@@ -15,6 +17,7 @@ add_action( 'wp_ajax_item_option_ajax', 'item_option_ajax' );
 add_action( 'wp_ajax_item_sku_ajax', 'item_sku_ajax' );
 add_action( 'wp_ajax_shop_options_ajax', 'shop_options_ajax' );
 add_action( 'wp_ajax_setup_cod_ajax', 'usces_setup_cod_ajax' );
+//add_action( 'wp_ajax_varch_ajax', 'usces_varch_ajax' );
 //20100809ysk start
 add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 //20100809ysk end

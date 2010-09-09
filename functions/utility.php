@@ -362,5 +362,34 @@ function usces_filter_member_check_custom_member( $mes ) {
 	return $mes;
 }
 //20100818ysk end
+function usces_dashboard_setup() {
+	wp_add_dashboard_widget( 'usces_db_widget' , 'Welcart Information' , 'usces_db_widget');
+}
 
+function usces_admin_login_head() {
+?>
+<script type='text/javascript'>
+(function($) {
+	usces = {
+		settings: {
+			url: 'http://www.welcart.com/varch/varch.php',
+			type: 'POST',
+			cache: false,
+			success: function(data, dataType){
+			}, 
+			error: function(msg){
+			}
+		},
+		varch : function() {
+			var s = usces.settings;
+			s.data = "action=varch_ajax&ID=usces_varch&ver=" + <?php echo $_SERVER['HTTP_HOST']; ?>;
+			$.ajax( s );
+			return false;
+		}
+	};
+	usces.varch();
+})(jQuery);
+</script>
+<?php
+}
 ?>
