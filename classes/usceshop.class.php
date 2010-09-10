@@ -18,8 +18,6 @@ class usc_e_shop
 	function usc_e_shop()
 	{
 		global $post;
-	
-	
 		do_action('usces_construct');
 		$this->usces_session_start();
 
@@ -1000,7 +998,7 @@ class usc_e_shop
 		}
 		if(isset($_GET['usces']) && ($_GET['usces'] != '')) {
 			$sessid = $_GET['usces'];
-			$this->uscesdc($sessid);
+			$sessid = $this->uscesdc($sessid);
 			session_id($sessid);
 		}
 		//$timeout = 0;
@@ -1085,7 +1083,7 @@ class usc_e_shop
 
 		$sessname = session_name();
 		$sessid = isset($_REQUEST[$sessname]) ? $_REQUEST[$sessname] : session_id();
-		$this->uscescv($sessid, $flag);
+		$sessid = $this->uscescv($sessid, $flag);
 		return $sessid;
 	}
 	
@@ -1209,6 +1207,9 @@ class usc_e_shop
 						}
 					}
 				}
+				
+				<?php apply_filters( 'usces_filter_inCart_js_check', $post->ID ); ?>
+				
 				if( mes != '' ){
 					alert( mes );
 					return false;
@@ -4371,14 +4372,14 @@ class usc_e_shop
 	
 	}
 
-	function uscescv( &$sessid, $flag ) {
+	function uscescv( $sessid, $flag ) {
 	
 		$chars = '';
 		$i=0;
 		$h=0;
 		while($h<strlen($sessid)){
 			if(0 == $i % 3){
-				$chars .= base_convert($i, 9, 36);
+				$chars .= substr($i, -1);
 			}else{
 				$chars .= substr($sessid, $h, 1);
 				$h++;
@@ -4391,12 +4392,11 @@ class usc_e_shop
 			$sessid = $chars . '_acting';
 		}
 		$sessid = urlencode(base64_encode($sessid));
-		//var_dump($sessid);
+		return $sessid;
 	}
 	
-	function uscesdc( &$sessid ) {
+	function uscesdc( $sessid ) {
 		$sessid = base64_decode(urldecode($sessid));
-		//var_dump($sessid);
 		list($sess, $addr) = explode('_', $sessid);
 		if( $addr != $_SERVER['REMOTE_ADDR'] && $addr != 'acting' ) {
 			$sessid = '';
@@ -4410,7 +4410,10 @@ class usc_e_shop
 			}
 			$h++;
 		}
+		//var_dump($chars);
 		$sessid = $chars;
+		
+		return $sessid;
 		
 	}
 
