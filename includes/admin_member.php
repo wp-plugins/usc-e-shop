@@ -3,7 +3,11 @@ $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
-$member_page_datas = stripslashes_deep($this->options['member_page_data']);
+if( !empty($this->options['member_page_data']) ){
+	$member_page_datas = stripslashes_deep($this->options['member_page_data']);
+}else{
+	$member_page_datas = array();
+}
 ?>
 <script type="text/javascript">
 jQuery(function($){

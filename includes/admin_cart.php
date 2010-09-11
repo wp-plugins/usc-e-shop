@@ -3,9 +3,11 @@ $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
-$cart_page_datas = stripslashes_deep($this->options['cart_page_data']);
-if(empty($cart_page_datas))
+if( !empty($this->options['cart_page_data']) ){
+	$cart_page_datas = stripslashes_deep($this->options['cart_page_data']);
+}else{
 	$cart_page_datas = array();
+}
 $indi_item_name = $this->options['indi_item_name'];
 $pos_item_name = $this->options['pos_item_name'];
 foreach( (array)$indi_item_name as $key => $value){
