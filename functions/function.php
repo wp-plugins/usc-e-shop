@@ -77,7 +77,7 @@ function usces_order_confirm_message($order_id) {
 	}
 	$msg_body .= __('Items','usces') . " : \r\n";
 
-	$meisai = "------------------------------------------------------------------\r\n";
+	$meisai = "";
 	foreach ( (array)$cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = $cart_row['sku'];
@@ -95,6 +95,7 @@ function usces_order_confirm_message($order_id) {
 			$options =  array();
 		}
 		
+		$meisai .= "------------------------------------------------------------------\r\n";
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
@@ -233,7 +234,7 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
 	$msg_body .= __('Items','usces') . " : \r\n";
 	
-	$meisai = "------------------------------------------------------------------\r\n";
+	$meisai = "";
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = $cart_row['sku'];
@@ -251,6 +252,7 @@ function usces_send_ordermail($order_id) {
 			$options =  array();
 		}
 		
+		$meisai .= "------------------------------------------------------------------\r\n";
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
