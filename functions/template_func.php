@@ -776,7 +776,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$html = "<dl>\n";
 	$list = '';
 	foreach ($usces->options['payment_method'] as $id => $payments) {
-		if( $charging_type ){
+		if( false !== $charging_type ){
 			if( 'acting_remise_card' != $payments['settlement'] ) continue;
 		}
 		if( $payments['name'] != '' ) {
@@ -795,7 +795,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$html .= $list . "</dl>\n";
 	
 	if( empty($list) )
-		$html = 'まだお支払方法の準備ができておりません。<br />管理者にお問合せいください。'."\n";
+		$html = 'まだお支払方法の準備ができておりません。<br />管理者にお問合せください。'."\n";
 	
 	if( $out == 'return' ){
 		return $html;

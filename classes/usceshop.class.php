@@ -3701,17 +3701,23 @@ class usc_e_shop
 	
 	function getItemSkuChargingType($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
+		$skus = array();
 		foreach((array)$fields as $key => $value){
 			if( preg_match('/^_isku_/', $key, $match) ){
 				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
-				$skus[$key] = $values['charging_type'];
+				if( isset($values['charging_type']) && !empty($values['charging_type']) ){ 
+					$skus[$key] = $values['charging_type'];
+				}else{
+					continue;
+				}
 			}
 		}
-		if(!$skus) return false;
+				var_dump($skus);
+		if( empty($skus) ) return false;
 		if($skukey == ''){
 			return $skus;
-		}else if(isset($skus[$skukey])){
+		}else if( isset($skus[$skukey]) ){
 			return $skus[$skukey];
 		}else{
 			return false;
