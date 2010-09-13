@@ -3706,7 +3706,7 @@ class usc_e_shop
 			if( preg_match('/^_isku_/', $key, $match) ){
 				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
-				if( isset($values['charging_type']) && "undefined" != $values['charging_type'] ){ 
+				if( isset($values['charging_type']) && "undefined" != $values['charging_type'] && !empty($values['charging_type']) ){ 
 					$skus[$key] = $values['charging_type'];
 				}else{
 					continue;
