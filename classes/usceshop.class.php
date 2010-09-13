@@ -3713,7 +3713,6 @@ class usc_e_shop
 				}
 			}
 		}
-				var_dump($skus);
 		if( empty($skus) ) return false;
 		if($skukey == ''){
 			return $skus;
