@@ -275,7 +275,8 @@ foreach((array)$prefs as $value) {
 	$itemCode = $this->getItemCode($post_id);
 	$itemName = $this->getItemName($post_id);
 	$cartItemName = $this->getCartItemName($post_id, $sku);
-	$skuPrice = $this->getItemPrice($post_id, $sku);
+	//$skuPrice = $this->getItemPrice($post_id, $sku);
+	$skuPrice = $cart_row['price'];
 	$pictids = $this->get_pictids($itemCode);
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
