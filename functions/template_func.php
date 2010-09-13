@@ -772,7 +772,6 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	
 	$cart = $usces->cart->get_cart();
 	$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
-
 	$html = "<dl>\n";
 	$list = '';
 	foreach ($usces->options['payment_method'] as $id => $payments) {
