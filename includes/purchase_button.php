@@ -288,7 +288,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				';
 			$html .= '
 				<input type="hidden" name="dummy" value="&#65533;" />
-				<input name="purchase" type="submit" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\'; document.purchase_form.submit();"') . ' /></div>';
+				<div class="send"><input name="purchase" type="submit" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\'; document.purchase_form.submit();"') . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html);
 			$html .= '</form>';
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
