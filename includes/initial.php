@@ -52,7 +52,15 @@ $shipping_rule = array(
 					'8' => __('about 3 weeks later', 'usces'),
 					'9' => __('after we get new items', 'usces')
 					);
-$item_option_select = array(__('Single-select','usces'), __('Multi-select','usces'), __('Text','usces'));
+//20100914ysk start
+//$item_option_select = array(__('Single-select','usces'), __('Multi-select','usces'), __('Text','usces'));
+$item_option_select = array(
+					'0' => __('Single-select', 'usces'),
+					'1' => __('Multi-select', 'usces'),
+					'2' => __('Text', 'usces'),
+					'5' => __('Text-area', 'usces')
+					);
+//20100914ysk end
 
 //20100818ysk start
 //20100809ysk start

@@ -613,7 +613,12 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$html = '';
 	$sku = $usces->itemsku['key'];
 	
-	if($means < 2){
+//20100914ysk start
+	//if($means < 2){
+	switch($means) {
+	case 0://Single-select
+	case 1://Multi-select
+//20100914ysk end
 		$selects = explode("\n", $values['value'][0]);
 		$multiple = ($means === 0) ? '' : ' multiple';
 		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
@@ -630,8 +635,18 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 			$i++;
 		}
 		$html .= "</select>\n";
-	}else{
+//20100914ysk start
+	//}else{
+		break;
+	case 2://Text
+//20100914ysk end
 		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$name}]' type='text' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" />\n";
+//20100914ysk start
+		break;
+	case 5://Text-area
+		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_textarea' onKeyDown=\"if (event.keyCode == 13) {return false;}\" /></textarea>\n";
+		break;
+//20100914ysk end
 	}
 	if( $out == 'return' ){
 		return $html;

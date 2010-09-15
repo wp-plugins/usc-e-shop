@@ -511,6 +511,7 @@ class usc_e_shop
 	
 		$this->options = get_option('usces');
 		//$this->options = array();
+		
 
 		if(isset($_POST['usces_option_update'])) {
 			$this->options['display_mode'] = isset($_POST['display_mode']) ? wp_specialchars($_POST['display_mode']) : '';
@@ -1414,6 +1415,10 @@ class usc_e_shop
 		global $wpdb, $wp_locale, $wp_version, $post_ID;
 		global $wp_query, $usces_action, $post, $action, $editing;
 
+		if( isset($_POST) ){
+			$_POST = stripslashes_deep($_POST);
+		}
+		
 		do_action('usces_main');
 		$this->usces_cookie();
 		$this->update_table();
@@ -2576,10 +2581,10 @@ class usc_e_shop
 		foreach ( $_SESSION['usces_member'] as $key => $value ) {
 //20100818ysk start
 			if(is_array($_SESSION['usces_member'][$key])) 
-				$res[$key] = $value;
+				$res[$key] = stripslashes_deep($value);
 			else
 //20100818ysk end
-				$res[$key] = htmlspecialchars($value);
+				$res[$key] = htmlspecialchars(stripslashes($value));
 		}
 		return $res;
 	}
