@@ -52,7 +52,7 @@
 		<?php endif; ?>
 		<?php if(usces_is_cart()): ?>
 		<li><a href="<?php echo USCES_CART_URL; ?>"><?php _e('Cart','usces') ?></a></li>
-		<li><a href="<?php echo USCES_CART_URL.'&customerinfo'; ?>"><?php _e('Proceed to checkout','usces') ?></a></li>
+		<li><a href="<?php echo USCES_CUSTOMER_URL; ?>"><?php _e('Proceed to checkout','usces') ?></a></li>
 		<?php endif; ?>
 	</ul>
 	<?php endif; ?>

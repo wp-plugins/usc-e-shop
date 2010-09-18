@@ -2510,3 +2510,8 @@ msgstr "継続課金"
 msgid "Termination"
 msgstr "継続課金解除"
 
+msgid "Setting"
+msgstr "設定"
+
+msgid "Text-area"
+msgstr "テキストエリア"

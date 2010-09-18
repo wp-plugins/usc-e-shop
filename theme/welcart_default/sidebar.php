@@ -67,8 +67,8 @@
 				<input type="submit" name="member_login" id="member_login" value="<?php _e('Log-in','usces') ?>" tabindex="100" />
 				</p>
 				</form>
-				<a href="<?php echo USCES_MEMBER_URL; ?>&page=lostmemberpassword" title="<?php _e('Pssword Lost and Found','usces') ?>"><?php _e('Did you forget your password?','usces') ?></a><br />
-				<a href="<?php echo USCES_MEMBER_URL; ?>&page=newmember" title="<?php _e('New enrollment for membership.','usces') ?>"><?php _e('New enrollment for membership.','usces') ?></a>
+				<a href="<?php echo USCES_LOSTMEMBERPASSWORD_URL; ?>" title="<?php _e('Pssword Lost and Found','usces') ?>"><?php _e('Did you forget your password?','usces') ?></a><br />
+				<a href="<?php echo USCES_NEWMEMBER_URL; ?>" title="<?php _e('New enrollment for membership.','usces') ?>"><?php _e('New enrollment for membership.','usces') ?></a>
 			<?php }else{ ?>
 				<?php printf(__('Mr/Mrs %s', 'usces'), usces_the_member_name()); ?><br />
 				<?php echo usces_loginout(); ?><br />

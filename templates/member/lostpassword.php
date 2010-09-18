@@ -26,7 +26,7 @@ $html .= '<div class="loginbox">
 <p id="nav">';
 
 if ( ! usces_is_login() ) {
-	$html .= '<a href="' . USCES_MEMBER_URL . '&page=login" title="' . __('Log-in', 'usces') . '">' . __('Log-in', 'usces') . '</a>';
+	$html .= '<a href="' . USCES_LOGIN_URL . '" title="' . __('Log-in', 'usces') . '">' . __('Log-in', 'usces') . '</a>';
 }
 $html .= '</p>
 

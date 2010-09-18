@@ -89,21 +89,21 @@ class usc_e_shop
 			define('USCES_SSL_URL_ADMIN', get_option('siteurl'));
 			define('USCES_COOKIEPATH', COOKIEPATH);
 		}
-		if($this->use_ssl) {
-			define('USCES_CART_URL', $ssl_url . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
-			define('USCES_MEMBER_URL', $ssl_url . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
-			define('USCES_INQUIRY_URL', $ssl_url . '/?page_id=' . $this->options['inquiry_id'] . '&usces=' . $this->get_uscesid());
-			add_filter('home_url', array($this, 'usces_ssl_page_link'));
-			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
-			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
-			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
-			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
-			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
-		} else {
-			define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
-			define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
-			define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
-		}
+//		if($this->use_ssl) {
+//			define('USCES_CART_URL', $ssl_url . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
+//			define('USCES_MEMBER_URL', $ssl_url . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
+//			define('USCES_INQUIRY_URL', $ssl_url . '/?page_id=' . $this->options['inquiry_id'] . '&usces=' . $this->get_uscesid());
+//			add_filter('home_url', array($this, 'usces_ssl_page_link'));
+//			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
+//			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
+//			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
+//			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
+//			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
+//		} else {
+//			define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
+//			define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
+//			define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
+//		}
 		define('USCES_ITEM_CAT_PARENT_ID', get_option('usces_item_cat_parent_id'));
 
 		$this->zaiko_status = get_option('usces_zaiko_status');
@@ -997,8 +997,8 @@ class usc_e_shop
 		}else{
 			session_name();
 		}
-		if(isset($_GET['usces']) && ($_GET['usces'] != '')) {
-			$sessid = $_GET['usces'];
+		if(isset($_GET['uscesid']) && ($_GET['uscesid'] != '')) {
+			$sessid = $_GET['uscesid'];
 			$sessid = $this->uscesdc($sessid);
 			session_id($sessid);
 		}
@@ -1419,6 +1419,8 @@ class usc_e_shop
 			$_POST = stripslashes_deep($_POST);
 		}
 		
+		$this->make_url();
+		
 		do_action('usces_main');
 		$this->usces_cookie();
 		$this->update_table();
@@ -1576,6 +1578,66 @@ class usc_e_shop
 			require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');
 		}
 		
+	}
+	
+	function make_url(){
+	
+		$permalink_structure = get_option('permalink_structure');
+
+		if($this->use_ssl) {
+			if( $permalink_structure ){
+				$home_perse = parse_url(get_option('home'));
+				$home_path = $home_perse['host'].$home_perse['path'];
+				$ssl_perse = parse_url($this->options['ssl_url']);
+				$ssl_path = $ssl_perse['host'].$ssl_perse['path'];
+				$ssl_plink_cart = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_CART_NUMBER) ));
+				$ssl_plink_member = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_MEMBER_NUMBER) ));
+				$ssl_plink_inquiry = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link($this->options['inquiry_id']) ));
+				define('USCES_CUSTOMER_URL', $ssl_plink_cart . '?uscesid=' . $this->get_uscesid() . '&customerinfo=1');
+				define('USCES_CART_URL', $ssl_plink_cart . '?uscesid=' . $this->get_uscesid());
+				define('USCES_LOSTMEMBERPASSWORD_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=lostmemberpassword');
+				define('USCES_NEWMEMBER_URL', $ssl_plink_member  . '?uscesid=' . $this->get_uscesid(). '&page=newmember');
+				define('USCES_LOGIN_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=login');
+				define('USCES_LOGOUT_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=logout');
+				define('USCES_MEMBER_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid());
+				define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
+			}else{
+				define('USCES_CUSTOMER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1&usces=' . $this->get_uscesid());
+				define('USCES_CART_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
+				define('USCES_LOSTMEMBERPASSWORD_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=lostmemberpassword');
+				define('USCES_NEWMEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=newmember');
+				define('USCES_LOGIN_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=login');
+				define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=logout');
+				define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
+				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&usces=' . $this->get_uscesid());
+			}
+			add_filter('home_url', array($this, 'usces_ssl_page_link'));
+			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
+			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
+			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
+			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));
+			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
+		} else {
+			if( $permalink_structure ){
+				define('USCES_CUSTOMER_URL', get_page_link(USCES_CART_NUMBER) . '?customerinfo=1');
+				define('USCES_CART_URL', get_page_link(USCES_CART_NUMBER));
+				define('USCES_LOSTMEMBERPASSWORD_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=lostmemberpassword');
+				define('USCES_NEWMEMBER_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=newmember');
+				define('USCES_LOGIN_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=login');
+				define('USCES_LOGOUT_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=logout');
+				define('USCES_MEMBER_URL', get_page_link(USCES_MEMBER_NUMBER));
+				define('USCES_INQUIRY_URL', get_page_link($this->options['inquiry_id']));
+			}else{
+				define('USCES_CUSTOMER_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1');
+				define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
+				define('USCES_LOSTMEMBERPASSWORD_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=lostmemberpassword');
+				define('USCES_NEWMEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=newmember');
+				define('USCES_LOGIN_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=login');
+				define('USCES_LOGOUT_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
+				define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
+				define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
+			}
+		}
 	}
 	
 	function regist_action(){

@@ -2514,6 +2514,12 @@ msgstr "継続課金"
 msgid "Termination"
 msgstr "継続課金解除"
 
+msgid "Setting"
+msgstr "設定"
+
+msgid "Text-area"
+msgstr "テキストエリア"
+
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
 #~ msgid "% Comments &#187;"
