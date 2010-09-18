@@ -962,10 +962,10 @@ class usc_e_shop
 		
 		$conjunction = ( empty($req) && (!strpos($request, USCES_CART_FOLDER, 1) && !strpos($request, USCES_MEMBER_FOLDER, 1)) ) ? '?' : '&';
 		
-		$sessid = $conjunction . 'usces=' . $this->get_uscesid();
+		$sessid = $conjunction . 'uscesid=' . $this->get_uscesid();
 	
 		
-		if( false === strpos($request, 'usces=') )
+		if( false === strpos($request, 'uscesid=') )
 			$uri = $request . $sessid;
 		else
 			$uri = $request;
@@ -1583,33 +1583,44 @@ class usc_e_shop
 	function make_url(){
 	
 		$permalink_structure = get_option('permalink_structure');
-
 		if($this->use_ssl) {
 			if( $permalink_structure ){
+			
 				$home_perse = parse_url(get_option('home'));
 				$home_path = $home_perse['host'].$home_perse['path'];
 				$ssl_perse = parse_url($this->options['ssl_url']);
 				$ssl_path = $ssl_perse['host'].$ssl_perse['path'];
-				$ssl_plink_cart = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_CART_NUMBER) ));
-				$ssl_plink_member = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_MEMBER_NUMBER) ));
-				$ssl_plink_inquiry = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link($this->options['inquiry_id']) ));
-				define('USCES_CUSTOMER_URL', $ssl_plink_cart . '?uscesid=' . $this->get_uscesid() . '&customerinfo=1');
-				define('USCES_CART_URL', $ssl_plink_cart . '?uscesid=' . $this->get_uscesid());
-				define('USCES_LOSTMEMBERPASSWORD_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=lostmemberpassword');
-				define('USCES_NEWMEMBER_URL', $ssl_plink_member  . '?uscesid=' . $this->get_uscesid(). '&page=newmember');
-				define('USCES_LOGIN_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=login');
-				define('USCES_LOGOUT_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=logout');
-				define('USCES_MEMBER_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid());
-				define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
+				if( $ssl_perse['path'] != $ssl_path['path'] ){
+					define('USCES_CUSTOMER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1&uscesid=' . $this->get_uscesid());
+					define('USCES_CART_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&uscesid=' . $this->get_uscesid());
+					define('USCES_LOSTMEMBERPASSWORD_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=lostmemberpassword');
+					define('USCES_NEWMEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=newmember');
+					define('USCES_LOGIN_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=login');
+					define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
+					define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
+					define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+				}else{
+					$ssl_plink_cart = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_CART_NUMBER) ));
+					$ssl_plink_member = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_MEMBER_NUMBER) ));
+					$ssl_plink_inquiry = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link($this->options['inquiry_id']) ));
+					define('USCES_CUSTOMER_URL', $ssl_plink_cart . '?uscesid=' . $this->get_uscesid() . '&customerinfo=1');
+					define('USCES_CART_URL', $ssl_plink_cart . '?uscesid=' . $this->get_uscesid());
+					define('USCES_LOSTMEMBERPASSWORD_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=lostmemberpassword');
+					define('USCES_NEWMEMBER_URL', $ssl_plink_member  . '?uscesid=' . $this->get_uscesid(). '&page=newmember');
+					define('USCES_LOGIN_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=login');
+					define('USCES_LOGOUT_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=logout');
+					define('USCES_MEMBER_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid());
+					define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
+				}
 			}else{
-				define('USCES_CUSTOMER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1&usces=' . $this->get_uscesid());
-				define('USCES_CART_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&usces=' . $this->get_uscesid());
-				define('USCES_LOSTMEMBERPASSWORD_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=lostmemberpassword');
-				define('USCES_NEWMEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=newmember');
-				define('USCES_LOGIN_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=login');
-				define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid() . '&page=logout');
-				define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&usces=' . $this->get_uscesid());
-				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&usces=' . $this->get_uscesid());
+				define('USCES_CUSTOMER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1&uscesid=' . $this->get_uscesid());
+				define('USCES_CART_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&uscesid=' . $this->get_uscesid());
+				define('USCES_LOSTMEMBERPASSWORD_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=lostmemberpassword');
+				define('USCES_NEWMEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=newmember');
+				define('USCES_LOGIN_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=login');
+				define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
+				define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
+				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
 			}
 			add_filter('home_url', array($this, 'usces_ssl_page_link'));
 			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
