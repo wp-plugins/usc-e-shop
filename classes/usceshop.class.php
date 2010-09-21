@@ -1590,7 +1590,7 @@ class usc_e_shop
 				$home_path = $home_perse['host'].$home_perse['path'];
 				$ssl_perse = parse_url($this->options['ssl_url']);
 				$ssl_path = $ssl_perse['host'].$ssl_perse['path'];
-				if( $ssl_perse['path'] != $ssl_perse['path'] ){
+				if( $home_perse['path'] != $ssl_perse['path'] ){
 					define('USCES_CUSTOMER_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&customerinfo=1&uscesid=' . $this->get_uscesid());
 					define('USCES_CART_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&uscesid=' . $this->get_uscesid());
 					define('USCES_LOSTMEMBERPASSWORD_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=lostmemberpassword');
