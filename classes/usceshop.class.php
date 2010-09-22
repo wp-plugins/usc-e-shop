@@ -209,7 +209,7 @@ class usc_e_shop
 		$flag = false;
 		foreach($search as $value){
 			$parts = array();
-			if( strpos($link, $value) ){
+			if( false !== strpos($link, $value) ){
 				if( $value == ('page_id='.USCES_CART_NUMBER) ||  $value == ('page_id='.USCES_MEMBER_NUMBER) ){
 					$parts = parse_url($link);
 					parse_str($parts['query'], $query);
@@ -229,7 +229,7 @@ class usc_e_shop
 		$search = array(('page_id='.USCES_CART_NUMBER), '/usces-cart' );
 		$flag = false;
 		foreach($search as $value){
-			if( strpos($link, $value) ){
+			if( false !== strpos($link, $value) ){
 				if( $value == ('page_id='.USCES_CART_NUMBER) ){
 					$parts = parse_url($link);
 					parse_str($parts['query'], $query);
@@ -252,7 +252,7 @@ class usc_e_shop
 		$search = array(('page_id='.$this->options['inquiry_id']), '/usces-inquiry' );
 		$flag = false;
 		foreach($search as $value){
-			if( strpos($link, $value) ){
+			if( false !== strpos($link, $value) ){
 				if( $value == ('page_id='.$this->options['inquiry_id']) ){
 					$parts = parse_url($link);
 					parse_str($parts['query'], $query);
@@ -274,13 +274,13 @@ class usc_e_shop
 		
 		$link = str_replace('https://', 'http://', $link);
 		
-		if( strpos($link, '/usces-cart') || $query['page_id'] == USCES_CART_NUMBER ) 
+		if( false !== strpos($link, '/usces-cart') || $query['page_id'] == USCES_CART_NUMBER ) 
 			$link = USCES_CART_URL;
 			
-		if( strpos($link, '/usces-member') || $query['page_id'] == USCES_MEMBER_NUMBER )
+		if( false !== strpos($link, '/usces-member') || $query['page_id'] == USCES_MEMBER_NUMBER )
 			$link = USCES_MEMBER_URL;
 		
-		if( !empty($this->options['inquiry_id']) && (strpos($link, '/usces-inquiry') || $query['page_id'] == $this->options['inquiry_id']) )
+		if( !empty($this->options['inquiry_id']) && (false !== strpos($link, '/usces-inquiry') || $query['page_id'] == $this->options['inquiry_id']) )
 			$link = USCES_INQUIRY_URL;
 		
 		return $link;
@@ -3553,7 +3553,7 @@ class usc_e_shop
 	{
 		$plugins = get_option('active_plugins');
 		foreach($plugins as $plugin) {
-			if( strpos($plugin, USCES_ADMIN_SSL_BASE_NAME) )
+			if( false !== strpos($plugin, USCES_ADMIN_SSL_BASE_NAME) )
 				return true;
 		}
 		return false;
@@ -4045,7 +4045,7 @@ class usc_e_shop
 				}
 				fclose($fp);
 
-				if( strpos( $page, 'Success_order') ){
+				if( false !== strpos( $page, 'Success_order') ){
 					header("Location: " . USCES_CART_URL . '&acting=zeus_card&acting_return=1');
 					exit;
 				}else{
@@ -4111,7 +4111,7 @@ class usc_e_shop
 				fclose($fp);
 				//usces_log('zeus page : '.$page, 'acting_transaction.log');
 
-				if( strpos( $page, 'Success_order') ){
+				if( false !== strpos( $page, 'Success_order') ){
 					//usces_log('zeus query : '.$qstr, 'acting_transaction.log');
 					header("Location: " . USCES_CART_URL . '&acting=zeus_conv&acting_return=1&' . $qstr);
 					exit;
@@ -5405,7 +5405,7 @@ class usc_e_shop
 	
 	function filter_permalink( $link ) {
 		
-		if(strpos('?page_id=4', $link) || strpos('?page_id=3', $link) || strpos('usces-cart', $link) || strpos('usces-member', $link) )
+		if(false !== strpos('?page_id=4', $link) || false !== strpos('?page_id=3', $link) || false !== strpos('usces-cart', $link) || false !== strpos('usces-member', $link) )
 			$link = str_replace('http://', 'https://', $link);
 	
 		return $link;
