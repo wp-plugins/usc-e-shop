@@ -63,11 +63,14 @@ function usces_pdf_out(&$pdf, $data){
 	// 文書情報設定
 	$pdf->SetCreator('USCe-Shop');
 	$pdf->SetAuthor('USconsort');
-	if($_REQUEST['type'] == 'mitumori')
+	if($_REQUEST['type'] == 'mitumori'){
 		$pdf->SetTitle('mitumori');
-	elseif($_REQUEST['type'] == 'nohin')
+		$filename = 'mitumori.pdf';
+	}elseif($_REQUEST['type'] == 'nohin'){
 		$pdf->SetTitle('nohinsyo');
-
+		$filename = 'nohinsyo.pdf';
+	}
+	
 	//表示モードを指定する。
 	$pdf->SetDisplayMode('real', 'continuous');
 
@@ -270,11 +273,12 @@ function usces_pdf_out(&$pdf, $data){
 
 	// PDF出力
 	//*****************************************************************
+	
 	header('Pragma:');
 	header('Cache-Control: application/octet-stream');
 	header("Content-type: application/pdf");
 	header('Content-Length: '.strlen($pdf->buffer));
-	$pdf->Output();
+	$pdf->Output($filename, 'I');
 }
 
 //ヘッダ出力
