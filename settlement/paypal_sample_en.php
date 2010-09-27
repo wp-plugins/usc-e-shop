@@ -6,7 +6,7 @@ PayPal Payment Module
 My Account - Profile - Website Payment Preferences
 
  * Auto Return: On
- * Return URL : 'The URL of the shop top page'/?page_id='The ID of the cart page'&acting=paypal&acting_return=1
+ * Return URL : 'The URL of the shop top page'/index.php?page_id='The ID of the cart page'&acting=paypal&acting_return=1
   When You use SSL, please change 'http://' in 'https://'. In the case of common-use SSL, please make entry of common use SSL.
   You can confirm the ID of the cart page in Home of the Welcart admin panel.
  * Payment Data Transfer: On

@@ -2276,7 +2276,7 @@ class usc_e_shop
 	
 		$_SESSION['usces_lostmail'] = wp_specialchars(trim($_POST['loginmail']));
 		$id = session_id();
-		$uri = USCES_MEMBER_URL . '&uscesmode=changepassword';
+		$uri = USCES_MEMBER_URL . $this->delim . 'uscesmode=changepassword';
 		$res = usces_lostmail($uri);
 		return $res;
 	
@@ -4013,6 +4013,7 @@ class usc_e_shop
 				$redirect = USCES_CART_URL;
 			}
 			$query .= '&settlement=epsilon&redirect_url=' . urlencode($redirect);
+			$query = $this->delim . ltrim($query, '&');
 			header("location: " . $redirect . $query);
 			exit;
 			
@@ -4058,14 +4059,14 @@ class usc_e_shop
 				fclose($fp);
 
 				if( false !== strpos( $page, 'Success_order') ){
-					header("Location: " . USCES_CART_URL . '&acting=zeus_card&acting_return=1');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
 					exit;
 				}else{
-					header("Location: " . USCES_CART_URL . '&acting=zeus_card&acting_return=0');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
 					exit;
 				}
 			}else{
-				header("Location: " . USCES_CART_URL . '&acting=zeus_card&acting_return=0');
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
 			}
 			exit;
 
@@ -4125,16 +4126,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					//usces_log('zeus query : '.$qstr, 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . '&acting=zeus_conv&acting_return=1&' . $qstr);
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
 					exit;
 				}else{
 					usces_log('zeus data NG : '.$page, 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . '&acting=zeus_conv&acting_return=0');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
 					exit;
 				}
 			}else{
 				usces_log('zeus : sockopen NG', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . '&acting=zeus_conv&acting_return=0');
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
 			}
 			exit;
 

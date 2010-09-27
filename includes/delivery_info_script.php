@@ -75,7 +75,7 @@ foreach($payments_arr as $pm ){
 $html .= "
 			var chk_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
 			if( uscesPaymod[chk_pay] != '' ){
-				$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"table\"});
+				$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"block\"});
 			}
 		});
 			

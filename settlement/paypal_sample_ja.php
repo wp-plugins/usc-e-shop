@@ -7,7 +7,7 @@ PayPal決済モジュール
 マイアカウント→個人設定→ウェブペイメントの設定
 
 ・自動復帰：オン
-・復帰URL：ショップトップページのＵＲＬ/?page_id=カートページのＩＤ&acting=paypal&acting_return=1
+・復帰URL：ショップトップページのＵＲＬ/index.php?page_id=カートページのＩＤ&acting=paypal&acting_return=1
 　SSLを利用している場合はhttp//をhttps://にする。また共用SSLの場合はそのURLを指定。
 　カートページのＩＤはWelcart 管理画面のHome で確認できます。
 ・支払いデータ転送：オン

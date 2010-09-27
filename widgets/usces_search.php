@@ -10,7 +10,8 @@ class Welcart_search extends WP_Widget {
     }
 
     /** @see WP_Widget::widget */
-    function widget($args, $instance) {		
+    function widget($args, $instance) {	
+		global $usces;	
         extract( $args );
         $title = $instance['title'] == '' ? 'Welcart '.__('keyword search', 'usces') : $instance['title'];
         $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
@@ -26,7 +27,7 @@ class Welcart_search extends WP_Widget {
 		<ul class="ucart_search_body ucart_widget_body"><li>
 		<form method="get" id="searchform" action="<?php bloginfo('home'); ?>" >
 		<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" value="<?php _e('Search', 'usces'); ?>" />
-		<div><a href="<?php echo USCES_CART_URL; ?>&page=search_item"><?php _e("'AND' search by categories", 'usces'); ?>&gt;</a></div>
+		<div><a href="<?php echo (USCES_CART_URL . $usces->delim); ?>page=search_item"><?php _e("'AND' search by categories", 'usces'); ?>&gt;</a></div>
 		</form>
 		</li></ul>
 				  

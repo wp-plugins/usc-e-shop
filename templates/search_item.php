@@ -75,7 +75,7 @@ if (isset($_REQUEST['usces_search'])) {
 		$html .= '</div><!-- searchitems -->';
 	}
 }
-$html .= '<form name="searchindetail" action="' . USCES_CART_URL . '&page=search_item" method="post">
+$html .= '<form name="searchindetail" action="' . USCES_CART_URL . $this->delim . 'page=search_item" method="post">
 <div class="field">
 <label class="outlabel">'.__('Categories: AND Search', 'usces').'</label>' . usces_categories_checkbox('return') . '
 </div>';
