@@ -13,7 +13,7 @@ class usc_e_shop
 	var $member_status;
 	var $options;
 	var $login_mail, $current_member, $member_form;
-	var $payment_results, $log_flg;
+	var $payment_results, $log_flg, $delim;
 
 	function usc_e_shop()
 	{
@@ -272,17 +272,21 @@ class usc_e_shop
 		$parts = parse_url($link);
 		parse_str($parts['query'], $query);
 		
-		$link = str_replace('https://', 'http://', $link);
 		
-		if( false !== strpos($link, '/usces-cart') || $query['page_id'] == USCES_CART_NUMBER ) 
+		if( false !== strpos($link, '/usces-cart') || $query['page_id'] == USCES_CART_NUMBER ){
 			$link = USCES_CART_URL;
 			
-		if( false !== strpos($link, '/usces-member') || $query['page_id'] == USCES_MEMBER_NUMBER )
+		}elseif( false !== strpos($link, '/usces-member') || $query['page_id'] == USCES_MEMBER_NUMBER ){
 			$link = USCES_MEMBER_URL;
 		
-		if( !empty($this->options['inquiry_id']) && (false !== strpos($link, '/usces-inquiry') || $query['page_id'] == $this->options['inquiry_id']) )
+		}elseif( !empty($this->options['inquiry_id']) && (false !== strpos($link, '/usces-inquiry') || $query['page_id'] == $this->options['inquiry_id']) ){
 			$link = USCES_INQUIRY_URL;
+
+		}else{
+			$link = str_replace('https://', 'http://', $link);
+			$link = apply_filters('usces_ssl_page_link', $link);
 		
+		}		
 		return $link;
 	}
 	function usces_ssl_contents_link($link)
@@ -1585,7 +1589,7 @@ class usc_e_shop
 		$permalink_structure = get_option('permalink_structure');
 		if($this->use_ssl) {
 			if( $permalink_structure ){
-			
+				$this->delim = '&';
 				$home_perse = parse_url(get_option('home'));
 				$home_path = $home_perse['host'].$home_perse['path'];
 				$ssl_perse = parse_url($this->options['ssl_url']);
@@ -1599,6 +1603,7 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+					define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				}else{
 					$ssl_plink_cart = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_CART_NUMBER) ));
 					$ssl_plink_member = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_MEMBER_NUMBER) ));
@@ -1611,8 +1616,10 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
+					define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				}
 			}else{
+				$this->delim = '&';
 				define('USCES_CUSTOMER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1&uscesid=' . $this->get_uscesid());
 				define('USCES_CART_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&uscesid=' . $this->get_uscesid());
 				define('USCES_LOSTMEMBERPASSWORD_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=lostmemberpassword');
@@ -1621,6 +1628,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 				define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+				define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 			}
 			add_filter('home_url', array($this, 'usces_ssl_page_link'));
 			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
@@ -1630,6 +1638,7 @@ class usc_e_shop
 			add_filter('style_loader_src', array($this, 'usces_ssl_script_link'));
 		} else {
 			if( $permalink_structure ){
+				$this->delim = '?';
 				define('USCES_CUSTOMER_URL', get_page_link(USCES_CART_NUMBER) . '?customerinfo=1');
 				define('USCES_CART_URL', get_page_link(USCES_CART_NUMBER));
 				define('USCES_LOSTMEMBERPASSWORD_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=lostmemberpassword');
@@ -1638,7 +1647,9 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=logout');
 				define('USCES_MEMBER_URL', get_page_link(USCES_MEMBER_NUMBER));
 				define('USCES_INQUIRY_URL', get_page_link($this->options['inquiry_id']));
+				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting_return=paypal_ipn');
 			}else{
+				$this->delim = '&';
 				define('USCES_CUSTOMER_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1');
 				define('USCES_CART_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
 				define('USCES_LOSTMEMBERPASSWORD_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=lostmemberpassword');
@@ -1647,6 +1658,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
 				define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
 				define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
+				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn');
 			}
 		}
 	}
@@ -4469,11 +4481,12 @@ class usc_e_shop
 			}
 			$i++;
 		}
-		if( $flag ){
-			$sessid = $chars . '_' . $_SERVER['REMOTE_ADDR'];
-		}else{
+//		if( $flag ){
+//			$sessid = $chars . '_' . $_SERVER['REMOTE_ADDR'];
+//		}else{
 			$sessid = $chars . '_acting';
-		}
+//			$sessid = $chars . apply_filters('usces_sessid_flag', '_acting');
+//		}
 		$sessid = urlencode(base64_encode($sessid));
 		return $sessid;
 	}
@@ -4481,10 +4494,10 @@ class usc_e_shop
 	function uscesdc( $sessid ) {
 		$sessid = base64_decode(urldecode($sessid));
 		list($sess, $addr) = explode('_', $sessid);
-		if( $addr != $_SERVER['REMOTE_ADDR'] && $addr != 'acting' ) {
-			$sessid = '';
-			return;
-		}
+//		if( $addr != $_SERVER['REMOTE_ADDR'] && $addr != 'acting' && $addr != 'mobile' ) {
+//			$sessid = '';
+//			return;
+//		}
 		$chars = '';
 		$h=0;
 		while($h<strlen($sess)){

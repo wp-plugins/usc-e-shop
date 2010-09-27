@@ -10,7 +10,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 	$html = apply_filters('usces_filter_confirm_inform', $html);
 	$html .= '</form>';
 }else{
-	//$notify_url = urlencode(USCES_CART_URL . '&purchase');
 	$send_item_code = $this->getItemCode($cart[0]['post_id']);
 	$send_item_name = $this->getItemName($cart[0]['post_id']);
 	if( count($cart) > 1 ) $send_item_name .= ' '.__('Others', 'usces');
@@ -38,8 +37,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '<input type="hidden" name="item_number" value="">
 				<input type="hidden" name="amount" value="' . $usces_entries['order']['total_full_price'] . '">
 				<input type="hidden" name="currency_code" value="JPY">
-				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . '&confirm">
-				<input type="hidden" name="notify_url" value="' . USCES_CART_URL . '&acting_return=paypal_ipn&usces=' . $this->get_uscesid(false) . '">
+				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . $this->delim . 'confirm=1">
+				<input type="hidden" name="notify_url" value="' . USCES_PAYPAL_NOTIFY_URL . '">
 				<input type="hidden" name="button_subtype" value="products">
 				<input type="hidden" name="tax_rate" value="0.000">
 				<input type="hidden" name="shipping" value="0">
@@ -182,9 +181,9 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="ITEM" value="0000120" />
 				<input type="hidden" name="TOTAL" value="' . $usces_entries['order']['total_full_price'] . '" />
 				<input type="hidden" name="AMOUNT" value="' . $usces_entries['order']['total_full_price'] . '" />
-				<input type="hidden" name="RETURL" value="' . USCES_CART_URL . '&acting=remise_card&acting_return=1" />
-				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . '&acting=remise_card&acting_return=0" />
-				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . '&confirm=1" />
+				<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_card&acting_return=1" />
+				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_card&acting_return=0" />
+				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $this->delim . 'confirm=1" />
 				';
 			if( 'on' == $acting_opts['payquick'] && $this->is_member_logged_in() ){
 				$member = $this->get_member();
@@ -281,10 +280,10 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="MSUM_07" value="0" />
 				';
 
-			$html .= '<input type="hidden" name="RETURL" value="' . USCES_CART_URL . '&acting=remise_conv&acting_return=1" />
-				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . '&acting=remise_conv&acting_return=0" />
+			$html .= '<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_conv&acting_return=1" />
+				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_conv&acting_return=0" />
 				<input type="hidden" name="OPT" value="1" />
-				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . '&confirm=1" />
+				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $this->delim . 'confirm=1" />
 				';
 			$html .= '
 				<input type="hidden" name="dummy" value="&#65533;" />
