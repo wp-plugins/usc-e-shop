@@ -49,8 +49,9 @@ Apache 2.2
 
 
 【更新履歴】
-Development Version  　2010/9/27
+Welcart 0.7.3  　2010/9/28
 　・SSLを利用した場合のクレジット決済の不具合を修正
+　・Welcart Default テーマのサイドバー内のリンクを修正
 
 Welcart 0.7.2  　2010/9/22
 　・パーマリンクを利用した場合にSSLで起こる不具合を修正

@@ -1133,7 +1133,8 @@ function usces_categories_checkbox($output=''){
 	global $usces;
 	$htm = '';
 	$retcats = usces_search_categories();
-	$categories =  get_categories('child_of='.USCES_ITEM_CAT_PARENT_ID . "&hide_empty=0&orderby=ID"); 
+	$parent_id = apply_filters('usces_search_categories_checkbox_parent', USCES_ITEM_CAT_PARENT_ID);
+	$categories =  get_categories('child_of='.$parent_id . "&hide_empty=0&orderby=ID"); 
 	foreach ($categories as $cat) {
 		$children =  get_categories('child_of='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
 		if(!empty($children)){
