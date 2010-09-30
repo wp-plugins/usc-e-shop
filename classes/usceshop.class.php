@@ -1650,7 +1650,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=logout');
 				define('USCES_MEMBER_URL', get_page_link(USCES_MEMBER_NUMBER));
 				define('USCES_INQUIRY_URL', get_page_link($this->options['inquiry_id']));
-				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting_return=paypal_ipn');
+				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 			}else{
 				$this->delim = '&';
 				define('USCES_CUSTOMER_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1');
@@ -1661,7 +1661,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
 				define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
 				define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
-				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn');
+				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 			}
 		}
 	}
@@ -1967,8 +1967,8 @@ class usc_e_shop
 	
 	function use_point(){
 		global $wp_query;
-		$this->error_message = $this->point_check();
 		$this->cart->entry();
+		$this->error_message = $this->point_check( $this->cart->get_entry() );
 		$this->page = 'confirm';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
@@ -2036,6 +2036,8 @@ class usc_e_shop
 			$ipn_res = paypal_ipn_check($usces_paypal_url);
 			if( $ipn_res[0] === true ){
 				$res = $this->order_processing( $ipn_res );
+				if( 'ordercompletion' == $res )
+					$this->cart->crear_cart();
 			}
 			exit;
 		}
@@ -2940,17 +2942,21 @@ class usc_e_shop
 		return $mes;
 	}
 
-	function point_check() {
+	function point_check( $entries ) {
 		$member = $this->get_member();
 		$this->set_cart_fees( $member, &$entries );
+//var_dump($entries);
 		$mes = '';
 		if ( trim($_POST['order']["usedpoint"]) == "" || !(int)$_POST['order']["usedpoint"] || (int)$_POST['order']["usedpoint"] < 0 ) {
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
-		} elseif ( trim($_POST['order']["usedpoint"]) > $member['point'] || trim($_POST['order']["usedpoint"]) > $entries['order']['total_price']) {
+		} elseif ( trim($_POST['order']["usedpoint"]) > $member['point'] || trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee']) ) {
 			$mes .= __('You have exceeded the maximum available.', 'usces') . "<br />";
 			$_POST['order']["usedpoint"] = 0;
+			$array = array(
+					'usedpoint' => 0
+					);
+			$this->cart->set_order_entry( $array );
 		}
-
 		return $mes;
 	}
 
@@ -4347,11 +4353,16 @@ class usc_e_shop
 		$discount = $this->get_order_discount();
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
-		$get_point = $this->get_order_point( $member['ID'] );
 		$use_point = $entries['order']['usedpoint'];
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 		$tax = $this->getTax( $total_price );
 		$total_full_price = $total_price + $tax;
+		$get_point = $this->get_order_point( $member['ID'] );
+		if(0 < (int)$use_point){
+			$get_point = ceil( $get_point - ($get_point * $use_point / $total_items_price) );
+			if(0 > $get_point)
+				$get_point = 0;
+		}
 
 		$array = array(
 				'total_items_price' => $total_items_price,
@@ -4366,6 +4377,7 @@ class usc_e_shop
 				);
 		$this->cart->set_order_entry( $array );
 		$entries = $this->cart->get_entry();
+//var_dump($entries);
 	}
 	
 	function getPayments( $payment_name ) {
