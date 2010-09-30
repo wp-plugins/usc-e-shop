@@ -26,7 +26,6 @@ class usc_e_shop
 			clean_term_cache( "", 'category' );
 		}
 
-		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : '';
 		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
 		$this->check_display_mode();
 		
@@ -1104,6 +1103,8 @@ class usc_e_shop
 			$javascript_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER . '/js/usces_cart.js';
 		}
 		$this->member_name = ( is_user_logged_in() ) ? get_usermeta($current_user->ID,'first_name').get_usermeta($current_user->ID,'last_name') : '';
+
+		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : get_bloginfo('home');
 		?>
 
 		<link href="<?php echo $css_url; ?>" rel="stylesheet" type="text/css" />
@@ -1150,7 +1151,7 @@ class usc_e_shop
 				'opt_means': new Array( <?php echo $opt_means; ?> ),
 				'mes_opts': new Array( <?php echo $mes_opts_str; ?> ),
 				'key_opts': new Array( <?php echo $key_opts_str; ?> ), 
-				'previous_url': "<?php if(isset($_SESSION['usces_previous_url'])) echo $_SESSION['usces_previous_url']; ?>", 
+				'previous_url': "<?php echo $this->previous_url; ?>", 
 				'itemRestriction': "<?php echo $itemRestriction[0]; ?>"
 			}
 		/* ]]> */
@@ -1425,6 +1426,7 @@ class usc_e_shop
 		
 		$this->make_url();
 		
+
 		do_action('usces_main');
 		$this->usces_cookie();
 		$this->update_table();
@@ -1433,6 +1435,7 @@ class usc_e_shop
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
 		
+
 		do_action('usces_after_cart_instant');
 		
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){

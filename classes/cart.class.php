@@ -14,11 +14,14 @@ class usces_cart {
 		}
 		
 	}
-
 	// into Cart ***************************************************************
 	function inCart() {
-		if( $_SERVER['HTTP_REFERER'] )
+	
+		if( $_SERVER['HTTP_REFERER'] ){
 			$_SESSION['usces_previous_url'] = $_SERVER['HTTP_REFERER'];
+		}else{
+			$_SESSION['usces_previous_url'] = str_replace('https://', 'http://', get_bloginfo('home')).'/';
+		}
 			
 		$ids = array_keys($_POST['inCart']);
 		$post_id = $ids[0];
