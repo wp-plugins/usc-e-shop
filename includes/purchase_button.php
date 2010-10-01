@@ -37,6 +37,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '<input type="hidden" name="item_number" value="">
 				<input type="hidden" name="amount" value="' . $usces_entries['order']['total_full_price'] . '">
 				<input type="hidden" name="currency_code" value="JPY">
+				<input type="hidden" name="return" value="' . get_bloginfo('home') . '">
 				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . $this->delim . 'confirm=1">
 				<input type="hidden" name="notify_url" value="' . USCES_PAYPAL_NOTIFY_URL . '">
 				<input type="hidden" name="button_subtype" value="products">
