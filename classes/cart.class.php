@@ -257,6 +257,9 @@ class usces_cart {
 			foreach( $_SESSION['usces_member'] as $key => $value ){
 //20100818ysk start
 				if($key === 'custom_member') {
+//20101008ysk start
+					unset($_SESSION['usces_entry']['custom_member']);
+//20101008ysk end
 					foreach( $_SESSION['usces_member']['custom_member'] as $mbkey => $mbvalue ) {
 						if( is_array($mbvalue) ) {
 							foreach( $mbvalue as $k => $v ) {
@@ -297,6 +300,9 @@ class usces_cart {
 		}
 //20100809ysk start
 		if(isset($_POST['custom_order'])) {
+//20101008ysk start
+			unset($_SESSION['usces_entry']['custom_order']);
+//20101008ysk end
 			foreach( $_POST['custom_order'] as $key => $value )
 				if ( is_array($value) ) {
 					foreach( $value as $k => $v ) {
@@ -309,6 +315,9 @@ class usces_cart {
 //20100809ysk end
 //20100818ysk start
 		if(isset($_POST['custom_customer'])) {
+//20101008ysk start
+			unset($_SESSION['usces_entry']['custom_customer']);
+//20101008ysk end
 			foreach( $_POST['custom_customer'] as $key => $value )
 				if ( is_array($value) ) {
 					foreach( $value as $k => $v ) {
@@ -319,6 +328,9 @@ class usces_cart {
 				}
 		}
 		if(isset($_POST['custom_delivery'])) {
+//20101008ysk start
+			unset($_SESSION['usces_entry']['custom_delivery']);
+//20101008ysk end
 			foreach( $_POST['custom_delivery'] as $key => $value )
 				if ( is_array($value) ) {
 					foreach( $value as $k => $v ) {
