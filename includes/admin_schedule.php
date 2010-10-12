@@ -155,7 +155,7 @@ function cangeWday3(id, c) {
 		<td><?php _e('hour','usces'); ?></td>
 	    <td><select name="campaign_schedule[start][min]">
 <?php for($i=0; $i<12; $i++) : ?>
-	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['min']['hour'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
+	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['start']['min'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('min','usces'); ?></td>
@@ -190,7 +190,7 @@ function cangeWday3(id, c) {
 		<td><?php _e('hour','usces'); ?></td>
 	    <td><select name="campaign_schedule[end][min]">
 <?php for($i=0; $i<12; $i++) : ?>
-	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['min']['hour'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
+	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['end']['min'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('min','usces'); ?></td>

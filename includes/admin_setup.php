@@ -224,13 +224,21 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_rate');"><?php _e('The initial value of point rate', 'usces'); ?></a></th>
-	    <td><input name="point_rate" type="text" class="short_str" value="<?php echo $this->options['point_rate']; ?>" />%</td>
+	    <td colspan="2"><input name="point_rate" type="text" class="short_str" value="<?php echo $this->options['point_rate']; ?>" />%</td>
 		<td><div id="ex_point_rate" class="explanation"><?php _e('initial value at registration of items. Leave it blank if it is not necessary.', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_start_point');"><?php _e('Point at the registration of membership', 'usces'); ?></a></th>
-	    <td><input name="start_point" type="text" class="short_str" value="<?php echo $this->options['start_point']; ?>" />pt</td>
+	    <td colspan="2"><input name="start_point" type="text" class="short_str" value="<?php echo $this->options['start_point']; ?>" />pt</td>
 		<td><div id="ex_start_point" class="explanation"><?php _e('Points granted  at the first membersip registration.', 'usces'); ?></div></td>
+	</tr>
+	<tr>
+	    <th rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_coverage');"><?php _e('ポイントの適用範囲', 'usces'); ?></a></th>
+	    <td><input name="point_coverage" type="radio" id="point_coverage0" value="0"<?php if( !$this->options['point_coverage'] ) echo 'checked="checked"'; ?> /></td><td width="220"><label for="point_coverage0"><?php _e('商品合計額のみに制限', 'usces'); ?></label></td>
+		<td rowspan="2"><div id="ex_point_coverage" class="explanation"><?php _e('お客様が利用できるポイントの適用範囲を選択します。<br />初期値は「商品合計金額のみに制限」されています。「商品合計額及び手数料などにも適用」を選択すると送料や代引き手数料もポイントで支払う事ができるようになります。', 'usces'); ?></div></td>
+	</tr>
+	<tr>
+	    <td><input name="point_coverage" type="radio" id="point_coverage1" value="1"<?php if( $this->options['point_coverage'] ) echo 'checked="checked"'; ?> /></td><td width="220"><label for="point_coverage1"><?php _e('商品合計額及び手数料などにも適用', 'usces'); ?></label></td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />

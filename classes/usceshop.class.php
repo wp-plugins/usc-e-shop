@@ -39,6 +39,8 @@ class usc_e_shop
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
 		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
 		if(!isset($this->options['use_ssl'])) $this->options['use_ssl'] = 0;
+		if(!isset($this->options['point_coverage'])) $this->options['point_coverage'] = 0;
+		if(!isset($this->options['use_javascript'])) $this->options['use_javascript'] = 1;
 		if(!isset($this->options['indi_item_name'])){
 			$this->options['indi_item_name']['item_name'] = 1;
 			$this->options['indi_item_name']['item_code'] = 1;
@@ -546,6 +548,7 @@ class usc_e_shop
 			$this->options['copyright'] = isset($_POST['copyright']) ? wp_specialchars($_POST['copyright']) : '';
 			$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? wp_specialchars($_POST['membersystem_state']) : '';
 			$this->options['membersystem_point'] = isset($_POST['membersystem_point']) ? wp_specialchars($_POST['membersystem_point']) : '';
+			$this->options['point_coverage'] = isset($_POST['point_coverage']) ? (int)$_POST['point_coverage'] : 0;
 
 			update_option('usces', $this->options);
 			
@@ -775,6 +778,7 @@ class usc_e_shop
 			$this->options['ssl_url_admin'] = isset($_POST['ssl_url_admin']) ? stripslashes(rtrim($_POST['ssl_url_admin'], '/')) : '';
 			if( $this->options['ssl_url'] == '' || $this->options['ssl_url_admin'] == '' ) $this->options['use_ssl'] = 0;
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
+			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
 
 			
 			$this->action_status = 'success';
@@ -1111,8 +1115,8 @@ class usc_e_shop
 	<?php if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){ ?>
 		<link href="<?php echo get_stylesheet_directory_uri(); ?>/usces_cart.css" rel="stylesheet" type="text/css" />
 	<?php } ?>
-		<?php 
-		if(isset($post)) : 
+		<?php
+		if( isset($post) && $this->options['use_javascript'] ) : 
 
 			$ioptkeys = $this->get_itemOptionKey( $post->ID );
 			$mes_opts_str = "";
@@ -1156,9 +1160,9 @@ class usc_e_shop
 			}
 		/* ]]> */
 		</script>
-		<?php endif; ?>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
-		<?php if( isset($post) && ((USCES_CART_NUMBER == $post->ID) || ('item' == $post->post_mime_type && is_single())) ) : ?>
+		<?php endif; ?>
+		<?php if( isset($post) && $this->options['use_javascript'] && ((USCES_CART_NUMBER == $post->ID) || ('item' == $post->post_mime_type && is_single())) ) : ?>
 		<script type='text/javascript'>
 		(function($) {
 		uscesCart = {
@@ -2949,13 +2953,29 @@ class usc_e_shop
 		$mes = '';
 		if ( trim($_POST['order']["usedpoint"]) == "" || !(int)$_POST['order']["usedpoint"] || (int)$_POST['order']["usedpoint"] < 0 ) {
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
-		} elseif ( trim($_POST['order']["usedpoint"]) > $member['point'] || trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee']) ) {
-			$mes .= __('You have exceeded the maximum available.', 'usces') . "<br />";
-			$_POST['order']["usedpoint"] = 0;
-			$array = array(
-					'usedpoint' => 0
-					);
-			$this->cart->set_order_entry( $array );
+		} else {
+			if ( trim($_POST['order']["usedpoint"]) > $member['point'] ){
+				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".$member['point']."pt<br />";
+				$_POST['order']["usedpoint"] = 0;
+				$array = array(
+						'usedpoint' => 0
+						);
+				$this->cart->set_order_entry( $array );
+			}elseif($this->options['point_coverage'] && trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
+				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])."pt<br />";
+				$_POST['order']["usedpoint"] = 0;
+				$array = array(
+						'usedpoint' => 0
+						);
+				$this->cart->set_order_entry( $array );
+			}elseif(!$this->options['point_coverage'] && trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
+				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
+				$_POST['order']["usedpoint"] = 0;
+				$array = array(
+						'usedpoint' => 0
+						);
+				$this->cart->set_order_entry( $array );
+			}
 		}
 		return $mes;
 	}
@@ -2989,16 +3009,17 @@ class usc_e_shop
 		
 		$start = $options['campaign_schedule']['start'];
 		$end = $options['campaign_schedule']['end'];
-		$starttime = mktime($start['hour'], $start['min'], 0, $start['month'], $start['day'], $start['year']); 
-		$endtime = mktime($end['hour'], $end['min'], 0, $end['month'], $end['day'], $end['year']); 
+		$starttime = mktime($start['hour'], $start['min'], 0, $start['month'], $start['day'], $start['year']);
+		$endtime = mktime($end['hour'], $end['min'], 0, $end['month'], $end['day'], $end['year']);
+		$current_time = current_time('timestamp');
 
-		if( (time() >= $starttime) && (time() <= $endtime) )
+		if( ($current_time >= $starttime) && ($current_time <= $endtime) )
 			$options['display_mode'] = 'Promotionsale';
 		else
 			$options['display_mode'] = 'Usualsale';
 		
 		update_option('usces', $options);
-	
+		
 	}
 	
 	function update_business_days() {

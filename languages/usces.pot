@@ -2515,3 +2515,6 @@ msgstr "設定"
 
 msgid "Text-area"
 msgstr "テキストエリア"
+
+msgid "M j, Y"
+msgstr "Y-m-d"

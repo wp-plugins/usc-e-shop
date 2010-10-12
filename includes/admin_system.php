@@ -139,7 +139,15 @@ function toggleVisibility(id) {
 	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry.', 'usces'); ?></div></td>
 	</tr>
 </table>
-</div>
+<!--<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript 利用の有無', 'usces'); ?></a></th>
+	    <td width="10"><input name="use_javascript" id="use_javascript0" type="radio" value="0"<?php if($this->options['use_javascript'] == 0) echo 'checked="checked"'; ?> /></td><td width="60"><label for="use_javascript0"><?php _e('利用しない', 'usces'); ?></label></td>
+	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="60"><label for="use_javascript1"><?php _e('利用する', 'usces'); ?></label></td>
+		<td><div id="ex_use_javascript" class="explanation"><?php _e("初期状態ではJavaScript を利用します。JavaScript を利用できないブラウザにも対応したい場合は「利用しない」を選択します。「利用しない」を選択するとJavaScript を使用しているWelcart 専用拡張プラグインも利用できなくなりますのでご注意下さい。その他のプラグインの制御は行いません。あくまでフロントの動作においてWelcart が利用しているJavaScript を停止するだけです。", 'usces'); ?></div></td>
+	</tr>
+</table>
+--></div>
 </div><!--postbox-->
 
 
