@@ -49,7 +49,9 @@ Apache 2.2
 
 
 【更新履歴】
-Development Version  　2010/10/1
+Development Version  　2010/10/12
+　・カートが空の場合「買い物に戻る」の遷移がおかしい
+　・Welcart カスタムフィールドのチェックボックスの値がクリアされない
 　・PayPalで決済の不具合を修正
 　・PayPal決済で、Auto Return がOFF でも利用できるよう仕様を変更
 　・獲得ポイントを、使用ポイントを引いてから計算するよう仕様を変更
