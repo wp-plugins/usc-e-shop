@@ -7,10 +7,6 @@ function usces_action_acting_construct(){
 
 	if(isset($_POST['X-TRANID']) && !isset($_POST['OPT'])){//remise
 		usces_log('remise in : '.$_POST['X-TRANID'], 'acting_transaction.log');
-		if( 'remise payment gateway2.4.2.1' != $_SERVER['HTTP_USER_AGENT'] ){
-			usces_log('remise card : ' . $_SERVER['HTTP_USER_AGENT'], 'acting_transaction.log');
-			die(0);
-		}
 		
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		$datas = usces_get_order_acting_data($rand);
@@ -38,9 +34,6 @@ function usces_action_acting_transaction(){
 	
 	//*** remise_card ***//
 	if(isset($_POST['X-TRANID']) && !isset($_POST['OPT'])){
-		if( 'remise payment gateway2.4.2.1' != $_SERVER['HTTP_USER_AGENT'] )
-			die(0);
-
 		
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		if( empty($rand) ){
