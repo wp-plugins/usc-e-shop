@@ -16,7 +16,7 @@
 			<li>
 			<form method="get" id="searchform" action="<?php bloginfo('home'); ?>" >
 			<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" value="<?php _e('Search','usces') ?>" />
-			<div><a href="<?php echo (USCES_CART_URL . $this->delim); ?>page=search_item"><?php _e('An article category keyword search','usces') ?>&gt;</a></div>
+			<div><a href="<?php echo USCES_CART_URL . $usces->delim; ?>page=search_item"><?php _e('An article category keyword search','usces') ?>&gt;</a></div>
 			</form>
 			</li>
 		</ul>
