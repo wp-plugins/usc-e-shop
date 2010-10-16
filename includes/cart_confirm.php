@@ -32,15 +32,15 @@
 		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
 		foreach((array)$options as $key => $value){
-			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
 		}
 ?>
 		<tr>
 			<td><?php echo $i + 1; ?></td>
 			<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-			<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
+			<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
 			<td class="aright"><?php echo number_format($skuPrice); ?></td>
-			<td><?php echo $cart_row['quantity']; ?></td>
+			<td><?php echo esc_html($cart_row['quantity']); ?></td>
 			<td class="aright"><?php echo number_format($skuPrice * $cart_row['quantity']); ?></td>
 			<td></td>
 		</tr>
@@ -104,11 +104,11 @@
 	<table cellspacing="0" id="point_table">
 		<tr>
 		<td><?php _e('The current point', 'usces'); ?></td>
-		<td><span class="point"><?php echo $member['point']; ?></span>pt</td>
+		<td><span class="point"><?php echo esc_html($member['point']); ?></span>pt</td>
 		</tr>
 		<tr>
 		<td><?php _e('Points you are using here', 'usces'); ?></td>
-		<td><input name="order[usedpoint]" class="used_point" type="text" value="<?php echo $entries['order']['usedpoint']; ?>" />pt</td>
+		<td><input name="order[usedpoint]" class="used_point" type="text" value="<?php echo esc_attr($entries['order']['usedpoint']); ?>" />pt</td>
 		</tr>
 		<tr>
 		<td colspan="2"><input name="use_point" type="submit" value="<?php _e('Use the points', 'usces'); ?>" /></td>

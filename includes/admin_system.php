@@ -62,7 +62,7 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_province');"><?php _e('Province', 'usces'); ?></a></th>
-		<td width="150"><textarea name="province" cols="30" rows="10"><?php echo $province; ?></textarea></td>
+		<td width="150"><textarea name="province" cols="30" rows="10"><?php echo esc_html($province); ?></textarea></td>
 	    <td><div id="ex_province" class="explanation"><?php _e('The district where sale is possible', 'usces'); ?>(<?php _e('Province', 'usces'); ?>) <?php _e('One line one by one.', 'usces'); ?></div></td>
 	</tr>
 </table>
@@ -70,7 +70,7 @@ function toggleVisibility(id) {
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');"><?php _e('Display Modes','usces'); ?></a></th>
 		<?php $checked = $divide_item == 1 ? ' checked="checked"' : ''; ?>
-		<td width="10"><input name="divide_item" type="checkbox" id="divide_item" value="<?php echo $divide_item; ?>"<?php echo $checked; ?> /></td>
+		<td width="10"><input name="divide_item" type="checkbox" id="divide_item" value="<?php echo esc_attr($divide_item); ?>"<?php echo $checked; ?> /></td>
 		<td width="300"><label for="divide_item"><?php _e('Not display an article in blog', 'usces'); ?></label></td>
 	    <td><div id="ex_divide_item" class="explanation"><?php _e('In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item.', 'usces'); ?></div></td>
 	</tr>
@@ -79,7 +79,7 @@ function toggleVisibility(id) {
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_itemimg_anchor_rel');"><?php _e('rel attribute', 'usces'); ?></a></th>
 		<td width="30">rel="</td>
-		<td width="100"><input name="itemimg_anchor_rel" id="itemimg_anchor_rel" type="text" value="<?php echo $itemimg_anchor_rel; ?>" /></td>
+		<td width="100"><input name="itemimg_anchor_rel" id="itemimg_anchor_rel" type="text" value="<?php echo esc_attr($itemimg_anchor_rel); ?>" /></td>
 		<td width="10">"</td>
 	    <td><div id="ex_itemimg_anchor_rel" class="explanation"><?php _e('In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin.', 'usces'); ?></div></td>
 	</tr>
@@ -105,7 +105,7 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');"><?php _e('settlement module path', 'usces'); ?></a></th>
-		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo $settlement_path; ?>" size="60" /></td>
+		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo esc_attr($settlement_path); ?>" size="60" /></td>
 	    <td><div id="ex_settlement_path" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
 	</tr>
 </table>
@@ -113,7 +113,7 @@ function toggleVisibility(id) {
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_ssl');"><?php _e('Use SSL','usces'); ?></a></th>
 		<?php $checked = $use_ssl == 1 ? ' checked="checked"' : ''; ?>
-		<td width="10"><input name="use_ssl" type="checkbox" id="use_ssl" value="<?php echo $use_ssl; ?>"<?php echo $checked; ?> /></td>
+		<td width="10"><input name="use_ssl" type="checkbox" id="use_ssl" value="<?php echo esc_attr($use_ssl); ?>"<?php echo $checked; ?> /></td>
 		<td width="300">&nbsp;</td>
 	    <td><div id="ex_use_ssl" class="explanation"><?php _e('Please decide whether you use SSL', 'usces'); ?></div></td>
 	</tr>
@@ -121,21 +121,21 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url_admin');"><?php _e('WordPress address (SSL)', 'usces'); ?></a></th>
-		<td><input name="ssl_url_admin" type="text" id="ssl_url_admin" value="<?php echo $ssl_url_admin; ?>" size="60" /></td>
+		<td><input name="ssl_url_admin" type="text" id="ssl_url_admin" value="<?php echo esc_attr($ssl_url_admin); ?>" size="60" /></td>
 	    <td><div id="ex_ssl_url_admin" class="explanation"><?php _e('https://*WordPress address*<br />You can use common use SSL.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url');"><?php _e('Blog address (SSL)', 'usces'); ?></a></th>
-		<td><input name="ssl_url" type="text" id="ssl_url" value="<?php echo $ssl_url; ?>" size="60" /></td>
+		<td><input name="ssl_url" type="text" id="ssl_url" value="<?php echo esc_attr($ssl_url); ?>" size="60" /></td>
 	    <td><div id="ex_ssl_url" class="explanation"><?php _e('https://*Blog address*<br />You can use common use SSL.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('The page_id of the inquiry-form', 'usces'); ?></a></th>
-		<td><input name="inquiry_id" type="text" id="inquiry_id" value="<?php echo $inquiry_id; ?>" size="7" /></td>
+		<td><input name="inquiry_id" type="text" id="inquiry_id" value="<?php echo esc_attr($inquiry_id); ?>" size="7" /></td>
 	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry.', 'usces'); ?></div></td>
 	</tr>
 </table>

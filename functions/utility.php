@@ -337,9 +337,9 @@ function usces_filter_member_check_custom_member( $mes ) {
 		foreach( $_POST['custom_member'] as $key => $value )
 			if( is_array($value) ) {
 				foreach( $value as $k => $v ) 
-					$_SESSION['usces_member']['custom_member'][$key][wp_specialchars($v)] = wp_specialchars($v);
+					$_SESSION['usces_member']['custom_member'][$key][trim($v)] = trim($v);
 			} else {
-				$_SESSION['usces_member']['custom_member'][$key] = wp_specialchars($value);
+				$_SESSION['usces_member']['custom_member'][$key] = trim($value);
 			}
 	}
 

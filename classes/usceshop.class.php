@@ -519,35 +519,35 @@ class usc_e_shop
 		
 
 		if(isset($_POST['usces_option_update'])) {
-			$this->options['display_mode'] = isset($_POST['display_mode']) ? wp_specialchars($_POST['display_mode']) : '';
-			$this->options['campaign_category'] = isset($_POST['cat']) ? $_POST['cat'] : '0';
-			$this->options['campaign_privilege'] = isset($_POST['cat_privilege']) ? wp_specialchars($_POST['cat_privilege']) : '';
+			$this->options['display_mode'] = isset($_POST['display_mode']) ? trim($_POST['display_mode']) : '';
+			$this->options['campaign_category'] = empty($_POST['cat']) ? USCES_ITEM_CAT_PARENT_ID : $_POST['cat'];
+			$this->options['campaign_privilege'] = isset($_POST['cat_privilege']) ? trim($_POST['cat_privilege']) : '';
 			$this->options['privilege_point'] = isset($_POST['point_num']) ? (int)$_POST['point_num'] : '';
 			$this->options['privilege_discount'] = isset($_POST['discount_num']) ? (int)$_POST['discount_num'] : '';
-			$this->options['company_name'] = isset($_POST['company_name']) ? wp_specialchars($_POST['company_name']) : '';
-			$this->options['zip_code'] = isset($_POST['zip_code']) ? wp_specialchars($_POST['zip_code']) : '';
-			$this->options['address1'] = isset($_POST['address1']) ? wp_specialchars($_POST['address1']) : '';
-			$this->options['address2'] = isset($_POST['address2']) ? wp_specialchars($_POST['address2']) : '';
-			$this->options['tel_number'] = isset($_POST['tel_number']) ? wp_specialchars($_POST['tel_number']) : '';
-			$this->options['fax_number'] = isset($_POST['fax_number']) ? wp_specialchars($_POST['fax_number']) : '';
-			$this->options['order_mail'] = isset($_POST['order_mail']) ? wp_specialchars($_POST['order_mail']) : '';
-			$this->options['inquiry_mail'] = isset($_POST['inquiry_mail']) ? wp_specialchars($_POST['inquiry_mail']) : '';
-			$this->options['sender_mail'] = isset($_POST['sender_mail']) ? wp_specialchars($_POST['sender_mail']) : '';
-			$this->options['error_mail'] = isset($_POST['error_mail']) ? wp_specialchars($_POST['error_mail']) : '';
-			$this->options['postage_privilege'] = isset($_POST['postage_privilege']) ? wp_specialchars($_POST['postage_privilege']) : '';
-			$this->options['purchase_limit'] = isset($_POST['purchase_limit']) ? wp_specialchars($_POST['purchase_limit']) : '';
+			$this->options['company_name'] = isset($_POST['company_name']) ? trim($_POST['company_name']) : '';
+			$this->options['zip_code'] = isset($_POST['zip_code']) ? trim($_POST['zip_code']) : '';
+			$this->options['address1'] = isset($_POST['address1']) ? trim($_POST['address1']) : '';
+			$this->options['address2'] = isset($_POST['address2']) ? trim($_POST['address2']) : '';
+			$this->options['tel_number'] = isset($_POST['tel_number']) ? trim($_POST['tel_number']) : '';
+			$this->options['fax_number'] = isset($_POST['fax_number']) ? trim($_POST['fax_number']) : '';
+			$this->options['order_mail'] = isset($_POST['order_mail']) ? trim($_POST['order_mail']) : '';
+			$this->options['inquiry_mail'] = isset($_POST['inquiry_mail']) ? trim($_POST['inquiry_mail']) : '';
+			$this->options['sender_mail'] = isset($_POST['sender_mail']) ? trim($_POST['sender_mail']) : '';
+			$this->options['error_mail'] = isset($_POST['error_mail']) ? trim($_POST['error_mail']) : '';
+			$this->options['postage_privilege'] = isset($_POST['postage_privilege']) ? trim($_POST['postage_privilege']) : '';
+			$this->options['purchase_limit'] = isset($_POST['purchase_limit']) ? trim($_POST['purchase_limit']) : '';
 			$this->options['point_rate'] = isset($_POST['point_rate']) ? (int)$_POST['point_rate'] : '';
 			$this->options['start_point'] = isset($_POST['start_point']) ? (int)$_POST['start_point'] : '';
-			$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? wp_specialchars($_POST['shipping_rule']) : '';
+			$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? trim($_POST['shipping_rule']) : '';
 			$this->options['tax_rate'] = isset($_POST['tax_rate']) ? (int)$_POST['tax_rate'] : '';
-			$this->options['tax_method'] = isset($_POST['tax_method']) ? wp_specialchars($_POST['tax_method']) : '';
+			$this->options['tax_method'] = isset($_POST['tax_method']) ? trim($_POST['tax_method']) : '';
 	
 			$this->options['cod_type'] = isset($this->options['cod_type']) ? $this->options['cod_type'] : 'fix';
 
-			$this->options['transferee'] = isset($_POST['transferee']) ? wp_specialchars($_POST['transferee']) : '';
-			$this->options['copyright'] = isset($_POST['copyright']) ? wp_specialchars($_POST['copyright']) : '';
-			$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? wp_specialchars($_POST['membersystem_state']) : '';
-			$this->options['membersystem_point'] = isset($_POST['membersystem_point']) ? wp_specialchars($_POST['membersystem_point']) : '';
+			$this->options['transferee'] = isset($_POST['transferee']) ? trim($_POST['transferee']) : '';
+			$this->options['copyright'] = isset($_POST['copyright']) ? trim($_POST['copyright']) : '';
+			$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? trim($_POST['membersystem_state']) : '';
+			$this->options['membersystem_point'] = isset($_POST['membersystem_point']) ? trim($_POST['membersystem_point']) : '';
 			$this->options['point_coverage'] = isset($_POST['point_coverage']) ? (int)$_POST['point_coverage'] : 0;
 
 			update_option('usces', $this->options);
@@ -620,27 +620,27 @@ class usc_e_shop
 
 		if(isset($_POST['usces_option_update'])) {
 		
-			$this->options['smtp_hostname'] = wp_specialchars(trim($_POST['smtp_hostname']));
+			$this->options['smtp_hostname'] = trim($_POST['smtp_hostname']);
 		
 			foreach ( $_POST['title'] as $key => $value ) {
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['title'][$key] = $this->options['mail_default']['title'][$key];
 				}else{
-					$this->options['mail_data']['title'][$key] = wp_specialchars($value);
+					$this->options['mail_data']['title'][$key] = trim($value);
 				}
 			}
 			foreach ( $_POST['header'] as $key => $value ) {
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['header'][$key] = $this->options['mail_default']['header'][$key];
 				}else{
-					$this->options['mail_data']['header'][$key] = wp_specialchars($value);
+					$this->options['mail_data']['header'][$key] = trim($value);
 				}
 			}
 			foreach ( $_POST['footer'] as $key => $value ) {
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['footer'][$key] = $this->options['mail_default']['footer'][$key];
 				}else{
-					$this->options['mail_data']['footer'][$key] = wp_specialchars($value);
+					$this->options['mail_data']['footer'][$key] = trim($value);
 				}
 			}
 
@@ -757,7 +757,7 @@ class usc_e_shop
 					if($i == -1){
 						$usces_pref[] = __('-- Select --','usces');
 					}else{
-						$usces_pref[] = wp_specialchars(trim($temp_pref[$i]));
+						$usces_pref[] = trim($temp_pref[$i]);
 					}
 				}
 			}else{
@@ -766,7 +766,7 @@ class usc_e_shop
 
 			$this->options['province'] = $usces_pref;
 			$this->options['divide_item'] = isset($_POST['divide_item']) ? 1 : 0;
-			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? wp_specialchars(trim($_POST['itemimg_anchor_rel'])) : '';
+			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? trim($_POST['itemimg_anchor_rel']) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
 			$this->options['fukugo_category_order'] = isset($_POST['fukugo_category_order']) ? $_POST['fukugo_category_order'] : '';
 			$this->options['settlement_path'] = isset($_POST['settlement_path']) ? stripslashes($_POST['settlement_path']) : '';
@@ -1425,7 +1425,7 @@ class usc_e_shop
 		global $wp_query, $usces_action, $post, $action, $editing;
 
 		if( isset($_POST) ){
-			$_POST = stripslashes_deep($_POST);
+			$_POST = $this->stripslashes_deep_post($_POST);
 		}
 		
 		$this->make_url();
@@ -1589,6 +1589,20 @@ class usc_e_shop
 			require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');
 		}
 		
+	}
+	
+	function stripslashes_deep_post( $array ){
+		$res = array();
+		foreach( $array as $key => $value ){
+			$key = stripslashes($key);
+			if( is_array($value) ){
+				$value = $this->stripslashes_deep_post( $value );
+			}else{
+				$value = stripslashes($value);
+			}
+			$res[$key] = $value;
+		}
+		return $res;
 	}
 	
 	function make_url(){
@@ -2283,7 +2297,7 @@ class usc_e_shop
 	
 	function lostmail() {
 	
-		$_SESSION['usces_lostmail'] = wp_specialchars(trim($_POST['loginmail']));
+		$_SESSION['usces_lostmail'] = trim($_POST['loginmail']);
 		$id = session_id();
 		$uri = USCES_MEMBER_URL . $this->delim . 'uscesmode=changepassword';
 		$res = usces_lostmail($uri);
@@ -2541,7 +2555,7 @@ class usc_e_shop
 		} else if ( $_POST['loginmail'] == '' && $_POST['loginpass'] == '' && $cookie['rme'] != 'forever' ) {
 			return 'login';
 		} else if ( $_POST['loginpass'] == '' && $cookie['rme'] != 'forever' ) {
-			$this->current_member['email'] = wp_specialchars(trim($_POST['loginmail']));
+			$this->current_member['email'] = trim($_POST['loginmail']);
 			$this->error_message = __('<b>Error:</b> Enter the password.', 'usces');
 			return 'login';
 		} else {
@@ -5137,7 +5151,7 @@ class usc_e_shop
 		$payments = $this->options['payment_method'];
 		$htm = "<ul>\n";
 		foreach ( (array)$payments as $payment ) {
-			$htm .= "<li>" . htmlspecialchars($payment['name']) . "</li>\n";
+			$htm .= "<li>" . esc_html($payment['name']) . "</li>\n";
 		}
 		$htm .= "</ul>\n";
 		return $htm;

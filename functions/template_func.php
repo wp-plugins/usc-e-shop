@@ -6,7 +6,7 @@ function usces_guid_tax() {
 
 function usces_currency_symbol() {
 	global $usces;
-	echo $usces->getCurrencySymbol();
+	echo esc_html($usces->getCurrencySymbol());
 }
 
 function usces_is_error_message() {
@@ -34,7 +34,7 @@ function usces_the_itemCode( $out = '' ) {
 	if( $out == 'return' ){
 		return $str[0];
 	}else{
-		echo $str[0];
+		echo esc_html($str[0]);
 	}
 }
 
@@ -49,7 +49,7 @@ function usces_the_itemName( $out = '', $post = NULL ) {
 	if( $out == 'return' ){
 		return $str[0];
 	}else{
-		echo $str[0];
+		echo esc_html($str[0]);
 	}
 }
 
@@ -63,7 +63,7 @@ function usces_the_point_rate( $out = '' ){
 	if( $out == 'return' ){
 		return $rate;
 	}else{
-		echo $rate;
+		echo esc_html($rate);
 	}
 }
 
@@ -98,7 +98,7 @@ function usces_get_itemMeta($metakey, $post_id, $out = ''){
 	if( $out == 'return' ){
 		return $value;
 	}else{
-		echo $value;
+		echo esc_html($value);
 	}
 }
 
@@ -133,7 +133,7 @@ function usces_have_skus() {
 
 function usces_the_itemSku() {
 	global $usces;
-	echo $usces->itemsku['key'];
+	echo esc_html($usces->itemsku['key']);
 }
 
 function usces_the_itemPrice($flg = '') {
@@ -161,7 +161,7 @@ function usces_the_itemZaiko( $out = '' ) {
 	if( $out == 'return' ){
 		return $usces->zaiko_status[$num];
 	}else{
-		echo $usces->zaiko_status[$num];
+		echo esc_html($usces->zaiko_status[$num]);
 	}
 }
 
@@ -172,18 +172,18 @@ function usces_the_itemZaikoNum( $out = '' ) {
 	if( $out == 'return' ){
 		return $num;
 	}else{
-		echo $num;
+		echo number_format($num);
 	}
 }
 
 function usces_the_itemSkuDisp() {
 	global $usces;
-	echo $usces->itemsku['value']['disp'];
+	echo esc_html($usces->itemsku['value']['disp']);
 }
 
 function usces_the_itemSkuUnit() {
 	global $usces;
-	echo $usces->itemsku['value']['unit'];
+	echo esc_html($usces->itemsku['value']['unit']);
 }
 
 function usces_the_firstSku() {
@@ -193,7 +193,7 @@ function usces_the_firstSku() {
 	
 	$fields = $usces->get_skus( $post_id );
 	
-	echo $fields['key'][0];
+	echo esc_html($fields['key'][0]);
 }
 
 function usces_the_firstPrice( $out = '', $post = NULL ) {
@@ -233,7 +233,7 @@ function usces_the_firstZaiko() {
 	
 	$fields = $usces->get_skus( $post_id );
 	
-	echo $fields['zaiko'][0];
+	echo esc_html($fields['zaiko'][0]);
 }
 
 function usces_the_lastSku() {
@@ -243,7 +243,7 @@ function usces_the_lastSku() {
 	
 	$fields = $usces->get_skus( $post_id );
 	
-	echo end($fields['key']);
+	echo esc_html(end($fields['key']));
 }
 
 function usces_the_lastPrice() {
@@ -253,7 +253,7 @@ function usces_the_lastPrice() {
 	
 	$fields = $usces->get_skus( $post_id );
 	
-	echo end($fields['price']);
+	echo number_format(end($fields['price']));
 }
 
 function usces_the_lastZaiko() {
@@ -263,7 +263,7 @@ function usces_the_lastZaiko() {
 	
 	$fields = $usces->get_skus( $post_id );
 	
-	echo end($fields['zaiko']);
+	echo esc_html(end($fields['zaiko']));
 }
 
 function usces_is_gptekiyo( $post_id, $sku, $quant ){
@@ -293,7 +293,7 @@ function usces_the_itemGpExp( $out = '' ) {
 			$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
 						number_format(round($price * (100 - $GpD1) / 100)), 
 						$usces->getGuidTax(),
-						$unit,
+						esc_html($unit),
 						$GpN1, 
 						__('$', 'usces'), 
 						"'price'"
@@ -305,7 +305,7 @@ function usces_the_itemGpExp( $out = '' ) {
 			$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
 						number_format(round($price * (100 - $GpD1) / 100)), 
 						$usces->getGuidTax(),
-						$unit,
+						esc_html($unit),
 						$GpN1, 
 						$GpN2-1, 
 						__('$', 'usces'), 
@@ -318,7 +318,7 @@ function usces_the_itemGpExp( $out = '' ) {
 				$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
 							number_format(round($price * (100 - $GpD2) / 100)), 
 							$usces->getGuidTax(),
-							$unit,
+							esc_html($unit),
 							$GpN2, 
 							__('$', 'usces'), 
 							"'price'"
@@ -329,7 +329,7 @@ function usces_the_itemGpExp( $out = '' ) {
 				$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
 							number_format(round($price * (100 - $GpD2) / 100)), 
 							$usces->getGuidTax(),
-							$unit,
+							esc_html($unit),
 							$GpN2, 
 							$GpN3-1, 
 							__('$', 'usces'), 
@@ -340,7 +340,7 @@ function usces_the_itemGpExp( $out = '' ) {
 				$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
 							number_format(round($price * (100 - $GpD3) / 100)), 
 							$usces->getGuidTax(),
-							$unit,
+							esc_html($unit),
 							$GpN3, 
 							__('$', 'usces'), 
 							"'price'"
@@ -361,7 +361,7 @@ function usces_the_itemGpExp( $out = '' ) {
 function usces_the_itemQuant( $out = '' ) {
 	global $usces, $post;
 	$post_id = $post->ID;
-	$html = "<input name=\"quant[{$post_id}][{$usces->itemsku['key']}]\" type=\"text\" id=\"quant[{$post_id}][{$usces->itemsku['key']}]\" class=\"skuquantity\" value=\"1\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+	$html = "<input name=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" type=\"text\" id=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" class=\"skuquantity\" value=\"1\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
 		
 	if( $out == 'return' ){
 		return $html;
@@ -373,12 +373,12 @@ function usces_the_itemQuant( $out = '' ) {
 function usces_the_itemSkuButton($value, $type=0, $out = '') {
 	global $usces, $post;
 	$post_id = $post->ID;
-	$sku = $usces->itemsku['key'];
 	$zaikonum = $usces->itemsku['value']['zaikonum'];
 	$num = $usces->itemsku['value']['zaiko'];
 	$gptekiyo = $usces->itemsku['value']['gptekiyo'];
-	$skuPrice = $usces->getItemPrice($post_id, $sku);
-	$value = apply_filters( 'usces_filter_incart_button_label', $value);
+	$skuPrice = $usces->getItemPrice($post_id, $usces->itemsku['key']);
+	$value = esc_attr(apply_filters( 'usces_filter_incart_button_label', $value));
+	$sku = esc_attr($usces->itemsku['key']);
 	
 	if($type == 1)
 		$type = 'button';
@@ -442,7 +442,7 @@ function usces_the_itemSkuTable($colum = '', $buttonValue = '' ) {
 	$html .= "\t<thead>\n";
 	$html .= "\t\t<tr>\n";
 	foreach ($colums as $label)
-		$html .= "\t\t\t<th>" . $label . "</th>\n";
+		$html .= "\t\t\t<th>" . esc_html($label) . "</th>\n";
 		if( $usces->options['insert_unit'] === false || $usces->options['insert_unit'] == 'plural' )
 			$html .= "\t\t\t<th class='sku_skuquantity'>" . __('Quantity','usces') . "</th>\n";
 		$html .= "\t\t\t<th class='sku_button'>&nbsp;</th>\n";
@@ -452,10 +452,10 @@ function usces_the_itemSkuTable($colum = '', $buttonValue = '' ) {
 	foreach ($rows as $values){
 		$html .= "\t\t<tr>\n";
 		foreach ($colums as $subkey => $label)
-			$html .= "\t\t\t<td class='sku_{$subkey}'>" . $values[$subkey] . "</td>\n";
+			$html .= "\t\t\t<td class='sku_{$subkey}'>" . esc_html($values[$subkey]) . "</td>\n";
 		if( $usces->options['insert_unit'] === false || $usces->options['insert_unit'] == 'plural' )
-			$html .= "\t\t\t<td class='sku_skuquantity'><input name=\"quant[{$post_id}][{$values['sku']}]\" type=\"text\" id=\"quant[{$post_id}][{$values['sku']}]\" class=\"skuquantity\" value=\"\" /></td>\n";
-		$html .= "\t\t\t<td class='sku_button'><input name=\"inCart[{$post_id}][{$values['sku']}]\" type=\"submit\" id=\"inCart[{$post_id}][{$values['sku']}]\" class=\"skubutton\" value=\"{$buttonValue}\" /></td>\n";
+			$html .= "\t\t\t<td class='sku_skuquantity'><input name=\"quant[{$post_id}][" . esc_attr($values['sku']) . "]\" type=\"text\" id=\"quant[{$post_id}][" . esc_attr($values['sku']) . "]\" class=\"skuquantity\" value=\"\" /></td>\n";
+		$html .= "\t\t\t<td class='sku_button'><input name=\"inCart[{$post_id}][" . esc_attr($values['sku']) . "]\" type=\"submit\" id=\"inCart[{$post_id}][" . esc_attr($values['sku']) . "]\" class=\"skubutton\" value=\"" . esc_attr($buttonValue) . "\" /></td>\n";
 		$html .= "\t\t</tr>\n";
 	}
 	$html .= "\t</tbody>\n";
@@ -477,10 +477,10 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 	$pictids = $usces->get_pictids($code[0]);
 	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
-	$alt = 'alt="'.$code[0].'"';
+	$alt = 'alt="'.esc_attr($code[0]).'"';
 	$alt = apply_filters('usces_filter_img_alt', $alt, $post_id);
 	$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-	$title = 'title="'.$name[0].'"';
+	$title = 'title="'.esc_attr($name[0]).'"';
 	$title = apply_filters('usces_filter_img_title', $title, $post_id);
 	$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 	if($out == 'return'){
@@ -519,12 +519,12 @@ function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
 	
 	$pictids = $usces->get_pictids($code[0]);
 	$attach_ob = get_post($pictids[$number]);
-	$excerpt = esc_html($attach_ob->post_excerpt);
+	$excerpt = $attach_ob->post_excerpt;
 
 	if($out == 'return'){
 		return $excerpt;
 	}else{
-		echo $excerpt;
+		echo esc_html($excerpt);
 	}
 }
 
@@ -541,12 +541,12 @@ function usces_the_itemImageDescription($number = 0, $post = '', $out = '' ) {
 	
 	$pictids = $usces->get_pictids($code[0]);
 	$attach_ob = get_post($pictids[$number]);
-	$excerpt = esc_html($attach_ob->post_content);
+	$excerpt = $attach_ob->post_content;
 
 	if($out == 'return'){
 		return $excerpt;
 	}else{
-		echo $excerpt;
+		echo esc_html($excerpt);
 	}
 }
 
@@ -595,7 +595,7 @@ function usces_getItemOptName() {
 
 function usces_the_itemOptName() {
 	global $usces;
-	echo $usces->itemopt['key'];
+	echo esc_html($usces->itemopt['key']);
 }
 
 function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
@@ -611,7 +611,9 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$means = (int)$values['means'][0];
 	$essential = (int)$values['essential'][0];
 	$html = '';
-	$sku = $usces->itemsku['key'];
+	$sku = esc_attr($usces->itemsku['key']);
+	$name = esc_attr($name);
+	$label = esc_attr($label);
 	
 //20100914ysk start
 	//if($means < 2){
@@ -631,7 +633,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 				$selected = ' selected="selected"';
 			else
 				$selected = '';
-			$html .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
+			$html .= "\t<option value='" . esc_attr($v) . "'{$selected}>" . esc_html($v) . "</option>\n";
 			$i++;
 		}
 		$html .= "</select>\n";
@@ -700,17 +702,17 @@ function usces_the_pref( $flag, $out = '' ){
 	
 	$usces_members = $usces->get_member();
 	$usces_entries = $usces->cart->get_entry();
-	$name = $flag . '[pref]';
+	$name = esc_attr($flag) . '[pref]';
 	$pref = $usces_entries[$flag]['pref'];
 	if( 'member' == $flag)
 		$pref = $usces_members['pref'];
 	
-	$html = "<select name='{$name}' id='pref' class='pref'>\n";
+	$html = "<select name='" . esc_attr($name) . "' id='pref' class='pref'>\n";
 //	$prefs = get_option('usces_pref');
 	$prefs = $usces->options['province'];
 	foreach($prefs as $value) {
 		$selected = ($pref == $value) ? ' selected="selected"' : '';
-		$html .= "\t<option value='{$value}'{$selected}>{$value}</option>\n";
+		$html .= "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
 	}
 	$html .= "</select>\n";
 	
@@ -723,47 +725,47 @@ function usces_the_pref( $flag, $out = '' ){
 
 function usces_the_company_name(){
 	global $usces;
-	echo $usces->options['company_name'];
+	echo esc_html($usces->options['company_name']);
 }
 
 function usces_the_zip_code(){
 	global $usces;
-	echo $usces->options['zip_code'];
+	echo esc_html($usces->options['zip_code']);
 }
 
 function usces_the_address1(){
 	global $usces;
-	echo $usces->options['address1'];
+	echo esc_html($usces->options['address1']);
 }
 
 function usces_the_address2(){
 	global $usces;
-	echo $usces->options['address2'];
+	echo esc_html($usces->options['address2']);
 }
 
 function usces_the_tel_number(){
 	global $usces;
-	echo $usces->options['tel_number'];
+	echo esc_html($usces->options['tel_number']);
 }
 
 function usces_the_fax_number(){
 	global $usces;
-	echo $usces->options['fax_number'];
+	echo esc_html($usces->options['fax_number']);
 }
 
 function usces_the_inquiry_mail(){
 	global $usces;
-	echo $usces->options['inquiry_mail'];
+	echo esc_html($usces->options['inquiry_mail']);
 }
 
 function usces_the_postage_privilege(){
 	global $usces;
-	echo $usces->options['postage_privilege'];
+	echo esc_html($usces->options['postage_privilege']);
 }
 
 function usces_the_start_point(){
 	global $usces;
-	echo $usces->options['start_point'];
+	echo esc_html($usces->options['start_point']);
 }
 
 function usces_point_rate( $post_id = NULL, $out = '' ){
@@ -798,9 +800,9 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			$checked = ($payments['name'] == $value) ? ' checked' : '';
 			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 				$checked = '';
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
 			}else{
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.$payments['name'].'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.$payments['name']."</label></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label></dt>\n";
 			}
 			$list .= "\t<dd>{$payments['explanation']}</dd>\n";
 		}
@@ -838,7 +840,7 @@ function usces_the_delivery_method( $value = '', $out = '' ){
 	foreach ($deli_id as $id) {
 		$index = $usces->get_delivery_method_index($id);
 		$selected = ($id == $value) ? ' selected="selected"' : '';
-		$html .= "\t<option value='{$id}'{$selected}>{$usces->options['delivery_method'][$index]['name']}</option>\n";
+		$html .= "\t<option value='{$id}'{$selected}>" . esc_html($usces->options['delivery_method'][$index]['name']) . "</option>\n";
 	}
 
 	$html .= "</select>\n";
@@ -874,15 +876,15 @@ function usces_the_campaign_schedule($flag, $kind){
 	$endtime = $usces->options['campaign_schedule']['end']['hour'] . __('hour','usces') . $usces->options['campaign_schedule']['end']['min'] . __('min','usces');
 	if( 'start' == $flag ) {
 		if( 'date' == $kind ) {
-			echo $startdate;
+			echo esc_html($startdate);
 		}elseif( 'datetime' == $kind ) {
-			echo $startdate . ' ' . $starttime;
+			echo esc_html($startdate . ' ' . $starttime);
 		}
 	} elseif ( 'end' == $flag ) {
 		if( 'date' == $kind ) {
-			echo $enddate;
+			echo esc_html($enddate);
 		}elseif( 'datetime' == $kind ) {
-			echo $enddate . ' ' . $endtime;
+			echo esc_html($enddate . ' ' . $endtime);
 		}
 	}
 }
@@ -898,16 +900,16 @@ function usces_the_inquiry_form() {
 	global $usces;
 	$error_message = '';
 	if( isset($_POST['inq_name']) && '' != trim($_POST['inq_name']) ) {
-		$inq_name = esc_html(trim($_POST['inq_name']));
+		$inq_name = trim($_POST['inq_name']);
 	}else{
 		$inq_name = '';
 		if($usces->page == 'deficiency')
 			$error_message .= __('Please input your name.', 'usces') . "<br />";
 	}
 	if( isset($_POST['inq_mailaddress']) && is_email(trim($_POST['inq_mailaddress'])) ) {
-		$inq_mailaddress = wp_specialchars(trim($_POST['inq_mailaddress']));
+		$inq_mailaddress = trim($_POST['inq_mailaddress']);
 	}elseif( isset($_POST['inq_mailaddress']) && !is_email(trim($_POST['inq_mailaddress'])) ) {
-		$inq_mailaddress = esc_html(trim($_POST['inq_mailaddress']));
+		$inq_mailaddress = trim($_POST['inq_mailaddress']);
 		if($usces->page == 'deficiency')
 			$error_message .= __('E-mail address is not correct', 'usces') . "<br />";
 	}else{
@@ -916,7 +918,7 @@ function usces_the_inquiry_form() {
 			$error_message .= __('Please input your e-mail address.', 'usces') . "<br />";
 	}
 	if( isset($_POST['inq_contents']) && '' != trim($_POST['inq_contents']) ) {
-		$inq_contents = esc_html(trim($_POST['inq_contents']));
+		$inq_contents = trim($_POST['inq_contents']);
 	}else{
 		$inq_contents = '';
 		if($usces->page == 'deficiency')
@@ -941,15 +943,15 @@ function usces_the_inquiry_form() {
 <table border="0" cellpadding="0" cellspacing="0" class="inquiry_table">
 <tr>
 <th scope="row"><?php _e('Full name','usces') ?></th>
-<td><input name="inq_name" type="text" class="inquiry_name" value="<?php echo $inq_name; ?>" /></td>
+<td><input name="inq_name" type="text" class="inquiry_name" value="<?php echo esc_attr($inq_name); ?>" /></td>
 </tr>
 <tr>
 <th scope="row"><?php _e('e-mail adress','usces') ?></th>
-<td><input name="inq_mailaddress" type="text" class="inquiry_mailaddress" value="<?php echo $inq_mailaddress; ?>" /></td>
+<td><input name="inq_mailaddress" type="text" class="inquiry_mailaddress" value="<?php echo esc_attr($inq_mailaddress); ?>" /></td>
 </tr>
 <tr>
 <th scope="row"><?php _e('contents','usces') ?></th>
-<td><textarea name="inq_contents" class="inquiry_contents"><?php echo $inq_contents; ?></textarea></td>
+<td><textarea name="inq_contents" class="inquiry_contents"><?php echo esc_attr($inq_contents); ?></textarea></td>
 </tr>
 </table>
 <div class="send"><input name="inquiry_button" type="submit" value="<?php _e('Admit to send it with this information.','usces') ?>" /></div>
@@ -984,7 +986,7 @@ function usces_is_login() {
 function usces_the_member_name() {
 	global $usces;
 	$usces->get_current_member();
-	echo $usces->current_member['name'];
+	echo esc_html($usces->current_member['name']);
 	
 }
 function usces_get_assistance_id_list($post_id) {
@@ -1009,7 +1011,7 @@ function usces_remembername( $out = '' ){
 			return '';
 	}else{
 		if($value)
-			echo $value['name'];
+			echo esc_html($value['name']);
 		else
 			echo '';
 	}
@@ -1025,7 +1027,7 @@ function usces_rememberpass( $out = '' ){
 			return '';
 	}else{
 		if($value)
-			echo $value['pass'];
+			echo esc_html($value['pass']);
 		else
 			echo '';
 	}
@@ -1055,7 +1057,7 @@ function usces_shippingchargeTR( $index='' ) {
 	if( !isset($usces->options['shipping_charge'][$index]) ) return;
 	$shipping_charge = $usces->options['shipping_charge'][$index];
 	foreach ($shipping_charge['value'] as $pref => $value) {
-		$list .= "<tr><th>" . $pref . "</th>\n";
+		$list .= "<tr><th>" . esc_html($pref) . "</th>\n";
 		$list .= "<td class='rightnum'>" . number_format($value) . "</td>\n";
 		$list .= "</tr>\n";
 	}
@@ -1063,11 +1065,11 @@ function usces_shippingchargeTR( $index='' ) {
 }
 function usces_sc_shipping_charge() {
 	global $usces;
-	echo $usces->sc_shipping_charge();
+	echo esc_html($usces->sc_shipping_charge());
 }
 function usces_sc_postage_privilege() {
 	global $usces;
-	echo $usces->sc_postage_privilege();
+	echo esc_html($usces->sc_postage_privilege());
 }
 function usces_sc_payment_title() {
 	global $usces;
@@ -1105,7 +1107,7 @@ function usces_list_bestseller($num, $days = ''){
 	for($i=0; $i<$num; $i++){
 		if(isset($ids[$i])){
 			$post = get_post($ids[$i]);
-			$disp_text = apply_filters('usces_widget_bestseller_auto_text', wp_specialchars($post->post_title), $ids[$i]);
+			$disp_text = apply_filters('usces_widget_bestseller_auto_text', esc_html($post->post_title), $ids[$i]);
 			$list = "<li><a href='" . get_permalink($ids[$i]) . "'>" . $disp_text . "</a></li>\n";
 			$htm .= apply_filters('usces_filter_bestseller', $list, $ids[$i], $i);
 		}
@@ -1121,7 +1123,7 @@ function usces_list_post( $slug, $rownum ){
 	$infolist = get_posts('category='.$cat_id.'&numberposts='.$rownum.'&order=DESC&orderby=post_date');
 	foreach ($infolist as $post) :
 		$list = "<li>\n";
-		$list .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . $post->post_title . "</a></div>\n";
+		$list .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . esc_html($post->post_title) . "</a></div>\n";
 		$list .= "<p>" . $post->post_excerpt . "</p>\n";
 		$list .= "</li>\n";
 		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
@@ -1141,7 +1143,7 @@ function usces_categories_checkbox($output=''){
 			$htm .= "<fieldset><legend>" . $cat->cat_name . "</legend><ul>\n";
 			foreach ($children as $child) {
 				$checked = in_array($child->term_id, $retcats) ? " checked='checked'" : "";
-				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]'>".$child->cat_name."</label></li>\n";
+				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]'>".esc_html($child->cat_name)."</label></li>\n";
 			}
 			$htm .= "</ul></fieldset>\n";
 		}
@@ -1174,7 +1176,7 @@ function usces_delivery_method_name( $id, $out = '' ){
 	if($out == 'return'){
 		return $name;
 	}else{
-		echo $name;
+		echo esc_html($name);
 	}
 }
 
@@ -1201,7 +1203,7 @@ function usces_is_membersystem_point(){
 function usces_copyright(){
 	global $usces;
 
-	echo $usces->options['copyright'];
+	echo esc_html($usces->options['copyright']);
 }
 
 function usces_totalprice_in_cart(){
@@ -1422,7 +1424,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 				$value = '';
 				if(is_array($entry['value'])) {
 					foreach($entry['value'] as $k => $v) {
-						$value .= htmlspecialchars($v)."\n";
+						$value .= $v."\n";
 					}
 				}
 				$value = trim($value);
@@ -1430,7 +1432,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 				$e = ($essential == 1) ? '<em>*</em>' : '';
 				$html .= '
 					<tr>
-					<th scope="row">'.$e.$name.'</th>';
+					<th scope="row">'.$e.esc_html($name).'</th>';
 				switch($means) {
 				case 0://シングルセレクト
 				case 1://マルチセレクト
@@ -1439,21 +1441,21 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 					$multiple_array = ($means == 0) ? '' : '[]';
 					$html .= '
 						<td colspan="2">
-						<select name="'.$label.'['.$key.']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+						<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
 					if($essential == 1) 
 						$html .= '
 							<option value="#NONE#">'.__('Choose','usces').'</option>';
 					foreach($selects as $v) {
 						$selected = ($data[$label][$key] == $v) ? ' selected' : '';
 						$html .= '
-							<option value="'.$v.'"'.$selected.'>'.$v.'</option>';
+							<option value="'.esc_attr($v).'"'.$selected.'>'.esc_html($v).'</option>';
 					}
 					$html .= '
 						</select></td>';
 					break;
 				case 2://テキスト
 					$html .= '
-						<td colspan="2"><input type="text" name="'.$label.'['.$key.']" size="30" value="'.$data[$label][$key].'" /></td>';
+						<td colspan="2"><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data[$label][$key]).'" /></td>';
 					break;
 				case 3://ラジオボタン
 					$selects = explode("\n", $value);
@@ -1462,7 +1464,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 					foreach($selects as $v) {
 						$checked = ($data[$label][$key] == $v) ? ' checked' : '';
 						$html .= '
-						<input type="radio" name="'.$label.'['.$key.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+						<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
 					}
 					$html .= '
 						</td>';
@@ -1478,7 +1480,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 							$checked = ($data[$label][$key] == $v) ? ' checked' : '';
 						}
 						$html .= '
-						<input type="checkbox" name="'.$label.'['.$key.']['.$v.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+						<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
 					}
 					$html .= '
 						</td>';
@@ -1530,24 +1532,24 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 				$means = $entry['means'];
 
 				$html .= '<tr>
-					<th>'.$name.'</th>
+					<th>'.esc_html($name).'</th>
 					<td>';
 					switch($means) {
 					case 0://シングルセレクト
 					case 2://テキスト
 					case 3://ラジオボタン
-						$html .= $data[$label][$key];
+						$html .= esc_html($data[$label][$key]);
 						break;
 					case 1://マルチセレクト
 					case 4://チェックボックス
 						if(is_array($data[$label][$key])) {
 							$c = '';
 							foreach($data[$label][$key] as $v) {
-								$html .= $c.$v;
+								$html .= $c.esc_html($v);
 								$c = ', ';
 							}
 						} else {
-							$html .= $data[$label][$key];
+							$html .= esc_html($data[$label][$key]);
 						}
 						break;
 					}
@@ -1599,7 +1601,7 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 				$value = '';
 				if(is_array($entry['value'])) {
 					foreach($entry['value'] as $k => $v) {
-						$value .= htmlspecialchars($v)."\n";
+						$value .= $v."\n";
 					}
 				}
 				$value = trim($value);
@@ -1607,7 +1609,7 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 
 				$html .= '
 					<tr>
-					<td class="label">'.$name.'</td>';
+					<td class="label">'.esc_html($name).'</td>';
 				switch($means) {
 				case 0://シングルセレクト
 				case 1://マルチセレクト
@@ -1616,21 +1618,21 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 					$multiple_array = ($means == 0) ? '' : '[]';
 					$html .= '
 						<td'.$class.'>
-						<select name="'.$label.'['.$key.']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+						<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
 					if($essential == 1) 
 						$html .= '
 							<option value="#NONE#">'.__('Choose','usces').'</option>';
 					foreach($selects as $v) {
 						$selected = ($data == $v) ? ' selected' : '';
 						$html .= '
-							<option value="'.$v.'"'.$selected.'>'.$v.'</option>';
+							<option value="'.esc_attr($v).'"'.$selected.'>'.esc_html($v).'</option>';
 					}
 					$html .= '
 						</select></td>';
 					break;
 				case 2://テキスト
 					$html .= '
-						<td'.$class.'><input type="text" name="'.$label.'['.$key.']" size="30" value="'.$data.'" /></td>';
+						<td'.$class.'><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data).'" /></td>';
 					break;
 				case 3://ラジオボタン
 					$selects = explode("\n", $value);
@@ -1639,7 +1641,7 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 					foreach($selects as $v) {
 						$checked = ($data == $v) ? ' checked' : '';
 						$html .= '
-						<input type="radio" name="'.$label.'['.$key.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+						<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
 					}
 					$html .= '
 						</td>';
@@ -1655,7 +1657,7 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 							$checked = ($data == $v) ? ' checked' : '';
 						}
 						$html .= '
-						<input type="checkbox" name="'.$label.'['.$key.']['.$v.']" value="'.$v.'"'.$checked.'><label for="'.$label.'['.$key.']['.$v.']" class="iopt_label">'.$v.'</label>';
+						<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
 					}
 					$html .= '
 						</td>';
@@ -1694,9 +1696,9 @@ function has_custom_customer_field_essential() {
 				if($entry['essential'] == 1) {
 					if(!array_key_exists($key, $essential)) {
 						if($entry['means'] == 2) {//Text
-							$mes .= __($entry['name'].'を入力してください。', 'usces')."<br />";
+							$mes .= __(esc_html($entry['name']).'を入力してください。', 'usces')."<br />";
 						} else {
-							$mes .= __($entry['name'].'を選択してください。', 'usces')."<br />";
+							$mes .= __(esc_html($entry['name']).'を選択してください。', 'usces')."<br />";
 						}
 					}
 				}

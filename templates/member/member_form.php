@@ -23,33 +23,33 @@ $html .= '<div class="error_message">' . $this->error_message . '</div>
 <table border="0" cellpadding="0" cellspacing="0" class="customer_form">
 <tr>
 <th scope="row"><em>*</em>' . __('e-mail adress', 'usces') . '</th>
-<td colspan="2"><input name="member[mailaddress1]" id="mailaddress1" type="text" value="' . $usces_members['mailaddress1'] . '" /></td>
+<td colspan="2"><input name="member[mailaddress1]" id="mailaddress1" type="text" value="' . esc_attr($usces_members['mailaddress1']) . '" /></td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('E-mail address (for verification)', 'usces') . '</th>
-<td colspan="2"><input name="member[mailaddress2]" id="mailaddress2" type="text" value="' . $usces_members['mailaddress2'] . '" /></td>
+<td colspan="2"><input name="member[mailaddress2]" id="mailaddress2" type="text" value="' . esc_attr($usces_members['mailaddress2']) . '" /></td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('password', 'usces') . '</th>
-<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . $usces_members['password1'] . '" /></td>
+<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" /></td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('Password (confirm)', 'usces') . '</th>
-<td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . $usces_members['password2'] . '" /></td>
+<td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . esc_attr($usces_members['password2']) . '" /></td>
 </tr>';
 //20100818ysk start
 $html .= usces_custom_field_input($usces_members, 'member', 'name_pre', 'return');
 //20100818ysk end
 $html .= '<tr class="inp1">
 <th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
-<td>' . __('Familly name', 'usces') . '<input name="member[name1]" id="name1" type="text" value="' . $usces_members['name1'] . '" /></td>
-<td>' . __('Given name', 'usces') . '<input name="member[name2]" id="name2" type="text" value="' . $usces_members['name2'] . '" /></td>
+<td>' . __('Familly name', 'usces') . '<input name="member[name1]" id="name1" type="text" value="' . esc_attr($usces_members['name1']) . '" /></td>
+<td>' . __('Given name', 'usces') . '<input name="member[name2]" id="name2" type="text" value="' . esc_attr($usces_members['name2']) . '" /></td>
 </tr>';
 if( USCES_JP ){
 	$html .= '<tr class="inp1">
 	<th scope="row">' . __('furigana', 'usces') . '</th>
-	<td>' . __('Familly name', 'usces') . '<input name="member[name3]" id="name3" type="text" value="' . $usces_members['name3'] . '" /></td>
-	<td>' . __('Given name', 'usces') . '<input name="member[name4]" id="name4" type="text" value="' . $usces_members['name4'] . '" /></td>
+	<td>' . __('Familly name', 'usces') . '<input name="member[name3]" id="name3" type="text" value="' . esc_attr($usces_members['name3']) . '" /></td>
+	<td>' . __('Given name', 'usces') . '<input name="member[name4]" id="name4" type="text" value="' . esc_attr($usces_members['name4']) . '" /></td>
 	</tr>';
 }
 //20100818ysk start
@@ -57,7 +57,7 @@ $html .= usces_custom_field_input($usces_members, 'member', 'name_after', 'retur
 //20100818ysk end
 $html .= '<tr>
 <th scope="row"><em>*</em>' . __('Zip/Postal Code', 'usces') . '</th>
-<td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . $usces_members['zipcode'] . '" />100-1000</td>
+<td colspan="2"><input name="member[zipcode]" id="zipcode" type="text" value="' . esc_attr($usces_members['zipcode']) . '" />100-1000</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('Province', 'usces') . '</th>
@@ -65,23 +65,23 @@ $html .= '<tr>
 </tr>
 <tr class="inp2">
 <th scope="row"><em>*</em>' . __('city', 'usces') . '</th>
-<td colspan="2"><input name="member[address1]" id="address1" type="text" value="' . $usces_members['address1'] . '" />' . __('Kitakami Yokohama', 'usces') . '</td>
+<td colspan="2"><input name="member[address1]" id="address1" type="text" value="' . esc_attr($usces_members['address1']) . '" />' . __('Kitakami Yokohama', 'usces') . '</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('numbers', 'usces') . '</th>
-<td colspan="2"><input name="member[address2]" id="address2" type="text" value="' . $usces_members['address2'] . '" />3-24-555</td>
+<td colspan="2"><input name="member[address2]" id="address2" type="text" value="' . esc_attr($usces_members['address2']) . '" />3-24-555</td>
 </tr>
 <tr>
 <th scope="row">' . __('building name', 'usces') . '</th>
-<td colspan="2"><input name="member[address3]" id="address3" type="text" value="' . $usces_members['address3'] . '" />' . __('tuhanbuild 4F', 'usces') . '</td>
+<td colspan="2"><input name="member[address3]" id="address3" type="text" value="' . esc_attr($usces_members['address3']) . '" />' . __('tuhanbuild 4F', 'usces') . '</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>' . __('Phone number', 'usces') . '</th>
-<td colspan="2"><input name="member[tel]" id="tel" type="text" value="' . $usces_members['tel'] . '" />1000-10-1000</td>
+<td colspan="2"><input name="member[tel]" id="tel" type="text" value="' . esc_attr($usces_members['tel']) . '" />1000-10-1000</td>
 </tr>
 <tr>
 <th scope="row">' . __('FAX number', 'usces') . '</th>
-<td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . $usces_members['fax'] . '" />1000-10-1000</td>
+<td colspan="2"><input name="member[fax]" id="fax" type="text" value="' . esc_attr($usces_members['fax']) . '" />1000-10-1000</td>
 </tr>';
 //20100818ysk start
 $html .= usces_custom_field_input($usces_members, 'member', 'fax_after', 'return');

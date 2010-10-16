@@ -15,7 +15,7 @@ $html .= '<div class="loginbox">
 <form name="loginform" id="loginform" action="' . apply_filters('usces_filter_login_form_action', USCES_MEMBER_URL) . '" method="post">
 <p>
 <label>' . __('e-mail adress', 'usces') . '<br />
-<input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . usces_remembername('return') . '" size="20" /></label>
+<input type="text" name="loginmail" id="loginmail" class="loginmail" value="' . esc_attr(usces_remembername('return')) . '" size="20" /></label>
 </p>
 <p>
 <label>' . __('password', 'usces') . '<br />

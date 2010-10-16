@@ -63,17 +63,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[thankyou]" id="title[thankyou]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['thankyou']; ?>" /></td>
+	    <td><input name="title[thankyou]" id="title[thankyou]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['thankyou']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[thankyou]" id="header[thankyou]" class="mail_header"><?php echo $mail_datas['header']['thankyou']; ?></textarea></td>
+	    <td><textarea name="header[thankyou]" id="header[thankyou]" class="mail_header"><?php echo esc_html($mail_datas['header']['thankyou']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[thankyou]" id="footer[thankyou]" class="mail_footer"><?php echo $mail_datas['footer']['thankyou']; ?></textarea></td>
+	    <td><textarea name="footer[thankyou]" id="footer[thankyou]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['thankyou']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -88,17 +88,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[order]" id="title[order]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['order']; ?>" /></td>
+	    <td><input name="title[order]" id="title[order]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['order']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[order]" id="header[order]" class="mail_header"><?php echo $mail_datas['header']['order']; ?></textarea></td>
+	    <td><textarea name="header[order]" id="header[order]" class="mail_header"><?php echo esc_html($mail_datas['header']['order']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[order]" id="footer[order]" class="mail_footer"><?php echo $mail_datas['footer']['order']; ?></textarea></td>
+	    <td><textarea name="footer[order]" id="footer[order]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['order']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -113,17 +113,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[inquiry]" id="title[inquiry]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['inquiry']; ?>" /></td>
+	    <td><input name="title[inquiry]" id="title[inquiry]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['inquiry']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[inquiry]" id="header[inquiry]" class="mail_header"><?php echo $mail_datas['header']['inquiry']; ?></textarea></td>
+	    <td><textarea name="header[inquiry]" id="header[inquiry]" class="mail_header"><?php echo esc_html($mail_datas['header']['inquiry']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[inquiry]" id="footer[inquiry]" class="mail_footer"><?php echo $mail_datas['footer']['inquiry']; ?></textarea></td>
+	    <td><textarea name="footer[inquiry]" id="footer[inquiry]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['inquiry']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -138,17 +138,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[membercomp]" id="title[membercomp]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['membercomp']; ?>" /></td>
+	    <td><input name="title[membercomp]" id="title[membercomp]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['membercomp']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[membercomp]" id="header[membercomp]" class="mail_header"><?php echo $mail_datas['header']['membercomp']; ?></textarea></td>
+	    <td><textarea name="header[membercomp]" id="header[membercomp]" class="mail_header"><?php echo esc_html($mail_datas['header']['membercomp']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[membercomp]" id="footer[membercomp]" class="mail_footer"><?php echo $mail_datas['footer']['membercomp']; ?></textarea></td>
+	    <td><textarea name="footer[membercomp]" id="footer[membercomp]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['membercomp']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -164,17 +164,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[completionmail]" id="title[completionmail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['completionmail']; ?>" /></td>
+	    <td><input name="title[completionmail]" id="title[completionmail]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['completionmail']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[completionmail]" id="header[completionmail]" class="mail_header"><?php echo $mail_datas['header']['completionmail']; ?></textarea></td>
+	    <td><textarea name="header[completionmail]" id="header[completionmail]" class="mail_header"><?php echo esc_html($mail_datas['header']['completionmail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[completionmail]" id="footer[completionmail]" class="mail_footer"><?php echo $mail_datas['footer']['completionmail']; ?></textarea></td>
+	    <td><textarea name="footer[completionmail]" id="footer[completionmail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['completionmail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -189,17 +189,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[ordermail]" id="title[ordermail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['ordermail']; ?>" /></td>
+	    <td><input name="title[ordermail]" id="title[ordermail]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['ordermail']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[ordermail]" id="header[ordermail]" class="mail_header"><?php echo $mail_datas['header']['ordermail']; ?></textarea></td>
+	    <td><textarea name="header[ordermail]" id="header[ordermail]" class="mail_header"><?php echo esc_html($mail_datas['header']['ordermail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[ordermail]" id="footer[ordermail]" class="mail_footer"><?php echo $mail_datas['footer']['ordermail']; ?></textarea></td>
+	    <td><textarea name="footer[ordermail]" id="footer[ordermail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['ordermail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -214,17 +214,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[changemail]" id="title[changemail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['changemail']; ?>" /></td>
+	    <td><input name="title[changemail]" id="title[changemail]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['changemail']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[changemail]" id="header[changemail]" class="mail_header"><?php echo $mail_datas['header']['changemail']; ?></textarea></td>
+	    <td><textarea name="header[changemail]" id="header[changemail]" class="mail_header"><?php echo esc_html($mail_datas['header']['changemail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[changemail]" id="footer[changemail]" class="mail_footer"><?php echo $mail_datas['footer']['changemail']; ?></textarea></td>
+	    <td><textarea name="footer[changemail]" id="footer[changemail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['changemail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -239,17 +239,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[receiptmail]" id="title[receiptmail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['receiptmail']; ?>" /></td>
+	    <td><input name="title[receiptmail]" id="title[receiptmail]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['receiptmail']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[receiptmail]" id="header[receiptmail]" class="mail_header"><?php echo $mail_datas['header']['receiptmail']; ?></textarea></td>
+	    <td><textarea name="header[receiptmail]" id="header[receiptmail]" class="mail_header"><?php echo esc_html($mail_datas['header']['receiptmail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[receiptmail]" id="footer[receiptmail]" class="mail_footer"><?php echo $mail_datas['footer']['receiptmail']; ?></textarea></td>
+	    <td><textarea name="footer[receiptmail]" id="footer[receiptmail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['receiptmail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -264,17 +264,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[mitumorimail]" id="title[mitumorimail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['mitumorimail']; ?>" /></td>
+	    <td><input name="title[mitumorimail]" id="title[mitumorimail]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['mitumorimail']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[mitumorimail]" id="header[mitumorimail]" class="mail_header"><?php echo $mail_datas['header']['mitumorimail']; ?></textarea></td>
+	    <td><textarea name="header[mitumorimail]" id="header[mitumorimail]" class="mail_header"><?php echo esc_html($mail_datas['header']['mitumorimail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[mitumorimail]" id="footer[mitumorimail]" class="mail_footer"><?php echo $mail_datas['footer']['mitumorimail']; ?></textarea></td>
+	    <td><textarea name="footer[mitumorimail]" id="footer[mitumorimail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['mitumorimail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -289,17 +289,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[cancelmail]" id="title[cancelmail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['cancelmail']; ?>" /></td>
+	    <td><input name="title[cancelmail]" id="title[cancelmail]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['cancelmail']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[cancelmail]" id="header[cancelmail]" class="mail_header"><?php echo $mail_datas['header']['cancelmail']; ?></textarea></td>
+	    <td><textarea name="header[cancelmail]" id="header[cancelmail]" class="mail_header"><?php echo esc_html($mail_datas['header']['cancelmail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[cancelmail]" id="footer[cancelmail]" class="mail_footer"><?php echo $mail_datas['footer']['cancelmail']; ?></textarea></td>
+	    <td><textarea name="footer[cancelmail]" id="footer[cancelmail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['cancelmail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -314,17 +314,17 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th width="150"><?php _e('Title', 'usces'); ?></th>
-	    <td><input name="title[othermail]" id="title[othermail]" type="text" class="mail_title" value="<?php echo $mail_datas['title']['othermail']; ?>" /></td>
+	    <td><input name="title[othermail]" id="title[othermail]" type="text" class="mail_title" value="<?php echo esc_attr($mail_datas['title']['othermail']); ?>" /></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('header', 'usces'); ?></th>
-	    <td><textarea name="header[othermail]" id="header[othermail]" class="mail_header"><?php echo $mail_datas['header']['othermail']; ?></textarea></td>
+	    <td><textarea name="header[othermail]" id="header[othermail]" class="mail_header"><?php echo esc_html($mail_datas['header']['othermail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[othermail]" id="footer[othermail]" class="mail_footer"><?php echo $mail_datas['footer']['othermail']; ?></textarea></td>
+	    <td><textarea name="footer[othermail]" id="footer[othermail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['othermail']); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>

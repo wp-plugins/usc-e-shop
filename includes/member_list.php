@@ -109,14 +109,14 @@ jQuery(document).ready(function($){
 			$selected = '';
 		}
 ?>
-		    <option value="<?php echo $value ?>"<?php echo $selected ?>><?php echo $key ?></option>
+		    <option value="<?php echo esc_attr($value); ?>"<?php echo $selected; ?>><?php echo esc_html($key); ?></option>
 <?php endforeach; ?>
     	</select></td>
 		<td><?php _e('key words', 'usces'); ?></td>
-		<td><input name="search[word]" type="text" value="<?php echo $arr_search['word'] ?>" class="searchword" maxlength="50" /></td>
+		<td><input name="search[word]" type="text" value="<?php echo esc_attr($arr_search['word']); ?>" class="searchword" maxlength="50" /></td>
 		<td><input name="searchIn" type="submit" class="searchbutton" value="<?php _e('Search', 'usces'); ?>" />
 		<input name="searchOut" type="submit" class="searchbutton" value="<?php _e('Cancellation', 'usces'); ?>" />
-		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo $DT->searchSwitchStatus; ?>" />
+		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo esc_attr($DT->searchSwitchStatus); ?>" />
 		</td>
 		</tr>
 		</table>
@@ -128,7 +128,7 @@ jQuery(document).ready(function($){
 <table id="mainDataTable" cellspacing="1">
 	<tr>
 <?php foreach ( (array)$arr_header as $value ) : ?>
-		<th scope="col"><?php echo $value ?></th>
+		<th scope="col"><?php echo $value; ?></th>
 <?php endforeach; ?>
 		<th scope="col">&nbsp;</th>
 	</tr>

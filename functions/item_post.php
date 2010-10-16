@@ -169,7 +169,7 @@ function _list_item_option_meta_row( $entry ) {
 	}
 	
 	$readonly = " readonly='true'";
-	$key = attribute_escape(substr($entry['meta_key'],6));
+	$key = esc_attr(substr($entry['meta_key'],6));
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
 		if($meankey == $entry['meta_value']['means']) {
@@ -177,24 +177,24 @@ function _list_item_option_meta_row( $entry ) {
 		}else{
 			$selected = '';
 		}
-		$meansoption .= '<option value="' . $meankey . '"' . $selected . '>' . $meanvalue . "</option>\n";
+		$meansoption .= '<option value="' . esc_attr($meankey) . '"' . $selected . '>' . esc_html($meanvalue) . "</option>\n";
 	}
 	$essential = $entry['meta_value']['essential'] == 1 ? " checked='checked'" : "";
 	$value = '';
 	if(is_array($entry['meta_value']['value'])){
 		foreach($entry['meta_value']['value'] as $k => $v){
-			$value .= htmlspecialchars($v) . "\n";
+			$value .= $v . "\n";
 		}
 	}
-	$value = trim($value);
+	$value = esc_attr(trim($value));
 	$id = (int) $entry['meta_id'];
 
 	$r .= "\n\t<tr id='itemopt-{$id}' class='{$style}'>";
 	$r .= "\n\t\t<td class='left'><div><input name='itemopt[{$id}][key]' id='itemopt[{$id}][key]' class='optname' type='text' size='20' value='{$key}'{$readonly} /></div>";
 	$r .= "\n\t\t<div class='optcheck'><select name='itemopt[{$id}][means]' id='itemopt[{$id}][means]'>" . $meansoption . "</select>\n";
 	$r .= "<input name='itemopt[{$id}][essential]' id='itemopt[{$id}][essential]' type='checkbox' value='1'{$essential} /><label for='itemopt[{$id}][essential]'>" . __('Required','usces') . "</label></div>";
-	$r .= "\n\t\t<div class='submit'><input name='deleteitemopt[{$id}]' id='deleteitemopt[{$id}]' type='button' value='".attribute_escape(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"deleteitemopt\", {$id});' />";
-	$r .= "\n\t\t<input name='updateitemopt' id='updateitemopt[{$id}]' type='button' value='".attribute_escape(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"updateitemopt\", {$id});' /></div>";
+	$r .= "\n\t\t<div class='submit'><input name='deleteitemopt[{$id}]' id='deleteitemopt[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"deleteitemopt\", {$id});' />";
+	$r .= "\n\t\t<input name='updateitemopt' id='updateitemopt[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"updateitemopt\", {$id});' /></div>";
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='itemopt[{$id}][value]' id='itemopt[{$id}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
@@ -214,13 +214,13 @@ function _list_item_sku_meta_row( $entry ) {
 		return;
 	}
 	$readonly = "";
-	$key = attribute_escape(substr($entry['meta_key'],6));
+	$key = esc_attr(substr($entry['meta_key'],6));
 	$cprice = $entry['meta_value']['cprice'];
 	$price = $entry['meta_value']['price'];
 	$zaikonum = $entry['meta_value']['zaikonum'];
 	$zaiko = $entry['meta_value']['zaiko'];
-	$skudisp = $entry['meta_value']['disp'];
-	$skuunit = $entry['meta_value']['unit'];
+	$skudisp = esc_attr($entry['meta_value']['disp']);
+	$skuunit = esc_attr($entry['meta_value']['unit']);
 	$skugptekiyo = $entry['meta_value']['gptekiyo'];
 	$charging_type = $entry['meta_value']['charging_type'];
 	$id = (int) $entry['meta_id'];
@@ -250,8 +250,8 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= "\n\t</tr>";
 	$r .= "\n\t<tr>";
 	$r .= "\n\t\t<td class='item-sku-key rowbottom'><input name='itemsku[{$id}][skudisp]' id='itemsku[{$id}][skudisp]' class='skudisp' type='text' value='{$skudisp}' />";
-	$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".attribute_escape(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
-	$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".attribute_escape(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
+	$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
+	$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-sku-cprice rowbottom'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
@@ -278,15 +278,15 @@ function _payment_list_row( $id, $payments ) {
 
 	if ( !$payments ) return;
 	
-	$name = $payments['name'];
-	$explanation = $payments['explanation'];
+	$name = esc_attr($payments['name']);
+	$explanation = esc_attr($payments['explanation']);
 	$settlement = $payments['settlement'];
-	$module = $payments['module'];
+	$module = esc_attr($payments['module']);
 
 	$r .= "\n\t<tr>";
 	$r .= "\n\t\t<td class='paymentname'><div><input name='payment[{$id}][name]' id='payment[{$id}][name]' class='paymentname' type='text' value='{$name}' /></div>";
-	$r .= "\n\t\t<div class='submit'><input name='deletepayment' id='deletepayment[{$id}]' type='button' value='".attribute_escape(__( 'Delete' ))."' onclick='payment.post(\"del\", {$id});' />";
-	$r .= "\n\t\t<input name='updatepayment' id='updatepayment[{$id}]' type='button' value='".attribute_escape(__( 'Update' ))."' onclick='payment.post(\"update\", {$id});' /></div>";
+	$r .= "\n\t\t<div class='submit'><input name='deletepayment' id='deletepayment[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='payment.post(\"del\", {$id});' />";
+	$r .= "\n\t\t<input name='updatepayment' id='updatepayment[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='payment.post(\"update\", {$id});' /></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='paymentexplanation'><textarea name='payment[{$id}][explanation]' id='payment[{$id}][explanation]' class='paymentexplanation'>{$explanation}</textarea></td>";
 	$r .= "\n\t\t<td class='paymentsettlement'><select name='payment[{$id}][settlement]' id='payment[{$id}][settlement]' class='paymentsettlement'>";
@@ -307,7 +307,7 @@ function common_option_meta_form() {
 	$means = get_option('usces_item_option_select');
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
-		$meansoption .= '<option value="' . $meankey . '">' . $meanvalue . "</option>\n";
+		$meansoption .= '<option value="' . esc_attr($meankey) . '">' . esc_html($meanvalue) . "</option>\n";
 	}
 ?>
 <p><strong><?php _e('Add a new option','usces') ?> : </strong></p>
@@ -355,7 +355,7 @@ function item_option_meta_form() {
 	$means = get_option('usces_item_option_select');
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
-		$meansoption .= '<option value="' . $meankey . '">' . $meanvalue . "</option>\n";
+		$meansoption .= '<option value="' . esc_attr($meankey) . '">' . esc_html($meanvalue) . "</option>\n";
 	}
 ?>
 <p><strong><?php _e('Applicable product options','usces') ?> : </strong></p>
@@ -376,7 +376,7 @@ function item_option_meta_form() {
 <?php
 
 	foreach ( $keys as $key ) {
-		$key = attribute_escape( substr($key, 6) );
+		$key = esc_attr( substr($key, 6) );
 		echo "\n<option value='$key'>$key</option>";
 	}
 ?>
@@ -451,7 +451,7 @@ function item_sku_meta_form() {
 <?php
 	$zaikoselectarray = get_option('usces_zaiko_status');
 	foreach ( $zaikoselectarray as $v => $l ) {
-		echo "\n<option value='{$v}'>$l</option>";
+		echo "\n<option value='{" . esc_attr($v) . "'>" . esc_html($l) . "</option>";
 	}
 ?>
 </select>
@@ -512,7 +512,7 @@ function payment_form() {
 <td class='paymentsettlement'>
 	<select name="newsettlement" id="newsettlement" class='paymentsettlement'>
 <?php foreach ($usces->payment_structure as $psk => $psv) { ?>
-		<option value="<?php echo $psk; ?>"><?php echo $psv; ?></option>
+		<option value="<?php echo esc_attr($psk); ?>"><?php echo esc_html($psv); ?></option>
 <?php } ?>
 	</select>
 </td>
@@ -542,18 +542,18 @@ function add_item_option_meta( $post_ID ) {
 	$value = array();
 	$protected = array( '#NONE#', '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
-	$newoptname = isset($_POST['newoptname']) ? stripslashes( trim( $_POST['newoptname'] ) ) : '';
+	$newoptname = isset($_POST['newoptname']) ? trim( $_POST['newoptname'] ) : '';
 	$newoptmeans = isset($_POST['newoptmeans']) ? $_POST['newoptmeans']: 0;
 	$newoptessential = isset($_POST['newoptessential']) ? $_POST['newoptessential']: 0;
 
 	if($newoptmeans == 0 || $newoptmeans == 1){
-		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', stripslashes( $_POST['newoptvalue'] ) ) : '';
+		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', $_POST['newoptvalue'] ) : '';
 		foreach((array)$newoptvalue as $v){
 			if(trim( $v ) != '') 
 				$nov[] = trim( $v );
 		}
 	}else{
-		$newoptvalue = isset($_POST['newoptvalue']) ? stripslashes( $_POST['newoptvalue'] ) : '';
+		$newoptvalue = isset($_POST['newoptvalue']) ? $_POST['newoptvalue'] : '';
 		$nov = $newoptvalue;
 	}
 
@@ -592,13 +592,13 @@ function add_item_sku_meta( $post_ID ) {
 	$value = array();
 	$protected = array( '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
-	$newskuname = isset($_POST['newskuname']) ? stripslashes( trim( $_POST['newskuname'] ) ) : '';
-	$newskucprice = isset($_POST['newskucprice']) ? stripslashes( $_POST['newskucprice'] ): '';
-	$newskuprice = isset($_POST['newskuprice']) ? stripslashes( $_POST['newskuprice'] ): '';
-	$newskuzaikonum = isset($_POST['newskuzaikonum']) ? stripslashes( $_POST['newskuzaikonum'] ): '';
+	$newskuname = isset($_POST['newskuname']) ? trim( $_POST['newskuname'] ) : '';
+	$newskucprice = isset($_POST['newskucprice']) ? $_POST['newskucprice']: '';
+	$newskuprice = isset($_POST['newskuprice']) ? $_POST['newskuprice']: '';
+	$newskuzaikonum = isset($_POST['newskuzaikonum']) ? $_POST['newskuzaikonum']: '';
 	$newskuzaikoselect = isset($_POST['newskuzaikoselect']) ? $_POST['newskuzaikoselect'] : '';
-	$newskudisp = isset($_POST['newskudisp']) ? stripslashes( trim( $_POST['newskudisp'] ) ) : '';
-	$newskuunit = isset($_POST['newskuunit']) ? stripslashes( trim( $_POST['newskuunit'] ) ) : '';
+	$newskudisp = isset($_POST['newskudisp']) ? trim( $_POST['newskudisp'] ) : '';
+	$newskuunit = isset($_POST['newskuunit']) ? trim( $_POST['newskuunit'] ) : '';
 	$newskugptekiyo = isset($_POST['newskugptekiyo']) ? $_POST['newskugptekiyo'] : '';
 	$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : '';
 
@@ -650,10 +650,10 @@ function add_payment_method() {
 	
 	$protected = array( '#NONE#', '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
-	$newname = isset($_POST['newname']) ? stripslashes( trim( $_POST['newname'] ) ) : '';
-	$newexplanation = isset($_POST['newexplanation']) ? stripslashes( trim( $_POST['newexplanation'] ) ) : '';
+	$newname = isset($_POST['newname']) ? trim( $_POST['newname'] ) : '';
+	$newexplanation = isset($_POST['newexplanation']) ? trim( $_POST['newexplanation'] ) : '';
 	$newsettlement = isset($_POST['newsettlement']) ? $_POST['newsettlement'] : '';
-	$newmodule = isset($_POST['newmodule']) ? stripslashes( trim( $_POST['newmodule'] ) ) : '';
+	$newmodule = isset($_POST['newmodule']) ? trim( $_POST['newmodule'] ) : '';
 
 	if ( !empty( $newname) ) {
 		// We have a key/value pair. If both the select and the
@@ -690,13 +690,13 @@ function up_item_option_meta( $post_ID ) {
 	$optessential = isset($_POST['optessential']) ? $_POST['optessential']: 0;
 
 	if($optmeans == 0 || $optmeans == 1){
-		$optvalue = isset($_POST['optvalue']) ? explode('\n', stripslashes( $_POST['optvalue'] ) ) : '';
+		$optvalue = isset($_POST['optvalue']) ? explode('\n', trim( $_POST['optvalue'] ) ) : '';
 		foreach((array)$optvalue as $v){
 			if(trim( $v ) != '') 
 				$nov[] = trim( $v );
 		}
 	}else{
-		$optvalue = isset($_POST['optvalue']) ? stripslashes( $_POST['optvalue'] ) : '';
+		$optvalue = isset($_POST['optvalue']) ? trim( $_POST['optvalue'] ) : '';
 		$nov = $optvalue;
 	}
 
@@ -729,14 +729,14 @@ function up_item_sku_meta( $post_ID ) {
 	$value = array();
 	$protected = array( '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
-	$skuname = isset($_POST['skuname']) ? stripslashes( $_POST['skuname'] ) : '';
+	$skuname = isset($_POST['skuname']) ? trim( $_POST['skuname'] ) : '';
 	$skumetaid = isset($_POST['skumetaid']) ? (int)$_POST['skumetaid'] : '';
-	$skucprice = isset($_POST['skucprice']) ? stripslashes( $_POST['skucprice'] ): 0;
-	$skuprice = isset($_POST['skuprice']) ? stripslashes( $_POST['skuprice'] ): 0;
-	$skuzaikonum = isset($_POST['skuzaikonum']) ? stripslashes( $_POST['skuzaikonum'] ): 0;
+	$skucprice = isset($_POST['skucprice']) ? trim( $_POST['skucprice'] ): 0;
+	$skuprice = isset($_POST['skuprice']) ? trim( $_POST['skuprice'] ): 0;
+	$skuzaikonum = isset($_POST['skuzaikonum']) ? trim( $_POST['skuzaikonum'] ): 0;
 	$skuzaiko = isset($_POST['skuzaiko']) ? (int)$_POST['skuzaiko'] : '';
-	$skudisp = isset($_POST['skudisp']) ? stripslashes( $_POST['skudisp'] ): '';
-	$skuunit = isset($_POST['skuunit']) ? stripslashes( $_POST['skuunit'] ): '';
+	$skudisp = isset($_POST['skudisp']) ? trim( $_POST['skudisp'] ): '';
+	$skuunit = isset($_POST['skuunit']) ? trim( $_POST['skuunit'] ): '';
 	$skugptekiyo = isset($_POST['skugptekiyo']) ? (int)$_POST['skugptekiyo'] : 0;
 	$charging_type = isset($_POST['charging_type']) ? (int)$_POST['charging_type'] : 0;
 
@@ -773,10 +773,10 @@ function up_payment_method() {
 
 	//$id = isset($_POST['id']) ? (int)$_POST['id'] : '';
 	$id = $_POST['id'];
-	$name = isset($_POST['name']) ? stripslashes( trim( $_POST['name'] ) ) : '';
-	$explanation = isset($_POST['explanation']) ? stripslashes( trim( $_POST['explanation'] ) ) : '';
+	$name = isset($_POST['name']) ? trim( $_POST['name'] ) : '';
+	$explanation = isset($_POST['explanation']) ? trim( $_POST['explanation'] ) : '';
 	$settlement = isset($_POST['settlement']) ? $_POST['settlement'] : '';
-	$module = isset($_POST['module']) ? stripslashes( trim( $_POST['module'] ) ) : '';
+	$module = isset($_POST['module']) ? trim( $_POST['module'] ) : '';
 
 	if ( !empty( $name) && $id != '') {
 		// We have a key/value pair. If both the select and the
@@ -856,7 +856,7 @@ function del_payment_method() {
 function select_common_option( $post_ID ) {
 	global $wpdb;
 	
-	$key = isset($_POST['key']) ? '_iopt_' . stripslashes( $_POST['key'] ) : '';
+	$key = isset($_POST['key']) ? '_iopt_' . trim( $_POST['key'] ) : '';
 	if(!$post_ID || !$key) return ;
 	
 	$meta_value = $wpdb->get_var( $wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = %s AND meta_key = '%s' ORDER BY meta_id", $post_ID, $key) );
@@ -871,10 +871,10 @@ function select_common_option( $post_ID ) {
 	$value = '';
 	if($means < 2){
 		foreach($array['value'] as $k => $v){
-			$value .= htmlspecialchars($v) . "\n";
+			$value .= trim($v) . "\n";
 		}
 	}else{
-			$value .= htmlspecialchars($array['value']) . "\n";
+			$value .= trim($array['value']) . "\n";
 	}
 	$res = $means . $essential . $value;
 	return $res;
@@ -883,7 +883,7 @@ function select_common_option( $post_ID ) {
 function select_item_sku( $post_ID ) {
 	global $wpdb;
 	
-	$key = isset($_POST['key']) ? '_isku_' . stripslashes( $_POST['key'] ) : '';
+	$key = isset($_POST['key']) ? '_isku_' . trim( $_POST['key'] ) : '';
 	if(!$key) return ;
 	
 	$meta_value = $wpdb->get_var( $wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '%s' GROUP BY meta_key LIMIT 1", $key) );
@@ -912,7 +912,7 @@ function has_item_sku_list() {
 	$r = "\t<option value='#NONE#'>" . __('- Select --','usces') . "</option>\n";
 	foreach ( $meta as $key ){
 		$key = substr($key, 6);
-		$r .= "\t<option value='{$key}'>{$key}</option>\n";
+		$r .= "\t<option value='" . esc_attr($key) . "'>" . esc_html($key) . "</option>\n";
 	}
 	
 	return $r;
@@ -920,7 +920,7 @@ function has_item_sku_list() {
 
 function add_delivery_method() {
 	$options = get_option('usces');
-	$name = htmlspecialchars($_POST['name']);
+	$name = trim($_POST['name']);
 	foreach((array)$options['delivery_method'] as $deli){
 		$ids[] = (int)$deli['id'];
 	}
@@ -944,7 +944,7 @@ function add_delivery_method() {
 
 function update_delivery_method() {
 	$options = get_option('usces');
-	$name = $_POST['name'];
+	$name = trim($_POST['name']);
 	$id = (int)$_POST['id'];
 	$charge = (int)$_POST['charge'];
 	for($i=0; $i<count($options['delivery_method']); $i++){
@@ -1069,7 +1069,7 @@ function add_shipping_charge() {
 	global $usces;
 
 	$options = get_option('usces');
-	$name = htmlspecialchars($_POST['name']);
+	$name = trim($_POST['name']);
 	$value = $_POST['value'];
 	foreach((array)$options['shipping_charge'] as $charge){
 		$ids[] = (int)$charge['id'];
@@ -1101,8 +1101,8 @@ function add_shipping_charge() {
 function update_shipping_charge() {
 	global $usces;
 	$options = get_option('usces');
-	$name = htmlspecialchars($_POST['name']);
-	$value = $_POST['value'];
+	$name = trim($_POST['name']);
+	$value = trim($_POST['value']);
 	$id = (int)$_POST['id'];
 //	$prefs = get_option('usces_pref');
 	$prefs = $usces->options['province'];
@@ -1278,7 +1278,7 @@ function get_order_item( $item_code ) {
 	$pict = $match[1];
 	$skus = $usces->get_skus( $post_id );
 	$optkeys = $usces->get_itemOptionKey( $post_id );
-	$itemName = $usces->getItemName($post_id);
+	$itemName = esc_html($usces->getItemName($post_id));
 	
 	$r = '';
 	$r .= $pict . "\n";
@@ -1303,13 +1303,13 @@ function get_order_item( $item_code ) {
 	$r .= "</thead>\n";
 	$r .= "<tbody>\n";
 	for ($i=0; $i<count($skus['key']); $i++) :
-		$sku = $skus['key'][$i];
-		$cprice = $skus['cprice'][$i];
-		$price = $skus['price'][$i];
-		$zaiko = $usces->zaiko_status[$skus['zaiko'][$i]];
-		$zaikonum = $skus['zaikonum'][$i];
-		$disp = $skus['disp'][$i];
-		$unit = $skus['unit'][$i];
+		$sku = esc_attr($skus['key'][$i]);
+		$cprice = esc_attr($skus['cprice'][$i]);
+		$price = esc_attr($skus['price'][$i]);
+		$zaiko = esc_attr($usces->zaiko_status[$skus['zaiko'][$i]]);
+		$zaikonum = esc_attr($skus['zaikonum'][$i]);
+		$disp = esc_attr($skus['disp'][$i]);
+		$unit = esc_attr($skus['unit'][$i]);
 		$gptekiyo = $skus['gptekiyo'][$i];
 		$r .= "<tr>\n";
 		$r .= "<td rowspan='2'>" . $sku . "</td>\n";
@@ -1339,8 +1339,8 @@ function get_order_item( $item_code ) {
 		$r .= "<td colspan='7'>\n";
 		foreach ($optkeys as $optkey) :
 			
-			$key = '_iopt_' . $optkey;
-			$value = get_post_custom_values($key, $post_id);
+			$value = get_post_custom_values(('_iopt_' . $optkey), $post_id);
+			$key = '_iopt_' . esc_attr($optkey);
 			if(!$value) continue;
 			$values = maybe_unserialize($value[0]);
 			$means = (int)$values['means'][0];
@@ -1462,16 +1462,16 @@ function item_save_metadata() {
   }
 
 	if(isset($_POST['itemName'])){
-		$itemName = wp_specialchars($_POST['itemName']);
+		$itemName = trim($_POST['itemName']);
 		update_post_meta($post_id, '_itemName', $itemName);
 		$usces->set_item_mime($post_id, 'item');
 	}
 	if(isset($_POST['itemCode'])){
-		$itemCode = wp_specialchars($_POST['itemCode']);
+		$itemCode = trim($_POST['itemCode']);
 		update_post_meta($post_id, '_itemCode', $itemCode);
 	}
 	if(isset($_POST['itemRestriction'])){
-		$itemRestriction = wp_specialchars($_POST['itemRestriction']);
+		$itemRestriction = trim($_POST['itemRestriction']);
 		update_post_meta($post_id, '_itemRestriction', $itemRestriction);
 	}
 	if(isset($_POST['itemPointrate'])){
@@ -1504,7 +1504,7 @@ function item_save_metadata() {
 	}
 	
 	if(isset($_POST['itemShipping'])){
-		$itemShipping = wp_specialchars($_POST['itemShipping']);
+		$itemShipping = trim($_POST['itemShipping']);
 		update_post_meta($post_id, '_itemShipping', $itemShipping);
 	}
 	if(isset($_POST['itemDeliveryMethod'])){
@@ -1515,7 +1515,7 @@ function item_save_metadata() {
 		update_post_meta($post_id, '_itemDeliveryMethod', $itemDeliveryMethod);
 	}
 	if(isset($_POST['itemShippingCharge'])){
-		$itemShippingCharge = wp_specialchars($_POST['itemShippingCharge']);
+		$itemShippingCharge = trim($_POST['itemShippingCharge']);
 		update_post_meta($post_id, '_itemShippingCharge', $itemShippingCharge);
 	}
 	$itemIndividualSCharge = isset($_POST['itemIndividualSCharge']) ? 1 : 0;
@@ -1580,7 +1580,7 @@ function _list_custom_order_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
 
-	$name = $entry['name'];
+	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_order_select');
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue) {
@@ -1589,16 +1589,16 @@ function _list_custom_order_meta_row($key, $entry) {
 		} else {
 			$selected = '';
 		}
-		$meansoption .= '<option value="'.$meankey.'"'.$selected.'>'.$meanvalue."</option>\n";
+		$meansoption .= '<option value="'.esc_attr($meankey).'"'.$selected.'>'.esc_html($meanvalue)."</option>\n";
 	}
 	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
 	$value = '';
 	if(is_array($entry['value'])) {
 		foreach($entry['value'] as $k => $v) {
-			$value .= htmlspecialchars($v)."\n";
+			$value .= $v."\n";
 		}
 	}
-	$value = trim($value);
+	$value = esc_attr(trim($value));
 
 	$r .= "\n\t<tr id='csod-{$key}' class='{$style}'>";
 	$r .= "\n\t\t<td class='left'><div><input type='text' name='csod[{$key}][key]' id='csod[{$key}][key]' class='optname' size='20' value='{$key}' readonly /></div>";
@@ -1606,10 +1606,10 @@ function _list_custom_order_meta_row($key, $entry) {
 	$r .= "\n\t\t<div class='optcheck'><select name='csod[{$key}][means]' id='csod[{$key}][means]'>".$meansoption."</select>\n";
 	$r .= "<input type='checkbox' name='csod[{$key}][essential]' id='csod[{$key}][essential]' value='1'{$essential} /><label for='csod[{$key}][essential]'>".__('Required','usces')."</label></div>";
 //20100818ysk start
-	//$r .= "\n\t\t<div class='submit'><input type='button' name='deletecsod[{$key}]' id='deletecsod[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customOrder.del(\"{$key}\");' />";
-	//$r .= "\n\t\t<input type='button' name='updatecsod' id='updatecsod[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customOrder.upd(\"{$key}\");' /></div>";
-	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csod[{$key}]' id='del_csod[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delOrder(\"{$key}\");' />";
-	$r .= "\n\t\t<input type='button' name='upd_csod[{$key}]' id='upd_csod[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updOrder(\"{$key}\");' /></div>";
+	//$r .= "\n\t\t<div class='submit'><input type='button' name='deletecsod[{$key}]' id='deletecsod[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customOrder.del(\"{$key}\");' />";
+	//$r .= "\n\t\t<input type='button' name='updatecsod' id='updatecsod[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customOrder.upd(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csod[{$key}]' id='del_csod[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delOrder(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_csod[{$key}]' id='upd_csod[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updOrder(\"{$key}\");' /></div>";
 //20100818ysk end
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csod[{$key}][value]' id='csod[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
@@ -1669,18 +1669,18 @@ function custom_field_ajax() {
 	$meta = usces_has_custom_field_meta($_POST['field']);
 
 	if(isset($_POST['add'])) {
-		$newkey = isset($_POST['newkey']) ? stripslashes(trim($_POST['newkey'])) : '';
-		$newname = isset($_POST['newname']) ? stripslashes(trim($_POST['newname'])) : '';
+		$newkey = isset($_POST['newkey']) ? trim($_POST['newkey']) : '';
+		$newname = isset($_POST['newname']) ? trim($_POST['newname']) : '';
 		$newmeans = isset($_POST['newmeans']) ? $_POST['newmeans'] : 0;
 		$newessential = isset($_POST['newessential']) ? $_POST['newessential'] : 0;
-		$newposition = isset($_POST['newposition']) ? $_POST['newposition'] : '';
+		$newposition = isset($_POST['newposition']) ? trim($_POST['newposition']) : '';
 
 		if($newmeans == 2) {//Text
-			$newvalue = isset($_POST['newvalue']) ? stripslashes($_POST['newvalue']) : '';
+			$newvalue = isset($_POST['newvalue']) ? trim($_POST['newvalue']) : '';
 			$nv = $newvalue;
 
 		} else {
-			$newvalue = isset($_POST['newvalue']) ? explode('\n', stripslashes($_POST['newvalue'])) : '';
+			$newvalue = isset($_POST['newvalue']) ? explode('\n', trim($_POST['newvalue'])) : '';
 			foreach((array)$newvalue as $v) {
 				if(trim($v) != '') 
 					$nv[] = trim($v);
@@ -1699,18 +1699,18 @@ function custom_field_ajax() {
 		}
 
 	} elseif(isset($_POST['update'])) {
-		$key = isset($_POST['key']) ? stripslashes(trim($_POST['key'])) : '';
-		$name = isset($_POST['name']) ? stripslashes(trim($_POST['name'])) : '';
+		$key = isset($_POST['key']) ? trim($_POST['key']) : '';
+		$name = isset($_POST['name']) ? trim($_POST['name']) : '';
 		$means = isset($_POST['means']) ? $_POST['means'] : 0;
 		$essential = isset($_POST['essential']) ? $_POST['essential'] : 0;
-		$position = isset($_POST['position']) ? $_POST['position'] : '';
+		$position = isset($_POST['position']) ? trim($_POST['position']) : '';
 
 		if($means == 2) {//Text
-			$value = isset($_POST['value']) ? stripslashes($_POST['value']) : '';
+			$value = isset($_POST['value']) ? trim($_POST['value']) : '';
 			$nv = $value;
 
 		} else {
-			$value = isset($_POST['value']) ? explode('\n', stripslashes($_POST['value'])) : '';
+			$value = isset($_POST['value']) ? explode('\n', trim($_POST['value'])) : '';
 			foreach((array)$value as $v) {
 				if(trim($v) != '') 
 					$nv[] = trim($v);
@@ -1727,7 +1727,7 @@ function custom_field_ajax() {
 		}
 
 	} elseif(isset($_POST['delete'])) {
-		$key = isset($_POST['key']) ? $_POST['key'] : '';
+		$key = isset($_POST['key']) ? trim($_POST['key']) : '';
 		unset($meta[$key]);
 		update_option($field, serialize($meta));
 	}
@@ -1764,26 +1764,26 @@ function _list_custom_customer_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
 
-	$name = $entry['name'];
+	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_customer_select');
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue) {
 		$selected = ($meankey == $entry['means']) ? " selected='selected'" : "";
-		$meansoption .= "<option value='".$meankey."'".$selected.">".$meanvalue."</option>\n";
+		$meansoption .= "<option value='".esc_attr($meankey)."'".$selected.">".esc_html($meanvalue)."</option>\n";
 	}
 	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
 	$value = '';
 	if(is_array($entry['value'])) {
 		foreach($entry['value'] as $k => $v) {
-			$value .= htmlspecialchars($v)."\n";
+			$value .= $v."\n";
 		}
 	}
-	$value = trim($value);
+	$value = esc_attr(trim($value));
 	$positions = get_option('usces_custom_field_position_select');
 	$positionsoption = '';
 	foreach($positions as $poskey => $posvalue) {
 		$selected = ($poskey == $entry['position']) ? " selected='selected'" : "";
-		$positionsoption .= "<option value='".$poskey."'".$selected.">".$posvalue."</option>\n";
+		$positionsoption .= "<option value='".esc_attr($poskey)."'".$selected.">".esc_html($posvalue)."</option>\n";
 	}
 
 	$r .= "\n\t<tr id='cscs-{$key}' class='{$style}'>";
@@ -1792,8 +1792,8 @@ function _list_custom_customer_meta_row($key, $entry) {
 	$r .= "\n\t\t<div class='optcheck'><select name='cscs[{$key}][means]' id='cscs[{$key}][means]'>".$meansoption."</select>\n";
 	$r .= "<input type='checkbox' name='cscs[{$key}][essential]' id='cscs[{$key}][essential]' value='1'{$essential} /><label for='cscs[{$key}][essential]'>".__('Required','usces')."</label>\n";
 	$r .= "<select name='cscs[{$key}][position]' id='cscs[{$key}][position]'>".$positionsoption."</select></div>";
-	$r .= "\n\t\t<div class='submit'><input type='button' name='del_cscs[{$key}]' id='del_cscs[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delCustomer(\"{$key}\");' />";
-	$r .= "\n\t\t<input type='button' name='upd_cscs[{$key}]' id='upd_cscs[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updCustomer(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_cscs[{$key}]' id='del_cscs[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delCustomer(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_cscs[{$key}]' id='upd_cscs[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updCustomer(\"{$key}\");' /></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='cscs[{$key}][value]' id='cscs[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;
@@ -1806,26 +1806,26 @@ function _list_custom_delivery_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
 
-	$name = $entry['name'];
+	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_delivery_select');
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue) {
 		$selected = ($meankey == $entry['means']) ? " selected='selected'" : "";
-		$meansoption .= "<option value='".$meankey."'".$selected.">".$meanvalue."</option>\n";
+		$meansoption .= "<option value='".esc_attr($meankey)."'".$selected.">".esc_html($meanvalue)."</option>\n";
 	}
 	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
 	$value = '';
 	if(is_array($entry['value'])) {
 		foreach($entry['value'] as $k => $v) {
-			$value .= htmlspecialchars($v)."\n";
+			$value .= $v."\n";
 		}
 	}
-	$value = trim($value);
+	$value = esc_attr(trim($value));
 	$positions = get_option('usces_custom_field_position_select');
 	$positionsoption = '';
 	foreach($positions as $poskey => $posvalue) {
 		$selected = ($poskey == $entry['position']) ? " selected='selected'" : "";
-		$positionsoption .= "<option value='".$poskey."'".$selected.">".$posvalue."</option>\n";
+		$positionsoption .= "<option value='".esc_attr($poskey)."'".$selected.">".esc_html($posvalue)."</option>\n";
 	}
 
 	$r .= "\n\t<tr id='csde-{$key}' class='{$style}'>";
@@ -1834,8 +1834,8 @@ function _list_custom_delivery_meta_row($key, $entry) {
 	$r .= "\n\t\t<div class='optcheck'><select name='csde[{$key}][means]' id='csde[{$key}][means]'>".$meansoption."</select>\n";
 	$r .= "<input type='checkbox' name='csde[{$key}][essential]' id='csde[{$key}][essential]' value='1'{$essential} /><label for='csde[{$key}][essential]'>".__('Required','usces')."</label>\n";
 	$r .= "<select name='csde[{$key}][position]' id='csde[{$key}][position]'>".$positionsoption."</select></div>";
-	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csde[{$key}]' id='del_csde[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delDelivery(\"{$key}\");' />";
-	$r .= "\n\t\t<input type='button' name='upd_csde[{$key}]' id='upd_csde[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updDelivery(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csde[{$key}]' id='del_csde[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delDelivery(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_csde[{$key}]' id='upd_csde[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updDelivery(\"{$key}\");' /></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csde[{$key}][value]' id='csde[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;
@@ -1848,26 +1848,26 @@ function _list_custom_member_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
 
-	$name = $entry['name'];
+	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_member_select');
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue) {
 		$selected = ($meankey == $entry['means']) ? " selected='selected'" : "";
-		$meansoption .= "<option value='".$meankey."'".$selected.">".$meanvalue."</option>\n";
+		$meansoption .= "<option value='".esc_attr($meankey)."'".$selected.">".esc_html($meanvalue)."</option>\n";
 	}
 	$essential = $entry['essential'] == 1 ? " checked='checked'" : "";
 	$value = '';
 	if(is_array($entry['value'])) {
 		foreach($entry['value'] as $k => $v) {
-			$value .= htmlspecialchars($v)."\n";
+			$value .= $v."\n";
 		}
 	}
-	$value = trim($value);
+	$value = esc_attr(trim($value));
 	$positions = get_option('usces_custom_field_position_select');
 	$positionsoption = '';
 	foreach($positions as $poskey => $posvalue) {
 		$selected = ($poskey == $entry['position']) ? " selected='selected'" : "";
-		$positionsoption .= "<option value='".$poskey."'".$selected.">".$posvalue."</option>\n";
+		$positionsoption .= "<option value='".esc_attr($poskey)."'".$selected.">".esc_attr($posvalue)."</option>\n";
 	}
 
 	$r .= "\n\t<tr id='csmb-{$key}' class='{$style}'>";
@@ -1876,8 +1876,8 @@ function _list_custom_member_meta_row($key, $entry) {
 	$r .= "\n\t\t<div class='optcheck'><select name='csmb[{$key}][means]' id='csmb[{$key}][means]'>".$meansoption."</select>\n";
 	$r .= "<input type='checkbox' name='csmb[{$key}][essential]' id='csmb[{$key}][essential]' value='1'{$essential} /><label for='csmb[{$key}][essential]'>".__('Required','usces')."</label>\n";
 	$r .= "<select name='csmb[{$key}][position]' id='csmb[{$key}][position]'>".$positionsoption."</select></div>";
-	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csmb[{$key}]' id='del_csmb[{$key}]' value='".attribute_escape(__( 'Delete' ))."' onclick='customField.delMember(\"{$key}\");' />";
-	$r .= "\n\t\t<input type='button' name='upd_csmb[{$key}]' id='upd_csmb[{$key}]' value='".attribute_escape(__( 'Update' ))."' onclick='customField.updMember(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csmb[{$key}]' id='del_csmb[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delMember(\"{$key}\");' />";
+	$r .= "\n\t\t<input type='button' name='upd_csmb[{$key}]' id='upd_csmb[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updMember(\"{$key}\");' /></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csmb[{$key}][value]' id='csmb[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;

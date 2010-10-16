@@ -45,18 +45,18 @@ if($this->cart->num_row() > 0) {
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
-		$sku = $cart_row['sku'];
+		$sku = esc_attr($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$advance = $this->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
-		$cartItemName = $this->getCartItemName($post_id, $sku);
+		$cartItemName = $this->getCartItemName($post_id, $cart_row['sku']);
 		$itemRestriction = $this->getItemRestriction($post_id);
 		$skuPrice = $cart_row['price'];
-		$skuZaikonum = $this->getItemZaikonum($post_id, $sku);
-		$stockid = $this->getItemZaikoStatusId($post_id, $sku);
-		$stock = $this->getItemZaiko($post_id, $sku);
+		$skuZaikonum = $this->getItemZaikonum($post_id, $cart_row['sku']);
+		$stockid = $this->getItemZaikoStatusId($post_id, $cart_row['sku']);
+		$stock = $this->getItemZaiko($post_id, $cart_row['sku']);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
 		if (!empty($options)) {
@@ -71,34 +71,34 @@ if($this->cart->num_row() > 0) {
 			<td>';
 			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a>';
 			$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
-			$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
+			$html .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$html .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+				$html .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
 			}
 		}
 		$html .= '</td>
 			<td class="aright">';
-		if( usces_is_gptekiyo($post_id, $sku, $quantity) ) {
+		if( usces_is_gptekiyo($post_id, $cart_row['sku'], $quantity) ) {
 			$usces_gp = 1;
 			$html .= '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
 		}
 		$html .= number_format($skuPrice) . '
 			</td>
-			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . $cart_row['quantity'] . '" /></td>
+			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
 			<td class="aright">' . number_format($skuPrice * $cart_row['quantity']) . '</td>
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';
 		foreach($options as $key => $value){
-			$html .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+			$html .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . esc_attr($key) . ']" type="hidden" value="' . esc_attr($value) . '" />';
 		}
 		$html .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
 			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
 			<input name="itempostid[' . $i . ']" type="hidden" value="' . $post_id . '" />
 			<input name="itemsku[' . $i . ']" type="hidden" value="' . $sku . '" />
-			<input name="zaikonum[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . $skuZaikonum . '" />
-			<input name="skuPrice[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . $skuPrice . '" />
-			<input name="advance[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . $advance . '" />
+			<input name="zaikonum[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuZaikonum) . '" />
+			<input name="skuPrice[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuPrice) . '" />
+			<input name="advance[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($advance) . '" />
 			<input name="delButton[' . $i . '][' . $post_id . '][' . $sku . ']" class="delButton" type="submit" value="' . __('Delete','usces') . '" />
 			</td>
 		</tr>';

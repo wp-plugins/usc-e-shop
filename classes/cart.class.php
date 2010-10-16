@@ -276,27 +276,27 @@ class usces_cart {
 			}
 		} else if(isset($_POST['customer']))	{	
 			foreach( $_POST['customer'] as $key => $value )
-				$_SESSION['usces_entry']['customer'][$key] = wp_specialchars($value);
+				$_SESSION['usces_entry']['customer'][$key] = trim($value);
 		}
 		
 		if(isset($_POST['delivery']))	{	
 			foreach( $_POST['delivery'] as $key => $value )
-				$_SESSION['usces_entry']['delivery'][$key] = wp_specialchars($value);
+				$_SESSION['usces_entry']['delivery'][$key] = trim($value);
 		}
 		
 		if(isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 0)	{	
 			foreach( $_SESSION['usces_entry']['customer'] as $key => $value )
-				$_SESSION['usces_entry']['delivery'][$key] = wp_specialchars($value);
+				$_SESSION['usces_entry']['delivery'][$key] = trim($value);
 		}
 
 		if(isset($_POST['order']))	{	
 			foreach( $_POST['order'] as $key => $value )
-				$_SESSION['usces_entry']['order'][$key] = wp_specialchars($value);
+				$_SESSION['usces_entry']['order'][$key] = trim($value);
 		}
 		
 		if(isset($_POST['reserve'])) {
 			foreach( $_POST['reserve'] as $key => $value )
-				$_SESSION['usces_entry']['reserve'][$key] = wp_specialchars($value);
+				$_SESSION['usces_entry']['reserve'][$key] = trim($value);
 		}
 //20100809ysk start
 		if(isset($_POST['custom_order'])) {
@@ -306,10 +306,10 @@ class usces_cart {
 			foreach( $_POST['custom_order'] as $key => $value )
 				if ( is_array($value) ) {
 					foreach( $value as $k => $v ) {
-						$_SESSION['usces_entry']['custom_order'][$key][wp_specialchars($v)] = wp_specialchars($v);
+						$_SESSION['usces_entry']['custom_order'][$key][trim($v)] = trim($v);
 					}
 				} else {
-					$_SESSION['usces_entry']['custom_order'][$key] = wp_specialchars($value);
+					$_SESSION['usces_entry']['custom_order'][$key] = trim($value);
 				}
 		}
 //20100809ysk end
@@ -321,10 +321,10 @@ class usces_cart {
 			foreach( $_POST['custom_customer'] as $key => $value )
 				if ( is_array($value) ) {
 					foreach( $value as $k => $v ) {
-						$_SESSION['usces_entry']['custom_customer'][$key][wp_specialchars($v)] = wp_specialchars($v);
+						$_SESSION['usces_entry']['custom_customer'][$key][trim($v)] = trim($v);
 					}
 				} else {
-					$_SESSION['usces_entry']['custom_customer'][$key] = wp_specialchars($value);
+					$_SESSION['usces_entry']['custom_customer'][$key] = trim($value);
 				}
 		}
 		if(isset($_POST['custom_delivery'])) {
@@ -334,10 +334,10 @@ class usces_cart {
 			foreach( $_POST['custom_delivery'] as $key => $value )
 				if ( is_array($value) ) {
 					foreach( $value as $k => $v ) {
-						$_SESSION['usces_entry']['custom_delivery'][$key][wp_specialchars($v)] = wp_specialchars($v);
+						$_SESSION['usces_entry']['custom_delivery'][$key][trim($v)] = trim($v);
 					}
 				} else {
-					$_SESSION['usces_entry']['custom_delivery'][$key] = wp_specialchars($value);
+					$_SESSION['usces_entry']['custom_delivery'][$key] = trim($value);
 				}
 		}
 //20100818ysk end

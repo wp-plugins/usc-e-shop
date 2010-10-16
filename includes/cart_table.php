@@ -21,49 +21,50 @@
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
-		$sku = $cart_row['sku'];
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
-		$cartItemName = $this->getCartItemName($post_id, $sku);
-		//$skuPrice = $this->getItemPrice($post_id, $sku);
+		//$skuPrice = $this->getItemPrice($post_id, $cart_row['sku']);
 		$itemRestriction = $this->getItemRestriction($post_id);
 		$skuPrice = $cart_row['price'];
-		$skuZaikonum = $this->getItemZaikonum($post_id, $sku);
-		$stockid = $this->getItemZaikoStatusId($post_id, $sku);
-		$stock = $this->getItemZaiko($post_id, $sku);
+		$skuZaikonum = $this->getItemZaikonum($post_id, $cart_row['sku']);
+		$stockid = $this->getItemZaikoStatusId($post_id, $cart_row['sku']);
+		$stock = $this->getItemZaiko($post_id, $cart_row['sku']);
 		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictids = $this->get_pictids($itemCode);
+		$cartItemName = $this->getCartItemName($post_id, $cart_row['sku']);
+
+		$sku = esc_attr($cart_row['sku']);
 		$optstr =  '';
 		foreach((array)$options as $key => $value){
-			$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
 		}
 			
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-		<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
+		<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
 		<td class="aright">
-		<?php if( usces_is_gptekiyo($post_id, $sku, $quantity) ) : $usces_gp = 1; ?>
+		<?php if( usces_is_gptekiyo($post_id, $cart_row['sku'], $quantity) ) : $usces_gp = 1; ?>
 		<img src="<?php echo bloginfo('template_url') . '/images/gp.gif'; ?>" alt="<?php _e('Business package discount', 'usces'); ?>" />
 		<?php endif; ?>
 		<?php echo number_format($skuPrice); ?>
 		</td>
-		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="quantity" type="text" value="<?php echo $cart_row['quantity']; ?>" /></td>
+		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td class="aright"><?php echo number_format($skuPrice * $cart_row['quantity']); ?></td>
-		<td <?php echo $red ?>><?php echo $stock; ?></td>
+		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
 		<td>
 		<?php foreach($options as $key => $value){ ?>
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo esc_attr($value); ?>" />
 		<?php } ?>
 		<input name="itemRestriction[<?php echo $i; ?>]" type="hidden" value="<?php echo $itemRestriction; ?>" />
 		<input name="stockid[<?php echo $i; ?>]" type="hidden" value="<?php echo $stockid; ?>" />
 		<input name="itempostid[<?php echo $i; ?>]" type="hidden" value="<?php echo $post_id; ?>" />
 		<input name="itemsku[<?php echo $i; ?>]" type="hidden" value="<?php echo $sku; ?>" />
-		<input name="zaikonum[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo $skuZaikonum; ?>" />
-		<input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo $skuPrice; ?>" />
+		<input name="zaikonum[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo esc_attr($skuZaikonum); ?>" />
+		<input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo esc_attr($skuPrice); ?>" />
 		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delButton" type="submit" value="<?php echo __('Delete','usces'); ?>" />
 		</td>
 	</tr>

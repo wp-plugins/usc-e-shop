@@ -25,11 +25,11 @@ $items_num = $this->get_items_num();
 
 <div class="usces_side_box">
 <h5><?php _e('Display Modes','usces'); ?>:</h5>
-<div class="dispmode <?php echo $display_mode; ?>"><?php echo $this->display_mode[$display_mode]; ?></div>
+<div class="dispmode <?php echo $display_mode; ?>"><?php echo esc_html($this->display_mode[$display_mode]); ?></div>
 <?php if ( $display_mode == 'Promotionsale' ) : ?>
-<span><?php _e('Special Benefits', 'usces'); ?>:</span><?php echo $this->options["campaign_privilege"]; ?> (<?php if($this->options["campaign_privilege"] == 'discount'){echo $this->options["privilege_discount"].__('% Discount', 'usces');}elseif($this->options["campaign_privilege"] == 'point'){echo $this->options["privilege_point"].__(" times (limited to members)", 'usces');} ?>) <br />
-<span><?php _e('applied material', 'usces'); ?>:</span><?php echo get_cat_name($this->options["campaign_category"]); ?><br />
-<span><?php _e('Period', 'usces'); ?>:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo $this->options["campaign_schedule"]['start']['day']; ?><?php _e(' - ', 'usces'); ?><?php echo $this->options["campaign_schedule"]['end']['year']; ?>/<?php echo $this->options["campaign_schedule"]['end']['month']; ?>/<?php echo $this->options["campaign_schedule"]['end']['day']; ?>
+<span><?php _e('Special Benefits', 'usces'); ?>:</span><?php echo esc_html($this->options["campaign_privilege"]); ?> (<?php if($this->options["campaign_privilege"] == 'discount'){echo esc_html($this->options["privilege_discount"]).__('% Discount', 'usces');}elseif($this->options["campaign_privilege"] == 'point'){echo esc_html($this->options["privilege_point"]).__(" times (limited to members)", 'usces');} ?>) <br />
+<span><?php _e('applied material', 'usces'); ?>:</span><?php echo esc_html(get_cat_name($this->options["campaign_category"])); ?><br />
+<span><?php _e('Period', 'usces'); ?>:</span><?php echo $this->options["campaign_schedule"]['start']['year']; ?>/<?php echo $this->options["campaign_schedule"]['start']['month']; ?>/<?php echo esc_html($this->options["campaign_schedule"]['start']['day']); ?><?php _e(' - ', 'usces'); ?><?php echo esc_html($this->options["campaign_schedule"]['end']['year']); ?>/<?php echo esc_html($this->options["campaign_schedule"]['end']['month']); ?>/<?php echo esc_html($this->options["campaign_schedule"]['end']['day']); ?>
 <?php endif; ?>
 </div>
 
@@ -123,10 +123,5 @@ $items_num = $this->get_items_num();
 </div>
 </div>
 <!--usces_admin_left-->
-<?php
-//$xml = USCES_PLUGIN_DIR . '/includes/initial_data.xml';
-//$match = $this->get_initial_data($xml);
-//var_dump($match);
-?>
 </div><!--usces_admin-->
 </div><!--wrap-->

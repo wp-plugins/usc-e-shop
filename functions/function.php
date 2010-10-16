@@ -99,7 +99,7 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+				$meisai .= $key . ' : ' . $value . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".number_format($skuPrice) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -256,7 +256,7 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "\r\n"; 
+				$meisai .= $key . ' : ' . $value . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('dollars','usces') . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -373,9 +373,9 @@ function usces_send_inquirymail() {
 	global $usces;
 	$res = false;
 	$mail_data = $usces->options['mail_data'];
-	$inq_name = wp_specialchars(trim($_POST["inq_name"]));
-	$inq_contents = wp_specialchars(trim($_POST["inq_contents"]));
-	$inq_mailaddress = wp_specialchars(trim($_POST["inq_mailaddress"]));
+	$inq_name = esc_html(trim($_POST["inq_name"]));
+	$inq_contents = esc_html(trim($_POST["inq_contents"]));
+	$inq_mailaddress = esc_html(trim($_POST["inq_mailaddress"]));
 
 	$subject =  $mail_data['title']['inquiry'];
 	$message = $mail_data['header']['inquiry'] . "\r\n\r\n" . $inq_contents . "\r\n\r\n" . $mail_data['footer']['inquiry'];
@@ -421,8 +421,8 @@ function usces_send_regmembermail($user) {
 
 	$subject =  $mail_data['title']['membercomp'];
 	$message = $mail_data['header']['membercomp'] . $mail_data['footer']['membercomp'];
-	$name = wp_specialchars(trim($user['name1'])) . wp_specialchars(trim($user['name2']));
-	$mailaddress1 = wp_specialchars(trim($user['mailaddress1']));
+	$name = esc_html(trim($user['name1'])) . esc_html(trim($user['name2']));
+	$mailaddress1 = esc_html(trim($user['mailaddress1']));
 
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $name),

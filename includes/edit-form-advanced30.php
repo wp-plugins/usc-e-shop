@@ -255,7 +255,7 @@ jQuery(function($){
 
 <div class="wrap">
 <div class="usces_admin">
-<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo wp_specialchars( $title ); ?></h2>
+<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo esc_html( $title ); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
 		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
@@ -334,33 +334,33 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <table class="iteminfo_table">
 <tr>
 <th><?php _e('item code', 'usces'); ?></th>
-<td><input type="text" name="itemCode" id="itemCode" class="itemCode" value="<?php echo $itemCode[0]; ?>" />
+<td><input type="text" name="itemCode" id="itemCode" class="itemCode" value="<?php echo esc_attr($itemCode[0]); ?>" />
 <input type="hidden" name="itemCode_nonce" id="itemCode_nonce" value="<?php echo wp_create_nonce( 'itemCode_nonce' ); ?>" /></td>
 </tr>
 <tr>
 <th><?php _e('item name', 'usces'); ?></th>
-<td><input type="text" name="itemName" id="itemName" class="itemName" value="<?php echo $itemName[0]; ?>" />
+<td><input type="text" name="itemName" id="itemName" class="itemName" value="<?php echo esc_attr($itemName[0]); ?>" />
 <input type="hidden" name="itemName_nonce" id="itemName_nonce" value="<?php echo wp_create_nonce( 'itemName_nonce' ); ?>" /></td>
 </tr>
 <tr>
 <th><?php _e('Limited amount for purchase', 'usces'); ?></th>
-<td><?php printf(__('limit by%s%s%s', 'usces'), '<input type="text" name="itemRestriction" id="itemRestriction" class="itemRestriction" value="', $itemRestriction[0], '" />'); ?>
+<td><?php printf(__('limit by%s%s%s', 'usces'), '<input type="text" name="itemRestriction" id="itemRestriction" class="itemRestriction" value="', esc_attr($itemRestriction[0]), '" />'); ?>
 <input type="hidden" name="itemRestriction_nonce" id="itemRestriction_nonce" value="<?php echo wp_create_nonce( 'itemRestriction_nonce' ); ?>" /></td>
 </tr>
 <tr>
 <th><?php _e('Percentage of points', 'usces'); ?></th>
-<td><input type="text" name="itemPointrate" id="itemPointrate" class="itemPointrate" value="<?php echo $itemPointrate[0]; ?>" />%<em>(<?php _e('Integer', 'usces'); ?>)</em>
+<td><input type="text" name="itemPointrate" id="itemPointrate" class="itemPointrate" value="<?php echo esc_attr($itemPointrate[0]); ?>" />%<em>(<?php _e('Integer', 'usces'); ?>)</em>
 <input type="hidden" name="itemPointrate_nonce" id="itemPointrate_nonce" value="<?php echo wp_create_nonce( 'itemPointrate_nonce' ); ?>" /></td>
 </tr>
 <tr>
 <th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
-<td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', $itemGpNum1[0], '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo $itemGpDis1[0]; ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
+<td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum1[0]), '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo esc_attr($itemGpDis1[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
 </tr>
 <tr>
-<td>2.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum2', '" id="', 'itemGpNum2', '" class="itemPointrate"', 'value="', $itemGpNum2[0], '" />'); ?><input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo $itemGpDis2[0]; ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
+<td>2.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum2', '" id="', 'itemGpNum2', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum2[0]), '" />'); ?><input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo esc_attr($itemGpDis2[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
 </tr>
 <tr>
-<td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', $itemGpNum3[0], '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo $itemGpDis3[0]; ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
+<td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum3[0]), '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo esc_attr($itemGpDis3[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
 </tr>
 <?php apply_filters('usces_item_master_first_section', NULL, $post_ID); ?>
 </table>
@@ -374,7 +374,7 @@ $second_section = '<tr>
 <td><select name="itemShipping" id="itemShipping" class="itemShipping">';
 foreach( (array)$this->shipping_rule as $key => $label){ 
 	$selected = $key == $itemShipping[0] ? ' selected="selected"' : '';
-	$second_section .= '<option value="' . $key . '"' . $selected . '>' . $label . '</option>';
+	$second_section .= '<option value="' . esc_attr($key) . '"' . $selected . '>' . esc_html($label) . '</option>';
 }
 $second_section .= '</select>
 <input type="hidden" name="itemShipping_nonce" id="itemShipping_nonce" value="' . wp_create_nonce( 'itemShipping_nonce' ) . '" /></td>
@@ -387,11 +387,11 @@ if( count($delivery_methods) === 0 ){
 	$second_section .= __('* Please register an item, after you finished delivery setting!','usces');
 }else{
 	foreach( $delivery_methods as $deli){
-		$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . $deli['id'] . '"';
+		$second_section .= '<label for="itemDeliveryMethod[' . $deli['id'] . ']"><input name="itemDeliveryMethod[' . $deli['id'] . ']" id="itemDeliveryMethod[' . $deli['id'] . ']" type="checkbox" value="' . esc_attr($deli['id']) . '"';
 		if(in_array($deli['id'], (array)$itemDeliveryMethod[0])) {
 			$second_section .= ' checked="checked"';
 		}
-		$second_section .= ' />' . $deli['name'] . '</label>';
+		$second_section .= ' />' . esc_html($deli['name']) . '</label>';
 	}
 }
 $second_section .= '</td>
@@ -401,7 +401,7 @@ $second_section .= '</td>
 <td><select name="itemShippingCharge" id="itemShippingCharge" class="itemShippingCharge">';
 foreach( (array)$this->options['shipping_charge'] as $cahrge){
 	$selected = $cahrge['id'] == $itemShippingCharge[0] ? ' selected="selected"' : '';
-	$second_section .= '<option value="' . $cahrge['id'] . '"' . $selected . '>' . $cahrge['name'] . '</option>';
+	$second_section .= '<option value="' . $cahrge['id'] . '"' . $selected . '>' . esc_html($cahrge['name']) . '</option>';
 }
 $second_section .= '</select>
 <input type="hidden" name="itemShippingCharge_nonce" id="itemShippingCharge_nonce" value="' . wp_create_nonce( 'itemShippingCharge_nonce' ) . '" /></td>

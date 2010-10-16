@@ -84,11 +84,11 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_cat_privilege');"><?php _e('Campaign Award', 'usces'); ?></a></th>
-	    <td><input name="cat_privilege" type="radio" id="privilege_point" value="point"<?php if($this->options['campaign_privilege'] == 'point') echo 'checked="checked"'; ?> /></td><td><label for="privilege_point"><?php _e('Points', 'usces'); ?></label></td><td><input name="point_num" type="text" class="short_str" value="<?php echo $this->options['privilege_point']; ?>" /><?php _e('times', 'usces'); ?></td>
+	    <td><input name="cat_privilege" type="radio" id="privilege_point" value="point"<?php if($this->options['campaign_privilege'] == 'point') echo 'checked="checked"'; ?> /></td><td><label for="privilege_point"><?php _e('Points', 'usces'); ?></label></td><td><input name="point_num" type="text" class="short_str" value="<?php echo esc_attr($this->options['privilege_point']); ?>" /><?php _e('times', 'usces'); ?></td>
 		<td rowspan="2"><div id="ex_cat_privilege" class="explanation"><?php _e("'Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
-	    <td><input name="cat_privilege" type="radio" id="privilege_discount" value="discount"<?php if($this->options['campaign_privilege'] == 'discount') echo 'checked="checked"'; ?> /></td><td><label for="privilege_discount"><?php _e('Disnount', 'usces'); ?></label></td><td><input name="discount_num" type="text" class="short_str" value="<?php echo $this->options['privilege_discount']; ?>" />%</td>
+	    <td><input name="cat_privilege" type="radio" id="privilege_discount" value="discount"<?php if($this->options['campaign_privilege'] == 'discount') echo 'checked="checked"'; ?> /></td><td><label for="privilege_discount"><?php _e('Disnount', 'usces'); ?></label></td><td><input name="discount_num" type="text" class="short_str" value="<?php echo esc_attr($this->options['privilege_discount']); ?>" />%</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
@@ -102,71 +102,71 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_company_name');"><?php _e('The company name', 'usces'); ?></a></th>
-	    <td><input name="company_name" type="text" class="long_str" value="<?php echo $this->options['company_name']; ?>" /></td>
+	    <td><input name="company_name" type="text" class="long_str" value="<?php echo esc_attr($this->options['company_name']); ?>" /></td>
 		<td><div id="ex_company_name" class="explanation"><?php _e('Fill out this if you are a corporation.', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_zip_code');"><?php _e('Zip/Postal Code', 'usces'); ?></a></th>
-	    <td><input name="zip_code" type="text" class="short_str" value="<?php echo $this->options['zip_code']; ?>" /></td>
+	    <td><input name="zip_code" type="text" class="short_str" value="<?php echo esc_attr($this->options['zip_code']); ?>" /></td>
 		<td><div id="ex_zip_code" class="explanation"><?php _e('Example)', 'usces'); ?>100-1001</div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_address1');"><?php _e('Address', 'usces'); ?>1</a></th>
-	    <td><input name="address1" type="text" class="long_str" value="<?php echo $this->options['address1']; ?>" /></td>
+	    <td><input name="address1" type="text" class="long_str" value="<?php echo esc_attr($this->options['address1']); ?>" /></td>
 		<td><div id="ex_address1" class="explanation"><?php _e('Example)', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_address2');"><?php _e('Address', 'usces'); ?>2</a></th>
-	    <td><input name="address2" type="text" class="long_str" value="<?php echo $this->options['address2']; ?>" /></td>
+	    <td><input name="address2" type="text" class="long_str" value="<?php echo esc_attr($this->options['address2']); ?>" /></td>
 		<td><div id="ex_address2" class="explanation"><?php _e('Example)', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tel_number');"><?php _e('Phone number', 'usces'); ?></a></th>
-	    <td><input name="tel_number" type="text" class="long_str" value="<?php echo $this->options['tel_number']; ?>" /></td>
+	    <td><input name="tel_number" type="text" class="long_str" value="<?php echo esc_attr($this->options['tel_number']); ?>" /></td>
 		<td><div id="ex_tel_number" class="explanation"><?php _e('Example)', 'usces'); ?>100-100-10000</div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fax_number');"><?php _e('FAX number', 'usces'); ?></a></th>
-	    <td><input name="fax_number" type="text" class="long_str" value="<?php echo $this->options['fax_number']; ?>" /></td>
+	    <td><input name="fax_number" type="text" class="long_str" value="<?php echo esc_attr($this->options['fax_number']); ?>" /></td>
 		<td><div id="ex_fax_number" class="explanation"><?php _e('Example)', 'usces'); ?>100-100-10000</div></td>
 	</tr>
 	<tr>
 	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');"><?php _e('E-mail address for ordering', 'usces'); ?></a></th>
-	    <td><input name="order_mail" type="text" class="long_str" value="<?php echo $this->options['order_mail']; ?>" /></td>
+	    <td><input name="order_mail" type="text" class="long_str" value="<?php echo esc_attr($this->options['order_mail']); ?>" /></td>
 		<td><div id="ex_order_mail" class="explanation"><?php _e("<em>[Required]</em> the administrator's e-mail address to receive the order", 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_mail');"><?php _e('Contact e-mail address', 'usces'); ?></a></th>
-	    <td><input name="inquiry_mail" type="text" class="long_str" value="<?php echo $this->options['inquiry_mail']; ?>" /></td>
+	    <td><input name="inquiry_mail" type="text" class="long_str" value="<?php echo esc_attr($this->options['inquiry_mail']); ?>" /></td>
 		<td><div id="ex_inquiry_mail" class="explanation"><?php _e("<em>[Required]</em> the administrator's e-mail address to receive the contact meils.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_sender_mail');"><?php _e("Sender's e-mail address", 'usces'); ?></a></th>
-	    <td><input name="sender_mail" type="text" class="long_str" value="<?php echo $this->options['sender_mail']; ?>" /></td>
+	    <td><input name="sender_mail" type="text" class="long_str" value="<?php echo esc_attr($this->options['sender_mail']); ?>" /></td>
 		<td><div id="ex_sender_mail" class="explanation"><?php _e("<em>[Required]</em> the sender's e-mail address to send 'thank you e-mail' to cuscomers.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_error_mail');"><?php _e('Address for Error mail', 'usces'); ?></a></th>
-	    <td><input name="error_mail" type="text" class="long_str" value="<?php echo $this->options['error_mail']; ?>" /></td>
+	    <td><input name="error_mail" type="text" class="long_str" value="<?php echo esc_attr($this->options['error_mail']); ?>" /></td>
 		<td><div id="ex_error_mail" class="explanation"><?php _e("<em>[Required]</em>The transmission of a message ahead of the error email.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_copyright');"><?php _e('copy rights', 'usces'); ?></a></th>
-	    <td><input name="copyright" type="text" class="long_str" value="<?php echo $this->options['copyright']; ?>" /></td>
+	    <td><input name="copyright" type="text" class="long_str" value="<?php echo esc_attr($this->options['copyright']); ?>" /></td>
 		<td><div id="ex_copyright" class="explanation"><?php _e('Example)', 'usces'); ?>Copyright(c) 2009 Welcart.inc All Rights Reserved.</div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_postage_privilege');"><?php _e('Conditions for free shipping', 'usces'); ?></a></th>
-	    <td><input name="postage_privilege" type="text" class="short_str" value="<?php echo $this->options['postage_privilege']; ?>" /><?php _e('Above', 'usces'); ?></td>
+	    <td><input name="postage_privilege" type="text" class="short_str" value="<?php echo esc_attr($this->options['postage_privilege']); ?>" /><?php _e('Above', 'usces'); ?></td>
 		<td><div id="ex_postage_privilege" class="explanation"><?php _e('Total purchase prise to have free shipping. Leave it blank if it is not necessary.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_purchase_limit');"><?php _e('default limitation number of purchase', 'usces'); ?></a></th>
-	    <td><input name="purchase_limit" type="text" class="short_str" value="<?php echo $this->options['purchase_limit']; ?>" /><?php _e('maximum amount', 'usces'); ?></td>
+	    <td><input name="purchase_limit" type="text" class="short_str" value="<?php echo esc_attr($this->options['purchase_limit']); ?>" /><?php _e('maximum amount', 'usces'); ?></td>
 		<td><div id="ex_purchase_limit" class="explanation"><?php _e('initial value at registration of items. Leave it blank if it is not necessary.', 'usces'); ?></div></td>
 	</tr>
 	<tr>
@@ -180,7 +180,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_rate');"><?php _e('Percentage of Consumption tax', 'usces'); ?></a></th>
-	    <td><input name="tax_rate" type="text" class="short_str" value="<?php echo $this->options['tax_rate']; ?>" />%</td>
+	    <td><input name="tax_rate" type="text" class="short_str" value="<?php echo esc_attr($this->options['tax_rate']); ?>" />%</td>
 		<td><div id="ex_tax_rate" class="explanation"><?php _e('Leave it as blank if tax is included', 'usces'); ?></div></td>
 	</tr>
 </table>
@@ -203,7 +203,7 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_transferee');"><?php _e('Account information for transfer', 'usces'); ?></a></th>
-	    <td><textarea name="transferee" class="long_txt"><?php echo $this->options['transferee']; ?></textarea></td>
+	    <td><textarea name="transferee" class="long_txt"><?php echo esc_html($this->options['transferee']); ?></textarea></td>
 		<td><div id="ex_transferee" class="explanation"><?php _e('The acount number for bank transfer. You can enter the information as you wish.  The contents will apear in the mail.', 'usces'); ?></div></td>
 	</tr>
 </table>
@@ -224,12 +224,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_rate');"><?php _e('The initial value of point rate', 'usces'); ?></a></th>
-	    <td colspan="2"><input name="point_rate" type="text" class="short_str" value="<?php echo $this->options['point_rate']; ?>" />%</td>
+	    <td colspan="2"><input name="point_rate" type="text" class="short_str" value="<?php echo esc_attr($this->options['point_rate']); ?>" />%</td>
 		<td><div id="ex_point_rate" class="explanation"><?php _e('initial value at registration of items. Leave it blank if it is not necessary.', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_start_point');"><?php _e('Point at the registration of membership', 'usces'); ?></a></th>
-	    <td colspan="2"><input name="start_point" type="text" class="short_str" value="<?php echo $this->options['start_point']; ?>" />pt</td>
+	    <td colspan="2"><input name="start_point" type="text" class="short_str" value="<?php echo esc_attr($this->options['start_point']); ?>" />pt</td>
 		<td><div id="ex_start_point" class="explanation"><?php _e('Points granted  at the first membersip registration.', 'usces'); ?></div></td>
 	</tr>
 	<tr>
@@ -310,14 +310,14 @@ if( 'change' == $this->options['cod_type'] ) {
 	<table>
 		<thead>
 			<tr><th colspan="3"><?php _e('A purchase amount', 'usces'); ?></th><th><?php _e('Fee', 'usces'); ?></th></tr>
-			<tr><td class="cod_f">0<?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_first_amount" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php echo $this->options['cod_first_amount']; ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_first_fee" type="text" class="short_str" value="<?php echo $this->options['cod_first_fee']; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+			<tr><td class="cod_f">0<?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_first_amount" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php echo esc_attr($this->options['cod_first_amount']); ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_first_fee" type="text" class="short_str" value="<?php echo esc_attr($this->options['cod_first_fee']); ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
 		</thead>
 		<tbody id="cod_change_field">
 <?php
 	if( isset($this->options['cod_amounts']) && isset($this->options['cod_fees']) ){
 		foreach ( (array)$this->options['cod_amounts'] as $key => $value ){
 ?>
-			<tr id="tr_<?php echo $key; ?>"><td class="cod_f"><span id="amount_<?php echo $key; ?>"><?php if( $key === 0 ){echo ($this->options['cod_first_amount'] + 1);}else{echo ($this->options['cod_amounts'][($key-1)] + 1);} ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts[<?php echo $key; ?>]" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php  echo $value; ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_fees[<?php echo $key; ?>]" type="text" class="short_str" value="<?php echo $this->options['cod_fees'][$key]; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+			<tr id="tr_<?php echo esc_attr($key); ?>"><td class="cod_f"><span id="amount_<?php echo esc_attr($key); ?>"><?php if( $key === 0 ){echo ($this->options['cod_first_amount'] + 1);}else{echo ($this->options['cod_amounts'][($key-1)] + 1);} ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts[<?php echo esc_attr($key); ?>]" type="text" class="short_str ui-widget-content ui-corner-all" value="<?php  echo esc_attr($value); ?>" /><?php _e('dollars', 'usces'); ?></td><td class="cod_cod"><input name="cod_fees[<?php echo esc_attr($key); ?>]" type="text" class="short_str" value="<?php echo esc_attr($this->options['cod_fees'][$key]); ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
 <?php			
 		} 
 	}
@@ -330,7 +330,7 @@ if( 'change' == $this->options['cod_type'] ) {
 ?>
 		</tbody>
 		<tfoot>
-			<tr><td class="cod_f"><span id="end_amount"><?php echo $end_amount; ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td>&nbsp;</td><td class="cod_cod"><input name="cod_end_fee" type="text" class="short_str" value="<?php echo $this->options['cod_end_fee']; ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
+			<tr><td class="cod_f"><span id="end_amount"><?php echo esc_attr($end_amount); ?></span><?php _e('dollars', 'usces'); ?></td><td class="cod_m">～</td><td>&nbsp;</td><td class="cod_cod"><input name="cod_end_fee" type="text" class="short_str" value="<?php echo esc_attr($this->options['cod_end_fee']); ?>" /><?php _e('dollars', 'usces'); ?></td></tr>
 		</tfoot>
 	</table>
 	</div>

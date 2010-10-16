@@ -262,12 +262,12 @@ function toggleVisibility(id) {
 	$csmb_means = get_option('usces_custom_member_select');
 	$csmb_meansoption = '';
 	foreach($csmb_means as $meankey => $meanvalue) {
-		$csmb_meansoption .= '<option value="'.$meankey.'">'.$meanvalue."</option>\n";
+		$csmb_meansoption .= '<option value="'.esc_attr($meankey).'">'.esc_html($meanvalue)."</option>\n";
 	}
 	$positions = get_option('usces_custom_field_position_select');
 	$positionsoption = '';
 	foreach($positions as $poskey => $posvalue) {
-		$positionsoption .= '<option value="'.$poskey.'">'.$posvalue."</option>\n";
+		$positionsoption .= '<option value="'.esc_attr($poskey).'">'.esc_html($posvalue)."</option>\n";
 	}
 ?>
 <div id="member_page_setting_2">

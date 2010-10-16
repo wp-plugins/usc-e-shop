@@ -4,7 +4,6 @@
  * @package Welcart
  * @subpackage Welcart Default Theme
  */
-global $usces;
 ?>
 <!-- begin left sidebar -->
 <div id="leftbar" class="sidebar">

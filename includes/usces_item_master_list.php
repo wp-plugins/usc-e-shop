@@ -109,13 +109,13 @@ jQuery(function($){
 			
 			if( column == 'item_name' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][item_name]" type="text" value="<?php echo wp_specialchars($arr_search['word']['item_name']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][item_name]" type="text" value="<?php echo esc_attr($arr_search['word']['item_name']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'item_code' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][item_code]" type="text" value="<?php echo wp_specialchars($arr_search['word']['item_code']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][item_code]" type="text" value="<?php echo esc_attr($arr_search['word']['item_code']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'post_title' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][post_title]" type="text" value="<?php echo wp_specialchars($arr_search['word']['post_title']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][post_title]" type="text" value="<?php echo esc_attr($arr_search['word']['post_title']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'zaiko_num' ) {
 				label = '';
 				html = '';
@@ -129,7 +129,7 @@ jQuery(function($){
 					$zselected = '';
 				}
 		?>
-				html += '<option value="<?php echo $zkey; ?>"<?php echo $zselected ?>><?php echo wp_specialchars($zvalue); ?></option>';
+				html += '<option value="<?php echo esc_attr($zkey); ?>"<?php echo $zselected ?>><?php echo esc_html($zvalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'category' ) {
@@ -144,7 +144,7 @@ jQuery(function($){
 					$cselected = '';
 				}
 		?>
-				html += '<option value="<?php echo wp_specialchars($cvalue->name); ?>"<?php echo $cselected ?>><?php echo wp_specialchars($cvalue->name); ?></option>';
+				html += '<option value="<?php echo esc_attr($cvalue->name); ?>"<?php echo $cselected ?>><?php echo esc_html($cvalue->name); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'display_status' ) {
@@ -174,7 +174,7 @@ jQuery(function($){
 				label = '';
 				html = '<select name="change[word][zaiko]" class="searchselect">';
 		<?php foreach($zaiko_status as $zkey => $zvalue){ ?>
-				html += '<option value="<?php echo $zkey; ?>"><?php echo wp_specialchars($zvalue); ?></option>';
+				html += '<option value="<?php echo $zkey; ?>"><?php echo esc_html($zvalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'display_status' ) {
@@ -293,10 +293,10 @@ jQuery(document).ready(function($){
 		if( $value != 'sku_key' && $value != 'price' ) :
 ?>
 	<?php if( $value == 'zaiko_num' ){ ?>
-		    <option value="<?php echo $value ?>"<?php echo $selected ?>><?php _e('items without stock', 'usces'); ?></option>
+		    <option value="<?php echo esc_attr($value); ?>"<?php echo $selected ?>><?php _e('items without stock', 'usces'); ?></option>
 	<?php }else if( USCES_MYSQL_VERSION < 5 && $value == 'item_code' ){ continue; ?>
 	<?php }else{ ?>
-		    <option value="<?php echo $value ?>"<?php echo $selected ?>><?php echo $key ?></option>
+		    <option value="<?php echo esc_attr($value); ?>"<?php echo $selected ?>><?php echo esc_html($key); ?></option>
 	<?php } ?>
 <?php endif; endforeach; ?>
     	</select></td>
@@ -336,9 +336,9 @@ jQuery(document).ready(function($){
 	<?php if ( $key == 'item_code' ) : ?>
 			<th scope="col"><?php echo $value ?>&nbsp;/&nbsp;
 	<?php elseif ( $key == 'item_name' || $key == 'post_title' ) : ?>
-			<?php echo $value ?></th>
+			<?php echo $value; ?></th>
 	<?php else : ?>
-			<th scope="col"><?php echo $value ?></th>
+			<th scope="col"><?php echo $value; ?></th>
 	<?php endif; ?>
 <?php endforeach; ?>
 	</tr>
@@ -349,7 +349,7 @@ jQuery(document).ready(function($){
 ?>
 	<tr>
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
-	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo wp_specialchars($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid[0], array(50, 50), true ); ?></a></td>
+	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid[0], array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : 
 			$skus = $this->get_skus( $array['ID'], 'ARRAY_A' );
 	?>
@@ -357,21 +357,21 @@ jQuery(document).ready(function($){
 			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('_itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
 			<td class="item">
 			<?php if( $value != '' ) : ?> 
-				<strong><?php echo wp_specialchars($value); ?></strong>
+				<strong><?php echo esc_html($value); ?></strong>
 			<?php else : ?> 
 				&nbsp;
 			<?php endif; ?>
 			<br />
 		<?php elseif( $key == 'item_name' ) : ?>
 			<?php if( $value != '' ) : ?> 
-				<strong><?php echo wp_specialchars($value); ?></strong>
+				<strong><?php echo esc_html($value); ?></strong>
 			<?php else : ?> 
 				&nbsp;
 			<?php endif; ?>
 			<ul class="item_list_navi">
 				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>"><?php _e('edit', 'usces'); ?></a></li>
 				<li>&nbsp;|&nbsp;</li>
-				<!--<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>-->
+				<!--<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo esc_attr($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>-->
 <?php
 			if ( current_user_can('delete_post', $post->ID) ) {
 				if ( 'trash' == $post->post_status ){
@@ -392,14 +392,14 @@ jQuery(document).ready(function($){
 			
 		<?php elseif( $key == 'post_title' ) : ?>
 			<?php if( $value != '' ) : ?> 
-				<strong><?php echo wp_specialchars($value); ?></strong>
+				<strong><?php echo esc_html($value); ?></strong>
 			<?php else : ?> 
 				&nbsp;
 			<?php endif; ?>
 			<ul class="item_list_navi">
 				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>"><?php _e('edit', 'usces'); ?></a></li>
 				<li>&nbsp;|&nbsp;</li>
-				<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo wp_specialchars($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>
+				<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo esc_attr($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>
 			</ul>
 			</td>
 			
@@ -407,7 +407,7 @@ jQuery(document).ready(function($){
 		
 			<td class="sku">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="skuline<?php echo $bgc; ?>"><?php echo $key; ?></div>
+				<div class="skuline<?php echo $bgc; ?>"><?php echo esc_html($key); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 
@@ -419,12 +419,12 @@ jQuery(document).ready(function($){
 			</td>
 			<td class="zaikonum">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php echo $sv['zaikonum']; ?></div>
+				<div class="priceline<?php echo $bgc; ?>"><?php echo esc_html($sv['zaikonum']); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 			<td class="zaiko">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $zaikokey = $sv['zaiko']; $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="zaikoline<?php echo $bgc; ?>"><?php echo $zaiko_status[$zaikokey]; ?></div>
+				<div class="zaikoline<?php echo $bgc; ?>"><?php echo esc_html($zaiko_status[$zaikokey]); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 		<?php elseif( $key == 'category' ) : ?>
@@ -442,7 +442,7 @@ jQuery(document).ready(function($){
 			?>
 			</td>
 		<?php elseif( $key == 'display_status' ): ?>
-			<td><?php echo $value; ?></td>
+			<td><?php echo esc_html($value); ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
 	</tr>

@@ -111,12 +111,12 @@ jQuery(document).ready(function($){
 <div class="error_message"><?php echo $this->error_message; ?></div>
 <table class="mem_wrap">
 <tr>
-<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo $data['ID']; ?></div></td>
+<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo esc_html($data['ID']); ?></div></td>
 <td colspan="2" rowspan="5" class="mem_col2">
 <table class="mem_info">
 		<tr>
 				<td class="label">e-mail</td>
-				<td><input name="mem_email" type="text" class="text long" value="<?php echo $data['mem_email']; ?>" /></td>
+				<td><input name="mem_email" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
 		</tr>
 		<?php
 //20100818ysk start
@@ -125,11 +125,11 @@ jQuery(document).ready(function($){
 		?>
 		<tr>
 				<td class="label"><?php _e('name', 'usces'); ?></td>
-				<td><input name="mem_name1" type="text" class="text short" value="<?php echo $data['mem_name1']; ?>" />		<input name="mem_name2" type="text" class="text short" value="<?php echo $data['mem_name2']; ?>" /></td>
+				<td><input name="mem_name1" type="text" class="text short" value="<?php echo esc_attr($data['mem_name1']); ?>" />		<input name="mem_name2" type="text" class="text short" value="<?php echo esc_attr($data['mem_name2']); ?>" /></td>
 		</tr>
 		<tr>
 				<td class="label"><?php _e('furigana', 'usces'); ?></td>
-				<td><input name="mem_name3" type="text" class="text short" value="<?php echo $data['mem_name3']; ?>" />		<input name="mem_name4" type="text" class="text short" value="<?php echo $data['mem_name4']; ?>" /></td>
+				<td><input name="mem_name3" type="text" class="text short" value="<?php echo esc_attr($data['mem_name3']); ?>" />		<input name="mem_name4" type="text" class="text short" value="<?php echo esc_attr($data['mem_name4']); ?>" /></td>
 		</tr>
 		<?php
 //20100818ysk start
@@ -139,7 +139,7 @@ jQuery(document).ready(function($){
 		<tr>
 				<td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
 				<td><span class="col2">
-						<input name="mem_zip" type="text" class="text short" value="<?php echo $data['mem_zip']; ?>" />
+						<input name="mem_zip" type="text" class="text short" value="<?php echo esc_attr($data['mem_zip']); ?>" />
 				</span></td>
 		</tr>
 		<tr>
@@ -151,7 +151,7 @@ jQuery(document).ready(function($){
 	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
+	echo "\t<option value='{" . esc_attr($value) . "'{$selected}>" . esc_attr($value) . "</option>\n";
 }
 ?>
 						</select>
@@ -160,28 +160,28 @@ foreach((array)$prefs as $value) {
 		<tr>
 				<td class="label"><?php _e('city', 'usces'); ?></td>
 				<td><span class="col2">
-						<input name="mem_address1" type="text" class="text long" value="<?php echo $data['mem_address1']; ?>" />
+						<input name="mem_address1" type="text" class="text long" value="<?php echo esc_attr($data['mem_address1']); ?>" />
 				</span></td>
 		</tr>
 		<tr>
 				<td class="label"><?php _e('numbers', 'usces'); ?></td>
 				<td><span class="col2">
-						<input name="mem_address2" type="text" class="text long" value="<?php echo $data['mem_address2']; ?>" />
+						<input name="mem_address2" type="text" class="text long" value="<?php echo esc_attr($data['mem_address2']); ?>" />
 				</span></td>
 		</tr>
 		<tr>
 				<td class="label"><?php _e('building name', 'usces'); ?></td>
 				<td><span class="col2">
-						<input name="mem_address3" type="text" class="text long" value="<?php echo $data['mem_address3']; ?>" />
+						<input name="mem_address3" type="text" class="text long" value="<?php echo esc_attr($data['mem_address3']); ?>" />
 				</span></td>
 		</tr>
 		<tr>
 				<td class="label"><?php _e('Phone number', 'usces'); ?></td>
-				<td><input name="mem_tel" type="text" class="text long" value="<?php echo $data['mem_tel']; ?>" /></td>
+				<td><input name="mem_tel" type="text" class="text long" value="<?php echo esc_attr($data['mem_tel']); ?>" /></td>
 		</tr>
 		<tr>
 				<td class="label"><?php _e('FAX number', 'usces'); ?></td>
-				<td><input name="mem_fax" type="text" class="text long" value="<?php echo $data['mem_fax']; ?>" /></td>
+				<td><input name="mem_fax" type="text" class="text long" value="<?php echo esc_attr($data['mem_fax']); ?>" /></td>
 		</tr>
 		<?php
 //20100818ysk start
@@ -194,8 +194,8 @@ foreach((array)$prefs as $value) {
 <table class="mem_info">
 <?php foreach($member_metas as $value){ ?>
 		<tr>
-				<td class="label"><?php echo $value['meta_key']; ?></td>
-				<td><div class="rod_left"><?php echo $value['meta_value']; ?></div></td>
+				<td class="label"><?php echo esc_html($value['meta_key']); ?></td>
+				<td><div class="rod_left"><?php echo esc_html($value['meta_value']); ?></div></td>
 		</tr>
 <?php } ?>
 </table>
@@ -209,17 +209,17 @@ foreach((array)$prefs as $value) {
 	foreach ((array)$this->member_status as $rk => $rv) {
 		$selected = ($rk == $data['mem_status']) ? ' selected="selected"' : '';
 ?>
-    <option value="<?php echo $rk; ?>"<?php echo $selected; ?>><?php echo $rv; ?></option>
+    <option value="<?php echo esc_attr($rk); ?>"<?php echo $selected; ?>><?php echo esc_html($rv); ?></option>
 <?php } ?>
 </select></td>
 </tr>
 <tr>
-<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="mem_point" type="text" class="text right short" value="<?php echo $data['mem_point']; ?>" /></td>
+<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="mem_point" type="text" class="text right short" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
 <?php if( USCES_JP ): ?>
 <?php endif; ?>
 </tr>
 <tr>
-<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo sprintf(__('%2$s %3$s, %1$s', 'usces'),substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2)); ?></div></td>
+<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo esc_html(sprintf(__('%2$s %3$s, %1$s', 'usces'),substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2))); ?></div></td>
 </tr>
 <tr>
 <td colspan="2">&nbsp;</td>
@@ -280,14 +280,15 @@ foreach((array)$prefs as $value) {
 	$pictids = $this->get_pictids($itemCode);
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
-		$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+		if( !empty($key) )
+			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
 	}
 	
 	?>
 	<tr>
 	<td><?php echo $i + 1; ?></td>
 	<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-	<td class="aleft"><?php echo $cartItemName; ?><br /><?php echo $optstr; ?></td>
+	<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
 	<td class="rightnum"><?php echo number_format($skuPrice); ?></td>
 	<td class="rightnum"><?php echo number_format($cart_row['quantity']); ?></td>
 	<td class="rightnum"><?php echo number_format($skuPrice * $cart_row['quantity']); ?></td>

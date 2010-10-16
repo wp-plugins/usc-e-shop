@@ -26,7 +26,7 @@ if(usces_is_membersystem_state()){
 	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="customer_form">
 	<tr>
 	<th scope="row">'.__('e-mail adress', 'usces').'</th>
-	<td><input name="loginmail" id="mailaddress1" type="text" value="' . $usces_entries['customer']['mailaddress1'] . '" /></td>
+	<td><input name="loginmail" id="mailaddress1" type="text" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '" /></td>
 	</tr>
 	<tr>
 	<th scope="row">'.__('password', 'usces').'</th>
@@ -43,11 +43,11 @@ $html .= '<form action="' . USCES_CART_URL . '" method="post" name="customer_for
 <tr>
 <th scope="row"><em>*</em>'.__('e-mail adress', 'usces').'</th>';
 
-$html .= '<td colspan="2"><input name="customer[mailaddress1]" id="mailaddress1" type="text" value="' . $usces_entries['customer']['mailaddress1'] . '" /></td>
+$html .= '<td colspan="2"><input name="customer[mailaddress1]" id="mailaddress1" type="text" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '" /></td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>'.__('e-mail adress', 'usces').'('.__('Re-input', 'usces').')</th>
-<td colspan="2"><input name="customer[mailaddress2]" id="mailaddress2" type="text" value="' . $usces_entries['customer']['mailaddress2'] . '" /></td>
+<td colspan="2"><input name="customer[mailaddress2]" id="mailaddress2" type="text" value="' . esc_attr($usces_entries['customer']['mailaddress2']) . '" /></td>
 </tr>';
 
 if(usces_is_membersystem_state()){
@@ -56,7 +56,7 @@ if(usces_is_membersystem_state()){
 		$html .= '<em>*</em>';
 	}
 	$html .= __('password', 'usces').'</th>
-	<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="' . $usces_entries['customer']['password1'] . '" />';
+	<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="' . esc_attr($usces_entries['customer']['password1']) . '" />';
 	if( $member_regmode != 'editmemberfromcart' ){
 		$html .= __('When you enroll newly, please fill it out.', 'usces');
 	}
@@ -66,7 +66,7 @@ if(usces_is_membersystem_state()){
 		$html .= '<em>*</em>';
 	}
 	$html .= __('Password (confirm)', 'usces').'</th>
-	<td colspan="2"><input name="customer[password2]" style="width:100px" type="password" value="' . $usces_entries['customer']['password2'] . '" />';
+	<td colspan="2"><input name="customer[password2]" style="width:100px" type="password" value="' . esc_attr($usces_entries['customer']['password2']) . '" />';
 	if( $member_regmode != 'editmemberfromcart' ){
 		$html .= __('When you enroll newly, please fill it out.', 'usces');
 	}
@@ -77,14 +77,14 @@ $html .= usces_custom_field_input($usces_entries, 'customer', 'name_pre', 'retur
 //20100818ysk end
 $html .= '<tr class="inp1">
 <th scope="row"><em>*</em>'.__('Full name', 'usces').'</th>
-<td>'.__('Familly name', 'usces').'<input name="customer[name1]" id="name1" type="text" value="' . $usces_entries['customer']['name1'] . '" /></td>
-<td>'.__('Given name', 'usces').'<input name="customer[name2]" id="name2" type="text" value="' . $usces_entries['customer']['name2'] . '" /></td>
+<td>'.__('Familly name', 'usces').'<input name="customer[name1]" id="name1" type="text" value="' . esc_attr($usces_entries['customer']['name1']) . '" /></td>
+<td>'.__('Given name', 'usces').'<input name="customer[name2]" id="name2" type="text" value="' . esc_attr($usces_entries['customer']['name2']) . '" /></td>
 </tr>';
 if( USCES_JP ){
 	$html .= '<tr class="inp1">
 	<th scope="row">'.__('furigana', 'usces').'</th>
-	<td>'.__('Familly name', 'usces').'<input name="customer[name3]" id="name3" type="text" value="' . $usces_entries['customer']['name3'] . '" /></td>
-	<td>'.__('Given name', 'usces').'<input name="customer[name4]" id="name4" type="text" value="' . $usces_entries['customer']['name4'] . '" /></td>
+	<td>'.__('Familly name', 'usces').'<input name="customer[name3]" id="name3" type="text" value="' . esc_attr($usces_entries['customer']['name3']) . '" /></td>
+	<td>'.__('Given name', 'usces').'<input name="customer[name4]" id="name4" type="text" value="' . esc_attr($usces_entries['customer']['name4']) . '" /></td>
 	</tr>';
 }
 //20100818ysk start
@@ -92,7 +92,7 @@ $html .= usces_custom_field_input($usces_entries, 'customer', 'name_after', 'ret
 //20100818ysk end
 $html .= '<tr>
 <th scope="row"><em>*</em>'.__('Zip/Postal Code', 'usces').'</th>
-<td colspan="2"><input name="customer[zipcode]" id="zipcode" type="text" value="' . $usces_entries['customer']['zipcode'] . '" />'.__('Example)', 'usces').'100-1000</td>
+<td colspan="2"><input name="customer[zipcode]" id="zipcode" type="text" value="' . esc_attr($usces_entries['customer']['zipcode']) . '" />'.__('Example)', 'usces').'100-1000</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>'.__('Province', 'usces').'</th>
@@ -100,23 +100,23 @@ $html .= '<tr>
 </tr>
 <tr class="inp2">
 <th scope="row"><em>*</em>'.__('city', 'usces').'</th>
-<td colspan="2"><input name="customer[address1]" id="address1" type="text" value="' . $usces_entries['customer']['address1'] . '" />'.__('Example)', 'usces').__('Kitakami Yokohama', 'usces').'</td>
+<td colspan="2"><input name="customer[address1]" id="address1" type="text" value="' . esc_attr($usces_entries['customer']['address1']) . '" />'.__('Example)', 'usces').__('Kitakami Yokohama', 'usces').'</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>'.__('numbers', 'usces').'</th>
-<td colspan="2"><input name="customer[address2]" id="address2" type="text" value="' . $usces_entries['customer']['address2'] . '" />'.__('Example)', 'usces').'3-24-555</td>
+<td colspan="2"><input name="customer[address2]" id="address2" type="text" value="' . esc_attr($usces_entries['customer']['address2']) . '" />'.__('Example)', 'usces').'3-24-555</td>
 </tr>
 <tr>
 <th scope="row">'.__('building name', 'usces').'</th>
-<td colspan="2"><input name="customer[address3]" id="address3" type="text" value="' . $usces_entries['customer']['address3'] . '" />'.__('Example)', 'usces').__('tuhanbuild 4F', 'usces').'</td>
+<td colspan="2"><input name="customer[address3]" id="address3" type="text" value="' . esc_attr($usces_entries['customer']['address3']) . '" />'.__('Example)', 'usces').__('tuhanbuild 4F', 'usces').'</td>
 </tr>
 <tr>
 <th scope="row"><em>*</em>'.__('Phone number', 'usces').'</th>
-<td colspan="2"><input name="customer[tel]" id="tel" type="text" value="' . $usces_entries['customer']['tel'] . '" />'.__('Example)', 'usces').'1000-10-1000</td>
+<td colspan="2"><input name="customer[tel]" id="tel" type="text" value="' . esc_attr($usces_entries['customer']['tel']) . '" />'.__('Example)', 'usces').'1000-10-1000</td>
 </tr>
 <tr>
 <th scope="row">'.__('FAX number', 'usces').'</th>
-<td colspan="2"><input name="customer[fax]" id="fax" type="text" value="' . $usces_entries['customer']['fax'] . '" />'.__('Example)', 'usces').'1000-10-1000</td>
+<td colspan="2"><input name="customer[fax]" id="fax" type="text" value="' . esc_attr($usces_entries['customer']['fax']) . '" />'.__('Example)', 'usces').'1000-10-1000</td>
 </tr>';
 //20100818ysk start
 $html .= usces_custom_field_input($usces_entries, 'customer', 'fax_after', 'return');

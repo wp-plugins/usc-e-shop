@@ -110,19 +110,19 @@ jQuery(function($){
 			
 			if( column == 'ID' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][ID]" type="text" value="<?php echo $arr_search['word']['ID'] ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][ID]" type="text" value="<?php echo esc_attr($arr_search['word']['ID']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'date' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][date]" type="text" value="<?php echo $arr_search['word']['date'] ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][date]" type="text" value="<?php echo esc_attr($arr_search['word']['date']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'mem_id' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][mem_id]" type="text" value="<?php echo $arr_search['word']['mem_id'] ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][mem_id]" type="text" value="<?php echo esc_attr($arr_search['word']['mem_id']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'name' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][name]" type="text" value="<?php echo $arr_search['word']['name'] ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][name]" type="text" value="<?php echo esc_attr($arr_search['word']['name']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'order_modified' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][order_modified]" type="text" value="<?php echo $arr_search['word']['order_modified'] ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][order_modified]" type="text" value="<?php echo esc_attr($arr_search['word']['order_modified']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'pref' ) {
 				label = '';
 				html = '<select name="search[word][pref]" class="searchselect">';
@@ -133,7 +133,7 @@ jQuery(function($){
 					$pselected = '';
 				}
 		?>
-				html += '<option value="<?php echo $pvalue; ?>"<?php echo $pselected ?>><?php echo $pvalue ?></option>';
+				html += '<option value="<?php echo esc_attr($pvalue); ?>"<?php echo $pselected ?>><?php echo esc_html($pvalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'delivery_method' ) {
@@ -146,7 +146,7 @@ jQuery(function($){
 					$dselected = '';
 				}
 		?>
-				html += '<option value="<?php echo $dvalue['id']; ?>"<?php echo $dselected ?>><?php echo $dvalue['name'] ?></option>';
+				html += '<option value="<?php echo esc_attr($dvalue['id']); ?>"<?php echo $dselected ?>><?php echo esc_html($dvalue['name']); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'payment_name' ) {
@@ -159,7 +159,7 @@ jQuery(function($){
 					$pnselected = '';
 				}
 		?>
-				html += '<option value="<?php echo $pnvalue; ?>"<?php echo $pnselected ?>><?php echo $pnvalue ?></option>';
+				html += '<option value="<?php echo esc_attr($pnvalue); ?>"<?php echo $pnselected ?>><?php echo esc_html($pnvalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'receipt_status' ) {
@@ -172,7 +172,7 @@ jQuery(function($){
 					$rselected = '';
 				}
 		?>
-				html += '<option value="<?php echo $rvalue; ?>"<?php echo $rselected ?>><?php echo $rvalue ?></option>';
+				html += '<option value="<?php echo esc_attr($rvalue); ?>"<?php echo $rselected ?>><?php echo esc_html($rvalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'order_status' ) {
@@ -185,7 +185,7 @@ jQuery(function($){
 					$oselected = '';
 				}
 		?>
-				html += '<option value="<?php echo $ovalue; ?>"<?php echo $oselected ?>><?php echo $ovalue ?></option>';
+				html += '<option value="<?php echo esc_attr($ovalue); ?>"<?php echo $oselected ?>><?php echo esc_html($ovalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}
@@ -205,14 +205,14 @@ jQuery(function($){
 				label = '';
 				html = '<select name="change[word][order_reciept]" class="searchselect">';
 		<?php foreach((array)$receipt_status as $orkey => $orvalue){ ?>
-				html += '<option value="<?php echo $orkey; ?>"><?php echo $orvalue ?></option>';
+				html += '<option value="<?php echo esc_attr($orkey); ?>"><?php echo esc_html($orvalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'order_status' ) {
 				label = '';
 				html = '<select name="change[word][order_status]" class="searchselect">';
 		<?php foreach((array)$order_status as $oskey => $osvalue){ ?>
-				html += '<option value="<?php echo $oskey; ?>"><?php echo $osvalue ?></option>';
+				html += '<option value="<?php echo esc_attr($oskey); ?>"><?php echo esc_html($osvalue); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'delete' ) {
@@ -299,14 +299,14 @@ jQuery(document).ready(function($){
 		}
 		if($value == 'total_price') continue;
 ?>
-		    <option value="<?php echo $value ?>"<?php echo $selected ?>><?php echo $key ?></option>
+		    <option value="<?php echo esc_attr($value); ?>"<?php echo $selected ?>><?php echo esc_html($key); ?></option>
 <?php endforeach; ?>
     	</select></td>
 		<td id="searchlabel"></td>
 		<td id="searchfield"></td>
 		<td><input name="searchIn" type="submit" class="searchbutton" value="<?php _e('Search', 'usces'); ?>" />
 		<input name="searchOut" type="submit" class="searchbutton" value="<?php _e('Cancellation', 'usces'); ?>" />
-		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo $DT->searchSwitchStatus; ?>" />
+		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo esc_attr($DT->searchSwitchStatus); ?>" />
 		</td>
 		</tr>
 		</table>
@@ -321,7 +321,7 @@ jQuery(document).ready(function($){
 			$selected = '';
 		}
 ?>
-		    <option value="<?php echo $key ?>"<?php echo $selected ?>><?php echo $value ?></option>
+		    <option value="<?php echo esc_attr($key); ?>"<?php echo $selected ?>><?php echo esc_html($value); ?></option>
 <?php endforeach; ?>
 		</select></td>
 		</tr>
@@ -359,7 +359,7 @@ jQuery(document).ready(function($){
 	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $value == '' || $value == ' ' ) $value = '&nbsp;'; ?>
 		<?php if( $key == 'ID' ): ?>
-		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo $value; ?></a></td>
+		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo esc_html($value); ?></a></td>
 		<?php elseif( $key == 'total_price' ): ?>
 		<td class="price"><?php _e('$', 'usces'); ?><?php echo number_format($value); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
@@ -371,7 +371,7 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'order_status' && $value == __('It has sent it out.', 'usces')): ?>
 		<td class="green"><?php echo $value; ?></td>
 		<?php elseif( $key == 'delivery_method'): ?>
-		<td class="green"><?php $delivery_method_index = $this->get_delivery_method_index($value); echo $this->options['delivery_method'][$delivery_method_index]['name']; ?></td>
+		<td class="green"><?php $delivery_method_index = $this->get_delivery_method_index($value); echo esc_html($this->options['delivery_method'][$delivery_method_index]['name']); ?></td>
 		<?php elseif( $key == 'payment_name' && $value == '#none#'): ?>
 		<td>&nbsp;</td>
 		<?php else: ?>

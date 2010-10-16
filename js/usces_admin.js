@@ -123,7 +123,7 @@
 				var essential = data.substring(1,2);
 				var value = data.substring(2,data.length-1);
 				$("#newoptvalue").val(value);
-				$("#newoptmeans").attr({selectedIndex:means});
+				$("#newoptmeans").val(means);
 				if( essential == '1') {
 					$("#newoptessential").attr({checked: true});
 				}else{

@@ -534,7 +534,7 @@ jQuery(document).ready(function($){
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
         <td class="label">e-mail</td>
-        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php esc_html_e($data['order_email']); ?>" /></td>
+        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr($data['order_email']); ?>" /></td>
     </tr>
 	<?php
 //20100818ysk start
@@ -543,11 +543,11 @@ jQuery(document).ready(function($){
 	?>
     <tr>
         <td class="label"><?php _e('name', 'usces'); ?> </td>
-        <td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php esc_html_e($data['order_name1']); ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php esc_html_e($data['order_name2']); ?>" /></td>
+        <td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php echo esc_attr($data['order_name1']); ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php echo esc_attr($data['order_name2']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('furigana', 'usces'); ?></td>
-        <td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php esc_html_e($data['order_name3']); ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php esc_html_e($data['order_name4']); ?>" /></td>
+        <td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php echo esc_attr($data['order_name3']); ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php echo esc_attr($data['order_name4']); ?>" /></td>
     </tr>
 	<?php
 //20100818ysk start
@@ -556,7 +556,7 @@ jQuery(document).ready(function($){
 	?>
     <tr>
         <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-        <td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php esc_html_e($data['order_zip']); ?>" /></td>
+        <td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php echo esc_attr($data['order_zip']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('Province', 'usces'); ?></td>
@@ -566,30 +566,30 @@ jQuery(document).ready(function($){
 	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($data['order_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
+	echo "\t<option value='{" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
 }
 ?>
         </select></td>
     </tr>
     <tr>
         <td class="label"><?php _e('city', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php esc_html_e($data['order_address1']); ?>" /></td>
+        <td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php echo esc_attr($data['order_address1']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('numbers', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php esc_html_e($data['order_address2']); ?>" /></td>
+        <td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php echo esc_attr($data['order_address2']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('building name', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php esc_html_e($data['order_address3']); ?>" /></td>
+        <td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php echo esc_attr($data['order_address3']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('Phone number', 'usces'); ?></td>
-        <td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php esc_html_e($data['order_tel']); ?>" /></td>
+        <td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php echo esc_attr($data['order_tel']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('FAX number', 'usces'); ?></td>
-        <td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php esc_html_e($data['order_fax']); ?>" /></td>
+        <td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php echo esc_attr($data['order_fax']); ?>" /></td>
     </tr>
 	<?php
 //20100818ysk start
@@ -609,7 +609,7 @@ if( $this->options['payment_method'] ) {
 	if( $payments['name'] != '' ) {
 		$selected = ($payments['name'] == $data['order_payment_name']) ? ' selected="selected"' : '';
 ?>
-    <option value="<?php echo $payments['name']; ?>"<?php echo $selected; ?>><?php echo $payments['name']; ?></option>
+    <option value="<?php echo esc_attr($payments['name']); ?>"<?php echo $selected; ?>><?php echo esc_attr($payments['name']); ?></option>
 <?php } } } ?>
 </select></td>
 <td colspan="2" rowspan="8" class="wrap_td">
@@ -621,11 +621,11 @@ if( $this->options['payment_method'] ) {
 	?>
     <tr>
         <td class="label"><?php _e('name', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[name1]" type="text" class="text short" value="<?php echo $deli['name1']; ?>" />    <input name="delivery[name2]" type="text" class="text short" value="<?php echo $deli['name2']; ?>" /></td>
+        <td class="col3"><input name="delivery[name1]" type="text" class="text short" value="<?php echo esc_attr($deli['name1']); ?>" />    <input name="delivery[name2]" type="text" class="text short" value="<?php echo esc_attr($deli['name2']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('furigana', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[name3]" type="text" class="text short" value="<?php echo $deli['name3']; ?>" />    <input name="delivery[name4]" type="text" class="text short" value="<?php echo $deli['name4']; ?>" /></td>
+        <td class="col3"><input name="delivery[name3]" type="text" class="text short" value="<?php echo esc_attr($deli['name3']); ?>" />    <input name="delivery[name4]" type="text" class="text short" value="<?php echo esc_attr($deli['name4']); ?>" /></td>
     </tr>
 	<?php
 //20100818ysk start
@@ -634,7 +634,7 @@ if( $this->options['payment_method'] ) {
 	?>
     <tr>
         <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo $deli['zipcode']; ?>" /></td>
+        <td class="col3"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo esc_attr($deli['zipcode']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('Province', 'usces'); ?></td>
@@ -644,30 +644,30 @@ if( $this->options['payment_method'] ) {
 	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($deli['pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{$value}'{$selected}>{$value}</option>\n";
+	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
 }
 ?>
     </select></td>
     </tr>
     <tr>
         <td class="label"><?php _e('city', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address1]" type="text" class="text long" value="<?php echo $deli['address1']; ?>" /></td>
+        <td class="col3"><input name="delivery[address1]" type="text" class="text long" value="<?php echo esc_attr($deli['address1']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('numbers', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address2]" type="text" class="text long" value="<?php echo $deli['address2']; ?>" /></td>
+        <td class="col3"><input name="delivery[address2]" type="text" class="text long" value="<?php echo esc_attr($deli['address2']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('building name', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address3]" type="text" class="text long" value="<?php echo $deli['address3']; ?>" /></td>
+        <td class="col3"><input name="delivery[address3]" type="text" class="text long" value="<?php echo esc_attr($deli['address3']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('Phone number', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[tel]" type="text" class="text long" value="<?php echo $deli['tel']; ?>" /></td>
+        <td class="col3"><input name="delivery[tel]" type="text" class="text long" value="<?php echo esc_attr($deli['tel']); ?>" /></td>
     </tr>
     <tr>
         <td class="label"><?php _e('FAX number', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[fax]" type="text" class="text long" value="<?php echo $deli['fax']; ?>" /></td>
+        <td class="col3"><input name="delivery[fax]" type="text" class="text long" value="<?php echo esc_attr($deli['fax']); ?>" /></td>
     </tr>
 	<?php
 //20100818ysk start
@@ -683,7 +683,7 @@ foreach((array)$prefs as $value) {
 <?php
 foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 	$selected = $order_delivery_method == $delivery['id'] ? ' selected="selected"' : '';
-	echo "\t<option value='{$delivery['id']}'{$selected}>{$delivery['name']}</option>\n";
+	echo "\t<option value='" . esc_attr($delivery['id']) . "'{$selected}>" . esc_attr($delivery['name']) . "</option>\n";
 }
 ?>
 </select></td>
@@ -701,7 +701,7 @@ if( !$this->options['delivery_time'] == '' ) {
 		$delivery = trim($delivery);
 		if( $delivery != '' ) {
 			$selected = ($delivery == $value) ? ' selected="selected"' : '';
-			echo "\t<option value='{$delivery}'{$selected}>{$delivery}</option>\n";
+			echo "\t<option value='" . esc_attr($delivery) . "'{$selected}>" . esc_html($delivery) . "</option>\n";
 		}
 	}
 }
@@ -766,12 +766,12 @@ for ($i=0; $i<50; $i++) {
 <div class="midasi2"><?php if($condition['display_mode'] == 'Usualsale'){echo __('normal sale', 'usces');}elseif($condition['display_mode'] == 'Promotionsale'){echo __('Sale Campaign', 'usces');} ?></div>
 <div class="condition">
 <?php if ( $condition['display_mode'] == 'Promotionsale' ) : ?>
-<span><?php _e('Special Benefits', 'usces'); ?> : </span><?php echo $condition["campaign_privilege"]; ?> (<?php if($condition["campaign_privilege"] == 'discount'){echo $condition["privilege_discount"].__('% Discount', 'usces');}elseif($condition["campaign_privilege"] == 'point'){echo $condition["privilege_point"].__(" times (limited to members)", 'usces');} ?>) <br />
-<span><?php _e('applied material', 'usces'); ?> : </span><?php if($condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo get_cat_name($condition["campaign_category"]);} ?><br />
+<span><?php _e('Special Benefits', 'usces'); ?> : </span><?php echo $condition["campaign_privilege"]; ?> (<?php if($condition["campaign_privilege"] == 'discount'){echo esc_html($condition["privilege_discount"]).__('% Discount', 'usces');}elseif($condition["campaign_privilege"] == 'point'){echo esc_html($condition["privilege_point"]).__(" times (limited to members)", 'usces');} ?>) <br />
+<span><?php _e('applied material', 'usces'); ?> : </span><?php if($condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo esc_html(get_cat_name($condition["campaign_category"]));} ?><br />
 <?php endif; ?>
 </div></td>
 <td class="label"><?php _e('Notes', 'usces'); ?></td>
-<td colspan="3"><textarea name="order[note]"><?php esc_html_e($data['order_note']); ?></textarea></td>
+<td colspan="3"><textarea name="order[note]"><?php echo esc_attr($data['order_note']); ?></textarea></td>
 </tr>
 </table>
 </div>
@@ -843,7 +843,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
 				if( !empty($key) )
-					$optstr .= htmlspecialchars($key) . ' : ' . htmlspecialchars($value) . "<br />\n"; 
+					$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
 			}
 		}
 			
@@ -851,18 +851,18 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
-		<td class="aleft"><?php echo $cartItemName; ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
-		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text price" type="text" value="<?php echo $skuPrice; ?>" /></td>
-		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text quantity" type="text" value="<?php echo $cart_row['quantity']; ?>" /></td>
+		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
+		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr($skuPrice); ?>" /></td>
+		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>
-		<td <?php echo $red ?>><?php echo $stock; ?></td>
+		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
 		<td>
 		<?php foreach((array)$options as $key => $value){ ?>
-		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $key; ?>" />
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
+		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_attr($key); ?>" />
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_attr($value); ?>" />
 		<?php } ?>
-		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo $advance; ?>" />
-		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
+		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
+		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
 		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
 		</td>
 	</tr>
@@ -878,28 +878,28 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {esc_html_e($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="order[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
 			<td><?php _e('granted points', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {esc_html_e($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="order[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { esc_html_e($data['order_discount']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="order[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo esc_attr($data['order_discount']); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-			<td class="aright"><input name="order[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { esc_html_e($data['order_shipping_charge']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="order[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo esc_attr($data['order_shipping_charge']); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('COD fee','usces'); ?></td>
-			<td class="aright"><input name="order[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { esc_html_e($data['order_cod_fee']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="order[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo esc_attr($data['order_cod_fee']); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="order[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { esc_html_e($data['order_tax']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="order[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo esc_attr($data['order_tax']); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
@@ -913,11 +913,11 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 <div class="ordernavi"><input name="upButton2" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 
 <input name="order_action" type="hidden" value="<?php echo $oa; ?>" />
-<input name="order_id" id="order_id" type="hidden" value="<?php esc_html_e($data['ID']); ?>" />
-<input name="old_getpoint" type="hidden" value="<?php esc_html_e($data['order_getpoint']); ?>" />
-<input name="old_usedpoint" type="hidden" value="<?php esc_html_e($data['order_usedpoint']); ?>" />
+<input name="order_id" id="order_id" type="hidden" value="<?php echo esc_attr($data['ID']); ?>" />
+<input name="old_getpoint" type="hidden" value="<?php echo esc_attr($data['order_getpoint']); ?>" />
+<input name="old_usedpoint" type="hidden" value="<?php echo esc_attr($data['order_usedpoint']); ?>" />
 <input name="up_modified" id="up_modified" type="hidden" value="" />
-<input name="modified" id="modified" type="hidden" value="<?php esc_html_e($data['order_modified']); ?>" />
+<input name="modified" id="modified" type="hidden" value="<?php echo esc_attr($data['order_modified']); ?>" />
 
 
 

@@ -75,7 +75,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clid_zeus');"><?php _e('カード決済IPコード', 'usces'); ?></a></th>
-				<td colspan="4"><input name="clientip" type="text" id="clid_zeus" value="<?php echo $opts['zeus']['clientip']; ?>" size="40" /></td>
+				<td colspan="4"><input name="clientip" type="text" id="clid_zeus" value="<?php echo esc_html($opts['zeus']['clientip']); ?>" size="40" /></td>
 				<td><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -100,12 +100,12 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_clid_zeus');"><?php _e('入金お任せIPコード', 'usces'); ?></a></th>
-				<td colspan="4"><input name="clientip_bank" type="text" id="bank_clid_zeus" value="<?php echo $opts['zeus']['clientip_bank']; ?>" size="40" /></td>
+				<td colspan="4"><input name="clientip_bank" type="text" id="bank_clid_zeus" value="<?php echo esc_html($opts['zeus']['clientip_bank']); ?>" size="40" /></td>
 				<td><div id="ex_bank_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行される入金お任せサービス用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_testid_zeus');"><?php _e('テストカード番号', 'usces'); ?></a></th>
-				<td colspan="4"><input name="testid_bank" type="text" id="testid_bank_zeus" value="<?php echo $opts['zeus']['testid_bank']; ?>" size="40" /></td>
+				<td colspan="4"><input name="testid_bank" type="text" id="testid_bank_zeus" value="<?php echo esc_html($opts['zeus']['testid_bank']); ?>" size="40" /></td>
 				<td><div id="ex_bank_testid_zeus" class="explanation"><?php _e('契約時にZEUSから発行される入金お任せサービス接続テストで必要なカード番号です。（半角数字）<br />本稼動の場合は空白にしてください。', 'usces'); ?></div></td>
 			</tr>
 		</table>
@@ -119,12 +119,12 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_clid_zeus');"><?php _e('コンビニ決済IPコード', 'usces'); ?></a></th>
-				<td colspan="6"><input name="clientip_conv" type="text" id="conv_clid_zeus" value="<?php echo $opts['zeus']['clientip_conv']; ?>" size="40" /></td>
+				<td colspan="6"><input name="clientip_conv" type="text" id="conv_clid_zeus" value="<?php echo esc_html($opts['zeus']['clientip_conv']); ?>" size="40" /></td>
 				<td><div id="ex_conv_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるコンビニ決済サービス用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_testid_zeus');"><?php _e('テストカード番号', 'usces'); ?></a></th>
-				<td colspan="6"><input name="testid_conv" type="text" id="testid_conv_zeus" value="<?php echo $opts['zeus']['testid_conv']; ?>" size="40" /></td>
+				<td colspan="6"><input name="testid_conv" type="text" id="testid_conv_zeus" value="<?php echo esc_html($opts['zeus']['testid_conv']); ?>" size="40" /></td>
 				<td><div id="ex_conv_testid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるコンビニ決済サービス接続テストで必要なカード番号です。（半角数字）<br />本稼動の場合は空白にしてください。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -184,12 +184,12 @@ function toggleVisibility(id) {
 			</tr>
 -->			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_SHOPCO_remise');"><?php _e('加盟店コード', 'usces'); ?></a></th>
-				<td><input name="SHOPCO" type="text" id="SHOPCO_remise" value="<?php echo $opts['remise']['SHOPCO']; ?>" size="20" maxlength="8" /></td>
+				<td><input name="SHOPCO" type="text" id="SHOPCO_remise" value="<?php echo esc_html($opts['remise']['SHOPCO']); ?>" size="20" maxlength="8" /></td>
 				<td><div id="ex_SHOPCO_remise" class="explanation"><?php _e('契約時にルミーズから発行される加盟店コード（半角英数）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_HOSTID_remise');"><?php _e('ホスト番号', 'usces'); ?></a></th>
-				<td><input name="HOSTID" type="text" id="HOSTID_remise" value="<?php echo $opts['remise']['HOSTID']; ?>" size="20" maxlength="8" /></td>
+				<td><input name="HOSTID" type="text" id="HOSTID_remise" value="<?php echo esc_html($opts['remise']['HOSTID']); ?>" size="20" maxlength="8" /></td>
 				<td><div id="ex_HOSTID_remise" class="explanation"><?php _e('契約時にルミーズから割り当てられるホスト番号（半角数字）', 'usces'); ?></div></td>
 			</tr>
 		</table>
@@ -228,7 +228,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_pc_remise');"><?php _e('本番URL(PC)', 'usces'); ?></a></th>
-				<td colspan="4"><input name="send_url_pc" type="text" id="send_url_pc_remise" value="<?php echo $opts['remise']['send_url_pc']; ?>" size="40" /></td>
+				<td colspan="4"><input name="send_url_pc" type="text" id="send_url_pc_remise" value="<?php echo esc_html($opts['remise']['send_url_pc']); ?>" size="40" /></td>
 				<td><div id="ex_send_url_pc_remise" class="explanation"><?php _e('クレジットカード決済の本番環境で接続するURLを設定します。', 'usces'); ?></div></td>
 			</tr>
 		</table>
@@ -241,7 +241,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_paydate_remise');"><?php _e('支払期限', 'usces'); ?></a></th>
-				<td colspan="4"><input name="S_PAYDATE" type="text" id="S_PAYDATE_remise" value="<?php echo $opts['remise']['S_PAYDATE']; ?>" size="5" maxlength="3" />日</td>
+				<td colspan="4"><input name="S_PAYDATE" type="text" id="S_PAYDATE_remise" value="<?php echo esc_html($opts['remise']['S_PAYDATE']); ?>" size="5" maxlength="3" />日</td>
 				<td><div id="ex_paydate_remise" class="explanation"><?php _e('日数を設定します。（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -252,7 +252,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_cvs_pc_remise');"><?php _e('本番URL(PC)', 'usces'); ?></a></th>
-				<td colspan="4"><input name="send_url_cvs_pc" type="text" id="send_url_cvs_pc_remise" value="<?php echo $opts['remise']['send_url_cvs_pc']; ?>" size="40" /></td>
+				<td colspan="4"><input name="send_url_cvs_pc" type="text" id="send_url_cvs_pc_remise" value="<?php echo esc_html($opts['remise']['send_url_cvs_pc']); ?>" size="40" /></td>
 				<td><div id="ex_send_url_cvs_pc_remise" class="explanation"><?php _e('コンビニ・電子マネー決済の本番環境で接続するURLを設定します。', 'usces'); ?></div></td>
 			</tr>
 		</table>

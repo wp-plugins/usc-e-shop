@@ -51,7 +51,7 @@ if (isset($_REQUEST['usces_search'])) {
 				<a href="' . get_permalink($post->ID) . '">' . usces_the_itemImage(0, 100, 100, $post, 'return') . '</a>
 				</div>
 				<div class="loopexp">
-					<div class="itemtitle"><a href="' . get_permalink($post->ID) . '">' . $post->post_title . '</a></div>
+					<div class="itemtitle"><a href="' . get_permalink($post->ID) . '">' . esc_html($post->post_title) . '</a></div>
 					<div class="field">' . $post->post_content . '</div>
 				</div>
 				</div>';

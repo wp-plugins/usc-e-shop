@@ -16,7 +16,7 @@ $html .= '</div>'."\n";
 if(usces_sku_num() === 1) { //1SKU
 	usces_have_skus();
 	
-	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp; (' . usces_the_itemCode( 'return' ) . ') </h3>'."\n";
+	$html .= '<h3>' . esc_html(usces_the_itemName( 'return' )) . '&nbsp; (' . esc_html(usces_the_itemCode( 'return' )) . ') </h3>'."\n";
 	$html .= '<div class="exp">'."\n";
 	$html .= '<div class="field">'."\n";
 	if( $this->itemsku['value']['cprice'] > 0 ){
@@ -28,7 +28,7 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= '<div class="field_name">' . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), $this->getGuidTax()) . '</div>'."\n";
 	$html .= '<div class="field_price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</div>'."\n";
 	$html .= '</div>'."\n";
-	$singlestock = '<div class="field">' . __('stock status', 'usces') . ' : ' . usces_the_itemZaiko('return') . '</div>'."\n";
+	$singlestock = '<div class="field">' . __('stock status', 'usces') . ' : ' . esc_html(usces_the_itemZaiko('return')) . '</div>'."\n";
 	$html .= apply_filters('single_item_stock_field', $singlestock);
 	$item_custom = usces_get_item_custom( $post->ID, 'list', 'return' );
 	if($item_custom){
@@ -44,11 +44,11 @@ if(usces_sku_num() === 1) { //1SKU
 	if (usces_is_options()) {
 		$html .= "<table class='item_option'><caption>".__('Please appoint an option.', 'usces')."</caption>\n";
 		while (usces_have_options()) {
-			$html .= "<tr><th>" . $this->itemopt['key'] . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
+			$html .= "<tr><th>" . esc_html($this->itemopt['key']) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
 		}
 		$html .= "</table>\n";
 	}
-	$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . $this->itemsku['value']['unit'] . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>'."\n";
+	$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . esc_html($this->itemsku['value']['unit']) . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>'."\n";
 	$html .= '</div><!-- end of skuform -->'."\n";
 	$html .= apply_filters('single_item_single_sku_after_field', NULL);
 	
@@ -89,12 +89,12 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= '<tbody>'."\n";
 	do {
 		$html .= '<tr>'."\n";
-		$html .= '<td rowspan="2">' . $this->itemsku['key'] . '</td>'."\n";
-		$html .= '<td colspan="2" class="skudisp subborder">' . $this->itemsku['value']['disp']."\n";
+		$html .= '<td rowspan="2">' . esc_html($this->itemsku['key']) . '</td>'."\n";
+		$html .= '<td colspan="2" class="skudisp subborder">' . esc_html($this->itemsku['value']['disp'])."\n";
 		if (usces_is_options()) {
 			$html .= "<table class='item_option'><caption>".__('Please appoint an option.', 'usces')."</caption>\n";
 			while (usces_have_options()) {
-				$html .= "<tr><th>" . $this->itemopt['key'] . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
+				$html .= "<tr><th>" . esc_html($this->itemopt['key']) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>\n";
 			}
 			$html .= "</table>\n";
 //			while (usces_have_options()) {
@@ -144,7 +144,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 			setup_postdata($post);
 			usces_the_item();
 			$html .= '<li><div class="listbox clearfix">'."\n";
-			$html .= '<div class="slit"><a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . $post->post_title . '">' . usces_the_itemImage(0, 100, 100, $post, 'return') . '</a></div>'."\n";
+			$html .= '<div class="slit"><a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . esc_attr($post->post_title) . '">' . usces_the_itemImage(0, 100, 100, $post, 'return') . '</a></div>'."\n";
 			$html .= '<div class="detail">'."\n";
 			$html .= '<h4>' . usces_the_itemName('return') . '</h4>'."\n";
 			$html .= $post->post_excerpt;
@@ -153,7 +153,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 				$html .= __('$', 'usces') . usces_the_firstPrice('return');
 			}
 			$html .= '<br />'."\n";
-			$html .= '&raquo; <a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . $post->post_title . '">'.__('see the details', 'usces').'</a></p>'."\n";
+			$html .= '&raquo; <a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . esc_attr($post->post_title) . '">'.__('see the details', 'usces').'</a></p>'."\n";
 			$html .= '</div>'."\n";
 			$html .= '</div>'."\n";
 			$html .= '</li>'."\n";

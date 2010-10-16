@@ -41,7 +41,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				}else{
 					$html .= '<tr>
 						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
-						<td colspan="2"><input name="cnum1" type="text" size="6" maxlength="4" value="' . $cnum1 . '" />-<input name="cnum2" type="text" size="6" maxlength="4" value="' . $cnum2 . '" />-<input name="cnum3" type="text" size="6" maxlength="4" value="' . $cnum3 . '" />-<input name="cnum4" type="text" size="6" maxlength="4" value="' . $cnum4 . '" /></td>
+						<td colspan="2"><input name="cnum1" type="text" size="6" maxlength="4" value="' . esc_attr($cnum1) . '" />-<input name="cnum2" type="text" size="6" maxlength="4" value="' . esc_attr($cnum2) . '" />-<input name="cnum3" type="text" size="6" maxlength="4" value="' . esc_attr($cnum3) . '" />-<input name="cnum4" type="text" size="6" maxlength="4" value="' . esc_attr($cnum4) . '" /></td>
 						</tr>
 						<tr>
 						<th scope="row">'.__('カード有効期限', 'usces').'</th>
@@ -73,7 +73,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 						</tr>
 						<tr>
 						<th scope="row">'.__('カード名義', 'usces').'</th>
-						<td colspan="2"><input name="username" type="text" size="30" value="' . $username . '" />(半角英字)</td>
+						<td colspan="2"><input name="username" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
 						</tr>';
 				}	
 					
