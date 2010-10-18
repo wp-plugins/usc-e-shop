@@ -17,7 +17,6 @@ define('USCES_DB_ORDER_META', '1.1');
 
 define('USCES_WP_CONTENT_DIR', ABSPATH . 'wp-content');
 define('USCES_WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
-
 define('USCES_WP_PLUGIN_DIR', USCES_WP_CONTENT_DIR . '/plugins');
 define('USCES_WP_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins');
 
