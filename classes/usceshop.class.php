@@ -3577,6 +3577,14 @@ class usc_e_shop
 		return $ids;
 	}
 	
+	function get_item_post_ids(){
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_mime_type = %s", 'item');
+		$ids = $wpdb->get_col( $query );
+
+		return $ids;
+	}
+	
 	function get_item_cat_genre_ids( $post_id ){
 		$genre = get_category_by_slug( 'itemgenre' );
 		$genre_id = $genre->term_id;
@@ -5274,6 +5282,9 @@ class usc_e_shop
 			default:
 				$html = $content;
 		}
+		
+		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI'])) )
+			$html = str_replace('src="'.get_option('siteurl'), 'src="'.USCES_SSL_URL_ADMIN, $html);
 
 		$html = apply_filters('usces_filter_cartContent', $html);
 

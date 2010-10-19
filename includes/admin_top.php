@@ -117,7 +117,8 @@ $items_num = $this->get_items_num();
 <td>MySQL</td><td colspan="2"><?php echo mysql_get_server_info(); ?></td>
 </tr>
 <tr>
-<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "(".__('Safe mode', 'usces').")"; ?></td>
+<?php $get_ini = ini_get_all(); ?>
+<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "(".__('Safe mode', 'usces').")"; ?> memoly[global]:<?php echo $get_ini['memory_limit']['global_value']; ?>M [locale]:<?php echo $get_ini['memory_limit']['local_value']; ?>M [usage]:<?php echo (int)(memory_get_usage()/1048576); ?>M</td>
 </tr>
 </table>
 </div>

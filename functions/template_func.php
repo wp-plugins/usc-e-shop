@@ -896,6 +896,11 @@ function usces_the_confirm() {
 	$usces->display_cart_confirm();
 }
 
+function usces_inquiry_condition() {
+	global $error_message, $reserve, $inq_name, $inq_mailaddress, $inq_contents;
+	require(USCES_PLUGIN_DIR.'/includes/inquiry_condition.php');
+}
+
 function usces_the_inquiry_form() {
 	global $usces;
 	$error_message = '';
@@ -924,6 +929,7 @@ function usces_the_inquiry_form() {
 		if($usces->page == 'deficiency')
 			$error_message .= __('Please input contents.', 'usces');
 	}
+	
 
 	if($usces->page == 'inquiry_comp') :
 ?>
@@ -1709,4 +1715,14 @@ function has_custom_customer_field_essential() {
 }
 //20100818ysk end
 
+function usces_order_discount( $out = 'echo' ){
+	global $usces;
+	$res = abs($usces->get_order_discount());
+	
+	if($out == 'return') {
+		return $res;
+	} else {
+		echo number_format($res);
+	}
+}
 ?>

@@ -373,12 +373,18 @@ function usces_send_inquirymail() {
 	global $usces;
 	$res = false;
 	$mail_data = $usces->options['mail_data'];
-	$inq_name = esc_html(trim($_POST["inq_name"]));
-	$inq_contents = esc_html(trim($_POST["inq_contents"]));
-	$inq_mailaddress = esc_html(trim($_POST["inq_mailaddress"]));
+	$inq_name = trim($_POST["inq_name"]);
+	$inq_contents = trim($_POST["inq_contents"]);
+	$inq_mailaddress = trim($_POST["inq_mailaddress"]);
+	$reserve = '';
+	if(isset($_POST['reserve'])){
+		foreach($_POST['reserve'] as $key => $value){
+			$reserve .= $key . " : " . $value . "\r\n";
+		}
+	}
 
 	$subject =  $mail_data['title']['inquiry'];
-	$message = $mail_data['header']['inquiry'] . "\r\n\r\n" . $inq_contents . "\r\n\r\n" . $mail_data['footer']['inquiry'];
+	$message = $mail_data['header']['inquiry'] . "\r\n\r\n" . $reserve . $inq_contents . "\r\n\r\n" . $mail_data['footer']['inquiry'];
 
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $inq_name),
@@ -393,8 +399,11 @@ function usces_send_inquirymail() {
 		$res0 = usces_send_mail( $para1 );
 	if ( $res0 ) {
 	
-		$subject =  __('** An inquiry **','usces');
-		$message = $_POST['inq_contents'];
+		$subject =  __('** An inquiry **','usces').'('.$inq_name.')';
+		$message = $reserve . $_POST['inq_contents'] . "\r\n"
+		 . "\n----------------------------------------------------\n"
+		 . "REMOTE_ADDR : " . $_SERVER['REMOTE_ADDR']
+		 . "\n----------------------------------------------------\n";
 	
 		$para2 = array(
 				'to_name' => __('An inquiry email','usces'),
@@ -421,8 +430,8 @@ function usces_send_regmembermail($user) {
 
 	$subject =  $mail_data['title']['membercomp'];
 	$message = $mail_data['header']['membercomp'] . $mail_data['footer']['membercomp'];
-	$name = esc_html(trim($user['name1'])) . esc_html(trim($user['name2']));
-	$mailaddress1 = esc_html(trim($user['mailaddress1']));
+	$name = trim($user['name1']) . trim($user['name2']);
+	$mailaddress1 = trim($user['mailaddress1']);
 
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $name),
