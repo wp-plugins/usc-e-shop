@@ -2518,3 +2518,24 @@ msgstr "テキストエリア"
 
 msgid "M j, Y"
 msgstr "Y-m-d"
+
+msgid "Header Information"
+msgstr "ヘッダ情報"
+
+msgid "Product Information"
+msgstr "商品情報"
+
+msgid "Order Infomation"
+msgstr "受注情報"
+
+msgid "Download"
+msgstr "ダウンロード"
+
+msgid "Download Member List"
+msgstr "会員データ出力"
+
+msgid "Download Product List"
+msgstr "商品データ出力"
+
+msgid "Download Order List"
+msgstr "受注データ出力"

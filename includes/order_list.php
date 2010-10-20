@@ -40,6 +40,15 @@ foreach((array)$ums as $key => $value){
 }
 $order_status['new'] = __('new order', 'usces');
 $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
+
+//20100908ysk start
+$csod_meta = usces_has_custom_field_meta('order');
+$cscs_meta = usces_has_custom_field_meta('customer');
+$csde_meta = usces_has_custom_field_meta('delivery');
+$usces_opt_order = unserialize(get_option('usces_opt_order'));
+$chk_pro = $usces_opt_order['chk_pro'];
+$chk_ord = $usces_opt_order['chk_ord'];
+//20100908ysk end
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -265,6 +274,72 @@ jQuery(document).ready(function($){
 	}
 		
 	operation.change_search_field();
+	
+//20100908ysk start
+	$("#dlProductListDialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 700,
+		resizable: true,
+		modal: true,
+		buttons: {
+			'<?php _e('close', 'usces'); ?>': function() {
+				$(this).dialog('close');
+			}
+		},
+		close: function() {
+		}
+	});
+	$('#dl_pro').click(function() {
+		var args = "&search[column]="+$(':input[name="search[column]"]').val()
+			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+			+"&search[period]="+$(':input[name="search[period]"]').val()
+			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+			+"&ftype="+$(':input[name="ftype_pro[]"]:checked').val();
+		$('*[class=check_product]').each(function(i) {
+			if($(this).attr('checked') == true) {
+				args += '&check['+$(this).val()+']=on';
+			}
+		});
+		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=dlproductlist&noheader=true"+args;
+	});
+	$('#dl_productlist').click(function() {
+		$('#dlProductListDialog').dialog('open');
+	});
+
+	$("#dlOrderListDialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 600,
+		width: 700,
+		resizable: true,
+		modal: true,
+		buttons: {
+			'<?php _e('close', 'usces'); ?>': function() {
+				$(this).dialog('close');
+			}
+		},
+		close: function() {
+		}
+	});
+	$('#dl_ord').click(function() {
+		var args = "&search[column]="+$(':input[name="search[column]"]').val()
+			+"&search[word]="+$(':input[name="search[word]"]').val()
+			+"&search[period]="+$(':input[name="search[period]"]').val()
+			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+			+"&ftype="+$(':input[name="ftype_ord[]"]:checked').val();
+		$('*[class=check_order]').each(function(i) {
+			if($(this).attr('checked') == true) {
+				args += '&check['+$(this).val()+']=on';
+			}
+		});
+		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=dlorderlist&noheader=true"+args;
+	});
+	$('#dl_orderlist').click(function() {
+		$('#dlOrderListDialog').dialog('open');
+	});
+//20100908ysk end
 });
 </script>
 
@@ -342,6 +417,14 @@ jQuery(document).ready(function($){
 		</tr>
 		</table>
 		<input name="action" id="oederlistaction" type="hidden" />
+<!--20100908ysk start-->
+		<table id="dl_list_table">
+		<tr>
+		<td><input type="button" id="dl_productlist" class="searchbutton" value="<?php _e('Download Product List', 'usces'); ?>" /></td>
+		<td><input type="button" id="dl_orderlist" class="searchbutton" value="<?php _e('Download Order List', 'usces'); ?>" /></td>
+		</tr>
+		</table>
+<!--20100908ysk end-->
 </div>
 </div>
 
@@ -384,6 +467,183 @@ jQuery(document).ready(function($){
 </table>
 
 </div>
+<!--20100908ysk start-->
+<div id="dlProductListDialog" title="<?php _e('Download Product List', 'usces'); ?>">
+	<p><?php _e('出力したい項目を選択して、ダウンロードを押してください。', 'usces'); ?></p>
+	<fieldset>
+<?php 
+	if($usces_opt_order['ftype_pro'] == 'xls') {
+		$ftype_pro_xls = ' checked';
+		$ftype_pro_csv = '';
+	} elseif($usces_opt_order['ftype_pro'] == 'csv') {
+		$ftype_pro_xls = '';
+		$ftype_pro_csv = ' checked';
+	} else {
+		$ftype_pro_xls = ' checked';
+		$ftype_pro_csv = '';
+	}
+?>
+		<label for="ftype_pro_xls"><input type="radio" name="ftype_pro[]" id="ftype_pro_xls" value="xls"<?php echo $ftype_pro_xls; ?> /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_pro_csv"><input type="radio" name="ftype_pro[]" id="ftype_pro_csv" value="csv"<?php echo $ftype_pro_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<input type="button" id="dl_pro" value="<?php _e('Download', 'usces'); ?>" />
+	</fieldset>
+	<fieldset><legend><?php _e('Header Information', 'usces'); ?></legend>
+		<label for="chk_pro[ID]"><input type="checkbox" class="check_product" id="chk_pro[ID]" value="ID" checked disabled /><?php _e('order number', 'usces'); ?></label>
+		<label for="chk_pro[date]"><input type="checkbox" class="check_product" id="chk_pro[date]" value="date"<?php if($chk_pro['date'] == 1) echo ' checked'; ?> /><?php _e('order date', 'usces'); ?></label>
+		<label for="chk_pro[mem_id]"><input type="checkbox" class="check_product" id="chk_pro[mem_id]" value="mem_id"<?php if($chk_pro['mem_id'] == 1) echo ' checked'; ?> /><?php _e('membership number', 'usces'); ?></label>
+		<label for="chk_pro[name]"><input type="checkbox" class="check_product" id="chk_pro[name]" value="name"<?php if($chk_pro['name'] == 1) echo ' checked'; ?> /><?php _e('name', 'usces'); ?></label>
+		<label for="chk_pro[delivery_method]"><input type="checkbox" class="check_product" id="chk_pro[delivery_method]" value="delivery_method"<?php if($chk_pro['delivery_method'] == 1) echo ' checked'; ?> /><?php _e('shipping option','usces'); ?></label>
+		<label for="chk_pro[shipping_date]"><input type="checkbox" class="check_product" id="chk_pro[shipping_date]" value="shipping_date"<?php if($chk_pro['shipping_date'] == 1) echo ' checked'; ?> /><?php _e('shpping date', 'usces'); ?></label>
+	</fieldset>
+	<fieldset><legend><?php _e('Product Information', 'usces'); ?></legend>
+		<label for="chk_pro[item_code]"><input type="checkbox" class="check_product" id="chk_pro[item_code]" value="item_code" checked disabled /><?php _e('item code', 'usces'); ?></label>
+		<label for="chk_pro[sku_code]"><input type="checkbox" class="check_product" id="chk_pro[sku_code]" value="sku_code" checked disabled /><?php _e('SKU code', 'usces'); ?></label>
+		<label for="chk_pro[item_name]"><input type="checkbox" class="check_product" id="chk_pro[item_name]" value="item_name"<?php if($chk_pro['item_name'] == 1) echo ' checked'; ?> /><?php _e('item name', 'usces'); ?></label>
+		<label for="chk_pro[sku_name]"><input type="checkbox" class="check_product" id="chk_pro[sku_name]" value="sku_name"<?php if($chk_pro['sku_name'] == 1) echo ' checked'; ?> /><?php _e('SKU display name ', 'usces'); ?></label>
+		<label for="chk_pro[options]"><input type="checkbox" class="check_product" id="chk_pro[options]" value="options"<?php if($chk_pro['options'] == 1) echo ' checked'; ?> /><?php _e('options for items', 'usces'); ?></label>
+		<label for="chk_pro[quantity]"><input type="checkbox" class="check_product" id="chk_pro[quantity]" value="quantity" checked disabled /><?php _e('Quantity','usces'); ?></label>
+		<label for="chk_pro[price]"><input type="checkbox" class="check_product" id="chk_pro[price]" value="price" checked disabled /><?php _e('Unit price','usces'); ?></label>
+		<label for="chk_pro[unit]"><input type="checkbox" class="check_product" id="chk_pro[unit]" value="unit"<?php if($chk_pro['unit'] == 1) echo ' checked'; ?> /><?php _e('unit', 'usces'); ?></label>
+	</fieldset>
+</div>
+<div id="dlOrderListDialog" title="<?php _e('Download Order List', 'usces'); ?>">
+	<p><?php _e('出力したい項目を選択して、ダウンロードを押してください。', 'usces'); ?></p>
+	<fieldset>
+<?php 
+	if($usces_opt_order['ftype_ord'] == 'xls') {
+		$ftype_ord_xls = ' checked';
+		$ftype_ord_csv = '';
+	} elseif($usces_opt_order['ftype_ord'] == 'csv') {
+		$ftype_ord_xls = '';
+		$ftype_ord_csv = ' checked';
+	} else {
+		$ftype_ord_xls = ' checked';
+		$ftype_ord_csv = '';
+	}
+?>
+		<label for="ftype_ord_xls"><input type="radio" name="ftype_ord[]" id="ftype_ord_xls" value="xls"<?php echo $ftype_ord_xls; ?> /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_ord_csv"><input type="radio" name="ftype_ord[]" id="ftype_ord_csv" value="csv"<?php echo $ftype_ord_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<input type="button" id="dl_ord" value="<?php _e('Download', 'usces'); ?>" />
+	</fieldset>
+	<fieldset><legend><?php _e('Customer Information', 'usces'); ?></legend>
+		<label for="chk_ord[ID]"><input type="checkbox" class="check_order" id="chk_ord[ID]" value="ID" checked disabled /><?php _e('Order number', 'usces'); ?></label>
+		<label for="chk_ord[date]"><input type="checkbox" class="check_order" id="chk_ord[date]" value="date" checked disabled /><?php _e('order date', 'usces'); ?></label>
+		<label for="chk_ord[mem_id]"><input type="checkbox" class="check_order" id="chk_ord[mem_id]" value="mem_id"<?php if($chk_ord['mem_id'] == 1) echo ' checked'; ?> /><?php _e('membership number', 'usces'); ?></label>
+		<label for="chk_ord[email]"><input type="checkbox" class="check_order" id="chk_ord[email]" value="email"<?php if($chk_ord['email'] == 1) echo ' checked'; ?> /><?php _e('e-mail', 'usces'); ?></label>
+<?php 
+	if(!empty($cscs_meta)) {
+		foreach($cscs_meta as $key => $entry) {
+			if($entry['position'] == 'name_pre') {
+				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+		<label for="chk_ord[name]"><input type="checkbox" class="check_order" id="chk_ord[name]" value="name" checked disabled /><?php _e('name', 'usces'); ?></label>
+		<label for="chk_ord[kana]"><input type="checkbox" class="check_order" id="chk_ord[kana]" value="kana"<?php if($chk_ord['kana'] == 1) echo ' checked'; ?> /><?php _e('furigana', 'usces'); ?></label>
+<?php 
+	if(!empty($cscs_meta)) {
+		foreach($cscs_meta as $key => $entry) {
+			if($entry['position'] == 'name_after') {
+				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+		<label for="chk_ord[zip]"><input type="checkbox" class="check_order" id="chk_ord[zip]" value="zip"<?php if($chk_ord['zip'] == 1) echo ' checked'; ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
+		<label for="chk_ord[pref]"><input type="checkbox" class="check_order" id="chk_ord[pref]" value="pref"<?php if($chk_ord['pref'] == 1) echo ' checked'; ?> /><?php _e('Province', 'usces'); ?></label>
+		<label for="chk_ord[address1]"><input type="checkbox" class="check_order" id="chk_ord[address1]" value="address1"<?php if($chk_ord['address1'] == 1) echo ' checked'; ?> /><?php _e('city', 'usces'); ?></label>
+		<label for="chk_ord[address2]"><input type="checkbox" class="check_order" id="chk_ord[address2]" value="address2"<?php if($chk_ord['address2'] == 1) echo ' checked'; ?> /><?php _e('numbers', 'usces'); ?></label>
+		<label for="chk_ord[address3]"><input type="checkbox" class="check_order" id="chk_ord[address3]" value="address3"<?php if($chk_ord['address3'] == 1) echo ' checked'; ?> /><?php _e('building name', 'usces'); ?></label>
+		<label for="chk_ord[tel]"><input type="checkbox" class="check_order" id="chk_ord[tel]" value="tel"<?php if($chk_ord['tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_ord[fax]"><input type="checkbox" class="check_order" id="chk_ord[fax]" value="fax"<?php if($chk_ord['fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
+<?php 
+	if(!empty($cscs_meta)) {
+		foreach($cscs_meta as $key => $entry) {
+			if($entry['position'] == 'fax_after') {
+				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+	</fieldset>
+	<fieldset><legend><?php _e('Shipping address information', 'usces'); ?></legend>
+<?php 
+	if(!empty($csde_meta)) {
+		foreach($csde_meta as $key => $entry) {
+			if($entry['position'] == 'name_pre') {
+				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+		<label for="chk_ord[delivery_name]"><input type="checkbox" class="check_order" id="chk_ord[delivery_name]" value="delivery_name"<?php if($chk_ord['delivery_name'] == 1) echo ' checked'; ?> /><?php _e('name', 'usces'); ?></label>
+		<label for="chk_ord[delivery_kana]"><input type="checkbox" class="check_order" id="chk_ord[delivery_kana]" value="delivery_kana"<?php if($chk_ord['delivery_kana'] == 1) echo ' checked'; ?> /><?php _e('furigana', 'usces'); ?></label>
+<?php 
+	if(!empty($csde_meta)) {
+		foreach($csde_meta as $key => $entry) {
+			if($entry['position'] == 'name_after') {
+				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+		<label for="chk_ord[delivery_zip]"><input type="checkbox" class="check_order" id="chk_ord[delivery_zip]" value="delivery_zip"<?php if($chk_ord['delivery_zip'] == 1) echo ' checked'; ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
+		<label for="chk_ord[delivery_pref]"><input type="checkbox" class="check_order" id="chk_ord[delivery_pref]" value="delivery_pref"<?php if($chk_ord['delivery_pref'] == 1) echo ' checked'; ?> /><?php _e('Province', 'usces'); ?></label>
+		<label for="chk_ord[delivery_address1]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address1]" value="delivery_address1"<?php if($chk_ord['delivery_address1'] == 1) echo ' checked'; ?> /><?php _e('city', 'usces'); ?></label>
+		<label for="chk_ord[delivery_address2]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address2]" value="delivery_address2"<?php if($chk_ord['delivery_address2'] == 1) echo ' checked'; ?> /><?php _e('numbers', 'usces'); ?></label>
+		<label for="chk_ord[delivery_address3]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address3]" value="delivery_address3"<?php if($chk_ord['delivery_address3'] == 1) echo ' checked'; ?> /><?php _e('building name', 'usces'); ?></label>
+		<label for="chk_ord[delivery_tel]"><input type="checkbox" class="check_order" id="chk_ord[delivery_tel]" value="delivery_tel"<?php if($chk_ord['delivery_tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_ord[delivery_fax]"><input type="checkbox" class="check_order" id="chk_ord[delivery_fax]" value="delivery_fax"<?php if($chk_ord['delivery_fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
+<?php 
+	if(!empty($csde_meta)) {
+		foreach($csde_meta as $key => $entry) {
+			if($entry['position'] == 'fax_after') {
+				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+	</fieldset>
+	<fieldset><legend><?php _e('Order Infomation', 'usces'); ?></legend>
+		<label for="chk_ord[shipping_date]"><input type="checkbox" class="check_order" id="chk_ord[shipping_date]" value="shipping_date"<?php if($chk_ord['shipping_date'] == 1) echo ' checked'; ?> /><?php _e('shpping date', 'usces'); ?></label>
+		<label for="chk_ord[peyment_method]"><input type="checkbox" class="check_order" id="chk_ord[peyment_method]" value="peyment_method"<?php if($chk_ord['peyment_method'] == 1) echo ' checked'; ?> /><?php _e('payment method','usces'); ?></label>
+		<label for="chk_ord[delivery_method]"><input type="checkbox" class="check_order" id="chk_ord[delivery_method]" value="delivery_method"<?php if($chk_ord['delivery_method'] == 1) echo ' checked'; ?> /><?php _e('shipping option','usces'); ?></label>
+		<label for="chk_ord[delivery_time]"><input type="checkbox" class="check_order" id="chk_ord[delivery_time]" value="delivery_time"<?php if($chk_ord['delivery_time'] == 1) echo ' checked'; ?> /><?php _e('delivery time','usces'); ?></label>
+		<label for="chk_ord[delidue_date]"><input type="checkbox" class="check_order" id="chk_ord[delidue_date]" value="delidue_date"<?php if($chk_ord['delidue_date'] == 1) echo ' checked'; ?> /><?php _e('Shipping date', 'usces'); ?></label>
+		<label for="chk_ord[status]"><input type="checkbox" class="check_order" id="chk_ord[status]" value="status"<?php if($chk_ord['status'] == 1) echo ' checked'; ?> /><?php _e('Status', 'usces'); ?></label>
+		<label for="chk_ord[total_amount]"><input type="checkbox" class="check_order" id="chk_ord[total_amount]" value="total_amount" checked disabled /><?php _e('Total Amount', 'usces'); ?></label>
+		<label for="chk_ord[usedpoint]"><input type="checkbox" class="check_order" id="chk_ord[usedpoint]" value="usedpoint"<?php if($chk_ord['usedpoint'] == 1) echo ' checked'; ?> /><?php _e('Used points', 'usces'); ?></label>
+		<label for="chk_ord[discount]"><input type="checkbox" class="check_order" id="chk_ord[discount]" value="discount" checked disabled /><?php _e('Disnount', 'usces'); ?></label>
+		<label for="chk_ord[shipping_charge]"><input type="checkbox" class="check_order" id="chk_ord[shipping_charge]" value="shipping_charge" checked disabled /><?php _e('Shipping', 'usces'); ?></label>
+		<label for="chk_ord[cod_fee]"><input type="checkbox" class="check_order" id="chk_ord[cod_fee]" value="cod_fee" checked disabled /><?php _e('COD fee', 'usces'); ?></label>
+		<label for="chk_ord[tax]"><input type="checkbox" class="check_order" id="chk_ord[tax]" value="tax" checked disabled /><?php _e('consumption tax', 'usces'); ?></label>
+		<label for="chk_ord[note]"><input type="checkbox" class="check_order" id="chk_ord[note]" value="note"<?php if($chk_ord['note'] == 1) echo ' checked'; ?> /><?php _e('Notes', 'usces'); ?></label>
+<?php 
+	if(!empty($csod_meta)) {
+		foreach($csod_meta as $key => $entry) {
+			$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+			$name = esc_attr($entry['name']);
+			echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+		}
+	}
+?>
+	</fieldset>
+</div>
+<!--20100908ysk end-->
+
 <!--<div class="chui">
 <h3>受注詳細画面（作成中）について</h3>
 <p>各行の受注番号をクリックすると受注詳細画面が表示されます。受注詳細画面では注文商品の追加、修正、削除など受注に関する全ての情報を編集することができま、問い合わせや電話での変更依頼に対応します。</p>

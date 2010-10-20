@@ -401,6 +401,14 @@ class usc_e_shop
 			$order_action = $_REQUEST['order_action'];
 		}
 		switch ($order_action) {
+//20100908ysk start
+			case 'dlproductlist':
+				usces_download_product_list();
+				break;
+			case 'dlorderlist':
+				usces_download_order_list();
+				break;
+//20100908ysk end
 			case 'printpdf':
 				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');	
 				break;
@@ -461,6 +469,11 @@ class usc_e_shop
 		}
 		$member_action = $_REQUEST['member_action'];
 		switch ($member_action) {
+//20100908ysk start
+			case 'dlmemberlist':
+				usces_download_member_list();
+				break;
+//20100908ysk end
 			case 'editpost':
 				$this->error_message = $this->admin_member_check();
 				if($this->error_message == ''){
@@ -1582,6 +1595,14 @@ class usc_e_shop
 					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
 					break;
 //20100818ysk end
+//20100908ysk start
+				case 'usces_orderlist':
+					wp_enqueue_script('jquery-ui-dialog');
+					break;
+				case 'usces_memberlist':
+					wp_enqueue_script('jquery-ui-dialog');
+					break;
+//20100908ysk end
 			}
 		}
 
@@ -3115,6 +3136,10 @@ class usc_e_shop
 				acc_type VARCHAR( 20 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
+				acc_num1 INT( 11 ) NOT NULL 0,
+				acc_num2 INT( 11 ) NOT NULL 0,
+				acc_str1 VARCHAR( 200 ) NULL ,
+				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
 				KEY acc_date ( acc_date )  
@@ -3258,6 +3283,10 @@ class usc_e_shop
 				acc_type VARCHAR( 20 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
+				acc_num1 INT( 11 ) NOT NULL 0,
+				acc_num2 INT( 11 ) NOT NULL 0,
+				acc_str1 VARCHAR( 200 ) NULL ,
+				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
 				KEY acc_date ( acc_date )  

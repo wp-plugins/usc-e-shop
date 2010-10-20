@@ -451,7 +451,7 @@ function item_sku_meta_form() {
 <?php
 	$zaikoselectarray = get_option('usces_zaiko_status');
 	foreach ( $zaikoselectarray as $v => $l ) {
-		echo "\n<option value='{" . esc_attr($v) . "'>" . esc_html($l) . "</option>";
+		echo "\n<option value='" . esc_attr($v) . "'>" . esc_html($l) . "</option>";
 	}
 ?>
 </select>

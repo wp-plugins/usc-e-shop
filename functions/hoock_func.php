@@ -11,6 +11,7 @@ function usces_action_acting_construct(){
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		$datas = usces_get_order_acting_data($rand);
 		$_GET['uscesid'] = $datas['sesid'];
+		//usces_log('sesid : '.$datas['sesid'], 'acting_transaction.log');
 		
 	}elseif( in_array($_SERVER['REMOTE_ADDR'], array('210.164.6.67', '202.221.139.50')) ){//zeus
 		

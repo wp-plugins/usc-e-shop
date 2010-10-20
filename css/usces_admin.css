@@ -990,6 +990,7 @@ table#order_list th {
 #searchBox table#search_table {
 	float: left;
 	margin: 0px;
+	clear: both;
 }
 
 #searchBox table#period_table {
@@ -998,8 +999,14 @@ table#order_list th {
 }
 
 #searchBox table#change_table {
+	float: left;
 	margin: 0px;
 	clear: both;
+}
+
+#searchBox table#dl_list_table {
+	float: right;
+	margin: 0px;
 }
 
 #searchBox input.searchword {
@@ -1909,4 +1916,25 @@ div.optcheck {
 .message,
 .error_message {
 	margin-bottom: 5px;
+}
+
+#dlMemberListDialog fieldset, 
+#dlOrderListDialog fieldset, 
+#dlProductListDialog fieldset {
+	border: 2px solid #CCCCCC;
+	padding: 10px;
+	margin-top: 20px;
+}
+#dlMemberListDialog legend, 
+#dlOrderListDialog legend, 
+#dlProductListDialog legend {
+	font-weight: bold;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+#dlMemberListDialog fieldset label, 
+#dlOrderListDialog fieldset label, 
+#dlProductListDialog fieldset label {
+	margin-right: 10px;
+	white-space: nowrap;
 }

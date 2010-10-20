@@ -566,7 +566,7 @@ jQuery(document).ready(function($){
 	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($data['order_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
+	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
 }
 ?>
         </select></td>

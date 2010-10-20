@@ -4,23 +4,23 @@ function get_wcblog_calendar($initial = true, $echo = true) {
 
 	$cache = array();
 	$key = md5( $m . $monthnum . $year );
-	if ( $cache = wp_cache_get( 'get_calendar', 'calendar' ) ) {
-		if ( is_array($cache) && isset( $cache[ $key ] ) ) {
-			if ( $echo ) {
-				echo apply_filters( 'get_calendar',  $cache[$key] );
-				return;
-			} else {
-				return apply_filters( 'get_calendar',  $cache[$key] );
-			}
-		}
-	}
+//	if ( $cache = wp_cache_get( 'get_calendar', 'calendar' ) ) {
+//		if ( is_array($cache) && isset( $cache[ $key ] ) ) {
+//			if ( $echo ) {
+//				echo apply_filters( 'get_calendar',  $cache[$key] );
+//				return;
+//			} else {
+//				return apply_filters( 'get_calendar',  $cache[$key] );
+//			}
+//		}
+//	}
 
 	if ( !is_array($cache) )
 		$cache = array();
 
 	// Quick check. If we have no posts at all, abort!
 	if ( !$posts ) {
-		$gotsome = $wpdb->get_var("SELECT 1 as test FROM $wpdb->posts WHERE post_type = 'post' AND post_status = 'publish' LIMIT 1");
+		$gotsome = $wpdb->get_var("SELECT 1 as test FROM $wpdb->posts WHERE post_type = 'post' AND post_mime_type <> 'item' AND post_status = 'publish' LIMIT 1");
 		if ( !$gotsome ) {
 			$cache[ $key ] = '';
 			wp_cache_set( 'get_calendar', $cache, 'calendar' );
@@ -60,14 +60,14 @@ function get_wcblog_calendar($initial = true, $echo = true) {
 	$previous = $wpdb->get_row("SELECT DISTINCT MONTH(post_date) AS month, YEAR(post_date) AS year
 		FROM $wpdb->posts
 		WHERE post_date < '$thisyear-$thismonth-01'
-		AND post_mime_type <> 'item'
+		AND post_mime_type <> 'item' 
 		AND post_type = 'post' AND post_status = 'publish'
 			ORDER BY post_date DESC
 			LIMIT 1");
 	$next = $wpdb->get_row("SELECT	DISTINCT MONTH(post_date) AS month, YEAR(post_date) AS year
 		FROM $wpdb->posts
 		WHERE post_date >	'$thisyear-$thismonth-01'
-		AND post_mime_type <> 'item'
+		AND post_mime_type <> 'item' 
 		AND MONTH( post_date ) != MONTH( '$thisyear-$thismonth-01' )
 		AND post_type = 'post' AND post_status = 'publish'
 			ORDER	BY post_date ASC
@@ -123,7 +123,7 @@ function get_wcblog_calendar($initial = true, $echo = true) {
 	// Get days with posts
 	$dayswithposts = $wpdb->get_results("SELECT DISTINCT DAYOFMONTH(post_date)
 		FROM $wpdb->posts WHERE MONTH(post_date) = '$thismonth'
-		AND post_mime_type <> 'item'
+		AND post_mime_type <> 'item' 
 		AND YEAR(post_date) = '$thisyear'
 		AND post_type = 'post' AND post_status = 'publish'
 		AND post_date < '" . current_time('mysql') . '\'', ARRAY_N);
@@ -145,7 +145,7 @@ function get_wcblog_calendar($initial = true, $echo = true) {
 		."FROM $wpdb->posts "
 		."WHERE YEAR(post_date) = '$thisyear' "
 		."AND MONTH(post_date) = '$thismonth' "
-		."AND post_mime_type <> 'item'"
+		."AND post_mime_type <> 'item' "
 		."AND post_date < '".current_time('mysql')."' "
 		."AND post_type = 'post' AND post_status = 'publish'"
 	);

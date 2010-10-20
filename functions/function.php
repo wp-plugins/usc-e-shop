@@ -710,6 +710,7 @@ function usces_reg_orderdata( $results = array() ) {
 				);
 
 	$res = $wpdb->query( $query );
+		//usces_log('res : '.$res, 'acting_transaction.log');
 //$wpdb->print_error();
 //	echo $query;
 //	exit;
@@ -718,7 +719,7 @@ function usces_reg_orderdata( $results = array() ) {
 	}else{
 		$order_id = $wpdb->insert_id;
 	}
-	
+
 	if ( !$order_id ) :
 	
 		return false;

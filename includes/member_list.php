@@ -24,6 +24,12 @@ $arr_search = $DT->GetSearchs();
 $arr_header = $DT->GetListheaders();
 $dataTableNavigation = $DT->GetDataTableNavigation();
 $rows = $DT->rows;
+
+//20100908ysk start
+$csmb_meta = usces_has_custom_field_meta('member');
+$usces_opt_member = unserialize(get_option('usces_opt_member'));
+$chk_mem = $usces_opt_member['chk_mem'];
+//20100908ysk end
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -77,6 +83,38 @@ jQuery(document).ready(function($){
 		$("#searchVisiLink").css("display", "none");
 	}
 		
+//20100908ysk start
+	$("#dlMemberListDialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 700,
+		resizable: true,
+		modal: true,
+		buttons: {
+			'<?php _e('close', 'usces'); ?>': function() {
+				$(this).dialog('close');
+			}
+		},
+		close: function() {
+		}
+	});
+	$('#dl_mem').click(function() {
+		var args = "&search[column]="+$(':input[name="search[column]"]').val()
+			+"&search[word]="+$(':input[name="search[word]"]').val()
+			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+			+"&ftype="+$(':input[name="ftype_mem[]"]:checked').val();
+		$('*[class=check_member]').each(function(i) {
+			if($(this).attr('checked') == true) {
+				args += '&check['+$(this).val()+']=on';
+			}
+		});
+		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_memberlist&member_action=dlmemberlist&noheader=true"+args;
+	});
+	$('#dl_memberlist').click(function() {
+		$('#dlMemberListDialog').dialog('open');
+	});
+//20100908ysk end
 });
 </script>
 <div class="wrap">
@@ -120,6 +158,13 @@ jQuery(document).ready(function($){
 		</td>
 		</tr>
 		</table>
+<!--20100908ysk start-->
+		<table id="dl_list_table">
+		<tr>
+		<td><input type="button" id="dl_memberlist" class="searchbutton" value="<?php _e('Download Member List', 'usces'); ?>" /></td>
+		</tr>
+		</table>
+<!--20100908ysk end-->
 		
 	</form>
 </div>
@@ -150,6 +195,78 @@ jQuery(document).ready(function($){
 </table>
 
 </div>
+<!--20100908ysk start-->
+<div id="dlMemberListDialog" title="<?php _e('Download Member List', 'usces'); ?>">
+	<p><?php _e('出力したい項目を選択して、ダウンロードを押してください。', 'usces'); ?></p>
+	<fieldset>
+<?php 
+	if($usces_opt_member['ftype_mem'] == 'xls') {
+		$ftype_mem_xls = ' checked';
+		$ftype_mem_csv = '';
+	} elseif($usces_opt_member['ftype_mem'] == 'csv') {
+		$ftype_mem_xls = '';
+		$ftype_mem_csv = ' checked';
+	} else {
+		$ftype_mem_xls = ' checked';
+		$ftype_mem_csv = '';
+	}
+?>
+		<label for="ftype_mem_xls"><input type="radio" name="ftype_mem[]" id="ftype_mem_xls" value="xls"<?php echo $ftype_mem_xls; ?> /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_mem_csv"><input type="radio" name="ftype_mem[]" id="ftype_mem_csv" value="csv"<?php echo $ftype_mem_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<input type="button" id="dl_mem" value="<?php _e('Download', 'usces'); ?>" />
+	</fieldset>
+	<fieldset><legend><?php _e('Membership information', 'usces'); ?></legend>
+		<label for="chk_mem[ID]"><input type="checkbox" class="check_member" id="chk_mem[ID]" value="ID" checked disabled /><?php _e('membership number', 'usces'); ?></label>
+		<label for="chk_mem[email]"><input type="checkbox" class="check_member" id="chk_mem[email]" value="email"<?php if($chk_mem['email'] == 1) echo ' checked'; ?> /><?php _e('e-mail', 'usces'); ?></label>
+<?php 
+	if(!empty($csmb_meta)) {
+		foreach($csmb_meta as $key => $entry) {
+			if($entry['position'] == 'name_pre') {
+				$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+		<label for="chk_mem[name]"><input type="checkbox" class="check_member" id="chk_mem[name]" value="name" checked disabled /><?php _e('name', 'usces'); ?></label>
+		<label for="chk_mem[kana]"><input type="checkbox" class="check_member" id="chk_mem[kana]" value="kana"<?php if($chk_mem['kana'] == 1) echo ' checked'; ?> /><?php _e('furigana','usces'); ?></label>
+<?php 
+	if(!empty($csmb_meta)) {
+		foreach($csmb_meta as $key => $entry) {
+			if($entry['position'] == 'name_after') {
+				$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+		<label for="chk_mem[zip]"><input type="checkbox" class="check_member" id="chk_mem[zip]" value="zip"<?php if($chk_mem['zip'] == 1) echo ' checked'; ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
+		<label for="chk_mem[pref]"><input type="checkbox" class="check_member" id="chk_mem[pref]" value="pref" checked disabled /><?php _e('Province', 'usces'); ?></label>
+		<label for="chk_mem[address1]"><input type="checkbox" class="check_member" id="chk_mem[address1]" value="address1" checked disabled /><?php _e('city', 'usces'); ?></label>
+		<label for="chk_mem[address2]"><input type="checkbox" class="check_member" id="chk_mem[address2]" value="address2" checked disabled /><?php _e('numbers', 'usces'); ?></label>
+		<label for="chk_mem[address3]"><input type="checkbox" class="check_member" id="chk_mem[address3]" value="address3" checked disabled /><?php _e('building name', 'usces'); ?></label>
+		<label for="chk_mem[tel]"><input type="checkbox" class="check_member" id="chk_mem[tel]" value="tel"<?php if($chk_mem['tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_mem[fax]"><input type="checkbox" class="check_member" id="chk_mem[fax]" value="fax"<?php if($chk_mem['fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
+<?php 
+	if(!empty($csmb_meta)) {
+		foreach($csmb_meta as $key => $entry) {
+			if($entry['position'] == 'fax_after') {
+				$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+				$name = esc_attr($entry['name']);
+				echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			}
+		}
+	}
+?>
+		<label for="chk_mem[date]"><input type="checkbox" class="check_member" id="chk_mem[date]" value="date"<?php if($chk_mem['date'] == 1) echo ' checked'; ?> /><?php _e('Strated date','usces'); ?></label>
+		<label for="chk_mem[point]"><input type="checkbox" class="check_member" id="chk_mem[point]" value="point"<?php if($chk_mem['point'] == 1) echo ' checked'; ?> /><?php _e('current point','usces'); ?></label>
+		<label for="chk_mem[rank]"><input type="checkbox" class="check_member" id="chk_mem[rank]" value="rank"<?php if($chk_mem['rank'] == 1) echo ' checked'; ?> /><?php _e('Rank', 'usces'); ?></label>
+	</fieldset>
+</div>
+<!--20100908ysk end-->
+
 <!--<div class="chui">
 <h3>受注詳細画面（作成中）について</h3>
 <p>各行の受注番号をクリックすると受注詳細画面が表示されます。受注詳細画面では注文商品の追加、修正、削除など受注に関する全ての情報を編集することができま、問い合わせや電話での変更依頼に対応します。</p>

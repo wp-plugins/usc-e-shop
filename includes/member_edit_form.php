@@ -151,7 +151,7 @@ jQuery(document).ready(function($){
 	$prefs = $this->options['province'];
 foreach((array)$prefs as $value) {
 	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='{" . esc_attr($value) . "'{$selected}>" . esc_attr($value) . "</option>\n";
+	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_attr($value) . "</option>\n";
 }
 ?>
 						</select>
