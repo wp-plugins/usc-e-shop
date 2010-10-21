@@ -9,7 +9,7 @@ class usc_e_shop
 	var $action, $action_status, $error_status;
 	var $action_message, $error_message;
 	var $itemskus, $itemsku, $itemopts, $itemopt;
-	var $zaiko_status, $payment_structure, $display_mode, $shipping_rule, $shipping_charge_structure;
+	var $zaiko_status, $payment_structure, $display_mode, $shipping_rule;
 	var $member_status;
 	var $options;
 	var $login_mail, $current_member, $member_form;
@@ -112,7 +112,6 @@ class usc_e_shop
 		$this->payment_structure = get_option('usces_payment_structure');
 		$this->display_mode = get_option('usces_display_mode');
 		$this->shipping_rule = get_option('usces_shipping_rule');
-		//$this->shipping_charge_structure = get_option('shipping_charge_structure');
 		define('USCES_MYSQL_VERSION', (int)substr(mysql_get_server_info(), 0, 1));
 		define('USCES_JP', ('ja' == get_locale() ? true : false));
 		
@@ -1726,6 +1725,7 @@ class usc_e_shop
 		usces_register_action('member_login', 'request', 'member_login', NULL, 'member_login_page');
 		usces_register_action('regmember', 'request', 'regmember', NULL, 'regmember');
 		usces_register_action('editmember', 'request', 'editmember', NULL, 'editmember');
+		usces_register_action('deletemember', 'request', 'deletemember', NULL, 'deletemember');
 		usces_register_action('page_login', 'get', 'page', 'login', 'member_login_page');
 		usces_register_action('page_logout', 'get', 'page', 'logout', 'page_logout');
 		usces_register_action('page_lostmemberpassword', 'get', 'page', 'lostmemberpassword', 'page_lostmemberpassword');
@@ -1746,7 +1746,7 @@ class usc_e_shop
 			$action_array = array('inCart', 'upButton', 'delButton', 'backCart', 'customerinfo', 'backCustomer', 
 			'customerlogin', 'reganddeliveryinfo', 'deliveryinfo', 'backDelivery', 'confirm', 'use_point', 
 			'backConfirm', 'purchase', 'acting_return', 'settlement_epsilon', 'inquiry_button', 'member_login', 
-			'regmember', 'editmember', 'page_login', 'page_logout', 'page_lostmemberpassword', 'lostpassword', 
+			'regmember', 'editmember', 'deletemember', 'page_login', 'page_logout', 'page_lostmemberpassword', 'lostpassword', 
 			'uscesmode_changepassword', 'changepassword', 'page_newmember', 'usces_export', 'usces_import', 
 			'page_search_item');
 			$flg = 0;
@@ -2169,6 +2169,17 @@ class usc_e_shop
 		add_action('the_post', array($this, 'action_memberFilter'));
 	}
 	
+	function deletemember(){
+		$res = $this->delete_member();
+		if( $res ){
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_deletemember');
+			$this->member_logout();
+		}else{
+			$this->page = 'editmemberform';
+			add_action('the_post', array($this, 'action_memberFilter'));
+		}
+	}
+	
 	function page_logout(){
 		global $wp_query;
 		$this->member_logout();
@@ -2494,6 +2505,18 @@ class usc_e_shop
 		}
 	}
 
+	function delete_member() {
+		if( ! $this->is_member_logged_in() )
+				return false;
+		$mem = $this->get_member();
+		if( ! $mem['ID'] )
+				return false;
+
+		$res = usces_delete_memberdata( $mem['ID'] );
+
+		return $res;
+	}
+
 	function is_member_logged_in( $id = false ) {
 		if( $id === false ){
 			if( isset($_SESSION['usces_member']['ID']) )
@@ -2713,7 +2736,7 @@ class usc_e_shop
 				$res[$key] = stripslashes_deep($value);
 			else
 //20100818ysk end
-				$res[$key] = htmlspecialchars(stripslashes($value));
+				$res[$key] = stripslashes($value);
 		}
 		return $res;
 	}
@@ -4341,16 +4364,24 @@ class usc_e_shop
 		$d_method_index = $this->get_delivery_method_index($d_method_id);
 		
 		$fixed_charge_id = $this->options['delivery_method'][$d_method_index]['charge'];
-		
 		$individual_quant = 0;
 		$total_quant = 0;
 		$charges = array();
 		$individual_charges = array();
 		
 		foreach ( $cart as $rows ) {
-			$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
-			$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
-			$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
+		
+			if( -1 == $fixed_charge_id ){
+				$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
+				$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
+				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
+			}else{
+			
+				$s_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
+				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
+			}
+
+			
 			if($this->getItemIndividualSCharge($rows['post_id'])){
 				$individual_quant += $rows['quantity'];
 				$individual_charges[] = $rows['quantity'] * $charge;

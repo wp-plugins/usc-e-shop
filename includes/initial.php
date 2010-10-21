@@ -96,13 +96,6 @@ $custom_field_position_select = array(
 					);
 //20100818ysk end
 
-//$shipping_charge_structure = array(
-//					'1' => '通常料金',
-//					'2' => '特別料金1',
-//					'3' => '特別料金2'
-//					);
-
-
 $province_ja = array(__('-- Select --', 'usces'),"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
 				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
 				"福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府",
@@ -143,7 +136,6 @@ update_option('usces_custom_field_position_select', $custom_field_position_selec
 
 update_option('usces_currency_symbol',__('$', 'usces'));
 update_option('usces_secure_link', $usces_secure_link);
-//update_option('shipping_charge_structure',$shipping_charge_structure);
 
 
 

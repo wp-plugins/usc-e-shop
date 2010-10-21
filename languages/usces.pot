@@ -2539,3 +2539,9 @@ msgstr "商品データ出力"
 
 msgid "Download Order List"
 msgstr "受注データ出力"
+
+msgid "delete it"
+msgstr "会員情報を削除する"
+
+msgid "All information about the member is deleted. Are you all right?"
+msgstr "会員に関する全ての情報が削除されます。よろしいですか？"

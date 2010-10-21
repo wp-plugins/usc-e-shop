@@ -966,14 +966,19 @@ function usces_new_orderdata() {
 	
 }
 
-function usces_delete_memberdata() {
+function usces_delete_memberdata( $ID = 0 ) {
 	global $wpdb, $usces;
-	if(!isset($_REQUEST['member_id']) || $_REQUEST['member_id'] == '') return 0;
+	
+	if( 0 === $ID ){
+		if(!isset($_REQUEST['member_id']) || $_REQUEST['member_id'] == '')
+			return 0;
+		$ID = $_REQUEST['member_id'];
+	}
+
 	$member_table_name = $wpdb->prefix . "usces_member";
 //20100818ysk start
 	$member_table_meta_name = $wpdb->prefix . "usces_member_meta";
 //20100818ysk end
-	$ID = $_REQUEST['member_id'];
 
 	$query = $wpdb->prepare("DELETE FROM $member_table_name WHERE ID = %d", $ID);
 	$res = $wpdb->query( $query );
@@ -1291,7 +1296,6 @@ function usces_export_xml() {
 	<usces_display_mode><?php echo serialize(get_option('usces_display_mode')); ?></usces_display_mode>
 	<usces_pref><?php echo serialize(get_option('usces_pref')); ?></usces_pref>
 	<usces_shipping_rule><?php echo serialize(get_option('usces_shipping_rule')); ?></usces_shipping_rule>
-	<shipping_charge_structure><?php echo serialize(get_option('shipping_charge_structure')); ?></shipping_charge_structure>
 
 <?php
 }
@@ -1376,15 +1380,6 @@ function usces_import_xml() {
 		update_option('usces_shipping_rule', $usces->shipping_rule);	
 	}
 
-	$parts = explode('<shipping_charge_structure>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</shipping_charge_structure>', $parts[1]);
-		$opt = $parts[0];
-		$usces->shipping_charge_structure = unserialize($opt);
-		update_option('shipping_charge_structure', $usces->shipping_charge_structure);	
-	}
-
-	
 	//category item post
 	$slug = urlencode(__('Items','usces'));
 	$query = $wpdb->prepare("SELECT tr.object_id FROM $wpdb->terms AS t 
@@ -2621,6 +2616,11 @@ function usces_trackPageview_newcompletion($push){
 
 function usces_trackPageview_newmemberform($push){
 	$push[] = "'_trackPageview','/wc_newmemberform'";
+	return $push;
+}
+
+function usces_trackPageview_deletemember($push){
+	$push[] = "'_trackPageview','/wc_deletemember'";
 	return $push;
 }
 ?>

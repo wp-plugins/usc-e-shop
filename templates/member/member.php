@@ -192,8 +192,10 @@ $html .= '<tr>
 	</table>
 	<input name="member_regmode" type="hidden" value="editmemberform" />
 	<input name="member_id" type="hidden" value="' . $usces_members['ID'] . '" />
-	<div class="send"><input name="top" type="button"  onclick="location.href=\'' . get_option('home') . '\'" value="' . __('Back to the top page.', 'usces') . '" />
-	<input name="editmember" type="submit" value="' . __('update it', 'usces') . '" /></div>
+	<div class="send">
+	<input name="top" type="button" value="' . __('Back to the top page.', 'usces') . '" onclick="location.href=\'' . get_option('home') . '\'" />
+	<input name="editmember" type="submit" value="' . __('update it', 'usces') . '" />
+	<input name="deletemember" type="submit" value="' . __('delete it', 'usces') . '" onclick="return confirm(\'' . __('All information about the member is deleted. Are you all right?', 'usces') . '\');" /></div>
 	</form>';
 	
 
