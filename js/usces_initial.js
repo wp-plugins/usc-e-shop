@@ -149,7 +149,7 @@ jQuery(function($) {
 			var end_amount = $("#end_amount");
 			//alert(parseInt(first_amount)+':'+first_fee+':'+end_amount+':'+enf_fee+':'+trs.length);
 			var del_id = trs.length - 1;
-			alert(trs.length);
+			//alert(trs.length);
 			if( 0 < trs.length){
 				$('#tr_'+del_id).remove();
 			}
