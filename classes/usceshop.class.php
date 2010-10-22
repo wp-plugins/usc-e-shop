@@ -408,9 +408,9 @@ class usc_e_shop
 				usces_download_order_list();
 				break;
 //20100908ysk end
-			case 'printpdf':
-				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');	
-				break;
+//			case 'printpdf':
+//				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');	
+//				break;
 			case 'editpost':
 				do_action('usces_pre_update_orderdata', $_REQUEST['order_id']);
 				$res = usces_update_orderdata();
@@ -1606,7 +1606,7 @@ class usc_e_shop
 		}
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
-			require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');
+			require_once( apply_filters('usces_filter_orderpdf_path', USCES_PLUGIN_DIR . '/includes/order_print.php') );
 		}
 		
 	}

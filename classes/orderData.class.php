@@ -40,6 +40,8 @@ class orderDataObject
 
 		$this->order['ID'] = $order_id;
 		$this->order['note'] = $data['order_note'];
+		$this->order['delidue_date'] = $data['order_delidue_date'];
+		$this->order['delivery_time'] = $data['order_delivery_time'];
 		$this->order['delivery_method'] = $data['order_delivery_method'];
 		$this->order['payment_name'] = $data['order_payment_name'];
 		$this->order['item_total_price'] = $data['order_item_total_price'];
