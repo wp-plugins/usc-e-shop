@@ -442,7 +442,7 @@ jQuery(document).ready(function($){
 			?>
 			</td>
 		<?php elseif( $key == 'display_status' ): ?>
-			<td><?php echo esc_html($value); ?></td>
+			<td><?php echo esc_html($value); ?><?php if( !empty( $post->post_password) ){echo '<br />'.__('Password protected');} ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
 	</tr>

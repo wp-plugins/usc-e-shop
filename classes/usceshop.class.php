@@ -4399,6 +4399,8 @@ class usc_e_shop
 			$charge = array_sum($individual_charges);
 		}
 		
+		$charge = apply_filters('usces_filter_getShippingCharge', $charge, $cart, $entry);
+		
 		return $charge;
 	}
 	
@@ -4428,6 +4430,7 @@ class usc_e_shop
 			}
 		}
 			
+		$fee = apply_filters('usces_filter_getCODFee', $fee, $payment_name, $amount_by_cod);
 		return $fee;
 	}
 	
@@ -4458,6 +4461,7 @@ class usc_e_shop
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$use_point = $entries['order']['usedpoint'];
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
+		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price);
 		$tax = $this->getTax( $total_price );
 		$total_full_price = $total_price + $tax;
 		$get_point = $this->get_order_point( $member['ID'] );
@@ -5285,7 +5289,9 @@ class usc_e_shop
 
 	function filter_itemPage($content){
 		global $post;
-		if($post->post_mime_type != 'item' || !is_single()) return $content;
+
+		if( ($post->post_mime_type != 'item' || !is_single()) ) return $content;
+		if( post_password_required($post) ) return $content;
 		
 		$temp_path = apply_filters('usces_template_path_single_item', USCES_PLUGIN_DIR . '/templates/single_item.php');
 		include( $temp_path );
