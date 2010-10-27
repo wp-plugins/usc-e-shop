@@ -791,6 +791,7 @@ class usc_e_shop
 			if( $this->options['ssl_url'] == '' || $this->options['ssl_url_admin'] == '' ) $this->options['use_ssl'] = 0;
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
+			$this->options['system']['front_lang'] = isset($_POST['front_lang']) ? $_POST['front_lang'] : get_locale();
 
 			
 			$this->action_status = 'success';
@@ -1446,6 +1447,8 @@ class usc_e_shop
 		do_action('usces_main');
 		$this->usces_cookie();
 		$this->update_table();
+		
+		
 		
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');

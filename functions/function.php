@@ -2394,7 +2394,9 @@ function usces_item_uploadcsv(){
 				$tag = trim($tag);
 				if( $tag != '' ){
 					$term_ids = wp_insert_term( $tag, 'post_tag' );
-				
+
+					if( !is_array($term_ids) ) continue;
+					
 					$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
 									(object_id, term_taxonomy_id, term_order) VALUES 
 									(%d, %d, 0)", 
@@ -2623,4 +2625,5 @@ function usces_trackPageview_deletemember($push){
 	$push[] = "'_trackPageview','/wc_deletemember'";
 	return $push;
 }
+
 ?>

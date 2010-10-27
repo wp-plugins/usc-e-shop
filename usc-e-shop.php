@@ -8,7 +8,7 @@ Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
 
-define('USCES_VERSION', '0.7.3.r10261');
+define('USCES_VERSION', '0.7.3.r10271');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.0');
@@ -28,7 +28,9 @@ define('USCES_CART_FOLDER', 'usces-cart');
 define('USCES_MEMBER_FOLDER', 'usces-member');
 define('USCES_ADMIN_SSL_BASE_NAME', 'admin-ssl.php');
 define('USCES_ADMIN_URL', get_option('siteurl') . '/wp-admin/admin.php');
-	
+
+require_once(USCES_PLUGIN_DIR."/functions/included_first.php");
+add_filter( 'locale', 'usces_filter_locale' );
 load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLDER.'/languages');
 
 require_once(USCES_PLUGIN_DIR."/functions/redirect.php");

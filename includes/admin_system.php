@@ -19,6 +19,15 @@ $use_ssl = $this->options['use_ssl'];
 $ssl_url = $this->options['ssl_url'];
 $ssl_url_admin = $this->options['ssl_url_admin'];
 $inquiry_id = $this->options['inquiry_id'];
+if( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ){
+	$front_lang =  $this->options['system']['front_lang'];
+}else{
+	if( 'ja' != get_locale() ){
+		$front_lang =  'en';
+	}else{
+		$front_lang =  get_locale();
+	}
+}
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -137,6 +146,16 @@ function toggleVisibility(id) {
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('The page_id of the inquiry-form', 'usces'); ?></a></th>
 		<td><input name="inquiry_id" type="text" id="inquiry_id" value="<?php echo esc_attr($inquiry_id); ?>" size="7" /></td>
 	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('The language of the front-end', 'usces'); ?></a></th>
+		<td width="10"><select name="front_lang" id="front_lang">
+		    <option value="ja"<?php if($front_lang == 'ja') echo ' selected="selected"'; ?>><?php _e('Japanese', 'usces'); ?></option>
+		    <option value="en"<?php if($front_lang == 'en') echo ' selected="selected"'; ?>><?php _e('English', 'usces'); ?></option>
+		</select></td>
+	    <td><div id="ex_front_lang" class="explanation"><?php _e('You can choose the language of the front-end.The language of the admin panel obeys config.php.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <!--<table class="form_table">

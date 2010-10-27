@@ -361,7 +361,8 @@ function usces_the_itemGpExp( $out = '' ) {
 function usces_the_itemQuant( $out = '' ) {
 	global $usces, $post;
 	$post_id = $post->ID;
-	$html = "<input name=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" type=\"text\" id=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" class=\"skuquantity\" value=\"1\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+	$quant = "<input name=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" type=\"text\" id=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" class=\"skuquantity\" value=\"1\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+	$html = apply_filters('usces_filter_the_itemQuant', $quant, $post);
 		
 	if( $out == 'return' ){
 		return $html;
