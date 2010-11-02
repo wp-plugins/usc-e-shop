@@ -217,7 +217,8 @@ jQuery(function($){
 					}
 				}
 				delivery_method.splice(index, 1);
-				operation.disp_delivery_method(delivery_method[0]['id']);
+				//operation.disp_delivery_method(delivery_method[0]['id']);
+				operation.disp_delivery_method(0);
 				$("#delivery_method_loading").html('');
 			};
 			$.ajax( s );

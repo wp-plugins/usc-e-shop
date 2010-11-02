@@ -5190,6 +5190,23 @@ class usc_e_shop
 		}
 		return $fields;
 	}
+	
+	function get_post_custom($post_id, $orderby='meta_id', $order='ASC'){
+		global $wpdb;
+		$table = $wpdb->prefix . "postmeta";
+		$meta_list = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value FROM $table WHERE post_id = %d ORDER BY $orderby $order",
+			$post_id), ARRAY_A );
+			
+		if ( !empty($meta_list) ) {
+			foreach ( $meta_list as $metarow) {
+				$mkey = $metarow['meta_key'];
+				$mval = $metarow['meta_value'];
+				$res[$mkey][] = $mval;
+			}
+		}
+		return $res;
+	}
+	
 	//shortcode-----------------------------------------------------------------------------
 	function sc_company_name() {
 		return htmlspecialchars($this->options['company_name']);

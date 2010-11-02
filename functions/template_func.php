@@ -1243,15 +1243,15 @@ function usces_is_cat_of_item( $cat_id ){
 }
 
 function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
-		
-	$cfields = get_post_custom($post_id);
+	global $usces;
+	$cfields = $usces->get_post_custom($post_id);
 	switch( $type ){
 		case 'list':
 			$list = '';
 			$html = '<ul class="item_custom_field">'."\n";
 			foreach( $cfields as $key => $value ){
 				if( 'wccs_' == substr($key, 0, 5) ){
-					$list .= '<li>' . substr($key, 5) . ' : ' . nl2br($value[0]) . '</li>'."\n";
+					$list .= '<li>' . esc_html(substr($key, 5)) . ' : ' . nl2br(esc_html($value[0])) . '</li>'."\n";
 				}
 			}
 			if(empty($list)){
@@ -1266,7 +1266,7 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 			$html = '<table class="item_custom_field">'."\n";
 			foreach($cfields as $key => $value){
 				if( 'wccs_' == substr($key, 0, 5) ){
-					$list .= '<tr><th>' . substr($key, 5) . '</th><td>' . nl2br($value[0]) . '</td>'."\n";
+					$list .= '<tr><th>' . esc_html(substr($key, 5)) . '</th><td>' . nl2br(esc_html($value[0])) . '</td></tr>'."\n";
 				}
 			}
 			if(empty($list)){
@@ -1280,7 +1280,7 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 			$list = '';
 			foreach($cfields as $key => $value){
 				if( 'wccs_' == substr($key, 0, 5) ){
-					$list .= substr($key, 5) . ' : ' . nl2br($value[0]) . "\r\n";
+					$list .= esc_html(substr($key, 5)) . ' : ' . nl2br(esc_html($value[0])) . "\r\n";
 				}
 			}
 			if(empty($list)){

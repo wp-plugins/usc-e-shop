@@ -4,13 +4,13 @@ function usces_ajax_send_mail() {
 	global $wpdb, $usces;
 	
 	$order_para = array(
-			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_POST['name']),
-			'to_address' => $_POST['mailaddress'], 
+			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), trim($_POST['name'])),
+			'to_address' => trim($_POST['mailaddress']), 
 			'from_name' => get_option('blogname'), 
 			'from_address' => $usces->options['order_mail'], 
 			'return_path' => $usces->options['error_mail'],
-			'subject' => $_POST['subject'],
-			'message' => $_POST['message']
+			'subject' => trim($_POST['subject']),
+			'message' => trim($_POST['message'])
 			);
 	
 	$res = usces_send_mail( $order_para );
@@ -34,8 +34,8 @@ function usces_ajax_send_mail() {
 				'from_name' => 'Welcart Auto BCC', 
 				'from_address' => 'Welcart', 
 				'return_path' => $usces->options['error_mail'],
-				'subject' => $_POST['subject'] . ' to ' . sprintf(__('Mr/Mrs %s', 'usces'), $_POST['name']),
-				'message' => $_POST['message']
+				'subject' => trim($_POST['subject']) . ' to ' . sprintf(__('Mr/Mrs %s', 'usces'), trim($_POST['name'])),
+				'message' => trim($_POST['message'])
 				);
 		
 		usces_send_mail( $bcc_para );

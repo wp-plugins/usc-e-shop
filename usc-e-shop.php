@@ -8,7 +8,7 @@ Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
 
-define('USCES_VERSION', '0.7.3.r10271');
+define('USCES_VERSION', '0.7.3.r11021');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.0');
@@ -52,4 +52,5 @@ register_activation_hook( __FILE__, array(&$usces, 'set_initial') );
 //add_action('activate_' . plugin_basename(__FILE__), array(&$usces, 'set_initial'));
 
 require_once(USCES_PLUGIN_DIR."/includes/default_filters.php");
+
 ?>
