@@ -52,6 +52,9 @@ function toggleVisibility(id) {
 	<ul>
 		<li><a href="#uscestabs_zeus">ゼウス</a></li>
 		<li><a href="#uscestabs_remise">ルミーズ</a></li>
+<!--20101018ysk start-->
+		<li><a href="#uscestabs_jpayment">J-Payment</a></li>
+<!--20101018ysk end-->
 	</ul>
 
 
@@ -275,6 +278,98 @@ function toggleVisibility(id) {
 		<p>「自動継続課金」を利用するには「DL Seller」拡張プラグインのインストールが必要です。</p>
 	</div>
 	</div><!--uscestabs_remise-->
+
+<!--20101018ysk start-->
+	<div id="uscestabs_jpayment">
+	<div class="settlement_service"><span class="service_title">J-Payment決済サービス</span></div>
+
+	<?php if( isset($_POST['acting']) && 'jpayment' == $_POST['acting'] ){ ?>
+		<?php if( 'on' == $opts['jpayment']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php }else if( '' != $mes ){ ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php } ?>
+	<?php } ?>
+	<form action="" method="post" name="jpayment_form" id="jpayment_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_aid_jpayment');"><?php _e('店舗ID', 'usces'); ?></a></th>
+				<td><input name="aid" type="text" id="aid_jpayment" value="<?php echo esc_html($opts['jpayment']['aid']); ?>" size="20" maxlength="6" /></td>
+				<td><div id="ex_aid_jpayment" class="explanation"><?php _e('契約時にJ-Paymentから発行される店舗ID（半角数字）', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_jpayment');">クレジットカード決済</a></th>
+				<td><input name="card_activate" type="radio" id="card_activate_jpayment_1" value="on"<?php if( $opts['jpayment']['card_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="card_activate_jpayment_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_jpayment_2" value="off"<?php if( $opts['jpayment']['card_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="card_activate_jpayment_2">利用しない</label></td>
+				<td><div></div></td><td><div></div></td>
+				<td><div id="ex_card_jpayment" class="explanation"><?php _e('クレジットカード決済を利用するかどうか<br />※自動継続課金には対応していません。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_jb_jpayment');">ジョブタイプ</a></th>
+<!--			<td><input name="card_jb" type="radio" id="card_jb_jpayment_1" value="CHECK"<?php if( $opts['jpayment']['card_jb'] == 'CHECK' ) echo ' checked' ?> /></td><td><label for="card_jb_jpayment_1">有効性チェック</label></td>
+-->				<td><input name="card_jb" type="radio" id="card_jb_jpayment_2" value="AUTH"<?php if( $opts['jpayment']['card_jb'] == 'AUTH' ) echo ' checked' ?> /></td><td><label for="card_jb_jpayment_2">仮売上処理</label></td>
+				<td><input name="card_jb" type="radio" id="card_jb_jpayment_3" value="CAPTURE"<?php if( $opts['jpayment']['card_jb'] == 'CAPTURE' ) echo ' checked' ?> /></td><td><label for="card_jb_jpayment_3">仮実同時売上処理</label></td>
+				<td><div id="ex_card_jb_jpayment" class="explanation"><?php _e('決済の種類を指定します', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_jpayment');">コンビニ決済</a></th>
+				<td><input name="conv_activate" type="radio" id="conv_activate_jpayment_1" value="on"<?php if( $opts['jpayment']['conv_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="conv_activate_jpayment_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_jpayment_2" value="off"<?php if( $opts['jpayment']['conv_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="conv_activate_jpayment_2">利用しない</label></td>
+				<td><div id="ex_conv_jpayment" class="explanation"><?php _e('コンビニ（ペーパーレス）決済を利用するかどうか', 'usces'); ?></div></td>
+			</tr>
+		</table>
+<!--
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_webm_jpayment');">WebMoney決済</a></th>
+				<td><input name="webm_activate" type="radio" id="webm_activate_jpayment_1" value="on"<?php if( $opts['jpayment']['webm_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="webm_activate_jpayment_1">利用する</label></td>
+				<td><input name="webm_activate" type="radio" id="webm_activate_jpayment_2" value="off"<?php if( $opts['jpayment']['webm_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="webm_activate_jpayment_2">利用しない</label></td>
+				<td><div></div></td><td><div></div></td>
+				<td><div id="ex_webm_jpayment" class="explanation"><?php _e('電子マネー（WebMoney）決済を利用するかどうか', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bitc_jpayment');">BitCash決済</a></th>
+				<td><input name="bitc_activate" type="radio" id="bitc_activate_jpayment_1" value="on"<?php if( $opts['jpayment']['bitc_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="bitc_activate_jpayment_1">利用する</label></td>
+				<td><input name="bitc_activate" type="radio" id="bitc_activate_jpayment_2" value="off"<?php if( $opts['jpayment']['bitc_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="bitc_activate_jpayment_2">利用しない</label></td>
+				<td><div id="ex_bitc_jpayment" class="explanation"><?php _e('電子マネー（BitCash）決済を利用するかどうか', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_suica_jpayment');">モバイルSuica決済</a></th>
+				<td><input name="suica_activate" type="radio" id="suica_activate_jpayment_1" value="on"<?php if( $opts['jpayment']['suica_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="suica_activate_jpayment_1">利用する</label></td>
+				<td><input name="suica_activate" type="radio" id="suica_activate_jpayment_2" value="off"<?php if( $opts['jpayment']['suica_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="suica_activate_jpayment_2">利用しない</label></td>
+				<td><div id="ex_suica_jpayment" class="explanation"><?php _e('電子マネー（モバイルSuica）決済を利用するかどうか', 'usces'); ?></div></td>
+			</tr>
+		</table>
+-->
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_jpayment');">バンクチェック決済</a></th>
+				<td><input name="bank_activate" type="radio" id="bank_activate_jpayment_1" value="on"<?php if( $opts['jpayment']['bank_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="bank_activate_jpayment_1">利用する</label></td>
+				<td><input name="bank_activate" type="radio" id="bank_activate_jpayment_2" value="off"<?php if( $opts['jpayment']['bank_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="bank_activate_jpayment_2">利用しない</label></td>
+				<td><div id="ex_bank_jpayment" class="explanation"><?php _e('バンクチェック決済を利用するかどうか', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<input name="send_url" type="hidden" value="https://credit.j-payment.co.jp/gateway/payform.aspx" />
+		<input name="acting" type="hidden" value="jpayment" />
+		<input name="usces_option_update" type="submit" class="button" value="J-Paymentの設定を更新する" />
+	</form>
+	<div class="settle_exp">
+		<p><strong>J-Payment決済サービス</strong></p>
+		<a href="http://www.j-payment.co.jp/" target="_blank">J-Payment決済サービスの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+	</div>
+	</div><!--uscestabs_jpayment-->
+<!--20101018ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

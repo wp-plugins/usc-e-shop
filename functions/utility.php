@@ -125,12 +125,15 @@ function usces_filter_delivery_secure_check( $mes ){
 function usces_get_conv_name($code){
 	switch($code){
 		case 'D001':
+		case '010'://20101018ysk
 			$name = 'セブンイレブン';
 			break;
 		case 'D002':
+		case '020'://20101018ysk
 			$name = 'ローソン';
 			break;
 		case 'D015':
+		case '760'://20101018ysk
 			$name = 'セイコーマート';
 			break;
 		case 'D405':
@@ -143,6 +146,7 @@ function usces_get_conv_name($code){
 			$name = 'サークルK';
 			break;
 		case 'D005':
+		case '080'://20101018ysk
 			$name = 'ミニストップ';
 			break;
 		case 'D010':
@@ -152,6 +156,7 @@ function usces_get_conv_name($code){
 			$name = 'ヤマザキデイリーストア';
 			break;
 		case 'D030':
+		case '030'://20101018ysk
 			$name = 'ファミリーマート';
 			break;
 		case 'D401':
@@ -175,6 +180,17 @@ function usces_get_conv_name($code){
 		case 'P902':
 			$name = 'コンビニ払込票（郵便振替対応）';
 			break;
+//20101018ysk start
+		case '050':
+			$name = 'デイリーヤマザキ・ヤマザキデイリーストア・タイムリー';
+			break;
+		case '060':
+			$name = 'サークルK・サンクス';
+			break;
+		case '110':
+			$name = 'am/pm';
+			break;
+//20101018ysk end
 		default:
 			$name = '';
 	}

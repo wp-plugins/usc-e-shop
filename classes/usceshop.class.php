@@ -945,6 +945,74 @@ class usc_e_shop
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure',$this->payment_structure);
 					break;
+//20101018ysk start
+				case 'jpayment':
+					unset( $options['acting_settings']['jpayment'] );
+					$options['acting_settings']['jpayment']['aid'] = $_POST['aid'];
+					$options['acting_settings']['jpayment']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['jpayment']['card_jb'] = $_POST['card_jb'];
+					$options['acting_settings']['jpayment']['conv_activate'] = $_POST['conv_activate'];
+					//$options['acting_settings']['jpayment']['webm_activate'] = $_POST['webm_activate'];
+					//$options['acting_settings']['jpayment']['bitc_activate'] = $_POST['bitc_activate'];
+					//$options['acting_settings']['jpayment']['suica_activate'] = $_POST['suica_activate'];
+					$options['acting_settings']['jpayment']['bank_activate'] = $_POST['bank_activate'];
+					$options['acting_settings']['jpayment']['send_url'] = $_POST['send_url'];
+
+					if( '' == trim($_POST['aid']) )
+						$mes .= '※店舗IDコードを入力して下さい<br />';
+					if( isset($_POST['card_activate']) && 'on' == $_POST['card_activate'] && empty($_POST['card_jb']) )
+						$mes .= '※ジョブタイプを指定して下さい<br />';
+
+					if( '' == $mes ){
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['jpayment']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['jpayment']['card_activate'] ){
+							$this->payment_structure['acting_jpayment_card'] = 'カード決済（J-Payment）';
+						}else{
+							unset($this->payment_structure['acting_jpayment_card']);
+						}
+						if( 'on' == $options['acting_settings']['jpayment']['conv_activate'] ){
+							$this->payment_structure['acting_jpayment_conv'] = 'コンビニ決済（J-Payment）';
+						}else{
+							unset($this->payment_structure['acting_jpayment_conv']);
+						}
+						//if( 'on' == $options['acting_settings']['jpayment']['webm_activate'] ){
+						//	$this->payment_structure['acting_jpayment_webm'] = 'WebMoney決済（J-Payment）';
+						//}else{
+						//	unset($this->payment_structure['acting_jpayment_webm']);
+						//}
+						//if( 'on' == $options['acting_settings']['jpayment']['bitc_activate'] ){
+						//	$this->payment_structure['acting_jpayment_bitc'] = 'BitCash決済（J-Payment）';
+						//}else{
+						//	unset($this->payment_structure['acting_jpayment_bitc']);
+						//}
+						//if( 'on' == $options['acting_settings']['jpayment']['suica_activate'] ){
+						//	$this->payment_structure['acting_jpayment_suica'] = 'モバイルSuica決済（J-Payment）';
+						//}else{
+						//	unset($this->payment_structure['acting_jpayment_suica']);
+						//}
+						if( 'on' == $options['acting_settings']['jpayment']['bank_activate'] ){
+							$this->payment_structure['acting_jpayment_bank'] = 'バンクチェック決済（J-Payment）';
+						}else{
+							unset($this->payment_structure['acting_jpayment_bank']);
+						}
+
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります', 'usces');
+						$options['acting_settings']['jpayment']['activate'] = 'off';
+						unset($this->payment_structure['acting_jpayment_card']);
+						unset($this->payment_structure['acting_jpayment_conv']);
+						//unset($this->payment_structure['acting_jpayment_webm']);
+						//unset($this->payment_structure['acting_jpayment_bitc']);
+						//unset($this->payment_structure['acting_jpayment_suica']);
+						unset($this->payment_structure['acting_jpayment_bank']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					break;
+//20101018ysk end
 			}
 			
 

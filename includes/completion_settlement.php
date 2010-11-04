@@ -62,5 +62,22 @@ if( isset($this->payment_results['X-TRANID']) ){ //remise_card
 		$html .= __('<p>The settlement is not completed.<br />Please remit the price from the PayPal Maia count page.After receipt of money confirmation, I will prepare for the article shipment.</p>', 'usces') . "\n";
 	}
 	$html .= "</div>\n";
+	
+//20101018ysk start
+}elseif( isset($_REQUEST['acting']) && 'jpayment_conv' == $_REQUEST['acting'] ){ //J-Payment
+
+	$html .= '<div id="status_table"><h5>J-Payment・コンビニペーパーレス決済</h5>'."\n";
+	$html .= '<table>'."\n";
+	$html .= '<tr><th>'.__('決済番号', 'usces').'</th><td>'.esc_html($_GET['gid'])."</td></tr>\n";
+	$html .= '<tr><th>'.__('決済金額', 'usces').'</th><td>'.esc_html($_GET['ta'])."</td></tr>\n";
+	$html .= '<tr><th>'.__('お支払先', 'usces').'</th><td>'.esc_html(usces_get_conv_name($_GET['cv']))."</td></tr>\n";
+	$html .= '<tr><th>'.__('コンビニ受付番号','usces').'</th><td>'.esc_html($_GET['no'])."</td></tr>\n";
+	if($_GET['cv'] != '030') {//ファミリーマート以外
+	$html .= '<tr><th>'.__('コンビニ受付番号情報URL', 'usces').'</th><td><a href="'.esc_html($_GET['cu']).'" target="_blank">'.esc_html($_GET['cu'])."</a></td></tr>\n";
+	}
+	$html .= '</table>'."\n";
+	$html .= '<p>「お支払いのご案内」は、'.esc_html($entry['customer']['mailaddress1']).'　宛にメールさせて頂いております。</p>'."\n";
+	$html .= "</div>\n";
+//20101018ysk end
 }
 ?>

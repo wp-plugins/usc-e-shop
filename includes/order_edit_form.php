@@ -123,7 +123,10 @@ jQuery(function($){
 
 	$("#order_payment_name").change(function () {
 		var pay_name = $("select[name='order\[payment_name\]'] option:selected").val();
-		if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
+//20101018ysk start
+		//if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
+		if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred' || uscesPayments[pay_name] == 'acting_remise_conv' || uscesPayments[pay_name] == 'acting_zeus_bank' || uscesPayments[pay_name] == 'acting_zeus_conv' || uscesPayments[pay_name] == 'acting_jpayment_conv' || uscesPayments[pay_name] == 'acting_jpayment_bank'){
+//20101018ysk end
 			var label = '<?php _e('transfer statement', 'usces'); ?>';
 			var html = "<select name='order[receipt]'>\n";
 			html += "<option value='noreceipt'><?php echo $management_status['noreceipt']; ?></option>\n";
@@ -318,9 +321,9 @@ jQuery(function($){
 			if($("#sendmailaddress").val() == "") return;
 		
 			var address = $("#sendmailaddress").val();
-			var message = $("#sendmailmessage").val();
-			var name = $("#sendmailname").val();
-			var subject = $("#sendmailsubject").val();
+			var message = encodeURIComponent($("#sendmailmessage").val());
+			var name = encodeURIComponent($("#sendmailname").val());
+			var subject = encodeURIComponent($("#sendmailsubject").val());
 			var order_id = $("#order_id").val();
 			var checked = $("#mailChecked").val();
 			

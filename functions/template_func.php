@@ -88,6 +88,7 @@ function usces_the_item(){
 	}
 	//natcasesort($usces->itemskus);
 	ksort($usces->itemskus, SORT_STRING);
+	ksort($usces->itemopts, SORT_STRING);
 	return;
 }
 
@@ -651,6 +652,9 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		break;
 //20100914ysk end
 	}
+	
+	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label);
+	
 	if( $out == 'return' ){
 		return $html;
 	}else{
@@ -794,7 +798,10 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$list = '';
 	foreach ($usces->options['payment_method'] as $id => $payments) {
 		if( false !== $charging_type ){
-			if( 'acting_remise_card' != $payments['settlement'] ) continue;
+			if( 'acting_remise_card' != $payments['settlement'] )
+				continue;
+			if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement'])
+				continue;
 		}
 		if( $payments['name'] != '' ) {
 			$module = trim($payments['module']);
@@ -1303,14 +1310,22 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 	global $usces;
 	$str = '';
 	$fields = $usces->get_settle_info_field( $order_id );
+//20101018ysk start
+	$acting = $fields['acting'];
 	foreach($fields as $key => $value){
-		if( 'acting' == $key )
-			$acting = $value;
+		//if( 'acting' == $key )
+		//	$acting = $value;
 			
+		//if( !in_array($key, array(
+		//						'order_no','tracking_no','status','error_message','money',
+		//						'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
+		//						'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE')) ){
 		if( !in_array($key, array(
 								'order_no','tracking_no','status','error_message','money',
 								'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
-								'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE')) ){
+								'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE',
+								'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp')) ){
+//20101018ysk end
 			continue;
 		}
 
@@ -1373,6 +1388,82 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 					$value = substr($value, 0, 4).'年' . substr($value, 4, 2).'月' . substr($value, 6, 2).'日';
 				}
 				break;
+//20101018ysk start
+			case 'jpayment_conv':
+				switch($key) {
+				case 'rst':
+					switch($value) {
+					case '1':
+						$value = 'OK'; break;
+					case '2':
+						$value = 'NG'; break;
+					}
+					break;
+				case 'ap':
+					switch($value) {
+					case 'CPL_PRE':
+						$value = 'コンビニペーパーレス決済識別コード'; break;
+					case 'CPL':
+						$value = '入金確定'; break;
+					case 'CVS_CAN':
+						$value = '入金取消'; break;
+					}
+					break;
+				case 'cv':
+					$value = esc_html(usces_get_conv_name($value));
+					break;
+				case 'mf':
+				case 'nk':
+				case 'nkd':
+				case 'bank':
+				case 'exp':
+					continue;
+					break;
+				}
+				break;
+
+			case 'jpayment_bank':
+				switch($key) {
+				case 'rst':
+					switch($value) {
+					case '1':
+						$value = 'OK'; break;
+					case '2':
+						$value = 'NG'; break;
+					}
+					break;
+				case 'ap':
+					switch($value) {
+					case 'BANK':
+						$value = '受付完了'; break;
+					case 'BAN_SAL':
+						$value = '入金完了'; break;
+					}
+					break;
+				case 'mf':
+					switch($value) {
+					case '1':
+						$value = 'マッチ'; break;
+					case '2':
+						$value = '過少'; break;
+					case '3':
+						$value = '過剰'; break;
+					}
+					break;
+				case 'nkd':
+					$value = substr($value, 0, 4).'年'.substr($value, 4, 2).'月'.substr($value, 6, 2).'日';
+					break;
+				case 'exp':
+					$value = substr($value, 0, 4).'年'.substr($value, 4, 2).'月'.substr($value, 6, 2).'日';
+					break;
+				case 'cv':
+				case 'no':
+				case 'cu':
+					continue;
+					break;
+				}
+				break;
+//20101018ysk end
 		}
 		switch($type){
 			case 'nl':

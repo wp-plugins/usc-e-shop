@@ -42,7 +42,7 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= usces_the_itemGpExp('return');
 	$html .= '<div class="skuform" align="right">'."\n";
 	if (usces_is_options()) {
-		$html .= "<table class='item_option'><caption>".__('Please appoint an option.', 'usces')."</caption>\n";
+		$html .= "<table class='item_option'><caption>" . apply_filters('usces_filter_single_item_options_caption', __('Please appoint an option.', 'usces'), $post) . "</caption>\n";
 		while (usces_have_options()) {
 			$opttr = "<tr><th>" . esc_html($this->itemopt['key']) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>";
 			$html .= apply_filters('usces_filter_singleitem_option', $opttr, $this->itemopt['key'], usces_getItemOptName()) . "\n";
@@ -93,7 +93,7 @@ if(usces_sku_num() === 1) { //1SKU
 		$html .= '<td rowspan="2">' . esc_html($this->itemsku['key']) . '</td>'."\n";
 		$html .= '<td colspan="2" class="skudisp subborder">' . apply_filters('usces_filter_singleitem_skudisp', esc_html($this->itemsku['value']['disp']))."\n";
 		if (usces_is_options()) {
-			$html .= "<table class='item_option'><caption>".__('Please appoint an option.', 'usces')."</caption>\n";
+			$html .= "<table class='item_option'><caption>" . apply_filters('usces_filter_single_item_options_caption', __('Please appoint an option.', 'usces'), $post) . "</caption>\n";
 			while (usces_have_options()) {
 				$opttr = "<tr><th>" . esc_html($this->itemopt['key']) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>";
 				$html .= apply_filters('usces_filter_singleitem_option', $opttr, $this->itemopt['key'], usces_getItemOptName()) . "\n";

@@ -250,6 +250,158 @@ function usces_action_acting_transaction(){
 		}
 
 		die('zeus');
+		
+//20101018ysk start
+	//*** jpayment_card ***//
+	} elseif(isset($_REQUEST['acting']) && 'jpayment_card' == $_REQUEST['acting']) {
+		$args='';
+		foreach((array)$_GET as $key => $value) {
+			$args.='&('.$key.')=('.$value.')';
+		}
+		usces_log('jpayment card : '.$args, 'acting_transaction.log');
+
+	//*** jpayment_conv ***//
+	} elseif(isset($_REQUEST['acting']) && 'jpayment_conv' == $_REQUEST['acting'] && isset($_GET['ap'])) {
+		$args='';
+		foreach((array)$_GET as $key => $value) {
+			$args.='&('.$key.')=('.$value.')';
+		}
+		usces_log('jpayment conv : '.$args, 'acting_transaction.log');
+
+		switch($_GET['ap']) {
+		case 'CPL_PRE'://コンビニペーパーレス決済識別コード
+			break;
+
+		case 'CPL'://入金確定
+			$table_name = $wpdb->prefix."usces_order";
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_GET['cod']);
+			$order_id = $wpdb->get_var($query);
+			if($order_id == NULL) {
+				usces_log('jpayment conv : order_id error', 'acting_transaction.log');
+			}
+
+			$query = $wpdb->prepare("
+				UPDATE $table_name SET order_status = 
+				CASE 
+					WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+					WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+					ELSE CONCAT('receipted,', order_status ) 
+				END 
+				WHERE ID = %d", $order_id);
+			$res = $wpdb->query($query);
+			if($res === false) {
+				usces_log('jpayment conv : order_update error', 'acting_transaction.log');
+			}
+
+			foreach($_GET as $key => $value) {
+				$data[$key] = mysql_real_escape_string($value);
+			}
+			$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
+			if($res === false) {
+				usces_log('jpayment conv : ordermeta_update error', 'acting_transaction.log');
+			}
+			die('J-Payment');
+			break;
+
+		case 'CVS_CAN'://入金取消
+			$table_name = $wpdb->prefix."usces_order";
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_GET['cod']);
+			$order_id = $wpdb->get_var($query);
+			if($order_id == NULL) {
+				usces_log('jpayment conv : order_id error', 'acting_transaction.log');
+			}
+
+			$query = $wpdb->prepare("
+				UPDATE $table_name SET order_status = 
+				CASE 
+					WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
+					WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status  
+					ELSE CONCAT('noreceipt,', order_status ) 
+				END 
+				WHERE ID = %d", $order_id);
+			$res = $wpdb->query($query);
+			if($res === false) {
+				usces_log('jpayment conv : order_update error', 'acting_transaction.log');
+			}
+
+			foreach($_GET as $key => $value) {
+				$data[$key] = mysql_real_escape_string($value);
+			}
+			$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
+			if($res === false) {
+				usces_log('jpayment conv : ordermeta_update error', 'acting_transaction.log');
+			}
+			die('J-Payment');
+			break;
+		}
+
+	//*** jpayment_webm ***//
+	} elseif(isset($_REQUEST['acting']) && 'jpayment_webm' == $_REQUEST['acting']) {
+		$args='';
+		foreach((array)$_GET as $key => $value) {
+			$args.='&('.$key.')=('.$value.')';
+		}
+		usces_log('jpayment webmoney : '.$args, 'acting_transaction.log');
+
+	//*** jpayment_bitc ***//
+	} elseif(isset($_REQUEST['acting']) && 'jpayment_bitc' == $_REQUEST['acting']) {
+		$args='';
+		foreach((array)$_GET as $key => $value) {
+			$args.='&('.$key.')=('.$value.')';
+		}
+		usces_log('jpayment bitcash : '.$args, 'acting_transaction.log');
+
+	//*** jpayment_bank ***//
+	} elseif(isset($_REQUEST['acting']) && 'jpayment_bank' == $_REQUEST['acting']) {
+		$args='';
+		foreach((array)$_GET as $key => $value) {
+			$args.='&('.$key.')=('.$value.')';
+		}
+		usces_log('jpayment bank : '.$args, 'acting_transaction.log');
+		switch($_GET['ap']) {
+		case 'BANK'://受付完了
+			break;
+
+		case 'BAN_SAL'://入金完了
+			if($_GET['mf'] == '1') {//入金マッチングの場合
+				$table_name = $wpdb->prefix."usces_order";
+				$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_GET['cod']);
+				$order_id = $wpdb->get_var($query);
+				if($order_id == NULL) {
+					usces_log('jpayment bank : order_id error', 'acting_transaction.log');
+				}
+
+				$query = $wpdb->prepare("
+					UPDATE $table_name SET order_status = 
+					CASE 
+						WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+						WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+						ELSE CONCAT('receipted,', order_status ) 
+					END 
+					WHERE ID = %d", $order_id);
+				$res = $wpdb->query($query);
+				if($res === false) {
+					usces_log('jpayment bank : order_update error', 'acting_transaction.log');
+				}
+
+				foreach($_GET as $key => $value) {
+					$data[$key] = mysql_real_escape_string($value);
+				}
+				$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
+				if($res === false) {
+					usces_log('jpayment bank : ordermeta_update error', 'acting_transaction.log');
+				}
+			}
+			die('J-Payment');
+			break;
+		}
+//20101018ysk end
 	}
 }
 ?>

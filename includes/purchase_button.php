@@ -299,6 +299,130 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>'."\n";
 			break;
 			
+//20101018ysk start
+		case 'acting_jpayment_card'://クレジット決済(J-Payment)
+			$acting_opts = $this->options['acting_settings']['jpayment'];
+			$this->save_order_acting_data($rand);
+			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="'.$acting_opts['card_jb'].'" />
+				<input type="hidden" name="am" value="'.$usces_entries['order']['total_full_price'].'" />
+				<input type="hidden" name="tx" value="0" />
+				<input type="hidden" name="sf" value="0" />
+				<input type="hidden" name="pt" value="1" />
+				<input type="hidden" name="acting" value="jpayment_card" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';
+			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.purchase_form.submit();"').' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>'."\n";
+			break;
+		case 'acting_jpayment_conv'://コンビニ・ペーパーレス決済(J-Payment)
+			$acting_opts = $this->options['acting_settings']['jpayment'];
+			$this->save_order_acting_data($rand);
+			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="CAPTURE" />
+				<input type="hidden" name="am" value="'.$usces_entries['order']['total_full_price'].'" />
+				<input type="hidden" name="tx" value="0" />
+				<input type="hidden" name="sf" value="0" />
+				<input type="hidden" name="pt" value="2" />
+				<input type="hidden" name="acting" value="jpayment_conv" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';
+			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.purchase_form.submit();"').' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>'."\n";
+			break;
+		case 'acting_jpayment_webm'://WebMoney決済(J-Payment)
+			$acting_opts = $this->options['acting_settings']['jpayment'];
+			$this->save_order_acting_data($rand);
+			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cmd" value="0" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="CAPTURE" />
+				<input type="hidden" name="am" value="'.$usces_entries['order']['total_full_price'].'" />
+				<input type="hidden" name="tx" value="0" />
+				<input type="hidden" name="sf" value="0" />
+				<input type="hidden" name="pt" value="3" />
+				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
+				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
+				<input type="hidden" name="acting" value="jpayment_webm" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';
+			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.purchase_form.submit();"').' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>'."\n";
+			break;
+		case 'acting_jpayment_bitc'://BitCash決済(J-Payment)
+			$acting_opts = $this->options['acting_settings']['jpayment'];
+			$this->save_order_acting_data($rand);
+			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="CAPTURE" />
+				<input type="hidden" name="am" value="'.$usces_entries['order']['total_full_price'].'" />
+				<input type="hidden" name="tx" value="0" />
+				<input type="hidden" name="sf" value="0" />
+				<input type="hidden" name="pt" value="9" />
+				<input type="hidden" name="acting" value="jpayment_bitc" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';
+			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.purchase_form.submit();"').' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>'."\n";
+			break;
+		//case 'acting_jpayment_suica'://モバイルSuica決済(J-Payment)
+		//	break;
+		case 'acting_jpayment_bank'://バンクチェック決済(J-Payment)
+			$acting_opts = $this->options['acting_settings']['jpayment'];
+			$this->save_order_acting_data($rand);
+			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="CAPTURE" />
+				<input type="hidden" name="am" value="'.$usces_entries['order']['total_full_price'].'" />
+				<input type="hidden" name="tx" value="0" />
+				<input type="hidden" name="sf" value="0" />
+				<input type="hidden" name="pt" value="7" />
+				<input type="hidden" name="acting" value="jpayment_bank" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';
+			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.purchase_form.submit();"').' /></div>';
+
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>'."\n";
+			break;
+//20101018ysk end
+
 		default:
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;

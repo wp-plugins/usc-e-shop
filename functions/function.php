@@ -4,13 +4,13 @@ function usces_ajax_send_mail() {
 	global $wpdb, $usces;
 	
 	$order_para = array(
-			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), trim($_POST['name'])),
+			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), trim(urldecode($_POST['name']))),
 			'to_address' => trim($_POST['mailaddress']), 
 			'from_name' => get_option('blogname'), 
 			'from_address' => $usces->options['order_mail'], 
 			'return_path' => $usces->options['error_mail'],
-			'subject' => trim($_POST['subject']),
-			'message' => trim($_POST['message'])
+			'subject' => trim(urldecode($_POST['subject'])),
+			'message' => trim(urldecode($_POST['message']))
 			);
 	
 	$res = usces_send_mail( $order_para );
@@ -34,8 +34,8 @@ function usces_ajax_send_mail() {
 				'from_name' => 'Welcart Auto BCC', 
 				'from_address' => 'Welcart', 
 				'return_path' => $usces->options['error_mail'],
-				'subject' => trim($_POST['subject']) . ' to ' . sprintf(__('Mr/Mrs %s', 'usces'), trim($_POST['name'])),
-				'message' => trim($_POST['message'])
+				'subject' => trim(urldecode($_POST['subject'])) . ' to ' . sprintf(__('Mr/Mrs %s', 'usces'), trim(urldecode($_POST['name']))),
+				'message' => trim(urldecode($_POST['message']))
 				);
 		
 		usces_send_mail( $bcc_para );
@@ -161,6 +161,32 @@ function usces_order_confirm_message($order_id) {
 		$transferee .= $usces->options['transferee'] . "\r\n";
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+//20101018ysk start
+	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
+		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('お支払先', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('コンビニ受付番号','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//ファミリーマート以外
+			$msg_body .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
+		}
+		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
+		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$bank = explode('.', $args['bank']);
+		$msg_body .= __('銀行コード','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('銀行名','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('支店コード','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('支店名','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('口座種別','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('口座番号','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('口座名義','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('支払期限','usces').' : '.substr($args['exp'], 0, 4).'年'.substr($args['exp'], 4, 2).'月'.substr($args['exp'], 6, 2)."日\r\n";
+		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+//20101018ysk end
 	}
 	
 //20100818ysk start
@@ -309,6 +335,32 @@ function usces_send_ordermail($order_id) {
 		$transferee .= $usces->options['transferee'] . "\r\n";
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+//20101018ysk start
+	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
+		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('お支払先', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('コンビニ受付番号','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//ファミリーマート以外
+			$msg_body .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
+		}
+		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
+		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$bank = explode('.', $args['bank']);
+		$msg_body .= __('銀行コード','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('銀行名','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('支店コード','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('支店名','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('口座種別','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('口座番号','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('口座名義','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('支払期限','usces').' : '.substr($args['exp'], 0, 4).'年'.substr($args['exp'], 4, 2).'月'.substr($args['exp'], 6, 2)."日\r\n";
+		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+//20101018ysk end
 	}
 
 //20100818ysk start
@@ -661,7 +713,10 @@ function usces_reg_orderdata( $results = array() ) {
 		//$status = 'continuation';
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' ) ? 'noreceipt' : '';
+//20101018ysk start
+		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' ) ? 'noreceipt' : '';
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' ) ? 'noreceipt' : '';
+//20101018ysk end
 		$order_modified = NULL;
 	}
 	$payments = $usces->getPayments($entry['order']['payment_name']);
@@ -809,6 +864,16 @@ function usces_reg_orderdata( $results = array() ) {
 			$wpdb->query( $mquery );
 		}
 	
+//20101018ysk start
+		if(isset($_REQUEST['acting']) && ('jpayment_conv' == $_REQUEST['acting'] || 'jpayment_bank' == $_REQUEST['acting'])) {
+			$usces->set_order_meta_value('settlement_id', $_GET['cod'], $order_id);
+			foreach($_GET as $key => $value) {
+				$data[$key] = mysql_real_escape_string($value);
+			}
+			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
+		}
+//20101018ysk end
+
 		foreach($cart as $cartrow){
 			$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
 			if($zaikonum == '') continue;
@@ -1806,6 +1871,33 @@ function usces_check_acting_return() {
 			}
 			break;
 			
+//20101018ysk start
+		case 'jpayment_card':
+			$results = $_GET;
+			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
+			break;
+
+		case 'jpayment_conv':
+			$results = $_GET;
+			$results[0] = ($_GET['rst'] == 1 and $_GET['ap'] == 'CPL_PRE') ? 1 : 0;
+			break;
+
+		case 'jpayment_webm':
+			$results = $_GET;
+			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
+			break;
+
+		case 'jpayment_bitc':
+			$results = $_GET;
+			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
+			break;
+
+		case 'jpayment_bank':
+			$results = $_GET;
+			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
+			break;
+//20101018ysk end
+
 		default:
 			$results = $_GET;
 			if( $_REQUEST['result'] ){
