@@ -309,7 +309,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 日付
 		$pdf->SetFont(GOTHIC, '', 9);
 		$pdf->SetXY(15, 17);
-		$pdf->Cell(30, 4, usces_conv_euc(date(__( 'M j, Y', 'usces' ))), $border, 0, 'L', 1);
+		$pdf->Cell(30, 4, usces_conv_euc(substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10)), $border, 0, 'L', 1);
 	
 		// 注文No
 		$pdf->SetFont(GOTHIC, '', 10);
@@ -424,7 +424,7 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 日付
 		$pdf->SetFont(GOTHIC, '', 9);
 		$pdf->SetXY(15, 17);
-		$pdf->Cell(30, 4, usces_conv_euc(date(__( 'M j, Y', 'usces' ))), $border, 0, 'L', 1);
+		$pdf->Cell(30, 4, usces_conv_euc(substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10)), $border, 0, 'L', 1);
 	
 		// 注文No
 		$pdf->SetFont(GOTHIC, '', 10);

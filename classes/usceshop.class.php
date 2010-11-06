@@ -23,9 +23,10 @@ class usc_e_shop
 
 		if ( !isset($_SESSION['usces_member']) ){
 			$_SESSION['usces_member'] = array();
-			clean_term_cache( "", 'category' );
 		}
-
+		if ( is_admin() ){
+			clean_term_cache( get_option('usces_item_cat_parent_id'), 'category' );
+		}
 		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
 		$this->check_display_mode();
 		
@@ -3199,7 +3200,6 @@ class usc_e_shop
 		$this->set_default_categories();
 		$this->create_table();
 		$this->update_table();
-
 
 	}
 	

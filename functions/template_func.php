@@ -1589,6 +1589,8 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 			}
 		}
 	}
+	
+	$html = apply_filters('usces_filter_custom_field_input', $html, $data, $custom_field, $position);
 
 	if($out == 'return') {
 		return $html;
@@ -1657,6 +1659,8 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 			}
 		}
 	}
+
+	$html = apply_filters('usces_filter_custom_field_info', $html, $data, $custom_field, $position);
 
 	if($out == 'return') {
 		return $html;
