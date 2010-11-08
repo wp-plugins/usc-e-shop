@@ -13,7 +13,7 @@ class usc_e_shop
 	var $member_status;
 	var $options;
 	var $login_mail, $current_member, $member_form;
-	var $payment_results, $log_flg, $delim;
+	var $payment_results, $log_flg, $delim, $use_js;
 
 	function usc_e_shop()
 	{
@@ -59,6 +59,7 @@ class usc_e_shop
 		$this->get_current_member();
 		$this->page = '';
 		$this->payment_results = array();
+		$this->use_js = $this->options['use_javascript'];
 
 		//admin_ssl options
 //		$this->use_ssl = get_option("admin_ssl_use_ssl") === "1" ? true : false;
@@ -1903,6 +1904,7 @@ class usc_e_shop
 	function inCart(){
 		global $wp_query;
 		$this->page = 'cart';
+		//$this->incart_check();
 		$this->cart->inCart();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
@@ -2916,6 +2918,31 @@ class usc_e_shop
 		return $res;
 	}
 
+	function incart_check() {
+		$red = '';
+//		$cart = $this->cart->get_cart();
+//		for($i=0; $i<count($cart); $i++) { 
+//			$cart_row = $cart[$i];
+//			$post_id = $cart_row['post_id'];
+//			$sku = $cart_row['sku'];
+//			$quant = ( isset($_POST['quant']) ) ? $_POST['quant'][$i][$post_id][$sku] : $cart_row['quantity'];
+//			$stock = $this->getItemZaiko($post_id, $sku);
+//			$zaikonum = $this->getItemZaikoNum($post_id, $sku);
+//			$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
+//		}
+//		if( $red != '' ){
+//			$mes = __('Sorry, this item is sold out.', 'usces');
+//		}else if( $zaikonum != '' && $zaikonum < $quant ){
+//			$mes = __('Sorry, stock is insufficient.', 'usces');
+//		}else{
+//			$mes = '';
+//		}
+		
+		$_SESSION['singleitem_error_message'] = 'あああああ';
+		header('location: ' . get_bloginfo('home') . $_POST['usces_referer'] . '#cart_button');
+		exit;
+	}
+	
 	function zaiko_check() {
 		$red = '';
 		$cart = $this->cart->get_cart();
@@ -2946,13 +2973,13 @@ class usc_e_shop
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
 			if ( (trim($_POST['member']['password1']) != '' || trim($_POST['member']['password2']) != '') && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
-			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' )
+			if ( !is_email($_POST['member']['mailaddress1']) || trim($_POST['member']['mailaddress1']) == '' )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 				
 		} else {
 			if ( trim($_POST['member']['password1']) == '' || trim($_POST['member']['password2']) == '' || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
-			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' || trim($_POST['member']['mailaddress2']) == '' || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
+			if ( !is_email($_POST['member']['mailaddress1']) || trim($_POST['member']['mailaddress1']) == '' || trim($_POST['member']['mailaddress2']) == '' || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 			
 		}
@@ -2980,7 +3007,7 @@ class usc_e_shop
 		$mes = '';
 		if ( trim($_POST['customer']['password1']) == '' || trim($_POST['customer']['password2']) == '' || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
 			$mes .= __('Password is not correct.', 'usces') . "<br />";
-		if ( !strstr($_POST['customer']['mailaddress1'], '@') || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
+		if ( !is_email($_POST['customer']['mailaddress1']) || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["name1"]) == "" )
 			$mes .= __('Name is not correct', 'usces');
@@ -3026,7 +3053,7 @@ class usc_e_shop
 
 	function customer_check() {
 		$mes = '';
-		if ( !strstr($_POST['customer']['mailaddress1'], '@') || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
+		if ( !is_email($_POST['customer']['mailaddress1']) || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["name1"]) == "" )
 			$mes .= __('Name is not correct', 'usces');
@@ -3112,7 +3139,7 @@ class usc_e_shop
 
 	function lostpass_mailaddcheck() {
 		$mes = '';
-		if ( !strstr($_POST['loginmail'], '@') || trim($_POST['loginmail']) == '' ) {
+		if ( !is_email($_POST['loginmail']) || trim($_POST['loginmail']) == '' ) {
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		}elseif( !$this->is_member($_POST['loginmail']) ){
 			$mes .= __('It is the e-mail address that there is not.', 'usces') . "<br />";
@@ -4331,7 +4358,24 @@ class usc_e_shop
 		
 		if ( $this->page == 'ordercompletion' )
 			$this->cart->crear_cart();
+			
+		unset($_SESSION['singleitem_error_message']);
 
+	}
+	
+	function is_item_zaiko( $post_id, $sku ){
+		$status_num = (int)$this->getItemZaikoStatusId($post_id, $sku);
+		$zaiko_num = (int)$this->getItemZaikoNum($post_id, $sku);
+
+		if( false !== $zaiko_num 
+			&& 0 < $zaiko_num 
+			&& false !== $status_num 
+			&& 2 > $status_num 
+		){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	// function for the cart ***********************************************************
