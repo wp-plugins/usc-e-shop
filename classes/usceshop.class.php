@@ -2959,7 +2959,7 @@ class usc_e_shop
 				}
 			}
 		}
-		foreach( $mes[$post_id] as $skukey => $skuvalue ){
+		foreach( (array)$mes[$post_id] as $skukey => $skuvalue ){
 			$mes[$post_id][$skukey] = rtrim($skuvalue, "<br />");
 		}
 		
