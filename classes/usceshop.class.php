@@ -1199,7 +1199,7 @@ class usc_e_shop
 		<link href="<?php echo get_stylesheet_directory_uri(); ?>/usces_cart.css" rel="stylesheet" type="text/css" />
 	<?php } ?>
 		<?php
-		if( isset($post) && $this->options['use_javascript'] ) : 
+		if( isset($post) && $this->use_js ) : 
 
 			$ioptkeys = $this->get_itemOptionKey( $post->ID );
 			$mes_opts_str = "";
@@ -1904,7 +1904,9 @@ class usc_e_shop
 	function inCart(){
 		global $wp_query;
 		$this->page = 'cart';
-		//$this->incart_check();
+		if( $this->use_js ){
+			$this->incart_check();
+		}
 		$this->cart->inCart();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
@@ -2919,24 +2921,64 @@ class usc_e_shop
 	}
 
 	function incart_check() {
-		$red = '';
-//		$cart = $this->cart->get_cart();
-//		for($i=0; $i<count($cart); $i++) { 
-//			$cart_row = $cart[$i];
-//			$post_id = $cart_row['post_id'];
-//			$sku = $cart_row['sku'];
-//			$quant = ( isset($_POST['quant']) ) ? $_POST['quant'][$i][$post_id][$sku] : $cart_row['quantity'];
-//			$stock = $this->getItemZaiko($post_id, $sku);
-//			$zaikonum = $this->getItemZaikoNum($post_id, $sku);
-//			$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
-//		}
-//		if( $red != '' ){
-//			$mes = __('Sorry, this item is sold out.', 'usces');
-//		}else if( $zaikonum != '' && $zaikonum < $quant ){
-//			$mes = __('Sorry, stock is insufficient.', 'usces');
-//		}else{
-//			$mes = '';
-//		}
+		$mes = '';
+		
+		$ids = array_keys($_POST['inCart']);
+		$post_id = $ids[0];
+		$skus = array_keys($_POST['inCart'][$post_id]);
+		$sku = $skus[0];
+		$quant_o = (int)$_POST['inCart'][$post_id][$sku];
+		$quant_c = (int)$this->getItemZaikoNum($post_id, $sku);
+		$stock_c = (int)$this->getItemZaikoStatusId($post_id, $sku);
+		$itemRestriction = get_post_custom_values('_itemRestriction', $post->ID);
+
+		if( 1 > $quant_o ){
+			$mes = __('enter the correct amount', 'usces') . "<br />";
+		}else if( $quant_o > $quant_c ){
+			$mes = __('Sorry, stock is insufficient.', 'usces') . "<br />";
+		}else if( 1 < $quant_c ){
+			$mes = __('Sorry, this item is sold out.', 'usces') . "<br />";
+		}
+		
+		
+		
+//			$ioptkeys = $this->get_itemOptionKey( $post->ID );
+//			$mes_opts_str = "";
+//			$key_opts_str = "";
+//			$opt_means = "";
+//			$opt_esse = "";
+//			if($ioptkeys){
+//				foreach($ioptkeys as $key => $value){
+//					$optValues = $this->get_itemOptions( $value, $post->ID );
+//					if($optValues['means'] < 2){
+//						$mes_opts_str .= "'" . sprintf(__("Chose the %s", 'usces'), $value) . "',";
+//					}else{
+//						$mes_opts_str .= "'" . sprintf(__("Input the %s", 'usces'), $value) . "',";
+//					}
+//					$key_opts_str .= "'{$value}',";
+//					$opt_means .= "'{$optValues['means']}',";
+//					$opt_esse .= "'{$optValues['essential']}',";
+//				}
+//				$mes_opts_str = rtrim($mes_opts_str, ',');
+//				$key_opts_str = rtrim($key_opts_str, ',');
+//				$opt_means = rtrim($opt_means, ',');
+//				$opt_esse = rtrim($opt_esse, ',');
+//			}
+//
+//
+//
+//
+//				for(i=0; i<uscesL10n.key_opts.length; i++){
+//					var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]");
+//					if( uscesL10n.opt_esse[i] == '1' ){
+//						
+//						if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
+//							mes += uscesL10n.mes_opts[i]+"\n";
+//						}else if( uscesL10n.opt_means[i] >= 2 && skuob.value == '' ){
+//							mes += uscesL10n.mes_opts[i]+"\n";
+//						}
+//					}
+//				}
 		
 		$_SESSION['singleitem_error_message'] = 'あああああ';
 		header('location: ' . get_bloginfo('home') . $_POST['usces_referer'] . '#cart_button');
@@ -4365,10 +4407,10 @@ class usc_e_shop
 	
 	function is_item_zaiko( $post_id, $sku ){
 		$status_num = (int)$this->getItemZaikoStatusId($post_id, $sku);
-		$zaiko_num = (int)$this->getItemZaikoNum($post_id, $sku);
+		$zaiko_num = $this->getItemZaikoNum($post_id, $sku);
 
 		if( false !== $zaiko_num 
-			&& 0 < $zaiko_num 
+			&& ( 0 < (int)$zaiko_num || '' == $zaiko_num ) 
 			&& false !== $status_num 
 			&& 2 > $status_num 
 		){
