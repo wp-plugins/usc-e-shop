@@ -49,7 +49,12 @@ if(usces_sku_num() === 1) { //1SKU
 		}
 		$html .= "</table>\n";
 	}
-	$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . esc_html($this->itemsku['value']['unit']) . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>'."\n";
+	if( !usces_have_zaiko() ){
+		$html .= '<div class="zaiko_status">' . apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')) . '</div>'."\n";
+	}else{
+		$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . esc_html($this->itemsku['value']['unit']) . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>'."\n";
+		$html .= '<div class="error_message">' . usces_singleitem_error_message($post->ID, $this->itemsku['key'], 'return') . '</div>'."\n";
+	}
 	$html .= '</div><!-- end of skuform -->'."\n";
 	$html .= apply_filters('single_item_single_sku_after_field', NULL);
 	
@@ -116,6 +121,7 @@ if(usces_sku_num() === 1) { //1SKU
 		$html .= '<td class="unit">' . $this->itemsku['value']['unit'] . '</td>'."\n";
 		$html .= '<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>'."\n";
 		$html .= '</tr>'."\n";
+		$html .= '<tr><td colspan="5" class="error_message">' . usces_singleitem_error_message($post->ID, $this->itemsku['key'], 'return') . '</td></tr>'."\n";
 	} while (usces_have_skus());
 	$html .= '</tbody>'."\n";
 	$html .= '</table>'."\n";

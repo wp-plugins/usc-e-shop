@@ -2921,68 +2921,55 @@ class usc_e_shop
 	}
 
 	function incart_check() {
-		$mes = '';
+		$mes = array();
 		
 		$ids = array_keys($_POST['inCart']);
 		$post_id = $ids[0];
 		$skus = array_keys($_POST['inCart'][$post_id]);
 		$sku = $skus[0];
-		$quant_o = (int)$_POST['inCart'][$post_id][$sku];
-		$quant_c = (int)$this->getItemZaikoNum($post_id, $sku);
+		$quant_o = (int)$_POST['quant'][$post_id][$sku];
+		$quant_c = $this->getItemZaikoNum($post_id, $sku);
 		$stock_c = (int)$this->getItemZaikoStatusId($post_id, $sku);
-		$itemRestriction = get_post_custom_values('_itemRestriction', $post->ID);
+		$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
 
 		if( 1 > $quant_o ){
-			$mes = __('enter the correct amount', 'usces') . "<br />";
-		}else if( $quant_o > $quant_c ){
-			$mes = __('Sorry, stock is insufficient.', 'usces') . "<br />";
-		}else if( 1 < $quant_c ){
-			$mes = __('Sorry, this item is sold out.', 'usces') . "<br />";
+			$mes[$post_id][$sku] = __('enter the correct amount', 'usces') . "<br />";
+		}else if( $quant_o > (int)$itemRestriction[0] ){
+			$mes[$post_id][$sku] = sprintf(__("This article is limited by %d at a time.", 'usces'), $itemRestriction[0]) . "<br />";
+		}else if( $quant_o > (int)$quant_c && '' != $quant_c ){
+			$mes[$post_id][$sku] = __('Sorry, stock is insufficient.', 'usces') . ' ' . __('Current stock', 'usces') . $quant_c . "<br />";
+		}else if( 1 < $stock_c ){
+			$mes[$post_id][$sku] = __('Sorry, this item is sold out.', 'usces') . "<br />";
 		}
 		
 		
 		
-//			$ioptkeys = $this->get_itemOptionKey( $post->ID );
-//			$mes_opts_str = "";
-//			$key_opts_str = "";
-//			$opt_means = "";
-//			$opt_esse = "";
-//			if($ioptkeys){
-//				foreach($ioptkeys as $key => $value){
-//					$optValues = $this->get_itemOptions( $value, $post->ID );
-//					if($optValues['means'] < 2){
-//						$mes_opts_str .= "'" . sprintf(__("Chose the %s", 'usces'), $value) . "',";
-//					}else{
-//						$mes_opts_str .= "'" . sprintf(__("Input the %s", 'usces'), $value) . "',";
-//					}
-//					$key_opts_str .= "'{$value}',";
-//					$opt_means .= "'{$optValues['means']}',";
-//					$opt_esse .= "'{$optValues['essential']}',";
-//				}
-//				$mes_opts_str = rtrim($mes_opts_str, ',');
-//				$key_opts_str = rtrim($key_opts_str, ',');
-//				$opt_means = rtrim($opt_means, ',');
-//				$opt_esse = rtrim($opt_esse, ',');
-//			}
-//
-//
-//
-//
-//				for(i=0; i<uscesL10n.key_opts.length; i++){
-//					var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]");
-//					if( uscesL10n.opt_esse[i] == '1' ){
-//						
-//						if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
-//							mes += uscesL10n.mes_opts[i]+"\n";
-//						}else if( uscesL10n.opt_means[i] >= 2 && skuob.value == '' ){
-//							mes += uscesL10n.mes_opts[i]+"\n";
-//						}
-//					}
-//				}
+		$ioptkeys = $this->get_itemOptionKey( $post_id );
+		if($ioptkeys){
+			foreach($ioptkeys as $key => $value){
+				$optValues = $this->get_itemOptions( $value, $post_id );
+				if( 2 > $optValues['means'] ){ //case of select
+					if( $optValues['essential'] && '#NONE#' == $_POST['itemOption'][$post_id][$sku][$value] ){
+						$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), $value) . "<br />";
+					}
+				}else{ //case of text
+					if( $optValues['essential'] && '' == trim($_POST['itemOption'][$post_id][$sku][$value]) ){
+						$mes[$post_id][$sku] .= sprintf(__("Input the %s", 'usces'), $value) . "<br />";
+					}
+				}
+			}
+		}
+		foreach( $mes[$post_id] as $skukey => $skuvalue ){
+			$mes[$post_id][$skukey] = rtrim($skuvalue, "<br />");
+		}
 		
-		$_SESSION['singleitem_error_message'] = 'あああああ';
-		header('location: ' . get_bloginfo('home') . $_POST['usces_referer'] . '#cart_button');
-		exit;
+		if( !empty($mes) ){
+			$_SESSION['usces_singleitem']['itemOption'] = $_POST['itemOption'];
+			$_SESSION['usces_singleitem']['quant'] = $_POST['quant'];
+			$_SESSION['usces_singleitem']['error_message'] = $mes;
+			header('location: ' . get_bloginfo('home') . $_POST['usces_referer'] . '#cart_button');
+			exit;
+		}
 	}
 	
 	function zaiko_check() {
@@ -4401,7 +4388,7 @@ class usc_e_shop
 		if ( $this->page == 'ordercompletion' )
 			$this->cart->crear_cart();
 			
-		unset($_SESSION['singleitem_error_message']);
+		unset($_SESSION['usces_singleitem']);
 
 	}
 	

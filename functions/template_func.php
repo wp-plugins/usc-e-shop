@@ -267,6 +267,11 @@ function usces_the_lastZaiko() {
 	echo esc_html(end($fields['zaiko']));
 }
 
+function usces_have_zaiko(){
+	global $post, $usces;
+	return $usces->is_item_zaiko( $post->ID, $usces->itemsku['key'] );
+}
+
 function usces_is_gptekiyo( $post_id, $sku, $quant ){
 	global $usces;
 	return $usces->is_gptekiyo( $post_id, $sku, $quant );
@@ -362,7 +367,8 @@ function usces_the_itemGpExp( $out = '' ) {
 function usces_the_itemQuant( $out = '' ) {
 	global $usces, $post;
 	$post_id = $post->ID;
-	$quant = "<input name=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" type=\"text\" id=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" class=\"skuquantity\" value=\"1\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+	$value = isset( $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['key']] ) ? $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['key']] : 1;
+	$quant = "<input name=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" type=\"text\" id=\"quant[{$post_id}][" . esc_attr($usces->itemsku['key']) . "]\" class=\"skuquantity\" value=\"" . $value . "\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
 	$html = apply_filters('usces_filter_the_itemQuant', $quant, $post);
 		
 	if( $out == 'return' ){
@@ -376,7 +382,7 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 	global $usces, $post;
 	$post_id = $post->ID;
 	$zaikonum = $usces->itemsku['value']['zaikonum'];
-	$num = $usces->itemsku['value']['zaiko'];
+	$zaiko_status = $usces->itemsku['value']['zaiko'];
 	$gptekiyo = $usces->itemsku['value']['gptekiyo'];
 	$skuPrice = $usces->getItemPrice($post_id, $usces->itemsku['key']);
 	$value = esc_attr(apply_filters( 'usces_filter_incart_button_label', $value));
@@ -388,10 +394,15 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 		$type = 'submit';
 		
 	$html = "<input name=\"zaikonum[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$sku}]\" value=\"{$zaikonum}\" />\n";
-	$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$num}\" />\n";
+	$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$zaiko_status}\" />\n";
 	$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
 	$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
-	$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"{$type}\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" onclick=\"return uscesCart.intoCart('{$post_id}','{$sku}')\" />";
+	if( $usces->use_js ){
+		$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"{$type}\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" onclick=\"return uscesCart.intoCart('{$post_id}','{$sku}')\" />";
+	}else{
+		$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$sku}]\" type=\"{$type}\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
+		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+	}
 
 	if( $out == 'return' ){
 		return $html;
@@ -603,7 +614,8 @@ function usces_the_itemOptName() {
 function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	global $post, $usces;
 	$post_id = $post->ID;
-
+	$session_value = isset( $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['key']][$name] ) ? $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['key']][$name] : NULL;
+	
 	if($label == '#default#')
 		$label = $name;
 	$key = '_iopt_' . $name;
@@ -612,6 +624,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$values = maybe_unserialize($value[0]);
 	$means = (int)$values['means'][0];
 	$essential = (int)$values['essential'][0];
+
 	$html = '';
 	$sku = esc_attr($usces->itemsku['key']);
 	$name = esc_attr($name);
@@ -627,11 +640,16 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		$multiple = ($means === 0) ? '' : ' multiple';
 		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
 		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
-		if($essential == 1)
-			$html .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
+		if($essential == 1){
+			if(  '#NONE#' == $session_value || NULL == $session_value ) 
+				$selected = ' selected="selected"';
+			else
+				$selected = '';
+			$html .= "\t<option value='#NONE#'{$selected}>" . __('Choose','usces') . "</option>\n";
+		}
 		$i=0;
 		foreach($selects as $v) {
-			if($i == 0 && $essential == 0) 
+			if( ($i == 0 && $essential == 0 && NULL == $session_value) || esc_attr($v) == $session_value ) 
 				$selected = ' selected="selected"';
 			else
 				$selected = '';
@@ -644,11 +662,11 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		break;
 	case 2://Text
 //20100914ysk end
-		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$name}]' type='text' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" />\n";
+		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$name}]' type='text' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"" . esc_attr($session_value) . "\" />\n";
 //20100914ysk start
 		break;
 	case 5://Text-area
-		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_textarea' onKeyDown=\"if (event.keyCode == 13) {return false;}\" /></textarea>\n";
+		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_textarea' onKeyDown=\"if (event.keyCode == 13) {return false;}\" />" . esc_attr($session_value) . "</textarea>\n";
 		break;
 //20100914ysk end
 	}
@@ -1819,6 +1837,14 @@ function usces_order_discount( $out = 'echo' ){
 		return $res;
 	} else {
 		echo number_format($res);
+	}
+}
+
+function usces_singleitem_error_message($post_id, $skukey, $out = ''){
+	if($out == 'return') {
+		return $_SESSION['usces_singleitem']['error_message'][$post_id][$skukey];
+	} else {
+		echo $_SESSION['usces_singleitem']['error_message'][$post_id][$skukey];
 	}
 }
 ?>

@@ -2545,3 +2545,6 @@ msgstr "会員情報を削除する"
 
 msgid "All information about the member is deleted. Are you all right?"
 msgstr "会員に関する全ての情報が削除されます。よろしいですか？"
+
+msgid "This article is limited by %d at a time."
+msgstr "この商品は一度に %d までの数量制限が有ります。"
