@@ -1904,9 +1904,7 @@ class usc_e_shop
 	function inCart(){
 		global $wp_query;
 		$this->page = 'cart';
-		if( !$this->use_js ){
-			$this->incart_check();
-		}
+		$this->incart_check();
 		$this->cart->inCart();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
@@ -1916,6 +1914,7 @@ class usc_e_shop
 		global $wp_query;
 		$this->page = 'cart';
 		$this->cart->upCart();
+		$this->error_message = $this->zaiko_check();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 	}
@@ -2927,18 +2926,18 @@ class usc_e_shop
 		$post_id = $ids[0];
 		$skus = array_keys($_POST['inCart'][$post_id]);
 		$sku = $skus[0];
-		$quant_o = (int)$_POST['quant'][$post_id][$sku];
-		$quant_c = $this->getItemZaikoNum($post_id, $sku);
-		$stock_c = (int)$this->getItemZaikoStatusId($post_id, $sku);
+		$quant = (int)$_POST['quant'][$post_id][$sku];
+		$stock = $this->getItemZaikoNum($post_id, $sku);
+		$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku);
 		$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
 
-		if( 1 > $quant_o ){
+		if( 1 > $quant ){
 			$mes[$post_id][$sku] = __('enter the correct amount', 'usces') . "<br />";
-		}else if( $quant_o > (int)$itemRestriction[0] ){
+		}else if( $quant > (int)$itemRestriction[0] ){
 			$mes[$post_id][$sku] = sprintf(__("This article is limited by %d at a time.", 'usces'), $itemRestriction[0]) . "<br />";
-		}else if( $quant_o > (int)$quant_c && '' != $quant_c ){
-			$mes[$post_id][$sku] = __('Sorry, stock is insufficient.', 'usces') . ' ' . __('Current stock', 'usces') . $quant_c . "<br />";
-		}else if( 1 < $stock_c ){
+		}else if( $quant > (int)$stock && '' != $stock ){
+			$mes[$post_id][$sku] = __('Sorry, stock is insufficient.', 'usces') . ' ' . __('Current stock', 'usces') . $stock . "<br />";
+		}else if( 1 < $zaiko_id ){
 			$mes[$post_id][$sku] = __('Sorry, this item is sold out.', 'usces') . "<br />";
 		}
 		
@@ -2973,23 +2972,31 @@ class usc_e_shop
 	}
 	
 	function zaiko_check() {
-		$red = '';
+		$mes = '';
 		$cart = $this->cart->get_cart();
+
 		for($i=0; $i<count($cart); $i++) { 
 			$cart_row = $cart[$i];
 			$post_id = $cart_row['post_id'];
 			$sku = $cart_row['sku'];
-			$quant = ( isset($_POST['quant']) ) ? $_POST['quant'][$i][$post_id][$sku] : $cart_row['quantity'];
-			$stock = $this->getItemZaiko($post_id, $sku);
-			$zaikonum = $this->getItemZaikoNum($post_id, $sku);
-			$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
-		}
-		if( $red != '' ){
-			$mes = __('Sorry, this item is sold out.', 'usces');
-		}else if( $zaikonum != '' && $zaikonum < $quant ){
-			$mes = __('Sorry, stock is insufficient.', 'usces');
-		}else{
-			$mes = '';
+			
+			$quant = ( isset($_POST['quant']) ) ? trim($_POST['quant'][$i][$post_id][$sku]) : $cart_row['quantity'];
+			//$zaiko_status = $this->getItemZaiko($post_id, $sku);
+			$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku);
+			$stock = $this->getItemZaikoNum($post_id, $sku);
+			$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
+			
+			//$red = (in_array($zaiko_status, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
+
+			if( 1 > (int)$quant ){
+				$mes .= sprintf(__("Enter the correct amount for the No.%d item.", 'usces'), ($i+1)) . "<br />";
+			}else if( 1 < $zaiko_id || (0 == $stock && '' != $stock) ){
+				$mes .= sprintf(__('Sorry, No.%d item is sold out.', 'usces'), ($i+1)) . "<br />";
+			}else if( $quant > (int)$itemRestriction[0] ){
+				$mes .= sprintf(__('This article is limited by %1$d at a time for the No.%2$d item.', 'usces'), $itemRestriction[0], ($i+1)) . "<br />";
+			}else if( $quant > (int)$stock && '' != $stock ){
+				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $stock) . "<br />";
+			}
 		}
 		return $mes;	
 	}

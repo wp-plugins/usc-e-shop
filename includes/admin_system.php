@@ -70,14 +70,14 @@ function toggleVisibility(id) {
 <div class="inside">
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_province');"><?php _e('Province', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_province');"><?php _e('Province', 'usces'); ?></a></th>
 		<td width="150"><textarea name="province" cols="30" rows="10"><?php echo esc_html($province); ?></textarea></td>
 	    <td><div id="ex_province" class="explanation"><?php _e('The district where sale is possible', 'usces'); ?>(<?php _e('Province', 'usces'); ?>) <?php _e('One line one by one.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');"><?php _e('Display Modes','usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');"><?php _e('Display Modes','usces'); ?></a></th>
 		<?php $checked = $divide_item == 1 ? ' checked="checked"' : ''; ?>
 		<td width="10"><input name="divide_item" type="checkbox" id="divide_item" value="<?php echo esc_attr($divide_item); ?>"<?php echo $checked; ?> /></td>
 		<td width="300"><label for="divide_item"><?php _e('Not display an article in blog', 'usces'); ?></label></td>
@@ -86,7 +86,7 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_itemimg_anchor_rel');"><?php _e('rel attribute', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_itemimg_anchor_rel');"><?php _e('rel attribute', 'usces'); ?></a></th>
 		<td width="30">rel="</td>
 		<td width="100"><input name="itemimg_anchor_rel" id="itemimg_anchor_rel" type="text" value="<?php echo esc_attr($itemimg_anchor_rel); ?>" /></td>
 		<td width="10">"</td>
@@ -95,7 +95,7 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_orderby');"><?php _e('compound category sort item', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_orderby');"><?php _e('compound category sort item', 'usces'); ?></a></th>
 		<td width="10"><select name="fukugo_category_orderby" id="fukugo_category_orderby">
 		    <option value="ID"<?php if($fukugo_category_orderby == 'ID') echo ' selected="selected"'; ?>><?php _e('category ID', 'usces'); ?></option>
 		    <option value="name"<?php if($fukugo_category_orderby == 'name') echo ' selected="selected"'; ?>><?php _e('category name', 'usces'); ?></option>
@@ -103,7 +103,7 @@ function toggleVisibility(id) {
 	    <td><div id="ex_fcat_orderby" class="explanation"><?php _e('In a category to display in a compound category search page, you can choose an object to sort.', 'usces'); ?></div></td>
 	</tr>
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_order');"><?php _e('compound category sort order', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_order');"><?php _e('compound category sort order', 'usces'); ?></a></th>
 		<td width="10"><select name="fukugo_category_order" id="fukugo_category_order">
 		    <option value="ASC"<?php if($fukugo_category_order == 'ASC') echo ' selected="selected"'; ?>><?php _e('Ascending', 'usces'); ?></option>
 		    <option value="DESC"<?php if($fukugo_category_order == 'DESC') echo ' selected="selected"'; ?>><?php _e('Descendin', 'usces'); ?></option>
@@ -113,14 +113,14 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');"><?php _e('settlement module path', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');"><?php _e('settlement module path', 'usces'); ?></a></th>
 		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo esc_attr($settlement_path); ?>" size="60" /></td>
 	    <td><div id="ex_settlement_path" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_ssl');"><?php _e('Use SSL','usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_ssl');"><?php _e('Use SSL','usces'); ?></a></th>
 		<?php $checked = $use_ssl == 1 ? ' checked="checked"' : ''; ?>
 		<td width="10"><input name="use_ssl" type="checkbox" id="use_ssl" value="<?php echo esc_attr($use_ssl); ?>"<?php echo $checked; ?> /></td>
 		<td width="300">&nbsp;</td>
@@ -129,28 +129,28 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url_admin');"><?php _e('WordPress address (SSL)', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url_admin');"><?php _e('WordPress address (SSL)', 'usces'); ?></a></th>
 		<td><input name="ssl_url_admin" type="text" id="ssl_url_admin" value="<?php echo esc_attr($ssl_url_admin); ?>" size="60" /></td>
 	    <td><div id="ex_ssl_url_admin" class="explanation"><?php _e('https://*WordPress address*<br />You can use common use SSL.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url');"><?php _e('Blog address (SSL)', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url');"><?php _e('Blog address (SSL)', 'usces'); ?></a></th>
 		<td><input name="ssl_url" type="text" id="ssl_url" value="<?php echo esc_attr($ssl_url); ?>" size="60" /></td>
 	    <td><div id="ex_ssl_url" class="explanation"><?php _e('https://*Blog address*<br />You can use common use SSL.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('The page_id of the inquiry-form', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('The page_id of the inquiry-form', 'usces'); ?></a></th>
 		<td><input name="inquiry_id" type="text" id="inquiry_id" value="<?php echo esc_attr($inquiry_id); ?>" size="7" /></td>
 	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('The language of the front-end', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('The language of the front-end', 'usces'); ?></a></th>
 		<td width="10"><select name="front_lang" id="front_lang">
 		    <option value="ja"<?php if($front_lang == 'ja') echo ' selected="selected"'; ?>><?php _e('Japanese', 'usces'); ?></option>
 		    <option value="en"<?php if($front_lang == 'en') echo ' selected="selected"'; ?>><?php _e('English', 'usces'); ?></option>
@@ -160,7 +160,7 @@ function toggleVisibility(id) {
 </table>
 <!--<table class="form_table">
 	<tr height="50">
-	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript 利用の有無', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript 利用の有無', 'usces'); ?></a></th>
 	    <td width="10"><input name="use_javascript" id="use_javascript0" type="radio" value="0"<?php if($this->options['use_javascript'] == 0) echo 'checked="checked"'; ?> /></td><td width="60"><label for="use_javascript0"><?php _e('利用しない', 'usces'); ?></label></td>
 	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="60"><label for="use_javascript1"><?php _e('利用する', 'usces'); ?></label></td>
 		<td><div id="ex_use_javascript" class="explanation"><?php _e("初期状態ではJavaScript を利用します。JavaScript を利用できないブラウザにも対応したい場合は「利用しない」を選択します。「利用しない」を選択するとJavaScript を使用しているWelcart 専用拡張プラグインも利用できなくなりますのでご注意下さい。その他のプラグインの制御は行いません。あくまでフロントの動作においてWelcart が利用しているJavaScript を停止するだけです。", 'usces'); ?></div></td>

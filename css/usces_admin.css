@@ -1938,3 +1938,11 @@ div.optcheck {
 	margin-right: 10px;
 	white-space: nowrap;
 }
+
+/***************************************************/
+.form_table th.system_th {
+	width: 200px;
+}
+
+
+

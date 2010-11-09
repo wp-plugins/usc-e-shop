@@ -2553,6 +2553,18 @@ msgstr "会員に関する全ての情報が削除されます。よろしいで
 msgid "This article is limited by %d at a time."
 msgstr "この商品は一度に %d までの数量制限が有ります。"
 
+msgid "Enter the correct amount for the No.%d item."
+msgstr "%d番の商品の数量を正しく入力して下さい。"
+
+msgid "This article is limited by %1$d at a time for the No.%2$d item."
+msgstr "%2$d番の商品は一度に %1$d までの数量制限が有ります。"
+
+msgid "Stock of No.%1$d item is remainder %2$d."
+msgstr "%1$d番の商品の在庫は残り %2$d です。"
+
+msgid "Sorry, No.%d item is sold out."
+msgstr "恐れ入りますが、%d番の商品は売り切れました。"
+
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
 #~ msgid "% Comments &#187;"
