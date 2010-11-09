@@ -8,7 +8,7 @@ Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
 
-define('USCES_VERSION', '0.7.3.r11091');
+define('USCES_VERSION', '0.7.3.r11092');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.0');

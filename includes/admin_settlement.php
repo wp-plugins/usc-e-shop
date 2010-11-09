@@ -303,7 +303,6 @@ function toggleVisibility(id) {
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_jpayment');">クレジットカード決済</a></th>
 				<td><input name="card_activate" type="radio" id="card_activate_jpayment_1" value="on"<?php if( $opts['jpayment']['card_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="card_activate_jpayment_1">利用する</label></td>
 				<td><input name="card_activate" type="radio" id="card_activate_jpayment_2" value="off"<?php if( $opts['jpayment']['card_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="card_activate_jpayment_2">利用しない</label></td>
-				<td><div></div></td><td><div></div></td>
 				<td><div id="ex_card_jpayment" class="explanation"><?php _e('クレジットカード決済を利用するかどうか<br />※自動継続課金には対応していません。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
