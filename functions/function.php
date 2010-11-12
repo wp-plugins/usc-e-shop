@@ -482,6 +482,8 @@ function usces_send_regmembermail($user) {
 
 	$subject =  $mail_data['title']['membercomp'];
 	$message = $mail_data['header']['membercomp'] . $mail_data['footer']['membercomp'];
+	$message = apply_filters('usces_filter_send_regmembermail_message', $message, $user);
+	
 	$name = trim($user['name1']) . trim($user['name2']);
 	$mailaddress1 = trim($user['mailaddress1']);
 

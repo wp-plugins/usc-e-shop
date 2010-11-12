@@ -2502,8 +2502,8 @@ msgstr "発送先情報に任意のフィールドを追加します。"
 msgid "You can add an arbitrary field to the member information page."
 msgstr "会員情報ページに任意のフィールドを追加します。"
 
-msgid "cannot use this payment method now"
-msgstr "現在この支払方法はご利用できません"
+msgid "cannot use this payment method now."
+msgstr "現在この支払方法はご利用できません。"
 
 msgid "Charging type"
 msgstr "課金タイプ"
@@ -2564,6 +2564,12 @@ msgstr "%1$d番の商品の在庫は残り %2$d です。"
 
 msgid "Sorry, No.%d item is sold out."
 msgstr "恐れ入りますが、%d番の商品は売り切れました。"
+
+msgid "The language of the front-end"
+msgstr "フロントエンドの言語"
+
+msgid "You can choose the language of the front-end.The language of the admin panel obeys config.php."
+msgstr "フロントエンドの言語を選択できます。管理パネルの方はconfig.php の設定に従います。"
 
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
