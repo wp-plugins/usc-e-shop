@@ -323,13 +323,16 @@ function common_option_meta_form() {
 <tr>
 <td class='item-opt-key'>
 <input type="text" id="newoptname" name="newoptname" class="optname" tabindex="7" value="" />
-<div class="optcheck"><select name='newoptmeans' id='newoptmeans'><?php echo $meansoption; ?></select>
-<input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label></div>
+<div class="optcheck">
+<select name='newoptmeans' id='newoptmeans'><?php echo $meansoption; ?></select>
+<input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label>
+</div>
 </td>
 <td class='item-opt-value'><textarea id="newoptvalue" name="newoptvalue" class='optvalue'></textarea></td>
 </tr>
 
-<tr><td colspan="2" class="submit">
+<tr>
+<td colspan="2" class="submit">
 <input name="add_comopt" type="button" id="add_comopt" tabindex="9" value="<?php _e('Add common options','usces') ?>" onclick="itemOpt.post('addcommonopt', 0);" />
 </td></tr>
 </tbody>
@@ -391,14 +394,16 @@ function item_option_meta_form() {
 <!--<input type="text" id="newoptname" name="newoptname" class="item-opt-key" tabindex="7" value="" />
 <input name="newoptmeans" type="checkbox" id="newoptmeans" class="item-opt-means" /><label for='newoptmeans'><?php _e('Multi-select','usces') ?></label></div>
 -->
-<?php _e('Please create a common option.','usces') ?>
+<p><?php _e('Please create a common option.','usces') ?></p>
 <?php } ?>
 </td>
 <td class='item-opt-value'><textarea id="newoptvalue" name="newoptvalue" class='optvalue'></textarea></td>
 </tr>
 
 <tr><td colspan="2" class="submit">
+<?php if( $keys ) { ?>
 <input name="add_itemopt" type="button" id="add_itemopt" tabindex="9" value="<?php _e('Apply an option','usces') ?>" onclick="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('additemopt', 0);" />
+<?php } ?>
 </td></tr>
 </tbody>
 </table>

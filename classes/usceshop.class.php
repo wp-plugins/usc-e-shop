@@ -2509,10 +2509,11 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
+					$user = $_POST['member'];
+					$user['ID'] = $wpdb->insert_id;
 //20100818ysk start
 					$res = $this->reg_custom_member($wpdb->insert_id);
 //20100818ysk end
-					$user = $_POST['member'];
 					$mser = usces_send_regmembermail($user);
 				}
 				
@@ -2933,7 +2934,7 @@ class usc_e_shop
 
 		if( 1 > $quant ){
 			$mes[$post_id][$sku] = __('enter the correct amount', 'usces') . "<br />";
-		}else if( $quant > (int)$itemRestriction[0] && '' != $itemRestriction[0] ){
+		}else if( $quant > (int)$itemRestriction[0] && '' != $itemRestriction[0] && '0' != $itemRestriction[0] ){
 			$mes[$post_id][$sku] = sprintf(__("This article is limited by %d at a time.", 'usces'), $itemRestriction[0]) . "<br />";
 		}else if( $quant > (int)$stock && '' != $stock ){
 			$mes[$post_id][$sku] = __('Sorry, stock is insufficient.', 'usces') . ' ' . __('Current stock', 'usces') . $stock . "<br />";
@@ -2992,7 +2993,7 @@ class usc_e_shop
 				$mes .= sprintf(__("Enter the correct amount for the No.%d item.", 'usces'), ($i+1)) . "<br />";
 			}else if( 1 < $zaiko_id || (0 == $stock && '' != $stock) ){
 				$mes .= sprintf(__('Sorry, No.%d item is sold out.', 'usces'), ($i+1)) . "<br />";
-			}else if( $quant > (int)$itemRestriction[0] && '' != $itemRestriction[0] ){
+			}else if( $quant > (int)$itemRestriction[0] && '' != $itemRestriction[0] && '0' != $itemRestriction[0] ){
 				$mes .= sprintf(__('This article is limited by %1$d at a time for the No.%2$d item.', 'usces'), $itemRestriction[0], ($i+1)) . "<br />";
 			}else if( $quant > (int)$stock && '' != $stock ){
 				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $stock) . "<br />";
