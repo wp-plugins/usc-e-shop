@@ -119,7 +119,7 @@ if($this->cart->num_row() > 0) {
 	$html .= '</div>';
 
 } else {
-	$html .= '<div class="no_cart">' . __('There is no items in your cart.','usces') . '</div>';
+	$html .= '<div class="no_cart">' . __('There are no items in your cart.','usces') . '</div>';
 }
 
 $html .= $content;

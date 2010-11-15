@@ -273,7 +273,7 @@ msgstr "値が不正です。半角数字で入力して下さい。"
 msgid "You have exceeded the maximum available."
 msgstr "利用できる上限値を超えています。"
 
-msgid "There is no items in your cart."
+msgid "There are no items in your cart."
 msgstr "只今、カートに商品はございません。"
 
 msgid "It is the e-mail address that there is not."

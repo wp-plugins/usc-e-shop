@@ -3242,7 +3242,7 @@ class usc_e_shop
 		if($this->cart->num_row() > 0) {
 			include (USCES_PLUGIN_DIR . '/includes/cart_table.php');
 		} else {
-			echo "<div class='no_cart'>" . __('There is no items in your cart.', 'usces') . "</div>\n";
+			echo "<div class='no_cart'>" . __('There are no items in your cart.', 'usces') . "</div>\n";
 		}
 	}
 
@@ -3250,7 +3250,7 @@ class usc_e_shop
 		if($this->cart->num_row() > 0) {
 			include (USCES_PLUGIN_DIR . '/includes/cart_confirm.php');
 		} else {
-			echo "<div class='no_cart'>" . __('There is no items in your cart.', 'usces') . "</div>\n";
+			echo "<div class='no_cart'>" . __('There are no items in your cart.', 'usces') . "</div>\n";
 		}
 	}
 
@@ -3773,6 +3773,8 @@ class usc_e_shop
 	}
 	
 	function get_item_cat_genre_ids( $post_id ){
+		$ids = array();
+		$all_ids = array();
 		$genre = get_category_by_slug( 'itemgenre' );
 		$genre_id = $genre->term_id;
 		$args = array('child_of' => $genre_id, 'hide_empty' => 0, 'hierarchical' => 0);
@@ -3784,7 +3786,7 @@ class usc_e_shop
 		foreach($allcats as $cat){
 			$all_ids[] = $cat->term_id;
 		}
-		$all_ids = 
+		//$all_ids = 
 		$results = array_intersect($ids, $all_ids);
 		
 		return $results;
