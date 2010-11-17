@@ -20,12 +20,27 @@ $ssl_url = $this->options['ssl_url'];
 $ssl_url_admin = $this->options['ssl_url_admin'];
 $inquiry_id = $this->options['inquiry_id'];
 if( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ){
-	$front_lang =  $this->options['system']['front_lang'];
+	//$front_lang =  $this->options['system']['front_lang'];
+	switch( $this->options['system']['front_lang'] ){
+		case 'en':
+			$front_lang =  'en';
+			break;
+		case 'ja':
+			$front_lang =  'ja';
+			break;
+		default:
+			$front_lang =  'others';
+	}
 }else{
-	if( 'ja' != get_locale() ){
-		$front_lang =  'en';
-	}else{
-		$front_lang =  get_locale();
+	switch( get_locale() ){
+		case 'en':
+			$front_lang =  'en';
+			break;
+		case 'ja':
+			$front_lang =  'ja';
+			break;
+		default:
+			$front_lang =  'others';
 	}
 }
 ?>
@@ -154,6 +169,7 @@ function toggleVisibility(id) {
 		<td width="10"><select name="front_lang" id="front_lang">
 		    <option value="ja"<?php if($front_lang == 'ja') echo ' selected="selected"'; ?>><?php _e('Japanese', 'usces'); ?></option>
 		    <option value="en"<?php if($front_lang == 'en') echo ' selected="selected"'; ?>><?php _e('English', 'usces'); ?></option>
+		    <option value="others"<?php if($front_lang == 'others') echo ' selected="selected"'; ?>><?php _e('Others', 'usces'); ?></option>
 		</select></td>
 	    <td><div id="ex_front_lang" class="explanation"><?php _e('You can choose the language of the front-end.The language of the admin panel obeys config.php.', 'usces'); ?></div></td>
 	</tr>
