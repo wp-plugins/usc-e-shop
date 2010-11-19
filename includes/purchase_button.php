@@ -39,7 +39,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			if( USCES_JP ){
 				$html .= '<input type="hidden" name="currency_code" value="JPY">';
 			}
-			$html .= '<input type="hidden" name="return" value="' . apply_filters('usces_paypal_return_url', get_bloginfo('home'), USCES_CART_URL, $this->delim, $this->get_uscesid(false) ) . '">
+			$html .= '<input type="hidden" name="return" value="' . apply_filters('usces_paypal_return_url', (USCES_CART_URL . $this->delim . 'acting=paypal&acting_return=1') ) . '">
 				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . $this->delim . 'confirm=1">
 				<input type="hidden" name="notify_url" value="' . USCES_PAYPAL_NOTIFY_URL . '">
 				<input type="hidden" name="button_subtype" value="products">
