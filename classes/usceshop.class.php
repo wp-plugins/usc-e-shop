@@ -2155,7 +2155,7 @@ class usc_e_shop
 			}
 			exit;
 		}
-		if( false === $this->cart->num_row() ){
+		if( false === $this->cart->num_row() && ('paypal' != $_GET['acting'] && 1 !== (int)$_GET['acting_return']) ){
 			header('location: ' . get_option('home'));
 			exit;
 		}
