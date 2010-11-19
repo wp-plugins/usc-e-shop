@@ -2927,7 +2927,7 @@ class usc_e_shop
 		$post_id = $ids[0];
 		$skus = array_keys($_POST['inCart'][$post_id]);
 		$sku = $skus[0];
-		$quant = (int)$_POST['quant'][$post_id][$sku];
+		$quant = isset($_POST['quant'][$post_id][$sku]) ? (int)$_POST['quant'][$post_id][$sku] : 1;
 		$stock = $this->getItemZaikoNum($post_id, $sku);
 		$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku);
 		$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
@@ -2945,6 +2945,7 @@ class usc_e_shop
 		
 		
 		$ioptkeys = $this->get_itemOptionKey( $post_id );
+		//if($ioptkeys && isset($_POST['itemOption'][$post_id][$sku])){
 		if($ioptkeys){
 			foreach($ioptkeys as $key => $value){
 				$optValues = $this->get_itemOptions( $value, $post_id );
@@ -2967,7 +2968,8 @@ class usc_e_shop
 			$_SESSION['usces_singleitem']['itemOption'] = $_POST['itemOption'];
 			$_SESSION['usces_singleitem']['quant'] = $_POST['quant'];
 			$_SESSION['usces_singleitem']['error_message'] = $mes;
-			header('location: ' . get_bloginfo('home') . $_POST['usces_referer'] . '#cart_button');
+			$parse_url = parse_url(get_bloginfo('home'));
+			header('location: ' . $parse_url['scheme'] . '://' . $parse_url['host'] . $_POST['usces_referer'] . '#cart_button');
 			exit;
 		}
 	}
@@ -5452,9 +5454,11 @@ class usc_e_shop
 		$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
 		$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
 		$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
+		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
 		$html = apply_filters('usces_filter_single_item_inform', $html);
 		$html .= "</form>";
-	
+		$html .= '<div class="error_message">' . usces_singleitem_error_message($post_id, $sku, 'return') . '</div>'."\n";
+		
 		return $html;
 	}
 
