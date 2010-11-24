@@ -42,6 +42,8 @@ class usc_e_shop
 		if(!isset($this->options['use_ssl'])) $this->options['use_ssl'] = 0;
 		if(!isset($this->options['point_coverage'])) $this->options['point_coverage'] = 0;
 		if(!isset($this->options['use_javascript'])) $this->options['use_javascript'] = 1;
+		if(!isset($this->options['system']['orderby_itemsku'])) $this->options['system']['orderby_itemsku'] = 0;
+		if(!isset($this->options['system']['orderby_itemopt'])) $this->options['system']['orderby_itemopt'] = 0;
 		if(!isset($this->options['indi_item_name'])){
 			$this->options['indi_item_name']['item_name'] = 1;
 			$this->options['indi_item_name']['item_code'] = 1;
@@ -647,14 +649,14 @@ class usc_e_shop
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['header'][$key] = $this->options['mail_default']['header'][$key];
 				}else{
-					$this->options['mail_data']['header'][$key] = trim($value);
+					$this->options['mail_data']['header'][$key] = $value;
 				}
 			}
 			foreach ( $_POST['footer'] as $key => $value ) {
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['footer'][$key] = $this->options['mail_default']['footer'][$key];
 				}else{
-					$this->options['mail_data']['footer'][$key] = trim($value);
+					$this->options['mail_data']['footer'][$key] = $value;
 				}
 			}
 
@@ -794,6 +796,8 @@ class usc_e_shop
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
 			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : get_locale();
+			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
+			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
 
 			
 			$this->action_status = 'success';

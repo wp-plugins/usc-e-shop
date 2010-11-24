@@ -3,11 +3,12 @@
  * item option
  */
 function has_item_option_meta( $postid ) {
-	global $wpdb;
-
+	global $wpdb, $usces;
+	
+	$orderby = $usces->options['system']['orderby_itemopt'] ? 'meta_id' : 'meta_key';
 	return $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
-			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE '%s' 
-			ORDER BY meta_key", $postid, '_iopt_%'), ARRAY_A );
+			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE %s 
+			ORDER BY {$orderby}", $postid, '_iopt_%'), ARRAY_A );
 
 }
 
@@ -15,11 +16,12 @@ function has_item_option_meta( $postid ) {
  * item sku
  */
 function has_item_sku_meta( $postid ) {
-	global $wpdb;
+	global $wpdb, $usces;
 
+	$orderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
 	return $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
 			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE '%s' 
-			ORDER BY meta_key", $postid, '_isku_%'), ARRAY_A );
+			ORDER BY {$orderby}", $postid, '_isku_%'), ARRAY_A );
 
 }
 
@@ -1107,7 +1109,7 @@ function update_shipping_charge() {
 	global $usces;
 	$options = get_option('usces');
 	$name = trim($_POST['name']);
-	$value = trim($_POST['value']);
+	$value = $_POST['value'];
 	$id = (int)$_POST['id'];
 //	$prefs = get_option('usces_pref');
 	$prefs = $usces->options['province'];

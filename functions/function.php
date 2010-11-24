@@ -507,13 +507,14 @@ function usces_lostmail($url) {
 	global $usces;
 	$res = false;
 
+	$mail_data = $usces->options['mail_data'];
 	$subject = __('Change password','usces');
 	$message = __('Please, click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
 			. $url . "\n\r\n\r\n\r"
 			. "-----------------------------------------------------\n\r"
 			. __('I seem to have you cancel it when the body does not have memorizing to this email.','usces') . "\n\r"
 			. "-----------------------------------------------------\n\r\n\r\n\r"
-			. $usces->options['mail_data']['footer']['footerlogo'];
+			. apply_filters('usces_filter_lostmail_footer', $mail_data['footer']['othermail']);
 
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_SESSION["usces_lostmail"]),

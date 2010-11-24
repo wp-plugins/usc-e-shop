@@ -3,7 +3,8 @@ $usces_entries = $this->cart->get_entry();
 $usces_secure_link = get_option('usces_secure_link');
 $html = '';
 
-require_once( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
+if( $this->use_js )
+	require_once( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
 
 $html .= '<div id="delivery-info">
 	

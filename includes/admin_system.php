@@ -19,29 +19,18 @@ $use_ssl = $this->options['use_ssl'];
 $ssl_url = $this->options['ssl_url'];
 $ssl_url_admin = $this->options['ssl_url_admin'];
 $inquiry_id = $this->options['inquiry_id'];
-if( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ){
-	//$front_lang =  $this->options['system']['front_lang'];
-	switch( $this->options['system']['front_lang'] ){
-		case 'en':
-			$front_lang =  'en';
-			break;
-		case 'ja':
-			$front_lang =  'ja';
-			break;
-		default:
-			$front_lang =  'others';
-	}
-}else{
-	switch( get_locale() ){
-		case 'en':
-			$front_lang =  'en';
-			break;
-		case 'ja':
-			$front_lang =  'ja';
-			break;
-		default:
-			$front_lang =  'others';
-	}
+$orderby_itemsku = isset($this->options['system']['orderby_itemsku']) ? $this->options['system']['orderby_itemsku'] : 0;
+$orderby_itemopt = isset($this->options['system']['orderby_itemopt']) ? $this->options['system']['orderby_itemopt'] : 0;
+$system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : get_locale();
+switch( $system_front_lang ){
+	case 'en':
+		$front_lang =  'en';
+		break;
+	case 'ja':
+		$front_lang =  'ja';
+		break;
+	default:
+		$front_lang =  'others';
 }
 ?>
 <script type="text/javascript">
@@ -176,9 +165,25 @@ function toggleVisibility(id) {
 </table>
 <!--<table class="form_table">
 	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('商品SKUの並び順', 'usces'); ?></a></th>
+	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku0" type="radio" value="0"<?php if($orderby_itemsku === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku0"><?php _e('SKUコード順', 'usces'); ?></label></td>
+	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku1" type="radio" value="1"<?php if($orderby_itemsku === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku1"><?php _e('登録順', 'usces'); ?></label></td>
+		<td><div id="ex_orderby_itemsku" class="explanation"><?php _e("商品SKUの並び順を指定します。登録されている順にしたい場合は「登録順」を選択します。初期状態は「SKUコード順」となっています。", 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('商品オプションの並び順', 'usces'); ?></a></th>
+	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt0" type="radio" value="0"<?php if($orderby_itemopt === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt0"><?php _e('オプション名順', 'usces'); ?></label></td>
+	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt1" type="radio" value="1"<?php if($orderby_itemopt === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt1"><?php _e('登録順', 'usces'); ?></label></td>
+		<td><div id="ex_orderby_itemopt" class="explanation"><?php _e("共通オプション及び商品オプションの並び順を指定します。登録されている順にしたい場合は「登録順」を選択します。初期状態は「オプション名順」となっています。", 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript 利用の有無', 'usces'); ?></a></th>
-	    <td width="10"><input name="use_javascript" id="use_javascript0" type="radio" value="0"<?php if($this->options['use_javascript'] == 0) echo 'checked="checked"'; ?> /></td><td width="60"><label for="use_javascript0"><?php _e('利用しない', 'usces'); ?></label></td>
-	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="60"><label for="use_javascript1"><?php _e('利用する', 'usces'); ?></label></td>
+	    <td width="10"><input name="use_javascript" id="use_javascript0" type="radio" value="0"<?php if($this->options['use_javascript'] == 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript0"><?php _e('利用しない', 'usces'); ?></label></td>
+	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript1"><?php _e('利用する', 'usces'); ?></label></td>
 		<td><div id="ex_use_javascript" class="explanation"><?php _e("初期状態ではJavaScript を利用します。JavaScript を利用できないブラウザにも対応したい場合は「利用しない」を選択します。「利用しない」を選択するとJavaScript を使用しているWelcart 専用拡張プラグインも利用できなくなりますのでご注意下さい。その他のプラグインの制御は行いません。あくまでフロントの動作においてWelcart が利用しているJavaScript を停止するだけです。", 'usces'); ?></div></td>
 	</tr>
 </table>

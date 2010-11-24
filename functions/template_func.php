@@ -73,22 +73,28 @@ function usces_the_item(){
 	$usces->itemopts = array();
 	$post_id = $post->ID;
 	
-	
-	$fields = get_post_custom($post_id);
-	foreach((array)$fields as $key => $value){
+	$skuorderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
+	$skufields = $usces->get_post_custom($post_id, $skuorderby);
+	$optorderby = $usces->options['system']['orderby_itemopt'] ? 'meta_id' : 'meta_key';
+	$optfields = $usces->get_post_custom($post_id, $optorderby);
+	foreach((array)$skufields as $key => $value){
 		if( preg_match('/^_isku_/', $key, $match) ){
 			$key = substr($key, 6);
 			$values = maybe_unserialize($value[0]);
 			$usces->itemskus[$key] = $values;
-		} else if( preg_match('/^_iopt_/', $key, $match) ){
+		}
+	}
+	foreach((array)$optfields as $key => $value){
+		if( preg_match('/^_iopt_/', $key, $match) ){
 			$key = substr($key, 6);
 			$values = maybe_unserialize($value[0]);
 			$usces->itemopts[$key] = $values;
 		}
 	}
+	//var_dump($fields);
 	//natcasesort($usces->itemskus);
-	ksort($usces->itemskus, SORT_STRING);
-	ksort($usces->itemopts, SORT_STRING);
+	//ksort($usces->itemskus, SORT_STRING);
+	//ksort($usces->itemopts, SORT_STRING);
 	return;
 }
 

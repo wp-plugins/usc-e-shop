@@ -42,7 +42,7 @@ jQuery(function($){
 	shipping_charge[<?php echo $i; ?>]['id'] = <?php echo (int)$shipping_charge[$i]['id']; ?>;
 	shipping_charge[<?php echo $i; ?>]['name'] = "<?php echo $shipping_charge[$i]['name']; ?>";
 	shipping_charge[<?php echo $i; ?>]['value'] = [];
-	<?php foreach((array)$prefs as $pref){ ?>;
+	<?php foreach((array)$prefs as $pref){ ?>
 	shipping_charge[<?php echo $i; ?>]['value']['<?php echo $pref; ?>'] = <?php echo (int)$shipping_charge[$i]['value'][$pref]; ?>;
 <?php }} ?>
 
