@@ -3428,11 +3428,13 @@ class usc_e_shop
 		global $wpdb;
 		$access_table = $wpdb->prefix . "usces_access";
 		$member_table = $wpdb->prefix . "usces_member";
+		$member_meta_table = $wpdb->prefix . "usces_member_meta";
 		$order_table = $wpdb->prefix . "usces_order";
 		$order_meta_table = $wpdb->prefix . "usces_order_meta";
 		
 		$access_ver = get_option( "usces_db_access" );
 		$member_ver = get_option( "usces_db_member" );
+		$member_meta_ver = get_option( "usces_db_member_meta" );
 		$order_ver = get_option( "usces_db_order" );
 		$order_meta_ver = get_option( "usces_db_order_meta" );
 		
