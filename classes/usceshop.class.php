@@ -3260,7 +3260,6 @@ class usc_e_shop
 		}
 	}
 
-	//
 	function set_initial()
 	{
 		$rets = usces_metakey_change();
@@ -3348,7 +3347,6 @@ class usc_e_shop
 			$sql = "CREATE TABLE " . $member_meta_table . " (
 				mmeta_id bigint(20) NOT NULL auto_increment,
 				member_id bigint(20) NOT NULL default '0',
-
 				meta_key varchar(255) default NULL,
 				meta_value longtext,
 				PRIMARY KEY  (mmeta_id),
@@ -3412,7 +3410,6 @@ class usc_e_shop
 			$sql = "CREATE TABLE " . $order_meta_table . " (
 				ometa_id bigint(20) NOT NULL auto_increment,
 				order_id bigint(20) NOT NULL default '0',
-
 				meta_key varchar(255) default NULL,
 				meta_value longtext,
 				PRIMARY KEY  (ometa_id),
@@ -3485,7 +3482,7 @@ class usc_e_shop
 				mem_nicename VARCHAR( 50 ) NULL ,
 				KEY mem_email ( mem_email ) ,  
 				KEY mem_pass ( mem_pass )  
-				) ENGINE = MYISAM ;";
+				) ENGINE = MYISAM;";
 			
 			dbDelta($sql);
 			update_option( "usces_db_member", USCES_DB_MEMBER );
@@ -3500,7 +3497,7 @@ class usc_e_shop
 				PRIMARY KEY  (mmeta_id),
 				KEY order_id (member_id),
 				KEY meta_key (meta_key)
-				) ENGINE = MYISAM';";
+				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
 			update_option("usces_db_member_meta", USCES_DB_MEMBER_META);
@@ -3547,7 +3544,7 @@ class usc_e_shop
 				KEY order_pref ( order_pref ) ,  
 				KEY order_address1 ( order_address1 ) ,  
 				KEY order_tel ( order_tel ) ,  
-				KEY order_date ( order_date )  
+				KEY order_date ( order_date ) 
 				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
@@ -3563,7 +3560,7 @@ class usc_e_shop
 				PRIMARY KEY  (ometa_id),
 				KEY order_id (order_id),
 				KEY meta_key (meta_key)
-				) ENGINE = MYISAM';";
+				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
 			update_option("usces_db_order_meta", USCES_DB_ORDER_META);
