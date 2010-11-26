@@ -4,14 +4,13 @@
 
 【手順1】イプシロン・システム情報登録（テスト環境）
 ・オーダー情報発信元ホスト情報：ショップのドメイン若しくはIPアドレス
-・決済完了後のリダイレクト先：ショップトップページのURL/index.php?page_id=カートページのＩＤ&acting=epsilon&acting_return=1
-　SSLを利用している場合はhttp//をhttps://にする。また共用SSLの場合はそのURLを指定。
+・決済完了後のリダイレクト先：ショップトップページのURL
 ・[戻る]ボタンの戻り先URL：ショップトップページのURL/index.php?page_id=カートページのＩＤ&confirm=0
-　ショップトップページのURLは上記と同じ
+　SSLを利用している場合はhttp//をhttps://にする。また共用SSLの場合はそのURLを指定。
 ・エラー発生時の戻り先URL：ショップトップページのURL/index.php?page_id=カートページのＩＤ&acting=epsilon&acting_return=0
-　ショップトップページのURLは上記と同じ
+　SSLを利用している場合はhttp//をhttps://にする。また共用SSLの場合はそのURLを指定。
 ・タイムアウト情報送信先URL：ショップトップページのURL/index.php?page_id=カートページのＩＤ&acting=epsilon&acting_return=0
-　ショップトップページのURLは上記と同じ
+　SSLを利用している場合はhttp//をhttps://にする。また共用SSLの場合はそのURLを指定。
 
 ※本番環境ではテスト環境と同じものを設定します。
 

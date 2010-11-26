@@ -402,6 +402,12 @@ function usces_action_acting_transaction(){
 			break;
 		}
 //20101018ysk end
+	//*** epsilon ***//
+	}elseif( isset($_GET['trans_code']) && isset($_GET['user_id']) && isset($_GET['result']) && isset($_GET['order_number']) ){
+		$query = 'trans_code=' . $_GET['trans_code'] . '&user_id=' . $_GET['user_id'] . '&result=' . $_GET['result'] . '&order_number=' . $_GET['order_number'];
+		usces_log('epsilon : ' . $query, 'acting_transaction.log');
+		header('location: ' . get_option('home') . '?page_id=' . get_option('usces_cart_number') . '&acting=epsilon&acting_return=1&result=' . $_GET['result']);
+		exit;
 	}
 }
 ?>
