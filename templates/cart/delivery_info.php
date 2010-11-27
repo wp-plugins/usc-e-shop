@@ -36,7 +36,7 @@ $html .= '<form action="' . USCES_CART_URL . '" method="post">';
 	$html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="delivery_flag1">'.__('same as customer information', 'usces').'</label></td>
 		</tr>
 		<tr>
-		<td><input name="delivery[delivery_flag]" id="delivery_flag2" onclick="document.getElementById(\'delivery_table\').style.display = \'table\'" type="radio" value="1"';
+		<td><input name="delivery[delivery_flag]" id="delivery_flag2" onclick="document.getElementById(\'delivery_table\').style.display = \'block\'" type="radio" value="1"';
 	if($usces_entries['delivery']['delivery_flag'] == 1) {
 		$html .= ' checked';
 	}

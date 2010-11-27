@@ -703,6 +703,7 @@ function usces_reg_orderdata( $results = array() ) {
 	if( empty($cart) )
 		return 0;
 	
+	
 	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 	$charging_flag = (  0 < (int)$chargings ) ? true : false;
 
@@ -876,6 +877,9 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 		}
 //20101018ysk end
+		if( isset($_REQUEST['acting']) && isset($_REQUEST['acting_return']) && isset($_REQUEST['trans_code']) && 'epsilon' == $_REQUEST['acting'] ) {
+			$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);
+		}
 
 		foreach($cart as $cartrow){
 			$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
