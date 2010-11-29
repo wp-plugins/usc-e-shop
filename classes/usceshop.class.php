@@ -310,6 +310,14 @@ class usc_e_shop
 		return $link;
 	}
 
+	function usces_ssl_icon_dir_uri($uri)
+	{
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
+			$uri = USCES_SSL_URL_ADMIN. '/' . WPINC . '/images/crystal';
+		}
+		return $uri;
+	}
+
 	function usces_ssl_script_link($link)
 	{
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
@@ -1750,6 +1758,7 @@ class usc_e_shop
 			}
 			add_filter('home_url', array($this, 'usces_ssl_page_link'));
 			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
+			add_filter('icon_dir_uri', array($this, 'usces_ssl_icon_dir_uri'));
 			add_filter('stylesheet_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('template_directory_uri', array($this, 'usces_ssl_contents_link'));
 			add_filter('script_loader_src', array($this, 'usces_ssl_script_link'));

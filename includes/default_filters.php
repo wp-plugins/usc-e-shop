@@ -1,6 +1,6 @@
 <?php
 add_action( 'init', array(&$usces, 'main'), 10);
-add_action( 'init', 'usces_redirect', 10);
+add_action( 'admin_init', 'usces_redirect', 10);
 add_action( 'admin_menu', array(&$usces, 'add_pages'));
 add_action( 'admin_head', array(&$usces, 'admin_head'));
 add_action( 'wp_head', array(&$usces, 'shop_head'));

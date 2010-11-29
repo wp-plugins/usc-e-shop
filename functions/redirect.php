@@ -17,5 +17,4 @@ function usces_redirect(){
 			
 	}
 }
-
 ?>
