@@ -4,6 +4,7 @@ add_action( 'admin_init', 'usces_redirect', 10);
 add_action( 'admin_menu', array(&$usces, 'add_pages'));
 add_action( 'admin_head', array(&$usces, 'admin_head'));
 add_action( 'wp_head', array(&$usces, 'shop_head'));
+add_action( 'wp_footer', array(&$usces, 'shop_foot'));
 add_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 //add_action('wp_dashboard_setup', 'usces_dashboard_setup' );	
 //add_action( 'login_head', 'usces_admin_login_head' );
