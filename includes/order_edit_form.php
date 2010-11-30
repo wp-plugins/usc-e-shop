@@ -300,7 +300,7 @@ jQuery(function($){
 		
 		make_delivery_time : function(selected) {
 			var option = '';
-			if(selected == -1){
+			if(selected == -1 || delivery_time[selected] == undefined){
 				option += '<option value="<?php _e('Non-request', 'usces'); ?>"><?php _e('Non-request', 'usces'); ?></option>' + "\n";
 			}else{
 				for(var i=0; i<delivery_time[selected].length; i++){

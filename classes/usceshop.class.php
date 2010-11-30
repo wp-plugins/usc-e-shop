@@ -1191,26 +1191,30 @@ class usc_e_shop
 	}
 	
 	function shop_head() {
-		global $post, $current_user;
-		get_currentuserinfo();
 		
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
-			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
 		}else{
 			$css_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER . '/css/usces_cart.css';
+		}
+		echo '<link href="' . $css_url . '" rel="stylesheet" type="text/css" />';
+		if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){
+			echo '<link href="' . get_stylesheet_directory_uri() . '/usces_cart.css" rel="stylesheet" type="text/css" />';
+		}
+	}
+	
+	function shop_foot() {
+		global $post, $current_user;
+		get_currentuserinfo();
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
+			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
+		}else{
 			$javascript_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER . '/js/usces_cart.js';
 		}
 		$this->member_name = ( is_user_logged_in() ) ? get_usermeta($current_user->ID,'first_name').get_usermeta($current_user->ID,'last_name') : '';
-
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : get_bloginfo('home');
-		?>
 
-		<link href="<?php echo $css_url; ?>" rel="stylesheet" type="text/css" />
-	<?php if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){ ?>
-		<link href="<?php echo get_stylesheet_directory_uri(); ?>/usces_cart.css" rel="stylesheet" type="text/css" />
-	<?php } ?>
-		<?php
+
 		if( isset($post) && $this->use_js ) : 
 
 			$ioptkeys = $this->get_itemOptionKey( $post->ID );
@@ -1237,7 +1241,7 @@ class usc_e_shop
 			}
 			$itemRestriction = get_post_custom_values('_itemRestriction', $post->ID);
 		
-		?>
+?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
