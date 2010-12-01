@@ -49,7 +49,7 @@ Apache 2.2
 
 
 【更新履歴】
-Development Version 0.8.1.r1012011   2010/12/01
+Development Version 0.8.1.r1012021   2010/12/02
 　・受注データ編集画面にて、配送時間の指定が無い場合に出るJavaScriptエラーを修正
 　・フロントでのJavaScriptをfooter に移動
 　・商品編集でプレビューができなくなっていた不具合を修正

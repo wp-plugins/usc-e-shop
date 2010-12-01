@@ -1261,7 +1261,7 @@ class usc_e_shop
 		</script>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
 		<?php endif; ?>
-		<?php if( isset($post) && $this->options['use_javascript'] && ((USCES_CART_NUMBER == $post->ID) || ('item' == $post->post_mime_type && is_single())) ) : ?>
+		<?php if( isset($post) && $this->use_js && ($this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $post->post_mime_type && is_single())) ) : ?>
 		<script type='text/javascript'>
 		(function($) {
 		uscesCart = {
@@ -1323,7 +1323,7 @@ class usc_e_shop
 					alert( mes );
 					return false;
 				}else{
-					<?php echo apply_filters('usces_filter_js_intoCart', "return true\n", $post->ID); ?>
+					<?php echo apply_filters('usces_filter_js_intoCart', "return true\n", $post->ID, $this->itemsku['key']); ?>
 				}
 			},
 			
