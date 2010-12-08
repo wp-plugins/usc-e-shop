@@ -22,6 +22,9 @@ class dataList
 	var $sortOldColumn;
 	var $sortSwitchs;	//各フィールド毎の昇順降順スイッチ
 	var $userHeaderNames;	//ユーザー指定のヘッダ名
+//20101202ysk start
+	var $pageLimit;		//ページ制限
+//20101202ysk end
 	
 	//Constructor
 	function dataList($tableName, $arr_column)
@@ -34,6 +37,9 @@ class dataList
 		$this->maxRow = 20;
 		$this->naviMaxButton = 11;
 		$this->firstPage = 1;
+//20101202ysk start
+		$this->pageLimit = 'on';
+//20101202ysk end
 
 		$this->SetParamByQuery();
 
@@ -484,7 +490,13 @@ class dataList
 		global $wpdb;
 		$where = $this->GetWhere();
 		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
+//20101202ysk start
+		if($this->pageLimit == 'on') {
+//20101202ysk end
 		$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
+//20101202ysk start
+		}
+//20101202ysk end
 			
 		$query = $wpdb->prepare("SELECT ID, CONCAT(mem_name1, ' ', mem_name2) AS name, 
 						CONCAT(mem_pref, mem_address1, mem_address2, ' ', mem_address3) AS address, 

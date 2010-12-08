@@ -36,6 +36,9 @@ $zaiko_status = get_option('usces_zaiko_status');
 $status = isset($_REQUEST['usces_status']) ? $_REQUEST['usces_status'] : $DT->get_action_status();
 $message = isset($_REQUEST['usces_message']) ? urldecode($_REQUEST['usces_message']) : $DT->get_action_message();
 $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
+//20101111ysk start
+$usces_opt_item = unserialize(get_option('usces_opt_item'));
+//20101111ysk end
 ?>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.resizable.js"></script>
@@ -212,13 +215,45 @@ jQuery(function($){
 			$("#usces_upcsv").val('');
 		}
 	});
-	$('#up_dlg').click(function() {
+//20101111ysk start
+	//$('#up_dlg').click(function() {
+	$('#up_itemlist').click(function() {
+//20101111ysk end
 			$('#upload_dialog').dialog( 'option' , 'title' , '<?php _e('Collective registration item', 'usces'); ?>' );
 			$('#upload_dialog').dialog( 'option' , 'width' , 500 );
-			$('#dialogExp').html( '<?php _e('Upload prescribed CSV and perform the collective registration of the article.<br />Please choose a file, and push the registration start.', 'usces'); ?>' );
+			$('#dialogExp').html( '<?php _e('Upload prescribed CSV or an Excel file and perform the collective registration of the article.<br />Please choose a file, and push the registration start.', 'usces'); ?>' );
 			$('#upload_dialog').dialog( 'open' );
 	});
-
+//20101111ysk start
+	$("#dlItemListDialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 700,
+		resizable: true,
+		modal: true,
+		buttons: {
+			'<?php _e('close', 'usces'); ?>': function() {
+				$(this).dialog('close');
+			}
+		},
+		close: function() {
+		}
+	});
+	$('#dl_item').click(function() {
+		var args = "&search[column]="+$(':input[name="search[column]"]').val()
+			+"&search[word]="+$(':input[name="search[word]"]').val()
+			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+			+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();
+		if($('#chk_header').attr('checked') == true) {
+			args += '&chk_header=on';
+		}
+		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_itemedit&action=dlitemlist&noheader=true"+args;
+	});
+	$('#dl_itemlist').click(function() {
+		$('#dlItemListDialog').dialog('open');
+	});
+//20101111ysk end
 });
 
 function toggleVisibility(id) {
@@ -320,7 +355,18 @@ jQuery(document).ready(function($){
 		<td id="changelabel"></td>
 		<td id="changefield"></td>
 		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="<?php _e('start', 'usces'); ?>" />
-		<a href="#" id="up_dlg"><?php _e('Collective registration item', 'usces'); ?></a>
+<!--20101111ysk start-->
+<!--	<a href="#" id="up_dlg"><?php _e('Collective registration item', 'usces'); ?></a>-->
+		</td>
+		</tr>
+		</table>
+		<table id="dl_list_table">
+		<tr>
+		<td><input type="button" id="up_itemlist" class="searchbutton" value="<?php _e('Collective registration item', 'usces'); ?>" /></td>
+		<td><input type="button" id="dl_itemlist" class="searchbutton" value="<?php _e('Download Item List', 'usces'); ?>" /></td>
+		</tr>
+		</table>
+<!--20101111ysk end-->
 		</td>
 		</tr>
 		</table>
@@ -455,13 +501,38 @@ jQuery(document).ready(function($){
 	<p id="dialogExp"></p>
 	<form action="<?php echo USCES_ADMIN_URL; ?>" method="post" enctype="multipart/form-data" name="upform" id="upform">
 	<input name="usces_upcsv" type="file" id="usces_upcsv" style="width:100%" />
-	<input name="itemcsv" type="submit" id="upcsv" value="登録開始" />
+	<input name="itemcsv" type="submit" id="upcsv" value="<?php _e('Registration start', 'usces'); ?>" />
 	<input name="page" type="hidden" value="usces_itemedit" />
 	<input name="action" type="hidden" value="itemcsv" />
 	</form>
 	<p><?php _e('Indication is updated after upload completion.', 'usces'); ?></p>
 	<p><?php _e('Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload.', 'usces'); ?></p>
 </div>
+<!--20101111ysk start-->
+<div id="dlItemListDialog" title="<?php _e('Download Item List', 'usces'); ?>">
+	<p><?php _e('Choose the file format, and push the download.', 'usces'); ?></p>
+	<fieldset>
+		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('最初の 1 行目にフィールドを追加する','usces'); ?></label>
+	</fieldset>
+	<fieldset>
+<?php 
+	if($usces_opt_item['ftype_item'] == 'xls') {
+		$ftype_item_xls = ' checked';
+		$ftype_item_csv = '';
+	} elseif($usces_opt_item['ftype_item'] == 'csv') {
+		$ftype_item_xls = '';
+		$ftype_item_csv = ' checked';
+	} else {
+		$ftype_item_xls = ' checked';
+		$ftype_item_csv = '';
+	}
+?>
+		<label for="ftype_item_xls"><input type="radio" name="ftype_item[]" id="ftype_item_xls" value="xls"<?php echo $ftype_item_xls; ?> /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_item_csv"><input type="radio" name="ftype_item[]" id="ftype_item_csv" value="csv"<?php echo $ftype_item_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<input type="button" id="dl_item" value="<?php _e('Download', 'usces'); ?>" />
+	</fieldset>
+</div>
+<!--20101111ysk end-->
 
 </div><!--usces_admin-->
 </div><!--wrap-->

@@ -386,6 +386,11 @@ class usc_e_shop
 		}
 
 		switch ( $action ) {
+//20101111ysk start
+			case 'dlitemlist':
+				usces_download_item_list();
+				break;
+//20101111ysk end
 			case 'delete':
 			case 'new':
 			case 'editpost':
@@ -1261,7 +1266,7 @@ class usc_e_shop
 		</script>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
 		<?php endif; ?>
-		<?php if( isset($post) && $this->use_js && ($this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $post->post_mime_type && is_single())) ) : ?>
+		<?php if( isset($post) && $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $post->post_mime_type && is_single())) ) : ?>
 		<script type='text/javascript'>
 		(function($) {
 		uscesCart = {
@@ -1323,7 +1328,7 @@ class usc_e_shop
 					alert( mes );
 					return false;
 				}else{
-					<?php echo apply_filters('usces_filter_js_intoCart', "return true\n", $post->ID, $this->itemsku['key']); ?>
+					<?php echo apply_filters('usces_filter_js_intoCart', "return true", $post->ID, $this->itemsku['key']); ?>
 				}
 			},
 			
@@ -1691,6 +1696,11 @@ class usc_e_shop
 					wp_enqueue_script('jquery-ui-dialog');
 					break;
 //20100908ysk end
+//20101111ysk start
+				case 'usces_itemedit':
+					wp_enqueue_script('jquery-ui-dialog');
+					break;
+//20101111ysk end
 			}
 		}
 
@@ -3153,6 +3163,16 @@ class usc_e_shop
 			$mes .= __('chose one from delivery method.', 'usces') . "<br />";
 		if ( !isset($_POST['order']['payment_name']) )
 			$mes .= __('chose one from payment options.', 'usces') . "<br />";
+//20101119ysk start
+		if(isset($_POST['order']['delivery_method']) and isset($_POST['order']['payment_name'])) {
+			$d_method_index = $this->get_delivery_method_index((int)$_POST['order']['delivery_method']);
+			if($this->options['delivery_method'][$d_method_index]['nocod'] == '1') {
+				$payments = $this->getPayments($_POST['order']['payment_name']);
+				if('COD' == $payments['settlement'])
+					$mes .= __('COD is not available.', 'usces') . "<br />";
+			}
+		}
+//20101119ysk end
 	
 		$mes = apply_filters('usces_filter_delivery_check', $mes);
 
@@ -4515,10 +4535,19 @@ class usc_e_shop
 		$discount = 0;
 		$total = $this->get_total_price( $cart );
 		if ( $display_mode == 'Promotionsale' ) {
-			if ( $this->options['campaign_privilege'] == 'discount' )
-				$discount = $total * $this->options['privilege_discount'] / 100;
-			elseif ( $this->options['campaign_privilege'] == 'point' )
+			if ( $this->options['campaign_privilege'] == 'discount' ){
+				if( 0 === (int)$this->options['campaign_category'] ){
+					$discount = $total * $this->options['privilege_discount'] / 100;
+				}else{
+					foreach($cart as $cart_row){
+						if( in_category((int)$this->options['campaign_category'], $cart_row['post_id']) ){
+							$discount += $cart_row['price'] * $cart_row['quantity'] * $this->options['privilege_discount'] / 100;
+						}
+					}
+				}
+			}else if ( $this->options['campaign_privilege'] == 'point' ){
 				$discount = 0;
+			}
 		}
 
 		$discount = ceil($discount * -1);

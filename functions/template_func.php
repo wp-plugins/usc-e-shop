@@ -843,7 +843,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$html .= $list . "</dl>\n";
 	
 	if( empty($list) )
-		$html = 'まだお支払方法の準備ができておりません。<br />管理者にお問合せください。'."\n";
+		$html = __('Not yet ready for the payment method. Please refer to a manager.', 'usces')."\n";
 	
 	if( $out == 'return' ){
 		return $html;

@@ -106,11 +106,12 @@ function toggleVisibility(id) {
 				<td colspan="4"><input name="clientip_bank" type="text" id="bank_clid_zeus" value="<?php echo esc_html($opts['zeus']['clientip_bank']); ?>" size="40" /></td>
 				<td><div id="ex_bank_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行される入金お任せサービス用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
-			<tr>
+<!--			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_testid_zeus');"><?php _e('テストカード番号', 'usces'); ?></a></th>
 				<td colspan="4"><input name="testid_bank" type="text" id="testid_bank_zeus" value="<?php echo esc_html($opts['zeus']['testid_bank']); ?>" size="40" /></td>
 				<td><div id="ex_bank_testid_zeus" class="explanation"><?php _e('契約時にZEUSから発行される入金お任せサービス接続テストで必要なカード番号です。（半角数字）<br />本稼動の場合は空白にしてください。', 'usces'); ?></div></td>
 			</tr>
+-->
 		</table>
 		<table class="settle_table">
 			<tr>
@@ -125,7 +126,7 @@ function toggleVisibility(id) {
 				<td colspan="6"><input name="clientip_conv" type="text" id="conv_clid_zeus" value="<?php echo esc_html($opts['zeus']['clientip_conv']); ?>" size="40" /></td>
 				<td><div id="ex_conv_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるコンビニ決済サービス用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
-			<tr>
+<!--			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_testid_zeus');"><?php _e('テストカード番号', 'usces'); ?></a></th>
 				<td colspan="6"><input name="testid_conv" type="text" id="testid_conv_zeus" value="<?php echo esc_html($opts['zeus']['testid_conv']); ?>" size="40" /></td>
 				<td><div id="ex_conv_testid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるコンビニ決済サービス接続テストで必要なカード番号です。（半角数字）<br />本稼動の場合は空白にしてください。', 'usces'); ?></div></td>
@@ -137,6 +138,7 @@ function toggleVisibility(id) {
 				<td><input name="test_type" type="radio" id="conv_testtype_zeus_3" value="2"<?php if( $opts['zeus']['test_type_conv'] == '2' ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_3">売上取消テスト</label></td>
 				<td><div id="ex_conv_testtype_zeus" class="explanation"><?php _e('テスト環境でのテストタイプを指定します。テストカード番号が空白のときはこの項目は無効になります。', 'usces'); ?></div></td>
 			</tr>
+-->
 		</table>
 		<input name="conv_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/cvs.cgi" />
 		<input name="bank_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/ebank.cgi" />
@@ -160,10 +162,10 @@ function toggleVisibility(id) {
 		デザインの統一されたスタイリッシュな決済が可能です。但し、カード番号を扱いますので専用SSLが必須となります。</p>
 		<p>カード番号はZEUS のシステムに送信されるだけで、Welcart に記録は残しません。</p>
 		<p>　</p>
-		<p><strong>テスト稼動について</strong></p>
+		<!--<p><strong>テスト稼動について</strong></p>
 		<p>入金お任せ及びコンビニ決済のテスト稼動を行なう際は、”テストカード番号”の項目にゼウスから発行されるテストカード番号を入力して下さい。<br />
 		これを入力することでWelcart は、名前の後ろにテストカード番号を自動的に付けるなどテストモードで動作します。通常の購入方法でテストができます。<br />
-		また、この項目を空白にすることで本稼動となります。</p>
+		また、この項目を空白にすることで本稼動となります。</p>-->
 	</div>
 	</div><!--uscestabs_zeus-->
 

@@ -2131,10 +2131,10 @@ msgid "estimate order"
 msgstr "見積り受注"
 
 msgid "Collective registration item"
-msgstr "商品一括登"
+msgstr "商品一括登録"
 
-msgid "Upload prescribed CSV and perform the collective registration of the article.<br />Please choose a file, and push the registration start."
-msgstr "規定のCSVをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。"
+msgid "Upload prescribed CSV or an Excel file and perform the collective registration of the article.<br />Please choose a file, and push the registration start."
+msgstr "規定のCSVまたはエクセルファイルをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。"
 
 msgid "Indication is updated after upload completion."
 msgstr "アップロード完了後に表示が更新されます。"
@@ -2539,10 +2539,10 @@ msgid "Download Member List"
 msgstr "会員データ出力"
 
 msgid "Download Product List"
-msgstr "商品データ出力"
+msgstr "受注明細リスト出力"
 
 msgid "Download Order List"
-msgstr "受注データ出力"
+msgstr "受注リスト出力"
 
 msgid "delete it"
 msgstr "会員情報を削除する"
@@ -2570,6 +2570,48 @@ msgstr "フロントエンドの言語"
 
 msgid "You can choose the language of the front-end.The language of the admin panel obeys config.php."
 msgstr "フロントエンドの言語を選択できます。管理パネルの方はconfig.php の設定に従います。"
+
+msgid "Order of SKU"
+msgstr "商品SKUの並び順"
+
+msgid "Order of Item options"
+msgstr "商品オプションの並び順"
+
+msgid "You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'."
+msgstr "商品SKUの並び順を指定します。登録されている順にしたい場合は「登録順」を選択します。初期状態は「SKUコード順」となっています。"
+
+msgid "You can appoint a common option and the equal thing order of the item option. When You want to make it registered order, choose 'Registration Order'. The initial state becomes 'Optional excellent Order'."
+msgstr "共通オプション及び商品オプションの並び順を指定します。登録されている順にしたい場合は「登録順」を選択します。初期状態は「オプション名順」となっています。"
+
+msgid "Registration Order"
+msgstr "登録順"
+
+msgid "Optional excellent Order"
+msgstr "オプション名順"
+
+msgid "SKU cord Order"
+msgstr "SKUコード順"
+
+msgid "Download Item List"
+msgstr "商品データ出力"
+
+msgid "excerpt"
+msgstr "抜粋"
+
+msgid "Field type"
+msgstr "フィールドタイプ"
+
+msgid "No COD"
+msgstr "代引き不可"
+
+msgid "Registration start"
+msgstr "登録開始"
+
+msgid "Choose the file format, and push the download."
+msgstr "出力したい形式を選択して、ダウンロードを押してください。"
+
+msgid "Not yet ready for the payment method. Please refer to a manager."
+msgstr "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
 
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"

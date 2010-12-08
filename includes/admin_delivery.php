@@ -30,6 +30,9 @@ jQuery(function($){
 	sttr += "<?php echo trim($line); ?>\n";
 	<?php } } ?>
 	delivery_method[<?php echo $i; ?>]['time'] = sttr;
+//20101119ysk start
+	delivery_method[<?php echo $i; ?>]['nocod'] = "<?php echo $delivery_method[$i]['nocod']; ?>";
+//20101119ysk end
 <?php } ?>
 
 	var pref = [];
@@ -74,6 +77,9 @@ jQuery(function($){
 		$("#delivery_method_name2").html('');
 		$("#delivery_method_time").val('');
 		$("#delivery_method_button").html('<input name="cancel_delivery_method" id="cancel_delivery_method" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_delivery_method(0);" /><input name="add_delivery_method" id="add_delivery_method" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_delivery_method();" />');
+//20101119ysk start
+		$("#delivery_method_nocod").html('<input name="delivery_method_nocod" type="checkbox" value="1" />');
+//20101119ysk end
 		$("input[name='delivery_method_name']").focus().select();
 		operation.make_delivery_method_charge(-1);
 	});
@@ -122,6 +128,9 @@ jQuery(function($){
 				$("#delivery_method_name2").html('');
 				$("#delivery_method_time").val('');
 				$("#delivery_method_button").html('<input name="add_delivery_method" id="add_delivery_method" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_delivery_method();" />');
+//20101119ysk start
+				$("#delivery_method_nocod").html('<input name="delivery_method_nocod" type="checkbox" value="1" />');
+//20101119ysk end
 				operation.make_delivery_method_charge(-1);
 			}else{
 				var name_select = '<select name="delivery_method_name_select" id="delivery_method_name_select" onchange="operation.onchange_delivery_select(this.selectedIndex);">'+"\n";
@@ -137,6 +146,10 @@ jQuery(function($){
 				$("#delivery_method_name2").html('<input name="delivery_method_name" type="text" value="'+delivery_method[selected]['name']+'" />');
 				$("#delivery_method_time").val(delivery_method[selected]['time']);
 				$("#delivery_method_button").html("<input name='delete_delivery_method' id='delete_delivery_method' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_delivery_method();' /><input name='update_delivery_method' id='update_delivery_method' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_delivery_method();' />");
+//20101119ysk start
+				var checked = (delivery_method[selected]['nocod'] == '1') ? ' checked' : '';
+				$("#delivery_method_nocod").html('<input name="delivery_method_nocod" type="checkbox" value="1"'+checked+' />');
+//20101119ysk end
 				operation.make_delivery_method_charge(get_delivery_method_charge(selected_method));
 			}
 		},
@@ -148,21 +161,33 @@ jQuery(function($){
 			var name = $("input[name='delivery_method_name']").val();
 			var time = $("#delivery_method_time").val();
 			var charge = $("#delivery_method_charge option:selected").val();
+//20101119ysk start
+			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked') == true) ? '1' : '0';
+//20101119ysk end
 			
 			var s = operation.settings;
-			s.data = "action=shop_options_ajax&mode=add_delivery_method&name=" + name + "&charge=" + charge + "&time=" + time;
+//20101119ysk start
+			//s.data = "action=shop_options_ajax&mode=add_delivery_method&name=" + name + "&charge=" + charge + "&time=" + time;
+			s.data = "action=shop_options_ajax&mode=add_delivery_method&name=" + name + "&charge=" + charge + "&time=" + time+ "&nocod=" + nocod;
+//20101119ysk end
 			s.success = function(data, dataType){
 				var strs = data.split('#usces#');
 				var id = strs[0] - 0;
 				var name = strs[1];
 				var time = strs[2];
 				var charge = strs[3] - 0;
+//20101119ysk start
+				var nocod = strs[4];
+//20101119ysk end
 				var index = delivery_method.length;
 				delivery_method[index] = [];
 				delivery_method[index]['id'] = id;
 				delivery_method[index]['name'] = name;
 				delivery_method[index]['time'] = time;
 				delivery_method[index]['charge'] = charge;
+//20101119ysk start
+				delivery_method[index]['nocod'] = nocod;
+//20101119ysk end
 				operation.disp_delivery_method(id);
 				$("#delivery_method_loading").html('');
 			};
@@ -176,14 +201,23 @@ jQuery(function($){
 			var name = $("input[name='delivery_method_name']").val();
 			var time = $("#delivery_method_time").val();
 			var charge = $("#delivery_method_charge option:selected").val();
+//20101119ysk start
+			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked') == true) ? '1' : '0';
+//20101119ysk end
 			var s = operation.settings;
-			s.data = "action=shop_options_ajax&mode=update_delivery_method&name=" + name + "&id=" + id + "&time=" + time + "&charge=" + charge;
+//20101119ysk start
+			//s.data = "action=shop_options_ajax&mode=update_delivery_method&name=" + name + "&id=" + id + "&time=" + time + "&charge=" + charge;
+			s.data = "action=shop_options_ajax&mode=update_delivery_method&name=" + name + "&id=" + id + "&time=" + time + "&charge=" + charge + "&nocod=" + nocod;
+//20101119ysk end
 			s.success = function(data, dataType){
 				var strs = data.split('#usces#');
 				var id = strs[0] - 0;
 				var name = strs[1];
 				var time = strs[2];
 				var charge = strs[3]-0;
+//20101119ysk start
+				var nocod = strs[4];
+//20101119ysk end
 				for(var i=0; i<delivery_method.length; i++){
 					if(id === delivery_method[i]['id']){
 						index = i;
@@ -192,6 +226,9 @@ jQuery(function($){
 				delivery_method[index]['name'] = name;
 				delivery_method[index]['time'] = time;
 				delivery_method[index]['charge'] = charge;
+//20101119ysk start
+				delivery_method[index]['nocod'] = nocod;
+//20101119ysk end
 				operation.disp_delivery_method(id);
 				$("#delivery_method_loading").html('');
 			};
@@ -267,13 +304,20 @@ jQuery(function($){
 				var name = strs[1].split(',');
 				var time = strs[2].split(',');
 				var charge = strs[3].split(',');
-				var selected = strs[4]-0;
+//20101119ysk start
+				var nocod = strs[4].split(',');
+				//var selected = strs[4]-0;
+				var selected = strs[5]-0;
+//20101119ysk end
 				var ct = delivery_method.length;
 				for(var i=0; i<ct; i++){
 					delivery_method[i]['id'] = id[i]-0;
 					delivery_method[i]['name'] = name[i];
 					delivery_method[i]['time'] = time[i];
 					delivery_method[i]['charge'] = charge[i]-0;
+//20101119ysk start
+					delivery_method[i]['nocod'] = nocod[i];
+//20101119ysk end
 				}
 				operation.disp_delivery_method(selected);
 				$("#delivery_method_loading").html('');
@@ -302,13 +346,20 @@ jQuery(function($){
 				var name = strs[1].split(',');
 				var time = strs[2].split(',');
 				var charge = strs[3].split(',');
-				var selected = strs[4]-0;
+//20101119ysk start
+				var nocod = strs[4].split(',');
+				//var selected = strs[4]-0;
+				var selected = strs[5]-0;
+//20101119ysk end
 				var ct = delivery_method.length;
 				for(var i=0; i<ct; i++){
 					delivery_method[i]['id'] = id[i]-0;
 					delivery_method[i]['name'] = name[i];
 					delivery_method[i]['time'] = time[i];
 					delivery_method[i]['charge'] = charge[i]-0;
+//20101119ysk start
+					delivery_method[i]['nocod'] = nocod[i];
+//20101119ysk end
 				}
 				operation.disp_delivery_method(selected);
 				$("#delivery_method_loading").html('');
@@ -550,6 +601,15 @@ jQuery(document).ready(function($){
 	    <td><?php _e("It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'.", 'usces'); ?></td>
 		<td>&nbsp;</td>
 	</tr>
+<!--20101119ysk start-->
+	<tr>
+		<th></th>
+		<td></td>
+		<th class="sec"><?php _e('No COD', 'usces'); ?></th>
+		<td><div id="delivery_method_nocod"></div></td>
+		<td>&nbsp;</td>
+	</tr>
+<!--20101119ysk end-->
 </table>
 
 <hr size="1" color="#CCCCCC" />
@@ -558,7 +618,7 @@ jQuery(document).ready(function($){
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Shipping', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');"> 8<?php _e('explanation', 'usces'); ?>) </a></h3>
+<h3 class="hndle"><span><?php _e('Shipping', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>

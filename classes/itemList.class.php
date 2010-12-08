@@ -23,6 +23,9 @@ class dataList
 	var $sortSwitchs;	//各フィールド毎の昇順降順スイッチ
 	var $userHeaderNames;	//ユーザー指定のヘッダ名
 	var $action_status, $action_message;
+//20101202ysk start
+	var $pageLimit;		//ページ制限
+//20101202ysk end
 		
 	//Constructor
 	function dataList($tableName, $arr_column)
@@ -38,6 +41,9 @@ class dataList
 		$this->firstPage = 1;
 		$this->action_status = 'none';
 		$this->action_message = '';
+//20101202ysk start
+		$this->pageLimit = 'on';
+//20101202ysk end
 
 		$this->SetParamByQuery();
 
@@ -314,7 +320,15 @@ class dataList
 					
 		$rows = $wpdb->get_results($query, ARRAY_A);
 		$this->selectedRow = count($rows);
+//20101202ysk start
+		if($this->pageLimit == 'off') {
+			$this->rows = (array)$rows;
+		} else {
+//20101202ysk end
 		$this->rows = array_slice((array)$rows, $this->startRow, $this->maxRow);
+//20101202ysk start
+		}
+//20101202ysk end
 
 		return $this->rows;
 	}

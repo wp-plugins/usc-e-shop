@@ -38,6 +38,7 @@ class Welcart_login extends WP_Widget {
 		<p class="submit">
 		<input type="submit" name="member_login" id="member_loginw" value="<?php _e('Log-in', 'usces'); ?>" />
 		</p>
+		<?php echo apply_filters('usces_filter_login_inform', NULL); ?>
 		</form>
 		<a href="<?php echo USCES_LOSTMEMBERPASSWORD_URL; ?>" title="<?php _e('Pssword Lost and Found', 'usces'); ?>"><?php _e('Lost your password?', 'usces'); ?></a><br />
 		<a href="<?php echo USCES_NEWMEMBER_URL; ?>" title="<?php _e('New enrollment for membership.', 'usces'); ?>"><?php _e('New enrollment for membership.', 'usces'); ?></a>

@@ -472,7 +472,6 @@ function item_sku_meta_form() {
 	<select id="newcharging_type" name="newcharging_type" class="newcharging_type">
 		<option value=""><?php _e('一括課金（即日）','usces'); ?></option>
 		<option value="1"><?php _e('月次課金（翌月1日）','usces'); ?></option>
-		<option value="2"><?php _e('年次課金（翌月1日）','usces'); ?></option>
 	</select>
 <?php endif; ?>
 </td>

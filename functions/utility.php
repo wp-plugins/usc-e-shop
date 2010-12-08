@@ -514,6 +514,9 @@ function usces_download_member_list() {
 				__('Strated date', 'usces') => 'date', 
 				__('current point', 'usces') => 'point');
 	$DT = new dataList($tableName, $arr_column);
+//20101202ysk start
+	$DT->pageLimit = 'off';
+//20101202ysk end
 	$res = $DT->MakeTable();
 	$rows = $DT->rows;
 
@@ -763,6 +766,9 @@ function usces_download_product_list() {
 				__('Processing', 'usces') => 'order_status', 
 				__('shpping date', 'usces') => 'order_modified');
 	$DT = new dataList($tableName, $arr_column);
+//20101202ysk start
+	$DT->pageLimit = 'off';
+//20101202ysk end
 	$res = $DT->MakeTable();
 	$rows = $DT->rows;
 
@@ -1026,6 +1032,9 @@ function usces_download_order_list() {
 				__('Processing', 'usces') => 'order_status', 
 				__('shpping date', 'usces') => 'order_modified');
 	$DT = new dataList($tableName, $arr_column);
+//20101202ysk start
+	$DT->pageLimit = 'off';
+//20101202ysk end
 	$res = $DT->MakeTable();
 	$rows = $DT->rows;
 
@@ -1385,4 +1394,270 @@ function usces_entity_decode($str, $ftype) {
 	}
 }
 //20100908ysk end
+//20101111ysk start
+// item list download
+function usces_download_item_list() {
+	require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
+	global $wpdb, $usces;
+
+	$ext = $_REQUEST['ftype'];
+	if($ext == 'xls') {//TSV
+		$table_h = "";
+		$table_f = "";
+		$tr_h = "";
+		$tr_f = "";
+		$th_h1 = '"';
+		$th_h = "\t".'"';
+		$th_f = '"';
+		$td_h1 = '"';
+		$td_h = "\t".'"';
+		$td_f = '"';
+		$sp = ";";
+		$lf = "\n";
+	} elseif($ext == 'csv') {//CSV
+		$table_h = "";
+		$table_f = "";
+		$tr_h = "";
+		$tr_f = "";
+		$th_h1 = "";
+		$th_h = ",";
+		$th_f = "";
+		$td_h1 = "";
+		$td_h = ",";
+		$sp = ";";
+		$td_f = "";
+		$lf = "\n";
+	} else {
+		exit();
+	}
+
+	//==========================================================================
+	$usces_opt_item = unserialize(get_option('usces_opt_item'));
+	$usces_opt_item['chk_header'] = (isset($_REQUEST['chk_header'])) ? 1 : 0;
+	$usces_opt_item['ftype_item'] = $ext;
+	update_option('usces_opt_item', serialize($usces_opt_item));
+	//==========================================================================
+
+	$tableName = $wpdb->posts;
+	if( USCES_MYSQL_VERSION >= 5 ) {
+		$arr_column = array(
+					__('item code', 'usces') => 'item_code', 
+					__('item name', 'usces') => 'item_name', 
+					__('SKU code', 'usces') => 'sku_key', 
+					__('selling price', 'usces') => 'price', 
+					__('stock', 'usces') => 'zaiko_num', 
+					__('stock status', 'usces') => 'zaiko', 
+					__('Categories', 'usces') => 'category', 
+					__('display status', 'usces') => 'display_status');
+	} else {
+		$arr_column = array(
+					__('item code', 'usces') => 'item_code', 
+					__('page title', 'usces') => 'post_title', 
+					__('SKU code', 'usces') => 'sku_key', 
+					__('selling price', 'usces') => 'price', 
+					__('stock', 'usces') => 'zaiko_num', 
+					__('stock status', 'usces') => 'zaiko', 
+					__('Categories', 'usces') => 'category', 
+					__('display status', 'usces') => 'display_status');
+	}
+
+	$DT = new dataList($tableName, $arr_column);
+//20101202ysk start
+	$DT->pageLimit = 'off';
+//20101202ysk end
+	$res = $DT->MakeTable();
+	$rows = $DT->rows;
+
+	//==========================================================================
+	$line = $table_h;
+	if($usces_opt_item['chk_header'] == 1) {
+		$line .= $tr_h;
+		$line .= $th_h1.__('item code', 'usces').$th_f;
+		$line .= $th_h.__('item name', 'usces').$th_f;
+		$line .= $th_h.__('Limited amount for purchase', 'usces').$th_f;
+		$line .= $th_h.__('Percentage of points', 'usces').$th_f;
+		$line .= $th_h.__('Business package discount', 'usces').'1-'.__('num', 'usces').$th_f.$th_h.__('Business package discount', 'usces').'1-'.__('rate', 'usces').$th_f;
+		$line .= $th_h.__('Business package discount', 'usces').'2-'.__('num', 'usces').$th_f.$th_h.__('Business package discount', 'usces').'2-'.__('rate', 'usces').$th_f;
+		$line .= $th_h.__('Business package discount', 'usces').'3-'.__('num', 'usces').$th_f.$th_h.__('Business package discount', 'usces').'3-'.__('rate', 'usces').$th_f;
+		if(defined('WCEX_DLSELLER')) {
+			$line .= $th_h.__('Division', 'dlseller').$th_f;
+			$line .= $th_h.__('Validity(days)', 'dlseller').$th_f;
+			$line .= $th_h.__('Period(month)', 'dlseller').$th_f;
+			$line .= $th_h.__('File name', 'dlseller').$th_f;
+			$line .= $th_h.__('Release date', 'dlseller').$th_f;
+			$line .= $th_h.__('Version', 'dlseller').$th_f;
+			$line .= $th_h.__('Author', 'dlseller').$th_f;
+			$line .= $th_h.__('Purchases', 'dlseller').$th_f;
+			$line .= $th_h.__('Downloads', 'dlseller').$th_f;
+		} else {
+			$line .= $th_h.__('estimated shipping date', 'usces').$th_f;
+			$line .= $th_h.__('shipping option', 'usces').$th_f;
+			$line .= $th_h.__('Shipping', 'usces').$th_f;
+			$line .= $th_h.__('Postage individual charging', 'usces').$th_f;
+		}
+		$line .= $th_h.__('Title', 'usces').$th_f;
+		$line .= $th_h.__('explanation', 'usces').$th_f;
+		$line .= $th_h.__('excerpt', 'usces').$th_f;
+		$line .= $th_h.__('display status', 'usces').$th_f;
+		$line .= $th_h.__('Publish on:').$th_f;
+		$line .= $th_h.__('Categories', 'usces').$th_f;
+		$line .= $th_h.__('tag', 'usces').$th_f;
+		$line .= $th_h.__('SKU code', 'usces').$th_f;
+		$line .= $th_h.__('SKU display name ', 'usces').$th_f;
+		$line .= $th_h.__('normal price', 'usces').$th_f;
+		$line .= $th_h.__('Sale price', 'usces').$th_f;
+		$line .= $th_h.__('stock', 'usces').$th_f;
+		$line .= $th_h.__('stock status', 'usces').$th_f;
+		$line .= $th_h.__('unit', 'usces').$th_f;
+		$line .= $th_h.__('Apply business package', 'usces').$th_f;
+		if(defined('WCEX_DLSELLER')) $line .= $th_h.__('Charging type', 'usces').$th_f;
+		$line .= $th_h.__('option name', 'usces').$th_f.$th_h.__('Field type', 'usces').$th_f.$th_h.__('Required', 'usces').$th_f.$th_h.__('selected amount', 'usces').$th_f;
+		$line .= $tr_f.$lf;
+	}
+	//==========================================================================
+	foreach((array)$rows as $array) {
+		$post_id = $array['ID'];
+		$post = get_post($post_id);
+
+		$line_item = $td_h1.$usces->getItemCode($post_id).$td_f;
+		$line_item .= $td_h.usces_entity_decode($usces->getItemName($post_id), $ext).$td_f;
+		$line_item .= $td_h.$usces->getItemRestriction($post_id).$td_f;
+		$line_item .= $td_h.$usces->getItemPointrate($post_id).$td_f;
+		$line_item .= $td_h.$usces->getItemGpNum1($post_id).$td_f.$td_h.$usces->getItemGpDis1($post_id).$td_f;
+		$line_item .= $td_h.$usces->getItemGpNum2($post_id).$td_f.$td_h.$usces->getItemGpDis2($post_id).$td_f;
+		$line_item .= $td_h.$usces->getItemGpNum3($post_id).$td_f.$td_h.$usces->getItemGpDis3($post_id).$td_f;
+		if(defined('WCEX_DLSELLER')) {
+			$dlseller_division = get_post_custom_values('_dlseller_division', $post_id);
+			$dlseller_validity = get_post_custom_values('_dlseller_validity', $post_id);
+			$dlseller_period = get_post_custom_values('_dlseller_period', $post_id);
+			$dlseller_file = get_post_custom_values('_dlseller_file', $post_id);
+			$dlseller_date = get_post_custom_values('_dlseller_date', $post_id);
+			$dlseller_version = get_post_custom_values('_dlseller_version', $post_id);
+			$dlseller_author = get_post_custom_values('_dlseller_author', $post_id);
+			$dlseller_purchases = get_post_custom_values('_dlseller_purchases', $post_id);
+			$dlseller_downloads = get_post_custom_values('_dlseller_downloads', $post_id);
+			$dls_mon = usces_dlseller_get_dlcount($post_id, 'month');
+			$dls_tol = usces_dlseller_get_dlcount($post_id, 'total');
+
+			$line_item .= $td_h.$dlseller_division[0].$td_f;
+			$line_item .= $td_h.$dlseller_validity[0].$td_f;
+			$line_item .= $td_h.$dlseller_period[0].$td_f;
+			$line_item .= $td_h.$dlseller_file[0].$td_f;
+			//if(!empty($dlseller_date[0])) {
+			//	if($ext == 'xls') {//TSV
+			//		$line_item .= "\t".'="'.$dlseller_date[0].'"';
+			//	} elseif($ext == 'csv') {//CSV
+			//		$line_item .= ",".'="'.$dlseller_date[0].'"';
+			//	}
+			//} else {
+			//	$line_item .= $td_h.$td_f;
+			//}
+			$line_item .= $td_h.$dlseller_date[0].$td_f;
+			$line_item .= $td_h.$dlseller_version[0].$td_f;
+			$line_item .= $td_h.$dlseller_author[0].$td_f;
+			if(!empty($dlseller_division[0])) {
+				$line_item .= $td_h.$dls_mon['par'].$sp.$dls_tol['par'].$td_f;
+				$line_item .= $td_h.$dls_mon['dl'].$sp.$dls_tol['dl'].$td_f;
+			} else {
+				$line_item .= $td_h.$td_f;
+				$line_item .= $td_h.$td_f;
+			}
+		} else {
+			$line_item .= $td_h.$usces->getItemShipping($post_id).$td_f;
+
+			$delivery_method = '';
+			$itemDeliveryMethod = $usces->getItemDeliveryMethod($post_id);
+			foreach($itemDeliveryMethod as $k => $v) {
+				$delivery_method .= $v.$sp;
+			}
+			$delivery_method = rtrim($delivery_method, $sp);
+			$line_item .= $td_h.$delivery_method.$td_f;
+
+			$line_item .= $td_h.$usces->getItemShippingCharge($post_id).$td_f;
+			$line_item .= $td_h.$usces->getItemIndividualSCharge($post_id).$td_f;
+		}
+
+		$line_item .= $td_h.usces_entity_decode($post->post_title, $ext).$td_f;
+		$line_item .= $td_h.usces_entity_decode($post->post_content, $ext).$td_f;
+		$line_item .= $td_h.usces_entity_decode($post->post_excerpt, $ext).$td_f;
+		$line_item .= $td_h.$array['post_status'].$td_f;
+		//if($ext == 'xls') {//TSV
+		//	$line_item .= "\t".'="'.$post->post_modified.'"';
+		//} elseif($ext == 'csv') {//CSV
+		//	$line_item .= ",".'="'.$post->post_modified.'"';
+		//}
+		$line_item .= $td_h.$post->post_modified.$td_f;
+
+		$category = '';
+		$cat_ids = wp_get_post_categories($post_id);
+		if(!empty($cat_ids)) {
+			foreach($cat_ids as $id) {
+				$category .= $id.$sp;
+			}
+			$category = rtrim($category, $sp);
+		}
+		$line_item .= $td_h.$category.$td_f;
+
+		$tag = '';
+		$tags_ob = wp_get_object_terms($post_id, 'post_tag');
+		foreach($tags_ob as $ob) {
+			$tag .= $ob->name.$sp;
+		}
+		$tag = rtrim($tag, $sp);
+		$line_item .= $td_h.$tag.$td_f;
+
+		$line_options = '';
+		$option_meta = has_item_option_meta($post_id);
+		foreach($option_meta as $option) {
+			$option_value = maybe_unserialize($option['meta_value']);
+			$value = '';
+			if(is_array($option_value['value'])) {
+				foreach($option_value['value'] as $k => $v) {
+					$values = explode("\n", $v);
+					foreach($values as $val) {
+						$value .= $val.$sp;
+					}
+				}
+				$value = rtrim($value, $sp);
+			} else {
+				$value = $option_value['value'];
+			}
+
+			$line_options .= $td_h.usces_entity_decode(substr($option['meta_key'], 6), $ext).$td_f;
+			$line_options .= $td_h.$option_value['means'].$td_f;
+			$line_options .= $td_h.$option_value['essential'].$td_f;
+			$line_options .= $td_h.usces_entity_decode($value, $ext).$td_f;
+		}
+
+		$sku_meta = has_item_sku_meta($post_id);
+		foreach($sku_meta as $sku) {
+			$sku_value = maybe_unserialize($sku['meta_value']);
+
+			$line_sku = $td_h.substr($sku['meta_key'], 6).$td_f;
+			$line_sku .= $td_h.usces_entity_decode($sku_value['disp'], $ext).$td_f;
+			$line_sku .= $td_h.$sku_value['cprice'].$td_f;
+			$line_sku .= $td_h.$sku_value['price'].$td_f;
+			$line_sku .= $td_h.$sku_value['zaikonum'].$td_f;
+			$line_sku .= $td_h.$sku_value['zaiko'].$td_f;
+			$line_sku .= $td_h.usces_entity_decode($sku_value['unit'], $ext).$td_f;
+			$line_sku .= $td_h.$sku_value['gptekiyo'].$td_f;
+			if(defined('WCEX_DLSELLER')) $line_sku .= $td_h.$sku_value['charging_type'].$td_f;
+
+			$line .= $tr_h.$line_item.$line_sku.$line_options.$tr_f.$lf;
+		}
+	}
+	$line .= $table_f.$lf;
+	//==========================================================================
+
+	if($ext == 'xls') {
+		header("Content-Type: application/vnd.ms-excel; charset=Shift-JIS");
+	} elseif($ext == 'csv') {
+		header("Content-Type: application/octet-stream");
+	}
+	header("Content-Disposition: attachment; filename=usces_item_list.".$ext);
+	mb_http_output('pass');
+	print(mb_convert_encoding($line, "SJIS-win", "UTF-8"));
+	exit();
+}
+//20101111ysk end
 ?>
