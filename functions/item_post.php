@@ -942,9 +942,15 @@ function add_delivery_method() {
 	$options['delivery_method'][$index]['time'] = str_replace("\r\n", "\n", $_POST['time']);
 	$options['delivery_method'][$index]['time'] = str_replace("\r", "\n", $options['delivery_method'][$index]['time']);
 	$options['delivery_method'][$index]['charge'] = (int)$_POST['charge'];
+//20101119ysk start
+	$options['delivery_method'][$index]['nocod'] = $_POST['nocod'];
+//20101119ysk end
 	update_option('usces', $options);
 	
-	$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
+//20101119ysk start
+	//$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
+	$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+//20101119ysk end
 	return $res;
 }
 
@@ -962,9 +968,15 @@ function update_delivery_method() {
 	$options['delivery_method'][$index]['charge'] = $charge;
 	$options['delivery_method'][$index]['time'] = str_replace("\r\n", "\n", $_POST['time']);
 	$options['delivery_method'][$index]['time'] = str_replace("\r", "\n", $options['delivery_method'][$index]['time']);
+//20101119ysk start
+	$options['delivery_method'][$index]['nocod'] = $_POST['nocod'];
+//20101119ysk end
 	update_option('usces', $options);
 	
-	$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
+//20101119ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
+	$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+//20101119ysk end
 	return $res;
 }
 
@@ -1011,19 +1023,31 @@ function moveup_delivery_method() {
 	$name = '';
 	$charge = '';
 	$time = '';
+//20101119ysk start
+	$nocod = '';
+//20101119ysk end
 	for($i=0; $i<$ct; $i++){
 		$id .= $options['delivery_method'][$i]['id'] . ',';
 		$name .= $options['delivery_method'][$i]['name'] . ',';
 		$charge .= $options['delivery_method'][$i]['charge'] . ',';
 		$time .= $options['delivery_method'][$i]['time'] . ',';
+//20101119ysk start
+		$nocod .= $options['delivery_method'][$i]['nocod'] . ',';
+//20101119ysk end
 	}
 	$id = rtrim($id,',');
 	$name = rtrim($name,',');
 	$charge = rtrim($charge,',');
 	$time = rtrim($time,',');
+//20101119ysk start
+	$nocod = rtrim($nocod,',');
+//20101119ysk end
 
 	
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
+//20101119ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
+	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
+//20101119ysk end
 	return $res;
 }
 
@@ -1055,19 +1079,31 @@ function movedown_delivery_method() {
 	$name = '';
 	$charge = '';
 	$time = '';
+//20101119ysk start
+	$nocod = '';
+//20101119ysk end
 	for($i=0; $i<$ct; $i++){
 		$id .= $options['delivery_method'][$i]['id'] . ',';
 		$name .= $options['delivery_method'][$i]['name'] . ',';
 		$charge .= $options['delivery_method'][$i]['charge'] . ',';
 		$time .= $options['delivery_method'][$i]['time'] . ',';
+//20101119ysk start
+		$nocod .= $options['delivery_method'][$i]['nocod'] . ',';
+//20101119ysk end
 	}
 	$id = rtrim($id,',');
 	$name = rtrim($name,',');
 	$charge = rtrim($charge,',');
 	$time = rtrim($time,',');
+//20101119ysk start
+	$nocod = rtrim($nocod,',');
+//20101119ysk end
 
 	
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
+//20101119ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
+	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
+//20101119ysk end
 	return $res;
 }
 
