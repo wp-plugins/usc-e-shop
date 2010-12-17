@@ -111,8 +111,8 @@ $html .= '<tr>
 		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
 		</tr>
 		<tr>
-		<th scope="row">'.__('Delivery Day', 'usces').'</th>
-		<td colspan="2">' . usces_the_delivery_day( $usces_entries['order']['delivery_day'], 'return' ) . '</td>
+		<th scope="row">'.__('Delivery date', 'usces').'</th>
+		<td colspan="2">' . usces_the_delivery_date( $usces_entries['order']['delivery_date'], 'return' ) . '</td>
 		</tr>
 		<tr>
 		<th scope="row">'.__('Delivery Time', 'usces').'</th>

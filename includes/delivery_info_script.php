@@ -12,7 +12,7 @@ $html .= '
 $html .= '
 <script type="text/javascript">
 	var selected_delivery_method = \'\';
-	var selected_delivery_day = \'\';
+	var selected_delivery_date = \'\';
 	var selected_delivery_time = \'\';
 	var add_shipping = new Array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0);//発送日目安
 
@@ -50,8 +50,8 @@ if($usces_entries['order']['delivery_method'] === NULL){
 	$selected_delivery_method = $usces_entries['order']['delivery_method'];
 }
 $html .= 'selected_delivery_method = \'' . $selected_delivery_method . '\';';
-if(isset($usces_entries['order']['delivery_day'])) {
-	$html .= 'selected_delivery_day = \''.$usces_entries['order']['delivery_day'].'\';';
+if(isset($usces_entries['order']['delivery_date'])) {
+	$html .= 'selected_delivery_date = \''.$usces_entries['order']['delivery_date'].'\';';
 }
 
 //カートに入っている商品の発送日目安
@@ -211,33 +211,33 @@ $html .= "
 		});
 		
 		$('#delivery_method_select').change(function() {
-			orderfunc.make_delivery_day(($('#delivery_method_select option:selected').val()-0));
+			orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
 			orderfunc.make_delivery_time(($('#delivery_method_select option:selected').val()-0));
 		});
 		
 		$('#delivery_flag1').click(function() {
 			if(customer_pref != delivery_pref) {
 				delivery_pref = customer_pref;
-				orderfunc.make_delivery_day(($('#delivery_method_select option:selected').val()-0));
+				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
 			}
 		});
 		
 		$('#delivery_flag2').click(function() {
 			if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
 				delivery_pref = $('#pref').val();
-				orderfunc.make_delivery_day(($('#delivery_method_select option:selected').val()-0));
+				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
 			}
 		});
 		
 		$('#pref').change(function() {
 			if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
 				delivery_pref = $('#pref').val();
-				orderfunc.make_delivery_day(($('#delivery_method_select option:selected').val()-0));
+				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
 			}
 		});
 		
 		orderfunc = {
-			make_delivery_day : function(selected) {
+			make_delivery_date : function(selected) {
 				var option = '';
 				var message = '';
 				if(delivery_days[selected] != undefined && 0 <= delivery_days[selected]) {
@@ -280,7 +280,7 @@ $html .= "
 						option += '<option value=\"0\">".__('指定しない', 'usces')."</option>';
 						for(var i = 0 ; i < delivery_after_days; i++) {
 							var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
-							if(date_str == selected_delivery_day) {
+							if(date_str == selected_delivery_date) {
 								option += '<option value=\"' + date_str + '\" selected>' + date_str + '</option>';
 							} else {
 								option += '<option value=\"' + date_str + '\">' + date_str + '</option>';
@@ -293,7 +293,7 @@ $html .= "
 				if(option == ''){
 					option = '<option value=\"" . __('There is not a choice.', 'usces') . "\">' + '" . __('There is not a choice.', 'usces') . "' + '</option>';
 				}
-				$(\"#delivery_day_select\").html(option);
+				$(\"#delivery_date_select\").html(option);
 				$(\"#delivery_time_limit_message\").html(message);
 			},
 			make_delivery_time : function(selected) {
@@ -323,7 +323,7 @@ if($usces_entries['delivery']['delivery_flag'] == 0) {
 
 //20101208ysk start
 $html .= "
-		orderfunc.make_delivery_day(selected_delivery_method);\n";
+		orderfunc.make_delivery_date(selected_delivery_method);\n";
 //20101208ysk end
 
 $html .= "

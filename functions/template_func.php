@@ -884,10 +884,10 @@ function usces_the_delivery_method( $value = '', $out = '' ){
 	}
 }
 //20101208ysk start
-function usces_the_delivery_day( $value = '', $out = '' ){
+function usces_the_delivery_date( $value = '', $out = '' ){
 	global $usces;
 
-	$html .= "<select name='order[delivery_days]' id='delivery_days_select' class='delivery_days'>\n";
+	$html = "<select name='order[delivery_date]' id='delivery_date_select' class='delivery_date'>\n";
 	$html .= "</select>\n";
 
 	if( $out == 'return' ){

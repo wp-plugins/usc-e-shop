@@ -695,9 +695,18 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 <?php endif; ?>
 <!--20101208ysk start-->
 <tr>
-<td class="label"><?php _e('Delivery Day', 'usces'); ?></td>
-<td class="col1"><select name="order[delivery_day]" id="delivery_day_select">
+<td class="label"><?php _e('Delivery date', 'usces'); ?></td>
+<td class="col1"><select name="order[delivery_date]" id="delivery_date_select">
 	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
+<?php
+$data_order_date = explode(" ", $data['order_date']);
+$order_date = explode("-", $data_order_date[0]);
+for($i = 0; $i < 50; $i++) {
+	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
+	$selected = ($data['order_delivery_date'] == $date) ? ' selected="selected"' : '';
+	echo "\t<option value='{$date}'{$selected}>{$date}</option>\n";
+}
+?>
 </select></td>
 </tr>
 <!--20101208ysk end-->
