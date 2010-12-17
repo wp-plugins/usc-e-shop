@@ -4,7 +4,7 @@
  * @package Welcart
  * @subpackage Welcart Default Theme
  */
-  if(!defined('USCES_VERSION')) return;
+if(!defined('USCES_VERSION')) return;
 
 if ( function_exists('register_sidebar') ) {
 	register_sidebar(array(

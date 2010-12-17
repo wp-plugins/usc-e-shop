@@ -319,7 +319,8 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 会員番号
 		$pdf->SetFont(GOTHIC, '', 9);
 		$pdf->SetXY(35, 24.5);
-		$pdf->Cell(20, 3, $data->customer['mem_id'], $border, 0, 'L', 1);
+		if( 0 != $data->customer['mem_id'] )
+			$pdf->Cell(20, 3, $data->customer['mem_id'], $border, 0, 'L', 1);
 	
 		// 名前
 		$pdf->SetFont(GOTHIC, '', 11);
@@ -434,7 +435,8 @@ function usces_pdfSetHeader(&$pdf, $data) {
 		// 会員番号
 		$pdf->SetFont(GOTHIC, '', 9);
 		$pdf->SetXY(35, 24.5);
-		$pdf->Cell(20, 3, $data->customer['mem_id'], $border, 0, 'L', 1);
+		if( 0 != $data->customer['mem_id'] )
+			$pdf->Cell(20, 3, $data->customer['mem_id'], $border, 0, 'L', 1);
 	
 		// 名前
 		$pdf->SetFont(GOTHIC, '', 11);

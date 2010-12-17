@@ -436,8 +436,12 @@ function usces_send_inquirymail() {
 	}
 
 	$subject =  $mail_data['title']['inquiry'];
-	$message = $mail_data['header']['inquiry'] . "\r\n\r\n" . $reserve . $inq_contents . "\r\n\r\n" . $mail_data['footer']['inquiry'];
-
+	$message  = apply_filters( 'usces_filter_inquiry_header', $mail_data['header']['inquiry'], $inq_name, $inq_mailaddress ) . "\r\n\r\n";
+	$message .= apply_filters( 'usces_filter_inquiry_reserve', $reserve, $inq_name, $inq_mailaddress );
+	$message .= apply_filters( 'usces_filter_inq_contents', $inq_contents, $inq_name, $inq_mailaddress ) . "\r\n\r\n";
+	$message .= apply_filters( 'usces_filter_inq_footer', $mail_data['footer']['inquiry'], $inq_name, $inq_mailaddress );
+	do_action( 'usces_action_presend_inquiry_mail', $message, $inq_name, $inq_mailaddress );
+	
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $inq_name),
 			'to_address' => $inq_mailaddress, 

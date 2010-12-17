@@ -3964,6 +3964,40 @@ class usc_e_shop
 		}
 	}
 	
+	function getItemDiscount($post_id, $skukey = '') {
+		$display_mode = $this->options['display_mode'];
+		$fields = get_post_custom($post_id);
+		foreach((array)$fields as $key => $value){
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
+				$values = maybe_unserialize($value[0]);
+				$price = (float)str_replace(',', '', $values['price']);
+				if ( $display_mode == 'Promotionsale' ) {
+					if ( $this->options['campaign_privilege'] == 'discount' ){
+						if( 0 === (int)$this->options['campaign_category'] || in_category((int)$this->options['campaign_category'], $post_id) ){
+							$discount = $price * $this->options['privilege_discount'] / 100;
+						}else{
+							$discount = 0;
+						}
+					}else if ( $this->options['campaign_privilege'] == 'point' ){
+						$discount = 0;
+					}
+				}
+		
+				$discount = ceil($discount);
+				$skus[$key] = $discount;
+			}
+		}
+		if(!$skus) return false;
+		if($skukey == ''){
+			return $skus;
+		}else if(isset($skus[$skukey])){
+			return $skus[$skukey];
+		}else{
+			return false;
+		}
+	}
+	
 	function getItemZaiko($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){

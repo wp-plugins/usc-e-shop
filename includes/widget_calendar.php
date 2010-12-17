@@ -11,9 +11,11 @@ list($nextyy, $nextmm, $nextdd) = getAfterMonth($todayyy, $todaymm, 1, 1);
 $cal2 = new calendarData();
 $cal2->setToday($nextyy, $nextmm, $nextdd);
 $cal2->setCalendarData();
+$caption1 = __('This month', 'usces') . '(' . sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm) . ')';
+$caption2 = __('Next month', 'usces') . '(' . sprintf(__('%2$s/%1$s', 'usces'),$nextyy,$nextmm) . ')';
 ?>
 <table cellspacing="0" id="wp-calendar" class="usces_calendar">
-<caption><?php _e('This month', 'usces'); ?>(<?php echo sprintf(__('%2$s/%1$s', 'usces'),$todayyy,$todaymm); ?>)</caption>
+<caption><?php echo apply_filters( 'usces_filter_calendar_widget_cap1', $caption1, $todayyy, $todaymm); ?></caption>
 <thead>
 	<tr>
 		<th><?php _e('Sun', 'usces'); ?></th>
@@ -54,7 +56,7 @@ $cal2->setCalendarData();
 </tbody>
 </table>
 <table cellspacing="0" id="wp-calendar" class="usces_calendar">
-<caption><?php _e('Next month', 'usces'); ?>(<?php echo sprintf(__('%2$s/%1$s', 'usces'),$nextyy,$nextmm); ?>)</caption>
+<caption><?php echo apply_filters( 'usces_filter_calendar_widget_cap2', $caption2, $nextyy, $nextmm); ?></caption>
 <thead>
 	<tr>
 		<th><?php _e('Sun', 'usces'); ?></th>

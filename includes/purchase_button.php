@@ -10,9 +10,9 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 	$html = apply_filters('usces_filter_confirm_inform', $html);
 	$html .= '</form>';
 }else{
-	$send_item_code = $this->getItemCode($cart[0]['post_id']);
-	$send_item_name = $this->getItemName($cart[0]['post_id']);
-	if( count($cart) > 1 ) $send_item_name .= ' '.__('Others', 'usces');
+	$send_item_code = apply_filters('usces_filter_settlement_item_code', $this->getItemCode($cart[0]['post_id']));
+	$send_item_name = apply_filters('usces_filter_settlement_item_name', $this->getItemName($cart[0]['post_id']));;
+	
 	$scheme = ( $this->use_ssl ) ? 'https://' : 'http://';
 	
 	$acting_flag = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
@@ -30,7 +30,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="custom" value="' . $this->get_uscesid(false) . '">
 				<input type="hidden" name="lc" value="JP">';
 			if( 1 < count($cart) ) {
-				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name) . __('and others', 'usces') . '">';
+				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name). ' ' . __('Others', 'usces') . '">';
 			}else{
 				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name) . '">';
 			}
@@ -59,10 +59,10 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="user_mail_add" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">';
 			if( 1 < count($cart) ) {
 				$html .= '<input type="hidden" name="item_code" value="99999999">
-					<input type="hidden" name="item_name" value="' . esc_attr(substr($send_item_name, 0, 50)) . ' ' . __('and others', 'usces') . '">';
+					<input type="hidden" name="item_name" value="' . esc_attr(mb_substr($send_item_name, 0, 50)) . ' ' . __('Others', 'usces') . '">';
 			}else{
 				$html .= '<input type="hidden" name="item_code" value="' . esc_attr($send_item_code) . '">
-					<input type="hidden" name="item_name" value="' . esc_attr(substr($send_item_name, 0, 64)) . '">';
+					<input type="hidden" name="item_name" value="' . esc_attr(mb_substr($send_item_name, 0, 64)) . '">';
 			}
 			$html .= '<input type="hidden" name="item_price" value="' . $usces_entries['order']['total_full_price'] . '">
 				<div class="send"><input name="backDelivery" type="submit" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;
