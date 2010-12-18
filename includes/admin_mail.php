@@ -324,4 +324,19 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><?php _e('footer', 'usces'); ?></th>
-	    <td><textarea name="footer[othermail]" id="footer[otherm
+	    <td><textarea name="footer[othermail]" id="footer[othermail]" class="mail_footer"><?php echo esc_html($mail_datas['footer']['othermail']); ?></textarea></td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<hr size="1" color="#CCCCCC" />
+<div id="ex_othermail_mail" class="explanation"><?php _e('e-mail which will be sent on temporaly basis', 'usces'); ?></div>
+</div>
+</div><!--postbox-->
+
+
+
+</div><!--poststuff-->
+<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
+</form>
+</div><!--usces_admin-->
+</div><!--wrap-->
