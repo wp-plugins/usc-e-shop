@@ -1475,7 +1475,6 @@ class usc_e_shop
 		</script>
 		<?php endif; ?>
 <?php
-print_r($item);
 	}
 	
 	function admin_head() {
