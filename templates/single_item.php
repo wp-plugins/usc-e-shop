@@ -144,6 +144,7 @@ foreach ( $imageid as $id ) {
 $html .= '</div><!-- end of itemsubimg -->'."\n";
 
 if (usces_get_assistance_id_list($post->ID)) {
+	$org_opst = $post;
 	$html .= '<div class="assistance_item">'."\n";
 	$assistanceposts = get_posts('include='.usces_get_assistance_id_list($post->ID));
 	if ($assistanceposts) {
@@ -172,6 +173,8 @@ if (usces_get_assistance_id_list($post->ID)) {
 	}
 	
 	$html .= '</div><!-- end of assistance_item -->'."\n";
+	$post = $org_opst;
+	setup_postdata($post);
 }
 
 $html = apply_filters('usces_filter_single_item_inform', $html);
