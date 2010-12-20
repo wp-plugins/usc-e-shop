@@ -765,11 +765,11 @@ jQuery(function($){
 		},
 		
 		allDeliveryDays : function () {
-			var all = $("#all_delivery_days").val();
-			if(all == '') return;
-			confirm(<?php _e("'Are you sure of setting delivery days to ' + charge + ' day for all the prefecture?'", 'usces'); ?>);
-			for(var i=0; i<pref.length; i++){
-				$("input[name='delivery_days_value\[" + pref[i] + "\]']").val(all);
+			var days = $("#all_delivery_days").val();
+			if(days == '') return;
+			confirm(<?php _e("'Are you sure of setting delivery days to '+days+' day for all the prefecture?'", 'usces'); ?>);
+			for(var i = 0; i < pref.length; i++) {
+				$("input[name='delivery_days_value\["+pref[i]+"\]']").val(days);
 			}
 			$("#all_delivery_days").val("");
 		},
