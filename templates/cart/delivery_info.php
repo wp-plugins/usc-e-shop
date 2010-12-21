@@ -95,9 +95,7 @@ $html .= usces_custom_field_input($usces_entries, 'delivery', 'fax_after', 'retu
 //20100818ysk end
 $html .= '</table>';
 $html .= '<table class="customer_form" id="time">';
-//20101208ysk start
-/*
-$html .= '<tr>
+	$html .= '<tr>
 		<th scope="row">'.__('shipping option', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
 		</tr>
@@ -105,20 +103,6 @@ $html .= '<tr>
 		<th scope="row">'.__('Delivery Time', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ) . '</td>
 		</tr>';
-*/
-$html .= '<tr>
-		<th scope="row">'.__('shipping option', 'usces').'</th>
-		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
-		</tr>
-		<tr>
-		<th scope="row">'.__('Delivery date', 'usces').'</th>
-		<td colspan="2">' . usces_the_delivery_date( $usces_entries['order']['delivery_date'], 'return' ) . '</td>
-		</tr>
-		<tr>
-		<th scope="row">'.__('Delivery Time', 'usces').'</th>
-		<td colspan="2">' . usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ) . '</td>
-		</tr>';
-//20101208ysk end
 $html .= '<tr>
 	<th scope="row"><em>*</em>'.__('payment method', 'usces').'</th>
 	<td colspan="2">' . usces_the_payment_method( $usces_entries['order']['payment_name'], 'return' ) . '</td>
@@ -152,8 +136,8 @@ $html .= '<table class="customer_form" id="notes_table">
 	</table>
 
 	<div class="send"><input name="order[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
-	<input name="backCustomer" type="submit" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_prebutton', NULL) . ' />&nbsp;&nbsp;
-	<input name="confirm" type="submit" value="'.__(' Next ', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_nextbutton', NULL) . ' /></div>
+	<input name="backCustomer" type="submit" class="back_to_customer_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_prebutton', NULL) . ' />&nbsp;&nbsp;
+	<input name="confirm" type="submit" class="to_confirm_button" value="'.__(' Next ', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_nextbutton', NULL) . ' /></div>
 	</form>';
 
 $html .= '<div class="footer_explanation">';

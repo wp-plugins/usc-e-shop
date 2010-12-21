@@ -126,14 +126,14 @@ $html .= $content;
 
 $html .= '<div class="send">';
 if($this->use_js){
-	$html .= '<input name="previous" type="button" id="previouscart" value="' . __('continue shopping','usces') . '"' . apply_filters('usces_filter_cart_prebutton', ' onclick="uscesCart.previousCart();"') . ' />&nbsp;&nbsp;';
+	$html .= '<input name="previous" type="button" id="previouscart" class="continue_shopping_button" value="' . __('continue shopping','usces') . '"' . apply_filters('usces_filter_cart_prebutton', ' onclick="uscesCart.previousCart();"') . ' />&nbsp;&nbsp;';
 	if( usces_is_cart() ) {
-		$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', ' onclick="return uscesCart.cartNext();"') . ' />';
+		$html .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', ' onclick="return uscesCart.cartNext();"') . ' />';
 	}
 }else{
-	$html .= '<a href="' . get_bloginfo('home') . '">' . __('continue shopping','usces') . '</a>&nbsp;&nbsp;';
+	$html .= '<a href="' . get_bloginfo('home') . '" class="continue_shopping_button">' . __('continue shopping','usces') . '</a>&nbsp;&nbsp;';
 	if( usces_is_cart() ) {
-		$html .= '<input name="customerinfo" type="submit" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', NULL) . ' />';
+		$html .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', NULL) . ' />';
 	}
 }
 $html .= '</div>';

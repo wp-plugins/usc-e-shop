@@ -478,18 +478,14 @@ div.explanation  {
 }
 .form_table #delivery_method_charge, 
 .form_table #delivery_method_name_select, 
-.form_table #shipping_charge_name_select, 
-.form_table #delivery_days_name_select {
+.form_table #shipping_charge_name_select {
 	width: 150px;
 }
 .form_table #shipping_charge_button, 
-.form_table #shipping_charge_loading, 
-.form_table #delivery_days_button, 
-.form_table #delivery_days_loading {
+.form_table #shipping_charge_loading {
 	vertical-align: top;
 }
-.form_table label.shipping_charge_label, 
-.form_table label.delivery_days_label {
+.form_table label.shipping_charge_label {
 	float: left;
 	display: block;
 	width: 70px;
@@ -499,8 +495,7 @@ div.explanation  {
 	height: 20px;
 	line-height: 20px;
 }
-.form_table input.charge_text, 
-.form_table input.days_text {
+.form_table input.charge_text {
 	text-align: right;
 	width: 100px;
 	padding-right: 5px;
@@ -1922,8 +1917,7 @@ div.optcheck {
 .error_message {
 	margin-bottom: 5px;
 }
-/*20101111ysk*/
-#dlItemListDialog fieldset, 
+
 #dlMemberListDialog fieldset, 
 #dlOrderListDialog fieldset, 
 #dlProductListDialog fieldset {
@@ -1931,7 +1925,6 @@ div.optcheck {
 	padding: 10px;
 	margin-top: 20px;
 }
-#dlItemListDialog legend, 
 #dlMemberListDialog legend, 
 #dlOrderListDialog legend, 
 #dlProductListDialog legend {
@@ -1939,7 +1932,6 @@ div.optcheck {
 	padding-right: 5px;
 	padding-left: 5px;
 }
-#dlItemListDialog fieldset label, 
 #dlMemberListDialog fieldset label, 
 #dlOrderListDialog fieldset label, 
 #dlProductListDialog fieldset label {

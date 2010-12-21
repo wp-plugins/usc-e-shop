@@ -30,7 +30,6 @@ class dataList
 	//Constructor
 	function dataList($tableName, $arr_column)
 	{
-
 		$this->table = $tableName;
 		$this->columns = $arr_column;
 		//$this->parent_term = $parent_term;
@@ -255,7 +254,7 @@ class dataList
 		
 		if(USCES_MYSQL_VERSION >= 5){			
 			$query = $wpdb->prepare("SELECT mc.meta_value AS item_code, mn.meta_value AS item_name, 
-						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, post.post_status, 
+						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.term_id AS category, post.post_status, 
 						CASE post.post_status 
 							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
 							WHEN 'future' THEN '" . __('Scheduled', 'usces') . "' 
@@ -401,7 +400,7 @@ class dataList
 				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";s:1:"'.$this->arr_search['word']['zaiko']) . "%') AND post_status <> 'trash'";
 				break;
 			case 'category':
-				$column = 'te.name';
+				$column = 'te.term_id';
 				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['category']) . "' AND post_status <> 'trash'";
 				break;
 			case 'display_status':
