@@ -1476,8 +1476,8 @@ msgstr "'チェックされた商品の在庫状況を「' + %s + '」に変更�
 msgid "'Are you sure of changing all the items you have checked in to ' + %s + ' ?'"
 msgstr "'チェックされた商品の表示状況を、すべて「' + %s + '」に変更します。よろしいですか？'"
 
-msgid "Are you sure of deleting all the items you have checked in bulk?"
-msgstr "チェックされた商品を一括削除します。よろしいですか？"
+msgid "'Are you sure of deleting all the items you have checked in bulk?'"
+msgstr "'チェックされた商品を一括削除します。よろしいですか？'"
 
 msgid "'Are you sure of deleting the item, item code ' + item_id + ' ?'"
 msgstr "'商品コード ' + item_id + 'の商品を削除します。よろしいですか？'"
@@ -2346,6 +2346,9 @@ msgstr "▼"
 msgid " * "
 msgstr " × "
 
+msgid "I completed collective operation."
+msgstr "一括操作を完了しました。"
+
 msgid "ERROR: I was not able to complete collective operation"
 msgstr "エラー：処理を正常に完了できませんでした。"
 
@@ -2803,8 +2806,6 @@ msgstr "まだお支払方法の準備ができておりません。<br />管理
 #~ msgstr "受注明細"
 #~ msgid "I ask."
 #~ msgstr "お願いいたします。"
-#~ msgid "I completed collective operation."
-#~ msgstr "一括操作を完了しました。"
 #~ msgid "ken"
 #~ msgstr "件"
 
