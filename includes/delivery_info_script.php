@@ -253,33 +253,35 @@ $html .= "
 						date[\"day\"] = now.getDate() + \"\";
 						if(date[\"month\"].length < 2) {date[\"month\"] = \"0\" + date[\"month\"];}
 						if(date[\"day\"].length < 2) {date[\"day\"] = \"0\" + date[\"day\"];}
+						//配送業務締時間を超えていたら1日加算
+						var hh = now.getHours() + \"\";
+						var mm = now.getMinutes() + \"\";
+						if(hh.length < 2) {hh = \"0\" + hh;}
+						if(mm.length < 2) {mm = \"0\" + mm;}
+						if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
+							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
+						}
+						//発送日目安加算
+						if(0 < add_shipping[shipping]) {
+							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], add_shipping[shipping]);
+						}
+						//配達日数加算
 						if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
 						}
-						if(shipping == 1) {//即日発送
-							var hh = now.getHours() + \"\";
-							var mm = now.getMinutes() + \"\";
-							if(hh.length < 2) {hh = \"0\" + hh;}
-							if(mm.length < 2) {mm = \"0\" + mm;}
-							if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
-							} else {
-								var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
-								switch(shortest_delivery_time) {
-								case 1://午前着可
-									message = date_str+\"の午前中からご指定できます。\";
-									break;
-								case 2://午前着不可
-									message = date_str+\"の午後からご指定できます。\";
-									break;
-								}
-							}
-						} else {
-							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], add_shipping[shipping]);
+						//最短配送時間帯メッセージ
+						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
+						switch(shortest_delivery_time) {
+						case 1://午前着可
+							message = date_str+\"".__('の午前中からご指定できます。', 'usces')."\";
+							break;
+						case 2://午前着不可
+							message = date_str+\"".__('の午後からご指定できます。', 'usces')."\";
+							break;
 						}
-						option += '<option value=\"0\">".__('指定しない', 'usces')."</option>';
-						for(var i = 0 ; i < delivery_after_days; i++) {
-							var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
+						option += '<option value=\"0\">".__('No preference', 'usces')."</option>';
+						for(var i = 0; i < delivery_after_days; i++) {
+							date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 							if(date_str == selected_delivery_date) {
 								option += '<option value=\"' + date_str + '\" selected>' + date_str + '</option>';
 							} else {
@@ -290,8 +292,8 @@ $html .= "
 						break;
 					}
 				}
-				if(option == ''){
-					option = '<option value=\"" . __('There is not a choice.', 'usces') . "\">' + '" . __('There is not a choice.', 'usces') . "' + '</option>';
+				if(option == '') {
+					option = '<option value=\"".__('There is not a choice.', 'usces')."\">' + '".__('There is not a choice.', 'usces')."' + '</option>';
 				}
 				$(\"#delivery_date_select\").html(option);
 				$(\"#delivery_time_limit_message\").html(message);
