@@ -137,7 +137,7 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 		<td><input name="order[usedpoint]" class="used_point" type="text" value="' . esc_attr($usces_entries['order']['usedpoint']) . '" />pt</td>
 		</tr>
 		<tr>
-		<td colspan="2"><input name="use_point" type="submit" value="'.__('Use the points', 'usces').'" /></td>
+		<td colspan="2"><input name="use_point" type="submit" class="use_point_button" value="'.__('Use the points', 'usces').'" /></td>
 		</tr>
 	</table>';
 	$html = apply_filters('usces_filter_confirm_point_inform', $html);

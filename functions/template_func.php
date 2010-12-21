@@ -67,6 +67,21 @@ function usces_the_point_rate( $out = '' ){
 	}
 }
 
+function usces_the_shipment_aim( $out = '' ){
+	global $post;
+	$post_id = $post->ID;
+
+	$str = get_post_custom_values('_itemShipping', $post_id);
+	$no = (int)$str[0];
+	$rules = get_option('usces_shipping_rule');
+	
+	if( $out == 'return' ){
+		return $rules[$no];
+	}else{
+		echo esc_html($rules[$no]);
+	}
+}
+
 function usces_the_item(){
 	global $usces, $post;
 	$usces->itemskus = array();
