@@ -73,6 +73,8 @@ function usces_the_shipment_aim( $out = '' ){
 
 	$str = get_post_custom_values('_itemShipping', $post_id);
 	$no = (int)$str[0];
+	if( 0 === $no ) return;
+	
 	$rules = get_option('usces_shipping_rule');
 	
 	if( $out == 'return' ){
