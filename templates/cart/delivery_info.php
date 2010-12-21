@@ -95,7 +95,9 @@ $html .= usces_custom_field_input($usces_entries, 'delivery', 'fax_after', 'retu
 //20100818ysk end
 $html .= '</table>';
 $html .= '<table class="customer_form" id="time">';
-	$html .= '<tr>
+//20101208ysk start
+/*
+$html .= '<tr>
 		<th scope="row">'.__('shipping option', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
 		</tr>
@@ -103,6 +105,20 @@ $html .= '<table class="customer_form" id="time">';
 		<th scope="row">'.__('Delivery Time', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ) . '</td>
 		</tr>';
+*/
+$html .= '<tr>
+		<th scope="row">'.__('shipping option', 'usces').'</th>
+		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
+		</tr>
+		<tr>
+		<th scope="row">'.__('Delivery date', 'usces').'</th>
+		<td colspan="2">' . usces_the_delivery_date( $usces_entries['order']['delivery_date'], 'return' ) . '</td>
+		</tr>
+		<tr>
+		<th scope="row">'.__('Delivery Time', 'usces').'</th>
+		<td colspan="2">' . usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ) . '</td>
+		</tr>';
+//20101208ysk end
 $html .= '<tr>
 	<th scope="row"><em>*</em>'.__('payment method', 'usces').'</th>
 	<td colspan="2">' . usces_the_payment_method( $usces_entries['order']['payment_name'], 'return' ) . '</td>

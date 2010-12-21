@@ -244,12 +244,25 @@ $html .= usces_custom_field_info($usces_entries, 'delivery', 'fax_after', 'retur
 $html .= '<tr>';
 $html .= '<td class="ttl" colspan="2"><h3>'.__('Others', 'usces').'</h3></td>
 	</tr>';
+//20101208ysk start
+/*
 $html .= '<tr>
 	<th>'.__('shipping option', 'usces').'</th><td>' . esc_html(usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' )) . '</td>
 	</tr>
 	<tr class="bdc">
 	<th>'.__('Delivery Time', 'usces').'</th><td>' . esc_html($usces_entries['order']['delivery_time']) . '</td>
 	</tr>';
+*/
+$html .= '<tr>
+	<th>'.__('shipping option', 'usces').'</th><td>' . esc_html(usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' )) . '</td>
+	</tr>
+	<tr>
+	<th>'.__('Delivery date', 'usces').'</th><td>' . esc_html($usces_entries['order']['delivery_date']) . '</td>
+	</tr>
+	<tr class="bdc">
+	<th>'.__('Delivery Time', 'usces').'</th><td>' . esc_html($usces_entries['order']['delivery_time']) . '</td>
+	</tr>';
+//20101208ysk end
 
 $html .= '<tr>
 	<th>'.__('payment method', 'usces').'</th><td>' . esc_html($usces_entries['order']['payment_name'] . usces_payment_detail($usces_entries)) . '</td>

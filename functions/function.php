@@ -132,7 +132,8 @@ function usces_order_confirm_message($order_id) {
 	$msg_shipping .= __('Address','usces') . "    : " . $deli['pref'] . $deli['address1'] . $deli['address2'] . " " . $deli['address3'] . "\r\n";
 	$msg_shipping .= __('Phone number','usces') . "  : " . $deli['tel'] . "\r\n";
 
-	$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
+//20101208ysk start
+	//$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
 	if ( $data['order_delidue_date'] == NULL || $data['order_delidue_date'] == '#none#' ) {
 		$msg_shipping .= "\r\n";
 	}else{
@@ -145,6 +146,9 @@ function usces_order_confirm_message($order_id) {
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
 		$msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
+	$msg_shipping .= __('Delivery date','usces') . " : " . $data['order_delivery_date'] . "\r\n";
+	$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
+//20101208ysk end
 	$msg_shipping .= "\r\n";
 	
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_shipping', $msg_shipping, $data);
@@ -314,12 +318,16 @@ function usces_send_ordermail($order_id) {
 	$msg_shipping .= __('Address','usces') . "    : " . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . " " . $entry['delivery']['address3'] . "\r\n";
 	$msg_shipping .= __('Phone number','usces') . "  : " . $entry['delivery']['tel'] . "\r\n";
 
-	$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
+//20101208ysk start
+	//$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
 	$deli_meth = (int)$entry['order']['delivery_method'];
 	if( 0 <= $deli_meth ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
 		$msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
+	$msg_shipping .= __('Delivery date','usces') . " : " . $entry['order']['delivery_date'] . "\r\n";
+	$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
+//20101208ysk end
 //	$msg_body .= "------------------------------------------------------------------\r\n";
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= " " . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
@@ -732,6 +740,8 @@ function usces_reg_orderdata( $results = array() ) {
 	
 	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
 	
+//20101208ysk start
+/*
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
 					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
@@ -771,6 +781,48 @@ function usces_reg_orderdata( $results = array() ) {
 					$order_modified, 
 					$status
 				);
+*/
+	$query = $wpdb->prepare(
+				"INSERT INTO $order_table_name (
+					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
+					`order_zip`, `order_pref`, `order_address1`, `order_address2`, `order_address3`, 
+					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_date`, `order_delivery_time`, 
+					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
+					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
+					$member['ID'], 
+					$entry['customer']['mailaddress1'], 
+					$entry['customer']['name1'], 
+					$entry['customer']['name2'], 
+					$entry['customer']['name3'], 
+					$entry['customer']['name4'], 
+					$entry['customer']['zipcode'], 
+					$entry['customer']['pref'], 
+					$entry['customer']['address1'], 
+					$entry['customer']['address2'], 
+					$entry['customer']['address3'], 
+					$entry['customer']['tel'], 
+					$entry['customer']['fax'], 
+					serialize($entry['delivery']), 
+					serialize($cart), 
+					$entry['order']['note'], 
+					$entry['order']['delivery_method'], 
+					$entry['order']['delivery_date'], 
+					$entry['order']['delivery_time'], 
+					$entry['order']['payment_name'], 
+					serialize($entry['condition']), 
+					$item_total_price, 
+					$entry['order']['getpoint'], 
+					$entry['order']['usedpoint'], 
+					$entry['order']['discount'], 
+					$entry['order']['shipping_charge'], 
+					$entry['order']['cod_fee'], 
+					$entry['order']['tax'], 
+					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
+					$order_modified, 
+					$status
+				);
+//20101208ysk end
 
 	$res = $wpdb->query( $query );
 		//usces_log('res : '.$res, 'acting_transaction.log');
@@ -919,7 +971,8 @@ function usces_new_orderdata() {
 	$status .= $_POST['order']['admin'];
 	$order_conditions = $usces->get_condition();
 
-	
+//20101208ysk start
+/*
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
 					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
@@ -959,6 +1012,48 @@ function usces_new_orderdata() {
 					null, 
 					$status
 				);
+*/
+	$query = $wpdb->prepare(
+				"INSERT INTO $order_table_name (
+					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
+					`order_zip`, `order_pref`, `order_address1`, `order_address2`, `order_address3`, 
+					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_date`, `order_delivery_time`, 
+					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
+					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
+					$member['ID'], 
+					$_POST['customer']['mailaddress'], 
+					$_POST['customer']['name1'], 
+					$_POST['customer']['name2'], 
+					$_POST['customer']['name3'], 
+					$_POST['customer']['name4'], 
+					$_POST['customer']['zipcode'], 
+					$_POST['customer']['pref'], 
+					$_POST['customer']['address1'], 
+					$_POST['customer']['address2'], 
+					$_POST['customer']['address3'], 
+					$_POST['customer']['tel'], 
+					$_POST['customer']['fax'], 
+					serialize($_POST['delivery']), 
+					serialize($cart), 
+					$_POST['order']['note'], 
+					$_POST['order']['delivery_method'], 
+					$_POST['order']['delivery_date'], 
+					$_POST['order']['delivery_time'], 
+					$_POST['order']['payment_name'], 
+					serialize($order_conditions), 
+					$item_total_price, 
+					$_POST['order']['getpoint'], 
+					$_POST['order']['usedpoint'], 
+					$_POST['order']['discount'], 
+					$_POST['order']['shipping_charge'], 
+					$_POST['order']['cod_fee'], 
+					$_POST['order']['tax'], 
+					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
+					null, 
+					$status
+				);
+//20101208ysk end
 
 	$res = $wpdb->query( $query );
 //	$wpdb->print_error();
@@ -1232,6 +1327,8 @@ function usces_update_orderdata() {
 	$ordercheck = isset($_POST['check']) ? serialize($_POST['check']) : '';
 	
 //$wpdb->show_errors();
+//20101208ysk start
+/*
 	$query = $wpdb->prepare(
 				"UPDATE $order_table_name SET 
 					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
@@ -1272,6 +1369,49 @@ function usces_update_orderdata() {
 					$ordercheck,
 					$ID
 				);
+*/
+	$query = $wpdb->prepare(
+				"UPDATE $order_table_name SET 
+					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
+					`order_zip`=%s, `order_pref`=%s, `order_address1`=%s, `order_address2`=%s, `order_address3`=%s, 
+					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
+					`order_delivery_method`=%d, `order_delivery_date`=%s, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%d, `order_getpoint`=%d, `order_usedpoint`=%d, 
+					`order_discount`=%d, `order_shipping_charge`=%d, `order_cod_fee`=%d, `order_tax`=%d, `order_modified`=%s, 
+					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
+				WHERE ID = %d", 
+					$_POST['customer']['mailaddress'], 
+					$_POST['customer']['name1'], 
+					$_POST['customer']['name2'], 
+					$_POST['customer']['name3'], 
+					$_POST['customer']['name4'], 
+					$_POST['customer']['zipcode'], 
+					$_POST['customer']['pref'], 
+					$_POST['customer']['address1'], 
+					$_POST['customer']['address2'], 
+					$_POST['customer']['address3'], 
+					$_POST['customer']['tel'], 
+					$_POST['customer']['fax'], 
+					serialize($_POST['delivery']), 
+					serialize($cart), 
+					$_POST['order']['note'], 
+					$_POST['order']['delivery_method'], 
+					$_POST['order']['delivery_date'], 
+					$_POST['order']['delivery_time'], 
+					$_POST['order']['payment_name'], 
+					$item_total_price, 
+					$_POST['order']['getpoint'], 
+					$_POST['order']['usedpoint'], 
+					$_POST['order']['discount'], 
+					$_POST['order']['shipping_charge'], 
+					$_POST['order']['cod_fee'], 
+					$_POST['order']['tax'], 
+					$order_modified, 
+					$status,
+					$_POST['order']['delidue_date'], 
+					$ordercheck,
+					$ID
+				);
+//20101208ysk end
 
 //20100818ysk start
 	//$res = $wpdb->query( $query );
@@ -2665,12 +2805,16 @@ function usces_item_uploadcsv(){
 			return $res;
 		}
 		if(substr($data, 0, 8) != IDENTIFIER_OLE) {
-			$fext = 'tsv';
-			while (! feof ($fpo)) {
-				$temp = fgets ($fpo, 10240);
-				if( 5 < strlen($temp) )
-					$lines[] = str_replace('"', '', $temp);
-			}
+			//$fext = 'tsv';
+			//while (! feof ($fpo)) {
+			//	$temp = fgets ($fpo, 10240);
+			//	if( 5 < strlen($temp) )
+			//		$lines[] = str_replace('"', '', $temp);
+			//}
+			//20101208ysk
+			$res['status'] = 'error';
+			$res['message'] = __('Excelで保存しなおしたファイルを指定してください。', 'usces').$fname.'.'.$fext;
+			return $res;
 		} else {
 			$excel = new Spreadsheet_Excel_Reader();
 			$excel->read($workfile);

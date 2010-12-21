@@ -906,13 +906,30 @@ function usces_the_delivery_method( $value = '', $out = '' ){
 		echo $html;
 	}
 }
+//20101208ysk start
+function usces_the_delivery_date( $value = '', $out = '' ){
+	global $usces;
 
+	$html = "<select name='order[delivery_date]' id='delivery_date_select' class='delivery_date'>\n";
+	$html .= "</select>\n";
+
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+//20101208ysk end
 function usces_the_delivery_time( $value = '', $out = '' ){
 	global $usces;
 	//if( $usces->options['delivery_time'] == '' ) return;
 	
 	//$array = explode("\n", $usces->options['delivery_time']);
-	$html = "<select name='order[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
+//20101208ysk start
+	//$html = "<select name='order[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
+	$html = "<div id='delivery_time_limit_message'></div>\n";
+	$html .= "<select name='order[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
+//20101208ysk end
 
 	$html .= "</select>\n";
 	
