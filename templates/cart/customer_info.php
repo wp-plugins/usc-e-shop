@@ -124,15 +124,15 @@ $html .= usces_custom_field_input($usces_entries, 'customer', 'fax_after', 'retu
 $html .= '</table>
 <input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
 
-<div class="send"><input name="backCart" type="submit" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;';
+<div class="send"><input name="backCart" type="submit" class="back_cart_button" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;';
 
-$button = '<input name="deliveryinfo" type="submit" value="'.__(' Next ', 'usces').'" />&nbsp;&nbsp;';
+$button = '<input name="deliveryinfo" type="submit" class="to_deliveryinfo_button" value="'.__(' Next ', 'usces').'" />&nbsp;&nbsp;';
 $html .= apply_filters('usces_filter_customer_button', $button);
 
 if(usces_is_membersystem_state() && $member_regmode != 'editmemberfromcart' && usces_is_login() == false ){
-	$html .= '<input name="reganddeliveryinfo" type="submit" value="'.__('To the next while enrolling', 'usces').'"' . apply_filters('usces_filter_customerinfo_prebutton', NULL) . ' />';
+	$html .= '<input name="reganddeliveryinfo" type="submit" class="to_reganddeliveryinfo_button" value="'.__('To the next while enrolling', 'usces').'"' . apply_filters('usces_filter_customerinfo_prebutton', NULL) . ' />';
 }elseif(usces_is_membersystem_state() && $member_regmode == 'editmemberfromcart' ){
-	$html .= '<input name="reganddeliveryinfo" type="submit" value="'.__('Revise member information, and to next', 'usces').'"' . apply_filters('usces_filter_customerinfo_nextbutton', NULL) . ' />';
+	$html .= '<input name="reganddeliveryinfo" type="submit" class="to_reganddeliveryinfo_button" value="'.__('Revise member information, and to next', 'usces').'"' . apply_filters('usces_filter_customerinfo_nextbutton', NULL) . ' />';
 }
 
 $html .= '</div>

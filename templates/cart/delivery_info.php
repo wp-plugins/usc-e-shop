@@ -152,8 +152,8 @@ $html .= '<table class="customer_form" id="notes_table">
 	</table>
 
 	<div class="send"><input name="order[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
-	<input name="backCustomer" type="submit" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_prebutton', NULL) . ' />&nbsp;&nbsp;
-	<input name="confirm" type="submit" value="'.__(' Next ', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_nextbutton', NULL) . ' /></div>
+	<input name="backCustomer" type="submit" class="back_to_customer_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_prebutton', NULL) . ' />&nbsp;&nbsp;
+	<input name="confirm" type="submit" class="to_confirm_button" value="'.__(' Next ', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_nextbutton', NULL) . ' /></div>
 	</form>';
 
 $html .= '<div class="footer_explanation">';

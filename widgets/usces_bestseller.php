@@ -38,7 +38,8 @@ class Welcart_bestseller extends WP_Widget {
 						$id = $usces->get_postIDbyCode($code);
 						if('' == $id) continue;
 						$post = get_post($id);
-						$list = '<li><a href="' . get_permalink($id) . '">' . wp_specialchars($post->post_title) . '</a></li>' . "\n";
+						$disp_text = apply_filters('usces_widget_bestseller_manual_text', esc_html($post->post_title), $id);
+						$list = '<li><a href="' . get_permalink($id) . '">' . $disp_text . '</a></li>' . "\n";
 						$htm .= apply_filters('usces_filter_bestseller', $list, $post->ID, $i);
 					}
 					echo $htm;
