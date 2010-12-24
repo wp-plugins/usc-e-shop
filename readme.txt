@@ -8,6 +8,7 @@ Stable tag: 0.8.1
 Welcart assists you to build online shop system.
 It is developed in Japan.
 
+
 == Description ==
 
 Welcart is a program made in Japan, which assists you to build e-commerce system on Wordpress.
