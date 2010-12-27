@@ -1231,7 +1231,9 @@ class usc_e_shop
 		<link href="<?php echo get_stylesheet_directory_uri(); ?>/usces_cart.css" rel="stylesheet" type="text/css" />
 	<?php } ?>
 		if( $this->use_js ) : 
-
+	<?php if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){ ?>
+		<link href="<?php echo get_stylesheet_directory_uri(); ?>/usces_cart.css" rel="stylesheet" type="text/css" />
+	<?php } ?>
 			$ioptkeys = $this->get_itemOptionKey( $item->ID );
 			$mes_opts_str = "";
 			$key_opts_str = "";
@@ -1554,6 +1556,7 @@ class usc_e_shop
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
+		
 		
 		
 
@@ -3061,6 +3064,9 @@ class usc_e_shop
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
 			if ( !is_email($_POST['member']['mailaddress1']) || trim($_POST['member']['mailaddress1']) == '' )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
+				
+			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' )
+				$mes .= "メールアドレスが不正です。<br />";
 				
 			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' )
 				$mes .= "メールアドレスが不正です。<br />";
