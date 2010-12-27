@@ -942,15 +942,21 @@ function add_delivery_method() {
 	$options['delivery_method'][$index]['time'] = str_replace("\r\n", "\n", $_POST['time']);
 	$options['delivery_method'][$index]['time'] = str_replace("\r", "\n", $options['delivery_method'][$index]['time']);
 	$options['delivery_method'][$index]['charge'] = (int)$_POST['charge'];
+//20101208ysk start
+	$options['delivery_method'][$index]['days'] = (int)$_POST['days'];
+//20101208ysk end
 //20101119ysk start
 	$options['delivery_method'][$index]['nocod'] = $_POST['nocod'];
 //20101119ysk end
 	update_option('usces', $options);
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
-	$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+	//$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
 //20101119ysk end
+	$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+//20101208ysk end
 	return $res;
 }
 
@@ -968,15 +974,21 @@ function update_delivery_method() {
 	$options['delivery_method'][$index]['charge'] = $charge;
 	$options['delivery_method'][$index]['time'] = str_replace("\r\n", "\n", $_POST['time']);
 	$options['delivery_method'][$index]['time'] = str_replace("\r", "\n", $options['delivery_method'][$index]['time']);
+//20101208ysk start
+	$options['delivery_method'][$index]['days'] = (int)$_POST['days'];
+//20101208ysk end
 //20101119ysk start
 	$options['delivery_method'][$index]['nocod'] = $_POST['nocod'];
 //20101119ysk end
 	update_option('usces', $options);
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
-	$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+	//$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
 //20101119ysk end
+	$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+//20101208ysk end
 	return $res;
 }
 
@@ -1023,6 +1035,9 @@ function moveup_delivery_method() {
 	$name = '';
 	$charge = '';
 	$time = '';
+//20101208ysk start
+	$days = '';
+//20101208ysk end
 //20101119ysk start
 	$nocod = '';
 //20101119ysk end
@@ -1031,6 +1046,9 @@ function moveup_delivery_method() {
 		$name .= $options['delivery_method'][$i]['name'] . ',';
 		$charge .= $options['delivery_method'][$i]['charge'] . ',';
 		$time .= $options['delivery_method'][$i]['time'] . ',';
+//20101208ysk start
+		$days .= $options['delivery_method'][$i]['days'] . ',';
+//20101208ysk end
 //20101119ysk start
 		$nocod .= $options['delivery_method'][$i]['nocod'] . ',';
 //20101119ysk end
@@ -1039,15 +1057,20 @@ function moveup_delivery_method() {
 	$name = rtrim($name,',');
 	$charge = rtrim($charge,',');
 	$time = rtrim($time,',');
+//20101208ysk start
+	$days = rtrim($days,',');
+//20101208ysk end
 //20101119ysk start
 	$nocod = rtrim($nocod,',');
 //20101119ysk end
-
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
 //20101119ysk end
+	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $selected_id;
+//20101208ysk end
 	return $res;
 }
 
@@ -1079,6 +1102,9 @@ function movedown_delivery_method() {
 	$name = '';
 	$charge = '';
 	$time = '';
+//20101208ysk start
+	$days = '';
+//20101208ysk end
 //20101119ysk start
 	$nocod = '';
 //20101119ysk end
@@ -1087,6 +1113,9 @@ function movedown_delivery_method() {
 		$name .= $options['delivery_method'][$i]['name'] . ',';
 		$charge .= $options['delivery_method'][$i]['charge'] . ',';
 		$time .= $options['delivery_method'][$i]['time'] . ',';
+//20101208ysk start
+		$days .= $options['delivery_method'][$i]['days'] . ',';
+//20101208ysk end
 //20101119ysk start
 		$nocod .= $options['delivery_method'][$i]['nocod'] . ',';
 //20101119ysk end
@@ -1095,15 +1124,20 @@ function movedown_delivery_method() {
 	$name = rtrim($name,',');
 	$charge = rtrim($charge,',');
 	$time = rtrim($time,',');
+//20101208ysk start
+	$days = rtrim($days,',');
+//20101208ysk end
 //20101119ysk start
 	$nocod = rtrim($nocod,',');
 //20101119ysk end
-
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
 //20101119ysk end
+	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $selected_id;
+//20101208ysk end
 	return $res;
 }
 
@@ -1181,7 +1215,80 @@ function delete_shipping_charge() {
 	$res = $id . '#usces#0';
 	return $res;
 }
+//20101208ysk start
+function add_delivery_days() {
+	global $usces;
 
+	$options = get_option('usces');
+	$name = trim($_POST['name']);
+	$value = $_POST['value'];
+	foreach((array)$options['delivery_days'] as $charge){
+		$ids[] = (int)$charge['id'];
+	}
+	if(isset($ids)){
+		rsort($ids);
+		$newid = $ids[0]+1;
+	}else{
+		$newid = 0;
+	}
+	$index = isset($options['delivery_days']) ? count($options['delivery_days']) : 0;
+	$prefs = $usces->options['province'];
+	array_shift($prefs);
+
+	$options['delivery_days'][$index]['id'] = $newid;
+	$options['delivery_days'][$index]['name'] = $name;
+	for($i=0; $i<count($prefs); $i++){
+		$pref = $prefs[$i];
+		$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	}
+	update_option('usces', $options);
+
+	$valuestr = implode(',', $options['delivery_days'][$index]['value']);
+	$res = $newid . '#usces#' . $name . '#usces#' . $valuestr;
+	return $res;
+}
+
+function update_delivery_days() {
+	global $usces;
+	$options = get_option('usces');
+	$name = trim($_POST['name']);
+	$value = $_POST['value'];
+	$id = (int)$_POST['id'];
+	$prefs = $usces->options['province'];
+	array_shift($prefs);
+
+	for($i=0; $i<count($options['delivery_days']); $i++){
+		if($options['delivery_days'][$i]['id'] === $id){
+			$index = $i;
+		}
+	}
+	$options['delivery_days'][$index]['name'] = $name;
+	for($i=0; $i<count($prefs); $i++){
+		$pref = $prefs[$i];
+		$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	}
+	update_option('usces', $options);
+
+	$valuestr = implode(',', $options['delivery_days'][$index]['value']);
+	$res = $id . '#usces#' . $name . '#usces#' . $valuestr;
+	return $res;
+}
+
+function delete_delivery_days() {
+	$options = get_option('usces');
+	$id = (int)$_POST['id'];
+	for($i=0; $i<count($options['delivery_days']); $i++){
+		if($options['delivery_days'][$i]['id'] === $id){
+			$index = $i;
+		}
+	}
+	array_splice($options['delivery_days'], $index, 1);
+	update_option('usces', $options);
+	
+	$res = $id . '#usces#0';
+	return $res;
+}
+//20101208ysk end
 /************************************************************************************************/
 function shop_options_ajax()
 {
@@ -1214,6 +1321,17 @@ function shop_options_ajax()
 		case 'delete_shipping_charge':
 			$res = delete_shipping_charge();
 			break;
+//20101208ysk start
+		case 'add_delivery_days':
+			$res = add_delivery_days();
+			break;
+		case 'update_delivery_days':
+			$res = update_delivery_days();
+			break;
+		case 'delete_delivery_days':
+			$res = delete_delivery_days();
+			break;
+//20101208ysk end
 	}
 	
 	die( $res );

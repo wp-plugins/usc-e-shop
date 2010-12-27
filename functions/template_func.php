@@ -652,6 +652,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$sku = esc_attr($usces->itemsku['key']);
 	$name = esc_attr($name);
 	$label = esc_attr($label);
+	
 //20100914ysk start
 	//if($means < 2){
 	switch($means) {

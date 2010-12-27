@@ -627,7 +627,11 @@ class usc_e_shop
 			//$this->options['delivery_time'] = isset($_POST['delivery_time']) ? $_POST['delivery_time'] : '';
 			//$this->options['shipping_charges'] = isset($_POST['shipping_charge']) ? $_POST['shipping_charge'] : '';
 
-
+//20101208ysk start
+			if(isset($_POST['delivery_time_limit'])) $this->options['delivery_time_limit'] = $_POST['delivery_time_limit'];
+			if(isset($_POST['shortest_delivery_time'])) $this->options['shortest_delivery_time'] =  $_POST['shortest_delivery_time'];
+			if(isset($_POST['delivery_after_days'])) $this->options['delivery_after_days'] =  $_POST['delivery_after_days'];
+//20101208ysk end
 
 			update_option('usces', $this->options);
 			
@@ -1223,8 +1227,6 @@ class usc_e_shop
 		$this->member_name = ( is_user_logged_in() ) ? get_usermeta($current_user->ID,'first_name').get_usermeta($current_user->ID,'last_name') : '';
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : get_bloginfo('home');
 
-//		usces_log('post_type : '.$item->post_mime_type, 'test.log');
-//		usces_log('is_single : '.(is_single() ? 'true' : 'false'), 'test.log');
 
 		if( $this->use_js ) : 
 
@@ -1684,14 +1686,14 @@ class usc_e_shop
 				case 'usces_cart':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
 					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20100809ysk end
 //20100818ysk start
 				case 'usces_member':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
 					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20100818ysk end
 //20100908ysk start
@@ -1707,6 +1709,13 @@ class usc_e_shop
 					wp_enqueue_script('jquery-ui-dialog');
 					break;
 //20101111ysk end
+//20101208ysk start
+				case 'usces_delivery':
+					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					break;
+//20101208ysk end
 			}
 		}
 

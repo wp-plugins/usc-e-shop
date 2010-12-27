@@ -297,11 +297,11 @@ function post_categories_meta_box( $post, $box ) {
 	?>
 	<div id="taxonomy-<?php echo $taxonomy; ?>" class="categorydiv">
 		<ul id="<?php echo $taxonomy; ?>-tabs" class="category-tabs">
-			<li class="tabs"><a href="#<?php echo $taxonomy; ?>-all" tabindex="3"><?php _e( 'Item Category', 'usces' ); ?></a></li>
-			<li class="hide-if-no-js"><a href="#<?php echo $taxonomy; ?>-pop" tabindex="3"><?php _e( 'Most Used' ); ?></a></li>
+			<li class="tabs"><a href="#<?php echo $taxonomy; ?>-items" tabindex="3"><?php _e( 'Item Category', 'usces' ); ?></a></li>
+			<li class="hide-if-no-js"><a href="#<?php echo $taxonomy; ?>-all" tabindex="3"><?php echo $tax->labels->all_items; ?></a></li>
 		</ul>
 
-		<div id="<?php echo $taxonomy; ?>-all" class="tabs-panel">
+		<div id="<?php echo $taxonomy; ?>-items" class="tabs-panel">
 			<?php
             $name = ( $taxonomy == 'category' ) ? 'post_category' : 'tax_input[' . $taxonomy . ']';
             echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
@@ -310,14 +310,13 @@ function post_categories_meta_box( $post, $box ) {
 				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids, 'descendants_and_self' => USCES_ITEM_CAT_PARENT_ID ) ) ?>
 			</ul>
 		</div>
-		<div id="<?php echo $taxonomy; ?>-pop" class="tabs-panel" style="display: none;">
+		<div id="<?php echo $taxonomy; ?>-all" class="tabs-panel" style="display: none;">
 			<?php
             $name = ( $taxonomy == 'category' ) ? 'post_category' : 'tax_input[' . $taxonomy . ']';
             echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
             ?>
-			<ul id="<?php echo $taxonomy; ?>checklist-pop" class="list:<?php echo $taxonomy?> categorychecklist form-no-clear">
-				<?php //wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids ) ) ?>
-				<?php $popular_ids = wp_popular_terms_checklist($taxonomy); ?>
+			<ul id="<?php echo $taxonomy; ?>checklist" class="list:<?php echo $taxonomy?> categorychecklist form-no-clear">
+				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids ) ) ?>
 			</ul>
 		</div>
 	</div>
