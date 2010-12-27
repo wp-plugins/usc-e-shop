@@ -1278,6 +1278,9 @@ msgstr "キーワード"
 msgid "Transfer"
 msgstr "銀行振り込み"
 
+msgid "Transfer"
+msgstr "銀行振り込み"
+
 msgid "transfer statement"
 msgstr "入金状況"
 

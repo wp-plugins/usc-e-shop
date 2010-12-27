@@ -737,6 +737,8 @@ function usces_reg_orderdata( $results = array() ) {
 	}
 	$payments = $usces->getPayments($entry['order']['payment_name']);
 	if($results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
+	$payments = $usces->getPayments($entry['order']['payment_name']);
+	if($results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
 	
 	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
 	

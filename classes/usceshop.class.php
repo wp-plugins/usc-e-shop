@@ -1227,7 +1227,9 @@ class usc_e_shop
 		$this->member_name = ( is_user_logged_in() ) ? get_usermeta($current_user->ID,'first_name').get_usermeta($current_user->ID,'last_name') : '';
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : get_bloginfo('home');
 
-
+	<?php if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){ ?>
+		<link href="<?php echo get_stylesheet_directory_uri(); ?>/usces_cart.css" rel="stylesheet" type="text/css" />
+	<?php } ?>
 		if( $this->use_js ) : 
 
 			$ioptkeys = $this->get_itemOptionKey( $item->ID );
@@ -1552,6 +1554,7 @@ class usc_e_shop
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
+		
 		
 
 		do_action('usces_after_cart_instant');
@@ -2108,7 +2111,9 @@ class usc_e_shop
 		$this->cart->entry();
 		$this->set_reserve_pre_order_id();
 		if(isset($_POST['confirm'])){
-			$this->error_message = $this->delivery_check();
+			if(isset($_POST['confirm'])){
+				$this->error_message = $this->delivery_check();
+			}
 		}
 		$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
 		if( $this->error_message == '' ){
@@ -3056,6 +3061,9 @@ class usc_e_shop
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
 			if ( !is_email($_POST['member']['mailaddress1']) || trim($_POST['member']['mailaddress1']) == '' )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
+				
+			if ( !strstr($_POST['member']['mailaddress1'], '@') || trim($_POST['member']['mailaddress1']) == '' )
+				$mes .= "メールアドレスが不正です。<br />";
 				
 		} else {
 			if ( trim($_POST['member']['password1']) == '' || trim($_POST['member']['password2']) == '' || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
@@ -5566,6 +5574,8 @@ class usc_e_shop
 		include( $temp_path );
 		
 		$content = apply_filters('usces_filter_itemPage', $html, $post->ID);
+
+		$content = apply_filters('usces_filter_itemPage', $html);
 
 		return $content;
 	}

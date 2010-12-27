@@ -845,7 +845,7 @@ msgid "not to use"
 msgstr "利用しない"
 
 msgid "Would you like to use membership system or not?"
-msgstr "会員（メンバー）システムを利用するか否か。"
+msgstr "会員システムを利用するか否か。"
 
 msgid "membership points"
 msgstr "会員ポイント"
@@ -902,7 +902,7 @@ msgid "Cart page"
 msgstr "カートページ"
 
 msgid "Membership page"
-msgstr "メンバーページ"
+msgstr "会員ページ"
 
 msgid "Membership"
 msgstr "メンバー"
@@ -1270,6 +1270,9 @@ msgstr "検索項目"
 
 msgid "key words"
 msgstr "キーワード"
+
+msgid "Transfer"
+msgstr "振り込み"
 
 msgid "Transfer"
 msgstr "振り込み"

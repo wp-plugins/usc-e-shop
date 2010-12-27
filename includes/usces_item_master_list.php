@@ -159,6 +159,7 @@ jQuery(function($){
 				html += '<option value="<?php _e('Pending Review', 'usces'); ?>"<?php if( __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
 				html += '<option value="<?php _e('Closed', 'usces'); ?>"<?php if( __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
 				html += '<option value="<?php _e('Trash', 'usces'); ?>"<?php if( __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
+				html += '<option value="ゴミ箱"<?php if("ゴミ箱" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>ゴミ箱の中</option>';
 				html += '</select>';
 			} 
 			
@@ -357,6 +358,7 @@ jQuery(document).ready(function($){
 		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="<?php _e('start', 'usces'); ?>" />
 <!--20101111ysk start-->
 <!--	<a href="#" id="up_dlg"><?php _e('Collective registration item', 'usces'); ?></a>-->
+		<!--<a href="#" id="up_dlg">商品一括登録</a>-->
 		</td>
 		</tr>
 		</table>
