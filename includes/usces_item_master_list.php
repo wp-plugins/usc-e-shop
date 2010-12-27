@@ -141,13 +141,13 @@ jQuery(function($){
 		<?php 
 			$categories = get_categories(array('child_of' => USCES_ITEM_CAT_PARENT_ID));
 			foreach($categories as $ckey => $cvalue){ 
-				if($cvalue->name == $arr_search['word']['category']){
+				if($cvalue->term_id == $arr_search['word']['category']){
 					$cselected = ' selected="selected"';
 				}else{
 					$cselected = '';
 				}
 		?>
-				html += '<option value="<?php echo esc_attr($cvalue->name); ?>"<?php echo $cselected ?>><?php echo esc_html($cvalue->name); ?></option>';
+				html += '<option value="<?php echo $cvalue->term_id; ?>"<?php echo $cselected ?>><?php echo esc_html($cvalue->name); ?></option>';
 		<?php } ?>
 				html += '</select>';
 			}else if( column == 'display_status' ) {

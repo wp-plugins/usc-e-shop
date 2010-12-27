@@ -444,8 +444,12 @@ function usces_send_inquirymail() {
 	}
 
 	$subject =  $mail_data['title']['inquiry'];
-	$message = $mail_data['header']['inquiry'] . "\r\n\r\n" . $reserve . $inq_contents . "\r\n\r\n" . $mail_data['footer']['inquiry'];
-
+	$message  = apply_filters( 'usces_filter_inquiry_header', $mail_data['header']['inquiry'], $inq_name, $inq_mailaddress ) . "\r\n\r\n";
+	$message .= apply_filters( 'usces_filter_inquiry_reserve', $reserve, $inq_name, $inq_mailaddress );
+	$message .= apply_filters( 'usces_filter_inq_contents', $inq_contents, $inq_name, $inq_mailaddress ) . "\r\n\r\n";
+	$message .= apply_filters( 'usces_filter_inq_footer', $mail_data['footer']['inquiry'], $inq_name, $inq_mailaddress );
+	do_action( 'usces_action_presend_inquiry_mail', $message, $inq_name, $inq_mailaddress );
+	
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $inq_name),
 			'to_address' => $inq_mailaddress, 
@@ -3077,7 +3081,7 @@ function usces_item_uploadcsv(){
 		if($pre_code != $datas[USCES_COL_ITEM_CODE]) {
 //20101207ysk start
 			//$post_id = $usces->get_postIDbyCode($datas[USCES_COL_ITEM_CODE]);
-			$query = $wpdb->prepare("SELECT meta.post_id FROM wp_postmeta AS meta 
+			$query = $wpdb->prepare("SELECT meta.post_id FROM $wpdb->postmeta AS meta 
 				INNER JOIN wp_posts AS post ON meta.post_id = post.ID AND post.post_status <> %s AND post.post_mime_type = 'item' 
 				WHERE meta.meta_value = %s LIMIT 1", 'trash', trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
 			$post_id = $wpdb->get_var( $query );
