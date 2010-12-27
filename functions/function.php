@@ -2937,8 +2937,8 @@ function usces_item_uploadcsv(){
 		if($pre_code != $datas[USCES_COL_ITEM_CODE]) {
 //20101207ysk start
 			//$post_id = $usces->get_postIDbyCode($datas[USCES_COL_ITEM_CODE]);
-			$query = $wpdb->prepare("SELECT meta.post_id FROM wp_postmeta AS meta 
-				INNER JOIN wp_posts AS post ON meta.post_id = post.ID AND post.post_status <> %s AND post.post_mime_type = 'item' 
+			$query = $wpdb->prepare("SELECT meta.post_id FROM $wpdb->postmeta AS meta 
+				INNER JOIN $wpdb->posts AS post ON meta.post_id = post.ID AND post.post_status <> %s AND post.post_mime_type = 'item' 
 				WHERE meta.meta_value = %s LIMIT 1", 'trash', trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
 			$post_id = $wpdb->get_var( $query );
 //20101207ysk end
