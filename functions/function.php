@@ -168,27 +168,27 @@ function usces_order_confirm_message($order_id) {
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('æ±ºæ¸ˆç•ªå·', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('æ±ºæ¸ˆé‡‘é¡', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
-		$msg_body .= __('ãŠæ”¯æ‰•å…ˆ', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
-		$msg_body .= __('ã‚³ãƒ³ãƒ“ãƒ‹å—ä»˜ç•ªå·','usces').' : '.$args['no']."\r\n";
-		if($args['cv'] != '030') {//ãƒ•ã‚¡ãƒŸãƒªãƒ¼ãƒãƒ¼ãƒˆä»¥å¤–
-			$msg_body .= __('ã‚³ãƒ³ãƒ“ãƒ‹å—ä»˜ç•ªå·æƒ…å ±URL', 'usces').' : '.$args['cu']."\r\n";
+		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('‚¨x•¥æ', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('ƒRƒ“ƒrƒjó•t”Ô†','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//ƒtƒ@ƒ~ƒŠ[ƒ}[ƒgˆÈŠO
+			$msg_body .= __('ƒRƒ“ƒrƒjó•t”Ô†î•ñURL', 'usces').' : '.$args['cu']."\r\n";
 		}
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('æ±ºæ¸ˆç•ªå·', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('æ±ºæ¸ˆé‡‘é¡', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
-		$msg_body .= __('éŠ€è¡Œã‚³ãƒ¼ãƒ‰','usces').' : '.$bank[0]."\r\n";
-		$msg_body .= __('éŠ€è¡Œå','usces').' : '.$bank[1]."\r\n";
-		$msg_body .= __('æ”¯åº—ã‚³ãƒ¼ãƒ‰','usces').' : '.$bank[2]."\r\n";
-		$msg_body .= __('æ”¯åº—å','usces').' : '.$bank[3]."\r\n";
-		$msg_body .= __('å£åº§ç¨®åˆ¥','usces').' : '.$bank[4]."\r\n";
-		$msg_body .= __('å£åº§ç•ªå·','usces').' : '.$bank[5]."\r\n";
-		$msg_body .= __('å£åº§åç¾©','usces').' : '.$bank[6]."\r\n";
-		$msg_body .= __('æ”¯æ‰•æœŸé™','usces').' : '.substr($args['exp'], 0, 4).'å¹´'.substr($args['exp'], 4, 2).'æœˆ'.substr($args['exp'], 6, 2)."æ—¥\r\n";
+		$msg_body .= __('‹âsƒR[ƒh','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('‹âs–¼','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('x“XƒR[ƒh','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('x“X–¼','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('ŒûÀí•Ê','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('ŒûÀ”Ô†','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('ŒûÀ–¼‹`','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('x•¥ŠúŒÀ','usces').' : '.substr($args['exp'], 0, 4).'”N'.substr($args['exp'], 4, 2).'Œ'.substr($args['exp'], 6, 2)."“ú\r\n";
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 //20101018ysk end
 	}
@@ -346,27 +346,27 @@ function usces_send_ordermail($order_id) {
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('æ±ºæ¸ˆç•ªå·', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('æ±ºæ¸ˆé‡‘é¡', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
-		$msg_body .= __('ãŠæ”¯æ‰•å…ˆ', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
-		$msg_body .= __('ã‚³ãƒ³ãƒ“ãƒ‹å—ä»˜ç•ªå·','usces').' : '.$args['no']."\r\n";
-		if($args['cv'] != '030') {//ãƒ•ã‚¡ãƒŸãƒªãƒ¼ãƒãƒ¼ãƒˆä»¥å¤–
-			$msg_body .= __('ã‚³ãƒ³ãƒ“ãƒ‹å—ä»˜ç•ªå·æƒ…å ±URL', 'usces').' : '.$args['cu']."\r\n";
+		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('‚¨x•¥æ', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('ƒRƒ“ƒrƒjó•t”Ô†','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//ƒtƒ@ƒ~ƒŠ[ƒ}[ƒgˆÈŠO
+			$msg_body .= __('ƒRƒ“ƒrƒjó•t”Ô†î•ñURL', 'usces').' : '.$args['cu']."\r\n";
 		}
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('æ±ºæ¸ˆç•ªå·', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('æ±ºæ¸ˆé‡‘é¡', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
-		$msg_body .= __('éŠ€è¡Œã‚³ãƒ¼ãƒ‰','usces').' : '.$bank[0]."\r\n";
-		$msg_body .= __('éŠ€è¡Œå','usces').' : '.$bank[1]."\r\n";
-		$msg_body .= __('æ”¯åº—ã‚³ãƒ¼ãƒ‰','usces').' : '.$bank[2]."\r\n";
-		$msg_body .= __('æ”¯åº—å','usces').' : '.$bank[3]."\r\n";
-		$msg_body .= __('å£åº§ç¨®åˆ¥','usces').' : '.$bank[4]."\r\n";
-		$msg_body .= __('å£åº§ç•ªå·','usces').' : '.$bank[5]."\r\n";
-		$msg_body .= __('å£åº§åç¾©','usces').' : '.$bank[6]."\r\n";
-		$msg_body .= __('æ”¯æ‰•æœŸé™','usces').' : '.substr($args['exp'], 0, 4).'å¹´'.substr($args['exp'], 4, 2).'æœˆ'.substr($args['exp'], 6, 2)."æ—¥\r\n";
+		$msg_body .= __('‹âsƒR[ƒh','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('‹âs–¼','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('x“XƒR[ƒh','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('x“X–¼','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('ŒûÀí•Ê','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('ŒûÀ”Ô†','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('ŒûÀ–¼‹`','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('x•¥ŠúŒÀ','usces').' : '.substr($args['exp'], 0, 4).'”N'.substr($args['exp'], 4, 2).'Œ'.substr($args['exp'], 6, 2)."“ú\r\n";
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 //20101018ysk end
 	}
@@ -444,8 +444,12 @@ function usces_send_inquirymail() {
 	}
 
 	$subject =  $mail_data['title']['inquiry'];
-	$message = $mail_data['header']['inquiry'] . "\r\n\r\n" . $reserve . $inq_contents . "\r\n\r\n" . $mail_data['footer']['inquiry'];
-
+	$message  = apply_filters( 'usces_filter_inquiry_header', $mail_data['header']['inquiry'], $inq_name, $inq_mailaddress ) . "\r\n\r\n";
+	$message .= apply_filters( 'usces_filter_inquiry_reserve', $reserve, $inq_name, $inq_mailaddress );
+	$message .= apply_filters( 'usces_filter_inq_contents', $inq_contents, $inq_name, $inq_mailaddress ) . "\r\n\r\n";
+	$message .= apply_filters( 'usces_filter_inq_footer', $mail_data['footer']['inquiry'], $inq_name, $inq_mailaddress );
+	do_action( 'usces_action_presend_inquiry_mail', $message, $inq_name, $inq_mailaddress );
+	
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $inq_name),
 			'to_address' => $inq_mailaddress, 
@@ -2809,13 +2813,13 @@ function usces_item_uploadcsv(){
 			//}
 			//20101208ysk
 			$res['status'] = 'error';
-			$res['message'] = __('Excelã§ä¿å­˜ã—ãªãŠã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚', 'usces').$fname.'.'.$fext;
+			$res['message'] = __('Excel‚Å•Û‘¶‚µ‚È‚¨‚µ‚½ƒtƒ@ƒCƒ‹‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B', 'usces').$fname.'.'.$fext;
 			return $res;
 		} else {
 			$excel = new Spreadsheet_Excel_Reader();
 			$excel->read($workfile);
-			$rows = $excel->rowcount();//æœ€å¤§è¡Œæ•°
-			$cols = $excel->colcount();//æœ€å¤§åˆ—æ•°
+			$rows = $excel->rowcount();//Å‘ås”
+			$cols = $excel->colcount();//Å‘å—ñ”
 			for($r = 1; $r <= $rows; $r++) {
 				$line = '';
 				for($c = 1; $c <= $cols; $c++) {
@@ -2977,7 +2981,7 @@ function usces_item_uploadcsv(){
 					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
 						//if( !preg_match($date_pattern, $data, $match) || strtotime($data) === false || strtotime($data) == -1 )
 						//	$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
-						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//å…ˆé ­4æ¡ãŒæ•°å€¤ã®ã¿
+						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4Œ…‚ª”’l‚Ì‚İ
 							if(strtotime($data) === false)
 								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 						} else {
@@ -3117,7 +3121,7 @@ function usces_item_uploadcsv(){
 						}else{
 							//$cdatas[$key] = $data;
 
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//å…ˆé ­4æ¡ãŒæ•°å€¤ã®ã¿
+							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4Œ…‚ª”’l‚Ì‚İ
 								$cdatas[$key] = $data;
 							} else {
 								$datetime = explode(' ', $data);
@@ -3133,7 +3137,7 @@ function usces_item_uploadcsv(){
 							$cdatas[$key] = gmdate('Y-m-d H:i:s');
 						}else{
 							//$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//å…ˆé ­4æ¡ãŒæ•°å€¤ã®ã¿
+							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4Œ…‚ª”’l‚Ì‚İ
 								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
 							} else {
 								$datetime = explode(' ', $data);

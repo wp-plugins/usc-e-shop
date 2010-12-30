@@ -8,7 +8,7 @@ class usc_e_shop
 	var $use_ssl;       //ssl flag
 	var $action, $action_status, $error_status;
 	var $action_message, $error_message;
-	var $itemskus, $itemsku, $itemopts, $itemopt;
+	var $itemskus, $itemsku, $itemopts, $itemopt, $item;
 	var $zaiko_status, $payment_structure, $display_mode, $shipping_rule;
 	var $member_status;
 	var $options;
@@ -20,7 +20,7 @@ class usc_e_shop
 		global $post;
 		do_action('usces_construct');
 		$this->usces_session_start();
-
+		
 		if ( !isset($_SESSION['usces_member']) ){
 			$_SESSION['usces_member'] = array();
 		}
@@ -1200,6 +1200,8 @@ class usc_e_shop
 	}
 	
 	function shop_head() {
+		global $post;
+		$this->item = $post;
 		
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
@@ -1213,7 +1215,9 @@ class usc_e_shop
 	}
 	
 	function shop_foot() {
-		global $post, $current_user;
+		global $current_user;
+		$item = $this->item;
+		
 		get_currentuserinfo();
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
@@ -1223,17 +1227,19 @@ class usc_e_shop
 		$this->member_name = ( is_user_logged_in() ) ? get_usermeta($current_user->ID,'first_name').get_usermeta($current_user->ID,'last_name') : '';
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : get_bloginfo('home');
 
+//		usces_log('post_type : '.$item->post_mime_type, 'test.log');
+//		usces_log('is_single : '.(is_single() ? 'true' : 'false'), 'test.log');
 
-		if( isset($post) && $this->use_js ) : 
+		if( $this->use_js ) : 
 
-			$ioptkeys = $this->get_itemOptionKey( $post->ID );
+			$ioptkeys = $this->get_itemOptionKey( $item->ID );
 			$mes_opts_str = "";
 			$key_opts_str = "";
 			$opt_means = "";
 			$opt_esse = "";
 			if($ioptkeys){
 				foreach($ioptkeys as $key => $value){
-					$optValues = $this->get_itemOptions( $value, $post->ID );
+					$optValues = $this->get_itemOptions( $value, $item->ID );
 					if($optValues['means'] < 2){
 						$mes_opts_str .= "'" . sprintf(__("Chose the %s", 'usces'), $value) . "',";
 					}else{
@@ -1248,15 +1254,15 @@ class usc_e_shop
 				$opt_means = rtrim($opt_means, ',');
 				$opt_esse = rtrim($opt_esse, ',');
 			}
-			$itemRestriction = get_post_custom_values('_itemRestriction', $post->ID);
+			$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
 		
 ?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
-				<?php echo apply_filters('usces_filter_uscesL10n', $uscesL10n, $post->ID); ?>
+				<?php echo apply_filters('usces_filter_uscesL10n', $uscesL10n, $item->ID); ?>
 				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php",
-				'post_id': "<?php echo $post->ID; ?>",
+				'post_id': "<?php echo $item->ID; ?>",
 				'cart_number': "<?php echo get_option('usces_cart_number'); ?>",
 				'is_cart_row': <?php echo ( (0 < $this->cart->num_row()) ? 'true' : 'false'); ?>,
 				'opt_esse': new Array( <?php echo $opt_esse; ?> ),
@@ -1270,7 +1276,7 @@ class usc_e_shop
 		</script>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
 		<?php endif; ?>
-		<?php if( isset($post) && $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $post->post_mime_type && is_single())) ) : ?>
+		<?php if( $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $item->post_mime_type)) ) : ?>
 		<script type='text/javascript'>
 		(function($) {
 		uscesCart = {
@@ -1326,13 +1332,13 @@ class usc_e_shop
 					}
 				}
 				
-				<?php apply_filters( 'usces_filter_inCart_js_check', $post->ID ); ?>
+				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); ?>
 				
 				if( mes != '' ){
 					alert( mes );
 					return false;
 				}else{
-					<?php echo apply_filters('usces_filter_js_intoCart', "return true", $post->ID, $this->itemsku['key']); ?>
+					<?php echo apply_filters('usces_filter_js_intoCart', "return true", $item->ID, $this->itemsku['key']); ?>
 				}
 			},
 			
@@ -1537,7 +1543,7 @@ class usc_e_shop
 		}
 		
 		$this->make_url();
-		
+
 
 		do_action('usces_main');
 		$this->usces_cookie();
@@ -3963,6 +3969,40 @@ class usc_e_shop
 				$key = substr($key, 6);
 				$values = maybe_unserialize($value[0]);
 				$skus[$key] = (float)str_replace(',', '', $values['price']);
+			}
+		}
+		if(!$skus) return false;
+		if($skukey == ''){
+			return $skus;
+		}else if(isset($skus[$skukey])){
+			return $skus[$skukey];
+		}else{
+			return false;
+		}
+	}
+	
+	function getItemDiscount($post_id, $skukey = '') {
+		$display_mode = $this->options['display_mode'];
+		$fields = get_post_custom($post_id);
+		foreach((array)$fields as $key => $value){
+			if( preg_match('/^_isku_/', $key, $match) ){
+				$key = substr($key, 6);
+				$values = maybe_unserialize($value[0]);
+				$price = (float)str_replace(',', '', $values['price']);
+				if ( $display_mode == 'Promotionsale' ) {
+					if ( $this->options['campaign_privilege'] == 'discount' ){
+						if( 0 === (int)$this->options['campaign_category'] || in_category((int)$this->options['campaign_category'], $post_id) ){
+							$discount = $price * $this->options['privilege_discount'] / 100;
+						}else{
+							$discount = 0;
+						}
+					}else if ( $this->options['campaign_privilege'] == 'point' ){
+						$discount = 0;
+					}
+				}
+		
+				$discount = ceil($discount);
+				$skus[$key] = $discount;
 			}
 		}
 		if(!$skus) return false;

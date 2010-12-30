@@ -4,7 +4,7 @@ $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
 
-$management_status = get_option('usces_management_status');
+$management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
 
 if($order_action == 'new'){
 
@@ -42,20 +42,18 @@ if($order_action == 'new'){
 	if( !empty($data) ){
 		$data = stripslashes_deep($data);
 	}
+	foreach ($management_status as $status_key => $status_name){
+		if( in_array($status_key, array('noreceipt','receipted','pending', 'estimate', 'adminorder')) )
+			continue;
+			
+		if($this->is_status($status_key, $data['order_status'])){
+			$taio = $status_key;
+			break;
+		}else{
+			$taio = 'new';
+		}
+	}
 
-	if($this->is_status('duringorder', $data['order_status']))
-		$taio = 'duringorder';
-	else if($this->is_status('cancel', $data['order_status']))
-		$taio = 'cancel';
-	else if($this->is_status('completion', $data['order_status']))
-		$taio = 'completion';
-	else if($this->is_status('continuation', $data['order_status']))
-		$taio = 'continuation';
-	else if($this->is_status('termination', $data['order_status']))
-		$taio = 'termination';
-	else
-		$taio = 'new';
-		
 	if($this->is_status('estimate', $data['order_status']))
 		$admin = 'estimate';
 	else if($this->is_status('adminorder', $data['order_status']))
@@ -749,12 +747,20 @@ for ($i=0; $i<50; $i++) {
 <td class="col1 status">
 <select name="order[taio]" id="order_taio">
 	<option value='#none#'><?php _e('new order', 'usces'); ?></option>
-	<option value='duringorder'<?php if($taio == 'duringorder'){ echo 'selected="selected"';} ?>><?php echo $management_status['duringorder']; ?></option>
-	<option value='cancel'<?php if($taio == 'cancel'){ echo 'selected="selected"';} ?>><?php echo $management_status['cancel']; ?></option>
+<?php 
+	foreach ($management_status as $status_key => $status_name){
+		if( in_array($status_key, array('noreceipt','receipted','pending', 'estimate', 'adminorder')) )
+			continue;
+?>
+	<option value="<?php echo $status_key; ?>"<?php if($taio == $status_key){ echo ' selected="selected"';} ?>><?php echo $status_name; ?></option>
+<?php 
+	}
+?>
+<!--	<option value='cancel'<?php if($taio == 'cancel'){ echo 'selected="selected"';} ?>><?php echo $management_status['cancel']; ?></option>
 	<option value='completion'<?php if($taio == 'completion'){ echo 'selected="selected"';} ?>><?php echo $management_status['completion']; ?></option>
 	<option value='continuation'<?php if($taio == 'continuation'){ echo 'selected="selected"';} ?>><?php echo $management_status['continuation']; ?></option>
 	<option value='termination'<?php if($taio == 'termination'){ echo 'selected="selected"';} ?>><?php echo $management_status['termination']; ?></option>
-</select></td>
+--></select></td>
 </tr>
 <tr>
 <td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>

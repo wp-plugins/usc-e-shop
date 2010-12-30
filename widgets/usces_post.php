@@ -21,7 +21,7 @@ class Welcart_post extends WP_Widget {
 		?>
               <?php echo $before_widget; ?>
                   <?php echo $before_title
-                      . wp_specialchars($title)
+                      . apply_filters( 'usces_filter_post_widget_title', esc_html($title), $instance)
                       . $after_title; ?>
 					  
 		<ul class="ucart_widget_body">

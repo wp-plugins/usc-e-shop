@@ -407,9 +407,9 @@ function usces_action_acting_transaction(){
 		$query = 'trans_code=' . $_GET['trans_code'] . '&user_id=' . $_GET['user_id'] . '&result=' . $_GET['result'] . '&order_number=' . $_GET['order_number'];
 		usces_log('epsilon : ' . $query, 'acting_transaction.log');
 		$permalink_structure = get_option('permalink_structure');
-		$delim = empty($permalink_structure) ? '&' : '?';
+		$delim = ( !$usces->use_ssl && $permalink_structure) ? '?' : '&';
 
-		header('location: ' . get_permalink(get_option('usces_cart_number')) . $delim . 'acting=epsilon&acting_return=1&' . $query );
+		header('location: ' . USCES_CART_URL . $delim . 'acting=epsilon&acting_return=1&' . $query );
 		exit;
 	}
 }

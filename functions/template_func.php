@@ -67,6 +67,23 @@ function usces_the_point_rate( $out = '' ){
 	}
 }
 
+function usces_the_shipment_aim( $out = '' ){
+	global $post;
+	$post_id = $post->ID;
+
+	$str = get_post_custom_values('_itemShipping', $post_id);
+	$no = (int)$str[0];
+	if( 0 === $no ) return;
+	
+	$rules = get_option('usces_shipping_rule');
+	
+	if( $out == 'return' ){
+		return $rules[$no];
+	}else{
+		echo esc_html($rules[$no]);
+	}
+}
+
 function usces_the_item(){
 	global $usces, $post;
 	$usces->itemskus = array();
@@ -635,7 +652,6 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$sku = esc_attr($usces->itemsku['key']);
 	$name = esc_attr($name);
 	$label = esc_attr($label);
-	
 //20100914ysk start
 	//if($means < 2){
 	switch($means) {
@@ -820,6 +836,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 	$html = "<dl>\n";
 	$list = '';
+	$payment_ct = count($usces->options['payment_method']);
 	foreach ($usces->options['payment_method'] as $id => $payments) {
 		if( false !== $charging_type ){
 			if( 'acting_remise_card' != $payments['settlement'] )
@@ -829,7 +846,13 @@ function usces_the_payment_method( $value = '', $out = '' ){
 		}
 		if( $payments['name'] != '' ) {
 			$module = trim($payments['module']);
-			$checked = ($payments['name'] == $value) ? ' checked' : '';
+			if( '' != $value ){
+				$checked = ($payments['name'] == $value) ? ' checked' : '';
+			}else if( 1 === $payment_ct ){
+				$checked = ' checked';
+			}else{
+				$checked = '';
+			}
 			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 				$checked = '';
 				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
@@ -1043,6 +1066,19 @@ function usces_the_member_name() {
 	$usces->get_current_member();
 	echo esc_html($usces->current_member['name']);
 	
+}
+
+function usces_the_member_point( $out = '' ) {
+	global $usces;
+	
+	if( !$usces->is_member_logged_in() ) return;
+	
+	$member = $usces->get_member();
+	if( $out == 'return' ){
+		return $member['point'];
+	}else{
+		echo number_format($member['point']);
+	}
 }
 function usces_get_assistance_id_list($post_id) {
 	global $usces;
@@ -1852,9 +1888,26 @@ function has_custom_customer_field_essential() {
 }
 //20100818ysk end
 
-function usces_order_discount( $out = 'echo' ){
+function usces_order_discount( $out = '' ){
 	global $usces;
 	$res = abs($usces->get_order_discount());
+	
+	if($out == 'return') {
+		return $res;
+	} else {
+		echo number_format($res);
+	}
+}
+
+function usces_item_discount( $out = '', $post_id = '', $sku = '' ){
+	global $usces, $post;
+	
+	if( '' == $post_id )
+		$post_id = $post->ID;
+	if( '' == $sku )
+		$sku = $usces->itemsku['key'];
+		
+	$res = $usces->getItemDiscount($post_id, $sku);
 	
 	if($out == 'return') {
 		return $res;

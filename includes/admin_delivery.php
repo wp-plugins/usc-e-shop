@@ -867,8 +867,8 @@ jQuery(document).ready(function($){
 		<th><?php _e('The shortest delivery time', 'usces'); ?></th>
 		<td colspan="4">
 			<select name="shortest_delivery_time">
-				<option value="1"<?php if($shortest_delivery_time == '1') echo ' selected'; ?>><?php _e('åˆå‰ç€å¯', 'usces'); ?></option>
-				<option value="2"<?php if($shortest_delivery_time == '2') echo ' selected'; ?>><?php _e('åˆå‰ç€ä¸å¯', 'usces'); ?></option>
+				<option value="1"<?php if($shortest_delivery_time == '1') echo ' selected'; ?>><?php _e('Œß‘O’…‰Â', 'usces'); ?></option>
+				<option value="2"<?php if($shortest_delivery_time == '2') echo ' selected'; ?>><?php _e('Œß‘O’…•s‰Â', 'usces'); ?></option>
 			</select>
 		</td>
 	</tr>

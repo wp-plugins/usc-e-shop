@@ -46,7 +46,7 @@ $html .= apply_filters('usces_filter_cartcompletion_page_footer', $footer, $entr
 $html .= '</div><!-- footer_explanation -->'."\n";
 
 $html .= '<form action="' . get_option('home') . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">'."\n";
-$html .= '<div class="send"><input name="top" type="submit" value="'.__('Back to the top page.', 'usces').'" /></div>'."\n";
+$html .= '<div class="send"><input name="top" class="back_to_top_button" type="submit" value="'.__('Back to the top page.', 'usces').'" /></div>'."\n";
 $html .= '</form>'."\n";
 
 $html .= '</div><!-- post -->'."\n";
