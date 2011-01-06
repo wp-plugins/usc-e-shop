@@ -1,4 +1,5 @@
 <?php
+global $usces_settings;
 $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
@@ -24,9 +25,11 @@ $orderby_itemopt = isset($this->options['system']['orderby_itemopt']) ? $this->o
 $system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : get_locale();
 switch( $system_front_lang ){
 	case 'en':
+	case 'en_US':
 		$front_lang =  'en';
 		break;
 	case 'ja':
+	case 'ja_JP':
 		$front_lang =  'ja';
 		break;
 	default:
@@ -154,18 +157,30 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('The language of the front-end', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('ãƒ•ãƒ­ãƒ³ãƒˆã‚¨ãƒ³ãƒ‰ã®è¨€èªž', 'usces'); ?></a></th>
 		<td width="10"><select name="front_lang" id="front_lang">
-		    <option value="ja"<?php if($front_lang == 'ja') echo ' selected="selected"'; ?>><?php _e('Japanese', 'usces'); ?></option>
-		    <option value="en"<?php if($front_lang == 'en') echo ' selected="selected"'; ?>><?php _e('English', 'usces'); ?></option>
-		    <option value="others"<?php if($front_lang == 'others') echo ' selected="selected"'; ?>><?php _e('Others', 'usces'); ?></option>
+		<?php foreach( $usces_settings['language'] as $Lkey => $Lvalue ){ ?>
+		    <option value="<?php echo $Lkey; ?>"<?php echo ($front_lang == $Lkey ? ' selected="selected"' : ''); ?>><?php echo $Lvalue; ?></option>
+		<?php } ?>
 		</select></td>
-	    <td><div id="ex_front_lang" class="explanation"><?php _e('You can choose the language of the front-end.The language of the admin panel obeys config.php.', 'usces'); ?></div></td>
+	    <td><div id="ex_front_lang" class="explanation"><?php _e('ãƒ•ãƒ­ãƒ³ãƒˆã‚¨ãƒ³ãƒ‰ï¼ˆã‚·ãƒ§ãƒƒãƒ—å´ï¼‰ã®è¨€èªžã‚’é¸æŠžã§ãã¾ã™ã€‚è¨€èªžã«åˆã›ã¦å…¥åŠ›é …ç›®ã®æ§˜å¼ã‚‚å¤‰ã‚Šã¾ã™ã€‚< br />ãƒãƒƒã‚¯ã‚¨ãƒ³ãƒ‰ï¼ˆç®¡ç†ãƒ‘ãƒãƒ«ï¼‰ã®è¨€èªžã¯config.php ã®è¨­å®šã«å¾“ã„ã¾ã™ã€‚', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('¤•iSKU‚Ì•À‚Ñ‡', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_currency');"><?php _e('é€šè²¨è¡¨ç¤º', 'usces'); ?></a></th>
+		<td width="10"><select name="currency" id="currency">
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo ($currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		    <option value="manual"<?php echo ($front_lang == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
+		</select></td>
+	    <td><div id="ex_currency" class="explanation"><?php _e('é¸æŠžã—ãŸå›½ã«åˆã‚ã›ãŸé€šè²¨è¨˜å·ã‚„é‡‘é¡ã®åŒºåˆ‡ã‚Šæ–‡å­—ã‚„å°‘æ•°æ¡ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('å•†å“SKUã®ä¸¦ã³é †', 'usces'); ?></a></th>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku0" type="radio" value="0"<?php if($orderby_itemsku === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku0"><?php _e('SKU cord Order', 'usces'); ?></label></td>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku1" type="radio" value="1"<?php if($orderby_itemsku === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku1"><?php _e('Registration Order', 'usces'); ?></label></td>
 		<td><div id="ex_orderby_itemsku" class="explanation"><?php _e("You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'.", 'usces'); ?></div></td>
@@ -173,7 +188,7 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('¤•iƒIƒvƒVƒ‡ƒ“‚Ì•À‚Ñ‡', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('å•†å“ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®ä¸¦ã³é †', 'usces'); ?></a></th>
 	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt0" type="radio" value="0"<?php if($orderby_itemopt === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt0"><?php _e('Optional excellent Order', 'usces'); ?></label></td>
 	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt1" type="radio" value="1"<?php if($orderby_itemopt === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt1"><?php _e('Registration Order', 'usces'); ?></label></td>
 		<td><div id="ex_orderby_itemopt" class="explanation"><?php _e("You can appoint a common option and the equal thing order of the item option. When You want to make it registered order, choose 'Registration Order'. The initial state becomes 'Optional excellent Order'.", 'usces'); ?></div></td>
@@ -181,10 +196,10 @@ function toggleVisibility(id) {
 </table>
 <!--<table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript —˜—p‚Ì—L–³', 'usces'); ?></a></th>
-	    <td width="10"><input name="use_javascript" id="use_javascript0" type="radio" value="0"<?php if($this->options['use_javascript'] == 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript0"><?php _e('—˜—p‚µ‚È‚¢', 'usces'); ?></label></td>
-	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript1"><?php _e('—˜—p‚·‚é', 'usces'); ?></label></td>
-		<td><div id="ex_use_javascript" class="explanation"><?php _e("‰Šúó‘Ô‚Å‚ÍJavaScript ‚ð—˜—p‚µ‚Ü‚·BJavaScript ‚ð—˜—p‚Å‚«‚È‚¢ƒuƒ‰ƒEƒU‚É‚à‘Î‰ž‚µ‚½‚¢ê‡‚Íu—˜—p‚µ‚È‚¢v‚ð‘I‘ð‚µ‚Ü‚·Bu—˜—p‚µ‚È‚¢v‚ð‘I‘ð‚·‚é‚ÆJavaScript ‚ðŽg—p‚µ‚Ä‚¢‚éWelcart ê—pŠg’£ƒvƒ‰ƒOƒCƒ“‚à—˜—p‚Å‚«‚È‚­‚È‚è‚Ü‚·‚Ì‚Å‚²’ˆÓ‰º‚³‚¢B‚»‚Ì‘¼‚Ìƒvƒ‰ƒOƒCƒ“‚Ì§Œä‚Ís‚¢‚Ü‚¹‚ñB‚ ‚­‚Ü‚Åƒtƒƒ“ƒg‚Ì“®ì‚É‚¨‚¢‚ÄWelcart ‚ª—˜—p‚µ‚Ä‚¢‚éJavaScript ‚ð’âŽ~‚·‚é‚¾‚¯‚Å‚·B", 'usces'); ?></div></td>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript åˆ©ç”¨ã®æœ‰ç„¡', 'usces'); ?></a></th>
+	    <td width="10"><input name="use_javascript" id="use_javascript0" type="radio" value="0"<?php if($this->options['use_javascript'] == 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript0"><?php _e('åˆ©ç”¨ã—ãªã„', 'usces'); ?></label></td>
+	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript1"><?php _e('åˆ©ç”¨ã™ã‚‹', 'usces'); ?></label></td>
+		<td><div id="ex_use_javascript" class="explanation"><?php _e("åˆæœŸçŠ¶æ…‹ã§ã¯JavaScript ã‚’åˆ©ç”¨ã—ã¾ã™ã€‚JavaScript ã‚’åˆ©ç”¨ã§ããªã„ãƒ–ãƒ©ã‚¦ã‚¶ã«ã‚‚å¯¾å¿œã—ãŸã„å ´åˆã¯ã€Œåˆ©ç”¨ã—ãªã„ã€ã‚’é¸æŠžã—ã¾ã™ã€‚ã€Œåˆ©ç”¨ã—ãªã„ã€ã‚’é¸æŠžã™ã‚‹ã¨JavaScript ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹Welcart å°‚ç”¨æ‹¡å¼µãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚‚åˆ©ç”¨ã§ããªããªã‚Šã¾ã™ã®ã§ã”æ³¨æ„ä¸‹ã•ã„ã€‚ãã®ä»–ã®ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã®åˆ¶å¾¡ã¯è¡Œã„ã¾ã›ã‚“ã€‚ã‚ãã¾ã§ãƒ•ãƒ­ãƒ³ãƒˆã®å‹•ä½œã«ãŠã„ã¦Welcart ãŒåˆ©ç”¨ã—ã¦ã„ã‚‹JavaScript ã‚’åœæ­¢ã™ã‚‹ã ã‘ã§ã™ã€‚", 'usces'); ?></div></td>
 	</tr>
 </table>-->
 </div>
