@@ -6,10 +6,10 @@ $html = '<div id="customer-info">
 
 <div class="usccart_navi">
 <ol class="ucart">
-<li class="ucart">' . __('1.Cart','usces') . '</li>
-<li class="ucart usccart_customer">' . __('2.Customer Info','usces') . '</li>
-<li class="ucart">' . __('3.Deli. & Pay.','usces') . '</li>
-<li class="ucart">' . __('4.Confirm','usces') . '</li>
+<li class="ucart usccart">' . __('1.Cart','usces') . '</li>
+<li class="ucart usccustomer usccart_customer">' . __('2.Customer Info','usces') . '</li>
+<li class="ucart uscdelivery">' . __('3.Deli. & Pay.','usces') . '</li>
+<li class="ucart uscconfirm">' . __('4.Confirm','usces') . '</li>
 </ol>
 </div>';
 

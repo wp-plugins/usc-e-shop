@@ -3,10 +3,10 @@ $html = '<div id="inside-cart">
 
 <div class="usccart_navi">
 <ol class="ucart">
-<li class="ucart usccart_cart">' . __('1.Cart','usces') . '</li>
-<li class="ucart">' . __('2.Customer Info','usces') . '</li>
-<li class="ucart">' . __('3.Deli. & Pay.','usces') . '</li>
-<li class="ucart">' . __('4.Confirm','usces') . '</li>
+<li class="ucart usccart usccart_cart">' . __('1.Cart','usces') . '</li>
+<li class="ucart usccustomer">' . __('2.Customer Info','usces') . '</li>
+<li class="ucart uscdelivery">' . __('3.Deli. & Pay.','usces') . '</li>
+<li class="ucart uscconfirm">' . __('4.Confirm','usces') . '</li>
 </ol>
 </div>';
 
