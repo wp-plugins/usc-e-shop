@@ -449,7 +449,7 @@ item_option_meta_form();
 </div>
 
 <?php if ( defined('USCES_EX_PLUGIN') ){ ?>
-<div id="itemoption" class="postbox">
+<!--<div id="itemoption" class="postbox">
 <h3 class="hndle"><span><?php _e('Options for EX-plugin', 'usces'); ?></span></h3>
 <div class="inside">
 <div id="postoptcustomstuff">
@@ -459,7 +459,7 @@ item_option_meta_form();
 ?>
 </div>
 </div>
-</div>
+</div>-->
 <?php } ?>
 
 

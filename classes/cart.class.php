@@ -90,7 +90,7 @@ class usces_cart {
 			}
 		}
 
-//		ksort($_SESSION['usces_cart'], SORT_STRING);
+		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
 	}
 	
 	// inCart_advance ****************************************************************
@@ -144,6 +144,7 @@ class usces_cart {
 		if(isset($_SESSION['usces_cart'][$this->serial]))
 			unset($_SESSION['usces_cart'][$this->serial]);
 			
+		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
 	}
 
 	// number of data in cart ***********************************************************

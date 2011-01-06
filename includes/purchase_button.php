@@ -59,10 +59,10 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="user_mail_add" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">';
 			if( 1 < count($cart) ) {
 				$html .= '<input type="hidden" name="item_code" value="99999999">
-					<input type="hidden" name="item_name" value="' . esc_attr(mb_substr($send_item_name, 0, 50)) . ' ' . __('Others', 'usces') . '">';
+					<input type="hidden" name="item_name" value="' . esc_attr(mb_substr($send_item_name, 0, 25, 'UTF-8')) . ' ' . __('Others', 'usces') . '">';
 			}else{
 				$html .= '<input type="hidden" name="item_code" value="' . esc_attr($send_item_code) . '">
-					<input type="hidden" name="item_name" value="' . esc_attr(mb_substr($send_item_name, 0, 64)) . '">';
+					<input type="hidden" name="item_name" value="' . esc_attr(mb_substr($send_item_name, 0, 32, 'UTF-8')) . '">';
 			}
 			$html .= '<input type="hidden" name="item_price" value="' . $usces_entries['order']['total_full_price'] . '">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;
