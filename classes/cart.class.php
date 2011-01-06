@@ -313,6 +313,9 @@ class usces_cart {
 				}
 		}
 //20100809ysk end
+//20110106ysk start
+		$this->set_custom_customer_delivery();
+//20110106ysk end
 //20100818ysk start
 		if(isset($_POST['custom_customer'])) {
 //20101008ysk start
@@ -340,7 +343,11 @@ class usces_cart {
 					$_SESSION['usces_entry']['custom_delivery'][$key] = trim($value);
 				}
 		}
-//20100818ysk end
+//20110106ysk start
+		if(isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 0) {
+			$this->set_custom_customer_delivery();
+		}
+//20110106ysk end
 	}
 
 	// get entry information ***************************************************************
@@ -453,5 +460,30 @@ class usces_cart {
 	function set_pre_order_id($id){
 		$_SESSION['usces_entry']['reserve']['pre_order_id'] = $id;
 	}
+
+//20110106ysk start
+	function set_custom_customer_delivery() {
+		if(isset($_SESSION['usces_entry']['custom_customer'])) {
+			$delivery = array();
+			$csde_meta = usces_has_custom_field_meta('delivery');
+			if(!empty($csde_meta) and is_array($csde_meta)) {
+				foreach($csde_meta as $key => $entry) {
+					$delivery[$key] = $key;
+				}
+			}
+			foreach( $_SESSION['usces_entry']['custom_customer'] as $mbkey => $mbvalue ) {
+				if(array_key_exists($mbkey, $delivery)) {
+					if( is_array($mbvalue) ) {
+						foreach( $mbvalue as $k => $v ) {
+							$_SESSION['usces_entry']['custom_delivery'][$mbkey][$v] = $v;
+						}
+					} else {
+						$_SESSION['usces_entry']['custom_delivery'][$mbkey] = $mbvalue;
+					}
+				}
+			}
+		}
+	}
+//20110106ysk end
 }
 ?>
