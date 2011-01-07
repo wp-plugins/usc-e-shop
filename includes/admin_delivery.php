@@ -765,11 +765,11 @@ jQuery(function($){
 		},
 		
 		allDeliveryDays : function () {
-			var all = $("#all_delivery_days").val();
-			if(all == '') return;
-			confirm(<?php _e("'Are you sure of setting delivery days to ' + charge + ' day for all the prefecture?'", 'usces'); ?>);
+			var days = $("#all_delivery_days").val();//20110106ysk [all]->[days]
+			if(days == '') return;
+			confirm(<?php _e("'Are you sure of setting delivery days to ' + days + ' day for all the prefecture?'", 'usces'); ?>);
 			for(var i=0; i<pref.length; i++){
-				$("input[name='delivery_days_value\[" + pref[i] + "\]']").val(all);
+				$("input[name='delivery_days_value\[" + pref[i] + "\]']").val(days);
 			}
 			$("#all_delivery_days").val("");
 		},
@@ -828,12 +828,12 @@ jQuery(document).ready(function($){
 
 <!--20101208ysk start-->
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('delivery option', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_option');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
+<h3 class="hndle"><span><?php _e('配送設定', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_option');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <form action="" method="post" name="option_form" id="option_form">
 <table class="form_table">
 	<tr>
-		<th><?php _e('Delivery time limit', 'usces'); ?></th>
+		<th><?php _e('配送業務締時間', 'usces'); ?></th>
 		<td>
 			<select name="delivery_time_limit[hour]">
 <?php
@@ -864,16 +864,17 @@ jQuery(document).ready(function($){
 		<td><?php _e('min','usces'); ?></td>
 	</tr>
 	<tr>
-		<th><?php _e('The shortest delivery time', 'usces'); ?></th>
+		<th><?php _e('最短配送時間帯', 'usces'); ?></th>
 		<td colspan="4">
 			<select name="shortest_delivery_time">
+				<option value="0"<?php if($shortest_delivery_time == '0') echo ' selected'; ?>><?php _e('No preference', 'usces'); ?></option>
 				<option value="1"<?php if($shortest_delivery_time == '1') echo ' selected'; ?>><?php _e('午前着可', 'usces'); ?></option>
 				<option value="2"<?php if($shortest_delivery_time == '2') echo ' selected'; ?>><?php _e('午前着不可', 'usces'); ?></option>
 			</select>
 		</td>
 	</tr>
 	<tr>
-		<th><?php _e('Delivery after days', 'usces'); ?></th>
+		<th><?php _e('配送希望日表示数', 'usces'); ?></th>
 		<td colspan="4">
 			<input name="delivery_after_days" type="text" value="<?php echo $delivery_after_days; ?>">
 		</td>
@@ -950,7 +951,7 @@ jQuery(document).ready(function($){
 	<tr>
 		<th></th>
 		<td></td>
-		<th class="sec"><?php _e('Delivery days', 'usces'); ?></th>
+		<th class="sec"><?php _e('配達日数', 'usces'); ?></th>
 		<td id="delivery_method_days_td"></td>
 		<td>&nbsp;</td>
 	</tr>
@@ -982,7 +983,7 @@ jQuery(document).ready(function($){
 <div id="uscestabs_delivery">
 	<ul>
 		<li><a href="#delivery_page_setting_1"><?php _e('Shipping','usces'); ?></a></li>
-		<li><a href="#delivery_page_setting_2"><?php _e('Delivery days','usces'); ?></a></li>
+		<li><a href="#delivery_page_setting_2"><?php _e('配達日数','usces'); ?></a></li>
 	</ul>
 
 <div id="delivery_page_setting_1">
@@ -1030,7 +1031,7 @@ jQuery(document).ready(function($){
 </div><!--delivery_page_setting_1-->
 <div id="delivery_page_setting_2">
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('Delivery days', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_days');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
+<h3 class="hndle"><span><?php _e('配達日数', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_days');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table">
 	<tr>
@@ -1041,9 +1042,9 @@ jQuery(document).ready(function($){
 		<td></td>
 	</tr>
 	<tr>
-		<th><?php _e('Delivery days name', 'usces'); ?></th>
+		<th><?php _e('配達日数名', 'usces'); ?></th>
 		<td width="150" height="30" id="delivery_days_name"></td>
-		<th class="sec"><?php _e('Delivery days', 'usces'); ?></th>
+		<th class="sec"><?php _e('配達日数', 'usces'); ?></th>
 		<td><label class="delivery_days_label"><input name="allbutton_delivery_days" type="button" class="allbutton" onclick="operation.allDeliveryDays();" value="<?php _e('same as', 'usces'); ?>"  /></label><input name="all_delivery_days" id="all_delivery_days" type="text" class='days_text' /><?php _e('day', 'usces'); ?></td>
 		<td>&nbsp;</td>
 	</tr>

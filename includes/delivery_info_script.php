@@ -11,23 +11,27 @@ $html .= '
 */
 $html .= '
 <script type="text/javascript">
+	//1桁の数字を0埋めで2桁にする
+	var toDoubleDigits = function(num) {
+		num += "";
+		if(num.length === 1) num = "0".concat(num);
+		return num;
+	};
 	var selected_delivery_method = \'\';
 	var selected_delivery_date = \'\';
 	var selected_delivery_time = \'\';
 	var add_shipping = new Array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0);//発送日目安
 
 	function addDate(year, month, day, add) {
-		var date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+		var date = new Date(Number(year), (Number(month) - 1), Number(day));
 		var baseSec = date.getTime();
-		var addSec = add * 86400000;
+		var addSec = Number(add) * 86400000;
 		var targetSec = baseSec + addSec;
 		date.setTime(targetSec);
 
 		var yy = date.getFullYear() + "";
-		var mm = (date.getMonth() + 1) + "";
-		var dd = date.getDate() + "";
-		if(mm.length < 2) {mm = "0" + mm;}
-		if(dd.length < 2) {dd = "0" + dd;}
+		var mm = toDoubleDigits(date.getMonth() + 1);
+		var dd = toDoubleDigits(date.getDate());
 
 		var newdate = new Array();
 		newdate["year"] = yy;
@@ -249,15 +253,11 @@ $html .= "
 						var now = new Date();
 						var date = new Array();
 						date[\"year\"] = now.getFullYear() + \"\";
-						date[\"month\"] = now.getMonth() + 1 + \"\";
-						date[\"day\"] = now.getDate() + \"\";
-						if(date[\"month\"].length < 2) {date[\"month\"] = \"0\" + date[\"month\"];}
-						if(date[\"day\"].length < 2) {date[\"day\"] = \"0\" + date[\"day\"];}
+						date[\"month\"] = toDoubleDigits(now.getMonth() + 1);
+						date[\"day\"] = toDoubleDigits(now.getDate());
 						//配送業務締時間を超えていたら1日加算
-						var hh = now.getHours() + \"\";
-						var mm = now.getMinutes() + \"\";
-						if(hh.length < 2) {hh = \"0\" + hh;}
-						if(mm.length < 2) {mm = \"0\" + mm;}
+						var hh = toDoubleDigits(now.getHours());
+						var mm = toDoubleDigits(now.getMinutes());
 						if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
 						}
@@ -272,6 +272,9 @@ $html .= "
 						//最短配送時間帯メッセージ
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 						switch(shortest_delivery_time) {
+						case 0://指定しない 20110106ysk
+							message = date_str+\"".__('からご指定できます。', 'usces')."\";
+							break;
 						case 1://午前着可
 							message = date_str+\"".__('の午前中からご指定できます。', 'usces')."\";
 							break;
