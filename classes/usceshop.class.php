@@ -1,5 +1,4 @@
 <?php
-
 class usc_e_shop
 {
 
@@ -1534,7 +1533,7 @@ class usc_e_shop
 		global $wpdb, $wp_locale, $wp_version, $post_ID;
 		global $wp_query, $usces_action, $post, $action, $editing;
 
-		if( isset($_POST) ){
+		if( isset($_POST) && 1 !== preg_match('/plugin-editor\.php/', $_POST['_wp_http_referer']) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
 		}
 		
@@ -4698,9 +4697,9 @@ class usc_e_shop
 		}
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
 		$discount = $this->get_order_discount();
+		$use_point = $entries['order']['usedpoint'];
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
-		$use_point = $entries['order']['usedpoint'];
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price);
 		$tax = $this->getTax( $total_price );
