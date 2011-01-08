@@ -1,5 +1,4 @@
 <?php
-
 class usc_e_shop
 {
 
@@ -1534,7 +1533,7 @@ class usc_e_shop
 		global $wpdb, $wp_locale, $wp_version, $post_ID;
 		global $wp_query, $usces_action, $post, $action, $editing;
 
-		if( isset($_POST) ){
+		if( isset($_POST) && 1 !== preg_match('/plugin-editor\.php/', $_POST['_wp_http_referer']) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
 		}
 		
