@@ -40,6 +40,8 @@ $html .= '</div><!-- header_explanation -->'."\n";
 
 require_once( USCES_PLUGIN_DIR . "/includes/completion_settlement.php");
 
+$html .= apply_filters('usces_filter_cartcompletion_page_body', NULL, $entry, $cart)."\n";
+
 $html .= '<div class="footer_explanation">'."\n";
 $footer = '';
 $html .= apply_filters('usces_filter_cartcompletion_page_footer', $footer, $entry, $cart)."\n";

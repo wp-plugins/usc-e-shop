@@ -74,8 +74,9 @@ foreach ( $usces_member_history as $umhs ) {
 		<td class="rightnum">' . number_format($umhs['cod_fee']) . '</td>
 		<td class="rightnum">' . number_format($umhs['tax']) . '</td>
 		<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>
-		</tr>
-		<tr>
+		</tr>';
+	$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
+	$html .= '<tr>
 		<td class="retail" colspan="9">
 			<table id="retail_table">
 			<tr>
