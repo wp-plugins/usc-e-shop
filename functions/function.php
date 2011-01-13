@@ -865,6 +865,11 @@ function usces_reg_orderdata( $results = array() ) {
 			}
 		}
 	
+		if ( !preg_match('/pending|noreceipt/', $status) ) {
+			$value = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+			$usces->set_order_meta_value('receipted_date', $value, $order_id);
+		}
+	
 //20100818ysk start
 		if( !empty($entry['custom_order']) ) {
 			foreach( $entry['custom_order'] as $key => $value ) {
@@ -1129,6 +1134,10 @@ function usces_new_orderdata() {
 				$usces->set_order_meta_value($csde_key, $value, $order_id);
 			}
 		}
+		if ( !preg_match('/pending|noreceipt/', $status) ) {
+			$value = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+			$usces->set_order_meta_value('receipted_date', $value, $order_id);
+		}
 	endif;
 //20100818ysk end
 	
@@ -1297,6 +1306,10 @@ function usces_update_orderdata() {
 	$member_table_name = $wpdb->prefix . "usces_member";
 
 	$ID = $_REQUEST['order_id'];
+	
+	$query = $wpdb->prepare("SELECT `order_status` FROM $order_table_name WHERE ID = %d", $ID);
+	$old_status = $wpdb->get_var( $query );
+	
 	$usces->cart->crear_cart();
 	$usces->cart->upCart();
 	if(isset($_POST['delButton'])) {
@@ -1452,6 +1465,20 @@ function usces_update_orderdata() {
 			$i++;
 		}
 	}
+	$value = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+	if ( !preg_match('/pending|noreceipt/', $old_status) && preg_match('/pending|noreceipt/', $status) ) {
+		$rquery = $wpdb->prepare("DELETE FROM $order_table_meta_name WHERE order_id = %d AND meta_key = %s", $ID, 'receipted_date');
+		$wpdb->query( $rquery );
+	}else if ( !preg_match('/pending|noreceipt/', $old_status) && !preg_match('/pending|noreceipt/', $status) ) {
+		$query = $wpdb->prepare("SELECT order_id FROM $order_table_meta_name WHERE order_id = %d AND meta_key = %s", $ID, 'receipted_date');
+		$varres = $wpdb->get_var( $query );
+		if( empty($varres) ){
+			$usces->set_order_meta_value('receipted_date', $value, $ID);
+		}
+	}else if ( preg_match('/pending|noreceipt/', $old_status) && !preg_match('/pending|noreceipt/', $status) ) {
+		$usces->set_order_meta_value('receipted_date', $value, $ID);
+	}
+
 	$result = ( 0 < array_sum($res) ) ? 1 : 0;
 //20100818ysk end
 
