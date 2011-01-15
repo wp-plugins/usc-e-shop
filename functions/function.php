@@ -131,6 +131,7 @@ function usces_order_confirm_message($order_id) {
 	$msg_shipping .= __('Zip/Postal Code','usces') . "  : " . $deli['zipcode'] . "\r\n";
 	$msg_shipping .= __('Address','usces') . "    : " . $deli['pref'] . $deli['address1'] . $deli['address2'] . " " . $deli['address3'] . "\r\n";
 	$msg_shipping .= __('Phone number','usces') . "  : " . $deli['tel'] . "\r\n";
+	$msg_shipping .= __('FAX number','usces') . "  : " . $deli['fax'] . "\r\n";
 
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
 	if ( $data['order_delidue_date'] == NULL || $data['order_delidue_date'] == '#none#' ) {
