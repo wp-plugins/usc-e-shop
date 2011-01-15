@@ -177,7 +177,7 @@ $html .= usces_custom_field_input($usces_members, 'member', 'fax_after', 'return
 //20100818ysk end
 $html .= '<tr>
 	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
-	<td colspan="2"><input name="member[mailaddress1]" id="fax" type="text" value="' . esc_attr($usces_members['mailaddress1']) . '" /></td>
+	<td colspan="2"><input name="member[mailaddress1]" id="mailaddress1" type="text" value="' . esc_attr($usces_members['mailaddress1']) . '" /></td>
 	</tr>
 	<tr>
 	<th scope="row">' . __('password', 'usces') . '</th>
