@@ -7,7 +7,7 @@ function usces_ajax_send_mail() {
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), trim(urldecode($_POST['name']))),
 			'to_address' => trim($_POST['mailaddress']), 
 			'from_name' => get_option('blogname'), 
-			'from_address' => $usces->options['order_mail'], 
+			'from_address' => $usces->options['sender_mail'], 
 			'return_path' => $usces->options['error_mail'],
 			'subject' => trim(urldecode($_POST['subject'])),
 			'message' => trim(urldecode($_POST['message']))
