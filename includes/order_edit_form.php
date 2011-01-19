@@ -318,7 +318,7 @@ jQuery(function($){
 		sendmail : function() {
 			if($("#sendmailaddress").val() == "") return;
 		
-			var address = $("#sendmailaddress").val();
+			var address = encodeURIComponent($("#sendmailaddress").val());
 			var message = encodeURIComponent($("#sendmailmessage").val());
 			var name = encodeURIComponent($("#sendmailname").val());
 			var subject = encodeURIComponent($("#sendmailsubject").val());

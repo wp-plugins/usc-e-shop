@@ -1337,7 +1337,7 @@ class usc_e_shop
 					alert( mes );
 					return false;
 				}else{
-					<?php echo apply_filters('usces_filter_js_intoCart', "return true", $item->ID, $this->itemsku['key']); ?>
+					<?php echo apply_filters('usces_filter_js_intoCart', "return true;\n", $item->ID, $this->itemsku['key']); ?>
 				}
 			},
 			
@@ -1721,6 +1721,11 @@ class usc_e_shop
 		}
 
 		if( isset($_REQUEST['order_action']) && $_REQUEST['order_action'] == 'pdfout' ){
+			$this->get_current_member();
+			$mid = $this->current_member['id'];
+			$oid = $_GET['order_id'];
+			if( !is_user_logged_in() && !$this->is_order($mid, $oid) )
+				die('No permission');
 			require_once( apply_filters('usces_filter_orderpdf_path', USCES_PLUGIN_DIR . '/includes/order_print.php') );
 		}
 		

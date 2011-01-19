@@ -7,7 +7,7 @@ function usces_ajax_send_mail() {
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), trim(urldecode($_POST['name']))),
 			'to_address' => trim($_POST['mailaddress']), 
 			'from_name' => get_option('blogname'), 
-			'from_address' => $usces->options['order_mail'], 
+			'from_address' => $usces->options['sender_mail'], 
 			'return_path' => $usces->options['error_mail'],
 			'subject' => trim(urldecode($_POST['subject'])),
 			'message' => trim(urldecode($_POST['message']))
@@ -66,13 +66,25 @@ function usces_order_confirm_message($order_id) {
 	if($_POST['mode'] == 'mitumoriConfirmMail'){
 		$msg_body = "\r\n\r\n\r\n" . __('Estimate','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
+//20110118ysk start
+		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
+//20110118ysk end
 		$msg_body .= __('Request of','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+//20110118ysk start
+		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
+//20110118ysk end
 		$msg_body .= __('estimate number','usces') . " : " . $order_id . "\r\n";
 	}else{
 		$msg_body = "\r\n\r\n\r\n" . __('** Article order contents **','usces') . "\r\n";
 		$msg_body .= "******************************************************************\r\n";
 		$msg_body .= apply_filters('usces_filter_order_confirm_mail_first', NULL, $data);
+//20110118ysk start
+		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
+//20110118ysk end
 		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+//20110118ysk start
+		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
+//20110118ysk end
 		$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
 	}
 	$msg_body .= __('Items','usces') . " : \r\n";
@@ -127,11 +139,20 @@ function usces_order_confirm_message($order_id) {
 	
 	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
 	$msg_shipping .= "******************************************************************\r\n";
+//20110118ysk start
+	$msg_shipping .= usces_mail_custom_field_info( 'delivery', 'name_pre', $order_id );
+//20110118ysk end
 	$msg_shipping .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($deli['name1'] . ' ' . $deli['name2'])) . " \r\n";
+//20110118ysk start
+	$msg_shipping .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id );
+//20110118ysk end
 	$msg_shipping .= __('Zip/Postal Code','usces') . "  : " . $deli['zipcode'] . "\r\n";
 	$msg_shipping .= __('Address','usces') . "    : " . $deli['pref'] . $deli['address1'] . $deli['address2'] . " " . $deli['address3'] . "\r\n";
 	$msg_shipping .= __('Phone number','usces') . "  : " . $deli['tel'] . "\r\n";
-
+	$msg_shipping .= __('FAX number','usces') . "  : " . $deli['fax'] . "\r\n";
+//20110118ysk start
+	$msg_shipping .= usces_mail_custom_field_info( 'delivery', 'fax_after', $order_id );
+//20110118ysk end
 //20101208ysk start
 	//$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
 	if ( $data['order_delidue_date'] == NULL || $data['order_delidue_date'] == '#none#' ) {
@@ -260,7 +281,13 @@ function usces_send_ordermail($order_id) {
 	$msg_body = "\r\n\r\n\r\n" . __('** content of ordered items **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
 	$msg_body .= apply_filters('usces_filter_send_order_mail_first', NULL, $data);
+//20110118ysk start
+	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
+//20110118ysk end
 	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['customer']['name1'] . ' ' . $entry['customer']['name2'])) . "\r\n";
+//20110118ysk start
+	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
+//20110118ysk end
 	$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
 	$msg_body .= __('Items','usces') . " : \r\n";
 	
@@ -313,10 +340,20 @@ function usces_send_ordermail($order_id) {
 	
 	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
 	$msg_shipping .= "******************************************************************\r\n";
+//20110118ysk start
+	$msg_shipping .= usces_mail_custom_field_info( 'delivery', 'name_pre', $order_id );
+//20110118ysk end
 	$msg_shipping .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['delivery']['name1'] . ' ' . $entry['delivery']['name2'])) . "\r\n";
+//20110118ysk start
+	$msg_shipping .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id );
+//20110118ysk end
 	$msg_shipping .= __('Zip/Postal Code','usces') . "  : " . $entry['delivery']['zipcode'] . "\r\n";
 	$msg_shipping .= __('Address','usces') . "    : " . $entry['delivery']['pref'] . $entry['delivery']['address1'] . $entry['delivery']['address2'] . " " . $entry['delivery']['address3'] . "\r\n";
 	$msg_shipping .= __('Phone number','usces') . "  : " . $entry['delivery']['tel'] . "\r\n";
+	$msg_shipping .= __('FAX number','usces') . "  : " . $entry['delivery']['fax'] . "\r\n";
+//20110118ysk start
+	$msg_shipping .= usces_mail_custom_field_info( 'delivery', 'fax_after', $order_id );
+//20110118ysk end
 
 //20101208ysk start
 	//$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
