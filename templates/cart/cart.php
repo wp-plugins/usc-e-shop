@@ -114,7 +114,8 @@ if($this->cart->num_row() > 0) {
 		</tfoot>
 	</table>';
 	if( $usces_gp ) {
-		$html .= '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
+		$Business_pack_discount = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
+		$html .= apply_filters('usces_filter_itemGpExp_cart_message', $Business_pack_discount);
 	}
 	$html .= '</div>';
 

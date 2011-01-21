@@ -315,7 +315,7 @@ function usces_the_itemGpExp( $out = '' ) {
 	if( ($usces->itemsku['value']['gptekiyo'] == 0) || empty($GpN1) || empty($GpD1) ){
 		return;
 	}
-	$html = "<dl class='itemGpExp'>\n<dt>" . __('Business package discount','usces') . "</dt>\n<dd>\n<ul>\n";
+	$html = "<dl class='itemGpExp'>\n<dt>" . apply_filters( 'usces_filter_itemGpExp_title', __('Business package discount','usces')) . "</dt>\n<dd>\n<ul>\n";
 	if(!empty($GpN1) && !empty($GpD1)) {
 		if(empty($GpN2) || empty($GpD2)) {
 			$html .= "<li>";
