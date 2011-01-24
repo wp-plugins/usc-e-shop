@@ -2611,3 +2611,15 @@ msgstr "出力したい形式を選択して、ダウンロードを押してく
 
 msgid "Not yet ready for the payment method. Please refer to a manager."
 msgstr "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
+
+msgid ""
+msgstr "上記、正に受領いたしました。"
+
+msgid ""
+msgstr "下記の通りご請求申し上げます。"
+
+msgid ""
+msgstr "明細書"
+
+msgid ""
+msgstr "ご担当："
