@@ -81,7 +81,8 @@ if($this->cart->num_row() > 0) {
 			<td class="aright">';
 		if( usces_is_gptekiyo($post_id, $cart_row['sku'], $quantity) ) {
 			$usces_gp = 1;
-			$html .= '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
+			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
+			$html .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
 		}
 		$html .= number_format($skuPrice) . '
 			</td>
