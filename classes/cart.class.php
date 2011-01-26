@@ -255,30 +255,40 @@ class usces_cart {
 	function entry() {
 	
 		if(isset($_SESSION['usces_member']['ID']) && !empty($_SESSION['usces_member']['ID'])) {
-			foreach( $_SESSION['usces_member'] as $key => $value ){
+//20110126ysk start
+			if($this->page !== 'confirm') {
+				foreach( $_SESSION['usces_member'] as $key => $value ){
 //20100818ysk start
-				if($key === 'custom_member') {
+					if($key === 'custom_member') {
 //20101008ysk start
-					unset($_SESSION['usces_entry']['custom_member']);
+						unset($_SESSION['usces_entry']['custom_member']);
 //20101008ysk end
-					foreach( $_SESSION['usces_member']['custom_member'] as $mbkey => $mbvalue ) {
-						if( is_array($mbvalue) ) {
-							foreach( $mbvalue as $k => $v ) {
-								$_SESSION['usces_entry']['custom_customer'][$mbkey][$v] = $v;
+						foreach( $_SESSION['usces_member']['custom_member'] as $mbkey => $mbvalue ) {
+							if(empty($_SESSION['usces_entry']['custom_customer'][$mbkey])) {
+								if( is_array($mbvalue) ) {
+									foreach( $mbvalue as $k => $v ) {
+										$_SESSION['usces_entry']['custom_customer'][$mbkey][$v] = $v;
+									}
+								} else {
+									$_SESSION['usces_entry']['custom_customer'][$mbkey] = $mbvalue;
+								}
 							}
-						} else {
-							$_SESSION['usces_entry']['custom_customer'][$mbkey] = $mbvalue;
+						}
+					} else {
+						if(empty($_SESSION['usces_entry']['customer'][$key])) {
+							$_SESSION['usces_entry']['customer'][$key] = $value;
 						}
 					}
-				} else {
-					$_SESSION['usces_entry']['customer'][$key] = $value;
-				}
 //20100818ysk end
+				}
 			}
-		} else if(isset($_POST['customer']))	{	
+		}
+		//} else if(isset($_POST['customer']))	{	
+		if(isset($_POST['customer']))	{	
 			foreach( $_POST['customer'] as $key => $value )
 				$_SESSION['usces_entry']['customer'][$key] = trim($value);
 		}
+//20110126ysk end
 		
 		if(isset($_POST['delivery']))	{	
 			foreach( $_POST['delivery'] as $key => $value )
@@ -474,13 +484,17 @@ class usces_cart {
 			}
 			foreach( $_SESSION['usces_entry']['custom_customer'] as $mbkey => $mbvalue ) {
 				if(array_key_exists($mbkey, $delivery)) {
-					if( is_array($mbvalue) ) {
-						foreach( $mbvalue as $k => $v ) {
-							$_SESSION['usces_entry']['custom_delivery'][$mbkey][$v] = $v;
+//20110126ysk start
+					if(empty($_SESSION['usces_entry']['custom_delivery'][$mbkey])) {
+						if( is_array($mbvalue) ) {
+							foreach( $mbvalue as $k => $v ) {
+								$_SESSION['usces_entry']['custom_delivery'][$mbkey][$v] = $v;
+							}
+						} else {
+							$_SESSION['usces_entry']['custom_delivery'][$mbkey] = $mbvalue;
 						}
-					} else {
-						$_SESSION['usces_entry']['custom_delivery'][$mbkey] = $mbvalue;
 					}
+//20110126ysk end
 				}
 			}
 		}
