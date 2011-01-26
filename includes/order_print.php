@@ -149,7 +149,7 @@ function usces_pdf_out(&$pdf, $data){
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
 			$pdf->SetXY($x+88.0, $line_y[$index]);
-			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc(number_format($cart_row['quantity'])), $border, 'R');
+			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($cart_row['quantity']), $border, 'R');
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
 			$pdf->SetXY($x+99.6, $line_y[$index]);
@@ -157,11 +157,11 @@ function usces_pdf_out(&$pdf, $data){
 			$pdf->SetXY($x+111.5, $line_y[$index]);
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
-			$pdf->MultiCell(15.2, $lineheight, usces_conv_euc(number_format($cart_row['price'])), $border, 'R');
+			$pdf->MultiCell(15.2, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price'])), $border, 'R');
 			$pdf->SetXY($x+126.9, $line_y[$index]);
-			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+			list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
-			$pdf->MultiCell(22.8, $lineheight, usces_conv_euc(number_format($cart_row['price']*$cart_row['quantity'])), $border, 'R');
+			$pdf->MultiCell(22.8, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price']*$cart_row['quantity'])), $border, 'R');
 
 			if( 190 < $next_y && 0 < $index ){
 				$pdf->Rect($x, $line_y[$index]-0.4, 149.5, 197.4-$line_y[$index], 'F');
@@ -205,7 +205,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			break;
 		
 		case 'nohin':
-			$title = __('Invoices', 'usces');
+			$title = __('Invoice', 'usces');
 			$message = sprintf(__("Thak you for choosing '%s'. We deliver your items as following.", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('F j, Y'), strtotime($data->order['date']));
@@ -220,7 +220,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		
 		case 'receipt':
 			$title = __('Receipt', 'usces');
-			$message = apply_filters('usces_filter_pdf_receipt_message', __("上記、正に受領いたしました。", 'usces'));
+			$message = apply_filters('usces_filter_pdf_receipt_message', __("Your payment has been received.", 'usces'));
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('F j, Y'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 			$sign_image = apply_filters('usces_filter_pdf_receipt_sign', NULL);
@@ -229,7 +229,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		
 		case 'bill':
 			$title = __('Bill', 'usces');
-			$message = apply_filters('usces_filter_pdf_receipt_message', __("下記の通りご請求申し上げます。", 'usces'));
+			$message = apply_filters('usces_filter_pdf_receipt_message', __("Please remit payment at your earliest convenience.", 'usces'));
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('F j, Y'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 			$sign_image = apply_filters('usces_filter_pdf_bill_sign', NULL);
@@ -275,6 +275,10 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	$leftside = 15;
 	$pdf->SetLeftMargin($leftside);
 	
+	$person_honor = ( 'JP' == $usces->options['system']['currency'] ) ? "様" : '';
+	$company_honor = ( 'JP' == $usces->options['system']['currency'] ) ? "御中" : '';
+	$currency_post = ( 'JP' == $usces->options['system']['currency'] ) ? "-" : '';
+	
 	if( 'receipt' == $_REQUEST['type'] ){
 		$top = 40;
 		// Name of customer
@@ -287,13 +291,13 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$x = $leftside + $width;
 			$y = $pdf->GetY() - $lineheight;
 			$pdf->SetXY($x, $y);
-			$pdf->Write($lineheight ,usces_conv_euc(__("様", 'usces')));
+			$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ));
 		}else{
 			$pdf->MultiCell($width, $lineheight, usces_conv_euc($company), $border, 'L');
 			$x = $leftside + $width;
 			$y = $pdf->GetY() - $lineheight;
 			$pdf->SetXY($x, $y);
-			$pdf->Write($lineheight ,usces_conv_euc(__("御中", 'usces')));
+			$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor) ));
 		}
 		$y = $pdf->GetY() + $lineheight + $linetop;
 		$pdf->SetLineWidth(0.1);
@@ -304,7 +308,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(20);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$pdf->SetXY($leftside+2, $y);
-		$pdf->MultiCell($width, $lineheight+2, usces_conv_euc(number_format($data->order['total_full_price'])), 1, 'C');
+		$pdf->MultiCell($width, $lineheight+2, usces_conv_euc($usces->get_currency($data->order['total_full_price'], true) . apply_filters( 'usces_filters_pdf_currency_post', $currency_post)), 1, 'C');
 		
 		// Message
 		$y = $pdf->GetY() + $lineheight;
@@ -316,7 +320,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		// Label
 		$y = 89.7;
 		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell(75, $lineheight, usces_conv_euc(__('明細書', 'usces')), $border, 'L');
+		$pdf->MultiCell(75, $lineheight, usces_conv_euc(__('Statement', 'usces')), $border, 'L');
 	}else{
 		$top = 35;
 		// Name of customer
@@ -329,19 +333,19 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$x = $leftside + $width;
 			$y = $pdf->GetY() - $lineheight;
 			$pdf->SetXY($x, $y);
-			$pdf->Write($lineheight ,usces_conv_euc(__("様", 'usces')));
+			$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ));
 			$y = $pdf->GetY() + $lineheight + $linetop + 2;
 		}else{
 			$pdf->MultiCell($width, $lineheight, usces_conv_euc($company), $border, 'L');
 			$x = $leftside + $width;
 			$y = $pdf->GetY() - $lineheight;
 			$pdf->SetXY($x, $y);
-			$pdf->Write($lineheight ,usces_conv_euc(__("御中", 'usces')));
+			$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor) ));
 			$y = $pdf->GetY() + $lineheight + $linetop;
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
 			$pdf->SetXY($leftside, $y);
-			$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("ご担当：", 'usces') . $data->customer['name1'].$data->customer['name2'] . __("様", 'usces')), $border, 'L');
+			$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn:", 'usces') . $data->customer['name1'].$data->customer['name2'] . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
 			$y = $pdf->GetY() + $linetop + 2;
 		}
 	
@@ -403,7 +407,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['company_name']), 0, 'L');
-	$pdf->MultiCell(60, $lineheight, usces_conv_euc('〒 '.$usces->options['zip_code']), 0, 'L');
+	$pdf->MultiCell(60, $lineheight, usces_conv_euc(__('zip code', 'usces').' '.$usces->options['zip_code']), 0, 'L');
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['address1']), 0, 'L');
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('TEL：'.$usces->options['tel_number']), 0, 'L');
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('FAX：'.$usces->options['fax_number']), 0, 'L');
@@ -413,6 +417,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 }
 //Footer
 function usces_pdfSetFooter($pdf, $data) {
+	global $usces;
 	$border = 0;
 
 
@@ -453,19 +458,19 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(16.1, 198.8);
 	$pdf->MultiCell(86.6, $lineheight, usces_conv_euc($data->order['note']), $border, 'J');
 	$pdf->SetXY(142.9, 198.8);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(number_format($data->order['item_total_price'])), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
 	$pdf->SetXY(142.9, 204.8);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(number_format($data->order['usedpoint'])), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['usedpoint'])), $border, 'R');
 	$pdf->SetXY(142.9, 210.8);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(number_format($data->order['discount'])), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['discount'])), $border, 'R');
 	$pdf->SetXY(142.9, 216.7);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(number_format($data->order['shipping_charge'])), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['shipping_charge'])), $border, 'R');
 	$pdf->SetXY(142.9, 222.7);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(number_format($data->order['cod_fee'])), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['cod_fee'])), $border, 'R');
 	$pdf->SetXY(142.9, 228.6);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(number_format($data->order['tax'])), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['tax'])), $border, 'R');
 	$pdf->SetXY(142.9, 235.8);
-	$pdf->MultiCell(22.67, $lineheight, usces_conv_euc(number_format($data->order['total_full_price'])), $border, 'R');
+	$pdf->MultiCell(22.67, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
 
 //	do_action( 'usces_action_order_print_footer', $pdf, $data);
 }

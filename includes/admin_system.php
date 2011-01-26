@@ -23,6 +23,7 @@ $inquiry_id = $this->options['inquiry_id'];
 $orderby_itemsku = isset($this->options['system']['orderby_itemsku']) ? $this->options['system']['orderby_itemsku'] : 0;
 $orderby_itemopt = isset($this->options['system']['orderby_itemopt']) ? $this->options['system']['orderby_itemopt'] : 0;
 $system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : get_locale();
+$system_currency =  ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : '';
 switch( $system_front_lang ){
 	case 'en':
 	case 'en_US':
@@ -171,7 +172,7 @@ function toggleVisibility(id) {
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_currency');"><?php _e('通貨表示', 'usces'); ?></a></th>
 		<td width="10"><select name="currency" id="currency">
 		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
-		    <option value="<?php echo $Ckey; ?>"<?php echo ($currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>
 		    <option value="manual"<?php echo ($front_lang == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
 		</select></td>

@@ -1923,4 +1923,17 @@ function usces_singleitem_error_message($post_id, $skukey, $out = ''){
 		echo $_SESSION['usces_singleitem']['error_message'][$post_id][$skukey];
 	}
 }
+
+function usces_cr($amount, $symbol_flag = false, $out = 'echo' ){
+	global $usces;
+	$price = $usces->get_currency($amount, $symbol_flag);
+	$res = apply_filters('usces_filter_cr', $price, $amount);
+		
+	if($out == 'return') {
+		return $res;
+	} else {
+		echo $res;
+	}
+}
+
 ?>

@@ -812,6 +812,7 @@ class usc_e_shop
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
 			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : get_locale();
+			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : "";
 			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
 			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
 
@@ -5461,6 +5462,19 @@ class usc_e_shop
 		}
 		return $res;
 	}
+	
+	function get_currency($amount, $symbol_flag = false ){
+		global $usces, $usces_settings;
+		$cr = $usces->options['system']['currency'];
+		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
+		if( $symbol_flag )
+			$price = $symbol . number_format($amount, $decimal, $point, $seperator);
+		else
+			$price = number_format($amount, $decimal, $point, $seperator);
+			
+		return $price;
+	}
+	
 	
 	//shortcode-----------------------------------------------------------------------------
 	function sc_company_name() {

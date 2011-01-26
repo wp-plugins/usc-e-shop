@@ -1449,6 +1449,9 @@ msgstr "有効期間：7日間"
 msgid "Invoices"
 msgstr "納品書"
 
+msgid "Invoice"
+msgstr "請求書"
+
 msgid "Thak you for choosing '%s'. We deliver your items as following."
 msgstr "この度は %s をご利用下さいましてありがとうございます。下記の通り納品いたします。"
 
@@ -1716,7 +1719,7 @@ msgstr "～はまだ登録されていせん。"
 msgid "Data for this date is not yet registered."
 msgstr "この日付のデータはまだ登録されていません。"
 
-msgid "Data by　～is not yet registered."
+msgid "Data by ~is not yet registered."
 msgstr "～によるデータはまだ登録されていません。"
 
 msgid "next article"
@@ -2615,6 +2618,28 @@ msgstr "出力したい形式を選択して、ダウンロードを押してく
 
 msgid "Not yet ready for the payment method. Please refer to a manager."
 msgstr "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
+
+msgid "Your payment has been received."
+msgstr "上記、正に受領いたしました。"
+
+# 請求書のメッセージ
+msgid "Please remit payment at your earliest convenience."
+msgstr "下記の通りご請求申し上げます。"
+
+# 各証書の購入明細のタイトル
+msgid "Statement"
+msgstr "明細書"
+
+# お客様が法人だった場合の担当者ラベル
+msgid "Attn:"
+msgstr "ご担当："
+
+msgid "Receipt"
+msgstr "領収書"
+
+# 請求書タイトル
+msgid "Bill"
+msgstr "請求書"
 
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
