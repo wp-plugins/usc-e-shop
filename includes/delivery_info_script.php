@@ -282,7 +282,10 @@ $html .= "
 							message = date_str+\"".__('の午後からご指定できます。', 'usces')."\";
 							break;
 						}
-						option += '<option value=\"0\">".__('No preference', 'usces')."</option>';
+//20110126ysk start
+						//option += '<option value=\"0\">".__('No preference', 'usces')."</option>';
+						option += '<option value=\"".__('No preference', 'usces')."\">".__('No preference', 'usces')."</option>';
+//20110126ysk end
 						for(var i = 0; i < delivery_after_days; i++) {
 							date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 							if(date_str == selected_delivery_date) {
