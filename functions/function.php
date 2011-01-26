@@ -739,11 +739,12 @@ function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
 //	$wpdb->show_errors();
 	
+		usces_log('test : 1'.print_r($usces, true), 'acting_transaction.log');
+		usces_log('test : 1'.print_r($_SESSION, true), 'acting_transaction.log');
 	$cart = $usces->cart->get_cart();
 	$entry = $usces->cart->get_entry();
 	if( empty($cart) )
 		return 0;
-	
 	
 	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 	$charging_flag = (  0 < (int)$chargings ) ? true : false;
@@ -1872,7 +1873,7 @@ function usces_check_acting_return() {
 		case 'paypal':
 			require_once($usces->options['settlement_path'] . "paypal.php");
 			$results = paypal_check($usces_paypal_url);
-	
+			remove_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 			break;
 			
 		case 'zeus_card':
