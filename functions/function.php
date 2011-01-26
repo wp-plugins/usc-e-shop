@@ -2852,7 +2852,10 @@ function usces_item_uploadcsv(){
 				case USCES_COL_POST_EXCERPT:
 					break;
 				case USCES_COL_POST_STATUS:
-					$array17 = array('publish', 'future', 'draft', 'pending');
+//20110126ysk start
+					//$array17 = array('publish', 'future', 'draft', 'pending');
+					$array17 = array('publish', 'future', 'draft', 'pending', 'private');
+//20110126ysk end
 					if( !in_array($data, $array17) || '' == $data )
 						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces')."\r\n";
 					break;
@@ -3219,6 +3222,13 @@ function usces_item_uploadcsv(){
 										WHERE term_id = %d", $category);
 				$term_taxonomy_id = $wpdb->get_var( $query );
 				if($term_taxonomy_id == NULL) continue;
+
+//20110126ysk start
+				$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
+							WHERE object_id = %d AND term_taxonomy_id = %d", $post_id, $term_taxonomy_id);
+				$ct = $wpdb->get_var( $query );
+				if($ct > 0) continue;
+//20110126ysk end
 
 				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
 								(object_id, term_taxonomy_id, term_order) VALUES 
