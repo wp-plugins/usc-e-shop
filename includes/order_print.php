@@ -314,12 +314,14 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		
 		// Message
 		$y = $pdf->GetY() + $lineheight;
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell($width+70, $lineheight, usces_conv_euc($message), $border, 'L');
 
 		// Label
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$y = 89.7;
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell(75, $lineheight, usces_conv_euc(__('Statement', 'usces')), $border, 'L');
@@ -380,12 +382,14 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		
 		// Message
 		$y = 77;
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell($width+70, $lineheight, usces_conv_euc($message), $border, 'L');
 	
 		// Order date
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$y = 89.7;
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell(75, $lineheight, usces_conv_euc($juchubi), $border, 'L');
@@ -454,13 +458,15 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(104.3, 235.8);
 	$pdf->MultiCell(37.77, $lineheight, usces_conv_euc(__('Total Amount', 'usces')), $border, 'C');
 
-	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
+	list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	// Footer value
 	$pdf->SetXY(16.1, 198.8);
 	$pdf->MultiCell(86.6, $lineheight, usces_conv_euc( apply_filters('usces_filter_pdf_note', $data->order['note'], $data, $_REQUEST['type'])), $border, 'J');
+	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
+	$pdf->SetFont(GOTHIC, '', $fontsize);
 	$pdf->SetXY(142.9, 198.8);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['item_total_price'])), $border, 'R');
 	$pdf->SetXY(142.9, 204.8);
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['usedpoint'])), $border, 'R');
 	$pdf->SetXY(142.9, 210.8);
