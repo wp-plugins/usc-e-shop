@@ -198,6 +198,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$title = __('Estimate', 'usces');
 			$message = sprintf(__("Thank you for choosing '%s' we send you following estimate. ", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
+			$message = apply_filters('usces_filter_pdf_estimate_message', $message, $data);
 			$juchubi = __('Valid:7days', 'usces');
 			$siharai = ' ';
 			$sign_image = apply_filters('usces_filter_pdf_estimate_sign', NULL);
@@ -208,6 +209,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$title = __('Invoice', 'usces');
 			$message = sprintf(__("Thak you for choosing '%s'. We deliver your items as following.", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
+			$message = apply_filters('usces_filter_pdf_invoice_message', $message, $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('F j, Y'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 			$sign_image = apply_filters('usces_filter_pdf_invoice_sign', NULL);
@@ -220,7 +222,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		
 		case 'receipt':
 			$title = __('Receipt', 'usces');
-			$message = apply_filters('usces_filter_pdf_receipt_message', __("Your payment has been received.", 'usces'));
+			$message = apply_filters('usces_filter_pdf_receipt_message', __("Your payment has been received.", 'usces'), $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('F j, Y'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 			$sign_image = apply_filters('usces_filter_pdf_receipt_sign', NULL);
@@ -229,7 +231,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		
 		case 'bill':
 			$title = __('Bill', 'usces');
-			$message = apply_filters('usces_filter_pdf_receipt_message', __("Please remit payment at your earliest convenience.", 'usces'));
+			$message = apply_filters('usces_filter_pdf_bill_message', __("Please remit payment at your earliest convenience.", 'usces'), $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('F j, Y'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 			$sign_image = apply_filters('usces_filter_pdf_bill_sign', NULL);
@@ -315,7 +317,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell($width+5, $lineheight, usces_conv_euc($message), $border, 'L');
+		$pdf->MultiCell($width+70, $lineheight, usces_conv_euc($message), $border, 'L');
 
 		// Label
 		$y = 89.7;
@@ -381,7 +383,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell($width+5, $lineheight, usces_conv_euc($message), $border, 'L');
+		$pdf->MultiCell($width+70, $lineheight, usces_conv_euc($message), $border, 'L');
 	
 		// Order date
 		$y = 89.7;
@@ -456,7 +458,7 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	// Footer value
 	$pdf->SetXY(16.1, 198.8);
-	$pdf->MultiCell(86.6, $lineheight, usces_conv_euc($data->order['note']), $border, 'J');
+	$pdf->MultiCell(86.6, $lineheight, usces_conv_euc( apply_filters('usces_filter_pdf_note', $data->order['note'], $data, $_REQUEST['type'])), $border, 'J');
 	$pdf->SetXY(142.9, 198.8);
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
 	$pdf->SetXY(142.9, 204.8);
