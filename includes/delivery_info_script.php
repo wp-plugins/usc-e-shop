@@ -9,6 +9,9 @@ $html .= '
 	jQuery(function($){
 		';
 */
+
+$shipping_indication = apply_filters('usces_filter_shipping_indication', array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0));
+
 $html .= '
 <script type="text/javascript">
 	//1桁の数字を0埋めで2桁にする
@@ -19,8 +22,14 @@ $html .= '
 	};
 	var selected_delivery_method = \'\';
 	var selected_delivery_date = \'\';
-	var selected_delivery_time = \'\';
-	var add_shipping = new Array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0);//発送日目安
+	var selected_delivery_time = \'\';	
+	var add_shipping = new Array(';
+$c = '';
+foreach($shipping_indication as $value){
+	$html .= $c.$value;
+	$c = ',';
+}
+$html .= ');//発送日目安
 
 	function addDate(year, month, day, add) {
 		var date = new Date(Number(year), (Number(month) - 1), Number(day));

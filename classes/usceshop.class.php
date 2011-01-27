@@ -114,7 +114,6 @@ class usc_e_shop
 		$this->member_status = get_option('usces_customer_status');
 		$this->payment_structure = get_option('usces_payment_structure');
 		$this->display_mode = get_option('usces_display_mode');
-		$this->shipping_rule = get_option('usces_shipping_rule');
 		define('USCES_MYSQL_VERSION', (int)substr(mysql_get_server_info(), 0, 1));
 		define('USCES_JP', ('ja' == get_locale() ? true : false));
 		
@@ -1537,6 +1536,10 @@ class usc_e_shop
 	function main() {
 		global $wpdb, $wp_locale, $wp_version, $post_ID;
 		global $wp_query, $usces_action, $post, $action, $editing;
+		
+		update_option('usces_shipping_rule', apply_filters('usces_filter_shipping_rule', get_option('usces_shipping_rule')));
+		$this->shipping_rule = get_option('usces_shipping_rule');
+
 
 		if( isset($_POST) && 1 !== preg_match('/plugin-editor\.php/', $_POST['_wp_http_referer']) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
