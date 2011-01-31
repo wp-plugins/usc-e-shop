@@ -27,7 +27,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				$pcid = NULL;
 				if( $this->is_member_logged_in() ){
 					$member = $this->get_member();
-					$pcid = $this->get_member_meta_value('remise_pcid', $member['ID']);
+					$pcid = $this->get_member_meta_value('zeus_pcid', $member['ID']);
 				}
 				if( 'on' == $this->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
 					$html .= '<input name="cnum1" type="hidden" value="8888" />
