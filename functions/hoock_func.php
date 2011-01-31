@@ -109,6 +109,14 @@ function usces_action_acting_transaction(){
 			$order_id = usces_reg_orderdata();
 			if( !$order_id ){
 				usces_log('zeus : Failure reg order data', 'acting_transaction.log');
+				$zeus_call = 'clientip='.$_REQUEST['clientip']."\n".
+				'ordd='.$_REQUEST['clientip']."\n".
+				'money='.$_REQUEST['clientip']."\n".
+				'telno='.$_REQUEST['clientip']."\n".
+				'email='.$_REQUEST['clientip']."\n".
+				'sendid='.$_REQUEST['clientip']."\n".
+				'sendpoint='.$_REQUEST['clientip'];
+				usces_log('cgi_call : '.$zeus_call, 'acting_transaction.log');
 				header("HTTP/1.0 400");
 				die('error');
 			}else{
