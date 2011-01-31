@@ -122,7 +122,17 @@ foreach((array)$default_deli as $key => $id) {
 	}
 }
 //20101208ysk end
-
+//20110131ysk start
+$business_days = 0;
+list($yy, $mm, $dd) = getToday();
+$business = $this->options['business_days'][$yy][$mm][$dd];
+while($business != 1) {
+	$business_days++;
+	list($yy, $mm, $dd) = getNextDay($yy, $mm, $dd);
+	$business = $this->options['business_days'][$yy][$mm][$dd];
+}
+$html .= 'var business_days = '.$business_days.';';
+//20110131ysk end
 
 $html .= 'selected_delivery_time = \'' . $usces_entries['order']['delivery_time'] . '\';
 		var delivery_time = [];delivery_time[0] = [];';
@@ -270,6 +280,12 @@ $html .= "
 						if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
 						}
+//20110131ysk start
+						//発送業務休日加算
+						if(0 < business_days) {
+							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], business_days);
+						}
+//20110131ysk end
 						//発送日目安加算
 						if(0 < add_shipping[shipping]) {
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], add_shipping[shipping]);

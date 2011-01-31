@@ -224,6 +224,9 @@ function cangeWday3(id, c) {
 			$mday = $cal1->getDateText($i, $d);
 			if ($mday != "") {
 				$business = $this->options['business_days'][$todayyy][$todaymm][$mday];
+//20110131ysk start
+				if(empty($business)) $business = '0';
+//20110131ysk end
 				$color = ($business == 1) ? "#DFFFDD" : "#FFECCE"; ?>
 				<td class="cal" style="background-color:<?php echo $color; ?>"><div onclick="cangeBus('calendar1', <?php echo ($i + 1); ?>, <?php echo $d; ?>);"><?php echo $mday; ?></div>
 				<input name="business_days[<?php echo $todayyy; ?>][<?php echo $todaymm; ?>][<?php echo $mday; ?>]" id="calendar1_<?php echo ($i+1); ?>_<?php echo $d; ?>" type="hidden" value="<?php echo $business; ?>"></td>
@@ -256,6 +259,9 @@ function cangeWday3(id, c) {
 			$mday = $cal2->getDateText($i, $d);
 			if ($mday != "") {
 				$business = $this->options['business_days'][$nextyy][$nextmm][$mday];
+//20110131ysk start
+				if(empty($business)) $business = '0';
+//20110131ysk end
 				$color = ($business == 1) ? "#DFFFDD" : "#FFECCE"; ?>
 				<td class="cal" style="background-color:<?php echo $color; ?>"><div onclick="cangeBus('calendar2', <?php echo ($i + 1); ?>, <?php echo $d; ?>);"><?php echo $mday; ?></div>
 				<input name="business_days[<?php echo $nextyy; ?>][<?php echo $nextmm; ?>][<?php echo $mday; ?>]" id="calendar2_<?php echo ($i+1); ?>_<?php echo $d; ?>" type="hidden" value="<?php echo $business; ?>"></td>
@@ -288,6 +294,9 @@ function cangeWday3(id, c) {
 			$mday = $cal3->getDateText($i, $d);
 			if ($mday != "") {
 				$business = $this->options['business_days'][$lateryy][$latermm][$mday];
+//20110131ysk start
+				if(empty($business)) $business = '0';
+//20110131ysk end
 				$color = ($business == 1) ? "#DFFFDD" : "#FFECCE"; ?>
 				<td class="cal" style="background-color:<?php echo $color; ?>"><div onclick="cangeBus('calendar3', <?php echo ($i + 1); ?>, <?php echo $d; ?>);"><?php echo $mday; ?></div>
 				<input name="business_days[<?php echo $lateryy; ?>][<?php echo $latermm; ?>][<?php echo $mday; ?>]" id="calendar3_<?php echo ($i+1); ?>_<?php echo $d; ?>" type="hidden" value="<?php echo $business; ?>"></td>
