@@ -143,11 +143,11 @@ if(!empty($meta) and is_array($meta)) {
 //20100809ysk end
 //20100818ysk end
 
-	
+$entry_order_note = empty($usces_entries['order']['note']) ? apply_filters('usces_filter_default_order_note', NULL) : $usces_entries['order']['note'];
 $html .= '<table class="customer_form" id="notes_table">
 	<tr>
 	<th scope="row">'.__('Notes', 'usces').'</th>
-	<td colspan="2"><textarea name="order[note]" id="note" class="notes">' . esc_html($usces_entries['order']['note']) . '</textarea></td>
+	<td colspan="2"><textarea name="order[note]" id="note" class="notes">' . esc_html($entry_order_note) . '</textarea></td>
 	</tr>
 	</table>
 
