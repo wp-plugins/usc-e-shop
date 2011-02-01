@@ -719,11 +719,11 @@ function usces_mail_custom_field_info( $custom_field, $position, $id ) {
 function usces_send_mail( $para ) {
 	global $usces;
 
-	$header = "From: " . $para['from_name'] . " <{$para['from_address']}>\r\n"
+	$header = "From: " . html_entity_decode($para['from_name'], ENT_QUOTES) . " <{$para['from_address']}>\r\n"
 //			."To: " . mb_convert_encoding($para['to_name'], "SJIS") . " <{$para['to_address']}>\r\n"
 			."Return-Path: {$para['return_path']}\r\n";
 
-	$subject = $para['subject'];
+	$subject = html_entity_decode($para['subject'], ENT_QUOTES);
 	$message = $para['message'];
 	
 	ini_set( "SMTP", "{$usces->options['smtp_hostname']}" );
@@ -751,7 +751,6 @@ function usces_reg_orderdata( $results = array() ) {
 	$entry = $usces->cart->get_entry();
 	if( empty($cart) )
 		return 0;
-	
 	
 	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 	$charging_flag = (  0 < (int)$chargings ) ? true : false;
@@ -873,7 +872,8 @@ function usces_reg_orderdata( $results = array() ) {
 	}
 
 	if ( !$order_id ) :
-	
+		
+		usces_log('reg_error_entry : '.print_r($entry, true), 'acting_transaction.log');
 		return false;
 		
 	else :
@@ -2039,7 +2039,7 @@ function usces_check_acting_return() {
 		case 'paypal':
 			require_once($usces->options['settlement_path'] . "paypal.php");
 			$results = paypal_check($usces_paypal_url);
-	
+			remove_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 			break;
 			
 		case 'zeus_card':
