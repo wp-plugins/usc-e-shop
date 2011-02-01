@@ -22,7 +22,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			require_once($this->options['settlement_path'] . "paypal.php");
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
 			$html .= '</form>
 				<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">

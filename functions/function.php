@@ -711,11 +711,11 @@ function usces_mail_custom_field_info( $custom_field, $position, $id ) {
 function usces_send_mail( $para ) {
 	global $usces;
 
-	$header = "From: " . $para['from_name'] . " <{$para['from_address']}>\r\n"
+	$header = "From: " . html_entity_decode($para['from_name'], ENT_QUOTES) . " <{$para['from_address']}>\r\n"
 //			."To: " . mb_convert_encoding($para['to_name'], "SJIS") . " <{$para['to_address']}>\r\n"
 			."Return-Path: {$para['return_path']}\r\n";
 
-	$subject = $para['subject'];
+	$subject = html_entity_decode($para['subject'], ENT_QUOTES);
 	$message = $para['message'];
 	
 	ini_set( "SMTP", "{$usces->options['smtp_hostname']}" );
@@ -739,8 +739,6 @@ function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
 //	$wpdb->show_errors();
 	
-		usces_log('test : 1'.print_r($usces, true), 'acting_transaction.log');
-		usces_log('test : 1'.print_r($_SESSION, true), 'acting_transaction.log');
 	$cart = $usces->cart->get_cart();
 	$entry = $usces->cart->get_entry();
 	if( empty($cart) )
@@ -822,7 +820,8 @@ function usces_reg_orderdata( $results = array() ) {
 	}
 
 	if ( !$order_id ) :
-	
+		
+		usces_log('reg_error_entry : '.print_r($entry, true), 'acting_transaction.log');
 		return false;
 		
 	else :
@@ -2853,10 +2852,7 @@ function usces_item_uploadcsv(){
 				case USCES_COL_POST_EXCERPT:
 					break;
 				case USCES_COL_POST_STATUS:
-//20110126ysk start
-					//$array17 = array('publish', 'future', 'draft', 'pending');
-					$array17 = array('publish', 'future', 'draft', 'pending', 'private');
-//20110126ysk end
+					$array17 = array('publish', 'future', 'draft', 'pending');
 					if( !in_array($data, $array17) || '' == $data )
 						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces')."\r\n";
 					break;
@@ -3223,13 +3219,6 @@ function usces_item_uploadcsv(){
 										WHERE term_id = %d", $category);
 				$term_taxonomy_id = $wpdb->get_var( $query );
 				if($term_taxonomy_id == NULL) continue;
-
-//20110126ysk start
-				$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
-							WHERE object_id = %d AND term_taxonomy_id = %d", $post_id, $term_taxonomy_id);
-				$ct = $wpdb->get_var( $query );
-				if($ct > 0) continue;
-//20110126ysk end
 
 				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
 								(object_id, term_taxonomy_id, term_order) VALUES 
