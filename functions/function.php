@@ -2735,7 +2735,13 @@ function usces_item_uploadcsv(){
 	foreach($lines as $rows_num => $line){
 		$datas = array();
 		$logtemp = '';
-		$datas = explode($sp, $line);
+//20110201ysk start
+		//$datas = explode($sp, $line);
+		$d = explode($sp, $line);
+		foreach($d as $key => $data) {
+			$datas[$key] = trim($data, '"');
+		}
+//20110201ysk end
 //		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
 		if( $min_field_num > count($datas) ){
 			$err_num++;
