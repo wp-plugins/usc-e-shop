@@ -509,7 +509,7 @@ class usc_e_shop
 			case 'delete':
 				$res = usces_delete_memberdata();
 				if ( 1 === $res ) {
-					$this->set_action_status('success', __('the member data is deleted','usces'));
+					$this->set_action_status('success', __('The member data is deleted','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {

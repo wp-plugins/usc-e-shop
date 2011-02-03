@@ -2682,6 +2682,9 @@ msgstr "商品合計額及び手数料などにも適用"
 msgid "To add a subject title at the first line"
 msgstr "１行目に項目名を追加する"
 
+msgid "The member data is deleted"
+msgstr "会員データを削除しました。"
+
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
 #~ msgid "% Comments &#187;"
