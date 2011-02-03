@@ -197,6 +197,48 @@ function usces_get_conv_name($code){
 	return $name;
 }
 
+function usces_get_remise_conv_return($code){
+	switch($code){
+		case 'D001': //セブンイレブン
+			$html = '<tr><th>' . __('払込番号','usces') . '</th><td>' . esc_html($_REQUEST["X-PAY_NO1"]) . "</td></tr>\n";
+			$html .= '<tr><th>'.__('払込票のURL', 'usces').'</th><td><a href="'.esc_html($_REQUEST["X-PAY_NO2"]).'" target="_blank">'.esc_html($_REQUEST["X-PAY_NO2"])."</a></td></tr>\n";
+			break;
+		case 'D002': //ローソン
+		case 'D015': //セイコーマート
+		case 'D405': //ペイジー
+			$html = '<tr><th>' . __('受付番号','usces') . '</th><td>' . esc_html($_REQUEST["X-PAY_NO1"]) . "</td></tr>\n";
+			$html .= '<tr><th>'.__('支払方法案内URL', 'usces').'</th><td><a href="'.esc_html($_REQUEST["X-PAY_NO2"]).'" target="_blank">'.esc_html($_REQUEST["X-PAY_NO2"])."</a></td></tr>\n";
+			break;
+		case 'D003': //サンクス
+		case 'D004': //サークルK
+		case 'D005': //ミニストップ
+		case 'D010': //デイリーヤマザキ
+		case 'D011': //ヤマザキデイリーストア
+			$html = '<tr><th>' . __('決済番号','usces') . '</th><td>' . esc_html($_REQUEST["X-PAY_NO1"]) . "</td></tr>\n";
+			$html .= '<tr><th>'.__('支払方法案内URL', 'usces').'</th><td><a href="'.esc_html($_REQUEST["X-PAY_NO2"]).'" target="_blank">'.esc_html($_REQUEST["X-PAY_NO2"])."</a></td></tr>\n";
+			break;
+		case 'D030': //ファミリーマート
+			$html = '<tr><th>' . __('コード','usces') . '</th><td>' . esc_html($_REQUEST["X-PAY_NO1"]) . "</td></tr>\n";
+			$html .= '<tr><th>'.__('注文番号', 'usces').'</th><td>'.esc_html($_REQUEST["X-PAY_NO2"])."</td></tr>\n";
+			break;
+		case 'D401': //CyberEdy
+		case 'D404': //楽天銀行
+		case 'D406': //ジャパネット銀行
+		case 'D451': //ウェブマネー
+		case 'D452': //ビットキャッシュ
+			$html = '<tr><th>' . __('受付番号','usces') . '</th><td>' . esc_html($_REQUEST["X-PAY_NO1"]) . "</td></tr>\n";
+			$html .= '<tr><th>'.__('支払手続URL', 'usces').'</th><td><a href="'.esc_html($_REQUEST["X-PAY_NO2"]).'" target="_blank">'.esc_html($_REQUEST["X-PAY_NO2"])."</a></td></tr>\n";
+			break;
+		case 'P901': //コンビニ払込票
+		case 'P902': //コンビニ払込票（郵便振替対応）
+			$html = '<tr><th>' . __('受付番号','usces') . '</th><td>' . esc_html($_REQUEST["X-PAY_NO1"]) . "</td></tr>\n";
+			break;
+		default:
+			$html = '';
+	}
+	return $html;
+}
+
 function usces_payment_detail($usces_entries){
 	$payments = usces_get_payments_by_name( $usces_entries['order']['payment_name'] );
 	$acting_flag = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
@@ -445,12 +487,20 @@ function usces_download_member_list() {
 		$table_f = "";
 		$tr_h = "";
 		$tr_f = "";
-		$th_h1 = "";
-		$th_h = ",";
-		$th_f = "";
-		$td_h1 = "";
-		$td_h = ",";
-		$td_f = "";
+//20110201ysk start
+		//$th_h1 = "";
+		$th_h1 = '"';
+		//$th_h = ",";
+		$th_h = ',"';
+		//$th_f = "";
+		$th_f = '"';
+		//$td_h1 = "";
+		$td_h1 = '"';
+		//$td_h = ",";
+		$td_h = ',"';
+		//$td_f = "";
+		$td_f = '"';
+//20110201ysk end
 		$lf = "\n";
 	} else {
 		exit();
@@ -716,12 +766,20 @@ function usces_download_product_list() {
 		$table_f = "";
 		$tr_h = "";
 		$tr_f = "";
-		$th_h1 = "";
-		$th_h = ",";
-		$th_f = "";
-		$td_h1 = "";
-		$td_h = ",";
-		$td_f = "";
+//20110201ysk start
+		//$th_h1 = "";
+		$th_h1 = '"';
+		//$th_h = ",";
+		$th_h = ',"';
+		//$th_f = "";
+		$th_f = '"';
+		//$td_h1 = "";
+		$td_h1 = '"';
+		//$td_h = ",";
+		$td_h = ',"';
+		//$td_f = "";
+		$td_f = '"';
+//20110201ysk end
 		$sp = ":";
 		$nb = " ";
 		$lf = "\n";
@@ -898,13 +956,21 @@ function usces_download_order_list() {
 		$table_f = "";
 		$tr_h = "";
 		$tr_f = "";
-		$th_h1 = "";
-		$th_h = ",";
-		$th_f = "";
-		$td_h1 = "";
-		$td_h = ",";
+//20110201ysk start
+		//$th_h1 = "";
+		$th_h1 = '"';
+		//$th_h = ",";
+		$th_h = ',"';
+		//$th_f = "";
+		$th_f = '"';
+		//$td_h1 = "";
+		$td_h1 = '"';
+		//$td_h = ",";
+		$td_h = ',"';
+		//$td_f = "";
+		$td_f = '"';
+//20110201ysk end
 		$sp = ":";
-		$td_f = "";
 		$lf = "\n";
 	} else {
 		exit();
@@ -1392,15 +1458,17 @@ function usces_download_order_list() {
 function usces_entity_decode($str, $ftype) {
 	$pos = strpos($str, '&');
 	if($pos !== false) $str = htmlspecialchars_decode($str);
-	if($ftype == 'xls') {
+//20110201ysk start
+	//if($ftype == 'xls') {
 		return str_replace('"', '""', $str);
-	} elseif($ftype == 'csv') {
-		if(substr($str, 0, 1) == '"' and substr($str, -1, 1) == '"') {
-			$str = '"""'.substr($str, 1);
-			$str = substr($str, 0, -1).'"""';
-		}
-		return $str;
-	}
+	//} elseif($ftype == 'csv') {
+	//	if(substr($str, 0, 1) == '"' and substr($str, -1, 1) == '"') {
+	//		$str = '"""'.substr($str, 1);
+	//		$str = substr($str, 0, -1).'"""';
+	//	}
+	//	return $str;
+	//}
+//20110201ysk end
 }
 //20100908ysk end
 //20101111ysk start
@@ -1428,13 +1496,21 @@ function usces_download_item_list() {
 		$table_f = "";
 		$tr_h = "";
 		$tr_f = "";
-		$th_h1 = "";
-		$th_h = ",";
-		$th_f = "";
-		$td_h1 = "";
-		$td_h = ",";
+//20110201ysk start
+		//$th_h1 = "";
+		$th_h1 = '"';
+		//$th_h = ",";
+		$th_h = ',"';
+		//$th_f = "";
+		$th_f = '"';
+		//$td_h1 = "";
+		$td_h1 = '"';
+		//$td_h = ",";
+		$td_h = ',"';
+		//$td_f = "";
+		$td_f = '"';
+//20110201ysk end
 		$sp = ";";
-		$td_f = "";
 		$lf = "\n";
 	} else {
 		exit();
