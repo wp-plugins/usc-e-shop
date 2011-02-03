@@ -165,7 +165,7 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('商品SKUの並び順', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('Order of Item SKU', 'usces'); ?></a></th>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku0" type="radio" value="0"<?php if($orderby_itemsku === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku0"><?php _e('SKU cord Order', 'usces'); ?></label></td>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku1" type="radio" value="1"<?php if($orderby_itemsku === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku1"><?php _e('Registration Order', 'usces'); ?></label></td>
 		<td><div id="ex_orderby_itemsku" class="explanation"><?php _e("You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'.", 'usces'); ?></div></td>
@@ -173,7 +173,7 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('商品オプションの並び順', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('Order of Item Option', 'usces'); ?></a></th>
 	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt0" type="radio" value="0"<?php if($orderby_itemopt === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt0"><?php _e('Optional excellent Order', 'usces'); ?></label></td>
 	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt1" type="radio" value="1"<?php if($orderby_itemopt === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt1"><?php _e('Registration Order', 'usces'); ?></label></td>
 		<td><div id="ex_orderby_itemopt" class="explanation"><?php _e("You can appoint a common option and the equal thing order of the item option. When You want to make it registered order, choose 'Registration Order'. The initial state becomes 'Optional excellent Order'.", 'usces'); ?></div></td>
