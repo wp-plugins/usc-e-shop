@@ -1153,8 +1153,8 @@ function usces_download_order_list() {
 			}
 		}
 	}
-	if(isset($_REQUEST['check']['delivery_name'])) $line .= $th_h.__('name', 'usces').$th_f;
-	if(isset($_REQUEST['check']['delivery_kana'])) $line .= $th_h.__('furigana', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_name'])) $line .= $th_h.__('Shipping Name', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_kana'])) $line .= $th_h.__('Shipping Furigana', 'usces').$th_f;
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
@@ -1163,13 +1163,13 @@ function usces_download_order_list() {
 			}
 		}
 	}
-	if(isset($_REQUEST['check']['delivery_zip'])) $line .= $th_h.__('Zip/Postal Code', 'usces').$th_f;
-	if(isset($_REQUEST['check']['delivery_pref'])) $line .= $th_h.__('Province', 'usces').$th_f;
-	if(isset($_REQUEST['check']['delivery_address1'])) $line .= $th_h.__('city', 'usces').$th_f;
-	if(isset($_REQUEST['check']['delivery_address2'])) $line .= $th_h.__('numbers', 'usces').$th_f;
-	if(isset($_REQUEST['check']['delivery_address3'])) $line .= $th_h.__('building name', 'usces').$th_f;
-	if(isset($_REQUEST['check']['delivery_tel'])) $line .= $th_h.__('Phone number', 'usces').$th_f;
-	if(isset($_REQUEST['check']['delivery_fax'])) $line .= $th_h.__('FAX number', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_zip'])) $line .= $th_h.__('Shipping Zip', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_pref'])) $line .= $th_h.__('Shipping State', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_address1'])) $line .= $th_h.__('Shipping City', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_address2'])) $line .= $th_h.__('Shipping Address1', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_address3'])) $line .= $th_h.__('Shipping Address2', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_tel'])) $line .= $th_h.__('Shipping Phone', 'usces').$th_f;
+	if(isset($_REQUEST['check']['delivery_fax'])) $line .= $th_h.__('Shipping FAX', 'usces').$th_f;
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
