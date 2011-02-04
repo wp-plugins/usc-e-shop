@@ -325,7 +325,7 @@ jQuery(document).ready(function($){
 	});
 	$('#dl_ord').click(function() {
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
-			+"&search[word]="+$(':input[name="search[word]"]').val()
+			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 			+"&search[period]="+$(':input[name="search[period]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_ord[]"]:checked').val();

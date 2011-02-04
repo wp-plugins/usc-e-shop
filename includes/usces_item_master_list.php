@@ -512,7 +512,7 @@ jQuery(document).ready(function($){
 <div id="dlItemListDialog" title="<?php _e('Download Item List', 'usces'); ?>">
 	<p><?php _e('Choose the file format, and push the download.', 'usces'); ?></p>
 	<fieldset>
-		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('最初の 1 行目にフィールドを追加する','usces'); ?></label>
+		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('To add a subject title at the first line','usces'); ?></label>
 	</fieldset>
 	<fieldset>
 <?php 

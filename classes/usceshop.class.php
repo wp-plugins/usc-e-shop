@@ -508,7 +508,7 @@ class usc_e_shop
 			case 'delete':
 				$res = usces_delete_memberdata();
 				if ( 1 === $res ) {
-					$this->set_action_status('success', __('the member data is deleted','usces'));
+					$this->set_action_status('success', __('The member data is deleted','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
@@ -2198,6 +2198,7 @@ class usc_e_shop
 	function acting_return(){
 		global $wp_query;
 		if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
+			usces_log('paypal_ipn : '.print_r($_REQUEST, true), 'acting_transaction.log');
 			require_once($this->options['settlement_path'] . 'paypal.php');
 			$ipn_res = paypal_ipn_check($usces_paypal_url);
 			if( $ipn_res[0] === true ){
@@ -4328,7 +4329,8 @@ class usc_e_shop
 	}
 
 	function acting_processing($acting_flg, $query) {
-
+		$entry = $this->cart->get_entry();
+		
 		$acting_flg = trim($acting_flg);
 		//$usces_entries = $this->cart->get_entry();
 
@@ -4352,6 +4354,7 @@ class usc_e_shop
 			}else{
 				$redirect = USCES_CART_URL;
 			}
+			usces_log('epsilon card entry data : '.print_r($entry, true), 'acting_transaction.log');
 			$query .= '&settlement=epsilon&redirect_url=' . urlencode($redirect);
 			$query = $this->delim . ltrim($query, '&');
 			header("location: " . $redirect . $query);
@@ -4399,6 +4402,7 @@ class usc_e_shop
 				fclose($fp);
 
 				if( false !== strpos( $page, 'Success_order') ){
+					usces_log('zeus card entry data : '.print_r($entry, true), 'acting_transaction.log');
 					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
 					exit;
 				}else{
@@ -4465,7 +4469,7 @@ class usc_e_shop
 				//usces_log('zeus page : '.$page, 'acting_transaction.log');
 
 				if( false !== strpos( $page, 'Success_order') ){
-					//usces_log('zeus query : '.$qstr, 'acting_transaction.log');
+					usces_log('zeus conv entry data : '.print_r($entry, true), 'acting_transaction.log');
 					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
 					exit;
 				}else{
