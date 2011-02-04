@@ -1445,9 +1445,6 @@ msgstr "有効期間：7日間"
 msgid "Invoices"
 msgstr "納品書"
 
-msgid "Invoice"
-msgstr "納品書"
-
 msgid "Thak you for choosing '%s'. We deliver your items as following."
 msgstr "この度は %s をご利用下さいましてありがとうございます。下記の通り納品いたします。"
 
@@ -2573,10 +2570,10 @@ msgstr "フロントエンドの言語"
 msgid "You can choose the language of the front-end.The language of the admin panel obeys config.php."
 msgstr "フロントエンドの言語を選択できます。管理パネルの方はconfig.php の設定に従います。"
 
-msgid "Order of SKU"
+msgid "Order of Item SKU"
 msgstr "商品SKUの並び順"
 
-msgid "Order of Item options"
+msgid "Order of Item Option"
 msgstr "商品オプションの並び順"
 
 msgid "You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'."
@@ -2616,7 +2613,7 @@ msgid "Not yet ready for the payment method. Please refer to a manager."
 msgstr "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
 
 #領収書のメッセージ
-msgid "Your payment has been received."
+msgid " Your payment has been received."
 msgstr "上記、正に受領いたしました。"
 
 #請求書のメッセージ
@@ -2628,7 +2625,7 @@ msgid "Statement"
 msgstr "明細書"
 
 #お客様が法人だった場合の担当者ラベル
-msgid "Attn:"
+msgid "Attn: :"
 msgstr "ご担当："
 
 #領収書タイトル
@@ -2636,6 +2633,56 @@ msgid "Receipt"
 msgstr "領収書"
 
 #請求書タイトル
-msgid "Bill"
+msgid "Invoice"
 msgstr "請求書"
 
+msgid "Shipping Name"
+msgstr "配送先氏名"
+
+msgid "Shipping Furigana"
+msgstr "配送先フリガナ"
+
+msgid "Shipping Zip"
+msgstr "配送先郵便番号"
+
+msgid "Shipping State"
+msgstr "配送先都道府県"
+
+msgid "Shipping City"
+msgstr "配送先市町村"
+
+msgid "Shipping Address1"
+msgstr "配送先番地"
+
+msgid "Shipping Address2"
+msgstr "配送先ビル名"
+
+msgid "Shipping Phone"
+msgstr "配送先電話番号"
+
+msgid "Shipping FAX"
+msgstr "配送先FAX番号"
+
+msgid "num"
+msgstr "数"
+
+msgid "rate"
+msgstr "率"
+
+msgid "Areas of Point Redemption"
+msgstr "ポイントの適用範囲"
+
+msgid "Limited Only to Total Merchandise Price"
+msgstr "商品合計額のみに制限"
+
+msgid "Applicable to Total Merchandise Price and Handling Fee"
+msgstr "商品合計額及び手数料などにも適用"
+
+msgid "To add a subject title at the first line"
+msgstr "１行目に項目名を追加する"
+
+msgid "The member data is deleted"
+msgstr "会員データを削除しました"
+
+msgid "Delivery date"
+msgstr "配送希望日"
