@@ -1845,6 +1845,7 @@ function usces_all_delete_order_data(&$obj){
 
 function usces_check_acting_return() {
 	global $usces;
+	$entry = $usces->cart->get_entry();
 
 	$acting = $_GET['acting'];
 	$results = array();
@@ -1876,7 +1877,7 @@ function usces_check_acting_return() {
 			break;
 			
 		case 'zeus_card':
-			$results = $_POST;
+			$results = $_REQUEST;
 			if( $_REQUEST['acting_return'] ){
 				$results[0] = 1;
 			}else{
@@ -1898,6 +1899,7 @@ function usces_check_acting_return() {
 		case 'remise_card':
 			$results = $_POST;
 			if( $_REQUEST['acting_return'] && '   ' == $_REQUEST['X-ERRCODE']){
+				usces_log('remise card entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;
@@ -1908,6 +1910,7 @@ function usces_check_acting_return() {
 		case 'remise_conv':
 			$results = $_GET;
 			if( $_REQUEST['acting_return'] && isset($_REQUEST['X-JOB_ID']) && '0:0000' == $_REQUEST['X-R_CODE']){
+				usces_log('remise conv entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;
