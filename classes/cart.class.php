@@ -251,6 +251,12 @@ class usces_cart {
 		foreach ( $array as $key => $value )
 			$_SESSION['usces_entry']['order'][$key] = $value;
 	}
+//20110203ysk start
+	// get entry information ***************************************************************
+	function get_order_entry( $key ) {
+		return $_SESSION['usces_entry']['order'][$key];
+	}
+//20110203ysk end
 	// entry information ***************************************************************
 	function entry() {
 	

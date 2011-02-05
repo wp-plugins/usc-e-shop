@@ -828,6 +828,40 @@ function usces_reg_orderdata( $results = array() ) {
 	
 		$usces->cart->set_order_entry( array('ID' => $order_id) );
 	
+//20110203ysk start
+		switch($_GET['acting']) {
+		case 'epsilon':
+			$trans_id = $_REQUEST['trans_code'];
+			break;
+		case 'paypal':
+			$trans_id = $_REQUEST['txn_id'];
+			break;
+		case 'zeus_card':
+			$trans_id = $_REQUEST['ordd'];
+			break;
+		case 'zeus_conv':
+		case 'zeus_bank':
+			$trans_id = $_REQUEST['order_no'];
+			break;
+		case 'remise_card':
+			$trans_id = $_REQUEST['X-TRANID'];
+			break;
+		case 'remise_conv':
+			$trans_id = $_REQUEST['X-JOB_ID'];
+			break;
+		case 'jpayment_card':
+		case 'jpayment_conv':
+		case 'jpayment_bank':
+			$trans_id = $_REQUEST['gid'];
+			break;
+		default:
+			$trans_id = '';
+		}
+		if(!empty($trans_id)) {
+			$usces->set_order_meta_value('trans_id', $trans_id, $order_id);
+		}
+//20110203ysk end
+
 		if ( $member['ID'] ) {
 		
 			$mquery = $wpdb->prepare(
@@ -1928,16 +1962,6 @@ function usces_check_acting_return() {
 			$results[0] = ($_GET['rst'] == 1 and $_GET['ap'] == 'CPL_PRE') ? 1 : 0;
 			break;
 
-		case 'jpayment_webm':
-			$results = $_GET;
-			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
-			break;
-
-		case 'jpayment_bitc':
-			$results = $_GET;
-			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
-			break;
-
 		case 'jpayment_bank':
 			$results = $_GET;
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
@@ -1957,6 +1981,44 @@ function usces_check_acting_return() {
 	
 	return $results;
 }
+//20110203ysk start
+function usces_check_acting_return_duplicate() {
+	global $wpdb;
+
+	switch($_GET['acting']) {
+	case 'epsilon':
+		$trans_id = $_REQUEST['trans_code'];
+		break;
+	case 'paypal':
+		$trans_id = $_REQUEST['txn_id'];
+		break;
+	case 'zeus_card':
+		$trans_id = $_REQUEST['ordd'];
+		break;
+	case 'zeus_conv':
+	case 'zeus_bank':
+		$trans_id = $_REQUEST['order_no'];
+		break;
+	case 'remise_card':
+		$trans_id = $_REQUEST['X-TRANID'];
+		break;
+	case 'remise_conv':
+		$trans_id = $_REQUEST['X-JOB_ID'];
+		break;
+	case 'jpayment_card':
+	case 'jpayment_conv':
+	case 'jpayment_bank':
+		$trans_id = $_REQUEST['gid'];
+		break;
+	default:
+		$trans_id = '';
+	}
+	$table_meta_name = $wpdb->prefix.'usces_order_meta';
+	$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'trans_id', $trans_id);
+	$order_id = $wpdb->get_var($query);
+	return $order_id;
+}
+//20110203ysk end
 
 function usces_item_dupricate($post_id){
 	global $wpdb;
@@ -3484,5 +3546,4 @@ function usces_trackPageview_deletemember($push){
 	$push[] = "'_trackPageview','/wc_deletemember'";
 	return $push;
 }
-
 ?>

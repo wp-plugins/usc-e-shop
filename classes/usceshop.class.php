@@ -4298,6 +4298,29 @@ class usc_e_shop
 	function order_processing( $results = array() ) {
 		do_action('usces_pre_reg_orderdata');
 		//db(function.php)
+//20110203ysk start
+		if(usces_check_acting_return_duplicate() != NULL) {
+			foreach( $_REQUEST as $key => $value ){
+				$data[$key] = $value;
+			}
+			usces_log('order processing duplicate : '.print_r($data, true), 'acting_transaction.log');
+			return 'ordercompletion';
+		}
+		switch($_REQUEST['acting']) {
+		case 'jpayment_card':
+			$entry = $this->cart->get_entry();
+			usces_log('jpayment card entry data : '.print_r($entry, true), 'acting_transaction.log');
+			break;
+		case 'jpayment_conv':
+			$entry = $this->cart->get_entry();
+			usces_log('jpayment conv entry data : '.print_r($entry, true), 'acting_transaction.log');
+			break;
+		case 'jpayment_bank':
+			$entry = $this->cart->get_entry();
+			usces_log('jpayment bank entry data : '.print_r($entry, true), 'acting_transaction.log');
+			break;
+		}
+//20110203ysk end
 		$order_id = usces_reg_orderdata( $results );
 		//var_dump($order_id);exit;
 		if ( $order_id ) {
