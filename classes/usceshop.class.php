@@ -4299,26 +4299,13 @@ class usc_e_shop
 		do_action('usces_pre_reg_orderdata');
 		//db(function.php)
 //20110203ysk start
-		if(usces_check_acting_return_duplicate() != NULL) {
-			foreach( $_REQUEST as $key => $value ){
-				$data[$key] = $value;
-			}
-			usces_log('order processing duplicate : '.print_r($data, true), 'acting_transaction.log');
+		$res = usces_check_acting_return_duplicate();
+		if($res != NULL) {
+			usces_log('order processing duplicate : acting='.$_REQUEST['acting'].', order_id='.$res, 'acting_transaction.log');
 			return 'ordercompletion';
 		}
-		switch($_REQUEST['acting']) {
-		case 'jpayment_card':
-			$entry = $this->cart->get_entry();
-			usces_log('jpayment card entry data : '.print_r($entry, true), 'acting_transaction.log');
-			break;
-		case 'jpayment_conv':
-			$entry = $this->cart->get_entry();
-			usces_log('jpayment conv entry data : '.print_r($entry, true), 'acting_transaction.log');
-			break;
-		case 'jpayment_bank':
-			$entry = $this->cart->get_entry();
-			usces_log('jpayment bank entry data : '.print_r($entry, true), 'acting_transaction.log');
-			break;
+		if(isset($_REQUEST['acting']) && ('jpayment_card' == $_REQUEST['acting'] || 'jpayment_conv' == $_REQUEST['acting'] || 'jpayment_bank' == $_REQUEST['acting'])) {
+			usces_log($_REQUEST['acting'].' transaction : '.$_REQUEST['gid'], 'acting_transaction.log');//OK
 		}
 //20110203ysk end
 		$order_id = usces_reg_orderdata( $results );

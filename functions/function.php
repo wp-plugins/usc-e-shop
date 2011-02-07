@@ -1954,16 +1954,25 @@ function usces_check_acting_return() {
 //20101018ysk start
 		case 'jpayment_card':
 			$results = $_GET;
+			if($_GET['rst'] == 2) {
+				usces_log('jpayment card entry error : '.print_r($entry, true), 'acting_transaction.log');
+			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
 			break;
 
 		case 'jpayment_conv':
 			$results = $_GET;
+			if($_GET['rst'] == 2) {
+				usces_log('jpayment conv entry error : '.print_r($entry, true), 'acting_transaction.log');
+			}
 			$results[0] = ($_GET['rst'] == 1 and $_GET['ap'] == 'CPL_PRE') ? 1 : 0;
 			break;
 
 		case 'jpayment_bank':
 			$results = $_GET;
+			if($_GET['rst'] == 2) {
+				usces_log('jpayment bank entry error : '.print_r($entry, true), 'acting_transaction.log');
+			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
 			break;
 //20101018ysk end
