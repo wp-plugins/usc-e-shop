@@ -534,9 +534,14 @@ jQuery(document).ready(function($){
 	if(!empty($cscs_meta)) {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
-				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_ord[$cscs_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -547,9 +552,14 @@ jQuery(document).ready(function($){
 	if(!empty($cscs_meta)) {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
-				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_ord[$cscs_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -565,9 +575,14 @@ jQuery(document).ready(function($){
 	if(!empty($cscs_meta)) {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
-				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_ord[$cscs_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -578,9 +593,14 @@ jQuery(document).ready(function($){
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
-				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_ord[$csde_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -591,9 +611,14 @@ jQuery(document).ready(function($){
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
-				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_ord[$csde_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -609,9 +634,14 @@ jQuery(document).ready(function($){
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
-				$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_ord[$csde_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -634,9 +664,14 @@ jQuery(document).ready(function($){
 <?php 
 	if(!empty($csod_meta)) {
 		foreach($csod_meta as $key => $entry) {
-			$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+			$csod_key = 'csod_'.$key;
+			//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
+			$checked = ($chk_ord[$csod_key] == 1) ? ' checked' : '';
 			$name = esc_attr($entry['name']);
-			echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+			echo '<label for="chk_ord['.$csod_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csod_key.']" value="'.$csod_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 		}
 	}
 ?>
