@@ -494,7 +494,7 @@ function usces_action_acting_transaction(){
 	//*** epsilon ***//
 	}elseif( !isset($_GET['acting_return']) && isset($_GET['trans_code']) && isset($_GET['user_id']) && isset($_GET['result']) && isset($_GET['order_number']) ){
 		$query = 'trans_code=' . $_GET['trans_code'] . '&user_id=' . $_GET['user_id'] . '&result=' . $_GET['result'] . '&order_number=' . $_GET['order_number'];
-		usces_log('epsilon : ' . $query, 'acting_transaction.log');
+		usces_log('epsilon (acting_transaction) : ' . $query, 'acting_transaction.log');
 		$permalink_structure = get_option('permalink_structure');
 		$delim = ( !$usces->use_ssl && $permalink_structure) ? '?' : '&';
 

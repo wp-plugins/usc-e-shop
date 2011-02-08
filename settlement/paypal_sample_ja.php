@@ -144,14 +144,6 @@ function paypal_ipn_check($usces_paypal_url) {
 	$txn_id = $_POST['txn_id'];
 	$receiver_email = $_POST['receiver_email'];
 	$payer_email = $_POST['payer_email'];
-	settlement_log($item_name);
-	settlement_log($item_number);
-	settlement_log($payment_status);
-	settlement_log($payment_amount);
-	settlement_log($payment_currency);
-	settlement_log($txn_id);
-	settlement_log($receiver_email);
-	settlement_log($payer_email);
 
 	$results = array();
 	if (!$fp) {
