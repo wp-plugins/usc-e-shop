@@ -43,9 +43,9 @@ class Welcart_login extends WP_Widget {
 		<a href="<?php echo USCES_LOSTMEMBERPASSWORD_URL; ?>" title="<?php _e('Pssword Lost and Found', 'usces'); ?>"><?php _e('Lost your password?', 'usces'); ?></a><br />
 		<a href="<?php echo USCES_NEWMEMBER_URL; ?>" title="<?php _e('New enrollment for membership.', 'usces'); ?>"><?php _e('New enrollment for membership.', 'usces'); ?></a>
 		<?php }else{ ?>
-		<?php echo sprintf(__('Mr/Mrs %s', 'usces'), usces_the_member_name()); ?><br />
+		<div><?php echo sprintf(__('Mr/Mrs %s', 'usces'), usces_the_member_name()); ?></div>
 		<?php echo usces_loginout(); ?><br />
-		<a href="<?php echo USCES_MEMBER_URL; ?>"><?php _e('Membership information','usces') ?></a>
+		<a href="<?php echo USCES_MEMBER_URL; ?>" class="login_widget_mem_info_a"><?php _e('Membership information','usces') ?></a>
 		<?php } ?>
 		</div>		
 		

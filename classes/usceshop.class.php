@@ -2197,14 +2197,19 @@ class usc_e_shop
 	
 	function acting_return(){
 		global $wp_query;
+		$entry = $this->cart->get_entry();
+		
 		if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
-			usces_log('paypal_ipn : '.print_r($_REQUEST, true), 'acting_transaction.log');
+			usces_log('paypal_ipn in ', 'acting_transaction.log');
 			require_once($this->options['settlement_path'] . 'paypal.php');
 			$ipn_res = paypal_ipn_check($usces_paypal_url);
 			if( $ipn_res[0] === true ){
 				$res = $this->order_processing( $ipn_res );
-				if( 'ordercompletion' == $res )
+				if( 'ordercompletion' == $res ){
 					$this->cart->crear_cart();
+				}else{
+					usces_log('paypal_ipn regorder error (acting_return) : '.print_r($entry, true), 'acting_transaction.log');
+				}
 			}
 			exit;
 		}
@@ -4315,6 +4320,16 @@ class usc_e_shop
 	function order_processing( $results = array() ) {
 		do_action('usces_pre_reg_orderdata');
 		//db(function.php)
+//20110203ysk start
+		$res = usces_check_acting_return_duplicate();
+		if($res != NULL) {
+			usces_log('order processing duplicate : acting='.$_REQUEST['acting'].', order_id='.$res, 'acting_transaction.log');
+			return 'ordercompletion';
+		}
+		if(isset($_REQUEST['acting']) && ('jpayment_card' == $_REQUEST['acting'] || 'jpayment_conv' == $_REQUEST['acting'] || 'jpayment_bank' == $_REQUEST['acting'])) {
+			usces_log($_REQUEST['acting'].' transaction : '.$_REQUEST['gid'], 'acting_transaction.log');//OK
+		}
+//20110203ysk end
 		$order_id = usces_reg_orderdata( $results );
 		//var_dump($order_id);exit;
 		if ( $order_id ) {
@@ -4339,11 +4354,11 @@ class usc_e_shop
 		
 		//include(USCES_PLUGIN_DIR . '/settlement/' . $acting_flg);
 		if($acting_flg == 'paypal.php'){
-			if( !file_exists($this->options['settlement_path'] . $acting_flg) )
-				return 'error';
-				
-			require_once($this->options['settlement_path'] . "paypal.php");
-			paypal_submit();
+//			if( !file_exists($this->options['settlement_path'] . $acting_flg) )
+//				return 'error';
+//				
+//			require_once($this->options['settlement_path'] . "paypal.php");
+//			paypal_submit();
 			
 		}else if($acting_flg == 'epsilon.php'){
 			if( !file_exists($this->options['settlement_path'] . $acting_flg) )
@@ -4354,7 +4369,7 @@ class usc_e_shop
 			}else{
 				$redirect = USCES_CART_URL;
 			}
-			usces_log('epsilon card entry data : '.print_r($entry, true), 'acting_transaction.log');
+			usces_log('epsilon card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 			$query .= '&settlement=epsilon&redirect_url=' . urlencode($redirect);
 			$query = $this->delim . ltrim($query, '&');
 			header("location: " . $redirect . $query);
@@ -4402,7 +4417,7 @@ class usc_e_shop
 				fclose($fp);
 
 				if( false !== strpos( $page, 'Success_order') ){
-					usces_log('zeus card entry data : '.print_r($entry, true), 'acting_transaction.log');
+					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
 					exit;
 				}else{
@@ -4469,7 +4484,7 @@ class usc_e_shop
 				//usces_log('zeus page : '.$page, 'acting_transaction.log');
 
 				if( false !== strpos( $page, 'Success_order') ){
-					usces_log('zeus conv entry data : '.print_r($entry, true), 'acting_transaction.log');
+					usces_log('zeus conv entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
 					exit;
 				}else{

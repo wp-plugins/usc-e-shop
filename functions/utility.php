@@ -517,7 +517,11 @@ function usces_download_member_list() {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
 				$name = $entry['name'];
-				$chk_mem[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//$chk_mem[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_mem[$csmb_key] = (isset($_REQUEST['check'][$csmb_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -527,7 +531,11 @@ function usces_download_member_list() {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
 				$name = $entry['name'];
-				$chk_mem[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//$chk_mem[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_mem[$csmb_key] = (isset($_REQUEST['check'][$csmb_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -542,7 +550,11 @@ function usces_download_member_list() {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
 				$name = $entry['name'];
-				$chk_mem[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//$chk_mem[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_mem[$csmb_key] = (isset($_REQUEST['check'][$csmb_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -579,7 +591,11 @@ function usces_download_member_list() {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$csmb_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -589,7 +605,11 @@ function usces_download_member_list() {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$csmb_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -604,7 +624,11 @@ function usces_download_member_list() {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$csmb_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -626,7 +650,10 @@ function usces_download_member_list() {
 				if($entry['position'] == 'name_pre') {
 					$name = $entry['name'];
 					$csmb_key = 'csmb_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$csmb_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_member_meta_value($csmb_key, $member_id));
 						if(empty($value)) {
 							$value = '';
@@ -651,7 +678,10 @@ function usces_download_member_list() {
 				if($entry['position'] == 'name_after') {
 					$name = $entry['name'];
 					$csmb_key = 'csmb_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$csmb_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_member_meta_value($csmb_key, $member_id));
 						if(empty($value)) {
 							$value = '';
@@ -681,7 +711,10 @@ function usces_download_member_list() {
 				if($entry['position'] == 'fax_after') {
 					$name = $entry['name'];
 					$csmb_key = 'csmb_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$csmb_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_member_meta_value($csmb_key, $member_id));
 						if(empty($value)) {
 							$value = '';
@@ -991,7 +1024,11 @@ function usces_download_order_list() {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
 				$name = $entry['name'];
-				$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_ord[$cscs_key] = (isset($_REQUEST['check'][$cscs_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -1001,7 +1038,11 @@ function usces_download_order_list() {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
 				$name = $entry['name'];
-				$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_ord[$cscs_key] = (isset($_REQUEST['check'][$cscs_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -1016,7 +1057,11 @@ function usces_download_order_list() {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
 				$name = $entry['name'];
-				$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_ord[$cscs_key] = (isset($_REQUEST['check'][$cscs_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -1025,7 +1070,11 @@ function usces_download_order_list() {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
 				$name = $entry['name'];
-				$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_ord[$csde_key] = (isset($_REQUEST['check'][$csde_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -1035,7 +1084,11 @@ function usces_download_order_list() {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
 				$name = $entry['name'];
-				$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_ord[$csde_key] = (isset($_REQUEST['check'][$csde_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -1050,7 +1103,11 @@ function usces_download_order_list() {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
 				$name = $entry['name'];
-				$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+				$chk_ord[$csde_key] = (isset($_REQUEST['check'][$csde_key])) ? 1 : 0;
+//20110208ysk end
 			}
 		}
 	}
@@ -1074,7 +1131,11 @@ function usces_download_order_list() {
 	if(!empty($csod_meta)) {
 		foreach($csod_meta as $key => $entry) {
 			$name = $entry['name'];
-			$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+//20110208ysk start
+			$csod_key = 'csod_'.$key;
+			//$chk_ord[$name] = (isset($_REQUEST['check'][$name])) ? 1 : 0;
+			$chk_ord[$csod_key] = (isset($_REQUEST['check'][$csod_key])) ? 1 : 0;
+//20110208ysk end
 		}
 	}
 	$usces_opt_order['chk_ord'] = $chk_ord;
@@ -1118,7 +1179,11 @@ function usces_download_order_list() {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$cscs_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -1128,7 +1193,11 @@ function usces_download_order_list() {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$cscs_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -1143,7 +1212,11 @@ function usces_download_order_list() {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$cscs_key = 'cscs_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$cscs_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -1152,7 +1225,11 @@ function usces_download_order_list() {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$csde_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -1162,7 +1239,11 @@ function usces_download_order_list() {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$csde_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -1177,7 +1258,11 @@ function usces_download_order_list() {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
 				$name = $entry['name'];
-				if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+				$csde_key = 'csde_'.$key;
+				//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+				if(isset($_REQUEST['check'][$csde_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 			}
 		}
 	}
@@ -1201,7 +1286,11 @@ function usces_download_order_list() {
 	if(!empty($csod_meta)) {
 		foreach($csod_meta as $key => $entry) {
 			$name = $entry['name'];
-			if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk start
+			$csod_key = 'csod_'.$key;
+			//if(isset($_REQUEST['check'][$name])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+			if(isset($_REQUEST['check'][$csod_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//20110208ysk end
 		}
 	}
 	$line .= $tr_f.$lf;
@@ -1226,7 +1315,10 @@ function usces_download_order_list() {
 				if($entry['position'] == 'name_pre') {
 					$name = $entry['name'];
 					$cscs_key = 'cscs_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$cscs_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_order_meta_value($cscs_key, $order_id));
 						if(empty($value)) {
 							$value = '';
@@ -1251,7 +1343,10 @@ function usces_download_order_list() {
 				if($entry['position'] == 'name_after') {
 					$name = $entry['name'];
 					$cscs_key = 'cscs_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$cscs_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_order_meta_value($cscs_key, $order_id));
 						if(empty($value)) {
 							$value = '';
@@ -1281,7 +1376,10 @@ function usces_download_order_list() {
 				if($entry['position'] == 'fax_after') {
 					$name = $entry['name'];
 					$cscs_key = 'cscs_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$cscs_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_order_meta_value($cscs_key, $order_id));
 						if(empty($value)) {
 							$value = '';
@@ -1305,7 +1403,10 @@ function usces_download_order_list() {
 				if($entry['position'] == 'name_pre') {
 					$name = $entry['name'];
 					$csde_key = 'csde_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$csde_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_order_meta_value($csde_key, $order_id));
 						if(empty($value)) {
 							$value = '';
@@ -1330,7 +1431,10 @@ function usces_download_order_list() {
 				if($entry['position'] == 'name_after') {
 					$name = $entry['name']."</td>";
 					$csde_key = 'csde_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$csde_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_order_meta_value($csde_key, $order_id));
 						if(empty($value)) {
 							$value = '';
@@ -1360,7 +1464,10 @@ function usces_download_order_list() {
 				if($entry['position'] == 'fax_after') {
 					$name = $entry['name'];
 					$csde_key = 'csde_'.$key;
-					if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+					//if(isset($_REQUEST['check'][$name])) {
+					if(isset($_REQUEST['check'][$csde_key])) {
+//20110208ysk end
 						$value = maybe_unserialize($usces->get_order_meta_value($csde_key, $order_id));
 						if(empty($value)) {
 							$value = '';
@@ -1422,7 +1529,10 @@ function usces_download_order_list() {
 			foreach($csod_meta as $key => $entry) {
 				$name = $entry['name'];
 				$csod_key = 'csod_'.$key;
-				if(isset($_REQUEST['check'][$name])) {
+//20110208ysk start
+				//if(isset($_REQUEST['check'][$name])) {
+				if(isset($_REQUEST['check'][$csod_key])) {
+//20110208ysk end
 					$value = maybe_unserialize($usces->get_order_meta_value($csod_key, $order_id));
 					if(empty($value)) {
 						$value = '';

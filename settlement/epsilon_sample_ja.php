@@ -90,7 +90,7 @@ if ($fp){
 	
 	if((int)$datas['result'] === 1){
 		$entry = $this->cart->get_entry();
-		settlement_log(print_r($entry, true));
+		settlement_log('epsilon module : ' . print_r($entry, true));
 		header("Location: " . $datas['redirect']);
 		exit;
 	}else{
