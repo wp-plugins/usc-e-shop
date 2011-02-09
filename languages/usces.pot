@@ -2613,7 +2613,7 @@ msgid "Not yet ready for the payment method. Please refer to a manager."
 msgstr "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
 
 #領収書のメッセージ
-msgid " Your payment has been received."
+msgid "Your payment has been received."
 msgstr "上記、正に受領いたしました。"
 
 #請求書のメッセージ

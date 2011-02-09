@@ -230,7 +230,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			break;
 		
 		case 'bill':
-			$title = __('Bill', 'usces');
+			$title = __('Invoice', 'usces');
 			$message = apply_filters('usces_filter_pdf_bill_message', __("Please remit payment at your earliest convenience.", 'usces'), $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('F j, Y'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
