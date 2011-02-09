@@ -25,7 +25,7 @@ class Welcart_page extends WP_Widget {
                       . $after_title; ?>
 					  
 		<ul class="ucart_widget_body">
-		<?php wp_list_pages(apply_filters('usces_filter_wc_widget_page_arg', 'title_li=&include=' . $instance['page'])) ; ?>
+		<?php wp_list_pages(apply_filters('usces_filter_wc_widget_page_arg', ('title_li=&include=' . $instance['page']), $instance['page'])) ; ?>
 		</ul>
 				  
               <?php echo $after_widget; ?>
