@@ -3469,6 +3469,18 @@ function usces_get_order_acting_data($rand){
 	}
 }
 
+function usces_get_filename( $path ){
+	$res = array();
+	if ( $handle = opendir($path) ) {
+		while (false !== ($file = readdir($handle))) {
+			if( '.' != $file && '..' != $file )
+				$res[] = $file;
+		}
+		closedir($handle);
+	}
+	return $res;	
+}
+
 function usces_get_wcex(){
 	if( defined('WCEX_DLSELLER_VERSION'))
 		$wcex['DLSELLER'] = array('name'=>'Dl Seller', 'version'=>WCEX_DLSELLER_VERSION);
