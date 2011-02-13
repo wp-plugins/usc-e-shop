@@ -3469,6 +3469,23 @@ function usces_get_order_acting_data($rand){
 	}
 }
 
+function usces_get_wcex(){
+	if( defined('WCEX_DLSELLER_VERSION'))
+		$wcex['DLSELLER'] = array('name'=>'Dl Seller', 'version'=>WCEX_DLSELLER_VERSION);
+	if( defined('WCEX_ITEM_LIST_LAYOUT_VERSION'))
+		$wcex['ITEM_LIST_LAYOUT'] = array('name'=>'Item List Layout', 'version'=>WCEX_ITEM_LIST_LAYOUT_VERSION);
+	if( defined('WCEX_MOBILE_VERSION'))
+		$wcex['MOBILE'] = array('name'=>'Mobile', 'version'=>WCEX_MOBILE_VERSION);
+	if( defined('WCEX_MULTIPRICE_VERSION'))
+		$wcex['MULTIPRICE'] = array('name'=>'Multi Price', 'version'=>WCEX_MULTIPRICE_VERSION);
+	if( defined('WCEX_SLIDE_SHOWCASE_VERSION'))
+		$wcex['SLIDE_SHOWCASE'] = array('name'=>'Slide Showcase', 'version'=>WCEX_SLIDE_SHOWCASE_VERSION);
+	if( defined('WCEX_WIDGET_CART_VERSION'))
+		$wcex['WIDGET_CART'] = array('name'=>'Widget Cart', 'version'=>WCEX_WIDGET_CART_VERSION);
+		
+	return $wcex;
+}
+
 function usces_trackPageview_cart($push){
 	$push[] = "'_trackPageview','/wc_cart'";
 	return $push;

@@ -1482,6 +1482,13 @@ class usc_e_shop
 			$payments_str .= "'" . $this->options['payment_method'][$id]['name'] . "': '" . $this->options['payment_method'][$id]['settlement'] . "', ";
 		}
 		$payments_str = rtrim($payments_str, ', ');
+		$wcex_str = '';
+		$wcex = usces_get_wcex();
+		foreach ( (array)$wcex as $key => $values ) {
+			$wcex_str .= "'" . $key . "-" . $values['version'] . "', ";
+		}
+		$wcex_str = rtrim($wcex_str, ', ');
+		$theme = get_theme_data( get_stylesheet_directory().'/style.css' );
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
@@ -1490,10 +1497,15 @@ class usc_e_shop
 			uscesL10n = {
 				'requestFile': "<?php echo get_option('siteurl'); ?>/wp-admin/admin-ajax.php",
 				'USCES_PLUGIN_URL': "<?php echo USCES_PLUGIN_URL; ?>",
+				'version': "<?php echo USCES_VERSION; ?>", 
+				'wcid': "<?php echo get_option('usces_wcid'); ?>", 
+				'locale': '<?php echo get_locale(); ?>', 
 				'cart_number': "<?php echo get_option('usces_cart_number'); ?>", 
 				'purchase_limit': "<?php echo $this->options['purchase_limit']; ?>", 
 				'point_rate': "<?php echo $this->options['point_rate']; ?>",
 				'shipping_rule': "<?php echo $this->options['shipping_rule']; ?>", 
+				'theme': "<?php echo $theme['Name'] . '-' . $theme['Version']; ?>", 
+				'wcex': new Array( <?php echo $wcex_str; ?> ), 
 				'now_loading': "<?php _e('now loading', 'usces'); ?>" 
 			};
 			uscesPayments = {<?php echo $payments_str; ?>};
