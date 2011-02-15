@@ -67,12 +67,12 @@ foreach ( $usces_member_history as $umhs ) {
 		<tr>
 		<td class="rightnum">' . $umhs['ID'] . '</td>
 		<td class="date">' . $umhs['date'] . '</td>
-		<td class="rightnum">' . number_format($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']) . '</td>
+		<td class="rightnum">' . usces_crform(($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, 'return') . '</td>
 		<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>
-		<td class="rightnum">' . number_format($umhs['discount']) . '</td>
-		<td class="rightnum">' . number_format($umhs['shipping_charge']) . '</td>
-		<td class="rightnum">' . number_format($umhs['cod_fee']) . '</td>
-		<td class="rightnum">' . number_format($umhs['tax']) . '</td>
+		<td class="rightnum">' . usces_crform($umhs['discount'], true, 'return') . '</td>
+		<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, 'return') . '</td>
+		<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, 'return') . '</td>
+		<td class="rightnum">' . usces_crform($umhs['tax'], true, 'return') . '</td>
 		<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>
 		</tr>';
 	$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
@@ -111,9 +111,9 @@ foreach ( $usces_member_history as $umhs ) {
 			<td>' . ($i + 1) . '</td>
 			<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
 			<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a></td>
-			<td class="rightnum">' . number_format($skuPrice) . '</td>
+			<td class="rightnum">' . usces_crform($skuPrice, true, 'return') . '</td>
 			<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
-			<td class="rightnum">' . number_format($skuPrice * $cart_row['quantity']) . '</td>
+			<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, 'return') . '</td>
 			</tr>';
 	}
 	$html .= '</table>

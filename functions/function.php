@@ -189,27 +189,27 @@ function usces_order_confirm_message($order_id) {
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
-		$msg_body .= __('‚¨Žx•¥æ', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
-		$msg_body .= __('ƒRƒ“ƒrƒjŽó•t”Ô†','usces').' : '.$args['no']."\r\n";
-		if($args['cv'] != '030') {//ƒtƒ@ƒ~ƒŠ[ƒ}[ƒgˆÈŠO
-			$msg_body .= __('ƒRƒ“ƒrƒjŽó•t”Ô†î•ñURL', 'usces').' : '.$args['cu']."\r\n";
+		$msg_body .= __('Ï”Ô', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('Ï‹z', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('x', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('RrjtÔ','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//t@~[}[gÈŠO
+			$msg_body .= __('RrjtÔURL', 'usces').' : '.$args['cu']."\r\n";
 		}
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('Ï”Ô', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('Ï‹z', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
-		$msg_body .= __('‹âsƒR[ƒh','usces').' : '.$bank[0]."\r\n";
-		$msg_body .= __('‹âs–¼','usces').' : '.$bank[1]."\r\n";
-		$msg_body .= __('Žx“XƒR[ƒh','usces').' : '.$bank[2]."\r\n";
-		$msg_body .= __('Žx“X–¼','usces').' : '.$bank[3]."\r\n";
-		$msg_body .= __('ŒûÀŽí•Ê','usces').' : '.$bank[4]."\r\n";
-		$msg_body .= __('ŒûÀ”Ô†','usces').' : '.$bank[5]."\r\n";
-		$msg_body .= __('ŒûÀ–¼‹`','usces').' : '.$bank[6]."\r\n";
-		$msg_body .= __('Žx•¥ŠúŒÀ','usces').' : '.substr($args['exp'], 0, 4).'”N'.substr($args['exp'], 4, 2).'ŒŽ'.substr($args['exp'], 6, 2)."“ú\r\n";
+		$msg_body .= __('sR[h','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('s','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('xXR[h','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('xX','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('Ô','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('`','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('x','usces').' : '.substr($args['exp'], 0, 4).'N'.substr($args['exp'], 4, 2).''.substr($args['exp'], 6, 2)."\r\n";
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 //20101018ysk end
 	}
@@ -383,27 +383,27 @@ function usces_send_ordermail($order_id) {
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
-		$msg_body .= __('‚¨Žx•¥æ', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
-		$msg_body .= __('ƒRƒ“ƒrƒjŽó•t”Ô†','usces').' : '.$args['no']."\r\n";
-		if($args['cv'] != '030') {//ƒtƒ@ƒ~ƒŠ[ƒ}[ƒgˆÈŠO
-			$msg_body .= __('ƒRƒ“ƒrƒjŽó•t”Ô†î•ñURL', 'usces').' : '.$args['cu']."\r\n";
+		$msg_body .= __('Ï”Ô', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('Ï‹z', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('x', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('RrjtÔ','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//t@~[}[gÈŠO
+			$msg_body .= __('RrjtÔURL', 'usces').' : '.$args['cu']."\r\n";
 		}
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ŒˆÏ”Ô†', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ŒˆÏ‹àŠz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('Ï”Ô', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('Ï‹z', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
-		$msg_body .= __('‹âsƒR[ƒh','usces').' : '.$bank[0]."\r\n";
-		$msg_body .= __('‹âs–¼','usces').' : '.$bank[1]."\r\n";
-		$msg_body .= __('Žx“XƒR[ƒh','usces').' : '.$bank[2]."\r\n";
-		$msg_body .= __('Žx“X–¼','usces').' : '.$bank[3]."\r\n";
-		$msg_body .= __('ŒûÀŽí•Ê','usces').' : '.$bank[4]."\r\n";
-		$msg_body .= __('ŒûÀ”Ô†','usces').' : '.$bank[5]."\r\n";
-		$msg_body .= __('ŒûÀ–¼‹`','usces').' : '.$bank[6]."\r\n";
-		$msg_body .= __('Žx•¥ŠúŒÀ','usces').' : '.substr($args['exp'], 0, 4).'”N'.substr($args['exp'], 4, 2).'ŒŽ'.substr($args['exp'], 6, 2)."“ú\r\n";
+		$msg_body .= __('sR[h','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('s','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('xXR[h','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('xX','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('Ô','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('`','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('x','usces').' : '.substr($args['exp'], 0, 4).'N'.substr($args['exp'], 4, 2).''.substr($args['exp'], 6, 2)."\r\n";
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 //20101018ysk end
 	}
@@ -2951,13 +2951,13 @@ function usces_item_uploadcsv(){
 			//}
 			//20101208ysk
 			$res['status'] = 'error';
-			$res['message'] = __('Excel‚Å•Û‘¶‚µ‚È‚¨‚µ‚½ƒtƒ@ƒCƒ‹‚ðŽw’è‚µ‚Ä‚­‚¾‚³‚¢B', 'usces').$fname.'.'.$fext;
+			$res['message'] = __('ExcelÅ•Û‘È‚t@Cwè‚µÄ‚B', 'usces').$fname.'.'.$fext;
 			return $res;
 		} else {
 			$excel = new Spreadsheet_Excel_Reader();
 			$excel->read($workfile);
-			$rows = $excel->rowcount();//Å‘ås”
-			$cols = $excel->colcount();//Å‘å—ñ”
+			$rows = $excel->rowcount();//Å‘s
+			$cols = $excel->colcount();//Å‘
 			for($r = 1; $r <= $rows; $r++) {
 				$line = '';
 				for($c = 1; $c <= $cols; $c++) {
@@ -3125,7 +3125,7 @@ function usces_item_uploadcsv(){
 					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
 						//if( !preg_match($date_pattern, $data, $match) || strtotime($data) === false || strtotime($data) == -1 )
 						//	$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
-						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4Œ…‚ª”’l‚Ì‚Ý
+						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4lÌ‚
 							if(strtotime($data) === false)
 								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 						} else {
@@ -3265,7 +3265,7 @@ function usces_item_uploadcsv(){
 						}else{
 							//$cdatas[$key] = $data;
 
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4Œ…‚ª”’l‚Ì‚Ý
+							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4lÌ‚
 								$cdatas[$key] = $data;
 							} else {
 								$datetime = explode(' ', $data);
@@ -3281,7 +3281,7 @@ function usces_item_uploadcsv(){
 							$cdatas[$key] = gmdate('Y-m-d H:i:s');
 						}else{
 							//$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4Œ…‚ª”’l‚Ì‚Ý
+							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//æ“ª4lÌ‚
 								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
 							} else {
 								$datetime = explode(' ', $data);
@@ -3652,6 +3652,42 @@ function usces_get_filename( $path ){
 	return $res;	
 }
 
+function usces_locales(){
+	$res = array();
+	if ( $handle = opendir(USCES_PLUGIN_DIR.'/languages/') ) {
+		while (false !== ($file = readdir($handle))) {
+			if( '.' != $file && '..' != $file && preg_match('/^usces-(.+)\.mo$/', $file, $matches) ){
+				$res[] = $matches[1];
+			}
+		}
+		closedir($handle);
+	}
+	return $res;	
+}
+
+function usces_remove_filter(){
+	global $usces;
+	remove_action('the_post', array($usces, 'action_memberFilter'));
+	remove_action('the_post', array($usces, 'action_cartFilter'));
+	remove_action('the_post', array($usces, 'goDefaultPage'));
+	remove_filter('the_title', array($usces, 'filter_cartTitle'),20);
+	remove_filter('the_content', array($usces, 'filter_cartContent'),20);
+	remove_filter('the_title', array($usces, 'filter_memberTitle'),20);
+	remove_filter('the_content', array($usces, 'filter_memberContent'),20);
+}
+
+function usces_reset_filter(){
+	global $usces;
+	add_action('the_post', array($usces, 'action_memberFilter'));
+	add_action('the_post', array($usces, 'action_cartFilter'));
+	add_action('the_post', array($usces, 'goDefaultPage'));
+	add_filter('the_title', array($usces, 'filter_cartTitle'),20);
+	add_filter('the_content', array($usces, 'filter_cartContent'),20);
+	add_filter('the_title', array($usces, 'filter_memberTitle'),20);
+	add_filter('the_content', array($usces, 'filter_memberContent'),20);
+}
+
+
 function usces_get_wcex(){
 	if( defined('WCEX_DLSELLER_VERSION'))
 		$wcex['DLSELLER'] = array('name'=>'Dl Seller', 'version'=>WCEX_DLSELLER_VERSION);
@@ -3670,22 +3706,38 @@ function usces_get_wcex(){
 }
 
 function usces_trackPageview_cart($push){
-	$push[] = "'_trackPageview','/wc_cart'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_cart'";
+	}else{
+		$push[] = "'_trackPageview','/wc_cart'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_customer($push){
-	$push[] = "'_trackPageview','/wc_customer'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_customer'";
+	}else{
+		$push[] = "'_trackPageview','/wc_customer'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_delivery($push){
-	$push[] = "'_trackPageview','/wc_delivery'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_delivery'";
+	}else{
+		$push[] = "'_trackPageview','/wc_delivery'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_confirm($push){
-	$push[] = "'_trackPageview','/wc_confirm'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_confirm'";
+	}else{
+		$push[] = "'_trackPageview','/wc_confirm'";
+	}
 	return $push;
 }
 
@@ -3697,7 +3749,11 @@ function usces_trackPageview_ordercompletion($push){
 	$cart = unserialize($data['order_cart']);
 	$total_price = $usces->get_total_price( $cart ) - $data['order_discount'];
 	
-	$push[] = "'_trackPageview','/wc_ordercompletion'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_ordercompletion'";
+	}else{
+		$push[] = "'_trackPageview','/wc_ordercompletion'";
+	}
 	$push[] = "'_addTrans', '" . $order_id . "', '" . get_bloginfo('name') . "', '" . $total_price . "', '" . $data['order_tax'] . "', '" . $data['order_shipping_charge'] . "', '" . $data['order_address1'].$data['order_address2'] . "', '" . $data['order_pref'] . "', '" . get_locale() . "'";
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
@@ -3722,37 +3778,65 @@ function usces_trackPageview_ordercompletion($push){
 }
 
 function usces_trackPageview_error($push){
-	$push[] = "'_trackPageview','/wc_error'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_error'";
+	}else{
+		$push[] = "'_trackPageview','/wc_error'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_member($push){
-	$push[] = "'_trackPageview','/wc_member'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_member'";
+	}else{
+		$push[] = "'_trackPageview','/wc_member'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_login($push){
-	$push[] = "'_trackPageview','/wc_login'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_login'";
+	}else{
+		$push[] = "'_trackPageview','/wc_login'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_editmemberform($push){
-	$push[] = "'_trackPageview','/wc_editmemberform'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_editmemberform'";
+	}else{
+		$push[] = "'_trackPageview','/wc_editmemberform'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_newcompletion($push){
-	$push[] = "'_trackPageview','/wc_newcompletion'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_newcompletion'";
+	}else{
+		$push[] = "'_trackPageview','/wc_newcompletion'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_newmemberform($push){
-	$push[] = "'_trackPageview','/wc_newmemberform'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_newmemberform'";
+	}else{
+		$push[] = "'_trackPageview','/wc_newmemberform'";
+	}
 	return $push;
 }
 
 function usces_trackPageview_deletemember($push){
-	$push[] = "'_trackPageview','/wc_deletemember'";
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_deletemember'";
+	}else{
+		$push[] = "'_trackPageview','/wc_deletemember'";
+	}
 	return $push;
 }
 ?>

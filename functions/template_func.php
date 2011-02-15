@@ -1151,10 +1151,15 @@ function usces_is_login() {
 	return $usces->is_member_logged_in();
 }
 
-function usces_the_member_name() {
+function usces_the_member_name( $out = '') {
 	global $usces;
 	$usces->get_current_member();
-	echo esc_html($usces->current_member['name']);
+	$res = esc_html($usces->current_member['name']);
+	if( $out == 'return' ){
+		return $res;
+	}else{
+		echo $res;
+	}
 	
 }
 
@@ -1298,19 +1303,10 @@ function usces_list_bestseller($num, $days = ''){
 
 function usces_list_post( $slug, $rownum ){
 	global $usces;
+	usces_remove_filter();
 	
-	//$cat_id = usces_get_cat_id( $slug );
 	$li = '';
-	//$infolist = get_posts('category='.$cat_id.'&numberposts='.$rownum.'&order=DESC&orderby=post_date');
 	$infolist = new wp_query( array('category_name'=>$slug, 'post_status'=>'publish', 'posts_per_page'=>$rownum, 'order'=>DESC, 'orderby'=>'date') );
-	
-//	foreach ($infolist as $post) :
-//		$list = "<li>\n";
-//		$list .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . esc_html($post->post_title) . "</a></div>\n";
-//		$list .= "<p>" . $post->post_excerpt . "</p>\n";
-//		$list .= "</li>\n";
-//		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
-//	endforeach;
 	while ($infolist->have_posts()) {
 		$infolist->the_post();
 		$ipost = get_post ( $post->ID, 'attreibute' );
@@ -1321,6 +1317,7 @@ function usces_list_post( $slug, $rownum ){
 		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
 	}
 	wp_reset_query();
+	usces_reset_filter();
 	echo $li;
 }
 

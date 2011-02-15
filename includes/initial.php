@@ -202,11 +202,7 @@ update_option('usces', $usces_op);
 
 /************************************************************************/
 /* usces_settings */
-$usces_settings['language'] = array(
-					'en' => 'en_US',
-					'ja' => 'ja_JP',
-					'others' => __('Follow config.php', 'usces'),
-					);
+$usces_settings['language'] = array();
 $usces_settings['currency'] = array(
 					'CA' => array('CAD', 2, '.', ',', 'C$'),
 //					'FRF' => array(2, ',', ' ', '&#x20AC;'),

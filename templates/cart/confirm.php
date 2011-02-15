@@ -68,9 +68,9 @@ for($i=0; $i<count($cart); $i++) {
 		}
 	}
 	$html .= '</td>
-		<td class="aright">' . number_format($skuPrice) . '</td>
+		<td class="aright">' . usces_crform($skuPrice, true, 'return') . '</td>
 		<td>' . $cart_row['quantity'] . '</td>
-		<td class="aright">' . number_format($skuPrice * $cart_row['quantity']) . '</td>
+		<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, 'return') . '</td>
 		<td>';
 	$html = apply_filters('usces_additional_confirm', $html, array($i, $post_id, $cart_row['sku']));
 	$html .= '</td>
@@ -81,7 +81,7 @@ $html .= '</tbody>
 	<tfoot>
 	<tr>
 		<th colspan="5" class="aright">'.__('total items', 'usces').'</th>
-		<th class="aright">' . number_format($usces_entries['order']['total_items_price']) . '</th>
+		<th class="aright">' . usces_crform($usces_entries['order']['total_items_price'], true, 'return') . '</th>
 		<th>&nbsp;</th>
 	</tr>';
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($usces_entries['order']['usedpoint']) ) {
@@ -119,7 +119,7 @@ if( !empty($usces_entries['order']['tax']) ) {
 }
 $html .= '<tr>
 	<th colspan="5" class="aright">'.__('Total Amount', 'usces').'</th>
-	<th class="aright">' . number_format($usces_entries['order']['total_full_price']) . '</th>
+	<th class="aright">' . usces_crform($usces_entries['order']['total_full_price'], true, 'return') . '</th>
 	<th>&nbsp;</th>
 	</tr>
 	</tfoot>

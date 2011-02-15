@@ -16,7 +16,7 @@ class usc_e_shop
 
 	function usc_e_shop()
 	{
-		global $post;
+		global $post, $usces_settings;
 		do_action('usces_construct');
 		$this->usces_session_start();
 		
@@ -28,6 +28,12 @@ class usc_e_shop
 		}
 		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
 		$this->check_display_mode();
+		
+		$locales = usces_locales();
+		foreach($locales as $l){
+			$usces_settings['language'][$l] = $l;
+		}
+		$usces_settings['language']['others'] = __('Follow config.php', 'usces');
 		
 		$this->options = get_option('usces');
 		if(!isset($this->options['smtp_hostname']) || empty($this->options['smtp_hostname'])){ $this->options['smtp_hostname'] = 'localhost';}
@@ -1556,7 +1562,7 @@ class usc_e_shop
 		$this->shipping_rule = get_option('usces_shipping_rule');
 
 
-		if( isset($_POST) && 1 !== preg_match('/plugin-editor\.php/', $_POST['_wp_http_referer']) ){
+		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_POST['_wp_http_referer']) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
 		}
 		
@@ -5506,8 +5512,8 @@ class usc_e_shop
 	}
 	
 	function get_currency($amount, $symbol_flag = false ){
-		global $usces, $usces_settings;
-		$cr = $usces->options['system']['currency'];
+		global $usces_settings;
+		$cr = $this->options['system']['currency'];
 		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
 		if( $symbol_flag )
 			$price = $symbol . number_format($amount, $decimal, $point, $seperator);
@@ -5738,7 +5744,7 @@ class usc_e_shop
 	
 	function action_cartFilter(){
 		add_filter('the_title', array($this, 'filter_cartTitle'),20);
-		add_filter('the_content', array($this, 'filter_cartContent'),21);
+		add_filter('the_content', array($this, 'filter_cartContent'),20);
 	}
 		
 	function action_search_item(){
