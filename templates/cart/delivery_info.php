@@ -4,7 +4,7 @@ $usces_secure_link = get_option('usces_secure_link');
 $html = '';
 
 if( $this->use_js )
-	require_once( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
+	require( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
 
 $html .= '<div id="delivery-info">
 	
@@ -125,7 +125,7 @@ $html .= '<tr>
 	</tr>
 	</table>';
 	
-require_once( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
+require( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
 //20100818ysk start
 //20100809ysk start
 //require_once( USCES_PLUGIN_DIR . "/includes/delivery_custom_order_form.php");

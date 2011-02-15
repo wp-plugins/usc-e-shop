@@ -2412,15 +2412,20 @@ class usc_e_shop
 			$this->page = 'member';
 			add_filter('the_content', array($this, 'filter_memberContent'),20);
 		
-		}/*else if( is_category() ) {
-		
-//			$this->page = 'category_item';
-//			add_filter('the_content', array($this, 'filter_cartContent'),20);
-		
-		}*/else if( !is_singular() ) {
+		}else if( !is_singular() ) {
 			$this->page = 'wp_search';
 			add_filter('the_excerpt', array($this, 'filter_cartContent'),20);
 			add_filter('the_content', array($this, 'filter_cartContent'),20);
+		}
+	}
+	
+	function template_redirect () {
+		global $post;
+		if( is_single() && 'item' == $post->post_mime_type ) {
+			if( file_exists(get_stylesheet_directory() . '/wc_item_single.php') ){
+				include(get_stylesheet_directory() . '/wc_item_single.php');
+				exit;
+			}
 		}
 	}
 	

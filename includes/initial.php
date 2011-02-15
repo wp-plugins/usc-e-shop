@@ -212,7 +212,7 @@ $usces_settings['currency'] = array(
 //					'FRF' => array(2, ',', ' ', '&#x20AC;'),
 //					'GBP' => array(2, '.', ',', '£'),
 //					'IDR' => array(2, '.', ',', 'Rp'),
-					'JP' => array('JPY', 0, '.', ',', '\\'),
+					'JP' => array('JPY', 0, '.', ',', '&yen;'),
 					'US' => array('USD', 2, '.', ',', 'US$'),
 					);
 $usces_settings['country'] = array(

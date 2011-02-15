@@ -34,7 +34,7 @@ if($this->cart->num_row() > 0) {
 			<th>' . __('item name','usces') . '</th>
 			<th class="quantity">' . __('Unit price','usces') . '</th>
 			<th class="quantity">' . __('Quantity','usces') . '</th>
-			<th class="subtotal">' . __('Amount','usces') . $this->getGuidTax() . '</th>
+			<th class="subtotal">' . __('Amount','usces') . usces_guid_tax('return') . '</th>
 			<th class="stock">' . __('stock status','usces') . '</th>
 			<th class="action"> </th>
 		</tr>
@@ -84,10 +84,10 @@ if($this->cart->num_row() > 0) {
 			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
 			$html .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
 		}
-		$html .= number_format($skuPrice) . '
+		$html .= usces_crform($skuPrice, true, 'return') . '
 			</td>
 			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
-			<td class="aright">' . number_format($skuPrice * $cart_row['quantity']) . '</td>
+			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, 'return') . '</td>
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';
 		foreach($options as $key => $value){
@@ -108,8 +108,8 @@ if($this->cart->num_row() > 0) {
 	$html .= '</tbody>
 		<tfoot>
 		<tr>
-			<th colspan="5" scope="row" class="aright">' . __('total items','usces') . $this->getGuidTax() . '</th>
-			<th class="aright">' . number_format($this->get_total_price()) . '</th>
+			<th colspan="5" scope="row" class="aright">' . __('total items','usces') . usces_guid_tax('return') . '</th>
+			<th class="aright">' . usces_crform($this->get_total_price(), true, 'return') . '</th>
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		</tfoot>

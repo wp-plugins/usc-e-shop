@@ -81,9 +81,8 @@ add_filter('usces_filter_memberinfo_page_header', array(&$usces, 'filter_memberi
 add_filter('usces_filter_memberinfo_page_footer', array(&$usces, 'filter_memberinfo_page_footer'));
 add_filter('usces_filter_membercompletion_page_header', array(&$usces, 'filter_membercompletion_page_header'));
 add_filter('usces_filter_membercompletion_page_footer', array(&$usces, 'filter_membercompletion_page_footer'));
+add_action('template_redirect', array($usces, 'template_redirect'));
 add_filter('the_content', array(&$usces, 'filter_itemPage'));
-//add_filter('post_link', array(&$usces, 'filter_permalink'));
-//add_filter('page_link', array(&$usces, 'filter_permalink'));
 if( $usces->options['itemimg_anchor_rel'] )
 	add_filter('usces_itemimg_anchor_rel', array(&$usces, 'filter_itemimg_anchor_rel'));
 	

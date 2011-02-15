@@ -1,7 +1,12 @@
 <?php
-function usces_guid_tax() {
+function usces_guid_tax( $out = '' ){
 	global $usces;
-	echo $usces->getGuidTax();
+
+	if( $out == 'return' ){
+		return $usces->getGuidTax();
+	}else{
+		echo $usces->getGuidTax();
+	}
 }
 
 function usces_currency_symbol() {
@@ -155,26 +160,64 @@ function usces_have_skus() {
 	}
 }
 
-function usces_the_itemSku() {
+function usces_the_itemSku($out = '') {
 	global $usces;
-	echo esc_html($usces->itemsku['key']);
+
+	if($out == 'return'){
+		return $usces->itemsku['key'];
+	}else{
+		echo esc_attr($usces->itemsku['key']);
+	}
 }
 
-function usces_the_itemPrice($flg = '') {
+function usces_the_itemPrice($out = '') {
 	global $usces;
-	if($flg == 'return'){
+	if($out == 'return'){
 		return $usces->itemsku['value']['price'];
 	}else{
 		echo number_format($usces->itemsku['value']['price']);
 	}
 }
 
-function usces_the_itemCprice($flg = '') {
+function usces_the_itemCprice($out = '') {
 	global $usces;
-	if($flg == 'return'){
+	if($out == 'return'){
 		return $usces->itemsku['value']['cprice'];
 	}else{
 		echo number_format($usces->itemsku['value']['cprice']);
+	}
+}
+
+function usces_the_itemPriceCr($out = '') {
+	global $usces;
+	$res = esc_html($usces->get_currency($usces->itemsku['value']['price'], true ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_the_itemCpriceCr($out = '') {
+	global $usces;
+	$res = esc_html($usces->get_currency($usces->itemsku['value']['cprice'], true ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_crform( $float, $symbol_flag = true, $out = '' ) {
+	global $usces;
+	$res = esc_html($usces->get_currency($float, $symbol_flag ));
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
 	}
 }
 
@@ -200,14 +243,24 @@ function usces_the_itemZaikoNum( $out = '' ) {
 	}
 }
 
-function usces_the_itemSkuDisp() {
+function usces_the_itemSkuDisp( $out = '' ) {
 	global $usces;
-	echo esc_html($usces->itemsku['value']['disp']);
+	
+	if( $out == 'return' ){
+		return $usces->itemsku['value']['disp'];
+	}else{
+		echo esc_html($usces->itemsku['value']['disp']);
+	}
 }
 
-function usces_the_itemSkuUnit() {
+function usces_the_itemSkuUnit( $out = '' ) {
 	global $usces;
-	echo esc_html($usces->itemsku['value']['unit']);
+	
+	if( $out == 'return' ){
+		return $usces->itemsku['value']['unit'];
+	}else{
+		echo esc_html($usces->itemsku['value']['unit']);
+	}
 }
 
 function usces_the_firstSku() {
@@ -247,6 +300,38 @@ function usces_the_firstCprice( $out = '', $post = NULL ) {
 		return $fields['cprice'][0];
 	}else{
 		echo number_format($fields['cprice'][0]);
+	}
+}
+
+function usces_the_firstPriceCr( $out = '', $post = NULL ) {
+	global $usces;
+	if($post == NULL)
+		global $post;
+	$post_id = $post->ID;
+	
+	$fields = $usces->get_skus( $post_id );
+	$res = esc_html($usces->get_currency($fields['price'][0], true ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_the_firstCpriceCr( $out = '', $post = NULL ) {
+	global $usces;
+	if($post == NULL)
+		global $post;
+	$post_id = $post->ID;
+	
+	$fields = $usces->get_skus( $post_id );
+	$res = esc_html($usces->get_currency($fields['cprice'][0], true ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
 	}
 }
 
@@ -629,9 +714,14 @@ function usces_getItemOptName() {
 	return $usces->itemopt['key'];
 }
 
-function usces_the_itemOptName() {
+function usces_the_itemOptName($out = '') {
 	global $usces;
-	echo esc_html($usces->itemopt['key']);
+
+	if($out == 'return'){
+		return $usces->itemopt['key'];
+	}else{
+		echo esc_html($usces->itemopt['key']);
+	}
 }
 
 function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
@@ -1209,16 +1299,28 @@ function usces_list_bestseller($num, $days = ''){
 function usces_list_post( $slug, $rownum ){
 	global $usces;
 	
-	$cat_id = usces_get_cat_id( $slug );
+	//$cat_id = usces_get_cat_id( $slug );
 	$li = '';
-	$infolist = get_posts('category='.$cat_id.'&numberposts='.$rownum.'&order=DESC&orderby=post_date');
-	foreach ($infolist as $post) :
+	//$infolist = get_posts('category='.$cat_id.'&numberposts='.$rownum.'&order=DESC&orderby=post_date');
+	$infolist = new wp_query( array('category_name'=>$slug, 'post_status'=>'publish', 'posts_per_page'=>$rownum, 'order'=>DESC, 'orderby'=>'date') );
+	
+//	foreach ($infolist as $post) :
+//		$list = "<li>\n";
+//		$list .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . esc_html($post->post_title) . "</a></div>\n";
+//		$list .= "<p>" . $post->post_excerpt . "</p>\n";
+//		$list .= "</li>\n";
+//		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
+//	endforeach;
+	while ($infolist->have_posts()) {
+		$infolist->the_post();
+		$ipost = get_post ( $post->ID, 'attreibute' );
 		$list = "<li>\n";
-		$list .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . esc_html($post->post_title) . "</a></div>\n";
-		$list .= "<p>" . $post->post_excerpt . "</p>\n";
+		$list .= "<div class='title'><a href='" . get_permalink($post->ID) . "'>" . $ipost->post_title . "</a></div>\n";
+		$list .= "<p>" . get_the_excerpt() . "</p>\n";
 		$list .= "</li>\n";
 		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
-	endforeach;
+	}
+	wp_reset_query();
 	echo $li;
 }
 
