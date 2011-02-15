@@ -456,6 +456,42 @@
 
 	};
 
+	uscesInformation = {
+		settings: {
+			url: 'http://www.welcart.com/util/welcart_information.php',
+			type: 'POST',
+			cache: false,
+			success: function(data, dataType){
+				//$("#newitemform").html( data );
+
+			}, 
+			error: function(msg){
+				$("#wc_information").html( 'error : ' +  msg );
+			}
+		},
+		
+		getinfo : function() {
+			var s = uscesInformation.settings;
+			s.data = "v=" + uscesL10n.version;
+			s.data += "&wcid=" + uscesL10n.wcid;
+			s.data += "&wcurl=" + uscesL10n.USCES_PLUGIN_URL;
+			s.data += "&locale=" + uscesL10n.locale;
+			s.data += "&theme=" + uscesL10n.theme;
+			s.data += "&wcex=";
+			var de = '';
+			for( var i = 0; i < uscesL10n.wcex.length; i++) {
+				s.data += de + uscesL10n.wcex[i];
+				de =',';
+			}
+			s.success = function(data, dataType){
+					$("#wc_information").html( data );
+			};
+			$.ajax( s );
+			return false;
+		},
+		
+	};
+	
 	uscesItem = {
 		
 		newdraft : function(itemCode) {

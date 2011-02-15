@@ -1207,6 +1207,9 @@ class usc_e_shop
 		}else{
 			$css_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER . '/css/usces_cart.css';
 		}
+		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+			echo "	<meta name='robots' content='noindex,nofollow' />\n";
+		}
 		echo '<link href="' . $css_url . '" rel="stylesheet" type="text/css" />';
 		if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){
 			echo '<link href="' . get_stylesheet_directory_uri() . '/usces_cart.css" rel="stylesheet" type="text/css" />';
@@ -1486,6 +1489,13 @@ class usc_e_shop
 			$payments_str .= "'" . $this->options['payment_method'][$id]['name'] . "': '" . $this->options['payment_method'][$id]['settlement'] . "', ";
 		}
 		$payments_str = rtrim($payments_str, ', ');
+		$wcex_str = '';
+		$wcex = usces_get_wcex();
+		foreach ( (array)$wcex as $key => $values ) {
+			$wcex_str .= "'" . $key . "-" . $values['version'] . "', ";
+		}
+		$wcex_str = rtrim($wcex_str, ', ');
+		$theme = get_theme_data( get_stylesheet_directory().'/style.css' );
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
@@ -1494,10 +1504,15 @@ class usc_e_shop
 			uscesL10n = {
 				'requestFile': "<?php echo get_option('siteurl'); ?>/wp-admin/admin-ajax.php",
 				'USCES_PLUGIN_URL': "<?php echo USCES_PLUGIN_URL; ?>",
+				'version': "<?php echo USCES_VERSION; ?>", 
+				'wcid': "<?php echo get_option('usces_wcid'); ?>", 
+				'locale': '<?php echo get_locale(); ?>', 
 				'cart_number': "<?php echo get_option('usces_cart_number'); ?>", 
 				'purchase_limit': "<?php echo $this->options['purchase_limit']; ?>", 
 				'point_rate': "<?php echo $this->options['point_rate']; ?>",
 				'shipping_rule': "<?php echo $this->options['shipping_rule']; ?>", 
+				'theme': "<?php echo $theme['Name'] . '-' . $theme['Version']; ?>", 
+				'wcex': new Array( <?php echo $wcex_str; ?> ), 
 				'now_loading': "<?php _e('now loading', 'usces'); ?>" 
 			};
 			uscesPayments = {<?php echo $payments_str; ?>};
@@ -5729,45 +5744,50 @@ class usc_e_shop
 	function filter_memberContent($content) {
 		global $post;
 		
-		if( $this->is_member_logged_in() ) {
+		if($this->options['membersystem_state'] == 'activate'){
 		
-			$member_regmode = 'editmemberform';
-			$temp_path = apply_filters('usces_template_path_member', USCES_PLUGIN_DIR . '/templates/member/member.php');
-			include( $temp_path );
-		
-		} else {
-		
-			switch($this->page){
-				case 'login':
-					$temp_path = apply_filters('usces_template_path_login', USCES_PLUGIN_DIR . '/templates/member/login.php');
-					include( $temp_path );
-					break;
-				case 'lostmemberpassword':
-					$temp_path = apply_filters('usces_template_path_lostpassword', USCES_PLUGIN_DIR . '/templates/member/lostpassword.php');
-					include( $temp_path );
-					break;
-				case 'changepassword':
-					$temp_path = apply_filters('usces_template_path_changepassword', USCES_PLUGIN_DIR . '/templates/member/changepassword.php');
-					include( $temp_path );
-					break;
-				case 'newcompletion':
-				case 'editcompletion':
-				case 'lostcompletion':
-				case 'changepasscompletion':
-					$temp_path = apply_filters('usces_template_path_membercompletion', USCES_PLUGIN_DIR . '/templates/member/completion.php');
-					include( $temp_path );
-					break;
-				case 'newmemberform':
-					$member_form_title = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces'));
-					$member_regmode = 'newmemberform';
-					$temp_path = apply_filters('usces_template_path_member_form', USCES_PLUGIN_DIR . '/templates/member/member_form.php');
-					include( $temp_path );
-					break;
-				default:
-					$temp_path = apply_filters('usces_template_path_login', USCES_PLUGIN_DIR . '/templates/member/login.php');
-					include( $temp_path );
+			if( $this->is_member_logged_in() ) {
+			
+				$member_regmode = 'editmemberform';
+				$temp_path = apply_filters('usces_template_path_member', USCES_PLUGIN_DIR . '/templates/member/member.php');
+				include( $temp_path );
+			
+			} else {
+			
+				switch($this->page){
+					case 'login':
+						$temp_path = apply_filters('usces_template_path_login', USCES_PLUGIN_DIR . '/templates/member/login.php');
+						include( $temp_path );
+						break;
+					case 'lostmemberpassword':
+						$temp_path = apply_filters('usces_template_path_lostpassword', USCES_PLUGIN_DIR . '/templates/member/lostpassword.php');
+						include( $temp_path );
+						break;
+					case 'changepassword':
+						$temp_path = apply_filters('usces_template_path_changepassword', USCES_PLUGIN_DIR . '/templates/member/changepassword.php');
+						include( $temp_path );
+						break;
+					case 'newcompletion':
+					case 'editcompletion':
+					case 'lostcompletion':
+					case 'changepasscompletion':
+						$temp_path = apply_filters('usces_template_path_membercompletion', USCES_PLUGIN_DIR . '/templates/member/completion.php');
+						include( $temp_path );
+						break;
+					case 'newmemberform':
+						$member_form_title = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces'));
+						$member_regmode = 'newmemberform';
+						$temp_path = apply_filters('usces_template_path_member_form', USCES_PLUGIN_DIR . '/templates/member/member_form.php');
+						include( $temp_path );
+						break;
+					default:
+						$temp_path = apply_filters('usces_template_path_login', USCES_PLUGIN_DIR . '/templates/member/login.php');
+						include( $temp_path );
+				}
+			
 			}
-		
+		}else{
+			$html .= "<p>只今会員サービスは提供いたしておりません。</p>";
 		}
 		
 		$content = $html;
@@ -5779,7 +5799,7 @@ class usc_e_shop
 
 	function filter_memberTitle($title) {
 
-		if( $title == 'Member' || $title == __('Membership', 'usces') ){
+		if( $this->options['membersystem_state'] == 'activate' && ($title == 'Member' || $title == __('Membership', 'usces')) ){
 			switch($this->page){
 				case 'login':
 					$newtitle = apply_filters('usces_filter_title_login', __('Log-in for members', 'usces'));

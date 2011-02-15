@@ -135,6 +135,8 @@ update_option('usces_custom_field_position_select', $custom_field_position_selec
 
 update_option('usces_currency_symbol',__('$', 'usces'));
 update_option('usces_secure_link', $usces_secure_link);
+if(!get_option('usces_wcid'))
+	update_option('usces_wcid', md5(uniqid(rand(),1)));
 
 update_option('usces_secure_link', $usces_secure_link);
 update_option('usces_secure_link', $usces_secure_link);
