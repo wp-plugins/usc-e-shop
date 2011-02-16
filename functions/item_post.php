@@ -1129,6 +1129,7 @@ function add_shipping_charge() {
 
 	$options['shipping_charge'][$index]['id'] = $newid;
 	$options['shipping_charge'][$index]['name'] = $name;
+	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
 		$options['shipping_charge'][$index]['value'][$pref] = (int)$value[$i];
@@ -1156,6 +1157,7 @@ function update_shipping_charge() {
 		}
 	}
 	$options['shipping_charge'][$index]["name"] = $name;
+	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
 		$options['shipping_charge'][$index]["value"][$pref] = (int)$value[$i];
