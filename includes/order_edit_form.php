@@ -278,10 +278,11 @@ jQuery(function($){
 			var db = $("input[name*='delButton']");
 			var price = [];
 			var quant = [];
-			var sub_total = 0;
-			var total_full = 0;
+			var float sub_total = 0;
+			var float total_full = 0;
 			for( var i = 0; i < p.length; i++) {
-				v = $(p[i]).val() * $(q[i]).val();
+				var float pval = $(p[i]).val();
+				v = pval * $(q[i]).val();
 				$(t[i]).html(addComma(v+''));
 				sub_total += v;
 			}
@@ -836,7 +837,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<tr>
 			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th id="total_full_top" class="aright">&nbsp;</th>
-			<th colspan="2">&nbsp;</th>
+			<th colspan="2">&nbsp;<?php _e('Currency','usces'); ?>(<?php usces_crcode(); ?>)</th>
 		</tr>
 	<tr>
 		<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
@@ -878,7 +879,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
-		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr($skuPrice); ?>" /></td>
+		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php usces_crform( $skuPrice, false ); ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>
 		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
@@ -910,22 +911,22 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo esc_attr($data['order_discount']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="order[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo usces_crform( $data['order_discount'], false, 'return' ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-			<td class="aright"><input name="order[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo esc_attr($data['order_shipping_charge']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="order[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo usces_crform( $data['order_shipping_charge'], false, 'return' ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('COD fee','usces'); ?></td>
-			<td class="aright"><input name="order[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo esc_attr($data['order_cod_fee']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="order[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo usces_crform( $data['order_cod_fee'], false, 'return' ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="order[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo esc_attr($data['order_tax']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="order[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo usces_crform( $data['order_tax'], false, 'return' ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>

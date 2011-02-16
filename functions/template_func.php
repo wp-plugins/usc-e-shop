@@ -221,6 +221,17 @@ function usces_crform( $float, $symbol_flag = true, $out = '' ) {
 	}
 }
 
+function usces_crcode( $out = '' ) {
+	global $usces;
+	$res = esc_html($usces->get_currency_code());
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
 function usces_the_itemZaiko( $out = '' ) {
 	global $usces;
 	$num = $usces->itemsku['value']['zaiko'];

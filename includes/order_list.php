@@ -10,7 +10,7 @@ $arr_column = array(
 			__('name', 'usces') => 'name', 
 			__('Region', 'usces') => 'pref', 
 			__('shipping option', 'usces') => 'delivery_method', 
-			__('Amount', 'usces') => 'total_price', 
+			__('Amount', 'usces').'('.usces_crcode( 'return' ).')' => 'total_price', 
 			__('payment method', 'usces') => 'payment_name', 
 			__('transfer statement', 'usces') => 'receipt_status', 
 			__('Processing', 'usces') => 'order_status', 
@@ -444,7 +444,7 @@ jQuery(document).ready(function($){
 		<?php if( $key == 'ID' ): ?>
 		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo esc_html($value); ?></a></td>
 		<?php elseif( $key == 'total_price' ): ?>
-		<td class="price"><?php _e('$', 'usces'); ?><?php echo number_format($value); ?></td>
+		<td class="price"><?php usces_crform( $value, false ); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
 		<td class="red"><?php echo $value; ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == 'Pending'): ?>

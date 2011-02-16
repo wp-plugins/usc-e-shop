@@ -74,8 +74,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th>' . __('SKU code','usces') . '</th>
-		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '</th>
-		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL) . '</th>
+		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '('.usces_crcode( 'return' ).')</th>
+		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL). '('.usces_crcode( 'return' ).')</th>
 		<th>' . __('stock','usces') . '</th>
 		<th>' . __('stock status', 'usces') . '</th>
 	</tr>
@@ -91,8 +91,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th class="left"><?php _e('SKU code','usces'); ?></th>
-		<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
-		<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
+		<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
+		<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 		<th><?php _e('stock','usces'); ?></th>
 		<th><?php _e('stock status','usces'); ?></th>
 	</tr>
@@ -432,8 +432,8 @@ function item_sku_meta_form() {
 <thead>
 <tr>
 	<th class="left"><?php _e('SKU code','usces') ?></th>
-	<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
-	<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
+	<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
+	<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 	<th><?php _e('stock','usces') ?></th>
 	<th><?php _e('stock status','usces') ?></th>
 </tr>

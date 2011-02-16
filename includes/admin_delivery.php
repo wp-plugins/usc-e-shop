@@ -146,7 +146,7 @@ jQuery(function($){
 		if(shipping_charge.length === 0) return false;
 		var valuehtml = '';
 		for(var i=0; i<pref.length; i++){
-			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php _e('dollars', 'usces'); ?></div>\n";
+			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 		}
 		$("#shipping_charge_name").html('<input name="shipping_charge_name" type="text" value="" />');
 		$("#shipping_charge_name2").html('');
@@ -501,7 +501,7 @@ jQuery(function($){
 			var valuehtml = '';
 			if(shipping_charge.length === 0) {
 				for(var i=0; i<pref.length; i++){
-					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php _e('dollars', 'usces'); ?></div>\n";
+					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 				}
 				$("#shipping_charge_name").html('<input name="shipping_charge_name" type="text" value="" />');
 				$("#shipping_charge_name2").html('');
@@ -520,7 +520,7 @@ jQuery(function($){
 				}
 				name_select += "</select>\n";
 				for(var i=0; i<pref.length; i++){
-					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='" + shipping_charge[selected]['value'][pref[i]] + "' class='charge_text' /><?php _e('dollars', 'usces'); ?></div>\n";
+					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='" + shipping_charge[selected]['value'][pref[i]] + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 				}
 				$("#shipping_charge_name").html(name_select);
 				$("#shipping_charge_name2").html('<input name="shipping_charge_name" type="text" value="'+shipping_charge[selected]['name']+'" />');
@@ -1004,7 +1004,7 @@ jQuery(document).ready(function($){
 	    <th><?php _e('Shipping charge name', 'usces'); ?></th>
 	    <td width="150" height="30" id="shipping_charge_name"></td>
 	    <th class="sec"><?php _e('Shipping', 'usces'); ?></th>
-	    <td><label class="shipping_charge_label"><input name="allbutton" type="button" class="allbutton" onclick="operation.allCharge();" value="<?php _e('same as', 'usces'); ?>"  /></label><input name="allcharge" id="allcharge" type="text" class='charge_text' /><?php _e('dollars', 'usces'); ?></td>
+	    <td><label class="shipping_charge_label"><input name="allbutton" type="button" class="allbutton" onclick="operation.allCharge();" value="<?php _e('same as', 'usces'); ?>"  /></label><input name="allcharge" id="allcharge" type="text" class='charge_text' /><?php usces_crcode(); ?></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>

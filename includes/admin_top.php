@@ -1,27 +1,13 @@
 <?php
-//define('MAGPIE_FETCH_TIME_OUT', 10);
-//define('MAGPIE_CACHE_ON', false);
-//include_once(ABSPATH . WPINC . '/rss.php');
-//$vcfeed = fetch_rss('http://www.welcart.com/archives/category/version_check/feed');
-//$vc_content = array_slice($vcfeed->items, 0, 1);
-//preg_match('/.+{version_check_start}(.+){version_check_end}.+/', $vc_content[0]['content']['encoded'], $matches);
-?>
-<script type="text/javascript">jQuery(function($){uscesInformation.getinfo();});</script>
-<?php
-//if( empty($matches[1]) ){
-//	$vcparse = NULL;
-//}else{
-//	parse_str($matches[1], $vcparse);
-//}
-
 $display_mode = $this->options['display_mode'];
 $data = $this->get_items_skus();
 $items_num = $this->get_items_num();
 ?>
+<script type="text/javascript">jQuery(function($){uscesInformation.getinfo();});</script>
 <div class="wrap">
 <div class="usces_admin">
 
-<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/warehause1.png" />-->Welcart Shop <?php _e('Home','usces'); ?></h2>
+<h2>Welcart Shop <?php _e('Home','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 
 <div class="usces_admin_right">
@@ -36,27 +22,7 @@ $items_num = $this->get_items_num();
 <?php endif; ?>
 </div>
 
-<?php if( $this->isAdnminSSL() ) : ?>
-<div class="usces_side_box">
-<h5><?php _e('Cart page', 'usces'); ?>:</h5>
-<div class="urlBox"><?php echo '?page_id=' . USCES_CART_NUMBER; ?></div>
-<h5><?php _e('Membership page', 'usces'); ?>:</h5>
-<div class="urlBox"><?php echo '?page_id=' . USCES_MEMBER_NUMBER; ?></div>
-</div>
-<?php endif; ?>
-
-<div id= "wc_information" class="chui">
-<!--<ul>
-<?php if ( $vcparse !== NULL && $vcparse['flag'] == 'ok' &&  'ja' == get_locale() ) : ?>
-<li><?php echo $vcparse['amp;mes_ja']; ?></li>
-<?php elseif ( $vcparse !== NULL && $vcparse['flag'] == 'ok' &&  'ja' != get_locale() ) : ?>
-<li><?php echo $vcparse['amp;mes_en']; ?></li>
-<?php else: ?>
-<li><?php _e('There is no news for this moment.', 'usces'); ?></li>
-<?php endif; ?>
-
-</ul>
---></div>
+<div id= "wc_information" class="chui"></div>
 </div><!--usces_admin_right-->
 
 <div class="usces_admin_left">
@@ -67,13 +33,13 @@ $items_num = $this->get_items_num();
 <th>&nbsp;</th><th><?php _e('number of order', 'usces'); ?></th><th><?php _e('amount of order', 'usces'); ?></th>
 </tr>
 <tr>
-<td><?php _e('today', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('today')); ?></td>
+<td><?php _e('today', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('today'), true ); ?></td>
 </tr>
 <tr>
-<td><?php _e('This month', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('thismonth')); ?></td>
+<td><?php _e('This month', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('thismonth'), true ); ?></td>
 </tr>
 <tr>
-<td><?php _e('Same date in last year', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php echo number_format($this->get_order_amount('lastyear')); ?></td>
+<td><?php _e('Same date in last year', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('lastyear'), true ); ?></td>
 </tr>
 </table>
 </div>

@@ -5523,6 +5523,13 @@ class usc_e_shop
 		return $price;
 	}
 	
+	function get_currency_code(){
+		global $usces_settings;
+		$cr = $this->options['system']['currency'];
+		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
+		return $code;
+	}
+	
 	
 	//shortcode-----------------------------------------------------------------------------
 	function sc_company_name() {
