@@ -2667,6 +2667,9 @@ function usces_item_dupricate($post_id){
 function usces_item_uploadcsv(){
 	require_once( USCES_PLUGIN_DIR . "/libs/excel_reader2.php" );
 	global $wpdb, $usces;
+	$wpdb->show_errors();
+	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
+	set_time_limit(1800);
 	
 	define('USCES_COL_ITEM_CODE', 0);
 	define('USCES_COL_ITEM_NAME', 1);
@@ -3043,7 +3046,6 @@ function usces_item_uploadcsv(){
 		}
 		
 		//wp_posts data reg;
-		$wpdb->show_errors();
 		$cdatas = array();
 		$post_fields = array();
 		$sku = array();
