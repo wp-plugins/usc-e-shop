@@ -211,6 +211,11 @@ $usces_settings['currency'] = array(
 					'JP' => array('JPY', 0, '.', ',', '&yen;'),
 					'US' => array('USD', 2, '.', ',', 'US$'),
 					);
+$usces_settings['addressform'] = array(
+					'CA' => 'US',
+					'JP' => 'JP',
+					'US' => 'US',
+					);
 $usces_settings['country'] = array(
 					'CA' => __('Canada', 'usces'),
 					'JP' => __('Japan', 'usces'),

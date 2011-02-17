@@ -49,6 +49,9 @@ class usc_e_shop
 		if(!isset($this->options['use_javascript'])) $this->options['use_javascript'] = 1;
 		if(!isset($this->options['system']['orderby_itemsku'])) $this->options['system']['orderby_itemsku'] = 0;
 		if(!isset($this->options['system']['orderby_itemopt'])) $this->options['system']['orderby_itemopt'] = 0;
+		if(!isset($this->options['system']['front_lang'])) $this->options['system']['front_lang'] = usces_get_local_language();
+		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_local_cerrency();
+		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['indi_item_name'])){
 			$this->options['indi_item_name']['item_name'] = 1;
 			$this->options['indi_item_name']['item_code'] = 1;
@@ -816,8 +819,9 @@ class usc_e_shop
 			if( $this->options['ssl_url'] == '' || $this->options['ssl_url_admin'] == '' ) $this->options['use_ssl'] = 0;
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
-			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : get_locale();
-			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : "";
+			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : usces_get_local_language();
+			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : usces_get_local_cerrency();
+			$this->options['system']['addressform'] = (isset($_POST['addressform']) ) ? $_POST['addressform'] : usces_get_local_addressform();
 			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
 			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
 
@@ -5516,7 +5520,7 @@ class usc_e_shop
 		$cr = $this->options['system']['currency'];
 		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
 		if( $symbol_flag )
-			$price = $symbol . number_format($amount, $decimal, $point, $seperator);
+			$price = $symbol . number_format($amount, $decimal, $point, $seperator) . __($code, 'usces');
 		else
 			$price = number_format($amount, $decimal, $point, $seperator);
 			

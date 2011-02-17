@@ -114,23 +114,23 @@ function usces_order_confirm_message($order_id) {
 				$meisai .= $key . ' : ' . $value . "\r\n"; 
 			}
 		}
-		$meisai .= __('Unit price','usces') . " ".number_format($skuPrice) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
+		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	
 	$meisai .= "=================================================================\r\n";
-	$meisai .= __('total items','usces') . "    : " . number_format($data['order_item_total_price']) . __('dollars','usces') . "\r\n";
+	$meisai .= __('total items','usces') . "    : " . usces_crform( $data['order_item_total_price'], true, 'return' ) . "\r\n";
 
 	if ( $data['order_usedpoint'] != 0 )
 		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$meisai .= __('Special Price','usces') . "    : " . number_format($data['order_discount']) . __('dollars','usces') . "\r\n";
-	$meisai .= __('Shipping','usces') . "     : " . number_format($data['order_shipping_charge']) . __('dollars','usces') . "\r\n";
+		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $data['order_discount'], true, 'return' ) . "\r\n";
+	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$meisai .= __('C.O.D','usces') . "  : " . number_format($data['order_cod_fee']) . __('dollars','usces') . "\r\n";
+		$meisai .= __('C.O.D','usces') . "  : " . usces_crform( $data['order_cod_fee'], true, 'return' ) . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$meisai .= __('consumption tax','usces') . "    : " . number_format($data['order_tax']) . __('dollars','usces') . "\r\n";
+		$meisai .= __('consumption tax','usces') . "    : " . usces_crform( $data['order_tax'], true, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
-	$meisai .= __('Payment amount','usces') . "  : " . number_format($total_full_price) . __('dollars','usces') . "\r\n";
+	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n\r\n";
 
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data);
@@ -316,22 +316,22 @@ function usces_send_ordermail($order_id) {
 				$meisai .= $key . ' : ' . $value . "\r\n"; 
 			}
 		}
-		$meisai .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('dollars','usces') . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
+		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	$meisai .= "=================================================================\r\n";
-	$meisai .= __('total items','usces') . "    : " . number_format($entry['order']['total_items_price']) . __('dollars','usces') . "\r\n";
+	$meisai .= __('total items','usces') . "    : " . usces_crform( $entry['order']['total_items_price'], true, 'return' ) . "\r\n";
 
 	if ( $entry['order']['usedpoint'] != 0 )
 		$meisai .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$meisai .= __('Special Price','usces') . "    : " . number_format($entry['order']['discount']) . __('dollars','usces') . "\r\n";
-	$meisai .= __('Shipping','usces') . "     : " . number_format($entry['order']['shipping_charge']) . __('dollars','usces') . "\r\n";
+		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $entry['order']['discount'], true, 'return' ) . "\r\n";
+	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$meisai .= __('C.O.D','usces') . "  : " . number_format($entry['order']['cod_fee']) . __('dollars','usces') . "\r\n";
+		$meisai .= __('C.O.D','usces') . "  : " . usces_crform( $entry['order']['cod_fee'], true, 'return' ) . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
-		$meisai .= __('consumption tax','usces') . "     : " . number_format($entry['order']['tax']) . __('dollars','usces') . "\r\n";
+		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
-	$meisai .= __('Payment amount','usces') . "  : " . number_format($entry['order']['total_full_price']) . __('dollars','usces') . "\r\n";
+	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $entry['order']['total_full_price'], true, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n\r\n";
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
@@ -3663,6 +3663,62 @@ function usces_locales(){
 		closedir($handle);
 	}
 	return $res;	
+}
+
+function usces_get_local_language(){
+	$locale = get_locale();
+	switch( $locale ){
+		case 'en':
+		case 'en_US':
+			$front_lang =  'en';
+			break;
+		case 'ja':
+		case 'ja_JP':
+			$front_lang =  'ja';
+			break;
+		default:
+			$front_lang =  'others';
+	}
+	return $front_lang;
+}
+
+function usces_get_local_cerrency(){
+	$locale = get_locale();
+	switch( $locale ){
+		case 'en':
+		case 'en_US':
+			$res =  'US';
+			break;
+		case 'ja':
+		case 'ja_JP':
+			$res =  'JP';
+			break;
+		default:
+			$res =  'US';
+	}
+	return $res;
+}
+
+function usces_get_local_addressform(){
+	$locale = get_locale();
+	switch( $locale ){
+		case 'en':
+		case 'en_US':
+			$res =  'US';
+			break;
+		case 'ja':
+		case 'ja_JP':
+			$res =  'JP';
+			break;
+		default:
+			$res =  'US';
+	}
+	return $res;
+}
+
+function usces_get_apply_addressform($country){
+	global $usces_settings;
+	return $usces_settings['addressform'][$country];
 }
 
 function usces_remove_filter(){

@@ -22,20 +22,9 @@ $ssl_url_admin = $this->options['ssl_url_admin'];
 $inquiry_id = $this->options['inquiry_id'];
 $orderby_itemsku = isset($this->options['system']['orderby_itemsku']) ? $this->options['system']['orderby_itemsku'] : 0;
 $orderby_itemopt = isset($this->options['system']['orderby_itemopt']) ? $this->options['system']['orderby_itemopt'] : 0;
-$system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : get_locale();
-$system_currency =  ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : '';
-switch( $system_front_lang ){
-	case 'en':
-	case 'en_US':
-		$front_lang =  'en';
-		break;
-	case 'ja':
-	case 'ja_JP':
-		$front_lang =  'ja';
-		break;
-	default:
-		$front_lang =  'others';
-}
+$system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : usces_get_local_language();
+$system_currency =  ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : usces_get_local_cerrency();
+$system_addressform =  ( isset($this->options['system']['addressform']) && !empty($this->options['system']['addressform']) ) ? $this->options['system']['addressform'] : usces_get_local_addressform();
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -161,7 +150,7 @@ function toggleVisibility(id) {
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('フロントエンドの言語', 'usces'); ?></a></th>
 		<td width="10"><select name="front_lang" id="front_lang">
 		<?php foreach( $usces_settings['language'] as $Lkey => $Lvalue ){ ?>
-		    <option value="<?php echo $Lkey; ?>"<?php echo ($front_lang == $Lkey ? ' selected="selected"' : ''); ?>><?php echo $Lvalue; ?></option>
+		    <option value="<?php echo $Lkey; ?>"<?php echo ($system_front_lang == $Lkey ? ' selected="selected"' : ''); ?>><?php echo $Lvalue; ?></option>
 		<?php } ?>
 		</select></td>
 	    <td><div id="ex_front_lang" class="explanation"><?php _e('フロントエンド（ショップ側）の言語を選択できます。言語に合せて入力項目の様式も変ります。< br />バックエンド（管理パネル）の言語はconfig.php の設定に従います。', 'usces'); ?></div></td>
@@ -174,9 +163,20 @@ function toggleVisibility(id) {
 		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
 		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>
-		    <option value="manual"<?php echo ($front_lang == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
+		    <option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
 		</select></td>
 	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_addressform');"><?php _e('住所氏名の様式', 'usces'); ?></a></th>
+		<td width="10"><select name="addressform" id="addressform">
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_addressform == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		</select></td>
+	    <td><div id="ex_addressform" class="explanation"><?php _e('住所氏名などの入力フォームの様式を、どの国のものにするか選択します', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
