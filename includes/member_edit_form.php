@@ -246,12 +246,12 @@ foreach((array)$prefs as $value) {
 </tr>
 <tr>
 <td><?php echo $umhs['date']; ?></td>
-<td class="rightnum"><?php echo number_format($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']); ?></td>
+<td class="rightnum"><?php usces_crform( $this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax'], true ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['usedpoint']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['discount']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['shipping_charge']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['cod_fee']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['tax']); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['discount'], true ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['shipping_charge'], true ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['cod_fee'], true ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['tax'], true ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['getpoint']); ?></td>
 </tr>
 <tr>
@@ -261,9 +261,9 @@ foreach((array)$prefs as $value) {
 	<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
 	<th class="thumbnail">&nbsp;</th>
 	<th><?php _e('Items','usces'); ?></th>
-	<th class="price "><?php _e('Unit price','usces'); ?></th>
+	<th class="price "><?php _e('Unit price','usces'); ?>(<?php usces_crcode(); ?>)</th>
 	<th class="quantity"><?php _e('Quantity','usces'); ?></th>
-	<th class="subtotal"><?php _e('Amount','usces'); ?></th>
+	<th class="subtotal"><?php _e('Amount','usces'); ?>(<?php usces_crcode(); ?>)</th>
 	</tr>
 	<?php
 	for($i=0; $i<count($cart); $i++) { 
@@ -289,9 +289,9 @@ foreach((array)$prefs as $value) {
 	<td><?php echo $i + 1; ?></td>
 	<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
 	<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
-	<td class="rightnum"><?php echo number_format($skuPrice); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice, false ); ?></td>
 	<td class="rightnum"><?php echo number_format($cart_row['quantity']); ?></td>
-	<td class="rightnum"><?php echo number_format($skuPrice * $cart_row['quantity']); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice * $cart_row['quantity'], false ); ?></td>
 	</tr>
 	<?php 
 	}

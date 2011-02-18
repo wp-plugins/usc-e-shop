@@ -204,12 +204,12 @@ update_option('usces', $usces_op);
 /* usces_settings */
 $usces_settings['language'] = array();
 $usces_settings['currency'] = array(
-					'CA' => array('CAD', 2, '.', ',', 'C$'),
+					'CA' => array('CAD', 2, '.', ',', '$'),
 //					'FRF' => array(2, ',', ' ', '&#x20AC;'),
 //					'GBP' => array(2, '.', ',', '£'),
 //					'IDR' => array(2, '.', ',', 'Rp'),
 					'JP' => array('JPY', 0, '.', ',', '&yen;'),
-					'US' => array('USD', 2, '.', ',', 'US$'),
+					'US' => array('USD', 2, '.', ',', '$'),
 					);
 $usces_settings['addressform'] = array(
 					'CA' => 'US',

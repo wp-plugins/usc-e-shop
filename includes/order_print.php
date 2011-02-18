@@ -440,7 +440,7 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(127.2, 94.9);
 	$pdf->MultiCell(15.0, $lineheight, usces_conv_euc(__('Unit price','usces')), $border, 'C');
 	$pdf->SetXY(142.9, 94.9);
-	$pdf->MultiCell(22.4, $lineheight, usces_conv_euc(__('Amount','usces')), $border, 'C');
+	$pdf->MultiCell(22.4, $lineheight, usces_conv_euc(__('Amount','usces').'('.usces_crcode('return').')'), $border, 'C');
 	
 	// Footer label
 	$pdf->SetXY(104.3, 198.8);

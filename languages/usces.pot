@@ -2686,3 +2686,6 @@ msgstr "会員データを削除しました"
 
 msgid "Delivery date"
 msgstr "配送希望日"
+
+msgid "JPY"
+msgstr "-"

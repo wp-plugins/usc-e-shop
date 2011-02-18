@@ -1451,10 +1451,10 @@ function get_order_item( $item_code ) {
 	$r .= "<tr>\n";
 	$r .= "<th>" . __('order number','usces') . "</th>\n";
 	$r .= "<th>" . __('title','usces') . "</th>\n";
-	$usces_listprice = __('List price', 'usces') . $usces->getGuidTax();
-	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), $usces->getGuidTax()) . "</th>\n";
-	$usces_sellingprice = __('Sale price','usces') . $usces->getGuidTax();
-	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), $usces->getGuidTax()) . "</th>\n";
+	$usces_listprice = __('List price', 'usces') . usces_guid_tax('return');
+	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), usces_guid_tax('return')) . "</th>\n";
+	$usces_sellingprice = __('Sale price','usces') . usces_guid_tax('return');
+	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), usces_guid_tax('return')) . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('unit','usces') . "</th>\n";
@@ -1474,8 +1474,8 @@ function get_order_item( $item_code ) {
 		$r .= "<tr>\n";
 		$r .= "<td rowspan='2'>" . $sku . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
-		$r .= "<td><span class='cprice'>" . __('$', 'usces') . $cprice . "</span></td>\n";
-		$r .= "<td><span class='price'>" . __('$', 'usces') . $price . "</span></td>\n";
+		$r .= "<td><span class='cprice'>" . usces_crform( $cprice, true, 'return' ) . "</span></td>\n";
+		$r .= "<td><span class='price'>" . usces_crform( $price, true, 'return' ) . "</span></td>\n";
 		$r .= "<td>" . $zaiko . "</td>\n";
 		$r .= "<td>" . $zaikonum . "</td>\n";
 //			$r .= "<td>" . usces_the_itemQuant() . "</td>\n";
