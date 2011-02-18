@@ -3723,24 +3723,44 @@ function usces_get_apply_addressform($country){
 
 function usces_remove_filter(){
 	global $usces;
-	remove_action('the_post', array($usces, 'action_memberFilter'));
-	remove_action('the_post', array($usces, 'action_cartFilter'));
-	remove_action('the_post', array($usces, 'goDefaultPage'));
-	remove_filter('the_title', array($usces, 'filter_cartTitle'),20);
-	remove_filter('the_content', array($usces, 'filter_cartContent'),20);
-	remove_filter('the_title', array($usces, 'filter_memberTitle'),20);
-	remove_filter('the_content', array($usces, 'filter_memberContent'),20);
+	
+	if( 'search_item' == $_GET['page'] && $usces->is_member_page($_SERVER['REQUEST_URI']) ){
+		remove_filter('the_content', array(&$usces, 'filter_itemPage'));
+		
+	}else if( $usces->is_cart_page($_SERVER['REQUEST_URI']) || $usces->is_inquiry_page($_SERVER['REQUEST_URI']) ){
+		remove_action('the_post', array(&$usces, 'action_cartFilter'));
+		remove_filter('the_title', array(&$usces, 'filter_cartTitle'),20);
+		remove_filter('the_content', array(&$usces, 'filter_cartContent'),20);
+		
+	}else if( $usces->is_member_page($_SERVER['REQUEST_URI']) ){
+		remove_action('the_post', array(&$usces, 'action_memberFilter'));
+		remove_filter('the_title', array(&$usces, 'filter_memberTitle'),20);
+		remove_filter('the_content', array(&$usces, 'filter_memberContent'),20);
+	
+	}else{
+		remove_action('the_post', array(&$usces, 'goDefaultPage'));
+	}
 }
 
 function usces_reset_filter(){
 	global $usces;
-	add_action('the_post', array($usces, 'action_memberFilter'));
-	add_action('the_post', array($usces, 'action_cartFilter'));
-	add_action('the_post', array($usces, 'goDefaultPage'));
-	add_filter('the_title', array($usces, 'filter_cartTitle'),20);
-	add_filter('the_content', array($usces, 'filter_cartContent'),20);
-	add_filter('the_title', array($usces, 'filter_memberTitle'),20);
-	add_filter('the_content', array($usces, 'filter_memberContent'),20);
+	
+	if( 'search_item' == $_GET['page'] && $usces->is_member_page($_SERVER['REQUEST_URI']) ){
+		add_filter('the_content', array(&$usces, 'filter_itemPage'));
+		
+	}else if( $usces->is_cart_page($_SERVER['REQUEST_URI']) || $usces->is_inquiry_page($_SERVER['REQUEST_URI']) ){
+		add_action('the_post', array(&$usces, 'action_cartFilter'));
+		add_filter('the_title', array(&$usces, 'filter_cartTitle'),20);
+		add_filter('the_content', array(&$usces, 'filter_cartContent'),20);
+		
+	}else if( $usces->is_member_page($_SERVER['REQUEST_URI']) ){
+		add_action('the_post', array(&$usces, 'action_memberFilter'));
+		add_filter('the_title', array(&$usces, 'filter_memberTitle'),20);
+		add_filter('the_content', array(&$usces, 'filter_memberContent'),20);
+	
+	}else{
+		add_action('the_post', array(&$usces, 'goDefaultPage'));
+	}
 }
 
 

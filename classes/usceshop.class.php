@@ -255,6 +255,26 @@ class usc_e_shop
 		return $flag;
 	}
 	
+	function is_member_page($link)
+	{
+		$search = array(('page_id='.USCES_MEMBER_NUMBER), '/usces-member' );
+		$flag = false;
+		foreach($search as $value){
+			if( false !== strpos($link, $value) ){
+				if( $value == ('page_id='.USCES_MEMBER_NUMBER) ){
+					$parts = parse_url($link);
+					parse_str($parts['query'], $query);
+					if( $query['page_id'] == USCES_MEMBER_NUMBER ){
+						$flag = true;
+					}
+				}else{
+					$flag = true;
+				}
+			}
+		}
+		return $flag;
+	}
+	
 	function is_inquiry_page($link)
 	{
 		if( empty($this->options['inquiry_id']) )

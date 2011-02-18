@@ -1314,7 +1314,7 @@ function usces_list_bestseller($num, $days = ''){
 
 function usces_list_post( $slug, $rownum ){
 	global $usces;
-	//usces_remove_filter();
+	usces_remove_filter();
 	
 	$li = '';
 	$infolist = new wp_query( array('category_name'=>$slug, 'post_status'=>'publish', 'posts_per_page'=>$rownum, 'order'=>DESC, 'orderby'=>'date') );
@@ -1328,7 +1328,7 @@ function usces_list_post( $slug, $rownum ){
 		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
 	}
 	wp_reset_query();
-	//usces_reset_filter();
+	usces_reset_filter();
 	echo $li;
 }
 
