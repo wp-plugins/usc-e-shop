@@ -36,7 +36,7 @@ $html .= '<tr>
 <td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . esc_attr($usces_members['password2']) . '" /></td>
 </tr>';
 
-include( USCES_PLUGIN_DIR . "/includes/addressform_member_form.php");
+$html .= uesces_addressform( 'member', $usces_members, 'return' );
 
 $html .= '</table>
 <input name="member_regmode" type="hidden" value="' . $member_regmode . '" /><div class="send">';
