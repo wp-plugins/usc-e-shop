@@ -221,4 +221,20 @@ $usces_settings['country'] = array(
 					'JP' => __('Japan', 'usces'),
 					'US' => __('USA', 'usces'),
 					);
+$usces_states['JP'] = array(__('-- Select --', 'usces'),"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
+				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
+				"福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府",
+				"大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県",
+				"徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県",
+				"宮崎県","鹿児島県","沖縄県");
+$usces_states['US'] = array(__('-- Select --', 'usces'),"Alabama","Alaska","Arizona","Arkansas","California","Colorado",
+				"Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii",
+				"Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
+				"Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri",
+				"Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York",
+				"North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania",
+				"Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont",
+				"Virginia","Washington","West Virginia","Wisconsin","Wyoming");
+if( !get_option('usces_states') )
+	update_option('usces_states',$usces_states);
 ?>

@@ -1956,4 +1956,10 @@ div.optcheck {
 	width: 200px;
 }
 
+#wpcontent select.multipleselect {
+	width: auto;
+	height: auto;
+}
+
+
 

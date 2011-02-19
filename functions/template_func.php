@@ -2049,7 +2049,7 @@ function usces_cr($amount, $symbol_flag = false, $out = '' ){
 // uesces_addressform( $type, $data, $out = '' )
 // $type = 'menber' or 'cuntomer' or 'delivery'
 function uesces_addressform( $type, $data, $out = '' ){
-	global $usces;
+	global $usces, $usces_settings;
 	$options = get_option('usces');
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
 	$formtag = '';
@@ -2079,6 +2079,7 @@ function uesces_addressform( $type, $data, $out = '' ){
 			//20100818ysk end
 			$formtag .= '
 			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
+			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
 			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
 			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
@@ -2101,6 +2102,7 @@ function uesces_addressform( $type, $data, $out = '' ){
 			//20100818ysk end
 			$formtag .= '
 			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
+			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
 			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
 			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
@@ -2116,7 +2118,7 @@ function uesces_addressform( $type, $data, $out = '' ){
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
 			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name1']) . ' ' . esc_html($values['customer']['name2']) . '</td></tr>';
+			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name3']) . '</td></tr>';
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
 			//20100818ysk end
@@ -2125,6 +2127,7 @@ function uesces_addressform( $type, $data, $out = '' ){
 			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['customer']['address3']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
 			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
+			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
@@ -2137,7 +2140,7 @@ function uesces_addressform( $type, $data, $out = '' ){
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
 			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
+			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
 			//20100818ysk end
@@ -2146,6 +2149,7 @@ function uesces_addressform( $type, $data, $out = '' ){
 			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
 			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
+			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
@@ -2180,6 +2184,10 @@ function uesces_addressform( $type, $data, $out = '' ){
 			$formtag .= '<tr>
 			<th scope="row"><em>*</em>'.__('Zip/Postal Code', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />100-1000</td>
+			</tr>
+			<tr>
+			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
+			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'], 'return' ) . '</td>
 			</tr>
 			<tr>
 			<th scope="row"><em>*</em>'.__('Province', 'usces').'</th>
@@ -2238,6 +2246,10 @@ function uesces_addressform( $type, $data, $out = '' ){
 			<tr>
 			<th scope="row"><em>*</em>' . __('State', 'usces') . '</th>
 			<td colspan="2">' . usces_the_pref( $type, 'return' ) . '</td>
+			</tr>
+			<tr>
+			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
+			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'], 'return' ) . '</td>
 			</tr>
 			<tr>
 			<th scope="row"><em>*</em>' . __('Zip', 'usces') . '</th>

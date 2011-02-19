@@ -538,72 +538,15 @@ jQuery(document).ready(function($){
 </tr>
 <tr>
 <td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php esc_html_e($data['mem_id']); ?></div></td>
-<td colspan="2" rowspan="9" class="wrap_td">
+<td colspan="2" rowspan="10" class="wrap_td">
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
         <td class="label">e-mail</td>
         <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr($data['order_email']); ?>" /></td>
     </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($cscs_meta, 'customer', 'name_pre');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('name', 'usces'); ?> </td>
-        <td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php echo esc_attr($data['order_name1']); ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php echo esc_attr($data['order_name2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('furigana', 'usces'); ?></td>
-        <td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php echo esc_attr($data['order_name3']); ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php echo esc_attr($data['order_name4']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($cscs_meta, 'customer', 'name_after');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-        <td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php echo esc_attr($data['order_zip']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Province', 'usces'); ?></td>
-        <td class="col2"><select name="customer[pref]" class="select">
-        <?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($data['order_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
-}
-?>
-        </select></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('city', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php echo esc_attr($data['order_address1']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('numbers', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php echo esc_attr($data['order_address2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('building name', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php echo esc_attr($data['order_address3']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Phone number', 'usces'); ?></td>
-        <td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php echo esc_attr($data['order_tel']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('FAX number', 'usces'); ?></td>
-        <td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php echo esc_attr($data['order_fax']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($cscs_meta, 'customer', 'fax_after');
-//20100818ysk end
-	?>
+	
+<?php uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
+	
 </table></td>
 <td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
 </tr>
@@ -620,68 +563,11 @@ if( $this->options['payment_method'] ) {
     <option value="<?php echo esc_attr($payments['name']); ?>"<?php echo $selected; ?>><?php echo esc_attr($payments['name']); ?></option>
 <?php } } } ?>
 </select></td>
-<td colspan="2" rowspan="8" class="wrap_td">
+<td colspan="2" rowspan="9" class="wrap_td">
 <table border="0" cellspacing="0" class="deli_info">
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($csde_meta, 'delivery', 'name_pre');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('name', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[name1]" type="text" class="text short" value="<?php echo esc_attr($deli['name1']); ?>" />    <input name="delivery[name2]" type="text" class="text short" value="<?php echo esc_attr($deli['name2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('furigana', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[name3]" type="text" class="text short" value="<?php echo esc_attr($deli['name3']); ?>" />    <input name="delivery[name4]" type="text" class="text short" value="<?php echo esc_attr($deli['name4']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($csde_meta, 'delivery', 'name_after');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo esc_attr($deli['zipcode']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Province', 'usces'); ?></td>
-        <td class="col3"><select name="delivery[pref]">
-    <?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($deli['pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
-}
-?>
-    </select></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('city', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address1]" type="text" class="text long" value="<?php echo esc_attr($deli['address1']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('numbers', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address2]" type="text" class="text long" value="<?php echo esc_attr($deli['address2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('building name', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address3]" type="text" class="text long" value="<?php echo esc_attr($deli['address3']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Phone number', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[tel]" type="text" class="text long" value="<?php echo esc_attr($deli['tel']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('FAX number', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[fax]" type="text" class="text long" value="<?php echo esc_attr($deli['fax']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($csde_meta, 'delivery', 'fax_after');
-//20100818ysk end
-	?>
+
+<?php uesces_get_admin_addressform( 'delivery', $deli, $csde_meta ); ?>
+
 </table></td>
 </tr>
 <tr>

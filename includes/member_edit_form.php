@@ -116,78 +116,11 @@ jQuery(document).ready(function($){
 <table class="mem_info">
 		<tr>
 				<td class="label">e-mail</td>
-				<td><input name="mem_email" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
+				<td><input name="member[email]" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
 		</tr>
-		<?php
-//20100818ysk start
-		usces_admin_custom_field_input($csmb_meta, 'member', 'name_pre');
-//20100818ysk end
-		?>
-		<tr>
-				<td class="label"><?php _e('name', 'usces'); ?></td>
-				<td><input name="mem_name1" type="text" class="text short" value="<?php echo esc_attr($data['mem_name1']); ?>" />		<input name="mem_name2" type="text" class="text short" value="<?php echo esc_attr($data['mem_name2']); ?>" /></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('furigana', 'usces'); ?></td>
-				<td><input name="mem_name3" type="text" class="text short" value="<?php echo esc_attr($data['mem_name3']); ?>" />		<input name="mem_name4" type="text" class="text short" value="<?php echo esc_attr($data['mem_name4']); ?>" /></td>
-		</tr>
-		<?php
-//20100818ysk start
-		usces_admin_custom_field_input($csmb_meta, 'member', 'name_after');
-//20100818ysk end
-		?>
-		<tr>
-				<td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_zip" type="text" class="text short" value="<?php echo esc_attr($data['mem_zip']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('Province', 'usces'); ?></td>
-				<td><span class="col2">
-						<select name="mem_pref" class="select">
-								<?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_attr($value) . "</option>\n";
-}
-?>
-						</select>
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('city', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_address1" type="text" class="text long" value="<?php echo esc_attr($data['mem_address1']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('numbers', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_address2" type="text" class="text long" value="<?php echo esc_attr($data['mem_address2']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('building name', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_address3" type="text" class="text long" value="<?php echo esc_attr($data['mem_address3']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('Phone number', 'usces'); ?></td>
-				<td><input name="mem_tel" type="text" class="text long" value="<?php echo esc_attr($data['mem_tel']); ?>" /></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('FAX number', 'usces'); ?></td>
-				<td><input name="mem_fax" type="text" class="text long" value="<?php echo esc_attr($data['mem_fax']); ?>" /></td>
-		</tr>
-		<?php
-//20100818ysk start
-		usces_admin_custom_field_input($csmb_meta, 'member', 'fax_after');
-//20100818ysk end
-		?>
+	
+<?php uesces_get_admin_addressform( 'member', $data, $csmb_meta ); ?>
+	
 </table>
 </td>
 <td colspan="2" rowspan="5" class="mem_col3">
@@ -204,7 +137,7 @@ foreach((array)$prefs as $value) {
 </td>
 		</tr>
 <tr>
-<td class="label"><?php _e('Rank', 'usces'); ?></td><td class="col1"><select name="mem_status">
+<td class="label"><?php _e('Rank', 'usces'); ?></td><td class="col1"><select name="member[status]">
 <?php 
 	foreach ((array)$this->member_status as $rk => $rv) {
 		$selected = ($rk == $data['mem_status']) ? ' selected="selected"' : '';
@@ -214,7 +147,7 @@ foreach((array)$prefs as $value) {
 </select></td>
 </tr>
 <tr>
-<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="mem_point" type="text" class="text right short" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
+<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
 <?php if( USCES_JP ): ?>
 <?php endif; ?>
 </tr>

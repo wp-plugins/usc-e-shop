@@ -842,6 +842,7 @@ class usc_e_shop
 			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : usces_get_local_language();
 			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : usces_get_local_cerrency();
 			$this->options['system']['addressform'] = (isset($_POST['addressform']) ) ? $_POST['addressform'] : usces_get_local_addressform();
+			$this->options['system']['target_market'] = (isset($_POST['target_market']) ) ? $_POST['target_market'] : usces_get_local_target_market();
 			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
 			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
 
@@ -3178,21 +3179,21 @@ class usc_e_shop
 
 	function admin_member_check() {
 		$mes = '';
-		if ( !is_email( trim($_POST["mem_email"]) ) )
+		if ( !is_email( trim($_POST['member']["email"]) ) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
-		if ( trim($_POST["mem_name1"]) == "" )
+		if ( trim($_POST['member']["name1"]) == "" )
 			$mes .= __('Name is not correct', 'usces') . "<br />";
 //		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( trim($_POST["mem_zip"]) == "" )
+		if ( trim($_POST['member']["zipcode"]) == "" )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["mem_pref"] == __('-- Select --', 'usces') )
+		if ( $_POST['member']["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
-		if ( trim($_POST["mem_address1"]) == "" )
+		if ( trim($_POST['member']["address1"]) == "" )
 			$mes .= __('enter the city name', 'usces') . "<br />";
-		if ( trim($_POST["mem_address2"]) == "" )
+		if ( trim($_POST['member']["address2"]) == "" )
 			$mes .= __('enter house numbers', 'usces') . "<br />";
-		if ( trim($_POST["mem_tel"]) == "" )
+		if ( trim($_POST['member']["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
 		return $mes;

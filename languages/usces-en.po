@@ -2163,7 +2163,7 @@ msgid "Options for EX-plugin"
 msgstr "Options for EX-plugin"
 
 msgid "Push 'change decision' button, to be settled with an order number."
-msgstr "Settle order number by pressing \"change setting.\""
+msgstr "Settle order number by pressing 'change setting'."
 
 msgid "Order number"
 msgstr "Order Number"

@@ -25,6 +25,7 @@ $orderby_itemopt = isset($this->options['system']['orderby_itemopt']) ? $this->o
 $system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : usces_get_local_language();
 $system_currency =  ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : usces_get_local_cerrency();
 $system_addressform =  ( isset($this->options['system']['addressform']) && !empty($this->options['system']['addressform']) ) ? $this->options['system']['addressform'] : usces_get_local_addressform();
+$system_target_markets =  ( isset($this->options['system']['target_market']) && !empty($this->options['system']['target_market']) ) ? $this->options['system']['target_market'] : usces_get_local_target_market();
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -177,6 +178,18 @@ function toggleVisibility(id) {
 		<?php } ?>
 		</select></td>
 	    <td><div id="ex_addressform" class="explanation"><?php _e('住所氏名などの入力フォームの様式を、どの国のものにするか選択します', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_target_market');"><?php _e('Target Market', 'usces'); ?></a></th>
+		<td width="20"><select name="target_market[]" size="10" multiple="multiple" class="multipleselect" id="target_market">
+		    <!--<option value="all"<?php echo ($system_target_market == 'all' ? ' selected="selected"' : ''); ?>><?php _e('全ての国', 'usces'); ?></option>-->
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo (in_array($Ckey, $system_target_markets) ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		</select></td>
+	    <td><div id="ex_target_market" class="explanation"><?php _e('販売・発送可能な地域を国単位で選択します。複数選択可。', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">

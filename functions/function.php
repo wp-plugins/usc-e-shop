@@ -879,6 +879,7 @@ function usces_reg_orderdata( $results = array() ) {
 	else :
 	
 		$usces->cart->set_order_entry( array('ID' => $order_id) );
+		$usces->set_order_meta_value('customer_country', $entry['customer']['country'], $order_id);
 	
 //20110203ysk start
 		switch($_GET['acting']) {
@@ -1181,6 +1182,8 @@ function usces_new_orderdata() {
 		return false;
 
 	else :
+		$usces->set_order_meta_value('customer_country', $_POST['customer']['country'], $order_id);
+	
 		if( !empty($_POST['custom_order']) ) {
 			foreach( $_POST['custom_order'] as $key => $value ) {
 				$csod_key = 'csod_'.$key;
@@ -1260,20 +1263,20 @@ function usces_update_memberdata() {
 					`mem_name3`=%s, `mem_name4`=%s, `mem_zip`=%s, `mem_pref`=%s, `mem_address1`=%s, 
 					`mem_address2`=%s, `mem_address3`=%s, `mem_tel`=%s, `mem_fax`=%s 
 				WHERE ID = %d", 
-					$_POST['mem_email'], 
-					$_POST['mem_status'], 
-					$_POST['mem_point'], 
-					$_POST['mem_name1'], 
-					$_POST['mem_name2'], 
-					$_POST['mem_name3'], 
-					$_POST['mem_name4'], 
-					$_POST['mem_zip'], 
-					$_POST['mem_pref'], 
-					$_POST['mem_address1'], 
-					$_POST['mem_address2'], 
-					$_POST['mem_address3'], 
-					$_POST['mem_tel'], 
-					$_POST['mem_fax'], 
+					$_POST['member']['email'], 
+					$_POST['member']['status'], 
+					$_POST['member']['point'], 
+					$_POST['member']['name1'], 
+					$_POST['member']['name2'], 
+					$_POST['member']['name3'], 
+					$_POST['member']['name4'], 
+					$_POST['member']['zipcode'], 
+					$_POST['member']['pref'], 
+					$_POST['member']['address1'], 
+					$_POST['member']['address2'], 
+					$_POST['member']['address3'], 
+					$_POST['member']['tel'], 
+					$_POST['member']['fax'], 
 					$ID
 				);
 
@@ -1502,6 +1505,9 @@ function usces_update_orderdata() {
 	$res[0] = $wpdb->query( $query );
 	if(false === $res[0]) 
 		return false;
+		
+	$usces->set_order_meta_value('customer_country', $_POST['customer']['country'], $ID);
+
 	$i = 1;
 	if( !empty($_POST['custom_order']) ) {
 		foreach( $_POST['custom_order'] as $key => $value ) {
@@ -3716,6 +3722,23 @@ function usces_get_local_addressform(){
 	return $res;
 }
 
+function usces_get_local_target_market(){
+	$locale = get_locale();
+	switch( $locale ){
+		case 'en':
+		case 'en_US':
+			$res =  'US';
+			break;
+		case 'ja':
+		case 'ja_JP':
+			$res =  'JP';
+			break;
+		default:
+			$res =  'US';
+	}
+	return (array)$res;
+}
+
 function usces_get_apply_addressform($country){
 	global $usces_settings;
 	return $usces_settings['addressform'][$country];
@@ -3914,5 +3937,175 @@ function usces_trackPageview_deletemember($push){
 		$push[] = "'_trackPageview','/wc_deletemember'";
 	}
 	return $push;
+}
+
+function uesces_get_admin_addressform( $type, $data, $customdata, $out = '' ){
+	global $usces, $usces_settings;
+	$options = get_option('usces');
+	$applyform = usces_get_apply_addressform($options['system']['addressform']);
+	$formtag = '';
+	switch( $type ){
+	case 'member':
+		$values = array('name1'=>$data['mem_name1'], 'name2'=>$data['mem_name2'], 'name3'=>$data['mem_name3'], 'name4'=>$data['mem_name4'], 'zipcode'=>$data['mem_zip'], 'address1'=>$data['mem_address1'], 'address2'=>$data['mem_address2'], 'address3'=>$data['mem_address3'], 'tel'=>$data['mem_tel'], 'fax'=>$data['mem_fax'], 'pref'=>$data['mem_pref']);
+		$country = $values['country'];
+		break;
+	case 'customer':
+		$values = array('name1'=>$data['order_name1'], 'name2'=>$data['order_name2'], 'name3'=>$data['order_name3'], 'name4'=>$data['order_name4'], 'zipcode'=>$data['order_zip'], 'address1'=>$data['order_address1'], 'address2'=>$data['order_address2'], 'address3'=>$data['order_address3'], 'tel'=>$data['order_tel'], 'fax'=>$data['order_fax'], 'pref'=>$data['order_pref']);
+		$country = $usces->get_order_meta_value('customer_country', $data['ID']);
+		break;
+	case 'delivery':
+		$values = $data;
+		$country = $values['country'];
+		break;
+	}
+	
+	switch ($applyform){
+	
+	case 'JP': 
+		//20100818ysk start
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre');
+		//20100818ysk end
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('name', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[name1]" type="text" class="text short" value="' . esc_attr($values['name1']) . '" /><input name="' . $type . '[name2]" type="text" class="text short" value="' . esc_attr($values['name2']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('furigana', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[name3]" type="text" class="text short" value="' . esc_attr($values['name3']) . '" /><input name="' . $type . '[name4]" type="text" class="text short" value="' . esc_attr($values['name4']) . '" /></td>
+		</tr>';
+		//20100818ysk start
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after');
+		//20100818ysk end
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('Zip/Postal Code', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[zipcode]" type="text" class="text short" value="' . esc_attr($values['zipcode']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Country', 'usces') . '</td>
+			<td class="col2">' . uesces_get_target_market_form( $type, $country, 'return' ) . '</td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Province', 'usces') . '</td>
+			<td class="col2"><select name="' . $type . '[pref]" class="select">';
+
+		$prefs = $options['province'];
+		foreach((array)$prefs as $pref) {
+			$selected = ($values['pref'] == $pref) ? ' selected="selected"' : '';
+			$formtag .= "\t<option value='" . esc_attr($pref) . "'{$selected}>" . esc_html($pref) . "</option>\n";
+		}
+		$formtag .= '	</select></td>
+		</tr>';
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('city', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address1]" type="text" class="text long" value="' . esc_attr($values['address1']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('numbers', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address2]" type="text" class="text long" value="' . esc_attr($values['address2']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('building name', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address3]" type="text" class="text long" value="' . esc_attr($values['address3']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Phone number', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[tel]" type="text" class="text long" value="' . esc_attr($values['tel']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('FAX number', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td>
+		</tr>';
+		//20100818ysk start
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after');
+		//20100818ysk end
+		break;
+		
+	case 'US':
+	default:
+		//20100818ysk start
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre');
+		//20100818ysk end
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('name', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[name2]" type="text" class="text short" value="' . esc_attr($values['name2']) . '" /><input name="' . $type . '[name1]" type="text" class="text short" value="' . esc_attr($values['name1']) . '" /></td>
+		</tr>';
+		//20100818ysk start
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after');
+		//20100818ysk end
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('Address Line1', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address2]" type="text" class="text long" value="' . esc_attr($values['address2']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Address Line2', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address3]" type="text" class="text long" value="' . esc_attr($values['address3']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('city', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address1]" type="text" class="text long" value="' . esc_attr($values['address1']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('State', 'usces') . '</td>
+			<td class="col2"><select name="' . $type . '[pref]" class="select">';
+
+		$prefs = $options['province'];
+		foreach((array)$prefs as $pref) {
+			$selected = ($values['pref'] == $pref) ? ' selected="selected"' : '';
+			$formtag .= "\t<option value='" . esc_attr($pref) . "'{$selected}>" . esc_html($pref) . "</option>\n";
+		}
+		$formtag .= '	</select></td>
+		</tr>';
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('Country', 'usces') . '</td>
+			<td class="col2">' . uesces_get_target_market_form( $type, $country, 'return' ) . '</td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Zip', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[zipcode]" type="text" class="text short" value="' . esc_attr($values['zipcode']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Phone number', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[tel]" type="text" class="text long" value="' . esc_attr($values['tel']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('FAX number', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td>
+		</tr>';
+		//20100818ysk start
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after');
+		//20100818ysk end
+		break;
+	}
+	$res = apply_filters('usces_filter_apply_admin_addressform', $formtag, $type, $data, $customdata);
+	
+
+	if($out == 'return') {
+		return $res;
+	} else {
+		echo $res;
+	}
+}
+
+function uesces_get_target_market_form( $type, $selected, $out = '' ){
+	global $usces_settings;
+	$options = get_option('usces');
+	$res = '<select name="' . $type . '[country]" id="country">'."\n";
+	foreach ( $usces_settings['country'] as $key => $value ){
+		if( in_array($key, $options['system']['target_market']) )
+			$res .= '<option value="' . $key . '"' . ($selected == $key ? ' selected="selected"' : '') . '>' . $value . "</option>\n";
+	}
+	$res .= '</select>'."\n";
+	
+	if($out == 'return') {
+		return $res;
+	} else {
+		echo $res;
+	}
 }
 ?>
