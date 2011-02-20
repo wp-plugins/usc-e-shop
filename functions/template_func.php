@@ -844,19 +844,22 @@ function usces_is_category( $str ) {
 }
 
 function usces_the_pref( $flag, $out = '' ){
-	global $usces;
+	global $usces, $usces_states;
 	
 	$usces_members = $usces->get_member();
 	$usces_entries = $usces->cart->get_entry();
 	$name = esc_attr($flag) . '[pref]';
 	$pref = $usces_entries[$flag]['pref'];
-	if( 'member' == $flag)
+	$country = $usces_entries[$flag]['country'];
+	if( 'member' == $flag){
 		$pref = $usces_members['pref'];
-	
+		$country = $usces_members['country'];
+	}
 	$html = "<select name='" . esc_attr($name) . "' id='pref' class='pref'>\n";
 //	$prefs = get_option('usces_pref');
-	$prefs = $usces->options['province'];
-	foreach($prefs as $value) {
+//	$prefs = $usces->options['province'];
+	$prefs = $usces_states[$country];
+	foreach((array)$prefs as $value) {
 		$selected = ($pref == $value) ? ' selected="selected"' : '';
 		$html .= "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
 	}

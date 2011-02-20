@@ -2044,4 +2044,18 @@ function _list_custom_member_meta_row($key, $entry) {
 }
 //20100818ysk end
 
+function change_states_ajax(){
+	global $usces, $usces_states;
+	
+	$c = $_POST['country'];
+	$res = '';
+	if( !isset($usces_states[$c]) || empty($usces_states[$c]) )
+		die('error');
+		
+	foreach( (array)$usces_states[$c] as $state ){
+		$res .= '<option value="' . $state . '">' . $state . '</option>';
+	}
+	die($res);
+}
+
 ?>

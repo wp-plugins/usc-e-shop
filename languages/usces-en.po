@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-5 00:00+0000\n"
 "PO-Revision-Date: \n"
-"Last-Translator: usc <nanbu@uscons.co.jp>\n"
+"Last-Translator: nanbu <nanbu@uscons.co.jp>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,10 +16,10 @@ msgstr ""
 "X-Poedit-Basepath: wp-content/themes/ucart_default\n"
 
 msgid "This month"
-msgstr "This month"
+msgstr "This Month"
 
 msgid "Last month"
-msgstr "Last month"
+msgstr "Last Month"
 
 msgid "The past one week"
 msgstr "Past week"
@@ -671,10 +671,10 @@ msgid "min"
 msgstr "minute"
 
 msgid "%2$s/%1$s"
-msgstr "Month/Year"
+msgstr "%2$s/%1$s"
 
 msgid "%2$s %3$s, %1$s"
-msgstr "Date/Month/Year"
+msgstr "%2$s %3$s, %1$s"
 
 msgid "date and time of termination"
 msgstr "Date and Time of Termination"
@@ -1972,7 +1972,7 @@ msgstr "'This Item is limited to '+checknum+' at a time.'"
 # "checknum" is a purchase limit number.
 # "(i+1)" is row number of the cart.
 msgid "'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'"
-msgstr "'The No.' +  (i+1) + ' Item is limited to ' + checknum+' at a time."
+msgstr "'The No.' +  (i+1) + ' Item is limited to ' + checknum+' at a time.'"
 
 # (JavaScript)
 # "checknum" is the number of the stock.

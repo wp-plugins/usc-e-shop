@@ -1501,6 +1501,35 @@ class usc_e_shop
 				location.href = uscesL10n.previous_url; 
 			},
 			
+			settings: {
+				url: uscesL10n.ajaxurl,
+				type: 'POST',
+				cache: false,
+				success: function(data, dataType){
+					//$("tbody#item-opt-list").html( data );
+				}, 
+				error: function(msg){
+					//$("#ajax-response").html(msg);
+				}
+			},
+			
+			changeStates : function( country ) {
+				var s = this.settings;
+				s.data = "action=change_states_ajax&country=" + country;
+				s.success = function(data, dataType){
+					if( 'error' == data ){
+						alert('error');
+					}else{
+						$("select#pref").html( data );
+					}
+				};
+				s.error = function(msg){
+					alert("error");
+				};
+				$.ajax( s );
+				return false;
+			},
+			
 			isNum : function (num) {
 				if (num.match(/[^0-9]/g)) {
 					return false;
@@ -1508,6 +1537,71 @@ class usc_e_shop
 				return true;
 			}
 		};
+		$("#country").change(function () {
+			var country = $("#country option:selected").val();
+			$("#newcharging_type option:selected").val()
+			uscesCart.changeStates( country ); 
+		});
+			
+		})(jQuery);
+		</script>
+		<?php elseif( ($this->use_js && (is_page(USCES_MEMBER_NUMBER) || $this->is_member_page($_SERVER['REQUEST_URI'])) && ('editmemberform' == $this->page || 'newmemberform' == $this->page)) 
+					|| (is_admin() && ('newpost' == $_GET['order_action'] || 'usces_ordernew' == $_GET['page'] || 'edit' == $_GET['order_action'] || 'edit' == $_GET['member_action'])) ) : ?>
+					
+		<script type='text/javascript'>
+		(function($) {
+		uscesCart = {
+			settings: {
+				url: uscesL10n.ajaxurl,
+				type: 'POST',
+				cache: false,
+				success: function(data, dataType){
+					//$("tbody#item-opt-list").html( data );
+				}, 
+				error: function(msg){
+					//$("#ajax-response").html(msg);
+				}
+			},
+			
+			changeStates : function( country ) {
+				var s = this.settings;
+				s.data = "action=change_states_ajax&country=" + country;
+				s.success = function(data, dataType){
+					if( 'error' == data ){
+						alert('error');
+					}else{
+						$("select#pref").html( data );
+						if( ocountry == $("#country").get(0).selectedIndex ){
+							$("#pref").attr({selectedIndex:ostate});
+						}
+					}
+				};
+				s.error = function(msg){
+					alert("error");
+				};
+				$.ajax( s );
+				return false;
+			},
+			
+			isNum : function (num) {
+				if (num.match(/[^0-9]/g)) {
+					return false;
+				}
+				return true;
+			}
+		};
+		var ostate = $("#pref").get(0).selectedIndex;
+		var ocountry = $("#country").get(0).selectedIndex;
+		
+//		$("#country").focus(function () {
+//			ocountry = $("#country option:selected").val();
+//			ostate = $("#pref").get(0).selectedIndex;
+//		});
+		$("#country").change(function () {
+			var country = $("#country option:selected").val();
+			uscesCart.changeStates( country ); 
+		});
+			
 		})(jQuery);
 		</script>
 		<?php endif; ?>
@@ -1576,8 +1670,106 @@ class usc_e_shop
 					break;
 			}
 		}
-
-	}
+?>
+<?php
+		if( is_admin() && ('newpost' == $_GET['order_action'] 
+							|| 'usces_ordernew' == $_GET['page'] 
+							|| 'edit' == $_GET['order_action'] 
+							|| 'editpost' == $_GET['order_action'] 
+							|| 'edit' == $_GET['member_action'] 
+							|| 'editpost' == $_GET['member_action']) ) :
+			switch( $_GET['page'] ){
+				case 'usces_ordernew':
+				case 'usces_orderlist':
+					$admin_page = 'order';
+					break;
+				case 'usces_memberlist':
+					$admin_page = 'member';
+					break;
+			}
+?>
+		<script type='text/javascript'>
+		jQuery(function($) {
+		uscesCart = {
+			settings: {
+				url: uscesL10n.requestFile,
+				type: 'POST',
+				cache: false,
+				success: function(data, dataType){
+					//$("tbody#item-opt-list").html( data );
+				}, 
+				error: function(msg){
+					//$("#ajax-response").html(msg);
+				}
+			},
+			
+			changeStates : function( country, type ) {
+				var s = this.settings;
+				s.data = "action=change_states_ajax&country=" + country;
+				s.success = function(data, dataType){
+					if( 'error' == data ){
+						alert('error');
+					}else{
+						$("select#" + type + "_pref").html( data );
+						if( customercountry == country && 'customer' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:customerstate});
+						}else if( deliverycountry == country && 'delivery' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:deliverystate});
+						}else if( customercountry == country && 'member' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:customerstate});
+						}
+					}
+				};
+				s.error = function(msg){
+					alert("error");
+				};
+				$.ajax( s );
+				return false;
+			},
+			
+			isNum : function (num) {
+				if (num.match(/[^0-9]/g)) {
+					return false;
+				}
+				return true;
+			}
+		};
+<?php
+		if( 'order' == $admin_page ){
+?>
+		var customerstate = $("#customer_pref").get(0).selectedIndex;
+		var customercountry = $("#customer_country").val();
+		var deliverystate = $("#delivery_pref").get(0).selectedIndex;
+		var deliverycountry = $("#delivery_country").val();
+		
+		$("#customer_country").change(function () {
+			var country = $("#customer_country option:selected").val();
+			uscesCart.changeStates( country, 'customer' ); 
+		});
+		$("#delivery_country").change(function () {
+			var country = $("#delivery_country option:selected").val();
+			uscesCart.changeStates( country, 'delivery' ); 
+		});
+<?php
+		}else if( 'member' == $admin_page ){
+?>
+		var customerstate = $("#member_pref").get(0).selectedIndex;
+		var customercountry = $("#member_country").val();
+		var deliverystate = '';
+		var deliverycountry = '';
+		
+		$("#member_country").change(function () {
+			var country = $("#member_country option:selected").val();
+			uscesCart.changeStates( country, 'member' ); 
+		});
+<?php
+		}
+?>
+		});
+		</script>
+<?php
+		endif;
+}
 	
 	function main() {
 		global $wpdb, $wp_locale, $wp_version, $post_ID;
@@ -2563,6 +2755,7 @@ class usc_e_shop
 				);
 			$res = $wpdb->query( $query );
 			if( $res !== false ){
+				$this->set_member_meta_value('customer_country', $_POST['member']['country'], $_POST['member_id']);
 //20100818ysk start
 				$res = $this->reg_custom_member($_POST['member_id']);
 //20100818ysk end
@@ -2620,6 +2813,7 @@ class usc_e_shop
 				if($res !== false) {
 					$user = $_POST['member'];
 					$user['ID'] = $wpdb->insert_id;
+					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $user['ID']);
 //20100818ysk start
 					$res = $this->reg_custom_member($wpdb->insert_id);
 //20100818ysk end
@@ -2671,6 +2865,7 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
+					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
 //20100818ysk start
 					$res = $this->reg_custom_member($wpdb->insert_id);
 //20100818ysk end
@@ -2773,6 +2968,7 @@ class usc_e_shop
 					$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+					$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
 //20100818ysk start
 					$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -2826,6 +3022,7 @@ class usc_e_shop
 					$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+					$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
 //20100818ysk start
 					$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -2877,6 +3074,7 @@ class usc_e_shop
 			$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 			$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 			$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+			$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
 //20100818ysk start
 			$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -5485,7 +5683,7 @@ class usc_e_shop
 	function get_member_meta($member_id){
 		global $wpdb;
 		$table_name = $wpdb->prefix . "usces_member_meta";
-		$query = $wpdb->prepare("SELECT * FROM $table_name WHERE member_id = %d AND meta_key NOT LIKE %s", $member_id, 'csmb_%');
+		$query = $wpdb->prepare("SELECT * FROM $table_name WHERE member_id = %d AND meta_key <> 'customer_country' AND meta_key NOT LIKE %s", $member_id, 'csmb_%');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		return $res;
 	}
