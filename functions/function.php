@@ -126,7 +126,7 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $data['order_discount'], true, 'return' ) . "\r\n";
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$meisai .= __('C.O.D','usces') . "  : " . usces_crform( $data['order_cod_fee'], true, 'return' ) . "\r\n";
+		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, 'return' ) . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
 		$meisai .= __('consumption tax','usces') . "    : " . usces_crform( $data['order_tax'], true, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
@@ -315,7 +315,7 @@ function usces_send_ordermail($order_id) {
 		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $entry['order']['discount'], true, 'return' ) . "\r\n";
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
-		$meisai .= __('C.O.D','usces') . "  : " . usces_crform( $entry['order']['cod_fee'], true, 'return' ) . "\r\n";
+		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, 'return' ) . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
 		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";

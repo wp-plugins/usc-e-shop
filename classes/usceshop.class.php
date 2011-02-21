@@ -4936,26 +4936,33 @@ class usc_e_shop
 	
 	function getCODFee($payment_name, $amount_by_cod) {
 		$payments = $this->getPayments($payment_name);
-		if( 'COD' != $payments['settlement'] )
-			return 0;
-	
-		if( 'change' != $this->options['cod_type'] )
-			return $this->options['cod_fee'];
-			
-		$price = $amount_by_cod + $this->getTax( $amount_by_cod );
-		if( $price <= $this->options['cod_first_amount'] )
-			return $this->options['cod_first_fee'];
-			
-		if( isset($this->options['cod_amounts']) ){
-			$last = count( $this->options['cod_amounts'] ) - 1;
-			if( $price > $this->options['cod_amounts'][$last] )
-				return 	$this->options['cod_end_fee'];
-			
+		if( 'COD' != $payments['settlement'] ){
 			$fee = 0;
-			foreach( $this->options['cod_amounts'] as $key => $value ){
-				if( $price <= $value ){
-					$fee = $this->options['cod_fees'][$key];
-					break;
+		
+		}else if( 'change' != $this->options['cod_type'] ){
+			$fee = $this->options['cod_fee'];
+		
+		}else{	
+			$price = $amount_by_cod + $this->getTax( $amount_by_cod );
+			if( $price <= $this->options['cod_first_amount'] ){
+				$fee = $this->options['cod_first_fee'];
+			
+			}else if( $price >= $this->options['cod_end_amount'] ){
+				$fee = $this->options['cod_end_fee'];
+			
+			}else if( isset($this->options['cod_amounts']) ){
+				$last = count( $this->options['cod_amounts'] ) - 1;
+				if( $price > $this->options['cod_amounts'][$last] ){
+					$fee = $this->options['cod_end_fee'];
+					
+				}else{
+					$fee = 0;
+					foreach( $this->options['cod_amounts'] as $key => $value ){
+						if( $price <= $value ){
+							$fee = $this->options['cod_fees'][$key];
+							break;
+						}
+					}
 				}
 			}
 		}

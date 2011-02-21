@@ -452,7 +452,7 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(104.3, 216.7);
 	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(__('Shipping', 'usces')), $border, 'C');
 	$pdf->SetXY(104.3, 222.7);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(__('COD fee', 'usces')), $border, 'C');
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_label', __('COD fee', 'usces'))), $border, 'C');
 	$pdf->SetXY(104.3, 228.6);
 	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(__('consumption tax', 'usces')), $border, 'C');
 	$pdf->SetXY(104.3, 235.8);

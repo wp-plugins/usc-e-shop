@@ -1280,7 +1280,7 @@ function usces_download_order_list() {
 	if(isset($_REQUEST['check']['usedpoint'])) $line .= $th_h.__('Used points', 'usces').$th_f;
 	$line .= $th_h.__('Disnount', 'usces').$th_f;
 	$line .= $th_h.__('Shipping', 'usces').$th_f;
-	$line .= $th_h.__('COD fee', 'usces').$th_f;
+	$line .= $th_h.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).$th_f;
 	$line .= $th_h.__('consumption tax', 'usces').$th_f;
 	if(isset($_REQUEST['check']['note'])) $line .= $th_h.__('Notes', 'usces').$th_f;
 	if(!empty($csod_meta)) {

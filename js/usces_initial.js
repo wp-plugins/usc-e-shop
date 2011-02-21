@@ -38,7 +38,7 @@ jQuery(function($) {
 				}
 			}
 			
-//alert(query)
+alert(query)
 			
 			var s = codSend.settings;
 			s.data = query;
@@ -125,7 +125,7 @@ jQuery(function($) {
 			}else if( 0 < trs.length){
 				prep = ( $(trs).eq(trs.length-1).val() == '' ) ? '' : parseInt( $(trs).eq(trs.length-1).val() )+1;
 			}
-			html = '<tr id="tr_'+trs.length+'"><td class="cod_f"><span id="amount_'+trs.length+'">' + prep + '</span>'+usces_ini.cod_unit+'</td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts['+trs.length+']" type="text" class="short_str ui-widget-content ui-corner-all" />'+usces_ini.cod_unit+'</td><td class="cod_cod"><input name="cod_fees['+trs.length+']" type="text" class="short_str" />'+usces_ini.cod_unit+'</td></tr>';
+			html = '<tr id="tr_'+trs.length+'"><td class="cod_f"><span id="amount_'+trs.length+'">' + prep + '</span></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts['+trs.length+']" type="text" class="short_str ui-widget-content ui-corner-all" /></td><td class="cod_cod"><input name="cod_fees['+trs.length+']" type="text" class="short_str" /></td></tr>';
 			$('#cod_change_field').append(html);
 			trs = $("input[name^='cod_amounts']");
 			$(trs).bind("change", function(){

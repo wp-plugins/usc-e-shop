@@ -94,26 +94,26 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 if( !empty($usces_entries['order']['discount']) ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</td>
-		<td class="aright" style="color:#FF0000">' . number_format($usces_entries['order']['discount']) . '</td>
+		<td class="aright" style="color:#FF0000">' . usces_crform($usces_entries['order']['discount'], true, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 $html .= '<tr>
 	<td colspan="5" class="aright">'.__('Shipping', 'usces').'</td>
-	<td class="aright">' . number_format($usces_entries['order']['shipping_charge']) . '</td>
+	<td class="aright">' . usces_crform($usces_entries['order']['shipping_charge'], true, 'return') . '</td>
 	<td>&nbsp;</td>
 	</tr>';
 if( !empty($usces_entries['order']['cod_fee']) ) {
 	$html .= '<tr>
-		<td colspan="5" class="aright">'.__('COD fee', 'usces').'</td>
-		<td class="aright">' . number_format($usces_entries['order']['cod_fee']) . '</td>
+		<td colspan="5" class="aright">'.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).'</td>
+		<td class="aright">' . usces_crform($usces_entries['order']['cod_fee'], true, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
-		<td class="aright">' . number_format($usces_entries['order']['tax']) . '</td>
+		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
