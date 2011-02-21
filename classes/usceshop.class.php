@@ -1545,12 +1545,15 @@ class usc_e_shop
 			
 		})(jQuery);
 		</script>
-		<?php elseif( ($this->use_js && (is_page(USCES_MEMBER_NUMBER) || $this->is_member_page($_SERVER['REQUEST_URI'])) && ('editmemberform' == $this->page || 'newmemberform' == $this->page)) 
-					|| (is_admin() && ('newpost' == $_GET['order_action'] || 'usces_ordernew' == $_GET['page'] || 'edit' == $_GET['order_action'] || 'edit' == $_GET['member_action'])) ) : ?>
+		<?php endif; ?>
+		<?php if( $this->use_js 
+					&& ((  (is_page(USCES_MEMBER_NUMBER) || $this->is_member_page($_SERVER['REQUEST_URI'])) && ('member' == $this->page || 'editmemberform' == $this->page || 'newmemberform' == $this->page)  )
+					|| (  (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI'])) && ('customer' == $this->page || 'delivery' == $this->page)  ) 
+					)) : ?>
 					
 		<script type='text/javascript'>
 		(function($) {
-		uscesCart = {
+		uscesForm = {
 			settings: {
 				url: uscesL10n.ajaxurl,
 				type: 'POST',
@@ -1563,16 +1566,20 @@ class usc_e_shop
 				}
 			},
 			
-			changeStates : function( country ) {
+			changeStates : function( country, type ) {
 				var s = this.settings;
 				s.data = "action=change_states_ajax&country=" + country;
 				s.success = function(data, dataType){
 					if( 'error' == data ){
 						alert('error');
 					}else{
-						$("select#pref").html( data );
-						if( ocountry == $("#country").get(0).selectedIndex ){
-							$("#pref").attr({selectedIndex:ostate});
+						$("select#" + type + "_pref").html( data );
+						if( customercountry == country && 'customer' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:customerstate});
+						}else if( deliverycountry == country && 'delivery' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:deliverystate});
+						}else if( customercountry == country && 'member' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:customerstate});
 						}
 					}
 				};
@@ -1582,26 +1589,44 @@ class usc_e_shop
 				$.ajax( s );
 				return false;
 			},
-			
-			isNum : function (num) {
-				if (num.match(/[^0-9]/g)) {
-					return false;
-				}
-				return true;
-			}
 		};
-		var ostate = $("#pref").get(0).selectedIndex;
-		var ocountry = $("#country").get(0).selectedIndex;
+		<?php if( 'customer' == $this->page ){ ?>
 		
-//		$("#country").focus(function () {
-//			ocountry = $("#country option:selected").val();
-//			ostate = $("#pref").get(0).selectedIndex;
-//		});
-		$("#country").change(function () {
-			var country = $("#country option:selected").val();
-			uscesCart.changeStates( country ); 
+		var customerstate = $("#customer_pref").get(0).selectedIndex;
+		var customercountry = $("#customer_country").get(0).selectedIndex;
+		var deliverystate = "";
+		var deliverycountry = "";
+		var memberstate = "";
+		var membercountry = "";
+		$("#customer_country").change(function () {
+			var country = $("#customer_country option:selected").val();
+			uscesForm.changeStates( country, 'customer' ); 
 		});
-			
+		<?php }elseif( 'delivery' == $this->page ){ ?>
+		
+		var customerstate = "";
+		var customercountry = "";
+		var deliverystate = $("#delivery_pref").get(0).selectedIndex;
+		var deliverycountry = $("#delivery_country").get(0).selectedIndex;
+		var memberstate = "";
+		var membercountry = "";
+		$("#delivery_country").change(function () {
+			var country = $("#delivery_country option:selected").val();
+			uscesForm.changeStates( country, 'delivery' ); 
+		});
+		<?php }elseif( 'member' == $this->page || 'editmemberform' == $this->page || 'newmemberform' == $this->page ){ ?>
+		
+		var customerstate = "";
+		var customercountry = "";
+		var deliverystate = "";
+		var deliverycountry = "";
+		var memberstate = $("#member_pref").get(0).selectedIndex;
+		var membercountry = $("#member_country").get(0).selectedIndex;
+		$("#member_country").change(function () {
+			var country = $("#member_country option:selected").val();
+			uscesForm.changeStates( country, 'member' ); 
+		});
+		<?php } ?>
 		})(jQuery);
 		</script>
 		<?php endif; ?>
@@ -1690,7 +1715,7 @@ class usc_e_shop
 ?>
 		<script type='text/javascript'>
 		jQuery(function($) {
-		uscesCart = {
+		uscesForm = {
 			settings: {
 				url: uscesL10n.requestFile,
 				type: 'POST',
@@ -1744,11 +1769,11 @@ class usc_e_shop
 		
 		$("#customer_country").change(function () {
 			var country = $("#customer_country option:selected").val();
-			uscesCart.changeStates( country, 'customer' ); 
+			uscesForm.changeStates( country, 'customer' ); 
 		});
 		$("#delivery_country").change(function () {
 			var country = $("#delivery_country option:selected").val();
-			uscesCart.changeStates( country, 'delivery' ); 
+			uscesForm.changeStates( country, 'delivery' ); 
 		});
 <?php
 		}else if( 'member' == $admin_page ){
@@ -1760,7 +1785,7 @@ class usc_e_shop
 		
 		$("#member_country").change(function () {
 			var country = $("#member_country option:selected").val();
-			uscesCart.changeStates( country, 'member' ); 
+			uscesForm.changeStates( country, 'member' ); 
 		});
 <?php
 		}
@@ -5741,14 +5766,17 @@ class usc_e_shop
 		return $res;
 	}
 	
-	function get_currency($amount, $symbol_flag = false ){
+	function get_currency($amount, $symbol_pre = false, $symbol_post = false ){
 		global $usces_settings;
 		$cr = $this->options['system']['currency'];
 		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
-		if( $symbol_flag )
-			$price = $symbol . number_format($amount, $decimal, $point, $seperator) . __($code, 'usces');
-		else
-			$price = number_format($amount, $decimal, $point, $seperator);
+		$price = number_format($amount, $decimal, $point, $seperator);
+
+		if( $symbol_pre )
+			$price = $symbol . $price;
+			
+		if( $symbol_post )
+			$price = $price . __($code, 'usces');
 			
 		return $price;
 	}

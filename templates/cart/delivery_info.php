@@ -45,7 +45,7 @@ $html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="d
 	</table>
 	<table class="customer_form" id="delivery_table">';
 
-$html .= uesces_addressform( 'delivery', $usces_entries, 'return' );
+$html .= uesces_addressform( 'delivery', $usces_entries );
 
 $html .= '</table>';
 $html .= '<table class="customer_form" id="time">';

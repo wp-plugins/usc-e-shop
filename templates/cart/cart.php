@@ -84,10 +84,10 @@ if($this->cart->num_row() > 0) {
 			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
 			$html .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
 		}
-		$html .= usces_crform($skuPrice, true, 'return') . '
+		$html .= usces_crform($skuPrice, true, false, 'return') . '
 			</td>
 			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
-			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, 'return') . '</td>
+			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';
 		foreach($options as $key => $value){
@@ -109,11 +109,12 @@ if($this->cart->num_row() > 0) {
 		<tfoot>
 		<tr>
 			<th colspan="5" scope="row" class="aright">' . __('total items','usces') . usces_guid_tax('return') . '</th>
-			<th class="aright">' . usces_crform($this->get_total_price(), true, 'return') . '</th>
+			<th class="aright">' . usces_crform($this->get_total_price(), true, false, 'return') . '</th>
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		</tfoot>
-	</table>';
+	</table>
+	<div class="currency_code">' . __('Currency','usces') . ' : ' . usces_crcode( 'return' ) . '</div>';
 	if( $usces_gp ) {
 		$Business_pack_discount = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
 		$html .= apply_filters('usces_filter_itemGpExp_cart_message', $Business_pack_discount);

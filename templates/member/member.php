@@ -42,7 +42,8 @@ $header = '';
 $html .= apply_filters('usces_filter_memberinfo_page_header', $header);
 $html .= '</div>';
 
-$html .= '<h3>' . __('Purchase history', 'usces') . '</h3>
+$html .= '<h3>' . __('Purchase history', 'usces') . '</h3>';
+$html .= '<div class="currency_code">' . __('Currency','usces') . ' : ' . usces_crcode( 'return' ) . '</div>
 	<table>';
 	
 	
@@ -67,12 +68,12 @@ foreach ( $usces_member_history as $umhs ) {
 		<tr>
 		<td class="rightnum">' . $umhs['ID'] . '</td>
 		<td class="date">' . $umhs['date'] . '</td>
-		<td class="rightnum">' . usces_crform(($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, 'return') . '</td>
+		<td class="rightnum">' . usces_crform(($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>
 		<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>
-		<td class="rightnum">' . usces_crform($umhs['discount'], true, 'return') . '</td>
-		<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, 'return') . '</td>
-		<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, 'return') . '</td>
-		<td class="rightnum">' . usces_crform($umhs['tax'], true, 'return') . '</td>
+		<td class="rightnum">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
+		<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, false, 'return') . '</td>
+		<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, false, 'return') . '</td>
+		<td class="rightnum">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>
 		<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>
 		</tr>';
 	$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
@@ -111,9 +112,9 @@ foreach ( $usces_member_history as $umhs ) {
 			<td>' . ($i + 1) . '</td>
 			<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
 			<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a></td>
-			<td class="rightnum">' . usces_crform($skuPrice, true, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
-			<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
 			</tr>';
 	}
 	$html .= '</table>
@@ -128,7 +129,7 @@ $html .= '</table>
 	<form action="' . USCES_MEMBER_URL . '#edit" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<table class="customer_form">';
 	
-$html .= uesces_addressform( 'member', $usces_members, 'return' );
+$html .= uesces_addressform( 'member', $usces_members );
 
 $html .= '<tr>
 	<th scope="row">' . __('e-mail adress', 'usces') . '</th>

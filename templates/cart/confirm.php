@@ -17,6 +17,7 @@ $html .= '</div>';
 $html .= '<div class="error_message">' . $this->error_message . '</div>';
 
 $html .= '<div id="cart">
+<div class="currency_code">' . __('Currency','usces') . ' : ' . usces_crcode( 'return' ) . '</div>
 <table cellspacing="0" id="cart_table">
 		<thead>
 		<tr>
@@ -68,9 +69,9 @@ for($i=0; $i<count($cart); $i++) {
 		}
 	}
 	$html .= '</td>
-		<td class="aright">' . usces_crform($skuPrice, true, 'return') . '</td>
+		<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 		<td>' . $cart_row['quantity'] . '</td>
-		<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, 'return') . '</td>
+		<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 		<td>';
 	$html = apply_filters('usces_additional_confirm', $html, array($i, $post_id, $cart_row['sku']));
 	$html .= '</td>
@@ -81,7 +82,7 @@ $html .= '</tbody>
 	<tfoot>
 	<tr>
 		<th colspan="5" class="aright">'.__('total items', 'usces').'</th>
-		<th class="aright">' . usces_crform($usces_entries['order']['total_items_price'], true, 'return') . '</th>
+		<th class="aright">' . usces_crform($usces_entries['order']['total_items_price'], true, false, 'return') . '</th>
 		<th>&nbsp;</th>
 	</tr>';
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($usces_entries['order']['usedpoint']) ) {
@@ -94,36 +95,37 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 if( !empty($usces_entries['order']['discount']) ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</td>
-		<td class="aright" style="color:#FF0000">' . usces_crform($usces_entries['order']['discount'], true, 'return') . '</td>
+		<td class="aright" style="color:#FF0000">' . usces_crform($usces_entries['order']['discount'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 $html .= '<tr>
 	<td colspan="5" class="aright">'.__('Shipping', 'usces').'</td>
-	<td class="aright">' . usces_crform($usces_entries['order']['shipping_charge'], true, 'return') . '</td>
+	<td class="aright">' . usces_crform($usces_entries['order']['shipping_charge'], true, false, 'return') . '</td>
 	<td>&nbsp;</td>
 	</tr>';
 if( !empty($usces_entries['order']['cod_fee']) ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).'</td>
-		<td class="aright">' . usces_crform($usces_entries['order']['cod_fee'], true, 'return') . '</td>
+		<td class="aright">' . usces_crform($usces_entries['order']['cod_fee'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
-		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, 'return') . '</td>
+		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 $html .= '<tr>
 	<th colspan="5" class="aright">'.__('Total Amount', 'usces').'</th>
-	<th class="aright">' . usces_crform($usces_entries['order']['total_full_price'], true, 'return') . '</th>
+	<th class="aright">' . usces_crform($usces_entries['order']['total_full_price'], true, false, 'return') . '</th>
 	<th>&nbsp;</th>
 	</tr>
 	</tfoot>
 	</table>';
+	
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' &&  $this->is_member_logged_in() ) {
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="error_message">' . $this->error_message . '</div>
@@ -154,7 +156,7 @@ $html .= '</div>
 	<td>' . esc_html($usces_entries['customer']['mailaddress1']) . '</td>
 	</tr>';
 	
-$html .= uesces_addressform( 'confirm', $usces_entries, 'return' );
+$html .= uesces_addressform( 'confirm', $usces_entries );
 	
 ////20100818ysk start
 //$html .= usces_custom_field_info($usces_entries, 'customer', 'name_pre', 'return');

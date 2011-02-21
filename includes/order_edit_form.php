@@ -546,7 +546,7 @@ jQuery(document).ready(function($){
         <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr($data['order_email']); ?>" /></td>
     </tr>
 	
-<?php uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
+<?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
 	
 </table></td>
 <td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
@@ -567,7 +567,7 @@ if( $this->options['payment_method'] ) {
 <td colspan="2" rowspan="9" class="wrap_td">
 <table border="0" cellspacing="0" class="deli_info">
 
-<?php uesces_get_admin_addressform( 'delivery', $deli, $csde_meta ); ?>
+<?php echo uesces_get_admin_addressform( 'delivery', $deli, $csde_meta ); ?>
 
 </table></td>
 </tr>

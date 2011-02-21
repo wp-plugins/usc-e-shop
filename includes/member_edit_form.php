@@ -119,7 +119,7 @@ jQuery(document).ready(function($){
 				<td><input name="member[email]" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
 		</tr>
 	
-<?php uesces_get_admin_addressform( 'member', $data, $csmb_meta ); ?>
+<?php echo uesces_get_admin_addressform( 'member', $data, $csmb_meta ); ?>
 	
 </table>
 </td>
@@ -179,12 +179,12 @@ jQuery(document).ready(function($){
 </tr>
 <tr>
 <td><?php echo $umhs['date']; ?></td>
-<td class="rightnum"><?php usces_crform( $this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax'], true ); ?></td>
+<td class="rightnum"><?php usces_crform( $this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax'], true, false ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['usedpoint']); ?></td>
-<td class="rightnum"><?php usces_crform( $umhs['discount'], true ); ?></td>
-<td class="rightnum"><?php usces_crform( $umhs['shipping_charge'], true ); ?></td>
-<td class="rightnum"><?php usces_crform( $umhs['cod_fee'], true ); ?></td>
-<td class="rightnum"><?php usces_crform( $umhs['tax'], true ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['discount'], true, false ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['shipping_charge'], true, false ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['cod_fee'], true, false ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['tax'], true, false ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['getpoint']); ?></td>
 </tr>
 <tr>
@@ -222,9 +222,9 @@ jQuery(document).ready(function($){
 	<td><?php echo $i + 1; ?></td>
 	<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
 	<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
-	<td class="rightnum"><?php usces_crform( $skuPrice, false ); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice, false, false ); ?></td>
 	<td class="rightnum"><?php echo number_format($cart_row['quantity']); ?></td>
-	<td class="rightnum"><?php usces_crform( $skuPrice * $cart_row['quantity'], false ); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice * $cart_row['quantity'], false, false ); ?></td>
 	</tr>
 	<?php 
 	}

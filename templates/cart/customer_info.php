@@ -73,7 +73,7 @@ if(usces_is_membersystem_state()){
 	$html .= '</td></tr>';
 }
 
-$html .= uesces_addressform( 'customer', $usces_entries, 'return' );
+$html .= uesces_addressform( 'customer', $usces_entries );
 
 $html .= '</table>
 <input name="member_regmode" type="hidden" value="' . $member_regmode . '" />

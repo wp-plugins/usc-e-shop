@@ -462,7 +462,7 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'sku_value' ): ?>
 			<td class="price">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php usces_crform( $sv['price'], false ); ?></div>
+				<div class="priceline<?php echo $bgc; ?>"><?php usces_crform( $sv['price'], false, false ); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 			<td class="zaikonum">

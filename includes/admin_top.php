@@ -33,13 +33,13 @@ $items_num = $this->get_items_num();
 <th>&nbsp;</th><th><?php _e('number of order', 'usces'); ?></th><th><?php _e('amount of order', 'usces'); ?></th>
 </tr>
 <tr>
-<td><?php _e('today', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('today'), true ); ?></td>
+<td><?php _e('today', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('today'), true, false ); ?></td>
 </tr>
 <tr>
-<td><?php _e('This month', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('thismonth'), true ); ?></td>
+<td><?php _e('This month', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('thismonth')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('thismonth'), true, false ); ?></td>
 </tr>
 <tr>
-<td><?php _e('Same date in last year', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('lastyear'), true ); ?></td>
+<td><?php _e('Same date in last year', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('lastyear')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('lastyear'), true, false ); ?></td>
 </tr>
 </table>
 </div>

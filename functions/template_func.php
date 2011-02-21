@@ -190,7 +190,7 @@ function usces_the_itemCprice($out = '') {
 
 function usces_the_itemPriceCr($out = '') {
 	global $usces;
-	$res = esc_html($usces->get_currency($usces->itemsku['value']['price'], true ));
+	$res = esc_html($usces->get_currency($usces->itemsku['value']['price'], true, false ));
 
 	if($out == 'return'){
 		return $res;
@@ -201,19 +201,8 @@ function usces_the_itemPriceCr($out = '') {
 
 function usces_the_itemCpriceCr($out = '') {
 	global $usces;
-	$res = esc_html($usces->get_currency($usces->itemsku['value']['cprice'], true ));
+	$res = esc_html($usces->get_currency($usces->itemsku['value']['cprice'], true, false ));
 
-	if($out == 'return'){
-		return $res;
-	}else{
-		echo $res;
-	}
-}
-
-function usces_crform( $float, $symbol_flag = true, $out = '' ) {
-	global $usces;
-	$res = esc_html($usces->get_currency($float, $symbol_flag ));
-	
 	if($out == 'return'){
 		return $res;
 	}else{
@@ -321,7 +310,7 @@ function usces_the_firstPriceCr( $out = '', $post = NULL ) {
 	$post_id = $post->ID;
 	
 	$fields = $usces->get_skus( $post_id );
-	$res = esc_html($usces->get_currency($fields['price'][0], true ));
+	$res = esc_html($usces->get_currency($fields['price'][0], true, false ));
 
 	if($out == 'return'){
 		return $res;
@@ -337,7 +326,7 @@ function usces_the_firstCpriceCr( $out = '', $post = NULL ) {
 	$post_id = $post->ID;
 	
 	$fields = $usces->get_skus( $post_id );
-	$res = esc_html($usces->get_currency($fields['cprice'][0], true ));
+	$res = esc_html($usces->get_currency($fields['cprice'][0], true, false ));
 
 	if($out == 'return'){
 		return $res;
@@ -841,35 +830,6 @@ function usces_is_category( $str ) {
 		return true;
 	else
 		return false;
-}
-
-function usces_the_pref( $flag, $out = '' ){
-	global $usces, $usces_states;
-	
-	$usces_members = $usces->get_member();
-	$usces_entries = $usces->cart->get_entry();
-	$name = esc_attr($flag) . '[pref]';
-	$pref = $usces_entries[$flag]['pref'];
-	$country = $usces_entries[$flag]['country'];
-	if( 'member' == $flag){
-		$pref = $usces_members['pref'];
-		$country = $usces_members['country'];
-	}
-	$html = "<select name='" . esc_attr($name) . "' id='pref' class='pref'>\n";
-//	$prefs = get_option('usces_pref');
-//	$prefs = $usces->options['province'];
-	$prefs = $usces_states[$country];
-	foreach((array)$prefs as $value) {
-		$selected = ($pref == $value) ? ' selected="selected"' : '';
-		$html .= "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
-	}
-	$html .= "</select>\n";
-	
-	if( $out == 'return' ){
-		return $html;
-	}else{
-		echo $html;
-	}
 }
 
 function usces_the_company_name(){
@@ -2037,248 +1997,16 @@ function usces_singleitem_error_message($post_id, $skukey, $out = ''){
 	}
 }
 
-function usces_cr($amount, $symbol_flag = false, $out = '' ){
+function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '' ) {
 	global $usces;
-	$price = $usces->get_currency($amount, $symbol_flag);
-	$res = apply_filters('usces_filter_cr', $price, $amount);
-		
-	if($out == 'return') {
+	$price = esc_html($usces->get_currency($float, $symbol_pre, $symbol_post ));
+	$res = apply_filters('usces_filter_crform', $price, $amount);
+	
+	if($out == 'return'){
 		return $res;
-	} else {
-		echo $res;
-	}
-}
-
-// uesces_addressform( $type, $data, $out = '' )
-// $type = 'menber' or 'cuntomer' or 'delivery'
-function uesces_addressform( $type, $data, $out = '' ){
-	global $usces, $usces_settings;
-	$options = get_option('usces');
-	$applyform = usces_get_apply_addressform($options['system']['addressform']);
-	$formtag = '';
-	switch( $type ){
-	case 'confirm':
-	case 'member':
-		$values =  $data;
-		break;
-	case 'customer':
-	case 'delivery':
-		$values = $data[$type];
-		break;
-	}
-	
-	if( 'confirm' == $type ){
-	
-		switch ($applyform){
-		
-		case 'JP':
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name1']) . ' ' . esc_html($values['customer']['name2']) . '</td></tr>';
-			$formtag .= '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['customer']['name3']) . ' ' . esc_html($values['customer']['name4']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
-			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
-			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
-			<tr><th>'.__('building name', 'usces').'</th><td>' . esc_html($values['customer']['address3']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
-			//20100818ysk end
-			
-			$formtag .= '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
-			$formtag .= '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
-			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
-			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
-			<tr><th>'.__('building name', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
-			//20100818ysk end
-			break;
-			
-		case 'US':
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name3']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
-			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['customer']['address3']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
-			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
-			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
-			//20100818ysk end
-			
-			$formtag .= '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
-			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
-			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
-			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
-			//20100818ysk end
-			break;
-		}
-		$res = apply_filters('usces_filter_apply_addressform_confirm', $formtag, $type, $data);
-	
 	}else{
-	
-		switch ($applyform){
-		
-		case 'JP':
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr class="inp1">
-			<th width="127" scope="row"><em>*</em>'.__('Full name', 'usces').'</th>
-			<td width="257">'.__('Familly name', 'usces').'<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			<td width="257">'.__('Given name', 'usces').'<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			</tr>';
-			$formtag .= '<tr class="inp1">
-			<th scope="row">'.__('furigana', 'usces').'</th>
-			<td>'.__('Familly name', 'usces').'<input name="' . $type . '[name3]" id="name3" type="text" value="' . esc_attr($values['name3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			<td>'.__('Given name', 'usces').'<input name="' . $type . '[name4]" id="name4" type="text" value="' . esc_attr($values['name4']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			</tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '<tr>
-			<th scope="row"><em>*</em>'.__('Zip/Postal Code', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />100-1000</td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
-			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'], 'return' ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>'.__('Province', 'usces').'</th>
-			<td colspan="2">' . usces_the_pref( $type, 'return' ) . '</td>
-			</tr>
-			<tr class="inp2">
-			<th scope="row"><em>*</em>'.__('city', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.__('Kitakami Yokohama', 'usces').'</td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>'.__('numbers', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />3-24-555</td>
-			</tr>
-			<tr>
-			<th scope="row">'.__('building name', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.__('tuhanbuild 4F', 'usces').'</td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>'.__('Phone number', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />1000-10-1000</td>
-			</tr>
-			<tr>
-			<th scope="row">'.__('FAX number', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />1000-10-1000</td>
-			</tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'fax_after', 'return');
-			//20100818ysk end
-			break;
-			
-		case 'US':
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr class="inp1">
-			<th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
-			<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" /></td>
-			<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" /></td>
-			</tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr>
-			<th scope="row"><em>*</em>' . __('Address Line1', 'usces') . '</th>
-			<td colspan="2">' . __('Street address', 'usces') . '<br /><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" /></td>
-			</tr>
-			<tr>
-			<th scope="row">' . __('Address Line2', 'usces') . '</th>
-			<td colspan="2">' . __('Apartment, building, etc.', 'usces') . '<br /><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" /></td>
-			</tr>
-			<tr class="inp2">
-			<th scope="row"><em>*</em>' . __('city', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" /></td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>' . __('State', 'usces') . '</th>
-			<td colspan="2">' . usces_the_pref( $type, 'return' ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
-			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'], 'return' ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>' . __('Zip', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" /></td>
-			</tr>
-			<tr>
-			<th scope="row"><em>*</em>' . __('Phone number', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" /></td>
-			</tr>
-			<tr>
-			<th scope="row">' . __('FAX number', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" /></td>
-			</tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'fax_after', 'return');
-			//20100818ysk end
-			break;
-		}
-		$res = apply_filters('usces_filter_apply_addressform', $formtag, $type, $data);
-	
-	}
-
-	if($out == 'return') {
-		return $res;
-	} else {
 		echo $res;
 	}
 }
+
 ?>

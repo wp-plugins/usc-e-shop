@@ -310,7 +310,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(20);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$pdf->SetXY($leftside+2, $y);
-		$pdf->MultiCell($width, $lineheight+2, usces_conv_euc($usces->get_currency($data->order['total_full_price'], true) . apply_filters( 'usces_filters_pdf_currency_post', $currency_post)), 1, 'C');
+		$pdf->MultiCell($width, $lineheight+2, usces_conv_euc($usces->get_currency($data->order['total_full_price'], true, false) . apply_filters( 'usces_filters_pdf_currency_post', $currency_post)), 1, 'C');
 		
 		// Message
 		$y = $pdf->GetY() + $lineheight;
