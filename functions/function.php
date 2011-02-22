@@ -131,8 +131,9 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= __('consumption tax','usces') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, false, 'return' ) . "\r\n";
-	$meisai .= "------------------------------------------------------------------\r\n\r\n";
-
+	$meisai .= "------------------------------------------------------------------\r\n";
+	$meisai .= "(" . __('Currency', 'uesces') . ' : ' . usces_crcode('return') . ")\r\n\r\n";
+	
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data);
 
 
@@ -320,7 +321,8 @@ function usces_send_ordermail($order_id) {
 		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $entry['order']['total_full_price'], true, false, 'return' ) . "\r\n";
-	$meisai .= "------------------------------------------------------------------\r\n\r\n";
+	$meisai .= "------------------------------------------------------------------\r\n";
+	$meisai .= "(" . __('Currency', 'uesces') . ' : ' . usces_crcode('return') . ")\r\n\r\n";
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
 
@@ -329,7 +331,7 @@ function usces_send_ordermail($order_id) {
 	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
 	$msg_shipping .= "******************************************************************\r\n";
 	
-	$msg_shipping .= uesces_get_mail_addressform( 'order_mail', $deli, $order_id );
+	$msg_shipping .= uesces_get_mail_addressform( 'order_mail', $entry, $order_id );
 
 //20101208ysk start
 	//$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
@@ -4300,7 +4302,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 }
 
 function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' ){
-	global $usces, $usces_settings, $usces_states;
+	global $usces, $usces_settings;
 	$options = get_option('usces');
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
 	$formtag = '';
@@ -4325,7 +4327,7 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "    : " . $usces_states[$values['country']] . "\r\n";
+		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Address','usces') . "    : " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
@@ -4347,7 +4349,7 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
-		$formtag .= __('Country','usces') . "    : " . $usces_states[$values['country']] . "\r\n";
+		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
@@ -4397,6 +4399,30 @@ function usces_pref_select( $type, $values, $out = 'return' ){
 		return $html;
 	}else{
 		echo $html;
+	}
+}
+
+function usces_is_member_system(){
+	global $usces;
+	if($usces->options['membersystem_state'] == 'activate')
+		return true;
+	else
+		return false;
+}
+
+function usces_shipping_country_option( $selected ){
+	global $usces_settings;
+	$options = get_option('usces');
+	$res = '';
+	foreach ( $usces_settings['country'] as $key => $value ){
+		if( in_array($key, $options['system']['target_market']) )
+			$res .= '<option value="' . $key . '"' . ($selected == $key ? ' selected="selected"' : '') . '>' . $value . "</option>\n";
+	}
+	$res .= '<option value="world_wide"' . ($selected == $key ? ' selected="selected"' : '') . '>World Wide' . "</option>\n";
+	if($out == 'return') {
+		return $res;
+	} else {
+		echo $res;
 	}
 }
 ?>

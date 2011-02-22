@@ -38,7 +38,6 @@ jQuery(function($) {
 				}
 			}
 			
-alert(query)
 			
 			var s = codSend.settings;
 			s.data = query;

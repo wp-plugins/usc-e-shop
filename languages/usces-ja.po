@@ -2524,7 +2524,7 @@ msgid "Text-area"
 msgstr "テキストエリア"
 
 msgid "M j, Y"
-msgstr "Y-m-d"
+msgstr "Y年m月d日"
 
 msgid "Header Information"
 msgstr "ヘッダ情報"
@@ -2628,8 +2628,8 @@ msgid "Statement"
 msgstr "明細書"
 
 # お客様が法人だった場合の担当者ラベル
-msgid "Attn: :"
-msgstr "ご担当："
+msgid "Attn"
+msgstr "ご担当"
 
 msgid "Receipt"
 msgstr "領収書"
@@ -2691,6 +2691,30 @@ msgstr "配送希望日"
 msgid "JPY"
 msgstr "-"
 
+msgid "Japan"
+msgstr "日本"
+
+msgid "Currency"
+msgstr "通貨"
+
+msgid "No Preference"
+msgstr "指定しない"
+
+msgid "Unit"
+msgstr "単位"
+
+msgid "Quant"
+msgstr "数量"
+
+msgid "Country"
+msgstr "国"
+
+msgid "Target Market"
+msgstr "販売対象国"
+
+# お客様が法人だった場合の担当者ラベル
+#~ msgid "Attn: :"
+#~ msgstr "ご担当："
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
 #~ msgid "% Comments &#187;"
@@ -2801,7 +2825,6 @@ msgstr "-"
 #~ msgstr ""
 #~ "この度はblognameの会員にご登録下さいまして誠に有難うございます。「会員情"
 #~ "報」にて商品ご購入の履歴が確認できます。"
-
 #, fuzzy
 #~ msgid "We will inform you by e-mail when we are ready to send you items."
 #~ msgstr ""

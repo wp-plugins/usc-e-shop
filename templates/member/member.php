@@ -1,6 +1,7 @@
 <?php 
 $usces_members = $this->get_member();
 $usces_member_history = $this->get_member_history($usces_members['ID']);
+$colspan = usces_is_membersystem_point() ? 9 : 7;
 
 $html = '<div id="memberpages">
 
@@ -57,28 +58,36 @@ foreach ( $usces_member_history as $umhs ) {
 	$html .= '<tr>
 		<th class="historyrow">' . __('Order number', 'usces') . '</th>
 		<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
-		<th class="historyrow">' . __('Purchase price', 'usces') . '</th>
-		<th class="historyrow">' . __('Used points', 'usces') . '</th>
-		<th class="historyrow">' . __('Special Price', 'usces') . '</th>
+		<th class="historyrow">' . __('Purchase price', 'usces') . '</th>';
+	if( usces_is_membersystem_point() ){
+		$html .= '<th class="historyrow">' . __('Used points', 'usces') . '</th>';
+	}
+	$html .= '<th class="historyrow">' . __('Special Price', 'usces') . '</th>
 		<th class="historyrow">' . __('Shipping', 'usces') . '</th>
 		<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
-		<th class="historyrow">' . __('consumption tax', 'usces') . '</th>
-		<th class="historyrow">' . __('Acquired points', 'usces') . '</th>
-		</tr>
+		<th class="historyrow">' . __('consumption tax', 'usces') . '</th>';
+	if( usces_is_membersystem_point() ){
+		$html .= '<th class="historyrow">' . __('Acquired points', 'usces') . '</th>';
+	}
+	$html .= '</tr>
 		<tr>
 		<td class="rightnum">' . $umhs['ID'] . '</td>
 		<td class="date">' . $umhs['date'] . '</td>
-		<td class="rightnum">' . usces_crform(($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>
-		<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>
-		<td class="rightnum">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
+		<td class="rightnum">' . usces_crform(($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
+	if( usces_is_membersystem_point() ){
+		$html .= '<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>';
+	}
+	$html .= '<td class="rightnum">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
 		<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, false, 'return') . '</td>
 		<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, false, 'return') . '</td>
-		<td class="rightnum">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>
-		<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>
-		</tr>';
+		<td class="rightnum">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>';
+	if( usces_is_membersystem_point() ){
+		$html .= '<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>';
+	}
+	$html .= '</tr>';
 	$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
 	$html .= '<tr>
-		<td class="retail" colspan="9">
+		<td class="retail" colspan="' . $colspan . '">
 			<table id="retail_table">
 			<tr>
 			<th scope="row" class="num">No.</th>

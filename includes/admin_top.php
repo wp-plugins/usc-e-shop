@@ -30,7 +30,7 @@ $items_num = $this->get_items_num();
 <div class="usces_box">
 <table class="dashboard">
 <tr>
-<th>&nbsp;</th><th><?php _e('number of order', 'usces'); ?></th><th><?php _e('amount of order', 'usces'); ?></th>
+<th><?php _e('Currency','usces'); ?> : <?php usces_crcode(); ?></th><th><?php _e('number of order', 'usces'); ?></th><th><?php _e('amount of order', 'usces'); ?></th>
 </tr>
 <tr>
 <td><?php _e('today', 'usces'); ?> : </td><td class="bignum"><?php echo number_format($this->get_order_num('today')); ?></td><td class="bignum"><?php usces_crform( $this->get_order_amount('today'), true, false ); ?></td>
@@ -43,6 +43,7 @@ $items_num = $this->get_items_num();
 </tr>
 </table>
 </div>
+
 <h4><?php _e('information for registration of items', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">

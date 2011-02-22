@@ -5266,7 +5266,7 @@ class usc_e_shop
 			$today = date('Y-m-d 23:59:59', current_time('timestamp'));
 		}else if($period == 'lastyear') {
 			$date = date('Y-m-01 00:00:00', mktime(0, 0, 0, (int)$monthstr, 1, (int)$yearstr-1));
-			$today = date('Y-m-01 23:59:59', mktime(0, 0, 0, (int)$monthstr, (int)$daystr, (int)$yearstr-1));
+			$today = date('Y-m-d 23:59:59', mktime(0, 0, 0, (int)$monthstr+1, 0, (int)$yearstr-1));
 		}
 		$table_name = $wpdb->prefix . 'usces_order';
 		
@@ -5293,7 +5293,7 @@ class usc_e_shop
 			$today = date('Y-m-d 23:59:59', current_time('timestamp'));
 		}else if($period == 'lastyear') {
 			$date = date('Y-m-01 00:00:00', mktime(0, 0, 0, (int)$monthstr, 1, (int)$yearstr-1));
-			$today = date('Y-m-01 23:59:59', mktime(0, 0, 0, (int)$monthstr, (int)$daystr, (int)$yearstr-1));
+			$today = date('Y-m-d 23:59:59', mktime(0, 0, 0, (int)$monthstr+1, 0, (int)$yearstr-1));
 		}
 		$table_name = $wpdb->prefix . 'usces_order';
 		

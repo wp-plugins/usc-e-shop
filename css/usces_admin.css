@@ -369,7 +369,8 @@ div.zaikoline {
 	line-height: 1.3em;
 }
 .form_table th.sec {
-	width: 100px;
+	width: 150px;
+	white-space: normal;
 }
 .form_table label {
 	padding: 0px;
@@ -492,11 +493,10 @@ div.explanation  {
 .form_table label.delivery_days_label {
 	float: left;
 	display: block;
-	width: 70px;
+	width: 100px;
 	text-align: right;
 	margin-right: 5px;
 	padding-top: 5px;
-	height: 20px;
 	line-height: 20px;
 }
 .form_table input.charge_text, 
@@ -1961,5 +1961,11 @@ div.optcheck {
 	height: auto;
 }
 
+.iteminfo_table td label {
+	margin-right: 15px;
+	width: 160px;
+	display: block;
+	float: left;
+}
 
 

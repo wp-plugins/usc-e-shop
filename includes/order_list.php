@@ -444,7 +444,7 @@ jQuery(document).ready(function($){
 		<?php if( $key == 'ID' ): ?>
 		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo esc_html($value); ?></a></td>
 		<?php elseif( $key == 'total_price' ): ?>
-		<td class="price"><?php usces_crform( $value, false, false ); ?></td>
+		<td class="price"><?php usces_crform( $value, true, false ); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
 		<td class="red"><?php echo $value; ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == 'Pending'): ?>

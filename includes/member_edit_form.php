@@ -31,6 +31,12 @@ if(is_array($csmb_meta)) {
 }
 //20100818ysk end
 
+if( usces_is_member_system() ){
+	$colspan = 8;
+}else{
+	$colspan = 6;
+}
+
 //$deli = unserialize($data['order_delivery']);
 //$cart = unserialize($data['order_cart']);
 //$condition = unserialize($data['order_condition']);
@@ -61,8 +67,9 @@ if(is_array($csmb_meta)) {
 //	$receipt = '';
 
 ?>
-<script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/jquery-ui-1.7.1.custom.min.js'; ?>'></script>
+<!--<script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/jquery-ui-1.7.1.custom.min.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/bgiframe/jquery.bgiframe.min.js'; ?>'></script>
+-->
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
@@ -222,9 +229,9 @@ jQuery(document).ready(function($){
 	<td><?php echo $i + 1; ?></td>
 	<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
 	<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
-	<td class="rightnum"><?php usces_crform( $skuPrice, false, false ); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice, true, false ); ?></td>
 	<td class="rightnum"><?php echo number_format($cart_row['quantity']); ?></td>
-	<td class="rightnum"><?php usces_crform( $skuPrice * $cart_row['quantity'], false, false ); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice * $cart_row['quantity'], true, false ); ?></td>
 	</tr>
 	<?php 
 	}
