@@ -2671,10 +2671,29 @@ class usc_e_shop
 	function template_redirect () {
 		global $post;
 		if( is_single() && 'item' == $post->post_mime_type ) {
-			if( file_exists(get_stylesheet_directory() . '/wc_item_single.php') ){
-				include(get_stylesheet_directory() . '/wc_item_single.php');
+			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){
+				include(get_stylesheet_directory() . '/wc_templates/wc_item_single.php');
 				exit;
 			}
+		}
+		if( ('search_item' == $_REQUEST['page'] || 'usces_search' == $_REQUEST['page']) && $this->is_cart_page($_SERVER['REQUEST_URI']) ){
+			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_search_page.php') ){
+				include(get_stylesheet_directory() . '/wc_templates/wc_search_page.php');
+				exit;
+			}
+			
+		}else if( $this->is_cart_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
+			remove_action('the_post', array(&$this, 'action_cartFilter'));
+			remove_filter('the_title', array(&$this, 'filter_cartTitle'),20);
+			remove_filter('the_content', array(&$this, 'filter_cartContent'),20);
+			
+		}else if( $this->is_member_page($_SERVER['REQUEST_URI']) ){
+			remove_action('the_post', array(&$this, 'action_memberFilter'));
+			remove_filter('the_title', array(&$this, 'filter_memberTitle'),20);
+			remove_filter('the_content', array(&$this, 'filter_memberContent'),20);
+		
+		}else{
+			remove_action('the_post', array(&$this, 'goDefaultPage'));
 		}
 	}
 	

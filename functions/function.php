@@ -3725,9 +3725,9 @@ function usces_get_apply_addressform($country){
 }
 
 function usces_remove_filter(){
-	global $usces;
+	global $usces, $post;
 	
-	if( 'search_item' == $_GET['page'] && $usces->is_member_page($_SERVER['REQUEST_URI']) ){
+	if( is_single() && 'item' == $post->post_mime_type ) {
 		remove_filter('the_content', array(&$usces, 'filter_itemPage'));
 		
 	}else if( $usces->is_cart_page($_SERVER['REQUEST_URI']) || $usces->is_inquiry_page($_SERVER['REQUEST_URI']) ){
@@ -3748,7 +3748,7 @@ function usces_remove_filter(){
 function usces_reset_filter(){
 	global $usces;
 	
-	if( 'search_item' == $_GET['page'] && $usces->is_member_page($_SERVER['REQUEST_URI']) ){
+	if( is_single() && 'item' == $post->post_mime_type ) {
 		add_filter('the_content', array(&$usces, 'filter_itemPage'));
 		
 	}else if( $usces->is_cart_page($_SERVER['REQUEST_URI']) || $usces->is_inquiry_page($_SERVER['REQUEST_URI']) ){
