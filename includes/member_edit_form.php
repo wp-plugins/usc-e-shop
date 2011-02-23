@@ -61,8 +61,6 @@ if(is_array($csmb_meta)) {
 //	$receipt = '';
 
 ?>
-<script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/jquery-ui-1.7.1.custom.min.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo USCES_WP_PLUGIN_URL . '/usc-e-shop/js/jquery/bgiframe/jquery.bgiframe.min.js'; ?>'></script>
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>

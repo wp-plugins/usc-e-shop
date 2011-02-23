@@ -40,10 +40,11 @@ $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 $usces_opt_item = unserialize(get_option('usces_opt_item'));
 //20101111ysk end
 ?>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
+<!--<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.resizable.js"></script>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.draggable.js"></script>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.dialog.js"></script>
+-->
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>

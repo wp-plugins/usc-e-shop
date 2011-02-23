@@ -158,8 +158,8 @@ jQuery(function($){
 			if($("input[name='delivery_method_name']").val() == "") return;
 			
 			$("#delivery_method_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
-			var name = $("input[name='delivery_method_name']").val();
-			var time = $("#delivery_method_time").val();
+			var name = encodeURIComponent($("input[name='delivery_method_name']").val());
+			var time = encodeURIComponent($("#delivery_method_time").val());
 			var charge = $("#delivery_method_charge option:selected").val();
 //20101119ysk start
 			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked') == true) ? '1' : '0';
@@ -198,8 +198,8 @@ jQuery(function($){
 		update_delivery_method : function() {
 			$("#delivery_method_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#delivery_method_name_select option:selected").val();
-			var name = $("input[name='delivery_method_name']").val();
-			var time = $("#delivery_method_time").val();
+			var name = encodeURIComponent($("input[name='delivery_method_name']").val());
+			var time = encodeURIComponent($("#delivery_method_time").val());
 			var charge = $("#delivery_method_charge option:selected").val();
 //20101119ysk start
 			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked') == true) ? '1' : '0';
@@ -404,7 +404,7 @@ jQuery(function($){
 			if($("input[name='shipping_charge_name']").val() == "") return;
 			
 			$("#shipping_charge_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
-			var name = $("input[name='shipping_charge_name']").val();
+			var name = encodeURIComponent($("input[name='shipping_charge_name']").val());
 			var query = '';
 			for(var i=0; i<pref.length; i++){
 				query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[i] + "\]']").val();
@@ -437,7 +437,7 @@ jQuery(function($){
 		update_shipping_charge : function() {
 			$("#shipping_charge_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#shipping_charge_name_select option:selected").val();
-			var name = $("input[name='shipping_charge_name']").val();
+			var name = encodeURIComponent($("input[name='shipping_charge_name']").val());
 			var query = '';
 			for(var i=0; i<pref.length; i++){
 				query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[i] + "\]']").val();
