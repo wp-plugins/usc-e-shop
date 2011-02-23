@@ -291,19 +291,29 @@ class usces_cart {
 		}
 		//} else if(isset($_POST['customer']))	{	
 		if(isset($_POST['customer']))	{	
-			foreach( $_POST['customer'] as $key => $value )
-				$_SESSION['usces_entry']['customer'][$key] = trim($value);
+			foreach( $_POST['customer'] as $key => $value ){
+				if( 'country' == $key && empty(trim($value)) )
+					$_SESSION['usces_entry']['customer'][$key] = usces_get_local_target_market();
+				else
+					$_SESSION['usces_entry']['customer'][$key] = trim($value);
+			}
 		}
 //20110126ysk end
 		
 		if(isset($_POST['delivery']))	{	
 			foreach( $_POST['delivery'] as $key => $value )
-				$_SESSION['usces_entry']['delivery'][$key] = trim($value);
+				if( 'country' == $key && empty(trim($value)) )
+					$_SESSION['usces_entry']['delivery'][$key] = usces_get_local_target_market();
+				else
+					$_SESSION['usces_entry']['delivery'][$key] = trim($value);
 		}
 		
 		if(isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 0)	{	
 			foreach( $_SESSION['usces_entry']['customer'] as $key => $value )
-				$_SESSION['usces_entry']['delivery'][$key] = trim($value);
+				if( 'country' == $key && empty(trim($value)) )
+					$_SESSION['usces_entry']['delivery'][$key] = usces_get_local_target_market();
+				else
+					$_SESSION['usces_entry']['delivery'][$key] = trim($value);
 		}
 
 		if(isset($_POST['order']))	{	
