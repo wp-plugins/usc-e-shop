@@ -5,7 +5,6 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
-usces_remove_filter();
 ?>
 
 <div id="content">
@@ -14,9 +13,10 @@ usces_remove_filter();
 <?php if (have_posts()) : the_post(); ?>
 
 <div <?php post_class() ?> id="post-<?php the_ID(); ?>">
-<h2><?php the_title(); ?></h2>
+<h1 class="item_page_title"><?php the_title(); ?></h1>
 <div class="storycontent">
 
+<?php usces_remove_filter(); ?>
 <?php usces_the_item(); ?>
 
 <div id="itempage">
@@ -27,7 +27,7 @@ usces_remove_filter();
 	
 <?php if(usces_sku_num() === 1) : usces_have_skus(); ?>
 <!--1SKU-->
-	<h3><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h3>
+	<h2 class="item_name"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h2>
 	<div class="exp">
 		<div class="field">
 		<?php if( usces_the_itemCprice('return') > 0 ) : ?>
@@ -62,7 +62,7 @@ usces_remove_filter();
 	
 <?php elseif(usces_sku_num() > 1) : usces_have_skus(); ?>
 <!--some SKU-->
-	<h2><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h2>
+	<h2 class="item_name"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h2>
 	<div class="exp">
 		<?php the_content(); ?>
 		<?php if( $item_custom = usces_get_item_custom( $post->ID, 'list', 'return' ) ) : ?>

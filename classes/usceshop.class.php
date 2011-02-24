@@ -2683,17 +2683,22 @@ class usc_e_shop
 			}
 			
 		}else if( $this->is_cart_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
-			remove_action('the_post', array(&$this, 'action_cartFilter'));
-			remove_filter('the_title', array(&$this, 'filter_cartTitle'),20);
-			remove_filter('the_content', array(&$this, 'filter_cartContent'),20);
+			switch( $this->page ){
+				case 'cart':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php');
+						exit;
+					}
+			
+			}
 			
 		}else if( $this->is_member_page($_SERVER['REQUEST_URI']) ){
-			remove_action('the_post', array(&$this, 'action_memberFilter'));
-			remove_filter('the_title', array(&$this, 'filter_memberTitle'),20);
-			remove_filter('the_content', array(&$this, 'filter_memberContent'),20);
+//			remove_action('the_post', array(&$this, 'action_memberFilter'));
+//			remove_filter('the_title', array(&$this, 'filter_memberTitle'),20);
+//			remove_filter('the_content', array(&$this, 'filter_memberContent'),20);
 		
 		}else{
-			remove_action('the_post', array(&$this, 'goDefaultPage'));
+//			remove_action('the_post', array(&$this, 'goDefaultPage'));
 		}
 	}
 	

@@ -4425,4 +4425,154 @@ function usces_shipping_country_option( $selected ){
 		echo $res;
 	}
 }
+
+function usces_get_cart_rows( $out = '' ) {
+	global $usces;
+	$cart = $usces->cart->get_cart();
+	$usces_gp = 0;
+	$res = '';
+	
+	for($i=0; $i<count($cart); $i++) { 
+		$cart_row = $cart[$i];
+		$post_id = $cart_row['post_id'];
+		$sku = esc_attr($cart_row['sku']);
+		$quantity = $cart_row['quantity'];
+		$options = $cart_row['options'];
+		$advance = $usces->cart->wc_serialize($cart_row['advance']);
+		$itemCode = $usces->getItemCode($post_id);
+		$itemName = $usces->getItemName($post_id);
+		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+		$itemRestriction = $usces->getItemRestriction($post_id);
+		$skuPrice = $cart_row['price'];
+		$skuZaikonum = $usces->getItemZaikonum($post_id, $cart_row['sku']);
+		$stockid = $usces->getItemZaikoStatusId($post_id, $cart_row['sku']);
+		$stock = $usces->getItemZaiko($post_id, $cart_row['sku']);
+		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
+		$pictids = $usces->get_pictids($itemCode);
+		if ( empty($options) ) {
+			$optstr =  '';
+			$options =  array();
+		}
+				
+		$res .= '<tr>
+			<td>' . ($i + 1) . '</td>
+			<td>';
+			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a>';
+			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
+		if( is_array($options) && count($options) > 0 ){
+			foreach($options as $key => $value){
+				$res .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			}
+		}
+		$res .= '</td>
+			<td class="aright">';
+		if( usces_is_gptekiyo($post_id, $cart_row['sku'], $quantity) ) {
+			$usces_gp = 1;
+			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
+			$res .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
+		}
+		$res .= usces_crform($skuPrice, true, false, 'return') . '
+			</td>
+			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
+			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
+			<td ' . $red . '>' . $stock . '</td>
+			<td>';
+		foreach($options as $key => $value){
+			$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . esc_attr($key) . ']" type="hidden" value="' . esc_attr($value) . '" />';
+		}
+		$res .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
+			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
+			<input name="itempostid[' . $i . ']" type="hidden" value="' . $post_id . '" />
+			<input name="itemsku[' . $i . ']" type="hidden" value="' . $sku . '" />
+			<input name="zaikonum[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuZaikonum) . '" />
+			<input name="skuPrice[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuPrice) . '" />
+			<input name="advance[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($advance) . '" />
+			<input name="delButton[' . $i . '][' . $post_id . '][' . $sku . ']" class="delButton" type="submit" value="' . __('Delete','usces') . '" />
+			</td>
+		</tr>';
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_get_confirm_rows( $out = '' ) {
+	global $usces;
+	$member = $usces->get_member();
+	$memid = ( empty($member['ID']) ) ? 999999999 : $member['ID'];
+	$usces_entries = $usces->cart->get_entry();
+	$usces->set_cart_fees( $member, $usces_entries );
+	
+	$cart = $usces->cart->get_cart();
+	$res = '';
+	for($i=0; $i<count($cart); $i++) { 
+		$cart_row = $cart[$i];
+		$post_id = $cart_row['post_id'];
+		$sku = esc_attr($cart_row['sku']);
+		$quantity = $cart_row['quantity'];
+		$options = $cart_row['options'];
+		$itemCode = $usces->getItemCode($post_id);
+		$itemName = $usces->getItemName($post_id);
+		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+		$skuPrice = $cart_row['price'];
+		$pictids = $usces->get_pictids($itemCode);
+		if (empty($options)) {
+			$optstr =  '';
+			$options =  array();
+		}
+	
+		 $res .= '<tr>
+			<td>' . ($i + 1) . '</td>
+			<td>';
+		$cart_thumbnail = wp_get_attachment_image( $pictids[0], array(60, 60), true );
+		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
+		if( is_array($options) && count($options) > 0 ){
+			foreach($options as $key => $value){
+				 $res .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			}
+		}
+		 $res .= '</td>
+			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
+			<td>' . $cart_row['quantity'] . '</td>
+			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
+			<td>';
+		 $res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $cart_row['sku']));
+		 $res .= '</td>
+		</tr>';
+	} 
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_get_cart_button( $out = '' ) {
+	global $usces;
+	$res = '';
+	
+	if($usces->use_js){
+		$res .= '<input name="previous" type="button" id="previouscart" class="continue_shopping_button" value="' . __('continue shopping','usces') . '"' . apply_filters('usces_filter_cart_prebutton', ' onclick="uscesCart.previousCart();"') . ' />&nbsp;&nbsp;';
+		if( usces_is_cart() ) {
+			$res .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', ' onclick="return uscesCart.cartNext();"') . ' />';
+		}
+	}else{
+		$res .= '<a href="' . get_bloginfo('home') . '" class="continue_shopping_button">' . __('continue shopping','usces') . '</a>&nbsp;&nbsp;';
+		if( usces_is_cart() ) {
+			$res .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', NULL) . ' />';
+		}
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
 ?>
