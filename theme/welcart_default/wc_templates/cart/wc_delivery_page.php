@@ -15,9 +15,8 @@ get_header();
 		<div class="entry">
 		
 <?php usces_remove_filter(); ?>
-<?php $usces_entries = $this->cart->get_entry(); ?>
-<?php $usces_secure_link = get_option('usces_secure_link'); ?>
-<?php if( $this->use_js ) require( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php"); ?>
+<?php usces_get_entries(); ?>
+<?php usces_delivery_info_script(); ?>
 
 <div id="delivery-info">
 	
@@ -28,13 +27,13 @@ get_header();
 		<li class="ucart uscdelivery usccart_delivery"><?php _e('3.Deli. & Pay.','usces'); ?></li>
 		<li class="ucart uscconfirm"><?php _e('4.Confirm','usces'); ?></li>
 		</ol>
-	</div>';
+	</div>
 	<div class="header_explanation">
 <?php echo apply_filters('usces_filter_delivery_page_header', $header); ?>
 	</div>
 	
-	<div class="error_message"><?php echo $this->error_message; ?></div>
-	<form action="<?php echo USCES_CART_URL; ?>" method="post">
+	<div class="error_message"><?php usces_error_message(); ?></div>
+	<form action="<?php usces_url('cart'); ?>" method="post">
 	<table class="customer_form">
 		<tr>
 			<th rowspan="2" scope="row"><?php _e('shipping address', 'usces'); ?></th>
@@ -66,7 +65,8 @@ get_header();
 		</tr>
 	</table>
 
-<?php require( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php"); ?>
+<?php usces_delivery_secure_form(); ?>
+
 <?php $meta = usces_has_custom_field_meta('order'); ?>
 <?php if(!empty($meta) and is_array($meta)) : ?>
 	<table class="customer_form" id="custom_order">
@@ -85,7 +85,7 @@ get_header();
 	<div class="send"><input name="order[cus_id]" type="hidden" value="<?php echo $this->cus_id; ?>" />		
 	<input name="backCustomer" type="submit" class="back_to_customer_button" value="<?php _e('Back', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_prebutton', NULL); ?> />&nbsp;&nbsp;
 	<input name="confirm" type="submit" class="to_confirm_button" value="<?php _e(' Next ', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_nextbutton', NULL); ?> /></div>
-	</form>';
+	</form>
 
 	<div class="footer_explanation">
 <?php echo apply_filters('usces_filter_delivery_page_footer', $footer); ?>

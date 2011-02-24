@@ -29,8 +29,8 @@ get_header();
 <?php echo apply_filters('usces_filter_cart_page_header', NULL); ?>
 </div>
 
-<div class="error_message"><?php echo $this->error_message; ?></div>
-<form action="<?php echo USCES_CART_URL; ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+<div class="error_message"><?php usces_error_message(); ?></div>
+<form action="<?php usces_url('cart'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 <?php if($this->cart->num_row() > 0) : ?>
 	
 <div id="cart">
@@ -54,7 +54,7 @@ get_header();
 		<tfoot>
 		<tr>
 			<th colspan="5" scope="row" class="aright"><?php _e('total items','usces'); ?><?php usces_guid_tax(); ?></th>
-			<th class="aright"><?php usces_crform($this->get_total_price(), true, false); ?></th>
+			<th class="aright"><?php usces_crform(usces_total_price('return'), true, false); ?></th>
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		</tfoot>

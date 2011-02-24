@@ -2689,6 +2689,32 @@ class usc_e_shop
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php');
 						exit;
 					}
+				case 'customer':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_customer_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_customer_page.php');
+						exit;
+					}
+				case 'delivery':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php');
+						exit;
+					}
+				case 'confirm':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_confirm_page.php') ){
+						global $usces_entries;
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_confirm_page.php');
+						exit;
+					}
+				case 'ordercompletion':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_completion_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_completion_page.php');
+						exit;
+					}
+				case 'error':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_error_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_error_page.php');
+						exit;
+					}
 			
 			}
 			

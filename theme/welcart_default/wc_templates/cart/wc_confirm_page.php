@@ -15,6 +15,7 @@ get_header();
 		<div class="entry">
 		
 <?php usces_remove_filter(); ?>
+<?php usces_get_entries(); ?>
 <div id="info-confirm">
 	
 	<div class="usccart_navi">
@@ -24,13 +25,13 @@ get_header();
 		<li class="ucart uscdelivery"><?php _e('3.Deli. & Pay.','usces'); ?></li>
 		<li class="ucart uscconfirm usccart_confirm"><?php _e('4.Confirm','usces'); ?></li>
 		</ol>
-	</div>';
+	</div>
 
 	<div class="header_explanation">
-<?php echo apply_filters('usces_filter_confirm_page_header', $header); ?>
+<?php echo apply_filters('usces_filter_confirm_page_header', NULL); ?>
 	</div><!-- end of header_explanation -->
 
-	<div class="error_message"><?php echo $this->error_message; ?></div>
+	<div class="error_message"><?php usces_error_message(); ?></div>
 	<div id="cart">
 		<div class="currency_code"><?php _e('Currency','usces'); ?> : <?php usces_crcode(); ?></div>
 		<table cellspacing="0" id="cart_table">
@@ -96,7 +97,7 @@ get_header();
 		</table>
 	
 <?php if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' &&  $this->is_member_logged_in() ) : ?>
-		<form action="<?php echo USCES_CART_URL; ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+		<form action="<?php usces_url('cart'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="error_message"><?php echo $this->error_message; ?></div>
 		<table cellspacing="0" id="point_table">
 			<tr>
@@ -123,7 +124,7 @@ get_header();
 			<th><?php _e('e-mail adress', 'usces'); ?></th>
 			<td><?php echo esc_html($usces_entries['customer']['mailaddress1']); ?></td>
 		</tr>
-<?php echo uesces_addressform( 'confirm', $usces_entries ); ?>
+<?php uesces_addressform( 'confirm', $usces_entries, 'echo' ); ?>
 		<tr>
 			<td class="ttl" colspan="2"><h3><?php _e('Others', 'usces'); ?></h3></td>
 		</tr>

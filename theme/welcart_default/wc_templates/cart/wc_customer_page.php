@@ -15,7 +15,7 @@ get_header();
 		<div class="entry">
 		
 <?php usces_remove_filter(); ?>
-<?php $usces_entries = $this->cart->get_entry(); ?>
+<?php usces_get_entries(); ?>
 <?php $member_regmode = isset( $_SESSION['usces_entry']['member_regmode'] ) ? $_SESSION['usces_entry']['member_regmode'] : 'none'; ?>
 
 <div id="customer-info">
@@ -33,10 +33,10 @@ get_header();
 	<?php echo apply_filters('usces_filter_customer_page_header', NULL); ?>
 	</div><!-- end of header_explanation -->
 	
-	<div class="error_message"><?php echo $this->error_message; ?></div>
+	<div class="error_message"><?php usces_error_message(); ?></div>
 <?php if( usces_is_membersystem_state() ) : ?>
 	<h5><?php _e('The member please enter at here.','usces'); ?></h5>
-	<form action="<?php echo USCES_CART_URL; ?>" method="post" name="customer_loginform" onKeyDown="if (event.keyCode == 13) {return false;}">
+	<form action="<?php usces_url('cart'); ?>" method="post" name="customer_loginform" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="customer_form">
 		<tr>
 			<th scope="row"><?php _e('e-mail adress', 'usces'); ?></th>
@@ -73,7 +73,7 @@ get_header();
 		</tr>
 <?php endif; ?>
 
-<?php uesces_addressform( 'customer', $usces_entries ); ?>
+<?php uesces_addressform( 'customer', $usces_entries, 'echo' ); ?>
 	</table>
 	<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
 	<div class="send">
