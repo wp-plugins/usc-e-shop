@@ -12,7 +12,7 @@ $header = '<p>'.__('Thank you for shopping.', 'usces').'<br />'.__("If you have 
 $html .= apply_filters('usces_filter_cartcompletion_page_header', $header, $usces_entries, $usces_carts)."\n";
 $html .= '</div><!-- header_explanation -->'."\n";
 
-$html .= usces_completion_settlement('return');
+require( USCES_PLUGIN_DIR . "/includes/completion_settlement.php");
 
 $html .= apply_filters('usces_filter_cartcompletion_page_body', NULL, $usces_entries, $usces_carts)."\n";
 

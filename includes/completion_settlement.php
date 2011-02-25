@@ -1,4 +1,8 @@
 <?php
+if(isset($this))
+	$usces = &$this;
+
+
 if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 
 		

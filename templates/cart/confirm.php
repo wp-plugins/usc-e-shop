@@ -286,7 +286,7 @@ $html .= '<tr>
 //20100818ysk end
 $html .= '</table>';
 
-$html .= usces_purchase_button('return');
+require_once( USCES_PLUGIN_DIR . "/includes/purchase_button.php");
 
 
 $html .= '<div class="footer_explanation">';

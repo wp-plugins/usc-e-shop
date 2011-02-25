@@ -9,7 +9,9 @@ $html .= '
 	jQuery(function($){
 		';
 */
-
+if(isset($this))
+	$usces = &$this;
+	
 $shipping_indication = apply_filters('usces_filter_shipping_indication', array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0));
 
 $html .= '

@@ -1241,6 +1241,7 @@ class usc_e_shop
 		}
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
 			echo "	<meta name='robots' content='noindex,nofollow' />\n";
+			wp_print_scripts( array( 'sack' )); 
 		}
 		echo '<link href="' . $css_url . '" rel="stylesheet" type="text/css" />';
 		if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){
@@ -1568,8 +1569,19 @@ class usc_e_shop
 			},
 			
 			changeStates : function( country, type ) {
+//				var mysack = new sack("<?php bloginfo( 'home' ); ?>" );    
+//				
+//				mysack.execute = 1;
+//				mysack.method = 'POST';
+//				mysack.setVar( "country", country );
+//				mysack.setVar( "type", type );
+//				mysack.setVar( "usces_ajax_action", "change_states" );
+//				mysack.onError = function() { alert('Ajax error in voting' )};
+//				mysack.runAJAX();
+  
 				var s = this.settings;
-				s.data = "action=change_states_ajax&country=" + country;
+				s.url = "<?php bloginfo( 'home' ); ?>/";
+				s.data = "usces_ajax_action=change_states&country=" + country;
 				s.success = function(data, dataType){
 					if( 'error' == data ){
 						alert('error');
@@ -2125,6 +2137,7 @@ class usc_e_shop
 		usces_register_action('usces_export', 'post', 'usces_export', NULL, 'usces_export');
 		usces_register_action('usces_import', 'post', 'usces_import', NULL, 'usces_import');
 		usces_register_action('page_search_item', 'get', 'page', 'search_item', 'page_search_item');
+		usces_register_action('front_ajax', 'post', 'usces_ajax_action', 'change_states', 'front_ajax');
 	}
 
 	function ad_controller(){
@@ -2137,7 +2150,7 @@ class usc_e_shop
 			'backConfirm', 'purchase', 'acting_return', 'settlement_epsilon', 'inquiry_button', 'member_login', 
 			'regmember', 'editmember', 'deletemember', 'page_login', 'page_logout', 'page_lostmemberpassword', 'lostpassword', 
 			'uscesmode_changepassword', 'changepassword', 'page_newmember', 'usces_export', 'usces_import', 
-			'page_search_item');
+			'page_search_item', 'front_ajax');
 			$flg = 0;
 			foreach( $usces_action as $handle => $action ){
 				extract($action);
@@ -2212,6 +2225,14 @@ class usc_e_shop
 	}
 
 	//action function------------------------------------------------------------
+	function front_ajax(){
+		switch ($_POST['usces_ajax_action']){
+			case 'change_states':
+				change_states_ajax();
+				break;
+		}
+	}
+	
 	function maintenance(){
 		$this->page = 'maintenance';
 		add_action('the_post', array($this, 'action_cartFilter'));

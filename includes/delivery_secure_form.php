@@ -1,4 +1,7 @@
 <?php
+if(isset($this))
+	$usces = &$this;
+
 foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
 	if( !empty( $array['settlement'] ) ){
 

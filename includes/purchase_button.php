@@ -1,4 +1,7 @@
 <?php
+if(isset($this))
+	$usces = &$this;
+
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 $rand = sprintf('%010d', mt_rand(1, 9999999999));
 

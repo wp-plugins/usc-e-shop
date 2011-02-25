@@ -6,7 +6,9 @@ usces_get_carts();
 $usces_secure_link = get_option('usces_secure_link');
 $html = '';
 
-$html .= usces_delivery_info_script('return');
+//$html .= usces_delivery_info_script('return');
+if( $this->use_js )
+	require( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
 
 $html .= '<div id="delivery-info">
 	
@@ -81,7 +83,7 @@ $html .= '<tr>
 	</tr>
 	</table>';
 	
-$html .= usces_delivery_secure_form('return');
+require( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
 //20100818ysk start
 //20100809ysk start
 //require_once( USCES_PLUGIN_DIR . "/includes/delivery_custom_order_form.php");
