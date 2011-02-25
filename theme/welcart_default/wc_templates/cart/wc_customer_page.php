@@ -9,15 +9,14 @@ get_header();
 
 <div id="content">
 <div class="catbox">
-	<?php if (have_posts()) : have_posts(); the_post(); ?>
-	<div class="post" id="<?php echo $post->post_name; ?>">
-		<h1><?php the_title(); ?></h1>
-		<div class="entry">
-		
-<?php usces_remove_filter(); ?>
-<?php usces_get_entries(); ?>
-<?php $member_regmode = isset( $_SESSION['usces_entry']['member_regmode'] ) ? $_SESSION['usces_entry']['member_regmode'] : 'none'; ?>
 
+<?php if (have_posts()) : usces_remove_filter(); ?>
+
+<div class="post" id="<?php usces_page_name(); ?>">
+
+<h1><?php _e('Customer Information', 'usces'); ?></h1>
+<div class="entry">
+		
 <div id="customer-info">
 
 	<div class="usccart_navi">
@@ -77,13 +76,7 @@ get_header();
 	</table>
 	<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
 	<div class="send">
-		<input name="backCart" type="submit" class="back_cart_button" value="<?php _e('Back', 'usces'); ?>" />&nbsp;&nbsp;
-		<input name="deliveryinfo" type="submit" class="to_deliveryinfo_button" value="<?php _e(' Next ', 'usces'); ?>" />&nbsp;&nbsp;
-<?php if(usces_is_membersystem_state() && $member_regmode != 'editmemberfromcart' && usces_is_login() == false ) : ?>
-		<input name="reganddeliveryinfo" type="submit" class="to_reganddeliveryinfo_button" value="<?php _e('To the next while enrolling', 'usces'); ?>"<?php echo apply_filters('usces_filter_customerinfo_prebutton', NULL); ?> />
-<?php elseif(usces_is_membersystem_state() && $member_regmode == 'editmemberfromcart' ) : ?>
-		<input name="reganddeliveryinfo" type="submit" class="to_reganddeliveryinfo_button" value="<?php _e('Revise member information, and to next', 'usces'); ?>"<?php echo apply_filters('usces_filter_customerinfo_nextbutton', NULL); ?> />
-<?php endif; ?>
+	<?php usces_get_customer_button(); ?>
 	</div>
 	</form>
 

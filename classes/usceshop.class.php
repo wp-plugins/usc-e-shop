@@ -1592,9 +1592,9 @@ class usc_e_shop
 			},
 		};
 		<?php if( 'customer' == $this->page ){ ?>
-		
+
 		var customerstate = $("#customer_pref").get(0).selectedIndex;
-		var customercountry = $("#customer_country").get(0).selectedIndex;
+		var customercountry = $("#customer_country").val();
 		var deliverystate = "";
 		var deliverycountry = "";
 		var memberstate = "";
@@ -1608,7 +1608,7 @@ class usc_e_shop
 		var customerstate = "";
 		var customercountry = "";
 		var deliverystate = $("#delivery_pref").get(0).selectedIndex;
-		var deliverycountry = $("#delivery_country").get(0).selectedIndex;
+		var deliverycountry = $("#delivery_country").val();
 		var memberstate = "";
 		var membercountry = "";
 		$("#delivery_country").change(function () {
@@ -1622,7 +1622,7 @@ class usc_e_shop
 		var deliverystate = "";
 		var deliverycountry = "";
 		var memberstate = $("#member_pref").get(0).selectedIndex;
-		var membercountry = $("#member_country").get(0).selectedIndex;
+		var membercountry = $("#member_country").val();
 		$("#member_country").change(function () {
 			var country = $("#member_country option:selected").val();
 			uscesForm.changeStates( country, 'member' ); 
@@ -2224,6 +2224,7 @@ class usc_e_shop
 		$this->cart->inCart();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function upButton(){
@@ -2233,6 +2234,7 @@ class usc_e_shop
 		$this->error_message = $this->zaiko_check();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function delButton(){
@@ -2241,6 +2243,7 @@ class usc_e_shop
 		$this->cart->del_row();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backCart(){
@@ -2248,6 +2251,7 @@ class usc_e_shop
 		$this->page = 'cart';
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function customerinfo(){
@@ -2279,6 +2283,7 @@ class usc_e_shop
 			$this->cart->set_order_condition($order_conditions);
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backCustomer(){
@@ -2290,6 +2295,7 @@ class usc_e_shop
 		$this->page = 'customer';
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
+		add_action('template_redirect', array($this, 'template_redirect'));
 //		$this->cart->entry();
 //		$this->error_message = $this->delivery_check();
 //		$this->page = ($this->error_message == '') ? 'customer' : 'delivery';
@@ -2321,6 +2327,7 @@ class usc_e_shop
 		}
 //20100818ysk end
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function reganddeliveryinfo(){
@@ -2340,6 +2347,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function deliveryinfo(){
@@ -2359,6 +2367,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backDelivery(){
@@ -2370,6 +2379,7 @@ class usc_e_shop
 		$this->page = 'delivery';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function confirm(){
@@ -2393,6 +2403,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function use_point(){
@@ -2402,6 +2413,7 @@ class usc_e_shop
 		$this->page = 'confirm';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backConfirm(){
@@ -2413,6 +2425,7 @@ class usc_e_shop
 		$this->page = 'confirm';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function purchase(){
@@ -2457,6 +2470,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function acting_return(){
@@ -2506,6 +2520,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function settlement_epsilon(){
@@ -2534,6 +2549,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_login');
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function regmember(){
@@ -2549,6 +2565,7 @@ class usc_e_shop
 			$this->page = $res;
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function editmember(){
@@ -2564,6 +2581,7 @@ class usc_e_shop
 			$this->page = $res;
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function deletemember(){
@@ -2575,18 +2593,21 @@ class usc_e_shop
 			$this->page = 'editmemberform';
 			add_action('the_post', array($this, 'action_memberFilter'));
 		}
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function page_logout(){
 		global $wp_query;
 		$this->member_logout();
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function page_lostmemberpassword(){
 		global $wp_query;
 		$this->page = 'lostmemberpassword';
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function lostpassword(){
@@ -2599,12 +2620,14 @@ class usc_e_shop
 			$this->page = $res;//'lostcompletion';
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function uscesmode_changepassword(){
 		global $wp_query;
 		$this->page = 'changepassword';
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function changepassword_page(){
@@ -2617,6 +2640,7 @@ class usc_e_shop
 			$this->page = $res;//'changepasscompletion';
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function page_newmember(){
@@ -2624,6 +2648,7 @@ class usc_e_shop
 		$this->page = 'newmemberform';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_newmemberform');
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function usces_export(){
@@ -2637,13 +2662,15 @@ class usc_e_shop
 	function page_search_item(){
 		global $wp_query;
 		$this->page = 'search_item';
-		add_action('template_redirect', array($this, 'action_search_item'));
+		//add_action('template_redirect', array($this, 'action_search_item'));
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function default_page(){
 		global $wp_query;
 		add_action('the_post', array($this, 'goDefaultPage'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	//--------------------------------------------------------------------------------------
 	
@@ -2665,48 +2692,54 @@ class usc_e_shop
 			$this->page = 'wp_search';
 			add_filter('the_excerpt', array($this, 'filter_cartContent'),20);
 			add_filter('the_content', array($this, 'filter_cartContent'),20);
+
+		}else{
+			add_filter('the_content', array(&$this, 'filter_itemPage'));
+
 		}
 	}
 	
 	function template_redirect () {
-		global $post;
+		global $post, $usces_entries, $usces_carts, $usces_members;
+
 		if( is_single() && 'item' == $post->post_mime_type ) {
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){
 				include(get_stylesheet_directory() . '/wc_templates/wc_item_single.php');
 				exit;
 			}
-		}
-		if( ('search_item' == $_REQUEST['page'] || 'usces_search' == $_REQUEST['page']) && $this->is_cart_page($_SERVER['REQUEST_URI']) ){
+		}elseif( ('search_item' == $_REQUEST['page'] || 'usces_search' == $_REQUEST['page']) && $this->is_cart_page($_SERVER['REQUEST_URI']) ){
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_search_page.php') ){
 				include(get_stylesheet_directory() . '/wc_templates/wc_search_page.php');
 				exit;
 			}
 			
-		}else if( $this->is_cart_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
+		}else if( $this->is_cart_page($_SERVER['REQUEST_URI']) ){
 			switch( $this->page ){
-				case 'cart':
-					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php') ){
-						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php');
-						exit;
-					}
 				case 'customer':
 					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_customer_page.php') ){
+						usces_get_entries();
+						usces_get_member_regmode();
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_customer_page.php');
 						exit;
 					}
 				case 'delivery':
 					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php') ){
+						usces_get_entries();
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php');
 						exit;
 					}
 				case 'confirm':
 					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_confirm_page.php') ){
-						global $usces_entries;
+						usces_get_entries();
+						usces_get_carts();
+						usces_get_members();
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_confirm_page.php');
 						exit;
 					}
 				case 'ordercompletion':
 					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_completion_page.php') ){
+						usces_get_entries();
+						usces_get_carts();
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_completion_page.php');
 						exit;
 					}
@@ -2715,8 +2748,15 @@ class usc_e_shop
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_error_page.php');
 						exit;
 					}
+				case 'cart':
+				default:
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php');
+						exit;
+					}
 			
 			}
+		}else if($this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			
 		}else if( $this->is_member_page($_SERVER['REQUEST_URI']) ){
 //			remove_action('the_post', array(&$this, 'action_memberFilter'));

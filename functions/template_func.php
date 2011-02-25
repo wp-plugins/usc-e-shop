@@ -1122,7 +1122,13 @@ function usces_loginout() {
 
 function usces_is_login() {
 	global $usces;
-	return $usces->is_member_logged_in();
+	
+	if( false === $usces->is_member_logged_in() )
+		$res = false;
+	else
+		$res = true;
+		
+	return $res;
 }
 
 function usces_the_member_name( $out = '') {

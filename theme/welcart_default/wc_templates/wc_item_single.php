@@ -6,9 +6,9 @@
  */
 get_header();
 ?>
-
 <div id="content">
 <div class="catbox">
+wc_item_single.php
 
 <?php if (have_posts()) : the_post(); ?>
 

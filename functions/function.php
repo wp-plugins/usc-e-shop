@@ -3726,10 +3726,10 @@ function usces_get_apply_addressform($country){
 
 function usces_remove_filter(){
 	global $usces, $post;
-	
+
 	if( is_single() && 'item' == $post->post_mime_type ) {
 		remove_filter('the_content', array(&$usces, 'filter_itemPage'));
-		
+
 	}else if( $usces->is_cart_page($_SERVER['REQUEST_URI']) || $usces->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 		remove_action('the_post', array(&$usces, 'action_cartFilter'));
 		remove_filter('the_title', array(&$usces, 'filter_cartTitle'),20);
@@ -3746,8 +3746,8 @@ function usces_remove_filter(){
 }
 
 function usces_reset_filter(){
-	global $usces;
-	
+	global $usces, $post;
+
 	if( is_single() && 'item' == $post->post_mime_type ) {
 		add_filter('the_content', array(&$usces, 'filter_itemPage'));
 		
@@ -4410,6 +4410,14 @@ function usces_is_member_system(){
 		return false;
 }
 
+function usces_is_member_system_point(){
+	global $usces;
+	if($usces->options['membersystem_point'] == 'activate')
+		return true;
+	else
+		return false;
+}
+
 function usces_shipping_country_option( $selected ){
 	global $usces_settings;
 	$options = get_option('usces');
@@ -4500,11 +4508,11 @@ function usces_get_cart_rows( $out = '' ) {
 	}
 }
 function usces_get_confirm_rows( $out = '' ) {
-	global $usces;
-	$member = $usces->get_member();
-	$memid = ( empty($member['ID']) ) ? 999999999 : $member['ID'];
-	$usces_entries = $usces->cart->get_entry();
-	$usces->set_cart_fees( $member, $usces_entries );
+	global $usces, $usces_members, $usces_entries;
+//	$usces_members = $usces->get_member();
+	$memid = ( empty($usces_members['ID']) ) ? 999999999 : $usces_members['ID'];
+//	$usces_entries = $usces->cart->get_entry();
+	$usces->set_cart_fees( $usces_members, $usces_entries );
 	
 	$cart = $usces->cart->get_cart();
 	$res = '';
@@ -4575,198 +4583,33 @@ function usces_get_cart_button( $out = '' ) {
 	}
 }
 
-function usces_delivery_secure_form( $out = '' ) {
-	global $usces;
-	$html = '';
-	foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
-		if( !empty( $array['settlement'] ) ){
+function usces_get_customer_button( $out = '' ) {
+	global $usces, $member_regmode;
+	$res = '';
 	
-			switch( $array['settlement'] ){
-				case 'acting_zeus_card':
-					$paymod_id = 'zeus';
-					
-					if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
-						|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] )
-						continue;
-						
-					$cnum1 = isset( $_POST['cnum1'] ) ? esc_html($_POST['cnum1']) : '';
-					$cnum2 = isset( $_POST['cnum2'] ) ? esc_html($_POST['cnum2']) : '';
-					$cnum3 = isset( $_POST['cnum3'] ) ? esc_html($_POST['cnum3']) : '';
-					$cnum4 = isset( $_POST['cnum4'] ) ? esc_html($_POST['cnum4']) : '';
-					$expyy = isset( $_POST['expyy'] ) ? esc_html($_POST['expyy']) : '';
-					$expmm = isset( $_POST['expmm'] ) ? esc_html($_POST['expmm']) : '';
-					$username = isset( $_POST['username'] ) ? esc_html($_POST['username']) : '';
-					$howpay = isset( $_POST['howpay'] ) ? esc_html($_POST['howpay']) : '1';
-					$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
-					$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
-					
-					$html .= '<input type="hidden" name="acting" value="zeus">'."\n";
-					$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
-					
-					$pcid = NULL;
-					if( $usces->is_member_logged_in() ){
-						$member = $usces->get_member();
-						$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
-					}
-					if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
-						$html .= '<input name="cnum1" type="hidden" value="8888" />
-						<input name="cnum2" type="hidden" value="8888" />
-						<input name="cnum3" type="hidden" value="8888" />
-						<input name="cnum4" type="hidden" value="8888" />
-						<input name="expyy" type="hidden" value="2010" />
-						<input name="expmm" type="hidden" value="01" />
-						<input name="username" type="hidden" value="QUICKCHARGE" />';
-						
-					}else{
-						$html .= '<tr>
-							<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
-							<td colspan="2"><input name="cnum1" type="text" size="6" maxlength="4" value="' . esc_attr($cnum1) . '" />-<input name="cnum2" type="text" size="6" maxlength="4" value="' . esc_attr($cnum2) . '" />-<input name="cnum3" type="text" size="6" maxlength="4" value="' . esc_attr($cnum3) . '" />-<input name="cnum4" type="text" size="6" maxlength="4" value="' . esc_attr($cnum4) . '" /></td>
-							</tr>
-							<tr>
-							<th scope="row">'.__('カード有効期限', 'usces').'</th>
-							<td colspan="2">
-							<select name="expyy">
-								<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
-							';
-						for($i=0; $i<10; $i++){
-							$year = date('Y') - 1 + $i;
-							$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
-						}
-						$html .= '
-							</select>年 
-							<select name="expmm">
-								<option value=""' . (empty($expmm) ? ' selected="selected"' : '') . '>----</option>
-								<option value="01"' . (('01' == $expmm) ? ' selected="selected"' : '') . '> 1</option>
-								<option value="02"' . (('02' == $expmm) ? ' selected="selected"' : '') . '> 2</option>
-								<option value="03"' . (('03' == $expmm) ? ' selected="selected"' : '') . '> 3</option>
-								<option value="04"' . (('04' == $expmm) ? ' selected="selected"' : '') . '> 4</option>
-								<option value="05"' . (('05' == $expmm) ? ' selected="selected"' : '') . '> 5</option>
-								<option value="06"' . (('06' == $expmm) ? ' selected="selected"' : '') . '> 6</option>
-								<option value="07"' . (('07' == $expmm) ? ' selected="selected"' : '') . '> 7</option>
-								<option value="08"' . (('08' == $expmm) ? ' selected="selected"' : '') . '> 8</option>
-								<option value="09"' . (('09' == $expmm) ? ' selected="selected"' : '') . '> 9</option>
-								<option value="10"' . (('10' == $expmm) ? ' selected="selected"' : '') . '>10</option>
-								<option value="11"' . (('11' == $expmm) ? ' selected="selected"' : '') . '>11</option>
-								<option value="12"' . (('12' == $expmm) ? ' selected="selected"' : '') . '>12</option>
-							</select>月</td>
-							</tr>
-							<tr>
-							<th scope="row">'.__('カード名義', 'usces').'</th>
-							<td colspan="2"><input name="username" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
-							</tr>';
-					}	
-						
-					if( 'on' == $usces->options['acting_settings'][$paymod_id]['howpay'] ){
-					
-					$html .= '
-						<tr>
-						<th scope="row">'.__('支払方法', 'usces').'</th>
-						<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' == $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
-						<td><input name="howpay" type="radio" value="0" id="howdiv2"' . (('0' == $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
-						</tr>
-						<tr id="cbrand_zeus">
-						<th scope="row">'.__('カードブランド', 'usces').'</th>
-						<td colspan="2">
-						<select name="cbrand">
-							<option value=""' . (('' == $cbrand) ? ' selected="selected"' : '') . '>--------</option>
-							<option value="1"' . (('1' == $cbrand) ? ' selected="selected"' : '') . '>JCB</option>
-							<option value="1"' . (('1' == $cbrand) ? ' selected="selected"' : '') . '>VISA</option>
-							<option value="1"' . (('1' == $cbrand) ? ' selected="selected"' : '') . '>MASTER</option>
-							<option value="2"' . (('2' == $cbrand) ? ' selected="selected"' : '') . '>DINERS</option>
-							<option value="3"' . (('3' == $cbrand) ? ' selected="selected"' : '') . '>AMEX</option>
-						</select>
-						</td>
-						</tr>
-						<tr id="div_zeus">
-						<th scope="row">'.__('分割回数', 'usces').'</th>
-						<td colspan="2">
-						<select name="div_1" id="brand1">
-							<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
-							<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
-							<option value="03"' . (('03' == $cbrand) ? ' selected="selected"' : '') . '>3回</option>
-							<option value="05"' . (('05' == $cbrand) ? ' selected="selected"' : '') . '>5回</option>
-							<option value="06"' . (('06' == $cbrand) ? ' selected="selected"' : '') . '>6回</option>
-							<option value="10"' . (('10' == $cbrand) ? ' selected="selected"' : '') . '>10回</option>
-							<option value="12"' . (('12' == $cbrand) ? ' selected="selected"' : '') . '>12回</option>
-							<option value="15"' . (('15' == $cbrand) ? ' selected="selected"' : '') . '>15回</option>
-							<option value="18"' . (('18' == $cbrand) ? ' selected="selected"' : '') . '>18回</option>
-							<option value="20"' . (('20' == $cbrand) ? ' selected="selected"' : '') . '>20回</option>
-							<option value="24"' . (('24' == $cbrand) ? ' selected="selected"' : '') . '>24回</option>
-						</select>
-						<select name="div_2" id="brand2">
-							<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
-							<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
-						</select>
-						<select name="div_2" id="brand3">
-							<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
-						</select>
-						</td>
-						</tr>
-						';
-						
-					}
-						
-					$html .= '
-					</table>';
-					break;
-					
-				case 'acting_zeus_conv':
-					$paymod_id = 'zeus';
-					
-					if( 'on' != $usces->options['acting_settings'][$paymod_id]['conv_activate'] 
-						|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] )
-						continue;
-						
-						
-					$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : 'D001';
-					
-					$html .= '
-					<table class="customer_form" id="' . $paymod_id . '_conv">
-						<tr>
-						<th scope="row">'.__('お支払いに利用するコンビニ', 'usces').'</th>
-						<td colspan="2">
-						<select name="pay_cvs" id="pay_cvs_zeus">
-							<option value="D001"' . (('D001' == $pay_cvs) ? ' selected="selected"' : '') . '>セブンイレブン</option>
-							<option value="D002"' . (('D002' == $pay_cvs) ? ' selected="selected"' : '') . '>ローソン</option>
-							<option value="D030"' . (('D030' == $pay_cvs) ? ' selected="selected"' : '') . '>ファミリーマート</option>
-							<option value="D040"' . (('D040' == $pay_cvs) ? ' selected="selected"' : '') . '>サークルKサンクス</option>
-							<option value="D015"' . (('D015' == $pay_cvs) ? ' selected="selected"' : '') . '>セイコーマート</option>
-						</select>
-						</td>
-						</tr>
-					</table>';
-					break;
-					
-				case 'acting_remise_card':
-					$paymod_id = 'remise';
-					$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
+	$res = '<input name="backCart" type="submit" class="back_cart_button" value="'.__('Back', 'usces').'" />&nbsp;&nbsp;';
 	
-					if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
-						|| 'on' != $usces->options['acting_settings'][$paymod_id]['howpay'] 
-						|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] 
-						|| 0 !== (int)$charging_type )
-						continue;
-						
-					$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '0';
-					
-					$html .= '
-					<table class="customer_form" id="' . $paymod_id . '">
-						<tr>
-						<th scope="row">'.__('支払方法', 'usces').'</th>
-						<td colspan="2">
-						<select name="div" id="div_remise">
-							<option value="0"' . (('0' == $div) ? ' selected="selected"' : '') . '>　一括払い</option>
-							<option value="1"' . (('1' == $div) ? ' selected="selected"' : '') . '>　2回払い</option>
-							<option value="2"' . (('2' == $div) ? ' selected="selected"' : '') . '>　リボ払い</option>
-						</select>
-						</td>
-						</tr>
-					</table>';
-					break;
-			}
-		}
+	$button = '<input name="deliveryinfo" type="submit" class="to_deliveryinfo_button" value="'.__(' Next ', 'usces').'" />&nbsp;&nbsp;';
+	$res .= apply_filters('usces_filter_customer_button', $button);
+	
+	if(usces_is_membersystem_state() && $member_regmode != 'editmemberfromcart' && usces_is_login() == false ){
+		$res .= '<input name="reganddeliveryinfo" type="submit" class="to_reganddeliveryinfo_button" value="'.__('To the next while enrolling', 'usces').'"' . apply_filters('usces_filter_customerinfo_prebutton', NULL) . ' />';
+	}elseif(usces_is_membersystem_state() && $member_regmode == 'editmemberfromcart' ){
+		$res .= '<input name="reganddeliveryinfo" type="submit" class="to_reganddeliveryinfo_button" value="'.__('Revise member information, and to next', 'usces').'"' . apply_filters('usces_filter_customerinfo_nextbutton', NULL) . ' />';
 	}
 	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_delivery_secure_form( $out = '' ) {
+	global $usces, $usces_entries, $usces_carts;
+	$thml = '';
+	include( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
+
 	if($out == 'return'){
 		return $html;
 	}else{
@@ -4775,449 +4618,10 @@ function usces_delivery_secure_form( $out = '' ) {
 }
 
 function usces_delivery_info_script( $out ='' ){
-	global $usces;
-	if( !$usces->use_js ) return;
+	global $usces, $usces_entries, $usces_carts;
+	$thml = '';
+	include( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
 
-	$html = '';
-	
-	//20101208ysk start
-	$shipping_indication = apply_filters('usces_filter_shipping_indication', array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0));
-	
-	$html .= '
-	<script type="text/javascript">
-		//1桁の数字を0埋めで2桁にする
-		var toDoubleDigits = function(num) {
-			num += "";
-			if(num.length === 1) num = "0".concat(num);
-			return num;
-		};
-		var selected_delivery_method = \'\';
-		var selected_delivery_date = \'\';
-		var selected_delivery_time = \'\';	
-		var add_shipping = new Array(';
-	$c = '';
-	foreach($shipping_indication as $value){
-		$html .= $c.$value;
-		$c = ',';
-	}
-	$html .= ');//発送日目安
-	
-		function addDate(year, month, day, add) {
-			var date = new Date(Number(year), (Number(month) - 1), Number(day));
-			var baseSec = date.getTime();
-			var addSec = Number(add) * 86400000;
-			var targetSec = baseSec + addSec;
-			date.setTime(targetSec);
-	
-			var yy = date.getFullYear() + "";
-			var mm = toDoubleDigits(date.getMonth() + 1);
-			var dd = toDoubleDigits(date.getDate());
-	
-			var newdate = new Array();
-			newdate["year"] = yy;
-			newdate["month"] = mm;
-			newdate["day"] = dd;
-			return(newdate);
-		}
-	
-		jQuery(function($){
-			';
-	
-	//選択可能な配送方法
-	$default_deli = array_values($usces->get_available_delivery_method());
-	if($usces_entries['order']['delivery_method'] === NULL){
-		//$default_deli = $usces->get_available_delivery_method();
-		//$html .= 'selected_delivery_method = \'' . $default_deli[0] . '\';';
-		$selected_delivery_method = $default_deli[0];
-	}else{
-		//$html .= 'selected_delivery_method = \'' . $usces_entries['order']['delivery_method'] . '\';';
-		$selected_delivery_method = $usces_entries['order']['delivery_method'];
-	}
-	$html .= 'selected_delivery_method = \'' . $selected_delivery_method . '\';';
-	if(isset($usces_entries['order']['delivery_date'])) {
-		$html .= 'selected_delivery_date = \''.$usces_entries['order']['delivery_date'].'\';';
-	}
-	
-	//カートに入っている商品の発送日目安
-	$shipping = 0;
-	$cart = $usces->cart->get_cart();
-	for($i = 0; $i < count($cart); $i++) {
-		$cart_row = $cart[$i];
-		$post_id = $cart_row['post_id'];
-		$itemShipping = $usces->getItemShipping($post_id);
-		if($shipping < $itemShipping) $shipping = $itemShipping;
-	}
-	$html .= 'var shipping = '.$shipping.';';
-	//配送業務締時間
-	$html .= 'var delivery_time_limit_hour = "'.$usces->options['delivery_time_limit']['hour'].'";';
-	$html .= 'var delivery_time_limit_min = "'.$usces->options['delivery_time_limit']['min'].'";';
-	//最短宅配時間帯
-	$html .= 'var shortest_delivery_time = '.(int)$usces->options['shortest_delivery_time'].';';
-	//配送希望日を何日後まで表示するか
-	$delivery_after_days = (empty($usces->options['delivery_after_days'])) ? 15 : (int)$usces->options['delivery_after_days'];
-	$html .= 'var delivery_after_days = '.$delivery_after_days.';';
-	//配送先県(customer)
-	$html .= 'var customer_pref = "'.$usces_entries['customer']['pref'].'";';
-	//配送先県(customer/delivery)
-	$delivery_pref = isset($usces_entries['delivery']['pref']) ? $usces_entries['delivery']['pref'] : $usces_entries['customer']['pref'];
-	$html .= 'var delivery_pref = "'.$delivery_pref.'";';
-	//選択可能な配送方法に設定されている配達日数
-	$html .= 'var delivery_days = [];';
-	foreach((array)$default_deli as $id) {
-		$index = $usces->get_delivery_method_index($id);
-		if(0 <= $index) {
-			$html .= 'delivery_days['.$id.'] = [];';
-			$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
-		}
-	}
-	//配達日数に設定されている県毎の日数
-	$prefs = $usces->options['province'];
-	array_shift($prefs);
-	$delivery_days = $usces->options['delivery_days'];
-	$html .= 'var delivery_days_value = [];';
-	foreach((array)$default_deli as $key => $id) {
-		$index = $usces->get_delivery_method_index($id);
-		if(0 <= $index) {
-			$days = (int)$usces->options['delivery_method'][$index]['days'];
-			if(0 <= $days) {
-				for($i = 0; $i < count((array)$delivery_days); $i++) {
-					if((int)$delivery_days[$i]['id'] == $days) {
-						$html .= 'delivery_days_value['.$days.'] = [];';
-						foreach((array)$prefs as $pref) {
-							$html .= 'delivery_days_value['.$days.']["'.$pref.'"] = [];';
-							$html .= 'delivery_days_value['.$days.']["'.$pref.'"].push("'.(int)$delivery_days[$i]['value'][$pref].'");';
-						}
-					}
-				}
-			}
-		}
-	}
-	//20101208ysk end
-	//20110131ysk start
-	$business_days = 0;
-	list($yy, $mm, $dd) = getToday();
-	$business = $usces->options['business_days'][$yy][$mm][$dd];
-	while($business != 1) {
-		$business_days++;
-		list($yy, $mm, $dd) = getNextDay($yy, $mm, $dd);
-		$business = $usces->options['business_days'][$yy][$mm][$dd];
-	}
-	$html .= 'var business_days = '.$business_days.';';
-	//20110131ysk end
-	
-	$html .= 'selected_delivery_time = \'' . $usces_entries['order']['delivery_time'] . '\';
-			var delivery_time = [];delivery_time[0] = [];';
-	
-	foreach((array)$usces->options['delivery_method'] as $dmid => $dm){
-		$lines = explode("\n", $dm['time']);
-		$html .= 'delivery_time[' . $dm['id'] . '] = [];';
-		foreach((array)$lines as $line){
-			if(trim($line) != ''){
-				$html .= 'delivery_time[' . $dm['id'] . '].push("' . trim($line) . '");';
-			}
-		}
-	}
-	
-	$payments_str = '';
-	$payments_arr = array();
-	foreach ( (array)$usces->options['payment_method'] as $array ) {
-		switch( $array['settlement'] ){
-			case 'acting_zeus_card':
-				$paymod_base = 'zeus';
-				if( 'on' == $usces->options['acting_settings'][$paymod_base]['card_activate'] 
-					&& 'on' == $usces->options['acting_settings'][$paymod_base]['activate'] ){
-				
-					$payments_str .= "'" . $array['name'] . "': '" . $paymod_base . "', ";
-					$payments_arr[] = $paymod_base;
-				}
-				break;
-			case 'acting_zeus_conv':
-				$paymod_base = 'zeus';
-				if( 'on' == $usces->options['acting_settings'][$paymod_base]['conv_activate'] 
-					&& 'on' == $usces->options['acting_settings'][$paymod_base]['activate'] ){
-				
-					$payments_str .= "'" . $array['name'] . "': '" . $paymod_base . "_conv', ";
-					$payments_arr[] = $paymod_base.'_conv';
-				}
-				break;
-			case 'acting_remise_card':
-				$paymod_base = 'remise';
-				if( 'on' == $usces->options['acting_settings'][$paymod_base]['card_activate'] 
-					&& 'on' == $usces->options['acting_settings'][$paymod_base]['howpay'] 
-					&& 'on' == $usces->options['acting_settings'][$paymod_base]['activate'] ){
-				
-					$payments_str .= "'" . $array['name'] . "': '" . $paymod_base . "', ";
-					$payments_arr[] = $paymod_base;
-				}
-				break;
-		}
-	}
-	$payments_str = rtrim($payments_str, ', ');
-	
-	$html .= "
-			var uscesPaymod = { " . $payments_str . " };
-	
-			$(\"input[name='order\\[payment_name\\]']\").click(function() {";
-	
-	foreach($payments_arr as $pm ){
-		$html .= "
-				$(\"#" . $pm . "\").css({\"display\": \"none\"});\n";
-	}
-	
-	//20101208ysk start
-	/*
-	$html .= "
-				var chk_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
-				if( uscesPaymod[chk_pay] != '' ){
-					$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"block\"});
-				}
-			});
-				
-			$('#delivery_method_select').change(function() {
-				orderfunc.make_delivery_time(($('#delivery_method_select option:selected').val()-0));
-			});
-				
-			orderfunc = {
-				make_delivery_time : function(selected) {
-					var option = '';
-					if(delivery_time[selected] != undefined){
-						for(var i=0; i<delivery_time[selected].length; i++){
-							if( delivery_time[selected][i] == selected_delivery_time ) {
-								option += '<option value=\"' + delivery_time[selected][i] + '\" selected=\"selected\">' + delivery_time[selected][i] + '</option>';
-							}else{
-								option += '<option value=\"' + delivery_time[selected][i] + '\">' + delivery_time[selected][i] + '</option>';
-							}
-						}
-					}
-					if(option == ''){
-						option = '<option value=\"" . __('There is not a choice.', 'usces') . "\">' + '" . __('There is not a choice.', 'usces') . "' + '</option>';
-					}
-					$(\"#delivery_time_select\").html(option);
-				}
-			};
-		";
-	*/
-	$html .= "
-				var chk_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
-				if( uscesPaymod[chk_pay] != '' ){
-					$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"block\"});
-				}
-			});
-			
-			$('#delivery_method_select').change(function() {
-				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
-				orderfunc.make_delivery_time(($('#delivery_method_select option:selected').val()-0));
-			});
-			
-			$('#delivery_flag1').click(function() {
-				if(customer_pref != delivery_pref) {
-					delivery_pref = customer_pref;
-					orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
-				}
-			});
-			
-			$('#delivery_flag2').click(function() {
-				if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-					delivery_pref = $('#pref').val();
-					orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
-				}
-			});
-			
-			$('#pref').change(function() {
-				if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-					delivery_pref = $('#pref').val();
-					orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
-				}
-			});
-			
-			orderfunc = {
-				make_delivery_date : function(selected) {
-					var option = '';
-					var message = '';
-					if(delivery_days[selected] != undefined && 0 <= delivery_days[selected]) {
-						switch(shipping) {
-						case 0://指定なし
-						case 9://商品入荷後
-							break;
-						default:
-							var now = new Date();
-							var date = new Array();
-							date[\"year\"] = now.getFullYear() + \"\";
-							date[\"month\"] = toDoubleDigits(now.getMonth() + 1);
-							date[\"day\"] = toDoubleDigits(now.getDate());
-							//配送業務締時間を超えていたら1日加算
-							var hh = toDoubleDigits(now.getHours());
-							var mm = toDoubleDigits(now.getMinutes());
-							if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
-							}
-	//20110131ysk start
-							//発送業務休日加算
-							if(0 < business_days) {
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], business_days);
-							}
-	//20110131ysk end
-							//発送日目安加算
-							if(0 < add_shipping[shipping]) {
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], add_shipping[shipping]);
-							}
-							//配達日数加算
-							if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
-							}
-							//最短配送時間帯メッセージ
-							var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
-							switch(shortest_delivery_time) {
-							case 0://指定しない 20110106ysk
-								message = date_str+\"".__('からご指定できます。', 'usces')."\";
-								break;
-							case 1://午前着可
-								message = date_str+\"".__('の午前中からご指定できます。', 'usces')."\";
-								break;
-							case 2://午前着不可
-								message = date_str+\"".__('の午後からご指定できます。', 'usces')."\";
-								break;
-							}
-	//20110126ysk start
-							//option += '<option value=\"0\">".__('No preference', 'usces')."</option>';
-							option += '<option value=\"".__('No preference', 'usces')."\">".__('No preference', 'usces')."</option>';
-	//20110126ysk end
-							for(var i = 0; i < delivery_after_days; i++) {
-								date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
-								if(date_str == selected_delivery_date) {
-									option += '<option value=\"' + date_str + '\" selected>' + date_str + '</option>';
-								} else {
-									option += '<option value=\"' + date_str + '\">' + date_str + '</option>';
-								}
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
-							}
-							break;
-						}
-					}
-					if(option == '') {
-						option = '<option value=\"".__('There is not a choice.', 'usces')."\">' + '".__('There is not a choice.', 'usces')."' + '</option>';
-					}
-					$(\"#delivery_date_select\").html(option);
-					$(\"#delivery_time_limit_message\").html(message);
-				},
-				make_delivery_time : function(selected) {
-					var option = '';
-					if(delivery_time[selected] != undefined){
-						for(var i=0; i<delivery_time[selected].length; i++){
-							if( delivery_time[selected][i] == selected_delivery_time ) {
-								option += '<option value=\"' + delivery_time[selected][i] + '\" selected=\"selected\">' + delivery_time[selected][i] + '</option>';
-							}else{
-								option += '<option value=\"' + delivery_time[selected][i] + '\">' + delivery_time[selected][i] + '</option>';
-							}
-						}
-					}
-					if(option == ''){
-						option = '<option value=\"" . __('There is not a choice.', 'usces') . "\">' + '" . __('There is not a choice.', 'usces') . "' + '</option>';
-					}
-					$(\"#delivery_time_select\").html(option);
-				}
-			};
-		";
-	//20101208ysk end
-	
-	if($usces_entries['delivery']['delivery_flag'] == 0) {
-		$html .= "
-			$(\"#delivery_table\").css({display: \"none\"});\n";
-	}
-	
-	//20101208ysk start
-	$html .= "
-			orderfunc.make_delivery_date(selected_delivery_method);\n";
-	//20101208ysk end
-	
-	$html .= "
-			orderfunc.make_delivery_time(selected_delivery_method);\n";
-	
-	foreach($payments_arr as $pn => $pm ){
-		$html .= "
-			$(\"#" . $pm . "\").css({\"display\": \"none\"});\n";
-		
-		switch( $pm ){
-			case 'zeus':
-				if('on' == $usces->options['acting_settings'][$pm]['howpay']){
-					$html .= "
-					$(\"input[name='howpay']\").change(function() {
-						if( '' != $(\"select[name='cbrand'] option:selected\").val() ){
-							$(\"#div_" . $pm . "\").css({\"display\": \"\"});
-						}
-						if( '1' == $(\"input[name='howpay']:checked\").val() ){
-							$(\"#cbrand_" . $pm . "\").css({\"display\": \"none\"});
-							$(\"#div_" . $pm . "\").css({\"display\": \"none\"});
-						}else{
-							$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
-						}
-					});
-			
-					$(\"select[name='cbrand']\").change(function() {
-						$(\"#div_" . $pm . "\").css({\"display\": \"\"});
-						if( '1' == $(\"select[name='cbrand'] option:selected\").val() ){
-							$(\"#brand1\").css({\"display\": \"\"});
-							$(\"#brand2\").css({\"display\": \"none\"});
-							$(\"#brand3\").css({\"display\": \"none\"});
-						}else if( '2' == $(\"select[name='cbrand'] option:selected\").val() ){
-							$(\"#brand1\").css({\"display\": \"none\"});
-							$(\"#brand2\").css({\"display\": \"\"});
-							$(\"#brand3\").css({\"display\": \"none\"});
-						}else if( '3' == $(\"select[name='cbrand'] option:selected\").val() ){
-							$(\"#brand1\").css({\"display\": \"none\"});
-							$(\"#brand2\").css({\"display\": \"none\"});
-							$(\"#brand3\").css({\"display\": \"\"});
-						}else{
-							$(\"#brand1\").css({\"display\": \"none\"});
-							$(\"#brand2\").css({\"display\": \"none\"});
-							$(\"#brand3\").css({\"display\": \"none\"});
-						}
-					});
-			
-					if( '1' == $(\"input[name='howpay']:checked\").val() ){
-						$(\"#cbrand_" . $pm . "\").css({\"display\": \"none\"});
-						$(\"#div_" . $pm . "\").css({\"display\": \"none\"});
-					}else{
-						$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
-						$(\"#div_" . $pm . "\").css({\"display\": \"\"});
-					}				
-	
-					if( '1' == $(\"select[name='cbrand'] option:selected\").val() ){
-						$(\"#brand1\").css({\"display\": \"\"});
-						$(\"#brand2\").css({\"display\": \"none\"});
-						$(\"#brand3\").css({\"display\": \"none\"});
-					}else if( '2' == $(\"select[name='cbrand'] option:selected\").val() ){
-						$(\"#brand1\").css({\"display\": \"none\"});
-						$(\"#brand2\").css({\"display\": \"\"});
-						$(\"#brand3\").css({\"display\": \"none\"});
-					}else if( '3' == $(\"select[name='cbrand'] option:selected\").val() ){
-						$(\"#brand1\").css({\"display\": \"none\"});
-						$(\"#brand2\").css({\"display\": \"none\"});
-						$(\"#brand3\").css({\"display\": \"\"});
-					}else{
-						$(\"#brand1\").css({\"display\": \"none\"});
-						$(\"#brand2\").css({\"display\": \"none\"});
-						$(\"#brand3\").css({\"display\": \"none\"});
-					}
-	
-					\n";
-				}
-				break;
-			
-		}
-	}
-	
-	$html .= "
-			ch_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
-			if( uscesPaymod[ch_pay] != '' ){
-				$(\"#\" + uscesPaymod[ch_pay]).css({\"display\": \"table\"});
-			}";
-		
-	$html .= "
-		});
-	</script>
-	";
-	
 	if($out == 'return'){
 		return $html;
 	}else{
@@ -5228,6 +4632,16 @@ function usces_delivery_info_script( $out ='' ){
 function usces_get_entries(){
 	global $usces, $usces_entries;
 	$usces_entries = $usces->cart->get_entry();
+}
+
+function usces_get_carts(){
+	global $usces, $usces_carts;
+	$usces_carts = $usces->cart->get_cart();
+}
+
+function usces_get_members(){
+	global $usces, $usces_members;
+	$usces_members = $usces->get_member();
 }
 
 function usces_error_message( $out = ''){
@@ -5263,6 +4677,61 @@ function usces_total_price( $out = ''){
 		return $usces->get_total_price();
 	}else{
 		echo $usces->get_total_price();
+	}
+}
+
+function usces_completion_settlement( $out ='' ){
+	global $usces;
+	$html = '';
+	require( USCES_PLUGIN_DIR . "/includes/completion_settlement.php");
+	
+	if($out == 'return'){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+
+function usces_purchase_button( $out ='' ){
+	global $usces, $usces_entries;
+	$html = '';
+	include( USCES_PLUGIN_DIR . "/includes/purchase_button.php");
+
+	if($out == 'return'){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+
+function usces_get_member_regmode(){
+	global $member_regmode;
+	$member_regmode = isset( $_SESSION['usces_entry']['member_regmode'] ) ? $_SESSION['usces_entry']['member_regmode'] : 'none'; 
+}
+
+function uesces_get_error_settlement( $out = '' ) {
+	$res = '';
+	if( isset($_REQUEST['acting']) && ('zeus_conv' == $_REQUEST['acting'] || 'zeus_card' == $_REQUEST['acting'] || 'zeus_bank' == $_REQUEST['acting'] ) ){ //ZEUS
+		$res .= '<div class="support_box">ゼウス・カスタマーサポート(24時間365日)<br />
+		電話番号：0570-02-3939(つながらないときは 03-4334-0500)<br />
+		E-mail:support@cardservice.co.jp
+		</div>'."\n";
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_page_name( $out = '') {
+	global $usces;
+
+	if($out == 'return'){
+		return $usces->page;
+	}else{
+		echo $usces->page;
 	}
 }
 

@@ -7,17 +7,17 @@
 get_header();
 ?>
 
+<?php usces_delivery_info_script(); ?>
 <div id="content">
 <div class="catbox">
-	<?php if (have_posts()) : have_posts(); the_post(); ?>
-	<div class="post" id="<?php echo $post->post_name; ?>">
-		<h1><?php the_title(); ?></h1>
-		<div class="entry">
-		
-<?php usces_remove_filter(); ?>
-<?php usces_get_entries(); ?>
-<?php usces_delivery_info_script(); ?>
 
+<?php if (have_posts()) : usces_remove_filter(); ?>
+	
+<div class="post" id="<?php usces_page_name(); ?>">
+
+<h1><?php _e('Shipping / Payment options', 'usces'); ?></h1>
+<div class="entry">
+		
 <div id="delivery-info">
 	
 	<div class="usccart_navi">
@@ -28,6 +28,7 @@ get_header();
 		<li class="ucart uscconfirm"><?php _e('4.Confirm','usces'); ?></li>
 		</ol>
 	</div>
+
 	<div class="header_explanation">
 <?php echo apply_filters('usces_filter_delivery_page_header', $header); ?>
 	</div>

@@ -9,13 +9,14 @@ get_header();
 
 <div id="content">
 <div class="catbox">
-	<?php if (have_posts()) : have_posts(); the_post(); ?>
-	<div class="post" id="<?php echo $post->post_name; ?>">
-		<h1><?php the_title(); ?></h1>
-		<div class="entry">
+
+<?php if (have_posts()) : usces_remove_filter(); ?>
+
+<div class="post" id="<?php usces_page_name(); ?>">
+
+<h1><?php _e('Confirmation', 'usces'); ?></h1>
+<div class="entry">
 		
-<?php usces_remove_filter(); ?>
-<?php usces_get_entries(); ?>
 <div id="info-confirm">
 	
 	<div class="usccart_navi">
@@ -55,7 +56,7 @@ get_header();
 				<th class="aright"><?php usces_crform($usces_entries['order']['total_items_price'], true, false); ?></th>
 				<th>&nbsp;</th>
 			</tr>
-<?php if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($usces_entries['order']['usedpoint']) ) : ?>
+<?php if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) : ?>
 			<tr>
 				<td colspan="5" class="aright"><?php _e('Used points', 'usces'); ?></td>
 				<td class="aright" style="color:#FF0000"><?php echo number_format($usces_entries['order']['usedpoint']); ?></td>
@@ -95,14 +96,13 @@ get_header();
 			</tr>
 			</tfoot>
 		</table>
-	
-<?php if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' &&  $this->is_member_logged_in() ) : ?>
+<?php if( usces_is_member_system() && usces_is_member_system_point() &&  usces_is_login() ) : ?>
 		<form action="<?php usces_url('cart'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-		<div class="error_message"><?php echo $this->error_message; ?></div>
+		<div class="error_message"><?php usces_error_message(); ?></div>
 		<table cellspacing="0" id="point_table">
 			<tr>
 				<td><?php _e('The current point', 'usces'); ?></td>
-				<td><span class="point"><?php echo $member['point']; ?></span>pt</td>
+				<td><span class="point"><?php echo $usces_members['point']; ?></span>pt</td>
 			</tr>
 			<tr>
 				<td><?php _e('Points you are using here', 'usces'); ?></td>
@@ -146,7 +146,7 @@ get_header();
 		</tr>
 	</table>
 
-<?php require( USCES_PLUGIN_DIR . "/includes/purchase_button.php"); ?>
+<?php usces_purchase_button(); ?>
 
 	<div class="footer_explanation">
 <?php echo apply_filters('usces_filter_confirm_page_footer', NULL); ?>

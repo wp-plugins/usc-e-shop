@@ -2,7 +2,6 @@
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 $rand = sprintf('%010d', mt_rand(1, 9999999999));
 
-
 if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['order']['total_full_price'] ){
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back to payment method page.', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;
@@ -10,21 +9,21 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 	$html = apply_filters('usces_filter_confirm_inform', $html);
 	$html .= '</form>';
 }else{
-	$send_item_code = apply_filters('usces_filter_settlement_item_code', $this->getItemCode($cart[0]['post_id']));
-	$send_item_name = apply_filters('usces_filter_settlement_item_name', $this->getItemName($cart[0]['post_id']));;
+	$send_item_code = apply_filters('usces_filter_settlement_item_code', $usces->getItemCode($cart[0]['post_id']));
+	$send_item_name = apply_filters('usces_filter_settlement_item_name', $usces->getItemName($cart[0]['post_id']));;
 	
-	$scheme = ( $this->use_ssl ) ? 'https://' : 'http://';
+	$scheme = ( $usces->use_ssl ) ? 'https://' : 'http://';
 	
 	$acting_flag = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
 	switch( $acting_flag ){
 	
 		case 'paypal.php':
-			require_once($this->options['settlement_path'] . "paypal.php");
+			require_once($usces->options['settlement_path'] . "paypal.php");
 			$html .= '</form>
 				<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
 				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
-				<input type="hidden" name="custom" value="' . $this->get_uscesid(false) . '">
+				<input type="hidden" name="custom" value="' . $usces->get_uscesid(false) . '">
 				<input type="hidden" name="lc" value="JP">';
 			if( 1 < count($cart) ) {
 				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name). ' ' . __('Others', 'usces') . '">';
@@ -36,8 +35,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			if( USCES_JP ){
 				$html .= '<input type="hidden" name="currency_code" value="JPY">';
 			}
-			$html .= '<input type="hidden" name="return" value="' . apply_filters('usces_paypal_return_url', (USCES_CART_URL . $this->delim . 'acting=paypal&acting_return=1') ) . '">
-				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . $this->delim . 'confirm=1">
+			$html .= '<input type="hidden" name="return" value="' . apply_filters('usces_paypal_return_url', (USCES_CART_URL . $usces->delim . 'acting=paypal&acting_return=1') ) . '">
+				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . $usces->delim . 'confirm=1">
 				<input type="hidden" name="notify_url" value="' . USCES_PAYPAL_NOTIFY_URL . '">
 				<input type="hidden" name="button_subtype" value="products">
 				<input type="hidden" name="tax_rate" value="0.000">
@@ -72,12 +71,12 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_zeus_card':
-			$acting_opts = $this->options['acting_settings']['zeus'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['zeus'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
-			$member = $this->get_member();
-			$pcid = $this->get_member_meta_value('zeus_pcid', $member['ID']);
-			if( $pcid == '8888888888888888' && $this->is_member_logged_in() ){
+			$member = $usces->get_member();
+			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
+			if( $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
@@ -114,8 +113,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_zeus_conv':
-			$acting_opts = $this->options['acting_settings']['zeus'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['zeus'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 			$html .= '
 				<input type="hidden" name="act" value="secure_order">
@@ -138,8 +137,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_zeus_bank':
-			$acting_opts = $this->options['acting_settings']['zeus'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['zeus'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form action="' . $acting_opts['bank_url'] . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">';
 			$html .= '
 				<input type="hidden" name="clientip" value="' . esc_attr($acting_opts['clientip_bank']) . '">
@@ -170,9 +169,9 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_remise_card':
-			$charging_type = $this->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
-			$acting_opts = $this->options['acting_settings']['remise'];
-			$this->save_order_acting_data($rand);
+			$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
+			$acting_opts = $usces->options['acting_settings']['remise'];
+			$usces->save_order_acting_data($rand);
 			$send_url = ('public' == $acting_opts['card_pc_ope']) ? $acting_opts['send_url_pc'] : $acting_opts['send_url_pc_test'];
 			$html .= '<form name="purchase_form" action="' . $send_url . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="SHOPCO" value="' . esc_attr($acting_opts['SHOPCO']) . '" />
@@ -184,13 +183,13 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="ITEM" value="0000120" />
 				<input type="hidden" name="TOTAL" value="' . $usces_entries['order']['total_full_price'] . '" />
 				<input type="hidden" name="AMOUNT" value="' . $usces_entries['order']['total_full_price'] . '" />
-				<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_card&acting_return=1" />
-				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_card&acting_return=0" />
-				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $this->delim . 'confirm=1" />
+				<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $usces->delim . 'acting=remise_card&acting_return=1" />
+				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . $usces->delim . 'acting=remise_card&acting_return=0" />
+				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $usces->delim . 'confirm=1" />
 				';
-			if( 'on' == $acting_opts['payquick'] && $this->is_member_logged_in() ){
-				$member = $this->get_member();
-				$pcid = $this->get_member_meta_value('remise_pcid', $member['ID']);
+			if( 'on' == $acting_opts['payquick'] && $usces->is_member_logged_in() ){
+				$member = $usces->get_member();
+				$pcid = $usces->get_member_meta_value('remise_pcid', $member['ID']);
 				$html .= '<input type="hidden" name="PAYQUICK" value="1">';
 				if( $pcid != NULL )
 					$html .= '<input type="hidden" name="PAYQUICKID" value="' . $pcid . '">';
@@ -240,8 +239,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			
 		case 'acting_remise_conv':
 			$datestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-			$acting_opts = $this->options['acting_settings']['remise'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['remise'];
+			$usces->save_order_acting_data($rand);
 			$send_url = ('public' == $acting_opts['conv_pc_ope']) ? $acting_opts['send_url_cvs_pc'] : $acting_opts['send_url_cvs_pc_test'];
 			$html .= '<form name="purchase_form" action="' . $send_url . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="SHOPCO" value="' . esc_attr($acting_opts['SHOPCO']) . '" />
@@ -283,10 +282,10 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="MSUM_07" value="0" />
 				';
 
-			$html .= '<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_conv&acting_return=1" />
-				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . $this->delim . 'acting=remise_conv&acting_return=0" />
+			$html .= '<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $usces->delim . 'acting=remise_conv&acting_return=1" />
+				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . $usces->delim . 'acting=remise_conv&acting_return=0" />
 				<input type="hidden" name="OPT" value="1" />
-				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $this->delim . 'confirm=1" />
+				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $usces->delim . 'confirm=1" />
 				';
 			$html .= '
 				<input type="hidden" name="dummy" value="&#65533;" />
@@ -301,8 +300,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			
 //20101018ysk start
 		case 'acting_jpayment_card'://クレジット決済(J-Payment)
-			$acting_opts = $this->options['acting_settings']['jpayment'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['jpayment'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
@@ -324,8 +323,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>'."\n";
 			break;
 		case 'acting_jpayment_conv'://コンビニ・ペーパーレス決済(J-Payment)
-			$acting_opts = $this->options['acting_settings']['jpayment'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['jpayment'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
@@ -347,8 +346,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>'."\n";
 			break;
 		case 'acting_jpayment_webm'://WebMoney決済(J-Payment)
-			$acting_opts = $this->options['acting_settings']['jpayment'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['jpayment'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cmd" value="0" />
@@ -373,8 +372,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>'."\n";
 			break;
 		case 'acting_jpayment_bitc'://BitCash決済(J-Payment)
-			$acting_opts = $this->options['acting_settings']['jpayment'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['jpayment'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
@@ -398,8 +397,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		//case 'acting_jpayment_suica'://モバイルSuica決済(J-Payment)
 		//	break;
 		case 'acting_jpayment_bank'://バンクチェック決済(J-Payment)
-			$acting_opts = $this->options['acting_settings']['jpayment'];
-			$this->save_order_acting_data($rand);
+			$acting_opts = $usces->options['acting_settings']['jpayment'];
+			$usces->save_order_acting_data($rand);
 			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
@@ -430,5 +429,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html = apply_filters('usces_filter_confirm_inform', $html);
 			$html .= '</form>';
 	}
+
 }
 ?>
