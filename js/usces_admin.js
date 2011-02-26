@@ -41,7 +41,7 @@
 			}
 			
 			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + name + "&newoptvalue=" + value + "&newoptmeans=" + means + "&newoptessential=" + essential;
+			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" + encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
 			s.success = function(data, dataType){
 					$("table#optlist-table").removeAttr("style");
 					$("tbody#item-opt-list").html( data );
@@ -68,7 +68,7 @@
 			}
 			
 			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + name + "&newoptvalue=" + value + "&newoptmeans=" + means + "&newoptessential=" + essential;
+			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" +encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
 			s.success = function(data, dataType){
 					$("table#optlist-table").removeAttr("style");
 					$("tbody#item-opt-list").html( data );
@@ -117,7 +117,7 @@
 			}
 			var id = uscesL10n.cart_number;
 			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&select=1&key=" + key;
+			s.data = "action=item_option_ajax&ID=" + id + "&select=1&key=" + encodeURIComponent(key);
 			s.success = function(data, dataType){
 				var means = data.substring(0,1);
 				var essential = data.substring(1,2);
@@ -183,7 +183,7 @@
 			var charging_type = $("#newcharging_type option:selected").val();
 			
 			var s = itemSku.settings;
-			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + name + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + zaiko + "&newskudisp=" + skudisp + "&newskuunit=" + skuunit + "&newskugptekiyo=" + skugptekiyo + "&newcharging_type=" + charging_type;
+			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugptekiyo=" + skugptekiyo + "&newcharging_type=" + encodeURIComponent(charging_type);
 			s.success = function(data, dataType){
 				//alert(data);
 				strs = data.split('#usces#');
@@ -227,7 +227,7 @@
 			var skugptekiyo = $(gs).val();
 			var charging_type = $(ct).val();
 			var s = itemSku.settings;
-			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + zaiko + "&skuname=" + name + "&skudisp=" + skudisp + "&skuunit=" + skuunit + "&skugptekiyo=" + skugptekiyo + "&charging_type=" + charging_type + "&skumetaid=" + meta_id;
+			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skugptekiyo=" + skugptekiyo + "&charging_type=" + charging_type + "&skumetaid=" + meta_id;
 			$.ajax( s );
 			return false;
 		},
@@ -247,7 +247,7 @@
 			}
 			var id = uscesL10n.cart_number;
 			var s = itemOpt.settings;
-			s.data = "action=item_sku_ajax&ID=" + id + "&select=1&key=" + key;
+			s.data = "action=item_sku_ajax&ID=" + id + "&select=1&key=" + encodeURIComponent(key);
 			s.success = function(data, dataType){
 				strs = data.split('#usces#');
 				$("#newskucprice").val(strs[1]);
@@ -291,7 +291,7 @@
 			var module = $("#newmodule").val();
 			
 			var s = payment.settings;
-			s.data = "action=payment_ajax&newname=" + name + "&newexplanation=" + explanation + "&newsettlement=" + settlement + "&newmodule=" + module;
+			s.data = "action=payment_ajax&newname=" + encodeURIComponent(name) + "&newexplanation=" + encodeURIComponent(explanation) + "&newsettlement=" + encodeURIComponent(settlement) + "&newmodule=" + encodeURIComponent(module);
 			s.success = function(data, dataType){
 					$("table#payment-table").removeAttr("style");
 					$("tbody#payment-list").html( data );
@@ -314,7 +314,7 @@
 			var settlement = $(vs).val();
 			var module = $(vm).val();
 			var s = payment.settings;
-			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + name + "&explanation=" + explanation + "&settlement=" + settlement + "&module=" + module;
+			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + encodeURIComponent(name) + "&explanation=" + encodeURIComponent(explanation) + "&settlement=" + encodeURIComponent(settlement) + "&module=" + encodeURIComponent(module);
 			$.ajax( s );
 			return false;
 		},
@@ -434,7 +434,7 @@
 			
 			var itemcode = $("#newitemcode").val();
 			var s = orderItem.settings;
-			s.data = "action=order_item_ajax&mode=get_order_item&itemcode=" + itemcode;
+			s.data = "action=order_item_ajax&mode=get_order_item&itemcode=" + encodeURIComponent(itemcode);
 			s.success = function(data, dataType){
 					$("#newitemform").html( data );
 			};
@@ -472,15 +472,15 @@
 		
 		getinfo : function() {
 			var s = uscesInformation.settings;
-			s.data = "v=" + uscesL10n.version;
-			s.data += "&wcid=" + uscesL10n.wcid;
-			s.data += "&wcurl=" + uscesL10n.USCES_PLUGIN_URL;
-			s.data += "&locale=" + uscesL10n.locale;
-			s.data += "&theme=" + uscesL10n.theme;
+			s.data = "v=" + encodeURIComponent(uscesL10n.version);
+			s.data += "&wcid=" + encodeURIComponent(uscesL10n.wcid);
+			s.data += "&wcurl=" + encodeURIComponent(uscesL10n.USCES_PLUGIN_URL);
+			s.data += "&locale=" + encodeURIComponent(uscesL10n.locale);
+			s.data += "&theme=" + encodeURIComponent(uscesL10n.theme);
 			s.data += "&wcex=";
 			var de = '';
 			for( var i = 0; i < uscesL10n.wcex.length; i++) {
-				s.data += de + uscesL10n.wcex[i];
+				s.data += de + encodeURIComponent(uscesL10n.wcex[i]);
 				de =',';
 			}
 			s.success = function(data, dataType){
@@ -489,6 +489,17 @@
 			$.ajax( s );
 			return false;
 		},
+		
+		getinfo2 : function() {
+			var s = uscesInformation.settings;
+			s.url = uscesL10n.requestFile;
+			s.data = 'action=getinfo_ajax';
+			s.success = function(data, dataType){
+					$("#wc_information").html( data );
+			};
+			$.ajax( s );
+			return false;
+		}
 		
 	};
 	
@@ -501,7 +512,7 @@
 			autosave();
 			
 		},
-		
+
 		cahngepict : function(code) {
 			$("div#item-select-pict").html(code);
 		}

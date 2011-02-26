@@ -110,7 +110,7 @@ function toggleVisibility(id) {
 	  e.style.display = 'none';
    else
 	  e.style.display = 'block';
-}
+};
 </script>
 <div class="wrap">
 <div class="usces_admin">

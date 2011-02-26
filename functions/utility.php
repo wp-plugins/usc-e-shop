@@ -1647,9 +1647,6 @@ function usces_download_item_list() {
 					__('display status', 'usces') => 'display_status');
 	}
 
-//20110221ysk start
-	$_REQUEST['searchIn'] = "searchIn";
-//20110221ysk end
 	$DT = new dataList($tableName, $arr_column);
 //20101202ysk start
 	$DT->pageLimit = 'off';

@@ -159,6 +159,7 @@ function usces_action_acting_transaction(){
 				if( $usces->is_member_logged_in() )
 					$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
 				usces_log('zeus card transaction : '.$_GET['sendpoint'], 'acting_transaction.log');
+				$usces->cart->crear_cart();
 				header("HTTP/1.0 200 OK");
 				die('zeus');
 			}

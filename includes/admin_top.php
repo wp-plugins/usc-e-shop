@@ -6,7 +6,7 @@
 //$vc_content = array_slice($vcfeed->items, 0, 1);
 //preg_match('/.+{version_check_start}(.+){version_check_end}.+/', $vc_content[0]['content']['encoded'], $matches);
 ?>
-<script type="text/javascript">jQuery(function($){uscesInformation.getinfo();});</script>
+<script type="text/javascript">jQuery(function($){uscesInformation.getinfo2();});</script>
 <?php
 //if( empty($matches[1]) ){
 //	$vcparse = NULL;

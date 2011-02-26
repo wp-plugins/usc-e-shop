@@ -243,7 +243,7 @@ jQuery(function($){
 	});
 	$('#dl_item').click(function() {
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
-			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+			+"&search[word]="+$(':input[name="search[word]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();
 		if($('#chk_header').attr('checked') == true) {

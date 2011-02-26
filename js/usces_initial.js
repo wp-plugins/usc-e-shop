@@ -76,14 +76,14 @@ jQuery(function($) {
 		
 	$('#cod_type_fix')
 		.click(function() {
-			$('#cod_fix_table').css("display","table");
+			$('#cod_fix_table').css("display","");
 			$('#cod_change_table').css("display","none");
 	});
 		
 	$('#cod_type_change')
 		.click(function() {
 			$('#cod_fix_table').css("display","none");
-			$('#cod_change_table').css("display","table");
+			$('#cod_change_table').css("display","");
 	});
 		
 	$("input[name='cod_first_amount']")
@@ -173,12 +173,12 @@ jQuery(function($) {
 		
 	if( 'fix' == usces_ini.cod_type ){
 		$('#cod_type_field').html(usces_ini.cod_type_fix);
-		$('#cod_fix_table').css("display","table");
+		$('#cod_fix_table').css("display","");
 		$('#cod_change_table').css("display","none");
 	}else{
 		$('#cod_type_field').html(usces_ini.cod_type_change);
 		$('#cod_fix_table').css("display","none");
-		$('#cod_change_table').css("display","table");
+		$('#cod_change_table').css("display","");
 	}
 	
 
