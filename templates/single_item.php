@@ -120,7 +120,11 @@ if(usces_sku_num() === 1) { //1SKU
 		$html .= '<td class="zaiko">' . usces_the_itemZaiko('return') . '</td>'."\n";
 		$html .= '<td class="quant">' . usces_the_itemQuant('return') . '</td>'."\n";
 		$html .= '<td class="unit">' . usces_the_itemSkuUnit('return') . '</td>'."\n";
-		$html .= '<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>'."\n";
+		if( !usces_have_zaiko() ){
+			$html .= '<td class="button">' . apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')) . '</td>'."\n";
+		}else{
+			$html .= '<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>'."\n";
+		}
 		$html .= '</tr>'."\n";
 		$html .= '<tr><td colspan="5" class="error_message">' . usces_singleitem_error_message($post->ID, usces_the_itemSku('return'), 'return') . '</td></tr>'."\n";
 

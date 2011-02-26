@@ -1,9 +1,23 @@
 <?php
+//define('MAGPIE_FETCH_TIME_OUT', 10);
+//define('MAGPIE_CACHE_ON', false);
+//include_once(ABSPATH . WPINC . '/rss.php');
+//$vcfeed = fetch_rss('http://www.welcart.com/archives/category/version_check/feed');
+//$vc_content = array_slice($vcfeed->items, 0, 1);
+//preg_match('/.+{version_check_start}(.+){version_check_end}.+/', $vc_content[0]['content']['encoded'], $matches);
+?>
+<script type="text/javascript">jQuery(function($){uscesInformation.getinfo2();});</script>
+<?php
+//if( empty($matches[1]) ){
+//	$vcparse = NULL;
+//}else{
+//	parse_str($matches[1], $vcparse);
+//}
+
 $display_mode = $this->options['display_mode'];
 $data = $this->get_items_skus();
 $items_num = $this->get_items_num();
 ?>
-<script type="text/javascript">jQuery(function($){uscesInformation.getinfo();});</script>
 <div class="wrap">
 <div class="usces_admin">
 

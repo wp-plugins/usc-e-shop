@@ -574,6 +574,7 @@ jQuery(function($){
 			var s = operation.settings;
 			s.data = "action=shop_options_ajax&mode=update_shipping_charge&id=" + id + "&name=" + name + query;
 			s.success = function(data, dataType){
+
 				var strs = data.split('#usces#');
 				var id = strs[0] - 0;
 				var name = strs[1];

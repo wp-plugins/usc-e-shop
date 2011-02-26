@@ -727,8 +727,10 @@ function usces_reg_orderdata( $results = array() ) {
 	
 	$cart = $usces->cart->get_cart();
 	$entry = $usces->cart->get_entry();
-	if( empty($cart) )
+	if( empty($cart) ){
+		usces_log('reg_orderdata : Session is empty.', 'database_error.log');
 		return 0;
+	}
 	
 	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 	$charging_flag = (  0 < (int)$chargings ) ? true : false;
@@ -839,10 +841,8 @@ function usces_reg_orderdata( $results = array() ) {
 //20101208ysk end
 
 	$res = $wpdb->query( $query );
-		//usces_log('res : '.$res, 'acting_transaction.log');
-//$wpdb->print_error();
-//	echo $query;
-//	exit;
+	usces_log('reg_orderdata : ' . $wpdb->last_error, 'database_error.log');
+
 	if( $res === false){
 		$order_id = false;
 	}else{
@@ -2071,6 +2071,7 @@ function usces_check_acting_return() {
 				$results[0] = 0;
 			}
 			$results['payment_status'] = 1;
+			remove_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 			break;
 			
 		case 'zeus_conv':
@@ -2820,6 +2821,9 @@ function usces_item_dupricate($post_id){
 function usces_item_uploadcsv(){
 	require_once( USCES_PLUGIN_DIR . "/libs/excel_reader2.php" );
 	global $wpdb, $usces;
+	$wpdb->show_errors();
+	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
+	set_time_limit(1800);
 	
 	define('USCES_COL_ITEM_CODE', 0);
 	define('USCES_COL_ITEM_NAME', 1);
@@ -3200,7 +3204,6 @@ function usces_item_uploadcsv(){
 		}
 		
 		//wp_posts data reg;
-		$wpdb->show_errors();
 		$cdatas = array();
 		$post_fields = array();
 		$sku = array();

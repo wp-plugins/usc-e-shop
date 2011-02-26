@@ -1979,6 +1979,7 @@ class usc_e_shop
 //20100818ysk end
 //20100908ysk start
 				case 'usces_orderlist':
+				case 'usces_ordernew':
 					wp_enqueue_script('jquery-ui-dialog');
 					break;
 				case 'usces_memberlist':
@@ -4785,8 +4786,8 @@ class usc_e_shop
 
 
 			$header = "POST " . $interface['path'] . " HTTP/1.1\r\n";
-			//$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
-			$header .= "Host: usctest.securesites.com\r\n";
+			$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
+			//$header .= "Host: usctest.securesites.com\r\n";
 			$header .= "User-Agent: PHP Script\r\n";
 			$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
 			$header .= "Content-Length: " . strlen($vars) . "\r\n";

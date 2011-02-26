@@ -19,7 +19,7 @@ add_action( 'wp_ajax_item_sku_ajax', 'item_sku_ajax' );
 add_action( 'wp_ajax_shop_options_ajax', 'shop_options_ajax' );
 add_action( 'wp_ajax_setup_cod_ajax', 'usces_setup_cod_ajax' );
 add_action( 'wp_ajax_change_states_ajax', 'change_states_ajax' );
-//add_action( 'wp_ajax_varch_ajax', 'usces_varch_ajax' );
+add_action( 'wp_ajax_getinfo_ajax', 'usces_getinfo_ajax' );
 //20100809ysk start
 add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 //20100809ysk end

@@ -441,7 +441,7 @@ foreach($payments_arr as $pn => $pm ){
 $html .= "
 		ch_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
 		if( uscesPaymod[ch_pay] != '' ){
-			$(\"#\" + uscesPaymod[ch_pay]).css({\"display\": \"table\"});
+			$(\"#\" + uscesPaymod[ch_pay]).css({\"display\": \"\"});
 		}";
 	
 $html .= "
