@@ -132,7 +132,7 @@ function usces_order_confirm_message($order_id) {
 	$meisai .= "------------------------------------------------------------------\r\n";
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, false, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
-	$meisai .= "(" . __('Currency', 'uesces') . ' : ' . usces_crcode('return') . ")\r\n\r\n";
+	$meisai .= "(" . __('Currency', 'usces') . ' : ' . usces_crcode('return') . ")\r\n\r\n";
 	
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data);
 

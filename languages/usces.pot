@@ -2688,7 +2688,7 @@ msgid "Delivery date"
 msgstr "配送希望日"
 
 msgid "JPY"
-msgstr "-"
+msgstr "円"
 
 msgid "Japan"
 msgstr "日本"

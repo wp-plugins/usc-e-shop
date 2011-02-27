@@ -217,7 +217,7 @@ function usces_crcode( $out = '' ) {
 	if($out == 'return'){
 		return $res;
 	}else{
-		echo $res;
+		echo __($res, 'usces');
 	}
 }
 
@@ -1294,7 +1294,7 @@ function usces_list_post( $slug, $rownum ){
 		$list .= "<div class='title'><a href='" . get_permalink($post->ID) . "'>" . $ipost->post_title . "</a></div>\n";
 		$list .= "<p>" . get_the_excerpt() . "</p>\n";
 		$list .= "</li>\n";
-		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
+		$li .= apply_filters( 'usces_filter_widget_post', $list, $ipost, $slug);
 	}
 	wp_reset_query();
 	usces_reset_filter();

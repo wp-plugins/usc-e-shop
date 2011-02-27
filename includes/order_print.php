@@ -15,10 +15,8 @@ usces_pdf_out($pdf, $usces_pdfo);
 die();
 
 function usces_conv_euc($str){
-//	$enc = mb_detect_encoding($str);
-//	if($enc != 'EUC-JP'){
-		$str = mb_convert_encoding($str, 'EUC-JP', 'UTF-8');
-//	}
+	$str = str_replace(mb_convert_encoding('&yen;','UTF-8','HTML-ENTITIES'),'\\',$str);
+	$str = mb_convert_encoding($str, 'EUC-JP', 'UTF-8');
 	return $str;
 }
 
@@ -551,7 +549,8 @@ function usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $l
 			$pdf->SetXY($leftside, $y);
 			$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->customer['address3']), $border, 'L');
 		}
-
+		break;
+		
 	case 'US':
 	default:
 		$pdf->SetXY($leftside, $y);
@@ -564,6 +563,7 @@ function usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $l
 		$y = $pdf->GetY() + $linetop;
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("zip code", 'usces') . ' ' . $data->customer['zip']), $border, 'L');
+		break;
 	}
 }
 
@@ -576,11 +576,13 @@ function usces_get_pdf_myaddress(&$pdf, $lineheight){
 	case 'JP': 
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc(__('zip code', 'usces').' '.$usces->options['zip_code']), 0, 'L');
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['address1']), 0, 'L');
-
+		break;
+		
 	case 'US':
 	default:
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['address1']), 0, 'L');
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc(__('zip code', 'usces').' '.$usces->options['zip_code']), 0, 'L');
+		break;
 	}
 }
 ?>

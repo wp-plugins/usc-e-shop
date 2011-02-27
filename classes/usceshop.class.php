@@ -5886,7 +5886,7 @@ class usc_e_shop
 		$price = number_format($amount, $decimal, $point, $seperator);
 
 		if( $symbol_pre )
-			$price = $symbol . $price;
+			$price = mb_convert_encoding($symbol, 'UTF-8', 'HTML-ENTITIES') . $price;
 			
 		if( $symbol_post )
 			$price = $price . __($code, 'usces');
