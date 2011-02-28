@@ -2621,9 +2621,26 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
+//20110228ysk start
 //20100818ysk start
-					$res = $this->reg_custom_member($wpdb->insert_id);
+					//$res = $this->reg_custom_member($wpdb->insert_id);
+					if( !empty($_POST['custom_customer']) ) {
+						$csmb_meta = usces_has_custom_field_meta('member');
+						if(!empty($csmb_meta) and is_array($csmb_meta)) {
+							foreach($csmb_meta as $key => $entry) {
+								if(!empty($_POST['custom_customer'][$key]) ) {
+									$csmb_key = 'csmb_'.$key;
+									$value = $_POST['custom_customer'][$key];
+									if( is_array($value) ) 
+										 $value = serialize($value);
+									$res = $this->set_member_meta_value($csmb_key, $value, $wpdb->insert_id);
+									if(false === $res) break;
+								}
+							}
+						}
+					}
 //20100818ysk end
+//20110228ysk end
 					//usces_send_regmembermail();
 					$user = $_POST['customer'];
 					$mser = usces_send_regmembermail($user);
