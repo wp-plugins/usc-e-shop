@@ -290,7 +290,7 @@ function cangeWday3(id, c) {
 				$business = $this->options['business_days'][$lateryy][$latermm][$mday];
 //20110131ysk start
 				//if(empty($business)) $business = '0';
-				if($business !== 0) $business = 1;
+				if($business != 0) $business = 1;
 //20110131ysk end
 				$color = ($business == 1) ? "#DFFFDD" : "#FFECCE"; ?>
 				<td class="cal" style="background-color:<?php echo $color; ?>"><div onclick="cangeBus('calendar3', <?php echo ($i + 1); ?>, <?php echo $d; ?>);"><?php echo $mday; ?></div>

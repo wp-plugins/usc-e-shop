@@ -12,7 +12,7 @@ define('USCES_VERSION', '1.0.r1102271');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
-define('USCES_DB_ORDER', '1.8');
+define('USCES_DB_ORDER', '1.9');
 define('USCES_DB_ORDER_META', '1.2');
 
 define('USCES_WP_CONTENT_DIR', ABSPATH . 'wp-content');

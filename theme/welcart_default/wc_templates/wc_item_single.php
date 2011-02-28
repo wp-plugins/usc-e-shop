@@ -56,7 +56,12 @@ wc_item_single.php
 		<?php endwhile; ?>
 		</table>
 	<?php endif; ?>
+	<?php if( !usces_have_zaiko() ) : ?>
+		<div class="zaiko_status"><?php echo apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')); ?></div>
+	<?php else : ?>
 		<div style="margin-top:10px"><?php _e('Quantity', 'usces'); ?><?php usces_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?><?php usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>
+		<div class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></div>
+	<?php endif; ?>
 	</div><!-- end of skuform -->
 	<?php echo apply_filters('single_item_single_sku_after_field', NULL); ?>
 	
@@ -101,7 +106,7 @@ wc_item_single.php
 					<caption><?php _e('Please appoint an option.', 'usces'); ?></caption>
 			<?php while (usces_have_options()) : ?>
 						<tr>
-							<th><?php usces_the_itemSku(); ?></th>
+							<th><?php usces_the_itemOptName(); ?></th>
 							<td><?php usces_the_itemOption(usces_getItemOptName(),''); ?></td>
 						</tr>
 			<?php endwhile; ?>
@@ -120,8 +125,16 @@ wc_item_single.php
 				<td class="zaiko"><?php usces_the_itemZaiko(); ?></td>
 				<td class="quant"><?php usces_the_itemQuant(); ?></td>
 				<td class="unit"><?php usces_the_itemSkuUnit(); ?></td>
+			<?php if( !usces_have_zaiko() ) : ?>
+				<td class="button"><?php echo apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')); ?></td>
+			<?php else : ?>
 				<td class="button"><?php usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></td>
+			<?php endif; ?>
 			</tr>
+			<tr>
+				<td colspan="5" class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></td>
+			</tr>
+
 	<?php } while (usces_have_skus()); ?>
 			</tbody>
 		</table>

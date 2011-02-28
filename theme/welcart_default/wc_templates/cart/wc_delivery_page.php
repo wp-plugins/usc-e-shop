@@ -13,7 +13,7 @@ get_header();
 
 <?php if (have_posts()) : usces_remove_filter(); ?>
 	
-<div class="post" id="<?php usces_page_name(); ?>">
+<div class="post" id="wc_<?php usces_page_name(); ?>">
 
 <h1><?php _e('Shipping / Payment options', 'usces'); ?></h1>
 <div class="entry">

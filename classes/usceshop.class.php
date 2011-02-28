@@ -3675,7 +3675,7 @@ class usc_e_shop
 	
 	function update_business_days() {
 		$options = get_option('usces');
-		$datenow = getdate();
+		$datenow = get_date_from_gmt(getdate());
 		list($year, $mon, $mday) = getBeforeMonth($datenow['year'], $datenow['mon'], $datenow['mday'], 1);
 		
 		if(isset($options['business_days'][$year][$mon][1]))
@@ -3831,13 +3831,13 @@ class usc_e_shop
 				order_delivery_time VARCHAR( 100 ) NOT NULL ,
 				order_payment_name VARCHAR( 100 ) NOT NULL ,
 				order_condition TEXT,
-				order_item_total_price INT( 10 ) NOT NULL DEFAULT '0',
+				order_item_total_price DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_getpoint INT( 10 ) NOT NULL DEFAULT '0',
 				order_usedpoint INT( 10 ) NOT NULL DEFAULT '0',
-				order_discount INT( 10 ) NOT NULL DEFAULT '0',
-				order_shipping_charge INT( 10 ) NOT NULL DEFAULT '0',
-				order_cod_fee INT( 10 ) NOT NULL DEFAULT '0',
-				order_tax INT( 10 ) NOT NULL DEFAULT '0',
+				order_discount DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_shipping_charge DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_cod_fee DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_tax DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				order_modified VARCHAR( 20 ) NULL ,
 				order_status VARCHAR( 255 ) NULL ,
@@ -3979,13 +3979,13 @@ class usc_e_shop
 				order_delivery_time VARCHAR( 100 ) NOT NULL ,
 				order_payment_name VARCHAR( 100 ) NOT NULL ,
 				order_condition TEXT,
-				order_item_total_price INT( 10 ) NOT NULL DEFAULT '0',
+				order_item_total_price DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_getpoint INT( 10 ) NOT NULL DEFAULT '0',
 				order_usedpoint INT( 10 ) NOT NULL DEFAULT '0',
-				order_discount INT( 10 ) NOT NULL DEFAULT '0',
-				order_shipping_charge INT( 10 ) NOT NULL DEFAULT '0',
-				order_cod_fee INT( 10 ) NOT NULL DEFAULT '0',
-				order_tax INT( 10 ) NOT NULL DEFAULT '0',
+				order_discount DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_shipping_charge DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_cod_fee DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_tax DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				order_modified VARCHAR( 20 ) NULL ,
 				order_status VARCHAR( 255 ) NULL ,

@@ -805,7 +805,7 @@ function usces_reg_orderdata( $results = array() ) {
 					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_date`, `order_delivery_time`, 
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %f, %d, %d, %f, %f, %f, %f, %s, %s, %s)", 
 					$member['ID'], 
 					$entry['customer']['mailaddress1'], 
 					$entry['customer']['name1'], 
@@ -1075,7 +1075,7 @@ function usces_new_orderdata() {
 					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_date`, `order_delivery_time`, 
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
+				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %f, %d, %d, %f, %f, %f, %f, %s, %s, %s)", 
 					$member['ID'], 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
@@ -1442,8 +1442,8 @@ function usces_update_orderdata() {
 					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
 					`order_zip`=%s, `order_pref`=%s, `order_address1`=%s, `order_address2`=%s, `order_address3`=%s, 
 					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
-					`order_delivery_method`=%d, `order_delivery_date`=%s, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%d, `order_getpoint`=%d, `order_usedpoint`=%d, 
-					`order_discount`=%d, `order_shipping_charge`=%d, `order_cod_fee`=%d, `order_tax`=%d, `order_modified`=%s, 
+					`order_delivery_method`=%d, `order_delivery_date`=%s, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%f, `order_getpoint`=%d, `order_usedpoint`=%d, 
+					`order_discount`=%f, `order_shipping_charge`=%f, `order_cod_fee`=%f, `order_tax`=%f, `order_modified`=%s, 
 					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
 				WHERE ID = %d", 
 					$_POST['customer']['mailaddress'], 
@@ -4663,6 +4663,19 @@ function usces_url( $type, $out = ''){
 	switch ( $type ){
 		case 'cart':
 			$url = USCES_CART_URL;
+			break;
+		case 'login':
+			$url = USCES_LOGIN_URL;
+			break;
+		case 'member':
+			$url = USCES_MEMBER_URL;
+			break;
+		case 'newmember':
+			$url = USCES_NEWMEMBER_URL;
+			break;
+		case 'lostmemberpassword':
+			$url = USCES_LOSTMEMBERPASSWORD_URL;
+			break;
 	
 	}
 	
@@ -4737,5 +4750,4 @@ function usces_page_name( $out = '') {
 		echo $usces->page;
 	}
 }
-
 ?>
