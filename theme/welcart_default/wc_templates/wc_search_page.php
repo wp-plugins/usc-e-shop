@@ -53,8 +53,12 @@ if (isset($_REQUEST['usces_search'])) :
 	<?php endif; ?>
 	</div>
 
-	<div class="searchitems">
+
+	<?php if( $search_result = apply_filters('usces_filter_search_result', NULL, $my_query)) : ?>
+	<?php echo $search_result; ?>
+	<?php else : ?>
 	
+	<div class="searchitems">
 	<?php while ($my_query->have_posts()) : $my_query->the_post(); 	usces_the_item(); ?>
 		<div class="itemlist clearfix">
 			<div class="loopimg">
@@ -66,9 +70,11 @@ if (isset($_REQUEST['usces_search'])) :
 			</div>
 		</div>
 	<?php endwhile; ?>
-
 	</div><!-- searchitems -->
-	
+
+	<?php endif; ?>
+
+
 	<div class="navigation clearfix">
 	<?php if( $uscpaged > 1 ) : ?>
 		<a style="float:left; cursor:pointer;" onclick="usces_prepage();"><?php _e('&laquo; Previous article', 'usces'); ?></a>

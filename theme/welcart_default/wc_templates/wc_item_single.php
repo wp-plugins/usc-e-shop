@@ -22,7 +22,7 @@ wc_item_single.php
 <div id="itempage">
 <form action="<?php echo USCES_CART_URL; ?>" method="post">
 	<div class="itemimg">
-	<a href="<?php usces_the_itemImageURL(0); ?>"><?php usces_the_itemImage(0, 200, 250, $post); ?></a>
+	<a href="<?php usces_the_itemImageURL(0); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage(0, 200, 250, $post); ?></a>
 	</div>
 	
 <?php if(usces_sku_num() === 1) : usces_have_skus(); ?>
@@ -52,7 +52,7 @@ wc_item_single.php
 		<table class='item_option'>
 			<caption><?php _e('Please appoint an option.', 'usces'); ?></caption>
 		<?php while (usces_have_options()) : ?>
-			<tr><th><?php usces_the_itemSku(); ?></th><td><?php usces_the_itemOption(usces_getItemOptName(),''); ?></td></tr>
+			<tr><th><?php usces_the_itemOptName(); ?></th><td><?php usces_the_itemOption(usces_getItemOptName(),''); ?></td></tr>
 		<?php endwhile; ?>
 		</table>
 	<?php endif; ?>
@@ -145,7 +145,7 @@ wc_item_single.php
 	<div class="itemsubimg">
 <?php $imageid = usces_get_itemSubImageNums(); ?>
 <?php foreach ( $imageid as $id ) : ?>
-		<a href="<?php usces_the_itemImageURL($id); ?>"><?php usces_the_itemImage($id, 137, 200, $post); ?></a>
+		<a href="<?php usces_the_itemImageURL($id); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage($id, 137, 200, $post); ?></a>
 <?php endforeach; ?>
 	</div><!-- end of itemsubimg -->
 
