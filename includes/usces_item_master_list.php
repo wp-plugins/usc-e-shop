@@ -1,6 +1,7 @@
 <?php
 require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
 global $wpdb;
+$wpdb->show_errors();
 
 $tableName = $wpdb->posts;
 if( USCES_MYSQL_VERSION >= 5 ){

@@ -2685,6 +2685,9 @@ msgstr "１行目に項目名を追加する"
 msgid "The member data is deleted"
 msgstr "会員データを削除しました。"
 
+msgid "COD is not available."
+msgstr "この配送方法では「代金引換」はご利用できません。"
+
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
 #~ msgid "% Comments &#187;"

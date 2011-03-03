@@ -2222,14 +2222,19 @@ class usc_e_shop
 		$this->payment_results = usces_check_acting_return();
 
 		if(  isset($this->payment_results[0]) && $this->payment_results[0] === 'duplicate' ){
+		
 			header('location: ' . get_option('home'));
 			exit;
-		}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
-			if( isset($this->payment_results['payment_status']) ){
+			
+		}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){//result OK
+		
+			if( ! $this->payment_results['reg_order'] ){//without Registration Order
 				$this->page = 'ordercompletion';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
+				
 			}else{
 				$res = $this->order_processing( $this->payment_results );
+				
 				if( 'ordercompletion' == $res ){
 					$this->page = 'ordercompletion';
 					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
@@ -2238,10 +2243,12 @@ class usc_e_shop
 					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 				}
 			}
-		}else{
+			
+		}else{//result NG
 			$this->page = 'error';
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 		}
+		
 		add_action('the_post', array($this, 'action_cartFilter'));
 	}
 	
@@ -2621,26 +2628,9 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
-//20110228ysk start
 //20100818ysk start
-					//$res = $this->reg_custom_member($wpdb->insert_id);
-					if( !empty($_POST['custom_customer']) ) {
-						$csmb_meta = usces_has_custom_field_meta('member');
-						if(!empty($csmb_meta) and is_array($csmb_meta)) {
-							foreach($csmb_meta as $key => $entry) {
-								if(!empty($_POST['custom_customer'][$key]) ) {
-									$csmb_key = 'csmb_'.$key;
-									$value = $_POST['custom_customer'][$key];
-									if( is_array($value) ) 
-										 $value = serialize($value);
-									$res = $this->set_member_meta_value($csmb_key, $value, $wpdb->insert_id);
-									if(false === $res) break;
-								}
-							}
-						}
-					}
+					$res = $this->reg_custom_member($wpdb->insert_id);
 //20100818ysk end
-//20110228ysk end
 					//usces_send_regmembermail();
 					$user = $_POST['customer'];
 					$mser = usces_send_regmembermail($user);
@@ -4347,7 +4337,8 @@ class usc_e_shop
 		}
 //20110203ysk end
 		$order_id = usces_reg_orderdata( $results );
-		//var_dump($order_id);exit;
+		do_action('usces_post_reg_orderdata', $order_id, $results);
+		
 		if ( $order_id ) {
 			//mail(function.php)
 			$mail_res = usces_send_ordermail( $order_id );
