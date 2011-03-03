@@ -51,20 +51,7 @@ function usces_action_acting_transaction(){
 		}
 		
 //20110203ysk start
-/*		$order_id = usces_reg_orderdata();
-		if( !$order_id ){
-			usces_log('remise card error3 : '.print_r($data, true), 'acting_transaction.log');
-			die('error3');
-		}else{
-			if( isset($_POST['X-PAYQUICKID']) )
-				$usces->set_member_meta_value('remise_pcid', $_POST['X-PAYQUICKID']);
-			if( isset($_POST['X-AC_MEMBERID']) )
-				$usces->set_member_meta_value('remise_memid', $_POST['X-AC_MEMBERID']);
-			$mail_res = usces_send_ordermail( $order_id );
-			usces_log('remise card transaction : '.$_POST['X-TRANID'], 'acting_transaction.log');
-			die('<SDBKDATA>STATUS=800</SDBKDATA>');
-		}
-*/		$res = $usces->order_processing();
+		$res = $usces->order_processing();
 		if( 'error' == $res ){
 			usces_log('remise card error3 : '.print_r($data, true), 'acting_transaction.log');
 			die('error3');
@@ -136,42 +123,8 @@ function usces_action_acting_transaction(){
 		}
 		
 		if( 'OK' == $_REQUEST['result'] ){
-//20110203ysk start
-/*			$order_id = usces_reg_orderdata();
-			if( !$order_id ){
-				usces_log('zeus card error2 : '.print_r($data, true), 'acting_transaction.log');
-				$zeus_call = 'clientip='.$_REQUEST['clientip']."\n".
-				'ordd='.$_REQUEST['clientip']."\n".
-				'money='.$_REQUEST['clientip']."\n".
-				'telno='.$_REQUEST['clientip']."\n".
-				'email='.$_REQUEST['clientip']."\n".
-				'sendid='.$_REQUEST['clientip']."\n".
-				'sendpoint='.$_REQUEST['clientip'];
-				usces_log('cgi_call : '.$zeus_call, 'acting_transaction.log');
-				header("HTTP/1.0 400");
-				die('error2');
-			}else{
-				if( $usces->is_member_logged_in() )
-					$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
-				$mail_res = usces_send_ordermail( $order_id );
-				usces_log('zeus card transaction : '.$_GET['sendpoint'], 'acting_transaction.log');
-				header("HTTP/1.0 200 OK");
-				die('zeus');
-			}
-*/			$res = $usces->order_processing();
-			if( 'error' == $res ){
-				usces_log('zeus card error2 : '.print_r($data, true), 'acting_transaction.log');
-				header("HTTP/1.0 400");
-				die('error2');
-			}else{
-				if( $usces->is_member_logged_in() )
-					$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
-				usces_log('zeus card transaction : '.$_GET['sendpoint'], 'acting_transaction.log');
-				$usces->cart->crear_cart();
-				header("HTTP/1.0 200 OK");
-				die('zeus');
-			}
-//20110203ysk end
+			header("HTTP/1.0 200 OK");
+			die('zeus');
 		}else{
 			usces_log('zeus card error3 : '.print_r($data, true), 'acting_transaction.log');
 			header("HTTP/1.0 200 OK");
@@ -193,28 +146,17 @@ function usces_action_acting_transaction(){
 		if( $values == NULL ){
 			
 //20110203ysk start
-/*			$order_id = usces_reg_orderdata();
-			if( !$order_id ){
-				usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
-				die('error1');
-			}else{
-				$mail_res = usces_send_ordermail( $order_id );
-				$value = serialize($_GET);
-				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
-				$res = $wpdb->query( $query );
-				$usces->cart->crear_cart();
-			}
-*/			$res = $usces->order_processing();
-			if( 'error' == $res ){
-				usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
-				die('error1');
-			}else{
-				$order_id = $usces->cart->get_order_entry('ID');
-				$value = serialize($_GET);
-				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
-				$res = $wpdb->query( $query );
-				$usces->cart->crear_cart();
-			}
+		$res = $usces->order_processing();
+		if( 'error' == $res ){
+			usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
+			die('error1');
+		}else{
+			$order_id = $usces->cart->get_order_entry('ID');
+			$value = serialize($_GET);
+			$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
+			$res = $wpdb->query( $query );
+			$usces->cart->crear_cart();
+		}
 //20110203ysk end
 
 		}else{
@@ -274,28 +216,16 @@ function usces_action_acting_transaction(){
 		if( $values == NULL ){
 			
 //20110203ysk start
-/*
-			$order_id = usces_reg_orderdata();
-			if( !$order_id ){
-				usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
-				die('error1');
-			}else{
-				$mail_res = usces_send_ordermail( $order_id );
-				$value = serialize($_GET);
-				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
-				$res = $wpdb->query( $query );
-				//$usces->cart->crear_cart(); clear in front
-			}
-*/			$res = $usces->order_processing();
-			if( 'error' == $res ){
-				usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
-				die('error1');
-			}else{
-				$order_id = $usces->cart->get_order_entry('ID');
-				$value = serialize($_GET);
-				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
-				$res = $wpdb->query( $query );
-			}
+		$res = $usces->order_processing();
+		if( 'error' == $res ){
+			usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
+			die('error1');
+		}else{
+			$order_id = $usces->cart->get_order_entry('ID');
+			$value = serialize($_GET);
+			$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
+			$res = $wpdb->query( $query );
+		}
 //20110203ysk end
 
 

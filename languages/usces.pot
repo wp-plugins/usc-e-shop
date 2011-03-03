@@ -2710,3 +2710,6 @@ msgstr "国"
 
 msgid "Target Market"
 msgstr "販売対象国"
+
+msgid "COD is not available."
+msgstr "この配送方法では「代金引換」はご利用できません。"

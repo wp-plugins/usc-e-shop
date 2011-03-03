@@ -2521,14 +2521,19 @@ class usc_e_shop
 		$this->payment_results = usces_check_acting_return();
 
 		if(  isset($this->payment_results[0]) && $this->payment_results[0] === 'duplicate' ){
+		
 			header('location: ' . get_option('home'));
 			exit;
-		}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){
-			if( isset($this->payment_results['payment_status']) ){
+			
+		}else if( isset($this->payment_results[0]) && $this->payment_results[0] ){//result OK
+		
+			if( ! $this->payment_results['reg_order'] ){//without Registration Order
 				$this->page = 'ordercompletion';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
+				
 			}else{
 				$res = $this->order_processing( $this->payment_results );
+				
 				if( 'ordercompletion' == $res ){
 					$this->page = 'ordercompletion';
 					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
@@ -2537,10 +2542,12 @@ class usc_e_shop
 					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 				}
 			}
-		}else{
+			
+		}else{//result NG
 			$this->page = 'error';
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 		}
+		
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_action('template_redirect', array($this, 'template_redirect'));
 	}
@@ -4718,7 +4725,8 @@ class usc_e_shop
 		}
 //20110203ysk end
 		$order_id = usces_reg_orderdata( $results );
-		//var_dump($order_id);exit;
+		do_action('usces_post_reg_orderdata', $order_id, $results);
+		
 		if ( $order_id ) {
 			//mail(function.php)
 			$mail_res = usces_send_ordermail( $order_id );

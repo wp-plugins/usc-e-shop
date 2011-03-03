@@ -725,6 +725,7 @@ function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
 //	$wpdb->show_errors();
 	
+	$options = get_option('usces');
 	$cart = $usces->cart->get_cart();
 	$entry = $usces->cart->get_entry();
 	if( empty($cart) ){
@@ -859,41 +860,7 @@ function usces_reg_orderdata( $results = array() ) {
 		$usces->cart->set_order_entry( array('ID' => $order_id) );
 		$usces->set_order_meta_value('customer_country', $entry['customer']['country'], $order_id);
 	
-//20110203ysk start
-		switch($_GET['acting']) {
-		case 'epsilon':
-			$trans_id = $_REQUEST['trans_code'];
-			break;
-		case 'paypal':
-			$trans_id = $_REQUEST['txn_id'];
-			break;
-		case 'zeus_card':
-			$trans_id = $_REQUEST['ordd'];
-			break;
-		case 'zeus_conv':
-		case 'zeus_bank':
-			$trans_id = $_REQUEST['order_no'];
-			break;
-		case 'remise_card':
-			$trans_id = $_REQUEST['X-TRANID'];
-			break;
-		case 'remise_conv':
-			$trans_id = $_REQUEST['X-JOB_ID'];
-			break;
-		case 'jpayment_card':
-		case 'jpayment_conv':
-		case 'jpayment_bank':
-			$trans_id = $_REQUEST['gid'];
-			break;
-		default:
-			$trans_id = '';
-		}
-		if(!empty($trans_id)) {
-			$usces->set_order_meta_value('trans_id', $trans_id, $order_id);
-		}
-//20110203ysk end
-
-		if ( $member['ID'] ) {
+		if ( $member['ID'] && 'activate' == $options['membersystem_state'] && 'activate' == $options['membersystem_point'] ) {
 		
 			$mquery = $wpdb->prepare(
 						"UPDATE $member_table_name SET mem_point = (mem_point + %d - %d) WHERE ID = %d", 
@@ -960,23 +927,6 @@ function usces_reg_orderdata( $results = array() ) {
 				$wpdb->query( $mquery );
 				$usces->set_member_meta_value('continue_memberid', $_REQUEST['X-AC_MEMBERID']);
 			}
-		}
-	
-		if ( 'zeus_conv' == $usces->payment_results['acting'] ) {
-			$zeus_convs = array(
-								'acting' => 'zeus_conv',
-								'pay_cvs' => $_REQUEST['pay_cvs'],
-								'order_no' => $_REQUEST['order_no'],
-								'money' => $_REQUEST['money'],
-								'pay_no1' => $_REQUEST['pay_no1'],
-								'pay_no2' => $_REQUEST['pay_no2'],
-								'pay_limit' => $_REQUEST['pay_limit'],
-								'status' => $_REQUEST['status'],
-								'error_code' => $_REQUEST['error_code']
-								);
-			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
-										VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], serialize($zeus_convs) );
-			$wpdb->query( $mquery );
 		}
 	
 //20101018ysk start
@@ -2042,6 +1992,7 @@ function usces_check_acting_return() {
 				$results[0] = 'duplicate';
 			}else if(isset($_GET['result'])){
 				$results[0] = (int)$_GET['result'];
+				$results['reg_order'] = true;
 			}else{
 				$str = explode('?', $_GET['acting_return']);
 				if(!isset($str[1])) {
@@ -2055,12 +2006,14 @@ function usces_check_acting_return() {
 				}
 			
 			}
+			$results['reg_order'] = true;
 		break;
 		
 		case 'paypal':
 			require_once($usces->options['settlement_path'] . "paypal.php");
 			$results = paypal_check($usces_paypal_url);
 			remove_action( 'wp_footer', array(&$usces, 'lastprocessing'));
+			$results['reg_order'] = true;
 			break;
 			
 		case 'zeus_card':
@@ -2070,8 +2023,7 @@ function usces_check_acting_return() {
 			}else{
 				$results[0] = 0;
 			}
-			$results['payment_status'] = 1;
-			remove_action( 'wp_footer', array(&$usces, 'lastprocessing'));
+			$results['reg_order'] = true;
 			break;
 			
 		case 'zeus_conv':
@@ -2081,7 +2033,7 @@ function usces_check_acting_return() {
 			}else{
 				$results[0] = 0;
 			}
-			$results['payment_status'] = 1;
+			$results['reg_order'] = false;
 			break;
 			
 		case 'remise_card':
@@ -2092,7 +2044,7 @@ function usces_check_acting_return() {
 			}else{
 				$results[0] = 0;
 			}
-			$results['payment_status'] = 1;
+			$results['reg_order'] = false;
 			break;
 			
 		case 'remise_conv':
@@ -2103,6 +2055,7 @@ function usces_check_acting_return() {
 			}else{
 				$results[0] = 0;
 			}
+			$results['reg_order'] = true;
 			break;
 			
 //20101018ysk start
@@ -2112,6 +2065,7 @@ function usces_check_acting_return() {
 				usces_log('jpayment card entry error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
+			$results['reg_order'] = true;
 			break;
 
 		case 'jpayment_conv':
@@ -2120,6 +2074,7 @@ function usces_check_acting_return() {
 				usces_log('jpayment conv entry error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1 and $_GET['ap'] == 'CPL_PRE') ? 1 : 0;
+			$results['reg_order'] = true;
 			break;
 
 		case 'jpayment_bank':
@@ -2128,6 +2083,7 @@ function usces_check_acting_return() {
 				usces_log('jpayment bank entry error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
+			$results['reg_order'] = true;
 			break;
 //20101018ysk end
 
@@ -2138,7 +2094,7 @@ function usces_check_acting_return() {
 			}else{
 				$results[0] = 0;
 			}
-			$results['payment_status'] = 1;
+			$results['reg_order'] = false;
 			break;
 	}
 	
@@ -4749,5 +4705,79 @@ function usces_page_name( $out = '') {
 	}else{
 		echo $usces->page;
 	}
+}
+
+function usces_post_reg_orderdata(){
+	global $usces, $wpdb;
+	$entry = $usces->cart->get_entry();
+	$acting = $_GET['acting'];
+	$args = func_get_args();
+	$order_id = $args[0];
+	$results = $args[1];
+	
+	if( $order_id ){
+
+		switch ( $acting ) {
+			case 'epsilon':
+				$trans_id = $_REQUEST['trans_code'];
+				break;
+			case 'paypal':
+				$trans_id = $_REQUEST['txn_id'];
+				break;
+			case 'zeus_card':
+				$trans_id = $_REQUEST['ordd'];
+				foreach($_GET as $key => $value) {
+					$data[$key] = mysql_real_escape_string($value);
+				}
+				$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
+				if( $usces->is_member_logged_in() )
+					$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
+				usces_log('zeus card transaction : '.$_GET['sendpoint'], 'acting_transaction.log');
+				break;
+			case 'zeus_conv':
+				$trans_id = $_REQUEST['order_no'];
+				$zeus_convs = array(
+									'acting' => 'zeus_conv',
+									'pay_cvs' => $_REQUEST['pay_cvs'],
+									'order_no' => $_REQUEST['order_no'],
+									'money' => $_REQUEST['money'],
+									'pay_no1' => $_REQUEST['pay_no1'],
+									'pay_no2' => $_REQUEST['pay_no2'],
+									'pay_limit' => $_REQUEST['pay_limit'],
+									'status' => $_REQUEST['status'],
+									'error_code' => $_REQUEST['error_code']
+									);
+				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name 
+											( order_id, meta_key, meta_value ) VALUES 
+											(%d, %s, %s)", 
+											$order_id, 
+											'acting_'.$_REQUEST['sendpoint'], 
+											serialize($zeus_convs)
+										);
+				$wpdb->query( $mquery );
+				break;
+			case 'zeus_bank':
+				$trans_id = $_REQUEST['order_no'];
+				break;
+			case 'remise_card':
+				$trans_id = $_REQUEST['X-TRANID'];
+				break;
+			case 'remise_conv':
+				$trans_id = $_REQUEST['X-JOB_ID'];
+				break;
+			case 'jpayment_card':
+			case 'jpayment_conv':
+			case 'jpayment_bank':
+				$trans_id = $_REQUEST['gid'];
+				break;
+			default:
+				$trans_id = '';
+		}
+	
+		if(!empty($trans_id)) {
+			$usces->set_order_meta_value('trans_id', $trans_id, $order_id);
+		}
+	}
+	
 }
 ?>

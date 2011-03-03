@@ -248,6 +248,7 @@ class dataList
 	function GetRows()
 	{
 		global $wpdb;
+		$wpdb->show_errors();
 		$where = $this->GetWhere();
 		$order = ' ORDER BY ' . $this->sortColumn . ' ' . $this->sortSwitchs[$this->sortColumn];
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
@@ -315,7 +316,6 @@ class dataList
 					
 		$query .= $where . $order;// . $limit;
 		//var_dump($query);
-		$wpdb->show_errors();
 					
 		$rows = $wpdb->get_results($query, ARRAY_A);
 		$this->selectedRow = count($rows);

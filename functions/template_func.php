@@ -1477,7 +1477,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 		//						'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
 		//						'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE')) ){
 		if( !in_array($key, array(
-								'order_no','tracking_no','status','error_message','money',
+								'acting','order_no','tracking_no','status','error_message','money',
 								'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
 								'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE',
 								'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp')) ){
