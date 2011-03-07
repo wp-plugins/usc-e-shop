@@ -263,14 +263,19 @@ function usces_the_itemSkuUnit( $out = '' ) {
 	}
 }
 
-function usces_the_firstSku() {
+function usces_the_firstSku( $out = '' ) {
 	global $post, $usces;
 	$post_id = $post->ID;
 	
 	
 	$fields = $usces->get_skus( $post_id );
 	
-	echo esc_html($fields['key'][0]);
+
+	if($out == 'return'){
+		return $fields['key'][0];
+	}else{
+		echo esc_html($fields['key'][0]);
+	}
 }
 
 function usces_the_firstPrice( $out = '', $post = NULL ) {
@@ -511,6 +516,37 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 		$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$sku}]\" type=\"{$type}\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
 		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
 	}
+
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+
+function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $options=NULL, $out = '') {
+	global $usces;
+	if( empty($value) )
+		$value = __('Add To Cart', 'usces');
+	$datas = $usces->get_skus( $post_id, 'ARRAY_A' );
+	$zaikonum = $datas[$sku]['zaikonum'];
+	$zaiko = $datas[$sku]['zaiko'];
+	$gptekiyo = $datas[$sku]['gptekiyo'];
+	$skuPrice = $datas[$sku]['price'];
+	$sku = esc_attr($sku);
+
+	$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\" name=\"" . $post_id."-". $sku . "\">\n";
+	$html .= "<input name=\"zaikonum[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$sku}]\" value=\"{$zaikonum}\" />\n";
+	$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$zaiko}\" />\n";
+	$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
+	$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
+	$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
+	$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+	if( $force )
+		$html .= "<input name=\"usces_force\" type=\"hidden\" value=\"incart\" />\n";
+	$html = apply_filters('usces_filter_single_item_inform', $html);
+	$html .= "</form>";
+	$html .= '<div class="direct_error_message">' . usces_singleitem_error_message($post_id, $sku, 'return') . '</div>'."\n";
 
 	if( $out == 'return' ){
 		return $html;
@@ -783,7 +819,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk end
 	}
 	
-	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label);
+	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label, $post_id, $sku);
 	
 	if( $out == 'return' ){
 		return $html;

@@ -4699,11 +4699,22 @@ function uesces_get_error_settlement( $out = '' ) {
 
 function usces_page_name( $out = '') {
 	global $usces;
-
-	if($out == 'return'){
-		return $usces->page;
+	$page = '';
+	
+	if( empty($usces->page) ){
+		if( $usces->is_cart_page($_SERVER['REQUEST_URI']) ){
+			$page = 'cart';
+		}elseif( $usces->is_member_page($_SERVER['REQUEST_URI']) ){
+			$page = 'member';
+		}
 	}else{
-		echo $usces->page;
+			$page = $usces->page;
+	}
+	
+	if($out == 'return'){
+		return $page;
+	}else{
+		echo $page;
 	}
 }
 
@@ -4780,4 +4791,5 @@ function usces_post_reg_orderdata(){
 	}
 	
 }
+
 ?>

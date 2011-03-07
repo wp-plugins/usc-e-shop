@@ -3,12 +3,12 @@
 Plugin Name: Welcart e-Commerce
 Plugin URI: http://www.welcart.com/
 Description: Welcart builds the management system with a net shop on Wordpress.
-Version: 1.0-future.r1103031
+Version: 1.0-future.r1103071
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
 //$wpdb->show_errors();
-define('USCES_VERSION', '1.0.r1103031');
+define('USCES_VERSION', '1.0.r1103071');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -39,6 +39,7 @@ require_once(USCES_PLUGIN_DIR."/functions/calendar-com.php");
 require_once(USCES_PLUGIN_DIR."/functions/utility.php");
 require_once(USCES_PLUGIN_DIR."/functions/item_post.php");
 require_once(USCES_PLUGIN_DIR."/functions/function.php");
+require_once(USCES_PLUGIN_DIR."/functions/shortcode.php");
 require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");
 require_once(USCES_PLUGIN_DIR."/functions/hoock_func.php");
 

@@ -16,6 +16,7 @@ class usc_e_shop
 
 	function usc_e_shop()
 	{
+
 		global $post, $usces_settings;
 		do_action('usces_construct');
 		$this->usces_session_start();
@@ -752,10 +753,10 @@ class usc_e_shop
 				$this->options['pos_item_name'][$key] = $value;
 			}
 			foreach ( $_POST['header'] as $key => $value ) {
-				$this->options['cart_page_data']['header'][$key] = $value;
+				$this->options['cart_page_data']['header'][$key] = addslashes($value);
 			}
 			foreach ( $_POST['footer'] as $key => $value ) {
-				$this->options['cart_page_data']['footer'][$key] = $value;
+				$this->options['cart_page_data']['footer'][$key] = addslashes($value);
 			}
 
 			update_option('usces', $this->options);
@@ -1569,15 +1570,6 @@ class usc_e_shop
 			},
 			
 			changeStates : function( country, type ) {
-//				var mysack = new sack("<?php bloginfo( 'home' ); ?>" );    
-//				
-//				mysack.execute = 1;
-//				mysack.method = 'POST';
-//				mysack.setVar( "country", country );
-//				mysack.setVar( "type", type );
-//				mysack.setVar( "usces_ajax_action", "change_states" );
-//				mysack.onError = function() { alert('Ajax error in voting' )};
-//				mysack.runAJAX();
   
 				var s = this.settings;
 				s.url = "<?php bloginfo( 'home' ); ?>/";
@@ -2138,7 +2130,7 @@ class usc_e_shop
 		usces_register_action('usces_export', 'post', 'usces_export', NULL, 'usces_export');
 		usces_register_action('usces_import', 'post', 'usces_import', NULL, 'usces_import');
 		usces_register_action('page_search_item', 'get', 'page', 'search_item', 'page_search_item');
-		usces_register_action('front_ajax', 'post', 'usces_ajax_action', 'change_states', 'front_ajax');
+		usces_register_action('front_ajax', 'post', 'usces_ajax_action', NULL, 'front_ajax');
 	}
 
 	function ad_controller(){
@@ -2232,6 +2224,7 @@ class usc_e_shop
 				change_states_ajax();
 				break;
 		}
+		do_action('usces_front_ajax');
 	}
 	
 	function maintenance(){
@@ -3682,7 +3675,15 @@ class usc_e_shop
 	
 	function update_business_days() {
 		$options = get_option('usces');
-		$datenow = get_date_from_gmt(getdate());
+		$datetimestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+		$dhour = (int)substr($datetimestr, 11, 2);
+		$dminute = (int)substr($datetimestr, 14, 2);
+		$dsecond = (int)substr($datetimestr, 17, 2);
+		$dmonth = (int)substr($datetimestr, 5, 2);
+		$dday = (int)substr($datetimestr, 8, 2);
+		$dyear = (int)substr($datetimestr, 0, 4);
+		$dtimestamp = mktime($dhour, $dminute, $dsecond, $dmonth, $dday, $dyear);
+		$datenow = get_date_from_gmt($dtimestamp);
 		list($year, $mon, $mday) = getBeforeMonth($datenow['year'], $datenow['mon'], $datenow['mday'], 1);
 		
 		if(isset($options['business_days'][$year][$mon][1]))
@@ -6286,154 +6287,154 @@ class usc_e_shop
 		if( !empty($this->options['cart_page_data']['header']['cart']) ){
 			$html = $this->options['cart_page_data']['header']['cart'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_cart_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
 			$html = $this->options['cart_page_data']['footer']['cart'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_customer_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['customer']) ){
 			$html = $this->options['cart_page_data']['header']['customer'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_customer_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
 			$html = $this->options['cart_page_data']['footer']['customer'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_delivery_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
 			$html = $this->options['cart_page_data']['header']['delivery'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_delivery_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
 			$html = $this->options['cart_page_data']['footer']['delivery'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_confirm_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
 			$html = $this->options['cart_page_data']['header']['confirm'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_confirm_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
 			$html = $this->options['cart_page_data']['footer']['confirm'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_cartcompletion_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['completion']) ){
 			$html = $this->options['cart_page_data']['header']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_cartcompletion_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
 			$html = $this->options['cart_page_data']['footer']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_login_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['login']) ){
 			$html = $this->options['member_page_data']['header']['login'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_login_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['login']) ){
 			$html = $this->options['member_page_data']['footer']['login'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newmember_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newmember']) ){
 			$html = $this->options['member_page_data']['header']['newmember'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newmember_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
 			$html = $this->options['member_page_data']['footer']['newmember'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newpass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newpass']) ){
 			$html = $this->options['member_page_data']['header']['newpass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newpass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
 			$html = $this->options['member_page_data']['footer']['newpass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_changepass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['changepass']) ){
 			$html = $this->options['member_page_data']['header']['changepass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_changepass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
 			$html = $this->options['member_page_data']['footer']['changepass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_memberinfo_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
 			$html = $this->options['member_page_data']['header']['memberinfo'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_memberinfo_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
 			$html = $this->options['member_page_data']['footer']['memberinfo'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_membercompletion_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['completion']) ){
 			$html = $this->options['member_page_data']['header']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_membercompletion_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['completion']) ){
 			$html = $this->options['member_page_data']['footer']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 }

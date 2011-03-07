@@ -41,6 +41,9 @@ add_shortcode('shipping_charge', array(&$usces, 'sc_shipping_charge'));
 add_shortcode('site_url', array(&$usces, 'sc_site_url'));
 add_shortcode('button_to_cart', array(&$usces, 'sc_button_to_cart'));
 
+add_shortcode('direct_intoCart', 'sc_direct_intoCart');
+
+
 if (version_compare($wp_version, '2.8', '>=')){
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_category.php");
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_bestseller.php");
