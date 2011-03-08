@@ -29,7 +29,7 @@ class Welcart_featured extends WP_Widget {
 			<?php
 //			$offset = usces_posts_random_offset(get_posts('category='.usces_get_cat_id( 'itemreco' )));
 //			$myposts = get_posts('numberposts=' . $num . '&offset='.$offset.'&category='.usces_get_cat_id( 'itemreco' ));
-			$myposts = get_posts('posts_per_page=' . $num . '&category='.usces_get_cat_id( 'itemreco' ) . '&orderby=rand');
+			$myposts = get_posts('numberposts=' . $num . '&category='.usces_get_cat_id( 'itemreco' ) . '&orderby=rand');
 			foreach($myposts as $post) :
 				$post_id = $post->ID;
 			?>

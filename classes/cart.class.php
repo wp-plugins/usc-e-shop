@@ -187,22 +187,30 @@ class usces_cart {
 	// insert serialize **************************************************************
 	function in_serialize($id, $sku){
 	
-		if(isset($_POST['itemOption']))
-			$sels[$id][$sku] = $_POST['itemOption'][$id][$sku];
-		else
+		if(isset($_POST['itemOption'])){
+			foreach( $_POST['itemOption'][$id][$sku] as $key => $value ){
+				$pots[$key] = urlencode($value);
+			}
+			$sels[$id][$sku] = $pots;
+		}else{
 			$sels[$id][$sku] = 0;
-			
+		}
+		
 		$this->serial = serialize($sels);
 	}
 
 	// update serialize **************************************************************
 	function up_serialize($index, $id, $sku){
 	
-		if(isset($_POST['itemOption'][$index]))
-			$sels[$id][$sku] = $_POST['itemOption'][$index][$id][$sku];
-		else
+		if(isset($_POST['itemOption'][$index])){
+			foreach( $_POST['itemOption'][$index][$id][$sku] as $key => $value ){
+				$pots[$key] = $value;
+			}
+			$sels[$id][$sku] = $pots;
+		}else{
 			$sels[$id][$sku] = 0;
-			
+		}
+		
 		$this->serial = serialize($sels);
 	}
 

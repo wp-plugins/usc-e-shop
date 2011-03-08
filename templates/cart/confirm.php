@@ -65,7 +65,7 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
 	if( is_array($options) && count($options) > 0 ){
 		foreach($options as $key => $value){
-			$html .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
 	}
 	$html .= '</td>

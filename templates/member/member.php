@@ -113,7 +113,7 @@ foreach ( $usces_member_history as $umhs ) {
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 			

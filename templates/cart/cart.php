@@ -74,7 +74,7 @@ if( usces_is_cart() ) {
 			$html .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$html .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+				$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 		$html .= '</td>
@@ -91,7 +91,7 @@ if( usces_is_cart() ) {
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';
 		foreach($options as $key => $value){
-			$html .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . esc_attr($key) . ']" type="hidden" value="' . esc_attr($value) . '" />';
+			$html .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 		}
 		$html .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
 			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />

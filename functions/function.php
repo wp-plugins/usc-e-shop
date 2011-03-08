@@ -111,7 +111,7 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= $key . ' : ' . $value . "\r\n"; 
+				$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -302,7 +302,7 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= $key . ' : ' . $value . "\r\n"; 
+				$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -4489,7 +4489,7 @@ function usces_get_cart_rows( $out = '' ) {
 			$optstr =  '';
 			$options =  array();
 		}
-				
+
 		$res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
@@ -4498,7 +4498,7 @@ function usces_get_cart_rows( $out = '' ) {
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$res .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+				$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 		$res .= '</td>
@@ -4515,7 +4515,7 @@ function usces_get_cart_rows( $out = '' ) {
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';
 		foreach($options as $key => $value){
-			$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . esc_attr($key) . ']" type="hidden" value="' . esc_attr($value) . '" />';
+			$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 		}
 		$res .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
 			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
@@ -4568,7 +4568,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				 $res .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+				 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 		 $res .= '</td>
@@ -4860,5 +4860,4 @@ function usces_post_reg_orderdata(){
 	}
 	
 }
-
 ?>
