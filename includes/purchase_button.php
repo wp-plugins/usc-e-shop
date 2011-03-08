@@ -22,21 +22,47 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 	
 		case 'paypal.php':
 			require_once($usces->options['settlement_path'] . "paypal.php");
-			$html .= '</form>
+//20110208ysk start
+/*			$html .= '</form>
 				<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
 				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
 				<input type="hidden" name="custom" value="' . $usces->get_uscesid(false) . '">
 				<input type="hidden" name="lc" value="JP">';
+*/			$lc = ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : '';
+			$currency_code = $this->get_currency_code();
+			global $usces_settings;
+			$country_num = $usces_settings['country_num'][$lc];
+			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
+			$html .= '<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="cmd" value="_xclick">
+				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
+				<input type="hidden" name="custom" value="' . $this->get_uscesid(false) . '">
+				<input type="hidden" name="lc" value="'.$lc.'">
+				<input type="hidden" name="charset" value="UTF-8">
+				<input type="hidden" name="first_name" value="'.esc_html($usces_entries['customer']['name2']).'">
+				<input type="hidden" name="last_name" value="'.esc_html($usces_entries['customer']['name1']).'">
+				<input type="hidden" name="address1" value="'.esc_html($usces_entries['customer']['address2']).'">
+				<input type="hidden" name="address2" value="'.esc_html($usces_entries['customer']['address3']).'">
+				<input type="hidden" name="city" value="'.esc_html($usces_entries['customer']['address1']).'">
+				<input type="hidden" name="state" value="'.esc_html($usces_entries['customer']['pref']).'">
+				<input type="hidden" name="zip" value="'.esc_html($usces_entries['customer']['zipcode']).'">
+				<input type="hidden" name="night_phone_a" value="'.$country_num.'">
+				<input type="hidden" name="night_phone_b" value="'.$tel.'">
+				<input type="hidden" name="night_phone_c" value="">';
+//20110208ysk end
 			if( 1 < count($cart) ) {
-				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name). ' ' . __('Others', 'usces') . '">';
+				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name) . ' ' . __('Others', 'usces') . '">';
 			}else{
 				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name) . '">';
 			}
 			$html .= '<input type="hidden" name="item_number" value="">
 				<input type="hidden" name="amount" value="' . $usces_entries['order']['total_full_price'] . '">';
 			if( USCES_JP ){
-				$html .= '<input type="hidden" name="currency_code" value="JPY">';
+//20110208ysk start
+				//$html .= '<input type="hidden" name="currency_code" value="JPY">';
+				$html .= '<input type="hidden" name="currency_code" value="'.$currency_code.'">';
+//20110208ysk end
 			}
 			$html .= '<input type="hidden" name="return" value="' . apply_filters('usces_paypal_return_url', (USCES_CART_URL . $usces->delim . 'acting=paypal&acting_return=1') ) . '">
 				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . $usces->delim . 'confirm=1">
@@ -52,6 +78,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;</div>';
 			$html = apply_filters('usces_filter_confirm_inform_back', $html);
+			$html .= '</form>';
+//20110208ysk end
 			break;
 			
 		case 'epsilon.php':
@@ -348,57 +376,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html = apply_filters('usces_filter_confirm_inform', $html);
 			$html .= '</form>'."\n";
 			break;
-		case 'acting_jpayment_webm'://WebMoney決済(J-Payment)
-			$acting_opts = $usces->options['acting_settings']['jpayment'];
-			$usces->save_order_acting_data($rand);
-			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
-				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
-				<input type="hidden" name="cmd" value="0" />
-				<input type="hidden" name="cod" value="'.$rand.'" />
-				<input type="hidden" name="jb" value="CAPTURE" />
-				<input type="hidden" name="am" value="'.$usces_entries['order']['total_full_price'].'" />
-				<input type="hidden" name="tx" value="0" />
-				<input type="hidden" name="sf" value="0" />
-				<input type="hidden" name="pt" value="3" />
-				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
-				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
-				<input type="hidden" name="acting" value="jpayment_webm" />
-				<input type="hidden" name="acting_return" value="1" />
-				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
-				';
-			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.purchase_form.submit();"').' /></div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
-			$html .= '</form>';
-			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
-				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
-			$html .= '</form>'."\n";
-			break;
-		case 'acting_jpayment_bitc'://BitCash決済(J-Payment)
-			$acting_opts = $usces->options['acting_settings']['jpayment'];
-			$usces->save_order_acting_data($rand);
-			$html .= '<form name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
-				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
-				<input type="hidden" name="cod" value="'.$rand.'" />
-				<input type="hidden" name="jb" value="CAPTURE" />
-				<input type="hidden" name="am" value="'.$usces_entries['order']['total_full_price'].'" />
-				<input type="hidden" name="tx" value="0" />
-				<input type="hidden" name="sf" value="0" />
-				<input type="hidden" name="pt" value="9" />
-				<input type="hidden" name="acting" value="jpayment_bitc" />
-				<input type="hidden" name="acting_return" value="1" />
-				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
-				';
-			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.purchase_form.submit();"').' /></div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
-			$html .= '</form>';
-			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
-				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
-			$html .= '</form>'."\n";
-			break;
-		//case 'acting_jpayment_suica'://モバイルSuica決済(J-Payment)
-		//	break;
 		case 'acting_jpayment_bank'://バンクチェック決済(J-Payment)
 			$acting_opts = $usces->options['acting_settings']['jpayment'];
 			$usces->save_order_acting_data($rand);
@@ -424,6 +401,57 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>'."\n";
 			break;
 //20101018ysk end
+//20110208ysk start
+		case 'acting_paypal_ec'://PayPal(エクスプレス・チェックアウト)
+			$acting_opts = $this->options['acting_settings']['paypal'];
+			$currency_code = ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : '';
+			$country = (!empty($usces_entries['customer']['country'])) ? $usces_entries['customer']['country'] : usces_get_local_addressform();
+			$zip = str_replace('-', '', $usces_entries['customer']['zipcode']);
+			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
+			for($i = 0; $i < count($cart); $i++) {
+				$cart_row = $cart[$i];
+				$post_id = $cart_row['post_id'];
+				$itemCode = $this->getItemCode($post_id);
+				$itemName = $this->getItemName($post_id);
+				$cartItemName = $this->getCartItemName($post_id, $cart_row['sku']);
+				$html .= '<input type="hidden" name="L_NAME'.$i.'" value="'.$itemName.'">
+					<input type="hidden" name="L_NUMBER'.$i.'" value="'.$itemCode.'">
+					<input type="hidden" name="L_DESC'.$i.'" value="'.$cartItemName.'">
+					<input type="hidden" name="L_AMT'.$i.'" value="'.$cart_row['price'].'">
+					<input type="hidden" name="L_QTY'.$i.'" value="'.$cart_row['quantity'].'">';
+			}
+			$html .= '<input type="hidden" name="ITEMAMT" value="'.$usces_entries['order']['total_items_price'].'">';
+			if( !empty($usces_entries['order']['tax']) ) 
+				$html .= '<input type="hidden" name="TAXAMT" value="'.$usces_entries['order']['tax'].'">';
+			$html .= '<input type="hidden" name="SHIPPINGAMT" value="'.$usces_entries['order']['shipping_charge'].'">';
+			if( !empty($usces_entries['order']['cod_fee']) ) 
+				$html .= '<input type="hidden" name="HANDLINGAMT" value="'.$usces_entries['order']['cod_fee'].'">';
+			if( !empty($usces_entries['order']['discount']) ) 
+				$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.$usces_entries['order']['discount'].'">';
+			$html .= '<input type="hidden" name="AMT" value="'.$usces_entries['order']['total_full_price'].'">
+				<input type="hidden" name="NAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">
+				<input type="hidden" name="SHIPTOSTREET" value="'.esc_html($usces_entries['customer']['address2']).'">
+				<input type="hidden" name="SHIPTOSTREET2" value="'.esc_html($usces_entries['customer']['address3']).'">
+				<input type="hidden" name="SHIPTOCITY" value="'.esc_html($usces_entries['customer']['address1']).'">
+				<input type="hidden" name="SHIPTOSTATE" value="'.esc_html($usces_entries['customer']['pref']).'">
+				<input type="hidden" name="SHIPTOCOUNTRYCODE" value="'.$country.'">
+				<input type="hidden" name="SHIPTOZIP" value="'.$zip.'">
+				<input type="hidden" name="SHIPTOPHONENUM" value="'.$tel.'">
+				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
+			$html .= '<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;
+				<input name="purchase" type="submit" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
+			//$html .= '<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' />
+			//	<img alt="" border="0" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP' : 'en_US' ).'/i/scr/pixel.gif" width="1" height="1"></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html .= '</form>';
+			//$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+			//	<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
+			//$html = apply_filters('usces_filter_confirm_inform_back', $html);
+			//$html .= '</form>';
+			break;
+//20110208ysk end
 
 		default:
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

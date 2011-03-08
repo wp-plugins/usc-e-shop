@@ -1068,6 +1068,53 @@ class usc_e_shop
 					update_option('usces_payment_structure', $this->payment_structure);
 					break;
 //20101018ysk end
+//20110208ysk start
+				case 'paypal':
+					unset( $options['acting_settings']['paypal'] );
+					$options['acting_settings']['paypal']['ec_activate'] = $_POST['ec_activate'];
+					$options['acting_settings']['paypal']['sandbox'] = $_POST['sandbox'];
+					$options['acting_settings']['paypal']['user'] = $_POST['user'];
+					$options['acting_settings']['paypal']['pwd'] = $_POST['pwd'];
+					$options['acting_settings']['paypal']['signature'] = $_POST['signature'];
+
+					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
+						$mes .= '※PayPalサーバーが不正です<br />';
+					if( '' == trim($_POST['user']) )
+						$mes .= '※APIユーザー名を入力して下さい<br />';
+					if( '' == trim($_POST['pwd']) )
+						$mes .= '※APIパスワードを入力して下さい<br />';
+					if( '' == trim($_POST['signature']) )
+						$mes .= '※署名を入力して下さい<br />';
+
+					if( '' == $mes ){
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						if($options['acting_settings']['paypal']['sandbox'] == 1) {
+							$options['acting_settings']['paypal']['api_host'] = 'api-3t.sandbox.paypal.com';
+							$options['acting_settings']['paypal']['api_endpoint'] = 'https://api-3t.sandbox.paypal.com/nvp';
+							$options['acting_settings']['paypal']['paypal_url'] = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+						} else {
+							$options['acting_settings']['paypal']['api_host'] = 'api-3t.paypal.com';
+							$options['acting_settings']['paypal']['api_endpoint'] = 'https://api-3t.paypal.com/nvp';
+							$options['acting_settings']['paypal']['paypal_url'] = 'https://www.paypal.com/cgi-bin/webscr';
+						}
+						$options['acting_settings']['paypal']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['paypal']['ec_activate'] ){
+							$this->payment_structure['acting_paypal_ec'] = 'PayPal決済';
+						}else{
+							unset($this->payment_structure['acting_paypal_ec']);
+						}
+
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります', 'usces');
+						$options['acting_settings']['paypal']['activate'] = 'off';
+						unset($this->payment_structure['acting_paypal_ec']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					break;
+//20110208ysk end
 			}
 			
 
@@ -1826,7 +1873,6 @@ class usc_e_shop
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
 		
-
 		do_action('usces_after_cart_instant');
 		
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
@@ -1842,7 +1888,12 @@ class usc_e_shop
 			wp_redirect($url);
 			exit;
 		}
-		
+//20110208ysk start
+		if('on' == $this->options['acting_settings']['paypal']['ec_activate']) {
+			require_once(USCES_PLUGIN_DIR . '/classes/paymentPaypal.class.php');
+			$this->paypal = new usces_paypal();
+		}
+//20110208ysk end
 		
 		$this->ad_controller();
 		//$this->controller();
@@ -4729,6 +4780,38 @@ class usc_e_shop
 		do_action('usces_post_reg_orderdata', $order_id, $results);
 		
 		if ( $order_id ) {
+//20110208ysk start
+			if(isset($_REQUEST['acting']) && ('paypal_ec' == $_REQUEST['acting'])) {
+				//Format the other parameters that were stored in the session from the previous calls
+				$entry = $this->cart->get_entry();
+				$paymentAmount = $entry['order']['total_full_price'];
+				$token = urlencode($_REQUEST['token']);
+				$paymentType = urlencode("Sale");
+				$currencyCodeType = urlencode($this->get_currency_code());
+				$payerID = urlencode($_REQUEST['PayerID']);
+				$serverName = urlencode($_SERVER['SERVER_NAME']);
+
+				$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
+
+				$this->paypal->setMethod('DoExpressCheckoutPayment');
+				$this->paypal->setData($nvpstr);
+				$res = $this->paypal->doExpressCheckout();
+				$resArray = $this->paypal->getResponse();
+				$ack = strtoupper($resArray["ACK"]);
+				if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+					$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
+					$this->set_order_meta_value('settlement_id', $transactionId, $order_id);
+
+				} else {
+					//Display a user friendly Error on the page using any of the following error information returned by PayPal
+					$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+					$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+					$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+					$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+					usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+				}
+			}
+//20110208ysk end
 			//mail(function.php)
 			$mail_res = usces_send_ordermail( $order_id );
 			return 'ordercompletion';
@@ -4894,6 +4977,42 @@ class usc_e_shop
 			}
 			exit;
 
+//20110208ysk start
+		}else if($acting_flg == 'acting_paypal_ec') {
+			$acting_opts = $this->options['acting_settings']['paypal'];
+
+			$nvpstr  = $query;
+			$nvpstr .= '&CURRENCYCODE='.$this->get_currency_code();
+			$nvpstr .= '&ADDROVERRIDE=1';
+			$nvpstr .= '&PAYMENTACTION=Sale';
+
+			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.
+			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=1&uscesid='.$this->get_uscesid(false));
+
+			//The cancelURL is the location buyers are sent to when they hit the cancel button during authorization of payment during the PayPal flow
+			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$this->delim.'confirm=1');
+
+			$this->paypal->setMethod('SetExpressCheckout');
+			$this->paypal->setData($nvpstr);
+			$res = $this->paypal->doExpressCheckout();
+			$resArray = $this->paypal->getResponse();
+			$ack = strtoupper($resArray["ACK"]);
+			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+				$token = urldecode($resArray["TOKEN"]);
+				$payPalURL = $acting_opts['paypal_url'].'?cmd=_express-checkout&token='.$token.'&useraction=commit';
+				header("Location: ".$payPalURL);
+
+			} else {
+				//Display a user friendly Error on the page using any of the following error information returned by PayPal
+				$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+				$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+				$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+				$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+				usces_log('PayPal : SetExpressCheckout API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+				header("Location: ".USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=0');
+			}
+			exit;
+//20110208ysk end
 		}
 	}
 

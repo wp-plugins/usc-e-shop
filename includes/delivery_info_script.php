@@ -127,7 +127,10 @@ foreach((array)$default_deli as $key => $id) {
 //20110131ysk start
 $business_days = 0;
 list($yy, $mm, $dd) = getToday();
-$business = $usces->options['business_days'][$yy][$mm][$dd];
+//20110228ysk start
+//$business = $this->options['business_days'][$yy][$mm][$dd];
+$business = (isset($usces->options['business_days'][$yy][$mm][$dd])) ? $this->options['business_days'][$yy][$mm][$dd] : 1;
+//20110228ysk end
 while($business != 1) {
 	$business_days++;
 	list($yy, $mm, $dd) = getNextDay($yy, $mm, $dd);

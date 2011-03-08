@@ -26,7 +26,6 @@ function usces_action_acting_construct(){
 		}else{
 			usces_log('zeus construct : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
 		}
-
 	}
 }
 

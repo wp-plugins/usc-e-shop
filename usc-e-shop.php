@@ -42,6 +42,10 @@ require_once(USCES_PLUGIN_DIR."/functions/function.php");
 require_once(USCES_PLUGIN_DIR."/functions/shortcode.php");
 require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");
 require_once(USCES_PLUGIN_DIR."/functions/hoock_func.php");
+//20110208ysk start
+require_once(USCES_PLUGIN_DIR."/classes/httpRequest.class.php");
+//require_once(USCES_PLUGIN_DIR."/functions/paypal_func.php");
+//20110208ysk end
 
 global $usces;
 $usces = new usc_e_shop();
@@ -53,5 +57,4 @@ register_activation_hook( __FILE__, array(&$usces, 'set_initial') );
 //add_action('activate_' . plugin_basename(__FILE__), array(&$usces, 'set_initial'));
 
 require_once(USCES_PLUGIN_DIR."/includes/default_filters.php");
-
 ?>

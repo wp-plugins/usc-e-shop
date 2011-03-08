@@ -860,6 +860,45 @@ function usces_reg_orderdata( $results = array() ) {
 		$usces->cart->set_order_entry( array('ID' => $order_id) );
 		$usces->set_order_meta_value('customer_country', $entry['customer']['country'], $order_id);
 	
+//20110203ysk start
+		switch($_GET['acting']) {
+		case 'epsilon':
+			$trans_id = $_REQUEST['trans_code'];
+			break;
+		case 'paypal':
+			$trans_id = $_REQUEST['txn_id'];
+			break;
+//20110208ysk start
+		case 'paypal_ec':
+			$trans_id = $_REQUEST['token'];
+			break;
+//20110208ysk end
+		case 'zeus_card':
+			$trans_id = $_REQUEST['ordd'];
+			break;
+		case 'zeus_conv':
+		case 'zeus_bank':
+			$trans_id = $_REQUEST['order_no'];
+			break;
+		case 'remise_card':
+			$trans_id = $_REQUEST['X-TRANID'];
+			break;
+		case 'remise_conv':
+			$trans_id = $_REQUEST['X-JOB_ID'];
+			break;
+		case 'jpayment_card':
+		case 'jpayment_conv':
+		case 'jpayment_bank':
+			$trans_id = $_REQUEST['gid'];
+			break;
+		default:
+			$trans_id = '';
+		}
+		if(!empty($trans_id)) {
+			$usces->set_order_meta_value('trans_id', $trans_id, $order_id);
+		}
+//20110203ysk end
+
 		if ( $member['ID'] && 'activate' == $options['membersystem_state'] && 'activate' == $options['membersystem_point'] ) {
 		
 			$mquery = $wpdb->prepare(
@@ -2086,6 +2125,31 @@ function usces_check_acting_return() {
 			$results['reg_order'] = true;
 			break;
 //20101018ysk end
+//20110208ysk start
+		case 'paypal_ec':
+			//Build a second API request to PayPal, using the token as the ID to get the details on the payment authorization
+		    $nvpstr = "&TOKEN=".urlencode($_REQUEST['token']);
+
+			$usces->paypal->setMethod('GetExpressCheckoutDetails');
+			$usces->paypal->setData($nvpstr);
+			$res = $usces->paypal->doExpressCheckout();
+			$resArray = $usces->paypal->getResponse();
+			$ack = strtoupper($resArray["ACK"]);
+			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+				$results[0] = 1;
+
+			} else {
+				//Display a user friendly Error on the page using any of the following error information returned by PayPal
+				$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+				$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+				$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+				$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+				usces_log('PayPal : GetExpressCheckoutDetails API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+				$results[0] = 0;
+			}
+			$results['reg_order'] = true;
+			break;
+//20110208ysk end
 
 		default:
 			$results = $_GET;
@@ -2111,6 +2175,11 @@ function usces_check_acting_return_duplicate() {
 	case 'paypal':
 		$trans_id = $_REQUEST['txn_id'];
 		break;
+//20110208ysk start
+	case 'paypal_ec':
+		$trans_id = $_REQUEST['token'];
+		break;
+//20110208ysk end
 	case 'zeus_card':
 		$trans_id = $_REQUEST['ordd'];
 		break;
