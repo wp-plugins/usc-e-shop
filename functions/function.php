@@ -866,6 +866,7 @@ function usces_reg_orderdata( $results = array() ) {
 			$trans_id = $_REQUEST['trans_code'];
 			break;
 		case 'paypal':
+		case 'paypal_ipn':
 			$trans_id = $_REQUEST['txn_id'];
 			break;
 //20110208ysk start
@@ -2052,7 +2053,10 @@ function usces_check_acting_return() {
 			require_once($usces->options['settlement_path'] . "paypal.php");
 			$results = paypal_check($usces_paypal_url);
 			remove_action( 'wp_footer', array(&$usces, 'lastprocessing'));
-			$results['reg_order'] = true;
+//20110208ysk start
+			//$results['reg_order'] = true;
+			$results['reg_order'] = false;
+//20110208ysk end
 			break;
 			
 		case 'zeus_card':
@@ -2173,6 +2177,7 @@ function usces_check_acting_return_duplicate() {
 		$trans_id = $_REQUEST['trans_code'];
 		break;
 	case 'paypal':
+	case 'paypal_ipn':
 		$trans_id = $_REQUEST['txn_id'];
 		break;
 //20110208ysk start
