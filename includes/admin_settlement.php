@@ -439,9 +439,6 @@ function toggleVisibility(id) {
 		<p>この決済は、「エクスプレスチェックアウト」を使用しています。</p>
 		<p>ご利用のサーバーに「OpenSSL」モジュールがインストールされていない場合、「エクスプレスチェックアウト」での決済はできません。</p>
 		<p>「OpenSSL」をインストールするか、「ウェブペイメントスタンダード」(組み込みモジュール)をご使用ください。</p>
-		<p>　</p>
-		<p>OpenSSL　<?php echo ($openssl ? '○' : '×'); ?></p>
-		<p>cURL　<?php echo ($curl ? '○' : '×'); ?></p>
 	</div>
 	</div><!--uscestabs_paypal-->
 <!--20110208ysk end-->
