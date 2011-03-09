@@ -8,7 +8,6 @@ get_header();
 ?>
 <div id="content">
 <div class="catbox">
-wc_item_single.php
 
 <?php if (have_posts()) : the_post(); ?>
 
@@ -149,36 +148,7 @@ wc_item_single.php
 <?php endforeach; ?>
 	</div><!-- end of itemsubimg -->
 
-<?php if (usces_get_assistance_id_list($post->ID)) : ?>
-	<div class="assistance_item">
-	<?php if ( $assistanceposts = get_posts('include='.usces_get_assistance_id_list($post->ID)) ) : ?>
-		<h3><?php usces_the_itemCode(); ?><?php _e('An article concerned', 'usces'); ?></h3>
-		<ul class="clearfix">
-		<?php foreach ($assistanceposts as $post) : setup_postdata($post); usces_the_item(); ?>
-			<li>
-			<div class="listbox clearfix">
-				<div class="slit">
-					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php usces_the_itemImage(0, 100, 100, $post); ?></a>
-				</div>
-				<div class="detail">
-					<h4><?php usces_the_itemName(); ?></h4>
-					<?php the_excerpt(); ?>
-					<p>
-				<?php if (usces_is_skus()) : ?>
-					<?php _e('$', 'usces'); ?><?php usces_the_firstPrice(); ?>
-				<?php endif; ?>
-					<br />
-					&raquo;<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php _e('see the details', 'usces'); ?></a>
-					</p>
-				</div>
-			</div>
-			</li>
-		<?php endforeach; ?>
-		</ul>
-	<?php endif; ?>
-	
-	</div><!-- end of assistance_item -->
-<?php endif; ?>
+<?php usces_assistance_item( $post->ID ); ?>
 
 </form>
 </div><!-- end of itemspage -->

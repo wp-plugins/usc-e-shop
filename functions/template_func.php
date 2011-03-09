@@ -1202,6 +1202,15 @@ function usces_get_assistance_id_list($post_id) {
 
 	return $list;
 }
+function usces_get_assistance_ids($post_id) {
+	global $usces;
+	$names = $usces->get_tag_names($post_id);
+	$ids = array();
+	foreach ( $names as $itemname )
+		$ids[] = $usces->get_ID_byItemName($itemname, 'publish');
+
+	return $ids;
+}
 function usces_remembername( $out = '' ){
 	global $usces;
 	$value = $usces->get_cookie();
@@ -1322,15 +1331,14 @@ function usces_list_post( $slug, $rownum ){
 	usces_remove_filter();
 	
 	$li = '';
-	$infolist = new wp_query( array('category_name'=>$slug, 'post_status'=>'publish', 'posts_per_page'=>$rownum, 'order'=>DESC, 'orderby'=>'date') );
+	$infolist = new wp_query( array('category_name'=>$slug, 'post_status'=>'publish', 'posts_per_page'=>$rownum, 'order'=>'DESC', 'orderby'=>'date') );
 	while ($infolist->have_posts()) {
 		$infolist->the_post();
-		$ipost = get_post ( $post->ID, 'attreibute' );
 		$list = "<li>\n";
-		$list .= "<div class='title'><a href='" . get_permalink($post->ID) . "'>" . $ipost->post_title . "</a></div>\n";
+		$list .= "<div class='title'><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></div>\n";
 		$list .= "<p>" . get_the_excerpt() . "</p>\n";
 		$list .= "</li>\n";
-		$li .= apply_filters( 'usces_filter_widget_post', $list, $ipost, $slug);
+		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
 	}
 	wp_reset_query();
 	usces_reset_filter();
@@ -2191,5 +2199,64 @@ function usces_newmember_button($member_regmode){
 	$newmemberbutton = '<input name="regmember" type="submit" value="' . __('transmit a message', 'usces') . '" />';
 	$html .= apply_filters('usces_filter_newmember_button', $newmemberbutton);
 	echo $html;
+}
+
+function usces_assistance_item($post_id){
+	if (usces_get_assistance_id_list($post_id)) :
+?>
+	<div class="assistance_item">
+<?php
+		$assistanceposts = new wp_query( array('post__in'=>usces_get_assistance_ids($post_id)) );
+		if($assistanceposts->have_posts()) :
+		remove_filter( 'excerpt_length', 'welcart_excerpt_length' );
+		remove_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
+		remove_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+		add_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
+		add_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
+?>
+
+		<h3><?php usces_the_itemCode(); ?><?php _e('An article concerned', 'usces'); ?></h3>
+		<ul class="clearfix">
+
+<?php
+		while ($assistanceposts->have_posts()) :
+			$assistanceposts->the_post();
+			//update_post_caches($posts); 
+			usces_remove_filter();
+			usces_the_item();
+?>
+			<li>
+			<div class="listbox clearfix">
+				<div class="slit">
+					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php usces_the_itemImage(0, 100, 100, $post); ?></a>
+				</div>
+				<div class="detail">
+					<h4><?php usces_the_itemName(); ?></h4>
+					<?php the_excerpt(); ?>
+					<p>
+				<?php if (usces_is_skus()) : ?>
+					<?php _e('$', 'usces'); ?><?php usces_the_firstPrice(); ?>
+				<?php endif; ?>
+					<br />
+					&raquo;<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php _e('see the details', 'usces'); ?></a>
+					</p>
+				</div>
+			</div>
+			</li>
+		<?php endwhile; ?>
+		
+		</ul>
+<?php 
+		wp_reset_query();
+		usces_reset_filter();
+		add_filter( 'excerpt_length', 'welcart_excerpt_length' );
+		add_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
+		add_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+		endif;
+?>
+	
+	</div><!-- end of assistance_item -->
+<?php
+	endif;
 }
 ?>
