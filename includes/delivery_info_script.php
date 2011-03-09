@@ -129,7 +129,7 @@ $business_days = 0;
 list($yy, $mm, $dd) = getToday();
 //20110228ysk start
 //$business = $this->options['business_days'][$yy][$mm][$dd];
-$business = (isset($usces->options['business_days'][$yy][$mm][$dd])) ? $this->options['business_days'][$yy][$mm][$dd] : 1;
+$business = (isset($usces->options['business_days'][$yy][$mm][$dd])) ? $usces->options['business_days'][$yy][$mm][$dd] : 1;
 //20110228ysk end
 while($business != 1) {
 	$business_days++;

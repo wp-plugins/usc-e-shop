@@ -29,15 +29,15 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
 				<input type="hidden" name="custom" value="' . $usces->get_uscesid(false) . '">
 				<input type="hidden" name="lc" value="JP">';
-*/			$lc = ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : '';
-			$currency_code = $this->get_currency_code();
+*/			$lc = ( isset($usces->options['system']['currency']) && !empty($usces->options['system']['currency']) ) ? $usces->options['system']['currency'] : '';
+			$currency_code = $usces->get_currency_code();
 			global $usces_settings;
 			$country_num = $usces_settings['country_num'][$lc];
 			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
 			$html .= '<form action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
 				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
-				<input type="hidden" name="custom" value="' . $this->get_uscesid(false) . '">
+				<input type="hidden" name="custom" value="' . $usces->get_uscesid(false) . '">
 				<input type="hidden" name="lc" value="'.$lc.'">
 				<input type="hidden" name="charset" value="UTF-8">
 				<input type="hidden" name="first_name" value="'.esc_html($usces_entries['customer']['name2']).'">
@@ -402,8 +402,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 //20101018ysk end
 //20110208ysk start
 		case 'acting_paypal_ec'://PayPal(エクスプレス・チェックアウト)
-			$acting_opts = $this->options['acting_settings']['paypal'];
-			$currency_code = ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : '';
+			$acting_opts = $usces->options['acting_settings']['paypal'];
+			$currency_code = ( isset($usces->options['system']['currency']) && !empty($usces->options['system']['currency']) ) ? $usces->options['system']['currency'] : '';
 			$country = (!empty($usces_entries['customer']['country'])) ? $usces_entries['customer']['country'] : usces_get_local_addressform();
 			$zip = str_replace('-', '', $usces_entries['customer']['zipcode']);
 			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
@@ -411,9 +411,9 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			for($i = 0; $i < count($cart); $i++) {
 				$cart_row = $cart[$i];
 				$post_id = $cart_row['post_id'];
-				$itemCode = $this->getItemCode($post_id);
-				$itemName = $this->getItemName($post_id);
-				$cartItemName = $this->getCartItemName($post_id, $cart_row['sku']);
+				$itemCode = $usces->getItemCode($post_id);
+				$itemName = $usces->getItemName($post_id);
+				$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
 				$html .= '<input type="hidden" name="L_NAME'.$i.'" value="'.$itemName.'">
 					<input type="hidden" name="L_NUMBER'.$i.'" value="'.$itemCode.'">
 					<input type="hidden" name="L_DESC'.$i.'" value="'.$cartItemName.'">
