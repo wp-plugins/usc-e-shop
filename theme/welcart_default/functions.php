@@ -41,10 +41,6 @@ function welcart_page_menu_args( $args ) {
 }
 add_filter( 'wp_page_menu_args', 'welcart_page_menu_args' );
 
-require_once(USCES_PLUGIN_DIR."/widgets/usces_blog_calendar.php");
-require_once(USCES_PLUGIN_DIR."/widgets/usces_recent_posts.php");
-add_action('widgets_init', create_function('', 'return register_widget("Welcart_Blog_Calendar");'));
-add_action('widgets_init', create_function('', 'return register_widget("Welcart_Recent_Posts");'));
 add_filter('widget_categories_dropdown_args', 'welcart_categories_dropdown_args');
 function welcart_categories_dropdown_args( $args ){
 	global $usces;

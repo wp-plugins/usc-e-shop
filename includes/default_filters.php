@@ -53,6 +53,8 @@ if (version_compare($wp_version, '2.8', '>=')){
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_page.php");
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_post.php");
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_login.php");
+	require_once(USCES_PLUGIN_DIR."/widgets/usces_blog_calendar.php");
+	require_once(USCES_PLUGIN_DIR."/widgets/usces_recent_posts.php");
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_category");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_bestseller");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_calendar");'));
@@ -61,6 +63,8 @@ if (version_compare($wp_version, '2.8', '>=')){
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_page");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_post");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_login");'));
+	add_action('widgets_init', create_function('', 'return register_widget("Welcart_Blog_Calendar");'));
+	add_action('widgets_init', create_function('', 'return register_widget("Welcart_Recent_Posts");'));
 }
 
 add_filter('usces_filter_cart_page_header', array(&$usces, 'filter_cart_page_header'));

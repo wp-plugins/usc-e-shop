@@ -2051,4 +2051,145 @@ function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '
 	}
 }
 
+function usces_memberinfo( $key, $out = '' ){
+	global $usces;
+	$info = $usces->get_member();
+
+	if( empty($key) ) return $info;
+	
+	switch ($key){
+		case 'registered':
+			$res = mysql2date(__('Mj, Y', 'usces'), $info['registered']);
+			break;
+		default:
+			$res = $info[$key];
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo esc_html($res);
+	}
+}
+
+function usces_localized_name( $Familly_name, $Given_name, $out = '' ){
+	global $usces_settings, $usces;
+	
+	$options = get_option('usces');
+	$form = $options['system']['addressform'];
+	if( $usces_settings['nameform'][$form] ){
+		$res = $Given_name . ' ' . $Familly_name;
+	}else{
+		$res = $Familly_name . ' ' . $Given_name;
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo esc_html($res);
+	}
+}
+
+function usces_member_history(){
+	global $usces;
+	
+	$usces_members = $usces->get_member();
+	$usces_member_history = $usces->get_member_history($usces_members['ID']);
+	$colspan = usces_is_membersystem_point() ? 9 : 7;
+
+	$html .= '<table>';
+	if ( !count($usces_member_history) ) {
+		$html .= '<tr>
+		<td>' . __('There is no purchase history for this moment.', 'usces') . '</td>
+		</tr>';
+	}
+	foreach ( $usces_member_history as $umhs ) {
+		$cart = $umhs['cart'];
+		$html .= '<tr>
+			<th class="historyrow">' . __('Order number', 'usces') . '</th>
+			<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
+			<th class="historyrow">' . __('Purchase price', 'usces') . '</th>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<th class="historyrow">' . __('Used points', 'usces') . '</th>';
+		}
+		$html .= '<th class="historyrow">' . __('Special Price', 'usces') . '</th>
+			<th class="historyrow">' . __('Shipping', 'usces') . '</th>
+			<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
+			<th class="historyrow">' . __('consumption tax', 'usces') . '</th>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<th class="historyrow">' . __('Acquired points', 'usces') . '</th>';
+		}
+		$html .= '</tr>
+			<tr>
+			<td class="rightnum">' . $umhs['ID'] . '</td>
+			<td class="date">' . $umhs['date'] . '</td>
+			<td class="rightnum">' . usces_crform(($usces->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>';
+		}
+		$html .= '<td class="rightnum">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, false, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, false, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>';
+		}
+		$html .= '</tr>';
+		$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
+		$html .= '<tr>
+			<td class="retail" colspan="' . $colspan . '">
+				<table id="retail_table">
+				<tr>
+				<th scope="row" class="num">No.</th>
+				<th class="thumbnail">&nbsp;</th>
+				<th>' . __('Items', 'usces') . '</th>
+				<th class="price ">' . __('Unit price', 'usces') . '</th>
+				<th class="quantity">' . __('Quantity', 'usces') . '</th>
+				<th class="subtotal">' . __('Amount', 'usces') . '</th>
+				</tr>';
+				
+		for($i=0; $i<count($cart); $i++) { 
+			$cart_row = $cart[$i];
+			$post_id = $cart_row['post_id'];
+			$sku = $cart_row['sku'];
+			$quantity = $cart_row['quantity'];
+			$options = $cart_row['options'];
+			$itemCode = $usces->getItemCode($post_id);
+			$itemName = $usces->getItemName($post_id);
+			$cartItemName = $usces->getCartItemName($post_id, $sku);
+			//$skuPrice = $usces->getItemPrice($post_id, $sku);
+			$skuPrice = $cart_row['price'];
+			$pictids = $usces->get_pictids($itemCode);
+			$optstr =  '';
+			if( is_array($options) && count($options) > 0 ){
+				foreach($options as $key => $value){
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				}
+			}
+				
+			$html .= '<tr>
+				<td>' . ($i + 1) . '</td>
+				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
+				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a></td>
+				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
+				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
+				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
+				</tr>';
+		}
+		$html .= '</table>
+			</td>
+			</tr>';
+	}
+	
+	$html .= '</table>';
+
+	echo $html;
+}
+
+function usces_newmember_button($member_regmode){
+	$html = '<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />';
+	$newmemberbutton = '<input name="regmember" type="submit" value="' . __('transmit a message', 'usces') . '" />';
+	$html .= apply_filters('usces_filter_newmember_button', $newmemberbutton);
+	echo $html;
+}
 ?>

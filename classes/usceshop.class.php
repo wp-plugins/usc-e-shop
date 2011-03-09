@@ -2848,12 +2848,57 @@ class usc_e_shop
 			
 			}
 		}else if($this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
-			
+
 		}else if( $this->is_member_page($_SERVER['REQUEST_URI']) ){
-//			remove_action('the_post', array(&$this, 'action_memberFilter'));
-//			remove_filter('the_title', array(&$this, 'filter_memberTitle'),20);
-//			remove_filter('the_content', array(&$this, 'filter_memberContent'),20);
-		
+			if($this->options['membersystem_state'] != 'activate') return;
+			
+			if( $this->is_member_logged_in() ) {
+				$member_regmode = 'editmemberform';
+				if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php') ){
+					include(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php');
+					exit;
+				}
+			
+			} else {
+			
+				switch( $this->page ){
+					case 'login':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php');
+							exit;
+						}
+					case 'newmemberform':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_new_member_page.php') ){
+							$member_regmode = 'newmemberform';
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_new_member_page.php');
+							exit;
+						}
+					case 'lostmemberpassword':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_lostpassword_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_lostpassword_page.php');
+							exit;
+						}
+					case 'changepassword':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php');
+							exit;
+						}
+					case 'newcompletion':
+					case 'editcompletion':
+					case 'lostcompletion':
+					case 'changepasscompletion':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_member_completion_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_member_completion_page.php');
+							exit;
+						}
+					default:
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php');
+							exit;
+						}
+				}
+			}
+
 		}else{
 //			remove_action('the_post', array(&$this, 'goDefaultPage'));
 		}
