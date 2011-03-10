@@ -438,6 +438,26 @@ function usces_action_acting_transaction(){
 
 		header('location: ' . USCES_CART_URL . $delim . 'acting=epsilon&acting_return=1&' . $query );
 		exit;
+//20110208ysk start
+	} elseif( !isset($_GET['acting_return']) && (isset($_GET['acting']) && 'paypal_ipn' == $_GET['acting']) ) {
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
+		}
+		usces_log('paypal_ipn in ', 'acting_transaction.log');
+		require_once($usces->options['settlement_path'] . 'paypal.php');
+		$ipn_res = paypal_ipn_check($usces_paypal_url);
+		if( $ipn_res[0] === true ){
+			$res = $usces->order_processing( $ipn_res );
+			if( 'ordercompletion' == $res ){
+				$usces->cart->crear_cart();
+			}else{
+				usces_log('paypal_ipn error : '.print_r($data, true), 'acting_transaction.log');
+				die('error1');
+			}
+		}
+		usces_log('PayPal IPN transaction : '.$_REQUEST['txn_id'], 'acting_transaction.log');
+		die('PayPal');
+//20110208ysk end
 	}
 }
 ?>

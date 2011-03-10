@@ -865,7 +865,11 @@ function usces_reg_orderdata( $results = array() ) {
 		case 'epsilon':
 			$trans_id = $_REQUEST['trans_code'];
 			break;
+//20110208ysk start
 		case 'paypal':
+			$trans_id = $results['txn_id'];
+			break;
+//20110208ysk end
 		case 'paypal_ipn':
 			$trans_id = $_REQUEST['txn_id'];
 			break;
@@ -2047,16 +2051,14 @@ function usces_check_acting_return() {
 			
 			}
 			$results['reg_order'] = true;
-		break;
-		
+			break;
+			
 		case 'paypal':
+			usces_log('paypal in ', 'acting_transaction.log');
 			require_once($usces->options['settlement_path'] . "paypal.php");
 			$results = paypal_check($usces_paypal_url);
 			remove_action( 'wp_footer', array(&$usces, 'lastprocessing'));
-//20110208ysk start
-			//$results['reg_order'] = true;
-			$results['reg_order'] = false;
-//20110208ysk end
+			$results['reg_order'] = true;
 			break;
 			
 		case 'zeus_card':
@@ -2131,6 +2133,8 @@ function usces_check_acting_return() {
 //20101018ysk end
 //20110208ysk start
 		case 'paypal_ec':
+			$results = $_GET;
+
 			//Build a second API request to PayPal, using the token as the ID to get the details on the payment authorization
 		    $nvpstr = "&TOKEN=".urlencode($_REQUEST['token']);
 
@@ -2169,14 +2173,18 @@ function usces_check_acting_return() {
 	return $results;
 }
 //20110203ysk start
-function usces_check_acting_return_duplicate() {
+function usces_check_acting_return_duplicate( $results = array() ) {
 	global $wpdb;
 
 	switch($_GET['acting']) {
 	case 'epsilon':
 		$trans_id = $_REQUEST['trans_code'];
 		break;
+//20110208ysk start
 	case 'paypal':
+		$trans_id = $results['txn_id'];
+		break;
+//20110208ysk end
 	case 'paypal_ipn':
 		$trans_id = $_REQUEST['txn_id'];
 		break;

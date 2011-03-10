@@ -1,9 +1,6 @@
 <?php
 class usces_paypal {
 
-	const API_BNCODE = "uscons_cart_EC_JP";
-	const API_VERSION = "52.0";
-
 	var $options;
 
 	var $API_UserName;

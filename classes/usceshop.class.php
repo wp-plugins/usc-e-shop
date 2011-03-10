@@ -2090,7 +2090,7 @@ class usc_e_shop
 					define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
 //20110208ysk start
 					//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
-					define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&acting_return=1&uscesid=' . $this->get_uscesid(false));
+					define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 //20110208ysk end
 				}else{
 					$ssl_plink_cart = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_CART_NUMBER) ));
@@ -2106,7 +2106,7 @@ class usc_e_shop
 					define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
 //20110208ysk start
 					//define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
-					define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting=paypal_ipn&acting_return=1&uscesid=' . $this->get_uscesid(false));
+					define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 //20110208ysk end
 				}
 			}else{
@@ -2121,7 +2121,7 @@ class usc_e_shop
 				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
-				define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&acting_return=1&uscesid=' . $this->get_uscesid(false));
+				define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 //20110208ysk end
 			}
 			add_filter('home_url', array($this, 'usces_ssl_page_link'));
@@ -2144,7 +2144,7 @@ class usc_e_shop
 				define('USCES_INQUIRY_URL', get_page_link($this->options['inquiry_id']));
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
-				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting=paypal_ipn&acting_return=1&uscesid=' . $this->get_uscesid(false));
+				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 //20110208ysk end
 			}else{
 				$this->delim = '&';
@@ -2158,7 +2158,7 @@ class usc_e_shop
 				define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
-				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&acting_return=1&uscesid=' . $this->get_uscesid(false));
+				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 //20110208ysk end
 			}
 		}
@@ -2559,9 +2559,7 @@ class usc_e_shop
 		$entry = $this->cart->get_entry();
 		
 //20110208ysk start
-		//if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
-		if( 'paypal_ipn' == $_REQUEST['acting'] ){
-//20110208ysk end
+/*		if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
 			usces_log('paypal_ipn in ', 'acting_transaction.log');
 			require_once($this->options['settlement_path'] . 'paypal.php');
 			$ipn_res = paypal_ipn_check($usces_paypal_url);
@@ -2574,7 +2572,8 @@ class usc_e_shop
 				}
 			}
 			exit;
-		}
+		}*/
+//20110208ysk end
 		if( false === $this->cart->num_row() && ('paypal' != $_GET['acting'] && 1 !== (int)$_GET['acting_return']) ){
 			header('location: ' . get_option('home'));
 			exit;
@@ -4830,7 +4829,7 @@ class usc_e_shop
 		do_action('usces_pre_reg_orderdata');
 		//db(function.php)
 //20110203ysk start
-		$res = usces_check_acting_return_duplicate();
+		$res = usces_check_acting_return_duplicate( $results );
 		if($res != NULL) {
 			usces_log('order processing duplicate : acting='.$_REQUEST['acting'].', order_id='.$res, 'acting_transaction.log');
 			return 'ordercompletion';
@@ -4873,6 +4872,8 @@ class usc_e_shop
 					$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
 					usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
 				}
+			} elseif(isset($_REQUEST['acting']) && ('paypal_ipn' == $_REQUEST['acting'])) {
+				$this->set_order_meta_value('settlement_id', $_REQUEST['txn_id'], $order_id);
 			}
 //20110208ysk end
 			//mail(function.php)

@@ -58,12 +58,13 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$html .= '<input type="hidden" name="item_number" value="">
 				<input type="hidden" name="amount" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '">';
-			if( USCES_JP ){
 //20110208ysk start
+			//if( USCES_JP ){
 				//$html .= '<input type="hidden" name="currency_code" value="JPY">';
 				$html .= '<input type="hidden" name="currency_code" value="'.$currency_code.'">';
+			//}
+			$html .= '<input type="hidden" name="no_note" value="1">';
 //20110208ysk end
-			}
 			$html .= '<input type="hidden" name="return" value="' . apply_filters('usces_paypal_return_url', (USCES_CART_URL . $usces->delim . 'acting=paypal&acting_return=1') ) . '">
 				<input type="hidden" name="cancel_return" value="' . USCES_CART_URL . $usces->delim . 'confirm=1">
 				<input type="hidden" name="notify_url" value="' . USCES_PAYPAL_NOTIFY_URL . '">
