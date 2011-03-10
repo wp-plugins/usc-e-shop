@@ -2166,7 +2166,10 @@ function usces_check_acting_return() {
 			}else{
 				$results[0] = 0;
 			}
-			$results['reg_order'] = false;
+//20110310ysk start
+			//$results['reg_order'] = false;
+			$results['reg_order'] = true;
+//20110310ysk end
 			break;
 	}
 	
