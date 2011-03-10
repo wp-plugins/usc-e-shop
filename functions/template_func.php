@@ -223,12 +223,18 @@ function usces_crcode( $out = '' ) {
 
 function usces_the_itemZaiko( $out = '' ) {
 	global $usces;
-	$num = $usces->itemsku['value']['zaiko'];
+	$num = (int)$usces->itemsku['value']['zaiko'];
+	
+	if( 0 === $num && 0 === (int)$usces->itemsku['value']['zaikonum'] && '' != $usces->itemsku['value']['zaikonum'] ){
+		$res = $usces->zaiko_status[2];
+	}else{
+		$res = $usces->zaiko_status[$num];
+	}
 	
 	if( $out == 'return' ){
-		return $usces->zaiko_status[$num];
+		return $res;
 	}else{
-		echo esc_html($usces->zaiko_status[$num]);
+		echo esc_html($res);
 	}
 }
 
