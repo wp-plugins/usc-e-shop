@@ -5,6 +5,8 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
+
+get_sidebar();
 ?>
 
 <div id="content">
@@ -14,7 +16,7 @@ get_header();
 
 
 <div <?php post_class() ?> id="post-<?php the_ID(); ?>">
-<h2><?php the_title(); ?></h2>
+<h1><?php the_title(); ?></h1>
 <?php if(!usces_is_item()): ?>
 <?php the_date('','<span class="storydate">','</span>'); ?>
 <div class="storymeta"><?php _e("Filed under:"); ?> <?php the_category(',') ?> &#8212; <?php the_tags(__('Tags: '), ', ', ' &#8212; '); ?> <?php the_author() ?> @ <?php the_time() ?> <?php edit_post_link(__('Edit This')); ?></div>

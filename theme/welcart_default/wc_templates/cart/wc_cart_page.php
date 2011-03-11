@@ -5,9 +5,11 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
+
+get_sidebar( 'onlycart' );
 ?>
 
-<div id="content">
+<div id="content" class="cartpage">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>

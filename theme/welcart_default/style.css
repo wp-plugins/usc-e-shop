@@ -43,6 +43,7 @@ body {
 	font-size: 0.8em;
 	color: #666;
 	line-height: 150%;
+	word-wrap: break-word;
 }
 img {
 	margin: 0px;
@@ -124,11 +125,19 @@ div.aligncenter {
 	background-image: url('images/header_bg.jpg');
 	background-repeat: no-repeat;
 }
-h1 {
+/*h1 {
 	margin: 0px;
 	padding: 55px 0px 10px 10px;
 	font-size: 30px;
 	color: #000;
+}*/
+h1#site-title,
+div#site-title {
+	margin: 0px;
+	padding: 55px 0px 10px 10px;
+	color: #000;
+	font-size: 30px;
+	font-weight: bold;
 }
 p.discprition {
 	margin: 0px;
@@ -449,15 +458,20 @@ ul.subnavi a {
 	border-bottom: 3px solid #DAD8D1;
 	float: left;
 }
+.cartpage {
+	width: 770px; !important
+}
 /* content CSS End */
 /*********************************************************************/
 /* content common CSS Start */
 /* title */
+#content h1,
 #content h2 {
 	margin: 0px;
 	padding: 0px;
 }
 #content h2.pagetitle, 
+#content .pagetitle, 
 #content .title {
 	height: 34px;
 	padding: 0px 20px;

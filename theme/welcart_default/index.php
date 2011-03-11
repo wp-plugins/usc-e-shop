@@ -5,6 +5,8 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
+
+get_sidebar();
 ?>
 
 <div id="content">

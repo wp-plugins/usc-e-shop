@@ -5,6 +5,8 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
+
+get_sidebar( 'onlycart' );
 ?>
 
 <?php usces_delivery_info_script(); ?>
