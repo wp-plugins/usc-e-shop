@@ -89,6 +89,30 @@ add_filter('usces_filter_memberinfo_page_header', array(&$usces, 'filter_memberi
 add_filter('usces_filter_memberinfo_page_footer', array(&$usces, 'filter_memberinfo_page_footer'));
 add_filter('usces_filter_membercompletion_page_header', array(&$usces, 'filter_membercompletion_page_header'));
 add_filter('usces_filter_membercompletion_page_footer', array(&$usces, 'filter_membercompletion_page_footer'));
+
+add_action('usces_action_cart_page_header', array(&$usces, 'action_cart_page_header'));
+add_action('usces_action_cart_page_footer', array(&$usces, 'action_cart_page_footer'));
+add_action('usces_action_customer_page_header', array(&$usces, 'action_customer_page_header'));
+add_action('usces_action_customer_page_footer', array(&$usces, 'action_customer_page_footer'));
+add_action('usces_action_delivery_page_header', array(&$usces, 'action_delivery_page_header'));
+add_action('usces_action_delivery_page_footer', array(&$usces, 'action_delivery_page_footer'));
+add_action('usces_action_confirm_page_header', array(&$usces, 'action_confirm_page_header'));
+add_action('usces_action_confirm_page_footer', array(&$usces, 'action_confirm_page_footer'));
+add_action('usces_action_cartcompletion_page_header', array(&$usces, 'action_cartcompletion_page_header'));
+add_action('usces_action_cartcompletion_page_footer', array(&$usces, 'action_cartcompletion_page_footer'));
+add_action('usces_action_login_page_header', array(&$usces, 'action_login_page_header'));
+add_action('usces_action_login_page_footer', array(&$usces, 'action_login_page_footer'));
+add_action('usces_action_newmember_page_header', array(&$usces, 'action_newmember_page_header'));
+add_action('usces_action_newmember_page_footer', array(&$usces, 'action_newmember_page_footer'));
+add_action('usces_action_newpass_page_header', array(&$usces, 'action_newpass_page_header'));
+add_action('usces_action_newpass_page_footer', array(&$usces, 'action_newpass_page_footer'));
+add_action('usces_action_changepass_page_header', array(&$usces, 'action_changepass_page_header'));
+add_action('usces_action_changepass_page_footer', array(&$usces, 'action_changepass_page_footer'));
+add_action('usces_action_memberinfo_page_header', array(&$usces, 'action_memberinfo_page_header'));
+add_action('usces_action_memberinfo_page_footer', array(&$usces, 'action_memberinfo_page_footer'));
+add_action('usces_action_membercompletion_page_header', array(&$usces, 'action_membercompletion_page_header'));
+add_action('usces_action_membercompletion_page_footer', array(&$usces, 'action_membercompletion_page_footer'));
+
 if( $usces->options['itemimg_anchor_rel'] )
 	add_filter('usces_itemimg_anchor_rel', array(&$usces, 'filter_itemimg_anchor_rel'));
 	

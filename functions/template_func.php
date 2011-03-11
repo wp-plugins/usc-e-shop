@@ -874,6 +874,32 @@ function usces_is_category( $str ) {
 		return false;
 }
 
+function usces_the_pref( $flag, $out = '' ){
+	global $usces;
+	
+	$usces_members = $usces->get_member();
+	$usces_entries = $usces->cart->get_entry();
+	$name = esc_attr($flag) . '[pref]';
+	$pref = $usces_entries[$flag]['pref'];
+	if( 'member' == $flag)
+		$pref = $usces_members['pref'];
+	
+	$html = "<select name='" . esc_attr($name) . "' id='pref' class='pref'>\n";
+//	$prefs = get_option('usces_pref');
+	$prefs = $usces->options['province'];
+	foreach($prefs as $value) {
+		$selected = ($pref == $value) ? ' selected="selected"' : '';
+		$html .= "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
+	}
+	$html .= "</select>\n";
+	
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+
 function usces_the_company_name(){
 	global $usces;
 	echo esc_html($usces->options['company_name']);
@@ -2204,6 +2230,12 @@ function usces_newmember_button($member_regmode){
 	$html = '<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />';
 	$newmemberbutton = '<input name="regmember" type="submit" value="' . __('transmit a message', 'usces') . '" />';
 	$html .= apply_filters('usces_filter_newmember_button', $newmemberbutton);
+	echo $html;
+}
+
+function usces_login_button(){
+	$loginbutton = '<input type="submit" name="member_login" id="member_login" class="member_login_button" value="' . __('Log-in', 'usces') . '" />';
+	$html .= apply_filters('usces_filter_login_button', $loginbutton);
 	echo $html;
 }
 

@@ -149,7 +149,7 @@ get_header();
 	</div><!-- end of itemsubimg -->
 
 <?php usces_assistance_item( $post->ID ); ?>
-
+<?php do_action('usces_action_single_item_inform'); ?>
 </form>
 </div><!-- end of itemspage -->
 </div><!-- end of storycontent -->

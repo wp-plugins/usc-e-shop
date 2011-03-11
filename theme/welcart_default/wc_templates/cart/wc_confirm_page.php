@@ -29,7 +29,7 @@ get_header();
 	</div>
 
 	<div class="header_explanation">
-<?php echo apply_filters('usces_filter_confirm_page_header', NULL); ?>
+<?php do_action('usces_action_confirm_page_header'); ?>
 	</div><!-- end of header_explanation -->
 
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -112,6 +112,7 @@ get_header();
 				<td colspan="2"><input name="use_point" type="submit" class="use_point_button" value="<?php _e('Use the points', 'usces'); ?>" /></td>
 			</tr>
 	</table>
+	<?php do_action('usces_action_confirm_page_point_inform'); ?>
 	</form>
 <?php endif; ?>
  
@@ -149,7 +150,7 @@ get_header();
 <?php usces_purchase_button(); ?>
 
 	<div class="footer_explanation">
-<?php echo apply_filters('usces_filter_confirm_page_footer', NULL); ?>
+<?php do_action('usces_action_confirm_page_footer'); ?>
 	</div><!-- end of footer_explanation -->
 
 </div><!-- end of info-confirm -->

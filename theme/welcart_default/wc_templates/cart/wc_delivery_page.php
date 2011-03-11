@@ -30,7 +30,7 @@ get_header();
 	</div>
 
 	<div class="header_explanation">
-<?php echo apply_filters('usces_filter_delivery_page_header', $header); ?>
+<?php do_action('usces_action_delivery_page_header'); ?>
 	</div>
 	
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -86,10 +86,11 @@ get_header();
 	<div class="send"><input name="order[cus_id]" type="hidden" value="<?php echo $this->cus_id; ?>" />		
 	<input name="backCustomer" type="submit" class="back_to_customer_button" value="<?php _e('Back', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_prebutton', NULL); ?> />&nbsp;&nbsp;
 	<input name="confirm" type="submit" class="to_confirm_button" value="<?php _e(' Next ', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_nextbutton', NULL); ?> /></div>
+	<?php do_action('usces_action_delivery_page_inform'); ?>
 	</form>
 
 	<div class="footer_explanation">
-<?php echo apply_filters('usces_filter_delivery_page_footer', $footer); ?>
+<?php do_action('usces_action_delivery_page_footer'); ?>
 	</div>
 </div>
 

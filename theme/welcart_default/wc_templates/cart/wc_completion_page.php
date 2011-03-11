@@ -20,8 +20,8 @@ get_header();
 <div id="cart_completion">
 <h3><?php _e('It has been sent succesfully.', 'usces'); ?></h3>
 	<div class="header_explanation">
-	<?php $header = '<p>'.__('Thank you for shopping.', 'usces').'<br />'.__("If you have any questions, please contact us by 'Contact'.", 'usces').'</p>'; ?>
-	<?php echo apply_filters('usces_filter_cartcompletion_page_header', $header, $usces_entries, $usces_carts)."\n"; ?>
+	<p><?php _e('Thank you for shopping.', 'usces'); ?><br /><?php _e("If you have any questions, please contact us by 'Contact'.", 'usces'); ?></p>
+	<?php do_action('usces_action_cartcompletion_page_header', $usces_entries, $usces_carts); ?>
 	</div><!-- header_explanation -->
 
 <?php usces_completion_settlement(); ?>
@@ -29,11 +29,12 @@ get_header();
 <?php do_action('usces_action_cartcompletion_page_body', $usces_entries, $usces_carts); ?>
 
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_cartcompletion_page_footer', NULL, $usces_entries, $usces_carts); ?>
+	<?php do_action('usces_action_cartcompletion_page_footer', $usces_entries, $usces_carts); ?>
 	</div><!-- footer_explanation -->
 
 	<form action="<?php bloginfo('home'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<div class="send"><input name="top" class="back_to_top_button" type="submit" value="<?php _e('Back to the top page.', 'usces'); ?>" /></div>
+	<?php do_action('usces_action_cartcompletion_page_inform'); ?>
 	</form>
 <?php echo apply_filters('usces_filter_conversion_tracking', NULL, $usces_entries, $usces_carts); ?>
 

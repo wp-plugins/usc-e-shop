@@ -29,7 +29,7 @@ get_header();
 	</div>
 	
 	<div class="header_explanation">
-	<?php echo apply_filters('usces_filter_cart_page_header', NULL); ?>
+	<?php do_action('usces_action_cart_page_header'); ?>
 	</div>
 	
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -75,10 +75,11 @@ get_header();
 	<?php the_content();?>
 	
 	<div class="send"><?php usces_get_cart_button(); ?></div>
+	<?php do_action('usces_action_cart_page_inform'); ?>
 	</form>
 	
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_cart_page_footer', NULL); ?>
+	<?php do_action('usces_action_cart_page_footer'); ?>
 	</div>
 </div><!-- end of inside-cart -->
 

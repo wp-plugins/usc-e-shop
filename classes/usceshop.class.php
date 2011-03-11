@@ -2791,6 +2791,8 @@ class usc_e_shop
 	
 	function template_redirect () {
 		global $post, $usces_entries, $usces_carts, $usces_members;
+		
+		do_action('usces_action_template_redirect');
 
 		if( is_single() && 'item' == $post->post_mime_type ) {
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){
@@ -6618,6 +6620,160 @@ class usc_e_shop
 			$html = $this->options['member_page_data']['footer']['completion'];
 		}
 		return do_shortcode( stripslashes($html) );
+	}
+	
+	function action_cart_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['cart']) ){
+			$html = $this->options['cart_page_data']['header']['cart'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_cart_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
+			$html = $this->options['cart_page_data']['footer']['cart'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_customer_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['customer']) ){
+			$html = $this->options['cart_page_data']['header']['customer'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_customer_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
+			$html = $this->options['cart_page_data']['footer']['customer'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_delivery_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
+			$html = $this->options['cart_page_data']['header']['delivery'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_delivery_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
+			$html = $this->options['cart_page_data']['footer']['delivery'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_confirm_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
+			$html = $this->options['cart_page_data']['header']['confirm'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_confirm_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
+			$html = $this->options['cart_page_data']['footer']['confirm'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_cartcompletion_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['completion']) ){
+			$html = $this->options['cart_page_data']['header']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_cartcompletion_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
+			$html = $this->options['cart_page_data']['footer']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_login_page_header(){
+		if( !empty($this->options['member_page_data']['header']['login']) ){
+			$html = $this->options['member_page_data']['header']['login'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_login_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['login']) ){
+			$html = $this->options['member_page_data']['footer']['login'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newmember_page_header(){
+		if( !empty($this->options['member_page_data']['header']['newmember']) ){
+			$html = $this->options['member_page_data']['header']['newmember'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newmember_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
+			$html = $this->options['member_page_data']['footer']['newmember'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newpass_page_header(){
+		if( !empty($this->options['member_page_data']['header']['newpass']) ){
+			$html = $this->options['member_page_data']['header']['newpass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newpass_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
+			$html = $this->options['member_page_data']['footer']['newpass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_changepass_page_header(){
+		if( !empty($this->options['member_page_data']['header']['changepass']) ){
+			$html = $this->options['member_page_data']['header']['changepass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_changepass_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
+			$html = $this->options['member_page_data']['footer']['changepass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_memberinfo_page_header(){
+		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
+			$html = $this->options['member_page_data']['header']['memberinfo'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_memberinfo_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
+			$html = $this->options['member_page_data']['footer']['memberinfo'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_membercompletion_page_header(){
+		if( !empty($this->options['member_page_data']['header']['completion']) ){
+			$html = $this->options['member_page_data']['header']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_membercompletion_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['completion']) ){
+			$html = $this->options['member_page_data']['footer']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
 	}
 	
 }

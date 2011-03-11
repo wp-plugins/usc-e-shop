@@ -20,7 +20,7 @@ get_header();
 <div id="memberpages">
 
 	<div class="header_explanation">
-	<?php echo apply_filters('usces_filter_membercompletion_page_header', NULL); ?>
+	<?php do_action('usces_action_membercompletion_page_header'); ?>
 	</div>
 
 	<?php $member_compmode = usces_page_name('return'); ?>
@@ -41,12 +41,13 @@ get_header();
 
 
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_membercompletion_page_footer', NULL); ?>
+	<?php do_action('usces_action_membercompletion_page_footer'); ?>
 	</div>
 
 	<p><a href="<?php usces_url('member'); ?>"><?php _e('to vist membership information page', 'usces'); ?></a></p>
 	<form action="<?php bloginfo('home'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<div class="send"><input name="top" type="submit" value="<?php _e('Back to the top page.', 'usces'); ?>" /></div>
+	<?php do_action('usces_action_membercompletion_page_inform'); ?>
 	</form>
 	</div>
 

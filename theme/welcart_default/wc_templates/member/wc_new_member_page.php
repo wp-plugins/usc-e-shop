@@ -28,7 +28,7 @@ get_header();
 		<li><?php _e('The items marked with *, are mandatory. Please complete.', 'usces'); ?></li>
 		<li><?php _e('Please use Alphanumeric characters for numbers.', 'usces'); ?></li>
 		</ul>
-		<?php echo apply_filters('usces_filter_newmember_page_header', NULL); ?>
+		<?php do_action('usces_action_newmember_page_header'); ?>
 	</div><!-- end of header_explanation -->
 	
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -53,10 +53,11 @@ get_header();
 		<?php uesces_addressform( 'member', usces_memberinfo(NULL), 'echo' ); ?>
 	</table>
 	<div class="send"><?php usces_newmember_button($member_regmode); ?></div>
+	<?php do_action('usces_action_newmember_page_inform'); ?>
 	</form>
 	
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_newmember_page_footer', NULL); ?>
+	<?php do_action('usces_action_newmember_page_footer'); ?>
 	</div><!-- end of footer_explanation -->
 	
 </div><!-- end of newmember -->

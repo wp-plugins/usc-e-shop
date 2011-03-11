@@ -21,7 +21,7 @@ get_header();
 <div class="whitebox">
 
 	<div class="header_explanation">
-	<?php echo apply_filters('usces_filter_login_page_header', NULL); ?>
+	<?php do_action('usces_action_login_page_header'); ?>
 	</div>
 
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -39,9 +39,9 @@ get_header();
 	<label><input name="rememberme" type="checkbox" id="rememberme" value="forever" /> <?php _e('memorize login information', 'usces'); ?></label>
 	</p>
 	<p class="submit">
-	<input type="submit" name="member_login" id="member_login" value="<?php _e('Log-in', 'usces'); ?>" />
+	<?php usces_login_button(); ?>
 	</p>
-	<?php echo apply_filters('usces_filter_login_inform', NULL); ?>
+	<?php do_action('usces_action_login_page_inform'); ?>
 	</form>
 	<p id="nav">
 	<a href="<?php usces_url('lostmemberpassword'); ?>" title="<?php _e('Did you forget your password?', 'usces'); ?>"><?php _e('Did you forget your password?', 'usces'); ?></a>
@@ -54,7 +54,7 @@ get_header();
 	</div>
 
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_login_page_footer', NULL); ?>
+	<?php do_action('usces_action_login_page_footer'); ?>
 	</div>
 
 </div><!-- end of whitebox -->

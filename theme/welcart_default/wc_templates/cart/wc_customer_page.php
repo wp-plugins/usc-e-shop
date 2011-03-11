@@ -29,7 +29,7 @@ get_header();
 	</div>
 	
 	<div class="header_explanation">
-	<?php echo apply_filters('usces_filter_customer_page_header', NULL); ?>
+	<?php do_action('usces_action_customer_page_header'); ?>
 	</div><!-- end of header_explanation -->
 	
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -47,6 +47,7 @@ get_header();
 		</tr>
 	</table>
 	<div class="send"><input name="customerlogin" type="submit" value="<?php _e(' Next ', 'usces'); ?>" /></div>
+	<?php do_action('usces_action_customer_page_member_inform'); ?>
 	</form>
 	<h5><?php _e('The nonmember please enter at here.','usces'); ?></h5>
 <?php endif; ?>
@@ -78,10 +79,11 @@ get_header();
 	<div class="send">
 	<?php usces_get_customer_button(); ?>
 	</div>
+	<?php do_action('usces_action_customer_page_inform'); ?>
 	</form>
 
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_customer_page_footer', NULL); ?>
+	<?php do_action('usces_action_customer_page_footer'); ?>
 	</div><!-- end of footer_explanation -->
 </div><!-- end of customer-info -->
 

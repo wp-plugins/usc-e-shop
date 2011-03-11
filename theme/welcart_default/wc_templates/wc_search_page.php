@@ -99,6 +99,7 @@ if (isset($_REQUEST['usces_search'])) :
 	<input name="usces_search_button" class="usces_search_button" type="submit" value="<?php _e('Search', 'usces'); ?>" onclick="newsubmit()" />
 	<input name="paged" id="usces_paged" type="hidden" value="<?php echo $uscpaged; ?>" />
 	<input name="usces_search" type="hidden" />
+	<?php do_action('usces_action_search_item_inform'); ?>
 	</form>
 <?php //******* End Form ************** ?>
 

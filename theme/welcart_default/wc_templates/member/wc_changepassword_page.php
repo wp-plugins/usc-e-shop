@@ -20,7 +20,7 @@ get_header();
 <div id="memberpages">
 
 	<div class="header_explanation">
-	<?php echo apply_filters('usces_filter_changepass_page_header', NULL); ?>
+	<?php do_action('usces_action_changepass_page_header'); ?>
 	</div>
 
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -37,10 +37,11 @@ get_header();
 	<p class="submit">
 		<input type="submit" name="changepassword" id="member_login" value="<?php _e('Register', 'usces'); ?>" />
 	</p>
+	<?php do_action('usces_action_changepass_page_inform'); ?>
 	</form>
 	</div>
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_changepass_page_footer', NULL); ?>
+	<?php do_action('usces_action_changepass_page_footer'); ?>
 	</div>
 
 </div><!-- end of memberpages -->

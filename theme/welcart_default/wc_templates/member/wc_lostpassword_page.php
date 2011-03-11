@@ -21,7 +21,7 @@ get_header();
 <div class="whitebox">
 
 	<div class="header_explanation">
-	<?php echo apply_filters('usces_filter_newpass_page_header', NULL); ?>
+	<?php do_action('usces_action_newpass_page_header'); ?>
 	</div>
 
 	<div class="error_message"><?php usces_error_message(); ?></div>
@@ -34,6 +34,7 @@ get_header();
 	<p class="submit">
 	<input type="submit" name="lostpassword" id="member_login" value="<?php _e('Obtain new password', 'usces'); ?>" />
 	</p>
+	<?php do_action('usces_action_newpass_page_inform'); ?>
 	</form>
 	<div><?php _e('Chenge th epassword according to the e-mail.', 'usces'); ?></div>
 	<p id="nav">
@@ -44,7 +45,7 @@ get_header();
 	</div><!-- end of loginbox -->
 
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_newpass_page_footer', NULL); ?>
+	<?php do_action('usces_action_newpass_page_footer'); ?>
 	</div>
 	
 </div><!-- end of whitebox -->

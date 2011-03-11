@@ -51,7 +51,7 @@ get_header();
 	<a href="#edit"><?php _e('To member information editing', 'usces'); ?></a>
 	
 	<div class="header_explanation">
-	<?php echo apply_filters('usces_filter_memberinfo_page_header', NULL); ?>
+	<?php do_action('usces_action_memberinfo_page_header'); ?>
 	</div>
 	
 	<h3><?php _e('Purchase history', 'usces'); ?></h3>
@@ -85,10 +85,11 @@ get_header();
 	<input name="editmember" type="submit" value="<?php _e('update it', 'usces'); ?>" />
 	<input name="deletemember" type="submit" value="<?php _e('delete it', 'usces'); ?>" onclick="return confirm('<?php _e('All information about the member is deleted. Are you all right?', 'usces'); ?>');" />
 	</div>
+	<?php do_action('usces_action_memberinfo_page_inform'); ?>
 	</form>
 	
 	<div class="footer_explanation">
-	<?php echo apply_filters('usces_filter_memberinfo_page_footer', NULL); ?>
+	<?php do_action('usces_action_memberinfo_page_footer'); ?>
 	</div>
 	</div><!-- end of memberinfo -->
 </div><!-- end of whitebox -->
