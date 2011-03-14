@@ -154,7 +154,7 @@ function toggleVisibility(id) {
 		    <option value="<?php echo $Lkey; ?>"<?php echo ($system_front_lang == $Lkey ? ' selected="selected"' : ''); ?>><?php echo $Lvalue; ?></option>
 		<?php } ?>
 		</select></td>
-	    <td><div id="ex_front_lang" class="explanation"><?php _e('フロントエンド（ショップ側）の言語を選択できます。言語に合せて入力項目の様式も変ります。< br />バックエンド（管理パネル）の言語はconfig.php の設定に従います。', 'usces'); ?></div></td>
+	    <td><div id="ex_front_lang" class="explanation"><?php _e('フロントエンド（ショップ側）の言語を選択できます。バックエンド（管理パネル）の言語はconfig.php の設定に従います。', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
@@ -166,7 +166,7 @@ function toggleVisibility(id) {
 		<?php } ?>
 		    <option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
 		</select></td>
-	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。', 'usces'); ?></div></td>
+	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロント・エンド、バック・エンド共通です。', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
@@ -177,7 +177,7 @@ function toggleVisibility(id) {
 		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_addressform == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>
 		</select></td>
-	    <td><div id="ex_addressform" class="explanation"><?php _e('住所氏名などの入力フォームの様式を、どの国のものにするか選択します', 'usces'); ?></div></td>
+	    <td><div id="ex_addressform" class="explanation"><?php _e('住所氏名などの入力フォームの様式を、どの国のものにするか選択します。', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">

@@ -829,12 +829,12 @@ jQuery(document).ready(function($){
 
 <!--20101208ysk start-->
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('配送設定', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_option');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
+<h3 class="hndle"><?php _e('Shipping Setting', 'usces'); ?></h3>
 <div class="inside">
 <form action="" method="post" name="option_form" id="option_form">
 <table class="form_table">
-	<tr>
-		<th><?php _e('配送業務締時間', 'usces'); ?></th>
+	<tr style="height:40px;">
+		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting01');"><?php _e('配送業務締時間', 'usces'); ?></a></th>
 		<td>
 			<select name="delivery_time_limit[hour]">
 <?php
@@ -847,7 +847,7 @@ jQuery(document).ready(function($){
 ?>
 			</select>
 		</td>
-		<td><?php _e('hour','usces'); ?></td>
+		<td>:&nbsp;</td>
 		<td>
 			<select name="delivery_time_limit[min]">
 <?php
@@ -862,34 +862,34 @@ jQuery(document).ready(function($){
 ?>
 			</select>
 		</td>
-		<td><?php _e('min','usces'); ?></td>
+		<td><div id="ex_shipping_setting01" class="explanation"><?php _e('商品発送を締め切る時間を指定します。この値は最短発送日を算出するために使用します。', 'usces'); ?></div></td>
 	</tr>
-	<tr>
-		<th><?php _e('最短配送時間帯', 'usces'); ?></th>
-		<td colspan="4">
+	<tr style="height:40px;">
+		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting02');"><?php _e('午前着の可否', 'usces'); ?></a></th>
+		<td colspan="3">
 			<select name="shortest_delivery_time">
 				<option value="0"<?php if($shortest_delivery_time == '0') echo ' selected'; ?>><?php _e('No preference', 'usces'); ?></option>
 				<option value="1"<?php if($shortest_delivery_time == '1') echo ' selected'; ?>><?php _e('午前着可', 'usces'); ?></option>
 				<option value="2"<?php if($shortest_delivery_time == '2') echo ' selected'; ?>><?php _e('午前着不可', 'usces'); ?></option>
 			</select>
 		</td>
+		<td><div id="ex_shipping_setting02" class="explanation"><?php _e('商品が最短発送日の午前中に到着が可能かどうかを指定します。', 'usces'); ?></div></td>
 	</tr>
-	<tr>
-		<th><?php _e('配送希望日表示数', 'usces'); ?></th>
-		<td colspan="4">
+	<tr style="height:40px;">
+		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting03');"><?php _e('配送希望日表示数', 'usces'); ?></a></th>
+		<td colspan="3">
 			<input name="delivery_after_days" type="text" value="<?php echo $delivery_after_days; ?>">
 		</td>
+		<td><div id="ex_shipping_setting03" class="explanation"><?php _e('お客様が選択する配送希望日の選択数を指定します。', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 		<th></th>
-		<td colspan="4">
+		<td colspan="3">
 			<input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 		</td>
 	</tr>
 </table>
 </form>
-<hr size="1" color="#CCCCCC" />
-<div id="ex_delivery_option" class="explanation"><?php _e('You can choose the shipping every item.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 <!--20101208ysk end-->
@@ -898,85 +898,76 @@ jQuery(document).ready(function($){
 <h3 class="hndle"><span><?php _e('shipping option','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_method');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table" style="width:290px; margin-left:10px; float:left;">
-	<tr>
+	<tr style="height:20px;">
 	    <th class="sec">&nbsp;</th>
 	    <td><a href="#" id="new_delivery_method_action"><?php _e('New addition', 'usces'); ?></a></td>
 	</tr>
-	<tr>
+	<tr style="height:40px;">
 	    <th><?php _e('Shipping name', 'usces'); ?></th>
 	    <td width="150" height="30" id="delivery_method_name"></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 	    <th class="sec">&nbsp;</th>
 	    <td id="delivery_method_name2"></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 	    <th class="sec" id="delivery_method_loading">&nbsp;</th>
 	    <td id="delivery_method_button"></td>
 	</tr>
-	<tr>
+	<tr style="height:20px;">
 	    <th class="sec"></th>
 	    <td><a href="#" id="moveup_action"><?php _e('Raise the priority', 'usces'); ?></a></td>
 	</tr>
-	<tr>
+	<tr style="height:20px;">
 	    <th class="sec"></th>
 	    <td><a href="#" id="movedown_action"><?php _e('Lower the priority', 'usces'); ?></a></td>
 	</tr>
 </table>
 
 <table class="form_table">
-	<tr>
+	<tr style="height:20px;">
 	    <th class="sec"></th>
 	    <td></td>
 	</tr>
-	<tr>
-	    <th class="sec"><?php _e('配送地域', 'usces'); ?></th>
+	<tr style="height:40px;">
+	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting10');"><?php _e('配送対象地域', 'usces'); ?></a></th>
 	    <td><input name="flights" type="radio" value="domestic" id="domestic_flights" /><label for="domestic_flights" style="margin-right:20px;"><?php _e('国内便', 'uesces'); ?></label><input name="flights" type="radio" value="internationa" id="internationa_flights" /><label for="internationa_flights"><?php _e('国際便', 'uesces'); ?></label></td>
+		<td><div id="ex_shipping_setting10" class="explanation"><?php _e('この配送方法が対象とする配送可能地域。', 'usces'); ?></div></td>
 	</tr>
-	<tr>
-	    <th class="sec"><?php _e('適用モジュール', 'usces'); ?></th>
+<!--	<tr>
+	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting11');"><?php _e('適用モジュール', 'usces'); ?></a></th>
 	    <td><select name="shipping_module">
 	    		<option value="none"><?php _e('利用できるモジュールがありません', 'usces'); ?></option>
 	    </select></td>
+		<td><div id="ex_shipping_setting11" class="explanation"><?php _e('配送モジュールを選択した場合は、送料を含め全てのルールがモジュール優先となります。', 'usces'); ?></div></td>
+	</tr>-->
+	<tr style="height:40px;">
+	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting12');"><?php _e('Deliverly time', 'usces'); ?></a></th>
+	    <td><textarea name="delivery_method_time" id="delivery_method_time" style="height:100px;"></textarea></td>
+		<td><div id="ex_shipping_setting12" class="explanation"><?php _e("配送可能な時間帯を入力します。お客様に時間帯を選択させない場合は空白にします。<br />例）<br />午前中<br />12：00～14：00<br />14：00～16：00<br />16：00～18：00", 'usces'); ?></div></td>
 	</tr>
-	<tr>
-	    <th class="sec"></th>
-	    <td><?php _e("モジュールを適用した場合、送料はモジュールによる計算が優先されます。", 'usces'); ?></td>
-	</tr>
-	<tr>
-	    <th class="sec"><?php _e('Deliverly time', 'usces'); ?></th>
-	    <td><textarea name="delivery_method_time" class="long_txt" id="delivery_method_time"></textarea></td>
-	</tr>
-	<tr>
-	    <th class="sec"><?php _e('Postage fixation', 'usces'); ?></th>
+	<tr style="height:40px;">
+	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting13');"><?php _e('Postage fixation', 'usces'); ?></a></th>
 	    <td id="delivery_method_charge_td"></td>
+		<td><div id="ex_shipping_setting13" class="explanation"><?php _e("It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'", 'usces'); ?></div></td>
 	</tr>
-	<tr>
-	    <th class="sec"></th>
-	    <td><?php _e("It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'.", 'usces'); ?></td>
-	</tr>
-	<tr>
-	    <th class="sec"><?php _e('重量加算', 'usces'); ?></th>
+<!--	<tr style="height:40px;">
+	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting14');"><?php _e('重量加算', 'usces'); ?></th>
 	    <td id="delivery_method_weight_td"></td>
-	</tr>
-	<tr>
-	    <th class="sec"></th>
-	    <td><?php _e("商品の合計重量によって送料を加算します。", 'usces'); ?></td>
-	</tr>
+		<td><div id="ex_shipping_setting14" class="explanation"><?php _e("商品の合計重量によって送料を加算します。", 'usces'); ?></div></td>
+	</tr>-->
 <!--20101208ysk start-->
-	<tr>
-		<th class="sec"><?php _e('配達日数', 'usces'); ?></th>
+	<tr style="height:40px;">
+		<th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting15');"><?php _e('配達日数', 'usces'); ?></a></th>
 		<td id="delivery_method_days_td"></td>
-	</tr>
-	<tr>
-		<th class="sec"></th>
-		<td><?php _e("発送してから到着するまでの日数。", 'usces'); ?></td>
+		<td><div id="ex_shipping_setting15" class="explanation"><?php _e("下の配達日数設定で登録した配達日数名を選択します。最短配送日を算出するために使用します。お客様に配送希望日を選択させない場合は「Not appoint the delivery days.」を指定します。", 'usces'); ?></div></td>
 	</tr>
 <!--20101208ysk end-->
 <!--20101119ysk start-->
-	<tr>
-		<th class="sec"><?php _e('No COD', 'usces'); ?></th>
+	<tr style="height:40px;">
+		<th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting16');"><?php _e('No COD', 'usces'); ?></a></th>
 		<td><div id="delivery_method_nocod"></div></td>
+		<td><div id="ex_shipping_setting16" class="explanation"><?php _e("代引き支払いができない場合はチェックを入れます。", 'usces'); ?></div></td>
 	</tr>
 <!--20101119ysk end-->
 </table>
@@ -990,7 +981,7 @@ jQuery(document).ready(function($){
 <div id="uscestabs_delivery">
 	<ul>
 		<li><a href="#delivery_page_setting_1"><?php _e('Shipping','usces'); ?></a></li>
-		<li><a href="#delivery_page_setting_3"><?php _e('重量加算','usces'); ?></a></li>
+		<!--<li><a href="#delivery_page_setting_3"><?php _e('重量加算','usces'); ?></a></li>-->
 		<li><a href="#delivery_page_setting_2"><?php _e('配達日数','usces'); ?></a></li>
 	</ul>
 
@@ -1001,45 +992,38 @@ jQuery(document).ready(function($){
 <h3 class="hndle"><span><?php _e('Shipping', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table" style="width:290px; margin-left:10px; float:left;">
-	<tr>
+	<tr style="height:20px;">
 	    <th class="sec">&nbsp;</th>
 	    <td><a href="#" id="new_shipping_charge_action"><?php _e('New addition', 'usces'); ?></a></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 	    <th class="sec"><?php _e('Shipping charge name', 'usces'); ?></th>
 	    <td width="150" height="30" id="shipping_charge_name"></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 	    <th class="sec">&nbsp;</th>
 	    <td width="150" height="30" id="shipping_charge_name2"></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 	    <th class="sec" id="shipping_charge_loading">&nbsp;</th>
 	    <td id="shipping_charge_button"></td>
 	</tr>
 </table>
 <table class="form_table">
-	<tr>
+	<tr style="height:20px;">
 	    <th class="sec"></th>
 	    <td></td>
 	</tr>
-	<tr>
-	    <th class="sec"><?php _e('Country', 'usces'); ?></th>
+	<tr style="height:40px;">
+	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting20');"><?php _e('Country', 'usces'); ?></a></th>
 	    <td><label class="shipping_charge_label"></label><select name="shipping_charge_country" id="shipping_charge_country">
 	    		<?php usces_shipping_country_option( $selected ); ?>
 	    </select></td>
+		<td><div id="ex_shipping_setting21" class="explanation"><?php _e('この送料を適用する国を選択してください。', 'usces'); ?></div></td>
 	</tr>
-	<tr>
-	    <th class="sec"></th>
-	    <td></td>
-	</tr>
-	<tr>
+	<tr style="height:40px;">
 	    <th class="sec"><?php _e('Shipping', 'usces'); ?></th>
 	    <td><label class="shipping_charge_label"><input name="allbutton" type="button" class="allbutton" onclick="operation.allCharge();" value="<?php _e('same as', 'usces'); ?>"  /></label><input name="allcharge" id="allcharge" type="text" class='charge_text' /><?php usces_crcode(); ?></td>
-	</tr>
-	<tr>
-	    <th class="sec"></th>
-	    <td></td>
 	</tr>
 	<tr>
 	    <th class="sec"></th>
@@ -1058,35 +1042,35 @@ jQuery(document).ready(function($){
 <h3 class="hndle"><span><?php _e('配達日数', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_days');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 <table class="form_table" style="width:280px; margin-left:10px; float:left;">
-	<tr>
+	<tr style="height:20px;">
 		<th class="sec">&nbsp;</th>
 		<td><a href="#" id="new_delivery_days_action"><?php _e('New addition', 'usces'); ?></a></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 		<th class="sec"><?php _e('配達日数名', 'usces'); ?></th>
 		<td width="150" height="30" id="delivery_days_name"></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 		<th class="sec">&nbsp;</th>
 		<td width="150" height="30" id="delivery_days_name2"></td>
 	</tr>
-	<tr>
+	<tr style="height:30px;">
 		<th class="sec" id="delivery_days_loading">&nbsp;</th>
 		<td id="delivery_days_button"></td>
 	</tr>
 </table>
 <table class="form_table">
-	<tr>
+	<tr style="height:20px;">
 		<th class="sec"></th>
 		<td></td>
 	</tr>
-	<tr>
+	<tr style="height:40px;">
+		<th class="sec"></th>
+		<td></td>
+	</tr>
+	<tr style="height:40px;">
 		<th class="sec"><?php _e('配達日数', 'usces'); ?></th>
 		<td><label class="delivery_days_label"><input name="allbutton_delivery_days" type="button" class="allbutton" onclick="operation.allDeliveryDays();" value="<?php _e('same as', 'usces'); ?>"  /></label><input name="all_delivery_days" id="all_delivery_days" type="text" class='days_text' /><?php _e('day', 'usces'); ?></td>
-	</tr>
-	<tr>
-		<th class="sec"></th>
-		<td></td>
 	</tr>
 	<tr>
 		<th class="sec"></th>
@@ -1098,6 +1082,7 @@ jQuery(document).ready(function($){
 </div>
 </div><!--postbox-->
 </div><!--delivery_page_setting_2-->
+<!--
 <div id="delivery_page_setting_3">
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('重量加算', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_weight');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
@@ -1141,8 +1126,10 @@ jQuery(document).ready(function($){
 <hr size="1" color="#CCCCCC" />
 <div id="ex_shipping_weight" class="explanation"><?php _e('商品の合計重量を元に送料に料金を加算します。', 'usces'); ?></div>
 </div>
-</div><!--postbox-->
-</div><!--delivery_page_setting_2-->
+</div>
+</div>
+-->
+
 </div><!--tabs-->
 <!--20101208ysk end-->
 

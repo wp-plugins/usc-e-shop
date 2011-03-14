@@ -22,8 +22,12 @@ function usces_is_error_message() {
 		return false;
 }
 
-function usces_is_item() {
-	global $usces, $post;
+function usces_is_item( $post_id = NULL ) {
+	if( NULL == $post_id ){
+		global $post;
+	}else{
+		$post = get_post($post_id);
+	}
 	if ( $post->post_mime_type == 'item' )
 		return true;
 	else

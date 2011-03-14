@@ -2201,6 +2201,7 @@ class usc_e_shop
 
 	function ad_controller(){
 		global $usces_action;
+		ksort($usces_action);
 		if($this->is_maintenance()){
 			$this->maintenance();
 		}else{
@@ -2211,6 +2212,7 @@ class usc_e_shop
 			'uscesmode_changepassword', 'changepassword', 'page_newmember', 'usces_export', 'usces_import', 
 			'page_search_item', 'front_ajax');
 			$flg = 0;
+			$res = true;
 			foreach( $usces_action as $handle => $action ){
 				extract($action);
 				switch($type){
@@ -2278,6 +2280,7 @@ class usc_e_shop
 						}
 						break;
 				}
+				if( ! $res ) break;
 			}
 			if( !$flg ) $this->default_page();
 		}
@@ -6177,6 +6180,10 @@ class usc_e_shop
 		), $atts));
 	
 		$post_id = $this->get_ID_byItemName($item);
+		if( ! $this->is_item_zaiko( $post_id, $sku ) ){
+			return '<div class="button_status">' . __('Sold Out', 'usces') . '</div>';
+		}
+		
 		$datas = $this->get_skus( $post_id, 'ARRAY_A' );
 	
 		$zaikonum = $datas[$sku]['zaikonum'];
