@@ -10,7 +10,7 @@ get_sidebar( 'onlycart' );
 ?>
 
 <?php usces_delivery_info_script(); ?>
-<div id="content">
+<div id="wc-content">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>

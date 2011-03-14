@@ -458,8 +458,14 @@ ul.subnavi a {
 	border-bottom: 3px solid #DAD8D1;
 	float: left;
 }
-.cartpage {
-	width: 770px; !important
+#wc-content {
+	width: 770px;
+	height: 100%;
+	margin: 0px 0px 0px 10px;
+	padding: 0px;
+	background-color: #DAD8D1;
+	border-bottom: 3px solid #DAD8D1;
+	float: left;
 }
 /* content CSS End */
 /*********************************************************************/
@@ -484,8 +490,13 @@ ul.subnavi a {
 	font-weight: bold;
 	line-height: 34px;
 }
+#content .post h2 {
+	padding-top: 10px;
+	font-size: 1.17em;
+}
 /* catbox */
-#content .catbox {
+#content .catbox,
+#wc-content .catbox {
 	width: auto;
 	height: 100%;
 	margin: 3px;

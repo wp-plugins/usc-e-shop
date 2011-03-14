@@ -9,14 +9,14 @@ get_header();
 get_sidebar( 'onlycart' );
 ?>
 
-<div id="content">
+<div id="wc-content">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>
 
 <div class="post" id="wc_<?php usces_page_name(); ?>">
 
-<h1><?php _e('Change password', 'usces'); ?></h1>
+<h1><?php _e('Log-in for members', 'usces'); ?></h1>
 <div class="entry">
 		
 <div id="memberpages">

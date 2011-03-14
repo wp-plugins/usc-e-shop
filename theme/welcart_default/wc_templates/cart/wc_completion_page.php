@@ -9,7 +9,7 @@ get_header();
 get_sidebar( 'onlycart' );
 ?>
 
-<div id="content">
+<div id="wc-content">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>

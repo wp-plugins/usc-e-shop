@@ -9,14 +9,14 @@ get_header();
 get_sidebar( 'onlycart' );
 ?>
 
-<div id="content">
+<div id="wc-content">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>
 
 <div class="post" id="wc_<?php usces_page_name(); ?>">
 
-<h1><?php _e('Change password', 'usces'); ?></h1>
+<h1><?php _e('Completion', 'usces'); ?></h1>
 <div class="entry">
 		
 <div id="memberpages">
@@ -33,7 +33,7 @@ get_sidebar( 'onlycart' );
 	<p><?php _e('Membership information has been updated.', 'usces'); ?></p>
 	
 	<?php elseif ( 'lostcompletion' == $member_compmode ) : ?>
-	<p><?php _e('I transmitted an email.', 'usces'); </p>
+	<p><?php _e('I transmitted an email.', 'usces'); ?></p>
 	<p><?php _e('Chenge th epassword according to the e-mail.', 'usces'); ?></p>
 	
 	<?php elseif ( 'changepasscompletion' == $member_compmode ) : ?>
