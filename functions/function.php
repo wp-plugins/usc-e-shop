@@ -3189,8 +3189,13 @@ function usces_item_uploadcsv(){
 					}
 					break;
 				case USCES_COL_SKU_NAME:
-				case USCES_COL_SKU_CPRICE:
+//20110315ysk start
 					break;
+				case USCES_COL_SKU_CPRICE:
+					if( 0 < strlen($data) and !preg_match("/^\d$|^\d+\.?\d+$/", $data) )
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the price is abnormal.', 'usces')."\r\n";
+					break;
+//20110315ysk end
 				case USCES_COL_SKU_PRICE:
 //20110315ysk start
 					//if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) )
@@ -3199,6 +3204,10 @@ function usces_item_uploadcsv(){
 						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the sale price is abnormal.', 'usces')."\r\n";
 					break;
 				case USCES_COL_SKU_ZAIKONUM:
+//20110315ysk start
+					if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) )
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the stock number is abnormal.', 'usces')."\r\n";
+//20110315ysk end
 					break;
 				case USCES_COL_SKU_ZAIKO:
 					if( !preg_match("/^[0-9]+$/", $data) || 4 < $data )
