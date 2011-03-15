@@ -9,9 +9,14 @@ function usces_guid_tax( $out = '' ){
 	}
 }
 
-function usces_currency_symbol() {
+function usces_currency_symbol( $out = '' ) {
 	global $usces;
-	echo esc_html($usces->getCurrencySymbol());
+
+	if( $out == 'return' ){
+		return $usces->getCurrencySymbol();
+	}else{
+		echo esc_html($usces->getCurrencySymbol());
+	}
 }
 
 function usces_is_error_message() {
@@ -222,6 +227,20 @@ function usces_crcode( $out = '' ) {
 		return $res;
 	}else{
 		echo __($res, 'usces');
+	}
+}
+
+function usces_crsymbol( $out = '', $js = NULL ) {
+	global $usces;
+	$res = $usces->getCurrencySymbol();
+	if( 'js' == $js && '&yen;' == $res ){
+		$res = mb_convert_encoding($res, 'UTF-8', 'HTML-ENTITIES');
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo esc_html($res);
 	}
 }
 

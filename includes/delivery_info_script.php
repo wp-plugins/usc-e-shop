@@ -303,13 +303,13 @@ $html .= "
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 						switch(shortest_delivery_time) {
 						case 0://指定しない 20110106ysk
-							message = date_str+\"".__('からご指定できます。', 'usces')."\";
+							message = " . __("'最短 ' + date_str + ' からご指定いただけます。'", 'usces') . ";
 							break;
 						case 1://午前着可
-							message = date_str+\"".__('の午前中からご指定できます。', 'usces')."\";
+							message = " . __("'最短 ' + date_str + ' の午前中からご指定いただけます。'", 'usces') . ";
 							break;
 						case 2://午前着不可
-							message = date_str+\"".__('の午後からご指定できます。', 'usces')."\";
+							message = " . __("'最短 ' + date_str + ' の午後からご指定いただけます。'", 'usces') . ";
 							break;
 						}
 //20110126ysk start

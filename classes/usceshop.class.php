@@ -5832,7 +5832,10 @@ class usc_e_shop
 	}
 
 	function getCurrencySymbol(){
-		return get_option('usces_currency_symbol');
+		global $usces_settings;
+		$cr = $this->options['system']['currency'];
+		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
+		return $symbol;
 	}
 
 	function getCartItemName($post_id, $sku){

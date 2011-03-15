@@ -1,19 +1,14 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: usconsort\n"
+"Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-5 00:00+0000\n"
 "PO-Revision-Date: \n"
-"Last-Translator: nanbu <nanbu@uscons.co.jp>\n"
-"Language-Team: \n"
+"Last-Translator: usc <nanbu@uscons.co.jp>\n"
+"Language-Team: Nimbus Works, LLC.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Japanese\n"
-"X-Poedit-Country: JAPAN\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-Basepath: wp-content/themes/ucart_default\n"
 
 msgid "This month"
 msgstr "This Month"
@@ -24,17 +19,8 @@ msgstr "Last Month"
 msgid "The past one week"
 msgstr "Past week"
 
-msgid "Last 30 days"
-msgstr "Last 30 days"
-
 msgid "Last 90days"
 msgstr "Last 90 days"
-
-msgid "All"
-msgstr "All"
-
-msgid "Show the Operation field"
-msgstr "Show the Operation field"
 
 msgid "hide the Operation field"
 msgstr "Hide the Operation field"
@@ -45,44 +31,14 @@ msgstr "update to the latest information"
 msgid "Pattern List"
 msgstr "List Pattern"
 
-msgid "Display Search"
-msgstr "Display Search"
-
-msgid "Hide Search"
-msgstr "Hide Search"
-
 msgid "CSV format is invalid!"
 msgstr "Invalid CSV format"
-
-msgid "Published"
-msgstr "Published"
-
-msgid "Draft"
-msgstr "Draft"
-
-msgid "Pending Review"
-msgstr "Pending Review"
-
-msgid "Scheduled"
-msgstr "Scheduled"
-
-msgid "Trash"
-msgstr "Trash"
 
 msgid "Closed"
 msgstr "Unpublished"
 
-msgid "unpaid"
-msgstr "unpaid"
-
-msgid "payment confirmed"
-msgstr "payment confirmed"
-
 msgid "temporaly out of stock"
 msgstr "temporarily out of stock"
-
-msgid "Cancel"
-msgstr "Cancel"
 
 msgid "It has sent it out."
 msgstr "Shipped"
@@ -99,15 +55,6 @@ msgstr "New Order"
 msgid "Welcart shop"
 msgstr "Welcart Shop"
 
-msgid "Home"
-msgstr "Home"
-
-msgid "Master Items"
-msgstr "Master Items"
-
-msgid "Add New Item"
-msgstr "Add New Item"
-
 msgid "General Setting"
 msgstr "Basic Setting"
 
@@ -116,21 +63,6 @@ msgstr "Business Day Setting"
 
 msgid "Shipping Setting"
 msgstr "Shipment Setting"
-
-msgid "E-mail Setting"
-msgstr "E-mail Setting"
-
-msgid "System Setting"
-msgstr "System Setting"
-
-msgid "Backup"
-msgstr "Backup"
-
-msgid "Welcart Management"
-msgstr "Welcart Management"
-
-msgid "Order List"
-msgstr "Order List"
 
 # New Order and Estimate
 msgid "New Order or Estimate"
@@ -219,17 +151,11 @@ msgstr "Item Category"
 msgid "guest"
 msgstr "Guest"
 
-msgid "Sold Out"
-msgstr "Sold Out"
-
 msgid "Out Of Stock"
 msgstr "Out of Stock"
 
 msgid "Out of print"
 msgstr "Discontinued"
-
-msgid "Sorry, this item is sold out."
-msgstr "Sorry, this item is sold out."
 
 msgid "Sorry, stock is insufficient."
 msgstr "Sorry, this item is out of stock."
@@ -288,9 +214,6 @@ msgstr "Dummy Page for Footer Navigation"
 msgid "Dummy page for maine nabigation"
 msgstr "Dummy Page for Main Navigation"
 
-msgid "Items"
-msgstr "Items"
-
 msgid "Items recommended"
 msgstr "Recommended Items"
 
@@ -317,26 +240,11 @@ msgstr "Estimate Number"
 msgid "** content of ordered items **"
 msgstr "** Ordered Items **"
 
-msgid "Unit price"
-msgstr "Unit Price"
-
-msgid "dollars"
-msgstr "Yen"
-
 msgid "total items"
 msgstr "Items Total"
 
 msgid "use of points"
 msgstr "Service Points Accumulated"
-
-msgid "Special Price"
-msgstr "Special Price"
-
-msgid "Shipping"
-msgstr "Shipping"
-
-msgid "C.O.D"
-msgstr "C.O.D."
 
 msgid "consumption tax"
 msgstr "Sales tax"
@@ -363,9 +271,6 @@ msgstr "Phone Number"
 msgid "Delivery Time"
 msgstr "Preferred Delivery Time"
 
-msgid "Delivery Method"
-msgstr "Delivery Method"
-
 msgid "** WE may not always be able to deliver the items on time which you desire."
 msgstr "** Morning Delivery not Available in Some Areas."
 
@@ -390,9 +295,6 @@ msgstr "Sale Price"
 msgid "SKU display name "
 msgstr "SKU Display Name"
 
-msgid "unit"
-msgstr "unit"
-
 msgid "Apply business package"
 msgstr "Apply Business Package"
 
@@ -414,12 +316,6 @@ msgstr "Single-Select"
 msgid "Multi-select"
 msgstr "Multi-Select"
 
-msgid "Text"
-msgstr "Text"
-
-msgid "Required"
-msgstr "Required"
-
 msgid "Add a new option"
 msgstr "Add a New Option"
 
@@ -438,14 +334,8 @@ msgstr "Apply an Option"
 msgid "Add new SKU"
 msgstr "Add New SKU"
 
-msgid "Apply"
-msgstr "Apply"
-
 msgid "Not apply"
 msgstr "Do Not Apply"
-
-msgid "Add SKU"
-msgstr "Add SKU"
 
 msgid "Add a new method forpayment "
 msgstr "Add a New Payment Option"
@@ -468,23 +358,8 @@ msgstr "Please Choose"
 msgid "Business package discount"
 msgstr "Business Package Discount"
 
-msgid "**par 1unit for more than ~"
-msgstr "**per one unit "
-
-msgid "**par 1unit for ~"
-msgstr "**per one unite for"
-
 msgid "size"
 msgstr "Size"
-
-msgid "Price"
-msgstr "Price"
-
-msgid "Add to Shopping Cart"
-msgstr "Add to Shopping Cart"
-
-msgid "Quantity"
-msgstr "Quantity"
 
 msgid "No preference"
 msgstr "No Preference"
@@ -522,14 +397,8 @@ msgstr "Sign In"
 msgid "Log out"
 msgstr "Log Out"
 
-msgid "Export"
-msgstr "Export"
-
 msgid "Start Exporting"
 msgstr "Begin Export"
-
-msgid "Import"
-msgstr "Import"
 
 msgid "Start importing"
 msgstr "Begin Import"
@@ -540,19 +409,8 @@ msgstr "Testing Backup Function"
 msgid "Please set the shipping price"
 msgstr "Please set the shipping price."
 
-msgid "Add"
-msgstr "Add"
-
-msgid "Delete"
-msgstr "Delete"
-
 msgid "update"
 msgstr "Update"
-
-# (JavaScript)
-# "delname" is a delivery method name.
-msgid "Are you sure of deleting the shipping option 'Delname'?"
-msgstr "'Are you sure to delete shipping option ' + delname + ' ?'"
 
 msgid "Not fixing shipping."
 msgstr "Do not fix shipping price."
@@ -565,8 +423,8 @@ msgstr "'Are you sure of deleting shipping ' + delname + '?'"
 # (JavaScript)
 # "charge" is a shipping charge.
 # （Currency correspondence is necessary.）
-msgid "'Are you sure of setting shiping to ' + charge + ' dollars for all the prefecture?'"
-msgstr "'Are you sure to set all prefectural shipping at ' + charge + ' dollars?'"
+msgid "'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'"
+msgstr "'Are you sure to set all prefectural shipping at %s' + charge + '?'"
 
 msgid "shipping option"
 msgstr "Shipping Option"
@@ -649,23 +507,8 @@ msgstr "E-mail sent on temporary basis"
 msgid "change decision"
 msgstr "Change Setting"
 
-msgid "Campaign Schedule"
-msgstr "Campaign Schedule"
-
 msgid "starting time"
 msgstr "Starting Time"
-
-msgid "year"
-msgstr "year"
-
-msgid "month"
-msgstr "month"
-
-msgid "day"
-msgstr "day"
-
-msgid "hour"
-msgstr "hour"
 
 msgid "min"
 msgstr "minute"
@@ -674,7 +517,7 @@ msgid "%2$s/%1$s"
 msgstr "%2$s/%1$s"
 
 msgid "%2$s %3$s, %1$s"
-msgstr "%2$s %3$s, %1$s"
+msgstr "%2$s/%3$s/%1$s"
 
 msgid "date and time of termination"
 msgstr "Date and Time of Termination"
@@ -682,48 +525,11 @@ msgstr "Date and Time of Termination"
 msgid "reserve the period of campaign."
 msgstr "Reserve the period of campaign"
 
-msgid "Business Calendar"
-msgstr "Business Calendar"
-
-# For the calendar widget.
-msgid "Sun"
-msgstr "Sun"
-
-# For the calendar widget.
-msgid "Mon"
-msgstr "Mon"
-
-# For the calendar widget.
-msgid "Tue"
-msgstr "Tue"
-
-# For the calendar widget.
-msgid "Wed"
-msgstr "Wed"
-
-# For the calendar widget.
-msgid "Thu"
-msgstr "Thu"
-
-# For the calendar widget.
-msgid "Fri"
-msgstr "Fri"
-
-# For the calendar widget.
-msgid "Sat"
-msgstr "Sat"
-
 msgid "Working day"
 msgstr "Business Day"
 
-msgid "Holiday for Shipping Operations"
-msgstr "Holiday for Shipping Operations"
-
 msgid "Next month"
 msgstr "Next Month"
-
-msgid "Month after next month"
-msgstr "Month after next month"
 
 msgid "Business settings"
 msgstr "Business Settings"
@@ -746,26 +552,14 @@ msgstr "Campaign Items"
 msgid "This is a category of the objects to add a privilege to in the case of a campaign mode. You can choose a campaign object article freely by installing a 'campaign' category for an article."
 msgstr "Categories of items on campaign mode. You can freely choose campaign items by setting up \"campaign\" category as opposed to regular merchandise."
 
-msgid "Example)"
-msgstr "Example)"
-
 msgid "all the items"
 msgstr "All Items"
 
 msgid "Campaign Award"
 msgstr "Campaign Benefits"
 
-msgid "Points"
-msgstr "Points"
-
-msgid "times"
-msgstr "times"
-
 msgid "'Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers."
 msgstr "'Points' are awarded only for members by nominating the added ratio of points.<br />'Discount' apply to all customers with specified discount rates."
-
-msgid "%"
-msgstr "%"
 
 msgid "Configuration of management and display mode of shop."
 msgstr "Configuration of the shop's display mode and/or management method."
@@ -902,26 +696,14 @@ msgstr "payment method"
 msgid "** Payment method **"
 msgstr "** payment method **"
 
-msgid "<em>[Required]</em>possible payment method"
-msgstr "<em>[Required]</em>possible payment method"
-
-msgid "Common Options"
-msgstr "Common Options"
-
 msgid "Conditions which will be selected at the purchase. You can use the options which you hve registered here, as an option in the master items."
 msgstr "Condition selected for purchase. Options registered here can be used as master option."
-
-msgid "Special Benefits"
-msgstr "Special Benefits"
 
 msgid " times (limited to members)"
 msgstr "times (members only)"
 
 msgid "applied material"
 msgstr "Applied Material"
-
-msgid "Period"
-msgstr "Period"
 
 msgid "Cart page"
 msgstr "Cart Page"
@@ -944,9 +726,6 @@ msgstr "Number of Order"
 msgid "amount of order"
 msgstr "Price of Order"
 
-msgid "today"
-msgstr "today"
-
 msgid "Same date in last year"
 msgstr "Same Month Last Year"
 
@@ -959,41 +738,20 @@ msgstr "Number of Items"
 msgid "SKU total number"
 msgstr "Total SKU"
 
-msgid "In Stock"
-msgstr "In Stock"
-
-msgid "OK"
-msgstr "OK"
-
 msgid "List of items without stock"
 msgstr "List of Items without Stock"
 
 msgid "Your environment"
 msgstr "Your Environment"
 
-msgid "Software Version"
-msgstr "Software Version"
-
-msgid "Server"
-msgstr "Server"
-
 msgid "Safe mode"
 msgstr "Safe Mode"
-
-msgid "Amount"
-msgstr "Amount"
 
 msgid "Used points"
 msgstr "Used Points"
 
 msgid "Campaign disnount"
 msgstr "Campaign Discount"
-
-msgid "Disnount"
-msgstr "Discount"
-
-msgid "Total Amount"
-msgstr "Total Amount"
 
 msgid "The current point"
 msgstr "Current Points"
@@ -1012,9 +770,6 @@ msgstr "Family Name"
 
 msgid "Given name"
 msgstr "Given Name"
-
-msgid "furigana"
-msgstr "furigana"
 
 msgid "Province"
 msgstr "Prefecture"
@@ -1049,9 +804,6 @@ msgstr "Item Image"
 msgid "This excerpt is a summary of the product description."
 msgstr "This excerpt is a summary of product description."
 
-msgid "Back"
-msgstr "Back"
-
 msgid "item code"
 msgstr "Item Code"
 
@@ -1066,9 +818,6 @@ msgstr "Limit for Purchase"
 
 msgid "Percentage of points"
 msgstr "Ratio of Points Earned"
-
-msgid "Integer"
-msgstr "Integer"
 
 # %s is a entry field
 msgid "limit by%s%s%s"
@@ -1114,17 +863,11 @@ msgstr "Direct Deposit (Pre-Payment)"
 msgid "Transfer (postpay)"
 msgstr "Direct Deposit (Post-Payment)"
 
-msgid "COD"
-msgstr "COD"
-
 msgid "COD fee"
 msgstr "COD Charge"
 
 msgid "During the campaign"
 msgstr "Campaign Underway"
-
-msgid "Under Maintenance"
-msgstr "Under Maintenance"
 
 msgid "-- Select --"
 msgstr "--Select--"
@@ -1180,9 +923,6 @@ msgstr "[Confirmation of Your Order Change]"
 msgid "Confirmation mail for your transfer"
 msgstr "[Confirmation of Your Payment]"
 
-msgid "Estimate"
-msgstr "Estimate"
-
 msgid "Confirmatin of your cancellation"
 msgstr "[Confirmation of Order Cancellation]"
 
@@ -1231,9 +971,6 @@ msgstr "We received your payment."
 msgid "We will send you following estimate for your items."
 msgstr "Please check your estimate as follows."
 
-msgid "This estimate is valid for one week."
-msgstr "This estimate is valid for one week."
-
 msgid "We have received your cancellationfor your order."
 msgstr "We received the cancellation of your order."
 
@@ -1242,9 +979,6 @@ msgstr "Zip Code"
 
 msgid "contact"
 msgstr "Contact"
-
-msgid "Categories"
-msgstr "Categories"
 
 msgid "Registration date"
 msgstr "Registration Date"
@@ -1257,9 +991,6 @@ msgstr "Make sure to \"update\" your order when you make a change."
 
 msgid "membership number"
 msgstr "Membership Number"
-
-msgid "Rank"
-msgstr "Rank"
 
 msgid "name"
 msgstr "Name"
@@ -1329,9 +1060,6 @@ msgstr "Cancellation Mail"
 msgid "Other mail"
 msgstr "Other Mail"
 
-msgid "E-mail has been sent."
-msgstr "E-mail has been sent."
-
 msgid "Failure in sending e-mails."
 msgstr "Fail to send mail."
 
@@ -1386,12 +1114,6 @@ msgstr "Regular Sale"
 msgid "Sale Campaign"
 msgstr "Campaign Sales"
 
-msgid "% Discount"
-msgstr "% Discount"
-
-msgid "Notes"
-msgstr "Notes"
-
 msgid "Current stock"
 msgstr "Current Stock"
 
@@ -1410,9 +1132,6 @@ msgstr "*Will not be calculated automatically."
 msgid "Enter the item code, then press 'Obtain'"
 msgstr "Enter Item Code then Press \"Obtain.\""
 
-msgid "Obtain"
-msgstr "Obtain"
-
 msgid "Check the mail and click 'send'"
 msgstr "Check the mail and click \"send.\""
 
@@ -1427,9 +1146,6 @@ msgstr "Send"
 
 msgid "date"
 msgstr "Date"
-
-msgid "Region"
-msgstr "Region"
 
 msgid "Processing"
 msgstr "Processing Situation"
@@ -1485,9 +1201,6 @@ msgstr "Date of Order Received"
 
 msgid "payment division"
 msgstr "Payment Division="
-
-msgid "Mj, Y"
-msgstr "month date, year"
 
 msgid "Edit item"
 msgstr "Edit Item Information"
@@ -1558,9 +1271,6 @@ msgstr "Go to Product Details"
 msgid "Visit/Contact Us"
 msgstr "Contact Us"
 
-msgid "Item Category"
-msgstr "Item Category"
-
 msgid "artist"
 msgstr "Artist"
 
@@ -1573,25 +1283,13 @@ msgstr "Bestseller"
 msgid "diary"
 msgstr "Diary"
 
-msgid "Information"
-msgstr "Information"
-
 msgid "Product Search"
 msgstr "Product Details Search"
-
-msgid "Categories: AND Search"
-msgstr "Categories: AND Search"
 
 msgid "Search"
 msgstr "Start Search"
 
-msgid "Cancellation"
-msgstr "Cancellation"
-
 msgid "Search results"
-msgstr "Search Results"
-
-msgid "Search Results"
 msgstr "Search Results"
 
 msgid "&laquo; Previous page"
@@ -1606,17 +1304,8 @@ msgstr "Next Article &raquo;"
 msgid "&laquo; Previous article"
 msgstr "&laquo; Previous Article"
 
-msgid "Cart"
-msgstr "Cart"
-
-msgid "Customer Information"
-msgstr "Customer Information"
-
 msgid "Shipping / Payment options"
 msgstr "Shipping/Payment Options"
-
-msgid "Confirmation"
-msgstr "Confirmation"
 
 msgid "continue shopping"
 msgstr "Continue Shopping"
@@ -1626,9 +1315,6 @@ msgstr "Enter above customer information."
 
 msgid "It has been sent succesfully."
 msgstr "Sent Successfully"
-
-msgid "Thank you for shopping."
-msgstr "Thank you for shopping."
 
 msgid "If you have any questions, please contact us by 'Contact'."
 msgstr "If you have any questions, please contace by \"Contact.\""
@@ -1642,9 +1328,6 @@ msgstr "Back to Payment Method Page"
 msgid "Shipping address information"
 msgstr "Shipping Address Information"
 
-msgid "Others"
-msgstr "Others"
-
 msgid "Sipping/Payment Option"
 msgstr "Shipping/Payment Option"
 
@@ -1657,9 +1340,6 @@ msgstr "Choose another shipping address."
 msgid "Confirm your order."
 msgstr "Confirm Your Order"
 
-msgid "Your order has not been completed"
-msgstr "Your order has not been completed."
-
 msgid "Thank you for contacting us. Please wait for our answer to your questions."
 msgstr "Thank you for contacting us. Please give us time to answer your question."
 
@@ -1668,9 +1348,6 @@ msgstr "Password"
 
 msgid "Password (confirm)"
 msgstr "Password (for confirmation)"
-
-msgid "Register"
-msgstr "Register"
 
 msgid "Thank you in new membership."
 msgstr "Thank you for becoming a member."
@@ -1695,9 +1372,6 @@ msgstr "Member Log-in"
 
 msgid "New enrollment for membership."
 msgstr "Enroll as New Member Here"
-
-msgid "Membership Registration"
-msgstr "Membership Registration"
 
 msgid "Obtain new password"
 msgstr "Create New Password"
@@ -1744,14 +1418,12 @@ msgstr "Next Item"
 msgid "previous item"
 msgstr "Previous Item"
 
-msgid "〜in not yet registered"
-msgstr "〜 has not been registered."
+# 20110212
+msgid "in not yet registered"
+msgstr " has not been registered."
 
 msgid "Data for this date is not yet registered."
 msgstr "Data for this date has not been registered."
-
-msgid "Data by　〜is not yet registered."
-msgstr "Data by 〜 has not been registered."
 
 msgid "next article"
 msgstr "Next Article"
@@ -1782,9 +1454,6 @@ msgstr "See Details"
 
 msgid "page title"
 msgstr "Page Title"
-
-msgid "Cart Page Setting"
-msgstr "Cart Page Setting"
 
 msgid "Explanation in a Cart page"
 msgstr "Description attached to Cart Page."
@@ -1818,12 +1487,6 @@ msgstr "You can set additional description to be inserted to Completion page."
 
 msgid "Explanation in Member page"
 msgstr "Description to be inserted to Membership-related page."
-
-msgid "Member Page Setting"
-msgstr "Member Page Setting"
-
-msgid "Login Page"
-msgstr "Login Page"
 
 msgid "header"
 msgstr "Header"
@@ -1879,9 +1542,6 @@ msgstr "Obtain New Password"
 msgid "Please, click the following URL, and please change a password."
 msgstr "Change your password by clicking the URL below."
 
-msgid "I seem to have you cancel it when the body does not have memorizing to this email."
-msgstr "If you received this e-mail by mistake, please disregard."
-
 msgid "Error: I was not able to transmit an email."
 msgstr "Error: E-mail Not Sent"
 
@@ -1915,9 +1575,6 @@ msgstr "Description to be inserted to the Member Information page."
 msgid "You can set additional explanation to insert in a member information page."
 msgstr "You can set additional description to be inserted to the Member Information page."
 
-msgid "Did you forget your password?"
-msgstr "Did you forget your password?"
-
 msgid "memorize login information"
 msgstr "Retain Login Information"
 
@@ -1942,23 +1599,11 @@ msgstr "Regular Business"
 msgid "I send a reply email to a visitor. I ask in a few minutes to be able to have you refer in there being the fear that e-mail address is different again when the email from this shop does not arrive."
 msgstr "Sending reply e-mail to the customer. If you don't hear from the store for a while, please contact us again, since we might have the wrong e-mail address."
 
-msgid "<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s"
-msgstr "<span class=%6$s>%5$s%1$s</span>%2$s per 1%3$s for more than %4$s%3$s"
-
 msgid "<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s"
 msgstr "At %4$s~%5$s%3$s, <span class=%7$s>%6$s%1$s</span>%2$s per1%3$s"
 
-msgid "$"
-msgstr "$"
-
 msgid "cases"
 msgstr "Casese"
-
-msgid "Completion"
-msgstr "Completion"
-
-msgid "Error"
-msgstr "Error"
 
 msgid "'AND' search by categories"
 msgstr "AND search by categories"
@@ -2087,9 +1732,6 @@ msgstr "Order E-mail (auto send)"
 msgid "Inquiry receptionist email(automatic transmission)"
 msgstr "Inquiry Acknowledgement E-mail (auto send)"
 
-msgid "Title"
-msgstr "Title"
-
 msgid "This is an email transmitting a message for a visitor at the time of an order."
 msgstr "E-mail sent to customers at the time of an order."
 
@@ -2117,9 +1759,6 @@ msgstr "In case of loop display, show items separately."
 msgid "In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item."
 msgstr "When loop display at the shop shows multiple articles, set if you let the item information show."
 
-msgid "rel attribute"
-msgstr "rel attribute"
-
 msgid "In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin."
 msgstr "In item details page, you can set rel attributes to show images with plug-ins such as Lightbox."
 
@@ -2137,9 +1776,6 @@ msgstr "Choosing which catogory to sort in multiple-search page."
 
 msgid "compound category sort order"
 msgstr "Multiple category sort order"
-
-msgid "Ascending"
-msgstr "Ascending"
 
 msgid "Descendin"
 msgstr "Descending"
@@ -2159,17 +1795,11 @@ msgstr "Hierarchy category of the item"
 msgid "Postage individual charging"
 msgstr "Individual postage charge"
 
-msgid "Options for EX-plugin"
-msgstr "Options for EX-plugin"
-
 msgid "Push 'change decision' button, to be settled with an order number."
 msgstr "Settle order number by pressing 'change setting'."
 
 msgid "Order number"
 msgstr "Order Number"
-
-msgid "Status"
-msgstr "Status"
 
 msgid "estimate order"
 msgstr "Estimate Order"
@@ -2186,20 +1816,8 @@ msgstr "Display will be updated after the upload is completed."
 msgid "Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload."
 msgstr "See（usc-e-shop/logs/itemcsv_log.txt）for registration progress. <br /> Log will be updated for each upload."
 
-msgid "IPN Start"
-msgstr "IPN Start"
-
-msgid "IPN Connection Error"
-msgstr "IPN Connection Error"
-
-msgid "PDT Refusal"
-msgstr "PDT Refusal"
-
-msgid "IPN Refusal"
-msgstr "IPN Refusal"
-
 msgid "PayPal gives back 'FAIL'. Please confirm setting."
-msgstr "PayPal returned 'FAIL.\" Please check the setting."
+msgstr "PayPal returned \"FAIL.\" Please check the setting."
 
 msgid "<p>The settlement is not completed.<br />Please remit the price from the PayPal Maia count page.After receipt of money confirmation, I will prepare for the article shipment.</p>"
 msgstr "<p>The payment is not completed. <br />Send payment from PayPal account page. We will ship the items after the payment is confirmed.</p>"
@@ -2207,14 +1825,9 @@ msgstr "<p>The payment is not completed. <br />Send payment from PayPal account 
 msgid "Checkout"
 msgstr "Check out with above."
 
-msgid "and others"
-msgstr "and others"
-
-# 全角
 msgid "The member please enter at here."
 msgstr "Members enter here."
 
-# 全角
 msgid "The nonmember please enter at here."
 msgstr "Non-members enter here."
 
@@ -2263,9 +1876,6 @@ msgstr "Display Hand-written List"
 msgid "Please input an article cord."
 msgstr "Please input Item Code."
 
-msgid "Calendar"
-msgstr "Calendar"
-
 msgid "The setting of the business day, In a 'business day setting' page of the admin screen."
 msgstr "You can set business days in 'Business Day Setting' page in Welcart Shop."
 
@@ -2281,17 +1891,8 @@ msgstr "Handling of Lost Password"
 msgid "Lost your password?"
 msgstr "Did you forget your password?"
 
-msgid "Remember Me"
-msgstr "Remember Me"
-
-msgid "Page"
-msgstr "Page"
-
 msgid "Page ID(comma separate)"
 msgstr "Page ID (separate multiple pages with comma)"
-
-msgid "Post"
-msgstr "Post"
 
 msgid "The article was not found."
 msgstr "Item Not Found"
@@ -2383,9 +1984,6 @@ msgstr "*Please note if you change/delete shipment method after item registratio
 msgid "* Please register an item, after you finished delivery setting!"
 msgstr "*Please register items after you set the shipment setting!"
 
-msgid "[ASC]"
-msgstr "[ASC]"
-
 msgid "[DESC]"
 msgstr "[DES]"
 
@@ -2394,9 +1992,6 @@ msgstr "*"
 
 msgid "ERROR: I was not able to complete collective operation"
 msgstr "Error: Could not finish command."
-
-msgid "*"
-msgstr "*"
 
 msgid "Kitakami Yokohama"
 msgstr "Kitakami-cho, Yokohama"
@@ -2407,32 +2002,17 @@ msgstr "Tsuhan Bldg. 4 Fl"
 msgid "numeric"
 msgstr "Numeric"
 
-msgid "Header Navigation"
-msgstr "Header Navigation"
-
-msgid "Sidebar Navigation"
-msgstr "Sidebar Navigation"
-
-msgid "Footer Navigation"
-msgstr "Footer Navigation"
-
 msgid "Please be settled for a fee in spite of Update."
 msgstr "Please set handling fee by pressing 'renew.'"
 
 msgid "Type of the fee"
 msgstr "Type of Fee"
 
-msgid "Fee"
-msgstr "Fee"
-
 msgid "A purchase amount"
 msgstr "Purchase Amount"
 
 msgid "Fixation C.O.D."
 msgstr "Fixed C.O.D."
-
-msgid "Variable C.O.D."
-msgstr "Variable C.O.D."
 
 msgid "Add row"
 msgstr "Add Row"
@@ -2455,20 +2035,11 @@ msgstr "Page ID of Contact Form"
 msgid "When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry."
 msgstr "If you want to use Welcart contact form through SSL, choose that page_id. Above SSl must be set. <br />Leave it blank if SS> is not necessary.<br />If using permaline, the page must bu usces-inquiry."
 
-msgid "Tags:"
-msgstr "Tags:"
-
 msgid "Comments Closed"
 msgstr "Comments Closed."
 
 msgid "Posted in %s"
 msgstr "Category: %s"
-
-msgid "No Comments &#187;"
-msgstr "No Comments &#187;"
-
-msgid "1 Comment &#187;"
-msgstr "1 Comment &#187;"
 
 msgid "Posts Tagged &#8216;%s&#8217;"
 msgstr "Posts Tagged to &#8216;%s&#8217;"
@@ -2560,300 +2131,34 @@ msgstr "Continuing Charge"
 msgid "Termination"
 msgstr "Stop Charging"
 
-msgid "Setting"
-msgstr "Setting"
-
 msgid "Text-area"
 msgstr "Text-Area"
 
-#~ msgid "M j, Y"
-#~ msgstr "Y-m-d"
-#~ msgid "Header Information"
-#~ msgstr "ヘッダ情報"
-#~ msgid "Product Information"
-#~ msgstr "商品情報"
-#~ msgid "Order Infomation"
-#~ msgstr "受注情報"
-#~ msgid "Download"
-#~ msgstr "ダウンロード"
-#~ msgid "Download Member List"
-#~ msgstr "会員データ出力"
-#~ msgid "Download Product List"
-#~ msgstr "受注明細リスト出力"
-#~ msgid "Download Order List"
-#~ msgstr "受注リスト出力"
-#~ msgid "delete it"
-#~ msgstr "会員情報を削除する"
-#~ msgid "All information about the member is deleted. Are you all right?"
-#~ msgstr "会員に関する全ての情報が削除されます。よろしいですか？"
-#~ msgid "This article is limited by %d at a time."
-#~ msgstr "この商品は一度に %d までの数量制限が有ります。"
-#~ msgid "Enter the correct amount for the No.%d item."
-#~ msgstr "%d番の商品の数量を正しく入力して下さい。"
-#~ msgid "This article is limited by %1$d at a time for the No.%2$d item."
-#~ msgstr "%2$d番の商品は一度に %1$d までの数量制限が有ります。"
-#~ msgid "Stock of No.%1$d item is remainder %2$d."
-#~ msgstr "%1$d番の商品の在庫は残り %2$d です。"
-#~ msgid "Sorry, No.%d item is sold out."
-#~ msgstr "恐れ入りますが、%d番の商品は売り切れました。"
-#~ msgid "The language of the front-end"
-#~ msgstr "フロントエンドの言語"
-#~ msgid ""
-#~ "You can choose the language of the front-end.The language of the admin "
-#~ "panel obeys config.php."
-#~ msgstr ""
-#~ "フロントエンドの言語を選択できます。管理パネルの方はconfig.php の設定に従"
-#~ "います。"
-#~ msgid "Order of SKU"
-#~ msgstr "商品SKUの並び順"
-#~ msgid "Order of Item options"
-#~ msgstr "商品オプションの並び順"
-#~ msgid ""
-#~ "You can appoint equal thing order of SKU. When I want to make it "
-#~ "registered order, choose 'Registration Order'. The initial state becomes "
-#~ "'SKU cord Order'."
-#~ msgstr ""
-#~ "商品SKUの並び順を指定します。登録されている順にしたい場合は「登録順」を選"
-#~ "択します。初期状態は「SKUコード順」となっています。"
-#~ msgid ""
-#~ "You can appoint a common option and the equal thing order of the item "
-#~ "option. When You want to make it registered order, choose 'Registration "
-#~ "Order'. The initial state becomes 'Optional excellent Order'."
-#~ msgstr ""
-#~ "共通オプション及び商品オプションの並び順を指定します。登録されている順にし"
-#~ "たい場合は「登録順」を選択します。初期状態は「オプション名順」となっていま"
-#~ "す。"
-#~ msgid "Registration Order"
-#~ msgstr "登録順"
-#~ msgid "Optional excellent Order"
-#~ msgstr "オプション名順"
-#~ msgid "SKU cord Order"
-#~ msgstr "SKUコード順"
-#~ msgid "Download Item List"
-#~ msgstr "商品データ出力"
-#~ msgid "excerpt"
-#~ msgstr "抜粋"
-#~ msgid "Field type"
-#~ msgstr "フィールドタイプ"
-#~ msgid "No COD"
-#~ msgstr "代引き不可"
-#~ msgid "Registration start"
-#~ msgstr "登録開始"
-#~ msgid "Choose the file format, and push the download."
-#~ msgstr "出力したい形式を選択して、ダウンロードを押してください。"
-#~ msgid "Not yet ready for the payment method. Please refer to a manager."
-#~ msgstr ""
-#~ "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
+msgid "Period(months)"
+msgstr "Contract Period (Months)"
 
-# 領収書のメッセージ
-#~ msgid " Your payment has been received."
-#~ msgstr " Your payment has been received."
-# 請求書のメッセージ
-#~ msgid "Please remit payment at your earliest convenience."
-#~ msgstr "Please remit payment at your earliest convenience."
-# 各証書の購入明細のタイトル
-#~ msgid "Statement"
-#~ msgstr "Statement"
-# お客様が法人だった場合の担当者ラベル
-#~ msgid "Attn: :"
-#~ msgstr "Attn: :"
-# 領収書タイトル
-#~ msgid "Receipt"
-#~ msgstr "Receipt"
-# 請求書タイトル
-#~ msgid "Invoice"
-#~ msgstr "Invoice"
-#~ msgid "Period(months)"
-#~ msgstr "契約期間（月数）"
-#~ msgid "% Comments &#187;"
-#~ msgstr "コメント %件 &#187;"
-#~ msgid "〜％ discount at the purchase of more then 〜units."
-#~ msgstr "〜個以上で〜％引き（単価）"
-#~ msgid "Only few stocks left for this item."
-#~ msgstr "在庫僅少"
-#~ msgid "Sellout"
-#~ msgstr "売切れ"
-#~ msgid "Temporarily out of stock"
-#~ msgstr "入荷待ち"
-#~ msgid "(Tax included)"
-#~ msgstr "（税込）"
-#~ msgid "Special discount"
-#~ msgstr "特別割引"
-#~ msgid "current month"
-#~ msgstr "今月"
-#~ msgid "OK-stocks"
-#~ msgstr "在庫有り"
-#~ msgid "h"
-#~ msgstr "時"
-#~ msgid "new item"
-#~ msgstr "新着商品"
-#~ msgid "cart"
-#~ msgstr "カート"
-#~ msgid "chose the value"
-#~ msgstr "valueを選択してください。"
-#~ msgid "<em>【必須】</em>メールが不達の場合のエラーメールの送信先。"
-#~ msgstr "<em>【必須】</em>メールが不達の場合のエラーメールの送信先。"
-#~ msgid "new arrival"
-#~ msgstr "新着商品"
-#~ msgid "〜yen"
-#~ msgstr "円"
-#~ msgid "number of the stock"
-#~ msgstr "在庫"
-#~ msgid "uCart back-up"
-#~ msgstr "uCart shop バックアップ"
-#~ msgid "Start Start importing"
-#~ msgstr "インポート開始"
-#~ msgid "yen"
-#~ msgstr "円"
-#~ msgid "uCart shop shipping option"
-#~ msgstr "uCart shop 配送設定"
-#~ msgid "edit the setting"
-#~ msgstr "設定を更新"
-#~ msgid "set the uCart buisiness days"
-#~ msgstr "uCart shop 営業日設定"
-#~ msgid "general setting of ucart shop"
-#~ msgstr "uCart shop 基本設定"
-#~ msgid "Home for uCart shop"
-#~ msgstr "uCart shop ホーム"
-#~ msgid "item amount"
-#~ msgstr "商品数"
-#~ msgid "There are stocks for this item."
-#~ msgstr "在庫有り"
-#~ msgid "MySQL"
-#~ msgstr "MySQL"
-#~ msgid "PHP"
-#~ msgstr "PHP"
-#~ msgid "Total items"
-#~ msgstr "商品合計"
-#~ msgid "e-mail address(confirmation)"
-#~ msgstr "メールアドレス（再入力）"
-#~ msgid "[]"
-#~ msgstr "【】"
-#~ msgid "SKU"
-#~ msgstr "ＳＫＵ"
-#~ msgid "Update Confirmed"
-#~ msgstr "更新確定"
-#~ msgid "Your current PT"
-#~ msgstr "保有PT"
-#~ msgid "Building name"
-#~ msgstr "ビル名"
-#~ msgid "points"
-#~ msgstr "獲得ポイント"
-#~ msgid "A list of uCart management members."
-#~ msgstr "uCart management 会員リスト"
-#~ msgid "Search Items"
-#~ msgstr "検索項目"
-#~ msgid "Bank transfer"
-#~ msgstr "銀行振り込み"
-#~ msgid "edit the uCart management order data"
-#~ msgstr "uCart management 受注データ編集"
-#~ msgid "on sale"
-#~ msgstr "通常セール"
-#~ msgid "〜times more. Limited to members."
-#~ msgstr "〜倍、会員のみ"
-#~ msgid "A list of received order for uCart management"
-#~ msgstr "uCart management 受注リスト"
-#~ msgid "mmddyyyy"
-#~ msgstr "Y年m月d日"
-#~ msgid "edit information of uCart shop items"
-#~ msgstr "uCart shop 商品情報編集"
-#~ msgid "Previous page"
-#~ msgstr "前のページ"
-#~ msgid "next page"
-#~ msgstr "次のページ"
-#~ msgid "inside of the cart"
-#~ msgstr "カートの中身"
-#~ msgid "To 〜"
-#~ msgstr "〜様"
-#~ msgid "** A password change **"
-#~ msgstr "パスワード変更"
-#~ msgid ""
-#~ "Than you for registrating as 'blog name' membership. You can chek your "
-#~ "purchase status at section 'membership information'."
-#~ msgstr ""
-#~ "この度はblognameの会員にご登録下さいまして誠に有難うございます。「会員情"
-#~ "報」にて商品ご購入の履歴が確認できます。"
-#, fuzzy
-#~ msgid "We will inform you by e-mail when we are ready to send you items."
-#~ msgstr ""
-#~ "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしく"
-#~ "お願いいたします。"
-#~ msgid ""
-#~ "Thank you for chosing 'blogname'. We have received following e-mail. We "
-#~ "will contact you by e-mail soon."
-#~ msgstr ""
-#~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお問合"
-#~ "せをお受けいたしました。準備ができ次第、メールにてご返答させていただきま"
-#~ "す。しばらくお待ちください。"
-#~ msgid ""
-#~ "Thank you for chosing 'blogname'. You have changed your order as "
-#~ "following. We will inform you by e-mail when we are ready to send your "
-#~ "items."
-#~ msgstr ""
-#~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りご注文"
-#~ "内容を変更いたしましたのでご確認をお願いいたします。商品の準備ができ次第、"
-#~ "メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
-#~ msgid ""
-#~ "Thank you for chosing 'blogname'. Your transfer have been made "
-#~ "successfully. We will inform you by e-mail when we are ready to send you "
-#~ "items."
-#~ msgstr ""
-#~ "この度はblognameをご利用下さいまして誠に有難うございます。ご入金の確認がで"
-#~ "きましたのでご連絡いたします。商品の準備ができ次第、メールにて発送のご案内"
-#~ "をさせていただきます。よろしくお願いいたします。"
-#~ msgid ""
-#~ "Thank you for chosing 'blogname'. We will send you following estimate for "
-#~ "your items. This estimate is valid for one week. "
-#~ msgstr ""
-#~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお見積"
-#~ "りいたしましたのでご確認をお願いいたします。お見積りの有効期限は一週間と"
-#~ "なっております。よろしくお願いいたします。"
-#~ msgid "Thank you for chosing 'blogname'."
-#~ msgstr "この度はblognameをご利用下さいまして誠に有難うございます。"
-#~ msgid "TEL"
-#~ msgstr "TEL"
-#~ msgid "FAX"
-#~ msgstr "FAX"
-#~ msgid "Sales tax"
-#~ msgstr "消費税"
-#~ msgid "about three weeks later"
-#~ msgstr "約3週間後"
-#~ msgid "** estimate **"
-#~ msgstr "お見積り書"
-#~ msgid "〜pt"
-#~ msgstr "〜pt"
-#~ msgid "Yen"
-#~ msgstr "円"
-#~ msgid "〜Point"
-#~ msgstr "〜ポイント"
-#~ msgid "〜%"
-#~ msgstr "〜%"
-#~ msgid "adds new items"
-#~ msgstr "新規商品追加"
-#~ msgid "Stock status"
-#~ msgstr "在庫ステータス"
+msgid "Sellout"
+msgstr "Sold Out"
 
-#, fuzzy
-#~ msgid "e-mail set up"
-#~ msgstr "メール設定"
-#~ msgid "【estimate】"
-#~ msgstr "【お見積り】"
-#~ msgid "Data by"
-#~ msgstr "〜による"
-#~ msgid "is not yet registered."
-#~ msgstr "〜はまだ登録されていません。"
-#~ msgid "par"
-#~ msgstr "あたり"
-#~ msgid "A buyer"
-#~ msgstr "ご購入者"
-#~ msgid "An order number"
-#~ msgstr "注文番号"
-#~ msgid "An order email"
-#~ msgstr "受注明細"
-#~ msgid "I ask."
-#~ msgstr "お願いいたします。"
-#~ msgid "I completed collective operation."
-#~ msgstr "一括操作を完了しました。"
-#~ msgid "ken"
-#~ msgstr "件"
+# 20110212
+msgid "Data by"
+msgstr "Data by "
+
+# 20110212
+msgid "is not yet registered."
+msgstr " is not yet registered."
+
+msgid "par"
+msgstr "per"
+
+msgid "An order email"
+msgstr "Order Detail"
+
+msgid "I completed collective operation."
+msgstr "Completed All Operation"
+
+#~ msgid ""
+#~ "I seem to have you cancel it when the body does not have memorizing to "
+#~ "this email."
+#~ msgstr "If you received this e-mail by mistake, please disregard."
 

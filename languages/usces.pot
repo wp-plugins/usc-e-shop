@@ -544,11 +544,13 @@ msgstr "配送方法「delname」を削除します。よろしいですか？"
 msgid "Not fixing shipping."
 msgstr "送料を固定しない"
 
+# JavaScript
 msgid "'Are you sure of deleting shipping [' + delname + ']?'"
 msgstr "'送料「'+delname+'」を削除します。よろしいですか？'"
 
-msgid "'Are you sure of setting shiping to ' + charge + ' dollars for all the prefecture?'"
-msgstr "'各都道府県の送料を' + charge + '円に一括設定します。よろしいですか？'"
+# JavaScript
+msgid "'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'"
+msgstr "'各都道府県の送料を%s' + charge + 'に一括設定します。よろしいですか？'"
 
 msgid "shipping option"
 msgstr "配送方法"
@@ -1841,8 +1843,14 @@ msgstr "新パスワード取得"
 msgid "Please, click the following URL, and please change a password."
 msgstr "下記のURLをクリックしてパスワードの変更を行ってください。"
 
-msgid "I seem to have you cancel it when the body does not have memorizing to this email."
+msgid "If you have not requested this email please kindly ignore and delete it."
 msgstr "このメールに見に覚えが無い場合は破棄していただきますようお願いいたします。"
+
+msgid "If you have not requested this email please kindly ignore and delete it."
+msgstr ""
+
+msgid "If you have not requested this email please kindly ignore and delete it."
+msgstr ""
 
 msgid "Error: I was not able to transmit an email."
 msgstr "エラー：　メールを送信できませんでした"
@@ -2752,10 +2760,27 @@ msgid ""
 msgstr "この送料を適用する国を選択してください。"
 
 msgid ""
+msgstr "配送可能な時間帯を入力します。お客様に時間帯を選択させない場合は空白にします。<br />例）<br />午前中"
+
+msgid ""
 msgstr "配達日数"
 
 msgid ""
-msgstr "配達日数名"
+msgstr "配送希望日を利用しない"
+
+msgid ""
+msgstr "下の配達日数設定で登録した配達日数名を選択します。最短配送日を算出するために使用します。お客様に配送希望日を選択させない場合は「配送希望日を利用しない」を指定します。"
+
+msgid ""
+msgstr "代引き支払いができない場合はチェックを入れます。"
+
+# JavaScript
+msgid ""
+msgstr "'配達日数設定「' + delname + '」を削除してもよろしいですか?'"
+
+# JavaScript
+msgid ""
+msgstr "'配達日数を全て ' + days + ' 日に変更してもよろしいですか?"
 
 #　System Setting Page　#########################
 msgid ""
@@ -2856,3 +2881,15 @@ msgstr "ご利用のサーバーに「OpenSSL」モジュールがインスト�
 msgid ""
 msgstr "出力したい項目を選択して、ダウンロードを押してください。"
 
+#　Front Shipping/Payment Options Page #########################
+# JavaScript
+msgid ""
+msgstr "'最短 ' + date_str + ' からご指定いただけます。'"
+
+# JavaScript
+msgid ""
+msgstr "'最短 ' + date_str + ' の午前中からご指定いただけます。'"
+
+# JavaScript
+msgid ""
+msgstr "'最短 ' + date_str + ' の午後からご指定いただけます。'"

@@ -539,7 +539,7 @@ function usces_lostmail($url) {
 	$message = __('Please, click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
 			. $url . "\n\r\n\r\n\r"
 			. "-----------------------------------------------------\n\r"
-			. __('I seem to have you cancel it when the body does not have memorizing to this email.','usces') . "\n\r"
+			. __('If you have not requested this email please kindly ignore and delete it.','usces') . "\n\r"
 			. "-----------------------------------------------------\n\r\n\r\n\r"
 			. apply_filters('usces_filter_lostmail_footer', $mail_data['footer']['othermail']);
 

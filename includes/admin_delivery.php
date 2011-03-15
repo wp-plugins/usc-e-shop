@@ -382,9 +382,9 @@ jQuery(function($){
 		make_delivery_method_days : function(selected) {
 			var option = '<select name="delivery_method_days" id="delivery_method_days">'+"\n";
 			if(selected === -1){
-				option += '<option value="-1" selected="selected"><?php _e('Not appoint the delivery days.', 'usces'); ?></option>'+"\n";
+				option += '<option value="-1" selected="selected"><?php _e('配送希望日を利用しない', 'usces'); ?></option>'+"\n";
 			}else{
-				option += '<option value="-1"><?php _e('Not appoint the delivery days.', 'usces'); ?></option>'+"\n";
+				option += '<option value="-1"><?php _e('配送希望日を利用しない', 'usces'); ?></option>'+"\n";
 			}
 			for(var i=0; i<delivery_days.length; i++){
 				if(selected === delivery_days[i]['id']){
@@ -629,11 +629,12 @@ jQuery(function($){
 		allCharge : function () {
 			var charge = $("#allcharge").val();
 			if(charge == '') return;
-			confirm(<?php _e("'Are you sure of setting shiping to ' + charge + ' dollars for all the prefecture?'", 'usces'); ?>);
-			for(var i=0; i<pref.length; i++){
-				$("input[name='shipping_charge_value\[" + pref[i] + "\]']").val(charge);
+			if( confirm(<?php echo sprintf(__("'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'", 'usces'), esc_js(usces_crsymbol('return', 'js'))); ?>) ){
+				for(var i=0; i<pref.length; i++){
+					$("input[name='shipping_charge_value\[" + pref[i] + "\]']").val(charge);
+				}
+				$("#allcharge").val("");
 			}
-			$("#allcharge").val("");
 		},
 		
 //20101208ysk start
@@ -737,7 +738,7 @@ jQuery(function($){
 		
 		delete_delivery_days : function() {
 			var delname = $("#delivery_days_name_select option:selected").html();
-			if(!confirm(<?php _e("'Are you sure of deleting delivery days [' + delname + ']?'", 'usces'); ?>)) return false;
+			if(!confirm(<?php _e("'配達日数設定「' + delname + '」を削除してもよろしいですか?'", 'usces'); ?>)) return false;
 			
 			$("#delivery_days_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#delivery_days_name_select option:selected").val();
@@ -759,7 +760,7 @@ jQuery(function($){
 			$.ajax( s );
 			return false;
 		},
-		
+
 		onchange_delivery_days : function(index) {
 			var id = $("#delivery_days_name_select option:eq("+index+")").val()-0;
 			operation.disp_delivery_days(id);
@@ -768,11 +769,12 @@ jQuery(function($){
 		allDeliveryDays : function () {
 			var days = $("#all_delivery_days").val();//20110106ysk [all]->[days]
 			if(days == '') return;
-			confirm(<?php _e("'Are you sure of setting delivery days to ' + days + ' day for all the prefecture?'", 'usces'); ?>);
-			for(var i=0; i<pref.length; i++){
-				$("input[name='delivery_days_value\[" + pref[i] + "\]']").val(days);
+			if( confirm(<?php _e("'配達日数を全て ' + days + ' 日に変更してもよろしいですか?'", 'usces'); ?>) ){
+				for(var i=0; i<pref.length; i++){
+					$("input[name='delivery_days_value\[" + pref[i] + "\]']").val(days);
+				}
+				$("#all_delivery_days").val("");
 			}
-			$("#all_delivery_days").val("");
 		},
 //20101208ysk end
 		
@@ -944,7 +946,7 @@ jQuery(document).ready(function($){
 	<tr style="height:40px;">
 	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting12');"><?php _e('Deliverly time', 'usces'); ?></a></th>
 	    <td><textarea name="delivery_method_time" id="delivery_method_time" style="height:100px;"></textarea></td>
-		<td><div id="ex_shipping_setting12" class="explanation"><?php _e("配送可能な時間帯を入力します。お客様に時間帯を選択させない場合は空白にします。<br />例）<br />午前中<br />12：00～14：00<br />14：00～16：00<br />16：00～18：00", 'usces'); ?></div></td>
+		<td><div id="ex_shipping_setting12" class="explanation"><?php _e("配送可能な時間帯を入力します。お客様に時間帯を選択させない場合は空白にします。<br />例）<br />午前中", 'usces'); ?><br />12：00～14：00<br />14：00～16：00<br />16：00～18：00</div></td>
 	</tr>
 	<tr style="height:40px;">
 	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting13');"><?php _e('Postage fixation', 'usces'); ?></a></th>
@@ -960,7 +962,7 @@ jQuery(document).ready(function($){
 	<tr style="height:40px;">
 		<th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting15');"><?php _e('配達日数', 'usces'); ?></a></th>
 		<td id="delivery_method_days_td"></td>
-		<td><div id="ex_shipping_setting15" class="explanation"><?php _e("下の配達日数設定で登録した配達日数名を選択します。最短配送日を算出するために使用します。お客様に配送希望日を選択させない場合は「Not appoint the delivery days.」を指定します。", 'usces'); ?></div></td>
+		<td><div id="ex_shipping_setting15" class="explanation"><?php _e("下の配達日数設定で登録した配達日数名を選択します。最短配送日を算出するために使用します。お客様に配送希望日を選択させない場合は「配送希望日を利用しない」を指定します。", 'usces'); ?></div></td>
 	</tr>
 <!--20101208ysk end-->
 <!--20101119ysk start-->
