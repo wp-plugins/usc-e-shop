@@ -111,7 +111,8 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= $key . ' : ' . $value . "\r\n"; 
+				if( !empty($key) )
+					$meisai .= $key . ' : ' . $value . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".number_format($skuPrice) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -309,7 +310,8 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= $key . ' : ' . $value . "\r\n"; 
+				if( !empty($key) )
+					$meisai .= $key . ' : ' . $value . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".number_format($skuPrice)." " . __('dollars','usces') . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
