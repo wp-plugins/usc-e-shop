@@ -3192,7 +3192,10 @@ function usces_item_uploadcsv(){
 				case USCES_COL_SKU_CPRICE:
 					break;
 				case USCES_COL_SKU_PRICE:
-					if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) )
+//20110315ysk start
+					//if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) )
+					if( !preg_match("/^\d$|^\d+\.?\d+$/", $data) || 0 == strlen($data) )
+//20110315ysk end
 						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the sale price is abnormal.', 'usces')."\r\n";
 					break;
 				case USCES_COL_SKU_ZAIKONUM:
@@ -3241,7 +3244,9 @@ function usces_item_uploadcsv(){
 		if( 0 < strlen($logtemp) ){
 			$err_num++;
 			$log .= $logtemp;
-			$pre_code = $datas[USCES_COL_ITEM_CODE];
+//20110315ysk start
+			//$pre_code = $datas[USCES_COL_ITEM_CODE];
+//20110315ysk end
 			continue;
 		}
 		
