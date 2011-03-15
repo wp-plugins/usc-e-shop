@@ -111,7 +111,8 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				if( !empty($key) )
+					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -2862,7 +2863,7 @@ function usces_item_dupricate($post_id){
 function usces_item_uploadcsv(){
 	require_once( USCES_PLUGIN_DIR . "/libs/excel_reader2.php" );
 	global $wpdb, $usces;
-	$wpdb->show_errors();
+	//$wpdb->show_errors();
 	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
 	set_time_limit(1800);
 	
@@ -2982,13 +2983,13 @@ function usces_item_uploadcsv(){
 			//}
 			//20101208ysk
 			$res['status'] = 'error';
-			$res['message'] = __('ExcelŕۑȂt@Cw肵ĂB', 'usces').$fname.'.'.$fext;
+			$res['message'] = __('このファイルはExcelファイルでは有りません。', 'usces').$fname.'.'.$fext;
 			return $res;
 		} else {
 			$excel = new Spreadsheet_Excel_Reader();
 			$excel->read($workfile);
-			$rows = $excel->rowcount();//ős
-			$cols = $excel->colcount();//ő
+			$rows = $excel->rowcount();//最大行数
+			$cols = $excel->colcount();//最大列数
 			for($r = 1; $r <= $rows; $r++) {
 				$line = '';
 				for($c = 1; $c <= $cols; $c++) {
@@ -3156,7 +3157,7 @@ function usces_item_uploadcsv(){
 					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
 						//if( !preg_match($date_pattern, $data, $match) || strtotime($data) === false || strtotime($data) == -1 )
 						//	$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
-						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//擪4l̂
+						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
 							if(strtotime($data) === false)
 								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 						} else {
@@ -3255,8 +3256,8 @@ function usces_item_uploadcsv(){
 		if($pre_code != $datas[USCES_COL_ITEM_CODE]) {
 //20101207ysk start
 			//$post_id = $usces->get_postIDbyCode($datas[USCES_COL_ITEM_CODE]);
-			$query = $wpdb->prepare("SELECT meta.post_id FROM wp_postmeta AS meta 
-				INNER JOIN wp_posts AS post ON meta.post_id = post.ID AND post.post_status <> %s AND post.post_mime_type = 'item' 
+			$query = $wpdb->prepare("SELECT meta.post_id FROM $wpdb->postmeta AS meta 
+				INNER JOIN $wpdb->posts AS post ON meta.post_id = post.ID AND post.post_status <> %s AND post.post_mime_type = 'item' 
 				WHERE meta.meta_value = %s LIMIT 1", 'trash', trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
 			$post_id = $wpdb->get_var( $query );
 //20101207ysk end
@@ -3295,7 +3296,7 @@ function usces_item_uploadcsv(){
 						}else{
 							//$cdatas[$key] = $data;
 
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//擪4l̂
+							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
 								$cdatas[$key] = $data;
 							} else {
 								$datetime = explode(' ', $data);
@@ -3311,7 +3312,7 @@ function usces_item_uploadcsv(){
 							$cdatas[$key] = gmdate('Y-m-d H:i:s');
 						}else{
 							//$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//擪4l̂
+							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
 								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
 							} else {
 								$datetime = explode(' ', $data);
@@ -3551,8 +3552,8 @@ function usces_item_uploadcsv(){
 			$dbres = mysql_query($query) or die(mysql_error());
 		
 		}
-		
-		
+
+
 		$comp_num++;
 		$pre_code = $datas[USCES_COL_ITEM_CODE];
 	}

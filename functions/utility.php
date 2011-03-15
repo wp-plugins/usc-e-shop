@@ -1762,7 +1762,7 @@ function usces_download_item_list() {
 
 			$delivery_method = '';
 			$itemDeliveryMethod = $usces->getItemDeliveryMethod($post_id);
-			foreach($itemDeliveryMethod as $k => $v) {
+			foreach((array)$itemDeliveryMethod as $k => $v) {
 				$delivery_method .= $v.$sp;
 			}
 			$delivery_method = rtrim($delivery_method, $sp);

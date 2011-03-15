@@ -3801,7 +3801,7 @@ class usc_e_shop
 		$dday = (int)substr($datetimestr, 8, 2);
 		$dyear = (int)substr($datetimestr, 0, 4);
 		$dtimestamp = mktime($dhour, $dminute, $dsecond, $dmonth, $dday, $dyear);
-		$datenow = get_date_from_gmt($dtimestamp);
+		$datenow = getdate($dtimestamp);
 		list($year, $mon, $mday) = getBeforeMonth($datenow['year'], $datenow['mon'], $datenow['mday'], 1);
 		
 		if(isset($options['business_days'][$year][$mon][1]))
