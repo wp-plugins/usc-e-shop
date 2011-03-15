@@ -9,11 +9,11 @@ get_header();
 get_sidebar();
 ?>
 
-<div id="content">
+<div id="content" class="three-column">
+<?php if (have_posts()) : have_posts(); the_post(); ?>
+<h1 class="pagetitle"><?php the_title(); ?></h1>
 <div class="catbox">
-	<?php if (have_posts()) : have_posts(); the_post(); ?>
 	<div class="post" id="<?php echo $post->post_name; ?>">
-		<h2><?php the_title(); ?></h2>
 		<div class="entry">
 		
 <?php $uscpaged = isset($_REQUEST['paged']) ? $_REQUEST['paged'] : 1; ?>

@@ -450,7 +450,6 @@ ul.subnavi a {
 /*********************************************************************/
 /* content CSS Start */
 #content {
-	width: 560px;
 	height: 100%;
 	margin: 0px 0px 0px 10px;
 	padding: 0px;
@@ -458,15 +457,12 @@ ul.subnavi a {
 	border-bottom: 3px solid #DAD8D1;
 	float: left;
 }
-#wc-content {
-	width: 770px;
-	height: 100%;
-	margin: 0px 0px 0px 10px;
-	padding: 0px;
-	background-color: #DAD8D1;
-	border-bottom: 3px solid #DAD8D1;
-	float: left;
-}
+	.three-column {
+		width: 560px;
+	}
+	.two-column {
+		width: 770px;
+	}
 /* content CSS End */
 /*********************************************************************/
 /* content common CSS Start */
@@ -495,8 +491,7 @@ ul.subnavi a {
 	font-size: 1.17em;
 }
 /* catbox */
-#content .catbox,
-#wc-content .catbox {
+#content .catbox {
 	width: auto;
 	height: 100%;
 	margin: 3px;

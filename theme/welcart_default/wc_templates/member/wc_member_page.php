@@ -9,14 +9,14 @@ get_header();
 get_sidebar( 'onlycart' );
 ?>
 
-<div id="wc-content">
+<div id="content" class="two-column">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>
 
 <div class="post" id="wc_<?php usces_page_name(); ?>">
 
-<h1><?php _e('Membership', 'usces'); ?></h1>
+<h1 class="member_page_title"><?php _e('Membership', 'usces'); ?></h1>
 <div class="entry">
 		
 <div id="memberpages">

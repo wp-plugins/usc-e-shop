@@ -9,7 +9,7 @@ get_header();
 get_sidebar();
 ?>
 
-<div id="content">
+<div id="content" class="three-column">
 
 <?php $post = $posts[0]; // Hack. Set $post so that the_date() works. ?>
 <?php /* If this is a category archive */ if (is_category()) { ?>

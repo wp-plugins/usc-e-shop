@@ -10,14 +10,14 @@ get_sidebar( 'onlycart' );
 ?>
 
 <?php usces_delivery_info_script(); ?>
-<div id="wc-content">
+<div id="content" class="two-column">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>
 	
 <div class="post" id="wc_<?php usces_page_name(); ?>">
 
-<h1><?php _e('Shipping / Payment options', 'usces'); ?></h1>
+<h1 class="cart_page_title"><?php _e('Shipping / Payment options', 'usces'); ?></h1>
 <div class="entry">
 		
 <div id="delivery-info">

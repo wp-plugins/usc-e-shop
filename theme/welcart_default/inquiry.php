@@ -10,7 +10,7 @@ get_header();
 get_sidebar();
 ?>
 
-<div id="content">
+<div id="content" class="three-column">
 <h1 class="pagetitle"><?php _e('Visit/Contact Us','usces') ?></h1>
 <div class="catbox">
 	<?php if (have_posts()) : while (have_posts()) : the_post(); ?>

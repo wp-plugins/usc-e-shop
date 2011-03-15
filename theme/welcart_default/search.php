@@ -9,7 +9,7 @@ get_header();
 get_sidebar();
 ?>
 
-<div id="content">
+<div id="content" class="three-column">
 
 <h1 class="pagetitle"><?php _e('Search Results', 'usces'); ?></h1>
 
