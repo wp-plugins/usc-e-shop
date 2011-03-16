@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 2.9
 Tested up to: 3.1
-Stable tag: 0.9.4
+Stable tag: 1.0-beta1
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -56,123 +56,11 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 
 == Changelog ==
 
-= V0.9.4 =
-3 Mar 2011
+= V1.0 =
+16 Mar 2011
 -----------
-* Fixed some malfunctions
-
-= V0.9.3 =
-14 Feb 2011
------------
-* Fixed some malfunctions
-
-= V0.9.2 =
-8 Feb 2011
------------
-* Fixed some malfunctions
-
-= V0.9.1 =
-18 Jan 2011
------------
-* Fixed some malfunctions
-
-= V0.9 =
-10 Jan 2011
------------
-* Fixed some malfunctions
-
-= V0.8.1 =
-27 Nov 2010
------------
-* Fixed some malfunctions
-
-= V0.8 =
-12 Nov 2010
------------
-* Fixed some malfunctions
-
-= V0.7.3 =
-28 Sep 2010
------------
-* Fixed some malfunctions
-
-= V0.7.2 =
-22 Sep 2010
------------
-* Fixed some malfunctions
-
-= V0.7.1 =
-13 Sep 2010
------------
-* Fixed some malfunctions
-
-= V0.7 =
-6 Sep 2010
------------
-* Added the function that order information or customer information can set an arbitrary item
-* Fixed some malfunctions
-
-= V0.6 =
-27 Jul 2010
------------
-* Improved to be able to set a COD mail fee step by step
-* The SSL correspondence of the Welcart inquiry form
-* Improved so that it is done the report of a management email transmitting a message by order data editing to a manager
-* Rrevised the malfunction that the link of the eye catch image is not over by media library at the time of the article editing
-* Improved so that a report email reaches the manager at the time of a sign-in
-
-= V0.5.2 =
-24 Jun 2010
------------
-* Fixed some malfunctions
-
-= V0.5.1 =
-23 Jun 2010
------------
-* Fixed some malfunctions
-
-= V0.5 =
-12 Jun 2010
------------
-* Now a new default theme, 'Welcart Default Theme 1.0'
-* It supported WordPress3.0
-* Custom Field came to be usable
-* Now comment on the product
-* Fixed other malfunctions
-
-= V0.4.4 =
-21 Apr 2010
------------
-* Fixed the malfunction that a new enrollment form is not displayed
-
-= V0.4.3 =
-20 Apr 2010
------------
-* Fixed the malfunction that a purchase procedure is possible with amount as 0
-* Fixed the malfunction that images or style-sheets go through SSL entirely in the page of non-SSL
-* Fixed the malfunction that cannot access the cart pages, when I use the Permalinks in the case of "Common use SSL"
-
-= V0.4.2 =
-25 Mar 2010
------------
-* Refixed malfunction of the stock confirmation
-
-= V0.4.1 =
-25 Mar 2010
------------
-* Fixed malfunction of the stock confirmation in a cart page
-* Fixed the transition error in a password change page to access from an email
-* Fixed malfunction time that is recorded by Greenwich Mean Time 
-* Fixed the malfunction that does not change to the top even if I click the button "back to the top" in a member information page
-* Added the English version of a module sample for PayPal
-* Revised it to be able to change the icon of the Welacert widget freely
-
-= V0.4 =
-10 Mar 2010
------------
-* It's now possible to use SSL on the Cart and Member pages
-* Added function to change display specifications of the item name of the Cart page
-* Added function to write the IP address of the buyer in 'Order-mail'
-* Internationalization is almost complete
-* Errors in JavaScript have been fixed
-* Fixed other malfunctions
+* Welcart Default テーマを1.1にアップグレード、wc_templates を採用
+* 通貨や入力フォームのグローバライズに対応
+* 配送希望日算出機能を追加
+* PayPal エクスプレス・チェックアウト決済を標準搭載
+* 納品書等のPDF出力仕様を変更、及び請求書・領収書を追加
