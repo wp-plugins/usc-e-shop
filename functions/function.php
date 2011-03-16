@@ -303,7 +303,8 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				if( !empty($key) )
+					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
