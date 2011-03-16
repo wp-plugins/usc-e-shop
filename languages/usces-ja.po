@@ -1278,9 +1278,6 @@ msgstr "キーワード"
 msgid "Transfer"
 msgstr "銀行振り込み"
 
-msgid "Transfer"
-msgstr "銀行振り込み"
-
 msgid "transfer statement"
 msgstr "入金状況"
 
@@ -1719,7 +1716,7 @@ msgstr "～はまだ登録されていせん。"
 msgid "Data for this date is not yet registered."
 msgstr "この日付のデータはまだ登録されていません。"
 
-msgid "Data by　～is not yet registered."
+msgid "Data by ~is not yet registered."
 msgstr "～によるデータはまだ登録されていません。"
 
 msgid "next article"
@@ -2527,7 +2524,7 @@ msgid "Text-area"
 msgstr "テキストエリア"
 
 msgid "M j, Y"
-msgstr "Y-m-d"
+msgstr "Y年m月d日"
 
 msgid "Header Information"
 msgstr "ヘッダ情報"
@@ -2577,10 +2574,10 @@ msgstr "フロントエンドの言語"
 msgid "You can choose the language of the front-end.The language of the admin panel obeys config.php."
 msgstr "フロントエンドの言語を選択できます。管理パネルの方はconfig.php の設定に従います。"
 
-msgid "Order of SKU"
+msgid "Order of Item SKU"
 msgstr "商品SKUの並び順"
 
-msgid "Order of Item options"
+msgid "Order of Item Option"
 msgstr "商品オプションの並び順"
 
 msgid "You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'."
@@ -2618,6 +2615,105 @@ msgstr "出力したい形式を選択して、ダウンロードを押してく
 
 msgid "Not yet ready for the payment method. Please refer to a manager."
 msgstr "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
+
+msgid "Your payment has been received."
+msgstr "上記、正に受領いたしました。"
+
+# 請求書のメッセージ
+msgid "Please remit payment at your earliest convenience."
+msgstr "下記の通りご請求申し上げます。"
+
+# 各証書の購入明細のタイトル
+msgid "Statement"
+msgstr "明細書"
+
+# お客様が法人だった場合の担当者ラベル
+msgid "Attn"
+msgstr "ご担当"
+
+msgid "Receipt"
+msgstr "領収書"
+
+msgid "Invoice"
+msgstr "請求書"
+
+msgid "Shipping Name"
+msgstr "配送先氏名"
+
+msgid "Shipping Furigana"
+msgstr "配送先フリガナ"
+
+msgid "Shipping Zip"
+msgstr "配送先郵便番号"
+
+msgid "Shipping State"
+msgstr "配送先都道府県"
+
+msgid "Shipping City"
+msgstr "配送先市町村"
+
+msgid "Shipping Address1"
+msgstr "配送先番地"
+
+msgid "Shipping Address2"
+msgstr "配送先ビル名"
+
+msgid "Shipping Phone"
+msgstr "配送先電話番号"
+
+msgid "Shipping FAX"
+msgstr "配送先FAX番号"
+
+msgid "num"
+msgstr "数"
+
+msgid "rate"
+msgstr "率"
+
+msgid "Areas of Point Redemption"
+msgstr "ポイントの適用範"
+
+msgid "Limited Only to Total Merchandise Price"
+msgstr "商品合計額のみに制限"
+
+msgid "Applicable to Total Merchandise Price and Handling Fee"
+msgstr "商品合計額及び手数料などにも適用"
+
+msgid "To add a subject title at the first line"
+msgstr "１行目に項目名を追加する"
+
+msgid "The member data is deleted"
+msgstr "会員データを削除しました。"
+
+msgid "Delivery date"
+msgstr "配送希望日"
+
+msgid "JPY"
+msgstr "円"
+
+msgid "Japan"
+msgstr "日本"
+
+msgid "Currency"
+msgstr "通貨"
+
+msgid "No Preference"
+msgstr "指定しない"
+
+msgid "Unit"
+msgstr "単位"
+
+msgid "Quant"
+msgstr "数量"
+
+msgid "Country"
+msgstr "国"
+
+msgid "Target Market"
+msgstr "販売対象国"
+
+msgid "COD is not available."
+msgstr "この配送方法では「代金引換」はご利用できません。"
 
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"

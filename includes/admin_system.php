@@ -1,4 +1,5 @@
 <?php
+global $usces_settings;
 $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
@@ -21,17 +22,10 @@ $ssl_url_admin = $this->options['ssl_url_admin'];
 $inquiry_id = $this->options['inquiry_id'];
 $orderby_itemsku = isset($this->options['system']['orderby_itemsku']) ? $this->options['system']['orderby_itemsku'] : 0;
 $orderby_itemopt = isset($this->options['system']['orderby_itemopt']) ? $this->options['system']['orderby_itemopt'] : 0;
-$system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : get_locale();
-switch( $system_front_lang ){
-	case 'en':
-		$front_lang =  'en';
-		break;
-	case 'ja':
-		$front_lang =  'ja';
-		break;
-	default:
-		$front_lang =  'others';
-}
+$system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : usces_get_local_language();
+$system_currency =  ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : usces_get_local_cerrency();
+$system_addressform =  ( isset($this->options['system']['addressform']) && !empty($this->options['system']['addressform']) ) ? $this->options['system']['addressform'] : usces_get_local_addressform();
+$system_target_markets =  ( isset($this->options['system']['target_market']) && !empty($this->options['system']['target_market']) ) ? $this->options['system']['target_market'] : usces_get_local_target_market();
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -154,13 +148,48 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('The language of the front-end', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('フロントエンドの言語', 'usces'); ?></a></th>
 		<td width="10"><select name="front_lang" id="front_lang">
-		    <option value="ja"<?php if($front_lang == 'ja') echo ' selected="selected"'; ?>><?php _e('Japanese', 'usces'); ?></option>
-		    <option value="en"<?php if($front_lang == 'en') echo ' selected="selected"'; ?>><?php _e('English', 'usces'); ?></option>
-		    <option value="others"<?php if($front_lang == 'others') echo ' selected="selected"'; ?>><?php _e('Others', 'usces'); ?></option>
+		<?php foreach( $usces_settings['language'] as $Lkey => $Lvalue ){ ?>
+		    <option value="<?php echo $Lkey; ?>"<?php echo ($system_front_lang == $Lkey ? ' selected="selected"' : ''); ?>><?php echo $Lvalue; ?></option>
+		<?php } ?>
 		</select></td>
-	    <td><div id="ex_front_lang" class="explanation"><?php _e('You can choose the language of the front-end.The language of the admin panel obeys config.php.', 'usces'); ?></div></td>
+	    <td><div id="ex_front_lang" class="explanation"><?php _e('フロントエンド（ショップ側）の言語を選択できます。バックエンド（管理パネル）の言語はconfig.php の設定に従います。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_currency');"><?php _e('通貨表示', 'usces'); ?></a></th>
+		<td width="10"><select name="currency" id="currency">
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		    <option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
+		</select></td>
+	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロント・エンド、バック・エンド共通です。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_addressform');"><?php _e('住所氏名の様式', 'usces'); ?></a></th>
+		<td width="10"><select name="addressform" id="addressform">
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_addressform == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		</select></td>
+	    <td><div id="ex_addressform" class="explanation"><?php _e('住所氏名などの入力フォームの様式を、どの国のものにするか選択します。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_target_market');"><?php _e('Target Market', 'usces'); ?></a></th>
+		<td width="20"><select name="target_market[]" size="10" multiple="multiple" class="multipleselect" id="target_market">
+		    <!--<option value="all"<?php echo ($system_target_market == 'all' ? ' selected="selected"' : ''); ?>><?php _e('全ての国', 'usces'); ?></option>-->
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo (in_array($Ckey, $system_target_markets) ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		</select></td>
+	    <td><div id="ex_target_market" class="explanation"><?php _e('販売・発送可能な地域を国単位で選択します。複数選択可。', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
@@ -173,7 +202,7 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('商品オプションの並び順', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('Order of Item Option', 'usces'); ?></a></th>
 	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt0" type="radio" value="0"<?php if($orderby_itemopt === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt0"><?php _e('Optional excellent Order', 'usces'); ?></label></td>
 	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt1" type="radio" value="1"<?php if($orderby_itemopt === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt1"><?php _e('Registration Order', 'usces'); ?></label></td>
 		<td><div id="ex_orderby_itemopt" class="explanation"><?php _e("You can appoint a common option and the equal thing order of the item option. When You want to make it registered order, choose 'Registration Order'. The initial state becomes 'Optional excellent Order'.", 'usces'); ?></div></td>

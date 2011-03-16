@@ -74,8 +74,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th>' . __('SKU code','usces') . '</th>
-		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '</th>
-		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL) . '</th>
+		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '('.usces_crcode( 'return' ).')</th>
+		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL). '('.usces_crcode( 'return' ).')</th>
 		<th>' . __('stock','usces') . '</th>
 		<th>' . __('stock status', 'usces') . '</th>
 	</tr>
@@ -91,8 +91,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th class="left"><?php _e('SKU code','usces'); ?></th>
-		<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
-		<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
+		<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
+		<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 		<th><?php _e('stock','usces'); ?></th>
 		<th><?php _e('stock status','usces'); ?></th>
 	</tr>
@@ -432,8 +432,8 @@ function item_sku_meta_form() {
 <thead>
 <tr>
 	<th class="left"><?php _e('SKU code','usces') ?></th>
-	<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
-	<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
+	<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
+	<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 	<th><?php _e('stock','usces') ?></th>
 	<th><?php _e('stock status','usces') ?></th>
 </tr>
@@ -1163,6 +1163,7 @@ function add_shipping_charge() {
 
 	$options['shipping_charge'][$index]['id'] = $newid;
 	$options['shipping_charge'][$index]['name'] = $name;
+	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
 		$options['shipping_charge'][$index]['value'][$pref] = (int)$value[$i];
@@ -1190,6 +1191,7 @@ function update_shipping_charge() {
 		}
 	}
 	$options['shipping_charge'][$index]["name"] = $name;
+	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
 		$options['shipping_charge'][$index]["value"][$pref] = (int)$value[$i];
@@ -1451,10 +1453,10 @@ function get_order_item( $item_code ) {
 	$r .= "<tr>\n";
 	$r .= "<th>" . __('order number','usces') . "</th>\n";
 	$r .= "<th>" . __('title','usces') . "</th>\n";
-	$usces_listprice = __('List price', 'usces') . $usces->getGuidTax();
-	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), $usces->getGuidTax()) . "</th>\n";
-	$usces_sellingprice = __('Sale price','usces') . $usces->getGuidTax();
-	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), $usces->getGuidTax()) . "</th>\n";
+	$usces_listprice = __('List price', 'usces') . usces_guid_tax('return');
+	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), usces_guid_tax('return')) . "</th>\n";
+	$usces_sellingprice = __('Sale price','usces') . usces_guid_tax('return');
+	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), usces_guid_tax('return')) . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('unit','usces') . "</th>\n";
@@ -1474,8 +1476,8 @@ function get_order_item( $item_code ) {
 		$r .= "<tr>\n";
 		$r .= "<td rowspan='2'>" . $sku . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
-		$r .= "<td><span class='cprice'>" . __('$', 'usces') . $cprice . "</span></td>\n";
-		$r .= "<td><span class='price'>" . __('$', 'usces') . $price . "</span></td>\n";
+		$r .= "<td><span class='cprice'>" . usces_crform( $cprice, true, false, 'return' ) . "</span></td>\n";
+		$r .= "<td><span class='price'>" . usces_crform( $price, true, false, 'return' ) . "</span></td>\n";
 		$r .= "<td>" . $zaiko . "</td>\n";
 		$r .= "<td>" . $zaikonum . "</td>\n";
 //			$r .= "<td>" . usces_the_itemQuant() . "</td>\n";
@@ -1739,6 +1741,7 @@ function usces_count_posts( $type = 'post', $perm = '' ) {
 function _list_custom_order_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
+	$key = esc_attr($key);
 
 	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_order_select');
@@ -1801,6 +1804,65 @@ function usces_has_custom_field_meta($fieldname) {
 	$fields = get_option($field);
 	$meta = ($fields) ? unserialize($fields) : array();
 	return $meta;
+}
+
+function usces_getinfo_ajax(){
+	$wcex_str = '';
+	$wcex = usces_get_wcex();
+	foreach ( (array)$wcex as $key => $values ) {
+		$wcex_str .= $key . "-" . $values['version'] . ",";
+	}
+	$wcex_str = rtrim($wcex_str, ',');
+	$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );
+	$v = urlencode(USCES_VERSION);
+	$wcid = urlencode(get_option('usces_wcid'));
+	$locale = urlencode(get_locale());
+	$theme = urlencode($themedata['Name'] . '-' . $themedata['Version']);
+	$wcex = urlencode($wcex_str);
+	$interface_url = 'http://www.welcart.com/util/welcart_information2.php';
+	$wcurl = urlencode(get_bloginfo('home'));
+	$interface = parse_url($interface_url);
+
+	$vars ="v=$v&wcid=$wcid&locale=$locale&theme=$theme&wcex=$wcex&wcurl=$wcurl";
+	$header = "POST " . $interface_url . " HTTP/1.1\r\n";
+	$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
+	$header .= "User-Agent: " . $_SERVER['HTTP_USER_AGENT'] . "\r\n";
+	$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+	$header .= "Content-Length: " . strlen($vars) . "\r\n";
+	$header .= "Connection: close\r\n\r\n";
+	$header .= $vars;
+	$fp = fsockopen($interface['host'],80,$errno,$errstr,30);
+	if(fp){
+		fwrite($fp, $header);
+		$i=0;
+		while ( !feof($fp) ) {
+			$scr = fgets($fp, 10240);
+			preg_match("/<(title|data)>(.*)<(\/title|\/data)>$/", $scr, $match);
+		
+			if(!empty($match[2])){
+				switch( $match[1] ){
+					case'title': 
+						$res .= '<div style="text-align: center;border-bottom: 1px dotted #CCCCCC;width: 80%;margin-bottom: 10px;padding-bottom: 3px; margin-right: auto; margin-left: auto;"><stlong>' . $match[2] . '</strong></div><ul>';
+						break;
+					case 'data':
+						$res .= '<li>' . $match[2] . '</li>';
+						break;
+				}
+			}
+			$i++;
+			if($i>50) {
+				$res = 'ERROR';
+				break;
+			}
+		}
+		
+		$res .= '</ul>';
+		fclose($fp);
+		
+	}else{
+		$res = 'ERROR';
+	}
+	die($res);
 }
 
 /**
@@ -1923,6 +1985,7 @@ function custom_field_ajax() {
 function _list_custom_customer_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
+	$key = esc_attr($key);
 
 	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_customer_select');
@@ -1965,6 +2028,7 @@ function _list_custom_customer_meta_row($key, $entry) {
 function _list_custom_delivery_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
+	$key = esc_attr($key);
 
 	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_delivery_select');
@@ -2007,6 +2071,7 @@ function _list_custom_delivery_meta_row($key, $entry) {
 function _list_custom_member_meta_row($key, $entry) {
 	$r = '';
 	$style = '';
+	$key = esc_attr($key);
 
 	$name = esc_attr($entry['name']);
 	$means = get_option('usces_custom_member_select');
@@ -2029,7 +2094,6 @@ function _list_custom_member_meta_row($key, $entry) {
 		$selected = ($poskey == $entry['position']) ? " selected='selected'" : "";
 		$positionsoption .= "<option value='".esc_attr($poskey)."'".$selected.">".esc_attr($posvalue)."</option>\n";
 	}
-
 	$r .= "\n\t<tr id='csmb-{$key}' class='{$style}'>";
 	$r .= "\n\t\t<td class='left'><div><input type='text' name='csmb[{$key}][key]' id='csmb[{$key}][key]' class='optname' size='20' value='{$key}' readonly /></div>";
 	$r .= "\n\t\t<div><input type='text' name='csmb[{$key}][name]' id='csmb[{$key}][name]' class='optname' size='20' value='{$name}' /></div>";
@@ -2043,5 +2107,19 @@ function _list_custom_member_meta_row($key, $entry) {
 	return $r;
 }
 //20100818ysk end
+
+function change_states_ajax(){
+	global $usces, $usces_states;
+	
+	$c = $_POST['country'];
+	$res = '';
+	if( !isset($usces_states[$c]) || empty($usces_states[$c]) )
+		die('error');
+		
+	foreach( (array)$usces_states[$c] as $state ){
+		$res .= '<option value="' . $state . '">' . $state . '</option>';
+	}
+	die($res);
+}
 
 ?>

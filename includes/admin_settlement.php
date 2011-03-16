@@ -5,6 +5,10 @@ $this->action_status = 'none';
 $this->action_message = '';
 
 $opts = $this->options['acting_settings'];
+//20110208ysk start
+$openssl = extension_loaded('openssl');
+$curl = extension_loaded('curl');
+//20110208ysk end
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -46,7 +50,6 @@ function toggleVisibility(id) {
 <div class="postbox">
 <h3 class="hndle"><span>決済サービス設定</span></h3>
 <div class="inside">
-
 <div id="uscestabs">
 
 	<ul>
@@ -55,6 +58,9 @@ function toggleVisibility(id) {
 <!--20101018ysk start-->
 		<li><a href="#uscestabs_jpayment">J-Payment</a></li>
 <!--20101018ysk end-->
+<!--20110208ysk start-->
+		<li><a href="#uscestabs_paypal">PayPal</a></li>
+<!--20110208ysk end-->
 	</ul>
 
 
@@ -363,7 +369,9 @@ function toggleVisibility(id) {
 				<td><div id="ex_bank_jpayment" class="explanation"><?php _e('バンクチェック決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
 		</table>
-		<input name="send_url" type="hidden" value="https://credit.j-payment.co.jp/gateway/payform.aspx" />
+<!--20110208ysk start-->
+		<!--<input name="send_url" type="hidden" value="https://credit.j-payment.co.jp/gateway/payform.aspx" />-->
+<!--20110208ysk end-->
 		<input name="acting" type="hidden" value="jpayment" />
 		<input name="usces_option_update" type="submit" class="button" value="J-Paymentの設定を更新する" />
 	</form>
@@ -376,6 +384,59 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_jpayment-->
 <!--20101018ysk end-->
+<!--20110208ysk start-->
+	<div id="uscestabs_paypal">
+	<div class="settlement_service"><span class="service_title"><?php _e('PayPalエクスプレスチェックアウト決済サービス', 'usces'); ?></span></div>
+
+	<?php if( isset($_POST['acting']) && 'paypal' == $_POST['acting'] ){ ?>
+		<?php if( 'on' == $opts['paypal']['activate'] ){ ?>
+		<div class="message"><?php _e('十分にテストを行ってから運用してください。', 'usces'); ?></div>
+		<?php }else if( '' != $mes ){ ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php } ?>
+	<?php } ?>
+	<form action="" method="post" name="paypal_form" id="paypal_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ec_activate_paypal');"><?php _e('PayPal決済', 'usces'); ?></a></th>
+				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_1" value="on"<?php if( $opts['paypal']['ec_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="ec_activate_paypal_1"><?php _e('利用する', 'usces'); ?></label></td>
+				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_2" value="off"<?php if( $opts['paypal']['ec_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="ec_activate_paypal_2"><?php _e('利用しない', 'usces'); ?></label></td>
+				<td><div id="ex_ec_activate_paypal" class="explanation"><?php _e('PayPal決済を利用するかどうかを選択します。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sandbox_paypal');"><?php _e('動作環境', 'usces'); ?></a></th>
+				<td><input name="sandbox" type="radio" id="sandbox_paypal_1" value="1"<?php if( $opts['paypal']['sandbox'] == '1' ) echo ' checked' ?> /></td><td><label for="sandbox_paypal_1"><?php _e('テスト(sandbox)', 'usces'); ?></label></td>
+				<td><input name="sandbox" type="radio" id="sandbox_paypal_2" value="2"<?php if( $opts['paypal']['sandbox'] == '2' ) echo ' checked' ?> /></td><td><label for="sandbox_paypal_2"><?php _e('本稼動', 'usces'); ?></label></td>
+				<td><div id="ex_sandbox_paypal" class="explanation"><?php _e('sandbox を利用した決済テストの場合は「テスト(sandbox)」を選択します。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_user_paypal');"><?php _e('APIユーザー名', 'usces'); ?></a></th>
+				<td colspan="4"><input name="user" type="text" id="user_paypal" value="<?php echo esc_html($opts['paypal']['user']); ?>" size="50" /></td>
+				<td><div id="ex_user_paypal" class="explanation"><?php _e('API信用証明書のAPIユーザー名を入力します。sandbox と本稼動では別のユーザー名となります。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_pwd_paypal');"><?php _e('APIパスワード', 'usces'); ?></a></th>
+				<td colspan="4"><input name="pwd" type="text" id="pwd_paypal" value="<?php echo esc_html($opts['paypal']['pwd']); ?>" size="50" /></td>
+				<td><div id="ex_pwd_paypal" class="explanation"><?php _e('API信用証明書のAPIパスワードを入力します。sandbox と本稼動では別のパスワードとなります。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_signature_paypal');"><?php _e('署名', 'usces'); ?></a></th>
+				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html($opts['paypal']['signature']); ?>" size="50" /></td>
+				<td><div id="ex_signature_paypal" class="explanation"><?php _e('PayPalから発行されるAPI信用証明書の署名を入力します。sandbox と本稼動では別の署名となります。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<input name="acting" type="hidden" value="paypal" />
+		<input name="usces_option_update" type="submit" class="button" value="<?php _e('PayPalの設定を更新する', 'usces'); ?>" />
+	</form>
+	<div class="settle_exp">
+		<p><strong><?php _e('PayPalエクスプレスチェックアウト決済サービス', 'usces'); ?></strong></p>
+		<a href="https://www.paypal.com/jp/cgi-bin/webscr?cmd=_home&country_lang.x=true" target="_blank"><?php _e('PayPal決済サービスの詳細はこちら 》', 'usces'); ?></a>
+		<p>　</p>
+		<p><?php _e('この決済は、「エクスプレスチェックアウト」を使用しています。', 'usces'); ?></p>
+		<p><?php _e('ご利用のサーバーに「OpenSSL」モジュールがインストールされていない場合、「エクスプレスチェックアウト」での決済はできません。', 'usces'); ?></p>
+	</div>
+	</div><!--uscestabs_paypal-->
+<!--20110208ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

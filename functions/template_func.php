@@ -1,12 +1,22 @@
 <?php
-function usces_guid_tax() {
+function usces_guid_tax( $out = '' ){
 	global $usces;
-	echo $usces->getGuidTax();
+
+	if( $out == 'return' ){
+		return $usces->getGuidTax();
+	}else{
+		echo $usces->getGuidTax();
+	}
 }
 
-function usces_currency_symbol() {
+function usces_currency_symbol( $out = '' ) {
 	global $usces;
-	echo esc_html($usces->getCurrencySymbol());
+
+	if( $out == 'return' ){
+		return $usces->getCurrencySymbol();
+	}else{
+		echo esc_html($usces->getCurrencySymbol());
+	}
 }
 
 function usces_is_error_message() {
@@ -17,8 +27,12 @@ function usces_is_error_message() {
 		return false;
 }
 
-function usces_is_item() {
-	global $usces, $post;
+function usces_is_item( $post_id = NULL ) {
+	if( NULL == $post_id ){
+		global $post;
+	}else{
+		$post = get_post($post_id);
+	}
 	if ( $post->post_mime_type == 'item' )
 		return true;
 	else
@@ -155,37 +169,95 @@ function usces_have_skus() {
 	}
 }
 
-function usces_the_itemSku() {
+function usces_the_itemSku($out = '') {
 	global $usces;
-	echo esc_html($usces->itemsku['key']);
+
+	if($out == 'return'){
+		return $usces->itemsku['key'];
+	}else{
+		echo esc_attr($usces->itemsku['key']);
+	}
 }
 
-function usces_the_itemPrice($flg = '') {
+function usces_the_itemPrice($out = '') {
 	global $usces;
-	if($flg == 'return'){
+	if($out == 'return'){
 		return $usces->itemsku['value']['price'];
 	}else{
 		echo number_format($usces->itemsku['value']['price']);
 	}
 }
 
-function usces_the_itemCprice($flg = '') {
+function usces_the_itemCprice($out = '') {
 	global $usces;
-	if($flg == 'return'){
+	if($out == 'return'){
 		return $usces->itemsku['value']['cprice'];
 	}else{
 		echo number_format($usces->itemsku['value']['cprice']);
 	}
 }
 
+function usces_the_itemPriceCr($out = '') {
+	global $usces;
+	$res = esc_html($usces->get_currency($usces->itemsku['value']['price'], true, false ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_the_itemCpriceCr($out = '') {
+	global $usces;
+	$res = esc_html($usces->get_currency($usces->itemsku['value']['cprice'], true, false ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_crcode( $out = '' ) {
+	global $usces;
+	$res = esc_html($usces->get_currency_code());
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo __($res, 'usces');
+	}
+}
+
+function usces_crsymbol( $out = '', $js = NULL ) {
+	global $usces;
+	$res = $usces->getCurrencySymbol();
+	if( 'js' == $js && '&yen;' == $res ){
+		$res = mb_convert_encoding($res, 'UTF-8', 'HTML-ENTITIES');
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo esc_html($res);
+	}
+}
+
 function usces_the_itemZaiko( $out = '' ) {
 	global $usces;
-	$num = $usces->itemsku['value']['zaiko'];
+	$num = (int)$usces->itemsku['value']['zaiko'];
+	
+	if( 0 === $num && 0 === (int)$usces->itemsku['value']['zaikonum'] && '' != $usces->itemsku['value']['zaikonum'] ){
+		$res = $usces->zaiko_status[2];
+	}else{
+		$res = $usces->zaiko_status[$num];
+	}
 	
 	if( $out == 'return' ){
-		return $usces->zaiko_status[$num];
+		return $res;
 	}else{
-		echo esc_html($usces->zaiko_status[$num]);
+		echo esc_html($res);
 	}
 }
 
@@ -200,24 +272,39 @@ function usces_the_itemZaikoNum( $out = '' ) {
 	}
 }
 
-function usces_the_itemSkuDisp() {
+function usces_the_itemSkuDisp( $out = '' ) {
 	global $usces;
-	echo esc_html($usces->itemsku['value']['disp']);
+	
+	if( $out == 'return' ){
+		return $usces->itemsku['value']['disp'];
+	}else{
+		echo esc_html($usces->itemsku['value']['disp']);
+	}
 }
 
-function usces_the_itemSkuUnit() {
+function usces_the_itemSkuUnit( $out = '' ) {
 	global $usces;
-	echo esc_html($usces->itemsku['value']['unit']);
+	
+	if( $out == 'return' ){
+		return $usces->itemsku['value']['unit'];
+	}else{
+		echo esc_html($usces->itemsku['value']['unit']);
+	}
 }
 
-function usces_the_firstSku() {
+function usces_the_firstSku( $out = '' ) {
 	global $post, $usces;
 	$post_id = $post->ID;
 	
 	
 	$fields = $usces->get_skus( $post_id );
 	
-	echo esc_html($fields['key'][0]);
+
+	if($out == 'return'){
+		return $fields['key'][0];
+	}else{
+		echo esc_html($fields['key'][0]);
+	}
 }
 
 function usces_the_firstPrice( $out = '', $post = NULL ) {
@@ -247,6 +334,38 @@ function usces_the_firstCprice( $out = '', $post = NULL ) {
 		return $fields['cprice'][0];
 	}else{
 		echo number_format($fields['cprice'][0]);
+	}
+}
+
+function usces_the_firstPriceCr( $out = '', $post = NULL ) {
+	global $usces;
+	if($post == NULL)
+		global $post;
+	$post_id = $post->ID;
+	
+	$fields = $usces->get_skus( $post_id );
+	$res = esc_html($usces->get_currency($fields['price'][0], true, false ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_the_firstCpriceCr( $out = '', $post = NULL ) {
+	global $usces;
+	if($post == NULL)
+		global $post;
+	$post_id = $post->ID;
+	
+	$fields = $usces->get_skus( $post_id );
+	$res = esc_html($usces->get_currency($fields['cprice'][0], true, false ));
+
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
 	}
 }
 
@@ -315,7 +434,7 @@ function usces_the_itemGpExp( $out = '' ) {
 	if( ($usces->itemsku['value']['gptekiyo'] == 0) || empty($GpN1) || empty($GpD1) ){
 		return;
 	}
-	$html = "<dl class='itemGpExp'>\n<dt>" . __('Business package discount','usces') . "</dt>\n<dd>\n<ul>\n";
+	$html = "<dl class='itemGpExp'>\n<dt>" . apply_filters( 'usces_filter_itemGpExp_title', __('Business package discount','usces')) . "</dt>\n<dd>\n<ul>\n";
 	if(!empty($GpN1) && !empty($GpD1)) {
 		if(empty($GpN2) || empty($GpD2)) {
 			$html .= "<li>";
@@ -434,6 +553,37 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 	}
 }
 
+function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $options=NULL, $out = '') {
+	global $usces;
+	if( empty($value) )
+		$value = __('Add To Cart', 'usces');
+	$datas = $usces->get_skus( $post_id, 'ARRAY_A' );
+	$zaikonum = $datas[$sku]['zaikonum'];
+	$zaiko = $datas[$sku]['zaiko'];
+	$gptekiyo = $datas[$sku]['gptekiyo'];
+	$skuPrice = $datas[$sku]['price'];
+	$sku = esc_attr($sku);
+
+	$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\" name=\"" . $post_id."-". $sku . "\">\n";
+	$html .= "<input name=\"zaikonum[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$sku}]\" value=\"{$zaikonum}\" />\n";
+	$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$zaiko}\" />\n";
+	$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
+	$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
+	$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
+	$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+	if( $force )
+		$html .= "<input name=\"usces_force\" type=\"hidden\" value=\"incart\" />\n";
+	$html = apply_filters('usces_filter_single_item_inform', $html);
+	$html .= "</form>";
+	$html .= '<div class="direct_error_message">' . usces_singleitem_error_message($post_id, $sku, 'return') . '</div>'."\n";
+
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+
 function usces_the_itemSkuTable($colum = '', $buttonValue = '' ) {
 	global $post, $usces;
 	
@@ -514,10 +664,10 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	$pictids = $usces->get_pictids($code[0]);
 	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
 	$alt = 'alt="'.esc_attr($code[0]).'"';
-	$alt = apply_filters('usces_filter_img_alt', $alt, $post_id);
+	$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictids[$number]);
 	$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
 	$title = 'title="'.esc_attr($name[0]).'"';
-	$title = apply_filters('usces_filter_img_title', $title, $post_id);
+	$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictids[$number]);
 	$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 	if($out == 'return'){
 		return $html;
@@ -629,9 +779,14 @@ function usces_getItemOptName() {
 	return $usces->itemopt['key'];
 }
 
-function usces_the_itemOptName() {
+function usces_the_itemOptName($out = '') {
 	global $usces;
-	echo esc_html($usces->itemopt['key']);
+
+	if($out == 'return'){
+		return $usces->itemopt['key'];
+	}else{
+		echo esc_html($usces->itemopt['key']);
+	}
 }
 
 function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
@@ -652,7 +807,6 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$sku = esc_attr($usces->itemsku['key']);
 	$name = esc_attr($name);
 	$label = esc_attr($label);
-	
 //20100914ysk start
 	//if($means < 2){
 	switch($means) {
@@ -694,7 +848,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk end
 	}
 	
-	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label);
+	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label, $post_id, $sku);
 	
 	if( $out == 'return' ){
 		return $html;
@@ -1052,20 +1206,31 @@ function usces_the_calendar() {
 function usces_loginout() {
 	global $usces;
 	if ( !$usces->is_member_logged_in() )
-		echo '<a href="' . USCES_LOGIN_URL . '">' . apply_filters('usces_filter_loginlink_label', __('Log-in','usces')) . '</a>';
+		echo '<a href="' . USCES_LOGIN_URL . '" class="usces_login_a">' . apply_filters('usces_filter_loginlink_label', __('Log-in','usces')) . '</a>';
 	else
-		echo '<a href="' . USCES_LOGOUT_URL . '">' . apply_filters('usces_filter_logoutlink_label', __('Log out','usces')) . '</a>';
+		echo '<a href="' . USCES_LOGOUT_URL . '" class="usces_logout_a">' . apply_filters('usces_filter_logoutlink_label', __('Log out','usces')) . '</a>';
 }
 
 function usces_is_login() {
 	global $usces;
-	return $usces->is_member_logged_in();
+	
+	if( false === $usces->is_member_logged_in() )
+		$res = false;
+	else
+		$res = true;
+		
+	return $res;
 }
 
-function usces_the_member_name() {
+function usces_the_member_name( $out = '') {
 	global $usces;
 	$usces->get_current_member();
-	echo esc_html($usces->current_member['name']);
+	$res = esc_html($usces->current_member['name']);
+	if( $out == 'return' ){
+		return $res;
+	}else{
+		echo $res;
+	}
 	
 }
 
@@ -1091,6 +1256,15 @@ function usces_get_assistance_id_list($post_id) {
 	$list = trim($list, ',');
 
 	return $list;
+}
+function usces_get_assistance_ids($post_id) {
+	global $usces;
+	$names = $usces->get_tag_names($post_id);
+	$ids = array();
+	foreach ( $names as $itemname )
+		$ids[] = $usces->get_ID_byItemName($itemname, 'publish');
+
+	return $ids;
 }
 function usces_remembername( $out = '' ){
 	global $usces;
@@ -1209,17 +1383,20 @@ function usces_list_bestseller($num, $days = ''){
 
 function usces_list_post( $slug, $rownum ){
 	global $usces;
+	usces_remove_filter();
 	
-	$cat_id = usces_get_cat_id( $slug );
 	$li = '';
-	$infolist = get_posts('category='.$cat_id.'&numberposts='.$rownum.'&order=DESC&orderby=post_date');
-	foreach ($infolist as $post) :
+	$infolist = new wp_query( array('category_name'=>$slug, 'post_status'=>'publish', 'posts_per_page'=>$rownum, 'order'=>'DESC', 'orderby'=>'date') );
+	while ($infolist->have_posts()) {
+		$infolist->the_post();
 		$list = "<li>\n";
-		$list .= "<div class='title'><a href='".get_permalink($post->ID)."'>" . esc_html($post->post_title) . "</a></div>\n";
-		$list .= "<p>" . $post->post_excerpt . "</p>\n";
+		$list .= "<div class='title'><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></div>\n";
+		$list .= "<p>" . get_the_excerpt() . "</p>\n";
 		$list .= "</li>\n";
 		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
-	endforeach;
+	}
+	wp_reset_query();
+	usces_reset_filter();
 	echo $li;
 }
 
@@ -1399,7 +1576,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 		//						'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
 		//						'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE')) ){
 		if( !in_array($key, array(
-								'order_no','tracking_no','status','error_message','money',
+								'acting','order_no','tracking_no','status','error_message','money',
 								'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
 								'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE',
 								'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp')) ){
@@ -1923,5 +2100,224 @@ function usces_singleitem_error_message($post_id, $skukey, $out = ''){
 	} else {
 		echo $_SESSION['usces_singleitem']['error_message'][$post_id][$skukey];
 	}
+}
+
+function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '' ) {
+	global $usces;
+	$price = esc_html($usces->get_currency($float, $symbol_pre, $symbol_post ));
+	$res = apply_filters('usces_filter_crform', $price, $amount);
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo $res;
+	}
+}
+
+function usces_memberinfo( $key, $out = '' ){
+	global $usces;
+	$info = $usces->get_member();
+
+	if( empty($key) ) return $info;
+	
+	switch ($key){
+		case 'registered':
+			$res = mysql2date(__('Mj, Y', 'usces'), $info['registered']);
+			break;
+		default:
+			$res = $info[$key];
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo esc_html($res);
+	}
+}
+
+function usces_localized_name( $Familly_name, $Given_name, $out = '' ){
+	global $usces_settings, $usces;
+	
+	$options = get_option('usces');
+	$form = $options['system']['addressform'];
+	if( $usces_settings['nameform'][$form] ){
+		$res = $Given_name . ' ' . $Familly_name;
+	}else{
+		$res = $Familly_name . ' ' . $Given_name;
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo esc_html($res);
+	}
+}
+
+function usces_member_history(){
+	global $usces;
+	
+	$usces_members = $usces->get_member();
+	$usces_member_history = $usces->get_member_history($usces_members['ID']);
+	$colspan = usces_is_membersystem_point() ? 9 : 7;
+
+	$html .= '<table>';
+	if ( !count($usces_member_history) ) {
+		$html .= '<tr>
+		<td>' . __('There is no purchase history for this moment.', 'usces') . '</td>
+		</tr>';
+	}
+	foreach ( $usces_member_history as $umhs ) {
+		$cart = $umhs['cart'];
+		$html .= '<tr>
+			<th class="historyrow">' . __('Order number', 'usces') . '</th>
+			<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
+			<th class="historyrow">' . __('Purchase price', 'usces') . '</th>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<th class="historyrow">' . __('Used points', 'usces') . '</th>';
+		}
+		$html .= '<th class="historyrow">' . __('Special Price', 'usces') . '</th>
+			<th class="historyrow">' . __('Shipping', 'usces') . '</th>
+			<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
+			<th class="historyrow">' . __('consumption tax', 'usces') . '</th>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<th class="historyrow">' . __('Acquired points', 'usces') . '</th>';
+		}
+		$html .= '</tr>
+			<tr>
+			<td class="rightnum">' . $umhs['ID'] . '</td>
+			<td class="date">' . $umhs['date'] . '</td>
+			<td class="rightnum">' . usces_crform(($usces->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>';
+		}
+		$html .= '<td class="rightnum">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, false, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, false, 'return') . '</td>
+			<td class="rightnum">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>';
+		if( usces_is_membersystem_point() ){
+			$html .= '<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>';
+		}
+		$html .= '</tr>';
+		$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
+		$html .= '<tr>
+			<td class="retail" colspan="' . $colspan . '">
+				<table id="retail_table">
+				<tr>
+				<th scope="row" class="num">No.</th>
+				<th class="thumbnail">&nbsp;</th>
+				<th>' . __('Items', 'usces') . '</th>
+				<th class="price ">' . __('Unit price', 'usces') . '</th>
+				<th class="quantity">' . __('Quantity', 'usces') . '</th>
+				<th class="subtotal">' . __('Amount', 'usces') . '</th>
+				</tr>';
+				
+		for($i=0; $i<count($cart); $i++) { 
+			$cart_row = $cart[$i];
+			$post_id = $cart_row['post_id'];
+			$sku = $cart_row['sku'];
+			$quantity = $cart_row['quantity'];
+			$options = $cart_row['options'];
+			$itemCode = $usces->getItemCode($post_id);
+			$itemName = $usces->getItemName($post_id);
+			$cartItemName = $usces->getCartItemName($post_id, $sku);
+			//$skuPrice = $usces->getItemPrice($post_id, $sku);
+			$skuPrice = $cart_row['price'];
+			$pictids = $usces->get_pictids($itemCode);
+			$optstr =  '';
+			if( is_array($options) && count($options) > 0 ){
+				foreach($options as $key => $value){
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				}
+			}
+				
+			$html .= '<tr>
+				<td>' . ($i + 1) . '</td>
+				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
+				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a></td>
+				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
+				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
+				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
+				</tr>';
+		}
+		$html .= '</table>
+			</td>
+			</tr>';
+	}
+	
+	$html .= '</table>';
+
+	echo $html;
+}
+
+function usces_newmember_button($member_regmode){
+	$html = '<input name="member_regmode" type="hidden" value="' . $member_regmode . '" />';
+	$newmemberbutton = '<input name="regmember" type="submit" value="' . __('transmit a message', 'usces') . '" />';
+	$html .= apply_filters('usces_filter_newmember_button', $newmemberbutton);
+	echo $html;
+}
+
+function usces_login_button(){
+	$loginbutton = '<input type="submit" name="member_login" id="member_login" class="member_login_button" value="' . __('Log-in', 'usces') . '" />';
+	$html .= apply_filters('usces_filter_login_button', $loginbutton);
+	echo $html;
+}
+
+function usces_assistance_item($post_id){
+	if (usces_get_assistance_id_list($post_id)) :
+?>
+	<div class="assistance_item">
+<?php
+		$assistanceposts = new wp_query( array('post__in'=>usces_get_assistance_ids($post_id)) );
+		if($assistanceposts->have_posts()) :
+		remove_filter( 'excerpt_length', 'welcart_excerpt_length' );
+		remove_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
+		remove_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+		add_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
+		add_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
+?>
+
+		<h3><?php usces_the_itemCode(); ?><?php _e('An article concerned', 'usces'); ?></h3>
+		<ul class="clearfix">
+
+<?php
+		while ($assistanceposts->have_posts()) :
+			$assistanceposts->the_post();
+			//update_post_caches($posts); 
+			usces_remove_filter();
+			usces_the_item();
+?>
+			<li>
+			<div class="listbox clearfix">
+				<div class="slit">
+					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php usces_the_itemImage(0, 100, 100, $post); ?></a>
+				</div>
+				<div class="detail">
+					<h4><?php usces_the_itemName(); ?></h4>
+					<?php the_excerpt(); ?>
+					<p>
+				<?php if (usces_is_skus()) : ?>
+					<?php _e('$', 'usces'); ?><?php usces_the_firstPrice(); ?>
+				<?php endif; ?>
+					<br />
+					&raquo;<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php _e('see the details', 'usces'); ?></a>
+					</p>
+				</div>
+			</div>
+			</li>
+		<?php endwhile; ?>
+		
+		</ul>
+<?php 
+		wp_reset_query();
+		usces_reset_filter();
+		add_filter( 'excerpt_length', 'welcart_excerpt_length' );
+		add_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
+		add_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+		endif;
+?>
+	
+	</div><!-- end of assistance_item -->
+<?php
+	endif;
 }
 ?>

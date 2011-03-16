@@ -8,3 +8,43 @@
 	background-color: #FFECCE;
 	color: #F00;
 }
+/*********************************************************************/
+/* wc_item_single Start */
+#content h1.item_page_title {
+	padding-bottom: 10px;
+	font-size: 1.5em;
+}
+#itempage h2.item_name {
+	height: 18px;
+	margin-bottom: 10px;
+	margin-left: 210px;
+	padding: 3px 5px;
+	background-color: #999999;
+	font-size: 14px;
+	color: #FFFFFF;
+	line-height: 18px;
+}
+/* wc_item_single End */
+/*********************************************************************/
+/* cart Start */
+#content h1.cart_page_title {
+	margin: 0px;
+	padding: 0px 0px 10px 0px;
+	font-size: 1.5em;
+}
+div.usccart_navi li.ucart {
+	width: 25%;
+}
+#cart table {
+	width: 100%;
+}
+/* cart End */
+/*********************************************************************/
+/* member Start */
+#content h1.member_page_title {
+	margin: 0px;
+	padding: 0px 0px 10px 0px;
+	font-size: 1.5em;
+}
+/* member End */
+/*********************************************************************/

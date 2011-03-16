@@ -31,7 +31,7 @@ class Welcart_login extends WP_Widget {
 		<form name="loginwidget" id="loginformw" action="<?php echo USCES_MEMBER_URL; ?>" method="post">
 		<p>
 		<label><?php _e('e-mail adress', 'usces'); ?><br />
-		<input type="text" name="loginmail" id="loginmailw" class="loginmail" value="<?php echo usces_remembername('return'); ?>" size="20" /></label><br />
+		<input type="text" name="loginmail" id="loginmailw" class="loginmail" value="<?php usces_remembername(); ?>" size="20" /></label><br />
 		<label><?php _e('password', 'usces'); ?><br />
 		<input type="password" name="loginpass" id="loginpassw" class="loginpass" size="20" /></label><br />
 		<label><input name="rememberme" type="checkbox" id="remembermew" value="forever" /> <?php _e('Remember Me', 'usces'); ?></label></p>
@@ -43,9 +43,9 @@ class Welcart_login extends WP_Widget {
 		<a href="<?php echo USCES_LOSTMEMBERPASSWORD_URL; ?>" title="<?php _e('Pssword Lost and Found', 'usces'); ?>"><?php _e('Lost your password?', 'usces'); ?></a><br />
 		<a href="<?php echo USCES_NEWMEMBER_URL; ?>" title="<?php _e('New enrollment for membership.', 'usces'); ?>"><?php _e('New enrollment for membership.', 'usces'); ?></a>
 		<?php }else{ ?>
-		<?php echo sprintf(__('Mr/Mrs %s', 'usces'), usces_the_member_name()); ?><br />
+		<div><?php echo sprintf(__('Mr/Mrs %s', 'usces'), usces_the_member_name('return')); ?></div>
 		<?php echo usces_loginout(); ?><br />
-		<a href="<?php echo USCES_MEMBER_URL; ?>"><?php _e('Membership information','usces') ?></a>
+		<a href="<?php echo USCES_MEMBER_URL; ?>" class="login_widget_mem_info_a"><?php _e('Membership information','usces') ?></a>
 		<?php } ?>
 		</div>		
 		

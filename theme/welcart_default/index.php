@@ -5,9 +5,11 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
+
+get_sidebar();
 ?>
 
-<div id="content">
+<div id="content" class="three-column">
 <div class="catbox">
 	<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 	<div <?php post_class() ?> id="post-<?php the_ID(); ?>">

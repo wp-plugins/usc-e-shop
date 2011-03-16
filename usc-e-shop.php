@@ -3,16 +3,16 @@
 Plugin Name: Welcart e-Commerce
 Plugin URI: http://www.welcart.com/
 Description: Welcart builds the management system with a net shop on Wordpress.
-Version: 0.8.1
+Version: 1.0-beta1.r1103161
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
 //$wpdb->show_errors();
-define('USCES_VERSION', '0.8.1.r1012211');
+define('USCES_VERSION', '1.0-beta1.r1103161');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
-define('USCES_DB_ORDER', '1.7');
+define('USCES_DB_ORDER', '1.9');
 define('USCES_DB_ORDER_META', '1.2');
 
 define('USCES_WP_CONTENT_DIR', ABSPATH . 'wp-content');
@@ -28,7 +28,6 @@ define('USCES_CART_FOLDER', 'usces-cart');
 define('USCES_MEMBER_FOLDER', 'usces-member');
 define('USCES_ADMIN_SSL_BASE_NAME', 'admin-ssl.php');
 define('USCES_ADMIN_URL', get_option('siteurl') . '/wp-admin/admin.php');
-load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLDER.'/languages');
 
 require_once(USCES_PLUGIN_DIR."/functions/included_first.php");
 add_filter( 'locale', 'usces_filter_locale' );
@@ -40,8 +39,10 @@ require_once(USCES_PLUGIN_DIR."/functions/calendar-com.php");
 require_once(USCES_PLUGIN_DIR."/functions/utility.php");
 require_once(USCES_PLUGIN_DIR."/functions/item_post.php");
 require_once(USCES_PLUGIN_DIR."/functions/function.php");
+require_once(USCES_PLUGIN_DIR."/functions/shortcode.php");
 require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");
 require_once(USCES_PLUGIN_DIR."/functions/hoock_func.php");
+require_once(USCES_PLUGIN_DIR."/classes/httpRequest.class.php");
 
 global $usces;
 $usces = new usc_e_shop();
@@ -53,5 +54,4 @@ register_activation_hook( __FILE__, array(&$usces, 'set_initial') );
 //add_action('activate_' . plugin_basename(__FILE__), array(&$usces, 'set_initial'));
 
 require_once(USCES_PLUGIN_DIR."/includes/default_filters.php");
-
 ?>

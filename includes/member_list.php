@@ -222,9 +222,14 @@ jQuery(document).ready(function($){
 	if(!empty($csmb_meta)) {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'name_pre') {
-				$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -235,9 +240,14 @@ jQuery(document).ready(function($){
 	if(!empty($csmb_meta)) {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
-				$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}
@@ -253,9 +263,14 @@ jQuery(document).ready(function($){
 	if(!empty($csmb_meta)) {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
-				$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+//20110208ysk start
+				$csmb_key = 'csmb_'.$key;
+				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
+				$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
-				echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>';
+//20110208ysk end
 			}
 		}
 	}

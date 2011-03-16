@@ -19,14 +19,14 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= '<h3>' . esc_html(usces_the_itemName( 'return' )) . '&nbsp; (' . esc_html(usces_the_itemCode( 'return' )) . ') </h3>'."\n";
 	$html .= '<div class="exp">'."\n";
 	$html .= '<div class="field">'."\n";
-	if( $this->itemsku['value']['cprice'] > 0 ){
-		$usces_listprice = __('List price', 'usces') . $this->getGuidTax();
-		$html .= '<div class="field_name">' . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), $this->getGuidTax()) . '</div>'."\n";
-		$html .= '<div class="field_cprice">' . __('$', 'usces') . number_format($this->itemsku['value']['cprice']) . '</div>';
+	if( usces_the_itemCprice('return') > 0 ){
+		$usces_listprice = __('List price', 'usces') . usces_guid_tax('return');
+		$html .= '<div class="field_name">' . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), usces_guid_tax('return')) . '</div>'."\n";
+		$html .= '<div class="field_cprice">' . usces_the_itemCpriceCr('return') . '</div>';
 	}
-	$usces_sellingprice = __('selling price', 'usces') . $this->getGuidTax();
-	$html .= '<div class="field_name">' . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), $this->getGuidTax()) . '</div>'."\n";
-	$html .= '<div class="field_price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</div>'."\n";
+	$usces_sellingprice = __('selling price', 'usces') . usces_guid_tax('return');
+	$html .= '<div class="field_name">' . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), usces_guid_tax('return')) . '</div>'."\n";
+	$html .= '<div class="field_price">' . usces_the_itemPriceCr('return') . '</div>'."\n";
 	$html .= '</div>'."\n";
 	$singlestock = '<div class="field">' . __('stock status', 'usces') . ' : ' . esc_html(usces_the_itemZaiko('return')) . '</div>'."\n";
 	$html .= apply_filters('single_item_stock_field', $singlestock);
@@ -44,16 +44,16 @@ if(usces_sku_num() === 1) { //1SKU
 	if (usces_is_options()) {
 		$html .= "<table class='item_option'><caption>" . apply_filters('usces_filter_single_item_options_caption', __('Please appoint an option.', 'usces'), $post) . "</caption>\n";
 		while (usces_have_options()) {
-			$opttr = "<tr><th>" . esc_html($this->itemopt['key']) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>";
-			$html .= apply_filters('usces_filter_singleitem_option', $opttr, $this->itemopt['key'], usces_getItemOptName()) . "\n";
+			$opttr = "<tr><th>" . esc_html(usces_getItemOptName()) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>";
+			$html .= apply_filters('usces_filter_singleitem_option', $opttr, usces_getItemOptName(), NULL) . "\n";
 		}
 		$html .= "</table>\n";
 	}
 	if( !usces_have_zaiko() ){
 		$html .= '<div class="zaiko_status">' . apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')) . '</div>'."\n";
 	}else{
-		$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . esc_html($this->itemsku['value']['unit']) . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>'."\n";
-		$html .= '<div class="error_message">' . usces_singleitem_error_message($post->ID, $this->itemsku['key'], 'return') . '</div>'."\n";
+		$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . esc_html(usces_the_itemSkuUnit('return')) . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>'."\n";
+		$html .= '<div class="error_message">' . usces_singleitem_error_message($post->ID, usces_the_itemSku('return'), 'return') . '</div>'."\n";
 	}
 
 	$html .= '</div><!-- end of skuform -->'."\n";
@@ -78,12 +78,12 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= '<tr>'."\n";
 	$html .= '<th rowspan="2" class="thborder">'.__('order number', 'usces').'</th>'."\n";
 	$html .= '<th colspan="2">'.__('Title', 'usces').'</th>'."\n";
-	if( $this->itemsku['value']['cprice'] > 0 ){
-		$usces_bothprice = '('.__('List price', 'usces').')'.__('selling price', 'usces') . $this->getGuidTax();
-		$html .= '<th colspan="2">'.apply_filters('usces_filter_bothprice_label', $usces_bothprice, __('List price', 'usces'), __('selling price', 'usces'), $this->getGuidTax()) . '</th>'."\n";
+	if( usces_the_itemCprice('return') > 0 ){
+		$usces_bothprice = '('.__('List price', 'usces').')'.__('selling price', 'usces') . usces_guid_tax('return');
+		$html .= '<th colspan="2">'.apply_filters('usces_filter_bothprice_label', $usces_bothprice, __('List price', 'usces'), __('selling price', 'usces'), usces_guid_tax('return')) . '</th>'."\n";
 	}else{
-		$usces_sellingprice = __('selling price', 'usces') . $this->getGuidTax();
-		$html .= '<th colspan="2">'.apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), $this->getGuidTax()) . '</th>'."\n";
+		$usces_sellingprice = __('selling price', 'usces') . usces_guid_tax('return');
+		$html .= '<th colspan="2">'.apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), usces_guid_tax('return')) . '</th>'."\n";
 	}
 	$html .= '</tr>'."\n";
 	$html .= '<tr>'."\n";
@@ -96,13 +96,13 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= '<tbody>'."\n";
 	do {
 		$html .= '<tr>'."\n";
-		$html .= '<td rowspan="2">' . esc_html($this->itemsku['key']) . '</td>'."\n";
-		$html .= '<td colspan="2" class="skudisp subborder">' . apply_filters('usces_filter_singleitem_skudisp', esc_html($this->itemsku['value']['disp']))."\n";
+		$html .= '<td rowspan="2">' . esc_html(usces_the_itemSku('return')) . '</td>'."\n";
+		$html .= '<td colspan="2" class="skudisp subborder">' . apply_filters('usces_filter_singleitem_skudisp', esc_html(usces_the_itemSkuDisp('return')))."\n";
 		if (usces_is_options()) {
 			$html .= "<table class='item_option'><caption>" . apply_filters('usces_filter_single_item_options_caption', __('Please appoint an option.', 'usces'), $post) . "</caption>\n";
 			while (usces_have_options()) {
-				$opttr = "<tr><th>" . esc_html($this->itemopt['key']) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>";
-				$html .= apply_filters('usces_filter_singleitem_option', $opttr, $this->itemopt['key'], usces_getItemOptName()) . "\n";
+				$opttr = "<tr><th>" . esc_html(usces_getItemOptName()) . '</th><td>' . usces_the_itemOption(usces_getItemOptName(),'','return') . "</td></tr>";
+				$html .= apply_filters('usces_filter_singleitem_option', $opttr, usces_getItemOptName(), NULL) . "\n";
 			}
 			$html .= "</table>\n";
 //			while (usces_have_options()) {
@@ -111,18 +111,22 @@ if(usces_sku_num() === 1) { //1SKU
 		}
 		$html .= '</td>'."\n";
 		$html .= '<td colspan="2" class="subborder price">'."\n";
-		if( $this->itemsku['value']['cprice'] > 0 ){
-			$html .= '<span class="cprice">(' . __('$', 'usces') . number_format($this->itemsku['value']['cprice']) . ')</span>'."\n";
+		if( usces_the_itemCprice('return') > 0 ){
+			$html .= '<span class="cprice">(' . usces_the_itemCpriceCr('return') . ')</span>'."\n";
 		}			
-		$html .= '<span class="price">' . __('$', 'usces') . number_format($this->itemsku['value']['price']) . '</span><br />' . usces_the_itemGpExp('return') . '</td>'."\n";
+		$html .= '<span class="price">' . usces_the_itemPriceCr('return') . '</span><br />' . usces_the_itemGpExp('return') . '</td>'."\n";
 		$html .= '</tr>'."\n";
 		$html .= '<tr>'."\n";
 		$html .= '<td class="zaiko">' . usces_the_itemZaiko('return') . '</td>'."\n";
 		$html .= '<td class="quant">' . usces_the_itemQuant('return') . '</td>'."\n";
-		$html .= '<td class="unit">' . $this->itemsku['value']['unit'] . '</td>'."\n";
-		$html .= '<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>'."\n";
+		$html .= '<td class="unit">' . usces_the_itemSkuUnit('return') . '</td>'."\n";
+		if( !usces_have_zaiko() ){
+			$html .= '<td class="button">' . apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')) . '</td>'."\n";
+		}else{
+			$html .= '<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>'."\n";
+		}
 		$html .= '</tr>'."\n";
-		$html .= '<tr><td colspan="5" class="error_message">' . usces_singleitem_error_message($post->ID, $this->itemsku['key'], 'return') . '</td></tr>'."\n";
+		$html .= '<tr><td colspan="5" class="error_message">' . usces_singleitem_error_message($post->ID, usces_the_itemSku('return'), 'return') . '</td></tr>'."\n";
 
 	} while (usces_have_skus());
 	$html .= '</tbody>'."\n";

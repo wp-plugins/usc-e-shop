@@ -9,25 +9,40 @@ $html .= '
 	jQuery(function($){
 		';
 */
+if(isset($this))
+	$usces = &$this;
+	
+$shipping_indication = apply_filters('usces_filter_shipping_indication', array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0));
+
 $html .= '
 <script type="text/javascript">
+	//1桁の数字を0埋めで2桁にする
+	var toDoubleDigits = function(num) {
+		num += "";
+		if(num.length === 1) num = "0".concat(num);
+		return num;
+	};
 	var selected_delivery_method = \'\';
 	var selected_delivery_date = \'\';
-	var selected_delivery_time = \'\';
-	var add_shipping = new Array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0);//発送日目安
+	var selected_delivery_time = \'\';	
+	var add_shipping = new Array(';
+$c = '';
+foreach($shipping_indication as $value){
+	$html .= $c.$value;
+	$c = ',';
+}
+$html .= ');//発送日目安
 
 	function addDate(year, month, day, add) {
-		var date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+		var date = new Date(Number(year), (Number(month) - 1), Number(day));
 		var baseSec = date.getTime();
-		var addSec = add * 86400000;
+		var addSec = Number(add) * 86400000;
 		var targetSec = baseSec + addSec;
 		date.setTime(targetSec);
 
 		var yy = date.getFullYear() + "";
-		var mm = (date.getMonth() + 1) + "";
-		var dd = date.getDate() + "";
-		if(mm.length < 2) {mm = "0" + mm;}
-		if(dd.length < 2) {dd = "0" + dd;}
+		var mm = toDoubleDigits(date.getMonth() + 1);
+		var dd = toDoubleDigits(date.getDate());
 
 		var newdate = new Array();
 		newdate["year"] = yy;
@@ -40,9 +55,9 @@ $html .= '
 		';
 
 //選択可能な配送方法
-$default_deli = array_values($this->get_available_delivery_method());
+$default_deli = array_values($usces->get_available_delivery_method());
 if($usces_entries['order']['delivery_method'] === NULL){
-	//$default_deli = $this->get_available_delivery_method();
+	//$default_deli = $usces->get_available_delivery_method();
 	//$html .= 'selected_delivery_method = \'' . $default_deli[0] . '\';';
 	$selected_delivery_method = $default_deli[0];
 }else{
@@ -56,21 +71,21 @@ if(isset($usces_entries['order']['delivery_date'])) {
 
 //カートに入っている商品の発送日目安
 $shipping = 0;
-$cart = $this->cart->get_cart();
+$cart = $usces->cart->get_cart();
 for($i = 0; $i < count($cart); $i++) {
 	$cart_row = $cart[$i];
 	$post_id = $cart_row['post_id'];
-	$itemShipping = $this->getItemShipping($post_id);
+	$itemShipping = $usces->getItemShipping($post_id);
 	if($shipping < $itemShipping) $shipping = $itemShipping;
 }
 $html .= 'var shipping = '.$shipping.';';
 //配送業務締時間
-$html .= 'var delivery_time_limit_hour = "'.$this->options['delivery_time_limit']['hour'].'";';
-$html .= 'var delivery_time_limit_min = "'.$this->options['delivery_time_limit']['min'].'";';
+$html .= 'var delivery_time_limit_hour = "'.$usces->options['delivery_time_limit']['hour'].'";';
+$html .= 'var delivery_time_limit_min = "'.$usces->options['delivery_time_limit']['min'].'";';
 //最短宅配時間帯
-$html .= 'var shortest_delivery_time = '.(int)$this->options['shortest_delivery_time'].';';
+$html .= 'var shortest_delivery_time = '.(int)$usces->options['shortest_delivery_time'].';';
 //配送希望日を何日後まで表示するか
-$delivery_after_days = (empty($this->options['delivery_after_days'])) ? 15 : (int)$this->options['delivery_after_days'];
+$delivery_after_days = (empty($usces->options['delivery_after_days'])) ? 15 : (int)$usces->options['delivery_after_days'];
 $html .= 'var delivery_after_days = '.$delivery_after_days.';';
 //配送先県(customer)
 $html .= 'var customer_pref = "'.$usces_entries['customer']['pref'].'";';
@@ -80,21 +95,21 @@ $html .= 'var delivery_pref = "'.$delivery_pref.'";';
 //選択可能な配送方法に設定されている配達日数
 $html .= 'var delivery_days = [];';
 foreach((array)$default_deli as $id) {
-	$index = $this->get_delivery_method_index($id);
+	$index = $usces->get_delivery_method_index($id);
 	if(0 <= $index) {
 		$html .= 'delivery_days['.$id.'] = [];';
-		$html .= 'delivery_days['.$id.'].push("'.$this->options['delivery_method'][$index]['days'].'");';
+		$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
 	}
 }
 //配達日数に設定されている県毎の日数
-$prefs = $this->options['province'];
+$prefs = $usces->options['province'];
 array_shift($prefs);
-$delivery_days = $this->options['delivery_days'];
+$delivery_days = $usces->options['delivery_days'];
 $html .= 'var delivery_days_value = [];';
 foreach((array)$default_deli as $key => $id) {
-	$index = $this->get_delivery_method_index($id);
+	$index = $usces->get_delivery_method_index($id);
 	if(0 <= $index) {
-		$days = (int)$this->options['delivery_method'][$index]['days'];
+		$days = (int)$usces->options['delivery_method'][$index]['days'];
 		if(0 <= $days) {
 			for($i = 0; $i < count((array)$delivery_days); $i++) {
 				if((int)$delivery_days[$i]['id'] == $days) {
@@ -109,12 +124,25 @@ foreach((array)$default_deli as $key => $id) {
 	}
 }
 //20101208ysk end
-
+//20110131ysk start
+$business_days = 0;
+list($yy, $mm, $dd) = getToday();
+//20110228ysk start
+//$business = $this->options['business_days'][$yy][$mm][$dd];
+$business = (isset($usces->options['business_days'][$yy][$mm][$dd])) ? $usces->options['business_days'][$yy][$mm][$dd] : 1;
+//20110228ysk end
+while($business != 1) {
+	$business_days++;
+	list($yy, $mm, $dd) = getNextDay($yy, $mm, $dd);
+	$business = $usces->options['business_days'][$yy][$mm][$dd];
+}
+$html .= 'var business_days = '.$business_days.';';
+//20110131ysk end
 
 $html .= 'selected_delivery_time = \'' . $usces_entries['order']['delivery_time'] . '\';
 		var delivery_time = [];delivery_time[0] = [];';
 
-foreach((array)$this->options['delivery_method'] as $dmid => $dm){
+foreach((array)$usces->options['delivery_method'] as $dmid => $dm){
 	$lines = explode("\n", $dm['time']);
 	$html .= 'delivery_time[' . $dm['id'] . '] = [];';
 	foreach((array)$lines as $line){
@@ -126,12 +154,12 @@ foreach((array)$this->options['delivery_method'] as $dmid => $dm){
 
 $payments_str = '';
 $payments_arr = array();
-foreach ( (array)$this->options['payment_method'] as $array ) {
+foreach ( (array)$usces->options['payment_method'] as $array ) {
 	switch( $array['settlement'] ){
 		case 'acting_zeus_card':
 			$paymod_base = 'zeus';
-			if( 'on' == $this->options['acting_settings'][$paymod_base]['card_activate'] 
-				&& 'on' == $this->options['acting_settings'][$paymod_base]['activate'] ){
+			if( 'on' == $usces->options['acting_settings'][$paymod_base]['card_activate'] 
+				&& 'on' == $usces->options['acting_settings'][$paymod_base]['activate'] ){
 			
 				$payments_str .= "'" . $array['name'] . "': '" . $paymod_base . "', ";
 				$payments_arr[] = $paymod_base;
@@ -139,8 +167,8 @@ foreach ( (array)$this->options['payment_method'] as $array ) {
 			break;
 		case 'acting_zeus_conv':
 			$paymod_base = 'zeus';
-			if( 'on' == $this->options['acting_settings'][$paymod_base]['conv_activate'] 
-				&& 'on' == $this->options['acting_settings'][$paymod_base]['activate'] ){
+			if( 'on' == $usces->options['acting_settings'][$paymod_base]['conv_activate'] 
+				&& 'on' == $usces->options['acting_settings'][$paymod_base]['activate'] ){
 			
 				$payments_str .= "'" . $array['name'] . "': '" . $paymod_base . "_conv', ";
 				$payments_arr[] = $paymod_base.'_conv';
@@ -148,9 +176,9 @@ foreach ( (array)$this->options['payment_method'] as $array ) {
 			break;
 		case 'acting_remise_card':
 			$paymod_base = 'remise';
-			if( 'on' == $this->options['acting_settings'][$paymod_base]['card_activate'] 
-				&& 'on' == $this->options['acting_settings'][$paymod_base]['howpay'] 
-				&& 'on' == $this->options['acting_settings'][$paymod_base]['activate'] ){
+			if( 'on' == $usces->options['acting_settings'][$paymod_base]['card_activate'] 
+				&& 'on' == $usces->options['acting_settings'][$paymod_base]['howpay'] 
+				&& 'on' == $usces->options['acting_settings'][$paymod_base]['activate'] ){
 			
 				$payments_str .= "'" . $array['name'] . "': '" . $paymod_base . "', ";
 				$payments_arr[] = $paymod_base;
@@ -249,18 +277,20 @@ $html .= "
 						var now = new Date();
 						var date = new Array();
 						date[\"year\"] = now.getFullYear() + \"\";
-						date[\"month\"] = now.getMonth() + 1 + \"\";
-						date[\"day\"] = now.getDate() + \"\";
-						if(date[\"month\"].length < 2) {date[\"month\"] = \"0\" + date[\"month\"];}
-						if(date[\"day\"].length < 2) {date[\"day\"] = \"0\" + date[\"day\"];}
+						date[\"month\"] = toDoubleDigits(now.getMonth() + 1);
+						date[\"day\"] = toDoubleDigits(now.getDate());
 						//配送業務締時間を超えていたら1日加算
-						var hh = now.getHours() + \"\";
-						var mm = now.getMinutes() + \"\";
-						if(hh.length < 2) {hh = \"0\" + hh;}
-						if(mm.length < 2) {mm = \"0\" + mm;}
+						var hh = toDoubleDigits(now.getHours());
+						var mm = toDoubleDigits(now.getMinutes());
 						if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
 						}
+//20110131ysk start
+						//発送業務休日加算
+						if(0 < business_days) {
+							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], business_days);
+						}
+//20110131ysk end
 						//発送日目安加算
 						if(0 < add_shipping[shipping]) {
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], add_shipping[shipping]);
@@ -272,14 +302,20 @@ $html .= "
 						//最短配送時間帯メッセージ
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 						switch(shortest_delivery_time) {
+						case 0://指定しない 20110106ysk
+							message = " . __("'最短 ' + date_str + ' からご指定いただけます。'", 'usces') . ";
+							break;
 						case 1://午前着可
-							message = date_str+\"".__('の午前中からご指定できます。', 'usces')."\";
+							message = " . __("'最短 ' + date_str + ' の午前中からご指定いただけます。'", 'usces') . ";
 							break;
 						case 2://午前着不可
-							message = date_str+\"".__('の午後からご指定できます。', 'usces')."\";
+							message = " . __("'最短 ' + date_str + ' の午後からご指定いただけます。'", 'usces') . ";
 							break;
 						}
-						option += '<option value=\"0\">".__('No preference', 'usces')."</option>';
+//20110126ysk start
+						//option += '<option value=\"0\">".__('No preference', 'usces')."</option>';
+						option += '<option value=\"".__('No preference', 'usces')."\">".__('No preference', 'usces')."</option>';
+//20110126ysk end
 						for(var i = 0; i < delivery_after_days; i++) {
 							date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 							if(date_str == selected_delivery_date) {
@@ -337,7 +373,7 @@ foreach($payments_arr as $pn => $pm ){
 	
 	switch( $pm ){
 		case 'zeus':
-			if('on' == $this->options['acting_settings'][$pm]['howpay']){
+			if('on' == $usces->options['acting_settings'][$pm]['howpay']){
 				$html .= "
 				$(\"input[name='howpay']\").change(function() {
 					if( '' != $(\"select[name='cbrand'] option:selected\").val() ){
@@ -408,7 +444,7 @@ foreach($payments_arr as $pn => $pm ){
 $html .= "
 		ch_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
 		if( uscesPaymod[ch_pay] != '' ){
-			$(\"#\" + uscesPaymod[ch_pay]).css({\"display\": \"table\"});
+			$(\"#\" + uscesPaymod[ch_pay]).css({\"display\": \"\"});
 		}";
 	
 $html .= "

@@ -6,27 +6,26 @@ add_action('usces_after_cart_instant', 'usces_action_acting_transaction', 10);
 function usces_action_acting_construct(){
 
 	if(isset($_POST['X-TRANID']) && !isset($_POST['OPT'])){//remise
-		usces_log('remise in : '.$_POST['X-TRANID'], 'acting_transaction.log');
 		
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		$datas = usces_get_order_acting_data($rand);
 		$_GET['uscesid'] = $datas['sesid'];
-		//usces_log('sesid : '.$datas['sesid'], 'acting_transaction.log');
-		
+		if( empty($datas['sesid']) ){
+			usces_log('remise construct : error1', 'acting_transaction.log');
+		}else{
+			usces_log('remise construct : '.$_POST['X-TRANID'], 'acting_transaction.log');
+		}
+			
 	}elseif( in_array($_SERVER['REMOTE_ADDR'], array('210.164.6.67', '202.221.139.50')) ){//zeus
 		
-		if( !isset($_REQUEST['sendpoint']) )
-			return;
-			
 		$rand = $_REQUEST['sendpoint'];
-		usces_log('zeus : sendpoint:'.$_REQUEST['sendpoint'], 'acting_transaction.log');
-//		usces_log('zeus : acting:'.$_REQUEST['acting'], 'acting_transaction.log');
-//		usces_log('zeus : tracking_no:'.$_REQUEST['tracking_no'], 'acting_transaction.log');
-//		usces_log('zeus : order_no:'.$_REQUEST['order_no'], 'acting_transaction.log');
 		$datas = usces_get_order_acting_data($rand);
 		$_GET['uscesid'] = $datas['sesid'];
-//		usces_log('zeus : session_id1:'.$datas['sesid'], 'acting_transaction.log');
-
+		if( empty($datas['sesid']) ){
+			usces_log('zeus construct : error1', 'acting_transaction.log');
+		}else{
+			usces_log('zeus construct : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
+		}
 	}
 }
 
@@ -35,29 +34,41 @@ function usces_action_acting_transaction(){
 	
 	//*** remise_card ***//
 	if(isset($_POST['X-TRANID']) && !isset($_POST['OPT'])){
+		foreach( $_POST as $key => $value ){
+			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
+		}
 		
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		if( empty($rand) ){
-			usces_log('remise : return error', 'acting_transaction.log');
-			die('error');
+			usces_log('remise card error1 : '.print_r($data, true), 'acting_transaction.log');
+			die('error1');
 		}
 		
-		$order_id = usces_reg_orderdata();
-		if( !$order_id ){
-			usces_log('remise : Failure reg order data', 'acting_transaction.log');
-			die('error');
+		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){
+			usces_log('remise card error2 : '.print_r($data, true), 'acting_transaction.log');
+			die('error2');
+		}
+		
+//20110203ysk start
+		$res = $usces->order_processing();
+		if( 'error' == $res ){
+			usces_log('remise card error3 : '.print_r($data, true), 'acting_transaction.log');
+			die('error3');
 		}else{
 			if( isset($_POST['X-PAYQUICKID']) )
 				$usces->set_member_meta_value('remise_pcid', $_POST['X-PAYQUICKID']);
 			if( isset($_POST['X-AC_MEMBERID']) )
 				$usces->set_member_meta_value('remise_memid', $_POST['X-AC_MEMBERID']);
-			$mail_res = usces_send_ordermail( $order_id );
+			usces_log('remise card transaction : '.$_POST['X-TRANID'], 'acting_transaction.log');
 			die('<SDBKDATA>STATUS=800</SDBKDATA>');
 		}
+//20110203ysk end
 		
 	//*** remise_conv ***//
 	}elseif( isset($_POST['S_TORIHIKI_NO']) && isset($_POST['REC_FLG']) ){
-		//usces_log('remise conv-info : ' . $_POST['S_TORIHIKI_NO'], 'acting_transaction.log');
+		foreach( $_POST as $key => $value ){
+			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
+		}
 		
 		$table_name = $wpdb->prefix . "usces_order";
 		$table_meta_name = $wpdb->prefix . "usces_order_meta";
@@ -65,7 +76,8 @@ function usces_action_acting_transaction(){
 		$mquery = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_POST['S_TORIHIKI_NO']);
 		$order_id = $wpdb->get_var( $mquery );
 		if( $order_id == NULL ){
-			usces_log('remise conv : order_id error', 'acting_transaction.log');
+			usces_log('remise conv error1 : '.print_r($data, true), 'acting_transaction.log');
+			die('error1');
 		}
 		
 		$mquery = $wpdb->prepare("
@@ -77,58 +89,54 @@ function usces_action_acting_transaction(){
 				END 
 				WHERE ID = %d", $order_id);
 		$res = $wpdb->query( $mquery );
-		if( $res === false )
-			usces_log('remise conv : order_update error', 'acting_transaction.log');
-		
-		foreach( $_POST as $key => $value ){
-			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
+		if( $res === false ){
+			usces_log('remise conv error2 : '.print_r($data, true), 'acting_transaction.log');
+			die('error2');
 		}
+		
 		$datastr = serialize( $data );
 		$mquery = $wpdb->prepare(
 					"UPDATE $table_meta_name SET meta_value = %s WHERE meta_key = %s AND order_id = %d", $datastr, 'settlement_id', $order_id);
 		$res = $wpdb->query( $mquery );
 		if( $res === false ){
-			usces_log('remise conv : ordermeta_update error', 'acting_transaction.log');
+			usces_log('remise conv error3 : '.print_r($data, true), 'acting_transaction.log');
+			die('error3');
 		}
 		
 		//usces_send_receipted_mail( $order_id, 'remise_conv' );
+		usces_log('remise conv transaction : '.$_POST['S_TORIHIKI_NO'], 'acting_transaction.log');
 		die('<SDBKDATA>STATUS=800</SDBKDATA>');
 	
 	//*** zeus_card ***//
 	}elseif( isset($_REQUEST['acting']) && 'zeus_card' == $_REQUEST['acting'] && isset($_REQUEST['result']) && isset($_REQUEST['ordd']) ){
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
+		}
 
 		$acting_opts = $usces->options['acting_settings']['zeus'];
 
 		$rand = $_GET['sendpoint'];
 		if( empty($rand) ){
-			usces_log('zeus : return error', 'acting_transaction.log');
-			die('error');
+			usces_log('zeus card error1 : '.print_r($data, true), 'acting_transaction.log');
+			die('error1');
 		}
 		
 		if( 'OK' == $_REQUEST['result'] ){
-			$order_id = usces_reg_orderdata();
-			if( !$order_id ){
-				usces_log('zeus : Failure reg order data', 'acting_transaction.log');
-				header("HTTP/1.0 400");
-				die('error');
-			}else{
-				if( $usces->is_member_logged_in() )
-					$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
-				$mail_res = usces_send_ordermail( $order_id );
-				header("HTTP/1.0 200 OK");
-				die('zeus');
-			}
-		}else{
-			usces_log('zeus result : NG', 'acting_transaction.log');
 			header("HTTP/1.0 200 OK");
 			die('zeus');
+		}else{
+			usces_log('zeus card error3 : '.print_r($data, true), 'acting_transaction.log');
+			header("HTTP/1.0 200 OK");
+			die('error3');
 		}
 		
 	//*** zeus_bank ***//
 	}elseif( isset($_REQUEST['acting']) && 'zeus_bank' == $_REQUEST['acting'] && isset($_REQUEST['order_no']) && isset($_REQUEST['tracking_no']) ){
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
+		}
 
 		$acting_opts = $usces->options['acting_settings']['zeus'];
-		usces_log('zeus status : '.$_REQUEST['status'], 'acting_transaction.log');
 
 		$table_name = $wpdb->prefix . "usces_order";
 		$table_meta_name = $wpdb->prefix . "usces_order_meta";
@@ -136,18 +144,19 @@ function usces_action_acting_transaction(){
 		$values = $wpdb->get_row( $mquery, ARRAY_A );
 		if( $values == NULL ){
 			
-			$order_id = usces_reg_orderdata();
-				usces_log('zeus :order_id'.print_r($order_id, true), 'acting_transaction.log');
-			if( !$order_id ){
-				usces_log('zeus : Failure reg order data', 'acting_transaction.log');
-			}else{
-				$mail_res = usces_send_ordermail( $order_id );
-				$value = serialize($_GET);
-				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
-				$res = $wpdb->query( $query );
-				$usces->cart->crear_cart();
-			}
-
+//20110203ysk start
+		$res = $usces->order_processing();
+		if( 'error' == $res ){
+			usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
+			die('error1');
+		}else{
+			$order_id = $usces->cart->get_order_entry('ID');
+			$value = serialize($_GET);
+			$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
+			$res = $wpdb->query( $query );
+			$usces->cart->crear_cart();
+		}
+//20110203ysk end
 
 		}else{
 		
@@ -174,23 +183,30 @@ function usces_action_acting_transaction(){
 				WHERE ID = %d", $order_id);
 			}
 			$res = $wpdb->query( $mquery );
-			if(!$res)
-				usces_log('zeus db_order : error', 'acting_transaction.log');
+			if(!$res){
+				usces_log('zeus bank error2 : '.print_r($data, true), 'acting_transaction.log');
+				die('error2');
+			}
 			
 			$value = serialize($_GET);
 			$mquery = $wpdb->prepare("UPDATE $table_meta_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", $value, $order_id, 'acting_'.$_REQUEST['tracking_no']);
 			$res = $wpdb->query( $mquery );
-			if(!$res)
-				usces_log('zeus db_order_meta : error', 'acting_transaction.log');
+			if(!$res){
+				usces_log('zeus bank error3 : '.print_r($data, true), 'acting_transaction.log');
+				die('error3');
+			}
 		}
 
+		usces_log('zeus bank transaction : '.$_REQUEST['tracking_no'], 'acting_transaction.log');
 		die('zeus');
 		
 	//*** zeus_conv ***//
 	}elseif( isset($_REQUEST['acting']) && 'zeus_conv' == $_REQUEST['acting'] && isset($_REQUEST['status']) && isset($_REQUEST['sendpoint']) ){
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
+		}
 
 		$acting_opts = $usces->options['acting_settings']['zeus'];
-		usces_log('zeus status : '.$_REQUEST['status'], 'acting_transaction.log');
 
 		$table_name = $wpdb->prefix . "usces_order";
 		$table_meta_name = $wpdb->prefix . "usces_order_meta";
@@ -198,17 +214,18 @@ function usces_action_acting_transaction(){
 		$values = $wpdb->get_row( $mquery, ARRAY_A );
 		if( $values == NULL ){
 			
-			$order_id = usces_reg_orderdata();
-				usces_log('zeus :order_id'.print_r($order_id, true), 'acting_transaction.log');
-			if( !$order_id ){
-				usces_log('zeus : Failure reg order data', 'acting_transaction.log');
-			}else{
-				$mail_res = usces_send_ordermail( $order_id );
-				$value = serialize($_GET);
-				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
-				$res = $wpdb->query( $query );
-				//$usces->cart->crear_cart(); clear in front
-			}
+//20110203ysk start
+		$res = $usces->order_processing();
+		if( 'error' == $res ){
+			usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
+			die('error1');
+		}else{
+			$order_id = $usces->cart->get_order_entry('ID');
+			$value = serialize($_GET);
+			$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
+			$res = $wpdb->query( $query );
+		}
+//20110203ysk end
 
 
 		}else{
@@ -236,37 +253,44 @@ function usces_action_acting_transaction(){
 				WHERE ID = %d", $order_id);
 			}
 			$res = $wpdb->query( $mquery );
-			if(!$res)
-				usces_log('zeus db_order : error'.$order_id, 'acting_transaction.log');
-			
+			if(!$res){
+				usces_log('zeus conv error2 : '.print_r($data, true), 'acting_transaction.log');
+				die('error2');
+			}
 			foreach( $_GET as $key => $v ){
 				$newvalue[$key] = mb_convert_encoding($v, 'UTF-8', 'SJIS');
 			}
 			$value = serialize($newvalue);
 			$mquery = $wpdb->prepare("UPDATE $table_meta_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", $value, $order_id, 'acting_'.$_REQUEST['sendpoint']);
 			$res = $wpdb->query( $mquery );
-			if(!$res)
-				usces_log('zeus db_order_meta : error', 'acting_transaction.log');
+			if(!$res){
+				usces_log('zeus conv error3 : '.print_r($data, true), 'acting_transaction.log');
+				die('error3');
+			}
 		}
 
+		usces_log('zeus conv transaction : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
 		die('zeus');
 		
 //20101018ysk start
 	//*** jpayment_card ***//
 	} elseif(isset($_REQUEST['acting']) && 'jpayment_card' == $_REQUEST['acting']) {
-		$args='';
-		foreach((array)$_GET as $key => $value) {
-			$args.='&('.$key.')=('.$value.')';
-		}
-		usces_log('jpayment card : '.$args, 'acting_transaction.log');
+		//$args='';
+		//foreach((array)$_GET as $key => $value) {
+		//	$args.='&('.$key.')=('.$value.')';
+		//}
+		//usces_log('jpayment card : '.$args, 'acting_transaction.log');
 
 	//*** jpayment_conv ***//
 	} elseif(isset($_REQUEST['acting']) && 'jpayment_conv' == $_REQUEST['acting'] && isset($_GET['ap'])) {
-		$args='';
-		foreach((array)$_GET as $key => $value) {
-			$args.='&('.$key.')=('.$value.')';
+		//$args='';
+		//foreach((array)$_GET as $key => $value) {
+		//	$args.='&('.$key.')=('.$value.')';
+		//}
+		//usces_log('jpayment conv : '.$args, 'acting_transaction.log');
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
 		}
-		usces_log('jpayment conv : '.$args, 'acting_transaction.log');
 
 		switch($_GET['ap']) {
 		case 'CPL_PRE'://コンビニペーパーレス決済識別コード
@@ -279,7 +303,8 @@ function usces_action_acting_transaction(){
 			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_GET['cod']);
 			$order_id = $wpdb->get_var($query);
 			if($order_id == NULL) {
-				usces_log('jpayment conv : order_id error', 'acting_transaction.log');
+				usces_log('jpayment conv error1 : '.print_r($data, true), 'acting_transaction.log');
+				die('error1');
 			}
 
 			$query = $wpdb->prepare("
@@ -292,7 +317,8 @@ function usces_action_acting_transaction(){
 				WHERE ID = %d", $order_id);
 			$res = $wpdb->query($query);
 			if($res === false) {
-				usces_log('jpayment conv : order_update error', 'acting_transaction.log');
+				usces_log('jpayment conv error2 : '.print_r($data, true), 'acting_transaction.log');
+				die('error2');
 			}
 
 			foreach($_GET as $key => $value) {
@@ -300,8 +326,11 @@ function usces_action_acting_transaction(){
 			}
 			$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 			if($res === false) {
-				usces_log('jpayment conv : ordermeta_update error', 'acting_transaction.log');
+				usces_log('jpayment conv error3 : '.print_r($data, true), 'acting_transaction.log');
+				die('error3');
 			}
+
+			usces_log('J-Payment conv transaction : '.$_GET['gid'], 'acting_transaction.log');
 			die('J-Payment');
 			break;
 
@@ -312,7 +341,8 @@ function usces_action_acting_transaction(){
 			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_GET['cod']);
 			$order_id = $wpdb->get_var($query);
 			if($order_id == NULL) {
-				usces_log('jpayment conv : order_id error', 'acting_transaction.log');
+				usces_log('jpayment conv error1 : '.print_r($data, true), 'acting_transaction.log');
+				die('error1');
 			}
 
 			$query = $wpdb->prepare("
@@ -325,7 +355,8 @@ function usces_action_acting_transaction(){
 				WHERE ID = %d", $order_id);
 			$res = $wpdb->query($query);
 			if($res === false) {
-				usces_log('jpayment conv : order_update error', 'acting_transaction.log');
+				usces_log('jpayment conv error2 : '.print_r($data, true), 'acting_transaction.log');
+				die('error2');
 			}
 
 			foreach($_GET as $key => $value) {
@@ -333,35 +364,26 @@ function usces_action_acting_transaction(){
 			}
 			$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 			if($res === false) {
-				usces_log('jpayment conv : ordermeta_update error', 'acting_transaction.log');
+				usces_log('jpayment conv error3 : '.print_r($data, true), 'acting_transaction.log');
+				die('error3');
 			}
+
+			usces_log('J-Payment conv transaction : '.$_GET['gid'], 'acting_transaction.log');
 			die('J-Payment');
 			break;
 		}
 
-	//*** jpayment_webm ***//
-	} elseif(isset($_REQUEST['acting']) && 'jpayment_webm' == $_REQUEST['acting']) {
-		$args='';
-		foreach((array)$_GET as $key => $value) {
-			$args.='&('.$key.')=('.$value.')';
-		}
-		usces_log('jpayment webmoney : '.$args, 'acting_transaction.log');
-
-	//*** jpayment_bitc ***//
-	} elseif(isset($_REQUEST['acting']) && 'jpayment_bitc' == $_REQUEST['acting']) {
-		$args='';
-		foreach((array)$_GET as $key => $value) {
-			$args.='&('.$key.')=('.$value.')';
-		}
-		usces_log('jpayment bitcash : '.$args, 'acting_transaction.log');
-
 	//*** jpayment_bank ***//
 	} elseif(isset($_REQUEST['acting']) && 'jpayment_bank' == $_REQUEST['acting']) {
-		$args='';
-		foreach((array)$_GET as $key => $value) {
-			$args.='&('.$key.')=('.$value.')';
+		//$args='';
+		//foreach((array)$_GET as $key => $value) {
+		//	$args.='&('.$key.')=('.$value.')';
+		//}
+		//usces_log('jpayment bank : '.$args, 'acting_transaction.log');
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
 		}
-		usces_log('jpayment bank : '.$args, 'acting_transaction.log');
+
 		switch($_GET['ap']) {
 		case 'BANK'://受付完了
 			break;
@@ -374,7 +396,8 @@ function usces_action_acting_transaction(){
 				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_GET['cod']);
 				$order_id = $wpdb->get_var($query);
 				if($order_id == NULL) {
-					usces_log('jpayment bank : order_id error', 'acting_transaction.log');
+					usces_log('jpayment bank error1 : '.print_r($data, true), 'acting_transaction.log');
+					die('error1');
 				}
 
 				$query = $wpdb->prepare("
@@ -387,7 +410,8 @@ function usces_action_acting_transaction(){
 					WHERE ID = %d", $order_id);
 				$res = $wpdb->query($query);
 				if($res === false) {
-					usces_log('jpayment bank : order_update error', 'acting_transaction.log');
+					usces_log('jpayment bank error2 : '.print_r($data, true), 'acting_transaction.log');
+					die('error2');
 				}
 
 				foreach($_GET as $key => $value) {
@@ -395,9 +419,12 @@ function usces_action_acting_transaction(){
 				}
 				$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 				if($res === false) {
-					usces_log('jpayment bank : ordermeta_update error', 'acting_transaction.log');
+					usces_log('jpayment bank error3 : '.print_r($data, true), 'acting_transaction.log');
+					die('error3');
 				}
 			}
+
+			usces_log('J-Payment bank transaction : '.$_REQUEST['gid'], 'acting_transaction.log');
 			die('J-Payment');
 			break;
 		}
@@ -405,12 +432,32 @@ function usces_action_acting_transaction(){
 	//*** epsilon ***//
 	}elseif( !isset($_GET['acting_return']) && isset($_GET['trans_code']) && isset($_GET['user_id']) && isset($_GET['result']) && isset($_GET['order_number']) ){
 		$query = 'trans_code=' . $_GET['trans_code'] . '&user_id=' . $_GET['user_id'] . '&result=' . $_GET['result'] . '&order_number=' . $_GET['order_number'];
-		usces_log('epsilon : ' . $query, 'acting_transaction.log');
+		usces_log('epsilon (acting_transaction) : ' . $query, 'acting_transaction.log');
 		$permalink_structure = get_option('permalink_structure');
-		$delim = empty($permalink_structure) ? '&' : '?';
+		$delim = ( !$usces->use_ssl && $permalink_structure) ? '?' : '&';
 
-		header('location: ' . get_permalink(get_option('usces_cart_number')) . $delim . 'acting=epsilon&acting_return=1&' . $query );
+		header('location: ' . USCES_CART_URL . $delim . 'acting=epsilon&acting_return=1&' . $query );
 		exit;
+//20110208ysk start
+	} elseif( !isset($_GET['acting_return']) && (isset($_GET['acting']) && 'paypal_ipn' == $_GET['acting']) ) {
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
+		}
+		usces_log('paypal_ipn in ', 'acting_transaction.log');
+		require_once($usces->options['settlement_path'] . 'paypal.php');
+		$ipn_res = paypal_ipn_check($usces_paypal_url);
+		if( $ipn_res[0] === true ){
+			$res = $usces->order_processing( $ipn_res );
+			if( 'ordercompletion' == $res ){
+				$usces->cart->crear_cart();
+			}else{
+				usces_log('paypal_ipn error : '.print_r($data, true), 'acting_transaction.log');
+				die('error1');
+			}
+		}
+		usces_log('PayPal IPN transaction : '.$_REQUEST['txn_id'], 'acting_transaction.log');
+		die('PayPal');
+//20110208ysk end
 	}
 }
 ?>

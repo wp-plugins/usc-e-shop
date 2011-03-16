@@ -1,6 +1,7 @@
 <?php
 require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
 global $wpdb;
+$wpdb->show_errors();
 
 $tableName = $wpdb->posts;
 if( USCES_MYSQL_VERSION >= 5 ){
@@ -40,10 +41,11 @@ $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 $usces_opt_item = unserialize(get_option('usces_opt_item'));
 //20101111ysk end
 ?>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
+<!--<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.resizable.js"></script>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.draggable.js"></script>
 <script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.dialog.js"></script>
+-->
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
@@ -159,7 +161,6 @@ jQuery(function($){
 				html += '<option value="<?php _e('Pending Review', 'usces'); ?>"<?php if( __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
 				html += '<option value="<?php _e('Closed', 'usces'); ?>"<?php if( __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
 				html += '<option value="<?php _e('Trash', 'usces'); ?>"<?php if( __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
-				html += '<option value="ゴミ箱"<?php if("ゴミ箱" == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>>ゴミ箱の中</option>';
 				html += '</select>';
 			} 
 			
@@ -358,7 +359,6 @@ jQuery(document).ready(function($){
 		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="<?php _e('start', 'usces'); ?>" />
 <!--20101111ysk start-->
 <!--	<a href="#" id="up_dlg"><?php _e('Collective registration item', 'usces'); ?></a>-->
-		<!--<a href="#" id="up_dlg">商品一括登録</a>-->
 		</td>
 		</tr>
 		</table>
@@ -385,6 +385,8 @@ jQuery(document).ready(function($){
 			<th scope="col"><?php echo $value ?>&nbsp;/&nbsp;
 	<?php elseif ( $key == 'item_name' || $key == 'post_title' ) : ?>
 			<?php echo $value; ?></th>
+	<?php elseif ( $key == 'price' ) : ?>
+			<th scope="col"><?php echo $value; ?>(<?php usces_crcode(); ?>)</th>
 	<?php else : ?>
 			<th scope="col"><?php echo $value; ?></th>
 	<?php endif; ?>
@@ -462,7 +464,7 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'sku_value' ): ?>
 			<td class="price">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php echo number_format($sv['price']); ?></div>
+				<div class="priceline<?php echo $bgc; ?>"><?php usces_crform( $sv['price'], true, false ); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 			<td class="zaikonum">
@@ -514,7 +516,7 @@ jQuery(document).ready(function($){
 <div id="dlItemListDialog" title="<?php _e('Download Item List', 'usces'); ?>">
 	<p><?php _e('Choose the file format, and push the download.', 'usces'); ?></p>
 	<fieldset>
-		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('最初の 1 行目にフィールドを追加する','usces'); ?></label>
+		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('To add a subject title at the first line','usces'); ?></label>
 	</fieldset>
 	<fieldset>
 <?php 

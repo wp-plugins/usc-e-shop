@@ -95,27 +95,6 @@ $custom_field_position_select = array(
 					'fax_after' => __('After the fax', 'usces')
 					);
 //20100818ysk end
-$usces_language_select = array(
-					'en' => __('English', 'usces'),
-					'ja' => __('Japanese', 'usces'),
-					'others' => __('Others', 'usces')
-					);
-$usces_currency_select = array(
-					'CAD' => array(2, '.', ',', 'C$'),
-					'EUR' => array(2, '.', ',', '&#x20AC;'),
-					'FRF' => array(2, ',', ' ', '&#x20AC;'),
-					'GBP' => array(2, '.', ',', '£'),
-					'IDR' => array(2, '.', ',', 'Rp'),
-					'USD' => array(2, '.', ',', 'US$'),
-					'JPY' => array(0, '.', ',', '￥'),
-					'others' => array(2, '.', '', '$')
-					);
-$usces_country_select = array(
-					'CA' => __('Canada', 'usces'),
-					'JP' => __('Japan', 'usces'),
-					'US' => __('United States', 'usces'),
-					'others' => __('Others', 'usces')
-					);
 $province_ja = array(__('-- Select --', 'usces'),"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
 				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
 				"福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府",
@@ -156,8 +135,11 @@ update_option('usces_custom_field_position_select', $custom_field_position_selec
 
 update_option('usces_currency_symbol',__('$', 'usces'));
 update_option('usces_secure_link', $usces_secure_link);
+if(!get_option('usces_wcid'))
+	update_option('usces_wcid', md5(uniqid(rand(),1)));
 
-
+update_option('usces_secure_link', $usces_secure_link);
+update_option('usces_secure_link', $usces_secure_link);
 
 $usces_op = get_option('usces');
 
@@ -216,8 +198,57 @@ $usces_op['mail_default']['footer']['mitumorimail'] = "=========================
 $usces_op['mail_default']['footer']['cancelmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
 $usces_op['mail_default']['footer']['othermail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
 
-
 update_option('usces', $usces_op);
 
-
+/************************************************************************/
+/* usces_settings */
+$usces_settings['language'] = array();
+$usces_settings['currency'] = array(
+					'CA' => array('CAD', 2, '.', ',', '$'),
+//					'FRF' => array(2, ',', ' ', '&#x20AC;'),
+//					'GBP' => array(2, '.', ',', '£'),
+//					'IDR' => array(2, '.', ',', 'Rp'),
+					'JP' => array('JPY', 0, '.', ',', '&yen;'),
+					'US' => array('USD', 2, '.', ',', '$'),
+					);
+$usces_settings['nameform'] = array(
+					'CA' => 1,
+					'JP' => 0,
+					'US' => 1,
+					);
+$usces_settings['addressform'] = array(
+					'CA' => 'US',
+					'JP' => 'JP',
+					'US' => 'US',
+					);
+$usces_settings['country'] = array(
+					'CA' => __('Canada', 'usces'),
+					'JP' => __('Japan', 'usces'),
+					'US' => __('USA', 'usces'),
+					);
+$usces_settings['country_num'] = array(
+					'CA' => 1,
+					'JP' => 81,
+					'US' => 1,
+					);
+$usces_settings['lungage2country'] = array(
+					'ja' => 'JP',
+					'en' => 'US',
+					);
+$usces_states['JP'] = array(__('-- Select --', 'usces'),"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
+				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
+				"福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府",
+				"大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県",
+				"徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県",
+				"宮崎県","鹿児島県","沖縄県");
+$usces_states['US'] = array(__('-- Select --', 'usces'),"Alabama","Alaska","Arizona","Arkansas","California","Colorado",
+				"Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii",
+				"Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
+				"Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri",
+				"Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York",
+				"North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania",
+				"Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont",
+				"Virginia","Washington","West Virginia","Wisconsin","Wyoming");
+if( !get_option('usces_states') )
+	update_option('usces_states',$usces_states);
 ?>

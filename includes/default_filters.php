@@ -18,7 +18,8 @@ add_action( 'wp_ajax_item_option_ajax', 'item_option_ajax' );
 add_action( 'wp_ajax_item_sku_ajax', 'item_sku_ajax' );
 add_action( 'wp_ajax_shop_options_ajax', 'shop_options_ajax' );
 add_action( 'wp_ajax_setup_cod_ajax', 'usces_setup_cod_ajax' );
-//add_action( 'wp_ajax_varch_ajax', 'usces_varch_ajax' );
+add_action( 'wp_ajax_change_states_ajax', 'change_states_ajax' );
+add_action( 'wp_ajax_getinfo_ajax', 'usces_getinfo_ajax' );
 //20100809ysk start
 add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 //20100809ysk end
@@ -40,6 +41,9 @@ add_shortcode('shipping_charge', array(&$usces, 'sc_shipping_charge'));
 add_shortcode('site_url', array(&$usces, 'sc_site_url'));
 add_shortcode('button_to_cart', array(&$usces, 'sc_button_to_cart'));
 
+add_shortcode('direct_intoCart', 'sc_direct_intoCart');
+
+
 if (version_compare($wp_version, '2.8', '>=')){
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_category.php");
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_bestseller.php");
@@ -49,6 +53,8 @@ if (version_compare($wp_version, '2.8', '>=')){
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_page.php");
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_post.php");
 	require_once(USCES_PLUGIN_DIR."/widgets/usces_login.php");
+	require_once(USCES_PLUGIN_DIR."/widgets/usces_blog_calendar.php");
+	require_once(USCES_PLUGIN_DIR."/widgets/usces_recent_posts.php");
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_category");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_bestseller");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_calendar");'));
@@ -57,6 +63,8 @@ if (version_compare($wp_version, '2.8', '>=')){
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_page");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_post");'));
 	add_action('widgets_init', create_function('', 'return register_widget("Welcart_login");'));
+	add_action('widgets_init', create_function('', 'return register_widget("Welcart_Blog_Calendar");'));
+	add_action('widgets_init', create_function('', 'return register_widget("Welcart_Recent_Posts");'));
 }
 
 add_filter('usces_filter_cart_page_header', array(&$usces, 'filter_cart_page_header'));
@@ -81,13 +89,35 @@ add_filter('usces_filter_memberinfo_page_header', array(&$usces, 'filter_memberi
 add_filter('usces_filter_memberinfo_page_footer', array(&$usces, 'filter_memberinfo_page_footer'));
 add_filter('usces_filter_membercompletion_page_header', array(&$usces, 'filter_membercompletion_page_header'));
 add_filter('usces_filter_membercompletion_page_footer', array(&$usces, 'filter_membercompletion_page_footer'));
-add_filter('the_content', array(&$usces, 'filter_itemPage'));
-//add_filter('post_link', array(&$usces, 'filter_permalink'));
-//add_filter('page_link', array(&$usces, 'filter_permalink'));
+
+add_action('usces_action_cart_page_header', array(&$usces, 'action_cart_page_header'));
+add_action('usces_action_cart_page_footer', array(&$usces, 'action_cart_page_footer'));
+add_action('usces_action_customer_page_header', array(&$usces, 'action_customer_page_header'));
+add_action('usces_action_customer_page_footer', array(&$usces, 'action_customer_page_footer'));
+add_action('usces_action_delivery_page_header', array(&$usces, 'action_delivery_page_header'));
+add_action('usces_action_delivery_page_footer', array(&$usces, 'action_delivery_page_footer'));
+add_action('usces_action_confirm_page_header', array(&$usces, 'action_confirm_page_header'));
+add_action('usces_action_confirm_page_footer', array(&$usces, 'action_confirm_page_footer'));
+add_action('usces_action_cartcompletion_page_header', array(&$usces, 'action_cartcompletion_page_header'));
+add_action('usces_action_cartcompletion_page_footer', array(&$usces, 'action_cartcompletion_page_footer'));
+add_action('usces_action_login_page_header', array(&$usces, 'action_login_page_header'));
+add_action('usces_action_login_page_footer', array(&$usces, 'action_login_page_footer'));
+add_action('usces_action_newmember_page_header', array(&$usces, 'action_newmember_page_header'));
+add_action('usces_action_newmember_page_footer', array(&$usces, 'action_newmember_page_footer'));
+add_action('usces_action_newpass_page_header', array(&$usces, 'action_newpass_page_header'));
+add_action('usces_action_newpass_page_footer', array(&$usces, 'action_newpass_page_footer'));
+add_action('usces_action_changepass_page_header', array(&$usces, 'action_changepass_page_header'));
+add_action('usces_action_changepass_page_footer', array(&$usces, 'action_changepass_page_footer'));
+add_action('usces_action_memberinfo_page_header', array(&$usces, 'action_memberinfo_page_header'));
+add_action('usces_action_memberinfo_page_footer', array(&$usces, 'action_memberinfo_page_footer'));
+add_action('usces_action_membercompletion_page_header', array(&$usces, 'action_membercompletion_page_header'));
+add_action('usces_action_membercompletion_page_footer', array(&$usces, 'action_membercompletion_page_footer'));
+
 if( $usces->options['itemimg_anchor_rel'] )
 	add_filter('usces_itemimg_anchor_rel', array(&$usces, 'filter_itemimg_anchor_rel'));
 	
 add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
+add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata');
 
 
 

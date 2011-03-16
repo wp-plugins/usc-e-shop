@@ -3,10 +3,10 @@ $html = '<div id="info-confirm">
 	
 	<div class="usccart_navi">
 	<ol class="ucart">
-	<li class="ucart">' . __('1.Cart','usces') . '</li>
-	<li class="ucart">' . __('2.Customer Info','usces') . '</li>
-	<li class="ucart">' . __('3.Deli. & Pay.','usces') . '</li>
-	<li class="ucart usccart_confirm">' . __('4.Confirm','usces') . '</li>
+	<li class="ucart usccart">' . __('1.Cart','usces') . '</li>
+	<li class="ucart usccustomer">' . __('2.Customer Info','usces') . '</li>
+	<li class="ucart uscdelivery">' . __('3.Deli. & Pay.','usces') . '</li>
+	<li class="ucart uscconfirm usccart_confirm">' . __('4.Confirm','usces') . '</li>
 	</ol>
 	</div>';
 
@@ -17,6 +17,7 @@ $html .= '</div>';
 $html .= '<div class="error_message">' . $this->error_message . '</div>';
 
 $html .= '<div id="cart">
+<div class="currency_code">' . __('Currency','usces') . ' : ' . usces_crcode( 'return' ) . '</div>
 <table cellspacing="0" id="cart_table">
 		<thead>
 		<tr>
@@ -64,13 +65,13 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
 	if( is_array($options) && count($options) > 0 ){
 		foreach($options as $key => $value){
-			$html .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
 	}
 	$html .= '</td>
-		<td class="aright">' . number_format($skuPrice) . '</td>
+		<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 		<td>' . $cart_row['quantity'] . '</td>
-		<td class="aright">' . number_format($skuPrice * $cart_row['quantity']) . '</td>
+		<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 		<td>';
 	$html = apply_filters('usces_additional_confirm', $html, array($i, $post_id, $cart_row['sku']));
 	$html .= '</td>
@@ -81,7 +82,7 @@ $html .= '</tbody>
 	<tfoot>
 	<tr>
 		<th colspan="5" class="aright">'.__('total items', 'usces').'</th>
-		<th class="aright">' . number_format($usces_entries['order']['total_items_price']) . '</th>
+		<th class="aright">' . usces_crform($usces_entries['order']['total_items_price'], true, false, 'return') . '</th>
 		<th>&nbsp;</th>
 	</tr>';
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($usces_entries['order']['usedpoint']) ) {
@@ -94,36 +95,37 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 if( !empty($usces_entries['order']['discount']) ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</td>
-		<td class="aright" style="color:#FF0000">' . number_format($usces_entries['order']['discount']) . '</td>
+		<td class="aright" style="color:#FF0000">' . usces_crform($usces_entries['order']['discount'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 $html .= '<tr>
 	<td colspan="5" class="aright">'.__('Shipping', 'usces').'</td>
-	<td class="aright">' . number_format($usces_entries['order']['shipping_charge']) . '</td>
+	<td class="aright">' . usces_crform($usces_entries['order']['shipping_charge'], true, false, 'return') . '</td>
 	<td>&nbsp;</td>
 	</tr>';
 if( !empty($usces_entries['order']['cod_fee']) ) {
 	$html .= '<tr>
-		<td colspan="5" class="aright">'.__('COD fee', 'usces').'</td>
-		<td class="aright">' . number_format($usces_entries['order']['cod_fee']) . '</td>
+		<td colspan="5" class="aright">'.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).'</td>
+		<td class="aright">' . usces_crform($usces_entries['order']['cod_fee'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
-		<td class="aright">' . number_format($usces_entries['order']['tax']) . '</td>
+		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 $html .= '<tr>
 	<th colspan="5" class="aright">'.__('Total Amount', 'usces').'</th>
-	<th class="aright">' . number_format($usces_entries['order']['total_full_price']) . '</th>
+	<th class="aright">' . usces_crform($usces_entries['order']['total_full_price'], true, false, 'return') . '</th>
 	<th>&nbsp;</th>
 	</tr>
 	</tfoot>
 	</table>';
+	
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' &&  $this->is_member_logged_in() ) {
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="error_message">' . $this->error_message . '</div>
@@ -153,94 +155,102 @@ $html .= '</div>
 	<th>'.__('e-mail adress', 'usces').'</th>
 	<td>' . esc_html($usces_entries['customer']['mailaddress1']) . '</td>
 	</tr>';
-//20100818ysk start
-$html .= usces_custom_field_info($usces_entries, 'customer', 'name_pre', 'return');
-//20100818ysk end
-$html .= '<tr class="bdc">
-	<th>'.__('Full name', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['name1']) . ' ' . esc_html($usces_entries['customer']['name2']) . '</td>
-	</tr>';
-if( USCES_JP ){
-	$html .= '<tr>
-	<th>'.__('furigana', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['name3']) . ' ' . esc_html($usces_entries['customer']['name4']) . '</td>
-	</tr>';
-}
-//20100818ysk start
-$html .= usces_custom_field_info($usces_entries, 'customer', 'name_after', 'return');
-//20100818ysk end
-$html .= '<tr class="bdc">
-	<th>'.__('Zip/Postal Code', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['zipcode']) . '</td>
-	</tr>
-	<tr>
-	<th>'.__('Province', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['pref']) . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>'.__('city', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['address1']) . '</td>
-	</tr>
-	<tr>
-	<th>'.__('numbers', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['address2']) . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>'.__('building name', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['address3']) . '</td>
-	</tr>
-	<tr>
-	<th>'.__('Phone number', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['tel']) . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>'.__('FAX number', 'usces').'</th>
-	<td>' . esc_html($usces_entries['customer']['fax']) . '</td>
-	</tr>';
-//20100818ysk start
-$html .= usces_custom_field_info($usces_entries, 'customer', 'fax_after', 'return');
-//20100818ysk end
-$html .= '<tr class="ttl">';
-$html .= '<td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td>
-	</tr>';
-//20100818ysk start
-$html .= usces_custom_field_info($usces_entries, 'delivery', 'name_pre', 'return');
-//20100818ysk end
-$html .= '<tr>
-	<th>'.__('Full name', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['name1']) . ' ' . esc_html($usces_entries['delivery']['name2']) . '</td>
-	</tr>';
-if( USCES_JP ){
-	$html .= '<tr class="bdc">
-	<th>'.__('furigana', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['name3']) . ' ' . esc_html($usces_entries['delivery']['name4']) . '</td>
-	</tr>';
-}
-//20100818ysk start
-$html .= usces_custom_field_info($usces_entries, 'delivery', 'name_after', 'return');
-//20100818ysk end
-$html .= '<tr>
-	<th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['zipcode']) . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>'.__('Province', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['pref']) . '</td>
-	</tr>
-	<tr>
-	<th>'.__('city', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['address1']) . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>'.__('numbers', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['address2']) . '</td>
-	</tr>
-	<tr>
-	<th>'.__('building name', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['address3']) . '</td>
-	</tr>
-	<tr class="bdc">
-	<th>'.__('Phone number', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['tel']) . '</td>
-	</tr>
-	<tr>
-	<th>'.__('FAX number', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['fax']) . '</td>
-	</tr>';
-//20100818ysk start
-$html .= usces_custom_field_info($usces_entries, 'delivery', 'fax_after', 'return');
-//20100818ysk end
+	
+$html .= uesces_addressform( 'confirm', $usces_entries );
+	
+////20100818ysk start
+//$html .= usces_custom_field_info($usces_entries, 'customer', 'name_pre', 'return');
+////20100818ysk end
+//$html .= '<tr class="bdc">
+//	<th>'.__('Full name', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['name1']) . ' ' . esc_html($usces_entries['customer']['name2']) . '</td>
+//	</tr>';
+//if( USCES_JP ){
+//	$html .= '<tr>
+//	<th>'.__('furigana', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['name3']) . ' ' . esc_html($usces_entries['customer']['name4']) . '</td>
+//	</tr>';
+//}
+////20100818ysk start
+//$html .= usces_custom_field_info($usces_entries, 'customer', 'name_after', 'return');
+////20100818ysk end
+//$html .= '<tr class="bdc">
+//	<th>'.__('Zip/Postal Code', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['zipcode']) . '</td>
+//	</tr>
+//	<tr>
+//	<th>'.__('Province', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['pref']) . '</td>
+//	</tr>
+//	<tr class="bdc">
+//	<th>'.__('city', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['address1']) . '</td>
+//	</tr>
+//	<tr>
+//	<th>'.__('numbers', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['address2']) . '</td>
+//	</tr>
+//	<tr class="bdc">
+//	<th>'.__('building name', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['address3']) . '</td>
+//	</tr>
+//	<tr>
+//	<th>'.__('Phone number', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['tel']) . '</td>
+//	</tr>
+//	<tr class="bdc">
+//	<th>'.__('FAX number', 'usces').'</th>
+//	<td>' . esc_html($usces_entries['customer']['fax']) . '</td>
+//	</tr>';
+////20100818ysk start
+//$html .= usces_custom_field_info($usces_entries, 'customer', 'fax_after', 'return');
+////20100818ysk end
+//$html .= '<tr class="ttl">';
+//
+//$html .= '<td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td>
+//	</tr>';
+//	
+////20100818ysk start
+//$html .= usces_custom_field_info($usces_entries, 'delivery', 'name_pre', 'return');
+////20100818ysk end
+//$html .= '<tr>
+//	<th>'.__('Full name', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['name1']) . ' ' . esc_html($usces_entries['delivery']['name2']) . '</td>
+//	</tr>';
+//if( USCES_JP ){
+//	$html .= '<tr class="bdc">
+//	<th>'.__('furigana', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['name3']) . ' ' . esc_html($usces_entries['delivery']['name4']) . '</td>
+//	</tr>';
+//}
+////20100818ysk start
+//$html .= usces_custom_field_info($usces_entries, 'delivery', 'name_after', 'return');
+////20100818ysk end
+//$html .= '<tr>
+//	<th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['zipcode']) . '</td>
+//	</tr>
+//	<tr class="bdc">
+//	<th>'.__('Province', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['pref']) . '</td>
+//	</tr>
+//	<tr>
+//	<th>'.__('city', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['address1']) . '</td>
+//	</tr>
+//	<tr class="bdc">
+//	<th>'.__('numbers', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['address2']) . '</td>
+//	</tr>
+//	<tr>
+//	<th>'.__('building name', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['address3']) . '</td>
+//	</tr>
+//	<tr class="bdc">
+//	<th>'.__('Phone number', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['tel']) . '</td>
+//	</tr>
+//	<tr>
+//	<th>'.__('FAX number', 'usces').'</th><td>' . esc_html($usces_entries['delivery']['fax']) . '</td>
+//	</tr>';
+////20100818ysk start
+//$html .= usces_custom_field_info($usces_entries, 'delivery', 'fax_after', 'return');
+////20100818ysk end
+
+
+
 $html .= '<tr>';
 $html .= '<td class="ttl" colspan="2"><h3>'.__('Others', 'usces').'</h3></td>
 	</tr>';

@@ -90,7 +90,7 @@ class usces_cart {
 			}
 		}
 
-//		ksort($_SESSION['usces_cart'], SORT_STRING);
+		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
 	}
 	
 	// inCart_advance ****************************************************************
@@ -144,6 +144,7 @@ class usces_cart {
 		if(isset($_SESSION['usces_cart'][$this->serial]))
 			unset($_SESSION['usces_cart'][$this->serial]);
 			
+		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
 	}
 
 	// number of data in cart ***********************************************************
@@ -186,22 +187,30 @@ class usces_cart {
 	// insert serialize **************************************************************
 	function in_serialize($id, $sku){
 	
-		if(isset($_POST['itemOption']))
-			$sels[$id][$sku] = $_POST['itemOption'][$id][$sku];
-		else
+		if(isset($_POST['itemOption'])){
+			foreach( $_POST['itemOption'][$id][$sku] as $key => $value ){
+				$pots[$key] = urlencode($value);
+			}
+			$sels[$id][$sku] = $pots;
+		}else{
 			$sels[$id][$sku] = 0;
-			
+		}
+		
 		$this->serial = serialize($sels);
 	}
 
 	// update serialize **************************************************************
 	function up_serialize($index, $id, $sku){
 	
-		if(isset($_POST['itemOption'][$index]))
-			$sels[$id][$sku] = $_POST['itemOption'][$index][$id][$sku];
-		else
+		if(isset($_POST['itemOption'][$index])){
+			foreach( $_POST['itemOption'][$index][$id][$sku] as $key => $value ){
+				$pots[$key] = $value;
+			}
+			$sels[$id][$sku] = $pots;
+		}else{
 			$sels[$id][$sku] = 0;
-			
+		}
+		
 		$this->serial = serialize($sels);
 	}
 
@@ -250,43 +259,80 @@ class usces_cart {
 		foreach ( $array as $key => $value )
 			$_SESSION['usces_entry']['order'][$key] = $value;
 	}
+//20110203ysk start
+	// get entry information ***************************************************************
+	function get_order_entry( $key ) {
+		return $_SESSION['usces_entry']['order'][$key];
+	}
+//20110203ysk end
 	// entry information ***************************************************************
 	function entry() {
 	
 		if(isset($_SESSION['usces_member']['ID']) && !empty($_SESSION['usces_member']['ID'])) {
-			foreach( $_SESSION['usces_member'] as $key => $value ){
+//20110126ysk start
+			if($this->page !== 'confirm') {
+				foreach( $_SESSION['usces_member'] as $key => $value ){
 //20100818ysk start
-				if($key === 'custom_member') {
+					if($key === 'custom_member') {
 //20101008ysk start
-					unset($_SESSION['usces_entry']['custom_member']);
+						unset($_SESSION['usces_entry']['custom_member']);
 //20101008ysk end
-					foreach( $_SESSION['usces_member']['custom_member'] as $mbkey => $mbvalue ) {
-						if( is_array($mbvalue) ) {
-							foreach( $mbvalue as $k => $v ) {
-								$_SESSION['usces_entry']['custom_customer'][$mbkey][$v] = $v;
+						foreach( $_SESSION['usces_member']['custom_member'] as $mbkey => $mbvalue ) {
+							if(empty($_SESSION['usces_entry']['custom_customer'][$mbkey])) {
+								if( is_array($mbvalue) ) {
+									foreach( $mbvalue as $k => $v ) {
+										$_SESSION['usces_entry']['custom_customer'][$mbkey][$v] = $v;
+									}
+								} else {
+									$_SESSION['usces_entry']['custom_customer'][$mbkey] = $mbvalue;
+								}
 							}
-						} else {
-							$_SESSION['usces_entry']['custom_customer'][$mbkey] = $mbvalue;
+						}
+					} else {
+						if(empty($_SESSION['usces_entry']['customer'][$key])) {
+							if( 'country' == $key && empty($value) ){
+								$country = usces_get_local_target_market();
+								$_SESSION['usces_entry']['customer'][$key] = $country[0];
+							}else{
+								$_SESSION['usces_entry']['customer'][$key] = trim($value);
+							}
 						}
 					}
-				} else {
-					$_SESSION['usces_entry']['customer'][$key] = $value;
-				}
 //20100818ysk end
+				}
 			}
-		} else if(isset($_POST['customer']))	{	
-			foreach( $_POST['customer'] as $key => $value )
-				$_SESSION['usces_entry']['customer'][$key] = trim($value);
 		}
+		//} else if(isset($_POST['customer']))	{	
+		if(isset($_POST['customer']))	{	
+			foreach( $_POST['customer'] as $key => $value ){
+				if( 'country' == $key && empty($value) ){
+					$country = usces_get_local_target_market();
+					$_SESSION['usces_entry']['customer'][$key] = $country[0];
+				}else{
+					$_SESSION['usces_entry']['customer'][$key] = trim($value);
+				}
+			}
+		}
+//20110126ysk end
 		
 		if(isset($_POST['delivery']))	{	
 			foreach( $_POST['delivery'] as $key => $value )
-				$_SESSION['usces_entry']['delivery'][$key] = trim($value);
+				if( 'country' == $key && empty($value) ){
+					$country = usces_get_local_target_market();
+					$_SESSION['usces_entry']['delivery'][$key] = $country[0];
+				}else{
+					$_SESSION['usces_entry']['delivery'][$key] = trim($value);
+				}
 		}
 		
 		if(isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 0)	{	
 			foreach( $_SESSION['usces_entry']['customer'] as $key => $value )
-				$_SESSION['usces_entry']['delivery'][$key] = trim($value);
+				if( 'country' == $key && empty($value) ){
+					$country = usces_get_local_target_market();
+					$_SESSION['usces_entry']['delivery'][$key] = $country[0];
+				}else{
+					$_SESSION['usces_entry']['delivery'][$key] = trim($value);
+				}
 		}
 
 		if(isset($_POST['order']))	{	
@@ -313,6 +359,9 @@ class usces_cart {
 				}
 		}
 //20100809ysk end
+//20110106ysk start
+		$this->set_custom_customer_delivery();
+//20110106ysk end
 //20100818ysk start
 		if(isset($_POST['custom_customer'])) {
 //20101008ysk start
@@ -340,7 +389,11 @@ class usces_cart {
 					$_SESSION['usces_entry']['custom_delivery'][$key] = trim($value);
 				}
 		}
-//20100818ysk end
+//20110106ysk start
+		if(isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 0) {
+			$this->set_custom_customer_delivery();
+		}
+//20110106ysk end
 	}
 
 	// get entry information ***************************************************************
@@ -453,5 +506,34 @@ class usces_cart {
 	function set_pre_order_id($id){
 		$_SESSION['usces_entry']['reserve']['pre_order_id'] = $id;
 	}
+
+//20110106ysk start
+	function set_custom_customer_delivery() {
+		if(isset($_SESSION['usces_entry']['custom_customer'])) {
+			$delivery = array();
+			$csde_meta = usces_has_custom_field_meta('delivery');
+			if(!empty($csde_meta) and is_array($csde_meta)) {
+				foreach($csde_meta as $key => $entry) {
+					$delivery[$key] = $key;
+				}
+			}
+			foreach( $_SESSION['usces_entry']['custom_customer'] as $mbkey => $mbvalue ) {
+				if(array_key_exists($mbkey, $delivery)) {
+//20110126ysk start
+					if(empty($_SESSION['usces_entry']['custom_delivery'][$mbkey])) {
+						if( is_array($mbvalue) ) {
+							foreach( $mbvalue as $k => $v ) {
+								$_SESSION['usces_entry']['custom_delivery'][$mbkey][$v] = $v;
+							}
+						} else {
+							$_SESSION['usces_entry']['custom_delivery'][$mbkey] = $mbvalue;
+						}
+					}
+//20110126ysk end
+				}
+			}
+		}
+	}
+//20110106ysk end
 }
 ?>
