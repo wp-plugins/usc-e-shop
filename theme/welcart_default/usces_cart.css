@@ -1,9 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
 
-#itempage .assistance_item li {
-	width: 267px;
-}
 #wp-calendar td.businessday {
 	background-color: #FFECCE;
 	color: #F00;
@@ -17,12 +14,36 @@
 #itempage h2.item_name {
 	height: 18px;
 	margin-bottom: 10px;
-	margin-left: 210px;
+	margin-left: 310px;
 	padding: 3px 5px;
 	background-color: #999999;
 	font-size: 14px;
 	color: #FFFFFF;
 	line-height: 18px;
+}
+#itempage .itemimg {
+	width: auto;
+}
+#itempage .field {
+	margin-left: 310px;
+}
+#itempage .assistance_item {
+	width: 740px;
+}
+#itempage .assistance_item ul {
+	width: 750px;
+	margin-right: -10px;
+	overflow: hidden;
+	_zoom: 1;
+}
+#itempage .assistance_item ul li {
+	width: 240px;
+	margin-right: 10px;
+}
+#itempage .assistance_item .listbox {
+	height: 125px;
+	margin-right: 0px;
+	overflow: hidden;
 }
 /* wc_item_single End */
 /*********************************************************************/

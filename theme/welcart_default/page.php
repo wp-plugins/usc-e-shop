@@ -6,10 +6,14 @@
  */
 get_header();
 
-get_sidebar();
+if(is_page('usces-cart')):
+	get_sidebar( 'cartmember' );
+else:
+	get_sidebar( 'other' );
+endif;
 ?>
 
-<div id="content" class="three-column">
+<div id="content" class="two-column">
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 <h1 class="pagetitle"><?php the_title(); ?></h1>
 <div class="catbox">

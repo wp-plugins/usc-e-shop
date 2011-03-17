@@ -6,10 +6,10 @@
  */
 get_header();
 
-get_sidebar();
+get_sidebar( 'other' );
 ?>
 
-<div id="content" class="three-column">
+<div id="content" class="two-column">
 
 <h1 class="pagetitle"><?php _e('Search Results', 'usces'); ?></h1>
 

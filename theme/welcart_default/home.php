@@ -6,7 +6,7 @@
  */
 get_header();
 
-get_sidebar();
+get_sidebar( 'home' );
 ?>
 
 <div id="content" class="three-column">

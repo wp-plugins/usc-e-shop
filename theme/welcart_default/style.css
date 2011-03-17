@@ -478,7 +478,7 @@ ul.subnavi a {
 	height: 34px;
 	padding: 0px 20px;
 	background-image: url('images/content_title_bg1.jpg');
-	background-repeat: no-repeat;
+	background-repeat: repeat-x;
 	border: none;
 	display: block;
 	color: #666666;
@@ -520,6 +520,7 @@ ul.subnavi a {
 	padding: 8px;
 	background-color: #FFFFFF;
 	float: left;
+	overflow: hidden;
 }
 .thumbnail_box .thumimg {
 	padding: 3px;
@@ -671,8 +672,8 @@ dl.itemGpExp li {
 	margin-bottom: 10px;
 }
 #itempage .itemsubimg img {
-	width: 123px;
-	height: 123px;
+	width: 135px;
+	height: 135px;
 	padding: 5px;
 }
 #itempage .skuform {

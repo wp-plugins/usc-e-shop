@@ -6,7 +6,7 @@
  */
 get_header();
 
-get_sidebar( 'onlycart' );
+get_sidebar( 'cartmember' );
 ?>
 
 <?php usces_delivery_info_script(); ?>

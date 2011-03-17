@@ -6,9 +6,9 @@
  */
 get_header();
 
-get_sidebar();
+get_sidebar( 'other' );
 ?>
-<div id="content" class="three-column">
+<div id="content" class="two-column">
 <div class="catbox">
 
 <?php if (have_posts()) : the_post(); ?>
@@ -23,7 +23,7 @@ get_sidebar();
 <div id="itempage">
 <form action="<?php echo USCES_CART_URL; ?>" method="post">
 	<div class="itemimg">
-	<a href="<?php usces_the_itemImageURL(0); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage(0, 200, 250, $post); ?></a>
+	<a href="<?php usces_the_itemImageURL(0); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage(0, 300, 300, $post); ?></a>
 	</div>
 	
 <?php if(usces_sku_num() === 1) : usces_have_skus(); ?>
@@ -146,7 +146,7 @@ get_sidebar();
 	<div class="itemsubimg">
 <?php $imageid = usces_get_itemSubImageNums(); ?>
 <?php foreach ( $imageid as $id ) : ?>
-		<a href="<?php usces_the_itemImageURL($id); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage($id, 137, 200, $post); ?></a>
+		<a href="<?php usces_the_itemImageURL($id); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage($id, 135, 135, $post); ?></a>
 <?php endforeach; ?>
 	</div><!-- end of itemsubimg -->
 

@@ -9,7 +9,7 @@ global $usces;
 <!-- begin left sidebar -->
 <div id="leftbar" class="sidebar">
 <ul>
-<?php if ( ! dynamic_sidebar( 'leftsidebar-widget-area' ) ): ?>
+<?php if ( ! dynamic_sidebar( 'homeleft-widget-area' ) ): ?>
 	<li id="welcart_search-3" class="widget widget_welcart_search">
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/search.png" alt="<?php _e('keyword search','usces') ?>" /><?php _e('keyword search','usces') ?></div>
 		<ul class="welcart_search_body welcart_widget_body">
@@ -48,7 +48,7 @@ global $usces;
 <!-- begin right sidebar -->
 <div id="rightbar" class="sidebar">
 <ul>
-<?php if ( ! dynamic_sidebar( 'rightsidebar-widget-area' ) ): ?>
+<?php if ( ! dynamic_sidebar( 'homeright-widget-area' ) ): ?>
 	<?php if(usces_is_membersystem_state()): ?>
 	<li id="welcart_login-3" class="widget widget_welcart_login">
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/login.png" alt="<?php _e('Log-in','usces') ?>" /><?php _e('Log-in','usces') ?></div>

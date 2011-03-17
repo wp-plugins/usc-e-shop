@@ -6,10 +6,10 @@
  */
 get_header();
 
-get_sidebar();
+get_sidebar( 'other' );
 ?>
 
-<div id="content" class="three-column">
+<div id="content" class="two-column">
 <div class="catbox">
 
 <?php if (have_posts()) : usces_remove_filter(); ?>

@@ -6,7 +6,7 @@
  */
 get_header();
 
-get_sidebar( 'onlycart' );
+get_sidebar( 'cartmember' );
 ?>
 
 <div id="content" class="two-column">

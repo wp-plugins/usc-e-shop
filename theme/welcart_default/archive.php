@@ -6,10 +6,10 @@
  */
 get_header();
 
-get_sidebar();
+get_sidebar( 'other' );
 ?>
 
-<div id="content" class="three-column">
+<div id="content" class="two-column">
 
 <?php $post = $posts[0]; // Hack. Set $post so that the_date() works. ?>
 <?php /* If this is a category archive */ if (is_category()) { ?>
