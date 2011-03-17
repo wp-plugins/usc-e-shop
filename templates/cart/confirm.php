@@ -17,7 +17,7 @@ $html .= '</div>';
 $html .= '<div class="error_message">' . $this->error_message . '</div>';
 
 $html .= '<div id="cart">
-<div class="currency_code">' . __('Currency','usces') . ' : ' . usces_crcode( 'return' ) . '</div>
+<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>
 <table cellspacing="0" id="cart_table">
 		<thead>
 		<tr>

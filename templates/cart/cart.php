@@ -114,7 +114,7 @@ if( usces_is_cart() ) {
 		</tr>
 		</tfoot>
 	</table>
-	<div class="currency_code">' . __('Currency','usces') . ' : ' . usces_crcode( 'return' ) . '</div>';
+	<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>';
 	if( $usces_gp ) {
 		$Business_pack_discount = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
 		$html .= apply_filters('usces_filter_itemGpExp_cart_message', $Business_pack_discount);

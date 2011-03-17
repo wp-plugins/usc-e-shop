@@ -74,8 +74,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th>' . __('SKU code','usces') . '</th>
-		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '('.usces_crcode( 'return' ).')</th>
-		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL). '('.usces_crcode( 'return' ).')</th>
+		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '('.__(usces_crcode( 'return' ), 'usces').')</th>
+		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL). '('.__(usces_crcode( 'return' ), 'usces').')</th>
 		<th>' . __('stock','usces') . '</th>
 		<th>' . __('stock status', 'usces') . '</th>
 	</tr>
@@ -1666,7 +1666,7 @@ function item_save_metadata() {
 	}
 	
 	if(isset($_POST['itemShipping'])){
-		$itemShipping = trim($_POST['itemShipping']);
+		$itemShipping = (int)$_POST['itemShipping'];
 		update_post_meta($post_id, '_itemShipping', $itemShipping);
 	}
 	if(isset($_POST['itemDeliveryMethod'])){
@@ -1677,7 +1677,7 @@ function item_save_metadata() {
 		update_post_meta($post_id, '_itemDeliveryMethod', $itemDeliveryMethod);
 	}
 	if(isset($_POST['itemShippingCharge'])){
-		$itemShippingCharge = trim($_POST['itemShippingCharge']);
+		$itemShippingCharge = (int)$_POST['itemShippingCharge'];
 		update_post_meta($post_id, '_itemShippingCharge', $itemShippingCharge);
 	}
 	$itemIndividualSCharge = isset($_POST['itemIndividualSCharge']) ? 1 : 0;

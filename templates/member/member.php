@@ -44,7 +44,7 @@ $html .= apply_filters('usces_filter_memberinfo_page_header', $header);
 $html .= '</div>';
 
 $html .= '<h3>' . __('Purchase history', 'usces') . '</h3>';
-$html .= '<div class="currency_code">' . __('Currency','usces') . ' : ' . usces_crcode( 'return' ) . '</div>
+$html .= '<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>
 	<table>';
 	
 	
