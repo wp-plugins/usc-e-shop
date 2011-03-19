@@ -65,7 +65,8 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
 	if( is_array($options) && count($options) > 0 ){
 		foreach($options as $key => $value){
-			$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+			if( !empty($key) )
+				$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
 	}
 	$html .= '</td>
@@ -263,7 +264,7 @@ $html .= '<tr>
 	<th>'.__('Delivery Time', 'usces').'</th><td>' . esc_html($usces_entries['order']['delivery_time']) . '</td>
 	</tr>';
 */
-$html .= '<tr>
+$shipping_info = '<tr>
 	<th>'.__('shipping option', 'usces').'</th><td>' . esc_html(usces_delivery_method_name( $usces_entries['order']['delivery_method'], 'return' )) . '</td>
 	</tr>
 	<tr>
@@ -272,6 +273,7 @@ $html .= '<tr>
 	<tr class="bdc">
 	<th>'.__('Delivery Time', 'usces').'</th><td>' . esc_html($usces_entries['order']['delivery_time']) . '</td>
 	</tr>';
+$html .= apply_filters('usces_filter_confirm_shipping_info', $shipping_info);
 //20101208ysk end
 
 $html .= '<tr>

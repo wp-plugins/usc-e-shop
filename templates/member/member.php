@@ -113,14 +113,15 @@ foreach ( $usces_member_history as $umhs ) {
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) )
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 			
 		$html .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
-			<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a></td>
+			<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
 			<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
 			<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>

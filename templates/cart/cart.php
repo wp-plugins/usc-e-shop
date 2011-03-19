@@ -74,7 +74,8 @@ if( usces_is_cart() ) {
 			$html .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) )
+					$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 		$html .= '</td>

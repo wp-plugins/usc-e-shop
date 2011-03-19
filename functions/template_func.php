@@ -994,7 +994,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$payment_ct = count($usces->options['payment_method']);
 	foreach ($usces->options['payment_method'] as $id => $payments) {
 		if( false !== $charging_type ){
-			if( 'acting_remise_card' != $payments['settlement'] )
+			if( 'acting' != substr($payments['settlement'], 0, 6) )
 				continue;
 			if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement'])
 				continue;
@@ -2102,9 +2102,9 @@ function usces_singleitem_error_message($post_id, $skukey, $out = ''){
 	}
 }
 
-function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '' ) {
+function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '', $seperator_flag = true ) {
 	global $usces;
-	$price = esc_html($usces->get_currency($float, $symbol_pre, $symbol_post ));
+	$price = esc_html($usces->get_currency($float, $symbol_pre, $symbol_post, $seperator_flag ));
 	$res = apply_filters('usces_filter_crform', $price, $amount);
 	
 	if($out == 'return'){
@@ -2226,14 +2226,15 @@ function usces_member_history(){
 			$optstr =  '';
 			if( is_array($options) && count($options) > 0 ){
 				foreach($options as $key => $value){
-					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					if( !empty($key) )
+						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				}
 			}
 				
 			$html .= '<tr>
 				<td>' . ($i + 1) . '</td>
 				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
-				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a></td>
+				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>

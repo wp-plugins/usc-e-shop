@@ -21,7 +21,6 @@ get_sidebar( 'other' );
 <?php usces_the_item(); ?>
 
 <div id="itempage">
-<form action="<?php echo USCES_CART_URL; ?>" method="post">
 	<div class="itemimg">
 	<a href="<?php usces_the_itemImageURL(0); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage(0, 300, 300, $post); ?></a>
 	</div>
@@ -44,9 +43,9 @@ get_sidebar( 'other' );
 		<?php endif; ?>
 		
 		<?php the_content(); ?>
-	
 	</div><!-- end of exp -->
-	
+
+	<form action="<?php echo USCES_CART_URL; ?>" method="post">
 	<?php usces_the_itemGpExp(); ?>
 	<div class="skuform" align="right">
 	<?php if (usces_is_options()) : ?>
@@ -65,6 +64,8 @@ get_sidebar( 'other' );
 	<?php endif; ?>
 	</div><!-- end of skuform -->
 	<?php echo apply_filters('single_item_single_sku_after_field', NULL); ?>
+	<?php do_action('usces_action_single_item_inform'); ?>
+	</form>
 	
 <?php elseif(usces_sku_num() > 1) : usces_have_skus(); ?>
 <!--some SKU-->
@@ -77,7 +78,8 @@ get_sidebar( 'other' );
 		</div>
 		<?php endif; ?>
 	</div><!-- end of exp -->
-	
+
+	<form action="<?php echo USCES_CART_URL; ?>" method="post">
 	<div class="skuform">
 		<table class="skumulti">
 			<thead>
@@ -141,6 +143,8 @@ get_sidebar( 'other' );
 		</table>
 	</div><!-- end of skuform -->
 	<?php echo apply_filters('single_item_multi_sku_after_field', NULL); ?>
+	<?php do_action('usces_action_single_item_inform'); ?>
+	</form>
 <?php endif; ?>
 	
 	<div class="itemsubimg">
@@ -151,8 +155,6 @@ get_sidebar( 'other' );
 	</div><!-- end of itemsubimg -->
 
 <?php usces_assistance_item( $post->ID ); ?>
-<?php do_action('usces_action_single_item_inform'); ?>
-</form>
 </div><!-- end of itemspage -->
 </div><!-- end of storycontent -->
 </div>

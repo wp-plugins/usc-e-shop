@@ -1276,7 +1276,7 @@ msgid "key words"
 msgstr "キーワード"
 
 msgid "Transfer"
-msgstr "銀行振り込み"
+msgstr "お振込先"
 
 msgid "transfer statement"
 msgstr "入金状況"

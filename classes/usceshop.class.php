@@ -1596,93 +1596,8 @@ class usc_e_shop
 		})(jQuery);
 		</script>
 		<?php endif; ?>
-		<?php if( $this->use_js 
-					&& ((  (is_page(USCES_MEMBER_NUMBER) || $this->is_member_page($_SERVER['REQUEST_URI'])) && ('member' == $this->page || 'editmemberform' == $this->page || 'newmemberform' == $this->page)  )
-					|| (  (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI'])) && ('customer' == $this->page || 'delivery' == $this->page)  ) 
-					)) : ?>
-					
-		<script type='text/javascript'>
-		(function($) {
-		uscesForm = {
-			settings: {
-				url: uscesL10n.ajaxurl,
-				type: 'POST',
-				cache: false,
-				success: function(data, dataType){
-					//$("tbody#item-opt-list").html( data );
-				}, 
-				error: function(msg){
-					//$("#ajax-response").html(msg);
-				}
-			},
-			
-			changeStates : function( country, type ) {
-  
-				var s = this.settings;
-				s.url = "<?php bloginfo( 'home' ); ?>/";
-				s.data = "usces_ajax_action=change_states&country=" + country;
-				s.success = function(data, dataType){
-					if( 'error' == data ){
-						alert('error');
-					}else{
-						$("select#" + type + "_pref").html( data );
-						if( customercountry == country && 'customer' == type ){
-							$("#" + type + "_pref").attr({selectedIndex:customerstate});
-						}else if( deliverycountry == country && 'delivery' == type ){
-							$("#" + type + "_pref").attr({selectedIndex:deliverystate});
-						}else if( customercountry == country && 'member' == type ){
-							$("#" + type + "_pref").attr({selectedIndex:customerstate});
-						}
-					}
-				};
-				s.error = function(msg){
-					alert("error");
-				};
-				$.ajax( s );
-				return false;
-			},
-		};
-		<?php if( 'customer' == $this->page ){ ?>
-
-		var customerstate = $("#customer_pref").get(0).selectedIndex;
-		var customercountry = $("#customer_country").val();
-		var deliverystate = "";
-		var deliverycountry = "";
-		var memberstate = "";
-		var membercountry = "";
-		$("#customer_country").change(function () {
-			var country = $("#customer_country option:selected").val();
-			uscesForm.changeStates( country, 'customer' ); 
-		});
-		<?php }elseif( 'delivery' == $this->page ){ ?>
-		
-		var customerstate = "";
-		var customercountry = "";
-		var deliverystate = $("#delivery_pref").get(0).selectedIndex;
-		var deliverycountry = $("#delivery_country").val();
-		var memberstate = "";
-		var membercountry = "";
-		$("#delivery_country").change(function () {
-			var country = $("#delivery_country option:selected").val();
-			uscesForm.changeStates( country, 'delivery' ); 
-		});
-		<?php }elseif( 'member' == $this->page || 'editmemberform' == $this->page || 'newmemberform' == $this->page ){ ?>
-		
-		var customerstate = "";
-		var customercountry = "";
-		var deliverystate = "";
-		var deliverycountry = "";
-		var memberstate = $("#member_pref").get(0).selectedIndex;
-		var membercountry = $("#member_country").val();
-		$("#member_country").change(function () {
-			var country = $("#member_country option:selected").val();
-			uscesForm.changeStates( country, 'member' ); 
-		});
-		<?php } ?>
-		})(jQuery);
-		</script>
-		<?php endif; ?>
 <?php
+		usces_states_form_js();
 	}
 	
 	function admin_head() {
@@ -1867,6 +1782,13 @@ class usc_e_shop
 		$this->usces_cookie();
 		$this->update_table();
 		
+//		if( 'customer' == $this->page ){
+//			header("Pragma: private");
+//			header("Cache-Control: private");
+//		}else{
+//			header("Pragma: no-cache");
+//			header("Cache-Control: no-cache");
+//		}
 		
 		
 		//var_dump($_REQUEST);
@@ -6079,10 +6001,13 @@ class usc_e_shop
 		return $res;
 	}
 	
-	function get_currency($amount, $symbol_pre = false, $symbol_post = false ){
+	function get_currency($amount, $symbol_pre = false, $symbol_post = false, $seperator_flag = true ){
 		global $usces_settings;
 		$cr = $this->options['system']['currency'];
 		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
+		if( !$seperator_flag ){
+			$seperator = '';
+		}
 		$price = number_format($amount, $decimal, $point, $seperator);
 
 		if( $symbol_pre )

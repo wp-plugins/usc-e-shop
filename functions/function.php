@@ -133,7 +133,7 @@ function usces_order_confirm_message($order_id) {
 	$meisai .= "------------------------------------------------------------------\r\n";
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, false, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
-	$meisai .= "(" . __('Currency', 'usces') . ' : ' . usces_crcode('return') . ")\r\n\r\n";
+	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
 	
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data);
 
@@ -324,7 +324,7 @@ function usces_send_ordermail($order_id) {
 	$meisai .= "------------------------------------------------------------------\r\n";
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $entry['order']['total_full_price'], true, false, 'return' ) . "\r\n";
 	$meisai .= "------------------------------------------------------------------\r\n";
-	$meisai .= "(" . __('Currency', 'uesces') . ' : ' . usces_crcode('return') . ")\r\n\r\n";
+	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
 
@@ -4024,17 +4024,16 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
 			//20100818ysk end
 			
-			$formtag .= '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			
+			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
 			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
+			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
 			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
-			$formtag .= '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
 			//20100818ysk start
-			$formtag .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
+			$shipping_address_info .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
 			//20100818ysk end
-			$formtag .= '
+			$shipping_address_info .= '
 			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
 			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
@@ -4044,8 +4043,9 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
 			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
+			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
 			//20100818ysk end
+			$formtag .= apply_filters('usces_filter_shipping_address_info', $shipping_address_info);
 			break;
 			
 		case 'US':
@@ -4069,16 +4069,15 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
 			//20100818ysk end
 			
-			$formtag .= '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			
+			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
 			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
+			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
 			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
 			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
+			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
 			//20100818ysk end
-			$formtag .= '
+			$shipping_address_info .= '
 			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
 			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
@@ -4088,8 +4087,9 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
 			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
+			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
 			//20100818ysk end
+			$formtag .= apply_filters('usces_filter_shipping_address_info', $shipping_address_info);
 			break;
 		}
 		$res = apply_filters('usces_filter_apply_addressform_confirm', $formtag, $type, $data);
@@ -4530,7 +4530,8 @@ function usces_get_cart_rows( $out = '' ) {
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) )
+					$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 		$res .= '</td>
@@ -4600,7 +4601,8 @@ function usces_get_confirm_rows( $out = '' ) {
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) )
+					 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 		 $res .= '</td>

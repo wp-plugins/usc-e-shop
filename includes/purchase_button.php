@@ -57,7 +57,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="item_name" value="' . esc_attr($send_item_name) . '">';
 			}
 			$html .= '<input type="hidden" name="item_number" value="">
-				<input type="hidden" name="amount" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '">';
+				<input type="hidden" name="amount" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">';
 //20110208ysk start
 			//if( USCES_JP ){
 				//$html .= '<input type="hidden" name="currency_code" value="JPY">';
@@ -94,7 +94,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="item_code" value="' . esc_attr($send_item_code) . '">
 					<input type="hidden" name="item_name" value="' . esc_attr(mb_substr($send_item_name, 0, 32, 'UTF-8')) . '">';
 			}
-			$html .= '<input type="hidden" name="item_price" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '">
+			$html .= '<input type="hidden" name="item_price" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;
 				<input name="purchase" type="submit" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', NULL) . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html);
@@ -120,7 +120,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
 				<input type="hidden" name="sendid" value="' . $memid . '">
 				<input type="hidden" name="username" value="' . esc_attr($_POST['username']) . '">
-				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '">
+				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
 				<input type="hidden" name="printord" value="yes">';
 			if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
@@ -149,7 +149,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 			$html .= '
 				<input type="hidden" name="act" value="secure_order">
-				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '">
+				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="username" value="' . esc_attr(trim($usces_entries['customer']['name3']) . trim($usces_entries['customer']['name4'])) . '">
 				<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
@@ -174,7 +174,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '
 				<input type="hidden" name="clientip" value="' . esc_attr($acting_opts['clientip_bank']) . '">
 				<input type="hidden" name="act" value="order">
-				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '">';
+				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">';
 			if( '' != $acting_opts['testid_bank'] ){	
 				$html .= '<input type="hidden" name="username" value="' . esc_attr(trim($usces_entries['customer']['name3']) . trim($usces_entries['customer']['name4']) . '_' . $acting_opts['testid_bank']) . '">';
 				$html .= '<input type="hidden" name="telno" value="99999999999">';
@@ -212,8 +212,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="JOB" value="' . apply_filters('usces_filter_remise_card_job', 'CAPTURE') . '" />
 				<input type="hidden" name="MAIL" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '" />
 				<input type="hidden" name="ITEM" value="0000120" />
-				<input type="hidden" name="TOTAL" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '" />
-				<input type="hidden" name="AMOUNT" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '" />
+				<input type="hidden" name="TOTAL" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '" />
+				<input type="hidden" name="AMOUNT" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '" />
 				<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $usces->delim . 'acting=remise_card&acting_return=1" />
 				<input type="hidden" name="NG_RETURL" value="' . USCES_CART_URL . $usces->delim . 'acting=remise_card&acting_return=0" />
 				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $usces->delim . 'confirm=1" />
@@ -298,7 +298,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				';
 			$mname_01 = '商品総額';
 			$html .= '<input type="hidden" name="MNAME_01" value="' . $mname_01 . '" />
-				<input type="hidden" name="MSUM_01" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return') . '" />
+				<input type="hidden" name="MSUM_01" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '" />
 				<input type="hidden" name="MNAME_02" value="" />
 				<input type="hidden" name="MSUM_02" value="0" />
 				<input type="hidden" name="MNAME_03" value="" />
@@ -337,7 +337,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="'.$acting_opts['card_jb'].'" />
-				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return').'" />
+				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'" />
 				<input type="hidden" name="tx" value="0" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="1" />
@@ -360,7 +360,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="CAPTURE" />
-				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return').'" />
+				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'" />
 				<input type="hidden" name="tx" value="0" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="2" />
@@ -383,7 +383,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="CAPTURE" />
-				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return').'" />
+				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'" />
 				<input type="hidden" name="tx" value="0" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="7" />
@@ -418,18 +418,18 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="L_NAME'.$i.'" value="'.$itemName.'">
 					<input type="hidden" name="L_NUMBER'.$i.'" value="'.$itemCode.'">
 					<input type="hidden" name="L_DESC'.$i.'" value="'.$cartItemName.'">
-					<input type="hidden" name="L_AMT'.$i.'" value="'.usces_crform($cart_row['price'], false, false, 'return').'">
+					<input type="hidden" name="L_AMT'.$i.'" value="'.usces_crform($cart_row['price'], false, false, 'return', false).'">
 					<input type="hidden" name="L_QTY'.$i.'" value="'.$cart_row['quantity'].'">';
 			}
-			$html .= '<input type="hidden" name="ITEMAMT" value="'.usces_crform($usces_entries['order']['total_items_price'], false, false, 'return').'">';
+			$html .= '<input type="hidden" name="ITEMAMT" value="'.usces_crform($usces_entries['order']['total_items_price'], false, false, 'return', false).'">';
 			if( !empty($usces_entries['order']['tax']) ) 
-				$html .= '<input type="hidden" name="TAXAMT" value="'.usces_crform($usces_entries['order']['tax'], false, false, 'return').'">';
-			$html .= '<input type="hidden" name="SHIPPINGAMT" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return').'">';
+				$html .= '<input type="hidden" name="TAXAMT" value="'.usces_crform($usces_entries['order']['tax'], false, false, 'return', false).'">';
+			$html .= '<input type="hidden" name="SHIPPINGAMT" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'">';
 			if( !empty($usces_entries['order']['cod_fee']) ) 
-				$html .= '<input type="hidden" name="HANDLINGAMT" value="'.usces_crform($usces_entries['order']['cod_fee'], false, false, 'return').'">';
+				$html .= '<input type="hidden" name="HANDLINGAMT" value="'.usces_crform($usces_entries['order']['cod_fee'], false, false, 'return', false).'">';
 			if( !empty($usces_entries['order']['discount']) ) 
-				$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return').'">';
-			$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return').'">
+				$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return', false).'">';
+			$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
 				<input type="hidden" name="NAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">
 				<input type="hidden" name="SHIPTOSTREET" value="'.esc_html($usces_entries['customer']['address2']).'">
 				<input type="hidden" name="SHIPTOSTREET2" value="'.esc_html($usces_entries['customer']['address3']).'">
