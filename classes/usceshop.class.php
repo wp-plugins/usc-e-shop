@@ -2717,7 +2717,7 @@ class usc_e_shop
 	function template_redirect () {
 		global $post, $usces_entries, $usces_carts, $usces_members;
 		
-		do_action('usces_action_template_redirect');
+		if( apply_filters('usces_action_template_redirect', false) ) return;
 
 		if( is_single() && 'item' == $post->post_mime_type ) {
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){

@@ -787,6 +787,9 @@ dl.itemGpExp li {
 	font-size: 11px;
 	line-height: 150%;
 }
+.page_content {
+	padding: 10px;
+}
 /* Welcart Item single page CSS End */
 /*********************************************************************/
 /* Welcart Search page CSS Start */

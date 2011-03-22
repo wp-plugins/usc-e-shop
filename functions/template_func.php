@@ -994,7 +994,8 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$payment_ct = count($usces->options['payment_method']);
 	foreach ($usces->options['payment_method'] as $id => $payments) {
 		if( false !== $charging_type ){
-			if( 'acting' != substr($payments['settlement'], 0, 6) )
+			//if( 'acting' != substr($payments['settlement'], 0, 6) )
+			if( 'acting_remise_card' != $payments['settlement'] && 'acting_paypal_ec' != $payments['settlement'])
 				continue;
 			if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement'])
 				continue;
