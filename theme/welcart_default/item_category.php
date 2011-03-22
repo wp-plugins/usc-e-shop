@@ -7,10 +7,10 @@ Template Name: Item category template
 */
 get_header();
 
-get_sidebar();
+get_sidebar( 'other' );
 ?>
 
-<div id="content" class="three-column">
+<div id="content" class="two-column">
 <?php if (have_posts()) the_post(); ?>
 <h1 class="pagetitle"><?php the_title(); ?></h1>
 
