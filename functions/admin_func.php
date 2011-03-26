@@ -47,7 +47,7 @@ function usces_states_form_js(){
 				};
 				$.ajax( s );
 				return false;
-			},
+			}
 		};';
 		
 		if( 'customer' == $usces->page ){

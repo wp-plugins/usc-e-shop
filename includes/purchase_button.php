@@ -212,7 +212,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="S_TORIHIKI_NO" value="' . $rand . '" />
 				<input type="hidden" name="JOB" value="' . apply_filters('usces_filter_remise_card_job', 'CAPTURE') . '" />
 				<input type="hidden" name="MAIL" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '" />
-				<input type="hidden" name="ITEM" value="0000120" />
+				<input type="hidden" name="ITEM" value="' . apply_filters('usces_filter_remise_card_item', '0000120') . '" />
 				<input type="hidden" name="TOTAL" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '" />
 				<input type="hidden" name="AMOUNT" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '" />
 				<input type="hidden" name="RETURL" value="' . USCES_CART_URL . $usces->delim . 'acting=remise_card&acting_return=1" />
@@ -239,7 +239,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				}
 			}else{
 				$html .= '<input type="hidden" name="div" value="0">';
-				$html .= '<input type="hidden" name="METHOD" value="80">';
+				$html .= '<input type="hidden" name="METHOD" value="10">';
 			}
 			if( 0 !== (int)$charging_type ){	
 				$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
