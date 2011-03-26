@@ -3539,7 +3539,7 @@ function usces_item_uploadcsv(){
 				$dbres = $wpdb->query($query);
 			}
 			//tag
-			$tags = explode(';', $datas[USCES_COL_POST_TAG]);
+			$tags = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
 			wp_set_object_terms($post_id, (array)$tags, 'post_tag');
 			
 			if($mode == 'add') {
