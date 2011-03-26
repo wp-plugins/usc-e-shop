@@ -354,7 +354,7 @@ function usces_send_ordermail($order_id) {
 
 	$msg_body .= __('** Payment method **','usces') . "\r\n";
 	$msg_body .= "******************************************************************\r\n";
-	$msg_body .= $payment['name']. "\r\n\r\n";
+	$msg_body .= $payment['name'] . usces_payment_detail($entry) . "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
 		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
@@ -964,7 +964,7 @@ function usces_reg_orderdata( $results = array() ) {
 			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
 										VALUES (%d, %s, %s)", $order_id, 'settlement_id', $_REQUEST['X-S_TORIHIKI_NO']);
 			$wpdb->query( $mquery );
-			$limitofcard = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 2) . substr($_REQUEST['X-EXPIRE'], 2, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 0, 2);
+			$limitofcard = substr($_REQUEST['X-EXPIRE'], 0, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 2, 2);
 			$usces->set_member_meta_value('partofcard', $_REQUEST['X-PARTOFCARD']);
 			$usces->set_member_meta_value('limitofcard', $limitofcard);
 			if ( isset($_REQUEST['X-AC_MEMBERID']) ) {
@@ -1292,11 +1292,10 @@ function usces_delete_orderdata() {
 	if(!isset($_REQUEST['order_id']) || $_REQUEST['order_id'] == '') return 0;
 	$order_table = $wpdb->prefix . "usces_order";
 	$order_meta_table = $wpdb->prefix . "usces_order_meta";
-	$member_meta_table = $wpdb->prefix . "usces_member_meta";
 	$ID = $_REQUEST['order_id'];
 	
-	$query = $wpdb->prepare("SELECT mem_id FROM $order_table WHERE ID = %d", $ID);
-	$mem_id = $wpdb->get_var( $query );
+	$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $ID);
+	$order_data = $wpdb->get_results( $query );
 
 	$query = $wpdb->prepare("DELETE FROM $order_table WHERE ID = %d", $ID);
 	$res = $wpdb->query( $query );
@@ -1304,8 +1303,8 @@ function usces_delete_orderdata() {
 	if($res){
 		$query = $wpdb->prepare("DELETE FROM $order_meta_table WHERE order_id = %d", $ID);
 		$wpdb->query( $query );
-		$query = $wpdb->prepare("UPDATE $member_meta_table SET meta_value = %s WHERE member_id = %d AND meta_key = %s", '', $mem_id, 'continue_status');
-		$wpdb->query( $query );
+		
+		do_action('usces_action_del_orderdata', $order_data);
 	}
 	
 	return $res;
@@ -1535,6 +1534,10 @@ function usces_update_orderdata() {
 	$result = ( 0 < array_sum($res) ) ? 1 : 0;
 //20100818ysk end
 
+	$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
+	$new_orderdata = $wpdb->get_results( $query );
+
+	do_action('usces_action_update_orderdata', $new_orderdata);
 	$usces->cart->crear_cart();
 	
 return $result;

@@ -315,6 +315,8 @@ function usces_payment_detail($usces_entries){
 		case 'acting_remise_conv':
 			break;
 	}
+	
+	$str = apply_filters('usces_filter_payment_detail', $str, $usces_entries);
 	return $str;
 }
 

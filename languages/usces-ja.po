@@ -552,8 +552,8 @@ msgstr "送料を固定しない"
 msgid "'Are you sure of deleting shipping [' + delname + ']?'"
 msgstr "'送料「'+delname+'」を削除します。よろしいですか？'"
 
-msgid "'Are you sure of setting shiping to ' + charge + ' dollars for all the prefecture?'"
-msgstr "'各都道府県の送料を' + charge + '円に一括設定します。よろしいですか？'"
+msgid "'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'"
+msgstr "'各都道府県の送料を%s' + charge + 'に一括設定します。よろしいですか？'"
 
 msgid "shipping option"
 msgstr "配送方法"
@@ -1845,8 +1845,8 @@ msgstr "新パスワード取得"
 msgid "Please, click the following URL, and please change a password."
 msgstr "下記のURLをクリックしてパスワードを変更してください。"
 
-msgid "I seem to have you cancel it when the body does not have memorizing to this email."
-msgstr "このメールに身に覚えが無い場合は破棄していただくようお願い申し上げます。"
+msgid "If you have not requested this email please kindly ignore and delete it."
+msgstr "このメールに見に覚えが無い場合は破棄していただきますようお願いいたします。"
 
 msgid "Error: I was not able to transmit an email."
 msgstr "エラー：　メールを送信できませんでした"
@@ -2715,6 +2715,161 @@ msgstr "販売対象国"
 msgid "COD is not available."
 msgstr "この配送方法では「代金引換」はご利用できません。"
 
+msgid "Argentina"
+msgstr "アルゼンチン"
+
+msgid "Australia"
+msgstr "オーストラリア"
+
+msgid "Austria"
+msgstr "オーストリア"
+
+msgid "Belgium"
+msgstr "ベルギー"
+
+msgid "Brazil"
+msgstr "ブラジル"
+
+msgid "Canada"
+msgstr "カナダ"
+
+msgid "Chile"
+msgstr "チリ"
+
+msgid "China"
+msgstr "中国"
+
+msgid "Costa Rica"
+msgstr "コスタリカ"
+
+msgid "Czech Republic"
+msgstr "チェコ共和国"
+
+msgid "Denmark"
+msgstr "デンマーク"
+
+msgid "Dominican Republic"
+msgstr "ドミニカ共和国"
+
+msgid "Finland"
+msgstr "フィンランド"
+
+msgid "France"
+msgstr "フランス"
+
+msgid "Germany"
+msgstr "ドイツ"
+
+msgid "Greece"
+msgstr "ギリシャ"
+
+msgid "Guatemala"
+msgstr "グアテマラ"
+
+msgid "Hong Kong"
+msgstr "香港"
+
+msgid "Hungary"
+msgstr "ハンガリー"
+
+msgid "India"
+msgstr "インド"
+
+msgid "Indonesia"
+msgstr "インドネシア"
+
+msgid "Ireland"
+msgstr "アイルランド"
+
+msgid "Israel"
+msgstr "イスラエル"
+
+msgid "Italy"
+msgstr "イタリア"
+
+msgid "Macau"
+msgstr "マカオ"
+
+msgid "Malaysia"
+msgstr "マレーシア"
+
+msgid "Mexico"
+msgstr "メキシコ"
+
+msgid "Netherlands"
+msgstr "オランダ"
+
+msgid "New Zealand"
+msgstr "ニュージーランド"
+
+msgid "Norway"
+msgstr "ノルウェー"
+
+msgid "Panama"
+msgstr "パナマ"
+
+msgid "Philippines"
+msgstr "フィリピン"
+
+msgid "Poland"
+msgstr "ポーランド"
+
+msgid "Portugal"
+msgstr "ポルトガル"
+
+msgid "Puerto Rico"
+msgstr "プエルトリコ"
+
+msgid "Romania"
+msgstr "ルーマニア"
+
+msgid "Russia"
+msgstr "ロシア"
+
+msgid "Singapore"
+msgstr "シンガポール"
+
+msgid "South Korea"
+msgstr "韓国"
+
+msgid "Spain"
+msgstr "スペイン"
+
+msgid "Sweden"
+msgstr "スウェーデン"
+
+msgid "Switzerland"
+msgstr "スイス"
+
+msgid "Taiwan"
+msgstr "台湾"
+
+msgid "Thailand"
+msgstr "タイ"
+
+msgid "Turkey"
+msgstr "トルコ"
+
+msgid "United Kingdom"
+msgstr "イギリス"
+
+msgid "United States"
+msgstr "アメリカ合衆国"
+
+msgid "Vietnam"
+msgstr "ヴェトナム"
+
+msgid "Print Invoice"
+msgstr "請求書印刷"
+
+msgid "Print Receipt"
+msgstr "領収書印刷"
+
+#~ msgid ""
+#~ "I seem to have you cancel it when the body does not have memorizing to "
+#~ "this email."
+#~ msgstr ""
+#~ "このメールに身に覚えが無い場合は破棄していただくようお願い申し上げます。"
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
 #~ msgid "% Comments &#187;"

@@ -54,6 +54,8 @@ class usc_e_shop
 		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_local_cerrency();
 		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
+		if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = $usces_settings['lungage2country'][$this->options['system']['front_lang']];
+		if(!isset($this->options['system']['pointreduction'])) $this->options['system']['pointreduction'] = usces_get_pointreduction($this->options['system']['currency']);
 		if(!isset($this->options['indi_item_name'])){
 			$this->options['indi_item_name']['item_name'] = 1;
 			$this->options['indi_item_name']['item_code'] = 1;
@@ -3339,7 +3341,7 @@ class usc_e_shop
 	}
 	
 	function get_order_data($order_id, $mode = '' ) {
-		global $wpdb;
+		global $wpdb, $usces;
 		$order_table = $wpdb->prefix . "usces_order";
 	
 		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $order_id);
@@ -3370,6 +3372,7 @@ class usc_e_shop
 					'shipping_charge' => $value->order_shipping_charge,
 					'cod_fee' => $value->order_cod_fee,
 					'tax' => $value->order_tax,
+					'end_price' => $value->order_item_total_price - ($value->order_getpoint*$usces->options['system']['pointreduction']) - $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
 					'status' => $value->order_tax,
 					'date' => mysql2date(__('Y/m/d'), $value->order_date),
 					'modified' => mysql2date(__('Y/m/d'), $value->order_modified)
@@ -4587,7 +4590,7 @@ class usc_e_shop
 		if( empty($skus) ) return false;
 		if($skukey == ''){
 			return $skus;
-		}else if( isset($skus[$skukey]) ){
+		}elseif( isset($skus[$skukey]) ){
 			return $skus[$skukey];
 		}else{
 			return false;
@@ -5944,6 +5947,15 @@ class usc_e_shop
 		$query = $wpdb->prepare("SELECT meta_value FROM $table_name WHERE member_id = %d AND meta_key = %s", 
 								$member_id, $key);
 		$res = $wpdb->get_var($query);
+		return $res;
+	}
+	
+	function del_member_meta($key, $member_id){
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("DELETE FROM $table_name WHERE member_id = %d AND meta_key = %s", 
+								$member_id, $key);
+		$res = $wpdb->query($query);
 		return $res;
 	}
 	

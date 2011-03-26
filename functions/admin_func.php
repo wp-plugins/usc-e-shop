@@ -96,5 +96,16 @@ function usces_states_form_js(){
 	echo apply_filters('usces_filter_states_form_js', $js);
 }
 
+function usces_get_pointreduction($currency){
+	global $usces, $usces_settings;
 
+	$form = $usces_settings['currency'][$currency];
+	if( 2 == $form[1] ){
+		$reduction = 0.01;
+	}else{
+		$reduction = 1;
+	}
+	$reduction = apply_filters('usces_filter_pointreduction', $reduction);
+	return $reduction;
+}
 ?>

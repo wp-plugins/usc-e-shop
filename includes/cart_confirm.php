@@ -32,7 +32,8 @@
 		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
 		foreach((array)$options as $key => $value){
-			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			if( !empty($key) )
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
 ?>
 		<tr>

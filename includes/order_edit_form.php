@@ -253,6 +253,14 @@ jQuery(function($){
 		pdfWindow('nohin');
 		uscesMail.ordercheckpost('nohinprint');
 	});
+	$('#receiptprint').click(function() {
+		pdfWindow('receipt');
+		uscesMail.ordercheckpost('receiptprint');
+	});
+	$('#billprint').click(function() {
+		pdfWindow('bill');
+		uscesMail.ordercheckpost('billprint');
+	});
 	$("#mailSendAlert").dialog({
 		bgiframe: true,
 		autoOpen: false,
@@ -520,7 +528,12 @@ jQuery(document).ready(function($){
 <td><input name="check[completionmail]" type="checkbox" value="completionmail"<?php if(isset($ordercheck['completionmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="completionMail"><?php _e('Mail for Shipping', 'usces'); ?></a></td>
 <td><input name="check[mitumoriprint]" type="checkbox" value="mitumoriprint"<?php if(isset($ordercheck['mitumoriprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="mitumoriprint"><?php _e('print out the estimate', 'usces'); ?></a></td>
 <td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint"><?php _e('print the invoice', 'usces'); ?></a></td>
-<td colspan="7"><span style="color:#CC3300"><?php _e("When there is any change, please press the 'change decision' before you send or print.", 'usces'); ?></span></td>
+<td><input name="check[billprint]" type="checkbox" value="billprint"<?php if(isset($ordercheck['billprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="billprint"><?php _e('Print Invoice', 'usces'); ?></a></td>
+<td><input name="check[receiptprint]" type="checkbox" value="receiptprint"<?php if(isset($ordercheck['receiptprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="receiptprint"><?php _e('Print Receipt', 'usces'); ?></a></td>
+<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+<td colspan="12"><span style="color:#CC3300"><?php _e("When there is any change, please press the 'change decision' before you send or print.", 'usces'); ?></span></td>
 </tr>
 </table>
 </div>
@@ -760,7 +773,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
 				if( !empty($key) )
-					$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 			

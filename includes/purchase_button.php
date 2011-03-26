@@ -4,6 +4,7 @@ if(isset($this))
 
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 $rand = sprintf('%010d', mt_rand(1, 9999999999));
+$cart = $usces->cart->get_cart();
 
 if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['order']['total_full_price'] ){
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -236,6 +237,9 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 						$html .= '<input type="hidden" name="METHOD" value="80">';
 						break;
 				}
+			}else{
+				$html .= '<input type="hidden" name="div" value="0">';
+				$html .= '<input type="hidden" name="METHOD" value="80">';
 			}
 			if( 0 !== (int)$charging_type ){	
 				$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
@@ -247,11 +251,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="AC_AMOUNT" value="' . $usces_entries['order']['total_full_price'] . '">';
 				$html .= '<input type="hidden" name="AC_TOTAL" value="' . $usces_entries['order']['total_full_price'] . '">';
 				switch( (int)$charging_type ){
-					case '1':
+					case 1:
 						$html .= '<input type="hidden" name="AC_NEXT_DATE" value="' . date('Ymd', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))) . '">';
 						$html .= '<input type="hidden" name="AC_INTERVAL" value="1M">';
 						break;
-					case '2':
+					case 2:
 						$html .= '<input type="hidden" name="AC_NEXT_DATE" value="' . date('Ymd', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))) . '">';
 						$html .= '<input type="hidden" name="AC_INTERVAL" value="12M">';
 						break;

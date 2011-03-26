@@ -129,12 +129,15 @@ jQuery(document).ready(function($){
 </td>
 <td colspan="2" rowspan="5" class="mem_col3">
 <table class="mem_info">
-<?php foreach($member_metas as $value){ ?>
+<?php 
+	foreach($member_metas as $value){ 
+		if( in_array($value['meta_key'], array('partofcard','limitofcard',)) ){
+?>
 		<tr>
 				<td class="label"><?php echo esc_html($value['meta_key']); ?></td>
 				<td><div class="rod_left"><?php echo esc_html($value['meta_value']); ?></div></td>
 		</tr>
-<?php } ?>
+<?php }} ?>
 </table>
 
 
@@ -218,7 +221,7 @@ jQuery(document).ready(function($){
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
 		if( !empty($key) )
-			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 	}
 	
 	?>

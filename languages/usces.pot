@@ -1846,12 +1846,6 @@ msgstr "下記のURLをクリックしてパスワードの変更を行ってく
 msgid "If you have not requested this email please kindly ignore and delete it."
 msgstr "このメールに見に覚えが無い場合は破棄していただきますようお願いいたします。"
 
-msgid "If you have not requested this email please kindly ignore and delete it."
-msgstr ""
-
-msgid "If you have not requested this email please kindly ignore and delete it."
-msgstr ""
-
 msgid "Error: I was not able to transmit an email."
 msgstr "エラー：　メールを送信できませんでした"
 
@@ -2722,174 +2716,161 @@ msgstr "販売対象国"
 msgid "COD is not available."
 msgstr "この配送方法では「代金引換」はご利用できません。"
 
-#　Shipment Setting Page　#########################
-msgid ""
-msgstr "配送業務締時間"
+msgid "Argentina"
+msgstr "アルゼンチン"
 
-msgid ""
-msgstr "商品発送を締め切る時間を指定します。この値は最短発送日を算出するために使用します。"
+msgid "Australia"
+msgstr "オーストラリア"
 
-msgid ""
-msgstr "午前着の可否"
+msgid "Austria"
+msgstr "オーストリア"
 
-msgid ""
-msgstr "午前着可"
+msgid "Belgium"
+msgstr "ベルギー"
 
-msgid ""
-msgstr "午前着不可"
+msgid "Brazil"
+msgstr "ブラジル"
 
-msgid ""
-msgstr "商品が最短発送日の午前中に到着が可能かどうかを指定します。"
+msgid "Canada"
+msgstr "カナダ"
 
-msgid ""
-msgstr "配送希望日表示数"
+msgid "Chile"
+msgstr "チリ"
 
-msgid "お客様が選択する配送希望日の選択数を指定します。"
-msgstr ""
+msgid "China"
+msgstr "中国"
 
-msgid "配送対象地域"
-msgstr ""
+msgid "Costa Rica"
+msgstr "コスタリカ"
 
-msgid ""
-msgstr "国際便"
+msgid "Czech Republic"
+msgstr "チェコ共和国"
 
-msgid ""
-msgstr "この配送方法が対象とする配送可能地域。"
+msgid "Denmark"
+msgstr "デンマーク"
 
-msgid ""
-msgstr "この送料を適用する国を選択してください。"
+msgid "Dominican Republic"
+msgstr "ドミニカ共和国"
 
-msgid ""
-msgstr "配送可能な時間帯を入力します。お客様に時間帯を選択させない場合は空白にします。<br />例）<br />午前中"
+msgid "Finland"
+msgstr "フィンランド"
 
-msgid ""
-msgstr "配達日数"
+msgid "France"
+msgstr "フランス"
 
-msgid ""
-msgstr "配送希望日を利用しない"
+msgid "Germany"
+msgstr "ドイツ"
 
-msgid ""
-msgstr "下の配達日数設定で登録した配達日数名を選択します。最短配送日を算出するために使用します。お客様に配送希望日を選択させない場合は「配送希望日を利用しない」を指定します。"
+msgid "Greece"
+msgstr "ギリシャ"
 
-msgid ""
-msgstr "代引き支払いができない場合はチェックを入れます。"
+msgid "Guatemala"
+msgstr "グアテマラ"
 
-# JavaScript
-msgid ""
-msgstr "'配達日数設定「' + delname + '」を削除してもよろしいですか?'"
+msgid "Hong Kong"
+msgstr "香港"
 
-# JavaScript
-msgid ""
-msgstr "'配達日数を全て ' + days + ' 日に変更してもよろしいですか?"
+msgid "Hungary"
+msgstr "ハンガリー"
 
-#　System Setting Page　#########################
-msgid ""
-msgstr "フロントエンドの言語"
+msgid "India"
+msgstr "インド"
 
-msgid ""
-msgstr "フロントエンド（ショップ側）の言語を選択できます。バックエンド（管理パネル）の言語はconfig.php の設定に従います。"
+msgid "Indonesia"
+msgstr "インドネシア"
 
-msgid ""
-msgstr "通貨表示"
+msgid "Ireland"
+msgstr "アイルランド"
 
-msgid ""
-msgstr "選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロント・エンド、バック・エンド共通です。"
+msgid "Israel"
+msgstr "イスラエル"
 
-msgid ""
-msgstr "住所氏名の様式"
+msgid "Italy"
+msgstr "イタリア"
 
-msgid ""
-msgstr "住所氏名などの入力フォームの様式を、どの国のものにするか選択します。"
+msgid "Macau"
+msgstr "マカオ"
 
-msgid "Target Market"
-msgstr "販売対象地域"
+msgid "Malaysia"
+msgstr "マレーシア"
 
-msgid ""
-msgstr "全ての国"
+msgid "Mexico"
+msgstr "メキシコ"
 
-msgid ""
-msgstr "販売・発送可能な地域を国単位で選択します。複数選択可"
+msgid "Netherlands"
+msgstr "オランダ"
 
-msgid ""
-msgstr "商品SKUの並び順"
+msgid "New Zealand"
+msgstr "ニュージーランド"
 
-#　Setting for Credit Settlement Page　only PayPal #########################
-msgid ""
-msgstr "決済サービス設定"
+msgid "Norway"
+msgstr "ノルウェー"
 
-msgid ""
-msgstr "PayPalエクスプレスチェックアウト決済サービス"
+msgid "Panama"
+msgstr "パナマ"
 
-msgid ""
-msgstr "十分にテストを行ってから運用してください。"
+msgid "Philippines"
+msgstr "フィリピン"
 
-msgid ""
-msgstr "PayPal決済"
+msgid "Poland"
+msgstr "ポーランド"
 
-msgid ""
-msgstr "利用する"
+msgid "Portugal"
+msgstr "ポルトガル"
 
-msgid ""
-msgstr "利用しない"
+msgid "Puerto Rico"
+msgstr "プエルトリコ"
 
-msgid ""
-msgstr "PayPal決済を利用するかどうかを選択します。"
+msgid "Romania"
+msgstr "ルーマニア"
 
-msgid ""
-msgstr "動作環境"
+msgid "Russia"
+msgstr "ロシア"
 
-msgid ""
-msgstr "テスト(sandbox)"
+msgid "Singapore"
+msgstr "シンガポール"
 
-msgid ""
-msgstr "本稼動"
+msgid "South Korea"
+msgstr "韓国"
 
-msgid ""
-msgstr "sandbox を利用した決済テストの場合は「テスト(sandbox)」を選択します。"
+msgid "Spain"
+msgstr "スペイン"
 
-msgid ""
-msgstr "APIユーザー名"
+msgid "Sweden"
+msgstr "スウェーデン"
 
-msgid ""
-msgstr "API信用証明書のAPIユーザー名を入力します。sandbox と本稼動では別のユーザー名となります。"
+msgid "Switzerland"
+msgstr "スイス"
 
-msgid ""
-msgstr "APIパスワード"
+msgid "Taiwan"
+msgstr "台湾"
 
-msgid ""
-msgstr "API信用証明書のAPIパスワードを入力します。sandbox と本稼動では別のパスワードとなります。"
+msgid "Thailand"
+msgstr "タイ"
 
-msgid ""
-msgstr "署名"
+msgid "Turkey"
+msgstr "トルコ"
 
-msgid ""
-msgstr "PayPalから発行されるAPI信用証明書の署名を入力します。sandbox と本稼動では別の署名となります。"
+msgid "United Kingdom"
+msgstr "イギリス"
 
-msgid ""
-msgstr "PayPalの設定を更新する"
+msgid "United States"
+msgstr "アメリカ合衆国"
 
-msgid ""
-msgstr "PayPal決済サービスの詳細はこちら 》"
+msgid "Vietnam"
+msgstr "ヴェトナム"
 
-msgid ""
-msgstr "この決済は、「エクスプレスチェックアウト」を使用しています。"
+msgid "Print Invoice"
+msgstr "請求書印刷"
 
-msgid ""
-msgstr "ご利用のサーバーに「OpenSSL」モジュールがインストールされていない場合、「エクスプレスチェックアウト」での決済はできません。"
+msgid "Print Receipt"
+msgstr "領収書印刷"
 
-#　Order List Page #########################
-msgid ""
-msgstr "出力したい項目を選択して、ダウンロードを押してください。"
+msgid "Oreder ID"
+msgstr "受注番号"
 
-#　Front Shipping/Payment Options Page #########################
-# JavaScript
-msgid ""
-msgstr "'最短 ' + date_str + ' からご指定いただけます。'"
+msgid "Member ID"
+msgstr "会員番号"
 
-# JavaScript
-msgid ""
-msgstr "'最短 ' + date_str + ' の午前中からご指定いただけます。'"
-
-# JavaScript
-msgid ""
-msgstr "'最短 ' + date_str + ' の午後からご指定いただけます。'"
+msgid "Name"
+msgstr "氏名"
