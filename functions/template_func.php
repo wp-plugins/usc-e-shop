@@ -650,7 +650,7 @@ function usces_the_itemSkuTable($colum = '', $buttonValue = '' ) {
 	echo $html;
 }
 
-function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '', $out = '' ) {
+function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '', $out = '', $media = 'item' ) {
 	global $usces;
 	if($post == '') global $post;
 
@@ -663,12 +663,14 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 	$pictids = $usces->get_pictids($code[0]);
 	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
-	$alt = 'alt="'.esc_attr($code[0]).'"';
-	$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictids[$number]);
-	$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-	$title = 'title="'.esc_attr($name[0]).'"';
-	$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictids[$number]);
-	$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+	if( 'item' == $media ){
+		$alt = 'alt="'.esc_attr($code[0]).'"';
+		$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictids[$number]);
+		$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
+		$title = 'title="'.esc_attr($name[0]).'"';
+		$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictids[$number]);
+		$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+	}
 	if($out == 'return'){
 		return $html;
 	}else{
@@ -1382,12 +1384,21 @@ function usces_list_bestseller($num, $days = ''){
 	echo $htm;
 }
 
-function usces_list_post( $slug, $rownum ){
+function usces_list_post( $slug, $rownum, $widget_id=NULL ){
 	global $usces;
 	usces_remove_filter();
 	
 	$li = '';
 	$infolist = new wp_query( array('category_name'=>$slug, 'post_status'=>'publish', 'posts_per_page'=>$rownum, 'order'=>'DESC', 'orderby'=>'date') );
+	if( NULL != $widget_id && $infolist->have_posts() ){
+		remove_filter( 'excerpt_length', 'welcart_excerpt_length' );
+		remove_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
+		remove_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+		if( function_exists('welcart_widget_post_excerpt_length_'.$widget_id) )
+			add_filter( 'excerpt_length', 'welcart_widget_post_excerpt_length_'.$widget_id );
+		if( function_exists('welcart_widget_post_excerpt_mblength_'.$widget_id) )
+			add_filter( 'excerpt_mblength', 'welcart_widget_post_excerpt_mblength_'.$widget_id );
+	}
 	while ($infolist->have_posts()) {
 		$infolist->the_post();
 		$list = "<li>\n";
@@ -1398,6 +1409,11 @@ function usces_list_post( $slug, $rownum ){
 	}
 	wp_reset_query();
 	usces_reset_filter();
+	if( NULL != $widget_id && $infolist->have_posts() ){
+		add_filter( 'excerpt_length', 'welcart_excerpt_length' );
+		add_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
+		add_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+	}
 	echo $li;
 }
 
@@ -2266,21 +2282,12 @@ function usces_login_button(){
 
 function usces_assistance_item($post_id){
 	if (usces_get_assistance_id_list($post_id)) :
-?>
-	<div class="assistance_item">
-<?php
 		$assistanceposts = new wp_query( array('post__in'=>usces_get_assistance_ids($post_id)) );
 		if($assistanceposts->have_posts()) :
-		remove_filter( 'excerpt_length', 'welcart_excerpt_length' );
-		remove_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
-		remove_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
 		add_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
 		add_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
 ?>
-
-		<h3><?php usces_the_itemCode(); ?><?php _e('An article concerned', 'usces'); ?></h3>
 		<ul class="clearfix">
-
 <?php
 		while ($assistanceposts->have_posts()) :
 			$assistanceposts->the_post();
@@ -2312,14 +2319,9 @@ function usces_assistance_item($post_id){
 <?php 
 		wp_reset_query();
 		usces_reset_filter();
-		add_filter( 'excerpt_length', 'welcart_excerpt_length' );
-		add_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
-		add_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+		remove_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
+		remove_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
 		endif;
-?>
-	
-	</div><!-- end of assistance_item -->
-<?php
 	endif;
 }
 ?>

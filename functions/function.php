@@ -3717,6 +3717,7 @@ function usces_locales(){
 function usces_get_local_language(){
 	$locale = get_locale();
 	switch( $locale ){
+		case '':
 		case 'en':
 		case 'en_US':
 			$front_lang =  'en';
@@ -3731,55 +3732,27 @@ function usces_get_local_language(){
 	return $front_lang;
 }
 
-function usces_get_local_cerrency(){
+function usces_get_base_country(){
+	global $usces_settings;
 	$locale = get_locale();
-	switch( $locale ){
-		case 'en':
-		case 'en_US':
-			$res =  'US';
-			break;
-		case 'ja':
-		case 'ja_JP':
-			$res =  'JP';
-			break;
-		default:
-			$res =  'US';
-	}
-	return $res;
+	if( array_key_exists($locale, $usces_settings['lungage2country']) )
+		return $usces_settings['lungage2country'][$locale];
+	else
+		return 'US';
 }
 
 function usces_get_local_addressform(){
-	$locale = get_locale();
-	switch( $locale ){
-		case 'en':
-		case 'en_US':
-			$res =  'US';
-			break;
-		case 'ja':
-		case 'ja_JP':
-			$res =  'JP';
-			break;
-		default:
-			$res =  'US';
-	}
-	return $res;
+	global $usces_settings;
+	$base = usces_get_base_country();
+	if( array_key_exists($base, $usces_settings['addressform']) )
+		return $usces_settings['addressform'][$base];
+	else
+		return 'US';
 }
 
 function usces_get_local_target_market(){
-	$locale = get_locale();
-	switch( $locale ){
-		case 'en':
-		case 'en_US':
-			$res =  'US';
-			break;
-		case 'ja':
-		case 'ja_JP':
-			$res =  'JP';
-			break;
-		default:
-			$res =  'US';
-	}
-	return (array)$res;
+	$base = usces_get_base_country();
+	return (array)$base;
 }
 
 function usces_get_apply_addressform($country){

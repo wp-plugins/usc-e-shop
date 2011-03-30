@@ -929,7 +929,7 @@ function usces_download_product_list() {
 					foreach((array)$options as $key => $value) {
 						if(!empty($key))
 							//$optstr .= usces_entity_decode($key, $ext).$sp.usces_entity_decode($value, $ext).$nb;
-							$optstr .= usces_entity_decode($key.$sp.$value, $ext).$nb;
+							$optstr .= usces_entity_decode($key.$sp.urldecode($value), $ext).$nb;
 					}
 				}
 				$line .= $td_h.$optstr.$td_f;
@@ -1857,4 +1857,17 @@ function usces_download_item_list() {
 	exit();
 }
 //20101111ysk end
+
+function usces_is_entity($entity){
+	$temp = substr($entity, 0, 1);
+	$temp .= substr($entity, -1, 1);
+	if ($temp != '&;')
+		return false;
+	else
+		return true;
+}
+
+function p($var){
+	echo '<pre>' . print_r($var, true) . '</pre>';
+}
 ?>

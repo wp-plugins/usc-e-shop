@@ -51,7 +51,7 @@ class usc_e_shop
 		if(!isset($this->options['system']['orderby_itemsku'])) $this->options['system']['orderby_itemsku'] = 0;
 		if(!isset($this->options['system']['orderby_itemopt'])) $this->options['system']['orderby_itemopt'] = 0;
 		if(!isset($this->options['system']['front_lang'])) $this->options['system']['front_lang'] = usces_get_local_language();
-		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_local_cerrency();
+		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_base_country();
 		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
 		if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = $usces_settings['lungage2country'][$this->options['system']['front_lang']];
@@ -844,7 +844,7 @@ class usc_e_shop
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
 			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : usces_get_local_language();
-			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : usces_get_local_cerrency();
+			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : usces_get_base_country();
 			$this->options['system']['addressform'] = (isset($_POST['addressform']) ) ? $_POST['addressform'] : usces_get_local_addressform();
 			$this->options['system']['target_market'] = (isset($_POST['target_market']) ) ? $_POST['target_market'] : usces_get_local_target_market();
 			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
@@ -6023,7 +6023,7 @@ class usc_e_shop
 		$price = number_format($amount, $decimal, $point, $seperator);
 
 		if( $symbol_pre )
-			$price = mb_convert_encoding($symbol, 'UTF-8', 'HTML-ENTITIES') . $price;
+			$price = ( usces_is_entity($symbol) ? mb_convert_encoding($symbol, 'UTF-8', 'HTML-ENTITIES') : $symbol ) . $price;
 			
 		if( $symbol_post )
 			$price = $price . __($code, 'usces');
@@ -6037,7 +6037,6 @@ class usc_e_shop
 		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
 		return $code;
 	}
-	
 	
 	//shortcode-----------------------------------------------------------------------------
 	function sc_company_name() {

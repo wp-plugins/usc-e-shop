@@ -154,7 +154,10 @@ get_sidebar( 'other' );
 <?php endforeach; ?>
 	</div><!-- end of itemsubimg -->
 
-<?php usces_assistance_item( $post->ID ); ?>
+	<div class="assistance_item">
+		<h3><?php usces_the_itemCode(); ?><?php _e('An article concerned', 'usces'); ?></h3>
+		<?php usces_assistance_item( $post->ID ); ?>
+	</div><!-- end of assistance_item -->
 </div><!-- end of itemspage -->
 </div><!-- end of storycontent -->
 </div>
