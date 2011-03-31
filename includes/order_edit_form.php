@@ -245,14 +245,6 @@ jQuery(function($){
 		$('#mailSendDialog').dialog('open');
 	});
 	
-	$('#mitumoriprint').click(function() {
-		pdfWindow('mitumori');
-		uscesMail.ordercheckpost('mitumoriprint');
-	});
-	$('#nohinprint').click(function() {
-		pdfWindow('nohin');
-		uscesMail.ordercheckpost('nohinprint');
-	});
 	$("#mailSendAlert").dialog({
 		bgiframe: true,
 		autoOpen: false,
@@ -265,9 +257,35 @@ jQuery(function($){
 		uscesMail.sendmail();
 	});
 	
-//	$('#addItemDialog').bind("ajaxComplete", function(){
-//  		$('#addItemDialog').dialog('close');
-//	});
+	$("#PDFDialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 800,
+		width: 700,
+		resizable: true,
+		modal: true,
+		buttons: {
+			'<?php _e('close', 'usces'); ?>': function() {
+				$(this).dialog('close');
+			}
+		},
+		close: function() {
+			$("#new_pdf").html( "" );
+		}
+	});
+	$('#mitumoriprint').click(function() {
+		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>&type=mitumori" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
+		$('#PDFDialog').dialog('option', 'title', '<?php _e('print out the estimate', 'usces'); ?>');
+		$('#PDFDialog').dialog('open');
+		uscesMail.ordercheckpost('mitumoriprint');
+	});
+	$('#nohinprint').click(function() {
+		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>&type=nohin" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
+		$('#PDFDialog').dialog('option', 'title', '<?php _e('print the invoice', 'usces'); ?>');
+		$('#PDFDialog').dialog('open');
+		uscesMail.ordercheckpost('nohinprint');
+	});
+
 	orderfunc = {
 		sumPrice : function() {
 			var p = $("input[name*='skuPrice']");
@@ -966,6 +984,13 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 </div>
 <input name="usces_referer" type="hidden" id="usces_referer" value="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>" />
 </form>
+
+<div id="PDFDialog" title="">
+	<div id="pdf_response"></div>
+	<fieldset>
+		<div id="new_pdf"></div>
+	</fieldset>
+</div>
 
 </div><!--usces_admin-->
 </div><!--wrap-->
