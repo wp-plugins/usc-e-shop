@@ -5,8 +5,6 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
-
-get_sidebar( 'other' );
 ?>
 <div id="content" class="two-column">
 <div class="catbox">
@@ -154,10 +152,7 @@ get_sidebar( 'other' );
 <?php endforeach; ?>
 	</div><!-- end of itemsubimg -->
 
-	<div class="assistance_item">
-		<h3><?php usces_the_itemCode(); ?><?php _e('An article concerned', 'usces'); ?></h3>
-		<?php usces_assistance_item( $post->ID ); ?>
-	</div><!-- end of assistance_item -->
+	<?php usces_assistance_item( $post->ID, __('An article concerned', 'usces') ); ?>
 </div><!-- end of itemspage -->
 </div><!-- end of storycontent -->
 </div>
@@ -168,5 +163,7 @@ get_sidebar( 'other' );
 
 </div><!-- end of catbox -->
 </div><!-- end of content -->
+
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>

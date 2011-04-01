@@ -6,8 +6,6 @@ Template Name: Inquiry
  * @subpackage Welcart Default Theme
 */
 get_header();
-
-get_sidebar( 'other' );
 ?>
 
 <div id="content" class="two-column">
@@ -22,5 +20,7 @@ get_sidebar( 'other' );
 	<?php endwhile; endif; ?>
 </div><!-- end of catbox -->
 </div><!-- end of content -->
+
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>

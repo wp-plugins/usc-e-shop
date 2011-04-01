@@ -5,8 +5,6 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
-
-get_sidebar( 'other' );
 ?>
 
 <div id="content" class="two-column">
@@ -25,5 +23,7 @@ get_sidebar( 'other' );
 	<?php posts_nav_link(' &#8212; ', __('&laquo; Newer Posts'), __('Older Posts &raquo;')); ?>
 </div><!-- end of catbox -->
 </div><!-- end of content -->
+
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>

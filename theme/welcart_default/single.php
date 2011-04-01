@@ -5,8 +5,6 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
-
-get_sidebar( 'other' );
 ?>
 
 <div id="content" class="two-column">
@@ -28,10 +26,11 @@ get_sidebar( 'other' );
 <?php if(!usces_is_item()): ?>
 	<div class="feedback">
 		<?php wp_link_pages(); ?>
-		<?php comments_popup_link(__('Comments (0)'), __('Comments (1)'), __('Comments (%)')); ?>
 	</div>
-<?php endif; ?>
 
+	<?php comments_template( '', true ); ?>
+
+<?php endif; ?>
 </div>
 </div><!-- end of catbox -->
 
@@ -45,5 +44,7 @@ get_sidebar( 'other' );
 <?php posts_nav_link(' &#8212; ', __('&laquo; Newer Posts'), __('Older Posts &raquo;')); ?>
 
 </div><!-- end of content -->
+
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>

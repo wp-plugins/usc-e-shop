@@ -5,12 +5,6 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
-
-if(is_page('usces-cart')):
-	get_sidebar( 'cartmember' );
-else:
-	get_sidebar( 'other' );
-endif;
 ?>
 
 <div id="content" class="two-column">
@@ -27,5 +21,13 @@ endif;
 <?php endwhile; endif; ?>
 <?php edit_post_link(__('Edit this entry.', 'uscestheme'), '<p>', '</p>'); ?>
 </div><!-- end of content -->
+
+<?php
+if(is_page('usces-cart')):
+	get_sidebar( 'cartmember' );
+else:
+	get_sidebar( 'other' );
+endif;
+?>
 
 <?php get_footer(); ?>

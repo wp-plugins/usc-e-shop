@@ -30,4 +30,6 @@ get_sidebar( 'home' );
 	</div>
 </div><!-- end of content -->
 
+<?php //get_sidebar( 'home' ); ?>
+
 <?php get_footer(); ?>

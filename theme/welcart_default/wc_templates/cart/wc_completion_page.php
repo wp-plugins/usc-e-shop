@@ -5,8 +5,6 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
-
-get_sidebar( 'cartmember' );
 ?>
 
 <div id="content" class="two-column">
@@ -49,5 +47,7 @@ get_sidebar( 'cartmember' );
 <?php endif; ?>
 </div><!-- end of catbox -->
 </div><!-- end of content -->
+
+<?php get_sidebar( 'cartmember' ); ?>
 
 <?php get_footer(); ?>
