@@ -1958,7 +1958,7 @@ function usces_check_acting_return_duplicate() {
 		$trans_id = $_REQUEST['trans_code'];
 		break;
 	case 'paypal':
-		$trans_id = $_REQUEST['txn_id'];
+		$trans_id = $_REQUEST['tx'];//PDT=tx  IPN=txn_id
 		break;
 	case 'zeus_card':
 		$trans_id = $_REQUEST['ordd'];
@@ -3546,20 +3546,19 @@ function usces_trackPageview_deletemember($push){
 	return $push;
 }
 
-function usces_post_reg_orderdata(){
+function usces_post_reg_orderdata($order_id, $results){
 	global $usces, $wpdb;
 	$entry = $usces->cart->get_entry();
 	$acting = $_GET['acting'];
-	$args = func_get_args();
-	$order_id = $args[0];
-	$results = $args[1];
-	
+	$data = array();
+
 	if( $order_id ){
 
 		switch ( $acting ) {
 			case 'epsilon':
 				$trans_id = $_REQUEST['trans_code'];
 				break;
+			case 'paypal_ipn':
 			case 'paypal':
 				$trans_id = $_REQUEST['txn_id'];
 				break;
@@ -3586,14 +3585,7 @@ function usces_post_reg_orderdata(){
 									'status' => $_REQUEST['status'],
 									'error_code' => $_REQUEST['error_code']
 									);
-				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name 
-											( order_id, meta_key, meta_value ) VALUES 
-											(%d, %s, %s)", 
-											$order_id, 
-											'acting_'.$_REQUEST['sendpoint'], 
-											serialize($zeus_convs)
-										);
-				$wpdb->query( $mquery );
+				$usces->set_order_meta_value('acting_'.$_REQUEST['sendpoint'], serialize($zeus_convs), $order_id);
 				break;
 			case 'zeus_bank':
 				$trans_id = $_REQUEST['order_no'];
