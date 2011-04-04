@@ -4327,7 +4327,7 @@ class usc_e_shop
 		do_action('usces_pre_reg_orderdata');
 		//db(function.php)
 //20110203ysk start
-		$res = usces_check_acting_return_duplicate();
+		$res = usces_check_acting_return_duplicate($results);
 		if($res != NULL) {
 			usces_log('order processing duplicate : acting='.$_REQUEST['acting'].', order_id='.$res, 'acting_transaction.log');
 			return 'ordercompletion';

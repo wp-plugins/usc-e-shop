@@ -1950,15 +1950,20 @@ function usces_check_acting_return() {
 	return $results;
 }
 //20110203ysk start
-function usces_check_acting_return_duplicate() {
+function usces_check_acting_return_duplicate($results) {
 	global $wpdb;
+//		usces_log('$_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+//		usces_log('$results : '.print_r($results,true), 'acting_transaction.log');
 
 	switch($_GET['acting']) {
 	case 'epsilon':
 		$trans_id = $_REQUEST['trans_code'];
 		break;
+	case 'paypal_ipn':
+		$trans_id = $_REQUEST['txn_id'];
+		break;
 	case 'paypal':
-		$trans_id = $_REQUEST['tx'];//PDT=tx  IPN=txn_id
+		$trans_id = $results['txn_id'];
 		break;
 	case 'zeus_card':
 		$trans_id = $_REQUEST['ordd'];
@@ -3559,8 +3564,10 @@ function usces_post_reg_orderdata($order_id, $results){
 				$trans_id = $_REQUEST['trans_code'];
 				break;
 			case 'paypal_ipn':
-			case 'paypal':
 				$trans_id = $_REQUEST['txn_id'];
+				break;
+			case 'paypal':
+				$trans_id = $results['txn_id'];
 				break;
 			case 'zeus_card':
 				$trans_id = $_REQUEST['ordd'];
