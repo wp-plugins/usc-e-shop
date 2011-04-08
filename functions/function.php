@@ -179,27 +179,27 @@ function usces_order_confirm_message($order_id) {
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ϔԍ', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ϋz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
-		$msg_body .= __('x', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
-		$msg_body .= __('Rrjtԍ','usces').' : '.$args['no']."\r\n";
-		if($args['cv'] != '030') {//t@~[}[gȊO
-			$msg_body .= __('RrjtԍURL', 'usces').' : '.$args['cu']."\r\n";
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('お支払先', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('コンビニ受付番号','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//ファミリーマート以外
+			$msg_body .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
 		}
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ϔԍ', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ϋz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
-		$msg_body .= __('sR[h','usces').' : '.$bank[0]."\r\n";
-		$msg_body .= __('s','usces').' : '.$bank[1]."\r\n";
-		$msg_body .= __('xXR[h','usces').' : '.$bank[2]."\r\n";
-		$msg_body .= __('xX','usces').' : '.$bank[3]."\r\n";
-		$msg_body .= __('','usces').' : '.$bank[4]."\r\n";
-		$msg_body .= __('ԍ','usces').' : '.$bank[5]."\r\n";
-		$msg_body .= __('`','usces').' : '.$bank[6]."\r\n";
-		$msg_body .= __('x','usces').' : '.substr($args['exp'], 0, 4).'N'.substr($args['exp'], 4, 2).''.substr($args['exp'], 6, 2)."\r\n";
+		$msg_body .= __('銀行コード','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('銀行名','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('支店コード','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('支店名','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('口座種別','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('口座番号','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('口座名義','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('支払期限','usces').' : '.substr($args['exp'], 0, 4).'年'.substr($args['exp'], 4, 2).'月'.substr($args['exp'], 6, 2)."日\r\n";
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 //20101018ysk end
 	}
@@ -363,27 +363,27 @@ function usces_send_ordermail($order_id) {
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ϔԍ', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ϋz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
-		$msg_body .= __('x', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
-		$msg_body .= __('Rrjtԍ','usces').' : '.$args['no']."\r\n";
-		if($args['cv'] != '030') {//t@~[}[gȊO
-			$msg_body .= __('RrjtԍURL', 'usces').' : '.$args['cu']."\r\n";
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('お支払先', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
+		$msg_body .= __('コンビニ受付番号','usces').' : '.$args['no']."\r\n";
+		if($args['cv'] != '030') {//ファミリーマート以外
+			$msg_body .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
 		}
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
-		$msg_body .= __('ϔԍ', 'usces').' : '.$args['gid']."\r\n";
-		$msg_body .= __('ϋz', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
+		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
+		$msg_body .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
-		$msg_body .= __('sR[h','usces').' : '.$bank[0]."\r\n";
-		$msg_body .= __('s','usces').' : '.$bank[1]."\r\n";
-		$msg_body .= __('xXR[h','usces').' : '.$bank[2]."\r\n";
-		$msg_body .= __('xX','usces').' : '.$bank[3]."\r\n";
-		$msg_body .= __('','usces').' : '.$bank[4]."\r\n";
-		$msg_body .= __('ԍ','usces').' : '.$bank[5]."\r\n";
-		$msg_body .= __('`','usces').' : '.$bank[6]."\r\n";
-		$msg_body .= __('x','usces').' : '.substr($args['exp'], 0, 4).'N'.substr($args['exp'], 4, 2).''.substr($args['exp'], 6, 2)."\r\n";
+		$msg_body .= __('銀行コード','usces').' : '.$bank[0]."\r\n";
+		$msg_body .= __('銀行名','usces').' : '.$bank[1]."\r\n";
+		$msg_body .= __('支店コード','usces').' : '.$bank[2]."\r\n";
+		$msg_body .= __('支店名','usces').' : '.$bank[3]."\r\n";
+		$msg_body .= __('口座種別','usces').' : '.$bank[4]."\r\n";
+		$msg_body .= __('口座番号','usces').' : '.$bank[5]."\r\n";
+		$msg_body .= __('口座名義','usces').' : '.$bank[6]."\r\n";
+		$msg_body .= __('支払期限','usces').' : '.substr($args['exp'], 0, 4).'年'.substr($args['exp'], 4, 2).'月'.substr($args['exp'], 6, 2)."日\r\n";
 		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
 //20101018ysk end
 	}
@@ -2186,6 +2186,8 @@ function usces_check_acting_return() {
 //20110203ysk start
 function usces_check_acting_return_duplicate( $results = array() ) {
 	global $wpdb;
+//		usces_log('$_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+//		usces_log('$results : '.print_r($results,true), 'acting_transaction.log');
 
 	switch($_GET['acting']) {
 	case 'epsilon':
@@ -4805,22 +4807,23 @@ function usces_page_name( $out = '') {
 	}
 }
 
-function usces_post_reg_orderdata(){
+function usces_post_reg_orderdata($order_id, $results){
 	global $usces, $wpdb;
 	$entry = $usces->cart->get_entry();
 	$acting = $_GET['acting'];
-	$args = func_get_args();
-	$order_id = $args[0];
-	$results = $args[1];
-	
+	$data = array();
+
 	if( $order_id ){
 
 		switch ( $acting ) {
 			case 'epsilon':
 				$trans_id = $_REQUEST['trans_code'];
 				break;
-			case 'paypal':
+			case 'paypal_ipn':
 				$trans_id = $_REQUEST['txn_id'];
+				break;
+			case 'paypal':
+				$trans_id = $results['txn_id'];
 				break;
 			case 'zeus_card':
 				$trans_id = $_REQUEST['ordd'];
@@ -4845,14 +4848,7 @@ function usces_post_reg_orderdata(){
 									'status' => $_REQUEST['status'],
 									'error_code' => $_REQUEST['error_code']
 									);
-				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name 
-											( order_id, meta_key, meta_value ) VALUES 
-											(%d, %s, %s)", 
-											$order_id, 
-											'acting_'.$_REQUEST['sendpoint'], 
-											serialize($zeus_convs)
-										);
-				$wpdb->query( $mquery );
+				$usces->set_order_meta_value('acting_'.$_REQUEST['sendpoint'], serialize($zeus_convs), $order_id);
 				break;
 			case 'zeus_bank':
 				$trans_id = $_REQUEST['order_no'];
