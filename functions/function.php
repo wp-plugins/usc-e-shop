@@ -1593,7 +1593,9 @@ function usces_export_xml() {
 	<usces_customer_status><?php echo serialize(get_option('usces_customer_status')); ?></usces_customer_status>
 	<usces_payment_structure><?php echo serialize(get_option('usces_payment_structure')); ?></usces_payment_structure>
 	<usces_display_mode><?php echo serialize(get_option('usces_display_mode')); ?></usces_display_mode>
-	<usces_pref><?php echo serialize(get_option('usces_pref')); ?></usces_pref>
+<!--20110331ysk start-->
+<!--	<usces_pref><?php //echo serialize(get_option('usces_pref')); ?></usces_pref>-->
+<!--20110331ysk end-->
 	<usces_shipping_rule><?php echo serialize(get_option('usces_shipping_rule')); ?></usces_shipping_rule>
 
 <?php
@@ -1637,14 +1639,15 @@ function usces_import_xml() {
 		$option = unserialize($opt);
 		update_option('usces_customer_status', $option);	
 	}
-
-	$parts = explode('<usces_pref>', $xml);
+//20110331ysk start
+/*	$parts = explode('<usces_pref>', $xml);
 	if(count($parts) > 1){
 		$parts = explode('</usces_pref>', $parts[1]);
 		$opt = $parts[0];
 		$option = unserialize($opt);
 		update_option('usces_pref', $option);	
-	}
+	}*/
+//20110331ysk start
 	///////////////////////////////////////////////////////////////
 	
 	$parts = explode('<usces_zaiko_status>', $xml);
@@ -4425,7 +4428,10 @@ function usces_pref_select( $type, $values, $out = 'return' ){
 	global $usces, $usces_states;
 	
 	$country = empty($values['country']) ? usces_get_local_addressform() : $values['country'];
-	$prefs = $usces_states[$country];
+//20110331ysk start
+	//$prefs = $usces_states[$country];
+	$prefs = get_usces_states($country);
+//20110331ysk end
 	$html = '<select name="' . esc_attr($type . '[pref]') . '" id="' . esc_attr($type) . '_pref" class="pref">';
 	foreach((array)$prefs as $pref)
 		$html .= "\t".'<option value="' . esc_attr($pref) . '"' . ($pref == $values['pref'] ? ' selected="selected"' : '') . '>' . esc_html($pref) . "</option>\n";
@@ -4462,7 +4468,9 @@ function usces_shipping_country_option( $selected ){
 		if( in_array($key, $options['system']['target_market']) )
 			$res .= '<option value="' . $key . '"' . ($selected == $key ? ' selected="selected"' : '') . '>' . $value . "</option>\n";
 	}
-	$res .= '<option value="world_wide"' . ($selected == $key ? ' selected="selected"' : '') . '>World Wide' . "</option>\n";
+//20110317ysk start
+	//$res .= '<option value="world_wide"' . ($selected == $key ? ' selected="selected"' : '') . '>World Wide' . "</option>\n";
+//20110317ysk end
 	if($out == 'return') {
 		return $res;
 	} else {

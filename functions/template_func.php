@@ -911,7 +911,10 @@ function usces_the_pref( $flag, $out = '' ){
 	
 	$html = "<select name='" . esc_attr($name) . "' id='pref' class='pref'>\n";
 //	$prefs = get_option('usces_pref');
-	$prefs = $usces->options['province'];
+//20110331ysk start
+	//$prefs = $usces->options['province'];
+	$prefs = get_usces_states(usces_get_local_addressform());
+//20110331ysk end
 	foreach($prefs as $value) {
 		$selected = ($pref == $value) ? ' selected="selected"' : '';
 		$html .= "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";

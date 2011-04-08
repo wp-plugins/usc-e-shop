@@ -102,8 +102,19 @@ foreach((array)$default_deli as $id) {
 	}
 }
 //配達日数に設定されている県毎の日数
-$prefs = $usces->options['province'];
-array_shift($prefs);
+//20110317ysk start
+//$prefs = $usces->options['province'];
+//array_shift($prefs);
+//global $usces_states;
+$target_market = ( isset($usces->options['system']['target_market']) && !empty($usces->options['system']['target_market']) ) ? $usces->options['system']['target_market'] : usces_get_local_target_market();
+foreach((array)$target_market as $tm) {
+//20110331ysk start
+	//$prefs[$tm] = $usces_states[$tm];
+	$prefs[$tm] = get_usces_states($tm);
+//20110331ysk end
+	array_shift($prefs[$tm]);
+}
+//20110317ysk end
 $delivery_days = $usces->options['delivery_days'];
 $html .= 'var delivery_days_value = [];';
 foreach((array)$default_deli as $key => $id) {
@@ -114,7 +125,11 @@ foreach((array)$default_deli as $key => $id) {
 			for($i = 0; $i < count((array)$delivery_days); $i++) {
 				if((int)$delivery_days[$i]['id'] == $days) {
 					$html .= 'delivery_days_value['.$days.'] = [];';
-					foreach((array)$prefs as $pref) {
+//20110317ysk start
+					$country = $usces->options['delivery_days'][$i]['country'];
+					//foreach((array)$prefs as $pref) {
+					foreach((array)$prefs[$country] as $pref) {
+//20110317ysk end
 						$html .= 'delivery_days_value['.$days.']["'.$pref.'"] = [];';
 						$html .= 'delivery_days_value['.$days.']["'.$pref.'"].push("'.(int)$delivery_days[$i]['value'][$pref].'");';
 					}
@@ -250,19 +265,26 @@ $html .= "
 			}
 		});
 		
+//20110317ysk start
 		$('#delivery_flag2').click(function() {
-			if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-				delivery_pref = $('#pref').val();
+			//if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') == true && 0 < $('#delivery_pref').attr('selectedIndex')) {
+				//delivery_pref = $('#pref').val();
+				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
 			}
 		});
 		
-		$('#pref').change(function() {
-			if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-				delivery_pref = $('#pref').val();
+		//$('#pref').change(function() {
+		$('#delivery_pref').change(function() {
+			//if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') == true && 0 < $('#delivery_pref').attr('selectedIndex')) {
+				//delivery_pref = $('#pref').val();
+				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
 			}
 		});
+//20110317ysk end
 		
 		orderfunc = {
 			make_delivery_date : function(selected) {

@@ -95,6 +95,8 @@ $custom_field_position_select = array(
 					'fax_after' => __('After the fax', 'usces')
 					);
 //20100818ysk end
+//20110331ysk start
+/*
 $province_ja = array(__('-- Select --', 'usces'),"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
 				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
 				"福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府",
@@ -110,6 +112,8 @@ $province_en = array(__('-- Select --', 'usces'),"Alabama","Alaska","Arizona","A
 				"Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont",
 				"Virginia","Washington","West Virginia","Wisconsin","Wyoming");
 $usces_pref = ( 'ja' == get_locale() ) ? $province_ja : $province_en;
+*/
+//20110331ysk end
 
 $usces_secure_link = array('zeus');
 
@@ -120,7 +124,9 @@ update_option('usces_customer_status',$customer_status);
 if( !get_option('usces_payment_structure') )
 	update_option('usces_payment_structure',$payment_structure);
 update_option('usces_display_mode',$display_mode);
-update_option('usces_pref',$usces_pref);
+//20110331ysk start
+//update_option('usces_pref',$usces_pref);
+//20110331ysk end
 update_option('usces_shipping_rule',$shipping_rule);
 update_option('usces_item_option_select',$item_option_select);
 //20100809ysk start

@@ -17,7 +17,10 @@ class usc_e_shop
 	function usc_e_shop()
 	{
 
-		global $post, $usces_settings;
+//20110331ysk start
+		//global $post, $usces_settings;
+		global $post, $usces_settings, $usces_states;
+//20110331ysk end
 		do_action('usces_construct');
 		$this->usces_session_start();
 		
@@ -41,7 +44,9 @@ class usc_e_shop
 		if(!isset($this->options['divide_item'])) $this->options['divide_item'] = 0;
 		if(!isset($this->options['fukugo_category_orderby'])) $this->options['fukugo_category_orderby'] = 'ID';
 		if(!isset($this->options['fukugo_category_order'])) $this->options['fukugo_category_order'] = 'ASC';
-		if(!isset($this->options['province'])) $this->options['province'] = get_option('usces_pref');
+//20110331ysk start
+		//if(!isset($this->options['province'])) $this->options['province'] = get_option('usces_pref');
+//20110331ysk end
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
 		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
@@ -55,6 +60,9 @@ class usc_e_shop
 		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
 		if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = $usces_settings['lungage2country'][$this->options['system']['front_lang']];
+//20110331ysk start
+		if(!isset($this->options['province'])) $this->options['province'][$this->options['system']['base_country']] = $usces_states($this->options['system']['base_country']);
+//20110331ysk end
 		if(!isset($this->options['system']['pointreduction'])) $this->options['system']['pointreduction'] = usces_get_pointreduction($this->options['system']['currency']);
 		if(!isset($this->options['indi_item_name'])){
 			$this->options['indi_item_name']['item_name'] = 1;
@@ -810,12 +818,16 @@ class usc_e_shop
 	
 	/* Admin System Page */
 	function admin_system_page() {
+//20110331ysk start
+		global $usces_states;
+//20110331ysk end
 
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
 		
-			if($_POST['province'] != ''){
+//20110331ysk start
+/*			if($_POST['province'] != ''){
 				$temp_pref = explode("\n", $_POST['province']);
 				for($i=-1; $i<count($temp_pref); $i++){
 					if($i == -1){
@@ -828,7 +840,8 @@ class usc_e_shop
 				$usces_pref = get_option('usces_pref');
 			}
 
-			$this->options['province'] = $usces_pref;
+			$this->options['province'] = $usces_pref;*/
+//20110331ysk end
 			$this->options['divide_item'] = isset($_POST['divide_item']) ? 1 : 0;
 			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? trim($_POST['itemimg_anchor_rel']) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
@@ -849,6 +862,20 @@ class usc_e_shop
 			$this->options['system']['target_market'] = (isset($_POST['target_market']) ) ? $_POST['target_market'] : usces_get_local_target_market();
 			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
 			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
+//20110331ysk start
+			unset($this->options['province']);
+			foreach((array)$this->options['system']['target_market'] as $target_market) {
+				$province = array();
+				if(!empty($_POST['province_'.$target_market])) {
+					$temp_pref = explode("\n", $_POST['province_'.$target_market]);
+					$province[] = __('-- Select --', 'usces');
+					for($i = 0; $i < count($temp_pref); $i++) {
+						$province[] = trim($temp_pref[$i]);
+					}
+				}
+				$this->options['province'][$target_market] = $province;
+			}
+//20110331ysk end
 
 			
 			$this->action_status = 'success';
@@ -856,7 +883,10 @@ class usc_e_shop
 		} else {
 
 			if( !isset($this->options['province']) || $this->options['province'] == '' ){
-				$this->options['province'] = get_option('usces_pref');
+//20110331ysk start
+				//$this->options['province'] = get_option('usces_pref');
+				$this->options['province'][$this->options['system']['base_country']] = $usces_states($this->options['system']['base_country']);
+//20110331ysk end
 			}
 			$this->action_status = 'none';
 			$this->action_message = '';
@@ -1965,6 +1995,13 @@ class usc_e_shop
 					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20101208ysk end
+//20110331ysk start
+				case 'usces_system':
+					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					break;
+//20110331ysk end
 			}
 		}
 
@@ -3634,6 +3671,22 @@ class usc_e_shop
 			}
 		}
 //20101119ysk end
+//20110317ysk start
+		if(isset($_POST['order']['delivery_method'])) {
+			$d_method_index = $this->get_delivery_method_index((int)$_POST['order']['delivery_method']);
+			$country = $_POST["delivery"]["country"];
+			$local_country = usces_get_local_addressform();
+			if($country == $local_country) {
+				if($this->options['delivery_method'][$d_method_index]['intl'] == '1') {
+					$mes .= __('配送方法が誤っています。国際便は指定できません。', 'usces') . "<br />";
+				}
+			} else {
+				if($this->options['delivery_method'][$d_method_index]['intl'] == '0') {
+					$mes .= __('配送方法が誤っています。国際便を指定してください。', 'usces') . "<br />";
+				}
+			}
+		}
+//20110317ysk end
 	
 		$mes = apply_filters('usces_filter_delivery_check', $mes);
 
