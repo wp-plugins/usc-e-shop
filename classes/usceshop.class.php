@@ -59,7 +59,7 @@ class usc_e_shop
 		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_base_country();
 		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
-		if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = $usces_settings['lungage2country'][$this->options['system']['front_lang']];
+		if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
 //20110331ysk start
 		if(!isset($this->options['province'])) $this->options['province'][$this->options['system']['base_country']] = $usces_states($this->options['system']['base_country']);
 //20110331ysk end
@@ -3406,6 +3406,7 @@ class usc_e_shop
 					'getpoint' => $value->order_getpoint,
 					'usedpoint' => $value->order_usedpoint,
 					'discount' => $value->order_discount,
+					'payment_name' => $value->order_payment_name,
 					'shipping_charge' => $value->order_shipping_charge,
 					'cod_fee' => $value->order_cod_fee,
 					'tax' => $value->order_tax,

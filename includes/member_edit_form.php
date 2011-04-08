@@ -131,7 +131,7 @@ jQuery(document).ready(function($){
 <table class="mem_info">
 <?php 
 	foreach($member_metas as $value){ 
-		if( in_array($value['meta_key'], array('partofcard','limitofcard',)) ){
+		if( in_array($value['meta_key'], array('partofcard','limitofcard','remise_memid',)) ){
 ?>
 		<tr>
 				<td class="label"><?php echo esc_html($value['meta_key']); ?></td>

@@ -1867,7 +1867,7 @@ function usces_is_entity($entity){
 		return true;
 }
 
-function p($var){
+function usces_p($var){
 	echo '<pre>' . print_r($var, true) . '</pre>';
 }
 ?>

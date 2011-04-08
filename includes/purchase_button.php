@@ -204,6 +204,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 			$acting_opts = $usces->options['acting_settings']['remise'];
 			$usces->save_order_acting_data($rand);
+			$member = $usces->get_member();
 			$send_url = ('public' == $acting_opts['card_pc_ope']) ? $acting_opts['send_url_pc'] : $acting_opts['send_url_pc_test'];
 			$html .= '<form name="purchase_form" action="' . $send_url . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="SHOPCO" value="' . esc_attr($acting_opts['SHOPCO']) . '" />
@@ -220,7 +221,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="EXITURL" value="' . USCES_CART_URL . $usces->delim . 'confirm=1" />
 				';
 			if( 'on' == $acting_opts['payquick'] && $usces->is_member_logged_in() ){
-				$member = $usces->get_member();
 				$pcid = $usces->get_member_meta_value('remise_pcid', $member['ID']);
 				$html .= '<input type="hidden" name="PAYQUICK" value="1">';
 				if( $pcid != NULL )

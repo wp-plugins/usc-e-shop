@@ -414,6 +414,21 @@ function usces_have_zaiko(){
 	return $usces->is_item_zaiko( $post->ID, $usces->itemsku['key'] );
 }
 
+function usces_have_zaiko_anyone( $post_id = NULL ){
+	 global $post, $usces;
+	if( NULL == $post_id ) $post_id = $post->ID;
+	
+	$skus = $usces->get_skus($post_id, 'ARRAY_A');
+	$status = false;
+	foreach($skus as $value){
+		if( ('' == $value['zaikonum'] || 0 < (int)$value['zaikonum']) && 2 > (int)$value['zaiko']) {
+			$status = true;
+			break;
+		}
+	}
+	return $status;
+}
+
 function usces_is_gptekiyo( $post_id, $sku, $quant ){
 	global $usces;
 	return $usces->is_gptekiyo( $post_id, $sku, $quant );
@@ -678,8 +693,9 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	}
 }
 
-function usces_the_itemImageURL($number = 0, $out = '' ) {
-	global $post, $usces;
+function usces_the_itemImageURL($number = 0, $post = '', $out = '' ) {
+	global $usces;
+	if($post == '') global $post;
 	$post_id = $post->ID;
 	
 	$code =  get_post_custom_values('_itemCode', $post_id);
@@ -2283,13 +2299,15 @@ function usces_login_button(){
 	echo $html;
 }
 
-function usces_assistance_item($post_id){
+function usces_assistance_item($post_id, $title ){
 	if (usces_get_assistance_id_list($post_id)) :
 		$assistanceposts = new wp_query( array('post__in'=>usces_get_assistance_ids($post_id)) );
 		if($assistanceposts->have_posts()) :
 		add_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
 		add_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
 ?>
+	<div class="assistance_item">
+		<h3><?php echo $title; ?></h3>
 		<ul class="clearfix">
 <?php
 		while ($assistanceposts->have_posts()) :
@@ -2319,6 +2337,7 @@ function usces_assistance_item($post_id){
 		<?php endwhile; ?>
 		
 		</ul>
+	</div><!-- end of assistance_item -->
 <?php 
 		wp_reset_query();
 		usces_reset_filter();

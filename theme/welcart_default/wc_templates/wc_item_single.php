@@ -152,7 +152,8 @@ get_header();
 <?php endforeach; ?>
 	</div><!-- end of itemsubimg -->
 
-	<?php usces_assistance_item( $post->ID, __('An article concerned', 'usces') ); ?>
+<?php usces_assistance_item( $post->ID, __('An article concerned', 'usces') ); ?>
+
 </div><!-- end of itemspage -->
 </div><!-- end of storycontent -->
 </div>

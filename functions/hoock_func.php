@@ -46,7 +46,19 @@ function usces_action_acting_transaction(){
 		
 		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){
 			usces_log('remise card error2 : '.print_r($data, true), 'acting_transaction.log');
-			die('error2');
+			//die('error2');
+		}
+		
+		if( '0000000' == substr($rand, 0, 7) ){//card up
+			usces_log('remise card_update : '.print_r($data, true), 'acting_transaction.log');
+			if( isset($_POST['X-EXPIRE']) ){
+				$expire = substr($_POST['X-EXPIRE'], 2, 2) . '/' . substr($_POST['X-EXPIRE'], 0, 2);
+				$usces->set_member_meta_value('limitofcard', $expire, $_POST['X-AC_S_KAIIN_NO']);
+			}
+			if( isset($_POST['X-PARTOFCARD']) )
+				$usces->set_member_meta_value('partofcard', $_POST['X-PARTOFCARD'], $_POST['X-AC_S_KAIIN_NO']);
+			
+			die('<SDBKDATA>STATUS=800</SDBKDATA>');
 		}
 		
 //20110203ysk start
