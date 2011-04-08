@@ -109,7 +109,7 @@
 		</tr>
 		<tr>
 		<td><?php _e('Points you are using here', 'usces'); ?></td>
-		<td><input name="order[usedpoint]" class="used_point" type="text" value="<?php echo esc_attr($entries['order']['usedpoint']); ?>" />pt</td>
+		<td><input name="offer[usedpoint]" class="used_point" type="text" value="<?php echo esc_attr($entries['order']['usedpoint']); ?>" />pt</td>
 		</tr>
 		<tr>
 		<td colspan="2"><input name="use_point" type="submit" value="<?php _e('Use the points', 'usces'); ?>" /></td>

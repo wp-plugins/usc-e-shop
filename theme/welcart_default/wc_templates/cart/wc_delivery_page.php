@@ -79,11 +79,11 @@ get_header();
 	<table class="customer_form" id="notes_table">
 		<tr>
 			<th scope="row"><?php _e('Notes', 'usces'); ?></th>
-			<td colspan="2"><textarea name="order[note]" id="note" class="notes"><?php echo esc_html($entry_order_note); ?></textarea></td>
+			<td colspan="2"><textarea name="offer[note]" id="note" class="notes"><?php echo esc_html($entry_order_note); ?></textarea></td>
 		</tr>
 	</table>
 
-	<div class="send"><input name="order[cus_id]" type="hidden" value="" />		
+	<div class="send"><input name="offer[cus_id]" type="hidden" value="" />		
 	<input name="backCustomer" type="submit" class="back_to_customer_button" value="<?php _e('Back', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_prebutton', NULL); ?> />&nbsp;&nbsp;
 	<input name="confirm" type="submit" class="to_confirm_button" value="<?php _e(' Next ', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_nextbutton', NULL); ?> /></div>
 	<?php do_action('usces_action_delivery_page_inform'); ?>

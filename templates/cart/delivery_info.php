@@ -105,11 +105,11 @@ $entry_order_note = empty($usces_entries['order']['note']) ? apply_filters('usce
 $html .= '<table class="customer_form" id="notes_table">
 	<tr>
 	<th scope="row">'.__('Notes', 'usces').'</th>
-	<td colspan="2"><textarea name="order[note]" id="note" class="notes">' . esc_html($entry_order_note) . '</textarea></td>
+	<td colspan="2"><textarea name="offer[note]" id="note" class="notes">' . esc_html($entry_order_note) . '</textarea></td>
 	</tr>
 	</table>
 
-	<div class="send"><input name="order[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
+	<div class="send"><input name="offer[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
 	<input name="backCustomer" type="submit" class="back_to_customer_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_prebutton', NULL) . ' />&nbsp;&nbsp;
 	<input name="confirm" type="submit" class="to_confirm_button" value="'.__(' Next ', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_nextbutton', NULL) . ' /></div>
 	</form>';

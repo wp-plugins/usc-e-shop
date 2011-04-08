@@ -335,8 +335,8 @@ class usces_cart {
 				}
 		}
 
-		if(isset($_POST['order']))	{	
-			foreach( $_POST['order'] as $key => $value )
+		if(isset($_POST['offer']))	{	
+			foreach( $_POST['offer'] as $key => $value )
 				$_SESSION['usces_entry']['order'][$key] = trim($value);
 		}
 		

@@ -862,50 +862,6 @@ function usces_reg_orderdata( $results = array() ) {
 		$usces->cart->set_order_entry( array('ID' => $order_id) );
 		$usces->set_order_meta_value('customer_country', $entry['customer']['country'], $order_id);
 	
-//20110203ysk start
-		switch($_GET['acting']) {
-		case 'epsilon':
-			$trans_id = $_REQUEST['trans_code'];
-			break;
-//20110208ysk start
-		case 'paypal':
-			$trans_id = $results['txn_id'];
-			break;
-//20110208ysk end
-		case 'paypal_ipn':
-			$trans_id = $_REQUEST['txn_id'];
-			break;
-//20110208ysk start
-		case 'paypal_ec':
-			$trans_id = $_REQUEST['token'];
-			break;
-//20110208ysk end
-		case 'zeus_card':
-			$trans_id = $_REQUEST['ordd'];
-			break;
-		case 'zeus_conv':
-		case 'zeus_bank':
-			$trans_id = $_REQUEST['order_no'];
-			break;
-		case 'remise_card':
-			$trans_id = $_REQUEST['X-TRANID'];
-			break;
-		case 'remise_conv':
-			$trans_id = $_REQUEST['X-JOB_ID'];
-			break;
-		case 'jpayment_card':
-		case 'jpayment_conv':
-		case 'jpayment_bank':
-			$trans_id = $_REQUEST['gid'];
-			break;
-		default:
-			$trans_id = '';
-		}
-		if(!empty($trans_id)) {
-			$usces->set_order_meta_value('trans_id', $trans_id, $order_id);
-		}
-//20110203ysk end
-
 		if ( $member['ID'] && 'activate' == $options['membersystem_state'] && 'activate' == $options['membersystem_point'] ) {
 		
 			$mquery = $wpdb->prepare(
@@ -1016,10 +972,10 @@ function usces_new_orderdata() {
 	$order_table_name = $wpdb->prefix . "usces_order";
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
 	$member_table_name = $wpdb->prefix . "usces_member";
-	$set = $usces->getPayments( $_POST['order']['payment_name'] );
+	$set = $usces->getPayments( $_POST['offer']['payment_name'] );
 	$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt,' : '';
-	$status .= ( $_POST['order']['taio'] != '' ) ? $_POST['order']['taio'].',' : '';
-	$status .= $_POST['order']['admin'];
+	$status .= ( $_POST['offer']['taio'] != '' ) ? $_POST['offer']['taio'].',' : '';
+	$status .= $_POST['offer']['admin'];
 	$order_conditions = $usces->get_condition();
 
 //20101208ysk start
@@ -1047,18 +1003,18 @@ function usces_new_orderdata() {
 					$_POST['customer']['fax'], 
 					serialize($_POST['delivery']), 
 					serialize($cart), 
-					$_POST['order']['note'], 
-					$_POST['order']['delivery_method'], 
-					$_POST['order']['delivery_time'], 
-					$_POST['order']['payment_name'], 
+					$_POST['offer']['note'], 
+					$_POST['offer']['delivery_method'], 
+					$_POST['offer']['delivery_time'], 
+					$_POST['offer']['payment_name'], 
 					serialize($order_conditions), 
 					$item_total_price, 
-					$_POST['order']['getpoint'], 
-					$_POST['order']['usedpoint'], 
-					$_POST['order']['discount'], 
-					$_POST['order']['shipping_charge'], 
-					$_POST['order']['cod_fee'], 
-					$_POST['order']['tax'], 
+					$_POST['offer']['getpoint'], 
+					$_POST['offer']['usedpoint'], 
+					$_POST['offer']['discount'], 
+					$_POST['offer']['shipping_charge'], 
+					$_POST['offer']['cod_fee'], 
+					$_POST['offer']['tax'], 
 					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
 					null, 
 					$status
@@ -1087,19 +1043,19 @@ function usces_new_orderdata() {
 					$_POST['customer']['fax'], 
 					serialize($_POST['delivery']), 
 					serialize($cart), 
-					$_POST['order']['note'], 
-					$_POST['order']['delivery_method'], 
-					$_POST['order']['delivery_date'], 
-					$_POST['order']['delivery_time'], 
-					$_POST['order']['payment_name'], 
+					$_POST['offer']['note'], 
+					$_POST['offer']['delivery_method'], 
+					$_POST['offer']['delivery_date'], 
+					$_POST['offer']['delivery_time'], 
+					$_POST['offer']['payment_name'], 
 					serialize($order_conditions), 
 					$item_total_price, 
-					$_POST['order']['getpoint'], 
-					$_POST['order']['usedpoint'], 
-					$_POST['order']['discount'], 
-					$_POST['order']['shipping_charge'], 
-					$_POST['order']['cod_fee'], 
-					$_POST['order']['tax'], 
+					$_POST['offer']['getpoint'], 
+					$_POST['offer']['usedpoint'], 
+					$_POST['offer']['discount'], 
+					$_POST['offer']['shipping_charge'], 
+					$_POST['offer']['cod_fee'], 
+					$_POST['offer']['tax'], 
 					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
 					null, 
 					$status
@@ -1414,20 +1370,20 @@ function usces_update_orderdata() {
 					$_POST['customer']['fax'], 
 					serialize($_POST['delivery']), 
 					serialize($cart), 
-					$_POST['order']['note'], 
-					$_POST['order']['delivery_method'], 
-					$_POST['order']['delivery_time'], 
-					$_POST['order']['payment_name'], 
+					$_POST['offer']['note'], 
+					$_POST['offer']['delivery_method'], 
+					$_POST['offer']['delivery_time'], 
+					$_POST['offer']['payment_name'], 
 					$item_total_price, 
-					$_POST['order']['getpoint'], 
-					$_POST['order']['usedpoint'], 
-					$_POST['order']['discount'], 
-					$_POST['order']['shipping_charge'], 
-					$_POST['order']['cod_fee'], 
-					$_POST['order']['tax'], 
+					$_POST['offer']['getpoint'], 
+					$_POST['offer']['usedpoint'], 
+					$_POST['offer']['discount'], 
+					$_POST['offer']['shipping_charge'], 
+					$_POST['offer']['cod_fee'], 
+					$_POST['offer']['tax'], 
 					$order_modified, 
 					$status,
-					$_POST['order']['delidue_date'], 
+					$_POST['offer']['delidue_date'], 
 					$ordercheck,
 					$ID
 				);
@@ -1455,21 +1411,21 @@ function usces_update_orderdata() {
 					$_POST['customer']['fax'], 
 					serialize($_POST['delivery']), 
 					serialize($cart), 
-					$_POST['order']['note'], 
-					$_POST['order']['delivery_method'], 
-					$_POST['order']['delivery_date'], 
-					$_POST['order']['delivery_time'], 
-					$_POST['order']['payment_name'], 
+					$_POST['offer']['note'], 
+					$_POST['offer']['delivery_method'], 
+					$_POST['offer']['delivery_date'], 
+					$_POST['offer']['delivery_time'], 
+					$_POST['offer']['payment_name'], 
 					$item_total_price, 
-					$_POST['order']['getpoint'], 
-					$_POST['order']['usedpoint'], 
-					$_POST['order']['discount'], 
-					$_POST['order']['shipping_charge'], 
-					$_POST['order']['cod_fee'], 
-					$_POST['order']['tax'], 
+					$_POST['offer']['getpoint'], 
+					$_POST['offer']['usedpoint'], 
+					$_POST['offer']['discount'], 
+					$_POST['offer']['shipping_charge'], 
+					$_POST['offer']['cod_fee'], 
+					$_POST['offer']['tax'], 
 					$order_modified, 
 					$status,
-					$_POST['order']['delidue_date'], 
+					$_POST['offer']['delidue_date'], 
 					$ordercheck,
 					$ID
 				);
@@ -4825,6 +4781,38 @@ function usces_post_reg_orderdata($order_id, $results){
 			case 'paypal':
 				$trans_id = $results['txn_id'];
 				break;
+//20110208ysk start
+			case 'paypal_ec':
+				$trans_id = $_REQUEST['token'];
+				//Format the other parameters that were stored in the session from the previous calls
+				$paymentAmount = $entry['order']['total_full_price'];
+				$token = urlencode($_REQUEST['token']);
+				$paymentType = urlencode("Sale");
+				$currencyCodeType = urlencode($usces->get_currency_code());
+				$payerID = urlencode($_REQUEST['PayerID']);
+				$serverName = urlencode($_SERVER['SERVER_NAME']);
+
+				$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
+
+				$usces->paypal->setMethod('DoExpressCheckoutPayment');
+				$usces->paypal->setData($nvpstr);
+				$res = $usces->paypal->doExpressCheckout();
+				$resArray = $usces->paypal->getResponse();
+				$ack = strtoupper($resArray["ACK"]);
+				if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+					$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
+					$usces->set_order_meta_value('settlement_id', $transactionId, $order_id);
+
+				} else {
+					//Display a user friendly Error on the page using any of the following error information returned by PayPal
+					$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+					$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+					$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+					$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+					usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+				}
+				break;
+//20110208ysk end
 			case 'zeus_card':
 				$trans_id = $_REQUEST['ordd'];
 				foreach($_GET as $key => $value) {

@@ -3658,23 +3658,23 @@ class usc_e_shop
 			if ( trim($_POST["delivery"]["tel"]) == "" )
 				$mes .= __('enter phone numbers', 'usces') . "<br />";
 		}
-		if ( !isset($_POST['order']['delivery_method']) || (empty($_POST['order']['delivery_method']) && $_POST['order']['delivery_method'] != 0) )
+		if ( !isset($_POST['offer']['delivery_method']) || (empty($_POST['offer']['delivery_method']) && $_POST['offer']['delivery_method'] != 0) )
 			$mes .= __('chose one from delivery method.', 'usces') . "<br />";
-		if ( !isset($_POST['order']['payment_name']) )
+		if ( !isset($_POST['offer']['payment_name']) )
 			$mes .= __('chose one from payment options.', 'usces') . "<br />";
 //20101119ysk start
-		if(isset($_POST['order']['delivery_method']) and isset($_POST['order']['payment_name'])) {
-			$d_method_index = $this->get_delivery_method_index((int)$_POST['order']['delivery_method']);
+		if(isset($_POST['offer']['delivery_method']) and isset($_POST['offer']['payment_name'])) {
+			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
 			if($this->options['delivery_method'][$d_method_index]['nocod'] == '1') {
-				$payments = $this->getPayments($_POST['order']['payment_name']);
+				$payments = $this->getPayments($_POST['offer']['payment_name']);
 				if('COD' == $payments['settlement'])
 					$mes .= __('COD is not available.', 'usces') . "<br />";
 			}
 		}
 //20101119ysk end
 //20110317ysk start
-		if(isset($_POST['order']['delivery_method'])) {
-			$d_method_index = $this->get_delivery_method_index((int)$_POST['order']['delivery_method']);
+		if(isset($_POST['offer']['delivery_method'])) {
+			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
 			$country = $_POST["delivery"]["country"];
 			$local_country = usces_get_local_addressform();
 			if($country == $local_country) {
@@ -3699,26 +3699,26 @@ class usc_e_shop
 		$this->set_cart_fees( $member, &$entries );
 //var_dump($entries);
 		$mes = '';
-		if ( trim($_POST['order']["usedpoint"]) == "" || !(int)$_POST['order']["usedpoint"] || (int)$_POST['order']["usedpoint"] < 0 ) {
+		if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 		} else {
-			if ( trim($_POST['order']["usedpoint"]) > $member['point'] ){
+			if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".$member['point']."pt<br />";
-				$_POST['order']["usedpoint"] = 0;
+				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif($this->options['point_coverage'] && trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
+			}elseif($this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])."pt<br />";
-				$_POST['order']["usedpoint"] = 0;
+				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif(!$this->options['point_coverage'] && trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
+			}elseif(!$this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
-				$_POST['order']["usedpoint"] = 0;
+				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
@@ -4826,40 +4826,6 @@ class usc_e_shop
 		do_action('usces_post_reg_orderdata', $order_id, $results);
 		
 		if ( $order_id ) {
-//20110208ysk start
-			if(isset($_REQUEST['acting']) && ('paypal_ec' == $_REQUEST['acting'])) {
-				//Format the other parameters that were stored in the session from the previous calls
-				$entry = $this->cart->get_entry();
-				$paymentAmount = $entry['order']['total_full_price'];
-				$token = urlencode($_REQUEST['token']);
-				$paymentType = urlencode("Sale");
-				$currencyCodeType = urlencode($this->get_currency_code());
-				$payerID = urlencode($_REQUEST['PayerID']);
-				$serverName = urlencode($_SERVER['SERVER_NAME']);
-
-				$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
-
-				$this->paypal->setMethod('DoExpressCheckoutPayment');
-				$this->paypal->setData($nvpstr);
-				$res = $this->paypal->doExpressCheckout();
-				$resArray = $this->paypal->getResponse();
-				$ack = strtoupper($resArray["ACK"]);
-				if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-					$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
-					$this->set_order_meta_value('settlement_id', $transactionId, $order_id);
-
-				} else {
-					//Display a user friendly Error on the page using any of the following error information returned by PayPal
-					$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
-					$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
-					$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
-					$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
-					usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
-				}
-			} elseif(isset($_REQUEST['acting']) && ('paypal_ipn' == $_REQUEST['acting'])) {
-				$this->set_order_meta_value('settlement_id', $_REQUEST['txn_id'], $order_id);
-			}
-//20110208ysk end
 			//mail(function.php)
 			$mail_res = usces_send_ordermail( $order_id );
 			return 'ordercompletion';

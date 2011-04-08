@@ -206,7 +206,7 @@ $payments_str = rtrim($payments_str, ', ');
 $html .= "
 		var uscesPaymod = { " . $payments_str . " };
 
-		$(\"input[name='order\\[payment_name\\]']\").click(function() {";
+		$(\"input[name='offer\\[payment_name\\]']\").click(function() {";
 
 foreach($payments_arr as $pm ){
 	$html .= "
@@ -216,7 +216,7 @@ foreach($payments_arr as $pm ){
 //20101208ysk start
 /*
 $html .= "
-			var chk_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
+			var chk_pay = $(\"input[name='offer\\[payment_name\\]']:checked\").val();
 			if( uscesPaymod[chk_pay] != '' ){
 				$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"block\"});
 			}
@@ -247,7 +247,7 @@ $html .= "
 	";
 */
 $html .= "
-			var chk_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
+			var chk_pay = $(\"input[name='offer\\[payment_name\\]']:checked\").val();
 			if( uscesPaymod[chk_pay] != '' ){
 				$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"\"});
 			}
@@ -464,7 +464,7 @@ foreach($payments_arr as $pn => $pm ){
 }
 
 $html .= "
-		ch_pay = $(\"input[name='order\\[payment_name\\]']:checked\").val();
+		ch_pay = $(\"input[name='offer\\[payment_name\\]']:checked\").val();
 		if( uscesPaymod[ch_pay] != '' ){
 			$(\"#\" + uscesPaymod[ch_pay]).css({\"display\": \"\"});
 		}";

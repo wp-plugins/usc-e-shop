@@ -90,7 +90,7 @@ function usces_filter_delivery_secure_check( $mes ){
 	$paymod_id = '';
 	
 	foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
-		if( $array['name'] == $_POST['order']['payment_name']){
+		if( $array['name'] == $_POST['offer']['payment_name']){
 			$settlement = $array['settlement'];
 			break;
 		}

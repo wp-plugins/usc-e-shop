@@ -118,13 +118,13 @@ jQuery(function($){
 <?php } ?>
 
 	$("#order_payment_name").change(function () {
-		var pay_name = $("select[name='order\[payment_name\]'] option:selected").val();
+		var pay_name = $("select[name='offer\[payment_name\]'] option:selected").val();
 //20101018ysk start
 		//if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
 		if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred' || uscesPayments[pay_name] == 'acting_remise_conv' || uscesPayments[pay_name] == 'acting_zeus_bank' || uscesPayments[pay_name] == 'acting_zeus_conv' || uscesPayments[pay_name] == 'acting_jpayment_conv' || uscesPayments[pay_name] == 'acting_jpayment_bank'){
 //20101018ysk end
 			var label = '<?php _e('transfer statement', 'usces'); ?>';
-			var html = "<select name='order[receipt]'>\n";
+			var html = "<select name='offer[receipt]'>\n";
 			html += "<option value='noreceipt'><?php echo $management_status['noreceipt']; ?></option>\n";
 			html += "<option value='receipted'><?php echo $management_status['receipted']; ?></option>\n";
 			html += "</select>\n";
@@ -154,7 +154,7 @@ jQuery(function($){
 		}
 	});
 	$('#addCartButton').click(function() {
-		if($("input[name='order_id']").val() == ''){
+		if($("input[name='offer_id']").val() == ''){
 			alert("<?php _e("Push 'change decision' button, to be settled with an order number.", 'usces'); ?>");
 			return;
 		}
@@ -585,7 +585,7 @@ jQuery(document).ready(function($){
 </tr>
 <tr>
 <td class="label"><?php _e('payment method', 'usces'); ?></td>
-<td class="col1"><select name="order[payment_name]" id="order_payment_name">
+<td class="col1"><select name="offer[payment_name]" id="order_payment_name">
     <option value="#none#"><?php _e('-- Select --', 'usces'); ?></option>
 <?php 
 if( $this->options['payment_method'] ) {
@@ -605,7 +605,7 @@ if( $this->options['payment_method'] ) {
 </tr>
 <tr>
 <td class="label"><?php _e('shipping option','usces'); ?></td>
-<td class="col1"><select name="order[delivery_method]" id="delivery_method_select">
+<td class="col1"><select name="offer[delivery_method]" id="delivery_method_select">
 	<option value="-1"><?php _e('Non-request', 'usces'); ?></option>
 <?php
 foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
@@ -620,7 +620,7 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 <!--20101208ysk start-->
 <tr>
 <td class="label"><?php _e('Delivery date', 'usces'); ?></td>
-<td class="col1"><select name="order[delivery_date]" id="delivery_date_select">
+<td class="col1"><select name="offer[delivery_date]" id="delivery_date_select">
 	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
 <?php
 $data_order_date = explode(" ", $data['order_date']);
@@ -636,7 +636,7 @@ for($i = 0; $i < 50; $i++) {
 <!--20101208ysk end-->
 <tr>
 <td class="label"><?php _e('delivery time', 'usces'); ?></td>
-<td class="col1"><select name="order[delivery_time]" id="delivery_time_select">
+<td class="col1"><select name="offer[delivery_time]" id="delivery_time_select">
 	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
 <?php
 if( !$this->options['delivery_time'] == '' ) {
@@ -654,7 +654,7 @@ if( !$this->options['delivery_time'] == '' ) {
 </tr>
 <tr>
 <td class="label"><?php _e('Shipping date', 'usces'); ?></td>
-<td class="col1"><select name="order[delidue_date]">
+<td class="col1"><select name="offer[delidue_date]">
     <option value="#none#"><?php _e('Not notified', 'usces'); ?></option>
 <?php
 for ($i=0; $i<50; $i++) {
@@ -671,7 +671,7 @@ for ($i=0; $i<50; $i++) {
 <tr>
 <td class="label status"><?php _e('The correspondence situation', 'usces'); ?></td>
 <td class="col1 status">
-<select name="order[taio]" id="order_taio">
+<select name="offer[taio]" id="order_taio">
 	<option value='#none#'><?php _e('new order', 'usces'); ?></option>
 <?php 
 	foreach ($management_status as $status_key => $status_name){
@@ -692,7 +692,7 @@ for ($i=0; $i<50; $i++) {
 <td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>
 <td class="col1 status" id="receiptbox">
 <?php if($receipt != '') : ?>
-<select name="order[receipt]">
+<select name="offer[receipt]">
 	<option value='noreceipt'<?php if($receipt == 'noreceipt'){ echo ' selected="selected"';} ?>><?php echo $management_status['noreceipt']; ?></option>
 	<option value='receipted'<?php if($receipt == 'receipted'){ echo ' selected="selected"';} ?>><?php echo $management_status['receipted']; ?></option>
 	<option value='pending'<?php if($receipt == 'pending'){ echo ' selected="selected"';} ?>><?php echo $management_status['pending']; ?></option>
@@ -705,7 +705,7 @@ for ($i=0; $i<50; $i++) {
 <td class="label status"><?php if($admin != ''){echo __('estimate order', 'usces');}else{echo '&nbsp';} ?></td>
 <td class="col1 status">
 <?php if($admin != '') : ?>
-<select name="order[admin]">
+<select name="offer[admin]">
 	<option value='adminorder'<?php if($admin == 'adminorder'){ echo 'selected="selected"';} ?>><?php echo $management_status['adminorder']; ?></option>
 	<option value='estimate'<?php if($admin == 'estimate'){ echo 'selected="selected"';} ?>><?php echo $management_status['estimate']; ?></option>
 </select>
@@ -723,7 +723,7 @@ for ($i=0; $i<50; $i++) {
 <?php endif; ?>
 </div></td>
 <td class="label"><?php _e('Notes', 'usces'); ?></td>
-<td colspan="3"><textarea name="order[note]"><?php echo esc_attr($data['order_note']); ?></textarea></td>
+<td colspan="3"><textarea name="offer[note]"><?php echo esc_attr($data['order_note']); ?></textarea></td>
 </tr>
 </table>
 </div>
@@ -830,28 +830,28 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
 			<td><?php _e('granted points', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo esc_attr( $data['order_discount'] ); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo esc_attr( $data['order_discount'] ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-			<td class="aright"><input name="order[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo esc_attr( $data['order_shipping_charge'] ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo esc_attr( $data['order_shipping_charge'] ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></td>
-			<td class="aright"><input name="order[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo esc_attr( $data['order_cod_fee'] ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo esc_attr( $data['order_cod_fee'] ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="order[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo esc_attr( $data['order_tax']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo esc_attr( $data['order_tax']); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>

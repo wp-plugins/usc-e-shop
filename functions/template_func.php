@@ -1032,9 +1032,9 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			}
 			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
 				$checked = '';
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
 			}else{
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="order[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label></dt>\n";
 			}
 			$list .= "\t<dd>{$payments['explanation']}</dd>\n";
 		}
@@ -1068,7 +1068,7 @@ function usces_get_payments_by_name( $name ){
 function usces_the_delivery_method( $value = '', $out = '' ){
 	global $usces;
 	$deli_id = $usces->get_available_delivery_method();
-	$html = '<select name="order[delivery_method]"  id="delivery_method_select" class="delivery_time" onKeyDown="if (event.keyCode == 13) {return false;}">'."\n";
+	$html = '<select name="offer[delivery_method]"  id="delivery_method_select" class="delivery_time" onKeyDown="if (event.keyCode == 13) {return false;}">'."\n";
 	foreach ($deli_id as $id) {
 		$index = $usces->get_delivery_method_index($id);
 		$selected = ($id == $value) ? ' selected="selected"' : '';
@@ -1087,7 +1087,7 @@ function usces_the_delivery_method( $value = '', $out = '' ){
 function usces_the_delivery_date( $value = '', $out = '' ){
 	global $usces;
 
-	$html = "<select name='order[delivery_date]' id='delivery_date_select' class='delivery_date'>\n";
+	$html = "<select name='offer[delivery_date]' id='delivery_date_select' class='delivery_date'>\n";
 	$html .= "</select>\n";
 
 	if( $out == 'return' ){
@@ -1103,9 +1103,9 @@ function usces_the_delivery_time( $value = '', $out = '' ){
 	
 	//$array = explode("\n", $usces->options['delivery_time']);
 //20101208ysk start
-	//$html = "<select name='order[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
+	//$html = "<select name='offer[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
 	$html = "<div id='delivery_time_limit_message'></div>\n";
-	$html .= "<select name='order[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
+	$html .= "<select name='offer[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
 //20101208ysk end
 
 	$html .= "</select>\n";
