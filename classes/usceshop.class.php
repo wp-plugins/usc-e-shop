@@ -864,6 +864,7 @@ class usc_e_shop
 			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
 //20110331ysk start
 			unset($this->options['province']);
+			$action_status = '';
 			foreach((array)$this->options['system']['target_market'] as $target_market) {
 				$province = array();
 				if(!empty($_POST['province_'.$target_market])) {
@@ -872,14 +873,24 @@ class usc_e_shop
 					for($i = 0; $i < count($temp_pref); $i++) {
 						$province[] = trim($temp_pref[$i]);
 					}
+				} else {
+					if(is_array($usces_states[$target_market])) {
+						$province = $usces_states[$target_market];
+					} else {
+						$action_status = 'error';
+					}
 				}
 				$this->options['province'][$target_market] = $province;
 			}
-//20110331ysk end
 
-			
-			$this->action_status = 'success';
-			$this->action_message = __('options are updated','usces');
+			if($action_status != '') {
+				$this->action_status = 'error';
+				$this->action_message = __('データに不備が有ります','usces');
+			} else {
+				$this->action_status = 'success';
+				$this->action_message = __('options are updated','usces');
+			}
+//20110331ysk end
 		} else {
 
 			if( !isset($this->options['province']) || $this->options['province'] == '' ){
@@ -1008,7 +1019,7 @@ class usc_e_shop
 						$mes .= '※設定が不正です！<br />';
 
 					if( '' == $mes ){			
-						$this->action_status = 'success';
+						$this->zaction_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['remise']['activate'] = 'on';
 						if( 'on' == $options['acting_settings']['remise']['card_activate'] ){

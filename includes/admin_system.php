@@ -264,7 +264,6 @@ jQuery(document).ready(function($) {
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('国・言語・通貨','usces'); ?></span></h3>
 <div class="inside">
-<?php echo usces_get_base_country(); ?>
 <table class="form_table">
 	<tr height="50">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('フロントエンドの言語', 'usces'); ?></a></th>
