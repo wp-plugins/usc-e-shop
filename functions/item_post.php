@@ -99,7 +99,10 @@ function list_item_sku_meta( $meta ) {
 	<tr>
 		<th><?php _e('SKU display name ','usces'); ?></th>
 		<th><?php _e('unit','usces'); ?></th>
-		<th colspan="2"><?php echo ( defined('WCEX_DLSELLER') ) ? __('Charging type','usces') : ''; ?> </th>
+		<?php
+		$advance_title = '<th colspan="2">' . ( defined('WCEX_DLSELLER') ? __('Charging type','usces') : '' ) . '</th>';
+		echo apply_filters('usces_filter_sku_meta_form_advance_title', $advance_title);
+		?>
 		<th><?php _e('Apply business package','usces'); ?></th>
 	</tr>
 	</thead>
@@ -257,7 +260,8 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-sku-cprice rowbottom'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
-	$r .= "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>" . $advance_field . "</td>";
+	$default_field = "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>" . $advance_field . "</td>";
+	$r .= apply_filters('usces_filter_sku_meta_row_advance', $default_field, $entry);
 	$r .= "\n\t\t<td class='item-sku-zaiko rowbottom'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
 	$r .= "\n\t\t\t<option value='0'";
 	$r .= ($skugptekiyo == 0) ? " selected='selected'" : "";
@@ -440,7 +444,10 @@ function item_sku_meta_form() {
 <tr>
 	<th><?php _e('SKU display name ','usces') ?></th>
 	<th><?php _e('unit','usces') ?></th>
-	<th colspan="2"><?php echo ( defined('WCEX_DLSELLER') ) ? __('Charging type','usces') : ''; ?> </th>
+	<?php
+	$advance_title = '<th colspan="2">' . ( defined('WCEX_DLSELLER') ? __('Charging type','usces') : '' ) . '</th>';
+	echo apply_filters('usces_filter_sku_meta_form_advance_title', $advance_title);
+	?>
 	<th><?php _e('Apply business package','usces') ?></th>
 </tr>
 </thead>
@@ -467,15 +474,19 @@ function item_sku_meta_form() {
 <tr>
 <td class='item-sku-key'><input type="text" id="newskudisp" name="newskudisp" class="newskudisp"value="" /></td>
 <td class='item-sku-cprice'><input type="text" id="newskuunit" name="newskuunit" class='newskuunit' /></td>
-<td class='item-sku-price'>
-<?php if( defined('WCEX_DLSELLER') ): ?>
-	<select id="newcharging_type" name="newcharging_type" class="newcharging_type">
-		<option value=""><?php _e('一括課金（即日）','usces'); ?></option>
-		<option value="1"><?php _e('月次課金（翌月1日）','usces'); ?></option>
-	</select>
-<?php endif; ?>
-</td>
-<td class='item-sku-zaikonum'></td>
+<?php
+$advance_field = '<td class="item-sku-price">';
+if( defined('WCEX_DLSELLER') ){
+	$advance_field .= '<select id="newcharging_type" name="newcharging_type" class="newcharging_type">
+	<option value="">' . __('一括課金（即日）','usces') . '</option>
+	<option value="1">' . __('継続課金（翌月1日）','usces') . '</option>
+	</select>';
+}
+$advance_field .= '</td>
+<td class="item-sku-zaikonum"></td>';
+echo apply_filters('usces_filter_sku_meta_form_advance_field', $advance_field );
+?>
+
 <td class='item-sku-zaiko'>
 <select id="newskugptekiyo" name="newskugptekiyo" class="newskugptekiyo">
     <option value="0"><?php _e('Not apply','usces') ?></option>
@@ -629,6 +640,7 @@ function add_item_sku_meta( $post_ID ) {
 		$value['unit'] = $newskuunit;
 		$value['gptekiyo'] = $newskugptekiyo;
 		$value['charging_type'] = $newcharging_type;
+		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
 		$unique = true;
 
 		add_post_meta($post_ID, $metakey, $value, $unique);
@@ -754,6 +766,9 @@ function up_item_sku_meta( $post_ID ) {
 	$value['unit'] = $skuunit;
 	$value['gptekiyo'] = $skugptekiyo;
 	$value['charging_type'] = $charging_type;
+	
+	$value = apply_filters('usces_filter_up_item_sku_meta_value', $value);
+	
 	$valueserialized = maybe_serialize($value);
 
 	if ( $skumetaid != '' && $skuname != '' ) {
