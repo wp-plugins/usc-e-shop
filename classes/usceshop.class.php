@@ -61,7 +61,7 @@ class usc_e_shop
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
 		if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
 //20110331ysk start
-		if(!isset($this->options['province'])) $this->options['province'][$this->options['system']['base_country']] = $usces_states($this->options['system']['base_country']);
+		if(!isset($this->options['province'])) $this->options['province'][$this->options['system']['base_country']] = $usces_states[$this->options['system']['base_country']];
 //20110331ysk end
 		if(!isset($this->options['system']['pointreduction'])) $this->options['system']['pointreduction'] = usces_get_pointreduction($this->options['system']['currency']);
 		if(!isset($this->options['indi_item_name'])){
