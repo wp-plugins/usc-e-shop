@@ -693,7 +693,7 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	}
 }
 
-function usces_the_itemImageURL($number = 0, $post = '', $out = '' ) {
+function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 	global $usces;
 	if($post == '') global $post;
 	$post_id = $post->ID;

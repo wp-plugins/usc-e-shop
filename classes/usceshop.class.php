@@ -896,7 +896,7 @@ class usc_e_shop
 			if( !isset($this->options['province']) || $this->options['province'] == '' ){
 //20110331ysk start
 				//$this->options['province'] = get_option('usces_pref');
-				$this->options['province'][$this->options['system']['base_country']] = $usces_states($this->options['system']['base_country']);
+				$this->options['province'][$this->options['system']['base_country']] = $usces_states[$this->options['system']['base_country']];
 //20110331ysk end
 			}
 			$this->action_status = 'none';
@@ -3843,12 +3843,10 @@ class usc_e_shop
 	{
 		global $wpdb;
 		
-		if ( $wpdb->has_cap( 'collation' ) ) {
-			if ( ! empty($wpdb->charset) )
-				$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-			if ( ! empty($wpdb->collate) )
-				$charset_collate .= " COLLATE $wpdb->collate";
-		}
+		if ( ! empty($wpdb->charset) )
+			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+		if ( ! empty($wpdb->collate) )
+			$charset_collate .= " COLLATE $wpdb->collate";
 		
 		$access_table = $wpdb->prefix . "usces_access";
 		$member_table = $wpdb->prefix . "usces_member";
