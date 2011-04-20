@@ -59,7 +59,10 @@ class usc_e_shop
 		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_base_country();
 		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
-		if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
+//20010420ysk start
+		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
+		$this->options['system']['base_country'] = usces_get_base_country();
+//20010420ysk end
 //20110331ysk start
 		if(!isset($this->options['province'])) $this->options['province'][$this->options['system']['base_country']] = $usces_states[$this->options['system']['base_country']];
 //20110331ysk end
@@ -1119,6 +1122,9 @@ class usc_e_shop
 					$options['acting_settings']['paypal']['user'] = $_POST['user'];
 					$options['acting_settings']['paypal']['pwd'] = $_POST['pwd'];
 					$options['acting_settings']['paypal']['signature'] = $_POST['signature'];
+//20110412ysk start
+					$options['acting_settings']['paypal']['continuation'] = $_POST['continuation'];
+//20110412ysk end
 
 					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
 						$mes .= '※PayPalサーバーが不正です<br />';

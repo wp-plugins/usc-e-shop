@@ -20,12 +20,12 @@ jQuery(function($){
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 
-		var $tabs = $('#uscestabs').tabs({
-			cookie: {
-				// store cookie for a day, without, it would be a session cookie
-				expires: 1
-			}
-		});
+	var $tabs = $('#uscestabs').tabs({
+		cookie: {
+			// store cookie for a day, without, it would be a session cookie
+			expires: 1
+		}
+	});
 });
 
 function toggleVisibility(id) {
@@ -424,6 +424,16 @@ function toggleVisibility(id) {
 				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html($opts['paypal']['signature']); ?>" size="50" /></td>
 				<td><div id="ex_signature_paypal" class="explanation"><?php _e('PayPalから発行されるAPI信用証明書の署名を入力します。sandbox と本稼動では別の署名となります。', 'usces'); ?></div></td>
 			</tr>
+<!--20110412ysk start-->
+			<?php if( defined('WCEX_DLSELLER') ): ?>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_paypal');"><?php _e('定期支払い', 'usces'); ?></a></th>
+				<td><input name="continuation" type="radio" id="continuation_paypal_1" value="on"<?php if( $opts['paypal']['continuation'] == 'on' ) echo ' checked' ?> /></td><td><label for="continuation_paypal_1"><?php _e('利用する', 'usces'); ?></label></td>
+				<td><input name="continuation" type="radio" id="continuation_paypal_2" value="off"<?php if( $opts['paypal']['continuation'] == 'off' ) echo ' checked' ?> /></td><td><label for="continuation_paypal_2"><?php _e('利用しない', 'usces'); ?></label></td>
+				<td><div id="ex_continuation_paypal" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくは「ルミーズ」にお問合せください。', 'usces'); ?></div></td>
+			</tr>
+			<?php endif; ?>
+<!--20110412ysk end-->
 		</table>
 		<input name="acting" type="hidden" value="paypal" />
 		<input name="usces_option_update" type="submit" class="button" value="<?php _e('PayPalの設定を更新する', 'usces'); ?>" />

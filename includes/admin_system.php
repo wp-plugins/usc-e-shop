@@ -149,7 +149,7 @@ jQuery(document).ready(function($) {
 <div id="poststuff" class="metabox-holder">
 
 <!--20110331ysk start-->
-<div id="uscestabs_system">
+<div class="uscestabs" id="uscestabs_system">
 	<ul>
 		<li><a href="#system_page_setting_1"><?php _e('System Setting','usces'); ?></a></li>
 		<li><a href="#system_page_setting_2"><?php _e('国・言語・通貨','usces'); ?></a></li>

@@ -1254,7 +1254,7 @@ jQuery(document).ready(function($){
 </div><!--postbox-->
 
 <!--20101208ysk start-->
-<div id="uscestabs_delivery">
+<div class="uscestabs" id="uscestabs_delivery">
 	<ul>
 		<li><a href="#delivery_page_setting_1"><?php _e('Shipping','usces'); ?></a></li>
 		<!--<li><a href="#delivery_page_setting_3"><?php _e('重量加算','usces'); ?></a></li>-->
@@ -1296,7 +1296,7 @@ jQuery(document).ready(function($){
 	    		<?php usces_shipping_country_option( $selected ); ?>
 	    </select></td>
 <!--20110317ysk start-->
-		<td><div id="ex_shipping_setting20" class="explanation"><?php _e('この送料を適用する国を選択してください。', 'usces'); ?></div></td>
+		<td><div id="ex_shipping_setting20" class="explanation"><?php _e('この送料を適用する国を選択します。', 'usces'); ?></div></td>
 <!--20110317ysk end-->
 	</tr>
 	<tr style="height:40px;">
@@ -1350,7 +1350,7 @@ jQuery(document).ready(function($){
 		<td><label class="shipping_charge_label"></label><select name="delivery_days_country" id="delivery_days_country">
 				<?php usces_shipping_country_option( $selected ); ?>
 		</select></td>
-		<td><div id="ex_delivery_days_setting20" class="explanation"><?php _e('この配達日数を適用する国を選択してください。', 'usces'); ?></div></td>
+		<td><div id="ex_delivery_days_setting20" class="explanation"><?php _e('この配達日数を適用する国を選択します。', 'usces'); ?></div></td>
 <!--20110317ysk end-->
 	</tr>
 	<tr style="height:40px;">
@@ -1363,7 +1363,7 @@ jQuery(document).ready(function($){
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
-<div id="ex_delivery_days" class="explanation"><?php _e('You can choose the shipping every item.', 'usces'); ?></div>
+<div id="ex_delivery_days" class="explanation"><?php _e('商品ごとに配達日数を選ぶことができます。', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
 </div><!--delivery_page_setting_2-->

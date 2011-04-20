@@ -14,7 +14,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 	$html .= '</form>';
 }else{
 	$send_item_code = apply_filters('usces_filter_settlement_item_code', $usces->getItemCode($cart[0]['post_id']));
-	$send_item_name = apply_filters('usces_filter_settlement_item_name', $usces->getItemName($cart[0]['post_id']));;
+	$send_item_name = apply_filters('usces_filter_settlement_item_name', $usces->getItemName($cart[0]['post_id']));
 	
 	$scheme = ( $usces->use_ssl ) ? 'https://' : 'http://';
 	
@@ -408,42 +408,82 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 //20110208ysk start
 		case 'acting_paypal_ec'://PayPal(エクスプレス・チェックアウト)
 			$acting_opts = $usces->options['acting_settings']['paypal'];
-			$currency_code = ( isset($usces->options['system']['currency']) && !empty($usces->options['system']['currency']) ) ? $usces->options['system']['currency'] : '';
-			$country = (!empty($usces_entries['customer']['country'])) ? $usces_entries['customer']['country'] : usces_get_local_addressform();
+			$currency_code = $usces->get_currency_code();
+			$country = (!empty($usces_entries['customer']['country'])) ? $usces_entries['customer']['country'] : usces_get_base_country();
 			$zip = str_replace('-', '', $usces_entries['customer']['zipcode']);
 			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
-			for($i = 0; $i < count($cart); $i++) {
-				$cart_row = $cart[$i];
-				$post_id = $cart_row['post_id'];
-				$itemCode = $usces->getItemCode($post_id);
-				$itemName = $usces->getItemName($post_id);
-				$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
-				$html .= '<input type="hidden" name="L_NAME'.$i.'" value="'.$itemName.'">
-					<input type="hidden" name="L_NUMBER'.$i.'" value="'.$itemCode.'">
-					<input type="hidden" name="L_DESC'.$i.'" value="'.$cartItemName.'">
-					<input type="hidden" name="L_AMT'.$i.'" value="'.usces_crform($cart_row['price'], false, false, 'return', false).'">
-					<input type="hidden" name="L_QTY'.$i.'" value="'.$cart_row['quantity'].'">';
+//20110412ysk start
+			if(usces_get_apply_addressform($country) == 'JP') {
+				$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">';
+			} else {
+				$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
 			}
-			$html .= '<input type="hidden" name="ITEMAMT" value="'.usces_crform($usces_entries['order']['total_items_price'], false, false, 'return', false).'">';
-			if( !empty($usces_entries['order']['tax']) ) 
-				$html .= '<input type="hidden" name="TAXAMT" value="'.usces_crform($usces_entries['order']['tax'], false, false, 'return', false).'">';
-			$html .= '<input type="hidden" name="SHIPPINGAMT" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'">';
-			if( !empty($usces_entries['order']['cod_fee']) ) 
-				$html .= '<input type="hidden" name="HANDLINGAMT" value="'.usces_crform($usces_entries['order']['cod_fee'], false, false, 'return', false).'">';
-			if( !empty($usces_entries['order']['discount']) ) 
-				$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return', false).'">';
-			$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
-				<input type="hidden" name="NAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">
-				<input type="hidden" name="SHIPTOSTREET" value="'.esc_html($usces_entries['customer']['address2']).'">
+			$html .= '<input type="hidden" name="SHIPTOSTREET" value="'.esc_html($usces_entries['customer']['address2']).'">
 				<input type="hidden" name="SHIPTOSTREET2" value="'.esc_html($usces_entries['customer']['address3']).'">
 				<input type="hidden" name="SHIPTOCITY" value="'.esc_html($usces_entries['customer']['address1']).'">
 				<input type="hidden" name="SHIPTOSTATE" value="'.esc_html($usces_entries['customer']['pref']).'">
 				<input type="hidden" name="SHIPTOCOUNTRYCODE" value="'.$country.'">
 				<input type="hidden" name="SHIPTOZIP" value="'.$zip.'">
 				<input type="hidden" name="SHIPTOPHONENUM" value="'.$tel.'">
-				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">
-				<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_buynowCC_LG.gif" border="0" name="purchase" value="submit" alt="PayPal"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
+				<input type="hidden" name="CURRENCYCODE" value="'.$currency_code.'">
+				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
+			$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
+			if(0 === (int)$charging_type) {
+				for($i = 0; $i < count($cart); $i++) {
+					$cart_row = $cart[$i];
+					$post_id = $cart_row['post_id'];
+					$itemCode = $usces->getItemCode($post_id);
+					$itemName = $usces->getItemName($post_id);
+					$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+					$html .= '<input type="hidden" name="L_NAME'.$i.'" value="'.esc_html($itemName).'">
+						<input type="hidden" name="L_NUMBER'.$i.'" value="'.esc_html($itemCode).'">
+						<input type="hidden" name="L_DESC'.$i.'" value="'.esc_html($cartItemName).'">
+						<input type="hidden" name="L_AMT'.$i.'" value="'.usces_crform($cart_row['price'], false, false, 'return', false).'">
+						<input type="hidden" name="L_QTY'.$i.'" value="'.$cart_row['quantity'].'">';
+				}
+				$html .= '<input type="hidden" name="ITEMAMT" value="'.usces_crform($usces_entries['order']['total_items_price'], false, false, 'return', false).'">';
+				if( !empty($usces_entries['order']['tax']) ) 
+					$html .= '<input type="hidden" name="TAXAMT" value="'.usces_crform($usces_entries['order']['tax'], false, false, 'return', false).'">';
+				$html .= '<input type="hidden" name="SHIPPINGAMT" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'">';
+				if( !empty($usces_entries['order']['cod_fee']) ) 
+					$html .= '<input type="hidden" name="HANDLINGAMT" value="'.usces_crform($usces_entries['order']['cod_fee'], false, false, 'return', false).'">';
+				if( !empty($usces_entries['order']['discount']) ) 
+					$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return', false).'">';
+				$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">';
+			} else {
+				$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+/*
+				for($i = 0; $i < count($cart); $i++) {
+					$cart_row = $cart[$i];
+					$cartItemName = $usces->getCartItemName($cart_row['post_id'], $cart_row['sku']);
+					$startDate = '初回引落し日 '.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
+					//$billingPeriod = 'Month';
+					$billingFreq = $cart_row['dlseller_period'].'ヶ月(自動更新)';
+					$amt = usces_crform($cart_row['price'], true, true, 'return', true);
+					$desc = $cartItemName.' '.$startDate.' '.$billingFreq.' '.$amt;
+					$html .= '<input type="hidden" name="L_BILLINGTYPE'.$i.'" value="RecurringPayments">
+						<input type="hidden" name="L_BILLINGAGREEMENTDESCRIPTION'.$i.'" value="'.$desc.'">';
+				}
+*/
+				$cart_row = $cart[0];
+				$itemCode = $usces->getItemCode($cart_row['post_id']);
+				$cartItemName = $usces->getCartItemName($cart_row['post_id'], $cart_row['sku']);
+				$startDate = '初回引落し日 '.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
+				//$usces_item = $usces->get_item($cart_row['post_id']);
+				$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
+				$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
+				$amt = usces_crform($usces_entries['order']['total_items_price'], true, false, 'return', true);
+				$desc = $cartItemName.' '.$startDate.' '.$billingFreq.' '.$amt;
+				$html .= '<input type="hidden" name="L_BILLINGTYPE0" value="RecurringPayments">
+					<input type="hidden" name="L_BILLINGAGREEMENTDESCRIPTION0" value="'.esc_html($desc).'">';
+				if( 1 < count($cart) ) $send_item_name .= ' '. __('Others', 'usces');
+				$html .= '<input type="hidden" name="DESC" value="'.esc_html($itemCode).'">
+					<input type="hidden" name="AMT" value="0">
+					<input type="hidden" name="ITEMAMT" value="'.usces_crform($usces_entries['order']['total_items_price'], false, false, 'return', false).'">';
+			}
+			$html .= '<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_buynowCC_LG.gif" border="0" name="purchase" value="submit" alt="PayPal"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
+//20110412ysk end
 			$html = apply_filters('usces_filter_confirm_inform', $html);
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

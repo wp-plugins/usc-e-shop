@@ -1975,4 +1975,12 @@ div.optcheck {
 .tabletitle {
 	font-size: 12px;
 }
-
+.usces_admin a {
+	color: #318999;
+}
+.usces_admin a:hover {
+	color: #DA6801;
+}
+.uscestabs {
+	margin-bottom: 20px;
+}

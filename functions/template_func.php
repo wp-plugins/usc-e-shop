@@ -1016,10 +1016,21 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	foreach ($usces->options['payment_method'] as $id => $payments) {
 		if( false !== $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
-			if( 'acting_remise_card' != $payments['settlement'] && 'acting_paypal_ec' != $payments['settlement'])
+//20110412ysk start
+			if( 'acting_remise_card' != $payments['settlement'] && 'acting_paypal_ec' != $payments['settlement']) {
+				$payment_ct--;
 				continue;
-			if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement'])
+			}
+			//if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement'])
+			//	continue;
+			if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement']) {
+				$payment_ct--;
 				continue;
+			} elseif( 'on' !== $usces->options['acting_settings']['paypal']['continuation'] && 'acting_paypal_ec' == $payments['settlement']) {
+				$payment_ct--;
+				continue;
+			}
+//20110412ysk end
 		}
 		if( $payments['name'] != '' ) {
 			$module = trim($payments['module']);

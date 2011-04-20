@@ -731,8 +731,8 @@ for ($i=0; $i<50; $i++) {
 <div class="info_head">
 <table>
 <tr>
-<td class="midasi0">Order Custom Field</td>
-<td class="midasi0">Settlement Information</td>
+<td class="midasi0"><?php _e('カスタム・オーダーフィールド', 'usces'); ?></td>
+<td class="midasi0"><?php _e('支払情報', 'usces'); ?></td>
 </tr>
 <tr>
 <td class="wrap_td">
