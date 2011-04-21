@@ -5012,7 +5012,7 @@ class usc_e_shop
 
 			$nvpstr  = $query;
 			$nvpstr .= '&CURRENCYCODE='.$this->get_currency_code();
-			$nvpstr .= '&ADDROVERRIDE=1';
+			//$nvpstr .= '&ADDROVERRIDE=1';
 			$nvpstr .= '&PAYMENTACTION=Sale';
 
 			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.
@@ -5020,6 +5020,8 @@ class usc_e_shop
 
 			//The cancelURL is the location buyers are sent to when they hit the cancel button during authorization of payment during the PayPal flow
 			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$this->delim.'confirm=1');
+
+			$nvpstr .= '&NOTIFYURL='.urlencode(USCES_PAYPAL_NOTIFY_URL);
 
 			$this->paypal->setMethod('SetExpressCheckout');
 			$this->paypal->setData($nvpstr);

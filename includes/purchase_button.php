@@ -430,6 +430,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
 			$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 			if(0 === (int)$charging_type) {
+				//通常購入
 				for($i = 0; $i < count($cart); $i++) {
 					$cart_row = $cart[$i];
 					$post_id = $cart_row['post_id'];
@@ -452,35 +453,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return', false).'">';
 				$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">';
 			} else {
-				$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-/*
-				for($i = 0; $i < count($cart); $i++) {
-					$cart_row = $cart[$i];
-					$cartItemName = $usces->getCartItemName($cart_row['post_id'], $cart_row['sku']);
-					$startDate = '初回引落し日 '.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
-					//$billingPeriod = 'Month';
-					$billingFreq = $cart_row['dlseller_period'].'ヶ月(自動更新)';
-					$amt = usces_crform($cart_row['price'], true, true, 'return', true);
-					$desc = $cartItemName.' '.$startDate.' '.$billingFreq.' '.$amt;
-					$html .= '<input type="hidden" name="L_BILLINGTYPE'.$i.'" value="RecurringPayments">
-						<input type="hidden" name="L_BILLINGAGREEMENTDESCRIPTION'.$i.'" value="'.$desc.'">';
-				}
-*/
-				$cart_row = $cart[0];
-				$itemCode = $usces->getItemCode($cart_row['post_id']);
-				$cartItemName = $usces->getCartItemName($cart_row['post_id'], $cart_row['sku']);
-				$startDate = '初回引落し日 '.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
-				//$usces_item = $usces->get_item($cart_row['post_id']);
-				$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
-				$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
-				$amt = usces_crform($usces_entries['order']['total_items_price'], true, false, 'return', true);
-				$desc = $cartItemName.' '.$startDate.' '.$billingFreq.' '.$amt;
+				//定期支払い
+				$desc = usces_make_agreement_description($cart, $usces_entries['order']['total_items_price']);
 				$html .= '<input type="hidden" name="L_BILLINGTYPE0" value="RecurringPayments">
-					<input type="hidden" name="L_BILLINGAGREEMENTDESCRIPTION0" value="'.esc_html($desc).'">';
-				if( 1 < count($cart) ) $send_item_name .= ' '. __('Others', 'usces');
-				$html .= '<input type="hidden" name="DESC" value="'.esc_html($itemCode).'">
-					<input type="hidden" name="AMT" value="0">
-					<input type="hidden" name="ITEMAMT" value="'.usces_crform($usces_entries['order']['total_items_price'], false, false, 'return', false).'">';
+					<input type="hidden" name="L_BILLINGAGREEMENTDESCRIPTION0" value="'.esc_html($desc).'">
+					<input type="hidden" name="AMT" value="0">';
 			}
 			$html .= '<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_buynowCC_LG.gif" border="0" name="purchase" value="submit" alt="PayPal"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
 //20110412ysk end

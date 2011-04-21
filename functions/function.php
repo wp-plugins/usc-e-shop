@@ -4789,9 +4789,10 @@ function usces_post_reg_orderdata($order_id, $results){
 				$cart = $usces->cart->get_cart();
 				$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 				if(0 === (int)$charging_type) {
+					//通常購入
 //20110412ysk end
 					//Format the other parameters that were stored in the session from the previous calls
-					$paymentAmount = $entry['order']['total_full_price'];
+					$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);
 					$token = urlencode($_REQUEST['token']);
 					$paymentType = urlencode("Sale");
 					$currencyCodeType = urlencode($usces->get_currency_code());
@@ -4819,25 +4820,16 @@ function usces_post_reg_orderdata($order_id, $results){
 					}
 //20110412ysk start
 				} else {
-					$paymentAmount = $entry['order']['total_items_price'];
+					//定期支払い
+					$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
 					$token = urlencode($_REQUEST['token']);
 					$currencyCodeType = urlencode($usces->get_currency_code());
 					$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-					$profileStartDate = urlencode(date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))).'T00:00:00Z');
-
-$cart_row = $cart[0];
-$cartItemName = $usces->getCartItemName($cart_row['post_id'], $cart_row['sku']);
-$startDate = '初回引落し日 '.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
-//$usces_item = $usces->get_item($cart_row['post_id']);
-$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
-$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
-$amt = usces_crform($usces_entries['order']['total_items_price'], true, false, 'return', true);
-//$desc = $cartItemName.' '.$startDate.' '.$billingFreq.' '.$amt;
-$itemCode = $usces->getItemCode($cart_row['post_id']);
-$desc = urlencode($itemCode);
+					$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))).'T01:01:01Z';
 					$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
-					//$billingFreq = urlencode($dlitem['dlseller_period']);
-					$billingFreq = urlencode('6');
+					$dlitem = dlseller_get_item(NULL, $cart[0]['post_id']);
+					$billingFreq = urlencode($dlitem['dlseller_period']);
+					$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price'], $nextdate));
 
 					$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
 
@@ -4857,7 +4849,6 @@ $desc = urlencode($itemCode);
 						$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
 						$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
 						usces_log('PayPal : CreateRecurringPaymentsProfile API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
-usces_log('CreateRecurringPaymentsProfile : '.print_r($resArray, true), 'acting_transaction.log');
 					}
 				}
 //20110412ysk end
@@ -4912,4 +4903,20 @@ usces_log('CreateRecurringPaymentsProfile : '.print_r($resArray, true), 'acting_
 	}
 	
 }
+//20110421ysk start
+function usces_make_agreement_description($cart, $amt, $nextdate = null) {
+	global $usces;
+
+	$cart_row = $cart[0];
+	$itemName = $usces->getItemName($cart_row['post_id']);
+	if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
+	if(is_null($nextdate)) $nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+	$startDate = '初回引落し日'.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
+	$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
+	$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
+	$amt = usces_crform($amt, true, false, 'return', true);
+	$desc = $itemName.' '.$startDate.' '.$billingFreq.' '.$amt;
+	return($desc);
+}
+//20110421ysk end
 ?>
