@@ -1772,7 +1772,10 @@ function usces_download_item_list() {
 		//} elseif($ext == 'csv') {//CSV
 		//	$line_item .= ",".'="'.$post->post_modified.'"';
 		//}
-		$line_item .= $td_h.$post->post_modified.$td_f;
+//20110421ysk start
+		//$line_item .= $td_h.$post->post_modified.$td_f;
+		$line_item .= $td_h.$post->post_date.$td_f;
+//20110421ysk end
 
 		$category = '';
 		$cat_ids = wp_get_post_categories($post_id);
