@@ -308,9 +308,13 @@ $html .= "
 						//配送業務締時間を超えていたら1日加算
 						var hh = toDoubleDigits(now.getHours());
 						var mm = toDoubleDigits(now.getMinutes());
-						if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
-							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
+//20110422ysk start
+						if(delivery_time_limit_hour.length > 0 && delivery_time_limit_min.length > 0) {
+							if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
+								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
+							}
 						}
+//20110422ysk end
 //20110131ysk start
 						//発送業務休日加算
 						if(0 < business_days) {
