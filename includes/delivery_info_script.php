@@ -98,7 +98,11 @@ foreach((array)$default_deli as $id) {
 	$index = $usces->get_delivery_method_index($id);
 	if(0 <= $index) {
 		$html .= 'delivery_days['.$id.'] = [];';
-		$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
+//20110422ysk start
+		$days = (!empty($usces->options['delivery_method'][$index]['days'])) ? $usces->options['delivery_method'][$index]['days'] : '-1';
+		//$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
+		$html .= 'delivery_days['.$id.'].push("'.$days.'");';
+//20110422ysk end
 	}
 }
 //配達日数に設定されている県毎の日数

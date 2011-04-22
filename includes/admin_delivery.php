@@ -67,7 +67,9 @@ jQuery(function($){
 	delivery_method[<?php echo $i; ?>]['nocod'] = "<?php echo $delivery_method[$i]['nocod']; ?>";
 //20101119ysk end
 //20110317ysk start
-	delivery_method[<?php echo $i; ?>]['intl'] = "<?php echo $delivery_method[$i]['intl']; ?>";
+//20110422ysk start
+	delivery_method[<?php echo $i; ?>]['intl'] = "<?php echo (!empty($delivery_method[$i]['intl'])) ? $delivery_method[$i]['intl'] : '0'; ?>";
+//20110422ysk end
 //20110317ysk end
 <?php } ?>
 
