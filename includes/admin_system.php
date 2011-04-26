@@ -284,7 +284,7 @@ jQuery(document).ready(function($) {
 		<?php } ?>
 		    <option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
 		</select></td>
-	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロント・エンド、バック・エンド共通です。', 'usces'); ?></div></td>
+	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロントエンド（ショップ側）、バックエンド（管理パネル）共通です。', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">

@@ -80,12 +80,16 @@ for($i = 0; $i < count($cart); $i++) {
 }
 $html .= 'var shipping = '.$shipping.';';
 //配送業務締時間
-$html .= 'var delivery_time_limit_hour = "'.$usces->options['delivery_time_limit']['hour'].'";';
-$html .= 'var delivery_time_limit_min = "'.$usces->options['delivery_time_limit']['min'].'";';
+//20110422ysk start
+$hour = (!empty($usces->options['delivery_time_limit']['hour'])) ? $usces->options['delivery_time_limit']['hour'] : '00';
+$min = (!empty($usces->options['delivery_time_limit']['min'])) ? $usces->options['delivery_time_limit']['min'] : '00';
+$html .= 'var delivery_time_limit_hour = "'.$hour.'";';
+$html .= 'var delivery_time_limit_min = "'.$min.'";';
+//20110422ysk end
 //最短宅配時間帯
 $html .= 'var shortest_delivery_time = '.(int)$usces->options['shortest_delivery_time'].';';
 //配送希望日を何日後まで表示するか
-$delivery_after_days = (empty($usces->options['delivery_after_days'])) ? 15 : (int)$usces->options['delivery_after_days'];
+$delivery_after_days = (!empty($usces->options['delivery_after_days'])) ? (int)$usces->options['delivery_after_days'] : 15;
 $html .= 'var delivery_after_days = '.$delivery_after_days.';';
 //配送先県(customer)
 $html .= 'var customer_pref = "'.$usces_entries['customer']['pref'].'";';
@@ -308,13 +312,9 @@ $html .= "
 						//配送業務締時間を超えていたら1日加算
 						var hh = toDoubleDigits(now.getHours());
 						var mm = toDoubleDigits(now.getMinutes());
-//20110422ysk start
-						if(delivery_time_limit_hour.length > 0 && delivery_time_limit_min.length > 0) {
-							if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
-							}
+						if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
+							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
 						}
-//20110422ysk end
 //20110131ysk start
 						//発送業務休日加算
 						if(0 < business_days) {

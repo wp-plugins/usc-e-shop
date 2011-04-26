@@ -4910,12 +4910,14 @@ function usces_make_agreement_description($cart, $amt, $nextdate = null) {
 	$cart_row = $cart[0];
 	$itemName = $usces->getItemName($cart_row['post_id']);
 	if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
-	if(is_null($nextdate)) $nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-	$startDate = '初回引落し日'.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
-	$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
-	$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
+	if(100 < strlen($itemName)) $itemName = substr($itemName, 0, 100).'...';
+	//if(is_null($nextdate)) $nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+	//$startDate = '初回引落し日'.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
+	//$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
+	//$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
 	$amt = usces_crform($amt, true, false, 'return', true);
-	$desc = $itemName.' '.$startDate.' '.$billingFreq.' '.$amt;
+	//$desc = $itemName.' '.$startDate.' '.$billingFreq.' '.$amt;
+	$desc = $itemName.' '.$amt;
 	return($desc);
 }
 //20110421ysk end

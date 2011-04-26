@@ -405,24 +405,24 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sandbox_paypal');"><?php _e('動作環境', 'usces'); ?></a></th>
-				<td><input name="sandbox" type="radio" id="sandbox_paypal_1" value="1"<?php if( $opts['paypal']['sandbox'] == '1' ) echo ' checked' ?> /></td><td><label for="sandbox_paypal_1"><?php _e('テスト(sandbox)', 'usces'); ?></label></td>
+				<td><input name="sandbox" type="radio" id="sandbox_paypal_1" value="1"<?php if( $opts['paypal']['sandbox'] == '1' ) echo ' checked' ?> /></td><td><label for="sandbox_paypal_1"><?php _e('テスト(Sandbox)', 'usces'); ?></label></td>
 				<td><input name="sandbox" type="radio" id="sandbox_paypal_2" value="2"<?php if( $opts['paypal']['sandbox'] == '2' ) echo ' checked' ?> /></td><td><label for="sandbox_paypal_2"><?php _e('本稼動', 'usces'); ?></label></td>
-				<td><div id="ex_sandbox_paypal" class="explanation"><?php _e('sandbox を利用した決済テストの場合は「テスト(sandbox)」を選択します。', 'usces'); ?></div></td>
+				<td><div id="ex_sandbox_paypal" class="explanation"><?php _e('Sandbox を利用した決済テストの場合は「テスト(Sandbox)」を選択します。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_user_paypal');"><?php _e('APIユーザー名', 'usces'); ?></a></th>
 				<td colspan="4"><input name="user" type="text" id="user_paypal" value="<?php echo esc_html($opts['paypal']['user']); ?>" size="50" /></td>
-				<td><div id="ex_user_paypal" class="explanation"><?php _e('API信用証明書のAPIユーザー名を入力します。sandbox と本稼動では別のユーザー名となります。', 'usces'); ?></div></td>
+				<td><div id="ex_user_paypal" class="explanation"><?php _e('API信用証明書のAPIユーザー名を入力します。Sandbox と本稼動では別のユーザー名となります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_pwd_paypal');"><?php _e('APIパスワード', 'usces'); ?></a></th>
 				<td colspan="4"><input name="pwd" type="text" id="pwd_paypal" value="<?php echo esc_html($opts['paypal']['pwd']); ?>" size="50" /></td>
-				<td><div id="ex_pwd_paypal" class="explanation"><?php _e('API信用証明書のAPIパスワードを入力します。sandbox と本稼動では別のパスワードとなります。', 'usces'); ?></div></td>
+				<td><div id="ex_pwd_paypal" class="explanation"><?php _e('API信用証明書のAPIパスワードを入力します。Sandbox と本稼動では別のパスワードとなります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_signature_paypal');"><?php _e('署名', 'usces'); ?></a></th>
 				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html($opts['paypal']['signature']); ?>" size="50" /></td>
-				<td><div id="ex_signature_paypal" class="explanation"><?php _e('PayPalから発行されるAPI信用証明書の署名を入力します。sandbox と本稼動では別の署名となります。', 'usces'); ?></div></td>
+				<td><div id="ex_signature_paypal" class="explanation"><?php _e('PayPalから発行されるAPI信用証明書の署名を入力します。Sandbox と本稼動では別の署名となります。', 'usces'); ?></div></td>
 			</tr>
 <!--20110412ysk start-->
 			<?php if( defined('WCEX_DLSELLER') ): ?>
@@ -430,7 +430,7 @@ function toggleVisibility(id) {
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_paypal');"><?php _e('定期支払い', 'usces'); ?></a></th>
 				<td><input name="continuation" type="radio" id="continuation_paypal_1" value="on"<?php if( $opts['paypal']['continuation'] == 'on' ) echo ' checked' ?> /></td><td><label for="continuation_paypal_1"><?php _e('利用する', 'usces'); ?></label></td>
 				<td><input name="continuation" type="radio" id="continuation_paypal_2" value="off"<?php if( $opts['paypal']['continuation'] == 'off' ) echo ' checked' ?> /></td><td><label for="continuation_paypal_2"><?php _e('利用しない', 'usces'); ?></label></td>
-				<td><div id="ex_continuation_paypal" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくは「ルミーズ」にお問合せください。', 'usces'); ?></div></td>
+				<td><div id="ex_continuation_paypal" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくは「PayPal」にお問合せください。', 'usces'); ?></div></td>
 			</tr>
 			<?php endif; ?>
 <!--20110412ysk end-->
@@ -440,7 +440,7 @@ function toggleVisibility(id) {
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('PayPalエクスプレスチェックアウト決済サービス', 'usces'); ?></strong></p>
-		<a href="https://www.paypal.com/jp/cgi-bin/webscr?cmd=_home&country_lang.x=true" target="_blank"><?php _e('PayPal決済サービスの詳細はこちら 》', 'usces'); ?></a>
+		<a href="https://www.paypal.com/" target="_blank"><?php _e('PayPal決済サービスの詳細はこちら 》', 'usces'); ?></a>
 		<p>　</p>
 		<p><?php _e('この決済は、「エクスプレスチェックアウト」を使用しています。', 'usces'); ?></p>
 		<p><?php _e('ご利用のサーバーに「OpenSSL」モジュールがインストールされていない場合、「エクスプレスチェックアウト」での決済はできません。', 'usces'); ?></p>
