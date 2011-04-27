@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 2.9
 Tested up to: 3.1
-Stable tag: 1.0-beta1
+Stable tag: 1.0-beta3
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -57,10 +57,10 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 == Changelog ==
 
 = V1.0 =
-16 Mar 2011
+30 Apr 2011
 -----------
-* Welcart Default テーマを1.1にアップグレード、wc_templates を採用
-* 通貨や入力フォームのグローバライズに対応
-* 配送希望日算出機能を追加
-* PayPal エクスプレス・チェックアウト決済を標準搭載
-* 納品書等のPDF出力仕様を変更、及び請求書・領収書を追加
+* Welcart Default theme is upgraded to 1.1. wc_templates is implemented.
+* Global currency and form entry is supported.
+* Requested delivery date calculation function is added.
+* PayPal Express Checkout function is included.
+* PDF (Packing list ext) export function is modified; invoice and receipt are added.

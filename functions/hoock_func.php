@@ -49,10 +49,10 @@ function usces_action_acting_transaction(){
 			//die('error2');
 		}
 		
-		if( '0000000' == substr($rand, 0, 7) ){//card up
+		if( '0000000' === substr($rand, 0, 7) ){//card up
 			usces_log('remise card_update : '.print_r($data, true), 'acting_transaction.log');
 			if( isset($_POST['X-EXPIRE']) ){
-				$expire = substr($_POST['X-EXPIRE'], 2, 2) . '/' . substr($_POST['X-EXPIRE'], 0, 2);
+				$expire = substr($_POST['X-EXPIRE'], 0, 2) . '/' . substr($_POST['X-EXPIRE'], 2, 2);
 				$usces->set_member_meta_value('limitofcard', $expire, $_POST['X-AC_S_KAIIN_NO']);
 			}
 			if( isset($_POST['X-PARTOFCARD']) )

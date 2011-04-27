@@ -3358,6 +3358,26 @@ class usc_e_shop
 		return $res;
 	}
 
+	function get_member_info( $mid ) {
+		global $wpdb;
+		
+		if( !current_user_can('activate_plugins') ) return array();
+		
+		$table = $wpdb->prefix . "usces_member";
+		$query = $wpdb->prepare("SELECT * FROM $table WHERE ID = %d", $mid);
+		$datas = $wpdb->get_results( $query, ARRAY_A );
+		$infos = $datas[0];
+		
+		$table = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table WHERE member_id = %d", $mid);
+		$metas = $wpdb->get_results( $query, ARRAY_A );
+		
+		foreach( $metas as $meta ){
+			$infos[$meta['meta_key']] = maybe_unserialize($meta['meta_value']);
+		}
+		return $infos;
+	}
+
 	function is_order($mid, $oid) {
 		global $wpdb;
 		
