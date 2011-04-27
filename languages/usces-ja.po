@@ -1323,7 +1323,7 @@ msgstr "メール・印刷フィールド表示"
 msgid "print out the estimate"
 msgstr "見積書印刷"
 
-msgid "print the invoice"
+msgid "print out Delivery Statement"
 msgstr "納品書印刷"
 
 msgid "When there is any change, please press the 'change decision' before you send or print."
@@ -1446,7 +1446,7 @@ msgstr "この度は %s をご利用下さいましてありがとうござい�
 msgid "Valid:7days"
 msgstr "有効期間：7日間"
 
-msgid "Invoices"
+msgid "Delivery Statement"
 msgstr "納品書"
 
 msgid "Thak you for choosing '%s'. We deliver your items as following."
@@ -2455,7 +2455,7 @@ msgid "field name"
 msgstr "フィールド名"
 
 msgid "Add a new custom order field"
-msgstr "新規カスタム・カスタマーフィールド追加"
+msgstr "新規カスタム・オーダーフィールド追加"
 
 msgid "Add a new custom customer field"
 msgstr "新規カスタム・カスタマーフィールド追加"
@@ -2865,6 +2865,19 @@ msgstr "請求書印刷"
 msgid "Print Receipt"
 msgstr "領収書印刷"
 
+msgid "Order ID"
+msgstr "受注ID"
+
+msgid "Member ID"
+msgstr "会員ID"
+
+msgid "Name"
+msgstr "氏名"
+
+#~ msgid "print the invoice"
+#~ msgstr "納品書印刷"
+#~ msgid "Invoices"
+#~ msgstr "納品書"
 #~ msgid ""
 #~ "I seem to have you cancel it when the body does not have memorizing to "
 #~ "this email."

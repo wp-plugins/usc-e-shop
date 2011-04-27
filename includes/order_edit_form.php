@@ -281,7 +281,7 @@ jQuery(function($){
 	});
 	$('#nohinprint').click(function() {
 		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>&type=nohin" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
-		$('#PDFDialog').dialog('option', 'title', '<?php _e('print the invoice', 'usces'); ?>');
+		$('#PDFDialog').dialog('option', 'title', '<?php _e('print out Delivery Statement', 'usces'); ?>');
 		$('#PDFDialog').dialog('open');
 		uscesMail.ordercheckpost('nohinprint');
 	});
@@ -549,7 +549,7 @@ jQuery(document).ready(function($){
 <tr>
 <td><input name="check[completionmail]" type="checkbox" value="completionmail"<?php if(isset($ordercheck['completionmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="completionMail"><?php _e('Mail for Shipping', 'usces'); ?></a></td>
 <td><input name="check[mitumoriprint]" type="checkbox" value="mitumoriprint"<?php if(isset($ordercheck['mitumoriprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="mitumoriprint"><?php _e('print out the estimate', 'usces'); ?></a></td>
-<td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint"><?php _e('print the invoice', 'usces'); ?></a></td>
+<td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint"><?php _e('print out Delivery Statement', 'usces'); ?></a></td>
 <td><input name="check[billprint]" type="checkbox" value="billprint"<?php if(isset($ordercheck['billprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="billprint"><?php _e('Print Invoice', 'usces'); ?></a></td>
 <td><input name="check[receiptprint]" type="checkbox" value="receiptprint"<?php if(isset($ordercheck['receiptprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="receiptprint"><?php _e('Print Receipt', 'usces'); ?></a></td>
 <td colspan="2">&nbsp;</td>
@@ -628,7 +628,7 @@ $order_date = explode("-", $data_order_date[0]);
 for($i = 0; $i < 50; $i++) {
 	$value = date('Y-m-d', mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
 	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
-	$selected = ($data['order_delivery_date'] == $date) ? ' selected="selected"' : '';
+	$selected = ($data['order_delivery_date'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$date}</option>\n";
 }
 ?>
@@ -661,7 +661,7 @@ if( !$this->options['delivery_time'] == '' ) {
 for ($i=0; $i<50; $i++) {
 	$value = date('Y-m-d', mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
 	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
-	$selected = ($data['order_delidue_date'] == $date) ? ' selected="selected"' : '';
+	$selected = ($data['order_delidue_date'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$date}</option>\n";
 }
 ?>
@@ -838,22 +838,22 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo esc_attr( $data['order_discount'] ); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo esc_attr( $data['order_shipping_charge'] ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { usces_crform( $data['order_shipping_charge'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></td>
-			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo esc_attr( $data['order_cod_fee'] ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { usces_crform( $data['order_cod_fee'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo esc_attr( $data['order_tax']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>

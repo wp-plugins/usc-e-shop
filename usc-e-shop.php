@@ -8,7 +8,7 @@ Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
 //$wpdb->show_errors();
-define('USCES_VERSION', '1.0-beta3.r1104271');
+define('USCES_VERSION', '1.0-beta3.r1104272');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -36,6 +36,7 @@ load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLD
 
 require_once(USCES_PLUGIN_DIR."/functions/redirect.php");
 require_once(USCES_PLUGIN_DIR."/includes/initial.php");
+require_once(USCES_PLUGIN_DIR.'/functions/define_function.php');
 require_once(USCES_PLUGIN_DIR."/functions/calendar-com.php");
 require_once(USCES_PLUGIN_DIR."/functions/utility.php");
 require_once(USCES_PLUGIN_DIR."/functions/item_post.php");

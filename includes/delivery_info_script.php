@@ -103,9 +103,9 @@ foreach((array)$default_deli as $id) {
 	if(0 <= $index) {
 		$html .= 'delivery_days['.$id.'] = [];';
 //20110422ysk start
-		$days = (!empty($usces->options['delivery_method'][$index]['days'])) ? $usces->options['delivery_method'][$index]['days'] : '-1';
-		//$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
-		$html .= 'delivery_days['.$id.'].push("'.$days.'");';
+		//$days = (!empty($usces->options['delivery_method'][$index]['days'])) ? $usces->options['delivery_method'][$index]['days'] : '-1';
+		$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
+		//$html .= 'delivery_days['.$id.'].push("'.$days.'");';
 //20110422ysk end
 	}
 }

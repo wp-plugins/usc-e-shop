@@ -116,6 +116,9 @@ add_action('usces_action_memberinfo_page_footer', array(&$usces, 'action_memberi
 add_action('usces_action_membercompletion_page_header', array(&$usces, 'action_membercompletion_page_header'));
 add_action('usces_action_membercompletion_page_footer', array(&$usces, 'action_membercompletion_page_footer'));
 
+add_action('usces_main', 'usces_define_functions', 10);
+
+
 if( $usces->options['itemimg_anchor_rel'] )
 	add_filter('usces_itemimg_anchor_rel', array(&$usces, 'filter_itemimg_anchor_rel'));
 	

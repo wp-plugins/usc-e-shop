@@ -204,7 +204,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			break;
 		
 		case 'nohin':
-			$title = __('Invoice', 'usces');
+			$title = __('Delivery Statement', 'usces');
 			$message = sprintf(__("Thak you for choosing '%s'. We deliver your items as following.", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
 			$message = apply_filters('usces_filter_pdf_invoice_message', $message, $data);
