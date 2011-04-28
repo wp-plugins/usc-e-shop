@@ -102,11 +102,7 @@ foreach((array)$default_deli as $id) {
 	$index = $usces->get_delivery_method_index($id);
 	if(0 <= $index) {
 		$html .= 'delivery_days['.$id.'] = [];';
-//20110422ysk start
-		//$days = (!empty($usces->options['delivery_method'][$index]['days'])) ? $usces->options['delivery_method'][$index]['days'] : '-1';
 		$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
-		//$html .= 'delivery_days['.$id.'].push("'.$days.'");';
-//20110422ysk end
 	}
 }
 //配達日数に設定されている県毎の日数
@@ -298,7 +294,7 @@ $html .= "
 			make_delivery_date : function(selected) {
 				var option = '';
 				var message = '';
-				if(delivery_days[selected] != undefined && 0 <= delivery_days[selected]) {
+				if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
 					switch(shipping) {
 					case 0://指定なし
 					case 9://商品入荷後
@@ -326,9 +322,13 @@ $html .= "
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], add_shipping[shipping]);
 						}
 						//配達日数加算
-						if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
-							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
+//20110428ysk start
+						if(delivery_days_value[delivery_days[selected]] != undefined && 0 < delivery_days_value[delivery_days[selected]].length) {
+							if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
+								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
+							}
 						}
+//20110428ysk end
 						//最短配送時間帯メッセージ
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 						switch(shortest_delivery_time) {

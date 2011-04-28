@@ -20,53 +20,25 @@ function usces_item_uploadcsv(){
 	define('USCES_COL_ITEM_GPDIS2', 7);
 	define('USCES_COL_ITEM_GPNUM3', 8);
 	define('USCES_COL_ITEM_GPDIS3', 9);
-	if(defined('WCEX_DLSELLER')) {
-		define('USCES_COL_DLSELLER_DIVISION', 10);
-		define('USCES_COL_DLSELLER_VALIDITY', 11);
-		define('USCES_COL_DLSELLER_PERIOD', 12);
-		define('USCES_COL_DLSELLER_FILE', 13);
-		define('USCES_COL_DLSELLER_DATE', 14);
-		define('USCES_COL_DLSELLER_VERSION', 15);
-		define('USCES_COL_DLSELLER_AUTHOR', 16);
-		define('USCES_COL_DLSELLER_PURCHASES', 17);
-		define('USCES_COL_DLSELLER_DOWNLOADS', 18);
-		define('USCES_COL_POST_TITLE', 19);
-		define('USCES_COL_POST_CONTENT', 20);
-		define('USCES_COL_POST_EXCERPT', 21);
-		define('USCES_COL_POST_STATUS', 22);
-		define('USCES_COL_POST_MODIFIED', 23);
-		define('USCES_COL_CATEGORY', 24);
-		define('USCES_COL_POST_TAG', 25);
-		define('USCES_COL_SKU_CODE', 26);
-		define('USCES_COL_SKU_NAME', 27);
-		define('USCES_COL_SKU_CPRICE', 28);
-		define('USCES_COL_SKU_PRICE', 29);
-		define('USCES_COL_SKU_ZAIKONUM', 30);
-		define('USCES_COL_SKU_ZAIKO', 31);
-		define('USCES_COL_SKU_UNIT', 32);
-		define('USCES_COL_SKU_GPTEKIYO', 33);
-		define('USCES_COL_SKU_CHARGINGTYPE', 34);
-	} else {
-		define('USCES_COL_ITEM_SHIPPING', 10);
-		define('USCES_COL_ITEM_DELIVERYMETHOD', 11);
-		define('USCES_COL_ITEM_SHIPPINGCHARGE', 12);
-		define('USCES_COL_ITEM_INDIVIDUALSCHARGE', 13);
-		define('USCES_COL_POST_TITLE', 14);
-		define('USCES_COL_POST_CONTENT', 15);
-		define('USCES_COL_POST_EXCERPT', 16);
-		define('USCES_COL_POST_STATUS', 17);
-		define('USCES_COL_POST_MODIFIED', 18);
-		define('USCES_COL_CATEGORY', 19);
-		define('USCES_COL_POST_TAG', 20);
-		define('USCES_COL_SKU_CODE', 21);
-		define('USCES_COL_SKU_NAME', 22);
-		define('USCES_COL_SKU_CPRICE', 23);
-		define('USCES_COL_SKU_PRICE', 24);
-		define('USCES_COL_SKU_ZAIKONUM', 25);
-		define('USCES_COL_SKU_ZAIKO', 26);
-		define('USCES_COL_SKU_UNIT', 27);
-		define('USCES_COL_SKU_GPTEKIYO', 28);
-	}
+	define('USCES_COL_ITEM_SHIPPING', 10);
+	define('USCES_COL_ITEM_DELIVERYMETHOD', 11);
+	define('USCES_COL_ITEM_SHIPPINGCHARGE', 12);
+	define('USCES_COL_ITEM_INDIVIDUALSCHARGE', 13);
+	define('USCES_COL_POST_TITLE', 14);
+	define('USCES_COL_POST_CONTENT', 15);
+	define('USCES_COL_POST_EXCERPT', 16);
+	define('USCES_COL_POST_STATUS', 17);
+	define('USCES_COL_POST_MODIFIED', 18);
+	define('USCES_COL_CATEGORY', 19);
+	define('USCES_COL_POST_TAG', 20);
+	define('USCES_COL_SKU_CODE', 21);
+	define('USCES_COL_SKU_NAME', 22);
+	define('USCES_COL_SKU_CPRICE', 23);
+	define('USCES_COL_SKU_PRICE', 24);
+	define('USCES_COL_SKU_ZAIKONUM', 25);
+	define('USCES_COL_SKU_ZAIKO', 26);
+	define('USCES_COL_SKU_UNIT', 27);
+	define('USCES_COL_SKU_GPTEKIYO', 28);
 	define('IDENTIFIER_OLE', pack("CCCCCCCC",0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1));
 
 	$workfile = $_FILES["usces_upcsv"]["tmp_name"];
@@ -74,7 +46,7 @@ function usces_item_uploadcsv(){
 	$total_num = 0;
 	$comp_num = 0;
 	$err_num = 0;
-	$min_field_num = (defined('WCEX_DLSELLER')) ? 35 : 29;
+	$min_field_num = 29;
 	$log = '';
 	$pre_code = '';
 	$res = array();
@@ -223,56 +195,6 @@ function usces_item_uploadcsv(){
 					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data )
 						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the postage individual charging is abnormal.', 'usces')."\r\n";
 					break;
-				case USCES_COL_DLSELLER_DIVISION:
-					if(defined('WCEX_DLSELLER')) {
-						$array_division = array('data', 'service');
-						if( !in_array($data, $array_division) || '' == $data )
-							$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the division is abnormal.', 'dlseller')."\r\n";
-					}
-					break;
-				case USCES_COL_DLSELLER_VALIDITY:
-					if(defined('WCEX_DLSELLER')) {
-						if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) )
-							$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the validity is abnormal.', 'dlseller')."\r\n";
-					}
-					break;
-				case USCES_COL_DLSELLER_PERIOD:
-					if(defined('WCEX_DLSELLER')) {
-						if($datas[USCES_COL_DLSELLER_DIVISION] == 'service') {
-							if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) )
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the period is abnormal.', 'dlseller')."\r\n";
-						}
-					}
-					break;
-				case USCES_COL_DLSELLER_FILE:
-					if(defined('WCEX_DLSELLER')) {
-						if($datas[USCES_COL_DLSELLER_DIVISION] == 'data') {
-							if( 0 == strlen($data) )
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A file name is non-input.', 'dlseller')."\r\n";
-						}
-					}
-					break;
-				case USCES_COL_DLSELLER_DATE:
-					if(defined('WCEX_DLSELLER')) {
-						if($datas[USCES_COL_DLSELLER_DIVISION] == 'data') {
-						}
-					}
-					break;
-				case USCES_COL_DLSELLER_VERSION:
-					if(defined('WCEX_DLSELLER')) {
-						if($datas[USCES_COL_DLSELLER_DIVISION] == 'data') {
-						}
-					}
-					break;
-				case USCES_COL_DLSELLER_AUTHOR:
-					if(defined('WCEX_DLSELLER')) {
-						if($datas[USCES_COL_DLSELLER_DIVISION] == 'data') {
-						}
-					}
-					break;
-				case USCES_COL_DLSELLER_PURCHASES:
-				case USCES_COL_DLSELLER_DOWNLOADS:
-					break;
 				case USCES_COL_POST_TITLE:
 				case USCES_COL_POST_CONTENT:
 				case USCES_COL_POST_EXCERPT:
@@ -417,8 +339,8 @@ function usces_item_uploadcsv(){
 //20101207ysk start
 			//$post_id = $usces->get_postIDbyCode($datas[USCES_COL_ITEM_CODE]);
 			$query = $wpdb->prepare("SELECT meta.post_id FROM $wpdb->postmeta AS meta 
-				INNER JOIN $wpdb->posts AS post ON meta.post_id = post.ID AND post.post_status <> %s AND post.post_mime_type = 'item' 
-				WHERE meta.meta_value = %s LIMIT 1", 'trash', trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
+				INNER JOIN $wpdb->posts AS post ON meta.post_id = post.ID AND post.post_status <> 'trash' AND post.post_mime_type = 'item' 
+				WHERE meta.meta_value = %s LIMIT 1", trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
 			$post_id = $wpdb->get_var( $query );
 //20101207ysk end
 			if(!empty($post_id)) $mode = 'upd';
@@ -581,12 +503,6 @@ function usces_item_uploadcsv(){
 			$valstr .= '(' . $post_id . ", '_itemGpDis2','" . $datas[USCES_COL_ITEM_GPDIS2] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemGpNum3','" . $datas[USCES_COL_ITEM_GPNUM3] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemGpDis3','" . $datas[USCES_COL_ITEM_GPDIS3] . "'),";
-			if(!defined('WCEX_DLSELLER')) {
-				$valstr .= '(' . $post_id . ", '_itemShipping','" . $datas[USCES_COL_ITEM_SHIPPING] . "'),";
-				$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
-				$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_SHIPPINGCHARGE], 'UTF-8', 'SJIS'))) . "'),";
-				$valstr .= '(' . $post_id . ", '_itemIndividualSCharge','" . $datas[USCES_COL_ITEM_INDIVIDUALSCHARGE] . "'),";
-			}
 			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
 			$sku['cprice'] = $datas[USCES_COL_SKU_CPRICE];
 			$sku['price'] = $datas[USCES_COL_SKU_PRICE];
@@ -595,9 +511,6 @@ function usces_item_uploadcsv(){
 			$sku['disp'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
 			$sku['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
 			$sku['gptekiyo'] = $datas[USCES_COL_SKU_GPTEKIYO];
-			if(defined('WCEX_DLSELLER')) {
-				$sku['charging_type'] = $datas[USCES_COL_SKU_CHARGINGTYPE];
-			}
 			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
 			
 			for($i=0; $i<$opnum; $i++){
@@ -638,20 +551,6 @@ function usces_item_uploadcsv(){
 			$valstr = rtrim($valstr, ',');
 			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
 			$dbres = mysql_query($query) or die(mysql_error());
-			
-			if(defined('WCEX_DLSELLER')) {
-				if(isset($datas[USCES_COL_DLSELLER_DIVISION])) update_post_meta($post_id, '_dlseller_division', $datas[USCES_COL_DLSELLER_DIVISION]);
-				if($datas[USCES_COL_DLSELLER_DIVISION] == 'data') {
-					if(isset($datas[USCES_COL_DLSELLER_VALIDITY])) update_post_meta($post_id, '_dlseller_validity', $datas[USCES_COL_DLSELLER_VALIDITY]);
-					if(isset($datas[USCES_COL_DLSELLER_FILE])) update_post_meta($post_id, '_dlseller_file', $datas[USCES_COL_DLSELLER_FILE]);
-					if(isset($datas[USCES_COL_DLSELLER_DATE])) update_post_meta($post_id, '_dlseller_date', $datas[USCES_COL_DLSELLER_DATE]);
-					if(isset($datas[USCES_COL_DLSELLER_VERSION])) update_post_meta($post_id, '_dlseller_version', $datas[USCES_COL_DLSELLER_VERSION]);
-					if(isset($datas[USCES_COL_DLSELLER_AUTHOR])) update_post_meta($post_id, '_dlseller_author', $datas[USCES_COL_DLSELLER_AUTHOR]);
-				} elseif($datas[USCES_COL_DLSELLER_DIVISION] == 'service') {
-					if(isset($datas[USCES_COL_DLSELLER_VALIDITY])) update_post_meta($post_id, '_dlseller_validity', $datas[USCES_COL_DLSELLER_VALIDITY]);
-					if(isset($datas[USCES_COL_DLSELLER_PERIOD])) update_post_meta($post_id, '_dlseller_period', $datas[USCES_COL_DLSELLER_PERIOD]);
-				}
-			}
 
 			//add term_relationships, edit term_taxonomy
 			//category
@@ -702,9 +601,6 @@ function usces_item_uploadcsv(){
 			$sku['disp'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
 			$sku['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
 			$sku['gptekiyo'] = $datas[USCES_COL_SKU_GPTEKIYO];
-			if(defined('WCEX_DLSELLER')) {
-				$sku['charging_type'] = $datas[USCES_COL_SKU_CHARGINGTYPE];
-			}
 			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
 			
 			$valstr = rtrim($valstr, ',');
@@ -824,22 +720,10 @@ function usces_download_item_list() {
 		$line .= $th_h.__('Business package discount', 'usces').'1-'.__('num', 'usces').$th_f.$th_h.__('Business package discount', 'usces').'1-'.__('rate', 'usces').$th_f;
 		$line .= $th_h.__('Business package discount', 'usces').'2-'.__('num', 'usces').$th_f.$th_h.__('Business package discount', 'usces').'2-'.__('rate', 'usces').$th_f;
 		$line .= $th_h.__('Business package discount', 'usces').'3-'.__('num', 'usces').$th_f.$th_h.__('Business package discount', 'usces').'3-'.__('rate', 'usces').$th_f;
-		if(defined('WCEX_DLSELLER')) {
-			$line .= $th_h.__('Division', 'dlseller').$th_f;
-			$line .= $th_h.__('Validity(days)', 'dlseller').$th_f;
-			$line .= $th_h.__('Period(month)', 'dlseller').$th_f;
-			$line .= $th_h.__('File name', 'dlseller').$th_f;
-			$line .= $th_h.__('Release date', 'dlseller').$th_f;
-			$line .= $th_h.__('Version', 'dlseller').$th_f;
-			$line .= $th_h.__('Author', 'dlseller').$th_f;
-			$line .= $th_h.__('Purchases', 'dlseller').$th_f;
-			$line .= $th_h.__('Downloads', 'dlseller').$th_f;
-		} else {
-			$line .= $th_h.__('estimated shipping date', 'usces').$th_f;
-			$line .= $th_h.__('shipping option', 'usces').$th_f;
-			$line .= $th_h.__('Shipping', 'usces').$th_f;
-			$line .= $th_h.__('Postage individual charging', 'usces').$th_f;
-		}
+		$line .= $th_h.__('estimated shipping date', 'usces').$th_f;
+		$line .= $th_h.__('shipping option', 'usces').$th_f;
+		$line .= $th_h.__('Shipping', 'usces').$th_f;
+		$line .= $th_h.__('Postage individual charging', 'usces').$th_f;
 		$line .= $th_h.__('Title', 'usces').$th_f;
 		$line .= $th_h.__('explanation', 'usces').$th_f;
 		$line .= $th_h.__('excerpt', 'usces').$th_f;
@@ -855,7 +739,6 @@ function usces_download_item_list() {
 		$line .= $th_h.__('stock status', 'usces').$th_f;
 		$line .= $th_h.__('unit', 'usces').$th_f;
 		$line .= $th_h.__('Apply business package', 'usces').$th_f;
-		if(defined('WCEX_DLSELLER')) $line .= $th_h.__('Charging type', 'usces').$th_f;
 		$line .= $th_h.__('option name', 'usces').$th_f.$th_h.__('Field type', 'usces').$th_f.$th_h.__('Required', 'usces').$th_f.$th_h.__('selected amount', 'usces').$th_f;
 		$line .= $tr_f.$lf;
 	}
@@ -871,56 +754,18 @@ function usces_download_item_list() {
 		$line_item .= $td_h.$usces->getItemGpNum1($post_id).$td_f.$td_h.$usces->getItemGpDis1($post_id).$td_f;
 		$line_item .= $td_h.$usces->getItemGpNum2($post_id).$td_f.$td_h.$usces->getItemGpDis2($post_id).$td_f;
 		$line_item .= $td_h.$usces->getItemGpNum3($post_id).$td_f.$td_h.$usces->getItemGpDis3($post_id).$td_f;
-		if(defined('WCEX_DLSELLER')) {
-			$dlseller_division = get_post_custom_values('_dlseller_division', $post_id);
-			$dlseller_validity = get_post_custom_values('_dlseller_validity', $post_id);
-			$dlseller_period = get_post_custom_values('_dlseller_period', $post_id);
-			$dlseller_file = get_post_custom_values('_dlseller_file', $post_id);
-			$dlseller_date = get_post_custom_values('_dlseller_date', $post_id);
-			$dlseller_version = get_post_custom_values('_dlseller_version', $post_id);
-			$dlseller_author = get_post_custom_values('_dlseller_author', $post_id);
-			$dlseller_purchases = get_post_custom_values('_dlseller_purchases', $post_id);
-			$dlseller_downloads = get_post_custom_values('_dlseller_downloads', $post_id);
-			$dls_mon = usces_dlseller_get_dlcount($post_id, 'month');
-			$dls_tol = usces_dlseller_get_dlcount($post_id, 'total');
+		$line_item .= $td_h.$usces->getItemShipping($post_id).$td_f;
 
-			$line_item .= $td_h.$dlseller_division[0].$td_f;
-			$line_item .= $td_h.$dlseller_validity[0].$td_f;
-			$line_item .= $td_h.$dlseller_period[0].$td_f;
-			$line_item .= $td_h.$dlseller_file[0].$td_f;
-			//if(!empty($dlseller_date[0])) {
-			//	if($ext == 'xls') {//TSV
-			//		$line_item .= "\t".'="'.$dlseller_date[0].'"';
-			//	} elseif($ext == 'csv') {//CSV
-			//		$line_item .= ",".'="'.$dlseller_date[0].'"';
-			//	}
-			//} else {
-			//	$line_item .= $td_h.$td_f;
-			//}
-			$line_item .= $td_h.$dlseller_date[0].$td_f;
-			$line_item .= $td_h.$dlseller_version[0].$td_f;
-			$line_item .= $td_h.$dlseller_author[0].$td_f;
-			if(!empty($dlseller_division[0])) {
-				$line_item .= $td_h.$dls_mon['par'].$sp.$dls_tol['par'].$td_f;
-				$line_item .= $td_h.$dls_mon['dl'].$sp.$dls_tol['dl'].$td_f;
-			} else {
-				$line_item .= $td_h.$td_f;
-				$line_item .= $td_h.$td_f;
-			}
-		} else {
-			$line_item .= $td_h.$usces->getItemShipping($post_id).$td_f;
-
-			$delivery_method = '';
-			$itemDeliveryMethod = $usces->getItemDeliveryMethod($post_id);
-			foreach((array)$itemDeliveryMethod as $k => $v) {
-				$delivery_method .= $v.$sp;
-			}
-			$delivery_method = rtrim($delivery_method, $sp);
-			$line_item .= $td_h.$delivery_method.$td_f;
-
-			$line_item .= $td_h.$usces->getItemShippingCharge($post_id).$td_f;
-			$line_item .= $td_h.$usces->getItemIndividualSCharge($post_id).$td_f;
+		$delivery_method = '';
+		$itemDeliveryMethod = $usces->getItemDeliveryMethod($post_id);
+		foreach((array)$itemDeliveryMethod as $k => $v) {
+			$delivery_method .= $v.$sp;
 		}
+		$delivery_method = rtrim($delivery_method, $sp);
+		$line_item .= $td_h.$delivery_method.$td_f;
+
+		$line_item .= $td_h.$usces->getItemShippingCharge($post_id).$td_f;
+		$line_item .= $td_h.$usces->getItemIndividualSCharge($post_id).$td_f;
 
 		$line_item .= $td_h.usces_entity_decode($post->post_title, $ext).$td_f;
 		$line_item .= $td_h.usces_entity_decode($post->post_content, $ext).$td_f;
@@ -989,7 +834,6 @@ function usces_download_item_list() {
 			$line_sku .= $td_h.$sku_value['zaiko'].$td_f;
 			$line_sku .= $td_h.usces_entity_decode($sku_value['unit'], $ext).$td_f;
 			$line_sku .= $td_h.$sku_value['gptekiyo'].$td_f;
-			if(defined('WCEX_DLSELLER')) $line_sku .= $td_h.$sku_value['charging_type'].$td_f;
 
 			$line .= $tr_h.$line_item.$line_sku.$line_options.$tr_f.$lf;
 		}
