@@ -3713,7 +3713,8 @@ class usc_e_shop
 		if(isset($_POST['offer']['delivery_method'])) {
 			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
 			$country = $_POST["delivery"]["country"];
-			$local_country = usces_get_local_addressform();
+			//$local_country = usces_get_local_addressform();
+			$local_country = usces_get_base_country();
 			if($country == $local_country) {
 				if($this->options['delivery_method'][$d_method_index]['intl'] == '1') {
 					$mes .= __('配送方法が誤っています。国際便は指定できません。', 'usces') . "<br />";
