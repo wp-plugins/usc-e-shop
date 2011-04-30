@@ -89,7 +89,7 @@ jQuery(function($){
 		},
 
 		onchange_target_market_province: function(index) {
-			$('#province_'+pre_target).val($("#province").val());
+			if(pre_target != '') $('#province_'+pre_target).val($("#province").val());
 			var target = $("#select_target_market_province option:selected").val();
 			$("#province").text('');
 			$("#province").text($('#province_'+target).val());

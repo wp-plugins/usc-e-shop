@@ -2270,6 +2270,10 @@ function target_market_ajax() {
 				$res .= $state."\n";
 			}
 			$res = rtrim($res, "\n")."#usces#";
+//20110430ysk start
+		} else {
+			$res .= $country.",#usces#";
+//20110430ysk end
 		}
 	}
 	$res = rtrim($res, "#usces#");
