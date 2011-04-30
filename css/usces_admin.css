@@ -1683,6 +1683,8 @@ tr.rowSelection_selected td {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	border: 1px solid #FF9900;
+	letter-spacing: 1px;
+	font-weight: normal;
 }
 
 .usces_admin div.chui h3 {
@@ -1690,6 +1692,7 @@ tr.rowSelection_selected td {
 	font-weight: bold;
 	color: #663300;
 }
+
 /************************************************************************************/
 .usces_admin table.dashboard {
 	width: 100%;
