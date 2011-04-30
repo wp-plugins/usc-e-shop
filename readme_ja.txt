@@ -4,7 +4,7 @@
 
 Welcart(ウェルカート)は以下の環境で動作します。
 
-Wordpress 2.9.0 以上 
+Wordpress 3.0 以上 
 PHP 5.2 以上 （セーフモード非対応）
 MySQL 5.0 以上 
 Apache を推奨 
