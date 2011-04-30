@@ -7,7 +7,7 @@
 get_header();
 ?>
 
-<div id="content">
+<div id="content" class="two-column">
 <div class="catbox">
 	<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 	<div <?php post_class() ?> id="post-<?php the_ID(); ?>">
@@ -23,5 +23,7 @@ get_header();
 	<?php posts_nav_link(' &#8212; ', __('&laquo; Newer Posts'), __('Older Posts &raquo;')); ?>
 </div><!-- end of catbox -->
 </div><!-- end of content -->
+
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>

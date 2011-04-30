@@ -35,7 +35,7 @@ class dataList
 		//$this->parent_term = $parent_term;
 		$this->rows = array();
 
-		$this->maxRow = 20;
+		$this->maxRow = 30;
 		$this->naviMaxButton = 11;
 		$this->firstPage = 1;
 		$this->action_status = 'none';
@@ -248,7 +248,7 @@ class dataList
 	function GetRows()
 	{
 		global $wpdb;
-		$wpdb->show_errors();
+		//$wpdb->show_errors();
 		$where = $this->GetWhere();
 		$order = ' ORDER BY ' . $this->sortColumn . ' ' . $this->sortSwitchs[$this->sortColumn];
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;

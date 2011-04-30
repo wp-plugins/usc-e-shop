@@ -369,7 +369,7 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <div id="postitemcustomstuff">
 <table class="iteminfo_table">
 <?php
-$second_section = '<tr>
+$second_section = '<tr class="shipped">
 <th>' . __('estimated shipping date', 'usces') . '</th>
 <td><select name="itemShipping" id="itemShipping" class="itemShipping">';
 foreach( (array)$this->shipping_rule as $key => $label){ 
@@ -379,7 +379,7 @@ foreach( (array)$this->shipping_rule as $key => $label){
 $second_section .= '</select>
 <input type="hidden" name="itemShipping_nonce" id="itemShipping_nonce" value="' . wp_create_nonce( 'itemShipping_nonce' ) . '" /></td>
 </tr>
-<tr>
+<tr class="shipped">
 <th>' . __('shipping option','usces') . '</th>
 <td>';
 $delivery_methods = (array)$this->options['delivery_method'];
@@ -396,7 +396,7 @@ if( count($delivery_methods) === 0 ){
 }
 $second_section .= '</td>
 </tr>
-<tr>
+<tr class="shipped">
 <th>' . __('Shipping', 'usces') . '</th>
 <td><select name="itemShippingCharge" id="itemShippingCharge" class="itemShippingCharge">';
 foreach( (array)$this->options['shipping_charge'] as $cahrge){
@@ -406,7 +406,7 @@ foreach( (array)$this->options['shipping_charge'] as $cahrge){
 $second_section .= '</select>
 <input type="hidden" name="itemShippingCharge_nonce" id="itemShippingCharge_nonce" value="' . wp_create_nonce( 'itemShippingCharge_nonce' ) . '" /></td>
 </tr>
-<tr>
+<tr class="shipped">
 <th>' . __('Postage individual charging', 'usces') . '</th>
 <td><input name="itemIndividualSCharge" id="itemIndividualSCharge" type="checkbox" value="1"';
 if($itemIndividualSCharge[0]){

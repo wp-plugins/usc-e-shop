@@ -1,13 +1,16 @@
 <?php
-foreach ( (array)$this->options['payment_method'] as $id => $array ) {
+if(isset($this))
+	$usces = &$this;
+
+foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
 	if( !empty( $array['settlement'] ) ){
 
 		switch( $array['settlement'] ){
 			case 'acting_zeus_card':
 				$paymod_id = 'zeus';
 				
-				if( 'on' != $this->options['acting_settings'][$paymod_id]['card_activate'] 
-					|| 'on' != $this->options['acting_settings'][$paymod_id]['activate'] )
+				if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
+					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] )
 					continue;
 					
 				$cnum1 = isset( $_POST['cnum1'] ) ? esc_html($_POST['cnum1']) : '';
@@ -25,11 +28,11 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
 				
 				$pcid = NULL;
-				if( $this->is_member_logged_in() ){
-					$member = $this->get_member();
-					$pcid = $this->get_member_meta_value('zeus_pcid', $member['ID']);
+				if( $usces->is_member_logged_in() ){
+					$member = $usces->get_member();
+					$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 				}
-				if( 'on' == $this->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
+				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
 					$html .= '<input name="cnum1" type="hidden" value="8888" />
 					<input name="cnum2" type="hidden" value="8888" />
 					<input name="cnum3" type="hidden" value="8888" />
@@ -77,7 +80,7 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 						</tr>';
 				}	
 					
-				if( 'on' == $this->options['acting_settings'][$paymod_id]['howpay'] ){
+				if( 'on' == $usces->options['acting_settings'][$paymod_id]['howpay'] ){
 				
 				$html .= '
 					<tr>
@@ -134,8 +137,8 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 			case 'acting_zeus_conv':
 				$paymod_id = 'zeus';
 				
-				if( 'on' != $this->options['acting_settings'][$paymod_id]['conv_activate'] 
-					|| 'on' != $this->options['acting_settings'][$paymod_id]['activate'] )
+				if( 'on' != $usces->options['acting_settings'][$paymod_id]['conv_activate'] 
+					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] )
 					continue;
 					
 					
@@ -160,11 +163,11 @@ foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 				
 			case 'acting_remise_card':
 				$paymod_id = 'remise';
-				$charging_type = $this->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
+				$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
 
-				if( 'on' != $this->options['acting_settings'][$paymod_id]['card_activate'] 
-					|| 'on' != $this->options['acting_settings'][$paymod_id]['howpay'] 
-					|| 'on' != $this->options['acting_settings'][$paymod_id]['activate'] 
+				if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
+					|| 'on' != $usces->options['acting_settings'][$paymod_id]['howpay'] 
+					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] 
 					|| 0 !== (int)$charging_type )
 					continue;
 					

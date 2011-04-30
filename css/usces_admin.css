@@ -369,7 +369,8 @@ div.zaikoline {
 	line-height: 1.3em;
 }
 .form_table th.sec {
-	width: 100px;
+	width: 150px;
+	white-space: normal;
 }
 .form_table label {
 	padding: 0px;
@@ -478,24 +479,28 @@ div.explanation  {
 }
 .form_table #delivery_method_charge, 
 .form_table #delivery_method_name_select, 
-.form_table #shipping_charge_name_select {
+.form_table #shipping_charge_name_select, 
+.form_table #delivery_days_name_select {
 	width: 150px;
 }
 .form_table #shipping_charge_button, 
-.form_table #shipping_charge_loading {
+.form_table #shipping_charge_loading, 
+.form_table #delivery_days_button, 
+.form_table #delivery_days_loading {
 	vertical-align: top;
 }
-.form_table label.shipping_charge_label {
+.form_table label.shipping_charge_label, 
+.form_table label.delivery_days_label {
 	float: left;
 	display: block;
-	width: 70px;
+	width: 100px;
 	text-align: right;
 	margin-right: 5px;
 	padding-top: 5px;
-	height: 20px;
 	line-height: 20px;
 }
-.form_table input.charge_text {
+.form_table input.charge_text, 
+.form_table input.days_text {
 	text-align: right;
 	width: 100px;
 	padding-right: 5px;
@@ -1678,6 +1683,8 @@ tr.rowSelection_selected td {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	border: 1px solid #FF9900;
+	letter-spacing: 1px;
+	font-weight: normal;
 }
 
 .usces_admin div.chui h3 {
@@ -1685,6 +1692,7 @@ tr.rowSelection_selected td {
 	font-weight: bold;
 	color: #663300;
 }
+
 /************************************************************************************/
 .usces_admin table.dashboard {
 	width: 100%;
@@ -1917,7 +1925,10 @@ div.optcheck {
 .error_message {
 	margin-bottom: 5px;
 }
-
+/*20101111ysk*/
+#dlItemListDialog fieldset, 
+/*20101111ysk*/
+#dlItemListDialog fieldset, 
 /*20101111ysk*/
 #dlItemListDialog fieldset, 
 #dlMemberListDialog fieldset, 
@@ -1948,5 +1959,31 @@ div.optcheck {
 	width: 200px;
 }
 
+#wpcontent select.multipleselect {
+	width: auto;
+	height: auto;
+}
 
+.iteminfo_table td label {
+	margin-right: 15px;
+	width: 160px;
+	display: block;
+	float: left;
+}
 
+.widcenter {
+	text-align: center;
+}
+
+.tabletitle {
+	font-size: 12px;
+}
+.usces_admin a {
+	color: #318999;
+}
+.usces_admin a:hover {
+	color: #DA6801;
+}
+.uscestabs {
+	margin-bottom: 20px;
+}

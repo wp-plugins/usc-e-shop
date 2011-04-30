@@ -38,7 +38,8 @@
 		$sku = esc_attr($cart_row['sku']);
 		$optstr =  '';
 		foreach((array)$options as $key => $value){
-			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			if( !empty($key) )
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
 			
 ?>

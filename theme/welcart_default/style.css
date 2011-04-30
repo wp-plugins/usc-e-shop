@@ -3,7 +3,7 @@
 Theme Name: Welcart Default Theme
 Theme URI: http://www.welcart.com/
 Description: The original Welcart theme.
-Version: 1.0.3
+Version: 1.1
 Author: USconsort
 Tags: USC, e-Shop, Welcart, cart, shopping, net shop, commerce
 */
@@ -43,6 +43,7 @@ body {
 	font-size: 0.8em;
 	color: #666;
 	line-height: 150%;
+	word-wrap: break-word;
 }
 img {
 	margin: 0px;
@@ -124,11 +125,19 @@ div.aligncenter {
 	background-image: url('images/header_bg.jpg');
 	background-repeat: no-repeat;
 }
-h1 {
+/*h1 {
 	margin: 0px;
 	padding: 55px 0px 10px 10px;
 	font-size: 30px;
 	color: #000;
+}*/
+h1#site-title,
+div#site-title {
+	margin: 0px;
+	padding: 55px 0px 10px 10px;
+	color: #000;
+	font-size: 30px;
+	font-weight: bold;
 }
 p.discprition {
 	margin: 0px;
@@ -441,34 +450,46 @@ ul.subnavi a {
 /*********************************************************************/
 /* content CSS Start */
 #content {
-	width: 560px;
 	height: 100%;
-	margin: 0px 0px 0px 10px;
-	padding: 0px;
+	padding: 0;
 	background-color: #DAD8D1;
 	border-bottom: 3px solid #DAD8D1;
-	float: left;
+	float: right;
 }
+	.three-column {
+		width: 560px;
+		margin: 0 10px 0 0;
+	}
+	.two-column {
+		width: 770px;
+		margin: 0;
+	}
 /* content CSS End */
 /*********************************************************************/
 /* content common CSS Start */
 /* title */
+#content h1,
 #content h2 {
 	margin: 0px;
 	padding: 0px;
 }
 #content h2.pagetitle, 
+#content .pagetitle, 
 #content .title {
 	height: 34px;
 	padding: 0px 20px;
 	background-image: url('images/content_title_bg1.jpg');
-	background-repeat: no-repeat;
+	background-repeat: repeat-x;
 	border: none;
 	display: block;
 	color: #666666;
 	font-size: 1.1em;
 	font-weight: bold;
 	line-height: 34px;
+}
+#content .post h2 {
+	padding-top: 10px;
+	font-size: 1.17em;
 }
 /* catbox */
 #content .catbox {
@@ -500,6 +521,7 @@ ul.subnavi a {
 	padding: 8px;
 	background-color: #FFFFFF;
 	float: left;
+	overflow: hidden;
 }
 .thumbnail_box .thumimg {
 	padding: 3px;
@@ -651,8 +673,8 @@ dl.itemGpExp li {
 	margin-bottom: 10px;
 }
 #itempage .itemsubimg img {
-	width: 123px;
-	height: 123px;
+	width: 135px;
+	height: 135px;
 	padding: 5px;
 }
 #itempage .skuform {
@@ -766,6 +788,9 @@ dl.itemGpExp li {
 	font-size: 11px;
 	line-height: 150%;
 }
+.page_content {
+	padding: 10px;
+}
 /* Welcart Item single page CSS End */
 /*********************************************************************/
 /* Welcart Search page CSS Start */
@@ -851,9 +876,6 @@ dl.itemGpExp li {
 }
 #memberpages .loginbox p#nav {
 	padding: 0px 0px 0px 12px;
-	background-image: url('image/icon9_topic6_s.gif');
-	background-repeat: no-repeat;
-	background-position: left center;
 }
 #memberinfo table {
 	width: 100%;

@@ -31,6 +31,12 @@ if(is_array($csmb_meta)) {
 }
 //20100818ysk end
 
+if( usces_is_member_system() ){
+	$colspan = 8;
+}else{
+	$colspan = 6;
+}
+
 //$deli = unserialize($data['order_delivery']);
 //$cart = unserialize($data['order_cart']);
 //$condition = unserialize($data['order_condition']);
@@ -114,95 +120,31 @@ jQuery(document).ready(function($){
 <table class="mem_info">
 		<tr>
 				<td class="label">e-mail</td>
-				<td><input name="mem_email" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
+				<td><input name="member[email]" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
 		</tr>
-		<?php
-//20100818ysk start
-		usces_admin_custom_field_input($csmb_meta, 'member', 'name_pre');
-//20100818ysk end
-		?>
-		<tr>
-				<td class="label"><?php _e('name', 'usces'); ?></td>
-				<td><input name="mem_name1" type="text" class="text short" value="<?php echo esc_attr($data['mem_name1']); ?>" />		<input name="mem_name2" type="text" class="text short" value="<?php echo esc_attr($data['mem_name2']); ?>" /></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('furigana', 'usces'); ?></td>
-				<td><input name="mem_name3" type="text" class="text short" value="<?php echo esc_attr($data['mem_name3']); ?>" />		<input name="mem_name4" type="text" class="text short" value="<?php echo esc_attr($data['mem_name4']); ?>" /></td>
-		</tr>
-		<?php
-//20100818ysk start
-		usces_admin_custom_field_input($csmb_meta, 'member', 'name_after');
-//20100818ysk end
-		?>
-		<tr>
-				<td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_zip" type="text" class="text short" value="<?php echo esc_attr($data['mem_zip']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('Province', 'usces'); ?></td>
-				<td><span class="col2">
-						<select name="mem_pref" class="select">
-								<?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($data['mem_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_attr($value) . "</option>\n";
-}
-?>
-						</select>
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('city', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_address1" type="text" class="text long" value="<?php echo esc_attr($data['mem_address1']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('numbers', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_address2" type="text" class="text long" value="<?php echo esc_attr($data['mem_address2']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('building name', 'usces'); ?></td>
-				<td><span class="col2">
-						<input name="mem_address3" type="text" class="text long" value="<?php echo esc_attr($data['mem_address3']); ?>" />
-				</span></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('Phone number', 'usces'); ?></td>
-				<td><input name="mem_tel" type="text" class="text long" value="<?php echo esc_attr($data['mem_tel']); ?>" /></td>
-		</tr>
-		<tr>
-				<td class="label"><?php _e('FAX number', 'usces'); ?></td>
-				<td><input name="mem_fax" type="text" class="text long" value="<?php echo esc_attr($data['mem_fax']); ?>" /></td>
-		</tr>
-		<?php
-//20100818ysk start
-		usces_admin_custom_field_input($csmb_meta, 'member', 'fax_after');
-//20100818ysk end
-		?>
+	
+<?php echo uesces_get_admin_addressform( 'member', $data, $csmb_meta ); ?>
+	
 </table>
 </td>
 <td colspan="2" rowspan="5" class="mem_col3">
 <table class="mem_info">
-<?php foreach($member_metas as $value){ ?>
+<?php 
+	foreach($member_metas as $value){ 
+		if( in_array($value['meta_key'], array('partofcard','limitofcard','remise_memid',)) ){
+?>
 		<tr>
 				<td class="label"><?php echo esc_html($value['meta_key']); ?></td>
 				<td><div class="rod_left"><?php echo esc_html($value['meta_value']); ?></div></td>
 		</tr>
-<?php } ?>
+<?php }} ?>
 </table>
 
 
 </td>
 		</tr>
 <tr>
-<td class="label"><?php _e('Rank', 'usces'); ?></td><td class="col1"><select name="mem_status">
+<td class="label"><?php _e('Rank', 'usces'); ?></td><td class="col1"><select name="member[status]">
 <?php 
 	foreach ((array)$this->member_status as $rk => $rv) {
 		$selected = ($rk == $data['mem_status']) ? ' selected="selected"' : '';
@@ -212,7 +154,7 @@ foreach((array)$prefs as $value) {
 </select></td>
 </tr>
 <tr>
-<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="mem_point" type="text" class="text right short" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
+<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
 <?php if( USCES_JP ): ?>
 <?php endif; ?>
 </tr>
@@ -244,12 +186,12 @@ foreach((array)$prefs as $value) {
 </tr>
 <tr>
 <td><?php echo $umhs['date']; ?></td>
-<td class="rightnum"><?php echo number_format($this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']); ?></td>
+<td class="rightnum"><?php usces_crform( $this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax'], true, false ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['usedpoint']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['discount']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['shipping_charge']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['cod_fee']); ?></td>
-<td class="rightnum"><?php echo number_format($umhs['tax']); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['discount'], true, false ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['shipping_charge'], true, false ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['cod_fee'], true, false ); ?></td>
+<td class="rightnum"><?php usces_crform( $umhs['tax'], true, false ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['getpoint']); ?></td>
 </tr>
 <tr>
@@ -259,9 +201,9 @@ foreach((array)$prefs as $value) {
 	<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
 	<th class="thumbnail">&nbsp;</th>
 	<th><?php _e('Items','usces'); ?></th>
-	<th class="price "><?php _e('Unit price','usces'); ?></th>
+	<th class="price "><?php _e('Unit price','usces'); ?>(<?php usces_crcode(); ?>)</th>
 	<th class="quantity"><?php _e('Quantity','usces'); ?></th>
-	<th class="subtotal"><?php _e('Amount','usces'); ?></th>
+	<th class="subtotal"><?php _e('Amount','usces'); ?>(<?php usces_crcode(); ?>)</th>
 	</tr>
 	<?php
 	for($i=0; $i<count($cart); $i++) { 
@@ -279,7 +221,7 @@ foreach((array)$prefs as $value) {
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
 		if( !empty($key) )
-			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 	}
 	
 	?>
@@ -287,9 +229,9 @@ foreach((array)$prefs as $value) {
 	<td><?php echo $i + 1; ?></td>
 	<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
 	<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
-	<td class="rightnum"><?php echo number_format($skuPrice); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice, true, false ); ?></td>
 	<td class="rightnum"><?php echo number_format($cart_row['quantity']); ?></td>
-	<td class="rightnum"><?php echo number_format($skuPrice * $cart_row['quantity']); ?></td>
+	<td class="rightnum"><?php usces_crform( $skuPrice * $cart_row['quantity'], true, false ); ?></td>
 	</tr>
 	<?php 
 	}

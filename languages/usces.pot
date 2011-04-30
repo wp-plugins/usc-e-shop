@@ -544,11 +544,13 @@ msgstr "配送方法「delname」を削除します。よろしいですか？"
 msgid "Not fixing shipping."
 msgstr "送料を固定しない"
 
+# JavaScript
 msgid "'Are you sure of deleting shipping [' + delname + ']?'"
 msgstr "'送料「'+delname+'」を削除します。よろしいですか？'"
 
-msgid "'Are you sure of setting shiping to ' + charge + ' dollars for all the prefecture?'"
-msgstr "'各都道府県の送料を' + charge + '円に一括設定します。よろしいですか？'"
+# JavaScript
+msgid "'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'"
+msgstr "'各都道府県の送料を%s' + charge + 'に一括設定します。よろしいですか？'"
 
 msgid "shipping option"
 msgstr "配送方法"
@@ -1272,7 +1274,7 @@ msgid "key words"
 msgstr "キーワード"
 
 msgid "Transfer"
-msgstr "振り込み"
+msgstr "お振込先"
 
 msgid "transfer statement"
 msgstr "入金状況"
@@ -1319,7 +1321,7 @@ msgstr "メール・印刷フィールド表示"
 msgid "print out the estimate"
 msgstr "見積書印刷"
 
-msgid "print the invoice"
+msgid "print out Delivery Statement"
 msgstr "納品書印刷"
 
 msgid "When there is any change, please press the 'change decision' before you send or print."
@@ -1442,7 +1444,7 @@ msgstr "この度は %s をご利用下さいましてありがとうござい�
 msgid "Valid:7days"
 msgstr "有効期間：7日間"
 
-msgid "Invoices"
+msgid "Delivery Statement"
 msgstr "納品書"
 
 msgid "Thak you for choosing '%s'. We deliver your items as following."
@@ -1841,7 +1843,7 @@ msgstr "新パスワード取得"
 msgid "Please, click the following URL, and please change a password."
 msgstr "下記のURLをクリックしてパスワードの変更を行ってください。"
 
-msgid "I seem to have you cancel it when the body does not have memorizing to this email."
+msgid "If you have not requested this email please kindly ignore and delete it."
 msgstr "このメールに見に覚えが無い場合は破棄していただきますようお願いいたします。"
 
 msgid "Error: I was not able to transmit an email."
@@ -2520,7 +2522,7 @@ msgid "Text-area"
 msgstr "テキストエリア"
 
 msgid "M j, Y"
-msgstr "Y-m-d"
+msgstr "Y年m月d日"
 
 msgid "Header Information"
 msgstr "ヘッダ情報"
@@ -2613,7 +2615,7 @@ msgid "Not yet ready for the payment method. Please refer to a manager."
 msgstr "まだお支払方法の準備ができておりません。<br />管理者にお問合せください。"
 
 #領収書のメッセージ
-msgid " Your payment has been received."
+msgid "Your payment has been received."
 msgstr "上記、正に受領いたしました。"
 
 #請求書のメッセージ
@@ -2625,8 +2627,8 @@ msgid "Statement"
 msgstr "明細書"
 
 #お客様が法人だった場合の担当者ラベル
-msgid "Attn: :"
-msgstr "ご担当："
+msgid "Attn"
+msgstr "ご担当"
 
 #領収書タイトル
 msgid "Receipt"
@@ -2684,5 +2686,191 @@ msgstr "１行目に項目名を追加する"
 msgid "The member data is deleted"
 msgstr "会員データを削除しました"
 
+msgid "Delivery date"
+msgstr "配送希望日"
+
+msgid "JPY"
+msgstr "円"
+
+msgid "Japan"
+msgstr "日本"
+
+msgid "Currency"
+msgstr "通貨"
+
+msgid "No Preference"
+msgstr "指定しない"
+
+msgid "Unit"
+msgstr "単位"
+
+msgid "Quant"
+msgstr "数量"
+
+msgid "Country"
+msgstr "国"
+
+msgid "Target Market"
+msgstr "販売対象国"
+
 msgid "COD is not available."
 msgstr "この配送方法では「代金引換」はご利用できません。"
+
+msgid "Argentina"
+msgstr "アルゼンチン"
+
+msgid "Australia"
+msgstr "オーストラリア"
+
+msgid "Austria"
+msgstr "オーストリア"
+
+msgid "Belgium"
+msgstr "ベルギー"
+
+msgid "Brazil"
+msgstr "ブラジル"
+
+msgid "Canada"
+msgstr "カナダ"
+
+msgid "Chile"
+msgstr "チリ"
+
+msgid "China"
+msgstr "中国"
+
+msgid "Costa Rica"
+msgstr "コスタリカ"
+
+msgid "Czech Republic"
+msgstr "チェコ共和国"
+
+msgid "Denmark"
+msgstr "デンマーク"
+
+msgid "Dominican Republic"
+msgstr "ドミニカ共和国"
+
+msgid "Finland"
+msgstr "フィンランド"
+
+msgid "France"
+msgstr "フランス"
+
+msgid "Germany"
+msgstr "ドイツ"
+
+msgid "Greece"
+msgstr "ギリシャ"
+
+msgid "Guatemala"
+msgstr "グアテマラ"
+
+msgid "Hong Kong"
+msgstr "香港"
+
+msgid "Hungary"
+msgstr "ハンガリー"
+
+msgid "India"
+msgstr "インド"
+
+msgid "Indonesia"
+msgstr "インドネシア"
+
+msgid "Ireland"
+msgstr "アイルランド"
+
+msgid "Israel"
+msgstr "イスラエル"
+
+msgid "Italy"
+msgstr "イタリア"
+
+msgid "Macau"
+msgstr "マカオ"
+
+msgid "Malaysia"
+msgstr "マレーシア"
+
+msgid "Mexico"
+msgstr "メキシコ"
+
+msgid "Netherlands"
+msgstr "オランダ"
+
+msgid "New Zealand"
+msgstr "ニュージーランド"
+
+msgid "Norway"
+msgstr "ノルウェー"
+
+msgid "Panama"
+msgstr "パナマ"
+
+msgid "Philippines"
+msgstr "フィリピン"
+
+msgid "Poland"
+msgstr "ポーランド"
+
+msgid "Portugal"
+msgstr "ポルトガル"
+
+msgid "Puerto Rico"
+msgstr "プエルトリコ"
+
+msgid "Romania"
+msgstr "ルーマニア"
+
+msgid "Russia"
+msgstr "ロシア"
+
+msgid "Singapore"
+msgstr "シンガポール"
+
+msgid "South Korea"
+msgstr "韓国"
+
+msgid "Spain"
+msgstr "スペイン"
+
+msgid "Sweden"
+msgstr "スウェーデン"
+
+msgid "Switzerland"
+msgstr "スイス"
+
+msgid "Taiwan"
+msgstr "台湾"
+
+msgid "Thailand"
+msgstr "タイ"
+
+msgid "Turkey"
+msgstr "トルコ"
+
+msgid "United Kingdom"
+msgstr "イギリス"
+
+msgid "United States"
+msgstr "アメリカ合衆国"
+
+msgid "Vietnam"
+msgstr "ヴェトナム"
+
+msgid "Print Invoice"
+msgstr "請求書印刷"
+
+msgid "Print Receipt"
+msgstr "領収書印刷"
+
+msgid "Order ID"
+msgstr "受注番号"
+
+msgid "Member ID"
+msgstr "会員番号"
+
+msgid "Name"
+msgstr "氏名"

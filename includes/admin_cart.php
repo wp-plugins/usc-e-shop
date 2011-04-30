@@ -249,7 +249,6 @@ jQuery(function($){
 	};
 	//20100809ysk end
 	//20100818ysk end
-
 });
 
 function toggleVisibility(id) {
@@ -274,7 +273,7 @@ function toggleVisibility(id) {
 <div id="poststuff" class="metabox-holder">
 
 <!--20100809ysk start-->
-<div id="uscestabs_cart">
+<div class="uscestabs" id="uscestabs_cart">
 	<ul>
 		<li><a href="#cart_page_setting_1"><?php _e('Rule of the column for a item name','usces'); ?></a></li>
 		<li><a href="#cart_page_setting_2"><?php _e('Explanation in a Cart page','usces'); ?></a></li>

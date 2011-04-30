@@ -26,7 +26,6 @@ function usces_action_acting_construct(){
 		}else{
 			usces_log('zeus construct : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
 		}
-
 	}
 }
 
@@ -47,7 +46,19 @@ function usces_action_acting_transaction(){
 		
 		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){
 			usces_log('remise card error2 : '.print_r($data, true), 'acting_transaction.log');
-			die('error2');
+			//die('error2');
+		}
+		
+		if( '0000000' === substr($rand, 0, 7) ){//card up
+			usces_log('remise card_update : '.print_r($data, true), 'acting_transaction.log');
+			if( isset($_POST['X-EXPIRE']) ){
+				$expire = substr($_POST['X-EXPIRE'], 0, 2) . '/' . substr($_POST['X-EXPIRE'], 2, 2);
+				$usces->set_member_meta_value('limitofcard', $expire, $_POST['X-AC_S_KAIIN_NO']);
+			}
+			if( isset($_POST['X-PARTOFCARD']) )
+				$usces->set_member_meta_value('partofcard', $_POST['X-PARTOFCARD'], $_POST['X-AC_S_KAIIN_NO']);
+			
+			die('<SDBKDATA>STATUS=800</SDBKDATA>');
 		}
 		
 //20110203ysk start
@@ -294,10 +305,10 @@ function usces_action_acting_transaction(){
 		}
 
 		switch($_GET['ap']) {
-		case 'CPL_PRE'://ã‚³ãƒ³ãƒ“ãƒ‹ãƒšãƒ¼ãƒ‘ãƒ¼ãƒ¬ã‚¹æ±ºæ¸ˆè­˜åˆ¥ã‚³ãƒ¼ãƒ‰
+		case 'CPL_PRE'://ƒRƒ“ƒrƒjƒy[ƒp[ƒŒƒXŒˆÏŽ¯•ÊƒR[ƒh
 			break;
 
-		case 'CPL'://å…¥é‡‘ç¢ºå®š
+		case 'CPL'://“ü‹àŠm’è
 			$table_name = $wpdb->prefix."usces_order";
 			$table_meta_name = $wpdb->prefix."usces_order_meta";
 
@@ -335,7 +346,7 @@ function usces_action_acting_transaction(){
 			die('J-Payment');
 			break;
 
-		case 'CVS_CAN'://å…¥é‡‘å–æ¶ˆ
+		case 'CVS_CAN'://“ü‹àŽæÁ
 			$table_name = $wpdb->prefix."usces_order";
 			$table_meta_name = $wpdb->prefix."usces_order_meta";
 
@@ -386,11 +397,11 @@ function usces_action_acting_transaction(){
 		}
 
 		switch($_GET['ap']) {
-		case 'BANK'://å—ä»˜å®Œäº†
+		case 'BANK'://Žó•tŠ®—¹
 			break;
 
-		case 'BAN_SAL'://å…¥é‡‘å®Œäº†
-			if($_GET['mf'] == '1') {//å…¥é‡‘ãƒžãƒƒãƒãƒ³ã‚°ã®å ´åˆ
+		case 'BAN_SAL'://“ü‹àŠ®—¹
+			if($_GET['mf'] == '1') {//“ü‹àƒ}ƒbƒ`ƒ“ƒO‚Ìê‡
 				$table_name = $wpdb->prefix."usces_order";
 				$table_meta_name = $wpdb->prefix."usces_order_meta";
 
@@ -439,11 +450,12 @@ function usces_action_acting_transaction(){
 
 		header('location: ' . USCES_CART_URL . $delim . 'acting=epsilon&acting_return=1&' . $query );
 		exit;
-	//*** PayPal webstd ***//
+//20110208ysk start
 	} elseif( !isset($_GET['acting_return']) && (isset($_GET['acting']) && 'paypal_ipn' == $_GET['acting']) ) {
 		foreach( $_REQUEST as $key => $value ){
 			$data[$key] = $value;
 		}
+		usces_log('paypal_ipn in ', 'acting_transaction.log');
 		require_once($usces->options['settlement_path'] . 'paypal.php');
 		$ipn_res = paypal_ipn_check($usces_paypal_url);
 		if( $ipn_res[0] === true ){
@@ -457,6 +469,7 @@ function usces_action_acting_transaction(){
 		}
 		usces_log('PayPal IPN transaction : '.$_REQUEST['txn_id'], 'acting_transaction.log');
 		die('PayPal');
+//20110208ysk end
 	}
 }
 ?>

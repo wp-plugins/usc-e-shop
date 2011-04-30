@@ -1,4 +1,5 @@
 <?php
+global $usces_settings;
 $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
@@ -8,30 +9,25 @@ $divide_item = $this->options['divide_item'];
 $itemimg_anchor_rel = $this->options['itemimg_anchor_rel'];
 $fukugo_category_orderby = $this->options['fukugo_category_orderby'];
 $fukugo_category_order = $this->options['fukugo_category_order'];
-$usces_pref = empty($this->options['province']) ? array() : $this->options['province'];
+//20110331ysk start
+//$usces_pref = empty($this->options['province']) ? array() : $this->options['province'];
 $settlement_path = $this->options['settlement_path'];
-$province = '';
-for($i=1; $i<count($usces_pref); $i++){
-	$province .= $usces_pref[$i] . "\n";
-}
-$province = trim($province);
+//$province = '';
+//for($i=1; $i<count($usces_pref); $i++){
+//	$province .= $usces_pref[$i] . "\n";
+//}
+//$province = trim($province);
+//20110331ysk end
 $use_ssl = $this->options['use_ssl'];
 $ssl_url = $this->options['ssl_url'];
 $ssl_url_admin = $this->options['ssl_url_admin'];
 $inquiry_id = $this->options['inquiry_id'];
 $orderby_itemsku = isset($this->options['system']['orderby_itemsku']) ? $this->options['system']['orderby_itemsku'] : 0;
 $orderby_itemopt = isset($this->options['system']['orderby_itemopt']) ? $this->options['system']['orderby_itemopt'] : 0;
-$system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : get_locale();
-switch( $system_front_lang ){
-	case 'en':
-		$front_lang =  'en';
-		break;
-	case 'ja':
-		$front_lang =  'ja';
-		break;
-	default:
-		$front_lang =  'others';
-}
+$system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty($this->options['system']['front_lang']) ) ? $this->options['system']['front_lang'] : usces_get_local_language();
+$system_currency =  ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : usces_get_base_country();
+$system_addressform =  ( isset($this->options['system']['addressform']) && !empty($this->options['system']['addressform']) ) ? $this->options['system']['addressform'] : usces_get_local_addressform();
+$system_target_markets =  ( isset($this->options['system']['target_market']) && !empty($this->options['system']['target_market']) ) ? $this->options['system']['target_market'] : usces_get_local_target_market();
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -46,6 +42,77 @@ jQuery(function($){
 	$("#aAdditionalURLs").click(function () {
 		$("#AdditionalURLs").toggle();
 	});
+
+//20110331ysk start
+	var pre_target = '';
+
+	operation = {
+		set_target_market: function() {
+			var target = [];
+			var target_text = [];
+			$("#target_market option:selected").each(function () {
+				target.push($(this).val());
+				target_text.push($(this).text());
+			});
+			if(target.length == 0) {
+				alert('<?php _e('いずれかの国を選択してください', 'usces'); ?>');
+				return -1;
+			}
+			var sel = $('select_target_market_province').val();
+			var name_select = '<select name="select_target_market_province" id="select_target_market_province" onchange="operation.onchange_target_market_province(this.selectedIndex);">'+"\n";
+			var target_args = '';
+			var c = '';
+			for(var i=0; i<target.length; i++){
+				name_select += '<option value="'+target[i]+'">'+target_text[i]+'</option>'+"\n";
+				target_args += c+target[i];
+				c = ',';
+			}
+			name_select += "</select>\n";
+			$("#target_market_province").html(name_select);
+			$("#target_market_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
+			var s = operation.settings;
+			s.data = "action=target_market_ajax&target="+target_args;
+			s.success = function(data, dataType) {
+				$('#province_ajax').empty();
+				var province = data.split('#usces#');
+				for(var i=0; i<province.length; i++) {
+					if(province[i].length > 0) {
+						var state = province[i].split(',');
+						$('#province_ajax').append('<input type="hidden" name="province_'+state[0]+'" id="province_'+state[0]+'" value="'+state[1]+'">');
+					}
+				}
+				$('#select_target_market_province').triggerHandler('change', 0);
+				$("#target_market_loading").html('');
+			};
+			$.ajax( s );
+			return false;
+		},
+
+		onchange_target_market_province: function(index) {
+			if(pre_target != '') $('#province_'+pre_target).val($("#province").val());
+			var target = $("#select_target_market_province option:selected").val();
+			$("#province").text('');
+			$("#province").text($('#province_'+target).val());
+			pre_target = target;
+		},
+
+		settings: {
+			url: uscesL10n.requestFile,
+			type: 'POST',
+			cache: false,
+			success: function(data, dataType) {
+				$("#target_market_loading").html('');
+			}, 
+			error: function(msg) {
+				$("#target_market_loading").html('');
+			}
+		}
+	};
+
+	$('form').submit(function() {
+		$('#province_'+pre_target).val($("#province").val());
+	});
+//20110331ysk end
 });
 
 function toggleVisibility(id) {
@@ -55,6 +122,18 @@ function toggleVisibility(id) {
    else
 	  e.style.display = 'block';
 }
+//20110331ysk start
+jQuery(document).ready(function($) {
+	operation.set_target_market();
+
+	var $tabs = $('#uscestabs_system').tabs({
+		cookie: {
+			// store cookie for a day, without, it would be a session cookie
+			expires: 1
+		}
+	});
+});
+//20110331ysk end
 </script>
 <div class="wrap">
 <div class="usces_admin">
@@ -69,16 +148,17 @@ function toggleVisibility(id) {
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
 
+<!--20110331ysk start-->
+<div class="uscestabs" id="uscestabs_system">
+	<ul>
+		<li><a href="#system_page_setting_1"><?php _e('System Setting','usces'); ?></a></li>
+		<li><a href="#system_page_setting_2"><?php _e('国・言語・通貨','usces'); ?></a></li>
+	</ul>
+<div id="system_page_setting_1">
+<!--20110331ysk end-->
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('System Setting','usces'); ?></span></h3>
 <div class="inside">
-<table class="form_table">
-	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_province');"><?php _e('Province', 'usces'); ?></a></th>
-		<td width="150"><textarea name="province" cols="30" rows="10"><?php echo esc_html($province); ?></textarea></td>
-	    <td><div id="ex_province" class="explanation"><?php _e('The district where sale is possible', 'usces'); ?>(<?php _e('Province', 'usces'); ?>) <?php _e('One line one by one.', 'usces'); ?></div></td>
-	</tr>
-</table>
 <table class="form_table">
 	<tr height="50">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');"><?php _e('Display Modes','usces'); ?></a></th>
@@ -154,18 +234,7 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('The language of the front-end', 'usces'); ?></a></th>
-		<td width="10"><select name="front_lang" id="front_lang">
-		    <option value="ja"<?php if($front_lang == 'ja') echo ' selected="selected"'; ?>><?php _e('Japanese', 'usces'); ?></option>
-		    <option value="en"<?php if($front_lang == 'en') echo ' selected="selected"'; ?>><?php _e('English', 'usces'); ?></option>
-		    <option value="others"<?php if($front_lang == 'others') echo ' selected="selected"'; ?>><?php _e('Others', 'usces'); ?></option>
-		</select></td>
-	    <td><div id="ex_front_lang" class="explanation"><?php _e('You can choose the language of the front-end.The language of the admin panel obeys config.php.', 'usces'); ?></div></td>
-	</tr>
-</table>
-<table class="form_table">
-	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('Order of Item SKU', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('商品SKUの並び順', 'usces'); ?></a></th>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku0" type="radio" value="0"<?php if($orderby_itemsku === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku0"><?php _e('SKU cord Order', 'usces'); ?></label></td>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku1" type="radio" value="1"<?php if($orderby_itemsku === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku1"><?php _e('Registration Order', 'usces'); ?></label></td>
 		<td><div id="ex_orderby_itemsku" class="explanation"><?php _e("You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'.", 'usces'); ?></div></td>
@@ -188,7 +257,77 @@ function toggleVisibility(id) {
 	</tr>
 </table>-->
 </div>
+<!--20110331ysk start-->
 </div><!--postbox-->
+</div><!--system_page_setting_1-->
+<div id="system_page_setting_2">
+<div class="postbox">
+<h3 class="hndle"><span><?php _e('国・言語・通貨','usces'); ?></span></h3>
+<div class="inside">
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('フロントエンドの言語', 'usces'); ?></a></th>
+		<td width="10"><select name="front_lang" id="front_lang">
+		<?php foreach( $usces_settings['language'] as $Lkey => $Lvalue ){ ?>
+		    <option value="<?php echo $Lkey; ?>"<?php echo ($system_front_lang == $Lkey ? ' selected="selected"' : ''); ?>><?php echo $Lvalue; ?></option>
+		<?php } ?>
+		</select></td>
+	    <td><div id="ex_front_lang" class="explanation"><?php _e('フロントエンド（ショップ側）の言語を選択できます。バックエンド（管理パネル）の言語はconfig.php の設定に従います。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_currency');"><?php _e('通貨表示', 'usces'); ?></a></th>
+		<td width="10"><select name="currency" id="currency">
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		    <option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
+		</select></td>
+	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロントエンド（ショップ側）、バックエンド（管理パネル）共通です。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_addressform');"><?php _e('住所氏名の様式', 'usces'); ?></a></th>
+		<td width="10"><select name="addressform" id="addressform">
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_addressform == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		</select></td>
+	    <td><div id="ex_addressform" class="explanation"><?php _e('住所氏名などの入力フォームの様式を、どの国のものにするか選択します。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th">
+			<a style="cursor:pointer;" onclick="toggleVisibility('ex_target_market');"><?php _e('Target Market', 'usces'); ?></a>
+			<div><input name="set_target_market" id="set_target_market" type="button" value="<?php _e('選択', 'usces'); ?>" onclick="operation.set_target_market();" /></div>
+		</th>
+		<td width="20"><select name="target_market[]" size="10" multiple="multiple" class="multipleselect" id="target_market">
+		    <!--<option value="all"<?php echo ($system_target_market == 'all' ? ' selected="selected"' : ''); ?>><?php _e('全ての国', 'usces'); ?></option>-->
+		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+		    <option value="<?php echo $Ckey; ?>"<?php echo (in_array($Ckey, $system_target_markets) ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
+		<?php } ?>
+		</select></td>
+	    <td><div id="ex_target_market" class="explanation"><?php _e('販売・発送可能な地域を国単位で選択します。複数選択可。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
+	<tr height="50">
+		<th class="system_th">
+			<a style="cursor:pointer;" onclick="toggleVisibility('ex_province');"><?php _e('Province', 'usces'); ?></a>
+			<div><span id="target_market_loading"></span><span id="target_market_province"></span></div>
+		</th>
+		<td width="150"><textarea name="province" id="province" cols="30" rows="10"></textarea><div id="province_ajax"></div></td>
+	    <td><div id="ex_province" class="explanation"><?php _e('The district where sale is possible', 'usces'); ?>(<?php _e('Province', 'usces'); ?>) <?php _e('One line one by one.', 'usces'); ?></div></td>
+	</tr>
+</table>
+</div>
+</div><!--postbox-->
+</div><!--system_page_setting_2-->
+</div><!--uscestabs_system-->
+<!--20110331ysk end-->
 
 
 </div><!--poststuff-->

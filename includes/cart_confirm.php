@@ -32,7 +32,8 @@
 		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
 		foreach((array)$options as $key => $value){
-			$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+			if( !empty($key) )
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
 ?>
 		<tr>
@@ -108,7 +109,7 @@
 		</tr>
 		<tr>
 		<td><?php _e('Points you are using here', 'usces'); ?></td>
-		<td><input name="order[usedpoint]" class="used_point" type="text" value="<?php echo esc_attr($entries['order']['usedpoint']); ?>" />pt</td>
+		<td><input name="offer[usedpoint]" class="used_point" type="text" value="<?php echo esc_attr($entries['order']['usedpoint']); ?>" />pt</td>
 		</tr>
 		<tr>
 		<td colspan="2"><input name="use_point" type="submit" value="<?php _e('Use the points', 'usces'); ?>" /></td>

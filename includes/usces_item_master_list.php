@@ -385,6 +385,8 @@ jQuery(document).ready(function($){
 			<th scope="col"><?php echo $value ?>&nbsp;/&nbsp;
 	<?php elseif ( $key == 'item_name' || $key == 'post_title' ) : ?>
 			<?php echo $value; ?></th>
+	<?php elseif ( $key == 'price' ) : ?>
+			<th scope="col"><?php echo $value; ?>(<?php usces_crcode(); ?>)</th>
 	<?php else : ?>
 			<th scope="col"><?php echo $value; ?></th>
 	<?php endif; ?>
@@ -462,7 +464,7 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'sku_value' ): ?>
 			<td class="price">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php echo number_format($sv['price']); ?></div>
+				<div class="priceline<?php echo $bgc; ?>"><?php usces_crform( $sv['price'], true, false ); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 			<td class="zaikonum">

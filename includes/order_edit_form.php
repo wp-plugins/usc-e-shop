@@ -118,13 +118,13 @@ jQuery(function($){
 <?php } ?>
 
 	$("#order_payment_name").change(function () {
-		var pay_name = $("select[name='order\[payment_name\]'] option:selected").val();
+		var pay_name = $("select[name='offer\[payment_name\]'] option:selected").val();
 //20101018ysk start
 		//if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
 		if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred' || uscesPayments[pay_name] == 'acting_remise_conv' || uscesPayments[pay_name] == 'acting_zeus_bank' || uscesPayments[pay_name] == 'acting_zeus_conv' || uscesPayments[pay_name] == 'acting_jpayment_conv' || uscesPayments[pay_name] == 'acting_jpayment_bank'){
 //20101018ysk end
 			var label = '<?php _e('transfer statement', 'usces'); ?>';
-			var html = "<select name='order[receipt]'>\n";
+			var html = "<select name='offer[receipt]'>\n";
 			html += "<option value='noreceipt'><?php echo $management_status['noreceipt']; ?></option>\n";
 			html += "<option value='receipted'><?php echo $management_status['receipted']; ?></option>\n";
 			html += "</select>\n";
@@ -154,7 +154,7 @@ jQuery(function($){
 		}
 	});
 	$('#addCartButton').click(function() {
-		if($("input[name='order_id']").val() == ''){
+		if($("input[name='offer_id']").val() == ''){
 			alert("<?php _e("Push 'change decision' button, to be settled with an order number.", 'usces'); ?>");
 			return;
 		}
@@ -281,9 +281,21 @@ jQuery(function($){
 	});
 	$('#nohinprint').click(function() {
 		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>&type=nohin" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
-		$('#PDFDialog').dialog('option', 'title', '<?php _e('print the invoice', 'usces'); ?>');
+		$('#PDFDialog').dialog('option', 'title', '<?php _e('print out Delivery Statement', 'usces'); ?>');
 		$('#PDFDialog').dialog('open');
 		uscesMail.ordercheckpost('nohinprint');
+	});
+	$('#receiptprint').click(function() {
+		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>&type=receipt" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
+		$('#PDFDialog').dialog('option', 'title', '<?php _e('Print Receipt', 'usces'); ?>');
+		$('#PDFDialog').dialog('open');
+		uscesMail.ordercheckpost('receiptprint');
+	});
+	$('#billprint').click(function() {
+		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>&type=bill" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
+		$('#PDFDialog').dialog('option', 'title', '<?php _e('Print Invoice', 'usces'); ?>');
+		$('#PDFDialog').dialog('open');
+		uscesMail.ordercheckpost('billprint');
 	});
 
 	orderfunc = {
@@ -297,16 +309,17 @@ jQuery(function($){
 			var sub_total = 0;
 			var total_full = 0;
 			for( var i = 0; i < p.length; i++) {
-				v = $(p[i]).val() * $(q[i]).val();
+				v =  parseFloat($(p[i]).val()) * $(q[i]).val();
 				$(t[i]).html(addComma(v+''));
+				//$(t[i]).html(v);
 				sub_total += v;
 			}
 			$("#item_total").html(addComma(sub_total+''));
 			var order_usedpoint = $("#order_usedpoint").val()*1;
-			var order_discount = $("#order_discount").val()*1;
-			var order_shipping_charge = $("#order_shipping_charge").val()*1;
-			var order_cod_fee = $("#order_cod_fee").val()*1;
-			var order_tax = $("#order_tax").val()*1;
+			var order_discount =  parseFloat($("#order_discount").val());
+			var order_shipping_charge =  parseFloat($("#order_shipping_charge").val());
+			var order_cod_fee =  parseFloat($("#order_cod_fee").val());
+			var order_tax =  parseFloat($("#order_tax").val());
 			total_full = sub_total - order_usedpoint + order_discount + order_shipping_charge + order_cod_fee + order_tax;
 			$("#total_full").html(addComma(total_full+''));
 			$("#total_full_top").html(addComma(total_full+''));
@@ -440,15 +453,21 @@ function toggleVisibility(id) {
 
 function addComma(str)
 {
+	var strs = str.split('.');
 	cnt = 0;
 	n   = "";
-	for (i=str.length-1; i>=0; i--)
+	for (i=strs[0].length-1; i>=0; i--)
 	{
-		n = str.charAt(i) + n;
+		n = strs[0].charAt(i) + n;
 		cnt++;
 		if (((cnt % 3) == 0) && (i != 0)) n = ","+n;
 	}
-	return n;
+	if(undefined != strs[1]){
+		res = n + '.' + strs[1];
+	}else{
+		res = n;
+	}
+	return res;
 };
 
 function pdfWindow( type ) {
@@ -530,8 +549,13 @@ jQuery(document).ready(function($){
 <tr>
 <td><input name="check[completionmail]" type="checkbox" value="completionmail"<?php if(isset($ordercheck['completionmail'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="completionMail"><?php _e('Mail for Shipping', 'usces'); ?></a></td>
 <td><input name="check[mitumoriprint]" type="checkbox" value="mitumoriprint"<?php if(isset($ordercheck['mitumoriprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="mitumoriprint"><?php _e('print out the estimate', 'usces'); ?></a></td>
-<td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint"><?php _e('print the invoice', 'usces'); ?></a></td>
-<td colspan="7"><span style="color:#CC3300"><?php _e("When there is any change, please press the 'change decision' before you send or print.", 'usces'); ?></span></td>
+<td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint"><?php _e('print out Delivery Statement', 'usces'); ?></a></td>
+<td><input name="check[billprint]" type="checkbox" value="billprint"<?php if(isset($ordercheck['billprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="billprint"><?php _e('Print Invoice', 'usces'); ?></a></td>
+<td><input name="check[receiptprint]" type="checkbox" value="receiptprint"<?php if(isset($ordercheck['receiptprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="receiptprint"><?php _e('Print Receipt', 'usces'); ?></a></td>
+<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+<td colspan="12"><span style="color:#CC3300"><?php _e("When there is any change, please press the 'change decision' before you send or print.", 'usces'); ?></span></td>
 </tr>
 </table>
 </div>
@@ -547,78 +571,21 @@ jQuery(document).ready(function($){
 </tr>
 <tr>
 <td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php esc_html_e($data['mem_id']); ?></div></td>
-<td colspan="2" rowspan="9" class="wrap_td">
+<td colspan="2" rowspan="10" class="wrap_td">
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
         <td class="label">e-mail</td>
         <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr($data['order_email']); ?>" /></td>
     </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($cscs_meta, 'customer', 'name_pre');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('name', 'usces'); ?> </td>
-        <td class="col2"><input name="customer[name1]" type="text" class="text short" value="<?php echo esc_attr($data['order_name1']); ?>" /><input name="customer[name2]" type="text" class="text short" value="<?php echo esc_attr($data['order_name2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('furigana', 'usces'); ?></td>
-        <td class="col2"><input name="customer[name3]" type="text" class="text short" value="<?php echo esc_attr($data['order_name3']); ?>" /><input name="customer[name4]" type="text" class="text short" value="<?php echo esc_attr($data['order_name4']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($cscs_meta, 'customer', 'name_after');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-        <td class="col2"><input name="customer[zipcode]" type="text" class="text short" value="<?php echo esc_attr($data['order_zip']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Province', 'usces'); ?></td>
-        <td class="col2"><select name="customer[pref]" class="select">
-        <?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($data['order_pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
-}
-?>
-        </select></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('city', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address1]" type="text" class="text long" value="<?php echo esc_attr($data['order_address1']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('numbers', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address2]" type="text" class="text long" value="<?php echo esc_attr($data['order_address2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('building name', 'usces'); ?></td>
-        <td class="col2"><input name="customer[address3]" type="text" class="text long" value="<?php echo esc_attr($data['order_address3']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Phone number', 'usces'); ?></td>
-        <td class="col2"><input name="customer[tel]" type="text" class="text long" value="<?php echo esc_attr($data['order_tel']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('FAX number', 'usces'); ?></td>
-        <td class="col2"><input name="customer[fax]" type="text" class="text long" value="<?php echo esc_attr($data['order_fax']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($cscs_meta, 'customer', 'fax_after');
-//20100818ysk end
-	?>
+	
+<?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
+	
 </table></td>
 <td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
 </tr>
 <tr>
 <td class="label"><?php _e('payment method', 'usces'); ?></td>
-<td class="col1"><select name="order[payment_name]" id="order_payment_name">
+<td class="col1"><select name="offer[payment_name]" id="order_payment_name">
     <option value="#none#"><?php _e('-- Select --', 'usces'); ?></option>
 <?php 
 if( $this->options['payment_method'] ) {
@@ -629,73 +596,16 @@ if( $this->options['payment_method'] ) {
     <option value="<?php echo esc_attr($payments['name']); ?>"<?php echo $selected; ?>><?php echo esc_attr($payments['name']); ?></option>
 <?php } } } ?>
 </select></td>
-<td colspan="2" rowspan="8" class="wrap_td">
+<td colspan="2" rowspan="9" class="wrap_td">
 <table border="0" cellspacing="0" class="deli_info">
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($csde_meta, 'delivery', 'name_pre');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('name', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[name1]" type="text" class="text short" value="<?php echo esc_attr($deli['name1']); ?>" />    <input name="delivery[name2]" type="text" class="text short" value="<?php echo esc_attr($deli['name2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('furigana', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[name3]" type="text" class="text short" value="<?php echo esc_attr($deli['name3']); ?>" />    <input name="delivery[name4]" type="text" class="text short" value="<?php echo esc_attr($deli['name4']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($csde_meta, 'delivery', 'name_after');
-//20100818ysk end
-	?>
-    <tr>
-        <td class="label"><?php _e('Zip/Postal Code', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[zipcode]" type="text" class="text short" value="<?php echo esc_attr($deli['zipcode']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Province', 'usces'); ?></td>
-        <td class="col3"><select name="delivery[pref]">
-    <?php
-//	$prefs = get_option('usces_pref');
-	$prefs = $this->options['province'];
-foreach((array)$prefs as $value) {
-	$selected = ($deli['pref'] == $value) ? ' selected="selected"' : '';
-	echo "\t<option value='" . esc_attr($value) . "'{$selected}>" . esc_html($value) . "</option>\n";
-}
-?>
-    </select></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('city', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address1]" type="text" class="text long" value="<?php echo esc_attr($deli['address1']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('numbers', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address2]" type="text" class="text long" value="<?php echo esc_attr($deli['address2']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('building name', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[address3]" type="text" class="text long" value="<?php echo esc_attr($deli['address3']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('Phone number', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[tel]" type="text" class="text long" value="<?php echo esc_attr($deli['tel']); ?>" /></td>
-    </tr>
-    <tr>
-        <td class="label"><?php _e('FAX number', 'usces'); ?></td>
-        <td class="col3"><input name="delivery[fax]" type="text" class="text long" value="<?php echo esc_attr($deli['fax']); ?>" /></td>
-    </tr>
-	<?php
-//20100818ysk start
-	usces_admin_custom_field_input($csde_meta, 'delivery', 'fax_after');
-//20100818ysk end
-	?>
+
+<?php echo uesces_get_admin_addressform( 'delivery', $deli, $csde_meta ); ?>
+
 </table></td>
 </tr>
 <tr>
 <td class="label"><?php _e('shipping option','usces'); ?></td>
-<td class="col1"><select name="order[delivery_method]" id="delivery_method_select">
+<td class="col1"><select name="offer[delivery_method]" id="delivery_method_select">
 	<option value="-1"><?php _e('Non-request', 'usces'); ?></option>
 <?php
 foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
@@ -707,9 +617,27 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 <?php if( USCES_JP ): ?>
 </tr>
 <?php endif; ?>
+<!--20101208ysk start-->
+<tr>
+<td class="label"><?php _e('Delivery date', 'usces'); ?></td>
+<td class="col1"><select name="offer[delivery_date]" id="delivery_date_select">
+	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
+<?php
+$data_order_date = explode(" ", $data['order_date']);
+$order_date = explode("-", $data_order_date[0]);
+for($i = 0; $i < 50; $i++) {
+	$value = date('Y-m-d', mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
+	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
+	$selected = ($data['order_delivery_date'] == $value) ? ' selected="selected"' : '';
+	echo "\t<option value='{$value}'{$selected}>{$date}</option>\n";
+}
+?>
+</select></td>
+</tr>
+<!--20101208ysk end-->
 <tr>
 <td class="label"><?php _e('delivery time', 'usces'); ?></td>
-<td class="col1"><select name="order[delivery_time]" id="delivery_time_select">
+<td class="col1"><select name="offer[delivery_time]" id="delivery_time_select">
 	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
 <?php
 if( !$this->options['delivery_time'] == '' ) {
@@ -727,13 +655,14 @@ if( !$this->options['delivery_time'] == '' ) {
 </tr>
 <tr>
 <td class="label"><?php _e('Shipping date', 'usces'); ?></td>
-<td class="col1"><select name="order[delidue_date]">
+<td class="col1"><select name="offer[delidue_date]">
     <option value="#none#"><?php _e('Not notified', 'usces'); ?></option>
 <?php
 for ($i=0; $i<50; $i++) {
+	$value = date('Y-m-d', mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
 	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
-	$selected = ($data['order_delidue_date'] == $date) ? ' selected="selected"' : '';
-	echo "\t<option value='{$date}'{$selected}>{$date}</option>\n";
+	$selected = ($data['order_delidue_date'] == $value) ? ' selected="selected"' : '';
+	echo "\t<option value='{$value}'{$selected}>{$date}</option>\n";
 }
 ?>
 </select></td>
@@ -744,7 +673,7 @@ for ($i=0; $i<50; $i++) {
 <tr>
 <td class="label status"><?php _e('The correspondence situation', 'usces'); ?></td>
 <td class="col1 status">
-<select name="order[taio]" id="order_taio">
+<select name="offer[taio]" id="order_taio">
 	<option value='#none#'><?php _e('new order', 'usces'); ?></option>
 <?php 
 	foreach ($management_status as $status_key => $status_name){
@@ -765,7 +694,7 @@ for ($i=0; $i<50; $i++) {
 <td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>
 <td class="col1 status" id="receiptbox">
 <?php if($receipt != '') : ?>
-<select name="order[receipt]">
+<select name="offer[receipt]">
 	<option value='noreceipt'<?php if($receipt == 'noreceipt'){ echo ' selected="selected"';} ?>><?php echo $management_status['noreceipt']; ?></option>
 	<option value='receipted'<?php if($receipt == 'receipted'){ echo ' selected="selected"';} ?>><?php echo $management_status['receipted']; ?></option>
 	<option value='pending'<?php if($receipt == 'pending'){ echo ' selected="selected"';} ?>><?php echo $management_status['pending']; ?></option>
@@ -778,7 +707,7 @@ for ($i=0; $i<50; $i++) {
 <td class="label status"><?php if($admin != ''){echo __('estimate order', 'usces');}else{echo '&nbsp';} ?></td>
 <td class="col1 status">
 <?php if($admin != '') : ?>
-<select name="order[admin]">
+<select name="offer[admin]">
 	<option value='adminorder'<?php if($admin == 'adminorder'){ echo 'selected="selected"';} ?>><?php echo $management_status['adminorder']; ?></option>
 	<option value='estimate'<?php if($admin == 'estimate'){ echo 'selected="selected"';} ?>><?php echo $management_status['estimate']; ?></option>
 </select>
@@ -796,7 +725,7 @@ for ($i=0; $i<50; $i++) {
 <?php endif; ?>
 </div></td>
 <td class="label"><?php _e('Notes', 'usces'); ?></td>
-<td colspan="3"><textarea name="order[note]"><?php echo esc_attr($data['order_note']); ?></textarea></td>
+<td colspan="3"><textarea name="offer[note]"><?php echo esc_attr($data['order_note']); ?></textarea></td>
 </tr>
 </table>
 </div>
@@ -804,8 +733,8 @@ for ($i=0; $i<50; $i++) {
 <div class="info_head">
 <table>
 <tr>
-<td class="midasi0">Order Custom Field</td>
-<td class="midasi0">Settlement Information</td>
+<td class="midasi0"><?php _e('カスタム・オーダーフィールド', 'usces'); ?></td>
+<td class="midasi0"><?php _e('支払情報', 'usces'); ?></td>
 </tr>
 <tr>
 <td class="wrap_td">
@@ -835,7 +764,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<tr>
 			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th id="total_full_top" class="aright">&nbsp;</th>
-			<th colspan="2">&nbsp;</th>
+			<th colspan="2">&nbsp;<?php _e('Currency','usces'); ?>(<?php usces_crcode(); ?>)</th>
 		</tr>
 	<tr>
 		<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>
@@ -843,7 +772,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<th><?php _e('Items','usces'); ?></th>
 		<th class="price"><?php _e('Unit price','usces'); ?></th>
 		<th class="quantity"><?php _e('Quantity','usces'); ?></th>
-		<th class="subtotal"><?php _e('Amount','usces'); ?></th>
+		<th class="subtotal"><?php _e('Amount','usces'); ?>(<?php usces_crcode(); ?>)</th>
 		<th class="stock"><?php _e('Current stock', 'usces'); ?></th>
 		<th class="action"><input name="addButton" id="addCartButton" class="addCartButton" type="button" value="<?php _e('Add item', 'usces'); ?>" /></th>
 	</tr>
@@ -868,7 +797,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
 				if( !empty($key) )
-					$optstr .= esc_html($key) . ' : ' . esc_html($value) . "<br />\n"; 
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 			
@@ -877,7 +806,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
-		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr($skuPrice); ?>" /></td>
+		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>
 		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
@@ -903,28 +832,28 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
 			<td><?php _e('granted points', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="order[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { echo esc_attr($data['order_discount']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-			<td class="aright"><input name="order[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { echo esc_attr($data['order_shipping_charge']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { usces_crform( $data['order_shipping_charge'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright"><?php _e('COD fee','usces'); ?></td>
-			<td class="aright"><input name="order[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { echo esc_attr($data['order_cod_fee']); } else { echo '0'; } ?>" /></td>
+			<td colspan="5" class="aright"><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></td>
+			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { usces_crform( $data['order_cod_fee'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="order[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { echo esc_attr($data['order_tax']); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
@@ -972,7 +901,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<label><?php _e('e-mail adress', 'usces'); ?></label><input type="text" name="sendmailaddress" id="sendmailaddress" class="text" /><br />
 		<label><?php _e('Client name', 'usces'); ?></label><input type="text" name="sendmailname" id="sendmailname" class="text" /><br />
 		<label><?php _e('subject', 'usces'); ?></label><input type="text" name="sendmailsubject" id="sendmailsubject" class="text" /><input name="sendmail" id="sendmail" type="button" value="<?php _e('send', 'usces'); ?>" /><br />
-		<textarea name="sendmailmessage" id="sendmailmessage" cols="" rows=""></textarea>
+		<textarea name="sendmailmessage" id="sendmailmessage"></textarea>
 		<input name="mailChecked" id="mailChecked" type="hidden" />
 	</fieldset>
 </div>
@@ -994,6 +923,3 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 
 </div><!--usces_admin-->
 </div><!--wrap-->
-<script type="text/javascript">
-//	rowSelection("mainDataTable");
-</script>

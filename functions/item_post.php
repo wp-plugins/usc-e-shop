@@ -74,8 +74,8 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th>' . __('SKU code','usces') . '</th>
-		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '</th>
-		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL) . '</th>
+		<th>' . apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL) . '('.__(usces_crcode( 'return' ), 'usces').')</th>
+		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL). '('.__(usces_crcode( 'return' ), 'usces').')</th>
 		<th>' . __('stock','usces') . '</th>
 		<th>' . __('stock status', 'usces') . '</th>
 	</tr>
@@ -91,15 +91,18 @@ function list_item_sku_meta( $meta ) {
 	<thead>
 	<tr>
 		<th class="left"><?php _e('SKU code','usces'); ?></th>
-		<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
-		<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
+		<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
+		<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 		<th><?php _e('stock','usces'); ?></th>
 		<th><?php _e('stock status','usces'); ?></th>
 	</tr>
 	<tr>
 		<th><?php _e('SKU display name ','usces'); ?></th>
 		<th><?php _e('unit','usces'); ?></th>
-		<th colspan="2"><?php echo ( defined('WCEX_DLSELLER') ) ? __('Charging type','usces') : ''; ?> </th>
+		<?php
+		$advance_title = '<th colspan="2">&nbsp;</th>';
+		echo apply_filters('usces_filter_sku_meta_form_advance_title', $advance_title);
+		?>
 		<th><?php _e('Apply business package','usces'); ?></th>
 	</tr>
 	</thead>
@@ -227,16 +230,6 @@ function _list_item_sku_meta_row( $entry ) {
 	$charging_type = $entry['meta_value']['charging_type'];
 	$id = (int) $entry['meta_id'];
 	$zaikoselectarray = get_option('usces_zaiko_status');
-	if( defined('WCEX_DLSELLER') ){
-		$advance_field = '
-	<select id="itemsku[' . $id . '][charging_type]" name="itemsku[' . $id . '][charging_type]" class="charging_type">
-		<option value=""' . ( (0 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('一括課金（即日）','usces') . '</option>
-		<option value="1"' . ( (1 === (int)$charging_type) ? ' selected="selected"' : '' ) . '>' . __('月次課金（翌月1日）','usces') . '</option>
-	</select>';
-
-	}else{
-		$advance_field = '';
-	}
 	
 	$r .= "\n\t<tr id='itemsku-{$id}' class='{$style}'>";
 	$r .= "\n\t\t<td class='item-sku-key'><input name='itemsku[{$id}][key]' id='itemsku[{$id}][key]' class='skuname' type='text' value='{$key}'{$readonly} /></td>";
@@ -257,7 +250,8 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-sku-cprice rowbottom'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
-	$r .= "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>" . $advance_field . "</td>";
+	$default_field = "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>&nbsp;</td>";
+	$r .= apply_filters('usces_filter_sku_meta_row_advance', $default_field, $entry);
 	$r .= "\n\t\t<td class='item-sku-zaiko rowbottom'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
 	$r .= "\n\t\t\t<option value='0'";
 	$r .= ($skugptekiyo == 0) ? " selected='selected'" : "";
@@ -432,15 +426,18 @@ function item_sku_meta_form() {
 <thead>
 <tr>
 	<th class="left"><?php _e('SKU code','usces') ?></th>
-	<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?></th>
-	<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?></th>
+	<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
+	<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 	<th><?php _e('stock','usces') ?></th>
 	<th><?php _e('stock status','usces') ?></th>
 </tr>
 <tr>
 	<th><?php _e('SKU display name ','usces') ?></th>
 	<th><?php _e('unit','usces') ?></th>
-	<th colspan="2"><?php echo ( defined('WCEX_DLSELLER') ) ? __('Charging type','usces') : ''; ?> </th>
+	<?php
+	$advance_title = '<th colspan="2">&nbsp;</th>';
+	echo apply_filters('usces_filter_sku_meta_form_advance_title', $advance_title);
+	?>
 	<th><?php _e('Apply business package','usces') ?></th>
 </tr>
 </thead>
@@ -467,15 +464,11 @@ function item_sku_meta_form() {
 <tr>
 <td class='item-sku-key'><input type="text" id="newskudisp" name="newskudisp" class="newskudisp"value="" /></td>
 <td class='item-sku-cprice'><input type="text" id="newskuunit" name="newskuunit" class='newskuunit' /></td>
-<td class='item-sku-price'>
-<?php if( defined('WCEX_DLSELLER') ): ?>
-	<select id="newcharging_type" name="newcharging_type" class="newcharging_type">
-		<option value=""><?php _e('一括課金（即日）','usces'); ?></option>
-		<option value="1"><?php _e('月次課金（翌月1日）','usces'); ?></option>
-	</select>
-<?php endif; ?>
-</td>
-<td class='item-sku-zaikonum'></td>
+<?php
+$advance_field = '<td class="item-sku-price">&nbsp;</td><td class="item-sku-zaikonum">&nbsp;</td>';
+echo apply_filters('usces_filter_sku_meta_form_advance_field', $advance_field );
+?>
+
 <td class='item-sku-zaiko'>
 <select id="newskugptekiyo" name="newskugptekiyo" class="newskugptekiyo">
     <option value="0"><?php _e('Not apply','usces') ?></option>
@@ -629,6 +622,7 @@ function add_item_sku_meta( $post_ID ) {
 		$value['unit'] = $newskuunit;
 		$value['gptekiyo'] = $newskugptekiyo;
 		$value['charging_type'] = $newcharging_type;
+		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
 		$unique = true;
 
 		add_post_meta($post_ID, $metakey, $value, $unique);
@@ -754,6 +748,9 @@ function up_item_sku_meta( $post_ID ) {
 	$value['unit'] = $skuunit;
 	$value['gptekiyo'] = $skugptekiyo;
 	$value['charging_type'] = $charging_type;
+	
+	$value = apply_filters('usces_filter_up_item_sku_meta_value', $value);
+	
 	$valueserialized = maybe_serialize($value);
 
 	if ( $skumetaid != '' && $skuname != '' ) {
@@ -942,15 +939,27 @@ function add_delivery_method() {
 	$options['delivery_method'][$index]['time'] = str_replace("\r\n", "\n", $_POST['time']);
 	$options['delivery_method'][$index]['time'] = str_replace("\r", "\n", $options['delivery_method'][$index]['time']);
 	$options['delivery_method'][$index]['charge'] = (int)$_POST['charge'];
+//20101208ysk start
+	$options['delivery_method'][$index]['days'] = (int)$_POST['days'];
+//20101208ysk end
 //20101119ysk start
 	$options['delivery_method'][$index]['nocod'] = $_POST['nocod'];
 //20101119ysk end
+//20110317ysk start
+	$options['delivery_method'][$index]['intl'] = $_POST['intl'];
+//20110317ysk end
 	update_option('usces', $options);
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
-	$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+	//$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
 //20101119ysk end
+//20110317ysk start
+	//$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+	$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'] . '#usces#' . $options['delivery_method'][$index]['intl'];
+//20110317ysk end
+//20101208ysk end
 	return $res;
 }
 
@@ -968,15 +977,27 @@ function update_delivery_method() {
 	$options['delivery_method'][$index]['charge'] = $charge;
 	$options['delivery_method'][$index]['time'] = str_replace("\r\n", "\n", $_POST['time']);
 	$options['delivery_method'][$index]['time'] = str_replace("\r", "\n", $options['delivery_method'][$index]['time']);
+//20101208ysk start
+	$options['delivery_method'][$index]['days'] = (int)$_POST['days'];
+//20101208ysk end
 //20101119ysk start
 	$options['delivery_method'][$index]['nocod'] = $_POST['nocod'];
 //20101119ysk end
+//20110317ysk start
+	$options['delivery_method'][$index]['intl'] = $_POST['intl'];
+//20110317ysk end
 	update_option('usces', $options);
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'];
-	$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+	//$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
 //20101119ysk end
+//20110317ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
+	$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'] . '#usces#' . $options['delivery_method'][$index]['intl'];
+//20110317ysk end
+//20101208ysk end
 	return $res;
 }
 
@@ -1023,31 +1044,54 @@ function moveup_delivery_method() {
 	$name = '';
 	$charge = '';
 	$time = '';
+//20101208ysk start
+	$days = '';
+//20101208ysk end
 //20101119ysk start
 	$nocod = '';
 //20101119ysk end
+//20110317ysk start
+	$intl = '';
+//20110317ysk end
 	for($i=0; $i<$ct; $i++){
 		$id .= $options['delivery_method'][$i]['id'] . ',';
 		$name .= $options['delivery_method'][$i]['name'] . ',';
 		$charge .= $options['delivery_method'][$i]['charge'] . ',';
 		$time .= $options['delivery_method'][$i]['time'] . ',';
+//20101208ysk start
+		$days .= $options['delivery_method'][$i]['days'] . ',';
+//20101208ysk end
 //20101119ysk start
 		$nocod .= $options['delivery_method'][$i]['nocod'] . ',';
 //20101119ysk end
+//20110317ysk start
+		$intl .= $options['delivery_method'][$i]['intl'] . ',';
+//20110317ysk end
 	}
 	$id = rtrim($id,',');
 	$name = rtrim($name,',');
 	$charge = rtrim($charge,',');
 	$time = rtrim($time,',');
+//20101208ysk start
+	$days = rtrim($days,',');
+//20101208ysk end
 //20101119ysk start
 	$nocod = rtrim($nocod,',');
 //20101119ysk end
-
+//20110317ysk start
+	$intl = rtrim($intl,',');
+//20110317ysk end
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
 //20101119ysk end
+//20110317ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $selected_id;
+	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $intl . '#usces#' . $selected_id;
+//20110317ysk end
+//20101208ysk end
 	return $res;
 }
 
@@ -1079,31 +1123,54 @@ function movedown_delivery_method() {
 	$name = '';
 	$charge = '';
 	$time = '';
+//20101208ysk start
+	$days = '';
+//20101208ysk end
 //20101119ysk start
 	$nocod = '';
 //20101119ysk end
+//20110317ysk start
+	$intl = '';
+//20110317ysk end
 	for($i=0; $i<$ct; $i++){
 		$id .= $options['delivery_method'][$i]['id'] . ',';
 		$name .= $options['delivery_method'][$i]['name'] . ',';
 		$charge .= $options['delivery_method'][$i]['charge'] . ',';
 		$time .= $options['delivery_method'][$i]['time'] . ',';
+//20101208ysk start
+		$days .= $options['delivery_method'][$i]['days'] . ',';
+//20101208ysk end
 //20101119ysk start
 		$nocod .= $options['delivery_method'][$i]['nocod'] . ',';
 //20101119ysk end
+//20110317ysk start
+		$intl .= $options['delivery_method'][$i]['intl'] . ',';
+//20110317ysk end
 	}
 	$id = rtrim($id,',');
 	$name = rtrim($name,',');
 	$charge = rtrim($charge,',');
 	$time = rtrim($time,',');
+//20101208ysk start
+	$days = rtrim($days,',');
+//20101208ysk end
 //20101119ysk start
 	$nocod = rtrim($nocod,',');
 //20101119ysk end
-
+//20110317ysk start
+	$intl = rtrim($intl,',');
+//20110317ysk end
 	
+//20101208ysk start
 //20101119ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $selected_id;
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $nocod . '#usces#' . $selected_id;
 //20101119ysk end
+//20110317ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $selected_id;
+	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $intl . '#usces#' . $selected_id;
+//20110317ysk end
+//20101208ysk end
 	return $res;
 }
 
@@ -1112,6 +1179,9 @@ function add_shipping_charge() {
 
 	$options = get_option('usces');
 	$name = trim($_POST['name']);
+//20110317ysk start
+	$country = trim($_POST['country']);
+//20110317ysk end
 	$value = $_POST['value'];
 	foreach((array)$options['shipping_charge'] as $charge){
 		$ids[] = (int)$charge['id'];
@@ -1124,11 +1194,20 @@ function add_shipping_charge() {
 	}
 	$index = isset($options['shipping_charge']) ? count($options['shipping_charge']) : 0;
 //	$prefs = get_option('usces_pref');
-	$prefs = $usces->options['province'];
+//20110317ysk start
+	//$prefs = $usces->options['province'];
+//20110331ysk start
+	//$prefs = $usces_states[$country];
+	$prefs = get_usces_states($country);
+//20110331ysk end
+//20110317ysk end
 	array_shift($prefs);
 
 	$options['shipping_charge'][$index]['id'] = $newid;
 	$options['shipping_charge'][$index]['name'] = $name;
+//20110317ysk start
+	$options['shipping_charge'][$index]['country'] = $country;
+//20110317ysk end
 	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
@@ -1137,18 +1216,31 @@ function add_shipping_charge() {
 	update_option('usces', $options);
 
 	$valuestr = implode(',', $options['shipping_charge'][$index]['value']);
-	$res = $newid . '#usces#' . $name . '#usces#' . $valuestr;
+//20110317ysk start
+	//$res = $newid . '#usces#' . $name . '#usces#' . $valuestr;
+	$res = $newid . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+//20110317ysk end
 	return $res;
 }
 
 function update_shipping_charge() {
 	global $usces;
+
 	$options = get_option('usces');
 	$name = trim($_POST['name']);
+//20110317ysk start
+	$country = trim($_POST['country']);
+//20110317ysk end
 	$value = $_POST['value'];
 	$id = (int)$_POST['id'];
 //	$prefs = get_option('usces_pref');
-	$prefs = $usces->options['province'];
+//20110317ysk start
+	//$prefs = $usces->options['province'];
+//20110331ysk start
+	//$prefs = $usces_states[$country];
+	$prefs = get_usces_states($country);
+//20110331ysk end
+//20110317ysk end
 	array_shift($prefs);
 
 	for($i=0; $i<count($options['shipping_charge']); $i++){
@@ -1157,6 +1249,9 @@ function update_shipping_charge() {
 		}
 	}
 	$options['shipping_charge'][$index]["name"] = $name;
+//20110317ysk start
+	$options['shipping_charge'][$index]['country'] = $country;
+//20110317ysk end
 	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
@@ -1165,7 +1260,10 @@ function update_shipping_charge() {
 	update_option('usces', $options);
 
 	$valuestr = implode(',', $options['shipping_charge'][$index]["value"]);
-	$res = $id . '#usces#' . $name . '#usces#' . $valuestr;
+//20110317ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $valuestr;
+	$res = $id . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+//20110317ysk end
 	return $res;
 }
 
@@ -1183,7 +1281,111 @@ function delete_shipping_charge() {
 	$res = $id . '#usces#0';
 	return $res;
 }
+//20101208ysk start
+function add_delivery_days() {
+	global $usces;
 
+	$options = get_option('usces');
+	$name = trim($_POST['name']);
+//20110317ysk start
+	$country = trim($_POST['country']);
+//20110317ysk end
+	$value = $_POST['value'];
+	foreach((array)$options['delivery_days'] as $charge){
+		$ids[] = (int)$charge['id'];
+	}
+	if(isset($ids)){
+		rsort($ids);
+		$newid = $ids[0]+1;
+	}else{
+		$newid = 0;
+	}
+	$index = isset($options['delivery_days']) ? count($options['delivery_days']) : 0;
+//20110317ysk start
+	//$prefs = $usces->options['province'];
+//20110331ysk start
+	//$prefs = $usces_states[$country];
+	$prefs = get_usces_states($country);
+//20110331ysk end
+//20110317ysk end
+	array_shift($prefs);
+
+	$options['delivery_days'][$index]['id'] = $newid;
+	$options['delivery_days'][$index]['name'] = $name;
+//20110317ysk start
+	$options['delivery_days'][$index]['country'] = $country;
+//20110317ysk end
+	for($i=0; $i<count($prefs); $i++){
+		$pref = $prefs[$i];
+		$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	}
+	update_option('usces', $options);
+
+	$valuestr = implode(',', $options['delivery_days'][$index]['value']);
+//20110317ysk start
+	//$res = $newid . '#usces#' . $name . '#usces#' . $valuestr;
+	$res = $newid . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+//20110317ysk end
+	return $res;
+}
+
+function update_delivery_days() {
+	global $usces;
+
+	$options = get_option('usces');
+	$name = trim($_POST['name']);
+//20110317ysk start
+	$country = trim($_POST['country']);
+//20110317ysk end
+	$value = $_POST['value'];
+	$id = (int)$_POST['id'];
+//20110317ysk start
+	//$prefs = $usces->options['province'];
+//20110331ysk start
+	//$prefs = $usces_states[$country];
+	$prefs = get_usces_states($country);
+//20110331ysk end
+//20110317ysk end
+	array_shift($prefs);
+
+	for($i=0; $i<count($options['delivery_days']); $i++){
+		if($options['delivery_days'][$i]['id'] === $id){
+			$index = $i;
+		}
+	}
+	$options['delivery_days'][$index]['name'] = $name;
+//20110317ysk start
+	$options['delivery_days'][$index]['country'] = $country;
+//20110317ysk end
+	for($i=0; $i<count($prefs); $i++){
+		$pref = $prefs[$i];
+		$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	}
+	update_option('usces', $options);
+
+	$valuestr = implode(',', $options['delivery_days'][$index]['value']);
+//20110317ysk start
+	//$res = $id . '#usces#' . $name . '#usces#' . $valuestr;
+	$res = $id . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+//20110317ysk end
+	return $res;
+}
+
+function delete_delivery_days() {
+	$options = get_option('usces');
+	$id = (int)$_POST['id'];
+	for($i=0; $i<count($options['delivery_days']); $i++){
+		if($options['delivery_days'][$i]['id'] === $id){
+			$index = $i;
+		}
+	}
+	array_splice($options['delivery_days'], $index, 1);
+	update_option('usces', $options);
+	
+	$res = $id . '#usces#0';
+	return $res;
+}
+//20101208ysk end
 /************************************************************************************************/
 function shop_options_ajax()
 {
@@ -1216,6 +1418,17 @@ function shop_options_ajax()
 		case 'delete_shipping_charge':
 			$res = delete_shipping_charge();
 			break;
+//20101208ysk start
+		case 'add_delivery_days':
+			$res = add_delivery_days();
+			break;
+		case 'update_delivery_days':
+			$res = update_delivery_days();
+			break;
+		case 'delete_delivery_days':
+			$res = delete_delivery_days();
+			break;
+//20101208ysk end
 	}
 	
 	die( $res );
@@ -1335,10 +1548,10 @@ function get_order_item( $item_code ) {
 	$r .= "<tr>\n";
 	$r .= "<th>" . __('order number','usces') . "</th>\n";
 	$r .= "<th>" . __('title','usces') . "</th>\n";
-	$usces_listprice = __('List price', 'usces') . $usces->getGuidTax();
-	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), $usces->getGuidTax()) . "</th>\n";
-	$usces_sellingprice = __('Sale price','usces') . $usces->getGuidTax();
-	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), $usces->getGuidTax()) . "</th>\n";
+	$usces_listprice = __('List price', 'usces') . usces_guid_tax('return');
+	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), usces_guid_tax('return')) . "</th>\n";
+	$usces_sellingprice = __('Sale price','usces') . usces_guid_tax('return');
+	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), usces_guid_tax('return')) . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('unit','usces') . "</th>\n";
@@ -1358,8 +1571,8 @@ function get_order_item( $item_code ) {
 		$r .= "<tr>\n";
 		$r .= "<td rowspan='2'>" . $sku . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
-		$r .= "<td><span class='cprice'>" . __('$', 'usces') . $cprice . "</span></td>\n";
-		$r .= "<td><span class='price'>" . __('$', 'usces') . $price . "</span></td>\n";
+		$r .= "<td><span class='cprice'>" . usces_crform( $cprice, true, false, 'return' ) . "</span></td>\n";
+		$r .= "<td><span class='price'>" . usces_crform( $price, true, false, 'return' ) . "</span></td>\n";
 		$r .= "<td>" . $zaiko . "</td>\n";
 		$r .= "<td>" . $zaikonum . "</td>\n";
 //			$r .= "<td>" . usces_the_itemQuant() . "</td>\n";
@@ -1548,7 +1761,7 @@ function item_save_metadata() {
 	}
 	
 	if(isset($_POST['itemShipping'])){
-		$itemShipping = trim($_POST['itemShipping']);
+		$itemShipping = (int)$_POST['itemShipping'];
 		update_post_meta($post_id, '_itemShipping', $itemShipping);
 	}
 	if(isset($_POST['itemDeliveryMethod'])){
@@ -1559,7 +1772,7 @@ function item_save_metadata() {
 		update_post_meta($post_id, '_itemDeliveryMethod', $itemDeliveryMethod);
 	}
 	if(isset($_POST['itemShippingCharge'])){
-		$itemShippingCharge = trim($_POST['itemShippingCharge']);
+		$itemShippingCharge = (int)$_POST['itemShippingCharge'];
 		update_post_meta($post_id, '_itemShippingCharge', $itemShippingCharge);
 	}
 	$itemIndividualSCharge = isset($_POST['itemIndividualSCharge']) ? 1 : 0;
@@ -1990,4 +2203,81 @@ function _list_custom_member_meta_row($key, $entry) {
 }
 //20100818ysk end
 
+function change_states_ajax(){
+	global $usces, $usces_states;
+	
+	$c = $_POST['country'];
+	$res = '';
+//20110331ysk start
+/*	if( !isset($usces_states[$c]) || empty($usces_states[$c]) )
+		die('error');
+		
+	foreach( (array)$usces_states[$c] as $state ){
+		$res .= '<option value="' . $state . '">' . $state . '</option>';
+	}*/
+	$prefs = get_usces_states($c);
+	if(is_array($prefs) and 0 < count($prefs)) {
+		foreach((array)$prefs as $state) {
+			$res .= '<option value="' . $state . '">' . $state . '</option>';
+		}
+	} else {
+		die('error');
+	}
+//20110331ysk end
+	die($res);
+}
+
+//20110331ysk start
+function get_usces_states($country) {
+	global $usces, $usces_states;
+
+	$states = array();
+	$prefs = maybe_unserialize($usces->options['province']);
+	if( !isset($prefs[$country]) || empty($prefs[$country]) ) {
+		if($country == $usces->options['system']['base_country']) {
+			foreach((array)$prefs as $state) {
+				if(!is_array($state))
+					array_push($states, $state);
+			}
+			if(count($states) == 0) {
+				$prefs = $usces_states[$country];
+				if(is_array($prefs)) {
+					$states = $prefs;
+				}
+			}
+		} else {
+			$prefs = $usces_states[$country];
+			if(is_array($prefs)) {
+				$states = $prefs;
+			}
+		}
+	} else {
+		$states = $prefs[$country];
+	}
+	return $states;
+}
+
+function target_market_ajax() {
+	$res = "";
+	$target = explode(",", $_POST['target']);
+	foreach((array)$target as $country) {
+		$prefs = get_usces_states($country);
+		if(is_array($prefs) and 0 < count($prefs)) {
+			$pos = strpos($prefs[0], '--');
+			if($pos !== false) array_shift($prefs);
+			$res .= $country.",";
+			foreach((array)$prefs as $state) {
+				$res .= $state."\n";
+			}
+			$res = rtrim($res, "\n")."#usces#";
+//20110430ysk start
+		} else {
+			$res .= $country.",#usces#";
+//20110430ysk end
+		}
+	}
+	$res = rtrim($res, "#usces#");
+	die($res);
+}
+//20110331ysk end
 ?>

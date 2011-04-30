@@ -5,8 +5,11 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
+
+get_sidebar( 'home' );
 ?>
-<div id="content">
+
+<div id="content" class="three-column">
 	<div class="top_image"><img src="<?php bloginfo('template_url'); ?>/images/image_top.jpg" alt="<?php bloginfo('name'); ?>" width="560" height="300" /></div>
 	<div class="title"><?php _e('Items recommended','usces') ?></div>
 	<div class="clearfix">
@@ -26,5 +29,7 @@ get_header();
 	<?php endif; wp_reset_query(); ?>
 	</div>
 </div><!-- end of content -->
+
+<?php //get_sidebar( 'home' ); ?>
 
 <?php get_footer(); ?>

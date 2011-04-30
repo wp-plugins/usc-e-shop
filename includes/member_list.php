@@ -30,6 +30,9 @@ $csmb_meta = usces_has_custom_field_meta('member');
 $usces_opt_member = unserialize(get_option('usces_opt_member'));
 $chk_mem = $usces_opt_member['chk_mem'];
 //20100908ysk end
+//20110411ysk start
+$applyform = usces_get_apply_addressform($this->options['system']['addressform']);
+//20110411ysk end
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -233,10 +236,19 @@ jQuery(document).ready(function($){
 			}
 		}
 	}
+//20110411ysk start
 ?>
 		<label for="chk_mem[name]"><input type="checkbox" class="check_member" id="chk_mem[name]" value="name" checked disabled /><?php _e('name', 'usces'); ?></label>
+<?php 
+	switch($applyform) {
+	case 'JP':
+?>
 		<label for="chk_mem[kana]"><input type="checkbox" class="check_member" id="chk_mem[kana]" value="kana"<?php if($chk_mem['kana'] == 1) echo ' checked'; ?> /><?php _e('furigana','usces'); ?></label>
 <?php 
+		break;
+	}
+//20110411ysk end
+
 	if(!empty($csmb_meta)) {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
@@ -251,8 +263,13 @@ jQuery(document).ready(function($){
 			}
 		}
 	}
+
+//20110411ysk start
+	switch($applyform) {
+	case 'JP':
 ?>
 		<label for="chk_mem[zip]"><input type="checkbox" class="check_member" id="chk_mem[zip]" value="zip"<?php if($chk_mem['zip'] == 1) echo ' checked'; ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
+		<label for="chk_mem[country]"><input type="checkbox" class="check_member" id="chk_mem[country]" value="country" checked disabled /><?php _e('Country', 'usces'); ?></label>
 		<label for="chk_mem[pref]"><input type="checkbox" class="check_member" id="chk_mem[pref]" value="pref" checked disabled /><?php _e('Province', 'usces'); ?></label>
 		<label for="chk_mem[address1]"><input type="checkbox" class="check_member" id="chk_mem[address1]" value="address1" checked disabled /><?php _e('city', 'usces'); ?></label>
 		<label for="chk_mem[address2]"><input type="checkbox" class="check_member" id="chk_mem[address2]" value="address2" checked disabled /><?php _e('numbers', 'usces'); ?></label>
@@ -260,6 +277,23 @@ jQuery(document).ready(function($){
 		<label for="chk_mem[tel]"><input type="checkbox" class="check_member" id="chk_mem[tel]" value="tel"<?php if($chk_mem['tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
 		<label for="chk_mem[fax]"><input type="checkbox" class="check_member" id="chk_mem[fax]" value="fax"<?php if($chk_mem['fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
 <?php 
+		break;
+	case 'US':
+	default:
+?>
+		<label for="chk_mem[address2]"><input type="checkbox" class="check_member" id="chk_mem[address2]" value="address2" checked disabled /><?php _e('Address Line1', 'usces'); ?></label>
+		<label for="chk_mem[address3]"><input type="checkbox" class="check_member" id="chk_mem[address3]" value="address3" checked disabled /><?php _e('Address Line2', 'usces'); ?></label>
+		<label for="chk_mem[address1]"><input type="checkbox" class="check_member" id="chk_mem[address1]" value="address1" checked disabled /><?php _e('city', 'usces'); ?></label>
+		<label for="chk_mem[pref]"><input type="checkbox" class="check_member" id="chk_mem[pref]" value="pref" checked disabled /><?php _e('State', 'usces'); ?></label>
+		<label for="chk_mem[country]"><input type="checkbox" class="check_member" id="chk_mem[country]" value="country" checked disabled /><?php _e('Country', 'usces'); ?></label>
+		<label for="chk_mem[zip]"><input type="checkbox" class="check_member" id="chk_mem[zip]" value="zip"<?php if($chk_mem['zip'] == 1) echo ' checked'; ?> /><?php _e('Zip', 'usces'); ?></label>
+		<label for="chk_mem[tel]"><input type="checkbox" class="check_member" id="chk_mem[tel]" value="tel"<?php if($chk_mem['tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_mem[fax]"><input type="checkbox" class="check_member" id="chk_mem[fax]" value="fax"<?php if($chk_mem['fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
+<?php 
+		break;
+	}
+//20110411ysk end
+
 	if(!empty($csmb_meta)) {
 		foreach($csmb_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {

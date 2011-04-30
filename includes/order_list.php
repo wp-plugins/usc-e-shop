@@ -10,7 +10,7 @@ $arr_column = array(
 			__('name', 'usces') => 'name', 
 			__('Region', 'usces') => 'pref', 
 			__('shipping option', 'usces') => 'delivery_method', 
-			__('Amount', 'usces') => 'total_price', 
+			__('Amount', 'usces').'('.__(usces_crcode( 'return' ), 'usces').')' => 'total_price', 
 			__('payment method', 'usces') => 'payment_name', 
 			__('transfer statement', 'usces') => 'receipt_status', 
 			__('Processing', 'usces') => 'order_status', 
@@ -26,7 +26,21 @@ $rows = $DT->rows;
 $status = $DT->get_action_status();
 $message = $DT->get_action_message();
 //$pref = get_option('usces_pref');
-$pref = $usces->options['province'];
+//20110331ysk start
+//$pref = $usces->options['province'];
+$pref = array();
+$target_market = $this->options['system']['target_market'];
+foreach((array)$target_market as $country) {
+	$prefs = get_usces_states($country);
+	if(is_array($prefs) and 0 < count($prefs)) {
+		$pos = strpos($prefs[0], '--');
+		if($pos !== false) array_shift($prefs);
+		foreach((array)$prefs as $state) {
+			$pref[] = $state;
+		}
+	}
+}
+//20110331ysk end
 foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 	$payment_name[$id] = $this->options['payment_method'][$id]['name'];
 }
@@ -49,6 +63,9 @@ $usces_opt_order = unserialize(get_option('usces_opt_order'));
 $chk_pro = $usces_opt_order['chk_pro'];
 $chk_ord = $usces_opt_order['chk_ord'];
 //20100908ysk end
+//20110411ysk start
+$applyform = usces_get_apply_addressform($this->options['system']['addressform']);
+//20110411ysk end
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -444,7 +461,7 @@ jQuery(document).ready(function($){
 		<?php if( $key == 'ID' ): ?>
 		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo esc_html($value); ?></a></td>
 		<?php elseif( $key == 'total_price' ): ?>
-		<td class="price"><?php _e('$', 'usces'); ?><?php echo number_format($value); ?></td>
+		<td class="price"><?php usces_crform( $value, true, false ); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
 		<td class="red"><?php echo $value; ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == 'Pending'): ?>
@@ -545,10 +562,19 @@ jQuery(document).ready(function($){
 			}
 		}
 	}
+//20110411ysk start
 ?>
 		<label for="chk_ord[name]"><input type="checkbox" class="check_order" id="chk_ord[name]" value="name" checked disabled /><?php _e('name', 'usces'); ?></label>
+<?php 
+	switch($applyform) {
+	case 'JP':
+?>
 		<label for="chk_ord[kana]"><input type="checkbox" class="check_order" id="chk_ord[kana]" value="kana"<?php if($chk_ord['kana'] == 1) echo ' checked'; ?> /><?php _e('furigana', 'usces'); ?></label>
 <?php 
+		break;
+	}
+//20110411ysk end
+
 	if(!empty($cscs_meta)) {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
@@ -563,8 +589,13 @@ jQuery(document).ready(function($){
 			}
 		}
 	}
+
+//20110411ysk start
+	switch($applyform) {
+	case 'JP':
 ?>
 		<label for="chk_ord[zip]"><input type="checkbox" class="check_order" id="chk_ord[zip]" value="zip"<?php if($chk_ord['zip'] == 1) echo ' checked'; ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
+		<label for="chk_ord[country]"><input type="checkbox" class="check_order" id="chk_ord[country]" value="country"<?php if($chk_ord['country'] == 1) echo ' checked'; ?> /><?php _e('Country', 'usces'); ?></label>
 		<label for="chk_ord[pref]"><input type="checkbox" class="check_order" id="chk_ord[pref]" value="pref"<?php if($chk_ord['pref'] == 1) echo ' checked'; ?> /><?php _e('Province', 'usces'); ?></label>
 		<label for="chk_ord[address1]"><input type="checkbox" class="check_order" id="chk_ord[address1]" value="address1"<?php if($chk_ord['address1'] == 1) echo ' checked'; ?> /><?php _e('city', 'usces'); ?></label>
 		<label for="chk_ord[address2]"><input type="checkbox" class="check_order" id="chk_ord[address2]" value="address2"<?php if($chk_ord['address2'] == 1) echo ' checked'; ?> /><?php _e('numbers', 'usces'); ?></label>
@@ -572,6 +603,23 @@ jQuery(document).ready(function($){
 		<label for="chk_ord[tel]"><input type="checkbox" class="check_order" id="chk_ord[tel]" value="tel"<?php if($chk_ord['tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
 		<label for="chk_ord[fax]"><input type="checkbox" class="check_order" id="chk_ord[fax]" value="fax"<?php if($chk_ord['fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
 <?php 
+		break;
+	case 'US':
+	default:
+?>
+		<label for="chk_ord[address2]"><input type="checkbox" class="check_order" id="chk_ord[address2]" value="address2"<?php if($chk_ord['address2'] == 1) echo ' checked'; ?> /><?php _e('Address Line1', 'usces'); ?></label>
+		<label for="chk_ord[address3]"><input type="checkbox" class="check_order" id="chk_ord[address3]" value="address3"<?php if($chk_ord['address3'] == 1) echo ' checked'; ?> /><?php _e('Address Line2', 'usces'); ?></label>
+		<label for="chk_ord[address1]"><input type="checkbox" class="check_order" id="chk_ord[address1]" value="address1"<?php if($chk_ord['address1'] == 1) echo ' checked'; ?> /><?php _e('city', 'usces'); ?></label>
+		<label for="chk_ord[pref]"><input type="checkbox" class="check_order" id="chk_ord[pref]" value="pref"<?php if($chk_ord['pref'] == 1) echo ' checked'; ?> /><?php _e('State', 'usces'); ?></label>
+		<label for="chk_ord[country]"><input type="checkbox" class="check_order" id="chk_ord[country]" value="country"<?php if($chk_ord['country'] == 1) echo ' checked'; ?> /><?php _e('Country', 'usces'); ?></label>
+		<label for="chk_ord[zip]"><input type="checkbox" class="check_order" id="chk_ord[zip]" value="zip"<?php if($chk_ord['zip'] == 1) echo ' checked'; ?> /><?php _e('Zip', 'usces'); ?></label>
+		<label for="chk_ord[tel]"><input type="checkbox" class="check_order" id="chk_ord[tel]" value="tel"<?php if($chk_ord['tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_ord[fax]"><input type="checkbox" class="check_order" id="chk_ord[fax]" value="fax"<?php if($chk_ord['fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
+<?php 
+		break;
+	}
+//20110411ysk end
+
 	if(!empty($cscs_meta)) {
 		foreach($cscs_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
@@ -604,10 +652,19 @@ jQuery(document).ready(function($){
 			}
 		}
 	}
+//20110411ysk start
 ?>
 		<label for="chk_ord[delivery_name]"><input type="checkbox" class="check_order" id="chk_ord[delivery_name]" value="delivery_name"<?php if($chk_ord['delivery_name'] == 1) echo ' checked'; ?> /><?php _e('name', 'usces'); ?></label>
+<?php 
+	switch($applyform) {
+	case 'JP':
+?>
 		<label for="chk_ord[delivery_kana]"><input type="checkbox" class="check_order" id="chk_ord[delivery_kana]" value="delivery_kana"<?php if($chk_ord['delivery_kana'] == 1) echo ' checked'; ?> /><?php _e('furigana', 'usces'); ?></label>
 <?php 
+		break;
+	}
+//20110411ysk end
+
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'name_after') {
@@ -622,8 +679,13 @@ jQuery(document).ready(function($){
 			}
 		}
 	}
+
+//20110411ysk start
+	switch($applyform) {
+	case 'JP':
 ?>
 		<label for="chk_ord[delivery_zip]"><input type="checkbox" class="check_order" id="chk_ord[delivery_zip]" value="delivery_zip"<?php if($chk_ord['delivery_zip'] == 1) echo ' checked'; ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
+		<label for="chk_ord[delivery_country]"><input type="checkbox" class="check_order" id="chk_ord[delivery_country]" value="delivery_country"<?php if($chk_ord['delivery_country'] == 1) echo ' checked'; ?> /><?php _e('Country', 'usces'); ?></label>
 		<label for="chk_ord[delivery_pref]"><input type="checkbox" class="check_order" id="chk_ord[delivery_pref]" value="delivery_pref"<?php if($chk_ord['delivery_pref'] == 1) echo ' checked'; ?> /><?php _e('Province', 'usces'); ?></label>
 		<label for="chk_ord[delivery_address1]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address1]" value="delivery_address1"<?php if($chk_ord['delivery_address1'] == 1) echo ' checked'; ?> /><?php _e('city', 'usces'); ?></label>
 		<label for="chk_ord[delivery_address2]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address2]" value="delivery_address2"<?php if($chk_ord['delivery_address2'] == 1) echo ' checked'; ?> /><?php _e('numbers', 'usces'); ?></label>
@@ -631,6 +693,23 @@ jQuery(document).ready(function($){
 		<label for="chk_ord[delivery_tel]"><input type="checkbox" class="check_order" id="chk_ord[delivery_tel]" value="delivery_tel"<?php if($chk_ord['delivery_tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
 		<label for="chk_ord[delivery_fax]"><input type="checkbox" class="check_order" id="chk_ord[delivery_fax]" value="delivery_fax"<?php if($chk_ord['delivery_fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
 <?php 
+		break;
+	case 'US':
+	default:
+?>
+		<label for="chk_ord[delivery_address2]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address2]" value="delivery_address2"<?php if($chk_ord['delivery_address2'] == 1) echo ' checked'; ?> /><?php _e('Address Line1', 'usces'); ?></label>
+		<label for="chk_ord[delivery_address3]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address3]" value="delivery_address3"<?php if($chk_ord['delivery_address3'] == 1) echo ' checked'; ?> /><?php _e('Address Line2', 'usces'); ?></label>
+		<label for="chk_ord[delivery_address1]"><input type="checkbox" class="check_order" id="chk_ord[delivery_address1]" value="delivery_address1"<?php if($chk_ord['delivery_address1'] == 1) echo ' checked'; ?> /><?php _e('city', 'usces'); ?></label>
+		<label for="chk_ord[delivery_pref]"><input type="checkbox" class="check_order" id="chk_ord[delivery_pref]" value="delivery_pref"<?php if($chk_ord['delivery_pref'] == 1) echo ' checked'; ?> /><?php _e('State', 'usces'); ?></label>
+		<label for="chk_ord[delivery_country]"><input type="checkbox" class="check_order" id="chk_ord[delivery_country]" value="delivery_country"<?php if($chk_ord['delivery_country'] == 1) echo ' checked'; ?> /><?php _e('Country', 'usces'); ?></label>
+		<label for="chk_ord[delivery_zip]"><input type="checkbox" class="check_order" id="chk_ord[delivery_zip]" value="delivery_zip"<?php if($chk_ord['delivery_zip'] == 1) echo ' checked'; ?> /><?php _e('Zip', 'usces'); ?></label>
+		<label for="chk_ord[delivery_tel]"><input type="checkbox" class="check_order" id="chk_ord[delivery_tel]" value="delivery_tel"<?php if($chk_ord['delivery_tel'] == 1) echo ' checked'; ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_ord[delivery_fax]"><input type="checkbox" class="check_order" id="chk_ord[delivery_fax]" value="delivery_fax"<?php if($chk_ord['delivery_fax'] == 1) echo ' checked'; ?> /><?php _e('FAX number', 'usces'); ?></label>
+<?php 
+		break;
+	}
+//20110411ysk end
+
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
 			if($entry['position'] == 'fax_after') {
@@ -651,6 +730,9 @@ jQuery(document).ready(function($){
 		<label for="chk_ord[shipping_date]"><input type="checkbox" class="check_order" id="chk_ord[shipping_date]" value="shipping_date"<?php if($chk_ord['shipping_date'] == 1) echo ' checked'; ?> /><?php _e('shpping date', 'usces'); ?></label>
 		<label for="chk_ord[peyment_method]"><input type="checkbox" class="check_order" id="chk_ord[peyment_method]" value="peyment_method"<?php if($chk_ord['peyment_method'] == 1) echo ' checked'; ?> /><?php _e('payment method','usces'); ?></label>
 		<label for="chk_ord[delivery_method]"><input type="checkbox" class="check_order" id="chk_ord[delivery_method]" value="delivery_method"<?php if($chk_ord['delivery_method'] == 1) echo ' checked'; ?> /><?php _e('shipping option','usces'); ?></label>
+<!--20101208ysk start-->
+		<label for="chk_ord[delivery_date]"><input type="checkbox" class="check_order" id="chk_ord[delivery_date]" value="delivery_date"<?php if($chk_ord['delivery_date'] == 1) echo ' checked'; ?> /><?php _e('Delivery date','usces'); ?></label>
+<!--20101208ysk end-->
 		<label for="chk_ord[delivery_time]"><input type="checkbox" class="check_order" id="chk_ord[delivery_time]" value="delivery_time"<?php if($chk_ord['delivery_time'] == 1) echo ' checked'; ?> /><?php _e('delivery time','usces'); ?></label>
 		<label for="chk_ord[delidue_date]"><input type="checkbox" class="check_order" id="chk_ord[delidue_date]" value="delidue_date"<?php if($chk_ord['delidue_date'] == 1) echo ' checked'; ?> /><?php _e('Shipping date', 'usces'); ?></label>
 		<label for="chk_ord[status]"><input type="checkbox" class="check_order" id="chk_ord[status]" value="status"<?php if($chk_ord['status'] == 1) echo ' checked'; ?> /><?php _e('Status', 'usces'); ?></label>
@@ -658,7 +740,7 @@ jQuery(document).ready(function($){
 		<label for="chk_ord[usedpoint]"><input type="checkbox" class="check_order" id="chk_ord[usedpoint]" value="usedpoint"<?php if($chk_ord['usedpoint'] == 1) echo ' checked'; ?> /><?php _e('Used points', 'usces'); ?></label>
 		<label for="chk_ord[discount]"><input type="checkbox" class="check_order" id="chk_ord[discount]" value="discount" checked disabled /><?php _e('Disnount', 'usces'); ?></label>
 		<label for="chk_ord[shipping_charge]"><input type="checkbox" class="check_order" id="chk_ord[shipping_charge]" value="shipping_charge" checked disabled /><?php _e('Shipping', 'usces'); ?></label>
-		<label for="chk_ord[cod_fee]"><input type="checkbox" class="check_order" id="chk_ord[cod_fee]" value="cod_fee" checked disabled /><?php _e('COD fee', 'usces'); ?></label>
+		<label for="chk_ord[cod_fee]"><input type="checkbox" class="check_order" id="chk_ord[cod_fee]" value="cod_fee" checked disabled /><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></label>
 		<label for="chk_ord[tax]"><input type="checkbox" class="check_order" id="chk_ord[tax]" value="tax" checked disabled /><?php _e('consumption tax', 'usces'); ?></label>
 		<label for="chk_ord[note]"><input type="checkbox" class="check_order" id="chk_ord[note]" value="note"<?php if($chk_ord['note'] == 1) echo ' checked'; ?> /><?php _e('Notes', 'usces'); ?></label>
 <?php 

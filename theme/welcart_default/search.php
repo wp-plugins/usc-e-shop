@@ -7,9 +7,9 @@
 get_header();
 ?>
 
-<div id="content">
+<div id="content" class="two-column">
 
-<h2 class="pagetitle"><?php _e('Search Results', 'usces'); ?></h2>
+<h1 class="pagetitle"><?php _e('Search Results', 'usces'); ?></h1>
 
 <div class="catbox">
 
@@ -23,7 +23,7 @@ get_header();
 	
 	<?php while (have_posts()) : the_post(); ?>
 	<div <?php post_class(); ?>>
-	<h3 id="post-<?php the_ID(); ?>"><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h3>
+	<h2 id="post-<?php the_ID(); ?>"><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h2>
 	<div class="entry clearfix">
 	<?php if(!usces_is_item()): ?>
 	<p><small><?php the_date('Y/n/j'); ?></small></p>
@@ -49,5 +49,6 @@ get_header();
 </div><!-- end of catbox -->
 </div><!-- end of content -->
 
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>

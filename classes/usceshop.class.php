@@ -16,7 +16,11 @@ class usc_e_shop
 
 	function usc_e_shop()
 	{
-		global $post;
+
+//20110331ysk start
+		//global $post, $usces_settings;
+		global $post, $usces_settings, $usces_states;
+//20110331ysk end
 		do_action('usces_construct');
 		$this->usces_session_start();
 		
@@ -29,12 +33,20 @@ class usc_e_shop
 		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
 		$this->check_display_mode();
 		
+		$locales = usces_locales();
+		foreach($locales as $l){
+			$usces_settings['language'][$l] = $l;
+		}
+		$usces_settings['language']['others'] = __('Follow config.php', 'usces');
+		
 		$this->options = get_option('usces');
 		if(!isset($this->options['smtp_hostname']) || empty($this->options['smtp_hostname'])){ $this->options['smtp_hostname'] = 'localhost';}
 		if(!isset($this->options['divide_item'])) $this->options['divide_item'] = 0;
 		if(!isset($this->options['fukugo_category_orderby'])) $this->options['fukugo_category_orderby'] = 'ID';
 		if(!isset($this->options['fukugo_category_order'])) $this->options['fukugo_category_order'] = 'ASC';
-		if(!isset($this->options['province'])) $this->options['province'] = get_option('usces_pref');
+//20110331ysk start
+		//if(!isset($this->options['province'])) $this->options['province'] = get_option('usces_pref');
+//20110331ysk end
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
 		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
@@ -43,6 +55,18 @@ class usc_e_shop
 		if(!isset($this->options['use_javascript'])) $this->options['use_javascript'] = 1;
 		if(!isset($this->options['system']['orderby_itemsku'])) $this->options['system']['orderby_itemsku'] = 0;
 		if(!isset($this->options['system']['orderby_itemopt'])) $this->options['system']['orderby_itemopt'] = 0;
+		if(!isset($this->options['system']['front_lang'])) $this->options['system']['front_lang'] = usces_get_local_language();
+		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_base_country();
+		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
+		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
+//20010420ysk start
+		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
+		$this->options['system']['base_country'] = usces_get_base_country();
+//20010420ysk end
+//20110331ysk start
+		if(!isset($this->options['province'])) $this->options['province'][$this->options['system']['base_country']] = $usces_states[$this->options['system']['base_country']];
+//20110331ysk end
+		if(!isset($this->options['system']['pointreduction'])) $this->options['system']['pointreduction'] = usces_get_pointreduction($this->options['system']['currency']);
 		if(!isset($this->options['indi_item_name'])){
 			$this->options['indi_item_name']['item_name'] = 1;
 			$this->options['indi_item_name']['item_code'] = 1;
@@ -114,7 +138,6 @@ class usc_e_shop
 		$this->member_status = get_option('usces_customer_status');
 		$this->payment_structure = get_option('usces_payment_structure');
 		$this->display_mode = get_option('usces_display_mode');
-		$this->shipping_rule = get_option('usces_shipping_rule');
 		define('USCES_MYSQL_VERSION', (int)substr(mysql_get_server_info(), 0, 1));
 		define('USCES_JP', ('ja' == get_locale() ? true : false));
 		
@@ -237,6 +260,26 @@ class usc_e_shop
 					$parts = parse_url($link);
 					parse_str($parts['query'], $query);
 					if( $query['page_id'] == USCES_CART_NUMBER ){
+						$flag = true;
+					}
+				}else{
+					$flag = true;
+				}
+			}
+		}
+		return $flag;
+	}
+	
+	function is_member_page($link)
+	{
+		$search = array(('page_id='.USCES_MEMBER_NUMBER), '/usces-member' );
+		$flag = false;
+		foreach($search as $value){
+			if( false !== strpos($link, $value) ){
+				if( $value == ('page_id='.USCES_MEMBER_NUMBER) ){
+					$parts = parse_url($link);
+					parse_str($parts['query'], $query);
+					if( $query['page_id'] == USCES_MEMBER_NUMBER ){
 						$flag = true;
 					}
 				}else{
@@ -626,7 +669,11 @@ class usc_e_shop
 			//$this->options['delivery_time'] = isset($_POST['delivery_time']) ? $_POST['delivery_time'] : '';
 			//$this->options['shipping_charges'] = isset($_POST['shipping_charge']) ? $_POST['shipping_charge'] : '';
 
-
+//20101208ysk start
+			if(isset($_POST['delivery_time_limit'])) $this->options['delivery_time_limit'] = $_POST['delivery_time_limit'];
+			if(isset($_POST['shortest_delivery_time'])) $this->options['shortest_delivery_time'] =  $_POST['shortest_delivery_time'];
+			if(isset($_POST['delivery_after_days'])) $this->options['delivery_after_days'] =  $_POST['delivery_after_days'];
+//20101208ysk end
 
 			update_option('usces', $this->options);
 			
@@ -719,10 +766,10 @@ class usc_e_shop
 				$this->options['pos_item_name'][$key] = $value;
 			}
 			foreach ( $_POST['header'] as $key => $value ) {
-				$this->options['cart_page_data']['header'][$key] = $value;
+				$this->options['cart_page_data']['header'][$key] = addslashes($value);
 			}
 			foreach ( $_POST['footer'] as $key => $value ) {
-				$this->options['cart_page_data']['footer'][$key] = $value;
+				$this->options['cart_page_data']['footer'][$key] = addslashes($value);
 			}
 
 			update_option('usces', $this->options);
@@ -774,12 +821,16 @@ class usc_e_shop
 	
 	/* Admin System Page */
 	function admin_system_page() {
+//20110331ysk start
+		global $usces_states;
+//20110331ysk end
 
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
 		
-			if($_POST['province'] != ''){
+//20110331ysk start
+/*			if($_POST['province'] != ''){
 				$temp_pref = explode("\n", $_POST['province']);
 				for($i=-1; $i<count($temp_pref); $i++){
 					if($i == -1){
@@ -792,7 +843,8 @@ class usc_e_shop
 				$usces_pref = get_option('usces_pref');
 			}
 
-			$this->options['province'] = $usces_pref;
+			$this->options['province'] = $usces_pref;*/
+//20110331ysk end
 			$this->options['divide_item'] = isset($_POST['divide_item']) ? 1 : 0;
 			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? trim($_POST['itemimg_anchor_rel']) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
@@ -807,17 +859,48 @@ class usc_e_shop
 			if( $this->options['ssl_url'] == '' || $this->options['ssl_url_admin'] == '' ) $this->options['use_ssl'] = 0;
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
-			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : get_locale();
+			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : usces_get_local_language();
+			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : usces_get_base_country();
+			$this->options['system']['addressform'] = (isset($_POST['addressform']) ) ? $_POST['addressform'] : usces_get_local_addressform();
+			$this->options['system']['target_market'] = (isset($_POST['target_market']) ) ? $_POST['target_market'] : usces_get_local_target_market();
 			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
 			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
+//20110331ysk start
+			unset($this->options['province']);
+			$action_status = '';
+			foreach((array)$this->options['system']['target_market'] as $target_market) {
+				$province = array();
+				if(!empty($_POST['province_'.$target_market])) {
+					$temp_pref = explode("\n", $_POST['province_'.$target_market]);
+					$province[] = __('-- Select --', 'usces');
+					for($i = 0; $i < count($temp_pref); $i++) {
+						$province[] = trim($temp_pref[$i]);
+					}
+				} else {
+					if(is_array($usces_states[$target_market])) {
+						$province = $usces_states[$target_market];
+					} else {
+						$action_status = 'error';
+					}
+				}
+				$this->options['province'][$target_market] = $province;
+			}
 
-			
-			$this->action_status = 'success';
-			$this->action_message = __('options are updated','usces');
+			if($action_status != '') {
+				$this->action_status = 'error';
+				$this->action_message = __('データに不備が有ります','usces');
+			} else {
+				$this->action_status = 'success';
+				$this->action_message = __('options are updated','usces');
+			}
+//20110331ysk end
 		} else {
 
 			if( !isset($this->options['province']) || $this->options['province'] == '' ){
-				$this->options['province'] = get_option('usces_pref');
+//20110331ysk start
+				//$this->options['province'] = get_option('usces_pref');
+				$this->options['province'][$this->options['system']['base_country']] = $usces_states[$this->options['system']['base_country']];
+//20110331ysk end
 			}
 			$this->action_status = 'none';
 			$this->action_message = '';
@@ -939,7 +1022,7 @@ class usc_e_shop
 						$mes .= '※設定が不正です！<br />';
 
 					if( '' == $mes ){			
-						$this->action_status = 'success';
+						$this->zaction_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['remise']['activate'] = 'on';
 						if( 'on' == $options['acting_settings']['remise']['card_activate'] ){
@@ -1031,6 +1114,56 @@ class usc_e_shop
 					update_option('usces_payment_structure', $this->payment_structure);
 					break;
 //20101018ysk end
+//20110208ysk start
+				case 'paypal':
+					unset( $options['acting_settings']['paypal'] );
+					$options['acting_settings']['paypal']['ec_activate'] = $_POST['ec_activate'];
+					$options['acting_settings']['paypal']['sandbox'] = $_POST['sandbox'];
+					$options['acting_settings']['paypal']['user'] = $_POST['user'];
+					$options['acting_settings']['paypal']['pwd'] = $_POST['pwd'];
+					$options['acting_settings']['paypal']['signature'] = $_POST['signature'];
+//20110412ysk start
+					$options['acting_settings']['paypal']['continuation'] = $_POST['continuation'];
+//20110412ysk end
+
+					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
+						$mes .= '※PayPalサーバーが不正です<br />';
+					if( '' == trim($_POST['user']) )
+						$mes .= '※APIユーザー名を入力して下さい<br />';
+					if( '' == trim($_POST['pwd']) )
+						$mes .= '※APIパスワードを入力して下さい<br />';
+					if( '' == trim($_POST['signature']) )
+						$mes .= '※署名を入力して下さい<br />';
+
+					if( '' == $mes ){
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						if($options['acting_settings']['paypal']['sandbox'] == 1) {
+							$options['acting_settings']['paypal']['api_host'] = 'api-3t.sandbox.paypal.com';
+							$options['acting_settings']['paypal']['api_endpoint'] = 'https://api-3t.sandbox.paypal.com/nvp';
+							$options['acting_settings']['paypal']['paypal_url'] = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+						} else {
+							$options['acting_settings']['paypal']['api_host'] = 'api-3t.paypal.com';
+							$options['acting_settings']['paypal']['api_endpoint'] = 'https://api-3t.paypal.com/nvp';
+							$options['acting_settings']['paypal']['paypal_url'] = 'https://www.paypal.com/cgi-bin/webscr';
+						}
+						$options['acting_settings']['paypal']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['paypal']['ec_activate'] ){
+							$this->payment_structure['acting_paypal_ec'] = 'PayPal決済';
+						}else{
+							unset($this->payment_structure['acting_paypal_ec']);
+						}
+
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります', 'usces');
+						$options['acting_settings']['paypal']['activate'] = 'off';
+						unset($this->payment_structure['acting_paypal_ec']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					break;
+//20110208ysk end
 			}
 			
 
@@ -1205,6 +1338,7 @@ class usc_e_shop
 		}
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
 			echo "	<meta name='robots' content='noindex,nofollow' />\n";
+			wp_print_scripts( array( 'sack' )); 
 		}
 		echo '<link href="' . $css_url . '" rel="stylesheet" type="text/css" />';
 		if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){
@@ -1466,6 +1600,35 @@ class usc_e_shop
 				location.href = uscesL10n.previous_url; 
 			},
 			
+			settings: {
+				url: uscesL10n.ajaxurl,
+				type: 'POST',
+				cache: false,
+				success: function(data, dataType){
+					//$("tbody#item-opt-list").html( data );
+				}, 
+				error: function(msg){
+					//$("#ajax-response").html(msg);
+				}
+			},
+			
+			changeStates : function( country ) {
+				var s = this.settings;
+				s.data = "action=change_states_ajax&country=" + country;
+				s.success = function(data, dataType){
+					if( 'error' == data ){
+						alert('error');
+					}else{
+						$("select#pref").html( data );
+					}
+				};
+				s.error = function(msg){
+					alert("error");
+				};
+				$.ajax( s );
+				return false;
+			},
+			
 			isNum : function (num) {
 				if (num.match(/[^0-9]/g)) {
 					return false;
@@ -1473,10 +1636,17 @@ class usc_e_shop
 				return true;
 			}
 		};
+		$("#country").change(function () {
+			var country = $("#country option:selected").val();
+			$("#newcharging_type option:selected").val()
+			uscesCart.changeStates( country ); 
+		});
+			
 		})(jQuery);
 		</script>
 		<?php endif; ?>
 <?php
+		usces_states_form_js();
 	}
 	
 	function admin_head() {
@@ -1541,14 +1711,116 @@ class usc_e_shop
 					break;
 			}
 		}
-
-	}
+?>
+<?php
+		if( is_admin() && ('newpost' == $_GET['order_action'] 
+							|| 'usces_ordernew' == $_GET['page'] 
+							|| 'edit' == $_GET['order_action'] 
+							|| 'editpost' == $_GET['order_action'] 
+							|| 'edit' == $_GET['member_action'] 
+							|| 'editpost' == $_GET['member_action']) ) :
+			switch( $_GET['page'] ){
+				case 'usces_ordernew':
+				case 'usces_orderlist':
+					$admin_page = 'order';
+					break;
+				case 'usces_memberlist':
+					$admin_page = 'member';
+					break;
+			}
+?>
+		<script type='text/javascript'>
+		jQuery(function($) {
+		uscesForm = {
+			settings: {
+				url: uscesL10n.requestFile,
+				type: 'POST',
+				cache: false,
+				success: function(data, dataType){
+					//$("tbody#item-opt-list").html( data );
+				}, 
+				error: function(msg){
+					//$("#ajax-response").html(msg);
+				}
+			},
+			
+			changeStates : function( country, type ) {
+				var s = this.settings;
+				s.data = "action=change_states_ajax&country=" + country;
+				s.success = function(data, dataType){
+					if( 'error' == data ){
+						alert('error');
+					}else{
+						$("select#" + type + "_pref").html( data );
+						if( customercountry == country && 'customer' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:customerstate});
+						}else if( deliverycountry == country && 'delivery' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:deliverystate});
+						}else if( customercountry == country && 'member' == type ){
+							$("#" + type + "_pref").attr({selectedIndex:customerstate});
+						}
+					}
+				};
+				s.error = function(msg){
+					alert("error");
+				};
+				$.ajax( s );
+				return false;
+			},
+			
+			isNum : function (num) {
+				if (num.match(/[^0-9]/g)) {
+					return false;
+				}
+				return true;
+			}
+		};
+<?php
+		if( 'order' == $admin_page ){
+?>
+		var customerstate = $("#customer_pref").get(0).selectedIndex;
+		var customercountry = $("#customer_country").val();
+		var deliverystate = $("#delivery_pref").get(0).selectedIndex;
+		var deliverycountry = $("#delivery_country").val();
+		
+		$("#customer_country").change(function () {
+			var country = $("#customer_country option:selected").val();
+			uscesForm.changeStates( country, 'customer' ); 
+		});
+		$("#delivery_country").change(function () {
+			var country = $("#delivery_country option:selected").val();
+			uscesForm.changeStates( country, 'delivery' ); 
+		});
+<?php
+		}else if( 'member' == $admin_page ){
+?>
+		var customerstate = $("#member_pref").get(0).selectedIndex;
+		var customercountry = $("#member_country").val();
+		var deliverystate = '';
+		var deliverycountry = '';
+		
+		$("#member_country").change(function () {
+			var country = $("#member_country option:selected").val();
+			uscesForm.changeStates( country, 'member' ); 
+		});
+<?php
+		}
+?>
+		});
+		</script>
+<?php
+		endif;
+}
 	
 	function main() {
 		global $wpdb, $wp_locale, $wp_version, $post_ID;
 		global $wp_query, $usces_action, $post, $action, $editing;
+		
+		update_option('usces_shipping_rule', apply_filters('usces_filter_shipping_rule', get_option('usces_shipping_rule')));
+		$this->shipping_rule = get_option('usces_shipping_rule');
 
-		if( isset($_POST) && 1 !== preg_match('/plugin-editor\.php/', $_POST['_wp_http_referer']) ){
+
+		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_POST['_wp_http_referer']) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
 		}
 		
@@ -1559,13 +1831,19 @@ class usc_e_shop
 		$this->usces_cookie();
 		$this->update_table();
 		
+//		if( 'customer' == $this->page ){
+//			header("Pragma: private");
+//			header("Cache-Control: private");
+//		}else{
+//			header("Pragma: no-cache");
+//			header("Cache-Control: no-cache");
+//		}
 		
 		
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
 		
-
 		do_action('usces_after_cart_instant');
 		
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
@@ -1581,7 +1859,12 @@ class usc_e_shop
 			wp_redirect($url);
 			exit;
 		}
-		
+//20110208ysk start
+		if('on' == $this->options['acting_settings']['paypal']['ec_activate']) {
+			require_once(USCES_PLUGIN_DIR . '/classes/paymentPaypal.class.php');
+			$this->paypal = new usces_paypal();
+		}
+//20110208ysk end
 		
 		$this->ad_controller();
 		//$this->controller();
@@ -1698,14 +1981,14 @@ class usc_e_shop
 				case 'usces_cart':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
 					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20100809ysk end
 //20100818ysk start
 				case 'usces_member':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
 					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20100818ysk end
 //20100908ysk start
@@ -1722,6 +2005,20 @@ class usc_e_shop
 					wp_enqueue_script('jquery-ui-dialog');
 					break;
 //20101111ysk end
+//20101208ysk start
+				case 'usces_delivery':
+					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					break;
+//20101208ysk end
+//20110331ysk start
+				case 'usces_system':
+					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					break;
+//20110331ysk end
 			}
 		}
 
@@ -1769,7 +2066,10 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+//20110208ysk start
+					//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 					define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
+//20110208ysk end
 				}else{
 					$ssl_plink_cart = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_CART_NUMBER) ));
 					$ssl_plink_member = str_replace('http://','https://', str_replace( $home_path, $ssl_path, get_page_link(USCES_MEMBER_NUMBER) ));
@@ -1782,7 +2082,10 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
+//20110208ysk start
+					//define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 					define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
+//20110208ysk end
 				}
 			}else{
 				$this->delim = '&';
@@ -1794,7 +2097,10 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 				define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+//20110208ysk start
+				//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
+//20110208ysk end
 			}
 			add_filter('home_url', array($this, 'usces_ssl_page_link'));
 			add_filter('wp_get_attachment_url', array($this, 'usces_ssl_attachment_link'));
@@ -1814,7 +2120,10 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=logout');
 				define('USCES_MEMBER_URL', get_page_link(USCES_MEMBER_NUMBER));
 				define('USCES_INQUIRY_URL', get_page_link($this->options['inquiry_id']));
+//20110208ysk start
+				//define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
+//20110208ysk end
 			}else{
 				$this->delim = '&';
 				define('USCES_CUSTOMER_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&customerinfo=1');
@@ -1825,7 +2134,10 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
 				define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
 				define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
+//20110208ysk start
+				//define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
+//20110208ysk end
 			}
 		}
 	}
@@ -1862,10 +2174,12 @@ class usc_e_shop
 		usces_register_action('usces_export', 'post', 'usces_export', NULL, 'usces_export');
 		usces_register_action('usces_import', 'post', 'usces_import', NULL, 'usces_import');
 		usces_register_action('page_search_item', 'get', 'page', 'search_item', 'page_search_item');
+		usces_register_action('front_ajax', 'post', 'usces_ajax_action', NULL, 'front_ajax');
 	}
 
 	function ad_controller(){
 		global $usces_action;
+		ksort($usces_action);
 		if($this->is_maintenance()){
 			$this->maintenance();
 		}else{
@@ -1874,8 +2188,9 @@ class usc_e_shop
 			'backConfirm', 'purchase', 'acting_return', 'settlement_epsilon', 'inquiry_button', 'member_login', 
 			'regmember', 'editmember', 'deletemember', 'page_login', 'page_logout', 'page_lostmemberpassword', 'lostpassword', 
 			'uscesmode_changepassword', 'changepassword', 'page_newmember', 'usces_export', 'usces_import', 
-			'page_search_item');
+			'page_search_item', 'front_ajax');
 			$flg = 0;
+			$res = true;
 			foreach( $usces_action as $handle => $action ){
 				extract($action);
 				switch($type){
@@ -1943,12 +2258,22 @@ class usc_e_shop
 						}
 						break;
 				}
+				if( ! $res ) break;
 			}
 			if( !$flg ) $this->default_page();
 		}
 	}
 
 	//action function------------------------------------------------------------
+	function front_ajax(){
+		switch ($_POST['usces_ajax_action']){
+			case 'change_states':
+				change_states_ajax();
+				break;
+		}
+		do_action('usces_front_ajax');
+	}
+	
 	function maintenance(){
 		$this->page = 'maintenance';
 		add_action('the_post', array($this, 'action_cartFilter'));
@@ -1961,6 +2286,7 @@ class usc_e_shop
 		$this->cart->inCart();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function upButton(){
@@ -1970,6 +2296,7 @@ class usc_e_shop
 		$this->error_message = $this->zaiko_check();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function delButton(){
@@ -1978,6 +2305,7 @@ class usc_e_shop
 		$this->cart->del_row();
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backCart(){
@@ -1985,6 +2313,7 @@ class usc_e_shop
 		$this->page = 'cart';
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function customerinfo(){
@@ -2016,6 +2345,7 @@ class usc_e_shop
 			$this->cart->set_order_condition($order_conditions);
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backCustomer(){
@@ -2027,6 +2357,7 @@ class usc_e_shop
 		$this->page = 'customer';
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
+		add_action('template_redirect', array($this, 'template_redirect'));
 //		$this->cart->entry();
 //		$this->error_message = $this->delivery_check();
 //		$this->page = ($this->error_message == '') ? 'customer' : 'delivery';
@@ -2058,6 +2389,7 @@ class usc_e_shop
 		}
 //20100818ysk end
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function reganddeliveryinfo(){
@@ -2077,6 +2409,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function deliveryinfo(){
@@ -2096,6 +2429,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backDelivery(){
@@ -2107,6 +2441,7 @@ class usc_e_shop
 		$this->page = 'delivery';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function confirm(){
@@ -2130,6 +2465,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function use_point(){
@@ -2139,6 +2475,7 @@ class usc_e_shop
 		$this->page = 'confirm';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function backConfirm(){
@@ -2150,6 +2487,7 @@ class usc_e_shop
 		$this->page = 'confirm';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function purchase(){
@@ -2194,26 +2532,29 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
 		}
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function acting_return(){
 		global $wp_query;
 		$entry = $this->cart->get_entry();
 		
-//		if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
-//			usces_log('paypal_ipn in ', 'acting_transaction.log');
-//			require_once($this->options['settlement_path'] . 'paypal.php');
-//			$ipn_res = paypal_ipn_check($usces_paypal_url);
-//			if( $ipn_res[0] === true ){
-//				$res = $this->order_processing( $ipn_res );
-//				if( 'ordercompletion' == $res ){
-//					$this->cart->crear_cart();
-//				}else{
-//					usces_log('paypal_ipn regorder error (acting_return) : '.print_r($entry, true), 'acting_transaction.log');
-//				}
-//			}
-//			exit;
-//		}
+//20110208ysk start
+/*		if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
+			usces_log('paypal_ipn in ', 'acting_transaction.log');
+			require_once($this->options['settlement_path'] . 'paypal.php');
+			$ipn_res = paypal_ipn_check($usces_paypal_url);
+			if( $ipn_res[0] === true ){
+				$res = $this->order_processing( $ipn_res );
+				if( 'ordercompletion' == $res ){
+					$this->cart->crear_cart();
+				}else{
+					usces_log('paypal_ipn regorder error (acting_return) : '.print_r($entry, true), 'acting_transaction.log');
+				}
+			}
+			exit;
+		}*/
+//20110208ysk end
 		if( false === $this->cart->num_row() && ('paypal' != $_GET['acting'] && 1 !== (int)$_GET['acting_return']) ){
 			header('location: ' . get_option('home'));
 			exit;
@@ -2250,6 +2591,7 @@ class usc_e_shop
 		}
 		
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function settlement_epsilon(){
@@ -2278,6 +2620,7 @@ class usc_e_shop
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_login');
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function regmember(){
@@ -2293,6 +2636,7 @@ class usc_e_shop
 			$this->page = $res;
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function editmember(){
@@ -2308,6 +2652,7 @@ class usc_e_shop
 			$this->page = $res;
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function deletemember(){
@@ -2319,18 +2664,21 @@ class usc_e_shop
 			$this->page = 'editmemberform';
 			add_action('the_post', array($this, 'action_memberFilter'));
 		}
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function page_logout(){
 		global $wp_query;
 		$this->member_logout();
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function page_lostmemberpassword(){
 		global $wp_query;
 		$this->page = 'lostmemberpassword';
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function lostpassword(){
@@ -2343,12 +2691,14 @@ class usc_e_shop
 			$this->page = $res;//'lostcompletion';
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function uscesmode_changepassword(){
 		global $wp_query;
 		$this->page = 'changepassword';
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function changepassword_page(){
@@ -2361,6 +2711,7 @@ class usc_e_shop
 			$this->page = $res;//'changepasscompletion';
 		}
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function page_newmember(){
@@ -2368,6 +2719,7 @@ class usc_e_shop
 		$this->page = 'newmemberform';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_newmemberform');
 		add_action('the_post', array($this, 'action_memberFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function usces_export(){
@@ -2381,13 +2733,15 @@ class usc_e_shop
 	function page_search_item(){
 		global $wp_query;
 		$this->page = 'search_item';
-		add_action('template_redirect', array($this, 'action_search_item'));
+		//add_action('template_redirect', array($this, 'action_search_item'));
 		add_action('the_post', array($this, 'action_cartFilter'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	
 	function default_page(){
 		global $wp_query;
 		add_action('the_post', array($this, 'goDefaultPage'));
+		add_action('template_redirect', array($this, 'template_redirect'));
 	}
 	//--------------------------------------------------------------------------------------
 	
@@ -2405,15 +2759,130 @@ class usc_e_shop
 			$this->page = 'member';
 			add_filter('the_content', array($this, 'filter_memberContent'),20);
 		
-		}/*else if( is_category() ) {
-		
-//			$this->page = 'category_item';
-//			add_filter('the_content', array($this, 'filter_cartContent'),20);
-		
-		}*/else if( !is_singular() ) {
+		}else if( !is_singular() ) {
 			$this->page = 'wp_search';
 			add_filter('the_excerpt', array($this, 'filter_cartContent'),20);
 			add_filter('the_content', array($this, 'filter_cartContent'),20);
+
+		}else{
+			add_filter('the_content', array(&$this, 'filter_itemPage'));
+
+		}
+	}
+	
+	function template_redirect () {
+		global $post, $usces_entries, $usces_carts, $usces_members;
+		
+		if( apply_filters('usces_action_template_redirect', false) ) return;
+
+		if( is_single() && 'item' == $post->post_mime_type ) {
+			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){
+				include(get_stylesheet_directory() . '/wc_templates/wc_item_single.php');
+				exit;
+			}
+		}elseif( ('search_item' == $_REQUEST['page'] || 'usces_search' == $_REQUEST['page']) && $this->is_cart_page($_SERVER['REQUEST_URI']) ){
+			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_search_page.php') ){
+				include(get_stylesheet_directory() . '/wc_templates/wc_search_page.php');
+				exit;
+			}
+			
+		}else if( $this->is_cart_page($_SERVER['REQUEST_URI']) ){
+			switch( $this->page ){
+				case 'customer':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_customer_page.php') ){
+						usces_get_entries();
+						usces_get_member_regmode();
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_customer_page.php');
+						exit;
+					}
+				case 'delivery':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php') ){
+						usces_get_entries();
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php');
+						exit;
+					}
+				case 'confirm':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_confirm_page.php') ){
+						usces_get_entries();
+						usces_get_carts();
+						usces_get_members();
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_confirm_page.php');
+						exit;
+					}
+				case 'ordercompletion':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_completion_page.php') ){
+						usces_get_entries();
+						usces_get_carts();
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_completion_page.php');
+						exit;
+					}
+				case 'error':
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_error_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_error_page.php');
+						exit;
+					}
+				case 'cart':
+				default:
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/cart/wc_cart_page.php');
+						exit;
+					}
+			
+			}
+		}else if($this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
+
+		}else if( $this->is_member_page($_SERVER['REQUEST_URI']) ){
+			if($this->options['membersystem_state'] != 'activate') return;
+			
+			if( $this->is_member_logged_in() ) {
+				$member_regmode = 'editmemberform';
+				if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php') ){
+					include(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php');
+					exit;
+				}
+			
+			} else {
+			
+				switch( $this->page ){
+					case 'login':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php');
+							exit;
+						}
+					case 'newmemberform':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_new_member_page.php') ){
+							$member_regmode = 'newmemberform';
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_new_member_page.php');
+							exit;
+						}
+					case 'lostmemberpassword':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_lostpassword_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_lostpassword_page.php');
+							exit;
+						}
+					case 'changepassword':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php');
+							exit;
+						}
+					case 'newcompletion':
+					case 'editcompletion':
+					case 'lostcompletion':
+					case 'changepasscompletion':
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_member_completion_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_member_completion_page.php');
+							exit;
+						}
+					default:
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php');
+							exit;
+						}
+				}
+			}
+
+		}else{
+//			remove_action('the_post', array(&$this, 'goDefaultPage'));
 		}
 	}
 	
@@ -2520,6 +2989,7 @@ class usc_e_shop
 				);
 			$res = $wpdb->query( $query );
 			if( $res !== false ){
+				$this->set_member_meta_value('customer_country', $_POST['member']['country'], $_POST['member_id']);
 //20100818ysk start
 				$res = $this->reg_custom_member($_POST['member_id']);
 //20100818ysk end
@@ -2577,6 +3047,7 @@ class usc_e_shop
 				if($res !== false) {
 					$user = $_POST['member'];
 					$user['ID'] = $wpdb->insert_id;
+					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $user['ID']);
 //20100818ysk start
 					$res = $this->reg_custom_member($wpdb->insert_id);
 //20100818ysk end
@@ -2628,6 +3099,7 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
+					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
 //20100818ysk start
 					$res = $this->reg_custom_member($wpdb->insert_id);
 //20100818ysk end
@@ -2730,6 +3202,7 @@ class usc_e_shop
 					$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+					$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
 //20100818ysk start
 					$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -2783,6 +3256,7 @@ class usc_e_shop
 					$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+					$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
 //20100818ysk start
 					$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -2834,6 +3308,7 @@ class usc_e_shop
 			$_SESSION['usces_member']['delivery'] = !empty($member['mem_delivery']) ? unserialize($member['mem_delivery']) : '';
 			$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 			$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
+			$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
 //20100818ysk start
 			$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -2883,6 +3358,26 @@ class usc_e_shop
 		return $res;
 	}
 
+	function get_member_info( $mid ) {
+		global $wpdb;
+		
+		if( !current_user_can('activate_plugins') ) return array();
+		
+		$table = $wpdb->prefix . "usces_member";
+		$query = $wpdb->prepare("SELECT * FROM $table WHERE ID = %d", $mid);
+		$datas = $wpdb->get_results( $query, ARRAY_A );
+		$infos = $datas[0];
+		
+		$table = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table WHERE member_id = %d", $mid);
+		$metas = $wpdb->get_results( $query, ARRAY_A );
+		
+		foreach( $metas as $meta ){
+			$infos[$meta['meta_key']] = maybe_unserialize($meta['meta_value']);
+		}
+		return $infos;
+	}
+
 	function is_order($mid, $oid) {
 		global $wpdb;
 		
@@ -2920,7 +3415,7 @@ class usc_e_shop
 	}
 	
 	function get_order_data($order_id, $mode = '' ) {
-		global $wpdb;
+		global $wpdb, $usces;
 		$order_table = $wpdb->prefix . "usces_order";
 	
 		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $order_id);
@@ -2948,9 +3443,11 @@ class usc_e_shop
 					'getpoint' => $value->order_getpoint,
 					'usedpoint' => $value->order_usedpoint,
 					'discount' => $value->order_discount,
+					'payment_name' => $value->order_payment_name,
 					'shipping_charge' => $value->order_shipping_charge,
 					'cod_fee' => $value->order_cod_fee,
 					'tax' => $value->order_tax,
+					'end_price' => $value->order_item_total_price - ($value->order_getpoint*$usces->options['system']['pointreduction']) - $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
 					'status' => $value->order_tax,
 					'date' => mysql2date(__('Y/m/d'), $value->order_date),
 					'modified' => mysql2date(__('Y/m/d'), $value->order_modified)
@@ -3136,21 +3633,21 @@ class usc_e_shop
 
 	function admin_member_check() {
 		$mes = '';
-		if ( !is_email( trim($_POST["mem_email"]) ) )
+		if ( !is_email( trim($_POST['member']["email"]) ) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
-		if ( trim($_POST["mem_name1"]) == "" )
+		if ( trim($_POST['member']["name1"]) == "" )
 			$mes .= __('Name is not correct', 'usces') . "<br />";
 //		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( trim($_POST["mem_zip"]) == "" )
+		if ( trim($_POST['member']["zipcode"]) == "" )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["mem_pref"] == __('-- Select --', 'usces') )
+		if ( $_POST['member']["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
-		if ( trim($_POST["mem_address1"]) == "" )
+		if ( trim($_POST['member']["address1"]) == "" )
 			$mes .= __('enter the city name', 'usces') . "<br />";
-		if ( trim($_POST["mem_address2"]) == "" )
+		if ( trim($_POST['member']["address2"]) == "" )
 			$mes .= __('enter house numbers', 'usces') . "<br />";
-		if ( trim($_POST["mem_tel"]) == "" )
+		if ( trim($_POST['member']["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
 		return $mes;
@@ -3198,20 +3695,36 @@ class usc_e_shop
 			if ( trim($_POST["delivery"]["tel"]) == "" )
 				$mes .= __('enter phone numbers', 'usces') . "<br />";
 		}
-		if ( !isset($_POST['order']['delivery_method']) || (empty($_POST['order']['delivery_method']) && $_POST['order']['delivery_method'] != 0) )
+		if ( !isset($_POST['offer']['delivery_method']) || (empty($_POST['offer']['delivery_method']) && $_POST['offer']['delivery_method'] != 0) )
 			$mes .= __('chose one from delivery method.', 'usces') . "<br />";
-		if ( !isset($_POST['order']['payment_name']) )
+		if ( !isset($_POST['offer']['payment_name']) )
 			$mes .= __('chose one from payment options.', 'usces') . "<br />";
 //20101119ysk start
-		if(isset($_POST['order']['delivery_method']) and isset($_POST['order']['payment_name'])) {
-			$d_method_index = $this->get_delivery_method_index((int)$_POST['order']['delivery_method']);
+		if(isset($_POST['offer']['delivery_method']) and isset($_POST['offer']['payment_name'])) {
+			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
 			if($this->options['delivery_method'][$d_method_index]['nocod'] == '1') {
-				$payments = $this->getPayments($_POST['order']['payment_name']);
+				$payments = $this->getPayments($_POST['offer']['payment_name']);
 				if('COD' == $payments['settlement'])
 					$mes .= __('COD is not available.', 'usces') . "<br />";
 			}
 		}
 //20101119ysk end
+//20110317ysk start
+		if(isset($_POST['offer']['delivery_method'])) {
+			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
+			$country = $_POST["delivery"]["country"];
+			$local_country = usces_get_base_country();
+			if($country == $local_country) {
+				if($this->options['delivery_method'][$d_method_index]['intl'] == '1') {
+					$mes .= __('配送方法が誤っています。国際便は指定できません。', 'usces') . "<br />";
+				}
+			} else {
+				if($this->options['delivery_method'][$d_method_index]['intl'] == '0') {
+					$mes .= __('配送方法が誤っています。国際便を指定してください。', 'usces') . "<br />";
+				}
+			}
+		}
+//20110317ysk end
 	
 		$mes = apply_filters('usces_filter_delivery_check', $mes);
 
@@ -3223,26 +3736,26 @@ class usc_e_shop
 		$this->set_cart_fees( $member, &$entries );
 //var_dump($entries);
 		$mes = '';
-		if ( trim($_POST['order']["usedpoint"]) == "" || !(int)$_POST['order']["usedpoint"] || (int)$_POST['order']["usedpoint"] < 0 ) {
+		if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 		} else {
-			if ( trim($_POST['order']["usedpoint"]) > $member['point'] ){
+			if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".$member['point']."pt<br />";
-				$_POST['order']["usedpoint"] = 0;
+				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif($this->options['point_coverage'] && trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
+			}elseif($this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])."pt<br />";
-				$_POST['order']["usedpoint"] = 0;
+				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif(!$this->options['point_coverage'] && trim($_POST['order']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
+			}elseif(!$this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
-				$_POST['order']["usedpoint"] = 0;
+				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
@@ -3296,7 +3809,15 @@ class usc_e_shop
 	
 	function update_business_days() {
 		$options = get_option('usces');
-		$datenow = getdate();
+		$datetimestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+		$dhour = (int)substr($datetimestr, 11, 2);
+		$dminute = (int)substr($datetimestr, 14, 2);
+		$dsecond = (int)substr($datetimestr, 17, 2);
+		$dmonth = (int)substr($datetimestr, 5, 2);
+		$dday = (int)substr($datetimestr, 8, 2);
+		$dyear = (int)substr($datetimestr, 0, 4);
+		$dtimestamp = mktime($dhour, $dminute, $dsecond, $dmonth, $dday, $dyear);
+		$datenow = getdate($dtimestamp);
 		list($year, $mon, $mday) = getBeforeMonth($datenow['year'], $datenow['mon'], $datenow['mday'], 1);
 		
 		if(isset($options['business_days'][$year][$mon][1]))
@@ -3348,12 +3869,10 @@ class usc_e_shop
 	{
 		global $wpdb;
 		
-		if ( $wpdb->has_cap( 'collation' ) ) {
-			if ( ! empty($wpdb->charset) )
-				$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-			if ( ! empty($wpdb->collate) )
-				$charset_collate .= " COLLATE $wpdb->collate";
-		}
+		if ( ! empty($wpdb->charset) )
+			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+		if ( ! empty($wpdb->collate) )
+			$charset_collate .= " COLLATE $wpdb->collate";
 		
 		$access_table = $wpdb->prefix . "usces_access";
 		$member_table = $wpdb->prefix . "usces_member";
@@ -3452,19 +3971,20 @@ class usc_e_shop
 				order_delivery_time VARCHAR( 100 ) NOT NULL ,
 				order_payment_name VARCHAR( 100 ) NOT NULL ,
 				order_condition TEXT,
-				order_item_total_price INT( 10 ) NOT NULL DEFAULT '0',
+				order_item_total_price DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_getpoint INT( 10 ) NOT NULL DEFAULT '0',
 				order_usedpoint INT( 10 ) NOT NULL DEFAULT '0',
-				order_discount INT( 10 ) NOT NULL DEFAULT '0',
-				order_shipping_charge INT( 10 ) NOT NULL DEFAULT '0',
-				order_cod_fee INT( 10 ) NOT NULL DEFAULT '0',
-				order_tax INT( 10 ) NOT NULL DEFAULT '0',
+				order_discount DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_shipping_charge DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_cod_fee DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_tax DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				order_modified VARCHAR( 20 ) NULL ,
 				order_status VARCHAR( 255 ) NULL ,
 				order_check VARCHAR( 255 ) NULL ,
 				order_delidue_date VARCHAR( 30 ) NULL ,
 				order_delivery_method INT( 10 ) NOT NULL DEFAULT -1,
+				order_delivery_date VARCHAR( 100 ) NULL,
 				KEY order_email ( order_email ) ,  
 				KEY order_name1 ( order_name1 ) ,  
 				KEY order_name2 ( order_name2 ) ,  
@@ -3599,19 +4119,20 @@ class usc_e_shop
 				order_delivery_time VARCHAR( 100 ) NOT NULL ,
 				order_payment_name VARCHAR( 100 ) NOT NULL ,
 				order_condition TEXT,
-				order_item_total_price INT( 10 ) NOT NULL DEFAULT '0',
+				order_item_total_price DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_getpoint INT( 10 ) NOT NULL DEFAULT '0',
 				order_usedpoint INT( 10 ) NOT NULL DEFAULT '0',
-				order_discount INT( 10 ) NOT NULL DEFAULT '0',
-				order_shipping_charge INT( 10 ) NOT NULL DEFAULT '0',
-				order_cod_fee INT( 10 ) NOT NULL DEFAULT '0',
-				order_tax INT( 10 ) NOT NULL DEFAULT '0',
+				order_discount DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_shipping_charge DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_cod_fee DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_tax DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
 				order_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				order_modified VARCHAR( 20 ) NULL ,
 				order_status VARCHAR( 255 ) NULL ,
 				order_check VARCHAR( 255 ) NULL ,
 				order_delidue_date VARCHAR( 30 ) NULL ,
 				order_delivery_method INT( 10 ) NOT NULL DEFAULT -1,
+				order_delivery_date VARCHAR( 100 ) NULL,
 				KEY order_email ( order_email ) ,  
 				KEY order_name1 ( order_name1 ) ,  
 				KEY order_name2 ( order_name2 ) ,  
@@ -4158,7 +4679,7 @@ class usc_e_shop
 		if( empty($skus) ) return false;
 		if($skukey == ''){
 			return $skus;
-		}else if( isset($skus[$skukey]) ){
+		}elseif( isset($skus[$skukey]) ){
 			return $skus[$skukey];
 		}else{
 			return false;
@@ -4327,7 +4848,7 @@ class usc_e_shop
 		do_action('usces_pre_reg_orderdata');
 		//db(function.php)
 //20110203ysk start
-		$res = usces_check_acting_return_duplicate($results);
+		$res = usces_check_acting_return_duplicate( $results );
 		if($res != NULL) {
 			usces_log('order processing duplicate : acting='.$_REQUEST['acting'].', order_id='.$res, 'acting_transaction.log');
 			return 'ordercompletion';
@@ -4505,6 +5026,44 @@ class usc_e_shop
 			}
 			exit;
 
+//20110208ysk start
+		}else if($acting_flg == 'acting_paypal_ec') {
+			$acting_opts = $this->options['acting_settings']['paypal'];
+
+			$nvpstr  = $query;
+			$nvpstr .= '&CURRENCYCODE='.$this->get_currency_code();
+			//$nvpstr .= '&ADDROVERRIDE=1';
+			$nvpstr .= '&PAYMENTACTION=Sale';
+
+			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.
+			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=1&uscesid='.$this->get_uscesid(false));
+
+			//The cancelURL is the location buyers are sent to when they hit the cancel button during authorization of payment during the PayPal flow
+			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$this->delim.'confirm=1');
+
+			$nvpstr .= '&NOTIFYURL='.urlencode(USCES_PAYPAL_NOTIFY_URL);
+
+			$this->paypal->setMethod('SetExpressCheckout');
+			$this->paypal->setData($nvpstr);
+			$res = $this->paypal->doExpressCheckout();
+			$resArray = $this->paypal->getResponse();
+			$ack = strtoupper($resArray["ACK"]);
+			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+				$token = urldecode($resArray["TOKEN"]);
+				$payPalURL = $acting_opts['paypal_url'].'?cmd=_express-checkout&token='.$token.'&useraction=commit';
+				header("Location: ".$payPalURL);
+
+			} else {
+				//Display a user friendly Error on the page using any of the following error information returned by PayPal
+				$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+				$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+				$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+				$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+				usces_log('PayPal : SetExpressCheckout API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+				header("Location: ".USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=0');
+			}
+			exit;
+//20110208ysk end
 		}
 	}
 
@@ -4694,26 +5253,33 @@ class usc_e_shop
 	
 	function getCODFee($payment_name, $amount_by_cod) {
 		$payments = $this->getPayments($payment_name);
-		if( 'COD' != $payments['settlement'] )
-			return 0;
-	
-		if( 'change' != $this->options['cod_type'] )
-			return $this->options['cod_fee'];
-			
-		$price = $amount_by_cod + $this->getTax( $amount_by_cod );
-		if( $price <= $this->options['cod_first_amount'] )
-			return $this->options['cod_first_fee'];
-			
-		if( isset($this->options['cod_amounts']) ){
-			$last = count( $this->options['cod_amounts'] ) - 1;
-			if( $price > $this->options['cod_amounts'][$last] )
-				return 	$this->options['cod_end_fee'];
-			
+		if( 'COD' != $payments['settlement'] ){
 			$fee = 0;
-			foreach( $this->options['cod_amounts'] as $key => $value ){
-				if( $price <= $value ){
-					$fee = $this->options['cod_fees'][$key];
-					break;
+		
+		}else if( 'change' != $this->options['cod_type'] ){
+			$fee = $this->options['cod_fee'];
+		
+		}else{	
+			$price = $amount_by_cod + $this->getTax( $amount_by_cod );
+			if( $price <= $this->options['cod_first_amount'] ){
+				$fee = $this->options['cod_first_fee'];
+			
+			}else if( $price >= $this->options['cod_end_amount'] ){
+				$fee = $this->options['cod_end_fee'];
+			
+			}else if( isset($this->options['cod_amounts']) ){
+				$last = count( $this->options['cod_amounts'] ) - 1;
+				if( $price > $this->options['cod_amounts'][$last] ){
+					$fee = $this->options['cod_end_fee'];
+					
+				}else{
+					$fee = 0;
+					foreach( $this->options['cod_amounts'] as $key => $value ){
+						if( $price <= $value ){
+							$fee = $this->options['cod_fees'][$key];
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -5248,7 +5814,10 @@ class usc_e_shop
 	}
 
 	function getCurrencySymbol(){
-		return get_option('usces_currency_symbol');
+		global $usces_settings;
+		$cr = $this->options['system']['currency'];
+		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
+		return $symbol;
 	}
 
 	function getCartItemName($post_id, $sku){
@@ -5438,10 +6007,19 @@ class usc_e_shop
 		return $res;
 	}
 	
+	function del_member_meta($key, $member_id){
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("DELETE FROM $table_name WHERE member_id = %d AND meta_key = %s", 
+								$member_id, $key);
+		$res = $wpdb->query($query);
+		return $res;
+	}
+	
 	function get_member_meta($member_id){
 		global $wpdb;
 		$table_name = $wpdb->prefix . "usces_member_meta";
-		$query = $wpdb->prepare("SELECT * FROM $table_name WHERE member_id = %d AND meta_key NOT LIKE %s", $member_id, 'csmb_%');
+		$query = $wpdb->prepare("SELECT * FROM $table_name WHERE member_id = %d AND meta_key <> 'customer_country' AND meta_key NOT LIKE %s", $member_id, 'csmb_%');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		return $res;
 	}
@@ -5490,6 +6068,31 @@ class usc_e_shop
 			}
 		}
 		return $res;
+	}
+	
+	function get_currency($amount, $symbol_pre = false, $symbol_post = false, $seperator_flag = true ){
+		global $usces_settings;
+		$cr = $this->options['system']['currency'];
+		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
+		if( !$seperator_flag ){
+			$seperator = '';
+		}
+		$price = number_format($amount, $decimal, $point, $seperator);
+
+		if( $symbol_pre )
+			$price = ( usces_is_entity($symbol) ? mb_convert_encoding($symbol, 'UTF-8', 'HTML-ENTITIES') : $symbol ) . $price;
+			
+		if( $symbol_post )
+			$price = $price . __($code, 'usces');
+			
+		return $price;
+	}
+	
+	function get_currency_code(){
+		global $usces_settings;
+		$cr = $this->options['system']['currency'];
+		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
+		return $code;
 	}
 	
 	//shortcode-----------------------------------------------------------------------------
@@ -5573,6 +6176,10 @@ class usc_e_shop
 		), $atts));
 	
 		$post_id = $this->get_ID_byItemName($item);
+		if( ! $this->is_item_zaiko( $post_id, $sku ) ){
+			return '<div class="button_status">' . __('Sold Out', 'usces') . '</div>';
+		}
+		
 		$datas = $this->get_skus( $post_id, 'ARRAY_A' );
 	
 		$zaikonum = $datas[$sku]['zaikonum'];
@@ -5712,7 +6319,7 @@ class usc_e_shop
 	
 	function action_cartFilter(){
 		add_filter('the_title', array($this, 'filter_cartTitle'),20);
-		add_filter('the_content', array($this, 'filter_cartContent'),21);
+		add_filter('the_content', array($this, 'filter_cartContent'),20);
 	}
 		
 	function action_search_item(){
@@ -5868,154 +6475,308 @@ class usc_e_shop
 		if( !empty($this->options['cart_page_data']['header']['cart']) ){
 			$html = $this->options['cart_page_data']['header']['cart'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_cart_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
 			$html = $this->options['cart_page_data']['footer']['cart'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_customer_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['customer']) ){
 			$html = $this->options['cart_page_data']['header']['customer'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_customer_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
 			$html = $this->options['cart_page_data']['footer']['customer'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_delivery_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
 			$html = $this->options['cart_page_data']['header']['delivery'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_delivery_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
 			$html = $this->options['cart_page_data']['footer']['delivery'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_confirm_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
 			$html = $this->options['cart_page_data']['header']['confirm'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_confirm_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
 			$html = $this->options['cart_page_data']['footer']['confirm'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_cartcompletion_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['completion']) ){
 			$html = $this->options['cart_page_data']['header']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_cartcompletion_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
 			$html = $this->options['cart_page_data']['footer']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_login_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['login']) ){
 			$html = $this->options['member_page_data']['header']['login'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_login_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['login']) ){
 			$html = $this->options['member_page_data']['footer']['login'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newmember_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newmember']) ){
 			$html = $this->options['member_page_data']['header']['newmember'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newmember_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
 			$html = $this->options['member_page_data']['footer']['newmember'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newpass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newpass']) ){
 			$html = $this->options['member_page_data']['header']['newpass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_newpass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
 			$html = $this->options['member_page_data']['footer']['newpass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_changepass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['changepass']) ){
 			$html = $this->options['member_page_data']['header']['changepass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_changepass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
 			$html = $this->options['member_page_data']['footer']['changepass'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_memberinfo_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
 			$html = $this->options['member_page_data']['header']['memberinfo'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_memberinfo_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
 			$html = $this->options['member_page_data']['footer']['memberinfo'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_membercompletion_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['completion']) ){
 			$html = $this->options['member_page_data']['header']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
 	}
 	
 	function filter_membercompletion_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['completion']) ){
 			$html = $this->options['member_page_data']['footer']['completion'];
 		}
-		return stripslashes($html);
+		return do_shortcode( stripslashes($html) );
+	}
+	
+	function action_cart_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['cart']) ){
+			$html = $this->options['cart_page_data']['header']['cart'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_cart_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
+			$html = $this->options['cart_page_data']['footer']['cart'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_customer_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['customer']) ){
+			$html = $this->options['cart_page_data']['header']['customer'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_customer_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
+			$html = $this->options['cart_page_data']['footer']['customer'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_delivery_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
+			$html = $this->options['cart_page_data']['header']['delivery'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_delivery_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
+			$html = $this->options['cart_page_data']['footer']['delivery'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_confirm_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
+			$html = $this->options['cart_page_data']['header']['confirm'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_confirm_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
+			$html = $this->options['cart_page_data']['footer']['confirm'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_cartcompletion_page_header(){
+		if( !empty($this->options['cart_page_data']['header']['completion']) ){
+			$html = $this->options['cart_page_data']['header']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_cartcompletion_page_footer(){
+		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
+			$html = $this->options['cart_page_data']['footer']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_login_page_header(){
+		if( !empty($this->options['member_page_data']['header']['login']) ){
+			$html = $this->options['member_page_data']['header']['login'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_login_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['login']) ){
+			$html = $this->options['member_page_data']['footer']['login'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newmember_page_header(){
+		if( !empty($this->options['member_page_data']['header']['newmember']) ){
+			$html = $this->options['member_page_data']['header']['newmember'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newmember_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
+			$html = $this->options['member_page_data']['footer']['newmember'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newpass_page_header(){
+		if( !empty($this->options['member_page_data']['header']['newpass']) ){
+			$html = $this->options['member_page_data']['header']['newpass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_newpass_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
+			$html = $this->options['member_page_data']['footer']['newpass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_changepass_page_header(){
+		if( !empty($this->options['member_page_data']['header']['changepass']) ){
+			$html = $this->options['member_page_data']['header']['changepass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_changepass_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
+			$html = $this->options['member_page_data']['footer']['changepass'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_memberinfo_page_header(){
+		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
+			$html = $this->options['member_page_data']['header']['memberinfo'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_memberinfo_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
+			$html = $this->options['member_page_data']['footer']['memberinfo'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_membercompletion_page_header(){
+		if( !empty($this->options['member_page_data']['header']['completion']) ){
+			$html = $this->options['member_page_data']['header']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
+	}
+	
+	function action_membercompletion_page_footer(){
+		if( !empty($this->options['member_page_data']['footer']['completion']) ){
+			$html = $this->options['member_page_data']['footer']['completion'];
+			echo do_shortcode( stripslashes($html) );
+		}
 	}
 	
 }

@@ -125,7 +125,7 @@ function toggleVisibility(id) {
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
 <!--20100818ysk start-->
-<div id="uscestabs_member">
+<div class="uscestabs" id="uscestabs_member">
 	<ul>
 		<li><a href="#member_page_setting_1"><?php _e('Explanation in Member page','usces'); ?></a></li>
 		<li><a href="#member_page_setting_2"><?php _e('Custom member field','usces'); ?></a></li>

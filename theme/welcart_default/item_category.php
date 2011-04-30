@@ -8,11 +8,12 @@ Template Name: Item category template
 get_header();
 ?>
 
-<div id="content">
+<div id="content" class="two-column">
+<?php if (have_posts()) the_post(); ?>
+<h1 class="pagetitle"><?php the_title(); ?></h1>
+
 <div class="catbox">
-	<?php if (have_posts()) the_post(); ?>
 	<div class="post" id="<?php echo $post->post_name; ?>">
-	<h2><?php the_title(); ?></h2>
 	<?php the_content(); ?>
 	
 	<?php $paged = $wp_query->query_vars['paged']; ?>
@@ -45,5 +46,7 @@ get_header();
 	</div>
 </div><!-- end of catbox -->
 </div><!-- end of content -->
+
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>
