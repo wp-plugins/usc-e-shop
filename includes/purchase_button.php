@@ -410,7 +410,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$acting_opts = $usces->options['acting_settings']['paypal'];
 			$currency_code = $usces->get_currency_code();
 			$country = (!empty($usces_entries['customer']['country'])) ? $usces_entries['customer']['country'] : usces_get_base_country();
-			$zip = str_replace('-', '', $usces_entries['customer']['zipcode']);
+			//$zip = str_replace('-', '', $usces_entries['customer']['zipcode']);//20110502ysk
+			$zip = $usces_entries['customer']['zipcode'];
 			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 //20110412ysk start
