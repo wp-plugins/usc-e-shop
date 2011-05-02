@@ -460,7 +460,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					<input type="hidden" name="L_BILLINGAGREEMENTDESCRIPTION0" value="'.esc_html($desc).'">
 					<input type="hidden" name="AMT" value="0">';
 			}
-			$html .= '<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_buynowCC_LG.gif" border="0" name="purchase" value="submit" alt="PayPal"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
+			$html .= '<input type="hidden" name="purchase" value="acting_paypal_ec">';//20110502ysk
+			$html .= '<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" value="submit" alt="PayPal"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
 //20110412ysk end
 			$html = apply_filters('usces_filter_confirm_inform', $html);
 			$html .= '</form>';
