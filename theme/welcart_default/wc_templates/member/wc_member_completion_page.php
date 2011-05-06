@@ -49,7 +49,6 @@ get_header();
 	<div class="send"><input name="top" type="submit" value="<?php _e('Back to the top page.', 'usces'); ?>" /></div>
 	<?php do_action('usces_action_membercompletion_page_inform'); ?>
 	</form>
-	</div>
 
 </div><!-- end of memberpages -->
 
@@ -61,6 +60,6 @@ get_header();
 </div><!-- end of catbox -->
 </div><!-- end of content -->
 
-<?php get_sidebar( 'cartmember' ); ?>
+<?php get_sidebar( 'other' ); ?>
 
 <?php get_footer(); ?>

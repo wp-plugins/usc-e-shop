@@ -2861,8 +2861,8 @@ class usc_e_shop
 							exit;
 						}
 					case 'changepassword':
-						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php') ){
-							include(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php');
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_changepassword_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_changepassword_page.php');
 							exit;
 						}
 					case 'newcompletion':

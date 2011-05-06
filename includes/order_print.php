@@ -400,7 +400,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(11);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	$pdf->SetXY($x, $y);
-	$pdf->MultiCell(60, $lineheight, usces_conv_euc(get_option('blogname')), 0, 'L');
+	$pdf->MultiCell(60, $lineheight, usces_conv_euc(apply_filters('usces_filter_publisher', get_option('blogname'))), 0, 'L');
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['company_name']), 0, 'L');
