@@ -267,7 +267,6 @@ class usces_cart {
 //20110203ysk end
 	// entry information ***************************************************************
 	function entry() {
-	
 		if(isset($_SESSION['usces_member']['ID']) && !empty($_SESSION['usces_member']['ID'])) {
 //20110126ysk start
 			if($this->page !== 'confirm') {
@@ -289,14 +288,14 @@ class usces_cart {
 							}
 						}
 					} else {
-						if(empty($_SESSION['usces_entry']['customer'][$key])) {
+						//if(empty($_SESSION['usces_entry']['customer'][$key])) {
 							if( 'country' == $key && empty($value) ){
 								$country = usces_get_local_target_market();
 								$_SESSION['usces_entry']['customer'][$key] = $country[0];
 							}else{
 								$_SESSION['usces_entry']['customer'][$key] = trim($value);
 							}
-						}
+						//}
 					}
 //20100818ysk end
 				}
