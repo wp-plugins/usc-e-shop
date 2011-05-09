@@ -10,7 +10,7 @@ global $usces;
 ?>
 <div id="leftbar" class="sidebar">
 <ul>
-<?php if ( ! dynamic_sidebar( 'leftsidebar-onlycart-widget-area' ) ): ?>
+<?php if ( ! dynamic_sidebar( 'cartmemberleft-widget-area' ) ): ?>
 	<li id="welcart_category-3" class="widget widget_welcart_category">
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/category.png" alt="<?php _e('Item Category','usces') ?>" /><?php _e('Item Category','usces') ?></div>
 		<ul class="welcart_widget_body">

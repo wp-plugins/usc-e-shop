@@ -5678,6 +5678,9 @@ class usc_e_shop
 		foreach((array)$dbres as $carts){
 			$rows = unserialize($carts);
 			foreach((array)$rows as $carts){
+				if( 'publish' != get_post_status($carts['post_id']) )
+					continue;
+					
 				$id = $carts['post_id'];
 				$qu = $carts['quantity'];
 				if(array_key_exists($id, $res)){
