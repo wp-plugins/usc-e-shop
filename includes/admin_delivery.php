@@ -44,6 +44,7 @@ jQuery(function($){
 	$target_market_arr = '';
 	foreach((array)$target_market as $tm) $target_market_arr .= "'".$tm."',";
 	$target_market_arr = rtrim($target_market_arr, ",");
+	if(!array_key_exists($base_country, (array)$target_market)) $base_country = $target_market[0];//20110509ysk
 ?>
 	var target_market = new Array(<?php echo $target_market_arr; ?>);
 	var base_country = '<?php echo $base_country; ?>';

@@ -26,7 +26,7 @@ function usces_states_form_js(){
 			changeStates : function( country, type ) {
 	
 				var s = this.settings;
-				s.url = "' . get_bloginfo( 'home' ) . '/";
+				s.url = "' . USCES_SSL_URL . '/";
 				s.data = "usces_ajax_action=change_states&country=" + country;
 				s.success = function(data, dataType){
 					if( "error" == data ){
