@@ -5264,9 +5264,6 @@ class usc_e_shop
 			if( $price <= $this->options['cod_first_amount'] ){
 				$fee = $this->options['cod_first_fee'];
 			
-			}else if( $price >= $this->options['cod_end_amount'] ){
-				$fee = $this->options['cod_end_fee'];
-			
 			}else if( isset($this->options['cod_amounts']) ){
 				$last = count( $this->options['cod_amounts'] ) - 1;
 				if( $price > $this->options['cod_amounts'][$last] ){

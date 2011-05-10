@@ -2404,6 +2404,7 @@ function usces_setup_cod_ajax(){
 				$message = __('There is the item where a value is dirty.', 'usces');
 		}
 		
+		unset($usces->options['cod_amounts'], $usces->options['cod_fees']);
 		if( isset($_POST['cod_amounts']) ){
 			for($i=0; $i<count((array)$_POST['cod_amounts']); $i++){
 				$usces->options['cod_amounts'][$i] = (int)$_POST['cod_amounts'][$i];
