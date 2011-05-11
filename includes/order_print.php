@@ -200,7 +200,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$juchubi = __('Valid:7days', 'usces');
 			$siharai = ' ';
 			$sign_image = apply_filters('usces_filter_pdf_estimate_sign', NULL);
-			$effective_date = date(__('M j, Y', 'usces', 'usces'), strtotime($data->order['date']));
+			$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['date']));
 			break;
 		
 		case 'nohin':
@@ -214,7 +214,10 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			if( empty($data->order['delidue_date']) ){
 				$effective_date = ' ';
 			}else{
-				$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['modified']));
+				if( empty($data->order['modified']) )
+					$effective_date = date(__('M j, Y', 'usces'), current_time('timestamp', 0));
+				else
+					$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['modified']));
 			}
 			break;
 		
@@ -224,7 +227,12 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('M j, Y', 'usces'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
 			$sign_image = apply_filters('usces_filter_pdf_receipt_sign', NULL);
-			$effective_date = date(__('M j, Y', 'usces'), strtotime($usces->get_order_meta_value('receipted_date', $data->order['ID'])));
+			$receipted_date = $usces->get_order_meta_value('receipted_date', $data->order['ID']);
+			if( empty($receipted_date) )
+				$effective_date = date(__('M j, Y', 'usces'), current_time('timestamp', 0));
+			else
+				$effective_date = date(__('M j, Y', 'usces'), strtotime($receipted_date));
+			
 			break;
 		
 		case 'bill':
