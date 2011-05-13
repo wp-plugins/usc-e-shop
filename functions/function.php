@@ -3173,7 +3173,13 @@ function uesces_get_target_market_form( $type, $selected, $out = 'return' ){
 function usces_pref_select( $type, $values, $out = 'return' ){
 	global $usces, $usces_states;
 	
-	$country = empty($values['country']) ? usces_get_local_addressform() : $values['country'];
+//20110513ysk start
+	//$country = empty($values['country']) ? usces_get_local_addressform() : $values['country'];
+	$country = empty($values['country']) ? usces_get_base_country() : $values['country'];
+	$options = get_option('usces');
+	if( !in_array($country, $options['system']['target_market']) )
+		$country = $options['system']['target_market'][0];
+//20110513ysk end
 //20110331ysk start
 	//$prefs = $usces_states[$country];
 	$prefs = get_usces_states($country);
