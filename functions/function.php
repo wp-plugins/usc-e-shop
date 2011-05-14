@@ -735,8 +735,7 @@ function usces_reg_orderdata( $results = array() ) {
 		return 0;
 	}
 	
-	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
-	$charging_flag = (  0 < (int)$chargings ) ? true : false;
+	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 
 	$item_total_price = $usces->get_total_price( $cart );
 	$member = $usces->get_member();
@@ -744,7 +743,7 @@ function usces_reg_orderdata( $results = array() ) {
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
-	if( $charging_flag ){
+	if( 'continue' == $charging_type ){
 		//$status = 'continuation';
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
@@ -952,7 +951,7 @@ function usces_reg_orderdata( $results = array() ) {
 			if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
 		}
 		
-		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_flag'=>$charging_flag);
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
 		do_action('usces_action_reg_orderdata', $args);
 	
 	endif;
@@ -3580,8 +3579,8 @@ function usces_post_reg_orderdata($order_id, $results){
 				$trans_id = $_REQUEST['token'];
 //20110412ysk start
 				$cart = $usces->cart->get_cart();
-				$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
-				if(0 === (int)$charging_type) {
+				$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
+				if( 'continue' != $charging_type) {
 					//通常購入
 //20110412ysk end
 					//Format the other parameters that were stored in the session from the previous calls

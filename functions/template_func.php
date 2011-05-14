@@ -1009,12 +1009,12 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	if( !$usces->options['payment_method'] ) return;
 	
 	$cart = $usces->cart->get_cart();
-	$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
+	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 	$html = "<dl>\n";
 	$list = '';
 	$payment_ct = count($usces->options['payment_method']);
 	foreach ($usces->options['payment_method'] as $id => $payments) {
-		if( false !== $charging_type ){
+		if( 'continue' == $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
 			if( 'acting_remise_card' != $payments['settlement'] && 'acting_paypal_ec' != $payments['settlement']) {

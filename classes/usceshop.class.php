@@ -4643,6 +4643,31 @@ class usc_e_shop
 		}
 	}
 	
+	function getItemChargingType( $post_id ){
+		if( usces_is_item($post_id) ){
+			$chargings = get_post_custom_values('_item_charging_type', $post_id);
+			$charging = empty($chargings[0]) ? 0 : $chargings[0];
+		}else{
+			$charging = NULL;
+		}
+		switch( $charging ){
+			case 0:
+				$type = 'once';
+				break;
+			case 1:
+				$type = 'continue';
+				break;
+			default:
+				$type = NULL;
+		}
+		return $type;
+	}
+	
+	function getItemFrequency( $post_id ){
+		$frequency = (int)get_post_custom_values('_item_frequency', $post_id);
+		return $frequency;
+	}
+	
 	function getItemSkuDisp($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
@@ -4662,29 +4687,29 @@ class usc_e_shop
 		}
 	}
 	
-	function getItemSkuChargingType($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		$skus = array();
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				if( isset($values['charging_type']) && "undefined" != $values['charging_type'] && !empty($values['charging_type']) ){ 
-					$skus[$key] = $values['charging_type'];
-				}else{
-					continue;
-				}
-			}
-		}
-		if( empty($skus) ) return false;
-		if($skukey == ''){
-			return $skus;
-		}elseif( isset($skus[$skukey]) ){
-			return $skus[$skukey];
-		}else{
-			return false;
-		}
-	}
+//	function getItemSkuChargingType($post_id, $skukey = '') {
+//		$fields = get_post_custom($post_id);
+//		$skus = array();
+//		foreach((array)$fields as $key => $value){
+//			if( preg_match('/^_isku_/', $key, $match) ){
+//				$key = substr($key, 6);
+//				$values = maybe_unserialize($value[0]);
+//				if( isset($values['charging_type']) && "undefined" != $values['charging_type'] && !empty($values['charging_type']) ){ 
+//					$skus[$key] = $values['charging_type'];
+//				}else{
+//					continue;
+//				}
+//			}
+//		}
+//		if( empty($skus) ) return false;
+//		if($skukey == ''){
+//			return $skus;
+//		}elseif( isset($skus[$skukey]) ){
+//			return $skus[$skukey];
+//		}else{
+//			return false;
+//		}
+//	}
 	
 	function getItemSkuUnit($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
