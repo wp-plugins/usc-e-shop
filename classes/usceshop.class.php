@@ -4664,8 +4664,8 @@ class usc_e_shop
 	}
 	
 	function getItemFrequency( $post_id ){
-		$frequency = (int)get_post_custom_values('_item_frequency', $post_id);
-		return $frequency;
+		$frequency = get_post_custom_values('_item_frequency', $post_id);
+		return $frequency[0];
 	}
 	
 	function getItemSkuDisp($post_id, $skukey = '') {
