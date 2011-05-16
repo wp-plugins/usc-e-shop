@@ -408,11 +408,13 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 //20110412ysk start
-			if(usces_get_apply_addressform($country) == 'JP') {
-				$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">';
-			} else {
+//20110516ysk start 0000166
+			//if(usces_get_apply_addressform($country) == 'JP') {
+			//	$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">';
+			//} else {
 				$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
-			}
+			//}
+//20110516ysk end
 			$html .= '<input type="hidden" name="SHIPTOSTREET" value="'.esc_html($usces_entries['customer']['address2']).'">
 				<input type="hidden" name="SHIPTOSTREET2" value="'.esc_html($usces_entries['customer']['address3']).'">
 				<input type="hidden" name="SHIPTOCITY" value="'.esc_html($usces_entries['customer']['address1']).'">
