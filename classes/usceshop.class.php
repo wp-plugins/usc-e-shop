@@ -971,7 +971,7 @@ class usc_e_shop
 						if( 'on' == $options['acting_settings']['zeus']['conv_activate'] ){
 							$this->payment_structure['acting_zeus_conv'] = 'コンビニ決済（ZEUS）';
 						}else{
-							unset($this->payment_structure['acting_zeus_bank']);
+							unset($this->payment_structure['acting_zeus_conv']);
 						}
 					}else{
 						$this->action_status = 'error';
