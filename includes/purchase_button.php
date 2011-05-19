@@ -84,6 +84,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'epsilon.php':
+			$member = $usces->get_member();
+			$memid = empty($member['ID']) ? 99999999 : $member['ID'];
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="user_id" value="' . $memid . '">
 				<input type="hidden" name="user_name" value="' . esc_attr($usces_entries['customer']['name1'] . ' ' . $usces_entries['customer']['name2']) . '">
