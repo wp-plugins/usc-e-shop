@@ -3469,7 +3469,9 @@ function usces_url( $type, $out = ''){
 		case 'lostmemberpassword':
 			$url = USCES_LOSTMEMBERPASSWORD_URL;
 			break;
-	
+		case 'cartnonsession':
+			$url = USCES_CART_NONSESSION_URL;
+			break;
 	}
 	
 	if($out == 'return'){
