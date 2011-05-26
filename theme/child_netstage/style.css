@@ -1,0 +1,11 @@
+@charset "utf-8";
+/*
+Theme Name: Net Stage Theme
+Template: welcart_default
+Description: This is a child theme of Welcart.
+Version: 0.0.1
+Author: SIRUSI Co., Ltd.
+*/
+
+@import url(../welcart_default/style.css);
+
