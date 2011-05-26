@@ -469,7 +469,15 @@ function usces_action_acting_transaction(){
 		}
 		usces_log('PayPal IPN transaction : '.$_REQUEST['txn_id'], 'acting_transaction.log');
 		die('PayPal');
-//20110208ysk end
+//20110523ysk start
+	//*** paypal ipn ***//
+	} elseif( isset($_GET['ipn_track_id']) ) {
+		foreach( $_REQUEST as $key => $value ){
+			$data[$key] = $value;
+		}
+		usces_log('paypal ipn : '.print_r($data, true), 'acting_transaction.log');
+		die('PayPal');
+//20110523ysk end
 	}
 }
 ?>

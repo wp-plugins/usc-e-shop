@@ -131,6 +131,7 @@ function usces_item_uploadcsv(){
 		//$datas = explode($sp, $line);
 		$d = explode($sp, $line);
 		foreach($d as $key => $data) {
+			$data = str_replace(array("\r\n","\r","\n"), '', $data);//20110525ysk
 			$datas[$key] = trim($data, '"');
 		}
 //20110201ysk end
@@ -460,7 +461,10 @@ function usces_item_uploadcsv(){
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+//20110525ysk start 0000172
+				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_')) AND post_id = %d", $post_id);
+//20110525ysk end
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;

@@ -427,7 +427,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="CURRENCYCODE" value="'.$currency_code.'">
 				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
 			$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
-			$frequency = $usces->getItemFrequency($cart[0]['post_id']);
+			//$frequency = $usces->getItemFrequency($cart[0]['post_id']);
 			if( 'continue' != $charging_type) {
 				//通常購入
 				for($i = 0; $i < count($cart); $i++) {
