@@ -3438,6 +3438,7 @@ class usc_e_shop
 		
 		$res = array(
 					'ID' => $value->ID,
+					'mem_id' => $value->mem_id,
 					'cart' => unserialize($value->order_cart),
 					'condition' => unserialize($value->order_condition),
 					'getpoint' => $value->order_getpoint,
@@ -4666,6 +4667,13 @@ class usc_e_shop
 	function getItemFrequency( $post_id ){
 		$frequency = get_post_custom_values('_item_frequency', $post_id);
 		return $frequency[0];
+	}
+	
+	function getItemChargingDay( $post_id ){
+		$array = get_post_custom_values('_item_chargingday', $post_id);
+		$day = (int)$array[0];
+		$chargingday = empty($day) ? 1 : $day;
+		return $chargingday;
 	}
 	
 	function getItemSkuDisp($post_id, $skukey = '') {
