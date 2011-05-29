@@ -599,7 +599,7 @@ function add_item_sku_meta( $post_ID ) {
 	$newskudisp = isset($_POST['newskudisp']) ? trim( $_POST['newskudisp'] ) : '';
 	$newskuunit = isset($_POST['newskuunit']) ? trim( $_POST['newskuunit'] ) : '';
 	$newskugptekiyo = isset($_POST['newskugptekiyo']) ? $_POST['newskugptekiyo'] : '';
-	$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : '';
+	$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : 0;
 
 
 	if ( $newskuname != '' && $newskuprice != '' && $newskuzaikoselect != '') {
@@ -621,7 +621,7 @@ function add_item_sku_meta( $post_ID ) {
 		$value['disp'] = $newskudisp;
 		$value['unit'] = $newskuunit;
 		$value['gptekiyo'] = $newskugptekiyo;
-		$value['charging_type'] = $newcharging_type;
+		$value['charging_type'] = (int)$newcharging_type;
 		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
 		$unique = true;
 
@@ -738,7 +738,7 @@ function up_item_sku_meta( $post_ID ) {
 	$skudisp = isset($_POST['skudisp']) ? trim( $_POST['skudisp'] ): '';
 	$skuunit = isset($_POST['skuunit']) ? trim( $_POST['skuunit'] ): '';
 	$skugptekiyo = isset($_POST['skugptekiyo']) ? (int)$_POST['skugptekiyo'] : 0;
-	$charging_type = isset($_POST['charging_type']) ? (int)$_POST['charging_type'] : 0;
+	$charging_type = isset($_POST['charging_type']) ? $_POST['charging_type'] : 0;
 
 	$value['cprice'] = $skucprice;
 	$value['price'] = $skuprice;
@@ -747,7 +747,7 @@ function up_item_sku_meta( $post_ID ) {
 	$value['disp'] = $skudisp;
 	$value['unit'] = $skuunit;
 	$value['gptekiyo'] = $skugptekiyo;
-	$value['charging_type'] = $charging_type;
+	$value['charging_type'] = (int)$charging_type;
 	
 	$value = apply_filters('usces_filter_up_item_sku_meta_value', $value);
 	

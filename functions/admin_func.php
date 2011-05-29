@@ -4,7 +4,7 @@ function usces_states_form_js(){
 	
 	$js = '';
 	if( $usces->use_js 
-			&& ((  (is_page(USCES_MEMBER_NUMBER) || $usces->is_member_page($_SERVER['REQUEST_URI'])) && ('member' == $usces->page || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page)  )
+			&& ((  (is_page(USCES_MEMBER_NUMBER) || $usces->is_member_page($_SERVER['REQUEST_URI'])) && ((true === $usces->is_member_logged_in() && '' == $usces->page) || 'member' == $usces->page || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page)  )
 			|| (  (is_page(USCES_CART_NUMBER) || $usces->is_cart_page($_SERVER['REQUEST_URI'])) && ('customer' == $usces->page || 'delivery' == $usces->page)  ) 
 			)) {
 			
@@ -26,7 +26,7 @@ function usces_states_form_js(){
 			changeStates : function( country, type ) {
 	
 				var s = this.settings;
-				s.url = "' . get_bloginfo( 'home' ) . '/";
+				s.url = "' . USCES_SSL_URL . '/";
 				s.data = "usces_ajax_action=change_states&country=" + country;
 				s.success = function(data, dataType){
 					if( "error" == data ){
@@ -76,7 +76,7 @@ function usces_states_form_js(){
 				uscesForm.changeStates( country, "delivery" ); 
 			});';
 			
-		}elseif( 'member' == $usces->page || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page ){
+		}elseif( (true === $usces->is_member_logged_in() && '' == $usces->page) || 'member' == $usces->page || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page ){
 			
 			$js .= 'var customerstate = "";
 			var customercountry = "";

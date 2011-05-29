@@ -971,7 +971,7 @@ class usc_e_shop
 						if( 'on' == $options['acting_settings']['zeus']['conv_activate'] ){
 							$this->payment_structure['acting_zeus_conv'] = 'コンビニ決済（ZEUS）';
 						}else{
-							unset($this->payment_structure['acting_zeus_bank']);
+							unset($this->payment_structure['acting_zeus_conv']);
 						}
 					}else{
 						$this->action_status = 'error';
@@ -2066,6 +2066,7 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+					define('USCES_CART_NONSESSION_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER);
 //20110208ysk start
 					//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 					define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2082,6 +2083,7 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
+					define('USCES_CART_NONSESSION_URL', $ssl_plink_cart);
 //20110208ysk start
 					//define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 					define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2097,6 +2099,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 				define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+				define('USCES_CART_NONSESSION_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER);
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2120,6 +2123,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=logout');
 				define('USCES_MEMBER_URL', get_page_link(USCES_MEMBER_NUMBER));
 				define('USCES_INQUIRY_URL', get_page_link($this->options['inquiry_id']));
+				define('USCES_CART_NONSESSION_URL', get_page_link(USCES_CART_NUMBER));
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2134,6 +2138,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
 				define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
 				define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
+				define('USCES_CART_NONSESSION_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2861,8 +2866,8 @@ class usc_e_shop
 							exit;
 						}
 					case 'changepassword':
-						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php') ){
-							include(get_stylesheet_directory() . '/wc_templates/member/wc_completion_page.php');
+						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_changepassword_page.php') ){
+							include(get_stylesheet_directory() . '/wc_templates/member/wc_changepassword_page.php');
 							exit;
 						}
 					case 'newcompletion':
@@ -3438,6 +3443,7 @@ class usc_e_shop
 		
 		$res = array(
 					'ID' => $value->ID,
+					'mem_id' => $value->mem_id,
 					'cart' => unserialize($value->order_cart),
 					'condition' => unserialize($value->order_condition),
 					'getpoint' => $value->order_getpoint,
@@ -4643,6 +4649,38 @@ class usc_e_shop
 		}
 	}
 	
+	function getItemChargingType( $post_id ){
+		if( usces_is_item($post_id) ){
+			$chargings = get_post_custom_values('_item_charging_type', $post_id);
+			$charging = empty($chargings[0]) ? 0 : $chargings[0];
+		}else{
+			$charging = NULL;
+		}
+		switch( $charging ){
+			case 0:
+				$type = 'once';
+				break;
+			case 1:
+				$type = 'continue';
+				break;
+			default:
+				$type = NULL;
+		}
+		return $type;
+	}
+	
+	function getItemFrequency( $post_id ){
+		$frequency = get_post_custom_values('_item_frequency', $post_id);
+		return $frequency[0];
+	}
+	
+	function getItemChargingDay( $post_id ){
+		$array = get_post_custom_values('_item_chargingday', $post_id);
+		$day = (int)$array[0];
+		$chargingday = empty($day) ? 1 : $day;
+		return $chargingday;
+	}
+	
 	function getItemSkuDisp($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
 		foreach((array)$fields as $key => $value){
@@ -4662,29 +4700,29 @@ class usc_e_shop
 		}
 	}
 	
-	function getItemSkuChargingType($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		$skus = array();
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				if( isset($values['charging_type']) && "undefined" != $values['charging_type'] && !empty($values['charging_type']) ){ 
-					$skus[$key] = $values['charging_type'];
-				}else{
-					continue;
-				}
-			}
-		}
-		if( empty($skus) ) return false;
-		if($skukey == ''){
-			return $skus;
-		}elseif( isset($skus[$skukey]) ){
-			return $skus[$skukey];
-		}else{
-			return false;
-		}
-	}
+//	function getItemSkuChargingType($post_id, $skukey = '') {
+//		$fields = get_post_custom($post_id);
+//		$skus = array();
+//		foreach((array)$fields as $key => $value){
+//			if( preg_match('/^_isku_/', $key, $match) ){
+//				$key = substr($key, 6);
+//				$values = maybe_unserialize($value[0]);
+//				if( isset($values['charging_type']) && "undefined" != $values['charging_type'] && !empty($values['charging_type']) ){ 
+//					$skus[$key] = $values['charging_type'];
+//				}else{
+//					continue;
+//				}
+//			}
+//		}
+//		if( empty($skus) ) return false;
+//		if($skukey == ''){
+//			return $skus;
+//		}elseif( isset($skus[$skukey]) ){
+//			return $skus[$skukey];
+//		}else{
+//			return false;
+//		}
+//	}
 	
 	function getItemSkuUnit($post_id, $skukey = '') {
 		$fields = get_post_custom($post_id);
@@ -5264,9 +5302,6 @@ class usc_e_shop
 			if( $price <= $this->options['cod_first_amount'] ){
 				$fee = $this->options['cod_first_fee'];
 			
-			}else if( $price >= $this->options['cod_end_amount'] ){
-				$fee = $this->options['cod_end_fee'];
-			
 			}else if( isset($this->options['cod_amounts']) ){
 				$last = count( $this->options['cod_amounts'] ) - 1;
 				if( $price > $this->options['cod_amounts'][$last] ){
@@ -5678,6 +5713,9 @@ class usc_e_shop
 		foreach((array)$dbres as $carts){
 			$rows = unserialize($carts);
 			foreach((array)$rows as $carts){
+				if( 'publish' != get_post_status($carts['post_id']) )
+					continue;
+					
 				$id = $carts['post_id'];
 				$qu = $carts['quantity'];
 				if(array_key_exists($id, $res)){

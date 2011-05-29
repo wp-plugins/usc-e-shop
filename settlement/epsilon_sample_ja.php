@@ -83,7 +83,7 @@ if ($fp){
 	
 		if(!empty($match[0][1])){
 			list($key, $value) = explode('=', $match[0][1]);
-			$datas[$key] = mb_convert_encoding(urldecode(trim($value, '"')), "UTF-8", "auto");
+			$datas[$key] = mb_convert_encoding(urldecode(trim($value, '"')), "UTF-8", "SJIS");
 		}
 	}
 	fclose($fp);

@@ -838,22 +838,22 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { usces_crform( $data['order_shipping_charge'], false, false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { usces_crform( $data['order_shipping_charge'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></td>
-			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { usces_crform( $data['order_cod_fee'], false, false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { usces_crform( $data['order_cod_fee'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>

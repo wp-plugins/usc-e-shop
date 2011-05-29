@@ -735,8 +735,7 @@ function usces_reg_orderdata( $results = array() ) {
 		return 0;
 	}
 	
-	$chargings = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
-	$charging_flag = (  0 < (int)$chargings ) ? true : false;
+	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 
 	$item_total_price = $usces->get_total_price( $cart );
 	$member = $usces->get_member();
@@ -744,7 +743,7 @@ function usces_reg_orderdata( $results = array() ) {
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
-	if( $charging_flag ){
+	if( 'continue' == $charging_type ){
 		//$status = 'continuation';
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
@@ -952,7 +951,7 @@ function usces_reg_orderdata( $results = array() ) {
 			if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
 		}
 		
-		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_flag'=>$charging_flag);
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
 		do_action('usces_action_reg_orderdata', $args);
 	
 	endif;
@@ -2109,7 +2108,6 @@ function usces_check_acting_return() {
 			$ack = strtoupper($resArray["ACK"]);
 			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 				$results[0] = 1;
-usces_log('GetExpressCheckoutDetails : '.print_r($resArray, true), 'acting_transaction.log');
 
 			} else {
 				//Display a user friendly Error on the page using any of the following error information returned by PayPal
@@ -2404,6 +2402,7 @@ function usces_setup_cod_ajax(){
 				$message = __('There is the item where a value is dirty.', 'usces');
 		}
 		
+		unset($usces->options['cod_amounts'], $usces->options['cod_fees']);
 		if( isset($_POST['cod_amounts']) ){
 			for($i=0; $i<count((array)$_POST['cod_amounts']); $i++){
 				$usces->options['cod_amounts'][$i] = (int)$_POST['cod_amounts'][$i];
@@ -3172,7 +3171,13 @@ function uesces_get_target_market_form( $type, $selected, $out = 'return' ){
 function usces_pref_select( $type, $values, $out = 'return' ){
 	global $usces, $usces_states;
 	
-	$country = empty($values['country']) ? usces_get_local_addressform() : $values['country'];
+//20110513ysk start
+	//$country = empty($values['country']) ? usces_get_local_addressform() : $values['country'];
+	$country = empty($values['country']) ? usces_get_base_country() : $values['country'];
+	$options = get_option('usces');
+	if( !in_array($country, $options['system']['target_market']) )
+		$country = $options['system']['target_market'][0];
+//20110513ysk end
 //20110331ysk start
 	//$prefs = $usces_states[$country];
 	$prefs = get_usces_states($country);
@@ -3464,7 +3469,9 @@ function usces_url( $type, $out = ''){
 		case 'lostmemberpassword':
 			$url = USCES_LOSTMEMBERPASSWORD_URL;
 			break;
-	
+		case 'cartnonsession':
+			$url = USCES_CART_NONSESSION_URL;
+			break;
 	}
 	
 	if($out == 'return'){
@@ -3573,8 +3580,9 @@ function usces_post_reg_orderdata($order_id, $results){
 				$trans_id = $_REQUEST['token'];
 //20110412ysk start
 				$cart = $usces->cart->get_cart();
-				$charging_type = $usces->getItemSkuChargingType($cart[0]['post_id'], $cart[0]['sku']);
-				if(0 === (int)$charging_type) {
+				$post_id = $cart[0]['post_id'];
+				$charging_type = $usces->getItemChargingType($post_id);
+				if( 'continue' != $charging_type) {
 					//通常購入
 //20110412ysk end
 					//Format the other parameters that were stored in the session from the previous calls
@@ -3611,11 +3619,11 @@ function usces_post_reg_orderdata($order_id, $results){
 					$token = urlencode($_REQUEST['token']);
 					$currencyCodeType = urlencode($usces->get_currency_code());
 					$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-					$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))).'T01:01:01Z';
+					$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
 					$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
-					$dlitem = dlseller_get_item(NULL, $cart[0]['post_id']);
-					$billingFreq = urlencode($dlitem['dlseller_period']);
-					$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price'], $nextdate));
+					$billingFreq = urlencode($usces->getItemFrequency($post_id));
+					//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
+					$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
 
 					$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
 
@@ -3690,20 +3698,16 @@ function usces_post_reg_orderdata($order_id, $results){
 	
 }
 //20110421ysk start
-function usces_make_agreement_description($cart, $amt, $nextdate = null) {
+function usces_make_agreement_description($cart, $amt) {
 	global $usces;
 
 	$cart_row = $cart[0];
+	$quantity = $cart_row['quantity'];
 	$itemName = $usces->getItemName($cart_row['post_id']);
-	if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
-	if(100 < strlen($itemName)) $itemName = substr($itemName, 0, 100).'...';
-	//if(is_null($nextdate)) $nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-	//$startDate = '初回引落し日'.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
-	//$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
-	//$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
+	//if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
+	if(50 < mb_strlen($itemName)) $itemName = mb_substr($itemName, 0, 50).'...';
 	$amt = usces_crform($amt, true, false, 'return', true);
-	//$desc = $itemName.' '.$startDate.' '.$billingFreq.' '.$amt;
-	$desc = $itemName.' '.$amt;
+	$desc = $itemName.' '.__('Quantity','usces').':'.$quantity.' '.$amt;
 	return($desc);
 }
 //20110421ysk end
