@@ -99,6 +99,14 @@ function toggleVisibility(id) {
 				<td><input name="howpay" type="radio" id="howpay_zeus_2" value="off"<?php if( $opts['zeus']['howpay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_2">一括払いのみ</label></td>
 				<td></td>
 			</tr>
+<!--20110516ysk start-->
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_3dsecure_zeus');"><?php _e('3Dセキュア(本人認証サービス)', 'usces'); ?></a></th>
+				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_1" value="on"<?php if( $opts['zeus']['3dsecure'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_1">利用する</label></td>
+				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_2" value="off"<?php if( $opts['zeus']['3dsecure'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_2">利用しない</label></td>
+				<td><div id="ex_3dsecure_zeus" class="explanation"><?php _e('3Dセキュアに対応しているクレジットカードをご利用される場合は、クレジットカードに記載されている情報に加え、「自分しか知らないパスワード」を合わせて認証することになります。', 'usces'); ?></div></td>
+			</tr>
+<!--20110516ysk end-->
 		</table>
 		<table class="settle_table">
 			<tr>
@@ -168,6 +176,9 @@ function toggleVisibility(id) {
 		デザインの統一されたスタイリッシュな決済が可能です。但し、カード番号を扱いますので専用SSLが必須となります。</p>
 		<p>カード番号はZEUS のシステムに送信されるだけで、Welcart に記録は残しません。</p>
 		<p>　</p>
+		<p>* 3Dセキュアとは </p>
+		<p>従来の「クレジットカード番号」と「有効期限」に加え、「自分しか知らないパスワード」を合わせて認証する仕組みで、<br />
+		クレジットカード情報の盗用による「なりすまし」などの不正使用を未然に防止することができます。</p>
 		<!--<p><strong>テスト稼動について</strong></p>
 		<p>入金お任せ及びコンビニ決済のテスト稼動を行なう際は、”テストカード番号”の項目にゼウスから発行されるテストカード番号を入力して下さい。<br />
 		これを入力することでWelcart は、名前の後ろにテストカード番号を自動的に付けるなどテストモードで動作します。通常の購入方法でテストができます。<br />

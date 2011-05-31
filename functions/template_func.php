@@ -2248,8 +2248,8 @@ function usces_member_history(){
 		$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
 		$html .= '<tr>
 			<td class="retail" colspan="' . $colspan . '">
-				<table id="retail_table">
-				<tr>
+				<table id="retail_table">';
+		$history_cart_head = '<tr>
 				<th scope="row" class="num">No.</th>
 				<th class="thumbnail">&nbsp;</th>
 				<th>' . __('Items', 'usces') . '</th>
@@ -2257,6 +2257,7 @@ function usces_member_history(){
 				<th class="quantity">' . __('Quantity', 'usces') . '</th>
 				<th class="subtotal">' . __('Amount', 'usces') . '</th>
 				</tr>';
+		$html .= apply_filters('usces_filter_history_cart_head', $history_cart_head, $umhs);
 				
 		for($i=0; $i<count($cart); $i++) { 
 			$cart_row = $cart[$i];
@@ -2278,7 +2279,7 @@ function usces_member_history(){
 				}
 			}
 				
-			$html .= '<tr>
+			$history_cart_row = '<tr>
 				<td>' . ($i + 1) . '</td>
 				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
 				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
@@ -2286,6 +2287,7 @@ function usces_member_history(){
 				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
 				</tr>';
+			$html .= apply_filters('usces_filter_history_cart_row', $history_cart_row, $umhs, $cart_row, $i);
 		}
 		$html .= '</table>
 			</td>

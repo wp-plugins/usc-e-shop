@@ -2108,7 +2108,6 @@ function usces_check_acting_return() {
 			$ack = strtoupper($resArray["ACK"]);
 			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 				$results[0] = 1;
-usces_log('GetExpressCheckoutDetails : '.print_r($resArray, true), 'acting_transaction.log');
 
 			} else {
 				//Display a user friendly Error on the page using any of the following error information returned by PayPal
@@ -3470,7 +3469,9 @@ function usces_url( $type, $out = ''){
 		case 'lostmemberpassword':
 			$url = USCES_LOSTMEMBERPASSWORD_URL;
 			break;
-	
+		case 'cartnonsession':
+			$url = USCES_CART_NONSESSION_URL;
+			break;
 	}
 	
 	if($out == 'return'){
@@ -3579,7 +3580,8 @@ function usces_post_reg_orderdata($order_id, $results){
 				$trans_id = $_REQUEST['token'];
 //20110412ysk start
 				$cart = $usces->cart->get_cart();
-				$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
+				$post_id = $cart[0]['post_id'];
+				$charging_type = $usces->getItemChargingType($post_id);
 				if( 'continue' != $charging_type) {
 					//通常購入
 //20110412ysk end
@@ -3617,11 +3619,11 @@ function usces_post_reg_orderdata($order_id, $results){
 					$token = urlencode($_REQUEST['token']);
 					$currencyCodeType = urlencode($usces->get_currency_code());
 					$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-					$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))).'T01:01:01Z';
+					$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
 					$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
-					$dlitem = dlseller_get_item(NULL, $cart[0]['post_id']);
-					$billingFreq = urlencode($dlitem['dlseller_period']);
-					$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price'], $nextdate));
+					$billingFreq = urlencode($usces->getItemFrequency($post_id));
+					//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
+					$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
 
 					$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
 
@@ -3696,20 +3698,16 @@ function usces_post_reg_orderdata($order_id, $results){
 	
 }
 //20110421ysk start
-function usces_make_agreement_description($cart, $amt, $nextdate = null) {
+function usces_make_agreement_description($cart, $amt) {
 	global $usces;
 
 	$cart_row = $cart[0];
+	$quantity = $cart_row['quantity'];
 	$itemName = $usces->getItemName($cart_row['post_id']);
-	if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
-	if(100 < strlen($itemName)) $itemName = substr($itemName, 0, 100).'...';
-	//if(is_null($nextdate)) $nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-	//$startDate = '初回引落し日'.date(__('Y/m/d'), mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4)));
-	//$dlitem = dlseller_get_item(NULL, $cart_row['post_id']);
-	//$billingFreq = $dlitem['dlseller_period'].'ヶ月(自動更新)';
+	//if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
+	if(50 < mb_strlen($itemName)) $itemName = mb_substr($itemName, 0, 50).'...';
 	$amt = usces_crform($amt, true, false, 'return', true);
-	//$desc = $itemName.' '.$startDate.' '.$billingFreq.' '.$amt;
-	$desc = $itemName.' '.$amt;
+	$desc = $itemName.' '.__('Quantity','usces').':'.$quantity.' '.$amt;
 	return($desc);
 }
 //20110421ysk end

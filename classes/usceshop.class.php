@@ -2066,6 +2066,7 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+					define('USCES_CART_NONSESSION_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER);
 //20110208ysk start
 					//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 					define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2082,6 +2083,7 @@ class usc_e_shop
 					define('USCES_LOGOUT_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid() . '&page=logout');
 					define('USCES_MEMBER_URL', $ssl_plink_member . '?uscesid=' . $this->get_uscesid());
 					define('USCES_INQUIRY_URL', $ssl_plink_inquiry . '?uscesid=' . $this->get_uscesid());
+					define('USCES_CART_NONSESSION_URL', $ssl_plink_cart);
 //20110208ysk start
 					//define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 					define('USCES_PAYPAL_NOTIFY_URL', $ssl_plink_cart . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2097,6 +2099,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid() . '&page=logout');
 				define('USCES_MEMBER_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_MEMBER_NUMBER . '&uscesid=' . $this->get_uscesid());
 				define('USCES_INQUIRY_URL', $this->options['ssl_url'] . '/?page_id=' . $this->options['inquiry_id'] . '&uscesid=' . $this->get_uscesid());
+				define('USCES_CART_NONSESSION_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER);
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', $this->options['ssl_url'] . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2120,6 +2123,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_page_link(USCES_MEMBER_NUMBER) . '?page=logout');
 				define('USCES_MEMBER_URL', get_page_link(USCES_MEMBER_NUMBER));
 				define('USCES_INQUIRY_URL', get_page_link($this->options['inquiry_id']));
+				define('USCES_CART_NONSESSION_URL', get_page_link(USCES_CART_NUMBER));
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', get_page_link(USCES_CART_NUMBER) . '?acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -2134,6 +2138,7 @@ class usc_e_shop
 				define('USCES_LOGOUT_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
 				define('USCES_MEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER);
 				define('USCES_INQUIRY_URL', get_option('home') . '/?page_id=' . $this->options['inquiry_id']);
+				define('USCES_CART_NONSESSION_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER);
 //20110208ysk start
 				//define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting_return=paypal_ipn&uscesid=' . $this->get_uscesid(false));
 				define('USCES_PAYPAL_NOTIFY_URL', get_option('home') . '/?page_id=' . USCES_CART_NUMBER . '&acting=paypal_ipn&uscesid=' . $this->get_uscesid(false));
@@ -3438,6 +3443,7 @@ class usc_e_shop
 		
 		$res = array(
 					'ID' => $value->ID,
+					'mem_id' => $value->mem_id,
 					'cart' => unserialize($value->order_cart),
 					'condition' => unserialize($value->order_condition),
 					'getpoint' => $value->order_getpoint,
@@ -4666,6 +4672,13 @@ class usc_e_shop
 	function getItemFrequency( $post_id ){
 		$frequency = get_post_custom_values('_item_frequency', $post_id);
 		return $frequency[0];
+	}
+	
+	function getItemChargingDay( $post_id ){
+		$array = get_post_custom_values('_item_chargingday', $post_id);
+		$day = (int)$array[0];
+		$chargingday = empty($day) ? 1 : $day;
+		return $chargingday;
 	}
 	
 	function getItemSkuDisp($post_id, $skukey = '') {

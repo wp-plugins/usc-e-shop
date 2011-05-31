@@ -205,6 +205,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_remise_card':
 			$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 			$frequency = $usces->getItemFrequency($cart[0]['post_id']);
+			$chargingday = $usces->getItemChargingDay($cart[0]['post_id']);
 			$acting_opts = $usces->options['acting_settings']['remise'];
 			$usces->save_order_acting_data($rand);
 			$member = $usces->get_member();
@@ -245,7 +246,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="METHOD" value="10">';
 			}
 			if( 'continue' == $charging_type ){	
-				$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+				$nextdate = current_time('mysql');
 				$html .= '<input type="hidden" name="AUTOCHARGE" value="1">';
 				$html .= '<input type="hidden" name="AC_S_KAIIN_NO" value="' . $member['ID'] . '">';
 				$html .= '<input type="hidden" name="AC_NAME" value="' . esc_attr($usces_entries['customer']['name1'].$usces_entries['customer']['name2']) . '">';
@@ -253,7 +254,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="AC_TEL" value="' . esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))) . '">';
 				$html .= '<input type="hidden" name="AC_AMOUNT" value="' . $usces_entries['order']['total_full_price'] . '">';
 				$html .= '<input type="hidden" name="AC_TOTAL" value="' . $usces_entries['order']['total_full_price'] . '">';
-				$html .= '<input type="hidden" name="AC_NEXT_DATE" value="' . date('Ymd', mktime(0,0,0,substr($nextdate, 5, 2)+1,1,substr($nextdate, 0, 4))) . '">';
+				$html .= '<input type="hidden" name="AC_NEXT_DATE" value="' . date('Ymd', dlseller_first_charging($cart[0]['post_id'], 'time')) . '">';
 				$html .= '<input type="hidden" name="AC_INTERVAL" value="' . $frequency . 'M">';
 			}
 
@@ -427,7 +428,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="CURRENCYCODE" value="'.$currency_code.'">
 				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
 			$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
-			$frequency = $usces->getItemFrequency($cart[0]['post_id']);
+			//$frequency = $usces->getItemFrequency($cart[0]['post_id']);
 			if( 'continue' != $charging_type) {
 				//通常購入
 				for($i = 0; $i < count($cart); $i++) {
