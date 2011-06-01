@@ -353,6 +353,7 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <input type="hidden" name="itemPointrate_nonce" id="itemPointrate_nonce" value="<?php echo wp_create_nonce( 'itemPointrate_nonce' ); ?>" /></td>
 </tr>
 <tr>
+<!--
 <th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
 <td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum1[0]), '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo esc_attr($itemGpDis1[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
 </tr>
@@ -362,6 +363,7 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <tr>
 <td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum3[0]), '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo esc_attr($itemGpDis3[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
 </tr>
+-->
 <?php apply_filters('usces_item_master_first_section', NULL, $post_ID); ?>
 </table>
 </div>
@@ -428,7 +430,7 @@ echo $second_section;
 <div id="postskucustomstuff"><div id="skuajax-response"></div>
 <?php
 $metadata = has_item_sku_meta($post->ID);
-list_item_sku_meta($metadata);
+list_item_sku_meta($metadata, $post->ID);
 item_sku_meta_form();
 ?>
 </div>

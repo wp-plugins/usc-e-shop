@@ -875,6 +875,62 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	}
 }
 
+function usces_the_itemSkuOption( $id, $skurow, $option ) {
+
+	$html = '';
+
+	if( is_serialized( $skurow['meta_value'] ) ) $skurow['meta_value'] = maybe_unserialize( $skurow['meta_value'] );
+	$name = esc_attr(substr($skurow['meta_key'],6));
+	$value = $skurow['meta_value']['value'];
+	$means = (int)$skurow['meta_value']['means'];
+	$essential = (int)$skurow['meta_value']['essential'];
+
+	//$html .= "\n\t<tr>";
+	//$html .= "\n\t\t<td colspan='3'></td>";
+	//$html .= "\n\t\t<td><label for='itemsku[{$id}][skuoption][{$name}]' class='iopt_label'>{$name}</label></td>";
+	$html .= "<div class='item-sku-option'>";
+	$html .= "<label for='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option'>{$name}</label>";
+
+	$opt_value = '';
+	foreach((array)$option as $opt_key => $opt_val) {
+		if($opt_key == $name) {
+			$opt_value = $opt_val;
+			break;
+		}
+	}
+
+	switch($means) {
+	case 0://Single-select
+	case 1://Multi-select
+		$selects = explode("\n", $value[0]);
+		$multiple = ($means === 0) ? '' : ' multiple';
+		//$html .= "\n\t\t<td>";
+		$html .= "<select name='itemsku[{$id}][skuoption][{$name}]' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' {$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">";
+		$html .= "\t<option value='#NONE#'>".__('Choose','usces')."</option>\n";
+		foreach($selects as $v) {
+			$selected = ( esc_attr($v) == $opt_value ) ? ' selected' : '';
+			$html .= "\t<option value='".esc_attr($v)."'{$selected}>".esc_html($v)."</option>\n";
+		}
+		$html .= "</select>\n";
+		//$html .= "</td>";
+		break;
+	case 2://Text
+		//$html .= "\n\t\t<td>";
+		$html .= "<input name='itemsku[{$id}][skuoption][{$name}]' type='text' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"".esc_attr($opt_value)."\" />";
+		//$html .= "</td>";
+		break;
+	case 5://Text-area
+		//$html .= "\n\t\t<td>";
+		$html .= "<textarea name='itemsku[{$id}][skuoption][{$name}]' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' />".esc_attr($opt_value)."</textarea>";
+		//$html .= "</td>";
+		break;
+	}
+	//$html .= "\n\t</tr>";
+	$html .= "</div>";
+
+	return $html;
+}
+
 function usces_the_cart() {
 	global $usces;
 	

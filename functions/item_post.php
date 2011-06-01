@@ -13,6 +13,24 @@ function has_item_option_meta( $postid ) {
 }
 
 /**
+ * item sku option
+ */
+function has_item_sku_option_meta( $postid ) {
+	global $wpdb, $usces;
+	$meta = array();
+
+	$orderby = $usces->options['system']['orderby_itemopt'] ? 'meta_id' : 'meta_key';
+	$res = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
+			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE %s 
+			ORDER BY {$orderby}", $postid, '_iopt_%'), ARRAY_A );
+	foreach( $res as $row ) {
+		if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
+		if( $row['meta_value']['sku'] == 1 ) $meta[] = $row;
+	}
+	return $meta;
+}
+
+/**
  * item sku
  */
 function has_item_sku_meta( $postid ) {
@@ -28,7 +46,7 @@ function has_item_sku_meta( $postid ) {
 /**
  * list_item_option
  */
-function list_item_option_meta( $meta ) {
+function list_item_option_meta( $meta, $item = '' ) {
 	// Exit if no meta
 	if ( ! $meta ) {
 		echo '
@@ -56,7 +74,7 @@ function list_item_option_meta( $meta ) {
 	<tbody id="item-opt-list">
 <?php
 	foreach ( $meta as $entry )
-		echo _list_item_option_meta_row( $entry );
+		echo _list_item_option_meta_row( $entry, $item );
 ?>
 	</tbody>
 </table>
@@ -66,7 +84,7 @@ function list_item_option_meta( $meta ) {
 /**
  * list_item_sku
  */
-function list_item_sku_meta( $meta ) {
+function list_item_sku_meta( $meta, $post_id ) {
 	// Exit if no meta
 	if ( ! $meta ) {
 		echo '
@@ -78,6 +96,13 @@ function list_item_sku_meta( $meta ) {
 		<th>' . apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL). '('.__(usces_crcode( 'return' ), 'usces').')</th>
 		<th>' . __('stock','usces') . '</th>
 		<th>' . __('stock status', 'usces') . '</th>
+	</tr>
+	<tr>
+		<th>' . __('SKU display name ','usces') . '</th>
+		<th>原価(円)</th>
+		<th>会員価格(円)</th>
+		<th>' . __('unit','usces') . '</th>
+		<th>商品規格</th>
 	</tr>
 	</thead>
 	<tbody id="item-sku-list">
@@ -98,18 +123,17 @@ function list_item_sku_meta( $meta ) {
 	</tr>
 	<tr>
 		<th><?php _e('SKU display name ','usces'); ?></th>
+		<th>原価(円)</th>
+		<th>会員価格(円)</th>
 		<th><?php _e('unit','usces'); ?></th>
-		<?php
-		$advance_title = '<th colspan="2">&nbsp;</th>';
-		echo apply_filters('usces_filter_sku_meta_form_advance_title', $advance_title);
-		?>
-		<th><?php _e('Apply business package','usces'); ?></th>
+		<th>商品規格</th>
 	</tr>
 	</thead>
 	<tbody id="item-sku-list">
 <?php
+	$skuoption = has_item_sku_option_meta($post_id);
 	foreach ( $meta as $entry )
-		echo _list_item_sku_meta_row( $entry );
+		echo _list_item_sku_meta_row( $entry, $skuoption );
 ?>
 	</tbody>
 </table>
@@ -134,7 +158,7 @@ function payment_list( $meta ) {
 	</tr>
 	</thead>
 	<tbody id="payment-list">
-	<tr><td></td><td></td><td></td></tr>
+	<tr><td></td><td></td><td></td><td></td></tr>
 	</tbody>
 </table>'; //TBODY needed for list-manipulation JS
 		return;
@@ -162,15 +186,15 @@ function payment_list( $meta ) {
 /**
  * option meta row
  */
-function _list_item_option_meta_row( $entry ) {
+function _list_item_option_meta_row( $entry, $item ) {
 	$r = '';
 	$style = '';
 	$means = get_option('usces_item_option_select');
 
 	if ( is_serialized( $entry['meta_value'] ) ) {
 		$entry['meta_value'] = maybe_unserialize( $entry['meta_value'] );
-	} else {
-		return;
+	//} else {
+	//	return;
 	}
 	
 	$readonly = " readonly='true'";
@@ -178,28 +202,43 @@ function _list_item_option_meta_row( $entry ) {
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
 		if($meankey == $entry['meta_value']['means']) {
-			$selected = ' selected="selected"';
+			$selected = ' selected';
 		}else{
 			$selected = '';
 		}
-		$meansoption .= '<option value="' . esc_attr($meankey) . '"' . $selected . '>' . esc_html($meanvalue) . "</option>\n";
+		$meansoption .= '<option value="'.esc_attr($meankey).'"'.$selected.'>'.esc_html($meanvalue)."</option>\n";
 	}
-	$essential = $entry['meta_value']['essential'] == 1 ? " checked='checked'" : "";
+	$essential = $entry['meta_value']['essential'] == 1 ? " checked" : "";
+	if($item == 'common') {
+		$sku = $entry['meta_value']['sku'] == 1 ? " checked" : "";
+		$keyname = $key;
+	} else {
+		$sku = $entry['meta_value']['sku'] == 1 ? $entry['meta_value']['sku'] : "0";
+		$keyname = $entry['meta_value']['sku'] == 1 ? '★'.$key : $key;
+	}
 	$value = '';
 	if(is_array($entry['meta_value']['value'])){
 		foreach($entry['meta_value']['value'] as $k => $v){
-			$value .= $v . "\n";
+			$value .= $v."\n";
 		}
 	}
 	$value = esc_attr(trim($value));
 	$id = (int) $entry['meta_id'];
 
+	$delete = ($item == 'common') ? 'deletecommonopt' : 'deleteitemopt';
+	$update = ($item == 'common') ? 'updatecommonopt' : 'updateitemopt';
+
 	$r .= "\n\t<tr id='itemopt-{$id}' class='{$style}'>";
-	$r .= "\n\t\t<td class='left'><div><input name='itemopt[{$id}][key]' id='itemopt[{$id}][key]' class='optname' type='text' size='20' value='{$key}'{$readonly} /></div>";
-	$r .= "\n\t\t<div class='optcheck'><select name='itemopt[{$id}][means]' id='itemopt[{$id}][means]'>" . $meansoption . "</select>\n";
-	$r .= "<input name='itemopt[{$id}][essential]' id='itemopt[{$id}][essential]' type='checkbox' value='1'{$essential} /><label for='itemopt[{$id}][essential]'>" . __('Required','usces') . "</label></div>";
-	$r .= "\n\t\t<div class='submit'><input name='deleteitemopt[{$id}]' id='deleteitemopt[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"deleteitemopt\", {$id});' />";
-	$r .= "\n\t\t<input name='updateitemopt' id='updateitemopt[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"updateitemopt\", {$id});' /></div>";
+	$r .= "\n\t\t<td class='left'><div><input name='itemopt[{$id}][key]' id='itemopt[{$id}][key]' class='optname' type='text' size='20' value='{$keyname}'{$readonly} /></div>";
+	$r .= "\n\t\t<div class='optcheck'><select name='itemopt[{$id}][means]' id='itemopt[{$id}][means]'>".$meansoption."</select>\n";
+	$r .= "<input name='itemopt[{$id}][essential]' id='itemopt[{$id}][essential]' type='checkbox' value='1'{$essential} /><label for='itemopt[{$id}][essential]'>".__('Required','usces')."</label>　";
+	if($item == 'common') {
+		$r .= "<input name='itemopt[{$id}][sku]' id='itemopt[{$id}][sku]' type='checkbox' value='1'{$sku} /><label for='itemopt[{$id}][sku]'>SKU用オプション</label>";
+	} else {
+		$r .= "<input name='itemopt[{$id}][sku]' id='itemopt[{$id}][sku]' type='hidden' value='$sku' /></div>";
+	}
+	$r .= "\n\t\t<div class='submit'><input name='deleteitemopt[{$id}]' id='deleteitemopt[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"{$delete}\", {$id});' />";
+	$r .= "\n\t\t<input name='updateitemopt' id='updateitemopt[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"{$update}\", {$id});' /></div>";
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='itemopt[{$id}][value]' id='itemopt[{$id}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
@@ -209,14 +248,13 @@ function _list_item_option_meta_row( $entry ) {
 /**
  * sku meta row
  */
-function _list_item_sku_meta_row( $entry ) {
+function _list_item_sku_meta_row( $entry, $skuoption ) {
 	$r = '';
 	$style = '';
-
 	if ( is_serialized( $entry['meta_value'] ) ) {
 		$entry['meta_value'] = maybe_unserialize( $entry['meta_value'] );
-	} else {
-		return;
+	//} else {
+	//	return;
 	}
 	$readonly = "";
 	$key = esc_attr(substr($entry['meta_key'],6));
@@ -226,10 +264,13 @@ function _list_item_sku_meta_row( $entry ) {
 	$zaiko = $entry['meta_value']['zaiko'];
 	$skudisp = esc_attr($entry['meta_value']['disp']);
 	$skuunit = esc_attr($entry['meta_value']['unit']);
-	$skugptekiyo = $entry['meta_value']['gptekiyo'];
-	$charging_type = $entry['meta_value']['charging_type'];
+	//$skugptekiyo = $entry['meta_value']['gptekiyo'];
+	//$charging_type = $entry['meta_value']['charging_type'];
 	$id = (int) $entry['meta_id'];
 	$zaikoselectarray = get_option('usces_zaiko_status');
+	$gprice = $entry['meta_value']['gprice'];//原価
+	$mprice = $entry['meta_value']['mprice'];//会員価格
+	$option = maybe_unserialize($entry['meta_value']['option']);//オプション
 	
 	$r .= "\n\t<tr id='itemsku-{$id}' class='{$style}'>";
 	$r .= "\n\t\t<td class='item-sku-key'><input name='itemsku[{$id}][key]' id='itemsku[{$id}][key]' class='skuname' type='text' value='{$key}'{$readonly} /></td>";
@@ -244,22 +285,40 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= "\n\t\t</select></td>";
 	$r .= "\n\t</tr>";
 	$r .= "\n\t<tr>";
-	$r .= "\n\t\t<td class='item-sku-key rowbottom'><input name='itemsku[{$id}][skudisp]' id='itemsku[{$id}][skudisp]' class='skudisp' type='text' value='{$skudisp}' />";
+	//$r .= "\n\t\t<td class='item-sku-key rowbottom'><input name='itemsku[{$id}][skudisp]' id='itemsku[{$id}][skudisp]' class='skudisp' type='text' value='{$skudisp}' />";
+	//$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
+	//$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
+	//$r .= "</td>";
+	$r .= "\n\t\t<td class='item-sku-key'><input name='itemsku[{$id}][skudisp]' id='itemsku[{$id}][skudisp]' class='skudisp' type='text' value='{$skudisp}' /></td>";
+	$r .= "\n\t\t<td class='item-sku-price'><input name='itemsku[{$id}][gprice]' id='itemsku[{$id}][gprice]' class='skuprice' type='text' value='{$gprice}' /></td>";
+	$r .= "\n\t\t<td class='item-sku-price'><input name='itemsku[{$id}][mprice]' id='itemsku[{$id}][mprice]' class='skuprice' type='text' value='{$mprice}' /></td>";
+	$r .= "\n\t\t<td class='item-sku-cprice'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
+	$r .= "\n\t\t<td></td>";
+	$r .= "\n\t</tr>";
+	$r .= "\n\t<tr>";
+	$r .= "\n\t\t<td colspan='3'></td>";
+	$r .= "\n\t\t<td colspan='2' class='item-sku-option' id='itemsku-option-{$id}' >";
+	foreach($skuoption as $skurow) {
+		$r .= usces_the_itemSkuOption( $id, $skurow, $option );
+	}
+	$r .= "</td>";
+	$r .= "\n\t</tr>";
+	//$default_field = "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>&nbsp;</td>";
+	//$r .= apply_filters('usces_filter_sku_meta_row_advance', $default_field, $entry);
+	//$r .= "\n\t\t<td class='item-sku-zaiko rowbottom'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
+	//$r .= "\n\t\t\t<option value='0'";
+	//$r .= ($skugptekiyo == 0) ? " selected='selected'" : "";
+	//$r .= ">" . __('Not apply','usces') . "</option>";
+	//$r .= "\n\t\t\t<option value='1'";
+	//$r .= ($skugptekiyo == 1) ? " selected='selected'" : "";
+	//$r .= ">" . __('Apply','usces') . "</option>";
+	//$r .= "\n\t\t</select></td>";
+	$r .= "\n\t<tr>";//[削除][更新]ボタン
+	$r .= "\n\t\t<td class='item-sku-key'>";
 	$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
 	$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
 	$r .= "</td>";
-
-	$r .= "\n\t\t<td class='item-sku-cprice rowbottom'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
-	$default_field = "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>&nbsp;</td>";
-	$r .= apply_filters('usces_filter_sku_meta_row_advance', $default_field, $entry);
-	$r .= "\n\t\t<td class='item-sku-zaiko rowbottom'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
-	$r .= "\n\t\t\t<option value='0'";
-	$r .= ($skugptekiyo == 0) ? " selected='selected'" : "";
-	$r .= ">" . __('Not apply','usces') . "</option>";
-	$r .= "\n\t\t\t<option value='1'";
-	$r .= ($skugptekiyo == 1) ? " selected='selected'" : "";
-	$r .= ">" . __('Apply','usces') . "</option>";
-	$r .= "\n\t\t</select></td>";
+	$r .= "\n\t\t<td colspan='4'></td>";
 	$r .= "\n\t</tr>";
 	return $r;
 }
@@ -318,10 +377,11 @@ function common_option_meta_form() {
 <tbody>
 <tr>
 <td class='item-opt-key'>
-<input type="text" id="newoptname" name="newoptname" class="optname" tabindex="7" value="" />
+<input type="text" id="newoptname" name="newoptname" class="optname" value="" />
 <div class="optcheck">
 <select name='newoptmeans' id='newoptmeans'><?php echo $meansoption; ?></select>
-<input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label>
+<input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label>　
+<input name="newoptsku" type="checkbox" id="newoptsku" /><label for='newoptsku'>SKU用オプション</label>
 </div>
 </td>
 <td class='item-opt-value'><textarea id="newoptvalue" name="newoptvalue" class='optvalue'></textarea></td>
@@ -329,7 +389,7 @@ function common_option_meta_form() {
 
 <tr>
 <td colspan="2" class="submit">
-<input name="add_comopt" type="button" id="add_comopt" tabindex="9" value="<?php _e('Add common options','usces') ?>" onclick="itemOpt.post('addcommonopt', 0);" />
+<input name="add_comopt" type="button" id="add_comopt" value="<?php _e('Add common options','usces') ?>" onclick="itemOpt.post('addcommonopt', 0);" />
 </td></tr>
 </tbody>
 </table>
@@ -340,17 +400,22 @@ function common_option_meta_form() {
 /**
  * item_option_meta_form
  */
-function item_option_meta_form() {
+function item_option_meta_form($sku = 0) {
 	global $wpdb;
-	$usces_options = get_option('usces');
+	//$usces_options = get_option('usces');
 	$limit = (int) apply_filters( 'postmeta_form_limit', 30 );
-	$cart_number = (int)get_option('usces_cart_number');
-	$keys = $wpdb->get_col( "
+	//$cart_number = (int)get_option('usces_cart_number');
+/*	$keys = $wpdb->get_col( "
 		SELECT meta_key
 		FROM $wpdb->postmeta
 		WHERE meta_key LIKE '_iopt_%' AND post_id = $cart_number 
 		ORDER BY meta_key ASC
 		LIMIT $limit" );
+*/	$keys = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value 
+		FROM $wpdb->postmeta 
+		WHERE post_id = %d AND meta_key LIKE %s 
+		ORDER BY meta_key ASC 
+		LIMIT %d", USCES_CART_NUMBER, '_iopt_%', $limit), ARRAY_A );
 	$means = get_option('usces_item_option_select');
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
@@ -370,35 +435,37 @@ function item_option_meta_form() {
 <tr>
 <td class='item-opt-key'>
 <?php if ( $keys ) { ?>
-<select id="optkeyselect" name="optkeyselect" class="optkeyselect" tabindex="7" onchange="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('keyselect', this.value);">
-<option value="#NONE#"><?php _e( '- Select -' ); ?></option>
+<select id="optkeyselect" name="optkeyselect" class="optkeyselect" onchange="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('keyselect', this.value);">
+<option value="#NONE#"><?php _e('-- Select --','usces'); ?></option>
 <?php
-
-	foreach ( $keys as $key ) {
-		$key = esc_attr( substr($key, 6) );
-		echo "\n<option value='$key'>$key</option>";
+	//foreach ( $keys as $key ) {
+	foreach( $keys as $row ) {
+		//$key = esc_attr( substr($key, 6) );
+		//echo "\n<option value='$key'>$key</option>";
+		$key = esc_attr( substr( $row['meta_key'], 6) );
+		if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
+		$keyname = ( $row['meta_value']['sku'] == 1 ) ? '★'.$key : $key;
+		echo "\n<option value='$key'>$keyname</option>";
 	}
 ?>
 </select>
 <input type="text" id="newoptname" name="newoptname" class="hide-if-js optname" value="" />
 <div class="optcheck"><select name='newoptmeans' id='newoptmeans'><?php echo $meansoption; ?></select>
-<input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label></div>
-<!--<a href="#postcustomstuff" class="hide-if-no-js" onClick="jQuery('#newoptname, #optkeyselect, #enternew, #cancelnew').toggle();return false;">
-<span id="enternew"><?php _e('Enter new'); ?></span>
-<span id="cancelnew" class="hidden"><?php _e('Cancel'); ?></span></a>
---><?php } else { ?>
-<!--<input type="text" id="newoptname" name="newoptname" class="item-opt-key" tabindex="7" value="" />
-<input name="newoptmeans" type="checkbox" id="newoptmeans" class="item-opt-means" /><label for='newoptmeans'><?php _e('Multi-select','usces') ?></label></div>
--->
-<p><?php _e('Please create a common option.','usces') ?></p>
-<?php } ?>
+<input name="newoptessential" type="checkbox" id="newoptessential" /><label for='newoptessential'><?php _e('Required','usces') ?></label>
+<input name="newoptsku" type="hidden" id="newoptsku" />
+</div>
 </td>
 <td class='item-opt-value'><textarea id="newoptvalue" name="newoptvalue" class='optvalue'></textarea></td>
+<?php } else { ?>
+<p><?php _e('Please create a common option.','usces') ?></p>
+</td>
+<td class='item-opt-value'></td>
+<?php } ?>
 </tr>
 
 <tr><td colspan="2" class="submit">
 <?php if( $keys ) { ?>
-<input name="add_itemopt" type="button" id="add_itemopt" tabindex="9" value="<?php _e('Apply an option','usces') ?>" onclick="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('additemopt', 0);" />
+<input name="add_itemopt" type="button" id="add_itemopt" value="<?php _e('Apply an option','usces') ?>" onclick="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('additemopt', 0);" />
 <?php } ?>
 </td></tr>
 </tbody>
@@ -433,23 +500,21 @@ function item_sku_meta_form() {
 </tr>
 <tr>
 	<th><?php _e('SKU display name ','usces') ?></th>
+	<th>原価(円)</th>
+	<th>会員価格(円)</th>
 	<th><?php _e('unit','usces') ?></th>
-	<?php
-	$advance_title = '<th colspan="2">&nbsp;</th>';
-	echo apply_filters('usces_filter_sku_meta_form_advance_title', $advance_title);
-	?>
-	<th><?php _e('Apply business package','usces') ?></th>
+	<th>商品規格</th>
 </tr>
 </thead>
 
 <tbody>
 <tr>
 <td id="newskuleft" class='item-sku-key'>
-<input type="text" id="newskuname" name="newskuname" class="newskuname"value="" />
+<input type="text" id="newskuname" name="newskuname" class="newskuname" value="" />
 </td>
-<td class='item-sku-cprice'><input type="text" id="newskucprice" name="newskucprice" class='newskuprice' /></td>
-<td class='item-sku-price'><input type="text" id="newskuprice" name="newskuprice" class='newskuprice' /></td>
-<td class='item-sku-zaikonum'><input type="text" id="newskuzaikonum" name="newskuzaikonum" class='newskuzaikonum' /></td>
+<td class='item-sku-cprice'><input type="text" id="newskucprice" name="newskucprice" class="newskuprice" /></td>
+<td class='item-sku-price'><input type="text" id="newskuprice" name="newskuprice" class="newskuprice" /></td>
+<td class='item-sku-zaikonum'><input type="text" id="newskuzaikonum" name="newskuzaikonum" class="newskuzaikonum" /></td>
 <td class='item-sku-zaiko'>
 <select id="newskuzaikoselect" name="newskuzaikoselect" class="newskuzaikoselect">
 <?php
@@ -462,24 +527,16 @@ function item_sku_meta_form() {
 </td>
 </tr>
 <tr>
-<td class='item-sku-key'><input type="text" id="newskudisp" name="newskudisp" class="newskudisp"value="" /></td>
-<td class='item-sku-cprice'><input type="text" id="newskuunit" name="newskuunit" class='newskuunit' /></td>
-<?php
-$advance_field = '<td class="item-sku-price">&nbsp;</td><td class="item-sku-zaikonum">&nbsp;</td>';
-echo apply_filters('usces_filter_sku_meta_form_advance_field', $advance_field );
-?>
-
-<td class='item-sku-zaiko'>
-<select id="newskugptekiyo" name="newskugptekiyo" class="newskugptekiyo">
-    <option value="0"><?php _e('Not apply','usces') ?></option>
-    <option value="1"><?php _e('Apply','usces') ?></option>
-</select>
-</td>
+<td class='item-sku-key'><input type="text" id="newskudisp" name="newskudisp" class="newskudisp" value="" /></td>
+<td class='item-sku-cprice'><input type="text" id="newskugprice" name="newskugprice" class="newskuprice" /></td>
+<td class='item-sku-price'><input type="text" id="newskumprice" name="newskumprice" class="newskuprice" /></td>
+<td class='item-sku-zaikonum'><input type="text" id="newskuunit" name="newskuunit" class="newskuunit" /></td>
+<td class='item-sku-zaiko'></td>
 </tr>
 
 <tr>
 <td colspan="5" class="submit">
-<input name="add_itemsku" type="button" id="add_itemsku" tabindex="9" value="<?php _e('Add SKU','usces') ?>" onclick="if( jQuery('#post_ID').val() < 0 ) return; itemSku.post('additemsku', 0);" />
+<input name="add_itemsku" type="button" id="add_itemsku" value="<?php _e('Add SKU','usces') ?>" onclick="if( jQuery('#post_ID').val() < 0 ) return; itemSku.post('additemsku', 0);" />
 </td></tr>
 </tbody>
 </table>
@@ -506,7 +563,7 @@ function payment_form() {
 
 <tbody>
 <tr>
-<td class='paymentname'><input type="text" id="newname" name="newname" class="paymentname" tabindex="7" value="" /></td>
+<td class='paymentname'><input type="text" id="newname" name="newname" class="paymentname" value="" /></td>
 <td class='paymentexplanation'><textarea id="newexplanation" name="newexplanation" class='paymentexplanation'></textarea></td>
 <td class='paymentsettlement'>
 	<select name="newsettlement" id="newsettlement" class='paymentsettlement'>
@@ -515,11 +572,11 @@ function payment_form() {
 <?php } ?>
 	</select>
 </td>
-<td class='paymentmodule'><input type="text" id="newmodule" name="newmodule" class="paymentmodule" tabindex="9" value="" /></td>
+<td class='paymentmodule'><input type="text" id="newmodule" name="newmodule" class="paymentmodule" value="" /></td>
 </tr>
 
 <tr><td colspan="2" class="submit">
-<input name="add_payment" type="button" id="add_payment" tabindex="9" value="<?php _e('Add a new method forpayment ','usces') ?>" onclick="payment.post('add', 0);" />
+<input name="add_payment" type="button" id="add_payment" value="<?php _e('Add a new method forpayment ','usces') ?>" onclick="payment.post('add', 0);" />
 </td></tr>
 </tbody>
 </table>
@@ -542,8 +599,9 @@ function add_item_option_meta( $post_ID ) {
 	$protected = array( '#NONE#', '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
 	$newoptname = isset($_POST['newoptname']) ? trim( $_POST['newoptname'] ) : '';
-	$newoptmeans = isset($_POST['newoptmeans']) ? $_POST['newoptmeans']: 0;
-	$newoptessential = isset($_POST['newoptessential']) ? $_POST['newoptessential']: 0;
+	$newoptmeans = isset($_POST['newoptmeans']) ? $_POST['newoptmeans'] : 0;
+	$newoptessential = isset($_POST['newoptessential']) ? $_POST['newoptessential'] : 0;
+	$newoptsku = isset($_POST['newoptsku']) ? $_POST['newoptsku'] : 0;
 
 	if($newoptmeans == 0 || $newoptmeans == 1){
 		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', $_POST['newoptvalue'] ) : '';
@@ -571,6 +629,7 @@ function add_item_option_meta( $post_ID ) {
 		$metakey = '_iopt_' . $metakey;
 		$value['means'] = $newoptmeans;
 		$value['essential'] = $newoptessential;
+		$value['sku'] = $newoptsku;
 		$value['value'] = $nov;
 		$unique = true;
 		
@@ -582,7 +641,7 @@ function add_item_option_meta( $post_ID ) {
 } // add_meta
 
 /**
- * add_item_option_meta
+ * add_item_sku_meta
  */
 function add_item_sku_meta( $post_ID ) {
 	global $wpdb;
@@ -598,8 +657,10 @@ function add_item_sku_meta( $post_ID ) {
 	$newskuzaikoselect = isset($_POST['newskuzaikoselect']) ? $_POST['newskuzaikoselect'] : '';
 	$newskudisp = isset($_POST['newskudisp']) ? trim( $_POST['newskudisp'] ) : '';
 	$newskuunit = isset($_POST['newskuunit']) ? trim( $_POST['newskuunit'] ) : '';
-	$newskugptekiyo = isset($_POST['newskugptekiyo']) ? $_POST['newskugptekiyo'] : '';
-	$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : 0;
+	//$newskugptekiyo = isset($_POST['newskugptekiyo']) ? $_POST['newskugptekiyo'] : '';
+	//$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : 0;
+	$newskugprice = isset($_POST['newskugprice']) ? $_POST['newskugprice']: '';//原価
+	$newskumprice = isset($_POST['newskumprice']) ? $_POST['newskumprice']: '';//会員価格
 
 
 	if ( $newskuname != '' && $newskuprice != '' && $newskuzaikoselect != '') {
@@ -620,13 +681,15 @@ function add_item_sku_meta( $post_ID ) {
 		$value['zaiko'] = $newskuzaikoselect;
 		$value['disp'] = $newskudisp;
 		$value['unit'] = $newskuunit;
-		$value['gptekiyo'] = $newskugptekiyo;
-		$value['charging_type'] = (int)$newcharging_type;
+		//$value['gptekiyo'] = $newskugptekiyo;
+		//$value['charging_type'] = (int)$newcharging_type;
+		$value['gprice'] = $newskugprice;
+		$value['mprice'] = $newskumprice;
 		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
 		$unique = true;
 
 		add_post_meta($post_ID, $metakey, $value, $unique);
-	
+
 //		$id = $wpdb->get_var( $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = %s LIMIT 1", $post_ID, $metakey) );
 //
 //		if(!$id){
@@ -686,8 +749,9 @@ function up_item_option_meta( $post_ID ) {
 	$protected = array( '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
 	$optmetaid = isset($_POST['optmetaid']) ? (int)$_POST['optmetaid'] : '';
-	$optmeans = isset($_POST['optmeans']) ? $_POST['optmeans']: 0;
-	$optessential = isset($_POST['optessential']) ? $_POST['optessential']: 0;
+	$optmeans = isset($_POST['optmeans']) ? $_POST['optmeans'] : 0;
+	$optessential = isset($_POST['optessential']) ? $_POST['optessential'] : 0;
+	$optsku = isset($_POST['optsku']) ? $_POST['optsku'] : 0;
 
 	if($optmeans == 0 || $optmeans == 1){
 		$optvalue = isset($_POST['optvalue']) ? explode('\n', trim( $_POST['optvalue'] ) ) : '';
@@ -702,6 +766,7 @@ function up_item_option_meta( $post_ID ) {
 
 	$value['means'] = $optmeans;
 	$value['essential'] = $optessential;
+	$value['sku'] = $optsku;
 	$value['value'] = $nov;
 	$valueserialized = maybe_serialize($value);
 
@@ -731,14 +796,18 @@ function up_item_sku_meta( $post_ID ) {
 
 	$skuname = isset($_POST['skuname']) ? trim( $_POST['skuname'] ) : '';
 	$skumetaid = isset($_POST['skumetaid']) ? (int)$_POST['skumetaid'] : '';
-	$skucprice = isset($_POST['skucprice']) ? trim( $_POST['skucprice'] ): 0;
-	$skuprice = isset($_POST['skuprice']) ? trim( $_POST['skuprice'] ): 0;
-	$skuzaikonum = isset($_POST['skuzaikonum']) ? trim( $_POST['skuzaikonum'] ): 0;
+	$skucprice = isset($_POST['skucprice']) ? trim( $_POST['skucprice'] ) : 0;
+	$skuprice = isset($_POST['skuprice']) ? trim( $_POST['skuprice'] ) : 0;
+	$skuzaikonum = isset($_POST['skuzaikonum']) ? trim( $_POST['skuzaikonum'] ) : 0;
 	$skuzaiko = isset($_POST['skuzaiko']) ? (int)$_POST['skuzaiko'] : '';
-	$skudisp = isset($_POST['skudisp']) ? trim( $_POST['skudisp'] ): '';
-	$skuunit = isset($_POST['skuunit']) ? trim( $_POST['skuunit'] ): '';
-	$skugptekiyo = isset($_POST['skugptekiyo']) ? (int)$_POST['skugptekiyo'] : 0;
-	$charging_type = isset($_POST['charging_type']) ? $_POST['charging_type'] : 0;
+	$skudisp = isset($_POST['skudisp']) ? trim( $_POST['skudisp'] ) : '';
+	$skuunit = isset($_POST['skuunit']) ? trim( $_POST['skuunit'] ) : '';
+	//$skugptekiyo = isset($_POST['skugptekiyo']) ? (int)$_POST['skugptekiyo'] : 0;
+	//$charging_type = isset($_POST['charging_type']) ? $_POST['charging_type'] : 0;
+	$skugprice = isset($_POST['skugprice']) ? trim( $_POST['skugprice'] ) : 0;//原価
+	$skumprice = isset($_POST['skumprice']) ? trim( $_POST['skumprice'] ) : 0;//会員価格
+	$skukey = isset($_POST['skukey']) ? explode("#usces#", trim( $_POST['skukey'] )) : array();//SKUオプション(KEY)
+	$skuoption = isset($_POST['skuoption']) ? explode("#usces#", trim( $_POST['skuoption'] )) : array();//SKUオプション(VALUE)
 
 	$value['cprice'] = $skucprice;
 	$value['price'] = $skuprice;
@@ -746,8 +815,13 @@ function up_item_sku_meta( $post_ID ) {
 	$value['zaiko'] = $skuzaiko;
 	$value['disp'] = $skudisp;
 	$value['unit'] = $skuunit;
-	$value['gptekiyo'] = $skugptekiyo;
-	$value['charging_type'] = (int)$charging_type;
+	//$value['gptekiyo'] = $skugptekiyo;
+	//$value['charging_type'] = (int)$charging_type;
+	$value['gprice'] = $skugprice;
+	$value['mprice'] = $skumprice;
+	for($i = 0; $i < count($skukey); $i++) {
+		$value['option'][$skukey[$i]] = $skuoption[$i];
+	}
 	
 	$value = apply_filters('usces_filter_up_item_sku_meta_value', $value);
 	
@@ -871,6 +945,7 @@ function select_common_option( $post_ID ) {
 	
 	$means = $array['means'];
 	$essential = $array['essential'];
+	$sku = $array['sku'];
 	$value = '';
 	if($means < 2){
 		foreach($array['value'] as $k => $v){
@@ -879,9 +954,71 @@ function select_common_option( $post_ID ) {
 	}else{
 			$value .= trim($array['value']) . "\n";
 	}
-	$res = $means . $essential . $value;
+	//$res = $means . $essential . $sku. $value;
+	$res = $means.'#usces#'.$essential.'#usces#'.$sku.'#usces#'.$value;
 	return $res;
 } // select_common_option
+
+function set_item_sku_option( $post_id ) {
+
+	$skudata = has_item_sku_meta($post_id);
+	$skuoption = has_item_sku_option_meta($post_id);
+	$html = '';
+	$sku_id = '';
+
+	foreach($skudata as $skurow) {
+		$id = (int)$skurow['meta_id'];
+		$sku_id .= $id.",";
+		if( is_serialized( $skurow['meta_value'] ) ) $skurow['meta_value'] = maybe_unserialize( $skurow['meta_value'] );
+		$option = $skurow['meta_value']['option'];//オプション
+
+		foreach($skuoption as $optionrow) {
+			if( is_serialized( $optionrow['meta_value'] ) ) $optionrow['meta_value'] = maybe_unserialize( $optionrow['meta_value'] );
+			$name = esc_attr(substr($optionrow['meta_key'],6));
+			$value = $optionrow['meta_value']['value'];
+			$means = (int)$optionrow['meta_value']['means'];
+			$essential = (int)$optionrow['meta_value']['essential'];
+
+			$opt_value = '';
+			foreach((array)$option as $opt_key => $opt_val) {
+				if($opt_key == $name) {
+					$opt_value = $opt_val;
+					break;
+				}
+			}
+
+			$html .= "<div class='item-sku-option'>";
+			$html .= "<label for='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option'>{$name}</label>";
+
+			switch($means) {
+			case 0://Single-select
+			case 1://Multi-select
+				$selects = explode("\n", $value[0]);
+				$multiple = ($means === 0) ? '' : ' multiple';
+				$html .= "<select name='itemsku[{$id}][skuoption][{$name}]' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' {$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">";
+				$html .= "\t<option value='#NONE#'>".__('Choose','usces')."</option>\n";
+				foreach($selects as $v) {
+					$selected = ( esc_attr($v) == $opt_value ) ? ' selected' : '';
+					$html .= "\t<option value='".esc_attr($v)."'{$selected}>".esc_html($v)."</option>\n";
+				}
+				$html .= "</select>\n";
+				break;
+			case 2://Text
+				$html .= "<input name='itemsku[{$id}][skuoption][{$name}]' type='text' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"".esc_attr($opt_value)."\" />";
+				break;
+			case 5://Text-area
+				$html .= "<textarea name='itemsku[{$id}][skuoption][{$name}]' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' />".esc_attr($opt_value)."</textarea>";
+				break;
+			}
+			$html .= "</div>";
+		}
+		$html .= '#usces#';
+	}
+
+	//$html = rtrim($html, '#usces#');
+	$res = rtrim($sku_id, ",").'#usces#'.$html;
+	return $res;
+}
 
 function select_item_sku( $post_ID ) {
 	global $wpdb;
@@ -898,7 +1035,9 @@ function select_item_sku( $post_ID ) {
 	
 	$cprice = $array['cprice'];
 	$price = $array['price'];
-	return $price.'#usces#'.$cprice;
+	$gprice = $array['gprice'];//原価
+	$mprice = $array['mprice'];//会員価格
+	return $price.'#usces#'.$cprice.'#usces#'.$gprice.'#usces#'.$mprice;
 } // select_item_sku
 
 
@@ -912,7 +1051,7 @@ function has_item_sku_list() {
 			FROM $wpdb->postmeta WHERE meta_key LIKE '%s' 
 			GROUP BY meta_key", '_isku_%'));
 			
-	$r = "\t<option value='#NONE#'>" . __('- Select --','usces') . "</option>\n";
+	$r = "\t<option value='#NONE#'>" . __('-- Select --','usces') . "</option>\n";
 	foreach ( $meta as $key ){
 		$key = substr($key, 6);
 		$r .= "\t<option value='" . esc_attr($key) . "'>" . esc_html($key) . "</option>\n";
@@ -1635,10 +1774,10 @@ function get_order_item( $item_code ) {
 	return $r;
 }
 
-function item_option_ajax()
+function common_option_ajax()
 {
 
-	if( $_POST['action'] != 'item_option_ajax' ) die(0);
+	if( $_POST['action'] != 'common_option_ajax' ) die(0);
 	
 	if(isset($_POST['update'])){
 		$res = up_item_option_meta( $_POST['ID'] );
@@ -1654,17 +1793,54 @@ function item_option_ajax()
 		$res = add_item_option_meta( $_POST['ID'] );
 		
 	}
-		
+	
 	$meta = has_item_option_meta( $_POST['ID'] );
 	
 	$r = '';
 	foreach ( $meta as $entry )
-		$r .= _list_item_option_meta_row( $entry );
+		$r .= _list_item_option_meta_row( $entry, 'common' );
 	
 	//REGEX BUG: but it'll return info
 	// Compose JavaScript for return
 	die( $r );
-} 
+}
+
+function item_option_ajax()
+{
+
+	if( $_POST['action'] != 'item_option_ajax' ) die(0);
+	
+	if(isset($_POST['update'])){
+		$res = up_item_option_meta( $_POST['ID'] );
+		
+	}else if(isset($_POST['delete'])){
+		$res = del_item_option_meta( $_POST['ID'] );
+		
+	}else if(isset($_POST['select'])){
+		$res = select_common_option( $_POST['ID'] );
+		die( $res );
+		
+	}else if(isset($_POST['skuoption'])){
+		$res = set_item_sku_option( $_POST['ID'] );
+		die( $res );
+		
+	}else{
+		$res = add_item_option_meta( $_POST['ID'] );
+		
+	}
+	
+	$meta = has_item_option_meta( $_POST['ID'] );
+	
+	$r = '';
+	foreach ( $meta as $entry )
+		$r .= _list_item_option_meta_row( $entry, '' );
+	
+	$r .= '#usces#'.set_item_sku_option( $_POST['ID'] );
+
+	//REGEX BUG: but it'll return info
+	// Compose JavaScript for return
+	die( $r );
+}
 
 function item_sku_ajax()
 {
@@ -1685,16 +1861,17 @@ function item_sku_ajax()
 		$res = add_item_sku_meta( $_POST['ID'] );
 		
 	}
-		
+	
 	$meta = has_item_sku_meta( $_POST['ID'] );
+	$skuoption = has_item_sku_option_meta( $_POST['ID'] );
 	
 	$r = '';
 	foreach ( (array)$meta as $entry )
-		$r .= _list_item_sku_meta_row( $entry );
+		$r .= _list_item_sku_meta_row( $entry, $skuoption );
 	
 	$list = has_item_sku_list();
 	
-	$res = $r . '#usces#' . $list;
+	$res = $r.'#usces#'.$list;
 	
 	die( $res );
 }
@@ -1735,7 +1912,7 @@ function item_save_metadata() {
 		$itemPointrate = (int)$_POST['itemPointrate'];
 		update_post_meta($post_id, '_itemPointrate', $itemPointrate);
 	}
-	if(isset($_POST['itemGpNum1'])){
+/*	if(isset($_POST['itemGpNum1'])){
 		$itemGpNum1 = (int)$_POST['itemGpNum1'];
 		update_post_meta($post_id, '_itemGpNum1', $itemGpNum1);
 	}
@@ -1758,7 +1935,7 @@ function item_save_metadata() {
 	if(isset($_POST['itemGpDis3'])){
 		$itemGpDis3 = (int)$_POST['itemGpDis3'];
 		update_post_meta($post_id, '_itemGpDis3', $itemGpDis3);
-	}
+	}*/
 	
 	if(isset($_POST['itemShipping'])){
 		$itemShipping = (int)$_POST['itemShipping'];
@@ -1778,10 +1955,10 @@ function item_save_metadata() {
 	$itemIndividualSCharge = isset($_POST['itemIndividualSCharge']) ? 1 : 0;
 	update_post_meta($post_id, '_itemIndividualSCharge', $itemIndividualSCharge);
 	
-	if(isset($_POST['wcexp'])){
+/*	if(isset($_POST['wcexp'])){
 		$wcexp = serialize($_POST['wcexp']);
 		update_post_meta($post_id, '_wcexp', $wcexp);
-	}
+	}*/
 
 	
    return ;

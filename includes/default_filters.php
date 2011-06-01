@@ -14,6 +14,7 @@ add_action('save_post', 'item_save_metadata');
 add_action( 'wp_ajax_order_item2cart_ajax', 'order_item2cart_ajax' );
 add_action( 'wp_ajax_order_item_ajax', 'order_item_ajax' );
 add_action( 'wp_ajax_payment_ajax', 'payment_ajax' );
+add_action( 'wp_ajax_common_option_ajax', 'common_option_ajax' );
 add_action( 'wp_ajax_item_option_ajax', 'item_option_ajax' );
 add_action( 'wp_ajax_item_sku_ajax', 'item_sku_ajax' );
 add_action( 'wp_ajax_shop_options_ajax', 'shop_options_ajax' );

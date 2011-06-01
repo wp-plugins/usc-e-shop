@@ -2,6 +2,7 @@
 (function($) {
 	itemOpt = {
 		settings: {
+		settings : {
 			url: uscesL10n.requestFile,
 			type: 'POST',
 			cache: false,
@@ -14,44 +15,21 @@
 		},
 		
 		post : function(action, arg) {
-			if( action == 'updateitemopt' ) {
+			if( action == 'updatecommonopt' ) {
+				itemOpt.updatecommonopt(arg);
+			} else if( action == 'updateitemopt' ) {
 				itemOpt.updateitemopt(arg);
+			} else if( action == 'deletecommonopt' ) {
+				itemOpt.deletecommonopt(arg);
 			} else if( action == 'deleteitemopt' ) {
 				itemOpt.deleteitemopt(arg);
-			} else if( action == 'additemopt' ) {
-				itemOpt.additemopt();
 			} else if( action == 'addcommonopt' ) {
 				itemOpt.addcommonopt();
+			} else if( action == 'additemopt' ) {
+				itemOpt.additemopt();
 			} else if( action == 'keyselect' ) {
 				itemOpt.keyselect(arg);
 			}
-		},
-
-		additemopt : function() {
-			if($("#optkeyselect").val() == "#NONE#") return;
-			
-			var id = $("#post_ID").val();
-			var name = $("#optkeyselect").val();
-			var value = $("#newoptvalue").val();
-			var means = $("#newoptmeans").val();
-			if($("input#newoptessential").attr("checked")){
-				var essential = '1';
-			}else{
-				var essential = '0';
-			}
-			
-			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" + encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
-			s.success = function(data, dataType){
-					$("table#optlist-table").removeAttr("style");
-					$("tbody#item-opt-list").html( data );
-					$("#optkeyselect").attr({selectedIndex:0});
-					$("#newoptvalue").val("");
-					$("#newoptmeans").attr({selectedIndex:0});
-					$("#newoptessential").attr({checked: false});
-			};
-			$.ajax( s );
-			return false;
 		},
 
 		addcommonopt : function() {
@@ -61,22 +39,68 @@
 			var name = $("#newoptname").val();
 			var value = $("#newoptvalue").val();
 			var means = $("#newoptmeans").val();
-			if($("input#newoptessential").attr("checked")){
-				var essential = '1';
-			}else{
-				var essential = '0';
-			}
+			var essential = ($("input#newoptessential").attr("checked")) ? '1' : '0';
+			var sku = ($("input#newoptsku").attr("checked")) ? '1' : '0';
 			
 			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" +encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
+			s.data = "action=common_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" +encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential) + "&newoptsku=" + encodeURIComponent(sku);
 			s.success = function(data, dataType){
-					$("table#optlist-table").removeAttr("style");
-					$("tbody#item-opt-list").html( data );
-					$("#newoptname").val("");
-					$("#newoptvalue").val("");
-					$("#newoptmeans").attr({selectedIndex:0});
-					$("#newoptessential").attr({checked: false});
+				$("table#optlist-table").removeAttr("style");
+				$("tbody#item-opt-list").html( data );
+				$("#newoptname").val("");
+				$("#newoptvalue").val("");
+				$("#newoptmeans").attr({selectedIndex:0});
+				$("#newoptessential").attr({checked: false});
+				$("#newoptsku").attr({checked: false});
 			};
+			$.ajax( s );
+			return false;
+		},
+
+		additemopt : function() {
+			if($("#optkeyselect").val() == "#NONE#") return;
+			
+			var id = $("#post_ID").val();
+			var name = $("#optkeyselect").val();
+			var value = $("#newoptvalue").val();
+			var means = $("#newoptmeans").val();
+			var essential = ($("input#newoptessential").attr("checked")) ? '1' : '0';
+			var sku = $("#newoptsku").val();
+			
+			var s = itemOpt.settings;
+			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" + encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential) + "&newoptsku=" + encodeURIComponent(sku);
+			s.success = function(data, dataType){
+				strs = data.split('#usces#');
+				$("table#optlist-table").removeAttr("style");
+				$("tbody#item-opt-list").html( strs[0] );
+				$("#optkeyselect").attr({selectedIndex:0});
+				$("#newoptvalue").val("");
+				$("#newoptmeans").attr({selectedIndex:0});
+				$("#newoptessential").attr({checked: false});
+				$("#newoptsku").val("");
+				sku_id = strs[1].split(",");
+				for(var i = 0; i < sku_id.length; i++) {
+					$("td#itemsku-option-"+sku_id[i]).empty();
+					$("td#itemsku-option-"+sku_id[i]).html( strs[i+2] );
+				}
+			};
+			$.ajax( s );
+			return false;
+		},
+
+		updatecommonopt : function(meta_id) {
+			var id = $("#post_ID").val();
+			vs = document.getElementById('itemopt\['+meta_id+'\]\[value\]');
+			ms = document.getElementById('itemopt\['+meta_id+'\]\[means\]');
+			es = document.getElementById('itemopt\['+meta_id+'\]\[essential\]');
+			ss = document.getElementById('itemopt\['+meta_id+'\]\[sku\]');
+			var value = $(vs).val();
+			var means = $(ms).val();
+			var essential = ($(es).attr("checked")) ? '1' : '0';
+			var sku = ($(ss).attr("checked")) ? '1' : '0';
+			
+			var s = itemOpt.settings;
+			s.data = "action=common_option_ajax&ID=" + id + "&update=1&optvalue=" + value + "&optmeans=" + means + "&optessential=" + essential + "&optsku=" + sku + "&optmetaid=" + meta_id;
 			$.ajax( s );
 			return false;
 		},
@@ -86,42 +110,70 @@
 			vs = document.getElementById('itemopt\['+meta_id+'\]\[value\]');
 			ms = document.getElementById('itemopt\['+meta_id+'\]\[means\]');
 			es = document.getElementById('itemopt\['+meta_id+'\]\[essential\]');
+			ss = document.getElementById('itemopt\['+meta_id+'\]\[sku\]');
 			var value = $(vs).val();
 			var means = $(ms).val();
-			if($(es).attr("checked")){
-				var essential = '1';
-			}else{
-				var essential = '0';
-			}
-			
+			var essential = ($(es).attr("checked")) ? '1' : '0';
+			var sku = $(ss).val();
+
 			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optvalue=" + value + "&optmeans=" + means + "&optessential=" + essential + "&optmetaid=" + meta_id;
+			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optvalue=" + value + "&optmeans=" + means + "&optessential=" + essential + "&optsku=" + sku + "&optmetaid=" + meta_id;
+			s.success = function(data, dataType){
+				strs = data.split('#usces#');
+				$("tbody#item-opt-list").html( strs[0] );
+				sku_id = strs[1].split(",");
+				for(var i = 0; i < sku_id.length; i++) {
+					$("td#itemsku-option-"+sku_id[i]).empty();
+					$("td#itemsku-option-"+sku_id[i]).html( strs[i+2] );
+				}
+			};
+			$.ajax( s );
+			return false;
+		},
+
+		deletecommonopt : function(meta_id) {
+			var id = $("#post_ID").val();
+			var s = itemOpt.settings;
+			s.data = "action=common_option_ajax&ID=" + id + "&delete=1&optmetaid=" + meta_id;
 			$.ajax( s );
 			return false;
 		},
 
 		deleteitemopt : function(meta_id) {
 			var id = $("#post_ID").val();
+			ss = document.getElementById('itemopt\['+meta_id+'\]\[sku\]');
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&delete=1&optmetaid=" + meta_id;
+			s.success = function(data, dataType){
+				strs = data.split('#usces#');
+				$("tbody#item-opt-list").html( strs[0] );
+				sku_id = strs[1].split(",");
+				for(var i = 0; i < sku_id.length; i++) {
+					$("td#itemsku-option-"+sku_id[i]).empty();
+					$("td#itemsku-option-"+sku_id[i]).html( strs[i+2] );
+				}
+			};
 			$.ajax( s );
 			return false;
 		},
-		
+
 		keyselect : function( key ) {
 			if(key == '#NONE#'){
 				$("#newoptvalue").val("");
 				$("#newoptmeans").attr({selectedIndex:0});
 				$("#newoptessential").attr({checked: false});
+				$("#newoptsku").val("");
 				return;
 			}
 			var id = uscesL10n.cart_number;
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&select=1&key=" + encodeURIComponent(key);
 			s.success = function(data, dataType){
-				var means = data.substring(0,1);
-				var essential = data.substring(1,2);
-				var value = data.substring(2,data.length-1);
+				strs = data.split('#usces#');
+				var means = strs[0];
+				var essential = strs[1];
+				var sku = strs[2];
+				var value = strs[3];
 				$("#newoptvalue").val(value);
 				$("#newoptmeans").val(means);
 				if( essential == '1') {
@@ -129,6 +181,7 @@
 				}else{
 					$("#newoptessential").attr({checked: false});
 				}
+				$("#newoptsku").val(sku);
 			};
 			$.ajax( s );
 			return false;
@@ -136,7 +189,7 @@
 	};
 
 	itemSku = {
-		settings: {
+		settings : {
 			url: uscesL10n.requestFile,
 			type: 'POST',
 			cache: false,
@@ -179,17 +232,20 @@
 			var zaiko = $("#newskuzaikoselect").val();
 			var skudisp = $("#newskudisp").val();
 			var skuunit = $("#newskuunit").val();
-			var skugptekiyo = $("#newskugptekiyo").val();
-			if( undefined != $("#newcharging_type option:selected").val() )
-				var charging_type = '&newcharging_type=' + $("#newcharging_type option:selected").val();
-			else
-				var charging_type = '&newcharging_type=0';
+			//var skugptekiyo = $("#newskugptekiyo").val();
+			//if( undefined != $("#newcharging_type option:selected").val() )
+			//	var charging_type = '&newcharging_type=' + $("#newcharging_type option:selected").val();
+			//else
+			//	var charging_type = '&newcharging_type=0';
 				
-			if( undefined != $("#newskuadvance").val() )
-				var skuadvance = '&newskuadvance=' + encodeURIComponent($("#newskuadvance").val());
+			//if( undefined != $("#newskuadvance").val() )
+			//	var skuadvance = '&newskuadvance=' + encodeURIComponent($("#newskuadvance").val());
+			var gprice = $("#newskugprice").val();
+			var mprice = $("#newskumprice").val();
 			
 			var s = itemSku.settings;
-			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugptekiyo=" + skugptekiyo + charging_type + skuadvance;
+			//s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugptekiyo=" + skugptekiyo + charging_type + skuadvance;
+			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugprice=" + gprice + "&newskumprice=" + mprice;
 			s.success = function(data, dataType){
 				//alert(data);
 				strs = data.split('#usces#');
@@ -205,12 +261,14 @@
 				$("#newskuzaikoselect").attr({selectedIndex:0});
 				$("#newskudisp").val("");
 				$("#newskuunit").val("");
-				$("#newskugptekiyo").attr({selectedIndex:0});
-				$("#newcharging_type").attr({selectedIndex:0});
-				if( undefined != $("input[name='newskuadvance']").val() )
-					$("#newskuadvance").val("");
-				if( undefined != $("select[name='newskuadvance']").val() )
-					$("#newskuadvance").attr({selectedIndex:0});
+				//$("#newskugptekiyo").attr({selectedIndex:0});
+				//$("#newcharging_type").attr({selectedIndex:0});
+				//if( undefined != $("input[name='newskuadvance']").val() )
+				//	$("#newskuadvance").val("");
+				//if( undefined != $("select[name='newskuadvance']").val() )
+				//	$("#newskuadvance").attr({selectedIndex:0});
+				$("#newskugprice").val("");
+				$("#newskumprice").val("");
 			};
 			$.ajax( s );
 			return false;
@@ -225,9 +283,11 @@
 			zs = document.getElementById('itemsku\['+meta_id+'\]\[zaiko\]');
 			ds = document.getElementById('itemsku\['+meta_id+'\]\[skudisp\]');
 			us = document.getElementById('itemsku\['+meta_id+'\]\[skuunit\]');
-			gs = document.getElementById('itemsku\['+meta_id+'\]\[skugptekiyo\]');
-			ct = document.getElementById('itemsku\['+meta_id+'\]\[charging_type\]');
-			ad = document.getElementById('itemsku\['+meta_id+'\]\[skuadvance\]');
+			//gs = document.getElementById('itemsku\['+meta_id+'\]\[skugptekiyo\]');
+			//ct = document.getElementById('itemsku\['+meta_id+'\]\[charging_type\]');
+			//ad = document.getElementById('itemsku\['+meta_id+'\]\[skuadvance\]');
+			gs = document.getElementById('itemsku\['+meta_id+'\]\[gprice\]');
+			ms = document.getElementById('itemsku\['+meta_id+'\]\[mprice\]');
 			var name = $(ks).val();
 			var cprice = $(cs).val();
 			var price = $(ps).val();
@@ -235,17 +295,32 @@
 			var zaiko = $(zs).val();
 			var skudisp = $(ds).val();
 			var skuunit = $(us).val();
-			var skugptekiyo = $(gs).val();
-			if( undefined != $(ct).val() )
-				var charging_type = '&charging_type=' + $(ct).val();
-			else
-				var charging_type = '&charging_type=0';
+			//var skugptekiyo = $(gs).val();
+			//if( undefined != $(ct).val() )
+			//	var charging_type = '&charging_type=' + $(ct).val();
+			//else
+			//	var charging_type = '&charging_type=0';
 			
-			if( undefined != $(ad).val() )
-				var skuadvance = '&skuadvance=' + encodeURIComponent($(ad).val());
+			//if( undefined != $(ad).val() )
+			//	var skuadvance = '&skuadvance=' + encodeURIComponent($(ad).val());
+			var gprice = $(gs).val();
+			var mprice = $(ms).val();
+
+			var skuoption_name = "itemsku\["+meta_id+"\]\[skuoption\]";
+			var skukey = "";
+			var skuoption = "";
+			var sp = "";
+			$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
+				key = obj.name.substring(skuoption_name.length+1);
+				key = key.replace("]", "");
+				skukey += sp + key;
+				skuoption += sp + $(this).val();
+				sp = '#usces#';
+			});
 			
 			var s = itemSku.settings;
-			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skugptekiyo=" + skugptekiyo + "&skumetaid=" + meta_id + charging_type + skuadvance;
+			//s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skugptekiyo=" + skugptekiyo + "&skumetaid=" + meta_id + charging_type + skuadvance;
+			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skumetaid=" + meta_id + "&skugprice=" + gprice + "&skumprice=" + mprice + "&skukey=" + skukey + "&skuoption=" + skuoption;
 			s.success = function(data, dataType){
 				//alert(data);
 			};
@@ -273,6 +348,8 @@
 				strs = data.split('#usces#');
 				$("#newskucprice").val(strs[1]);
 				$("#newskuprice").val(strs[0]);
+				$("#newskugprice").val(strs[2]);
+				$("#newskumprice").val(strs[3]);
 			};
 			$.ajax( s );
 			return false;
