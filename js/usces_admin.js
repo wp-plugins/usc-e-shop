@@ -1,7 +1,6 @@
 // JavaScript
 (function($) {
 	itemOpt = {
-		settings: {
 		settings : {
 			url: uscesL10n.requestFile,
 			type: 'POST',

@@ -17,15 +17,16 @@ get_header();
 
 <?php usces_remove_filter(); ?>
 <?php usces_the_item(); ?>
+<?php usces_have_skus(); ?>
 
 <div id="itempage" class="border_arround clearfix">
 	<div class="item_header clearfix">
 		<div class="item_info alignleft">
-			<div class="item_maker">○○工業</div>
+			<div class="item_maker"><?php NS_teh_item_maker(); ?></div>
 			<h2 class="item_name"><?php usces_the_itemName(); ?></h2>
 		</div>
 		<div class="item_addition alignright">
-			<div class="sale_tag"><img src="<?php bloginfo('stylesheet_directory'); ?>/images/item/tag_sale.png" alt="SALE" width="70" height="30" /></div>
+			<div class="sale_tag"><?php NS_the_salse_tag(); ?></div>
 			<div class="itemstar">★★★★☆</div>
 		</div>
 	</div>
@@ -53,17 +54,12 @@ get_header();
 			生産国：日本
 		</div>
 		<div class="item_exp_2">
-			商品説明2商品説明2商品説明2商品説明2商品説明2商品説明2商品説明2商品説明2商品説明2商品説明2商品説明2
+			<?php NS_the_item_explanation( 2 ); ?>
 		</div>
 	</div>
 	<div class="itemdetail_right">
 		<div class="tag_field">
-			<ul class="clearfix">
-				<li><img src="<?php bloginfo('stylesheet_directory'); ?>/images/item/tag_new.png" alt="NEW" width="60" height="20" /></li>
-				<li><img src="<?php bloginfo('stylesheet_directory'); ?>/images/item/tag_few.png" alt="残りわずか" width="60" height="20" /></li>
-				<li><img src="<?php bloginfo('stylesheet_directory'); ?>/images/item/tag_recommend.png" alt="おすすめ" width="60" height="20" /></li>
-				<li><img src="<?php bloginfo('stylesheet_directory'); ?>/images/item/tag_limited.png" alt="限定品" width="60" height="20" /></li>
-			</ul>
+		<?php NS_the_fantastic4(); ?>
 		</div>
 		<div class="item_field clear">
 			<div class="field_name">商品コード</div>
@@ -71,7 +67,7 @@ get_header();
 
 			<div class="field_name">商品名</div>
 			<div class="field_itemname">：<?php usces_the_itemName(); ?></div>
-<?php if(usces_sku_num() === 1) : usces_have_skus(); ?>
+<?php if(usces_sku_num() === 1) : ?>
 		<?php if( usces_the_itemCprice('return') > 0 ) : ?>
 			<div class="field_name">通常価格</div>
 			<div class="field_cprice">：<?php usces_the_itemCpriceCr(); ?></div>
@@ -82,7 +78,7 @@ get_header();
 			<div class="field_name">残り在庫</div>
 			<div class="field_cprice">：<?php usces_the_itemZaiko(); ?></div>
 		</div>
-		<div class="item_exp_3">商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3</div>
+		<div class="item_exp_3"><?php NS_the_item_explanation( 3 ); ?></div>
 
 		<form action="<?php echo USCES_CART_URL; ?>" method="post">
 			<div class="skuform">
@@ -115,16 +111,16 @@ get_header();
 			<?php do_action('usces_action_single_item_inform'); ?>
 		</form>
 
-<?php elseif(usces_sku_num() > 1) : usces_have_skus(); ?>
+<?php elseif(usces_sku_num() > 1) : ?>
 <!--some SKU-->
 		<?php if( usces_the_itemCprice('return') > 0 ) : ?>
 			<div class="field_name">通常価格</div>
-			<div class="field_cprice">：<?php _e('$', 'usces'); ?><?php usces_the_firstCprice(); ?></div>
+			<div class="field_cprice">：<?php usces_crform( usces_the_firstCprice('return'), true, false ); ?></div>
 		<?php endif; ?>
 			<div class="field_name">販売価格</div>
-			<div class="field_cprice price">：<?php _e('$', 'usces'); ?><?php usces_the_firstPrice(); ?>～<?php _e('$', 'usces'); ?><?php usces_the_lastPrice() ?></div>
+			<div class="field_cprice price">：<?php NS_the_item_pricesCr(); ?></div>
 	</div>
-	<div class="item_exp_3">商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3商品説明3</div>
+	<div class="item_exp_3"><?php NS_the_item_explanation( 3 ); ?></div>
 	<form action="<?php echo USCES_CART_URL; ?>" method="post">
 	<div class="skuform">
 		<?php if( usces_is_options() ): ?>
@@ -191,10 +187,7 @@ get_header();
 
 <div class="item_detail">
 	<h3 class="titlebar">この商品の解説</h2>
-	<div class="item_exp_4">
-		商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4
-		商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4商品説明4
-	</div>
+	<div class="item_exp_4"><?php NS_the_item_explanation( 4 ); ?></div>
 	<table class="spec_list">
 		<tr>
 			<th>品番</th>

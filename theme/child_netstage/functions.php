@@ -185,4 +185,131 @@ global $usces;
 <?php
 }
 
+// Net Stage テンプレートタグ
+/**********************************************************
+ * Explanation	: メーカ名表示
+ * UpDate		: 2011.05.31
+ * Author		: Nanbu
+ **********************************************************/
+function NS_teh_item_maker(){
+	$maker = '';
+	$termID = get_cat_ID( 'メーカー' );
+	$taxonomyName = "category";
+	$termchildren = get_term_children( $termID, $taxonomyName );
+	foreach ($termchildren as $child) {
+		if(in_category($child)){
+			$term = get_term_by( 'id', $child, $taxonomyName );
+			$maker = $term->name;
+		}
+	}
+	
+	echo esc_html($maker);
+}
+/**********************************************************
+ * Explanation	: セールタグ表示
+ * UpDate		: 2011.06.01
+ * Author		: Nanbu
+ **********************************************************/
+function NS_the_salse_tag(){
+	global $post, $usces;
+	$sale_id = usces_get_cat_id( 'itemsale' );
+	if(in_category($sale_id))
+		$tag = '<img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_sale.png" alt="SALE" width="70" height="30" />';
+	else
+		$tag = '';
+		
+	echo $tag;
+}
+/**********************************************************
+ * Explanation	: 4つの商品タグ表示
+ * UpDate		: 2011.06.01
+ * Author		: Nanbu
+ **********************************************************/
+function NS_the_fantastic4(){
+	global $post, $usces;
+	
+	$termIDs = array(
+		'new' => usces_get_cat_id( 'itemnew' ), 
+		'zaiko' => NULL, 
+		'reco' => usces_get_cat_id( 'itemreco' ), 
+		'limit' => usces_get_cat_id( 'itemlimited' )
+		);
+	$taxonomyName = "category";
+
+	$tag = '<ul class="clearfix">'. "\n";
+	foreach ($termIDs as $key => $value) {
+		switch( $key ){
+			case 'zaiko':
+				$zsids = $usces->getItemZaikoStatusId($post->ID);
+				if( in_array(1, $zsids) )
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_few.png" alt="残りわずか" width="60" height="20" /></li>' . "\n";
+				break;
+			case 'new':
+				if(in_category($value))
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_new.png" alt="NEW" width="60" height="20" /></li>' . "\n";
+				break;
+			case 'reco':
+				if(in_category($value))
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_recommend.png" alt="おすすめ" width="60" height="20" /></li>' . "\n";
+				break;
+			case 'limit':
+				if(in_category($value))
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_limited.png" alt="限定品" width="60" height="20" /></li>' . "\n";
+				break;
+		}
+	}
+	$tag .= '</ul>'. "\n";
+	
+	echo $tag;
+}
+/**********************************************************
+ * Explanation	: 商品解説2の表示
+ * UpDate		: 2011.06.01
+ * Author		: Nanbu
+ **********************************************************/
+function NS_the_item_explanation( $part ){
+	global $post, $usces;
+	$exp = '';
+	switch( $part ){
+		case 2:
+			$exps = get_post_meta($post->ID, 'item_exp2', true);
+			break;
+		case 3:
+			$exps = get_post_meta($post->ID, 'item_exp3', true);
+			break;
+		case 4:
+			$exps = get_post_meta($post->ID, 'item_exp4', true);
+			break;
+	}
+	
+	//echo $exps;
+	$content = apply_filters('NS_filter_item_explanation', $exps);
+	echo $content;
+}
+add_filter( 'NS_filter_item_explanation', 'wptexturize'        , 10);
+add_filter( 'NS_filter_item_explanation', 'convert_smilies'    , 10);
+add_filter( 'NS_filter_item_explanation', 'convert_chars'      , 10);
+add_filter( 'NS_filter_item_explanation', 'wpautop'            , 10);
+add_filter( 'NS_filter_item_explanation', 'shortcode_unautop'  , 10);
+add_filter( 'NS_filter_item_explanation', 'prepend_attachment' , 10);
+add_filter( 'NS_filter_item_explanation', 'do_shortcode'       , 11);
+/**********************************************************
+ * Explanation	: 商品価格幅の表示
+ * UpDate		: 2011.06.01
+ * Author		: Nanbu
+ **********************************************************/
+function NS_the_item_pricesCr(){
+	global $post, $usces;
+	$prices = $usces->getItemPrice($post->ID);
+	sort($prices);
+	$first = $prices[0];
+	rsort($prices);
+	$last = $prices[0];
+	if( $first == $last ){
+		$str = usces_crform( $first, true, false, 'return' );
+	}else{
+		$str = usces_crform( $first, true, false, 'return' ) . '～' . usces_crform( $last, true, false, 'return' );
+	}
+	echo $str;
+}
 ?>
