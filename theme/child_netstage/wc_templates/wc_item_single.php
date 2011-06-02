@@ -141,13 +141,12 @@ get_header();
 				<div class="field"><?php echo $item_custom; ?></div>
 			<?php endif; ?>
 				<div class="send_info">発送日目安：<?php usces_the_shipment_aim(); ?></div>
-			<?php if( !usces_have_zaiko() ) : ?>
-				<div class="zaiko_status"><?php echo apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')); ?></div>
-			<?php else : ?>
-				<div style="margin:10px 0"><?php _e('Quantity', 'usces'); ?><?php usces_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?></div>
-				<div><?php ntstg_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>
+				<div id="sku_option_field" class="sku_option_box"><?php NS_sku_option_field(); ?></div>
+				<div class="sku_option_quant"><?php _e('Quantity', 'usces'); ?><?php usces_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?></div>
+				<div id="sku_option_price">￥50,000</div>
+				<div id="sku_option_button"><input name="button" type="image" src="http://usctest.welcarthosting.net/future_next/wordpress/wp-content/themes/child_netstage/images/item/btn_addcart.png" class="skubutton" disabled /></div>
+				<!--参考までに<div><?php ntstg_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>-->
 				<div class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></div>
-			<?php endif; ?>
 			</div><!-- end of skuform -->
 			<?php echo apply_filters('single_item_single_sku_after_field', NULL); ?>
 			<?php do_action('usces_action_single_item_inform'); ?>

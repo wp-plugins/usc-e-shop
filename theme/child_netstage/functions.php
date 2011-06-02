@@ -346,10 +346,11 @@ function NS_the_sku_list(){
 	global $post, $usces;
 	if( !NS_have_sku_option() ) return;
 	
+	$sku_options = NS_get_sku_option();
 	$html = '<table class="spec_list">'."\n";
 	$html .= '<tr>'."\n";
 	$html .= '<th>品番</th>';
-	foreach( $usces->itemopts as $key => $value ){
+	foreach( $sku_options as $key => $value ){
 		$html .= '<th>' . $key . '</th>';
 		$opts[] = $key;
 	}
@@ -378,20 +379,73 @@ function NS_the_sku_list(){
  * Return		: boolean
  **********************************************************/
 function NS_have_sku_option(){
-	global $post, $usces;
-	$res = false;
-	foreach( $usces->itemopts as $opts ){
-		foreach( $opts as $key => $value ){
-			if( 'sku' == $key && 1 === (int)$value){
-				$res = true;
-				break 2;
+	$sku_options = NS_get_sku_option();
+
+	if( empty($sku_options) )
+		return false;
+	else
+		return true;
+		
+}
+/**********************************************************
+ * Explanation	: SKU_OPTION 取得
+ * UpDate		: 2011.06.03
+ * Return		: array
+ **********************************************************/
+function NS_get_sku_option( $post_id = '' ){
+	if( '' == $post_id ){
+		global $post;
+		$post_id = $post->ID;
+	}
+	global $usces;
+	$res = array();
+	$optorderby = $usces->options['system']['orderby_itemopt'] ? 'meta_id' : 'meta_key';
+	$optfields = $usces->get_post_custom($post->ID, $optorderby);
+	foreach((array)$optfields as $key => $value){
+		if( preg_match('/^_iopt_/', $key, $match) ){
+			$key = substr($key, 6);
+			$opts = maybe_unserialize($value[0]);
+			if( isset($opts['sku']) && 1 === (int)$opts['sku']){
+				$res[$key]['means'] = $opts['means'];
+				$res[$key]['essential'] = $opts['essential'];
+				$res[$key]['sku'] = $opts['sku'];
+				$res[$key]['value'] = explode("\n", $opts['value'][0]);
 			}
-				
 		}
 	}
-//	print_r( $usces->itemskus);
-//	echo '<br>';
-//	print_r( $usces->itemopts);
 	return $res;
 }
+/**********************************************************
+ * Explanation	: 規格選択初期フィールド
+ * UpDate		: 2011.06.03
+ * Echo			: html
+ **********************************************************/
+function NS_sku_option_field(){
+	global $post, $usces;
+	if( !NS_have_sku_option() ) return;
+
+	$sku_options = NS_get_sku_option();
+	$html = '';
+	$i = 1;
+	foreach( $sku_options as $key => $values ){
+		if( 0 == $values['means'] ){
+			$html .= '<div id= "opt' . $i . '" class="sku_option_select">';
+			$html .= '<label class="sku_option_label">' . $key . ':</label>';
+			$html .= '<select name="opt' . $i . '" class="sku_option_select_field">';
+			$html .= '<option value="">選択してください</option>';
+			foreach( (array)$values['value'] as $val ){
+				$html .= '<option value="' . $val . '">' . $val . '</option>';
+			}
+			$html .= '</select>';
+			$html .= '</div>'."\n";
+		}elseif( 2 == $values['means'] ){
+			$html .= '<div id= "opt' . $i . '" class="sku_option_text">';
+			$html .= '<label class="sku_option_label">' . $key . ':</label>';
+			$html .= '<input name="opt' . $i . '" type="text" value="" readonly="true" class="sku_option_text_field" />';
+			$html .= '</div>'."\n";
+		}
+	}
+	echo $html;
+}
+
 ?>

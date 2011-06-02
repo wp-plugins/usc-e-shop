@@ -1604,4 +1604,31 @@ div#itempage {
 	margin-right:30px;
 }
 /* common CSS End */
-
+/*********************************************************************/
+/* Single Item Page SKU_OPTION SELECT Start */
+.sku_option_label {
+	width: 100px;
+	display: block;
+	float: left;
+	font-weight: bold;
+	color: #666666;
+	line-height: 24px;
+}
+.sku_option_text_field,
+.sku_option_select_field {
+	width: 150px;
+}
+.sku_option_quant {
+	float: left;
+	width: 100px;
+	margin-right: 30px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+#sku_option_price {
+	font-size: 24px;
+	font-weight: bold;
+	color: #FF3300;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}

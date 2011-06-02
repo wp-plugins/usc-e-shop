@@ -119,7 +119,9 @@ function usces_the_item(){
 		if( preg_match('/^_iopt_/', $key, $match) ){
 			$key = substr($key, 6);
 			$values = maybe_unserialize($value[0]);
-			$usces->itemopts[$key] = $values;
+			//NS Customize
+			if( !isset( $values['sku'] ) || 1 != $values['sku'] )
+				$usces->itemopts[$key] = $values;
 		}
 	}
 	//var_dump($fields);

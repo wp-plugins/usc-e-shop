@@ -1991,15 +1991,24 @@ div.optcheck {
 /***************************************************/
 /* Net Stage カスタマイズ */
 /***************************************************/
+table#newsku td.item-sku-option,
 table#skulist-table td.item-sku-option {
 	text-align: right;
 	padding-right: 15px;
 }
 
+table#newsku label.item-sku-option,
 table#skulist-table label.item-sku-option {
 	font-weight: bold;
 	color: #666666;
 	margin-right: 5px;
+}
+
+table#newsku input.item-sku-option,
+table#skulist-table input.item-sku-option,
+table#newsku select.item-sku-option,
+table#skulist-table select.item-sku-option {
+	width: 100px;
 }
 
 table#skulist-table td.item-sku-button {
