@@ -27,7 +27,7 @@ get_header();
 		</div>
 		<div class="item_addition alignright">
 			<div class="sale_tag"><?php NS_the_salse_tag(); ?></div>
-			<div class="itemstar">★★★★☆</div>
+			<div class="itemstar"><?php NS_the_item_star(); ?></div>
 		</div>
 	</div>
 	<div class="item_exp_1 clear">
@@ -51,7 +51,7 @@ get_header();
 	<?php endif; ?>
 
 		<div class="item_country textright">
-			生産国：日本
+			<?php NS_the_item_country(); NS_have_sku_option(); ?>
 		</div>
 		<div class="item_exp_2">
 			<?php NS_the_item_explanation( 2 ); ?>
@@ -121,20 +121,40 @@ get_header();
 			<div class="field_cprice price">：<?php NS_the_item_pricesCr(); ?></div>
 	</div>
 	<div class="item_exp_3"><?php NS_the_item_explanation( 3 ); ?></div>
-	<form action="<?php echo USCES_CART_URL; ?>" method="post">
-	<div class="skuform">
-		<?php if( usces_is_options() ): ?>
-			<div class="item_option">
-				<table id="option_list">
-					<?php while (usces_have_options()) : ?>
+	<?php if( NS_have_sku_option() ) : ?>
+		<form action="<?php echo USCES_CART_URL; ?>" method="post">
+			<div class="skuform">
+			<?php //_e('Please appoint an option.', 'usces'); ?>
+			<?php if (usces_is_options()) : ?>
+				<div class="item_option">
+					<table id="option_list">
+				<?php while (usces_have_options()) : ?>
 					<tr>
 						<th><?php usces_the_itemOptName(); ?></th>
 						<td><?php usces_the_itemOption(usces_getItemOptName(),''); ?></td>
 					</tr>
-					<?php endwhile; ?>
-				</table>
-			</div>
-		<?php endif; ?>
+				<?php endwhile; ?>
+					</table>
+				</div>
+			<?php endif; ?>
+			<?php if( $item_custom = usces_get_item_custom( $post->ID, 'list', 'return' ) ) : ?>
+				<div class="field"><?php echo $item_custom; ?></div>
+			<?php endif; ?>
+				<div class="send_info">発送日目安：<?php usces_the_shipment_aim(); ?></div>
+			<?php if( !usces_have_zaiko() ) : ?>
+				<div class="zaiko_status"><?php echo apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')); ?></div>
+			<?php else : ?>
+				<div style="margin:10px 0"><?php _e('Quantity', 'usces'); ?><?php usces_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?></div>
+				<div><?php ntstg_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>
+				<div class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></div>
+			<?php endif; ?>
+			</div><!-- end of skuform -->
+			<?php echo apply_filters('single_item_single_sku_after_field', NULL); ?>
+			<?php do_action('usces_action_single_item_inform'); ?>
+		</form>
+	<?php else : ?>
+	<form action="<?php echo USCES_CART_URL; ?>" method="post">
+	<div class="skuform">
 		<table class="skumulti">
 			<thead>
 			<tr>
@@ -150,7 +170,18 @@ get_header();
 			<tbody>
 	<?php do { ?>
 			<tr>
-				<td colspan="2" class="skudisp subborder"><?php usces_the_itemSkuDisp(); ?></td>
+				<td colspan="2" class="skudisp subborder"><?php if( '' != usces_the_itemSkuDisp('return') ) usces_the_itemSkuDisp(); else usces_the_itemSku(); ?>
+				<?php if( usces_is_options() ): ?>
+						<table id="item_option">
+							<?php while (usces_have_options()) : ?>
+							<tr>
+								<th><?php usces_the_itemOptName(); ?></th>
+								<td><?php usces_the_itemOption(usces_getItemOptName(),''); ?></td>
+							</tr>
+							<?php endwhile; ?>
+						</table>
+				<?php endif; ?>
+				</td>
 				<td colspan="1" class="subborder price"><span class="price"><?php usces_the_itemPriceCr(); ?></span></td>
 			</tr>
 			<tr>
@@ -172,6 +203,7 @@ get_header();
 	<?php echo apply_filters('single_item_multi_sku_after_field', NULL); ?>
 	<?php do_action('usces_action_single_item_inform'); ?>
 	</form>
+	<?php endif; ?>
 <?php endif; ?>
 </div>
 	<div class="item_caution clear">
@@ -188,56 +220,7 @@ get_header();
 <div class="item_detail">
 	<h3 class="titlebar">この商品の解説</h2>
 	<div class="item_exp_4"><?php NS_the_item_explanation( 4 ); ?></div>
-	<table class="spec_list">
-		<tr>
-			<th>品番</th>
-			<th>項目1</th>
-			<th>項目2</th>
-			<th>項目3</th>
-			<th>項目4</th>
-			<th>項目5</th>
-		</tr>
-		<tr class="odd">
-			<td>111</td>
-			<td>222</td>
-			<td>333</td>
-			<td>444</td>
-			<td>555</td>
-			<td>666</td>
-		</tr>
-		<tr class="even">
-			<td>111</td>
-			<td>222</td>
-			<td>333</td>
-			<td>444</td>
-			<td>555</td>
-			<td>666</td>
-		</tr>
-		<tr class="odd">
-			<td>111</td>
-			<td>222</td>
-			<td>333</td>
-			<td>444</td>
-			<td>555</td>
-			<td>666</td>
-		</tr>
-		<tr class="even">
-			<td>111</td>
-			<td>222</td>
-			<td>333</td>
-			<td>444</td>
-			<td>555</td>
-			<td>666</td>
-		</tr>
-		<tr class="odd">
-			<td>111</td>
-			<td>222</td>
-			<td>333</td>
-			<td>444</td>
-			<td>555</td>
-			<td>666</td>
-		</tr>
-	</table>
+	<?php NS_the_sku_list(); ?>
 </div>
 
 <?php ntstg_assistance_item( $post->ID, 'おすすめ商品'); ?>

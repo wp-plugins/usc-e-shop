@@ -1987,3 +1987,36 @@ div.optcheck {
 .uscestabs {
 	margin-bottom: 20px;
 }
+
+/***************************************************/
+/* Net Stage カスタマイズ */
+/***************************************************/
+table#skulist-table td.item-sku-option {
+	text-align: right;
+	padding-right: 15px;
+}
+
+table#skulist-table label.item-sku-option {
+	font-weight: bold;
+	color: #666666;
+	margin-right: 5px;
+}
+
+table#skulist-table td.item-sku-button {
+	padding-bottom: 10px;
+	border-bottom: 1px dotted #CCCCCC;
+}
+
+#postskucustomstuff .gprice, 
+#postskucustomstuff .mprice {
+	width: 80%;
+	margin-top: 0px;
+	margin-right: 3px;
+	margin-bottom: 0px;
+	margin-left: 3px;
+	font-size: 13px;
+	line-height: 16px;
+	text-align: right;
+	padding-right: 4px;
+}
+

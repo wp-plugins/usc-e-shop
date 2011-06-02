@@ -189,7 +189,7 @@ global $usces;
 /**********************************************************
  * Explanation	: メーカ名表示
  * UpDate		: 2011.05.31
- * Author		: Nanbu
+ * Echo			: strings
  **********************************************************/
 function NS_teh_item_maker(){
 	$maker = '';
@@ -208,7 +208,7 @@ function NS_teh_item_maker(){
 /**********************************************************
  * Explanation	: セールタグ表示
  * UpDate		: 2011.06.01
- * Author		: Nanbu
+ * Echo			: html
  **********************************************************/
 function NS_the_salse_tag(){
 	global $post, $usces;
@@ -223,7 +223,7 @@ function NS_the_salse_tag(){
 /**********************************************************
  * Explanation	: 4つの商品タグ表示
  * UpDate		: 2011.06.01
- * Author		: Nanbu
+ * Echo			: html
  **********************************************************/
 function NS_the_fantastic4(){
 	global $post, $usces;
@@ -265,7 +265,7 @@ function NS_the_fantastic4(){
 /**********************************************************
  * Explanation	: 商品解説2の表示
  * UpDate		: 2011.06.01
- * Author		: Nanbu
+ * Echo			: strings
  **********************************************************/
 function NS_the_item_explanation( $part ){
 	global $post, $usces;
@@ -296,7 +296,7 @@ add_filter( 'NS_filter_item_explanation', 'do_shortcode'       , 11);
 /**********************************************************
  * Explanation	: 商品価格幅の表示
  * UpDate		: 2011.06.01
- * Author		: Nanbu
+ * Echo			: strings
  **********************************************************/
 function NS_the_item_pricesCr(){
 	global $post, $usces;
@@ -311,5 +311,87 @@ function NS_the_item_pricesCr(){
 		$str = usces_crform( $first, true, false, 'return' ) . '～' . usces_crform( $last, true, false, 'return' );
 	}
 	echo $str;
+}
+/**********************************************************
+ * Explanation	: スターの表示
+ * UpDate		: 2011.06.02
+ * Echo			: strings
+ **********************************************************/
+function NS_the_item_star(){
+	global $post;
+	$str = '';
+	$star = (int)get_post_meta($post->ID, '_itemStart', true);
+	for( $i=1; $i<=$star; $i++ ){
+		$str .= '★';
+	}
+	echo $str;
+}
+/**********************************************************
+ * Explanation	: 生産国の表示
+ * UpDate		: 2011.06.02
+ * Echo			: strings
+ **********************************************************/
+function NS_the_item_country(){
+	global $post, $usces_settings;
+	$country = get_post_meta($post->ID, '_itemCountry', true);
+	$str = empty($country) ? '' : ('生産国：'.$usces_settings['country'][$country]);
+	echo $str;
+}
+/**********************************************************
+ * Explanation	: 規格一覧の表示
+ * UpDate		: 2011.06.02
+ * Echo			: html
+ **********************************************************/
+function NS_the_sku_list(){
+	global $post, $usces;
+	if( !NS_have_sku_option() ) return;
+	
+	$html = '<table class="spec_list">'."\n";
+	$html .= '<tr>'."\n";
+	$html .= '<th>品番</th>';
+	foreach( $usces->itemopts as $key => $value ){
+		$html .= '<th>' . $key . '</th>';
+		$opts[] = $key;
+	}
+	$html .= '<th>価格</th>';
+	$html .= '<th>在庫数</th>'."\n";
+	$html .= '<tr>'."\n";
+	$i = 0;
+	foreach( $usces->itemskus as $skucode => $skus ){
+		$trclass = ( 0 === ($i % 2) ) ? 'odd' : 'even';
+		$html .= '<tr class="' . $trclass . '">'."\n";
+		$html .= '<td>' . $skucode . '</td>';
+		foreach( $opts as $key ){
+			$html .= '<td>' . $skus['option'][$key] . '</td>';
+		}
+		$html .= '<td>' . usces_crform($skus['price'], true, false, 'return') . '</td>';
+		$html .= '<td>' . ( '' == $skus['zaikonum'] ? '在庫有り' : $skus['zaikonum']) . '</td>';
+		$html .= '</tr>'."\n";
+		$i++;
+	}
+	$html .= '</table>'."\n";
+	echo $html;
+}
+/**********************************************************
+ * Explanation	: 規格選択対象品かどうか
+ * UpDate		: 2011.06.02
+ * Return		: boolean
+ **********************************************************/
+function NS_have_sku_option(){
+	global $post, $usces;
+	$res = false;
+	foreach( $usces->itemopts as $opts ){
+		foreach( $opts as $key => $value ){
+			if( 'sku' == $key && 1 === (int)$value){
+				$res = true;
+				break 2;
+			}
+				
+		}
+	}
+//	print_r( $usces->itemskus);
+//	echo '<br>';
+//	print_r( $usces->itemopts);
+	return $res;
 }
 ?>
