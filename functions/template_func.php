@@ -875,7 +875,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	}
 }
 
-function usces_the_itemSkuOption( $id, $skurow, $option ) {
+function usces_the_itemSkuOption( $id, $skurow, $option, $new = 0 ) {
 
 	$html = '';
 
@@ -885,11 +885,10 @@ function usces_the_itemSkuOption( $id, $skurow, $option ) {
 	$means = (int)$skurow['meta_value']['means'];
 	$essential = (int)$skurow['meta_value']['essential'];
 
-	//$html .= "\n\t<tr>";
-	//$html .= "\n\t\t<td colspan='3'></td>";
-	//$html .= "\n\t\t<td><label for='itemsku[{$id}][skuoption][{$name}]' class='iopt_label'>{$name}</label></td>";
+	$idname = ($new == 1) ? "newskuoption[{$name}]" : "itemsku[{$id}][skuoption][{$name}]";
+
 	$html .= "<div class='item-sku-option'>";
-	$html .= "<label for='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option'>{$name}</label>";
+	$html .= "<label for='{$idname}' class='item-sku-option'>{$name}</label>";
 
 	$opt_value = '';
 	foreach((array)$option as $opt_key => $opt_val) {
@@ -904,28 +903,21 @@ function usces_the_itemSkuOption( $id, $skurow, $option ) {
 	case 1://Multi-select
 		$selects = explode("\n", $value[0]);
 		$multiple = ($means === 0) ? '' : ' multiple';
-		//$html .= "\n\t\t<td>";
-		$html .= "<select name='itemsku[{$id}][skuoption][{$name}]' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' {$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">";
+		$html .= "<select name='{$idname}' id='{$idname}' class='item-sku-option' {$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">";
 		$html .= "\t<option value='#NONE#'>".__('Choose','usces')."</option>\n";
 		foreach($selects as $v) {
 			$selected = ( esc_attr($v) == $opt_value ) ? ' selected' : '';
 			$html .= "\t<option value='".esc_attr($v)."'{$selected}>".esc_html($v)."</option>\n";
 		}
 		$html .= "</select>\n";
-		//$html .= "</td>";
 		break;
 	case 2://Text
-		//$html .= "\n\t\t<td>";
-		$html .= "<input name='itemsku[{$id}][skuoption][{$name}]' type='text' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"".esc_attr($opt_value)."\" />";
-		//$html .= "</td>";
+		$html .= "<input name='{$idname}' type='text' id='{$idname}' class='item-sku-option' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"".esc_attr($opt_value)."\" />";
 		break;
 	case 5://Text-area
-		//$html .= "\n\t\t<td>";
-		$html .= "<textarea name='itemsku[{$id}][skuoption][{$name}]' id='itemsku[{$id}][skuoption][{$name}]' class='item-sku-option' />".esc_attr($opt_value)."</textarea>";
-		//$html .= "</td>";
+		$html .= "<textarea name='{$idname}' id='{$idname}' class='item-sku-option' />".esc_attr($opt_value)."</textarea>";
 		break;
 	}
-	//$html .= "\n\t</tr>";
 	$html .= "</div>";
 
 	return $html;

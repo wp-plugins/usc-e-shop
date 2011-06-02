@@ -82,6 +82,8 @@
 					$("td#itemsku-option-"+sku_id[i]).empty();
 					$("td#itemsku-option-"+sku_id[i]).html( strs[i+2] );
 				}
+				$("td#newskuoption").empty();
+				$("td#newskuoption").html( strs[strs.length-1] );
 			};
 			$.ajax( s );
 			return false;
@@ -125,6 +127,8 @@
 					$("td#itemsku-option-"+sku_id[i]).empty();
 					$("td#itemsku-option-"+sku_id[i]).html( strs[i+2] );
 				}
+				$("td#newskuoption").empty();
+				$("td#newskuoption").html( strs[strs.length-1] );
 			};
 			$.ajax( s );
 			return false;
@@ -151,6 +155,8 @@
 					$("td#itemsku-option-"+sku_id[i]).empty();
 					$("td#itemsku-option-"+sku_id[i]).html( strs[i+2] );
 				}
+				$("td#newskuoption").empty();
+				$("td#newskuoption").html( strs[strs.length-1] );
 			};
 			$.ajax( s );
 			return false;
@@ -241,10 +247,22 @@
 			//	var skuadvance = '&newskuadvance=' + encodeURIComponent($("#newskuadvance").val());
 			var gprice = $("#newskugprice").val();
 			var mprice = $("#newskumprice").val();
+
+			var skuoption_name = "newskuoption";
+			var skukey = "";
+			var skuoption = "";
+			var sp = "";
+			$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
+				key = obj.name.substring(skuoption_name.length+1);
+				key = key.replace("]", "");
+				skukey += sp + key;
+				skuoption += sp + $(this).val();
+				sp = '#usces#';
+			});
 			
 			var s = itemSku.settings;
 			//s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugptekiyo=" + skugptekiyo + charging_type + skuadvance;
-			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugprice=" + gprice + "&newskumprice=" + mprice;
+			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugprice=" + gprice + "&newskumprice=" + mprice + "&newskukey=" + skukey + "&newskuoption=" + skuoption;
 			s.success = function(data, dataType){
 				//alert(data);
 				strs = data.split('#usces#');

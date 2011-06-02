@@ -287,6 +287,9 @@ $itemShippingCharge = get_post_custom_values('_itemShippingCharge', $post_ID);
 $itemIndividualSCharge = get_post_custom_values('_itemIndividualSCharge', $post_ID);
 $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 
+global $usces_settings;
+$itemStar = get_post_custom_values('_itemStar', $post_ID);
+$itemCountry = get_post_custom_values('_itemCountry', $post_ID);
 /*************************************** 30 */
 ?>
 
@@ -353,6 +356,30 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <input type="hidden" name="itemPointrate_nonce" id="itemPointrate_nonce" value="<?php echo wp_create_nonce( 'itemPointrate_nonce' ); ?>" /></td>
 </tr>
 <tr>
+<th>おすすめ度</th>
+<td>
+<select name="itemStar" id="itemStar" class="itemShipping">
+	<option value="0"<?php echo ($itemStar[0] == 0 ? ' selected' : ''); ?>><?php _e('Non-request', 'usces'); ?></option>
+<?php
+	for($i = 1; $i <= 5; $i++) {
+		$star_name = str_repeat("★", $i);
+		$star_name .= str_repeat("☆", (5-$i));
+?>
+	<option value="<?php echo $i; ?>"<?php echo ($itemStar[0] == $i ? ' selected' : ''); ?>><?php echo $star_name; ?></option>
+<?php } ?>
+</select>
+<input type="hidden" name="itemStar_nonce" id="itemStar_nonce" value="<?php echo wp_create_nonce( 'itemStar_nonce' ); ?>" /></td>
+</tr>
+<th>生産国</th>
+<td>
+<select name="itemCountry" id="itemCountry" class="itemShipping">
+	<option value="#NONE#"<?php echo ($itemCountry[0] == "#NONE#") ? ' selected' : ''; ?>><?php _e('Non-request', 'usces'); ?></option>
+<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
+    <option value="<?php echo $Ckey; ?>"<?php echo ($itemCountry[0] == $Ckey ? ' selected' : ''); ?>><?php echo $Cvalue; ?></option>
+<?php } ?>
+</select>
+<input type="hidden" name="itemCountry_nonce" id="itemCountry_nonce" value="<?php echo wp_create_nonce( 'itemCountry_nonce' ); ?>" /></td>
+</tr>
 <!--
 <th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
 <td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum1[0]), '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo esc_attr($itemGpDis1[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
@@ -375,7 +402,7 @@ $second_section = '<tr class="shipped">
 <th>' . __('estimated shipping date', 'usces') . '</th>
 <td><select name="itemShipping" id="itemShipping" class="itemShipping">';
 foreach( (array)$this->shipping_rule as $key => $label){ 
-	$selected = $key == $itemShipping[0] ? ' selected="selected"' : '';
+	$selected = ($key == $itemShipping[0]) ? ' selected="selected"' : '';
 	$second_section .= '<option value="' . esc_attr($key) . '"' . $selected . '>' . esc_html($label) . '</option>';
 }
 $second_section .= '</select>
@@ -431,7 +458,7 @@ echo $second_section;
 <?php
 $metadata = has_item_sku_meta($post->ID);
 list_item_sku_meta($metadata, $post->ID);
-item_sku_meta_form();
+item_sku_meta_form($post->ID);
 ?>
 </div>
 </div>

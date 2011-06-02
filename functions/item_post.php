@@ -290,18 +290,18 @@ function _list_item_sku_meta_row( $entry, $skuoption ) {
 	//$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
 	//$r .= "</td>";
 	$r .= "\n\t\t<td class='item-sku-key'><input name='itemsku[{$id}][skudisp]' id='itemsku[{$id}][skudisp]' class='skudisp' type='text' value='{$skudisp}' /></td>";
-	$r .= "\n\t\t<td class='item-sku-price'><input name='itemsku[{$id}][gprice]' id='itemsku[{$id}][gprice]' class='skuprice' type='text' value='{$gprice}' /></td>";
-	$r .= "\n\t\t<td class='item-sku-price'><input name='itemsku[{$id}][mprice]' id='itemsku[{$id}][mprice]' class='skuprice' type='text' value='{$mprice}' /></td>";
+	$r .= "\n\t\t<td class='item-sku-cprice'><input name='itemsku[{$id}][gprice]' id='itemsku[{$id}][gprice]' class='gprice' type='text' value='{$gprice}' /></td>";
+	$r .= "\n\t\t<td class='item-sku-cprice'><input name='itemsku[{$id}][mprice]' id='itemsku[{$id}][mprice]' class='mprice' type='text' value='{$mprice}' /></td>";
 	$r .= "\n\t\t<td class='item-sku-cprice'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
 	$r .= "\n\t\t<td></td>";
 	$r .= "\n\t</tr>";
 	$r .= "\n\t<tr>";
 	$r .= "\n\t\t<td colspan='3'></td>";
-	$r .= "\n\t\t<td colspan='2' class='item-sku-option' id='itemsku-option-{$id}' >";
+	$r .= "\n\t\t<td colspan='2' class='item-sku-option' id='itemsku-option-{$id}'>";
 	foreach($skuoption as $skurow) {
 		$r .= usces_the_itemSkuOption( $id, $skurow, $option );
 	}
-	$r .= "</td>";
+	$r .= "\n\t\t</td>";
 	$r .= "\n\t</tr>";
 	//$default_field = "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>&nbsp;</td>";
 	//$r .= apply_filters('usces_filter_sku_meta_row_advance', $default_field, $entry);
@@ -314,11 +314,10 @@ function _list_item_sku_meta_row( $entry, $skuoption ) {
 	//$r .= ">" . __('Apply','usces') . "</option>";
 	//$r .= "\n\t\t</select></td>";
 	$r .= "\n\t<tr>";//[削除][更新]ボタン
-	$r .= "\n\t\t<td class='item-sku-key'>";
+	$r .= "\n\t\t<td class='item-sku-button' colspan='5'>";
 	$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
 	$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
 	$r .= "</td>";
-	$r .= "\n\t\t<td colspan='4'></td>";
 	$r .= "\n\t</tr>";
 	return $r;
 }
@@ -477,7 +476,7 @@ function item_option_meta_form($sku = 0) {
 /**
  * item_sku_meta_form
  */
-function item_sku_meta_form() {
+function item_sku_meta_form($post_id) {
 	global $wpdb;
 
 	$limit = (int) apply_filters( 'postmeta_form_limit', 30 );
@@ -528,10 +527,24 @@ function item_sku_meta_form() {
 </tr>
 <tr>
 <td class='item-sku-key'><input type="text" id="newskudisp" name="newskudisp" class="newskudisp" value="" /></td>
-<td class='item-sku-cprice'><input type="text" id="newskugprice" name="newskugprice" class="newskuprice" /></td>
-<td class='item-sku-price'><input type="text" id="newskumprice" name="newskumprice" class="newskuprice" /></td>
+<td class='item-sku-cprice'><input type="text" id="newskugprice" name="newskugprice" class="gprice" /></td>
+<td class='item-sku-cprice'><input type="text" id="newskumprice" name="newskumprice" class="mprice" /></td>
 <td class='item-sku-zaikonum'><input type="text" id="newskuunit" name="newskuunit" class="newskuunit" /></td>
 <td class='item-sku-zaiko'></td>
+</tr>
+
+<tr>
+<td colspan='3'></td>
+<td colspan='2' class='item-sku-option' id='newskuoption'>
+<?php
+	$skuoption = has_item_sku_option_meta($post_id);
+	$r = '';
+	foreach($skuoption as $skurow) {
+		$r .= usces_the_itemSkuOption( '', $skurow, '', 1 );
+	}
+	echo $r;
+?>
+</td>
 </tr>
 
 <tr>
@@ -661,7 +674,8 @@ function add_item_sku_meta( $post_ID ) {
 	//$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : 0;
 	$newskugprice = isset($_POST['newskugprice']) ? $_POST['newskugprice']: '';//原価
 	$newskumprice = isset($_POST['newskumprice']) ? $_POST['newskumprice']: '';//会員価格
-
+	$newskukey = isset($_POST['skukey']) ? explode("#usces#", trim( $_POST['skukey'] )) : array();//SKUオプション(KEY)
+	$newskuoption = isset($_POST['skuoption']) ? explode("#usces#", trim( $_POST['skuoption'] )) : array();//SKUオプション(VALUE)
 
 	if ( $newskuname != '' && $newskuprice != '' && $newskuzaikoselect != '') {
 		// We have a key/value pair. If both the select and the
@@ -685,6 +699,9 @@ function add_item_sku_meta( $post_ID ) {
 		//$value['charging_type'] = (int)$newcharging_type;
 		$value['gprice'] = $newskugprice;
 		$value['mprice'] = $newskumprice;
+		for($i = 0; $i < count($newskukey); $i++) {
+			$value['option'][$newskukey[$i]] = $newskuoption[$i];
+		}
 		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
 		$unique = true;
 
@@ -1015,7 +1032,40 @@ function set_item_sku_option( $post_id ) {
 		$html .= '#usces#';
 	}
 
-	//$html = rtrim($html, '#usces#');
+	//新規
+	foreach($skuoption as $optionrow) {
+		if( is_serialized( $optionrow['meta_value'] ) ) $optionrow['meta_value'] = maybe_unserialize( $optionrow['meta_value'] );
+		$name = esc_attr(substr($optionrow['meta_key'],6));
+		$value = $optionrow['meta_value']['value'];
+		$means = (int)$optionrow['meta_value']['means'];
+		$essential = (int)$optionrow['meta_value']['essential'];
+
+		$html .= "<div class='item-sku-option'>";
+		$html .= "<label for='newskuoption[{$name}]' class='item-sku-option'>{$name}</label>";
+
+		switch($means) {
+		case 0://Single-select
+		case 1://Multi-select
+			$selects = explode("\n", $value[0]);
+			$multiple = ($means === 0) ? '' : ' multiple';
+			$html .= "<select name='newskuoption[{$name}]' id='newskuoption[{$name}]' class='item-sku-option' {$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">";
+			$html .= "\t<option value='#NONE#'>".__('Choose','usces')."</option>\n";
+			foreach($selects as $v) {
+				$html .= "\t<option value='".esc_attr($v).">".esc_html($v)."</option>\n";
+			}
+			$html .= "</select>\n";
+			break;
+		case 2://Text
+			$html .= "<input name='newskuoption[{$name}]' type='text' id='newskuoption[{$name}]' class='item-sku-option' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />";
+			break;
+		case 5://Text-area
+			$html .= "<textarea name='newskuoption[{$name}]' id='newskuoption[{$name}]' class='item-sku-option' /></textarea>";
+			break;
+		}
+		$html .= "</div>";
+	}
+	//$html .= '#usces#';
+
 	$res = rtrim($sku_id, ",").'#usces#'.$html;
 	return $res;
 }
@@ -1936,7 +1986,14 @@ function item_save_metadata() {
 		$itemGpDis3 = (int)$_POST['itemGpDis3'];
 		update_post_meta($post_id, '_itemGpDis3', $itemGpDis3);
 	}*/
-	
+	if(isset($_POST['itemStar'])){
+		$itemStar = (int)$_POST['itemStar'];
+		update_post_meta($post_id, '_itemStar', $itemStar);
+	}
+	if(isset($_POST['itemCountry'])){
+		$itemCountry = trim($_POST['itemCountry']);
+		update_post_meta($post_id, '_itemCountry', $itemCountry);
+	}
 	if(isset($_POST['itemShipping'])){
 		$itemShipping = (int)$_POST['itemShipping'];
 		update_post_meta($post_id, '_itemShipping', $itemShipping);
