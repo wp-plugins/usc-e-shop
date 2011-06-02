@@ -1051,7 +1051,7 @@ function set_item_sku_option( $post_id ) {
 			$html .= "<select name='newskuoption[{$name}]' id='newskuoption[{$name}]' class='item-sku-option' {$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">";
 			$html .= "\t<option value='#NONE#'>".__('Choose','usces')."</option>\n";
 			foreach($selects as $v) {
-				$html .= "\t<option value='".esc_attr($v).">".esc_html($v)."</option>\n";
+				$html .= "\t<option value='".esc_attr($v)."'>".esc_html($v)."</option>\n";
 			}
 			$html .= "</select>\n";
 			break;
