@@ -112,16 +112,18 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 			if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
+				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}else{
 				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . esc_attr($_POST['cnum2']) . esc_attr($_POST['cnum3']) . esc_attr($_POST['cnum4']) . '">';
+				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}
 			$html .= '<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
-				<input type="hidden" name="sendid" value="' . $memid . '">
+				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
 				<input type="hidden" name="username" value="' . esc_attr($_POST['username']) . '">
 				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
@@ -147,6 +149,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_zeus_conv':
+			$member = $usces->get_member();
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			$usces->save_order_acting_data($rand);
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
@@ -157,7 +160,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
 				<input type="hidden" name="pay_cvs" value="' . $_POST['pay_cvs'] . '">
-				<input type="hidden" name="sendid" value="' . $memid . '">
+				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">';
 			if( '' != $acting_opts['testid_conv'] ){	
 				$html .= '<input type="hidden" name="testid" value="' . $acting_opts['testid_conv'] . '">';
@@ -171,6 +174,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_zeus_bank':
+			$member = $usces->get_member();
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			$usces->save_order_acting_data($rand);
 			$html .= '<form action="' . $acting_opts['bank_url'] . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">';
@@ -186,7 +190,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">';
 			}	
 			$html .= '<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
-				<input type="hidden" name="sendid" value="' . $memid . '">
+				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
 				<input type="hidden" name="siteurl" value="' . get_option('home') . '">
 				<input type="hidden" name="sitestr" value="「' . esc_attr(get_option('blogname')) . '」トップページへ">

@@ -87,6 +87,14 @@ function toggleVisibility(id) {
 				<td colspan="4"><input name="clientip" type="text" id="clid_zeus" value="<?php echo esc_html($opts['zeus']['clientip']); ?>" size="40" /></td>
 				<td><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
+<!-- ZEUS3D
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_3dsecure_zeus');"><?php _e('3Dセキュア', 'usces'); ?></a></th>
+				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_1" value="on"<?php if( $opts['zeus']['3dsecure'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_1">利用する</label></td>
+				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_2" value="off"<?php if( $opts['zeus']['3dsecure'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_2">利用しない</label></td>
+				<td><div id="ex_3dsecure_zeus" class="explanation"><?php _e('3Dセキュア(本人認証サービス)に対応しているクレジットカードをご利用される場合は、クレジットカードに記載されている情報に加え、「自分しか知らないパスワード」を合わせて認証することになります。', 'usces'); ?></div></td>
+			</tr>
+ZEUS3D -->
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_quickcharge_zeus');">クイックチャージ</a></th>
 				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_1" value="on"<?php if( $opts['zeus']['quickcharge'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_1">利用する</label></td>
@@ -99,14 +107,6 @@ function toggleVisibility(id) {
 				<td><input name="howpay" type="radio" id="howpay_zeus_2" value="off"<?php if( $opts['zeus']['howpay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_2">一括払いのみ</label></td>
 				<td></td>
 			</tr>
-<!--20110516ysk start-->
-			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_3dsecure_zeus');"><?php _e('3Dセキュア(本人認証サービス)', 'usces'); ?></a></th>
-				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_1" value="on"<?php if( $opts['zeus']['3dsecure'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_1">利用する</label></td>
-				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_2" value="off"<?php if( $opts['zeus']['3dsecure'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_2">利用しない</label></td>
-				<td><div id="ex_3dsecure_zeus" class="explanation"><?php _e('3Dセキュアに対応しているクレジットカードをご利用される場合は、クレジットカードに記載されている情報に加え、「自分しか知らないパスワード」を合わせて認証することになります。', 'usces'); ?></div></td>
-			</tr>
-<!--20110516ysk end-->
 		</table>
 		<table class="settle_table">
 			<tr>
@@ -157,6 +157,7 @@ function toggleVisibility(id) {
 		<input name="conv_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/cvs.cgi" />
 		<input name="bank_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/ebank.cgi" />
 		<input name="card_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/secure.cgi" />
+		<input name="card3d_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/secure/api.cgi" />
 		<input name="ipaddrs[]" type="hidden" value="210.164.6.67" />
 		<input name="ipaddrs[]" type="hidden" value="202.221.139.50" />
 		<input name="pay_cvs[D001]" type="hidden" value="セブンイレブン" />
