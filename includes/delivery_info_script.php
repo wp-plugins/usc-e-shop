@@ -294,7 +294,10 @@ $html .= "
 			make_delivery_date : function(selected) {
 				var option = '';
 				var message = '';
-				if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
+//20110606ysk start
+				//if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
+				if(delivery_days[selected] != undefined && 0 < delivery_days[selected]) {
+//20110606ysk end
 					switch(shipping) {
 					case 0://指定なし
 					case 9://商品入荷後
