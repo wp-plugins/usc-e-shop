@@ -435,7 +435,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			//$frequency = $usces->getItemFrequency($cart[0]['post_id']);
 			if( 'continue' != $charging_type) {
 				//通常購入
-				for($i = 0; $i < count($cart); $i++) {
+//20110606ysk start
+/*				for($i = 0; $i < count($cart); $i++) {
 					$cart_row = $cart[$i];
 					$post_id = $cart_row['post_id'];
 					$itemCode = $usces->getItemCode($post_id);
@@ -453,8 +454,24 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="SHIPPINGAMT" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'">';
 				if( !empty($usces_entries['order']['cod_fee']) ) 
 					$html .= '<input type="hidden" name="HANDLINGAMT" value="'.usces_crform($usces_entries['order']['cod_fee'], false, false, 'return', false).'">';
+				$discamt = 0;
+				if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) 
+					$discamt += $usces_entries['order']['usedpoint'];
 				if( !empty($usces_entries['order']['discount']) ) 
-					$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return', false).'">';
+					$discamt += $usces_entries['order']['discount'];
+				if( 0 < $discamt ) 
+					$html .= '<input type="hidden" name="SHIPDISCAMT" value="-'.usces_crform($discamt, false, false, 'return', false).'">';
+*/
+				$itemName = $usces->getItemName($cart[0]['post_id']);
+				if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
+				if(50 < mb_strlen($itemName)) $itemName = mb_substr($itemName, 0, 50).'...';
+				$quantity = 0;
+				foreach($cart as $cart_row) {
+					$quantity += $cart_row['quantity'];
+				}
+				$desc = $itemName.' '.__('Quantity','usces').':'.$quantity;
+				$html .= '<input type="hidden" name="DESC" value="'.$desc.'">';
+//20110606ysk end
 				$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">';
 			} else {
 				//定期支払い
