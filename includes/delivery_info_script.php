@@ -302,7 +302,7 @@ $html .= "
 				var message = '';
 //20110606ysk start
 				//if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
-				if(delivery_days[selected] != undefined && 0 < delivery_days[selected]) {
+				if(delivery_days[selected] != undefined && 0 <= delivery_days[selected]) {
 //20110606ysk end
 					switch(shipping) {
 					case 0://指定なし
