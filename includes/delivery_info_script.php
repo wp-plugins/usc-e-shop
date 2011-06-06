@@ -76,7 +76,13 @@ for($i = 0; $i < count($cart); $i++) {
 	$cart_row = $cart[$i];
 	$post_id = $cart_row['post_id'];
 	$itemShipping = $usces->getItemShipping($post_id);
+//20110606ysk start
+	if($itemShipping == 0 or $itemShipping == 9) {
+		$shipping = 0;
+		break;
+	}
 	if($shipping < $itemShipping) $shipping = $itemShipping;
+//20110606ysk end
 }
 $html .= 'var shipping = '.$shipping.';';
 //配送業務締時間
