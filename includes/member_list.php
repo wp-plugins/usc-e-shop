@@ -214,8 +214,8 @@ jQuery(document).ready(function($){
 		$ftype_mem_csv = '';
 	}
 ?>
-		<label for="ftype_mem_xls"><input type="radio" name="ftype_mem[]" id="ftype_mem_xls" value="xls"<?php echo $ftype_mem_xls; ?> /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_mem_csv"><input type="radio" name="ftype_mem[]" id="ftype_mem_csv" value="csv"<?php echo $ftype_mem_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<label for="ftype_mem_xls"><input type="radio" name="ftype_mem[]" id="ftype_mem_xls" value="xls"<?php echo $ftype_mem_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_mem_csv"><input type="radio" name="ftype_mem[]" id="ftype_mem_csv" value="csv"<?php echo $ftype_mem_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_mem" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Membership information', 'usces'); ?></legend>

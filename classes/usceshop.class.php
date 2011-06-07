@@ -929,7 +929,7 @@ class usc_e_shop
 				case 'zeus':
 					unset( $options['acting_settings']['zeus'] );
 					$options['acting_settings']['zeus']['card_url'] = $_POST['card_url'];
-					$options['acting_settings']['zeus']['card3d_url'] = $_POST['card3d_url'];
+					$options['acting_settings']['zeus']['card_secureurl'] = $_POST['card_secureurl'];
 					$options['acting_settings']['zeus']['ipaddrs'] = $_POST['ipaddrs'];
 					$options['acting_settings']['zeus']['pay_cvs'] = $_POST['pay_cvs'];
 					$options['acting_settings']['zeus']['card_activate'] = $_POST['card_activate'];
@@ -4952,7 +4952,12 @@ class usc_e_shop
 
 			usces_zeus_3dsecure_auth();
 
-		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] ){
+		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && !empty($this->options['acting_settings']['zeus']['authkey']) && !isset($_REQUEST['PaRes'])){
+
+			$res = usces_zeus_secure_payreq();
+			return $res;
+
+		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && empty($this->options['acting_settings']['zeus']['authkey']) ){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);

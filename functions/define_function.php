@@ -81,44 +81,62 @@ function usces_item_uploadcsv(){
 	
 	$lines = array();
 	$sp = ",";
-	if('xls' === $fext) {
-		$sp = "\t";
-		$data = @file_get_contents($workfile);
-		if (!$data) {
-			$res['status'] = 'error';
-			$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
-			return $res;
-		}
-		if(substr($data, 0, 8) != IDENTIFIER_OLE) {
-			//$fext = 'tsv';
-			//while (! feof ($fpo)) {
-			//	$temp = fgets ($fpo, 10240);
-			//	if( 5 < strlen($temp) )
-			//		$lines[] = str_replace('"', '', $temp);
-			//}
-			//20101208ysk
-			$res['status'] = 'error';
-			$res['message'] = __('このファイルはExcelファイルでは有りません。', 'usces').$fname.'.'.$fext;
-			return $res;
-		} else {
-			$excel = new Spreadsheet_Excel_Reader();
-			$excel->read($workfile);
-			$rows = $excel->rowcount();//最大行数
-			$cols = $excel->colcount();//最大列数
-			for($r = 1; $r <= $rows; $r++) {
-				$line = '';
-				for($c = 1; $c <= $cols; $c++) {
-					$line .= mb_convert_encoding($excel->val($r, $c), "SJIS", "UTF-8").$sp;
-				}
-				$line = trim($line, $sp);
-				$lines[] = $line;
-			}
-		}
+	if('csv' !== $fext) {
+		$res['status'] = 'error';
+		$res['message'] = __('このファイルはCSVファイルでは有りません。', 'usces').$fname.'.'.$fext;
+		return $res;
+
+//		$sp = "\t";
+//		$data = @file_get_contents($workfile);
+//		if (!$data) {
+//			$res['status'] = 'error';
+//			$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
+//			return $res;
+//		}
+//		if(substr($data, 0, 8) != IDENTIFIER_OLE) {
+//			//$fext = 'tsv';
+//			//while (! feof ($fpo)) {
+//			//	$temp = fgets ($fpo, 10240);
+//			//	if( 5 < strlen($temp) )
+//			//		$lines[] = str_replace('"', '', $temp);
+//			//}
+//			//20101208ysk
+//			$res['status'] = 'error';
+//			$res['message'] = __('このファイルはExcelファイルでは有りません。', 'usces').$fname.'.'.$fext;
+//			return $res;
+//		} else {
+//			$excel = new Spreadsheet_Excel_Reader();
+//			$excel->read($workfile);
+//			$rows = $excel->rowcount();//最大行数
+//			$cols = $excel->colcount();//最大列数
+//			for($r = 1; $r <= $rows; $r++) {
+//				$line = '';
+//				for($c = 1; $c <= $cols; $c++) {
+//					$line .= mb_convert_encoding($excel->val($r, $c), "SJIS", "UTF-8").$sp;
+//				}
+//				$line = trim($line, $sp);
+//				$lines[] = $line;
+//			}
+//		}
 	} else {
+		$buf = '';
+		$lines = array();
 		while (! feof ($fpo)) {
 			$temp = fgets ($fpo, 10240);
-			if( 5 < strlen($temp) )
+			if( 0 == strlen($temp) ) continue;
+			
+			$num = substr_count($temp, '"');
+			if( 0 == $num % 2 && '' == $buf ){
 				$lines[] = $temp;
+			}elseif( 1 == $num % 2 && '' == $buf ){
+				$buf .= $temp;
+			}elseif( 0 == $num % 2 && '' != $buf ){
+				$buf .= $temp;
+			}elseif( 1 == $num % 2 && '' != $buf ){
+				$buf .= $temp;
+				$lines[] = $buf;
+				$buf = '';
+			}
 		}
 	}
 	$total_num = count($lines);
@@ -127,14 +145,34 @@ function usces_item_uploadcsv(){
 	foreach($lines as $rows_num => $line){
 		$datas = array();
 		$logtemp = '';
-//20110201ysk start
-		//$datas = explode($sp, $line);
 		$d = explode($sp, $line);
-		foreach($d as $key => $data) {
-			$data = str_replace(array("\r\n","\r","\n"), '', $data);//20110525ysk
-			$datas[$key] = trim($data, '"');
+		$buf = '';
+		foreach($d as $data) {
+			$num = substr_count($data, '"');
+			if( 0 == $num % 2 && '' == $buf ){
+//usces_log('data : '.print_r($data[0],true), 'acting_transaction.log');
+				if( '"' == substr($data, 0, 1) )
+					$data = substr($data, 1);
+				if( '"' == substr($data, -1) )
+					$data = substr($data, 0, -1);
+				$data = str_replace(array('""'), '"', $data);
+				$datas[] = ( false !== $data ) ? $data : '';
+			}elseif( 1 == $num % 2 && '' == $buf ){
+				$buf .= $data;
+			}elseif( 0 == $num % 2 && '' != $buf ){
+				$buf .= $data;
+			}elseif( 1 == $num % 2 && '' != $buf ){
+				$buf .= $data;
+				if( '"' == substr($buf, 0, 1) )
+					$buf = substr($buf, 1);
+				if( '"' == substr($buf, -1) )
+					$buf = substr($buf, 0, -1);
+				$buf = str_replace(array('""'), '"', $buf);
+				$datas[] = ( false !== $buf ) ? $buf : '';
+				$buf = '';
+			}
 		}
-//20110201ysk end
+
 //		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
 		if( $min_field_num > count($datas) ){
 			$err_num++;
