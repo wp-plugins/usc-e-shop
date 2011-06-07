@@ -2826,12 +2826,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			//20100818ysk end
 			$formtag .= '<tr class="inp1">
-			<th width="127" scope="row"><em>*</em>'.__('Full name', 'usces').'</th>
+			<th width="127" scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces').'</th>
 			<td width="257">'.__('Familly name', 'usces').'<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			<td width="257">'.__('Given name', 'usces').'<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			</tr>';
 			$formtag .= '<tr class="inp1">
-			<th scope="row">'.__('furigana', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('name3').__('furigana', 'usces').'</th>
 			<td>'.__('Familly name', 'usces').'<input name="' . $type . '[name3]" id="name3" type="text" value="' . esc_attr($values['name3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			<td>'.__('Given name', 'usces').'<input name="' . $type . '[name4]" id="name4" type="text" value="' . esc_attr($values['name4']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			</tr>';
@@ -2839,35 +2839,35 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
 			//20100818ysk end
 			$formtag .= '<tr>
-			<th scope="row"><em>*</em>'.__('Zip/Postal Code', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('zipcode').__('Zip/Postal Code', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />100-1000</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
 			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>'.__('Province', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('states').__('Province', 'usces').'</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . '</td>
 			</tr>
 			<tr class="inp2">
-			<th scope="row"><em>*</em>'.__('city', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address1').__('city', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.__('Kitakami Yokohama', 'usces').'</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>'.__('numbers', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address2').__('numbers', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />3-24-555</td>
 			</tr>
 			<tr>
-			<th scope="row">'.__('building name', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address3').__('building name', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.__('tuhanbuild 4F', 'usces').'</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>'.__('Phone number', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('tel').__('Phone number', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />1000-10-1000</td>
 			</tr>
 			<tr>
-			<th scope="row">'.__('FAX number', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('fax').__('FAX number', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />1000-10-1000</td>
 			</tr>';
 			//20100818ysk start
@@ -2880,7 +2880,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			//20100818ysk end
 			$formtag .= '<tr class="inp1">
-			<th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces') . '</th>
 			<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" /></td>
 			<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" /></td>
 			</tr>';
@@ -2889,35 +2889,35 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk end
 			$formtag .= '
 			<tr>
-			<th scope="row"><em>*</em>' . __('Address Line1', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address2') . __('Address Line1', 'usces') . '</th>
 			<td colspan="2">' . __('Street address', 'usces') . '<br /><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row">' . __('Address Line2', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address3') . __('Address Line2', 'usces') . '</th>
 			<td colspan="2">' . __('Apartment, building, etc.', 'usces') . '<br /><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" /></td>
 			</tr>
 			<tr class="inp2">
-			<th scope="row"><em>*</em>' . __('city', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address1') . __('city', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('State', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('states') . __('State', 'usces') . '</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
 			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Zip', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('zipcode') . __('Zip', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Phone number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('tel') . __('Phone number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row">' . __('FAX number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('fax') . __('FAX number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" /></td>
 			</tr>';
 			//20100818ysk start
@@ -2934,6 +2934,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 	} else {
 		echo $res;
 	}
+}
+
+function usces_get_essential_mark( $type ){
+	global $usces_essential_mark;
+	do_action('usces_essential_mark');
+	return $usces_essential_mark[$type];
 }
 
 function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return' ){
