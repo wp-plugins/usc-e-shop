@@ -1829,7 +1829,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 				}
 				$value = trim($value);
 
-				$e = ($essential == 1) ? '<em>*</em>' : '';
+				$e = ($essential == 1) ? '<em>' . __('*', 'usces') . '</em>' : '';
 				$html .= '
 					<tr>
 					<th scope="row">'.$e.esc_html($name).'</th>';

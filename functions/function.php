@@ -2938,7 +2938,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 
 function usces_get_essential_mark( $type ){
 	global $usces_essential_mark;
-	do_action('usces_essential_mark');
+	do_action('usces_action_essential_mark');
 	return $usces_essential_mark[$type];
 }
 
