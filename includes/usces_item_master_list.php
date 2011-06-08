@@ -393,13 +393,13 @@ jQuery(document).ready(function($){
 <?php endforeach; ?>
 	</tr>
 <?php foreach ( (array)$rows as $array ) :
-		$pctid = $this->get_pictids($array['item_code']); 
+		$pctid = $this->get_mainpictid($array['item_code']); 
 		$sku_values = unserialize($array['sku_value']);
 		$post = get_post($array['ID']);
 ?>
 	<tr>
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
-	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid[0], array(50, 50), true ); ?></a></td>
+	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : 
 			$skus = $this->get_skus( $array['ID'], 'ARRAY_A' );
 	?>

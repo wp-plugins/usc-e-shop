@@ -99,7 +99,7 @@ function usces_order_confirm_message($order_id) {
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictids = $usces->get_pictids($itemCode);
+//		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
 //			$optstr = implode(',', $options);
 		} else { 
@@ -291,7 +291,7 @@ function usces_send_ordermail($order_id) {
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictids = $usces->get_pictids($itemCode);
+//		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
 //			$optstr = implode(',', $options);
 		} else { 
@@ -3256,7 +3256,7 @@ function usces_get_cart_rows( $out = '' ) {
 		$stockid = $usces->getItemZaikoStatusId($post_id, $cart_row['sku']);
 		$stock = $usces->getItemZaiko($post_id, $cart_row['sku']);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
-		$pictids = $usces->get_pictids($itemCode);
+		$pictid = $usces->get_mainpictid($itemCode);
 		if ( empty($options) ) {
 			$optstr =  '';
 			$options =  array();
@@ -3265,8 +3265,8 @@ function usces_get_cart_rows( $out = '' ) {
 		$res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
-			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a>';
-			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
+			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
@@ -3327,7 +3327,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
 		$skuPrice = $cart_row['price'];
-		$pictids = $usces->get_pictids($itemCode);
+		$pictid = $usces->get_mainpictid($itemCode);
 		if (empty($options)) {
 			$optstr =  '';
 			$options =  array();
@@ -3336,8 +3336,8 @@ function usces_get_confirm_rows( $out = '' ) {
 		 $res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
-		$cart_thumbnail = wp_get_attachment_image( $pictids[0], array(60, 60), true );
-		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
+		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){

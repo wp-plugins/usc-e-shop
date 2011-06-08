@@ -1529,8 +1529,8 @@ function get_order_item( $item_code ) {
 	$post_id = $usces->get_postIDbyCode( $item_code );
 	if( $post_id == NULL ) return false;
 	
-	$pict_id = $usces->get_pictids( $item_code );
-	$pict_link = wp_get_attachment_link($pict_id[0], array(200, 100), false);
+	$pict_id = $usces->get_mainpictid( $item_code );
+	$pict_link = wp_get_attachment_link($pict_id, array(200, 100), false);
 	preg_match("/^\<a .+\>(\<img .+\/\>)\<\/a\>$/", $pict_link, $match);
 	$pict = $match[1];
 	$skus = $usces->get_skus( $post_id );

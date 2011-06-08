@@ -109,7 +109,7 @@ foreach ( $usces_member_history as $umhs ) {
 		$cartItemName = $this->getCartItemName($post_id, $sku);
 		//$skuPrice = $this->getItemPrice($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictids = $this->get_pictids($itemCode);
+		$pictid = $this->get_mainpictid($itemCode);
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
@@ -120,7 +120,7 @@ foreach ( $usces_member_history as $umhs ) {
 			
 		$html .= '<tr>
 			<td>' . ($i + 1) . '</td>
-			<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
+			<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a></td>
 			<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
 			<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>

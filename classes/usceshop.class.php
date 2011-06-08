@@ -4804,6 +4804,13 @@ class usc_e_shop
 		return $results;
 	}
 	
+	function get_mainpictid($item_code) {
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'attachment' LIMIT 1", $item_code);
+		$id = $wpdb->get_var( $query );
+		return $id;
+	}
+	
 	function get_skus( $post_id, $output='' ) {
 		$fields = get_post_custom($post_id);
 		if( !is_array($fields)) $fields = array();
