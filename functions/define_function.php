@@ -145,12 +145,14 @@ function usces_item_uploadcsv(){
 	foreach($lines as $rows_num => $line){
 		$datas = array();
 		$logtemp = '';
+		$line = trim($line);
+		if( empty($line) ) continue;
+		
 		$d = explode($sp, $line);
 		$buf = '';
 		foreach($d as $data) {
 			$num = substr_count($data, '"');
 			if( 0 == $num % 2 && '' == $buf ){
-//usces_log('data : '.print_r($data[0],true), 'acting_transaction.log');
 				if( '"' == substr($data, 0, 1) )
 					$data = substr($data, 1);
 				if( '"' == substr($data, -1) )
@@ -501,7 +503,7 @@ function usces_item_uploadcsv(){
 				}
 //20110525ysk start 0000172
 				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_')) AND post_id = %d", $post_id);
+				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_') OR (SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_')) AND post_id = %d", $post_id);
 //20110525ysk end
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
