@@ -131,7 +131,7 @@ get_header();
 				<?php while (usces_have_options()) : ?>
 					<tr>
 						<th><?php usces_the_itemOptName(); ?></th>
-						<td><?php usces_the_itemOption(usces_getItemOptName(),''); ?></td>
+						<td><?php NS_the_itemOption(usces_getItemOptName(),''); ?></td>
 					</tr>
 				<?php endwhile; ?>
 					</table>
@@ -142,10 +142,9 @@ get_header();
 			<?php endif; ?>
 				<div class="send_info">発送日目安：<?php usces_the_shipment_aim(); ?></div>
 				<div id="sku_option_field" class="sku_option_box"><?php NS_sku_option_field(); ?></div>
-				<div class="sku_option_quant"><?php _e('Quantity', 'usces'); ?><?php usces_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?></div>
-				<div id="sku_option_price">￥50,000</div>
-				<div id="sku_option_button"><input name="button" type="image" src="http://usctest.welcarthosting.net/future_next/wordpress/wp-content/themes/child_netstage/images/item/btn_addcart.png" class="skubutton" disabled /></div>
-				<!--参考までに<div><?php ntstg_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>-->
+				<div class="sku_option_quant"><?php _e('Quantity', 'usces'); ?><?php NS_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?></div>
+				<div id="sku_option_price"></div>
+				<div id="sku_option_button"><?php NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>
 				<div class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></div>
 			</div><!-- end of skuform -->
 			<?php echo apply_filters('single_item_single_sku_after_field', NULL); ?>

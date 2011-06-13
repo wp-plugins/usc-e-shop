@@ -427,25 +427,127 @@ function NS_sku_option_field(){
 	$sku_options = NS_get_sku_option();
 	$html = '';
 	$i = 1;
+	$skucnt = 0;
 	foreach( $sku_options as $key => $values ){
 		if( 0 == $values['means'] ){
-			$html .= '<div id= "opt' . $i . '" class="sku_option_select">';
+			//$html .= '<div id= "opt' . $i . '" class="sku_option_select">';
+			$html .= '<div class="sku_option_select">';
 			$html .= '<label class="sku_option_label">' . $key . ':</label>';
-			$html .= '<select name="opt' . $i . '" class="sku_option_select_field">';
+			//$html .= '<select name="opt' . $i . '" class="sku_option_select_field">';
+			$html .= '<select name="opt'.$key.'" id= "opt'.$i.'" class="sku_option_select_field">';
 			$html .= '<option value="">選択してください</option>';
 			foreach( (array)$values['value'] as $val ){
 				$html .= '<option value="' . $val . '">' . $val . '</option>';
 			}
 			$html .= '</select>';
 			$html .= '</div>'."\n";
+			$skucnt++;
 		}elseif( 2 == $values['means'] ){
-			$html .= '<div id= "opt' . $i . '" class="sku_option_text">';
+			//$html .= '<div id= "opt' . $i . '" class="sku_option_text">';
+			$html .= '<div class="sku_option_text">';
 			$html .= '<label class="sku_option_label">' . $key . ':</label>';
-			$html .= '<input name="opt' . $i . '" type="text" value="" readonly="true" class="sku_option_text_field" />';
+			//$html .= '<input name="opt' . $i . '" type="text" value="" readonly="true" class="sku_option_text_field" />';
+			$html .= '<input name="opt'.$key.'" id= "opt'.$i.'" type="text" value="" readonly="true" class="sku_option_text_field" />';
 			$html .= '</div>'."\n";
 		}
+		$i++;
 	}
+	$html .= '<input type="hidden" id="sku" value="" />'."\n";
+	$html .= '<input type="hidden" id="skucnt" value="'.$skucnt.'" />'."\n";
 	echo $html;
+}
+
+function NS_the_itemOption( $name, $label = '#default#', $out = '' ) {
+	global $post, $usces;
+	$post_id = $post->ID;
+	$session_value = isset( $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['key']][$name] ) ? $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['key']][$name] : NULL;
+	
+	if($label == '#default#')
+		$label = $name;
+	$key = '_iopt_' . $name;
+	$value = get_post_custom_values($key, $post_id);
+	if(!$value) return false;
+	$values = maybe_unserialize($value[0]);
+	$means = (int)$values['means'];
+	$essential = (int)$values['essential'];
+
+	$html = '';
+	$name = esc_attr($name);
+	$label = esc_attr($label);
+	switch($means) {
+	case 0://Single-select
+	case 1://Multi-select
+		$selects = explode("\n", $values['value'][0]);
+		$multiple = ($means === 0) ? '' : ' multiple';
+		$html .= "\n<label for='iopt{$name}' class='iopt_label'>{$label}</label>\n";
+		$html .= "\n<select name='iopt{$name}' id='iopt{$name}' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+		if($essential == 1){
+			if(  '#NONE#' == $session_value || NULL == $session_value ) 
+				$selected = ' selected="selected"';
+			else
+				$selected = '';
+			$html .= "\t<option value='#NONE#'{$selected}>" . __('Choose','usces') . "</option>\n";
+		}
+		$i=0;
+		foreach($selects as $v) {
+			if( ($i == 0 && $essential == 0 && NULL == $session_value) || esc_attr($v) == $session_value ) 
+				$selected = ' selected="selected"';
+			else
+				$selected = '';
+			$html .= "\t<option value='" . esc_attr($v) . "'{$selected}>" . esc_html($v) . "</option>\n";
+			$i++;
+		}
+		$html .= "</select>\n";
+		break;
+	case 2://Text
+		$html .= "\n<input name='iopt{$name}' type='text' id='iopt{$name}' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"" . esc_attr($session_value) . "\" />\n";
+		break;
+	case 5://Text-area
+		$html .= "\n<textarea name='iopt{$name}' id='iopt{$name}' class='iopt_textarea' />" . esc_attr($session_value) . "</textarea>\n";
+		break;
+	}
+	
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+
+function NS_the_itemQuant( $out = '' ) {
+	global $usces, $post;
+	$post_id = $post->ID;
+	$value = isset( $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['key']] ) ? $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['key']] : 1;
+	$html = "<input name=\"qnt\" type=\"text\" id=\"qnt\" class=\"skuquantity\" value=\"" . $value . "\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+		
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
+
+function NS_the_itemSkuButton($value, $type=0, $out = '') {
+	global $usces, $post;
+	$post_id = $post->ID;
+
+	if($type == 1)
+		$type = 'button';
+	else
+		$type = 'image';
+
+	if( $usces->use_js ){
+		$html .= "<input name=\"inCart\" type=\"{$type}\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart.png\" alt=\"カートに入れる\" id=\"inCart\" class=\"skubutton\" value=\"{$value}\" disabled />";
+	}else{
+		$html .= "<a name=\"cart_button\"></a><input name=\"inCart\" type=\"{$type}\" id=\"inCart\" class=\"skubutton\" value=\"{$value}\" disabled />";
+		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+	}
+
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
 }
 
 ?>

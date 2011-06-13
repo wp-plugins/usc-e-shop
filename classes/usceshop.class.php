@@ -1387,8 +1387,8 @@ class usc_e_shop
 				$opt_esse = rtrim($opt_esse, ',');
 			}
 			$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
-		
 ?>
+		
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
@@ -1413,6 +1413,17 @@ class usc_e_shop
 		(function($) {
 		uscesCart = {
 			intoCart : function (post_id, sku) {
+<?php
+			if( NS_have_sku_option() ) {
+?>
+				$.each($(':input[name^="iopt"]'), function(i, obj) {
+					name = $(this).attr("name").substring(4);
+					$('#sku_option_button').append('<input name="itemOption['+post_id+']['+sku+']['+name+']" type="hidden" value="'+$(this).val()+'">');
+				});
+				$('#sku_option_button').append('<input name="quant['+post_id+']['+sku+']" type="hidden" value="'+$('#qnt').val()+'">');
+<?php
+			}
+?>
 				
 				var zaikonum = document.getElementById("zaikonum["+post_id+"]["+sku+"]").value;
 				var zaiko = document.getElementById("zaiko["+post_id+"]["+sku+"]").value;
@@ -1596,6 +1607,93 @@ class usc_e_shop
 				}
 			},
 			
+<?php
+			if( NS_have_sku_option() ) {
+?>
+			changeSkuSelect : function(index) {
+				var id = '#opt'+index;
+				var value = $(id).val();
+				if(value == '') return;
+				var key = $(id).attr("name");
+
+				var skukey = '';
+				var skuoption = '';
+				var sp = '';
+				if(1 < index) {
+					$.each($(':input[name^="opt"]'), function(i, obj) {
+						if(i < (index-1)) {
+							skukey += sp + $(this).attr("name").substring(3);
+							skuoption += sp + $(this).val();
+							sp = '#usces#';
+						}
+					});
+				}
+
+				var nextskukey = '';
+				var skucnt = $('#skucnt['+uscesL10n.post_id+']').val();
+				if(index != skucnt) {
+					nextskukey = $('#opt'+(index+1)).attr("name").substring(3);
+				}
+
+				var s = this.settings;
+				s.data = "action=change_sku_option_ajax&post_id="+uscesL10n.post_id+"&key="+key.substring(3)+"&value="+value+"&index="+index+"&skukey="+skukey+"&skuoption="+skuoption+"&nextskukey="+nextskukey;
+				s.success = function(data, dataType) {
+alert(data);
+					d = data.split('#usces#');
+					var sku = d[0].split("#ns#");
+					var nextval = d[1].split("#ns#");
+					var optkey = d[2].split("#ns#");
+					var optval = d[3].split("#ns#");
+					var skuprice = d[4];
+					var zaikonum = d[5];
+					var html = d[6];
+					if(nextskukey != '') {
+						$(':input[name="opt'+nextskukey+'"]').attr('disabled', false);
+						$(':input[name="opt'+nextskukey+'"]').html('');
+						var nextopt = '<option value="">選択してください</option>';
+						for(i = 0; i < nextval.length; i++) {
+							nextopt += '<option value="'+nextval[i]+'">'+nextval[i]+'</option>';
+						}
+						$(':input[name="opt'+nextskukey+'"]').html(nextopt);
+						$(':input[name="opt'+nextskukey+'"]').val(nextval);
+						$(':input[name="opt'+nextskukey+'"]').attr('selectedIndex', 0);
+					}
+					if(0 < optkey.length && optkey[0] != '') {
+						for(i = 0; i < optkey.length; i++) {
+							if(index < $(':input[name="opt'+optkey[i]+'"]').attr('id').substring(3)) {
+								$(':input[name="opt'+optkey[i]+'"]').attr('disabled', false);
+								$(':input[name="opt'+optkey[i]+'"]').html('');
+								if($(':input[name="opt'+optkey[i]+'"]').attr("class") == 'sku_option_select_field') {
+									var opt = '<option value="">選択してください</option><option value="'+optval[i]+'">'+optval[i]+'</option>';
+									$(':input[name="opt'+optkey[i]+'"]').html(opt);
+								}
+							}
+							$(':input[name="opt'+optkey[i]+'"]').val(optval[i]);
+						}
+						$('#sku').val(sku);
+						$('#sku_option_price').text(skuprice);
+					} else {
+						$.each($(':input[name^="opt"]'), function(i, obj) {
+							if(index < i) {
+								if($(this).attr("class") == 'sku_option_select_field') {
+									$(this).html('<option value="">選択してください</option>');
+									$(this).attr('disabled', true);
+								}
+								$(this).val('');
+							}
+						});
+						$('#sku_option_price').text('');
+					}
+					$('#sku_option_button').html('');
+					$('#sku_option_button').html(html);
+				};
+				$.ajax( s );
+				return false;
+			},
+			
+<?php
+			}
+?>
 			previousCart : function () {
 				location.href = uscesL10n.previous_url; 
 			},
@@ -1635,14 +1733,34 @@ class usc_e_shop
 				}
 				return true;
 			}
+
 		};
 		$("#country").change(function () {
 			var country = $("#country option:selected").val();
 			$("#newcharging_type option:selected").val()
 			uscesCart.changeStates( country ); 
 		});
-			
+		
 		})(jQuery);
+<?php
+			if( NS_have_sku_option() ) {
+?>
+		
+		jQuery(document).ready(function($) {
+			if(0 < $('#skucnt').val()) {
+				$.each($(':input[name^="opt"]'), function(i, obj) {
+					if($(this).attr('class') == 'sku_option_select_field') {
+						$('#opt'+(i+1)).change(function() {
+							uscesCart.changeSkuSelect(i+1);
+						});
+						if(0 < i) $(this).attr('disabled', true);
+					}
+				});
+			}
+		});
+<?php
+			}
+?>
 		</script>
 		<?php endif; ?>
 <?php

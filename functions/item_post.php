@@ -674,8 +674,8 @@ function add_item_sku_meta( $post_ID ) {
 	//$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : 0;
 	$newskugprice = isset($_POST['newskugprice']) ? $_POST['newskugprice']: '';//原価
 	$newskumprice = isset($_POST['newskumprice']) ? $_POST['newskumprice']: '';//会員価格
-	$newskukey = isset($_POST['skukey']) ? explode("#usces#", trim( $_POST['skukey'] )) : array();//SKUオプション(KEY)
-	$newskuoption = isset($_POST['skuoption']) ? explode("#usces#", trim( $_POST['skuoption'] )) : array();//SKUオプション(VALUE)
+	$newskukey = isset($_POST['newskukey']) ? explode("#usces#", trim( $_POST['newskukey'] )) : array();//SKUオプション(KEY)
+	$newskuoption = isset($_POST['newskuoption']) ? explode("#usces#", trim( $_POST['newskuoption'] )) : array();//SKUオプション(VALUE)
 
 	if ( $newskuname != '' && $newskuprice != '' && $newskuzaikoselect != '') {
 		// We have a key/value pair. If both the select and the
@@ -823,8 +823,8 @@ function up_item_sku_meta( $post_ID ) {
 	//$charging_type = isset($_POST['charging_type']) ? $_POST['charging_type'] : 0;
 	$skugprice = isset($_POST['skugprice']) ? trim( $_POST['skugprice'] ) : 0;//原価
 	$skumprice = isset($_POST['skumprice']) ? trim( $_POST['skumprice'] ) : 0;//会員価格
-	$skukey = isset($_POST['skukey']) ? explode("#usces#", trim( $_POST['skukey'] )) : array();//SKUオプション(KEY)
-	$skuoption = isset($_POST['skuoption']) ? explode("#usces#", trim( $_POST['skuoption'] )) : array();//SKUオプション(VALUE)
+	$skukey = isset($_POST['skukey']) ? explode("#usces#", trim($_POST['skukey'])) : array();//SKUオプション(KEY)
+	$skuoption = isset($_POST['skuoption']) ? explode("#usces#", trim($_POST['skuoption'])) : array();//SKUオプション(VALUE)
 
 	$value['cprice'] = $skucprice;
 	$value['price'] = $skuprice;
@@ -2514,4 +2514,75 @@ function target_market_ajax() {
 	die($res);
 }
 //20110331ysk end
+
+function change_sku_option_ajax() {
+	global $wpdb, $usces;
+
+	$post_id = $_POST['post_id'];
+	$key = $_POST['key'];
+	$value = $_POST['value'];
+	$index = $_POST['index'];
+	$skukey = isset($_POST['skukey']) ? explode("#usces#", trim($_POST['skukey'])) : array();//SKUオプション(KEY)
+	$skuoption = isset($_POST['skuoption']) ? explode("#usces#", trim($_POST['skuoption'])) : array();//SKUオプション(VALUE)
+	$skucnt = count($skukey);
+	$nextskukey = $_POST['nextskukey'];
+	$sku = array();
+	$nextskuvalue = array();
+	$optkey = array();
+	$optvalue = array();
+	$skuprice = '';
+	$zaikonum = 0;
+	$html = '';
+
+	$orderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
+	$res = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
+			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE '%s' 
+			ORDER BY {$orderby}", $post_id, '_isku_%'), ARRAY_A );
+	foreach( $res as $row ) {
+		if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
+		$chk = 0;
+		for($i = 0; $i < $skucnt; $i++) {
+			if($row['meta_value']['option'][$skukey[$i]] != $skuoption[$i]) {
+				$chk = 1;
+				break;
+			}
+		}
+		if($chk == 0 and $row['meta_value']['option'][$key] == $value) {
+			$sku[] = esc_attr(substr($row['meta_key'],6));
+			if($nextskukey != '') $nextskuvalue[] = esc_attr($row['meta_value']['option'][$nextskukey]);
+		}
+	}
+
+	$sku = array_unique($sku);
+	$nextskuvalue = array_unique($nextskuvalue);
+
+	if(count($sku) == 1 and !empty($sku[0])) {
+		foreach( $res as $row ) {
+			if($row['meta_key'] == '_isku_'.$sku[0]) {
+				if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
+				foreach( $row['meta_value']['option'] as $k => $v ) {
+					$optkey[] = esc_attr($k);
+					$optvalue[] = esc_attr($v);
+				}
+				$skuprice = esc_attr(usces_crform($row['meta_value']['price'], true, false, 'return'));
+				$zaikonum = $row['meta_value']['zaikonum'];
+				if(0 < $zaikonum) {
+					$html  = "<input name=\"zaikonum[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaikonum[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaikonum']."\" />\n";
+					$html .= "<input name=\"zaiko[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaiko[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaiko']."\" />\n";
+					$html .= "<input name=\"skuPrice[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"skuPrice[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['price']."\" />\n";
+					if( $usces->use_js ){
+						$html .= "<input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart.png\" alt=\"カートに入れる\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />";
+					}else{
+						$html .= "<a name=\"cart_button\"></a><input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" />";
+						$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+					}
+				}
+				break;
+			}
+		}
+	}
+	if($html == '') $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return');
+
+	die(implode("#ns#", $sku)."#usces#".implode("#ns#", $nextskuvalue)."#usces#".implode("#ns#", $optkey)."#usces#".implode("#ns#", $optvalue)."#usces#".$skuprice."#usces#".$zaikonum."#usces#".$html);
+}
 ?>

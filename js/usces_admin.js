@@ -253,13 +253,12 @@
 			var skuoption = "";
 			var sp = "";
 			$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
-				key = obj.name.substring(skuoption_name.length+1);
+				key = $(this).attr('name').substring(skuoption_name.length+1);
 				key = key.replace("]", "");
 				skukey += sp + key;
 				skuoption += sp + $(this).val();
 				sp = '#usces#';
 			});
-			
 			var s = itemSku.settings;
 			//s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugptekiyo=" + skugptekiyo + charging_type + skuadvance;
 			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugprice=" + gprice + "&newskumprice=" + mprice + "&newskukey=" + skukey + "&newskuoption=" + skuoption;
@@ -286,6 +285,13 @@
 				//	$("#newskuadvance").attr({selectedIndex:0});
 				$("#newskugprice").val("");
 				$("#newskumprice").val("");
+				$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
+					//if($(this).attr('class') == 'item-sku-option') {
+						$(this).attr({selectedIndex:0});
+					//} else {
+						$(this).val("");
+					//}
+				});
 			};
 			$.ajax( s );
 			return false;
@@ -328,7 +334,7 @@
 			var skuoption = "";
 			var sp = "";
 			$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
-				key = obj.name.substring(skuoption_name.length+1);
+				key = $(this).attr('name').substring(skuoption_name.length+1);
 				key = key.replace("]", "");
 				skukey += sp + key;
 				skuoption += sp + $(this).val();
