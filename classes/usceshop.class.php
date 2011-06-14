@@ -5373,9 +5373,10 @@ class usc_e_shop
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
-		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price);
+		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$tax = $this->getTax( $total_price );
 		$total_full_price = $total_price + $tax;
+		$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$get_point = $this->get_order_point( $member['ID'] );
 		if(0 < (int)$use_point){
 			$get_point = ceil( $get_point - ($get_point * $use_point / $total_items_price) );
