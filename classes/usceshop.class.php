@@ -1416,7 +1416,17 @@ class usc_e_shop
 <?php
 			if( NS_have_sku_option() ) {
 ?>
-				$.each($(':input[name^="iopt"]'), function(i, obj) {
+				var opterr = 0;
+				$(':input[name^="opt"]').each(function(i, obj) {
+					if($(this).val() == '') {
+						name = $(this).attr("name").substring(3);
+						alert(name+'を選択してください。');
+						opterr++;
+						return false;
+					}
+				});
+				if(opterr != 0) return false;
+				$(':input[name^="iopt"]').each(function(i, obj) {
 					name = $(this).attr("name").substring(4);
 					$('#sku_option_button').append('<input name="itemOption['+post_id+']['+sku+']['+name+']" type="hidden" value="'+$(this).val()+'">');
 				});
@@ -1620,7 +1630,7 @@ class usc_e_shop
 				var skuoption = '';
 				var sp = '';
 				if(1 < index) {
-					$.each($(':input[name^="opt"]'), function(i, obj) {
+					$(':input[name^="opt"]').each(function(i, obj) {
 						if(i < (index-1)) {
 							skukey += sp + $(this).attr("name").substring(3);
 							skuoption += sp + $(this).val();
@@ -1638,15 +1648,19 @@ class usc_e_shop
 				var s = this.settings;
 				s.data = "action=change_sku_option_ajax&post_id="+uscesL10n.post_id+"&key="+key.substring(3)+"&value="+value+"&index="+index+"&skukey="+skukey+"&skuoption="+skuoption+"&nextskukey="+nextskukey;
 				s.success = function(data, dataType) {
-alert(data);
 					d = data.split('#usces#');
-					var sku = d[0].split("#ns#");
-					var nextval = d[1].split("#ns#");
-					var optkey = d[2].split("#ns#");
-					var optval = d[3].split("#ns#");
+					//var sku = d[0].split("#ns#");
+					//var nextval = d[1].split("#ns#");
+					//var optkey = d[2].split("#ns#");
+					//var optval = d[3].split("#ns#");
+					var sku = (d[0].match(/#ns#/i)) ? d[0].split("#ns#") : new Array();
+					var nextval = (d[1].match(/#ns#/i)) ? d[1].split("#ns#") : new Array();
+					var optkey = (d[2].match(/#ns#/i)) ? d[2].split("#ns#") : new Array();
+					var optval = (d[3].match(/#ns#/i)) ? d[3].split("#ns#") : new Array();
 					var skuprice = d[4];
 					var zaikonum = d[5];
 					var html = d[6];
+					var msg = d[7];
 					if(nextskukey != '') {
 						$(':input[name="opt'+nextskukey+'"]').attr('disabled', false);
 						$(':input[name="opt'+nextskukey+'"]').html('');
@@ -1673,7 +1687,7 @@ alert(data);
 						$('#sku').val(sku);
 						$('#sku_option_price').text(skuprice);
 					} else {
-						$.each($(':input[name^="opt"]'), function(i, obj) {
+						$(':input[name^="opt"]').each(function(i, obj) {
 							if(index < i) {
 								if($(this).attr("class") == 'sku_option_select_field') {
 									$(this).html('<option value="">選択してください</option>');
@@ -1684,8 +1698,8 @@ alert(data);
 						});
 						$('#sku_option_price').text('');
 					}
-					$('#sku_option_button').html('');
 					$('#sku_option_button').html(html);
+					$('#sku_option_message').html(msg);
 				};
 				$.ajax( s );
 				return false;
@@ -1748,12 +1762,15 @@ alert(data);
 		
 		jQuery(document).ready(function($) {
 			if(0 < $('#skucnt').val()) {
-				$.each($(':input[name^="opt"]'), function(i, obj) {
+				$(':input[name^="opt"]').each(function(i, obj) {
 					if($(this).attr('class') == 'sku_option_select_field') {
+						$(this).attr('selectedIndex', 0);
 						$('#opt'+(i+1)).change(function() {
 							uscesCart.changeSkuSelect(i+1);
 						});
 						if(0 < i) $(this).attr('disabled', true);
+					} else {
+						$(this).val('');
 					}
 				});
 			}

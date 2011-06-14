@@ -2533,6 +2533,7 @@ function change_sku_option_ajax() {
 	$skuprice = '';
 	$zaikonum = 0;
 	$html = '';
+	$msg = '';
 
 	$orderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
 	$res = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
@@ -2556,33 +2557,43 @@ function change_sku_option_ajax() {
 	$sku = array_unique($sku);
 	$nextskuvalue = array_unique($nextskuvalue);
 
-	if(count($sku) == 1 and !empty($sku[0])) {
-		foreach( $res as $row ) {
-			if($row['meta_key'] == '_isku_'.$sku[0]) {
-				if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
-				foreach( $row['meta_value']['option'] as $k => $v ) {
-					$optkey[] = esc_attr($k);
-					$optvalue[] = esc_attr($v);
-				}
-				$skuprice = esc_attr(usces_crform($row['meta_value']['price'], true, false, 'return'));
-				$zaikonum = $row['meta_value']['zaikonum'];
-				if(0 < $zaikonum) {
-					$html  = "<input name=\"zaikonum[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaikonum[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaikonum']."\" />\n";
-					$html .= "<input name=\"zaiko[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaiko[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaiko']."\" />\n";
-					$html .= "<input name=\"skuPrice[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"skuPrice[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['price']."\" />\n";
-					if( $usces->use_js ){
-						$html .= "<input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart.png\" alt=\"カートに入れる\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />";
-					}else{
-						$html .= "<a name=\"cart_button\"></a><input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" />";
-						$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+	if(0 == count($sku)) {
+		$msg = esc_attr('商品が登録されていません');
+	} else {
+		if(count($sku) == 1 and !empty($sku[0])) {
+			foreach( $res as $row ) {
+				if($row['meta_key'] == '_isku_'.$sku[0]) {
+					if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
+					foreach( $row['meta_value']['option'] as $k => $v ) {
+						$optkey[] = esc_attr($k);
+						$optvalue[] = esc_attr($v);
 					}
+					$skuprice = esc_attr(usces_crform($row['meta_value']['price'], true, false, 'return'));
+					$zaiko_num = trim($row['meta_value']['zaikonum']);
+					$status_num = $row['meta_value']['zaiko'];
+					if( false !== $zaiko_num 
+						&& ( 0 < (int)$zaiko_num || '' == $zaiko_num ) 
+						&& 2 > $status_num 
+					){
+						$html  = "<input name=\"zaikonum[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaikonum[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaikonum']."\" />\n";
+						$html .= "<input name=\"zaiko[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaiko[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaiko']."\" />\n";
+						$html .= "<input name=\"skuPrice[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"skuPrice[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['price']."\" />\n";
+						if( $usces->use_js ){
+							$html .= "<input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart.png\" alt=\"カートに入れる\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />";
+						}else{
+							$html .= "<a name=\"cart_button\"></a><input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" />";
+							$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+						}
+					} else {
+						$msg = esc_attr('在庫がありません');
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}
 	if($html == '') $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return');
 
-	die(implode("#ns#", $sku)."#usces#".implode("#ns#", $nextskuvalue)."#usces#".implode("#ns#", $optkey)."#usces#".implode("#ns#", $optvalue)."#usces#".$skuprice."#usces#".$zaikonum."#usces#".$html);
+	die(implode("#ns#", $sku)."#usces#".implode("#ns#", $nextskuvalue)."#usces#".implode("#ns#", $optkey)."#usces#".implode("#ns#", $optvalue)."#usces#".$skuprice."#usces#".$zaikonum."#usces#".$html."#usces#".$msg);
 }
 ?>

@@ -252,7 +252,7 @@
 			var skukey = "";
 			var skuoption = "";
 			var sp = "";
-			$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
+			$(":input[name^='"+skuoption_name+"']").each(function(i, obj) {
 				key = $(this).attr('name').substring(skuoption_name.length+1);
 				key = key.replace("]", "");
 				skukey += sp + key;
@@ -263,7 +263,6 @@
 			//s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugptekiyo=" + skugptekiyo + charging_type + skuadvance;
 			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugprice=" + gprice + "&newskumprice=" + mprice + "&newskukey=" + skukey + "&newskuoption=" + skuoption;
 			s.success = function(data, dataType){
-				//alert(data);
 				strs = data.split('#usces#');
 				$("table#skulist-table").removeAttr("style");
 				$("tbody#skukeyselect").html( strs[1] );
@@ -285,9 +284,9 @@
 				//	$("#newskuadvance").attr({selectedIndex:0});
 				$("#newskugprice").val("");
 				$("#newskumprice").val("");
-				$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
+				$(":input[name^='"+skuoption_name+"']").each(function(i, obj) {
 					//if($(this).attr('class') == 'item-sku-option') {
-						$(this).attr({selectedIndex:0});
+					//	$(this).attr('selectedIndex', 0);
 					//} else {
 						$(this).val("");
 					//}
@@ -333,7 +332,7 @@
 			var skukey = "";
 			var skuoption = "";
 			var sp = "";
-			$.each($(":input[name^='"+skuoption_name+"']"), function(i, obj) {
+			$(":input[name^='"+skuoption_name+"']").each(function(i, obj) {
 				key = $(this).attr('name').substring(skuoption_name.length+1);
 				key = key.replace("]", "");
 				skukey += sp + key;
