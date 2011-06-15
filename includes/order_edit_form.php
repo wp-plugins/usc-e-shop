@@ -792,7 +792,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		$skuPrice = $cart_row['price'];
 		$stock = $this->getItemZaiko($post_id, $sku);
 		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
-		$pictids = $this->get_pictids($itemCode);
+		$pictid = $this->get_mainpictid($itemCode);
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
@@ -804,7 +804,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
-		<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
+		<td><?php echo wp_get_attachment_image( $pictid, array(60, 60), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
 		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>

@@ -144,7 +144,6 @@ get_header();
 				<div id="sku_option_field" class="sku_option_box"><?php NS_sku_option_field(); ?></div>
 				<div class="sku_option_quant"><?php _e('Quantity', 'usces'); ?><?php NS_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?></div>
 				<div id="sku_option_price"></div>
-				<div id="sku_option_message"></div>
 				<div id="sku_option_button"><?php NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>
 				<div class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></div>
 			</div><!-- end of skuform -->

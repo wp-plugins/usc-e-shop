@@ -49,7 +49,7 @@ for($i=0; $i<count($cart); $i++) {
 	$itemName = $this->getItemName($post_id);
 	$cartItemName = $this->getCartItemName($post_id, $cart_row['sku']);
 	$skuPrice = $cart_row['price'];
-	$pictids = $this->get_pictids($itemCode);
+	$pictid = $this->get_mainpictid($itemCode);
 	if (!empty($options)) {
 //		$optstr = implode(',', $options);
 	} else { 
@@ -60,8 +60,8 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= '<tr>
 		<td>' . ($i + 1) . '</td>
 		<td>';
-	$cart_thumbnail = wp_get_attachment_image( $pictids[0], array(60, 60), true );
-	$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+	$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
+	$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
 	if( is_array($options) && count($options) > 0 ){
 		foreach($options as $key => $value){

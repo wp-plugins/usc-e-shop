@@ -929,9 +929,11 @@ class usc_e_shop
 				case 'zeus':
 					unset( $options['acting_settings']['zeus'] );
 					$options['acting_settings']['zeus']['card_url'] = $_POST['card_url'];
+					$options['acting_settings']['zeus']['card_secureurl'] = $_POST['card_secureurl'];
 					$options['acting_settings']['zeus']['ipaddrs'] = $_POST['ipaddrs'];
 					$options['acting_settings']['zeus']['pay_cvs'] = $_POST['pay_cvs'];
 					$options['acting_settings']['zeus']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['zeus']['3dsecure'] = $_POST['3dsecure'];
 					$options['acting_settings']['zeus']['quickcharge'] = $_POST['quickcharge'];
 					$options['acting_settings']['zeus']['clientip'] = trim($_POST['clientip']);
 					$options['acting_settings']['zeus']['howpay'] = $_POST['howpay'];
@@ -4937,6 +4939,13 @@ class usc_e_shop
 		return $results;
 	}
 	
+	function get_mainpictid($item_code) {
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'attachment' LIMIT 1", $item_code);
+		$id = $wpdb->get_var( $query );
+		return $id;
+	}
+	
 	function get_skus( $post_id, $output='' ) {
 		$fields = get_post_custom($post_id);
 		if( !is_array($fields)) $fields = array();
@@ -5076,7 +5085,21 @@ class usc_e_shop
 			header("location: " . $redirect . $query);
 			exit;
 			
-		}else if($acting_flg == 'acting_zeus_card'){
+		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && !isset($_REQUEST['PaRes'])){
+	
+			usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+			usces_zeus_3dsecure_enrol();
+			
+		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && isset($_REQUEST['PaRes'])){
+
+			usces_zeus_3dsecure_auth();
+
+		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && !empty($this->options['acting_settings']['zeus']['authkey']) && !isset($_REQUEST['PaRes'])){
+
+			$res = usces_zeus_secure_payreq();
+			return $res;
+
+		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && empty($this->options['acting_settings']['zeus']['authkey']) ){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);
@@ -5485,9 +5508,10 @@ class usc_e_shop
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
-		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price);
+		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$tax = $this->getTax( $total_price );
 		$total_full_price = $total_price + $tax;
+		$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$get_point = $this->get_order_point( $member['ID'] );
 		if(0 < (int)$use_point){
 			$get_point = ceil( $get_point - ($get_point * $use_point / $total_items_price) );

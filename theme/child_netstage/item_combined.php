@@ -226,18 +226,20 @@ class NS_SetPage
 			case 'shuft_list':
 				$cat_item = usces_get_cat_id( 'itemshuft' );
 				$cat_set = usces_get_cat_id( 'availableset' );
-				$category__and = array($cat_item, $cat_set);
 				break;
 			case 'grip_list':
 				$cat_item = usces_get_cat_id( 'itemgrip' );
 				$cat_set = usces_get_cat_id( 'availableset' );
-				$category__and = array($cat_item, $cat_set);
 				break;
 			case 'head_list':
 			default:
 				$cat_item = usces_get_cat_id( 'itemhead' );
 				$cat_set = usces_get_cat_id( 'availableset' );
-				$category__and = array($cat_item, $cat_set);
+		}
+		if( empty($cat_item) || empty($cat_set) ){
+			$category__and = array(99999, 88888);
+		}else{
+			$category__and = array($cat_item, $cat_set);
 		}
 		$page = get_query_var( 'page' );
 		$paged = empty($page) ? 1 : $page;

@@ -2134,6 +2134,9 @@ msgstr "商品一括登録"
 msgid "Upload prescribed CSV or an Excel file and perform the collective registration of the article.<br />Please choose a file, and push the registration start."
 msgstr "規定のCSVまたはエクセルファイルをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。"
 
+msgid "Upload prescribed CSV file and perform the collective registration of the article.<br />Please choose a file, and push the registration start."
+msgstr "規定のCSVファイルをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。"
+
 msgid "Indication is updated after upload completion."
 msgstr "アップロード完了後に表示が更新されます。"
 

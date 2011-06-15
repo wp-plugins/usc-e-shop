@@ -549,5 +549,4 @@ function NS_the_itemSkuButton($value, $type=0, $out = '') {
 		echo $html;
 	}
 }
-
 ?>
