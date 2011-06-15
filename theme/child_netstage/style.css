@@ -1554,6 +1554,30 @@ div#itempage {
 	font-size: 1em;
 	line-height: 1.5em;
 }
+*/
+.info_table{
+	width:670px;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-collapse:collapse;
+	margin:0 auto;
+}
+.info_table th{
+	width:140px;
+	background-color: #FAFAFA;
+    border-bottom: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    font-weight: normal;
+    padding: 8px;
+}
+.info_table td {
+    border-bottom: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    padding: 8px;
+}
+
+
+
 /* Welcart Inquiry page CSS End */
 /*********************************************************************/
 /* footer CSS Start */

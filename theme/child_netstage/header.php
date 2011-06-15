@@ -112,7 +112,8 @@
 		<ul>
 			<li><a href="<?php bloginfo('url'); ?>/">HOME</a></li>
 			<li><a href="<?php bloginfo('url'); ?>/about">当サイトについて</a></li>
-			<li><a href="<?php bloginfo('url'); ?>/law">特定商取引に関する法律</a></li>
+			<li><a href="<?php bloginfo('url'); ?>/service">利用規約</a></li>
+			<li><a href="<?php bloginfo('url'); ?>/legal">特定商取引に関する法律</a></li>
 			<li><a href="<?php bloginfo('url'); ?>/contact">お問合わせ</a></li>
 		</ul>
 	</div>
@@ -121,7 +122,7 @@
 
 
 <div id="main" class="clearfix">
-<?php if(is_home()): ?><div id="newsticker">ログインの説明を表示。ログインすると、どんないいことがあるのかの説明。　文章はこちらで用意。スクロール表示　電光掲示板のイメージ？</div><?php endif;?>
+<?php if(is_home()): ?><div id="newsticker">会員登録された方には、最新の商品情報やお得な商品のお知らせをお届けいたします。</div><?php endif;?>
 <?php get_sidebar(); ?>
 <div id="rightbar">
 <!-- end header -->

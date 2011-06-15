@@ -117,7 +117,7 @@ global $usces;
 			avatars: true,
 			behavior: 'default'
 		  }
-		}).render().setUser('welcart').start();
+		}).render().setUser('NorthfieldGolf').start();
 		</script>
 	</li>
 	<?php /* ?>

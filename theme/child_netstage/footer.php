@@ -116,6 +116,8 @@ gmail等のフリーメールアドレスにはメールが<br />
 			<li>｜</li>
 			<li><a href="<?php bloginfo('url'); ?>/about">当サイトについて</a></li>
 			<li>｜</li>
+			<li><a href="<?php bloginfo('url'); ?>/service">利用規約</a></li>
+			<li>｜</li>
 			<li><a href="<?php bloginfo('url'); ?>/law">特定商取引に関する法律</a></li>
 			<li>｜</li>
 			<li><a href="<?php bloginfo('url'); ?>/contact">お問合わせ</a></li>
