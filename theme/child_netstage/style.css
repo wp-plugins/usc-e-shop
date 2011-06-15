@@ -1613,6 +1613,7 @@ div#itempage {
 	font-weight: bold;
 	color: #666666;
 	line-height: 24px;
+	clear: left;
 }
 .sku_option_text_field,
 .sku_option_select_field {

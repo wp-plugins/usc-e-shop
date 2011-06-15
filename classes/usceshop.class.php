@@ -1647,15 +1647,13 @@ class usc_e_shop
 				if(index != skucnt) {
 					nextskukey = $('#opt'+(index+1)).attr("name").substring(3);
 				}
+				
 
 				var s = this.settings;
-				s.data = "action=change_sku_option_ajax&post_id="+uscesL10n.post_id+"&key="+key.substring(3)+"&value="+value+"&index="+index+"&skukey="+skukey+"&skuoption="+skuoption+"&nextskukey="+nextskukey;
+				s.url = "<?php bloginfo('home'); ?>/index.php";
+				s.data = "usces_ajax_action=change_sku_option_ajax&post_id="+uscesL10n.post_id+"&key="+key.substring(3)+"&value="+value+"&index="+index+"&skukey="+skukey+"&skuoption="+skuoption+"&nextskukey="+nextskukey;
 				s.success = function(data, dataType) {
 					d = data.split('#usces#');
-					//var sku = d[0].split("#ns#");
-					//var nextval = d[1].split("#ns#");
-					//var optkey = d[2].split("#ns#");
-					//var optval = d[3].split("#ns#");
 					var sku = (d[0].match(/#ns#/i)) ? d[0].split("#ns#") : d[0];
 					var nextval = (d[1].match(/#ns#/i)) ? d[1].split("#ns#") : new Array();
 					var optkey = (d[2].match(/#ns#/i)) ? d[2].split("#ns#") : new Array();
@@ -1736,7 +1734,7 @@ class usc_e_shop
 			
 			changeStates : function( country ) {
 				var s = this.settings;
-				s.data = "action=change_states_ajax&country=" + country;
+				s.data = "action=change_states_ajax&country=" + country + '&dgd=555555';
 				s.success = function(data, dataType){
 					if( 'error' == data ){
 						alert('error');
