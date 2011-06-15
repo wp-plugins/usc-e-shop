@@ -1627,6 +1627,7 @@ class usc_e_shop
 				var value = $(id).val();
 				if(value == '') return;
 				var key = $(id).attr("name");
+				$('#sku_option_message').html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading.gif" /> 検索中').addClass('sku_option_status_message').removeClass('sku_option_error_message');
 
 				var skukey = '';
 				var skuoption = '';
@@ -1655,7 +1656,7 @@ class usc_e_shop
 					//var nextval = d[1].split("#ns#");
 					//var optkey = d[2].split("#ns#");
 					//var optval = d[3].split("#ns#");
-					var sku = (d[0].match(/#ns#/i)) ? d[0].split("#ns#") : new Array();
+					var sku = (d[0].match(/#ns#/i)) ? d[0].split("#ns#") : d[0];
 					var nextval = (d[1].match(/#ns#/i)) ? d[1].split("#ns#") : new Array();
 					var optkey = (d[2].match(/#ns#/i)) ? d[2].split("#ns#") : new Array();
 					var optval = (d[3].match(/#ns#/i)) ? d[3].split("#ns#") : new Array();
@@ -1701,7 +1702,14 @@ class usc_e_shop
 						$('#sku_option_price').text('');
 					}
 					$('#sku_option_button').html(html);
-					$('#sku_option_message').html(msg);
+					if(msg){
+						$('#sku_option_message').html(msg).addClass('sku_option_error_message').removeClass('sku_option_status_message');
+					}else if(sku){
+						$('#sku_option_message').html('品番 ： ' + sku).removeClass('sku_option_error_message');
+					}else{
+						$('#sku_option_message').html('').removeClass('sku_option_error_message');
+					}
+					
 				};
 				$.ajax( s );
 				return false;

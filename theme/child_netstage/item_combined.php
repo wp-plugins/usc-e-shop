@@ -233,13 +233,12 @@ class NS_SetPage
 				break;
 			case 'head_list':
 			default:
-				$cat_item = usces_get_cat_id( 'itemhead' );
-				$cat_set = usces_get_cat_id( 'availableset' );
-		}
-		if( empty($cat_item) || empty($cat_set) ){
-			$category__and = array(99999, 88888);
-		}else{
-			$category__and = array($cat_item, $cat_set);
+				$cat_item = usces_get_cat_id( 'setead' );
+				if( empty($cat_item) ){
+					$category__and = array(99999);
+				}else{
+					$category__and = array($cat_item);
+				}
 		}
 		$page = get_query_var( 'page' );
 		$paged = empty($page) ? 1 : $page;

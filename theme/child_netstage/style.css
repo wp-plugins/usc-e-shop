@@ -1624,6 +1624,7 @@ div#itempage {
 	margin-right: 30px;
 	margin-top: 15px;
 	margin-bottom: 15px;
+	height: 30px;
 }
 #sku_option_price {
 	font-size: 24px;
@@ -1631,6 +1632,30 @@ div#itempage {
 	color: #FF3300;
 	margin-top: 15px;
 	margin-bottom: 15px;
+	height: 30px;
+}
+.sku_option_error_message {
+	font-weight: normal;
+	color: #FF3300;
+	background-color: #FFEDD2;
+	padding: 10px;
+	width: auto;
+	margin-bottom: 5px;
+	border: 1px solid #FF6600;
+}
+.sku_option_status_message {
+	font-weight: bold;
+	color: #333333;
+	padding: 10px;
+	width: auto;
+	margin-bottom: 5px;
+	border: 1px solid #CCCCCC;
+	text-align: center;
+}
+#sku_option_button {
+	width: 200px;
+	margin-right: auto;
+	margin-left: auto;
 }
 /* Single Item Page CSS End */
 /*********************************************************************/

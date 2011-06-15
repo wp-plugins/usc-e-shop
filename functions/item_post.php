@@ -2558,7 +2558,7 @@ function change_sku_option_ajax() {
 	$nextskuvalue = array_unique($nextskuvalue);
 
 	if(0 == count($sku)) {
-		$msg = esc_attr('商品が登録されていません');
+		$msg = esc_attr('ご選択戴きました商品は未だ登録されていません。');
 	} else {
 		if(count($sku) == 1 and !empty($sku[0])) {
 			foreach( $res as $row ) {
@@ -2585,7 +2585,7 @@ function change_sku_option_ajax() {
 							$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
 						}
 					} else {
-						$msg = esc_attr('在庫がありません');
+						$msg = esc_attr('大変申し訳ございません。ご選択いただきました商品は、只今在庫切れとなっております。');
 					}
 					break;
 				}

@@ -243,18 +243,26 @@ function NS_the_fantastic4(){
 				$zsids = $usces->getItemZaikoStatusId($post->ID);
 				if( in_array(1, $zsids) )
 					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_few.png" alt="残りわずか" width="60" height="20" /></li>' . "\n";
+				else
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_few2.png" alt="残りわずか" width="60" height="20" /></li>' . "\n";
 				break;
 			case 'new':
 				if(in_category($value))
 					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_new.png" alt="NEW" width="60" height="20" /></li>' . "\n";
+				else
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_new2.png" alt="NEW" width="60" height="20" /></li>' . "\n";
 				break;
 			case 'reco':
 				if(in_category($value))
 					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_recommend.png" alt="おすすめ" width="60" height="20" /></li>' . "\n";
+				else
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_recommend2.png" alt="おすすめ" width="60" height="20" /></li>' . "\n";
 				break;
 			case 'limit':
 				if(in_category($value))
 					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_limited.png" alt="限定品" width="60" height="20" /></li>' . "\n";
+				else
+					$tag .= '<li><img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_limited2.png" alt="限定品" width="60" height="20" /></li>' . "\n";
 				break;
 		}
 	}
@@ -537,7 +545,7 @@ function NS_the_itemSkuButton($value, $type=0, $out = '') {
 		$type = 'image';
 
 	if( $usces->use_js ){
-		$html .= "<input name=\"inCart\" type=\"{$type}\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart.png\" alt=\"カートに入れる\" id=\"inCart\" class=\"skubutton\" value=\"{$value}\" disabled />";
+		$html .= "<input name=\"inCart\" type=\"{$type}\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart2.png\" alt=\"カートに入れる\" id=\"inCart\" class=\"skubutton\" value=\"{$value}\" disabled />";
 	}else{
 		$html .= "<a name=\"cart_button\"></a><input name=\"inCart\" type=\"{$type}\" id=\"inCart\" class=\"skubutton\" value=\"{$value}\" disabled />";
 		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
