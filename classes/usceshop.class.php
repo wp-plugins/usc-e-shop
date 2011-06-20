@@ -1702,7 +1702,7 @@ class usc_e_shop
 					$('#sku_option_button').html(html);
 					if(msg){
 						$('#sku_option_message').html(msg).addClass('sku_option_error_message').removeClass('sku_option_status_message');
-					}else if(sku){
+					}else if($('#sku_option_price').text()){
 						$('#sku_option_message').html('品番 ： ' + sku).removeClass('sku_option_error_message');
 					}else{
 						$('#sku_option_message').html('').removeClass('sku_option_error_message');

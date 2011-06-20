@@ -328,10 +328,16 @@ function NS_the_item_pricesCr(){
 function NS_the_item_star(){
 	global $post;
 	$str = '';
-	$star = (int)get_post_meta($post->ID, '_itemStart', true);
-	for( $i=1; $i<=$star; $i++ ){
-		$str .= '★';
+	$star = (int)get_post_meta($post->ID, '_itemStar', true);
+	if( !$star )
+		return;
+	
+	$s = 0;
+	for( $i=1; $i<=5; $i++ ){
+		$str .= ( $s < $star ) ? '★' : '☆';
+		$s++;
 	}
+
 	echo $str;
 }
 /**********************************************************
