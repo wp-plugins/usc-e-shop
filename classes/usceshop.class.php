@@ -1655,7 +1655,7 @@ class usc_e_shop
 					d = data.split('#usces#');
 					var sku = (d[0].match(/#ns#/i)) ? d[0].split("#ns#") : d[0];
 					var nextval = (d[1].match(/#ns#/i)) ? d[1].split("#ns#") : new Array(d[1]);
-					var optkey = (d[2].match(/#ns#/i)) ? d[2].split("#ns#") : new Array([2]);
+					var optkey = (d[2].match(/#ns#/i)) ? d[2].split("#ns#") : new Array(d[2]);
 					var optval = (d[3].match(/#ns#/i)) ? d[3].split("#ns#") : new Array(d[3]);
 					var skuprice = d[4];
 					var zaikonum = d[5];
