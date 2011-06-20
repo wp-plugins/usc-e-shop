@@ -414,7 +414,8 @@ function NS_get_sku_option( $post_id = '' ){
 	global $usces;
 	$res = array();
 	$optorderby = $usces->options['system']['orderby_itemopt'] ? 'meta_id' : 'meta_key';
-	$optfields = $usces->get_post_custom($post->ID, $optorderby);
+	//$optfields = $usces->get_post_custom($post->ID, $optorderby);
+	$optfields = $usces->get_post_custom($post_id, $optorderby);
 	foreach((array)$optfields as $key => $value){
 		if( preg_match('/^_iopt_/', $key, $match) ){
 			$key = substr($key, 6);
@@ -435,6 +436,7 @@ function NS_get_sku_option( $post_id = '' ){
  * Echo			: html
  **********************************************************/
 function NS_sku_option_field(){
+	global $wpdb;
 	global $post, $usces;
 	if( !NS_have_sku_option() ) return;
 
@@ -450,8 +452,23 @@ function NS_sku_option_field(){
 			//$html .= '<select name="opt' . $i . '" class="sku_option_select_field">';
 			$html .= '<select name="opt'.$key.'" id= "opt'.$i.'" class="sku_option_select_field">';
 			$html .= '<option value="">選択してください</option>';
-			foreach( (array)$values['value'] as $val ){
-				$html .= '<option value="' . $val . '">' . $val . '</option>';
+			//foreach( (array)$values['value'] as $val ){
+			//	$html .= '<option value="' . $val . '">' . $val . '</option>';
+			//}
+			if($i == 1) {
+				$skuvalue = array();
+				$orderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
+				$res = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
+						FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE '%s' 
+						ORDER BY {$orderby}", $post->ID, '_isku_%'), ARRAY_A );
+				foreach( $res as $row ) {
+					if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
+					$skuvalue[] = $row['meta_value']['option'][$key];
+				}
+				$skuvalue = array_unique($skuvalue);
+				foreach( $skuvalue as $val ){
+					$html .= '<option value="' . $val . '">' . $val . '</option>';
+				}
 			}
 			$html .= '</select>';
 			$html .= '</div>'."\n";
