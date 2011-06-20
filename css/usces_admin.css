@@ -2029,3 +2029,14 @@ table#skulist-table td.item-sku-button {
 	padding-right: 4px;
 }
 
+#usces_ess {
+	font-weight: bold;
+	color: #FF0000;
+	background-color: #FFFFE8;
+	padding: 5px;
+	width: auto;
+	margin-top: 10px;
+	border: 1px solid #FFCC00;
+	margin-right: 0px;
+	margin-left: 0px;
+}

@@ -580,6 +580,37 @@ try{
 }catch(e){}
 
 jQuery(document).ready(function($){
+    var submit_event = true;
+    // 下書き保存やプレビューの場合は必須チェックを行わない
+    $('#post-preview, #save-post').click(function(){
+        submit_event = false;
+        return true;
+    });
+    $('#post').submit(function(e){
+ 		var mes = '';
+        if (submit_event) {
+			if ( "" == $("#itemCode").val() ) {
+				mes += '商品コードが入力されていません。<br />';
+				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+			if ( '' != mes) {
+				$("#major-publishing-actions").append('<div id="usces_ess"></div>');
+				$('#ajax-loading').css({'visibility': 'hidden'});
+				$('#draft-ajax-loading').css({'visibility': 'hidden'});
+				$('#publish').removeClass('button-primary-disabled');
+				$('#save-post').removeClass('button-disabled');
+				$("#usces_ess").html(mes);
+				return false;
+			} else {
+	            $('#usces_ess').fadeOut();
+				return true;
+			}
+        } else {
+            return true;
+        }
+    });
 	$("#in-category-"+<?php echo USCES_ITEM_CAT_PARENT_ID; ?>).attr({checked: "checked"});
 
 	$('#itemCode').blur( 
@@ -587,6 +618,42 @@ jQuery(document).ready(function($){
 							if ( $("#itemCode").val().length == 0 ) return;
 							uscesItem.newdraft($('#itemCode').val());
 						});
+});
+</script>
+<?php else : ?>
+<script type="text/javascript">
+jQuery(document).ready(function($){
+    var submit_event = true;
+    // 下書き保存やプレビューの場合は必須チェックを行わない
+    $('#post-preview, #save-post').click(function(){
+        submit_event = false;
+        return true;
+    });
+    $('#post').submit(function(e){
+ 		var mes = '';
+        if (submit_event) {
+			if ( "" == $("#itemCode").val() ) {
+				mes += '商品コードが入力されていません。<br />';
+				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+			if ( '' != mes) {
+				$("#major-publishing-actions").append('<div id="usces_ess"></div>');
+				$('#ajax-loading').css({'visibility': 'hidden'});
+				$('#draft-ajax-loading').css({'visibility': 'hidden'});
+				$('#publish').removeClass('button-primary-disabled');
+				$('#save-post').removeClass('button-disabled');
+				$("#usces_ess").html(mes);
+				return false;
+			} else {
+	            $('#usces_ess').fadeOut();
+				return true;
+			}
+        } else {
+            return true;
+        }
+    });
 });
 </script>
 <?php endif; ?>

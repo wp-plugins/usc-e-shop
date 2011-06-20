@@ -1,10 +1,10 @@
 <?php
 $zaiko_status = array(
-					'0' => __('In Stock', 'usces'),
-					'1' => __('A Few Stock', 'usces'),
-					'2' => __('Sold Out', 'usces'),
-					'3' => __('Out Of Stock', 'usces'),
-					'4' => __('Out of print', 'usces')
+					'0' => '在庫有り',
+					'1' => '在庫僅少',
+					'2' => '取寄せ',
+					'3' => '売切れ',
+					'4' => '廃盤'
 					);
 $management_status = array(
 					'estimate' => __('An estimate', 'usces'),
