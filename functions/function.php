@@ -3565,7 +3565,7 @@ function usces_page_name( $out = '') {
 
 function usces_post_reg_orderdata($order_id, $results){
 	global $usces, $wpdb;
-	$entry = $usces->cart->get_entry();
+	//$entry = $usces->cart->get_entry();//20110621ysk 0000184
 	$acting = $_GET['acting'];
 	$data = array();
 
@@ -3584,6 +3584,8 @@ function usces_post_reg_orderdata($order_id, $results){
 //20110208ysk start
 			case 'paypal_ec':
 				$trans_id = $_REQUEST['token'];
+//20110621ysk start 0000184
+/*
 //20110412ysk start
 				$cart = $usces->cart->get_cart();
 				$post_id = $cart[0]['post_id'];
@@ -3652,6 +3654,12 @@ function usces_post_reg_orderdata($order_id, $results){
 					}
 				}
 //20110412ysk end
+*/
+				if(isset($results['settlement_id'])) 
+					$usces->set_order_meta_value('settlement_id', $results['settlement_id'], $order_id);
+				if(isset($results['profile_id'])) 
+					$usces->set_order_meta_value('profile_id', $results['profile_id'], $order_id);
+//20110621ysk end
 				break;
 //20110208ysk end
 			case 'zeus_card':
@@ -3703,6 +3711,85 @@ function usces_post_reg_orderdata($order_id, $results){
 	}
 	
 }
+
+//20110621ysk start 0000184
+function usces_paypal_doecp( &$results ) {
+	global $usces;
+	$entry = $usces->cart->get_entry();
+
+	$cart = $usces->cart->get_cart();
+	$post_id = $cart[0]['post_id'];
+	$charging_type = $usces->getItemChargingType($post_id);
+	if( 'continue' != $charging_type) {
+		//通常購入
+		//Format the other parameters that were stored in the session from the previous calls
+		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);
+		$token = urlencode($_REQUEST['token']);
+		$paymentType = urlencode("Sale");
+		$currencyCodeType = urlencode($usces->get_currency_code());
+		$payerID = urlencode($_REQUEST['PayerID']);
+		$serverName = urlencode($_SERVER['SERVER_NAME']);
+
+		$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
+
+		$usces->paypal->setMethod('DoExpressCheckoutPayment');
+		$usces->paypal->setData($nvpstr);
+		$res = $usces->paypal->doExpressCheckout();
+		$resArray = $usces->paypal->getResponse();
+		$ack = strtoupper($resArray["ACK"]);
+		if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+			$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
+			//$usces->set_order_meta_value('settlement_id', $transactionId, $order_id);
+			$results['settlement_id'] = $transactionId;
+
+		} else {
+			//Display a user friendly Error on the page using any of the following error information returned by PayPal
+			$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+			$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+			$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+			$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+			usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+			return false;
+		}
+
+	} else {
+		//定期支払い
+		$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
+		$token = urlencode($_REQUEST['token']);
+		$currencyCodeType = urlencode($usces->get_currency_code());
+		$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+		$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
+		$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
+		$billingFreq = urlencode($usces->getItemFrequency($post_id));
+		//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
+		$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
+
+		$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
+
+		$usces->paypal->setMethod('CreateRecurringPaymentsProfile');
+		$usces->paypal->setData($nvpstr);
+		$res = $usces->paypal->doExpressCheckout();
+		$resArray = $usces->paypal->getResponse();
+		$ack = strtoupper($resArray["ACK"]);
+		if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+			$profileid = $resArray["PROFILEID"];
+			//$usces->set_order_meta_value('profile_id', $profileid, $order_id);
+			$results['profile_id'] = $profileid;
+
+		} else {
+			//Display a user friendly Error on the page using any of the following error information returned by PayPal
+			$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+			$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+			$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+			$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+			usces_log('PayPal : CreateRecurringPaymentsProfile API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+			return false;
+		}
+	}
+
+	return true;
+}
+//20110621ysk end
 //20110421ysk start
 function usces_make_agreement_description($cart, $amt) {
 	global $usces;

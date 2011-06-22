@@ -28,7 +28,7 @@ define('USCES_MEMBER_FOLDER', 'usces-member');
 define('USCES_ADMIN_SSL_BASE_NAME', 'admin-ssl.php');
 define('USCES_ADMIN_URL', get_option('siteurl') . '/wp-admin/admin.php');
 
-global $usces_settings, $usces_states;
+global $usces_settings, $usces_states, $usces_p;
 require_once(USCES_PLUGIN_DIR."/functions/included_first.php");
 add_filter( 'locale', 'usces_filter_locale' );
 load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLDER.'/languages');

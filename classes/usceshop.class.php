@@ -1255,7 +1255,7 @@ class usc_e_shop
 	}
 	
 	function usces_cookie() {
-		if( !isset($_SESSION['usces_cookieid']) ) {
+		//if( !isset($_SESSION['usces_cookieid']) ) {
 			$cookie = $this->get_cookie();
 			if( !isset($cookie['id']) || $cookie['id'] == '' ) {
 				$values = array(
@@ -1265,12 +1265,18 @@ class usc_e_shop
 							);
 				$this->set_cookie($values);
 				$_SESSION['usces_cookieid'] = $values['id'];
+				//unset($_SESSION['usces_member']);
 				//$this->cnt_access('first');
 			} else {
+				if( $_SESSION['usces_cookieid'] != $cookie['id'])
+					//unset($_SESSION['usces_member']);
+
 				$_SESSION['usces_cookieid'] = $cookie['id'];
 				//$this->cnt_access();
 			}
-		}
+		//}
+			
+			
 	}
 	function set_cookie($values){
 		$value = serialize($values);
@@ -5048,6 +5054,12 @@ class usc_e_shop
 			usces_log($_REQUEST['acting'].' transaction : '.$_REQUEST['gid'], 'acting_transaction.log');//OK
 		}
 //20110203ysk end
+//20110621ysk start 0000184
+		if(isset($_REQUEST['acting']) && ('paypal_ec' == $_REQUEST['acting'])) {
+			if( !usces_paypal_doecp( $results ) )
+				return 'error';
+		}
+//20110621ysk end
 		$order_id = usces_reg_orderdata( $results );
 		do_action('usces_post_reg_orderdata', $order_id, $results);
 		
@@ -5661,12 +5673,12 @@ class usc_e_shop
 			}
 			$i++;
 		}
-//		if( $flag ){
-//			$sessid = $chars . '_' . $_SERVER['REMOTE_ADDR'];
-//		}else{
-			$sessid = $chars . '_acting';
-//			$sessid = $chars . apply_filters('usces_sessid_flag', '_acting');
-//		}
+		if( $flag ){
+			$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
+			$sessid = $chars . '_' . $postfix;
+		}else{
+			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting');
+		}
 		$sessid = urlencode(base64_encode($sessid));
 		return $sessid;
 	}
@@ -5674,10 +5686,11 @@ class usc_e_shop
 	function uscesdc( $sessid ) {
 		$sessid = base64_decode(urldecode($sessid));
 		list($sess, $addr) = explode('_', $sessid);
-//		if( $addr != $_SERVER['REMOTE_ADDR'] && $addr != 'acting' && $addr != 'mobile' ) {
-//			$sessid = '';
-//			return;
-//		}
+		$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
+		if( 'acting' != $addr && 'mobile' != $addr && $postfix != $addr ) {
+			$sessid = '';
+			return;
+		}
 		$chars = '';
 		$h=0;
 		while($h<strlen($sess)){
@@ -5686,7 +5699,6 @@ class usc_e_shop
 			}
 			$h++;
 		}
-		//var_dump($chars);
 		$sessid = $chars;
 		
 		return $sessid;
