@@ -19,7 +19,8 @@ $arr_column = array(
 $DT = new dataList($tableName, $arr_column);
 $res = $DT->MakeTable();
 $arr_search = $DT->GetSearchs();
-$arr_status = get_option('usces_management_status');
+$arr_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
+
 $arr_header = $DT->GetListheaders();
 $dataTableNavigation = $DT->GetDataTableNavigation();
 $rows = $DT->rows;
@@ -341,12 +342,12 @@ jQuery(document).ready(function($){
 		}
 	});
 	$('#dl_ord').click(function() {
-		var args = "&search[column]="+$(':input[name="search[column]"]').val()
-			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
-			+"&search[period]="+$(':input[name="search[period]"]').val()
-			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
-			+"&ftype="+$(':input[name="ftype_ord[]"]:checked').val();
-		$('*[class=check_order]').each(function(i) {
+		var args = "&search[column]="+$(":input[name='search\[column\]']").val()
+			+"&search[word]["+$("#searchselect").val()+"]="+$(":input[name='search\[word\]\["+$("#searchselect").val()+"\]']").val()
+			+"&search[period]="+$(":input[name='search\[period\]']").val()
+			+"&searchSwitchStatus="+$(":input[name='searchSwitchStatus']").val()
+			+"&ftype="+$(":input[name='ftype_ord\[\]']:checked").val();
+		$(".check_order").each(function(i) {
 			if($(this).attr('checked') == true) {
 				args += '&check['+$(this).val()+']=on';
 			}
@@ -377,7 +378,7 @@ jQuery(document).ready(function($){
 <div id="tablenavi"><?php echo $dataTableNavigation ?></div>
 
 <div id="tablesearch">
-<div id="searchBox">
+<div id="searchBox"><a href="<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=dlB2list">B2</a>
 		<table id="search_table">
 		<tr>
 		<td><?php _e('search fields', 'usces'); ?></td>

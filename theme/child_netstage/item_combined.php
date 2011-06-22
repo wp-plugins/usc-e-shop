@@ -264,37 +264,50 @@ class NS_SetPage
 	}
 
 	function get_list_query(){
+		$cat_item = array();
 		switch( $this->action ){
 			case 'shuft_list':
-				$cat_item = usces_get_cat_id( 'setshuft' );
-				if( empty($cat_item) ){
-					$category__and = array(99999);
-				}else{
-					$category__and = array($cat_item);
-				}
+				if ( in_category( 'setdriverhead', (int)$this->produnct['head']['post_id'] ) )
+					$cat_item[] = usces_get_cat_id( 'setdrivershuft' );
+					$cat_item []= usces_get_cat_id( 'setdriverfairwayshuft' );
+				elseif ( in_category( 'setfairwayhead', (int)$this->produnct['head']['post_id'] ) )
+					$cat_item []= usces_get_cat_id( 'setfairwayshuft' );
+					$cat_item []= usces_get_cat_id( 'setdriverfairwayshuft' );
+				elseif ( in_category( 'setironhead', (int)$this->produnct['head']['post_id'] ) )
+					$cat_item[] = usces_get_cat_id( 'setironshuft' );
+				elseif ( in_category( 'setutilityhead', (int)$this->produnct['head']['post_id'] ) )
+					$cat_item[] = usces_get_cat_id( 'setutilityshuft' );
+				elseif ( in_category( 'setwedgehead', (int)$this->produnct['head']['post_id'] ) )
+					$cat_item[] = usces_get_cat_id( 'setwedgeshuft' );
+				elseif ( in_category( 'setputterhead', (int)$this->produnct['head']['post_id'] ) )
+					$cat_item[] = usces_get_cat_id( 'setputtershuft' );
+					
 				break;
 			case 'grip_list':
-				$cat_item = usces_get_cat_id( 'setgrip' );
-				if( empty($cat_item) ){
-					$category__and = array(99999);
-				}else{
-					$category__and = array($cat_item);
-				}
+				if ( in_category( 'setdrivershuft', (int)$this->produnct['shuft']['post_id'] ) 
+					|| in_category( 'setfairwayshuft', (int)$this->produnct['shuft']['post_id'] ) 
+					|| in_category( 'setdriverfairwayshuft', (int)$this->produnct['shuft']['post_id'] ) 
+					|| in_category( 'setutilityshuft', (int)$this->produnct['shuft']['post_id'] ) 
+					|| in_category( 'setwedgeshuft', (int)$this->produnct['shuft']['post_id'] ) 
+					)
+					$cat_item[] = usces_get_cat_id( 'setwoodirongrip' );
+				elseif ( in_category( 'setputtershuft', (int)$this->produnct['head']['post_id'] ) )
+					$cat_item []= usces_get_cat_id( 'setputtergrip' );
+
 				break;
 			case 'head_list':
 			default:
-				$cat_item = usces_get_cat_id( 'sethead' );
-				if( empty($cat_item) ){
-					$category__and = array(99999);
-				}else{
-					$category__and = array($cat_item);
-				}
+				$cat_item[] = usces_get_cat_id( 'sethead' );
+		}
+		if( empty($cat_item) ){
+			$category__and = array(99999);
+		}else{
+			$category__and = $cat_item;
 		}
 		$page = get_query_var( 'page' );
 		$paged = empty($page) ? 1 : $page;
-		//$offset = $this->posts_per_page * ($paged - 1) + 1;
 		$offset = $this->posts_per_page * ($paged - 1);
-
+		
 		$query = array(
 			'category__and'		=> $category__and,
 			'posts_per_page'	=> $this->posts_per_page, 

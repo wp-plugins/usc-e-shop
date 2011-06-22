@@ -184,6 +184,15 @@ global $usces;
 	</div>
 <?php
 }
+/**********************************************************/
+// Net Stage フィルター
+add_filter('usces_filter_management_status', 'NS_filter_management_status');
+function NS_filter_management_status($status){
+	$status['work'] = '作業中';
+	return $status;
+}
+
+
 
 // Net Stage テンプレートタグ
 /**********************************************************
@@ -379,7 +388,7 @@ function NS_the_sku_list( $post = '' ){
 	if($post == '') global $post;
 	//if( !NS_have_sku_option() ) return;
 	if( !NS_have_sku_option($post) ) return;
-	
+	$zaiko_status = get_option('usces_zaiko_status');
 	//$sku_options = NS_get_sku_option();
 	$sku_options = NS_get_sku_option($post->ID);
 	$html = '<table class="spec_list">'."\n";
@@ -401,7 +410,7 @@ function NS_the_sku_list( $post = '' ){
 			$html .= '<td>' . $skus['option'][$key] . '</td>';
 		}
 		$html .= '<td>' . usces_crform($skus['price'], true, false, 'return') . '</td>';
-		$html .= '<td>' . ( '' == $skus['zaikonum'] ? '在庫有り' : $skus['zaikonum']) . '</td>';
+		$html .= '<td>' . ( '' == $skus['zaikonum'] ? $zaiko_status[$skus['zaiko']] : $skus['zaikonum']) . '</td>';
 		$html .= '</tr>'."\n";
 		$i++;
 	}
@@ -708,7 +717,671 @@ function change_sku_option_ajax() {
 	
 	die(implode("#ns#", $sku)."#usces#".implode("#ns#", $nextskuvalue)."#usces#".implode("#ns#", $optkey)."#usces#".implode("#ns#", $optvalue)."#usces#".$skuprice."#usces#".$zaikonum."#usces#".$html."#usces#".$msg);
 }
+/**********************************************************
+ * Explanation	: B2用CSV出力
+ * UpDate		: 2011.06.27
+ * exit			: csv
+ **********************************************************/
+function NS_download_B2_list(){
+	require_once( USCES_PLUGIN_DIR . "/classes/orderList.class.php" );
+	global $wpdb, $usces, $usces_settings;
+	
+	$usces_option = get_option('usces');
 
+//	$table_h = "";
+//	$table_f = "";
+//	$tr_h = "";
+//	$tr_f = "";
+//	$th_h1 = '"';
+//	$th_h = ',"';
+//	$th_f = '"';
+//	$td_h1 = '"';
+//	$td_h = ',"';
+//	$td_f = '"';
+//	$sp = ":";
+//	$lf = "\n";
+
+//	$csod_meta = usces_has_custom_field_meta('order');
+//	$cscs_meta = usces_has_custom_field_meta('customer');
+//	$csde_meta = usces_has_custom_field_meta('delivery');
+
+	//$applyform = usces_get_apply_addressform($usces->options['system']['addressform']);
+
+	//==========================================================================
+//	$usces_opt_order = unserialize(get_option('usces_opt_order'));
+
+//	$chk_ord = array();
+//	$chk_ord['ID'] = 1;
+//	$chk_ord['date'] = 1;
+//	$chk_ord['mem_id'] = (isset($_REQUEST['check']['mem_id'])) ? 1 : 0;
+//	$chk_ord['email'] = (isset($_REQUEST['check']['email'])) ? 1 : 0;
+//	if(!empty($cscs_meta)) {
+//		foreach($cscs_meta as $key => $entry) {
+//			if($entry['position'] == 'name_pre') {
+//				$name = $entry['name'];
+//				$cscs_key = 'cscs_'.$key;
+//				$chk_ord[$cscs_key] = (isset($_REQUEST['check'][$cscs_key])) ? 1 : 0;
+//			}
+//		}
+//	}
+//	$chk_ord['name'] = 1;
+//	$chk_ord['kana'] = (isset($_REQUEST['check']['kana'])) ? 1 : 0;
+//
+//	if(!empty($cscs_meta)) {
+//		foreach($cscs_meta as $key => $entry) {
+//			if($entry['position'] == 'name_after') {
+//				$name = $entry['name'];
+//				$cscs_key = 'cscs_'.$key;
+//				$chk_ord[$cscs_key] = (isset($_REQUEST['check'][$cscs_key])) ? 1 : 0;
+//			}
+//		}
+//	}
+//	$chk_ord['zip'] = (isset($_REQUEST['check']['zip'])) ? 1 : 0;
+//	$chk_ord['country'] = (isset($_REQUEST['check']['country'])) ? 1 : 0;
+//	$chk_ord['pref'] = (isset($_REQUEST['check']['pref'])) ? 1 : 0;
+//	$chk_ord['address1'] = (isset($_REQUEST['check']['address1'])) ? 1 : 0;
+//	$chk_ord['address2'] = (isset($_REQUEST['check']['address2'])) ? 1 : 0;
+//	$chk_ord['address3'] = (isset($_REQUEST['check']['address3'])) ? 1 : 0;
+//	$chk_ord['tel'] = (isset($_REQUEST['check']['tel'])) ? 1 : 0;
+//	$chk_ord['fax'] = (isset($_REQUEST['check']['fax'])) ? 1 : 0;
+//	if(!empty($cscs_meta)) {
+//		foreach($cscs_meta as $key => $entry) {
+//			if($entry['position'] == 'fax_after') {
+//				$name = $entry['name'];
+//				$cscs_key = 'cscs_'.$key;
+//				$chk_ord[$cscs_key] = (isset($_REQUEST['check'][$cscs_key])) ? 1 : 0;
+//			}
+//		}
+//	}
+//	//--------------------------------------------------------------------------
+//	if(!empty($csde_meta)) {
+//		foreach($csde_meta as $key => $entry) {
+//			if($entry['position'] == 'name_pre') {
+//				$name = $entry['name'];
+//				$csde_key = 'csde_'.$key;
+//				$chk_ord[$csde_key] = (isset($_REQUEST['check'][$csde_key])) ? 1 : 0;
+//			}
+//		}
+//	}
+//	$chk_ord['delivery_name'] = (isset($_REQUEST['check']['delivery_name'])) ? 1 : 0;
+//	$chk_ord['delivery_kana'] = (isset($_REQUEST['check']['delivery_kana'])) ? 1 : 0;
+//
+//	if(!empty($csde_meta)) {
+//		foreach($csde_meta as $key => $entry) {
+//			if($entry['position'] == 'name_after') {
+//				$name = $entry['name'];
+//				$csde_key = 'csde_'.$key;
+//				$chk_ord[$csde_key] = (isset($_REQUEST['check'][$csde_key])) ? 1 : 0;
+//			}
+//		}
+//	}
+//	$chk_ord['delivery_zip'] = (isset($_REQUEST['check']['delivery_zip'])) ? 1 : 0;
+//	$chk_ord['delivery_country'] = (isset($_REQUEST['check']['delivery_country'])) ? 1 : 0;
+//	$chk_ord['delivery_pref'] = (isset($_REQUEST['check']['delivery_pref'])) ? 1 : 0;
+//	$chk_ord['delivery_address1'] = (isset($_REQUEST['check']['delivery_address1'])) ? 1 : 0;
+//	$chk_ord['delivery_address2'] = (isset($_REQUEST['check']['delivery_address2'])) ? 1 : 0;
+//	$chk_ord['delivery_address3'] = (isset($_REQUEST['check']['delivery_address3'])) ? 1 : 0;
+//	$chk_ord['delivery_tel'] = (isset($_REQUEST['check']['delivery_tel'])) ? 1 : 0;
+//	$chk_ord['delivery_fax'] = (isset($_REQUEST['check']['delivery_fax'])) ? 1 : 0;
+//	if(!empty($csde_meta)) {
+//		foreach($csde_meta as $key => $entry) {
+//			if($entry['position'] == 'fax_after') {
+//				$name = $entry['name'];
+//				$csde_key = 'csde_'.$key;
+//				$chk_ord[$csde_key] = (isset($_REQUEST['check'][$csde_key])) ? 1 : 0;
+//			}
+//		}
+//	}
+//	//--------------------------------------------------------------------------
+//	$chk_ord['shipping_date'] = (isset($_REQUEST['check']['shipping_date'])) ? 1 : 0;
+//	$chk_ord['peyment_method'] = (isset($_REQUEST['check']['peyment_method'])) ? 1 : 0;
+//	$chk_ord['delivery_method'] = (isset($_REQUEST['check']['delivery_method'])) ? 1 : 0;
+//	$chk_ord['delivery_date'] = (isset($_REQUEST['check']['delivery_date'])) ? 1 : 0;
+//	$chk_ord['delivery_time'] = (isset($_REQUEST['check']['delivery_time'])) ? 1 : 0;
+//	$chk_ord['delidue_date'] = (isset($_REQUEST['check']['delidue_date'])) ? 1 : 0;
+//	$chk_ord['status'] = (isset($_REQUEST['check']['status'])) ? 1 : 0;
+//	$chk_ord['total_amount'] = 1;
+//	$chk_ord['usedpoint'] = (isset($_REQUEST['check']['usedpoint'])) ? 1 : 0;
+//	$chk_ord['discount'] = 1;
+//	$chk_ord['shipping_charge'] = 1;
+//	$chk_ord['cod_fee'] = 1;
+//	$chk_ord['tax'] = 1;
+//	$chk_ord['note'] = (isset($_REQUEST['check']['note'])) ? 1 : 0;
+//	if(!empty($csod_meta)) {
+//		foreach($csod_meta as $key => $entry) {
+//			$name = $entry['name'];
+//			$csod_key = 'csod_'.$key;
+//			$chk_ord[$csod_key] = (isset($_REQUEST['check'][$csod_key])) ? 1 : 0;
+//		}
+//	}
+//	$usces_opt_order['chk_ord'] = $chk_ord;
+//	update_option('usces_opt_order', serialize($usces_opt_order));
+	//==========================================================================
+
+	if(isset($_REQUEST['check']['status'])) {
+		$usces_management_status = get_option('usces_management_status');
+		$usces_management_status['new'] = __('new order', 'usces');
+	}
+
+	$_REQUEST['searchIn'] = "searchIn";
+	$tableName = $wpdb->prefix."usces_order";
+	$arr_column = array(
+				__('Order number', 'usces') => 'ID', 
+				__('date', 'usces') => 'date', 
+				__('membership number', 'usces') => 'mem_id', 
+				__('name', 'usces') => 'name', 
+				__('Region', 'usces') => 'pref', 
+				__('shipping option', 'usces') => 'delivery_method', 
+				__('Amount', 'usces') => 'total_price', 
+				__('payment method', 'usces') => 'payment_name', 
+				__('transfer statement', 'usces') => 'receipt_status', 
+				__('Processing', 'usces') => 'order_status', 
+				__('shpping date', 'usces') => 'order_modified');
+	$DT = new dataList($tableName, $arr_column);
+	$DT->pageLimit = 'off';
+	$res = $DT->MakeTable();
+	$rows = $DT->rows;
+
+	$line = '';
+	//==========================================================================
+	//header
+	
+/* 01 */	$line .= '"お客様管理番号(注文番号)",';
+/* 02 */	$line .= '"送り状種類",';
+/* 03 */	$line .= '"空欄",';
+/* 04 */	$line .= '"空欄",';
+/* 05 */	$line .= '"出荷予定日",';
+/* 06 */	$line .= '"お届け予定日(空欄)",';
+/* 07 */	$line .= '"配達時間帯(空欄)",';
+/* 08 */	$line .= '"お届け先コード",';
+/* 09 */	$line .= '"お届け先電話番号",';
+/* 10 */	$line .= '"お届け先電話番号枝",';
+/* 11 */	$line .= '"お届け先郵便番号",';
+/* 12 */	$line .= '"お届け先住所",';
+/* 13 */	$line .= '"お届け先建物名",';
+/* 14 */	$line .= '"お届け先会社・部門１",';
+/* 15 */	$line .= '"お届け先会社・部門２",';
+/* 16 */	$line .= '"お届け先名",';
+/* 17 */	$line .= '"お届け先名略称カナ",';
+/* 18 */	$line .= '"空欄",';
+/* 19 */	$line .= '"ご依頼主コード",';
+/* 20 */	$line .= '"ご依頼主電話番号",';
+/* 21 */	$line .= '"ご依頼主電話番号枝",';
+/* 22 */	$line .= '"ご依頼主郵便番号",';
+/* 23 */	$line .= '"ご依頼主住所",';
+/* 24 */	$line .= '"ご依頼主建物名",';
+/* 25 */	$line .= '"ご依頼主名",';
+/* 26 */	$line .= '"ご依頼主名略称カナ",';
+/* 27 */	$line .= '"品名コード１",';
+/* 28 */	$line .= '"品名１",';
+/* 29 */	$line .= '"品名コード２",';
+/* 30 */	$line .= '"品名２",';
+/* 31 */	$line .= '"荷扱い１",';
+/* 32 */	$line .= '"荷扱い２",';
+/* 33 */	$line .= '"記事",';
+/* 34 */	$line .= '"コレクト代金引換額",';
+/* 35 */	$line .= '"コレクト内消費税",';
+/* 36 */	$line .= '"営業所止置き",';
+/* 37 */	$line .= '"営業所コード",';
+/* 38 */	$line .= '"発行枚数",';
+/* 39 */	$line .= '"個数口枠の印字",';
+/* 40 */	$line .= '"ご請求先顧客コード",';
+/* 41 */	$line .= '"ご請求先分類コード",';
+/* 42 */	$line .= '"運賃管理番号"';
+			$line .= "\n";
+	
+	
+//	$line .= $tr_h;
+//	$line .= $th_h1.__('Order number', 'usces').$th_f;
+//	$line .= $th_h.__('order date', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['mem_id'])) $line .= $th_h.__('membership number', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['email'])) $line .= $th_h.__('e-mail', 'usces').$th_f;
+//	if(!empty($cscs_meta)) {
+//		foreach($cscs_meta as $key => $entry) {
+//			if($entry['position'] == 'name_pre') {
+//				$name = $entry['name'];
+//				$cscs_key = 'cscs_'.$key;
+//				if(isset($_REQUEST['check'][$cscs_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//			}
+//		}
+//	}
+//	$line .= $th_h.__('name', 'usces').$th_f;
+//	if($applyform == 'JP') {
+//		if(isset($_REQUEST['check']['kana'])) $line .= $th_h.__('furigana', 'usces').$th_f;
+//	}
+//	if(!empty($cscs_meta)) {
+//		foreach($cscs_meta as $key => $entry) {
+//			if($entry['position'] == 'name_after') {
+//				$name = $entry['name'];
+//				$cscs_key = 'cscs_'.$key;
+//				if(isset($_REQUEST['check'][$cscs_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//			}
+//		}
+//	}
+//	if(isset($_REQUEST['check']['zip'])) $line .= $th_h.__('Zip/Postal Code', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['country'])) $line .= $th_h.__('Country', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['pref'])) $line .= $th_h.__('Province', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['address1'])) $line .= $th_h.__('city', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['address2'])) $line .= $th_h.__('numbers', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['address3'])) $line .= $th_h.__('building name', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['tel'])) $line .= $th_h.__('Phone number', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['fax'])) $line .= $th_h.__('FAX number', 'usces').$th_f;
+//
+//	if(!empty($cscs_meta)) {
+//		foreach($cscs_meta as $key => $entry) {
+//			if($entry['position'] == 'fax_after') {
+//				$name = $entry['name'];
+//				$cscs_key = 'cscs_'.$key;
+//				if(isset($_REQUEST['check'][$cscs_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//			}
+//		}
+//	}
+//	//--------------------------------------------------------------------------
+//	if(!empty($csde_meta)) {
+//		foreach($csde_meta as $key => $entry) {
+//			if($entry['position'] == 'name_pre') {
+//				$name = $entry['name'];
+//				$csde_key = 'csde_'.$key;
+//				if(isset($_REQUEST['check'][$csde_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//			}
+//		}
+//	}
+//	if(isset($_REQUEST['check']['delivery_name'])) $line .= $th_h.__('Shipping Name', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_kana'])) $line .= $th_h.__('Shipping Furigana', 'usces').$th_f;
+//	if(!empty($csde_meta)) {
+//		foreach($csde_meta as $key => $entry) {
+//			if($entry['position'] == 'name_after') {
+//				$name = $entry['name'];
+//				$csde_key = 'csde_'.$key;
+//				if(isset($_REQUEST['check'][$csde_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//			}
+//		}
+//	}
+//	if(isset($_REQUEST['check']['delivery_zip'])) $line .= $th_h.__('Shipping Zip', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_country'])) $line .= $th_h.__('配送先国', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_pref'])) $line .= $th_h.__('Shipping State', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_address1'])) $line .= $th_h.__('Shipping City', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_address2'])) $line .= $th_h.__('Shipping Address1', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_address3'])) $line .= $th_h.__('Shipping Address2', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_tel'])) $line .= $th_h.__('Shipping Phone', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_fax'])) $line .= $th_h.__('Shipping FAX', 'usces').$th_f;
+//
+//	if(!empty($csde_meta)) {
+//		foreach($csde_meta as $key => $entry) {
+//			if($entry['position'] == 'fax_after') {
+//				$name = $entry['name'];
+//				$csde_key = 'csde_'.$key;
+//				if(isset($_REQUEST['check'][$csde_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//			}
+//		}
+//	}
+//	//--------------------------------------------------------------------------
+//	if(isset($_REQUEST['check']['shipping_date'])) $line .= $th_h.__('shpping date', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['peyment_method'])) $line .= $th_h.__('payment method', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_method'])) $line .= $th_h.__('shipping option', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_date'])) $line .= $th_h.__('Delivery date', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delivery_time'])) $line .= $th_h.__('delivery time', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['delidue_date'])) $line .= $th_h.__('Shipping date', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['status'])) $line .= $th_h.__('Status', 'usces').$th_f;
+//	$line .= $th_h.__('Total Amount', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['usedpoint'])) $line .= $th_h.__('Used points', 'usces').$th_f;
+//	$line .= $th_h.__('Disnount', 'usces').$th_f;
+//	$line .= $th_h.__('Shipping', 'usces').$th_f;
+//	$line .= $th_h.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).$th_f;
+//	$line .= $th_h.__('consumption tax', 'usces').$th_f;
+//	if(isset($_REQUEST['check']['note'])) $line .= $th_h.__('Notes', 'usces').$th_f;
+//	if(!empty($csod_meta)) {
+//		foreach($csod_meta as $key => $entry) {
+//			$name = $entry['name'];
+//			$csod_key = 'csod_'.$key;
+//			if(isset($_REQUEST['check'][$csod_key])) $line .= $th_h.usces_entity_decode($name, $ext).$th_f;
+//		}
+//	}
+//	$line .= $tr_f.$lf;
+	
+	//==========================================================================
+	//body
+	
+	foreach((array)$rows as $array) {
+		$order_id = $array['ID'];
+		$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
+		$data = $wpdb->get_row( $query, ARRAY_A );
+		$deli = unserialize($data['order_delivery']);
+		$cart = unserialize($data['order_cart']);
+		$row_num = count($cart);
+		usces_p($cart);
+		$first_code = get_post_meta($cart[0]['post_id'], '_itemCode', true);
+		$first_name = get_post_meta($cart[0]['post_id'], '_itemName', true);
+		if( 2 === $row_num ){
+			$second_code = get_post_meta($cart[1]['post_id'], '_itemCode', true);
+			$second_name = get_post_meta($cart[1]['post_id'], '_itemName', true);
+		}elseif( 2 < $row_num ){
+			$second_code = get_post_meta($cart[1]['post_id'], '_itemCode', true);
+			$second_name = get_post_meta($cart[1]['post_id'], '_itemName', true) . '　その他';
+		}else{
+			$second_code = "";
+			$second_name = "";
+		}
+		
+		
+/* 01 */	$line .= '"' . $order_id . '",';
+/* 02 */	$line .= '"0",';
+/* 03 */	$line .= ',';
+/* 04 */	$line .= ',';
+/* 05 */	$line .= '"' . date('Ymd', current_time('timestamp')) . '",';
+/* 06 */	$line .= ',';
+/* 07 */	$line .= ',';
+/* 08 */	$line .= ',';
+/* 09 */	$line .= '"' . str_replace('-', '', $deli['order_tel']) . '",';
+/* 10 */	$line .= ',';
+/* 11 */	$line .= '"' . str_replace('-', '', $deli['zipcode']) . '",';
+/* 12 */	$line .= '"' . str_replace('"', '""', $deli['pref'] . $deli['address1'] . $deli['address2']) . '",';
+/* 13 */	$line .= '"' . str_replace('"', '""', $deli['address3']) . '",';
+/* 14 */	$line .= ',';
+/* 15 */	$line .= ',';
+/* 16 */	$line .= '"' . str_replace('"', '""', $deli['name1'] . $deli['name2']) . '",';
+/* 17 */	$line .= ',';
+/* 18 */	$line .= ',';
+/* 19 */	$line .= ',';
+/* 20 */	$line .= '"' . str_replace('-', '', $usces_option['tel_number']) . '",';
+/* 21 */	$line .= ',';
+/* 22 */	$line .= '"' . str_replace('-', '', $usces_option['zip_code']) . '",';
+/* 23 */	$line .= '"' . str_replace('"', '""', $usces_option['address1'] . $usces_option['address2']) . '",';
+/* 24 */	$line .= ',';
+/* 25 */	$line .= '"' . str_replace('"', '""', $usces_option['company_name']) . '",';
+/* 26 */	$line .= ',';
+/* 27 */	$line .= '"' . str_replace('"', '""', $first_code) . '",';
+/* 28 */	$line .= '"' . str_replace('"', '""', $first_name) . '",';
+/* 29 */	$line .= '"' . str_replace('"', '""', $second_code) . '",';
+/* 30 */	$line .= '"' . str_replace('"', '""', $second_name) . '",';
+/* 31 */	$line .= ',';
+/* 32 */	$line .= ',';
+/* 33 */	$line .= ',';
+/* 34 */	$line .= ',';
+/* 35 */	$line .= ',';
+/* 36 */	$line .= ',';
+/* 37 */	$line .= ',';
+/* 38 */	$line .= '"1",';
+/* 39 */	$line .= '"1",';
+/* 40 */	$line .= '"' . str_replace('"', '""', $usces_option['b2_bill_code']) . '",';
+/* 41 */	$line .= '"' . str_replace('"', '""', $usces_option['b2_div_code']) . '",';
+/* 42 */	$line .= '"' . str_replace('"', '""', $usces_option['b2_admin_id']) . '"';
+			$line .= "\n";
+		
+	}	
+		
+	usces_p($line);
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+//		$line .= $tr_h;
+//		$line .= $td_h1.$order_id.$td_f;
+//		$line .= $td_h.$data['order_date'].$td_f;
+//		if(isset($_REQUEST['check']['mem_id'])) $line .= $td_h.$data['mem_id'].$td_f;
+//		if(isset($_REQUEST['check']['email'])) $line .= $td_h.usces_entity_decode($data['order_email'], $ext).$td_f;
+//		if(!empty($cscs_meta)) {
+//			foreach($cscs_meta as $key => $entry) {
+//				if($entry['position'] == 'name_pre') {
+//					$name = $entry['name'];
+//					$cscs_key = 'cscs_'.$key;
+//
+//					if(isset($_REQUEST['check'][$cscs_key])) {
+//						$value = maybe_unserialize($usces->get_order_meta_value($cscs_key, $order_id));
+//						if(empty($value)) {
+//							$value = '';
+//						} elseif(is_array($value)) {
+//							$concatval = '';
+//							$c = '';
+//							foreach($value as $v) {
+//								$concatval .= $c.$v;
+//								$c = ' ';
+//							}
+//							$value = $concatval;
+//						}
+//						$line .= $td_h.usces_entity_decode($value, $ext).$td_f;
+//					}
+//				}
+//			}
+//		}
+//		$line .= $td_h.usces_entity_decode($data['order_name1'].' '.$data['order_name2'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['kana'])) $line .= $td_h.usces_entity_decode($data['order_name3'].' '.$data['order_name4'], $ext).$td_f;
+//		if(!empty($cscs_meta)) {
+//			foreach($cscs_meta as $key => $entry) {
+//				if($entry['position'] == 'name_after') {
+//					$name = $entry['name'];
+//					$cscs_key = 'cscs_'.$key;
+//					if(isset($_REQUEST['check'][$cscs_key])) {
+//						$value = maybe_unserialize($usces->get_order_meta_value($cscs_key, $order_id));
+//						if(empty($value)) {
+//							$value = '';
+//						} elseif(is_array($value)) {
+//							$concatval = '';
+//							$c = '';
+//							foreach($value as $v) {
+//								$concatval .= $c.$v;
+//								$c = ' ';
+//							}
+//							$value = $concatval;
+//						}
+//						$line .= $td_h.usces_entity_decode($value, $ext).$td_f;
+//					}
+//				}
+//			}
+//		}
+//		if(isset($_REQUEST['check']['zip'])) $line .= $td_h.usces_entity_decode($data['order_zip'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['country'])) $line .= $td_h.$usces_settings['country'][$usces->get_order_meta_value('customer_country', $order_id)].$td_f;
+//		if(isset($_REQUEST['check']['pref'])) $line .= $td_h.usces_entity_decode($data['order_pref'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['address1'])) $line .= $td_h.usces_entity_decode($data['order_address1'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['address2'])) $line .= $td_h.usces_entity_decode($data['order_address2'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['address3'])) $line .= $td_h.usces_entity_decode($data['order_address3'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['tel'])) $line .= $td_h.usces_entity_decode($data['order_tel'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['fax'])) $line .= $td_h.usces_entity_decode($data['order_fax'], $ext).$td_f;
+//		if(!empty($cscs_meta)) {
+//			foreach($cscs_meta as $key => $entry) {
+//				if($entry['position'] == 'fax_after') {
+//					$name = $entry['name'];
+//					$cscs_key = 'cscs_'.$key;
+//					if(isset($_REQUEST['check'][$cscs_key])) {
+//						$value = maybe_unserialize($usces->get_order_meta_value($cscs_key, $order_id));
+//						if(empty($value)) {
+//							$value = '';
+//						} elseif(is_array($value)) {
+//							$concatval = '';
+//							$c = '';
+//							foreach($value as $v) {
+//								$concatval .= $c.$v;
+//								$c = ' ';
+//							}
+//							$value = $concatval;
+//						}
+//						$line .= $td_h.usces_entity_decode($value, $ext).$td_f;
+//					}
+//				}
+//			}
+//		}
+//		//----------------------------------------------------------------------
+//		if(!empty($csde_meta)) {
+//			foreach($csde_meta as $key => $entry) {
+//				if($entry['position'] == 'name_pre') {
+//					$name = $entry['name'];
+//					$csde_key = 'csde_'.$key;
+//					if(isset($_REQUEST['check'][$csde_key])) {
+//						$value = maybe_unserialize($usces->get_order_meta_value($csde_key, $order_id));
+//						if(empty($value)) {
+//							$value = '';
+//						} elseif(is_array($value)) {
+//							$concatval = '';
+//							$c = '';
+//							foreach($value as $v) {
+//								$concatval .= $c.$v;
+//								$c = ' ';
+//							}
+//							$value = $concatval;
+//						}
+//						$line .= $td_h.usces_entity_decode($value, $ext).$td_f;
+//					}
+//				}
+//			}
+//		}
+//		if(isset($_REQUEST['check']['delivery_name'])) $line .= $td_h.usces_entity_decode($deli['name1'].' '.$deli['name2'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['delivery_kana'])) $line .= $td_h.usces_entity_decode($deli['name3'].' '.$deli['name4'], $ext).$td_f;
+//
+//		if(!empty($csde_meta)) {
+//			foreach($csde_meta as $key => $entry) {
+//				if($entry['position'] == 'name_after') {
+//					$name = $entry['name']."</td>";
+//					$csde_key = 'csde_'.$key;
+//					if(isset($_REQUEST['check'][$csde_key])) {
+//						$value = maybe_unserialize($usces->get_order_meta_value($csde_key, $order_id));
+//						if(empty($value)) {
+//							$value = '';
+//						} elseif(is_array($value)) {
+//							$concatval = '';
+//							$c = '';
+//							foreach($value as $v) {
+//								$concatval .= $c.$v;
+//								$c = ' ';
+//							}
+//							$value = $concatval;
+//						}
+//						$line .= $td_h.usces_entity_decode($value, $ext).$td_f;
+//					}
+//				}
+//			}
+//		}
+//		if(isset($_REQUEST['check']['delivery_zip'])) $line .= $td_h.usces_entity_decode($deli['zipcode'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['delivery_country'])) $line .= $td_h.$usces_settings['country'][$deli['country']].$td_f;
+//		if(isset($_REQUEST['check']['delivery_pref'])) $line .= $td_h.usces_entity_decode($deli['pref'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['delivery_address1'])) $line .= $td_h.usces_entity_decode($deli['address1'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['delivery_address2'])) $line .= $td_h.usces_entity_decode($deli['address2'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['delivery_address3'])) $line .= $td_h.usces_entity_decode($deli['address3'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['delivery_tel'])) $line .= $td_h.usces_entity_decode($deli['tel'], $ext).$td_f;
+//		if(isset($_REQUEST['check']['delivery_fax'])) $line .= $td_h.usces_entity_decode($deli['fax'], $ext).$td_f;
+//
+//		if(!empty($csde_meta)) {
+//			foreach($csde_meta as $key => $entry) {
+//				if($entry['position'] == 'fax_after') {
+//					$name = $entry['name'];
+//					$csde_key = 'csde_'.$key;
+//					if(isset($_REQUEST['check'][$csde_key])) {
+//						$value = maybe_unserialize($usces->get_order_meta_value($csde_key, $order_id));
+//						if(empty($value)) {
+//							$value = '';
+//						} elseif(is_array($value)) {
+//							$concatval = '';
+//							$c = '';
+//							foreach($value as $v) {
+//								$concatval .= $c.$v;
+//								$c = ' ';
+//							}
+//							$value = $concatval;
+//						}
+//						$line .= $td_h.usces_entity_decode($value, $ext).$td_f;
+//					}
+//				}
+//			}
+//		}
+//		//----------------------------------------------------------------------
+//		if(isset($_REQUEST['check']['shipping_date'])) $line .= $td_h.$data['order_modified'].$td_f;
+//		if(isset($_REQUEST['check']['peyment_method'])) $line .= $td_h.$data['order_payment_name'].$td_f;
+//		if(isset($_REQUEST['check']['delivery_method'])) {
+//			$delivery_method = '';
+//			if(strtoupper($data['order_delivery_method']) == '#NONE#') {
+//				$delivery_method = __('No preference', 'usces');
+//			} else {
+//				foreach((array)$usces->options['delivery_method'] as $dkey => $delivery) {
+//					if($delivery['id'] == $data['order_delivery_method']) {
+//						$delivery_method = $delivery['name'];
+//						break;
+//					}
+//				}
+//			}
+//			$line .= $td_h.$delivery_method.$td_f;
+//		}
+//		if(isset($_REQUEST['check']['delivery_date'])) $line .= $td_h.$data['order_delivery_date'].$td_f;
+//		if(isset($_REQUEST['check']['delivery_time'])) $line .= $td_h.$data['order_delivery_time'].$td_f;
+//		if(isset($_REQUEST['check']['delidue_date'])) {
+//			$order_delidue_date = (strtoupper($data['order_delidue_date']) == '#NONE#') ? '' : $data['order_delidue_date'];
+//			$line .= $td_h.$order_delidue_date.$td_f;
+//		}
+//		if(isset($_REQUEST['check']['status'])) {
+//			$order_status = explode(',', $data['order_status']);
+//			$status = '';
+//			foreach($order_status as $os) {
+//				$status .= $usces_management_status[$os].$sp;
+//			}
+//			$line .= $td_h.trim($status, $sp).$td_f;
+//		}
+//		$line .= $td_h.$array['total_price'].$td_f;
+//		if(isset($_REQUEST['check']['usedpoint'])) $line .= $td_h.$data['order_usedpoint'].$td_f;
+//		$line .= $td_h.$data['order_discount'].$td_f;
+//		$line .= $td_h.$data['order_shipping_charge'].$td_f;
+//		$line .= $td_h.$data['order_cod_fee'].$td_f;
+//		$line .= $td_h.$data['order_tax'].$td_f;
+//		if(isset($_REQUEST['check']['note'])) $line .= $td_h.usces_entity_decode($data['order_note'], $ext).$td_f;
+//		if(!empty($csod_meta)) {
+//			foreach($csod_meta as $key => $entry) {
+//				$name = $entry['name'];
+//				$csod_key = 'csod_'.$key;
+//				if(isset($_REQUEST['check'][$csod_key])) {
+//					$value = maybe_unserialize($usces->get_order_meta_value($csod_key, $order_id));
+//					if(empty($value)) {
+//						$value = '';
+//					} elseif(is_array($value)) {
+//						$concatval = '';
+//						$c = '';
+//						foreach($value as $v) {
+//							$concatval .= $c.$v;
+//							$c = ' ';
+//						}
+//						$value = $concatval;
+//					}
+//					$line .= $td_h.usces_entity_decode($value, $ext).$td_f;
+//				}
+//			}
+//		}
+//		$line .= $tr_f.$lf;
+//	}
+//	$line .= $table_f.$lf;
+	//==========================================================================
+
+//	header("Content-Type: application/octet-stream");
+//	header("Content-Disposition: attachment; filename=b2_list.csv");
+//	mb_http_output('pass');
+//	print(mb_convert_encoding($line, "SJIS-win", "UTF-8"));
+//	exit();
+
+}
 function NS_the_shipment_aim( $post = '', $out = '' ) {
 	if($post == '') global $post;
 	$post_id = $post->ID;

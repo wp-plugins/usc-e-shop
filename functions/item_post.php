@@ -487,6 +487,7 @@ function item_sku_meta_form($post_id) {
 		GROUP BY meta_key 
 		LIMIT $limit" );
 ?>
+<div id="sku_ajax-response"></div>
 <p><strong><?php _e('Add new SKU','usces') ?> : </strong></p>
 <table id="newsku">
 <thead>

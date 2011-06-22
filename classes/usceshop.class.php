@@ -466,6 +466,10 @@ class usc_e_shop
 			case 'dlorderlist':
 				usces_download_order_list();
 				break;
+			case 'dlB2list':
+				if( function_exists( 'NS_download_B2_list' ) )
+					NS_download_B2_list();
+				break;
 //20100908ysk end
 //			case 'printpdf':
 //				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');	

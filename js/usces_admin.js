@@ -117,9 +117,16 @@
 			var essential = ($(es).attr("checked")) ? '1' : '0';
 			var sku = $(ss).val();
 
+			var deleteitemopt = 'input[name="deleteitemopt\[' +  meta_id + '\]"]';
+			if( !$("#opt_loading-" + meta_id).length ){
+				$(deleteitemopt).before('<div id="opt_loading-' + meta_id + '"></div>');
+			}
+			$("#opt_loading-" + meta_id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
+
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optvalue=" + value + "&optmeans=" + means + "&optessential=" + essential + "&optsku=" + sku + "&optmetaid=" + meta_id;
 			s.success = function(data, dataType){
+				$("#opt_loading-" + meta_id).html('');
 				strs = data.split('#usces#');
 				$("tbody#item-opt-list").html( strs[0] );
 				sku_id = strs[1].split(",");
@@ -171,9 +178,17 @@
 				return;
 			}
 			var id = uscesL10n.cart_number;
+
+			var add_itemopt = '#add_itemopt';
+			if( !$("#opt_loading").length ){
+				$(add_itemopt).before('<div id="opt_loading"></div>');
+			}
+			$("#opt_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
+
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&select=1&key=" + encodeURIComponent(key);
 			s.success = function(data, dataType){
+				$("#opt_loading").html('');
 				strs = data.split('#usces#');
 				var means = strs[0];
 				var essential = strs[1];
@@ -228,9 +243,6 @@
 			}else{
 				var name = $("#skukeyselect").val();
 			}
-			if(name == '#NONE#' || name == ''){
-				return false;
-			}
 			var cprice = $("#newskucprice").val();
 			var price = $("#newskuprice").val();
 			var zaikonum = $("#newskuzaikonum").val();
@@ -245,6 +257,7 @@
 				
 			//if( undefined != $("#newskuadvance").val() )
 			//	var skuadvance = '&newskuadvance=' + encodeURIComponent($("#newskuadvance").val());
+
 			var gprice = $("#newskugprice").val();
 			var mprice = $("#newskumprice").val();
 
@@ -259,10 +272,29 @@
 				skuoption += sp + $(this).val();
 				sp = '#usces#';
 			});
+
+			if( '' == name || '' == price ){
+				$mes = '<div class="error">';
+				if( '' == name )
+					$mes += '<p>SKUコードの値を入力してください。</p>';
+				if( '' == price )
+					$mes += '<p>売価の値を入力してください。</p>';
+				$mes += '</div>';
+				$("#sku_ajax-response").html($mes);
+				return false;
+			}
+			if( !$("#newsku_loading").length ){
+				$("#add_itemsku").before('<div id="newsku_loading"></div>');
+			}
+			$("#newsku_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
+
+
 			var s = itemSku.settings;
 			//s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugptekiyo=" + skugptekiyo + charging_type + skuadvance;
 			s.data = "action=item_sku_ajax&ID=" + id + "&newskuname=" + encodeURIComponent(name) + "&newskucprice=" + cprice + "&newskuprice=" + price + "&newskuzaikonum=" + zaikonum + "&newskuzaikoselect=" + encodeURIComponent(zaiko) + "&newskudisp=" + encodeURIComponent(skudisp) + "&newskuunit=" + encodeURIComponent(skuunit) + "&newskugprice=" + gprice + "&newskumprice=" + mprice + "&newskukey=" + skukey + "&newskuoption=" + skuoption;
 			s.success = function(data, dataType){
+				$("#newsku_loading").html('');
+				$("#sku_ajax-response").html('');
 				strs = data.split('#usces#');
 				$("table#skulist-table").removeAttr("style");
 				$("tbody#skukeyselect").html( strs[1] );
@@ -291,6 +323,9 @@
 						$(this).val("");
 					//}
 				});
+			};
+			s.error = function(msg){
+				$("#newsku_loading").html('');
 			};
 			$.ajax( s );
 			return false;
@@ -339,12 +374,28 @@
 				skuoption += sp + $(this).val();
 				sp = '#usces#';
 			});
+			if( '' == name || '' == price ){
+				$mes = '<div class="error">';
+				if( '' == name )
+					$mes += '<p>SKUコードの値を入力してください。</p>';
+				if( '' == price )
+					$mes += '<p>売価の値を入力してください。</p>';
+				$mes += '</div>';
+				$("#sku_ajax-response").html($mes);
+				return false;
+			}
+			var deleteitemsku = 'input[name="deleteitemsku\[' +  meta_id + '\]"]';
+			if( !$("#sku_loading-" + meta_id).length ){
+				$(deleteitemsku).before('<div id="sku_loading-' + meta_id + '"></div>');
+			}
+			$("#sku_loading-" + meta_id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 			
 			var s = itemSku.settings;
 			//s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skugptekiyo=" + skugptekiyo + "&skumetaid=" + meta_id + charging_type + skuadvance;
 			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skumetaid=" + meta_id + "&skugprice=" + gprice + "&skumprice=" + mprice + "&skukey=" + skukey + "&skuoption=" + skuoption;
 			s.success = function(data, dataType){
-				//alert(data);
+				$("#sku_ajax-response").html('');
+				$("#sku_loading-" + meta_id).html('');
 			};
 			$.ajax( s );
 			return false;

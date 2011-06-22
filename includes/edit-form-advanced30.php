@@ -590,8 +590,17 @@ jQuery(document).ready(function($){
  		var mes = '';
         if (submit_event) {
 			if ( "" == $("#itemCode").val() ) {
-				mes += '商品コードが入力されていません。<br />';
+				mes += '・商品コードが入力されていません。<br />';
 				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+			if ( ! $("input[name^='itemsku\[']").length ) {
+				mes += '・SKUが登録されていません。<br />';
+				$("#newskuname").css({'background-color': '#FFA'}).click(function(){
+					$(this).css({'background-color': '#FFF'});
+				});
+				$("#newskuprice").css({'background-color': '#FFA'}).click(function(){
 					$(this).css({'background-color': '#FFF'});
 				});
 			}
@@ -633,13 +642,24 @@ jQuery(document).ready(function($){
  		var mes = '';
         if (submit_event) {
 			if ( "" == $("#itemCode").val() ) {
-				mes += '商品コードが入力されていません。<br />';
+				mes += '・商品コードが入力されていません。<br />';
 				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
 					$(this).css({'background-color': '#FFF'});
 				});
 			}
+			if ( ! $("input[name^='itemsku\[']").length ) {
+				mes += '・SKUが登録されていません。<br />';
+				$("#newskuname").css({'background-color': '#FFA'}).click(function(){
+					$(this).css({'background-color': '#FFF'});
+				});
+				$("#newskuprice").css({'background-color': '#FFA'}).click(function(){
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
 			if ( '' != mes) {
-				$("#major-publishing-actions").append('<div id="usces_ess"></div>');
+				if( !$("#usces_ess").length ){
+					$("#major-publishing-actions").append('<div id="usces_ess"></div>');
+				}
 				$('#ajax-loading').css({'visibility': 'hidden'});
 				$('#draft-ajax-loading').css({'visibility': 'hidden'});
 				$('#publish').removeClass('button-primary-disabled');
