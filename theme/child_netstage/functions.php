@@ -1462,4 +1462,90 @@ function NS_get_itemSubImageNums( $post = '' ) {
 	return  $res;
 }
 
+function NS_get_cart( $cart ) {
+	global $usces;
+	$rows = array();
+	$set_post_id = $usces->get_postIDbyCode('dummySet');
+
+	$i = 0;
+	foreach($cart as $key => $row) { 
+		if($row['post_id'] == $set_post_id) {
+			$serial = $row['serial'];
+			$quant = $row['quant'];
+
+			$post_id = $row['options']['セットヘッド'];
+			$sku = $row['options']['セットヘッドSKU'];
+			$r = array();
+			$r['serial'] = $serial;
+			$r['post_id'] = $post_id;
+			$r['sku'] = $sku;
+			$r['options'] = array();
+			$r['price'] = usces_get_item_price($post_id, $sku);
+			$r['quantity'] = $quant;
+			$r['advance'] = array();
+			$rows[$i] = $r;
+			$i++;
+
+			$post_id = $row['options']['セットシャフト'];
+			$sku = $row['options']['セットシャフトSKU'];
+			$r = array();
+			$r['serial'] = $serial;
+			$r['post_id'] = $post_id;
+			$r['sku'] = $sku;
+			$r['options'] = array();
+			$r['price'] = usces_get_item_price($post_id, $sku);
+			$r['quantity'] = $quant;
+			$r['advance'] = array();
+			$rows[$i] = $r;
+			$i++;
+
+			$post_id = $row['options']['セットグリップ'];
+			$sku = $row['options']['セットグリップSKU'];
+			$r = array();
+			$r['serial'] = $serial;
+			$r['post_id'] = $post_id;
+			$r['sku'] = $sku;
+			$r['options'] = array();
+			$r['price'] = usces_get_item_price($post_id, $sku);
+			$r['quantity'] = $quant;
+			$r['advance'] = array();
+			$rows[$i] = $r;
+			$i++;
+
+		} else {
+			$rows[$i] = $row;
+			$i++;
+		}
+	}
+
+	return $rows;
+}
+
+function usces_get_itemImage( $post_id, $number = 0, $width = 60, $height = 60 ) {
+	global $usces;
+
+	$code =  get_post_custom_values('_itemCode', $post_id);
+	if(!$code) return false;
+	
+	$name = get_post_custom_values('_itemName', $post_id);
+	
+	$pictids = $usces->get_pictids($code[0]);
+	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );
+
+	return $html;
+}
+
+function usces_get_item_price($post_id, $sku){
+	global $usces;
+	$field = get_post_meta($post_id, '_isku_'.$sku, true);
+	//$skus = unserialize($field);
+	$skus = maybe_unserialize($field);
+	return $skus['price'];
+}
+
+function usces_get_item_cprice($post_id, $sku){
+	global $usces;
+
+}
+
 ?>

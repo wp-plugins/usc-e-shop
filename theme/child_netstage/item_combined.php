@@ -157,8 +157,7 @@ class NS_SetPage
 	}
 	
 	function set_data(){
-		//$this->get_session();
-		$this->set_session();
+		$this->get_session();
 		
 		switch( $this->action ){
 			case 'head_list':
@@ -222,7 +221,7 @@ class NS_SetPage
 			default:
 				$this->body_caption = 'ヘッド一覧';
 		}
-		$this->get_session();
+		$this->set_session();
 	}
 
 	function get_session(){
@@ -231,15 +230,51 @@ class NS_SetPage
 //		$_SESSION['nsset']['product']['shuft']
 //		$_SESSION['nsset']['product']['grip']
 //		$_SESSION['nsset']['product']
-		if(!empty($_SESSION['nsset']['product']['head']['post_id'])) $this->product['head']['post_id'] = $_SESSION['nsset']['product']['head']['post_id'];
-		if(!empty($_SESSION['nsset']['product']['head']['sku'])) $this->product['head']['sku'] = $_SESSION['nsset']['product']['head']['sku'];
-		if(!empty($_SESSION['nsset']['product']['head']['price'])) $this->product['head']['price'] = $_SESSION['nsset']['product']['head']['price'];
-		if(!empty($_SESSION['nsset']['product']['shuft']['post_id'])) $this->product['shuft']['post_id'] = $_SESSION['nsset']['product']['shuft']['post_id'];
-		if(!empty($_SESSION['nsset']['product']['shuft']['sku'])) $this->product['shuft']['sku'] = $_SESSION['nsset']['product']['shuft']['sku'];
-		if(!empty($_SESSION['nsset']['product']['shuft']['price'])) $this->product['shuft']['price'] = $_SESSION['nsset']['product']['shuft']['price'];
-		if(!empty($_SESSION['nsset']['product']['grip']['post_id'])) $this->product['grip']['post_id'] = $_SESSION['nsset']['product']['grip']['post_id'];
-		if(!empty($_SESSION['nsset']['product']['grip']['sku'])) $this->product['grip']['sku'] = $_SESSION['nsset']['product']['grip']['sku'];
-		if(!empty($_SESSION['nsset']['product']['grip']['price'])) $this->product['grip']['price'] = $_SESSION['nsset']['product']['grip']['price'];
+		if(isset($_POST['head_post_id'])) {
+			$this->product['head']['post_id'] = $_POST['head_post_id'];
+		} elseif(isset($_SESSION['nsset']['product']['head']['post_id'])) {
+			$this->product['head']['post_id'] = $_SESSION['nsset']['product']['head']['post_id'];
+		}
+		if(isset($_POST['head_sku'])) {
+			$this->product['head']['sku'] = $_POST['head_sku'];
+		} elseif(isset($_SESSION['nsset']['product']['head']['sku'])) {
+			$this->product['head']['sku'] = $_SESSION['nsset']['product']['head']['sku'];
+		}
+		if(isset($_POST['head_price'])) {
+			$this->product['head']['price'] = $_POST['head_price'];
+		} elseif(isset($_SESSION['nsset']['product']['head']['price'])) {
+			$this->product['head']['price'] = $_SESSION['nsset']['product']['head']['price'];
+		}
+		if(isset($_POST['shuft_post_id'])) {
+			$this->product['shuft']['post_id'] = $_POST['shuft_post_id'];
+		} elseif(isset($_SESSION['nsset']['product']['shuft']['post_id'])) {
+			$this->product['shuft']['post_id'] = $_SESSION['nsset']['product']['shuft']['post_id'];
+		}
+		if(isset($_POST['shuft_sku'])) {
+			$this->product['shuft']['sku'] = $_POST['shuft_sku'];
+		} elseif(isset($_SESSION['nsset']['product']['shuft']['sku'])) {
+			$this->product['shuft']['sku'] = $_SESSION['nsset']['product']['shuft']['sku'];
+		}
+		if(isset($_POST['shuft_price'])) {
+			$this->product['shuft']['price'] = $_POST['shuft_price'];
+		} elseif(isset($_SESSION['nsset']['product']['shuft']['price'])) {
+			$this->product['shuft']['price'] = $_SESSION['nsset']['product']['shuft']['price'];
+		}
+		if(isset($_POST['grip_post_id'])) {
+			$this->product['grip']['post_id'] = $_POST['grip_post_id'];
+		} elseif(isset($_SESSION['nsset']['product']['grip']['post_id'])) {
+			$this->product['grip']['post_id'] = $_SESSION['nsset']['product']['grip']['post_id'];
+		}
+		if(isset($_POST['grip_sku'])) {
+			$this->product['grip']['sku'] = $_POST['grip_sku'];
+		} elseif(isset($_SESSION['nsset']['product']['grip']['sku'])) {
+			$this->product['grip']['sku'] = $_SESSION['nsset']['product']['grip']['sku'];
+		}
+		if(isset($_POST['grip_price'])) {
+			$this->product['grip']['price'] = $_POST['grip_price'];
+		} elseif(isset($_SESSION['nsset']['product']['grip']['price'])) {
+			$this->product['grip']['price'] = $_SESSION['nsset']['product']['grip']['price'];
+		}
 	}
 
 	function set_session(){
@@ -248,15 +283,15 @@ class NS_SetPage
 //		$_SESSION['nsset']['product']['shuft']
 //		$_SESSION['nsset']['product']['grip']
 //		$_SESSION['nsset']['product']
-		if(isset($_POST['head_post_id'])) $_SESSION['nsset']['product']['head']['post_id'] = $_POST['head_post_id'];
-		if(isset($_POST['head_sku'])) $_SESSION['nsset']['product']['head']['sku'] = $_POST['head_sku'];
-		if(isset($_POST['head_price'])) $_SESSION['nsset']['product']['head']['price'] = $_POST['head_price'];
-		if(isset($_POST['shuft_post_id'])) $_SESSION['nsset']['product']['shuft']['post_id'] = $_POST['shuft_post_id'];
-		if(isset($_POST['shuft_sku'])) $_SESSION['nsset']['product']['shuft']['sku'] = $_POST['shuft_sku'];
-		if(isset($_POST['shuft_price'])) $_SESSION['nsset']['product']['shuft']['price'] = $_POST['shuft_price'];
-		if(isset($_POST['grip_post_id'])) $_SESSION['nsset']['product']['grip']['post_id'] = $_POST['grip_post_id'];
-		if(isset($_POST['grip_sku'])) $_SESSION['nsset']['product']['grip']['sku'] = $_POST['grip_sku'];
-		if(isset($_POST['grip_price'])) $_SESSION['nsset']['product']['grip']['price'] = $_POST['grip_price'];
+		if(isset($this->product['head']['post_id'])) $_SESSION['nsset']['product']['head']['post_id'] = $this->product['head']['post_id'];
+		if(isset($this->product['head']['sku'])) $_SESSION['nsset']['product']['head']['sku'] = $this->product['head']['sku'];
+		if(isset($this->product['head']['price'])) $_SESSION['nsset']['product']['head']['price'] = $this->product['head']['price'];
+		if(isset($this->product['shuft']['post_id'])) $_SESSION['nsset']['product']['shuft']['post_id'] = $this->product['shuft']['post_id'];
+		if(isset($this->product['shuft']['sku'])) $_SESSION['nsset']['product']['shuft']['sku'] = $this->product['shuft']['sku'];
+		if(isset($this->product['shuft']['price'])) $_SESSION['nsset']['product']['shuft']['price'] = $this->product['shuft']['price'];
+		if(isset($this->product['grip']['post_id'])) $_SESSION['nsset']['product']['grip']['post_id'] = $this->product['grip']['post_id'];
+		if(isset($this->product['grip']['sku'])) $_SESSION['nsset']['product']['grip']['sku'] = $this->product['grip']['sku'];
+		if(isset($this->product['grip']['price'])) $_SESSION['nsset']['product']['grip']['price'] = $this->product['grip']['price'];
 	}
 
 	function set_list_per_page( $per_page ){
@@ -267,21 +302,23 @@ class NS_SetPage
 		$cat_item = array();
 		switch( $this->action ){
 			case 'shuft_list':
-				if ( in_category( 'setdriverhead', (int)$this->produnct['head']['post_id'] ) )
+				if ( in_category( 'setdriverhead', (int)$this->produnct['head']['post_id'] ) ) {
 					$cat_item[] = usces_get_cat_id( 'setdrivershuft' );
 					$cat_item []= usces_get_cat_id( 'setdriverfairwayshuft' );
-				elseif ( in_category( 'setfairwayhead', (int)$this->produnct['head']['post_id'] ) )
+				} elseif ( in_category( 'setfairwayhead', (int)$this->produnct['head']['post_id'] ) ) {
 					$cat_item []= usces_get_cat_id( 'setfairwayshuft' );
 					$cat_item []= usces_get_cat_id( 'setdriverfairwayshuft' );
-				elseif ( in_category( 'setironhead', (int)$this->produnct['head']['post_id'] ) )
+				} elseif ( in_category( 'setironhead', (int)$this->produnct['head']['post_id'] ) ) {
 					$cat_item[] = usces_get_cat_id( 'setironshuft' );
-				elseif ( in_category( 'setutilityhead', (int)$this->produnct['head']['post_id'] ) )
+
+				} elseif ( in_category( 'setutilityhead', (int)$this->produnct['head']['post_id'] ) ) {
 					$cat_item[] = usces_get_cat_id( 'setutilityshuft' );
-				elseif ( in_category( 'setwedgehead', (int)$this->produnct['head']['post_id'] ) )
+				} elseif ( in_category( 'setwedgehead', (int)$this->produnct['head']['post_id'] ) ) {
 					$cat_item[] = usces_get_cat_id( 'setwedgeshuft' );
-				elseif ( in_category( 'setputterhead', (int)$this->produnct['head']['post_id'] ) )
+				} elseif ( in_category( 'setputterhead', (int)$this->produnct['head']['post_id'] ) ) {
 					$cat_item[] = usces_get_cat_id( 'setputtershuft' );
-					
+				}
+				
 				break;
 			case 'grip_list':
 				if ( in_category( 'setdrivershuft', (int)$this->produnct['shuft']['post_id'] ) 
@@ -289,10 +326,11 @@ class NS_SetPage
 					|| in_category( 'setdriverfairwayshuft', (int)$this->produnct['shuft']['post_id'] ) 
 					|| in_category( 'setutilityshuft', (int)$this->produnct['shuft']['post_id'] ) 
 					|| in_category( 'setwedgeshuft', (int)$this->produnct['shuft']['post_id'] ) 
-					)
+					) {
 					$cat_item[] = usces_get_cat_id( 'setwoodirongrip' );
-				elseif ( in_category( 'setputtershuft', (int)$this->produnct['head']['post_id'] ) )
+				} elseif ( in_category( 'setputtershuft', (int)$this->produnct['head']['post_id'] ) ) {
 					$cat_item []= usces_get_cat_id( 'setputtergrip' );
+				}
 
 				break;
 			case 'head_list':
@@ -448,14 +486,20 @@ class NS_SetPage
 
 	function get_top_amount_mes(){
 		$focus = $this->get_top_focus();
-		$res = ( 'amount' == $focus ) ? 'kouchin' : '※パーツ構成が確定していません。';
+		//$res = ( 'amount' == $focus ) ? 'kouchin' : '※パーツ構成が確定していません。';
+		if( 'amount' == $focus and !empty($this->product['head']['sku']) and !empty($this->product['shuft']['sku']) and !empty($this->product['grip']['sku']) ){
+			$res = usces_crform($this->product['head']['price'] + $this->product['shuft']['price'] + $this->product['grip']['price'], true, false, 'return');
+		} else {
+			$res = '※パーツ構成が確定していません。';
+		}
 		return $res;
 	}
 	
 	function get_top_amount_button(){
 		global $usces;
 		$focus = $this->get_top_focus();
-		if( 'amount' == $focus ){
+		//if( 'amount' == $focus ){
+		if( 'amount' == $focus and !empty($this->product['head']['sku']) and !empty($this->product['shuft']['sku']) and !empty($this->product['grip']['sku']) ){
 			$post_id = $usces->get_postIDbyCode('dummySet');
 			$skus = $usces->get_skus($post_id);
 			$sku = $skus['key'][0];
@@ -464,13 +508,12 @@ class NS_SetPage
 			$res .= '<input name="decide" type="submit" class="decide_button" value="　" />';
 			$res .= '<input name="inCart['.$post_id.']['.$sku.']" type="hidden" value="　" />';
 			$res .= '<input name="skuPrice['.$post_id.']['.$sku.']" type="hidden" value="'.$price.'" />';
-			$res .= '<input name="advance['.$post_id.']['.$sku.'][head_post_id]" type="hidden" value="'.$this->product['head']['post_id'].'" />';
-			$res .= '<input name="advance['.$post_id.']['.$sku.'][head_sku]" type="hidden" value="'.$this->product['head']['sku'].'" />';
-			$res .= '<input name="advance['.$post_id.']['.$sku.'][shuft_post_id]" type="hidden" value="'.$this->product['shuft']['post_id'].'" />';
-			$res .= '<input name="advance['.$post_id.']['.$sku.'][shuft_sku]" type="hidden" value="'.$this->product['shuft']['sku'].'" />';
-			$res .= '<input name="advance['.$post_id.']['.$sku.'][grip_post_id]" type="hidden" value="'.$this->product['grip']['post_id'].'" />';
-			$res .= '<input name="advance['.$post_id.']['.$sku.'][grip_sku]" type="hidden" value="'.$this->product['grip']['sku'].'" />';
-			$res .= '</form>';
+			$res .= '<input name="itemOption['.$post_id.']['.$sku.'][セットヘッド]" type="hidden" value="'.$this->product['head']['post_id'].'" />';
+			$res .= '<input name="itemOption['.$post_id.']['.$sku.'][セットヘッドSKU]" type="hidden" value="'.$this->product['head']['sku'].'" />';
+			$res .= '<input name="itemOption['.$post_id.']['.$sku.'][セットシャフト]" type="hidden" value="'.$this->product['shuft']['post_id'].'" />';
+			$res .= '<input name="itemOption['.$post_id.']['.$sku.'][セットシャフトSKU]" type="hidden" value="'.$this->product['shuft']['sku'].'" />';
+			$res .= '<input name="itemOption['.$post_id.']['.$sku.'][セットグリップ]" type="hidden" value="'.$this->product['grip']['post_id'].'" />';
+			$res .= '<input name="itemOption['.$post_id.']['.$sku.'][セットグリップSKU]" type="hidden" value="'.$this->product['grip']['sku'].'" />';
 		}else{
 			$res = '<input name="decide" type="button" class="decide_button_dis" value="　" disabled="disabled" />';
 		}
@@ -963,32 +1006,5 @@ class NS_Post {
 	function set_id( $id ) {
 		$this->ID = $id;
 	}
-}
-
-function usces_get_itemImage( $post_id, $number = 0, $width = 60, $height = 60 ) {
-	global $usces;
-
-	$code =  get_post_custom_values('_itemCode', $post_id);
-	if(!$code) return false;
-	
-	$name = get_post_custom_values('_itemName', $post_id);
-	
-	$pictids = $usces->get_pictids($code[0]);
-	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );
-
-	return $html;
-}
-
-function usces_get_item_price($post_id, $sku){
-	global $usces;
-	$field = get_post_meta($post_id, '_isku_'.$sku, true);
-	//$skus = unserialize($field);
-	$skus = maybe_unserialize($field);
-	return $skus['price'];
-}
-
-function usces_get_item_cprice($post_id, $sku){
-	global $usces;
-
 }
 ?>

@@ -48,7 +48,7 @@ class usces_cart {
 		
 		
 		if ( isset($_POST['skuPrice']) && $_POST['skuPrice'][$post_id][$sku] != '') {
-			$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
+			$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant'], (int)$_POST['skuPrice'][$post_id][$sku]);
 			$price = apply_filters('usces_filter_inCart_price', $price, $this->serial);
 			$_SESSION['usces_cart'][$this->serial]['price'] = $price;
 		}
@@ -82,7 +82,7 @@ class usces_cart {
 				if( isset($_POST['order_action']) ){
 					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
 				}else{
-					$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
+					$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant'], (int)$_POST['skuPrice'][$index][$post_id][$sku]);
 					$price = apply_filters('usces_filter_upCart_price', $price, $this->serial, $index);
 				}
 				$_SESSION['usces_cart'][$this->serial]['price'] = $price;

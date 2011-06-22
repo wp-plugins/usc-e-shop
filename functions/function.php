@@ -738,6 +738,7 @@ function usces_reg_orderdata( $results = array() ) {
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 
 	$item_total_price = $usces->get_total_price( $cart );
+	$cart = NS_get_cart($cart);
 	$member = $usces->get_member();
 	$order_table_name = $wpdb->prefix . "usces_order";
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";

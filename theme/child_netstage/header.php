@@ -115,7 +115,7 @@
 			<li><a href="<?php bloginfo('url'); ?>/service">利用規約</a></li>
 			<li><a href="<?php bloginfo('url'); ?>/legal">特定商取引に関する法律</a></li>
 			<li><a href="<?php bloginfo('url'); ?>/contact">お問合わせ</a></li>
-			<li><a href="<?php echo get_page_link(30); ?>">セット販売</a></li>
+			<li><a href="<?php echo get_page_link(92); ?>">セット販売</a></li>
 		</ul>
 	</div>
 </div><!-- end of header -->
