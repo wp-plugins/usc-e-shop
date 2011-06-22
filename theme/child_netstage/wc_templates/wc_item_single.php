@@ -22,7 +22,7 @@ get_header();
 <div id="itempage" class="border_arround clearfix">
 	<div class="item_header clearfix">
 		<div class="item_info alignleft">
-			<div class="item_maker"><?php NS_teh_item_maker(); ?></div>
+			<div class="item_maker"><?php NS_the_item_maker(); ?></div>
 			<h2 class="item_name"><?php usces_the_itemName(); ?></h2>
 		</div>
 		<div class="item_addition alignright">

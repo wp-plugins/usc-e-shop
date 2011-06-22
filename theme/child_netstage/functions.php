@@ -191,7 +191,8 @@ global $usces;
  * UpDate		: 2011.05.31
  * Echo			: strings
  **********************************************************/
-function NS_teh_item_maker(){
+//function NS_teh_item_maker(){
+function NS_the_item_maker(){
 	$maker = '';
 	$termID = get_cat_ID( 'メーカー' );
 	$taxonomyName = "category";
@@ -211,7 +212,8 @@ function NS_teh_item_maker(){
  * Echo			: html
  **********************************************************/
 function NS_the_salse_tag(){
-	global $post, $usces;
+	//global $post, $usces;
+	global $usces;
 	$sale_id = usces_get_cat_id( 'itemsale' );
 	if(in_category($sale_id))
 		$tag = '<img src="' . get_bloginfo('stylesheet_directory') . '/images/item/tag_sale.png" alt="SALE" width="70" height="30" />';
@@ -225,8 +227,11 @@ function NS_the_salse_tag(){
  * UpDate		: 2011.06.01
  * Echo			: html
  **********************************************************/
-function NS_the_fantastic4(){
-	global $post, $usces;
+//function NS_the_fantastic4(){
+function NS_the_fantastic4( $post = '' ){
+	//global $post, $usces;
+	global $usces;
+	if($post == '') global $post;
 	
 	$termIDs = array(
 		'new' => usces_get_cat_id( 'itemnew' ), 
@@ -275,8 +280,11 @@ function NS_the_fantastic4(){
  * UpDate		: 2011.06.01
  * Echo			: strings
  **********************************************************/
-function NS_the_item_explanation( $part ){
-	global $post, $usces;
+//function NS_the_item_explanation( $part ){
+function NS_the_item_explanation( $part, $post = '' ){
+	//global $post, $usces;
+	global $usces;
+	if($post == '') global $post;
 	$exp = '';
 	switch( $part ){
 		case 2:
@@ -306,8 +314,11 @@ add_filter( 'NS_filter_item_explanation', 'do_shortcode'       , 11);
  * UpDate		: 2011.06.01
  * Echo			: strings
  **********************************************************/
-function NS_the_item_pricesCr(){
-	global $post, $usces;
+//function NS_the_item_pricesCr(){
+function NS_the_item_pricesCr( $post = '' ){
+	//global $post, $usces;
+	global $usces;
+	if($post == '') global $post;
 	$prices = $usces->getItemPrice($post->ID);
 	sort($prices);
 	$first = $prices[0];
@@ -325,8 +336,10 @@ function NS_the_item_pricesCr(){
  * UpDate		: 2011.06.02
  * Echo			: strings
  **********************************************************/
-function NS_the_item_star(){
-	global $post;
+//function NS_the_item_star(){
+function NS_the_item_star( $post = '' ){
+	//global $post;
+	if($post == '') global $post;
 	$str = '';
 	$star = (int)get_post_meta($post->ID, '_itemStar', true);
 	if( !$star )
@@ -345,8 +358,11 @@ function NS_the_item_star(){
  * UpDate		: 2011.06.02
  * Echo			: strings
  **********************************************************/
-function NS_the_item_country(){
-	global $post, $usces_settings;
+//function NS_the_item_country(){
+function NS_the_item_country( $post = '' ){
+	//global $post, $usces_settings;
+	global $usces_settings;
+	if($post == '') global $post;
 	$country = get_post_meta($post->ID, '_itemCountry', true);
 	$str = empty($country) ? '' : ('生産国：'.$usces_settings['country'][$country]);
 	echo $str;
@@ -356,11 +372,16 @@ function NS_the_item_country(){
  * UpDate		: 2011.06.02
  * Echo			: html
  **********************************************************/
-function NS_the_sku_list(){
-	global $post, $usces;
-	if( !NS_have_sku_option() ) return;
+//function NS_the_sku_list(){
+function NS_the_sku_list( $post = '' ){
+	//global $post, $usces;
+	global $usces;
+	if($post == '') global $post;
+	//if( !NS_have_sku_option() ) return;
+	if( !NS_have_sku_option($post) ) return;
 	
-	$sku_options = NS_get_sku_option();
+	//$sku_options = NS_get_sku_option();
+	$sku_options = NS_get_sku_option($post->ID);
 	$html = '<table class="spec_list">'."\n";
 	$html .= '<tr>'."\n";
 	$html .= '<th>品番</th>';
@@ -392,8 +413,10 @@ function NS_the_sku_list(){
  * UpDate		: 2011.06.02
  * Return		: boolean
  **********************************************************/
-function NS_have_sku_option(){
-	$sku_options = NS_get_sku_option();
+//function NS_have_sku_option(){
+function NS_have_sku_option( $post = '' ){
+	//$sku_options = NS_get_sku_option();
+	$sku_options = NS_get_sku_option($post->ID);
 
 	if( empty($sku_options) )
 		return false;
@@ -435,12 +458,16 @@ function NS_get_sku_option( $post_id = '' ){
  * UpDate		: 2011.06.03
  * Echo			: html
  **********************************************************/
-function NS_sku_option_field(){
-	global $wpdb;
-	global $post, $usces;
-	if( !NS_have_sku_option() ) return;
+//function NS_sku_option_field(){
+function NS_sku_option_field( $post = '' ){
+	//global $post, $usces;
+	global $wpdb, $usces;
+	if($post == '') global $post;
+	//if( !NS_have_sku_option() ) return;
+	if( !NS_have_sku_option($post) ) return;
 
-	$sku_options = NS_get_sku_option();
+	//$sku_options = NS_get_sku_option();
+	$sku_options = NS_get_sku_option($post->ID);
 	$html = '';
 	$i = 1;
 	$skucnt = 0;
@@ -488,8 +515,11 @@ function NS_sku_option_field(){
 	echo $html;
 }
 
-function NS_the_itemOption( $name, $label = '#default#', $out = '' ) {
-	global $post, $usces;
+//function NS_the_itemOption( $name, $label = '#default#', $out = '' ) {
+function NS_the_itemOption( $name, $label = '#default#', $post = '', $out = '' ) {
+	//global $post, $usces;
+	global $usces;
+	if($post == '') global $post;
 	$post_id = $post->ID;
 	$session_value = isset( $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['key']][$name] ) ? $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['key']][$name] : NULL;
 	
@@ -545,8 +575,11 @@ function NS_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	}
 }
 
-function NS_the_itemQuant( $out = '' ) {
-	global $usces, $post;
+//function NS_the_itemQuant( $out = '' ) {
+function NS_the_itemQuant( $post = '', $out = '' ) {
+	//global $usces, $post;
+	global $usces;
+	if($post == '') global $post;
 	$post_id = $post->ID;
 	$value = isset( $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['key']] ) ? $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['key']] : 1;
 	$html = "<input name=\"qnt\" type=\"text\" id=\"qnt\" class=\"skuquantity\" value=\"" . $value . "\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
@@ -558,8 +591,11 @@ function NS_the_itemQuant( $out = '' ) {
 	}
 }
 
-function NS_the_itemSkuButton($value, $type=0, $out = '') {
-	global $usces, $post;
+//function NS_the_itemSkuButton($value, $type=0, $out = '') {
+function NS_the_itemSkuButton($value, $type=0, $post = '', $out = '') {
+	//global $usces, $post;
+	global $usces;
+	if($post == '') global $post;
 	$post_id = $post->ID;
 
 	if($type == 1)
@@ -584,7 +620,6 @@ function NS_the_itemSkuButton($value, $type=0, $out = '') {
 add_action('usces_front_ajax', 'change_sku_option_ajax');
 function change_sku_option_ajax() {
 	global $wpdb, $usces;
-
 	$post_id = $_POST['post_id'];
 	$key = $_POST['key'];
 	$value = $_POST['value'];
@@ -601,6 +636,9 @@ function change_sku_option_ajax() {
 	$zaikonum = 0;
 	$html = '';
 	$msg = '';
+	$set = isset($_POST['set']) ? $_POST['set'] : '';
+	$type = isset($_POST['type']) ? $_POST['type'] : '';
+	$nextaction = isset($_POST['nextaction']) ? $_POST['nextaction'] : '';
 
 	$orderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
 	$res = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
@@ -642,14 +680,21 @@ function change_sku_option_ajax() {
 						&& ( 0 < (int)$zaiko_num || '' == $zaiko_num ) 
 						&& 2 > $status_num 
 					){
-						$html  = "<input name=\"zaikonum[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaikonum[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaikonum']."\" />\n";
-						$html .= "<input name=\"zaiko[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaiko[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaiko']."\" />\n";
-						$html .= "<input name=\"skuPrice[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"skuPrice[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['price']."\" />\n";
-						if( $usces->use_js ){
-							$html .= "<input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart.png\" alt=\"カートに入れる\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />";
-						}else{
-							$html .= "<a name=\"cart_button\"></a><input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" />";
-							$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+						if($set == 1) {
+							$html  = "<input name=\"".$nextaction."\" type=\"submit\" class=\"select_item_button\" value=\"　\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />\n";
+							$html .= "<input name=\"".$type."_post_id\" type=\"hidden\" value=\"".$post_id."\" />\n";
+							$html .= "<input name=\"".$type."_sku\" type=\"hidden\" value=\"".$sku[0]."\" />\n";
+							$html .= "<input name=\"".$type."_price\" type=\"hidden\" value=\"".$row['meta_value']['price']."\" />\n";
+						} else {
+							$html  = "<input name=\"zaikonum[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaikonum[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaikonum']."\" />\n";
+							$html .= "<input name=\"zaiko[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"zaiko[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['zaiko']."\" />\n";
+							$html .= "<input name=\"skuPrice[".$post_id."][".$sku[0]."]\" type=\"hidden\" id=\"skuPrice[".$post_id."][".$sku[0]."]\" value=\"".$row['meta_value']['price']."\" />\n";
+							if( $usces->use_js ){
+								$html .= "<input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" src=\"" . get_stylesheet_directory_uri() . "/images/item/btn_addcart.png\" alt=\"カートに入れる\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />";
+							}else{
+								$html .= "<a name=\"cart_button\"></a><input name=\"inCart[".$post_id."][".$sku[0]."]\" type=\"image\" id=\"inCart[".$post_id."][".$sku[0]."]\" class=\"skubutton\" value=\"カートに入れる\" />";
+								$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+							}
 						}
 					} else {
 						$msg = esc_attr('大変申し訳ございません。ご選択いただきました商品は、只今在庫切れとなっております。');
@@ -659,9 +704,89 @@ function change_sku_option_ajax() {
 			}
 		}
 	}
-	if($html == '') $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return');
+	if($html == '') $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, '', 'return');
 	
 	die(implode("#ns#", $sku)."#usces#".implode("#ns#", $nextskuvalue)."#usces#".implode("#ns#", $optkey)."#usces#".implode("#ns#", $optvalue)."#usces#".$skuprice."#usces#".$zaikonum."#usces#".$html."#usces#".$msg);
+}
+
+function NS_the_shipment_aim( $post = '', $out = '' ) {
+	if($post == '') global $post;
+	$post_id = $post->ID;
+
+	$str = get_post_custom_values('_itemShipping', $post_id);
+	$no = (int)$str[0];
+	if( 0 === $no ) return;
+	
+	$rules = get_option('usces_shipping_rule');
+	
+	if( $out == 'return' ){
+		return $rules[$no];
+	}else{
+		echo esc_html($rules[$no]);
+	}
+}
+
+function NS_the_itemCode( $post = '', $out = '' ) {
+	if($post == '') global $post;
+	$post_id = $post->ID;
+
+	$str = get_post_custom_values('_itemCode', $post_id);
+	
+	if( $out == 'return' ){
+		return $str[0];
+	}else{
+		echo esc_html($str[0]);
+	}
+}
+
+function NS_the_item( $post = '' ) {
+	global $usces;
+	if($post == '') global $post;
+	$usces->itemskus = array();
+	$usces->itemopts = array();
+	$post_id = $post->ID;
+	
+	$skuorderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
+	$skufields = $usces->get_post_custom($post_id, $skuorderby);
+	$optorderby = $usces->options['system']['orderby_itemopt'] ? 'meta_id' : 'meta_key';
+	$optfields = $usces->get_post_custom($post_id, $optorderby);
+	foreach((array)$skufields as $key => $value){
+		if( preg_match('/^_isku_/', $key, $match) ){
+			$key = substr($key, 6);
+			$values = maybe_unserialize($value[0]);
+			$usces->itemskus[$key] = $values;
+		}
+	}
+	foreach((array)$optfields as $key => $value){
+		if( preg_match('/^_iopt_/', $key, $match) ){
+			$key = substr($key, 6);
+			$values = maybe_unserialize($value[0]);
+			//NS Customize
+			if( !isset( $values['sku'] ) || 1 != $values['sku'] )
+				$usces->itemopts[$key] = $values;
+		}
+	}
+	//var_dump($fields);
+	//natcasesort($usces->itemskus);
+	//ksort($usces->itemskus, SORT_STRING);
+	//ksort($usces->itemopts, SORT_STRING);
+	return;
+}
+
+function NS_get_itemSubImageNums( $post = '' ) {
+	global $usces;
+	if($post == '') global $post;
+	$post_id = $post->ID;
+	$res = array();
+	
+	$code =  get_post_custom_values('_itemCode', $post_id);
+	if(!$code) return false;
+	$name = get_post_custom_values('_itemName', $post_id);
+	$pictids = $usces->get_pictids($code[0]);
+	for($i=1; $i<count($pictids); $i++){
+		$res[] = $i;
+	}
+	return  $res;
 }
 
 ?>
