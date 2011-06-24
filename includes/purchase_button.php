@@ -219,7 +219,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="HOSTID" value="' . esc_attr($acting_opts['HOSTID']) . '" />
 				<input type="hidden" name="REMARKS3" value="' . $acting_opts['REMARKS3'] . '" />
 				<input type="hidden" name="S_TORIHIKI_NO" value="' . $rand . '" />
-				<input type="hidden" name="JOB" value="' . apply_filters('usces_filter_remise_card_job', 'CAPTURE') . '" />
+				<input type="hidden" name="JOB" value="' . apply_filters('usces_filter_remise_card_job', $acting_opts['card_jb']) . '" />
 				<input type="hidden" name="MAIL" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '" />
 				<input type="hidden" name="ITEM" value="' . apply_filters('usces_filter_remise_card_item', '0000120') . '" />
 				<input type="hidden" name="TOTAL" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '" />

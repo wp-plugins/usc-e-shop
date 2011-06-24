@@ -991,6 +991,7 @@ class usc_e_shop
 					$options['acting_settings']['remise']['SHOPCO'] = $_POST['SHOPCO'];
 					$options['acting_settings']['remise']['HOSTID'] = $_POST['HOSTID'];
 					$options['acting_settings']['remise']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['remise']['card_jb'] = $_POST['card_jb'];
 					$options['acting_settings']['remise']['card_pc_ope'] = $_POST['card_pc_ope'];
 					$options['acting_settings']['remise']['payquick'] = $_POST['payquick'];
 					$options['acting_settings']['remise']['howpay'] = $_POST['howpay'];

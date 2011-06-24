@@ -234,6 +234,13 @@ ZEUS3D -->
 				<td><div></div></td>
 			</tr>
 			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_jb_remise');">ジョブコード</a></th>
+<!--			<td><input name="card_jb" type="radio" id="card_jb_remise_1" value="CHECK"<?php if( $opts['remise']['card_jb'] == 'CHECK' ) echo ' checked' ?> /></td><td><label for="card_jb_remise_1">有効性チェック</label></td>
+-->				<td><input name="card_jb" type="radio" id="card_jb_remise_2" value="AUTH"<?php if( $opts['remise']['card_jb'] == 'AUTH' ) echo ' checked' ?> /></td><td><label for="card_jb_remise_2">仮売上処理</label></td>
+				<td><input name="card_jb" type="radio" id="card_jb_remise_3" value="CAPTURE"<?php if( $opts['remise']['card_jb'] == 'CAPTURE' ) echo ' checked' ?> /></td><td><label for="card_jb_remise_3">売上処理</label></td>
+				<td><div id="ex_card_jb_remise" class="explanation"><?php _e('決済の種類を指定します', 'usces'); ?></div></td>
+			</tr>
+			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_payquick_remise');">ペイクイック機能</a></th>
 				<td><input name="payquick" type="radio" id="payquick_remise_1" value="on"<?php if( $opts['remise']['payquick'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="payquick_remise_1">利用する</label></td>
 				<td><input name="payquick" type="radio" id="payquick_remise_2" value="off"<?php if( $opts['remise']['payquick'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="payquick_remise_2">利用しない</label></td>
