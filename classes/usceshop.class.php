@@ -1383,7 +1383,8 @@ class usc_e_shop
 			$opt_esse = "";
 			if($ioptkeys){
 				foreach($ioptkeys as $key => $value){
-					$optValues = $this->get_itemOptions( $value, $item->ID );
+					//$optValues = $this->get_itemOptions( $value, $item->ID );
+					$optValues = NS_get_itemOptions( $value, $item->ID );
 					if($optValues['means'] < 2){
 						$mes_opts_str .= "'" . sprintf(__("Chose the %s", 'usces'), $value) . "',";
 					}else{
@@ -1425,27 +1426,13 @@ class usc_e_shop
 		(function($) {
 		uscesCart = {
 			intoCart : function (post_id, sku) {
-<?php
-			if( NS_have_sku_option() ) {
-?>
-				var opterr = 0;
-				$(':input[name^="opt"]').each(function(i, obj) {
-					if($(this).val() == '') {
-						name = $(this).attr("name").substring(3);
-						alert(name+'を選択してください。');
-						opterr++;
-						return false;
-					}
-				});
-				if(opterr != 0) return false;
+		<?php if( NS_have_sku_option() ) : ?>
 				$(':input[name^="iopt"]').each(function(i, obj) {
 					name = $(this).attr("name").substring(4);
-					$('#sku_option_button').append('<input name="itemOption['+post_id+']['+sku+']['+name+']" type="hidden" value="'+$(this).val()+'">');
+					$('#sku_option_button').append('<input name="itemOption['+post_id+']['+sku+']['+name+']" id="itemOption['+post_id+']['+sku+']['+name+']" type="hidden" value="'+$(this).val()+'">');
 				});
-				$('#sku_option_button').append('<input name="quant['+post_id+']['+sku+']" type="hidden" value="'+$('#qnt').val()+'">');
-<?php
-			}
-?>
+				$('#sku_option_button').append('<input name="quant['+post_id+']['+sku+']" id="quant['+post_id+']['+sku+']" type="hidden" value="'+$('#qnt').val()+'">');
+		<?php endif; ?>
 				
 				var zaikonum = document.getElementById("zaikonum["+post_id+"]["+sku+"]").value;
 				var zaiko = document.getElementById("zaiko["+post_id+"]["+sku+"]").value;
@@ -1475,8 +1462,6 @@ class usc_e_shop
 						checknum = uscesL10n.itemRestriction;
 						checkmode ='rest';
 					}
-									
-	
 					if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
 							if(checkmode == 'rest'){
 								mes += <?php _e("'This article is limited by '+checknum+' at a time.'", 'usces'); ?>+"\n";
@@ -1496,11 +1481,23 @@ class usc_e_shop
 						}
 					}
 				}
+		<?php if( NS_have_sku_option() ) : ?>
+				$(':input[name^="opt"]').each(function(i, obj) {
+					if($(this).val() == '') {
+						name = $(this).attr("name").substring(3);
+						mes += name+'を選択してください。'+"\n";
+					}
+				});
+		<?php endif; ?>
 				
 				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); ?>
 				
 				if( mes != '' ){
 					alert( mes );
+		<?php if( NS_have_sku_option() ) : ?>
+					$('*[id*="itemOption"]').remove();
+					$('*[id*="quant"]').remove();
+		<?php endif; ?>
 					return false;
 				}else{
 					<?php echo apply_filters('usces_filter_js_intoCart', "return true;\n", $item->ID, $this->itemsku['key']); ?>
@@ -1629,9 +1626,7 @@ class usc_e_shop
 				}
 			},
 			
-<?php
-			if( NS_have_sku_option() ) {
-?>
+		<?php if( NS_have_sku_option() ) : ?>
 			changeSkuSelect : function(index) {
 				var id = '#opt'+index;
 				var value = $(id).val();
@@ -1722,9 +1717,7 @@ class usc_e_shop
 				return false;
 			},
 			
-<?php
-			}
-?>
+		<?php endif; ?>
 			previousCart : function () {
 				location.href = uscesL10n.previous_url; 
 			},
@@ -1773,9 +1766,7 @@ class usc_e_shop
 		});
 		
 		})(jQuery);
-<?php
-			if( NS_have_sku_option() ) {
-?>
+		<?php if( NS_have_sku_option() ) : ?>
 		
 		jQuery(document).ready(function($) {
 			if(0 < $('#skucnt').val()) {
@@ -1792,9 +1783,7 @@ class usc_e_shop
 				});
 			}
 		});
-<?php
-			}
-?>
+		<?php endif; ?>
 		</script>
 		<?php endif; ?>
 <?php
@@ -5301,6 +5290,8 @@ class usc_e_shop
 			
 		unset($_SESSION['usces_singleitem']);
 
+		if ( $this->page == 'ordercompletion' )
+			unset($_SESSION['nsset']);
 	}
 	
 	function is_item_zaiko( $post_id, $sku ){

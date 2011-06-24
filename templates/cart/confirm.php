@@ -31,7 +31,12 @@ $html .= '<div id="cart">
 		</tr>
 		</thead>
 		<tbody>';
-
+$html .= usces_get_confirm_rows( 'return' );
+$member = $this->get_member();
+$memid = ( empty($member['ID']) ) ? 999999999 : $member['ID'];
+$usces_entries = $this->cart->get_entry();
+$this->set_cart_fees( $member, $usces_entries );
+/*
 $member = $this->get_member();
 $memid = ( empty($member['ID']) ) ? 999999999 : $member['ID'];
 $usces_entries = $this->cart->get_entry();
@@ -78,7 +83,7 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= '</td>
 	</tr>';
 } 
-
+*/
 $html .= '</tbody>
 	<tfoot>
 	<tr>

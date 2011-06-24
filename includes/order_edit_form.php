@@ -785,7 +785,8 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		$sku = $cart_row['sku'];
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
-		$advance = $this->cart->wc_serialize($cart_row['advance']);
+		//$advance = $this->cart->wc_serialize($cart_row['advance']);
+		$advance = $this->cart->wc_unserialize($cart_row['advance']);
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
 		$cartItemName = $this->getCartItemName($post_id, $sku);
@@ -793,19 +794,58 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		$stock = $this->getItemZaiko($post_id, $sku);
 		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictid = $this->get_mainpictid($itemCode);
-		$optstr =  '';
-		if( is_array($options) && count($options) > 0 ){
-			foreach($options as $key => $value){
-				if( !empty($key) )
-					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+		if( $itemCode == NS_ITEM_SET ) {
+			$setstr = 'セット商品<br />　ヘッド : ';
+			if($options['set_head'] < 0) {
+				$mochi_options = $advance['mochi_head']['mochi_head_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				$setstr .= 'お持込ヘッド<br />';
+				$setstr .= '　　種類 : '.$genre.'<br />';
+				$setstr .= '　　タイプ : '.$bore.'<br />';
+				$setstr .= '　　メーカー : '.$mochi_options['maker'].'<br />';
+			} else {
+				$setstr .= esc_html($this->getCartItemName($options['set_head'], $options['set_head_sku'])).'<br />';
+			}
+			$setstr .= '　シャフト : ';
+			if($options['set_shuft'] < 0) {
+				$mochi_options = $advance['mochi_shuft']['mochi_shuft_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$setstr .= 'お持込シャフト<br />';
+				$setstr .= '　　種類 : '.$genre.'<br />';
+			} else {
+				$setstr .= esc_html($this->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])).'<br />';
+			}
+			$setstr .= '　グリップ : ';
+			if($options['set_grip'] < 0) {
+				$mochi_options = $advance['mochi_grip']['mochi_grip_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$setstr .= 'お持込グリップ<br />';
+				$setstr .= '　　種類 : '.$genre.'<br />';
+			} else {
+				$setstr .= esc_html($this->getCartItemName($options['set_grip'], $options['set_grip_sku'])).'<br />';
+			}
+		} else {
+			$optstr =  '';
+			if( is_array($options) && count($options) > 0 ){
+				foreach($options as $key => $value){
+					if( !empty($key) )
+						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				}
 			}
 		}
-			
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictid, array(60, 60), true ); ?></td>
+<?php if( $itemCode == NS_ITEM_SET ) : ?>
+		<td class="aleft"><?php echo $setstr; ?></td>
+<?php else : ?>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
+<?php endif; ?>
 		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>

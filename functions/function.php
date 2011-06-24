@@ -106,16 +106,62 @@ function usces_order_confirm_message($order_id) {
 			$optstr =  '';
 			$options =  array();
 		}
+		$advance = $usces->cart->wc_unserialize($cart_row['advance']);
 		
 		$meisai .= "------------------------------------------------------------------\r\n";
-		$meisai .= "$cartItemName \r\n";
-		if( is_array($options) && count($options) > 0 ){
-			foreach($options as $key => $value){
-				if( !empty($key) )
-					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+		if( $itemCode == NS_ITEM_SET ) {
+			$meisai .= "セット商品\r\n";
+			$meisai .= '　ヘッド : ';
+			if($options['set_head'] < 0) {
+				$head_price = 0;
+				$mochi_options = $advance['mochi_head']['mochi_head_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				$meisai .= "お持込ヘッド\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+				$meisai .= '　　タイプ : '.$bore."\r\n";
+				$meisai .= '　　メーカー : '.$mochi_options['maker']."\r\n";
+			} else {
+				$head_price = usces_get_item_price($options['set_head'], $options['set_head_sku']);
+				$meisai .= $usces->getCartItemName($options['set_head'], $options['set_head_sku'])." ".usces_crform($head_price, true, false, 'return')."\r\n";
 			}
+			$meisai .= '　シャフト : ';
+			if($options['set_shuft'] < 0) {
+				$shuft_price = 0;
+				$mochi_options = $advance['mochi_shuft']['mochi_shuft_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$meisai .= "お持込シャフト\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+			} else {
+				$shuft_price = usces_get_item_price($options['set_shuft'], $options['set_shuft_sku']);
+				$meisai .= $usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])." ".usces_crform($shuft_price, true, false, 'return')."\r\n";
+			}
+			$meisai .= '　グリップ : ';
+			if($options['set_grip'] < 0) {
+				$grip_price = 0;
+				$mochi_options = $advance['mochi_grip']['mochi_grip_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$meisai .= "お持込グリップ\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+			} else {
+				$grip_price = usces_get_item_price($options['set_grip'], $options['set_grip_sku']);
+				$meisai .= $usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])." ".usces_crform($grip_price, true, false, 'return')."\r\n";
+			}
+			$meisai .= '　工賃 : '.usces_crform( $skuPrice, true, false, 'return' )."\r\n";
+			$meisai .= "セット価格 ".usces_crform( $head_price + $shuft_price + $head_price + $grip_price, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
+		} else {
+			$meisai .= "$cartItemName \r\n";
+			if( is_array($options) && count($options) > 0 ){
+				foreach($options as $key => $value){
+					if( !empty($key) )
+						$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				}
+			}
+			$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 		}
-		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	
 	$meisai .= "=================================================================\r\n";
@@ -298,16 +344,56 @@ function usces_send_ordermail($order_id) {
 			$optstr =  '';
 			$options =  array();
 		}
+		$advance = $usces->cart->wc_unserialize($cart_row['advance']);
 		
 		$meisai .= "------------------------------------------------------------------\r\n";
-		$meisai .= "$cartItemName \r\n";
-		if( is_array($options) && count($options) > 0 ){
-			foreach($options as $key => $value){
-				if( !empty($key) )
-					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+		if( $itemCode == NS_ITEM_SET ) {
+			$meisai .= "セット商品\r\n";
+			$meisai .= '　ヘッド : ';
+			if($options['set_head'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_head_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				$meisai .= "お持込ヘッド\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+				$meisai .= '　　タイプ : '.$bore."\r\n";
+				$meisai .= '　　メーカー : '.$mochi_options['maker']."\r\n";
+			} else {
+				$meisai .= $usces->getCartItemName($options['set_head'], $options['set_head_sku'])." ".usces_crform(usces_get_item_price($options['set_head'], $options['set_head_sku']), true, false, 'return')."\r\n";
 			}
+			$meisai .= '　シャフト : ';
+			if($options['set_shuft'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_shuft_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$meisai .= "お持込シャフト\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+			} else {
+				$meisai .= $usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])." ".usces_crform(usces_get_item_price($options['set_shuft'], $options['set_shuft_sku']), true, false, 'return')."\r\n";
+			}
+			$meisai .= '　グリップ : ';
+			if($options['set_grip'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_grip_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$meisai .= "お持込グリップ\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+			} else {
+				$meisai .= $usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])." ".usces_crform(usces_get_item_price($options['set_grip'], $options['set_grip_sku']), true, false, 'return')."\r\n";
+			}
+			$meisai .= '　工賃 : '.usces_crform( usces_get_item_price($post_id, $cart_row['sku'] ), true, false, 'return')."\r\n";
+			$meisai .= "セット価格 ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
+		} else {
+			$meisai .= "$cartItemName \r\n";
+			if( is_array($options) && count($options) > 0 ){
+				foreach($options as $key => $value){
+					if( !empty($key) )
+						$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				}
+			}
+			$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 		}
-		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	$meisai .= "=================================================================\r\n";
 	$meisai .= __('total items','usces') . "    : " . usces_crform( $entry['order']['total_items_price'], true, false, 'return' ) . "\r\n";
@@ -737,8 +823,8 @@ function usces_reg_orderdata( $results = array() ) {
 	
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 
-	$item_total_price = $usces->get_total_price( $cart );
 	$cart = NS_get_cart($cart);
+	$item_total_price = $usces->get_total_price( $cart );
 	$member = $usces->get_member();
 	$order_table_name = $wpdb->prefix . "usces_order";
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
@@ -760,47 +846,6 @@ function usces_reg_orderdata( $results = array() ) {
 	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
 	
 //20101208ysk start
-/*
-	$query = $wpdb->prepare(
-				"INSERT INTO $order_table_name (
-					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
-					`order_zip`, `order_pref`, `order_address1`, `order_address2`, `order_address3`, 
-					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
-					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
-					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
-					$member['ID'], 
-					$entry['customer']['mailaddress1'], 
-					$entry['customer']['name1'], 
-					$entry['customer']['name2'], 
-					$entry['customer']['name3'], 
-					$entry['customer']['name4'], 
-					$entry['customer']['zipcode'], 
-					$entry['customer']['pref'], 
-					$entry['customer']['address1'], 
-					$entry['customer']['address2'], 
-					$entry['customer']['address3'], 
-					$entry['customer']['tel'], 
-					$entry['customer']['fax'], 
-					serialize($entry['delivery']), 
-					serialize($cart), 
-					$entry['order']['note'], 
-					$entry['order']['delivery_method'], 
-					$entry['order']['delivery_time'], 
-					$entry['order']['payment_name'], 
-					serialize($entry['condition']), 
-					$item_total_price, 
-					$entry['order']['getpoint'], 
-					$entry['order']['usedpoint'], 
-					$entry['order']['discount'], 
-					$entry['order']['shipping_charge'], 
-					$entry['order']['cod_fee'], 
-					$entry['order']['tax'], 
-					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
-					$order_modified, 
-					$status
-				);
-*/
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
 					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
@@ -979,47 +1024,6 @@ function usces_new_orderdata() {
 	$order_conditions = $usces->get_condition();
 
 //20101208ysk start
-/*
-	$query = $wpdb->prepare(
-				"INSERT INTO $order_table_name (
-					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
-					`order_zip`, `order_pref`, `order_address1`, `order_address2`, `order_address3`, 
-					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
-					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
-					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
-					$member['ID'], 
-					$_POST['customer']['mailaddress'], 
-					$_POST['customer']['name1'], 
-					$_POST['customer']['name2'], 
-					$_POST['customer']['name3'], 
-					$_POST['customer']['name4'], 
-					$_POST['customer']['zipcode'], 
-					$_POST['customer']['pref'], 
-					$_POST['customer']['address1'], 
-					$_POST['customer']['address2'], 
-					$_POST['customer']['address3'], 
-					$_POST['customer']['tel'], 
-					$_POST['customer']['fax'], 
-					serialize($_POST['delivery']), 
-					serialize($cart), 
-					$_POST['offer']['note'], 
-					$_POST['offer']['delivery_method'], 
-					$_POST['offer']['delivery_time'], 
-					$_POST['offer']['payment_name'], 
-					serialize($order_conditions), 
-					$item_total_price, 
-					$_POST['offer']['getpoint'], 
-					$_POST['offer']['usedpoint'], 
-					$_POST['offer']['discount'], 
-					$_POST['offer']['shipping_charge'], 
-					$_POST['offer']['cod_fee'], 
-					$_POST['offer']['tax'], 
-					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
-					null, 
-					$status
-				);
-*/
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
 					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
@@ -1346,48 +1350,6 @@ function usces_update_orderdata() {
 	
 //$wpdb->show_errors();
 //20101208ysk start
-/*
-	$query = $wpdb->prepare(
-				"UPDATE $order_table_name SET 
-					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
-					`order_zip`=%s, `order_pref`=%s, `order_address1`=%s, `order_address2`=%s, `order_address3`=%s, 
-					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
-					`order_delivery_method`=%d, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%d, `order_getpoint`=%d, `order_usedpoint`=%d, 
-					`order_discount`=%d, `order_shipping_charge`=%d, `order_cod_fee`=%d, `order_tax`=%d, `order_modified`=%s, 
-					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
-				WHERE ID = %d", 
-					$_POST['customer']['mailaddress'], 
-					$_POST['customer']['name1'], 
-					$_POST['customer']['name2'], 
-					$_POST['customer']['name3'], 
-					$_POST['customer']['name4'], 
-					$_POST['customer']['zipcode'], 
-					$_POST['customer']['pref'], 
-					$_POST['customer']['address1'], 
-					$_POST['customer']['address2'], 
-					$_POST['customer']['address3'], 
-					$_POST['customer']['tel'], 
-					$_POST['customer']['fax'], 
-					serialize($_POST['delivery']), 
-					serialize($cart), 
-					$_POST['offer']['note'], 
-					$_POST['offer']['delivery_method'], 
-					$_POST['offer']['delivery_time'], 
-					$_POST['offer']['payment_name'], 
-					$item_total_price, 
-					$_POST['offer']['getpoint'], 
-					$_POST['offer']['usedpoint'], 
-					$_POST['offer']['discount'], 
-					$_POST['offer']['shipping_charge'], 
-					$_POST['offer']['cod_fee'], 
-					$_POST['offer']['tax'], 
-					$order_modified, 
-					$status,
-					$_POST['offer']['delidue_date'], 
-					$ordercheck,
-					$ID
-				);
-*/
 	$query = $wpdb->prepare(
 				"UPDATE $order_table_name SET 
 					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
@@ -3247,7 +3209,6 @@ function usces_get_cart_rows( $out = '' ) {
 		$sku = esc_attr($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
-		$advance = $usces->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $usces->getItemCode($post_id);
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
@@ -3262,17 +3223,57 @@ function usces_get_cart_rows( $out = '' ) {
 			$optstr =  '';
 			$options =  array();
 		}
-
+		$advance = $usces->cart->wc_unserialize($cart_row['advance']);
+		
 		$res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
 			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
 			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
-			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
-		if( is_array($options) && count($options) > 0 ){
-			foreach($options as $key => $value){
-				if( !empty($key) )
-					$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+			//$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
+			$res .= '</td><td class="aleft">';
+		if( $itemCode == NS_ITEM_SET ) {
+			$res .= 'セット商品<br />　ヘッド : ';
+			if($options['set_head'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_head_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				$res .= 'お持込ヘッド<br />';
+				$res .= '　　種類 : '.$genre.'<br />';
+				$res .= '　　タイプ : '.$bore.'<br />';
+				$res .= '　　メーカー : '.$mochi_options['maker'].'<br />';
+			} else {
+				$res .= esc_html($usces->getCartItemName($options['set_head'], $options['set_head_sku'])).'<br />';
+			}
+			$res .= '　シャフト : ';
+			if($options['set_shuft'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_shuft_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$res .= 'お持込シャフト<br />';
+				$res .= '　　種類 : '.$genre.'<br />';
+			} else {
+				$res .= esc_html($usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])).'<br />';
+			}
+			$res .= '　グリップ : ';
+			if($options['set_grip'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_grip_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$res .= 'お持込グリップ<br />';
+				$res .= '　　種類 : '.$genre.'<br />';
+			} else {
+				$res .= esc_html($usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])).'<br />';
+			}
+			$res .= '　工賃 : '.usces_crform(usces_get_item_price($post_id, $cart_row['sku']), true, false, 'return');
+		} else {
+			$res .= esc_html($cartItemName) . '<br />';
+			if( is_array($options) && count($options) > 0 ){
+				foreach($options as $key => $value){
+					if( !empty($key) )
+						$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				}
 			}
 		}
 		$res .= '</td>
@@ -3333,28 +3334,68 @@ function usces_get_confirm_rows( $out = '' ) {
 			$optstr =  '';
 			$options =  array();
 		}
-	
-		 $res .= '<tr>
+		$advance = $usces->cart->wc_unserialize($cart_row['advance']);
+		
+		$res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
-		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
-		if( is_array($options) && count($options) > 0 ){
-			foreach($options as $key => $value){
-				if( !empty($key) )
-					 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+		$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
+		//$res .= '</td><td class="aleft">' . $cartItemName . '<br />';
+		$res .= '</td><td class="aleft">';
+		if( $itemCode == NS_ITEM_SET ) {
+			$res .= 'セット商品<br />　ヘッド : ';
+			if($options['set_head'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_head_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				$res .= 'お持込ヘッド<br />';
+				$res .= '　　種類 : '.$genre.'<br />';
+				$res .= '　　タイプ : '.$bore.'<br />';
+				$res .= '　　メーカー : '.$mochi_options['maker'].'<br />';
+			} else {
+				$res .= esc_html($usces->getCartItemName($options['set_head'], $options['set_head_sku'])).'<br />';
+			}
+			$res .= '　シャフト : ';
+			if($options['set_shuft'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_shuft_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$res .= 'お持込シャフト<br />';
+				$res .= '　　種類 : '.$genre.'<br />';
+			} else {
+				$res .= esc_html($usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])).'<br />';
+			}
+			$res .= '　グリップ : ';
+			if($options['set_grip'] < 0) {
+				$mochi_options = $advance[$post_id][$sku]['set_grip_options'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$res .= 'お持込グリップ<br />';
+				$res .= '　　種類 : '.$genre.'<br />';
+			} else {
+				$res .= esc_html($usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])).'<br />';
+			}
+			$res .= '　工賃 : '.usces_crform(usces_get_item_price($post_id, $cart_row['sku']), true, false, 'return');
+		} else {
+			$res .= $cartItemName . '<br />';
+			if( is_array($options) && count($options) > 0 ){
+				foreach($options as $key => $value){
+					if( !empty($key) )
+						 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				}
 			}
 		}
-		 $res .= '</td>
+		$res .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td>' . $cart_row['quantity'] . '</td>
 			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 			<td>';
-		 $res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $cart_row['sku']));
-		 $res .= '</td>
+		$res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $cart_row['sku']));
+		$res .= '</td>
 		</tr>';
-	} 
+	}
 	
 	if($out == 'return'){
 		return $res;

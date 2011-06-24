@@ -40,6 +40,8 @@ if( usces_is_cart() ) {
 		</tr>
 		</thead>
 		<tbody>';
+	$html .= usces_get_cart_rows( 'return' );
+/*
 	$cart = $this->cart->get_cart();
 	$usces_gp = 0;
 	for($i=0; $i<count($cart); $i++) { 
@@ -105,7 +107,7 @@ if( usces_is_cart() ) {
 			</td>
 		</tr>';
 	}
-
+*/
 	$html .= '</tbody>
 		<tfoot>
 		<tr>

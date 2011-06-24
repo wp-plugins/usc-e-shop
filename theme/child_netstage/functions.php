@@ -6,6 +6,8 @@
  */
 if(!defined('USCES_VERSION')) return;
 
+define('NS_ITEM_SET', 'dummySet');
+
 /***********************************************************
 * NET STAGE
 ***********************************************************/
@@ -626,6 +628,15 @@ function NS_the_itemSkuButton($value, $type=0, $post = '', $out = '') {
 	}
 }
 
+function NS_get_itemOptions( $key, $post_id ) {
+	$metakey = '_iopt_' . $key;
+	$values = get_post_custom_values( $metakey, $post_id );
+	if(empty($values)) return NULL;
+
+	$val = ( is_serialized( $values[0] )) ? unserialize( $values[0] ) : $values[0];
+	if( $val['sku'] != 1 ) return $val; else return NULL;
+}
+
 add_action('usces_front_ajax', 'change_sku_option_ajax');
 function change_sku_option_ajax() {
 	global $wpdb, $usces;
@@ -713,7 +724,7 @@ function change_sku_option_ajax() {
 			}
 		}
 	}
-	if($html == '') $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, '', 'return');
+	if($html == '' and $set != 1) $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, '', 'return');
 	
 	die(implode("#ns#", $sku)."#usces#".implode("#ns#", $nextskuvalue)."#usces#".implode("#ns#", $optkey)."#usces#".implode("#ns#", $optvalue)."#usces#".$skuprice."#usces#".$zaikonum."#usces#".$html."#usces#".$msg);
 }
@@ -1465,51 +1476,70 @@ function NS_get_itemSubImageNums( $post = '' ) {
 function NS_get_cart( $cart ) {
 	global $usces;
 	$rows = array();
-	$set_post_id = $usces->get_postIDbyCode('dummySet');
+	$set_post_id = $usces->get_postIDbyCode( NS_ITEM_SET );
 
 	$i = 0;
-	foreach($cart as $key => $row) { 
+	foreach($cart as $key => $row) {
 		if($row['post_id'] == $set_post_id) {
 			$serial = $row['serial'];
-			$quant = $row['quant'];
+			$quantity = $row['quantity'];
+			$advance = $usces->cart->wc_unserialize($row['advance']);
+			$options = $advance[$row['post_id']][$row['sku']];
 
-			$post_id = $row['options']['セットヘッド'];
-			$sku = $row['options']['セットヘッドSKU'];
-			$r = array();
-			$r['serial'] = $serial;
-			$r['post_id'] = $post_id;
-			$r['sku'] = $sku;
-			$r['options'] = array();
-			$r['price'] = usces_get_item_price($post_id, $sku);
-			$r['quantity'] = $quant;
-			$r['advance'] = array();
-			$rows[$i] = $r;
-			$i++;
+			$post_id = $row['options']['set_head'];
+			if($post_id < 0) {
+				$advance['mochi_head']['mochi_head_sku'] = $options['set_head_options'];
+			} else {
+				$sku = $row['options']['set_head_sku'];
+				$r = array();
+				$r['serial'] = $serial;
+				$r['post_id'] = $post_id;
+				$r['sku'] = $sku;
+				$r['options'] = (!empty($options['set_head_options'])) ? $options['set_head_options'] : array();
+				$r['price'] = usces_get_item_price($post_id, $sku);
+				$r['quantity'] = $quantity;
+				$r['advance'] = array();
+				$rows[$i] = $r;
+				$i++;
+			}
 
-			$post_id = $row['options']['セットシャフト'];
-			$sku = $row['options']['セットシャフトSKU'];
-			$r = array();
-			$r['serial'] = $serial;
-			$r['post_id'] = $post_id;
-			$r['sku'] = $sku;
-			$r['options'] = array();
-			$r['price'] = usces_get_item_price($post_id, $sku);
-			$r['quantity'] = $quant;
-			$r['advance'] = array();
-			$rows[$i] = $r;
-			$i++;
+			$post_id = $row['options']['set_shuft'];
+			if($post_id < 0) {
+				$advance['mochi_shuft']['mochi_shuft_sku'] = $options['set_shuft_options'];
+			} else {
+				$sku = $row['options']['set_shuft_sku'];
+				$r = array();
+				$r['serial'] = $serial;
+				$r['post_id'] = $post_id;
+				$r['sku'] = $sku;
+				$r['options'] = (!empty($options['set_shuft_options'])) ? $options['set_shuft_options'] : array();
+				$r['price'] = usces_get_item_price($post_id, $sku);
+				$r['quantity'] = $quantity;
+				$r['advance'] = array();
+				$rows[$i] = $r;
+				$i++;
+			}
 
-			$post_id = $row['options']['セットグリップ'];
-			$sku = $row['options']['セットグリップSKU'];
-			$r = array();
-			$r['serial'] = $serial;
-			$r['post_id'] = $post_id;
-			$r['sku'] = $sku;
-			$r['options'] = array();
-			$r['price'] = usces_get_item_price($post_id, $sku);
-			$r['quantity'] = $quant;
-			$r['advance'] = array();
-			$rows[$i] = $r;
+			$post_id = $row['options']['set_grip'];
+			if($post_id < 0) {
+				$advance['mochi_grip']['mochi_grip_sku'] = $options['set_grip_options'];
+			} else {
+				$sku = $row['options']['set_grip_sku'];
+				$r = array();
+				$r['serial'] = $serial;
+				$r['post_id'] = $post_id;
+				$r['sku'] = $sku;
+				$r['options'] = (!empty($options['set_grip_options'])) ? $options['set_grip_options'] : array();
+				$r['price'] = usces_get_item_price($post_id, $sku);
+				$r['quantity'] = $quantity;
+				$r['advance'] = array();
+				$rows[$i] = $r;
+				$i++;
+			}
+
+			$row['price'] = usces_get_item_price($row['post_id'], $row['sku']);
+			$row['advance'] = $usces->cart->wc_serialize($advance);
+			$rows[$i] = $row;
 			$i++;
 
 		} else {
@@ -1538,14 +1568,13 @@ function usces_get_itemImage( $post_id, $number = 0, $width = 60, $height = 60 )
 function usces_get_item_price($post_id, $sku){
 	global $usces;
 	$field = get_post_meta($post_id, '_isku_'.$sku, true);
-	//$skus = unserialize($field);
-	$skus = maybe_unserialize($field);
-	return $skus['price'];
+	return $field['price'];
 }
 
 function usces_get_item_cprice($post_id, $sku){
 	global $usces;
-
+	$field = get_post_meta($post_id, '_isku_'.$sku, true);
+	return $field['cprice'];
 }
 
 ?>
