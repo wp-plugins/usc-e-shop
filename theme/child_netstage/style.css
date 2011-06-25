@@ -362,9 +362,8 @@ div.aligncenter {
 /* widget search end */
 /* widget wp-calendar start
 #wp-calendar {
-	width: 180px;
+	width: 120px;
 	height: auto;
-	margin: 0px 0px 10px 0px;
 	padding: 0px;
 	background-color: #333;
 	border-collapse: collapse;
@@ -387,7 +386,7 @@ div.aligncenter {
 #wp-calendar td {
 	background-color: #FFF;
 }
-.businesstoday {
+#wp-calendar td.businesstoday {
 }
 /* widget wp-calendar end */
 /* widget featured start
@@ -726,6 +725,13 @@ div#itempage {
 	color:#FF3100;
 	font-weight:bold;
 	padding:20px 0;
+}
+#itempage .item_caution .item_caution_title{
+	font-size:120%;
+}
+#itempage .item_caution ul li{
+	list-style: disc outside;
+	margin:5px 0 0 15px;
 }
 .item_detail .item_exp_4{
 	margin:0 20px 20px;
@@ -1563,7 +1569,7 @@ div#itempage {
 	margin:0 auto;
 }
 .info_table th{
-	width:140px;
+	width:90px;
 	background-color: #FAFAFA;
     border-bottom: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
@@ -1575,7 +1581,31 @@ div#itempage {
     border-right: 1px solid #CCCCCC;
     padding: 8px;
 }
+.info_table table.time{
+	font-size:11px;
+	border-collapse:collapse;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	margin-bottom:15px;
+	text-align:center;
+}
+.info_table table.time td{
+	padding:5px 0px;
+	width:90px;
+}
 
+.info_table table.fare{
+	font-size:12px;
+	border-collapse:collapse;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	width:550px;
+}
+.info_table table.fare td,
+.info_table table.fare th{
+	width:auto;
+	padding:0px;
+}
 
 
 /* Welcart Inquiry page CSS End */
@@ -1590,6 +1620,69 @@ div#itempage {
 	width: 930px;
 	z-index: 0;
 }
+#footerinfobox{
+	margin: 20px auto 30px;
+	border-collapse: collapse;
+	font-size: 12px;
+	color: #000;
+	background: none repeat scroll 0 0;
+	width: 900px;
+	height:510px;
+}
+#footerinfobox caption#top-caption{
+	 padding-bottom:5px;
+	 text-align:center;
+	 font-weight:bold;
+}
+#footerinfobox .boxcol{
+	 vertical-align:top;
+	 align:left;
+	 border: 1px solid #DFDFDF;
+	 width: 290px;
+	 padding:5px;
+}
+#footerinfobox .boxcol p.infobox-title{
+	 padding:3px 0px;
+	 margin-bottom:15px;
+	 text-align:center;
+	 font-weight:bold;
+}
+/* calender */
+#footerinfobox .usces_calendar {
+	width: 132px;
+	height: auto;
+	margin: 0px 5px 10px 5px;
+	padding: 0px;
+	background-color: #333;
+	border-collapse: collapse;
+	border: 1px solid #DAD8D1;
+	text-align: center;
+	float:left;
+}
+#footerinfobox .usces_calendar caption {
+	padding: 3px 0px;
+	font-weight: bold;
+}
+#footerinfobox .usces_calendar th,
+#footerinfobox .usces_calendar td {
+	padding: 0px;
+	border: 1px solid #DAD8D1;
+}
+#footerinfobox .usces_calendar th {
+	background-color: #777777;
+	color: #FFF;
+}
+#footerinfobox .usces_calendar td {
+	background-color: #FFF;
+}
+#footerinfobox .usces_calendar td.businesstoday {
+}
+#footerinfobox .usces_calendar td.businessday {
+	background-color: #FFECCE;
+	color:#F00;
+}
+
+/* footernavi */
 #footer .footernavi{
 	background-color: #000000;
 	height: 50px;

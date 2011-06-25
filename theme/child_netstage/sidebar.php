@@ -26,7 +26,7 @@ global $usces;
 				<input type="password" name="loginpass" id="loginpass" class="loginpass" value="<?php echo usces_rememberpass('return'); ?>" size="35" tabindex="20" /></label><br />
 				</p>
 				<p class="submit clearfix">
-				<input type="image" src="<?php bloginfo('stylesheet_directory'); ?>/images/sidebar/btn_login.png" name="member_login" id="member_login" alt="<?php _e('Log-in','usces') ?>" tabindex="100"  value="<?php _e('Log-in','usces') ?>"/>
+				<input type="image" src="<?php bloginfo('stylesheet_directory'); ?>/images/sidebar/btn_login.png" name="member_login" id="member_login" alt="<?php _e('Log-in','usces') ?>" tabindex="100"  value="<?php _e('Log-in','usces') ?>" />
 				</p>
 				<p class="forgetmenot">
 				<label><input name="rememberme" type="checkbox" id="rememberme" value="forever" tabindex="90"<?php echo usces_remembercheck('return'); ?> /> <?php _e('memorize login information','usces') ?></label>
@@ -76,7 +76,7 @@ global $usces;
 		<div class="widget_title">買い物かごの中</div>
 		<ul class="welcart_incart_body welcart_widget_body">
 			<li class="total_quantity">商品数 : <?php usces_totalquantity_in_cart(); ?>点</li>
-			<li class="total_price"><div class="price">合計 : <?php usces_totalprice_in_cart(); ?>円</span></li>
+			<li class="total_price"><div class="price">合計 : <?php usces_totalprice_in_cart(); ?>円</div></li>
 		</ul>
 		<div id="incartbutton"><a href="<?php echo USCES_CART_URL; ?>">詳細を見る</a></div>
 	</li>
@@ -87,47 +87,39 @@ global $usces;
 		<?php wp_list_categories('orderby=id&use_desc_for_title=0&child_of='.$cats->term_id.'&title_li='); ?>
  		</ul>
 	</li>
-	<li>
+	<li id="welcart_twitter" class="widget widget_welcart_twitter">
 		<script src="http://widgets.twimg.com/j/2/widget.js" type="text/javascript"></script>
 		<script type="text/javascript">
 		new TWTR.Widget({
 			version: 2,
 			type: 'profile',
-			rpp: 5,
-			interval: 5000,
-			width: 240,
-			height: 350,
+			rpp: 4,
+			interval: 6000,
+			width: 200,
+			height: 300,
 			theme: {
 				shell: {
-					background: '#333333',
+					background: '#1e2116',
 					color: '#ffffff'
 				},
 				tweets: {
-					background: '#e3e3e3',
-					color: '#000000',
-					links: '#787822'
+					background: '#1e2116',
+					color: '#cccccc',
+					links: '#fcb000'
 				}
 			},
-		  features: {
-			scrollbar: false,
-			loop: true,
-			live: true,
-			hashtags: true,
-			timestamp: true,
-			avatars: true,
-			behavior: 'default'
-		  }
+			features: {
+				scrollbar: false,
+				loop: false,
+				live: false,
+				hashtags: true,
+				timestamp: true,
+				avatars: false,
+				behavior: 'all'
+			}
 		}).render().setUser('NorthfieldGolf').start();
 		</script>
 	</li>
-	<?php /* ?>
-	<li id="welcart_calendar" class="widget widget_welcart_calendar">
-		<div class="widget_title"><?php _e('Business Calendar','usces') ?></div>
-		<ul class="welcart_calendar_body welcart_widget_body"><li>
-		<?php usces_the_calendar(); ?>
-		</li></ul>
-	</li>
-	<?php */ ?>
 <?php endif; ?>
 </ul>
 </div>
