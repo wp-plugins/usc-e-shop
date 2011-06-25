@@ -1780,13 +1780,6 @@ function usces_is_entity($entity){
 }
 
 function usces_p( $var ){
-	global $usces_p;
-	$usces_p = $var;
-}
-
-function usces_print(){
-	global $usces_p;
-	if( !empty($usces_p) )
-		echo '<pre>' . print_r($usces_p, true) . '</pre>';
+	echo '<pre>' . print_r($var, true) . '</pre>';
 }
 ?>

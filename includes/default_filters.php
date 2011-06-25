@@ -27,9 +27,6 @@ add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 add_action( 'wp_ajax_target_market_ajax', 'target_market_ajax' );
 //20110331ysk end
 
-add_action('wp_footer', 'usces_print');
-add_action('admin_footer', 'usces_print');
-
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));
 add_shortcode('company_name', array(&$usces, 'sc_company_name'));
 add_shortcode('zip_code', array(&$usces, 'sc_zip_code'));
