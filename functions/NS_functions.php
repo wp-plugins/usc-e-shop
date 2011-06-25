@@ -931,11 +931,6 @@ function NS_mochikomihin( $action ){
 			return;
 	}
 }
-?>
-
-
-
-<?php
 /**********************************************************/
 // Net Stage フィルター
 add_filter('usces_filter_management_status', 'NS_filter_management_status');
@@ -1521,3 +1516,4 @@ function usces_get_item_cprice($post_id, $sku){
 	$field = get_post_meta($post_id, '_isku_'.$sku, true);
 	return $field['cprice'];
 }
+?>
