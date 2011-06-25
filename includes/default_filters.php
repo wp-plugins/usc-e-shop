@@ -29,9 +29,6 @@ add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 add_action( 'wp_ajax_target_market_ajax', 'target_market_ajax' );
 //20110331ysk end
 
-add_action('wp_footer', 'usces_print');
-add_action('admin_footer', 'usces_print');
-
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));
 add_shortcode('company_name', array(&$usces, 'sc_company_name'));
 add_shortcode('zip_code', array(&$usces, 'sc_zip_code'));
@@ -129,10 +126,6 @@ if( $usces->options['itemimg_anchor_rel'] )
 	
 add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
 add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata', 10, 2);
-
-
-
-add_filter('usces_filter_delivery_check', 'usces_filter_delivery_secure_check', 9);
 
 
 //20100818ysk start

@@ -10,7 +10,6 @@ get_header();
 $NSSP = new NS_SetPage();
 $NSSP->set_list_per_page( 20 );
 $NSSP->set_data();
-
 ?>
 
 <div id="content">
@@ -26,7 +25,7 @@ $NSSP->set_data();
 			<div class="step_title">STEP.1 ヘッド</div>
 			<div id="step1" class="product_info <?php echo $NSSP->get_top_info_class('head'); ?>">
 				<?php if($NSSP->is_mochikomihin('head')) : ?>
-				<div class="item_name <?php echo $NSSP->get_top_name_class('head'); ?>"><?php echo $NSSP->get_top_mochikomihin('head'); ?></div>
+				<div class="mochi_name <?php echo $NSSP->get_top_name_class('head'); ?>"><?php echo $NSSP->get_top_mochikomihin('head'); ?></div>
 				<?php else : ?>
 				<div class="set_thumbnail"><?php echo $NSSP->get_top_thumb('head'); ?></div>
 				<div class="item_name <?php echo $NSSP->get_top_name_class('head'); ?>"><?php echo $NSSP->get_top_itemname('head'); ?></div>
@@ -45,7 +44,7 @@ $NSSP->set_data();
 			<div class="step_title">STEP.2 シャフト</div>
 			<div id="step2" class="product_info <?php echo $NSSP->get_top_info_class('shuft'); ?>">
 				<?php if($NSSP->is_mochikomihin('shuft')) : ?>
-				<div class="item_name <?php echo $NSSP->get_top_name_class('shuft'); ?>"><?php echo $NSSP->get_top_mochikomihin('shuft'); ?></div>
+				<div class="mochi_name <?php echo $NSSP->get_top_name_class('shuft'); ?>"><?php echo $NSSP->get_top_mochikomihin('shuft'); ?></div>
 				<?php else : ?>
 				<div class="set_thumbnail"><?php echo $NSSP->get_top_thumb('shuft'); ?></div>
 				<div class="item_name <?php echo $NSSP->get_top_name_class('shuft'); ?>"><?php echo $NSSP->get_top_itemname('shuft'); ?></div>
@@ -64,7 +63,7 @@ $NSSP->set_data();
 			<div class="step_title">STEP.3 グリップ</div>
 			<div id="step3" class="product_info <?php echo $NSSP->get_top_info_class('grip'); ?>">
 				<?php if($NSSP->is_mochikomihin('grip')) : ?>
-				<div class="item_name <?php echo $NSSP->get_top_name_class('grip'); ?>"><?php echo $NSSP->get_top_mochikomihin('grip'); ?></div>
+				<div class="mochi_name <?php echo $NSSP->get_top_name_class('grip'); ?>"><?php echo $NSSP->get_top_mochikomihin('grip'); ?></div>
 				<?php else : ?>
 				<div class="set_thumbnail"><?php echo $NSSP->get_top_thumb('grip'); ?></div>
 				<div class="item_name <?php echo $NSSP->get_top_name_class('grip'); ?>"><?php echo $NSSP->get_top_itemname('grip'); ?></div>
@@ -125,8 +124,8 @@ $NSSP->set_data();
 </div><!-- end of entry -->
 </div><!-- end of post -->
 <?php endwhile; endif; ?>
-<?php usces_p($NSSP->product); var_dump($NSSP->product); ?>
-<?php usces_p($NSSP->action); ?>
+<?php //usces_p($NSSP->product);?>
+<?php //usces_p($NSSP->action); ?>
 </div><!-- end of catbox -->
 </div><!-- end of content -->
 
@@ -354,10 +353,10 @@ class NS_SetPage
 					|| in_category( 'setdriverfairwayshuft', (int)$this->product['shuft']['post_id'] ) 
 					|| in_category( 'setutilityshuft', (int)$this->product['shuft']['post_id'] ) 
 					|| in_category( 'setwedgeshuft', (int)$this->product['shuft']['post_id'] ) 
-					|| ( -1 == $this->product['shuft']['post_id'] && in_array($this->product['head']['shuft']['genre'], array('setdrivershuft', 'setfairwayshuft', 'setdriverfairwayshuft', 'setutilityshuft', 'setwedgeshuft', )))
+					|| ( -2 == $this->product['shuft']['post_id'] && in_array($this->product['shuft']['options']['genre'], array('setdrivershuft', 'setfairwayshuft', 'setdriverfairwayshuft', 'setutilityshuft', 'setwedgeshuft', )))
 					){
 					$cat_item[] = (int)usces_get_cat_id( 'setwoodirongrip' );
-				} elseif ( in_category( 'setputtershuft', (int)$this->product['head']['post_id'] ) || ( -1 == $this->product['shuft']['post_id'] && 'setputtershuft' == $this->product['shuft']['options']['genre']) ){
+				} elseif ( in_category( 'setputtershuft', (int)$this->product['shuft']['post_id'] ) || ( -2 == $this->product['shuft']['post_id'] && 'setputtershuft' == $this->product['shuft']['options']['genre']) ){
 					$cat_item[] = (int)usces_get_cat_id( 'setputtergrip' );
 				}
 
@@ -979,7 +978,7 @@ function NS_mochikomihin( $action ){
 <?php
 				$idObj = get_category_by_slug('sethead'); 
 				$parent_id = $idObj->term_id;
-				$cats = get_categories( array('child_of'=>$idObj->term_id) );
+				$cats = get_categories( array('child_of'=>$idObj->term_id, 'hide_empty'=>0) );
 				foreach( $cats as $cat ){
 					echo '<option value="' . esc_attr__($cat->category_nicename) . '" >' . esc_html__($cat->cat_name) . '</option>';
 				}
@@ -1014,7 +1013,7 @@ function NS_mochikomihin( $action ){
 <?php
 				$idObj = get_category_by_slug('setshuft'); 
 				$parent_id = $idObj->term_id;
-				$cats = get_categories( array('child_of'=>$idObj->term_id) );
+				$cats = get_categories( array('child_of'=>$idObj->term_id, 'hide_empty'=>0) );
 				foreach( $cats as $cat ){
 					echo '<option value="' . esc_attr__($cat->category_nicename) . '" >' . esc_html__($cat->cat_name) . '</option>';
 				}
@@ -1034,7 +1033,7 @@ function NS_mochikomihin( $action ){
 			
 		case 'grip_list':
 ?>
-			<div class="thumbnail_box">
+<!--			<div class="thumbnail_box">
 				<form action="#capture" method="post">
 					<div class="item_name">お持込グリップ</div>
 				<div class="item_etc">
@@ -1043,7 +1042,7 @@ function NS_mochikomihin( $action ){
 <?php
 				$idObj = get_category_by_slug('setgrip'); 
 				$parent_id = $idObj->term_id;
-				$cats = get_categories( array('child_of'=>$idObj->term_id) );
+				$cats = get_categories( array('child_of'=>$idObj->term_id, 'hide_empty'=>0) );
 				foreach( $cats as $cat ){
 					echo '<option value="' . esc_attr__($cat->category_nicename) . '" >' . esc_html__($cat->cat_name) . '</option>';
 				}
@@ -1057,7 +1056,7 @@ function NS_mochikomihin( $action ){
 					<input name="grip_price" type="hidden" value="0" />
 				</div>
 				</form>
-			</div>
+			</div>-->
 <?php
 			break;
 			

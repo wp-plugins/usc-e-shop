@@ -45,7 +45,7 @@ foreach((array)$target_market as $country) {
 foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 	$payment_name[$id] = $this->options['payment_method'][$id]['name'];
 }
-$ums = get_option('usces_management_status');
+$ums = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
 foreach((array)$ums as $key => $value){
 	if($key == 'noreceipt' || $key == 'receipted' || $key == 'pending'){
 		$receipt_status[$key] = $value;
@@ -116,6 +116,14 @@ jQuery(function($){
 							'\n\n'); ?>;
 		}else if(coll == 'delete'){
 			mes = '<?php _e('Are you sure of deleting all the checked data in bulk?', 'usces'); ?>';
+		}else if(coll == 'dlB2list'){
+			var list_id = '';
+			$("input[name*='listcheck']:checked").each(function(){
+				list_id += $(this).val()+',';
+			});
+			alert('送り状発行ソフト「B2」用のCSVデータを出力します。');
+			location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=dlB2list&list_id="+list_id;
+			return false;
 		}else{
 			$("#oederlistaction").val('');
 			return false;
@@ -378,7 +386,7 @@ jQuery(document).ready(function($){
 <div id="tablenavi"><?php echo $dataTableNavigation ?></div>
 
 <div id="tablesearch">
-<div id="searchBox"><a href="<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=dlB2list">B2</a>
+<div id="searchBox">
 		<table id="search_table">
 		<tr>
 		<td><?php _e('search fields', 'usces'); ?></td>
@@ -424,6 +432,7 @@ jQuery(document).ready(function($){
 		<td><?php _e('Oparation in bulk', 'usces'); ?></td>
 		<td><select name="allchange[column]" class="searchselect" id="changeselect">
 		    <option value="none"> </option>
+		    <option value="dlB2list">B2用データ出力</option>
 		    <option value="order_reciept"><?php _e('Edit the receiving money status', 'usces'); ?></option>
 		    <option value="order_status"><?php _e('Edit of status process', 'usces'); ?></option>
 		    <option value="delete"><?php _e('Delete in bulk', 'usces'); ?></option>
@@ -438,6 +447,7 @@ jQuery(document).ready(function($){
 <!--20100908ysk start-->
 		<table id="dl_list_table">
 		<tr>
+		<td><a href="<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=dlB2list">B2用データ出力</a></td>
 		<td><input type="button" id="dl_productlist" class="searchbutton" value="<?php _e('Download Product List', 'usces'); ?>" /></td>
 		<td><input type="button" id="dl_orderlist" class="searchbutton" value="<?php _e('Download Order List', 'usces'); ?>" /></td>
 		</tr>

@@ -98,7 +98,7 @@ function usces_filter_delivery_secure_check( $mes ){
 
 	switch( $settlement ){
 		case 'acting_zeus_card':
-			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) != 4 )
+			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) < 2 )
 				$mes .= __('カード番号が不正です', 'usces') . "<br />";
 			
 			if ( '' == $_POST["securecode"] && 'on' == $usces->options['acting_settings']['zeus']['3dsecure'] )
@@ -1231,7 +1231,7 @@ function usces_download_order_list() {
 	//==========================================================================
 
 	if(isset($_REQUEST['check']['status'])) {
-		$usces_management_status = get_option('usces_management_status');
+		$usces_management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
 		$usces_management_status['new'] = __('new order', 'usces');
 	}
 
@@ -1780,13 +1780,6 @@ function usces_is_entity($entity){
 }
 
 function usces_p( $var ){
-	global $usces_p;
-	$usces_p = $var;
-}
-
-function usces_print(){
-	global $usces_p;
-	if( !empty($usces_p) )
-		echo '<pre>' . print_r($usces_p, true) . '</pre>';
+	echo '<pre>' . print_r($var, true) . '</pre>';
 }
 ?>

@@ -466,10 +466,6 @@ class usc_e_shop
 			case 'dlorderlist':
 				usces_download_order_list();
 				break;
-			case 'dlB2list':
-				if( function_exists( 'NS_download_B2_list' ) )
-					NS_download_B2_list();
-				break;
 //20100908ysk end
 //			case 'printpdf':
 //				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');	
@@ -995,6 +991,7 @@ class usc_e_shop
 					$options['acting_settings']['remise']['SHOPCO'] = $_POST['SHOPCO'];
 					$options['acting_settings']['remise']['HOSTID'] = $_POST['HOSTID'];
 					$options['acting_settings']['remise']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['remise']['card_jb'] = $_POST['card_jb'];
 					$options['acting_settings']['remise']['card_pc_ope'] = $_POST['card_pc_ope'];
 					$options['acting_settings']['remise']['payquick'] = $_POST['payquick'];
 					$options['acting_settings']['remise']['howpay'] = $_POST['howpay'];

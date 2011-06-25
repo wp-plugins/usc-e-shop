@@ -1956,9 +1956,30 @@ div#itempage {
 	cursor: pointer;
 }
 
+#body_area #sku_option_button .select_item_button {
+	background-color: transparent;
+	background-image: url(images/set_page/detail_select.png);
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 150px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	cursor: pointer;
+}
 
+.mochi_text {
+	width: 98%;
+}
 
+.mochi_select {
+	width: 100%;
+}
 
+.mochi_name {
+	height: 128px;
+}
 
 
 

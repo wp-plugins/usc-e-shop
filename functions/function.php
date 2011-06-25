@@ -1873,6 +1873,8 @@ function usces_all_change_order_status(&$obj){
 					$statusstr = str_replace('completion', 'duringorder', $statusstr);
 				}else if(strpos($statusstr, 'new') !== false) {
 					$statusstr = str_replace('new', 'duringorder', $statusstr);
+				}else if(strpos($statusstr, 'work') !== false) {
+					$statusstr = str_replace('work', 'duringorder', $statusstr);
 				}else if(strpos($statusstr, 'duringorder') === false) {
 					$statusstr .= 'duringorder,';
 				}
@@ -1884,6 +1886,8 @@ function usces_all_change_order_status(&$obj){
 					$statusstr = str_replace('new', 'cancel', $statusstr);
 				}else if(strpos($statusstr, 'duringorder') !== false) {
 					$statusstr = str_replace('duringorder', 'cancel', $statusstr);
+				}else if(strpos($statusstr, 'work') !== false) {
+					$statusstr = str_replace('work', 'cancel', $statusstr);
 				}else if(strpos($statusstr, 'cancel') === false) {
 					$statusstr .= 'cancel,';
 				}
@@ -1895,8 +1899,23 @@ function usces_all_change_order_status(&$obj){
 					$statusstr = str_replace('duringorder', 'completion', $statusstr);
 				}else if(strpos($statusstr, 'cancel') !== false) {
 					$statusstr = str_replace('cancel', 'completion', $statusstr);
+				}else if(strpos($statusstr, 'work') !== false) {
+					$statusstr = str_replace('work', 'completion', $statusstr);
 				}else if(strpos($statusstr, 'completion') === false) {
 					$statusstr .= 'completion,';
+				}
+				break;
+			case 'work':
+				if(strpos($statusstr, 'new') !== false) {
+					$statusstr = str_replace('new', 'work', $statusstr);
+				}else if(strpos($statusstr, 'duringorder') !== false) {
+					$statusstr = str_replace('duringorder', 'work', $statusstr);
+				}else if(strpos($statusstr, 'cancel') !== false) {
+					$statusstr = str_replace('cancel', 'work', $statusstr);
+				}else if(strpos($statusstr, 'completion') !== false) {
+					$statusstr = str_replace('completion', 'work', $statusstr);
+				}else if(strpos($statusstr, 'work') === false) {
+					$statusstr .= 'work,';
 				}
 				break;
 			case 'new':
@@ -1904,10 +1923,13 @@ function usces_all_change_order_status(&$obj){
 					$statusstr = str_replace('duringorder,', '', $statusstr);
 				}else if(strpos($statusstr, 'completion') !== false) {
 					$statusstr = str_replace('completion,', '', $statusstr);
+				}else if(strpos($statusstr, 'work') !== false) {
+					$statusstr = str_replace('work,', '', $statusstr);
 				}else if(strpos($statusstr, 'cancel') !== false) {
 					$statusstr = str_replace('cancel,', '', $statusstr);
 				}
 				break;
+			
 		}
 		$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s WHERE ID = %d", $statusstr, $id);
 		$res = $wpdb->query( $query );
