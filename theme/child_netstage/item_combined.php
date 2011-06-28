@@ -126,6 +126,7 @@ $NSSP->set_data();
 <?php endwhile; endif; ?>
 <?php //usces_p($NSSP->product);?>
 <?php //usces_p($NSSP->action); ?>
+<?php //usces_p($NSSP->get_top_focus()); ?>
 </div><!-- end of catbox -->
 </div><!-- end of content -->
 

@@ -327,7 +327,7 @@ class NS_SetPage
 		switch( $type ){
 			case 'head':
 				//$res = '<input name="head_detail" type="submit" class="detail_button" value="　" />';
-				if( !empty($this->product['head']['sku']) ){
+				if( !empty($this->product['head']['sku']) && -1 != $this->product['head']['post_id'] ){
 					$res = '<input name="head_detail" type="submit" class="detail_button" value="　" />';
 				}else{
 					$res = '<input name="head_detail" type="button" class="detail_button_dis" value="　" disabled="disabled" />';
@@ -335,7 +335,7 @@ class NS_SetPage
 				break;
 			case 'shuft':
 				//if( 'shuft' == $focus || 'grip' == $focus || 'amount' == $focus ){
-				if( ('shuft' == $focus || 'grip' == $focus || 'amount' == $focus) and !empty($this->product['shuft']['sku']) ){
+				if( ('shuft' == $focus || 'grip' == $focus || 'amount' == $focus) and !empty($this->product['shuft']['sku']) && -2 != $this->product['shuft']['post_id']){
 					$res = '<input name="shuft_detail" type="submit" class="detail_button" value="　" />';
 				}else{
 					$res = '<input name="shuft_detail" type="button" class="detail_button_dis" value="　" disabled="disabled" />';
@@ -432,11 +432,11 @@ class NS_SetPage
 	}
 
 	function get_top_focus(){
-		if( empty($this->product['head']['post_id']) && empty($this->product['shuft']['post_id']) && empty($this->product['grip']['post_id'])){
+		if( empty($this->product['shuft']['post_id']) && empty($this->product['grip']['post_id']) && ('head_list' == $this->action || 'head_detail' == $this->action)){
 			$res = 'head';
-		}elseif( !empty($this->product['head']['post_id']) && empty($this->product['shuft']['post_id'])){
+		}elseif( !empty($this->product['head']['post_id']) && empty($this->product['shuft']['post_id']) && ('shuft_list' == $this->action || 'shuft_detail' == $this->action)){
 			$res = 'shuft';
-		}elseif( !empty($this->product['shuft']['post_id']) && empty($this->product['grip']['post_id'])){
+		}elseif( !empty($this->product['shuft']['post_id']) && empty($this->product['grip']['post_id']) && ('grip_list' == $this->action || 'grip_detail' == $this->action)){
 			$res = 'grip';
 		}else{
 			$res = 'amount';

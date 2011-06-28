@@ -2019,6 +2019,10 @@ div#itempage {
 	height: 44px;
 }
 
+#body_area ul.detail_status {
+	width: auto;
+}
+
 #body_area li {
 	float: left;
 	margin-top: 0px;
