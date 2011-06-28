@@ -155,30 +155,24 @@ class NS_SetPage
 
 	function get_session(){
 		
-		if( !isset($_SESSION['nsset']['product']['head']['post_id']) )
+		if( !isset($_SESSION['nsset']['product']['head']['post_id']) or !isset($_SESSION['nsset']['product']['head']['sku']) ) {
 			$_SESSION['nsset']['product']['head']['post_id'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['head']['sku']) )
 			$_SESSION['nsset']['product']['head']['sku'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['head']['price']) )
 			$_SESSION['nsset']['product']['head']['price'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['head']['options']) )
 			$_SESSION['nsset']['product']['head']['options'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['shuft']['post_id']) )
+		}
+		if( !isset($_SESSION['nsset']['product']['shuft']['post_id']) or !isset($_SESSION['nsset']['product']['shuft']['sku']) ) {
 			$_SESSION['nsset']['product']['shuft']['post_id'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['shuft']['sku']) )
 			$_SESSION['nsset']['product']['shuft']['sku'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['shuft']['price']) )
 			$_SESSION['nsset']['product']['shuft']['price'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['shuft']['options']) )
 			$_SESSION['nsset']['product']['shuft']['options'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['grip']['post_id']) )
+		}
+		if( !isset($_SESSION['nsset']['product']['grip']['post_id']) or !isset($_SESSION['nsset']['product']['grip']['sku']) ) {
 			$_SESSION['nsset']['product']['grip']['post_id'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['grip']['sku']) )
 			$_SESSION['nsset']['product']['grip']['sku'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['grip']['price']) )
 			$_SESSION['nsset']['product']['grip']['price'] = NULL;
-		if( !isset($_SESSION['nsset']['product']['grip']['options']) )
 			$_SESSION['nsset']['product']['grip']['options'] = NULL;
+		}
 
 		$this->product = $_SESSION['nsset']['product'];
 	}
@@ -384,7 +378,11 @@ class NS_SetPage
 		//$res = ( 'amount' == $focus ) ? 'kouchin' : '※パーツ構成が確定していません。';
 		if( 'amount' == $focus and !empty($this->product['head']['sku']) and !empty($this->product['shuft']['sku']) and !empty($this->product['grip']['sku']) ){
 			$post_id = $usces->get_postIDbyCode( NS_ITEM_SET );
-			$sku = (in_category( 'straightbore', $this->product['head']['post_id'] )) ? 'straightbore' : 'normal';
+			if($this->product['head']['post_id'] < 0) {
+				$sku = $this->product['head']['options']['bore'];
+			} else {
+				$sku = (in_category( 'straightbore', $this->product['head']['post_id'] )) ? 'straightbore' : 'normal';
+			}
 			$set_price = usces_get_item_price($post_id, $sku);
 			$res = usces_crform($this->product['head']['price'] + $this->product['shuft']['price'] + $this->product['grip']['price'] + $set_price, true, false, 'return');
 		} else {
@@ -400,7 +398,11 @@ class NS_SetPage
 		if( 'amount' == $focus and !empty($this->product['head']['sku']) and !empty($this->product['shuft']['sku']) and !empty($this->product['grip']['sku']) ){
 			$post_id = $usces->get_postIDbyCode( NS_ITEM_SET );
 			//$skus = $usces->get_skus($post_id);
-			$sku = (in_category( 'straightbore', $this->product['head']['post_id'] )) ? 'straightbore' : 'normal';
+			if($this->product['head']['post_id'] < 0) {
+				$sku = $this->product['head']['options']['bore'];
+			} else {
+				$sku = (in_category( 'straightbore', $this->product['head']['post_id'] )) ? 'straightbore' : 'normal';
+			}
 			$set_price = usces_get_item_price($post_id, $sku);
 			$price = $this->product['head']['price'] + $this->product['shuft']['price'] + $this->product['grip']['price'] + $set_price;
 			$res  = '<form action="'.USCES_CART_URL.'" method="post">';
@@ -470,6 +472,7 @@ class NS_SetPage
 		default:
 		}
 		if($post_id == '') return;
+		$back_action = $type.'_list';
 
 		global $usces;
 		$post = new NS_Post();
@@ -741,11 +744,10 @@ class NS_SetPage
 				<?php if( $item_custom = usces_get_item_custom( $post->ID, 'list', 'return' ) ) : ?>
 					<div class="field"><?php echo $item_custom; ?></div>
 				<?php endif; ?>
-					<div class="send_info">発送日目安：<?php NS_the_shipment_aim($post); ?></div>
 					<div id="sku_option_field" class="sku_option_box"><?php NS_sku_option_field($post); ?></div>
 					<div id="sku_option_price"></div>
 					<div id="sku_option_message"></div>
-					<div id="sku_option_button"></div>
+					<div id="sku_option_button"><input name="<?php echo $back_action; ?>" type="submit" class="back_button" value="　" /></div>
 					<div class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></div>
 				</div><!-- end of skuform -->
 				<?php echo apply_filters('single_item_single_sku_after_field', NULL); ?>
@@ -854,7 +856,8 @@ function NS_mochikomihin( $action ){
 				<label for="mochi_bore" class="mochi_label">タイプ</label><select name="mochiopt[bore]" id="mochi_bore" class="mochi_select">
 					<option value="">選択してください</option>
 					<option value="normal">ノーマル・ボア</option>
-					<option value="straight">ストレート・ボア</option>
+					<option value="straightbore">ストレート・ボア</option>
+					<option value="undecided">わからない</option>
 				</select>
 				<label for="mochi_maker" class="mochi_label">メーカー</label><input name="mochiopt[maker]" type="text" id="mochi_maker" class="mochi_text"/>
 				</div>
@@ -1072,6 +1075,7 @@ function change_sku_option_ajax() {
 	$set = isset($_POST['set']) ? $_POST['set'] : '';
 	$type = isset($_POST['type']) ? $_POST['type'] : '';
 	$nextaction = isset($_POST['nextaction']) ? $_POST['nextaction'] : '';
+	$backaction = $type.'_list';
 
 	$orderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
 	$res = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
@@ -1114,7 +1118,8 @@ function change_sku_option_ajax() {
 						&& 2 > $status_num 
 					){
 						if($set == 1) {
-							$html  = "<input name=\"".$nextaction."\" type=\"submit\" class=\"select_item_button\" value=\"　\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />\n";
+							$html  = "<input name=\"".$backaction."\" type=\"submit\" class=\"back_button\" value=\"　\" />\n";
+							$html .= "<input name=\"".$nextaction."\" type=\"submit\" class=\"select_item_button\" value=\"　\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />\n";
 							$html .= "<input name=\"".$type."_post_id\" type=\"hidden\" value=\"".$post_id."\" />\n";
 							$html .= "<input name=\"".$type."_sku\" type=\"hidden\" value=\"".$sku[0]."\" />\n";
 							$html .= "<input name=\"".$type."_price\" type=\"hidden\" value=\"".$row['meta_value']['price']."\" />\n";
@@ -1137,8 +1142,10 @@ function change_sku_option_ajax() {
 			}
 		}
 	}
-	if($html == '' and $set != 1) $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, '', 'return');
-	
+	if($html == '') {
+		if($set != 1) $html = NS_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, '', 'return');
+		else $html  = "<input name=\"".$backaction."\" type=\"submit\" class=\"back_button\" value=\"　\" />\n";
+	}
 	die(implode("#ns#", $sku)."#usces#".implode("#ns#", $nextskuvalue)."#usces#".implode("#ns#", $optkey)."#usces#".implode("#ns#", $optvalue)."#usces#".$skuprice."#usces#".$zaikonum."#usces#".$html."#usces#".$msg);
 }
 

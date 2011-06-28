@@ -795,7 +795,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictid = $this->get_mainpictid($itemCode);
 		if( $itemCode == NS_ITEM_SET ) {
-			$setstr = 'セット商品<br />　ヘッド : ';
+			$setstr = 'セット商品組み立て工賃<br />　ヘッド : ';
 			if($options['set_head'] < 0) {
 				$mochi_options = $advance['mochi_head']['mochi_head_sku'];
 				$idObj = get_category_by_slug($mochi_options['genre']);

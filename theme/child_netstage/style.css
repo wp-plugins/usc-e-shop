@@ -2062,6 +2062,19 @@ div#itempage {
 	cursor: pointer;
 }
 
+#body_area #sku_option_button .back_button {
+	background-color: transparent;
+	background-image: url(images/set_page/back-1.png);
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 51px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	cursor: pointer;
+}
+
 .mochi_text {
 	width: 98%;
 }

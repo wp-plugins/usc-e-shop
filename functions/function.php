@@ -110,10 +110,9 @@ function usces_order_confirm_message($order_id) {
 		
 		$meisai .= "------------------------------------------------------------------\r\n";
 		if( $itemCode == NS_ITEM_SET ) {
-			$meisai .= "セット商品\r\n";
+			$meisai .= "セット商品組み立て工賃\r\n";
 			$meisai .= '　ヘッド : ';
 			if($options['set_head'] < 0) {
-				$head_price = 0;
 				$mochi_options = $advance['mochi_head']['mochi_head_sku'];
 				$idObj = get_category_by_slug($mochi_options['genre']);
 				$genre = $idObj->cat_name;
@@ -123,35 +122,29 @@ function usces_order_confirm_message($order_id) {
 				$meisai .= '　　タイプ : '.$bore."\r\n";
 				$meisai .= '　　メーカー : '.$mochi_options['maker']."\r\n";
 			} else {
-				$head_price = usces_get_item_price($options['set_head'], $options['set_head_sku']);
-				$meisai .= $usces->getCartItemName($options['set_head'], $options['set_head_sku'])." ".usces_crform($head_price, true, false, 'return')."\r\n";
+				$meisai .= $usces->getCartItemName($options['set_head'], $options['set_head_sku'])."\r\n";
 			}
 			$meisai .= '　シャフト : ';
 			if($options['set_shuft'] < 0) {
-				$shuft_price = 0;
 				$mochi_options = $advance['mochi_shuft']['mochi_shuft_sku'];
 				$idObj = get_category_by_slug($mochi_options['genre']);
 				$genre = $idObj->cat_name;
 				$meisai .= "お持込シャフト\r\n";
 				$meisai .= '　　種類 : '.$genre."\r\n";
 			} else {
-				$shuft_price = usces_get_item_price($options['set_shuft'], $options['set_shuft_sku']);
-				$meisai .= $usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])." ".usces_crform($shuft_price, true, false, 'return')."\r\n";
+				$meisai .= $usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])."\r\n";
 			}
 			$meisai .= '　グリップ : ';
 			if($options['set_grip'] < 0) {
-				$grip_price = 0;
 				$mochi_options = $advance['mochi_grip']['mochi_grip_sku'];
 				$idObj = get_category_by_slug($mochi_options['genre']);
 				$genre = $idObj->cat_name;
 				$meisai .= "お持込グリップ\r\n";
 				$meisai .= '　　種類 : '.$genre."\r\n";
 			} else {
-				$grip_price = usces_get_item_price($options['set_grip'], $options['set_grip_sku']);
-				$meisai .= $usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])." ".usces_crform($grip_price, true, false, 'return')."\r\n";
+				$meisai .= $usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])."\r\n";
 			}
-			$meisai .= '　工賃 : '.usces_crform( $skuPrice, true, false, 'return' )."\r\n";
-			$meisai .= "セット価格 ".usces_crform( $head_price + $shuft_price + $head_price + $grip_price, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
+			$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 		} else {
 			$meisai .= "$cartItemName \r\n";
 			if( is_array($options) && count($options) > 0 ){

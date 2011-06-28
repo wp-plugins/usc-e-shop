@@ -253,7 +253,7 @@ function NS_the_fantastic4( $post = '' ){
 		);
 	$taxonomyName = "category";
 
-	$tag = '<ul class="clearfix">'. "\n";
+	$tag = '<ul class="detail_status clearfix">'. "\n";
 	foreach ($termIDs as $key => $value) {
 		switch( $key ){
 			case 'zaiko':
