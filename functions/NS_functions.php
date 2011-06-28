@@ -774,7 +774,15 @@ class NS_SetPage
 
 		switch( $type ){
 		case 'head':
-			$bore = ($this->product[$type]['options']['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+			switch($this->product[$type]['options']['bore']) {
+			case "straightbore":
+				$bore = 'ストレート・ボア'; break;
+			case "normal":
+				$bore = 'ノーマル・ボア'; break;
+			case "undecided":
+			default:
+				$bore = '不明'; break;
+			}
 			$res  = '<div>お持込ヘッド</div>';
 			$res .= '<div>種類:'.$genre.'</div>';
 			$res .= '<div>タイプ:'.$bore.'</div>';
