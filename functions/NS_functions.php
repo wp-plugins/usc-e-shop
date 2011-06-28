@@ -1126,7 +1126,7 @@ function change_sku_option_ajax() {
 						&& 2 > $status_num 
 					){
 						if($set == 1) {
-							$html  = "<input name=\"".$backaction."\" type=\"submit\" class=\"back_button\" value=\"　\" />\n";
+							$html  = "<input name=\"".$backaction."\" type=\"submit\" class=\"back_button\" value=\"　\" />　";
 							$html .= "<input name=\"".$nextaction."\" type=\"submit\" class=\"select_item_button\" value=\"　\" onclick=\"return uscesCart.intoCart('".$post_id."','".$sku[0]."')\" />\n";
 							$html .= "<input name=\"".$type."_post_id\" type=\"hidden\" value=\"".$post_id."\" />\n";
 							$html .= "<input name=\"".$type."_sku\" type=\"hidden\" value=\"".$sku[0]."\" />\n";

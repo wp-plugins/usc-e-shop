@@ -44,8 +44,9 @@ $html .= apply_filters('usces_filter_memberinfo_page_header', $header);
 $html .= '</div>';
 
 $html .= '<h3>' . __('Purchase history', 'usces') . '</h3>';
-$html .= '<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>
-	<table>';
+$html .= '<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>';
+/*
+$html .= '<table>';
 	
 	
 if ( !count($usces_member_history) ) {
@@ -132,9 +133,11 @@ foreach ( $usces_member_history as $umhs ) {
 		</tr>';
 }
 
-$html .= '</table>
+$html .= '</table>';
+*/
+$html .= usces_member_history('return');
 
-	<h3><a name="edit"></a>' . __('Member information editing', 'usces') . '</h3>
+$html .= '<h3><a name="edit"></a>' . __('Member information editing', 'usces') . '</h3>
 	<div class="error_message">' . $this->error_message . '</div>
 	<form action="' . USCES_MEMBER_URL . '#edit" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<table class="customer_form">';

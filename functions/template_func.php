@@ -2278,7 +2278,8 @@ function usces_localized_name( $Familly_name, $Given_name, $out = '' ){
 	}
 }
 
-function usces_member_history(){
+//function usces_member_history(){
+function usces_member_history( $out = '' ){
 	global $usces;
 	
 	$usces_members = $usces->get_member();
@@ -2349,18 +2350,56 @@ function usces_member_history(){
 			//$skuPrice = $usces->getItemPrice($post_id, $sku);
 			$skuPrice = $cart_row['price'];
 			$pictid = $usces->get_mainpictid($itemCode);
-			$optstr =  '';
-			if( is_array($options) && count($options) > 0 ){
-				foreach($options as $key => $value){
-					if( !empty($key) )
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+			$advance = $usces->cart->wc_unserialize(serialize($cart_row['advance']));
+			if( $itemCode == NS_ITEM_SET ) {
+				$setstr = 'セット商品組み立て工賃<br />　ヘッド : ';
+				if($options['set_head'] < 0) {
+					$mochi_options = $advance['mochi_head']['mochi_head_sku'];
+					$idObj = get_category_by_slug($mochi_options['genre']);
+					$genre = $idObj->cat_name;
+					$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+					$setstr .= 'お持込ヘッド<br />';
+					$setstr .= '　　種類 : '.$genre.'<br />';
+					$setstr .= '　　タイプ : '.$bore.'<br />';
+					$setstr .= '　　メーカー : '.$mochi_options['maker'].'<br />';
+				} else {
+					$setstr .= esc_html($usces->getCartItemName($options['set_head'], $options['set_head_sku'])).'<br />';
 				}
+				$setstr .= '　シャフト : ';
+				if($options['set_shuft'] < 0) {
+					$mochi_options = $advance['mochi_shuft']['mochi_shuft_sku'];
+					$idObj = get_category_by_slug($mochi_options['genre']);
+					$genre = $idObj->cat_name;
+					$setstr .= 'お持込シャフト<br />';
+					$setstr .= '　　種類 : '.$genre.'<br />';
+				} else {
+					$setstr .= esc_html($usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])).'<br />';
+				}
+				$setstr .= '　グリップ : ';
+				if($options['set_grip'] < 0) {
+					$mochi_options = $advance['mochi_grip']['mochi_grip_sku'];
+					$idObj = get_category_by_slug($mochi_options['genre']);
+					$genre = $idObj->cat_name;
+					$setstr .= 'お持込グリップ<br />';
+					$setstr .= '　　種類 : '.$genre.'<br />';
+				} else {
+					$setstr .= esc_html($usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])).'<br />';
+				}
+			} else {
+				$optstr =  '';
+				if( is_array($options) && count($options) > 0 ){
+					foreach($options as $key => $value){
+						if( !empty($key) )
+							$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					}
+				}
+				$setstr = esc_html($cartItemName) . '<br />' . $optstr;
 			}
-				
+			
 			$history_cart_row = '<tr>
 				<td>' . ($i + 1) . '</td>
 				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a></td>
-				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
+				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . $setstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
@@ -2374,7 +2413,12 @@ function usces_member_history(){
 	
 	$html .= '</table>';
 
-	echo $html;
+	//echo $html;
+	if($out == 'return'){
+		return $html;
+	}else{
+		echo esc_html($html);
+	}
 }
 
 function usces_newmember_button($member_regmode){

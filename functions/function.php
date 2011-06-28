@@ -116,7 +116,15 @@ function usces_order_confirm_message($order_id) {
 				$mochi_options = $advance['mochi_head']['mochi_head_sku'];
 				$idObj = get_category_by_slug($mochi_options['genre']);
 				$genre = $idObj->cat_name;
-				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				switch($mochi_options['bore']) {
+				case "straightbore":
+					$bore = 'ストレート・ボア'; break;
+				case "normal":
+					$bore = 'ノーマル・ボア'; break;
+				case "undecided":
+				default:
+					$bore = '不明'; break;
+				}
 				$meisai .= "お持込ヘッド\r\n";
 				$meisai .= '　　種類 : '.$genre."\r\n";
 				$meisai .= '　　タイプ : '.$bore."\r\n";
@@ -347,7 +355,15 @@ function usces_send_ordermail($order_id) {
 				$mochi_options = $advance[$post_id][$sku]['set_head_options'];
 				$idObj = get_category_by_slug($mochi_options['genre']);
 				$genre = $idObj->cat_name;
-				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				switch($mochi_options['bore']) {
+				case "straightbore":
+					$bore = 'ストレート・ボア'; break;
+				case "normal":
+					$bore = 'ノーマル・ボア'; break;
+				case "undecided":
+				default:
+					$bore = '不明'; break;
+				}
 				$meisai .= "お持込ヘッド\r\n";
 				$meisai .= '　　種類 : '.$genre."\r\n";
 				$meisai .= '　　タイプ : '.$bore."\r\n";
@@ -3253,7 +3269,15 @@ function usces_get_cart_rows( $out = '' ) {
 				$mochi_options = $advance[$post_id][$sku]['set_head_options'];
 				$idObj = get_category_by_slug($mochi_options['genre']);
 				$genre = $idObj->cat_name;
-				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				switch($mochi_options['bore']) {
+				case "straightbore":
+					$bore = 'ストレート・ボア'; break;
+				case "normal":
+					$bore = 'ノーマル・ボア'; break;
+				case "undecided":
+				default:
+					$bore = '不明'; break;
+				}
 				$res .= 'お持込ヘッド<br />';
 				$res .= '　　種類 : '.$genre.'<br />';
 				$res .= '　　タイプ : '.$bore.'<br />';
@@ -3364,7 +3388,15 @@ function usces_get_confirm_rows( $out = '' ) {
 				$mochi_options = $advance[$post_id][$sku]['set_head_options'];
 				$idObj = get_category_by_slug($mochi_options['genre']);
 				$genre = $idObj->cat_name;
-				$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+				switch($mochi_options['bore']) {
+				case "straightbore":
+					$bore = 'ストレート・ボア'; break;
+				case "normal":
+					$bore = 'ノーマル・ボア'; break;
+				case "undecided":
+				default:
+					$bore = '不明'; break;
+				}
 				$res .= 'お持込ヘッド<br />';
 				$res .= '　　種類 : '.$genre.'<br />';
 				$res .= '　　タイプ : '.$bore.'<br />';
