@@ -1771,9 +1771,10 @@ div#itempage {
 	text-align: center;
 }
 #sku_option_button {
-	width: 200px;
+	width: 250px;
 	margin-right: auto;
 	margin-left: auto;
+	text-align: center;
 }
 /* Single Item Page CSS End */
 /*********************************************************************/
