@@ -123,8 +123,23 @@ function usces_pdf_out(&$pdf, $data){
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
 			foreach($cart_row['options'] as $key => $value){
-				if( !empty($key) )
-					$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$optstr .= esc_html($key) . ' = ';
+						foreach($value as $v) {
+							$optstr .= $c.esc_html(urldecode($v));
+							$c = ', ';
+						}
+						$optstr .= "\n"; 
+					} else {
+						$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
+					}
+				}
+//20110629ysk end
 			}
 			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $options);
 		}
