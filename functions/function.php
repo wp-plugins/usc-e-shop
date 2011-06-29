@@ -117,7 +117,7 @@ function usces_order_confirm_message($order_id) {
 				if( !empty($key) ) {
 					if(is_array($value)) {
 						$c = '';
-						$meisai .= $key;
+						$meisai .= $key . ' : ';
 						foreach($value as $v) {
 							$meisai .= $c.urldecode($v);
 							$c = ', ';
@@ -324,7 +324,7 @@ function usces_send_ordermail($order_id) {
 				if( !empty($key) ) {
 					if(is_array($value)) {
 						$c = '';
-						$meisai .= $key;
+						$meisai .= $key. ' : ';
 						foreach($value as $v) {
 							$meisai .= $c.urldecode($v);
 							$c = ', ';
