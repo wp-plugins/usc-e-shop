@@ -73,10 +73,12 @@ if( usces_is_cart() ) {
 			$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 			$html .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 				if( !empty($key) )
-					$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
+			$html .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
 		$html .= '</td>
 			<td class="aright">';

@@ -117,18 +117,19 @@ function usces_order_confirm_message($order_id) {
 				if( !empty($key) ) {
 					if(is_array($value)) {
 						$c = '';
-						$meisai .= $key . ' : ';
+						$optstr .= $key . ' : ';
 						foreach($value as $v) {
-							$meisai .= $c.urldecode($v);
+							$optstr .= $c.urldecode($v);
 							$c = ', ';
 						}
-						$meisai .= "\r\n"; 
+						$optstr .= "\r\n"; 
 					} else {
-						$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+						$optstr .= $key . ' : ' . urldecode($value) . "\r\n"; 
 					}
 				}
 //20110629ysk end
 			}
+			$meisai .= apply_filters( 'usces_filter_option_adminmail', $optstr, $options);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
@@ -324,18 +325,19 @@ function usces_send_ordermail($order_id) {
 				if( !empty($key) ) {
 					if(is_array($value)) {
 						$c = '';
-						$meisai .= $key. ' : ';
+						$optstr .= $key. ' : ';
 						foreach($value as $v) {
-							$meisai .= $c.urldecode($v);
+							$optstr .= $c.urldecode($v);
 							$c = ', ';
 						}
-						$meisai .= "\r\n"; 
+						$optstr .= "\r\n"; 
 					} else {
-						$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+						$optstr .= $key . ' : ' . urldecode($value) . "\r\n"; 
 					}
 				}
 //20110629ysk end
 			}
+			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
@@ -3306,18 +3308,19 @@ function usces_get_cart_rows( $out = '' ) {
 				if( !empty($key) ) {
 					if(is_array($value)) {
 						$c = '';
-						$res .= esc_html($key) . ' : '; 
+						$optstr .= esc_html($key) . ' : '; 
 						foreach($value as $v) {
-							$res .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
 							$c = ', ';
 						}
-						$res .= "<br />\n"; 
+						$optstr .= "<br />\n"; 
 					} else {
-						$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 					}
 				}
 //20110629ysk end
 			}
+			$res .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
 		$res .= '</td>
 			<td class="aright">';
@@ -3401,18 +3404,19 @@ function usces_get_confirm_rows( $out = '' ) {
 				if( !empty($key) ) {
 					if(is_array($value)) {
 						$c = '';
-						$res .= esc_html($key) . ' : '; 
+						$optstr .= esc_html($key) . ' : '; 
 						foreach($value as $v) {
-							$res .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
 							$c = ', ';
 						}
-						$res .= "<br />\n"; 
+						$optstr .= "<br />\n"; 
 					} else {
-						$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 					}
 				}
 //20110629ysk end
 			}
+			$res .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
 		 $res .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>

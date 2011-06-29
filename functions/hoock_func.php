@@ -46,7 +46,7 @@ function usces_action_acting_transaction(){
 		
 		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){
 			usces_log('remise card error2 : '.print_r($data, true), 'acting_transaction.log');
-			//die('error2');
+			die('error2');
 		}
 		
 		if( '0000000' === substr($rand, 0, 7) ){//card up

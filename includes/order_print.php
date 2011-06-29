@@ -126,6 +126,7 @@ function usces_pdf_out(&$pdf, $data){
 				if( !empty($key) )
 					$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
 			}
+			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $options);
 		}
 
 			$line_y[$index] = $next_y;

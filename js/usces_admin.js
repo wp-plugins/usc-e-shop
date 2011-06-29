@@ -374,7 +374,6 @@
 			var optob;
 			var optvalue = '';
 			var query = 'action=order_item2cart_ajax&order_id='+ID;
-			
 			for( var i = 0; i < cnum; i++) {
 				name = $(priceob[i]).attr("name");
 				strs = name.split('[');
@@ -406,7 +405,8 @@
 			}
 				
 				
-				
+					alert(query);
+		
 			var s = orderItem.settings;
 			s.data = query;
 			s.success = function(data, dataType){

@@ -1498,6 +1498,9 @@ function order_item_ajax()
 		case 'ordercheckpost':
 			$res = usces_update_ordercheck();
 			break;
+		case 'getmember':
+			$res = usces_get_member_neworder();
+			break;
 	}
 	
 	if( $res === false )  die(0);
@@ -1510,6 +1513,55 @@ function order_item_ajax()
 /**
  * order Item html
  */
+function usces_get_member_neworder() {
+	global $wpdb;
+	$wpdb->show_errors();
+	$res = '';
+	$member_table = $wpdb->prefix . "usces_member";
+	$query = $wpdb->prepare("SELECT * FROM $member_table WHERE mem_email = %s", trim($_POST['email']));
+	$value = $wpdb->get_row( $query, ARRAY_A );
+	if( !$value ){
+		die( 'none#usces#1' );
+	}else{
+		$res .= 'ok#usces#member_id=' . $value['ID'];
+		$res .= '#usces#customer[name1]=' . $value['mem_name1'];
+		$res .= '#usces#customer[name2]=' . $value['mem_name2'];
+		$res .= '#usces#customer[name3]=' . $value['mem_name3'];
+		$res .= '#usces#customer[name4]=' . $value['mem_name4'];
+		$res .= '#usces#customer[zipcode]=' . $value['mem_zip'];
+		$res .= '#usces#customer[pref]=' . $value['mem_pref'];
+		$res .= '#usces#customer[address1]=' . $value['mem_address1'];
+		$res .= '#usces#customer[address2]=' . $value['mem_address2'];
+		$res .= '#usces#customer[address3]=' . $value['mem_address3'];
+		$res .= '#usces#customer[tel]=' . $value['mem_tel'];
+		$res .= '#usces#customer[fax]=' . $value['mem_fax'];
+		$res .= '#usces#delivery[name1]=' . $value['mem_name1'];
+		$res .= '#usces#delivery[name2]=' . $value['mem_name2'];
+		$res .= '#usces#delivery[name3]=' . $value['mem_name3'];
+		$res .= '#usces#delivery[name4]=' . $value['mem_name4'];
+		$res .= '#usces#delivery[zipcode]=' . $value['mem_zip'];
+		$res .= '#usces#delivery[pref]=' . $value['mem_pref'];
+		$res .= '#usces#delivery[address1]=' . $value['mem_address1'];
+		$res .= '#usces#delivery[address2]=' . $value['mem_address2'];
+		$res .= '#usces#delivery[address3]=' . $value['mem_address3'];
+		$res .= '#usces#delivery[tel]=' . $value['mem_tel'];
+		$res .= '#usces#delivery[fax]=' . $value['mem_fax'];
+		
+		$member_metetable = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("SELECT * FROM $member_metetable WHERE meta_key LIKE %s AND member_id = %d", 'csmb_%', $value['ID']);
+		$customs = $wpdb->get_results( $query, ARRAY_A );
+		if( !empty($customs) ){
+			foreach( $customs as $cusv ){
+				$res .= '#usces#custom_customer[' . substr($cusv['meta_key'], 5) . ']=' . $cusv['meta_value'];
+				$res .= '#usces#custom_delivery[' . substr($cusv['meta_key'], 5) . ']=' . $cusv['meta_value'];
+			}
+		}
+		//die( urlencode($res) );
+	}
+		
+	die( $res );
+}
+
 function order_item2cart() {
 	global $usces;
 

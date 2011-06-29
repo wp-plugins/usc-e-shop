@@ -66,8 +66,9 @@ for($i=0; $i<count($cart); $i++) {
 	if( is_array($options) && count($options) > 0 ){
 		foreach($options as $key => $value){
 			if( !empty($key) )
-				$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
+		$html .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 	}
 	$html .= '</td>
 		<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>

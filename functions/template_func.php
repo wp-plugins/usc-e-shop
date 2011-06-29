@@ -2324,6 +2324,7 @@ function usces_member_history(){
 					}
 //20110629ysk end
 				}
+				$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 			}
 				
 			$history_cart_row = '<tr>

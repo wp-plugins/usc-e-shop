@@ -116,6 +116,7 @@ foreach ( $usces_member_history as $umhs ) {
 				if( !empty($key) )
 					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
+			$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 		}
 			
 		$html .= '<tr>
