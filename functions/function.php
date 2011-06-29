@@ -111,8 +111,23 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$meisai .= $key;
+						foreach($value as $v) {
+							$meisai .= $c.urldecode($v);
+							$c = ', ';
+						}
+						$meisai .= "\r\n"; 
+					} else {
+						$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+					}
+				}
+//20110629ysk end
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -303,8 +318,23 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$meisai .= $key;
+						foreach($value as $v) {
+							$meisai .= $c.urldecode($v);
+							$c = ', ';
+						}
+						$meisai .= "\r\n"; 
+					} else {
+						$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+					}
+				}
+//20110629ysk end
 			}
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
@@ -3270,8 +3300,23 @@ function usces_get_cart_rows( $out = '' ) {
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$res .= esc_html($key) . ' : '; 
+						foreach($value as $v) {
+							$res .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$c = ', ';
+						}
+						$res .= "<br />\n"; 
+					} else {
+						$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					}
+				}
+//20110629ysk end
 			}
 		}
 		$res .= '</td>
@@ -3288,7 +3333,16 @@ function usces_get_cart_rows( $out = '' ) {
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';
 		foreach($options as $key => $value){
-			$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+//20110629ysk start 0000190
+			//$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+			if(is_array($value)) {
+				foreach($value as $v) {
+					$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
+				}
+			} else {
+				$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+			}
+//20110629ysk end
 		}
 		$res .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
 			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
@@ -3341,8 +3395,23 @@ function usces_get_confirm_rows( $out = '' ) {
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$res .= esc_html($key) . ' : '; 
+						foreach($value as $v) {
+							$res .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$c = ', ';
+						}
+						$res .= "<br />\n"; 
+					} else {
+						$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					}
+				}
+//20110629ysk end
 			}
 		}
 		 $res .= '</td>

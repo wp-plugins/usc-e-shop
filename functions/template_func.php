@@ -861,8 +861,12 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk end
 		$selects = explode("\n", $values['value'][0]);
 		$multiple = ($means === 0) ? '' : ' multiple';
+		$multiple_array = ($means == 0) ? '' : '[]';//20110629ysk 0000190
 		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
-		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+//20110629ysk start 0000190
+		//$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]{$multiple_array}' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+//20110629ysk end
 		if($essential == 1){
 			if(  '#NONE#' == $session_value || NULL == $session_value ) 
 				$selected = ' selected="selected"';
@@ -2302,8 +2306,23 @@ function usces_member_history(){
 			$optstr =  '';
 			if( is_array($options) && count($options) > 0 ){
 				foreach($options as $key => $value){
-					if( !empty($key) )
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+					//f( !empty($key) )
+					//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					if( !empty($key) ) {
+						if(is_array($value)) {
+							$c = '';
+							$optstr .= esc_html($key) . ' : '; 
+							foreach($value as $v) {
+								$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+								$c = ', ';
+							}
+							$optstr .= "<br />\n"; 
+						} else {
+							$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+						}
+					}
+//20110629ysk end
 				}
 			}
 				

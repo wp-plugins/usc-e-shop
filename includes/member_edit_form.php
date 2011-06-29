@@ -220,8 +220,23 @@ jQuery(document).ready(function($){
 	$pictid = $this->get_mainpictid($itemCode);
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
-		if( !empty($key) )
-			$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+		//if( !empty($key) )
+		//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+		if( !empty($key) ) {
+			if(is_array($value)) {
+				$c = '';
+				$optstr .= esc_html($key) . ' : '; 
+				foreach($value as $v) {
+					$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+					$c = ', ';
+				}
+				$optstr .= "<br />\n"; 
+			} else {
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+			}
+		}
+//20110629ysk end
 	}
 	
 	?>
