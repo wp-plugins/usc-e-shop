@@ -317,6 +317,7 @@ function _list_item_sku_meta_row( $entry, $skuoption ) {
 	$r .= "\n\t\t<td class='item-sku-button' colspan='5'>";
 	$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
 	$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
+	$r .= "<div id='sku_loading-{$id}'></div><div id='sku_ajax-response-{$id}'></div>";
 	$r .= "</td>";
 	$r .= "\n\t</tr>";
 	return $r;
@@ -657,7 +658,8 @@ function add_item_option_meta( $post_ID ) {
 /**
  * add_item_sku_meta
  */
-function add_item_sku_meta( $post_ID ) {
+//function add_item_sku_meta( $post_ID ) {
+function add_item_sku_meta( $post_ID, &$mes ) {
 	global $wpdb;
 	
 	$post_ID = (int) $post_ID;
@@ -684,8 +686,10 @@ function add_item_sku_meta( $post_ID ) {
 
 		$metakey = $newskuname; // default
 
-		if ( in_array($metakey, $protected) )
+		if ( in_array($metakey, $protected) ) {
+			$mes = esc_html('SKU名が不正です');
 			return false;
+		}
 
 		wp_cache_delete($post_ID, 'post_meta');
 		
@@ -703,6 +707,12 @@ function add_item_sku_meta( $post_ID ) {
 		for($i = 0; $i < count($newskukey); $i++) {
 			$value['option'][$newskukey[$i]] = $newskuoption[$i];
 		}
+
+		if(NS_check_item_sku_options( $post_ID, $value['option'] ) == false) {
+			$mes = esc_html('商品規格が重複しています');
+			return false;
+		}
+
 		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
 		$unique = true;
 
@@ -805,7 +815,8 @@ function up_item_option_meta( $post_ID ) {
 /**
  * up_item_sku_meta
  */
-function up_item_sku_meta( $post_ID ) {
+//function up_item_sku_meta( $post_ID ) {
+function up_item_sku_meta( $post_ID, &$mes ) {
 	global $wpdb;
 	
 	$post_ID = (int) $post_ID;
@@ -841,8 +852,13 @@ function up_item_sku_meta( $post_ID ) {
 		$value['option'][$skukey[$i]] = $skuoption[$i];
 	}
 	
+	if(NS_check_item_sku_options( $post_ID, $value['option'] ) == false) {
+		$mes = esc_html('商品規格が重複しています');
+		return false;
+	}
+
 	$value = apply_filters('usces_filter_up_item_sku_meta_value', $value);
-	
+
 	$valueserialized = maybe_serialize($value);
 
 	if ( $skumetaid != '' && $skuname != '' ) {
@@ -854,6 +870,7 @@ function up_item_sku_meta( $post_ID ) {
 		$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_key = %s, meta_value = %s WHERE meta_id = %d", $metakey, $valueserialized, $skumetaid) );
 		return $res;
 	}
+	$mes = esc_html('更新できませんでした');
 	return false;
 } // update_meta
 
@@ -1895,11 +1912,13 @@ function item_option_ajax()
 
 function item_sku_ajax()
 {
+	$mes = '';
 
 	if( $_POST['action'] != 'item_sku_ajax' ) die(0);
 	
 	if(isset($_POST['update'])){
-		$res = up_item_sku_meta( $_POST['ID'] );
+		//$res = up_item_sku_meta( $_POST['ID'] );
+		$res = up_item_sku_meta( $_POST['ID'], $mes );
 		
 	}else if(isset($_POST['delete'])){
 		$res = del_item_sku_meta( $_POST['ID'] );
@@ -1909,8 +1928,8 @@ function item_sku_ajax()
 		die( $res );
 		
 	}else{
-		$res = add_item_sku_meta( $_POST['ID'] );
-		
+		//$res = add_item_sku_meta( $_POST['ID'] );
+		$res = add_item_sku_meta( $_POST['ID'], $mes );
 	}
 	
 	$meta = has_item_sku_meta( $_POST['ID'] );
@@ -1922,7 +1941,7 @@ function item_sku_ajax()
 	
 	$list = has_item_sku_list();
 	
-	$res = $r.'#usces#'.$list;
+	$res = $r.'#usces#'.$list.'#usces#'.$mes;
 	
 	die( $res );
 }

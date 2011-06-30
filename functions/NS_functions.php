@@ -1531,4 +1531,27 @@ function usces_get_item_cprice($post_id, $sku){
 	$field = get_post_meta($post_id, '_isku_'.$sku, true);
 	return $field['cprice'];
 }
+
+function NS_check_item_sku_options( $post_id, $sku ) {
+	global $wpdb, $usces;
+	$dup = true;
+
+	$orderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
+	$res = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
+			FROM $wpdb->postmeta WHERE post_id = %d AND meta_key LIKE '%s' 
+			ORDER BY {$orderby}", $post_id, '_isku_%'), ARRAY_A );
+	$skucnt = count($sku);
+	foreach( $res as $row ) {
+		if( is_serialized( $row['meta_value'] )) $row['meta_value'] = maybe_unserialize( $row['meta_value'] );
+		$chk = 0;
+		foreach($sku as $key => $value) {
+			if($row['meta_value']['option'][$key] == $value) $chk++;
+		}
+		if($chk == $skucnt) {
+			$dup = false;
+			break;
+		}
+	}
+	return $dup;
+}
 ?>

@@ -220,7 +220,7 @@
 				$("select#skukeyselect").html( strs[1] );
 			}, 
 			error: function(msg){
-				$("#skuajax-response").html(msg);
+				//$("#skuajax-response").html(msg);
 			}
 		},
 		
@@ -296,36 +296,42 @@
 				$("#newsku_loading").html('');
 				$("#sku_ajax-response").html('');
 				strs = data.split('#usces#');
-				$("table#skulist-table").removeAttr("style");
-				$("tbody#skukeyselect").html( strs[1] );
-				$("tbody#item-sku-list").html( strs[0] );
-				$("#skukeyselect").attr({selectedIndex:0});
-				$("#newskuname").val("");
-				$("#newskucprice").val("");
-				$("#newskuprice").val("");
-				$("#newskuzaikonum").val("");
-				$("#newskuzaikonum").val("");
-				$("#newskuzaikoselect").attr({selectedIndex:0});
-				$("#newskudisp").val("");
-				$("#newskuunit").val("");
-				//$("#newskugptekiyo").attr({selectedIndex:0});
-				//$("#newcharging_type").attr({selectedIndex:0});
-				//if( undefined != $("input[name='newskuadvance']").val() )
-				//	$("#newskuadvance").val("");
-				//if( undefined != $("select[name='newskuadvance']").val() )
-				//	$("#newskuadvance").attr({selectedIndex:0});
-				$("#newskugprice").val("");
-				$("#newskumprice").val("");
-				$(":input[name^='"+skuoption_name+"']").each(function(i, obj) {
-					//if($(this).attr('class') == 'item-sku-option') {
-					//	$(this).attr('selectedIndex', 0);
-					//} else {
-						$(this).val("");
-					//}
-				});
+				if(0 < strs[2].length) {
+					$mes = '<div class="error"><p>'+strs[2]+'</p></div>';
+					$("#sku_ajax-response").html( $mes );
+				} else {
+					$("table#skulist-table").removeAttr("style");
+					$("tbody#skukeyselect").html( strs[1] );
+					$("tbody#item-sku-list").html( strs[0] );
+					$("#skukeyselect").attr({selectedIndex:0});
+					$("#newskuname").val("");
+					$("#newskucprice").val("");
+					$("#newskuprice").val("");
+					$("#newskuzaikonum").val("");
+					$("#newskuzaikonum").val("");
+					$("#newskuzaikoselect").attr({selectedIndex:0});
+					$("#newskudisp").val("");
+					$("#newskuunit").val("");
+					//$("#newskugptekiyo").attr({selectedIndex:0});
+					//$("#newcharging_type").attr({selectedIndex:0});
+					//if( undefined != $("input[name='newskuadvance']").val() )
+					//	$("#newskuadvance").val("");
+					//if( undefined != $("select[name='newskuadvance']").val() )
+					//	$("#newskuadvance").attr({selectedIndex:0});
+					$("#newskugprice").val("");
+					$("#newskumprice").val("");
+					$(":input[name^='"+skuoption_name+"']").each(function(i, obj) {
+						//if($(this).attr('class') == 'item-sku-option') {
+						//	$(this).attr('selectedIndex', 0);
+						//} else {
+							$(this).val("");
+						//}
+					});
+				}
 			};
 			s.error = function(msg){
 				$("#newsku_loading").html('');
+				$("#sku_ajax-response").html(msg);
 			};
 			$.ajax( s );
 			return false;
@@ -396,6 +402,18 @@
 			s.success = function(data, dataType){
 				$("#sku_ajax-response").html('');
 				$("#sku_loading-" + meta_id).html('');
+				strs = data.split('#usces#');
+				if(0 < strs[2].length) {
+					$mes = '<div class="error"><p>'+strs[2]+'</p></div>';
+					$("#sku_ajax-response-" + meta_id).html( $mes );
+				} else {
+					$("#sku_ajax-response-" + meta_id).html('');
+				}
+			};
+			s.error = function(msg){
+				$("#sku_ajax-response").html('');
+				$("#sku_loading-" + meta_id).html('');
+				$("#sku_ajax-response-" + meta_id).html(msg);
 			};
 			$.ajax( s );
 			return false;
@@ -405,6 +423,9 @@
 			var id = $("#post_ID").val();
 			var s = itemSku.settings;
 			s.data = "action=item_sku_ajax&ID=" + id + "&delete=1&skumetaid=" + meta_id;
+			s.error = function(msg){
+				$("#sku_ajax-response").html(msg);
+			};
 			$.ajax( s );
 			return false;
 		},
@@ -423,6 +444,9 @@
 				$("#newskuprice").val(strs[0]);
 				$("#newskugprice").val(strs[2]);
 				$("#newskumprice").val(strs[3]);
+			};
+			s.error = function(msg){
+				$("#sku_ajax-response").html(msg);
 			};
 			$.ajax( s );
 			return false;
