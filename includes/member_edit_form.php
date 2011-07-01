@@ -230,7 +230,7 @@ jQuery(document).ready(function($){
 			$mochi_options = $advance['mochi_head']['mochi_head_sku'];
 			$idObj = get_category_by_slug($mochi_options['genre']);
 			$genre = $idObj->cat_name;
-			$bore = ($mochi_options['bore'] == "straight") ? 'ストレート・ボア' : 'ノーマル・ボア';
+			$bore = ($mochi_options['bore'] == "straight") ? 'スルー・ボア' : 'ノーマル・ボア';
 			$setstr .= 'お持込ヘッド<br />';
 			$setstr .= '　　種類 : '.$genre.'<br />';
 			$setstr .= '　　タイプ : '.$bore.'<br />';

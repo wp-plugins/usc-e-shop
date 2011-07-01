@@ -776,7 +776,7 @@ class NS_SetPage
 		case 'head':
 			switch($this->product[$type]['options']['bore']) {
 			case "straightbore":
-				$bore = 'ストレート・ボア'; break;
+				$bore = 'スルー・ボア'; break;
 			case "normal":
 				$bore = 'ノーマル・ボア'; break;
 			case "undecided":
@@ -864,7 +864,7 @@ function NS_mochikomihin( $action ){
 				<label for="mochi_bore" class="mochi_label">タイプ</label><select name="mochiopt[bore]" id="mochi_bore" class="mochi_select">
 					<option value="">選択してください</option>
 					<option value="normal">ノーマル・ボア</option>
-					<option value="straightbore">ストレート・ボア</option>
+					<option value="straightbore">スルー・ボア</option>
 					<option value="undecided">わからない</option>
 				</select>
 				<label for="mochi_maker" class="mochi_label">メーカー</label><input name="mochiopt[maker]" type="text" id="mochi_maker" class="mochi_text"/>

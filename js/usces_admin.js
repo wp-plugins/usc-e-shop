@@ -273,6 +273,40 @@
 				sp = '#usces#';
 			});
 
+			//option check
+			var newstr = '';
+			var str = '';
+			var elm_sku = $("input[name='updateitemsku']");
+			var storage = {};
+			var dep = false;
+			$("select[name^='newskuoption']").each(function(i, obj) {
+				newstr += $(obj).val();
+			});
+			storage[newstr] = 1;
+			if( 0 < elm_sku.length ){
+				$( elm_sku ).each(function(i1, obj1) {
+					var id = $(obj1).attr('id');
+					id = id.replace(/updateitemsku\[(.+)\]/, '$1');
+					$("select[name^='itemsku\["+id+"\]\[skuoption\]']").each(function(i2, obj2) {
+						str += $(obj2).val();
+					});
+					if ( str in storage ) {
+						dep = true;
+					}else{
+						storage[str] = 1;
+					}
+					str = '';
+				});
+			}
+			
+			if( dep ){
+				$mes = '<div class="error">';
+				$mes += '<p>商品規格が他のSKUと重複しています。</p>';
+				$mes += '</div>';
+				$("#sku_ajax-response").html($mes);
+				return false;
+			}
+
 			if( '' == name || '' == price ){
 				$mes = '<div class="error">';
 				if( '' == name )
@@ -380,6 +414,33 @@
 				skuoption += sp + $(this).val();
 				sp = '#usces#';
 			});
+			//option check
+			var str = '';
+			var elm_sku = $("input[name='updateitemsku']");
+			var storage = {};
+			var dep = false;
+			if( 1 < elm_sku.length ){
+				$( elm_sku ).each(function(i1, obj1) {
+					var id = $(obj1).attr('id');
+					id = id.replace(/updateitemsku\[(.+)\]/, '$1');
+					$("select[name^='itemsku\["+id+"\]\[skuoption\]']").each(function(i2, obj2) {
+						str += $(obj2).val();
+					});
+					if ( str in storage ) {
+						dep = true;
+					}else{
+						storage[str] = 1;
+					}
+					str = '';
+				});
+			}
+			if( dep ){
+				$mes = '<div class="error">';
+				$mes += '<p>商品規格が他のSKUと重複しています。</p>';
+				$mes += '</div>';
+				$("#sku_ajax-response-" + meta_id).html($mes);
+				return false;
+			}
 			if( '' == name || '' == price ){
 				$mes = '<div class="error">';
 				if( '' == name )

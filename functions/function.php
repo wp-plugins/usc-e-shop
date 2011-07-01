@@ -118,7 +118,7 @@ function usces_order_confirm_message($order_id) {
 				$genre = $idObj->cat_name;
 				switch($mochi_options['bore']) {
 				case "straightbore":
-					$bore = 'ストレート・ボア'; break;
+					$bore = 'スルー・ボア'; break;
 				case "normal":
 					$bore = 'ノーマル・ボア'; break;
 				case "undecided":
@@ -357,7 +357,7 @@ function usces_send_ordermail($order_id) {
 				$genre = $idObj->cat_name;
 				switch($mochi_options['bore']) {
 				case "straightbore":
-					$bore = 'ストレート・ボア'; break;
+					$bore = 'スルー・ボア'; break;
 				case "normal":
 					$bore = 'ノーマル・ボア'; break;
 				case "undecided":
@@ -3271,7 +3271,7 @@ function usces_get_cart_rows( $out = '' ) {
 				$genre = $idObj->cat_name;
 				switch($mochi_options['bore']) {
 				case "straightbore":
-					$bore = 'ストレート・ボア'; break;
+					$bore = 'スルー・ボア'; break;
 				case "normal":
 					$bore = 'ノーマル・ボア'; break;
 				case "undecided":
@@ -3390,7 +3390,7 @@ function usces_get_confirm_rows( $out = '' ) {
 				$genre = $idObj->cat_name;
 				switch($mochi_options['bore']) {
 				case "straightbore":
-					$bore = 'ストレート・ボア'; break;
+					$bore = 'スルー・ボア'; break;
 				case "normal":
 					$bore = 'ノーマル・ボア'; break;
 				case "undecided":

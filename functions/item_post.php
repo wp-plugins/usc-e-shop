@@ -708,10 +708,10 @@ function add_item_sku_meta( $post_ID, &$mes ) {
 			$value['option'][$newskukey[$i]] = $newskuoption[$i];
 		}
 
-		if(NS_check_item_sku_options( $post_ID, $value['option'] ) == false) {
-			$mes = esc_html('商品規格が重複しています');
-			return false;
-		}
+//		if(NS_check_item_sku_options( $post_ID, $value['option'] ) == false) {
+//			$mes = esc_html('商品規格が重複しています');
+//			return false;
+//		}
 
 		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
 		$unique = true;
@@ -852,10 +852,10 @@ function up_item_sku_meta( $post_ID, &$mes ) {
 		$value['option'][$skukey[$i]] = $skuoption[$i];
 	}
 	
-	if(NS_check_item_sku_options( $post_ID, $value['option'] ) == false) {
-		$mes = esc_html('商品規格が重複しています');
-		return false;
-	}
+//	if(NS_check_item_sku_options( $post_ID, $value['option'] ) == false) {
+//		$mes = esc_html('商品規格が重複しています');
+//		return false;
+//	}
 
 	$value = apply_filters('usces_filter_up_item_sku_meta_value', $value);
 
