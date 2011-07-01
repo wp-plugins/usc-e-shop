@@ -119,13 +119,75 @@ function usces_pdf_out(&$pdf, $data){
 
 		//---------------------------------------------------------
 		$post_id = $cart_row['post_id'];
-		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
-		$optstr =  '';
-		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
-			foreach($cart_row['options'] as $key => $value){
-				if( !empty($key) )
-					$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
+		//$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+		//$optstr =  '';
+		//if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
+		//	foreach($cart_row['options'] as $key => $value){
+		//		if( !empty($key) )
+		//			$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
+		//	}
+		//}
+		$itemCode = $usces->getItemCode($post_id);
+		$y = 0;
+		if( $itemCode == NS_ITEM_SET ) {
+			$options = $cart_row['options'];
+			$advance = $usces->cart->wc_unserialize($cart_row['advance']);
+			$meisai = '　ヘッド : ';
+			if($options['set_head'] < 0) {
+				$mochi_options = $advance['mochi_head']['mochi_head_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				switch($mochi_options['bore']) {
+				case "straightbore":
+					$bore = 'スルー・ボア'; break;
+				case "normal":
+					$bore = 'ノーマル・ボア'; break;
+				case "undecided":
+				default:
+					$bore = '不明'; break;
+				}
+				$meisai .= "お持込ヘッド\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+				$meisai .= '　　タイプ : '.$bore."\r\n";
+				$meisai .= '　　メーカー : '.$mochi_options['maker']."\r\n";
+				$y = 4;
+			} else {
+				$meisai .= $usces->getCartItemName($options['set_head'], $options['set_head_sku'])."\r\n";
+				$y++;
 			}
+			$meisai .= '　シャフト : ';
+			if($options['set_shuft'] < 0) {
+				$mochi_options = $advance['mochi_shuft']['mochi_shuft_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$meisai .= "お持込シャフト\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+			} else {
+				$meisai .= $usces->getCartItemName($options['set_shuft'], $options['set_shuft_sku'])."\r\n";
+				$y++;
+			}
+			$meisai .= '　グリップ : ';
+			if($options['set_grip'] < 0) {
+				$mochi_options = $advance['mochi_grip']['mochi_grip_sku'];
+				$idObj = get_category_by_slug($mochi_options['genre']);
+				$genre = $idObj->cat_name;
+				$meisai .= "お持込グリップ\r\n";
+				$meisai .= '　　種類 : '.$genre."\r\n";
+			} else {
+				$meisai .= $usces->getCartItemName($options['set_grip'], $options['set_grip_sku'])."\r\n";
+				$y++;
+			}
+			$y++;
+		} else {
+			$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+			$optstr =  '';
+			if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
+				foreach($cart_row['options'] as $key => $value){
+					if( !empty($key) )
+						$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
+				}
+			}
+			$y = 2;
 		}
 
 			$line_y[$index] = $next_y;
@@ -135,6 +197,16 @@ function usces_pdf_out(&$pdf, $data){
 			$pdf->SetXY($x-0.2, $line_y[$index]);
 			$pdf->MultiCell(3.6, $lineheight, '*', $border, 'C');
 			$pdf->SetXY($x+3.0, $line_y[$index]);
+
+		if( $itemCode == NS_ITEM_SET ) {
+			$pdf->MultiCell(84.6, $lineheight, usces_conv_euc("セット商品組み立て工賃"), $border, 'L');
+			if( 'receipt' != $_REQUEST['type'] ){
+				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+				$pdf->SetFont(GOTHIC, '', $fontsize);
+				$pdf->SetXY($x+6.0, $pdf->GetY()+$linetop);
+				$pdf->MultiCell(81.6, $lineheight-0.2, usces_conv_euc($meisai), $border, 'L');
+			}
+		} else {
 			$pdf->MultiCell(84.6, $lineheight, usces_conv_euc($cartItemName), $border, 'L');
 			if( 'receipt' != $_REQUEST['type'] ){
 				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
@@ -142,8 +214,10 @@ function usces_pdf_out(&$pdf, $data){
 				$pdf->SetXY($x+6.0, $pdf->GetY()+$linetop);
 				$pdf->MultiCell(81.6, $lineheight-0.2, usces_conv_euc($optstr), $border, 'L');
 			}
+		}
 						
-			$next_y = $pdf->GetY()+2;
+			//$next_y = $pdf->GetY()+2;
+			$next_y = $pdf->GetY()+$y;
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
 			$pdf->SetXY($x+88.0, $line_y[$index]);
