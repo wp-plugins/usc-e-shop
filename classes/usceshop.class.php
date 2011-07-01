@@ -1480,9 +1480,11 @@ class usc_e_shop
 				}
 		<?php if( NS_have_sku_option() ) : ?>
 				$(':input[name^="opt"]').each(function(i, obj) {
-					if($(this).val() == '') {
-						name = $(this).attr("name").substring(3);
-						mes += name+'を選択してください。'+"\n";
+					if($(this).attr("class") == 'sku_option_select_field') {
+						if($(this).val() == '') {
+							name = $(this).attr("name").substring(3);
+							mes += name+'を選択してください。'+"\n";
+						}
 					}
 				});
 		<?php endif; ?>

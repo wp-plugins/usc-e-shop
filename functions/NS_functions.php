@@ -519,9 +519,11 @@ class NS_SetPage
 			intoCart : function (post_id, sku) {
 				var mes = '';
 				$(':input[name^="opt"]').each(function(i, obj) {
-					if($(this).val() == '') {
-						name = $(this).attr("name").substring(3);
-						mes += name+'を選択してください。'+"\n";
+					if($(this).attr("class") == 'sku_option_select_field') {
+						if($(this).val() == '') {
+							name = $(this).attr("name").substring(3);
+							mes += name+'を選択してください。'+"\n";
+						}
 					}
 				});
 				for(i=0; i<key_opts.length; i++){

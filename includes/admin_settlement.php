@@ -393,9 +393,7 @@ ZEUS3D -->
 				<td><div id="ex_bank_jpayment" class="explanation"><?php _e('バンクチェック決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
 		</table>
-<!--20110208ysk start-->
-		<!--<input name="send_url" type="hidden" value="https://credit.j-payment.co.jp/gateway/payform.aspx" />-->
-<!--20110208ysk end-->
+		<input name="send_url" type="hidden" value="https://credit.j-payment.co.jp/gateway/payform.aspx" />
 		<input name="acting" type="hidden" value="jpayment" />
 		<input name="usces_option_update" type="submit" class="button" value="J-Paymentの設定を更新する" />
 	</form>
