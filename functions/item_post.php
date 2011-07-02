@@ -2014,6 +2014,10 @@ function item_save_metadata() {
 		$itemCountry = trim($_POST['itemCountry']);
 		update_post_meta($post_id, '_itemCountry', $itemCountry);
 	}
+	if(isset($_POST['itemMaker'])){
+		$itemMaker = trim($_POST['itemMaker']);
+		update_post_meta($post_id, '_itemMaker', $itemMaker);
+	}
 	if(isset($_POST['itemShipping'])){
 		$itemShipping = (int)$_POST['itemShipping'];
 		update_post_meta($post_id, '_itemShipping', $itemShipping);

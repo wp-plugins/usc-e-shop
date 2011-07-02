@@ -200,23 +200,18 @@ function NS_get_page_id_by_slug( $slug ){
 
 /**********************************************************
  * Explanation	: メーカ名表示
- * UpDate		: 2011.05.31
+ * UpDate		: 2011.07.02
  * Echo			: strings
  **********************************************************/
 //function NS_teh_item_maker(){
-function NS_the_item_maker(){
-	$maker = '';
-	$termID = get_cat_ID( 'メーカー' );
-	$taxonomyName = "category";
-	$termchildren = get_term_children( $termID, $taxonomyName );
-	foreach ($termchildren as $child) {
-		if(in_category($child)){
-			$term = get_term_by( 'id', $child, $taxonomyName );
-			$maker = $term->name;
-		}
+function NS_the_item_maker( $post_id = NULL ){
+	if( empty($post_id) ){
+		global $post;
+		$post_id = $post->ID;
 	}
-	
-	echo esc_html($maker);
+	$maker = get_post_meta($post_id, '_itemMaker', true);
+	$res = ('#NONE#' == $maker) ? '' : esc_html($maker);
+	echo $res;
 }
 /**********************************************************
  * Explanation	: セールタグ表示
@@ -376,7 +371,7 @@ function NS_the_item_country( $post = '' ){
 	global $usces_settings;
 	if($post == '') global $post;
 	$country = get_post_meta($post->ID, '_itemCountry', true);
-	$str = empty($country) ? '' : ('生産国：'.$usces_settings['country'][$country]);
+	$str = ( '#NONE#' == $country) ? '' : ('生産国：'.esc_html($usces_settings['country'][$country]));
 	echo $str;
 }
 /**********************************************************

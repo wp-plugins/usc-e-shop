@@ -282,6 +282,7 @@
 			$("select[name^='newskuoption']").each(function(i, obj) {
 				newstr += $(obj).val();
 			});
+
 			storage[newstr] = 1;
 			if( 0 < elm_sku.length ){
 				$( elm_sku ).each(function(i1, obj1) {
@@ -298,6 +299,19 @@
 					str = '';
 				});
 			}
+
+			if( '' == name || '' == price || newstr.match(/#NONE#/i)){
+				$mes = '<div class="error">';
+				if( '' == name )
+					$mes += '<p>SKUコードの値を入力してください。</p>';
+				if( '' == price )
+					$mes += '<p>売価の値を入力してください。</p>';
+				if( newstr.match(/#NONE#/i) )
+					$mes += '<p>商品規格を選択してください。</p>';
+				$mes += '</div>';
+				$("#sku_ajax-response").html($mes);
+				return false;
+			}
 			
 			if( dep ){
 				$mes = '<div class="error">';
@@ -307,16 +321,6 @@
 				return false;
 			}
 
-			if( '' == name || '' == price ){
-				$mes = '<div class="error">';
-				if( '' == name )
-					$mes += '<p>SKUコードの値を入力してください。</p>';
-				if( '' == price )
-					$mes += '<p>売価の値を入力してください。</p>';
-				$mes += '</div>';
-				$("#sku_ajax-response").html($mes);
-				return false;
-			}
 			if( !$("#newsku_loading").length ){
 				$("#add_itemsku").before('<div id="newsku_loading"></div>');
 			}
@@ -434,21 +438,23 @@
 					str = '';
 				});
 			}
-			if( dep ){
-				$mes = '<div class="error">';
-				$mes += '<p>商品規格が他のSKUと重複しています。</p>';
-				$mes += '</div>';
-				$("#sku_ajax-response-" + meta_id).html($mes);
-				return false;
-			}
-			if( '' == name || '' == price ){
+			if( '' == name || '' == price || skuoption.match(/#NONE#/i)){
 				$mes = '<div class="error">';
 				if( '' == name )
 					$mes += '<p>SKUコードの値を入力してください。</p>';
 				if( '' == price )
 					$mes += '<p>売価の値を入力してください。</p>';
+				if( skuoption.match(/#NONE#/i) )
+					$mes += '<p>商品規格を選択してください。</p>';
 				$mes += '</div>';
-				$("#sku_ajax-response").html($mes);
+				$("#sku_ajax-response-" + meta_id).html($mes);
+				return false;
+			}
+			if( dep ){
+				$mes = '<div class="error">';
+				$mes += '<p>商品規格が他のSKUと重複しています。</p>';
+				$mes += '</div>';
+				$("#sku_ajax-response-" + meta_id).html($mes);
 				return false;
 			}
 			var deleteitemsku = 'input[name="deleteitemsku\[' +  meta_id + '\]"]';

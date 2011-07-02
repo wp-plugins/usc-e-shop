@@ -290,6 +290,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 global $usces_settings;
 $itemStar = get_post_custom_values('_itemStar', $post_ID);
 $itemCountry = get_post_custom_values('_itemCountry', $post_ID);
+$itemMaker = get_post_custom_values('_itemMaker', $post_ID);
 /*************************************** 30 */
 ?>
 
@@ -370,12 +371,24 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 </select>
 <input type="hidden" name="itemStar_nonce" id="itemStar_nonce" value="<?php echo wp_create_nonce( 'itemStar_nonce' ); ?>" /></td>
 </tr>
+<tr>
 <th>生産国</th>
 <td>
 <select name="itemCountry" id="itemCountry" class="itemShipping">
 	<option value="#NONE#"<?php echo ($itemCountry[0] == "#NONE#") ? ' selected' : ''; ?>><?php _e('Non-request', 'usces'); ?></option>
 <?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
-    <option value="<?php echo $Ckey; ?>"<?php echo ($itemCountry[0] == $Ckey ? ' selected' : ''); ?>><?php echo $Cvalue; ?></option>
+    <option value="<?php esc_attr_e($Ckey); ?>"<?php echo ($itemCountry[0] == $Ckey ? ' selected' : ''); ?>><?php esc_html_e($Cvalue); ?></option>
+<?php } ?>
+</select>
+<input type="hidden" name="itemCountry_nonce" id="itemCountry_nonce" value="<?php echo wp_create_nonce( 'itemCountry_nonce' ); ?>" /></td>
+</tr>
+<tr>
+<th>メーカー</th>
+<td>
+<select name="itemMaker" id="itemMaker" class="itemShipping">
+	<option value="#NONE#"<?php echo ($itemMaker[0] == "#NONE#") ? ' selected' : ''; ?>><?php _e('Non-request', 'usces'); ?></option>
+<?php foreach( $usces_settings['maker'] as $Ckey => $Cvalue ){ ?>
+    <option value="<?php esc_attr_e($Ckey); ?>"<?php echo ($itemMaker[0] == $Ckey ? ' selected' : ''); ?>><?php esc_html_e($Cvalue); ?></option>
 <?php } ?>
 </select>
 <input type="hidden" name="itemCountry_nonce" id="itemCountry_nonce" value="<?php echo wp_create_nonce( 'itemCountry_nonce' ); ?>" /></td>
