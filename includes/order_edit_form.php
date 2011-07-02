@@ -5,6 +5,31 @@ $this->action_status = 'none';
 $this->action_message = '';
 
 $management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
+$payment_method = $this->options['payment_method'];
+foreach( $payment_method as $pmet){
+	$pname[] = $pmet['name'];
+}
+if( !in_array( __('Transfer (prepayment)', 'usces'), $pname) ){
+	$newp['name'] = __('Transfer (prepayment)', 'usces');
+	$newp['explanation'] = '';
+	$newp['settlement'] = 'transferAdvance';
+	$newp['module'] = '';
+	$payment_method[] = $newp;
+}
+if( !in_array( __('Transfer (postpay)', 'usces'), $pname) ){
+	$newp['name'] = __('Transfer (postpay)', 'usces');
+	$newp['explanation'] = '';
+	$newp['settlement'] = 'transferDeferred';
+	$newp['module'] = '';
+	$payment_method[] = $newp;
+}
+if( !in_array( __('COD', 'usces'), $pname) ){
+	$newp['name'] = __('COD', 'usces');
+	$newp['explanation'] = '';
+	$newp['settlement'] = 'COD';
+	$newp['module'] = '';
+	$payment_method[] = $newp;
+}
 
 if($order_action == 'new'){
 
@@ -121,7 +146,13 @@ jQuery(function($){
 		var pay_name = $("select[name='offer\[payment_name\]'] option:selected").val();
 //20101018ysk start
 		//if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
-		if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred' || uscesPayments[pay_name] == 'acting_remise_conv' || uscesPayments[pay_name] == 'acting_zeus_bank' || uscesPayments[pay_name] == 'acting_zeus_conv' || uscesPayments[pay_name] == 'acting_jpayment_conv' || uscesPayments[pay_name] == 'acting_jpayment_bank'){
+		if( uscesPayments[pay_name] == 'transferAdvance' 
+			|| uscesPayments[pay_name] == 'transferDeferred' 
+			|| uscesPayments[pay_name] == 'acting_remise_conv' 
+			|| uscesPayments[pay_name] == 'acting_zeus_bank' 
+			|| uscesPayments[pay_name] == 'acting_zeus_conv' 
+			|| uscesPayments[pay_name] == 'acting_jpayment_conv' 
+			|| uscesPayments[pay_name] == 'acting_jpayment_bank'){
 //20101018ysk end
 			var label = '<?php _e('transfer statement', 'usces'); ?>';
 			var html = "<select name='offer[receipt]'>\n";
@@ -648,8 +679,8 @@ jQuery(document).ready(function($){
 <td class="col1"><select name="offer[payment_name]" id="order_payment_name">
     <option value="#none#"><?php _e('-- Select --', 'usces'); ?></option>
 <?php 
-if( $this->options['payment_method'] ) {
-	foreach ((array)$this->options['payment_method'] as $payments) {
+if( $payment_method ) {
+	foreach ((array)$payment_method as $payments) {
 	if( $payments['name'] != '' ) {
 		$selected = ($payments['name'] == $data['order_payment_name']) ? ' selected="selected"' : '';
 ?>
