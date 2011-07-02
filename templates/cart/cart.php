@@ -58,7 +58,7 @@ if( usces_is_cart() ) {
 		$stockid = $this->getItemZaikoStatusId($post_id, $cart_row['sku']);
 		$stock = $this->getItemZaiko($post_id, $cart_row['sku']);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
-		$pictids = $this->get_pictids($itemCode);
+		$pictid = $this->get_mainpictid($itemCode);
 		if (!empty($options)) {
 //			$optstr = implode(',', $options);
 		} else { 
@@ -69,14 +69,16 @@ if( usces_is_cart() ) {
 		$html .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
-			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a>';
-			$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
+			$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 			$html .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 				if( !empty($key) )
-					$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
+			$html .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
 		$html .= '</td>
 			<td class="aright">';

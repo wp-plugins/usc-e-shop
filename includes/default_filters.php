@@ -126,10 +126,6 @@ add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
 add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata', 10, 2);
 
 
-
-add_filter('usces_filter_delivery_check', 'usces_filter_delivery_secure_check', 9);
-
-
 //20100818ysk start
 add_filter('usces_filter_customer_check', 'usces_filter_customer_check_custom_customer', 10);
 add_filter('usces_filter_delivery_check', 'usces_filter_delivery_check_custom_delivery', 10);

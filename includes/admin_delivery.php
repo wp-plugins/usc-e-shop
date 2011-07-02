@@ -849,7 +849,8 @@ jQuery(function($){
 				//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[i] + "</label><input type='text' name='delivery_days_value[" + pref[i] + "]' value='" + delivery_days[selected]['value'][pref[i]] + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 				//}
 				for(var i=0; i<pref[country].length; i++){
-					value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+					//value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+					value = (delivery_days[selected] == undefined || delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
 					valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[country][i] + "</label><input type='text' name='delivery_days_value[" + pref[country][i] + "]' value='" + value + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 				}
 				$("#delivery_days_country").val(country);
@@ -1059,7 +1060,8 @@ jQuery(function($){
 		var value = '';
 		var valuehtml = '';
 		for(var i=0; i<pref[country].length; i++){
-			value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+			//value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+			value = (delivery_days[selected] == undefined || delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
 			valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[country][i] + "</label><input type='text' name='delivery_days_value[" + pref[country][i] + "]' value='" + value + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 		}
 		$("#delivery_days_value").html(valuehtml);

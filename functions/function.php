@@ -99,7 +99,7 @@ function usces_order_confirm_message($order_id) {
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictids = $usces->get_pictids($itemCode);
+//		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
 //			$optstr = implode(',', $options);
 		} else { 
@@ -111,9 +111,25 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$optstr .= $key . ' : ';
+						foreach($value as $v) {
+							$optstr .= $c.urldecode($v);
+							$c = ', ';
+						}
+						$optstr .= "\r\n"; 
+					} else {
+						$optstr .= $key . ' : ' . urldecode($value) . "\r\n"; 
+					}
+				}
+//20110629ysk end
 			}
+			$meisai .= apply_filters( 'usces_filter_option_adminmail', $optstr, $options);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
@@ -291,7 +307,7 @@ function usces_send_ordermail($order_id) {
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictids = $usces->get_pictids($itemCode);
+//		$pictids = $usces->get_pictids($itemCode);
 		if (!empty($options)) {
 //			$optstr = implode(',', $options);
 		} else { 
@@ -303,9 +319,25 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$optstr .= $key. ' : ';
+						foreach($value as $v) {
+							$optstr .= $c.urldecode($v);
+							$c = ', ';
+						}
+						$optstr .= "\r\n"; 
+					} else {
+						$optstr .= $key . ' : ' . urldecode($value) . "\r\n"; 
+					}
+				}
+//20110629ysk end
 			}
+			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
@@ -972,7 +1004,8 @@ function usces_new_orderdata() {
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $_POST['offer']['payment_name'] );
-	$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt,' : '';
+	//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt,' : '';
+	$status = 'noreceipt,';
 	$status .= ( $_POST['offer']['taio'] != '' ) ? $_POST['offer']['taio'].',' : '';
 	$status .= $_POST['offer']['admin'];
 	$order_conditions = $usces->get_condition();
@@ -1027,7 +1060,7 @@ function usces_new_orderdata() {
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
 				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %f, %d, %d, %f, %f, %f, %f, %s, %s, %s)", 
-					$member['ID'], 
+					$member_id, 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
 					$_POST['customer']['name2'], 
@@ -1342,6 +1375,7 @@ function usces_update_orderdata() {
 		$order_modified = '';
 	}
 	$ordercheck = isset($_POST['check']) ? serialize($_POST['check']) : '';
+	$member_id = $usces->get_memberid_by_email($_POST['customer']['mailaddress']);
 	
 //$wpdb->show_errors();
 //20101208ysk start
@@ -1389,13 +1423,14 @@ function usces_update_orderdata() {
 */
 	$query = $wpdb->prepare(
 				"UPDATE $order_table_name SET 
-					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
+					`mem_id`=%d, `order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
 					`order_zip`=%s, `order_pref`=%s, `order_address1`=%s, `order_address2`=%s, `order_address3`=%s, 
 					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
 					`order_delivery_method`=%d, `order_delivery_date`=%s, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%f, `order_getpoint`=%d, `order_usedpoint`=%d, 
 					`order_discount`=%f, `order_shipping_charge`=%f, `order_cod_fee`=%f, `order_tax`=%f, `order_modified`=%s, 
 					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
 				WHERE ID = %d", 
+					$member_id, 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
 					$_POST['customer']['name2'], 
@@ -2826,12 +2861,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			//20100818ysk end
 			$formtag .= '<tr class="inp1">
-			<th width="127" scope="row"><em>*</em>'.__('Full name', 'usces').'</th>
+			<th width="127" scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces').'</th>
 			<td width="257">'.__('Familly name', 'usces').'<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			<td width="257">'.__('Given name', 'usces').'<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			</tr>';
 			$formtag .= '<tr class="inp1">
-			<th scope="row">'.__('furigana', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('name3').__('furigana', 'usces').'</th>
 			<td>'.__('Familly name', 'usces').'<input name="' . $type . '[name3]" id="name3" type="text" value="' . esc_attr($values['name3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			<td>'.__('Given name', 'usces').'<input name="' . $type . '[name4]" id="name4" type="text" value="' . esc_attr($values['name4']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
 			</tr>';
@@ -2839,35 +2874,35 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
 			//20100818ysk end
 			$formtag .= '<tr>
-			<th scope="row"><em>*</em>'.__('Zip/Postal Code', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('zipcode').__('Zip/Postal Code', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />100-1000</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
 			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>'.__('Province', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('states').__('Province', 'usces').'</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . '</td>
 			</tr>
 			<tr class="inp2">
-			<th scope="row"><em>*</em>'.__('city', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address1').__('city', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.__('Kitakami Yokohama', 'usces').'</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>'.__('numbers', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address2').__('numbers', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />3-24-555</td>
 			</tr>
 			<tr>
-			<th scope="row">'.__('building name', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address3').__('building name', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.__('tuhanbuild 4F', 'usces').'</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>'.__('Phone number', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('tel').__('Phone number', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />1000-10-1000</td>
 			</tr>
 			<tr>
-			<th scope="row">'.__('FAX number', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('fax').__('FAX number', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />1000-10-1000</td>
 			</tr>';
 			//20100818ysk start
@@ -2880,7 +2915,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			//20100818ysk end
 			$formtag .= '<tr class="inp1">
-			<th scope="row"><em>*</em>' . __('Full name', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces') . '</th>
 			<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" /></td>
 			<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" /></td>
 			</tr>';
@@ -2889,35 +2924,35 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk end
 			$formtag .= '
 			<tr>
-			<th scope="row"><em>*</em>' . __('Address Line1', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address2') . __('Address Line1', 'usces') . '</th>
 			<td colspan="2">' . __('Street address', 'usces') . '<br /><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row">' . __('Address Line2', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address3') . __('Address Line2', 'usces') . '</th>
 			<td colspan="2">' . __('Apartment, building, etc.', 'usces') . '<br /><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" /></td>
 			</tr>
 			<tr class="inp2">
-			<th scope="row"><em>*</em>' . __('city', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address1') . __('city', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('State', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('states') . __('State', 'usces') . '</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Country', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
 			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Zip', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('zipcode') . __('Zip', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row"><em>*</em>' . __('Phone number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('tel') . __('Phone number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" /></td>
 			</tr>
 			<tr>
-			<th scope="row">' . __('FAX number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('fax') . __('FAX number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" /></td>
 			</tr>';
 			//20100818ysk start
@@ -2934,6 +2969,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 	} else {
 		echo $res;
 	}
+}
+
+function usces_get_essential_mark( $type ){
+	global $usces_essential_mark;
+	do_action('usces_action_essential_mark');
+	return $usces_essential_mark[$type];
 }
 
 function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return' ){
@@ -3250,7 +3291,7 @@ function usces_get_cart_rows( $out = '' ) {
 		$stockid = $usces->getItemZaikoStatusId($post_id, $cart_row['sku']);
 		$stock = $usces->getItemZaiko($post_id, $cart_row['sku']);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
-		$pictids = $usces->get_pictids($itemCode);
+		$pictid = $usces->get_mainpictid($itemCode);
 		if ( empty($options) ) {
 			$optstr =  '';
 			$options =  array();
@@ -3259,14 +3300,30 @@ function usces_get_cart_rows( $out = '' ) {
 		$res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
-			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a>';
-			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
+			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$optstr .= esc_html($key) . ' : '; 
+						foreach($value as $v) {
+							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$c = ', ';
+						}
+						$optstr .= "<br />\n"; 
+					} else {
+						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					}
+				}
+//20110629ysk end
 			}
+			$res .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
 		$res .= '</td>
 			<td class="aright">';
@@ -3282,7 +3339,16 @@ function usces_get_cart_rows( $out = '' ) {
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';
 		foreach($options as $key => $value){
-			$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+//20110629ysk start 0000190
+			//$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+			if(is_array($value)) {
+				foreach($value as $v) {
+					$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
+				}
+			} else {
+				$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+			}
+//20110629ysk end
 		}
 		$res .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
 			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
@@ -3321,7 +3387,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
 		$skuPrice = $cart_row['price'];
-		$pictids = $usces->get_pictids($itemCode);
+		$pictid = $usces->get_mainpictid($itemCode);
 		if (empty($options)) {
 			$optstr =  '';
 			$options =  array();
@@ -3330,14 +3396,30 @@ function usces_get_confirm_rows( $out = '' ) {
 		 $res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
-		$cart_thumbnail = wp_get_attachment_image( $pictids[0], array(60, 60), true );
-		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
+		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
+		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+				//if( !empty($key) )
+				//	 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$optstr .= esc_html($key) . ' : '; 
+						foreach($value as $v) {
+							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$c = ', ';
+						}
+						$optstr .= "<br />\n"; 
+					} else {
+						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					}
+				}
+//20110629ysk end
 			}
+			$res .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
 		 $res .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
@@ -3559,7 +3641,7 @@ function usces_page_name( $out = '') {
 
 function usces_post_reg_orderdata($order_id, $results){
 	global $usces, $wpdb;
-	$entry = $usces->cart->get_entry();
+	//$entry = $usces->cart->get_entry();//20110621ysk 0000184
 	$acting = $_GET['acting'];
 	$data = array();
 
@@ -3578,6 +3660,8 @@ function usces_post_reg_orderdata($order_id, $results){
 //20110208ysk start
 			case 'paypal_ec':
 				$trans_id = $_REQUEST['token'];
+//20110621ysk start 0000184
+/*
 //20110412ysk start
 				$cart = $usces->cart->get_cart();
 				$post_id = $cart[0]['post_id'];
@@ -3646,6 +3730,12 @@ function usces_post_reg_orderdata($order_id, $results){
 					}
 				}
 //20110412ysk end
+*/
+				if(isset($results['settlement_id'])) 
+					$usces->set_order_meta_value('settlement_id', $results['settlement_id'], $order_id);
+				if(isset($results['profile_id'])) 
+					$usces->set_order_meta_value('profile_id', $results['profile_id'], $order_id);
+//20110621ysk end
 				break;
 //20110208ysk end
 			case 'zeus_card':
@@ -3697,6 +3787,85 @@ function usces_post_reg_orderdata($order_id, $results){
 	}
 	
 }
+
+//20110621ysk start 0000184
+function usces_paypal_doecp( &$results ) {
+	global $usces;
+	$entry = $usces->cart->get_entry();
+
+	$cart = $usces->cart->get_cart();
+	$post_id = $cart[0]['post_id'];
+	$charging_type = $usces->getItemChargingType($post_id);
+	if( 'continue' != $charging_type) {
+		//通常購入
+		//Format the other parameters that were stored in the session from the previous calls
+		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);
+		$token = urlencode($_REQUEST['token']);
+		$paymentType = urlencode("Sale");
+		$currencyCodeType = urlencode($usces->get_currency_code());
+		$payerID = urlencode($_REQUEST['PayerID']);
+		$serverName = urlencode($_SERVER['SERVER_NAME']);
+
+		$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
+
+		$usces->paypal->setMethod('DoExpressCheckoutPayment');
+		$usces->paypal->setData($nvpstr);
+		$res = $usces->paypal->doExpressCheckout();
+		$resArray = $usces->paypal->getResponse();
+		$ack = strtoupper($resArray["ACK"]);
+		if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+			$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
+			//$usces->set_order_meta_value('settlement_id', $transactionId, $order_id);
+			$results['settlement_id'] = $transactionId;
+
+		} else {
+			//Display a user friendly Error on the page using any of the following error information returned by PayPal
+			$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+			$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+			$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+			$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+			usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+			return false;
+		}
+
+	} else {
+		//定期支払い
+		$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
+		$token = urlencode($_REQUEST['token']);
+		$currencyCodeType = urlencode($usces->get_currency_code());
+		$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+		$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
+		$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
+		$billingFreq = urlencode($usces->getItemFrequency($post_id));
+		//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
+		$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
+
+		$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
+
+		$usces->paypal->setMethod('CreateRecurringPaymentsProfile');
+		$usces->paypal->setData($nvpstr);
+		$res = $usces->paypal->doExpressCheckout();
+		$resArray = $usces->paypal->getResponse();
+		$ack = strtoupper($resArray["ACK"]);
+		if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+			$profileid = $resArray["PROFILEID"];
+			//$usces->set_order_meta_value('profile_id', $profileid, $order_id);
+			$results['profile_id'] = $profileid;
+
+		} else {
+			//Display a user friendly Error on the page using any of the following error information returned by PayPal
+			$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+			$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+			$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+			$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+			usces_log('PayPal : CreateRecurringPaymentsProfile API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+			return false;
+		}
+	}
+
+	return true;
+}
+//20110621ysk end
 //20110421ysk start
 function usces_make_agreement_description($cart, $amt) {
 	global $usces;

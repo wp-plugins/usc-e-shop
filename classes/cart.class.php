@@ -189,7 +189,16 @@ class usces_cart {
 	
 		if(isset($_POST['itemOption'])){
 			foreach( $_POST['itemOption'][$id][$sku] as $key => $value ){
-				$pots[$key] = urlencode($value);
+//20110629ysk start 0000190
+				//$pots[$key] = urlencode($value);
+				if( is_array($value) ) {
+					foreach( $value as $k => $v ) {
+						$pots[$key][urlencode(trim($v))] = urlencode(trim($v));
+					}
+				} else {
+					$pots[$key] = urlencode($value);
+				}
+//20110629ysk end
 			}
 			$sels[$id][$sku] = $pots;
 		}else{
@@ -204,7 +213,16 @@ class usces_cart {
 	
 		if(isset($_POST['itemOption'][$index])){
 			foreach( $_POST['itemOption'][$index][$id][$sku] as $key => $value ){
-				$pots[$key] = $value;
+//20110629ysk start 0000190
+				//$pots[$key] = $value;
+				if( is_array($value) ) {
+					foreach( $value as $k => $v ) {
+						$pots[$key][$v] = $v;
+					}
+				} else {
+					$pots[$key] = $value;
+				}
+//20110629ysk end
 			}
 			$sels[$id][$sku] = $pots;
 		}else{

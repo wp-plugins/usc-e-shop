@@ -500,8 +500,8 @@ jQuery(document).ready(function($){
 		$ftype_pro_csv = '';
 	}
 ?>
-		<label for="ftype_pro_xls"><input type="radio" name="ftype_pro[]" id="ftype_pro_xls" value="xls"<?php echo $ftype_pro_xls; ?> /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_pro_csv"><input type="radio" name="ftype_pro[]" id="ftype_pro_csv" value="csv"<?php echo $ftype_pro_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<label for="ftype_pro_xls"><input type="radio" name="ftype_pro[]" id="ftype_pro_xls" value="xls"<?php echo $ftype_pro_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_pro_csv"><input type="radio" name="ftype_pro[]" id="ftype_pro_csv" value="csv"<?php echo $ftype_pro_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_pro" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Header Information', 'usces'); ?></legend>
@@ -538,8 +538,8 @@ jQuery(document).ready(function($){
 		$ftype_ord_csv = '';
 	}
 ?>
-		<label for="ftype_ord_xls"><input type="radio" name="ftype_ord[]" id="ftype_ord_xls" value="xls"<?php echo $ftype_ord_xls; ?> /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_ord_csv"><input type="radio" name="ftype_ord[]" id="ftype_ord_csv" value="csv"<?php echo $ftype_ord_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<label for="ftype_ord_xls"><input type="radio" name="ftype_ord[]" id="ftype_ord_xls" value="xls"<?php echo $ftype_ord_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_ord_csv"><input type="radio" name="ftype_ord[]" id="ftype_ord_csv" value="csv"<?php echo $ftype_ord_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_ord" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Customer Information', 'usces'); ?></legend>

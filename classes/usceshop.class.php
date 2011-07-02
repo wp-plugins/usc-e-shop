@@ -929,9 +929,11 @@ class usc_e_shop
 				case 'zeus':
 					unset( $options['acting_settings']['zeus'] );
 					$options['acting_settings']['zeus']['card_url'] = $_POST['card_url'];
+					$options['acting_settings']['zeus']['card_secureurl'] = $_POST['card_secureurl'];
 					$options['acting_settings']['zeus']['ipaddrs'] = $_POST['ipaddrs'];
 					$options['acting_settings']['zeus']['pay_cvs'] = $_POST['pay_cvs'];
 					$options['acting_settings']['zeus']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['zeus']['3dsecure'] = $_POST['3dsecure'];
 					$options['acting_settings']['zeus']['quickcharge'] = $_POST['quickcharge'];
 					$options['acting_settings']['zeus']['clientip'] = trim($_POST['clientip']);
 					$options['acting_settings']['zeus']['howpay'] = $_POST['howpay'];
@@ -989,6 +991,7 @@ class usc_e_shop
 					$options['acting_settings']['remise']['SHOPCO'] = $_POST['SHOPCO'];
 					$options['acting_settings']['remise']['HOSTID'] = $_POST['HOSTID'];
 					$options['acting_settings']['remise']['card_activate'] = $_POST['card_activate'];
+					$options['acting_settings']['remise']['card_jb'] = $_POST['card_jb'];
 					$options['acting_settings']['remise']['card_pc_ope'] = $_POST['card_pc_ope'];
 					$options['acting_settings']['remise']['payquick'] = $_POST['payquick'];
 					$options['acting_settings']['remise']['howpay'] = $_POST['howpay'];
@@ -1249,7 +1252,7 @@ class usc_e_shop
 	}
 	
 	function usces_cookie() {
-		if( !isset($_SESSION['usces_cookieid']) ) {
+		//if( !isset($_SESSION['usces_cookieid']) ) {
 			$cookie = $this->get_cookie();
 			if( !isset($cookie['id']) || $cookie['id'] == '' ) {
 				$values = array(
@@ -1259,12 +1262,18 @@ class usc_e_shop
 							);
 				$this->set_cookie($values);
 				$_SESSION['usces_cookieid'] = $values['id'];
+				//unset($_SESSION['usces_member']);
 				//$this->cnt_access('first');
 			} else {
+				if( $_SESSION['usces_cookieid'] != $cookie['id'])
+					//unset($_SESSION['usces_member']);
+
 				$_SESSION['usces_cookieid'] = $cookie['id'];
 				//$this->cnt_access();
 			}
-		}
+		//}
+			
+			
 	}
 	function set_cookie($values){
 		$value = serialize($values);
@@ -1654,6 +1663,9 @@ class usc_e_shop
 		foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 			$payments_str .= "'" . $this->options['payment_method'][$id]['name'] . "': '" . $this->options['payment_method'][$id]['settlement'] . "', ";
 		}
+		$payments_str .= "'" . __('Transfer (prepayment)', 'usces') . "': 'transferAdvance', ";
+		$payments_str .= "'" . __('Transfer (postpay)', 'usces') . "': 'transferDeferred', ";
+		$payments_str .= "'" . __('COD', 'usces') . "': 'COD', ";
 		$payments_str = rtrim($payments_str, ', ');
 		$wcex_str = '';
 		$wcex = usces_get_wcex();
@@ -4802,6 +4814,13 @@ class usc_e_shop
 		return $results;
 	}
 	
+	function get_mainpictid($item_code) {
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'attachment' LIMIT 1", $item_code);
+		$id = $wpdb->get_var( $query );
+		return $id;
+	}
+	
 	function get_skus( $post_id, $output='' ) {
 		$fields = get_post_custom($post_id);
 		if( !is_array($fields)) $fields = array();
@@ -4895,6 +4914,12 @@ class usc_e_shop
 			usces_log($_REQUEST['acting'].' transaction : '.$_REQUEST['gid'], 'acting_transaction.log');//OK
 		}
 //20110203ysk end
+//20110621ysk start 0000184
+		if(isset($_REQUEST['acting']) && ('paypal_ec' == $_REQUEST['acting'])) {
+			if( !usces_paypal_doecp( $results ) )
+				return 'error';
+		}
+//20110621ysk end
 		$order_id = usces_reg_orderdata( $results );
 		do_action('usces_post_reg_orderdata', $order_id, $results);
 		
@@ -4941,7 +4966,21 @@ class usc_e_shop
 			header("location: " . $redirect . $query);
 			exit;
 			
-		}else if($acting_flg == 'acting_zeus_card'){
+		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && !isset($_REQUEST['PaRes'])){
+	
+			usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+			usces_zeus_3dsecure_enrol();
+			
+		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && isset($_REQUEST['PaRes'])){
+
+			usces_zeus_3dsecure_auth();
+
+		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && !empty($this->options['acting_settings']['zeus']['authkey']) && !isset($_REQUEST['PaRes'])){
+
+			$res = usces_zeus_secure_payreq();
+			return $res;
+
+		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && empty($this->options['acting_settings']['zeus']['authkey']) ){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);
@@ -5350,9 +5389,10 @@ class usc_e_shop
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
-		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price);
+		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$tax = $this->getTax( $total_price );
 		$total_full_price = $total_price + $tax;
+		$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$get_point = $this->get_order_point( $member['ID'] );
 		if(0 < (int)$use_point){
 			$get_point = ceil( $get_point - ($get_point * $use_point / $total_items_price) );
@@ -5493,12 +5533,12 @@ class usc_e_shop
 			}
 			$i++;
 		}
-//		if( $flag ){
-//			$sessid = $chars . '_' . $_SERVER['REMOTE_ADDR'];
-//		}else{
-			$sessid = $chars . '_acting';
-//			$sessid = $chars . apply_filters('usces_sessid_flag', '_acting');
-//		}
+		if( $flag ){
+			$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
+			$sessid = $chars . '_' . $postfix;
+		}else{
+			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting');
+		}
 		$sessid = urlencode(base64_encode($sessid));
 		return $sessid;
 	}
@@ -5506,10 +5546,11 @@ class usc_e_shop
 	function uscesdc( $sessid ) {
 		$sessid = base64_decode(urldecode($sessid));
 		list($sess, $addr) = explode('_', $sessid);
-//		if( $addr != $_SERVER['REMOTE_ADDR'] && $addr != 'acting' && $addr != 'mobile' ) {
-//			$sessid = '';
-//			return;
-//		}
+		$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
+		if( 'acting' != $addr && 'mobile' != $addr && $postfix != $addr ) {
+			$sessid = '';
+			return;
+		}
 		$chars = '';
 		$h=0;
 		while($h<strlen($sess)){
@@ -5518,7 +5559,6 @@ class usc_e_shop
 			}
 			$h++;
 		}
-		//var_dump($chars);
 		$sessid = $chars;
 		
 		return $sessid;
@@ -5681,7 +5721,11 @@ class usc_e_shop
 	}
 	
 	function get_memberid_by_email($email){
-		return;
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_member";
+		$query = $wpdb->prepare("SELECT ID FROM $table_name WHERE mem_email = %s", $email);
+		$res = $wpdb->get_var($query);
+		return $res;
 	}
 	
 	function get_condition(){

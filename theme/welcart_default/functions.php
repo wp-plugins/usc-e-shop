@@ -78,8 +78,9 @@ if ( function_exists('register_sidebar') ) {
 /***********************************************************
 * widget
 ***********************************************************/
-add_filter('widget_categories_dropdown_args', 'welcart_categories_dropdown_args');
-function welcart_categories_dropdown_args( $args ){
+add_filter('widget_categories_dropdown_args', 'welcart_categories_args');
+add_filter('widget_categories_args', 'welcart_categories_args');
+function welcart_categories_args( $args ){
 	global $usces;
 	$ids = $usces->get_item_cat_ids();
 	$ids[] = USCES_ITEM_CAT_PARENT_ID;
@@ -131,12 +132,12 @@ if ( ! function_exists( 'welcart_excerpt_length' ) ) {
 }
 add_filter( 'excerpt_length', 'welcart_excerpt_length' );
 
-if ( ! function_exists( 'welcart_excerpt_bmlength' ) ) {
-	function welcart_excerpt_bmlength( $length ) {
+if ( ! function_exists( 'welcart_excerpt_mblength' ) ) {
+	function welcart_excerpt_mblength( $length ) {
 		return 110;
 	}
 }
-add_filter( 'excerpt_mblength', 'welcart_excerpt_bmlength' );
+add_filter( 'excerpt_mblength', 'welcart_excerpt_mblength' );
 
 if ( ! function_exists( 'welcart_continue_reading_link' ) ) {
 	function welcart_continue_reading_link() {
