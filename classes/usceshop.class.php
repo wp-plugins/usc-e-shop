@@ -1663,6 +1663,9 @@ class usc_e_shop
 		foreach ( (array)$this->options['payment_method'] as $id => $array ) {
 			$payments_str .= "'" . $this->options['payment_method'][$id]['name'] . "': '" . $this->options['payment_method'][$id]['settlement'] . "', ";
 		}
+		$payments_str .= "'" . __('Transfer (prepayment)', 'usces') . "': 'transferAdvance', ";
+		$payments_str .= "'" . __('Transfer (postpay)', 'usces') . "': 'transferDeferred', ";
+		$payments_str .= "'" . __('COD', 'usces') . "': 'COD', ";
 		$payments_str = rtrim($payments_str, ', ');
 		$wcex_str = '';
 		$wcex = usces_get_wcex();
@@ -1827,7 +1830,6 @@ class usc_e_shop
 		
 		update_option('usces_shipping_rule', apply_filters('usces_filter_shipping_rule', get_option('usces_shipping_rule')));
 		$this->shipping_rule = get_option('usces_shipping_rule');
-
 
 		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_POST['_wp_http_referer']) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
@@ -5718,7 +5720,11 @@ class usc_e_shop
 	}
 	
 	function get_memberid_by_email($email){
-		return;
+		global $wpdb;
+		$table_name = $wpdb->prefix . "usces_member";
+		$query = $wpdb->prepare("SELECT ID FROM $table_name WHERE mem_email = %s", $email);
+		$res = $wpdb->get_var($query);
+		return $res;
 	}
 	
 	function get_condition(){
@@ -6508,7 +6514,7 @@ class usc_e_shop
 		global $wp_query;
 
 
-		if( $this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin() ){
+		if( ($this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin()) || is_home() ){
 			$ids = $this->getItemIds( 'front' );
 			$wp_query->query_vars['post__not_in'] = $ids;
 			
