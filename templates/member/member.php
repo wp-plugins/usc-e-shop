@@ -113,8 +113,19 @@ foreach ( $usces_member_history as $umhs ) {
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			foreach($options as $key => $value){
-				if( !empty($key) )
-					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				if( !empty($key) ) {
+					if(is_array($value)) {
+						$c = '';
+						$optstr .= esc_html($key) . ' : '; 
+						foreach($value as $v) {
+							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$c = ', ';
+						}
+						$optstr .= "<br />\n"; 
+					} else {
+						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					}
+				}
 			}
 			$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 		}
