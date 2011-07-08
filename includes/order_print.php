@@ -122,6 +122,7 @@ function usces_pdf_out(&$pdf, $data){
 		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
+			$optstr = '';
 			foreach($cart_row['options'] as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )

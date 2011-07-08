@@ -110,6 +110,7 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "------------------------------------------------------------------\r\n";
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -318,6 +319,7 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "------------------------------------------------------------------\r\n";
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -1004,7 +1006,8 @@ function usces_new_orderdata() {
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $_POST['offer']['payment_name'] );
-	$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt,' : '';
+	//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt,' : '';
+	$status = 'noreceipt,';
 	$status .= ( $_POST['offer']['taio'] != '' ) ? $_POST['offer']['taio'].',' : '';
 	$status .= $_POST['offer']['admin'];
 	$order_conditions = $usces->get_condition();
@@ -1059,7 +1062,7 @@ function usces_new_orderdata() {
 					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
 					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
 				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %f, %d, %d, %f, %f, %f, %f, %s, %s, %s)", 
-					$member['ID'], 
+					$member_id, 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
 					$_POST['customer']['name2'], 
@@ -1374,6 +1377,7 @@ function usces_update_orderdata() {
 		$order_modified = '';
 	}
 	$ordercheck = isset($_POST['check']) ? serialize($_POST['check']) : '';
+	$member_id = $usces->get_memberid_by_email($_POST['customer']['mailaddress']);
 	
 //$wpdb->show_errors();
 //20101208ysk start
@@ -1421,13 +1425,14 @@ function usces_update_orderdata() {
 */
 	$query = $wpdb->prepare(
 				"UPDATE $order_table_name SET 
-					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
+					`mem_id`=%d, `order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
 					`order_zip`=%s, `order_pref`=%s, `order_address1`=%s, `order_address2`=%s, `order_address3`=%s, 
 					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
 					`order_delivery_method`=%d, `order_delivery_date`=%s, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%f, `order_getpoint`=%d, `order_usedpoint`=%d, 
 					`order_discount`=%f, `order_shipping_charge`=%f, `order_cod_fee`=%f, `order_tax`=%f, `order_modified`=%s, 
 					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
 				WHERE ID = %d", 
+					$member_id, 
 					$_POST['customer']['mailaddress'], 
 					$_POST['customer']['name1'], 
 					$_POST['customer']['name2'], 
@@ -3301,6 +3306,7 @@ function usces_get_cart_rows( $out = '' ) {
 			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -3397,6 +3403,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )

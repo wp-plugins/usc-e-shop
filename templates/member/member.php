@@ -112,6 +112,7 @@ foreach ( $usces_member_history as $umhs ) {
 		$pictid = $this->get_mainpictid($itemCode);
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 				if( !empty($key) ) {
 					if(is_array($value)) {

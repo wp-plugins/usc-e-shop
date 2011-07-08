@@ -64,6 +64,7 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
 	if( is_array($options) && count($options) > 0 ){
+		$optstr = '';
 		foreach($options as $key => $value){
 			if( !empty($key) )
 				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
