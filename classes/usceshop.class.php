@@ -22,7 +22,8 @@ class usc_e_shop
 		global $post, $usces_settings, $usces_states;
 //20110331ysk end
 		do_action('usces_construct');
-		$this->usces_session_start();
+		add_action('after_setup_theme', array(&$this, 'usces_session_start'));
+		//$this->usces_session_start();
 		
 		if ( !isset($_SESSION['usces_member']) ){
 			$_SESSION['usces_member'] = array();
@@ -5534,21 +5535,24 @@ class usc_e_shop
 		}
 		if( $flag ){
 			$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
-			$sessid = $chars . '_' . $postfix;
+			$postfix = apply_filters('usces_sessid_force', $postfix);
+			$sessid = $chars . '_' . $postfix . '_A';
 		}else{
-			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting');
+			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting') . '_A';
 		}
 		$sessid = urlencode(base64_encode($sessid));
+
 		return $sessid;
 	}
 	
 	function uscesdc( $sessid ) {
 		$sessid = base64_decode(urldecode($sessid));
-		list($sess, $addr) = explode('_', $sessid);
+		list($sess, $addr, $none) = explode('_', $sessid, 3);
 		$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
+		$postfix = apply_filters('usces_sessid_force', $postfix);
 		if( 'acting' != $addr && 'mobile' != $addr && $postfix != $addr ) {
 			$sessid = '';
-			return;
+			return '';
 		}
 		$chars = '';
 		$h=0;
