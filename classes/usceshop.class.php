@@ -5500,7 +5500,7 @@ class usc_e_shop
 									WHERE tt.taxonomy = %s AND tr.object_id = %d", $tag, $post_id);
 		$names = $wpdb->get_col( $query );
 
-		return $names;
+		return apply_filters('usces_filter_get_tag_names', $names, $post_id);
 	
 	}
 	
