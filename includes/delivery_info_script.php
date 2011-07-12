@@ -332,7 +332,10 @@ $html .= "
 						}
 						//配達日数加算
 //20110428ysk start
-						if(delivery_days_value[delivery_days[selected]] != undefined && 0 < delivery_days_value[delivery_days[selected]].length) {
+//20110712ysk start
+						//if(delivery_days_value[delivery_days[selected]] != undefined && 0 < delivery_days_value[delivery_days[selected]].length) {
+						if(delivery_days_value[delivery_days[selected]] != undefined) {
+//20110712ysk end
 							if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
 								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
 							}
