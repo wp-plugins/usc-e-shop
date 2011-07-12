@@ -3408,7 +3408,7 @@ class usc_e_shop
 		}
 	}
 
-	function is_purchased_item($mid, $post_id) {
+	function is_purchased_item($mid, $post_id, $sku = NULL) {
 		global $wpdb;
 		$res = false;
 		
@@ -3418,12 +3418,22 @@ class usc_e_shop
 			$status = $umhs['order_status'];
 			for($i=0; $i<count($cart); $i++) { 
 				$cart_row = $cart[$i];
-				if($cart_row['post_id'] == $post_id && ('noreceipt' != $status && 'pending' != $status) ){
-					$res = true;
-					break 2;
-				}elseif($cart_row['post_id'] == $post_id && ('noreceipt' == $status || 'pending' == $status) ){
-					$res = 'noreceipt';
-					break 2;
+				if( empty($sku) ){
+					if( $cart_row['post_id'] == $post_id && ('noreceipt' != $status && 'pending' != $status) ){
+						$res = true;
+						break 2;
+					}elseif( $cart_row['post_id'] == $post_id && ('noreceipt' == $status || 'pending' == $status) ){
+						$res = 'noreceipt';
+						break 2;
+					}
+				}else{
+					if( $cart_row['post_id'] == $post_id && $cart_row['sku'] == $sku && ('noreceipt' != $status && 'pending' != $status) ){
+						$res = true;
+						break 2;
+					}elseif( $cart_row['post_id'] == $post_id && $cart_row['sku'] == $sku && ('noreceipt' == $status || 'pending' == $status) ){
+						$res = 'noreceipt';
+						break 2;
+					}
 				}
 			}
 		
