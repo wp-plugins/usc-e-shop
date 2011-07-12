@@ -27,7 +27,7 @@ $rows = $DT->rows;
 
 //20100908ysk start
 $csmb_meta = usces_has_custom_field_meta('member');
-$usces_opt_member = unserialize(get_option('usces_opt_member'));
+$usces_opt_member = get_option('usces_opt_member');
 $chk_mem = $usces_opt_member['chk_mem'];
 //20100908ysk end
 //20110411ysk start
@@ -108,7 +108,7 @@ jQuery(document).ready(function($){
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_mem[]"]:checked').val();
 		$('*[class=check_member]').each(function(i) {
-			if($(this).attr('checked') == true) {
+			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
 			}
 		});

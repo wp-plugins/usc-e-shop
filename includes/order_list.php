@@ -59,7 +59,7 @@ $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 $csod_meta = usces_has_custom_field_meta('order');
 $cscs_meta = usces_has_custom_field_meta('customer');
 $csde_meta = usces_has_custom_field_meta('delivery');
-$usces_opt_order = unserialize(get_option('usces_opt_order'));
+$usces_opt_order = get_option('usces_opt_order');
 $chk_pro = $usces_opt_order['chk_pro'];
 $chk_ord = $usces_opt_order['chk_ord'];
 //20100908ysk end
@@ -314,8 +314,8 @@ jQuery(document).ready(function($){
 			+"&search[period]="+$(':input[name="search[period]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_pro[]"]:checked').val();
-		$('*[class=check_product]').each(function(i) {
-			if($(this).attr('checked') == true) {
+		$(".check_product").each(function(i) {
+			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
 			}
 		});
@@ -346,8 +346,8 @@ jQuery(document).ready(function($){
 			+"&search[period]="+$(':input[name="search[period]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_ord[]"]:checked').val();
-		$('*[class=check_order]').each(function(i) {
-			if($(this).attr('checked') == true) {
+		$(".check_order").each(function(i) {
+			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
 			}
 		});

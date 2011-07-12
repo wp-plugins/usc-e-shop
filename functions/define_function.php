@@ -721,10 +721,10 @@ function usces_download_item_list() {
 	}
 
 	//==========================================================================
-	$usces_opt_item = unserialize(get_option('usces_opt_item'));
+	$usces_opt_item = get_option('usces_opt_item');
 	$usces_opt_item['chk_header'] = (isset($_REQUEST['chk_header'])) ? 1 : 0;
 	$usces_opt_item['ftype_item'] = $ext;
-	update_option('usces_opt_item', serialize($usces_opt_item));
+	update_option('usces_opt_item', $usces_opt_item);
 	//==========================================================================
 
 	$tableName = $wpdb->posts;
