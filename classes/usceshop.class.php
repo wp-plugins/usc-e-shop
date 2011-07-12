@@ -25,13 +25,13 @@ class usc_e_shop
 		add_action('after_setup_theme', array(&$this, 'usces_session_start'));
 		//$this->usces_session_start();
 		
-		if ( !isset($_SESSION['usces_member']) ){
-			$_SESSION['usces_member'] = array();
-		}
+//		if ( !isset($_SESSION['usces_member']) ){
+//			$_SESSION['usces_member'] = array();
+//		}
 		if ( is_admin() ){
 			clean_term_cache( get_option('usces_item_cat_parent_id'), 'category' );
 		}
-		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
+//		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
 		$this->check_display_mode();
 		
 		$locales = usces_locales();
@@ -1250,6 +1250,12 @@ class usc_e_shop
 		//@session_set_cookie_params($timeout, USCES_COOKIEPATH, $domain);
 		@session_start();
 		
+		if ( !isset($_SESSION['usces_member']) ){
+			$_SESSION['usces_member'] = array();
+		}
+
+		if(!isset($_SESSION['usces_checked_business_days']))
+			$this->update_business_days();
 	}
 	
 	function usces_cookie() {
