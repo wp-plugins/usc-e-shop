@@ -3004,7 +3004,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 	
 	case 'JP': 
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3016,7 +3016,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[name3]" type="text" class="text short" value="' . esc_attr($values['name3']) . '" /><input name="' . $type . '[name4]" type="text" class="text short" value="' . esc_attr($values['name4']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3057,14 +3057,14 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return');
 		//20100818ysk end
 		break;
 		
 	case 'US':
 	default:
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3072,7 +3072,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[name2]" type="text" class="text short" value="' . esc_attr($values['name2']) . '" /><input name="' . $type . '[name1]" type="text" class="text short" value="' . esc_attr($values['name1']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3113,7 +3113,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return');
 		//20100818ysk end
 		break;
 	}
