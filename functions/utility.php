@@ -520,6 +520,9 @@ function usces_download_member_list() {
 
 	//==========================================================================
 	$usces_opt_member = get_option('usces_opt_member');
+	if(!is_array($usces_opt_member)){
+		$usces_opt_member = array();
+	}
 	$usces_opt_member['ftype_mem'] = $ext;
 	$chk_mem = array();
 	$chk_mem['ID'] = 1;
@@ -890,6 +893,9 @@ function usces_download_product_list() {
 
 	//==========================================================================
 	$usces_opt_order = get_option('usces_opt_order');
+	if(!is_array($usces_opt_order)){
+		$usces_opt_order = array();
+	}
 	$usces_opt_order['ftype_pro'] = $ext;
 	$chk_pro = array();
 	$chk_pro['ID'] = 1;
@@ -1088,6 +1094,9 @@ function usces_download_order_list() {
 
 	//==========================================================================
 	$usces_opt_order = get_option('usces_opt_order');
+	if(!is_array($usces_opt_order)){
+		$usces_opt_order = array();
+	}
 	$usces_opt_order['ftype_ord'] = $ext;
 	$chk_ord = array();
 	$chk_ord['ID'] = 1;

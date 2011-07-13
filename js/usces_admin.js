@@ -405,7 +405,7 @@
 			}
 				
 				
-					alert(query);
+			//		alert(query);
 		
 			var s = orderItem.settings;
 			s.data = query;

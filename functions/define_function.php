@@ -722,6 +722,9 @@ function usces_download_item_list() {
 
 	//==========================================================================
 	$usces_opt_item = get_option('usces_opt_item');
+	if(!is_array($usces_opt_item)){
+		$usces_opt_item = array();
+	}
 	$usces_opt_item['chk_header'] = (isset($_REQUEST['chk_header'])) ? 1 : 0;
 	$usces_opt_item['ftype_item'] = $ext;
 	update_option('usces_opt_item', $usces_opt_item);
@@ -750,6 +753,9 @@ function usces_download_item_list() {
 					__('display status', 'usces') => 'display_status');
 	}
 
+//20110221ysk start 
+	$_REQUEST['searchIn'] = "searchIn"; 
+//20110221ysk end 
 	$DT = new dataList($tableName, $arr_column);
 //20101202ysk start
 	$DT->pageLimit = 'off';
