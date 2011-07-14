@@ -3071,9 +3071,12 @@ class usc_e_shop
 					$user = $_POST['member'];
 					$user['ID'] = $wpdb->insert_id;
 					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $user['ID']);
+//20110714ysk start 0000207
 //20100818ysk start
-					$res = $this->reg_custom_member($wpdb->insert_id);
+					//$res = $this->reg_custom_member($wpdb->insert_id);
+					$res = $this->reg_custom_member($user['ID']);
 //20100818ysk end
+//20110714ysk end
 					$mser = usces_send_regmembermail($user);
 				}
 				
@@ -3122,10 +3125,15 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
-					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
+//20110714ysk start 0000207
+					$member_id = $wpdb->insert_id;
+					//$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
+					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
 //20100818ysk start
-					$res = $this->reg_custom_member($wpdb->insert_id);
+					//$res = $this->reg_custom_member($wpdb->insert_id);
+					$res = $this->reg_custom_member($member_id);
 //20100818ysk end
+//20110714ysk end
 					//usces_send_regmembermail();
 					$user = $_POST['customer'];
 					$mser = usces_send_regmembermail($user);
