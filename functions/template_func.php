@@ -853,6 +853,9 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$sku = esc_attr($usces->itemsku['key']);
 	$name = esc_attr($name);
 	$label = esc_attr($label);
+//20110715ysk start 0000208
+	$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
+//20110715ysk end
 //20100914ysk start
 	//if($means < 2){
 	switch($means) {
@@ -862,7 +865,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		$selects = explode("\n", $values['value'][0]);
 		$multiple = ($means === 0) ? '' : ' multiple';
 		$multiple_array = ($means == 0) ? '' : '[]';//20110629ysk 0000190
-		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
+		//$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
 //20110629ysk start 0000190
 		//$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
 		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]{$multiple_array}' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
