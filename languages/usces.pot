@@ -1999,8 +1999,14 @@ msgstr "SKUが重複しています"
 msgid "A value of the sale price is abnormal."
 msgstr "売価の値が異常です"
 
+msgid "A value of the normal price is abnormal."
+msgstr "通常価格の値が異常です"
+
 msgid "A value of the stock status is abnormal."
 msgstr "在庫状態の値が異常です"
+
+msgid "A value of the stock amount is abnormal."
+msgstr "在庫数の値が異常です"
 
 msgid "The value of the duties pack application is abnormal."
 msgstr "業務パック適用の値が異常です"

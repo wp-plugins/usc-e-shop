@@ -310,12 +310,12 @@ function usces_item_uploadcsv(){
 					//if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) )
 					if( !preg_match("/^\d$|^\d+\.?\d+$/", $data) || 0 == strlen($data) )
 //20110315ysk end
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('通常価格の値が異常です', 'usces')."\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the normal price is abnormal.', 'usces')."\r\n";
 					break;
 				case USCES_COL_SKU_ZAIKONUM:
 //20110315ysk start
 					if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('在庫数の値が異常です', 'usces')."\r\n";
+						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the stock amount is abnormal.', 'usces')."\r\n";
 //20110315ysk end
 					break;
 				case USCES_COL_SKU_ZAIKO:
