@@ -1652,13 +1652,21 @@ function get_order_item( $item_code ) {
 			$key = '_iopt_' . esc_attr($optkey);
 			if(!$value) continue;
 			$values = maybe_unserialize($value[0]);
-			$means = (int)$values['means'][0];
-			$essential = (int)$values['essential'][0];
+//20110715ysk start 0000202
+			//$means = (int)$values['means'][0];
+			$means = (int)$values['means'];
+			//$essential = (int)$values['essential'][0];
+			$essential = (int)$values['essential'];
+			$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
+		switch($means) {
+		case 0://Single-select
+		case 1://Multi-select
 			$selects = explode("\n", $values['value'][0]);
 			$multiple = ($means === 0) ? '' : ' multiple';
+			$multiple_array = ($means === 0) ? '' : '_multiple';
 			
-			$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
-			$r .= "\n<select name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_select'{$multiple}>\n";
+			//$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
+			$r .= "\n<select name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_select{$multiple_array}'{$multiple}>\n";
 			if($essential == 1)
 				$r .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
 			$i=0;
@@ -1671,6 +1679,15 @@ function get_order_item( $item_code ) {
 				$i++;
 			}
 			$r .= "</select>\n";
+			break;
+		case 2://Text
+			$r .= "\n<input name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' type='text' id='itemOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
+			break;
+		case 5://Text-area
+			$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_textarea' /></textarea>\n";
+			break;
+		}
+//20110715ysk end
 			$r .= "<input name=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" type=\"hidden\" id=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" value=\"{$optkey}\" />\n";
 			
 		endforeach;

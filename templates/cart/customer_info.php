@@ -1,5 +1,6 @@
 <?php 
 $usces_entries = $this->cart->get_entry();
+global $member_regmode;//20110715ysk 0000203
 $member_regmode = isset( $_SESSION['usces_entry']['member_regmode'] ) ? $_SESSION['usces_entry']['member_regmode'] : 'none';
 //global $usces_entries, $usces_entries;
 //usces_get_entries();
@@ -80,6 +81,7 @@ $html .= uesces_addressform( 'customer', $usces_entries );
 
 $html .= '</table>
 <input name="member_regmode" type="hidden" value="' . $member_regmode . '" />
+<input name="member_id" type="hidden" value="' . usces_memberinfo('ID', 'return') . '" />
 
 <div class="send">';
 $html .= usces_get_customer_button( 'return' );

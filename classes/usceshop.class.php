@@ -2422,7 +2422,10 @@ class usc_e_shop
 			exit;
 		}
 		$this->cart->entry();
-		$_POST['member_regmode'] = 'newmemberfromcart';
+//20110715ysk start 0000203
+		//$_POST['member_regmode'] = 'newmemberfromcart';
+		if(empty($_POST['member_regmode']) or $_POST['member_regmode'] != 'editmemberfromcart') $_POST['member_regmode'] = 'newmemberfromcart';
+//20110715ysk end
 
 		if( $this->regist_member() == 'newcompletion' ){
 			$this->page = 'delivery';
@@ -2795,6 +2798,9 @@ class usc_e_shop
 	
 	function template_redirect () {
 		global $post, $usces_entries, $usces_carts, $usces_members;
+//20110715ysk start 0000203
+		global $member_regmode;
+//20110715ysk end
 		
 		if( apply_filters('usces_action_template_redirect', false) ) return;
 
@@ -2978,7 +2984,10 @@ class usc_e_shop
 		$member_table = $wpdb->prefix . "usces_member";
 		$member_meta_table = $wpdb->prefix . "usces_member_meta";
 			
-		$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
+//20110715ysk start 0000203
+		//$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
+		$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' or $_POST['member_regmode'] == 'editmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
+//20110715ysk end
 		
 		if ( $error_mes != '' ) {
 		
@@ -2986,30 +2995,30 @@ class usc_e_shop
 			return $mode;
 			
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
-	
-		$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
-		$pass = $wpdb->get_var( $query );
 
-		$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
-		$query = $wpdb->prepare("UPDATE $member_table SET 
-				mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
-				mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
-				mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
-				$password, 
-				trim($_POST['member']['name1']), 
-				trim($_POST['member']['name2']), 
-				trim($_POST['member']['name3']), 
-				trim($_POST['member']['name4']), 
-				trim($_POST['member']['zipcode']), 
-				trim($_POST['member']['pref']), 
-				trim($_POST['member']['address1']), 
-				trim($_POST['member']['address2']), 
-				trim($_POST['member']['address3']), 
-				trim($_POST['member']['tel']), 
-				trim($_POST['member']['fax']), 
-				trim($_POST['member']['mailaddress1']), 
-				$_POST['member_id'] 
-				);
+			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
+			$pass = $wpdb->get_var( $query );
+
+			$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
+			$query = $wpdb->prepare("UPDATE $member_table SET 
+					mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
+					mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
+					mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
+					$password, 
+					trim($_POST['member']['name1']), 
+					trim($_POST['member']['name2']), 
+					trim($_POST['member']['name3']), 
+					trim($_POST['member']['name4']), 
+					trim($_POST['member']['zipcode']), 
+					trim($_POST['member']['pref']), 
+					trim($_POST['member']['address1']), 
+					trim($_POST['member']['address2']), 
+					trim($_POST['member']['address3']), 
+					trim($_POST['member']['tel']), 
+					trim($_POST['member']['fax']), 
+					trim($_POST['member']['mailaddress1']), 
+					$_POST['member_id'] 
+					);
 			$res = $wpdb->query( $query );
 			if( $res !== false ){
 				$this->set_member_meta_value('customer_country', $_POST['member']['country'], $_POST['member_id']);
@@ -3147,6 +3156,41 @@ class usc_e_shop
 				
 				return false;
 			}
+
+//20110715ysk start 0000203
+		} elseif ( $_POST['member_regmode'] == 'editmemberfromcart' ) {
+
+			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
+			$pass = $wpdb->get_var( $query );
+
+			$password = ( !empty($_POST['customer']['password1']) && trim($_POST['customer']['password1']) == trim($_POST['customer']['password2']) ) ? md5(trim($_POST['customer']['password1'])) : $pass;
+			$query = $wpdb->prepare("UPDATE $member_table SET 
+					mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
+					mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
+					mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
+					$password, 
+					trim($_POST['customer']['name1']), 
+					trim($_POST['customer']['name2']), 
+					trim($_POST['customer']['name3']), 
+					trim($_POST['customer']['name4']), 
+					trim($_POST['customer']['zipcode']), 
+					trim($_POST['customer']['pref']), 
+					trim($_POST['customer']['address1']), 
+					trim($_POST['customer']['address2']), 
+					trim($_POST['customer']['address3']), 
+					trim($_POST['customer']['tel']), 
+					trim($_POST['customer']['fax']), 
+					trim($_POST['customer']['mailaddress1']), 
+					$_POST['member_id'] 
+					);
+			$res = $wpdb->query( $query );
+			if( $res !== false ){
+				$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $_POST['member_id']);
+				$res = $this->reg_custom_member($_POST['member_id']);
+			}
+			
+			return 'newcompletion';
+//20110715ysk end
 		}
 	}
 
