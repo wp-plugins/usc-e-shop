@@ -38,7 +38,7 @@ $status = isset($_REQUEST['usces_status']) ? $_REQUEST['usces_status'] : $DT->ge
 $message = isset($_REQUEST['usces_message']) ? urldecode($_REQUEST['usces_message']) : $DT->get_action_message();
 $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 //20101111ysk start
-$usces_opt_item = unserialize(get_option('usces_opt_item'));
+$usces_opt_item = get_option('usces_opt_item');
 //20101111ysk end
 ?>
 <!--<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
@@ -244,10 +244,10 @@ jQuery(function($){
 	});
 	$('#dl_item').click(function() {
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
-			+"&search[word]="+$(':input[name="search[word]"]').val()
+			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();
-		if($('#chk_header').attr('checked') == true) {
+		if($('#chk_header').attr('checked')) {
 			args += '&chk_header=on';
 		}
 		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_itemedit&action=dlitemlist&noheader=true"+args;

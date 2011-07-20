@@ -853,6 +853,9 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$sku = esc_attr($usces->itemsku['key']);
 	$name = esc_attr($name);
 	$label = esc_attr($label);
+//20110715ysk start 0000208
+	$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
+//20110715ysk end
 //20100914ysk start
 	//if($means < 2){
 	switch($means) {
@@ -862,7 +865,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		$selects = explode("\n", $values['value'][0]);
 		$multiple = ($means === 0) ? '' : ' multiple';
 		$multiple_array = ($means == 0) ? '' : '[]';//20110629ysk 0000190
-		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
+		//$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
 //20110629ysk start 0000190
 		//$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
 		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]{$multiple_array}' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
@@ -1864,60 +1867,57 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 				$e = ($essential == 1) ? '<em>' . __('*', 'usces') . '</em>' : '';
 				$html .= '
 					<tr>
-					<th scope="row">'.$e.esc_html($name).'</th>';
+					<th scope="row">'.$e.esc_html($name).apply_filters('usces_filter_custom_field_input_label', NULL, $key, $entry).'</th>';
 				switch($means) {
-				case 0://シングルセレクト
-				case 1://マルチセレクト
-					$selects = explode("\n", $value);
-					$multiple = ($means == 0) ? '' : ' multiple';
-					$multiple_array = ($means == 0) ? '' : '[]';
-					$html .= '
-						<td colspan="2">
-						<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
-					if($essential == 1) 
+					case 0://シングルセレクト
+					case 1://マルチセレクト
+						$selects = explode("\n", $value);
+						$multiple = ($means == 0) ? '' : ' multiple';
+						$multiple_array = ($means == 0) ? '' : '[]';
 						$html .= '
-							<option value="#NONE#">'.__('Choose','usces').'</option>';
-					foreach($selects as $v) {
-						$selected = ($data[$label][$key] == $v) ? ' selected' : '';
-						$html .= '
-							<option value="'.esc_attr($v).'"'.$selected.'>'.esc_html($v).'</option>';
-					}
-					$html .= '
-						</select></td>';
-					break;
-				case 2://テキスト
-					$html .= '
-						<td colspan="2"><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data[$label][$key]).'" /></td>';
-					break;
-				case 3://ラジオボタン
-					$selects = explode("\n", $value);
-					$html .= '
-						<td colspan="2">';
-					foreach($selects as $v) {
-						$checked = ($data[$label][$key] == $v) ? ' checked' : '';
-						$html .= '
-						<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
-					}
-					$html .= '
-						</td>';
-					break;
-				case 4://チェックボックス
-					$selects = explode("\n", $value);
-					$html .= '
-						<td colspan="2">';
-					foreach($selects as $v) {
-						if(is_array($data[$label][$key])) {
-							$checked = (array_key_exists($v, $data[$label][$key])) ? ' checked' : '';
-						} else {
-							$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+							<td colspan="2">
+							<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+						if($essential == 1) 
+							$html .= '
+								<option value="#NONE#">'.__('Choose','usces').'</option>';
+						foreach($selects as $v) {
+							$selected = ($data[$label][$key] == $v) ? ' selected' : '';
+							$html .= '
+								<option value="'.esc_attr($v).'"'.$selected.'>'.esc_html($v).'</option>';
 						}
 						$html .= '
-						<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
-					}
-					$html .= '
-						</td>';
-					break;
+							</select>';
+						break;
+					case 2://テキスト
+						$html .= '
+							<td colspan="2"><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data[$label][$key]).'" />';
+						break;
+					case 3://ラジオボタン
+						$selects = explode("\n", $value);
+						$html .= '
+							<td colspan="2">';
+						foreach($selects as $v) {
+							$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+							$html .= '
+							<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+						}
+						break;
+					case 4://チェックボックス
+						$selects = explode("\n", $value);
+						$html .= '
+							<td colspan="2">';
+						foreach($selects as $v) {
+							if(is_array($data[$label][$key])) {
+								$checked = (array_key_exists($v, $data[$label][$key])) ? ' checked' : '';
+							} else {
+								$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+							}
+							$html .= '
+							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+						}
+						break;
 				}
+				$html .= apply_filters('usces_filter_custom_field_input_value', NULL, $key, $entry).'</td>';
 				$html .= '
 					</tr>';
 			}
@@ -2305,6 +2305,7 @@ function usces_member_history(){
 			$pictid = $usces->get_mainpictid($itemCode);
 			$optstr =  '';
 			if( is_array($options) && count($options) > 0 ){
+				$optstr = '';
 				foreach($options as $key => $value){
 //20110629ysk start 0000190
 					//f( !empty($key) )

@@ -110,6 +110,7 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= "------------------------------------------------------------------\r\n";
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -318,6 +319,7 @@ function usces_send_ordermail($order_id) {
 		$meisai .= "------------------------------------------------------------------\r\n";
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -3002,7 +3004,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 	
 	case 'JP': 
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3014,7 +3016,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[name3]" type="text" class="text short" value="' . esc_attr($values['name3']) . '" /><input name="' . $type . '[name4]" type="text" class="text short" value="' . esc_attr($values['name4']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3055,14 +3057,14 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return');
 		//20100818ysk end
 		break;
 		
 	case 'US':
 	default:
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3070,7 +3072,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[name2]" type="text" class="text short" value="' . esc_attr($values['name2']) . '" /><input name="' . $type . '[name1]" type="text" class="text short" value="' . esc_attr($values['name1']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after', 'return');
 		//20100818ysk end
 		$formtag .= '
 		<tr>
@@ -3111,7 +3113,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 			<td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td>
 		</tr>';
 		//20100818ysk start
-		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after');
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return');
 		//20100818ysk end
 		break;
 	}
@@ -3304,6 +3306,7 @@ function usces_get_cart_rows( $out = '' ) {
 			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -3400,6 +3403,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )

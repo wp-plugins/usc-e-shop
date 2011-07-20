@@ -906,7 +906,6 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 //20110629ysk end
 			}
 		}
-			
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
@@ -919,7 +918,13 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<td>
 		<?php foreach((array)$options as $key => $value){ ?>
 		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_attr($key); ?>" />
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_attr($value); ?>" />
+			<?php if(is_array($value)): //20110715ysk 0000202 ?>
+				<?php foreach($value as $v): ?>
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>][<?php echo esc_html(urldecode($v)); ?>]" type="hidden" value="<?php echo esc_html(urldecode($v)); ?>" />
+				<?php endforeach; ?>
+			<?php else: ?>
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_html(urldecode($value)); ?>" />
+			<?php endif; ?>
 		<?php } ?>
 		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
 		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />

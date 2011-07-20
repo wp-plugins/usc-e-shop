@@ -22,15 +22,16 @@ class usc_e_shop
 		global $post, $usces_settings, $usces_states;
 //20110331ysk end
 		do_action('usces_construct');
-		$this->usces_session_start();
+		add_action('after_setup_theme', array(&$this, 'usces_session_start'));
+		//$this->usces_session_start();
 		
-		if ( !isset($_SESSION['usces_member']) ){
-			$_SESSION['usces_member'] = array();
-		}
+//		if ( !isset($_SESSION['usces_member']) ){
+//			$_SESSION['usces_member'] = array();
+//		}
 		if ( is_admin() ){
 			clean_term_cache( get_option('usces_item_cat_parent_id'), 'category' );
 		}
-		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
+//		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
 		$this->check_display_mode();
 		
 		$locales = usces_locales();
@@ -1249,6 +1250,12 @@ class usc_e_shop
 		//@session_set_cookie_params($timeout, USCES_COOKIEPATH, $domain);
 		@session_start();
 		
+		if ( !isset($_SESSION['usces_member']) ){
+			$_SESSION['usces_member'] = array();
+		}
+
+		if(!isset($_SESSION['usces_checked_business_days']))
+			$this->update_business_days();
 	}
 	
 	function usces_cookie() {
@@ -1830,7 +1837,6 @@ class usc_e_shop
 		
 		update_option('usces_shipping_rule', apply_filters('usces_filter_shipping_rule', get_option('usces_shipping_rule')));
 		$this->shipping_rule = get_option('usces_shipping_rule');
-
 
 		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_POST['_wp_http_referer']) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
@@ -2416,7 +2422,10 @@ class usc_e_shop
 			exit;
 		}
 		$this->cart->entry();
-		$_POST['member_regmode'] = 'newmemberfromcart';
+//20110715ysk start 0000203
+		//$_POST['member_regmode'] = 'newmemberfromcart';
+		if(empty($_POST['member_regmode']) or $_POST['member_regmode'] != 'editmemberfromcart') $_POST['member_regmode'] = 'newmemberfromcart';
+//20110715ysk end
 
 		if( $this->regist_member() == 'newcompletion' ){
 			$this->page = 'delivery';
@@ -2789,6 +2798,9 @@ class usc_e_shop
 	
 	function template_redirect () {
 		global $post, $usces_entries, $usces_carts, $usces_members;
+//20110715ysk start 0000203
+		global $member_regmode;
+//20110715ysk end
 		
 		if( apply_filters('usces_action_template_redirect', false) ) return;
 
@@ -2972,7 +2984,10 @@ class usc_e_shop
 		$member_table = $wpdb->prefix . "usces_member";
 		$member_meta_table = $wpdb->prefix . "usces_member_meta";
 			
-		$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
+//20110715ysk start 0000203
+		//$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
+		$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' or $_POST['member_regmode'] == 'editmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
+//20110715ysk end
 		
 		if ( $error_mes != '' ) {
 		
@@ -2980,30 +2995,30 @@ class usc_e_shop
 			return $mode;
 			
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
-	
-		$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
-		$pass = $wpdb->get_var( $query );
 
-		$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
-		$query = $wpdb->prepare("UPDATE $member_table SET 
-				mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
-				mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
-				mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
-				$password, 
-				trim($_POST['member']['name1']), 
-				trim($_POST['member']['name2']), 
-				trim($_POST['member']['name3']), 
-				trim($_POST['member']['name4']), 
-				trim($_POST['member']['zipcode']), 
-				trim($_POST['member']['pref']), 
-				trim($_POST['member']['address1']), 
-				trim($_POST['member']['address2']), 
-				trim($_POST['member']['address3']), 
-				trim($_POST['member']['tel']), 
-				trim($_POST['member']['fax']), 
-				trim($_POST['member']['mailaddress1']), 
-				$_POST['member_id'] 
-				);
+			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
+			$pass = $wpdb->get_var( $query );
+
+			$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
+			$query = $wpdb->prepare("UPDATE $member_table SET 
+					mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
+					mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
+					mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
+					$password, 
+					trim($_POST['member']['name1']), 
+					trim($_POST['member']['name2']), 
+					trim($_POST['member']['name3']), 
+					trim($_POST['member']['name4']), 
+					trim($_POST['member']['zipcode']), 
+					trim($_POST['member']['pref']), 
+					trim($_POST['member']['address1']), 
+					trim($_POST['member']['address2']), 
+					trim($_POST['member']['address3']), 
+					trim($_POST['member']['tel']), 
+					trim($_POST['member']['fax']), 
+					trim($_POST['member']['mailaddress1']), 
+					$_POST['member_id'] 
+					);
 			$res = $wpdb->query( $query );
 			if( $res !== false ){
 				$this->set_member_meta_value('customer_country', $_POST['member']['country'], $_POST['member_id']);
@@ -3065,9 +3080,12 @@ class usc_e_shop
 					$user = $_POST['member'];
 					$user['ID'] = $wpdb->insert_id;
 					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $user['ID']);
+//20110714ysk start 0000207
 //20100818ysk start
-					$res = $this->reg_custom_member($wpdb->insert_id);
+					//$res = $this->reg_custom_member($wpdb->insert_id);
+					$res = $this->reg_custom_member($user['ID']);
 //20100818ysk end
+//20110714ysk end
 					$mser = usces_send_regmembermail($user);
 				}
 				
@@ -3116,10 +3134,15 @@ class usc_e_shop
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
-					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
+//20110714ysk start 0000207
+					$member_id = $wpdb->insert_id;
+					//$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
+					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
 //20100818ysk start
-					$res = $this->reg_custom_member($wpdb->insert_id);
+					//$res = $this->reg_custom_member($wpdb->insert_id);
+					$res = $this->reg_custom_member($member_id);
 //20100818ysk end
+//20110714ysk end
 					//usces_send_regmembermail();
 					$user = $_POST['customer'];
 					$mser = usces_send_regmembermail($user);
@@ -3133,6 +3156,43 @@ class usc_e_shop
 				
 				return false;
 			}
+
+//20110715ysk start 0000203
+		} elseif ( $_POST['member_regmode'] == 'editmemberfromcart' ) {
+
+			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
+			$pass = $wpdb->get_var( $query );
+
+			$password = ( !empty($_POST['customer']['password1']) && trim($_POST['customer']['password1']) == trim($_POST['customer']['password2']) ) ? md5(trim($_POST['customer']['password1'])) : $pass;
+			$query = $wpdb->prepare("UPDATE $member_table SET 
+					mem_pass = %s, mem_name1 = %s, mem_name2 = %s, mem_name3 = %s, mem_name4 = %s, 
+					mem_zip = %s, mem_pref = %s, mem_address1 = %s, mem_address2 = %s, 
+					mem_address3 = %s, mem_tel = %s, mem_fax = %s, mem_email = %s WHERE ID = %d", 
+					$password, 
+					trim($_POST['customer']['name1']), 
+					trim($_POST['customer']['name2']), 
+					trim($_POST['customer']['name3']), 
+					trim($_POST['customer']['name4']), 
+					trim($_POST['customer']['zipcode']), 
+					trim($_POST['customer']['pref']), 
+					trim($_POST['customer']['address1']), 
+					trim($_POST['customer']['address2']), 
+					trim($_POST['customer']['address3']), 
+					trim($_POST['customer']['tel']), 
+					trim($_POST['customer']['fax']), 
+					trim($_POST['customer']['mailaddress1']), 
+					$_POST['member_id'] 
+					);
+			$res = $wpdb->query( $query );
+			if( $res !== false ){
+				$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $_POST['member_id']);
+				$res = $this->reg_custom_member($_POST['member_id']);
+				unset($_SESSION['usces_member']);
+				$this->member_just_login(trim($_POST['customer']['mailaddress1']), trim($_POST['customer']['password1']));
+			}
+			
+			return 'newcompletion';
+//20110715ysk end
 		}
 	}
 
@@ -3408,7 +3468,7 @@ class usc_e_shop
 		}
 	}
 
-	function is_purchased_item($mid, $post_id) {
+	function is_purchased_item($mid, $post_id, $sku = NULL) {
 		global $wpdb;
 		$res = false;
 		
@@ -3418,12 +3478,22 @@ class usc_e_shop
 			$status = $umhs['order_status'];
 			for($i=0; $i<count($cart); $i++) { 
 				$cart_row = $cart[$i];
-				if($cart_row['post_id'] == $post_id && ('noreceipt' != $status && 'pending' != $status) ){
-					$res = true;
-					break 2;
-				}elseif($cart_row['post_id'] == $post_id && ('noreceipt' == $status || 'pending' == $status) ){
-					$res = 'noreceipt';
-					break 2;
+				if( empty($sku) ){
+					if( $cart_row['post_id'] == $post_id && ('noreceipt' != $status && 'pending' != $status) ){
+						$res = true;
+						break 2;
+					}elseif( $cart_row['post_id'] == $post_id && ('noreceipt' == $status || 'pending' == $status) ){
+						$res = 'noreceipt';
+						break 2;
+					}
+				}else{
+					if( $cart_row['post_id'] == $post_id && $cart_row['sku'] == $sku && ('noreceipt' != $status && 'pending' != $status) ){
+						$res = true;
+						break 2;
+					}elseif( $cart_row['post_id'] == $post_id && $cart_row['sku'] == $sku && ('noreceipt' == $status || 'pending' == $status) ){
+						$res = 'noreceipt';
+						break 2;
+					}
 				}
 			}
 		
@@ -5500,7 +5570,7 @@ class usc_e_shop
 									WHERE tt.taxonomy = %s AND tr.object_id = %d", $tag, $post_id);
 		$names = $wpdb->get_col( $query );
 
-		return $names;
+		return apply_filters('usces_filter_get_tag_names', $names, $post_id);
 	
 	}
 	
@@ -5535,21 +5605,24 @@ class usc_e_shop
 		}
 		if( $flag ){
 			$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
-			$sessid = $chars . '_' . $postfix;
+			$postfix = apply_filters('usces_sessid_force', $postfix);
+			$sessid = $chars . '_' . $postfix . '_A';
 		}else{
-			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting');
+			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting') . '_A';
 		}
 		$sessid = urlencode(base64_encode($sessid));
+
 		return $sessid;
 	}
 	
 	function uscesdc( $sessid ) {
 		$sessid = base64_decode(urldecode($sessid));
-		list($sess, $addr) = explode('_', $sessid);
+		list($sess, $addr, $none) = explode('_', $sessid, 3);
 		$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
+		$postfix = apply_filters('usces_sessid_force', $postfix);
 		if( 'acting' != $addr && 'mobile' != $addr && $postfix != $addr ) {
 			$sessid = '';
-			return;
+			return '';
 		}
 		$chars = '';
 		$h=0;
@@ -6515,7 +6588,7 @@ class usc_e_shop
 		global $wp_query;
 
 
-		if( $this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin() ){
+		if( ($this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin()) || is_home() ){
 			$ids = $this->getItemIds( 'front' );
 			$wp_query->query_vars['post__not_in'] = $ids;
 			

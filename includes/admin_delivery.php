@@ -301,7 +301,7 @@ jQuery(function($){
 			var days = $("#delivery_method_days option:selected").val();
 //20101208ysk end
 //20101119ysk start
-			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked') == true) ? '1' : '0';
+			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked')) ? '1' : '0';
 //20101119ysk end
 //20110317ysk start
 			var intl = $(':radio[name=delivery_method_intl]:checked').val();
@@ -366,7 +366,7 @@ jQuery(function($){
 			var days = $("#delivery_method_days option:selected").val();
 //20101208ysk end
 //20101119ysk start
-			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked') == true) ? '1' : '0';
+			var nocod = ($(':input[name=delivery_method_nocod]').attr('checked')) ? '1' : '0';
 //20101119ysk end
 //20110317ysk start
 			var intl = $(':radio[name=delivery_method_intl]:checked').val();

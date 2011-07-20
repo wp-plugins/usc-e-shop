@@ -277,8 +277,8 @@ $html .= "
 		
 //20110317ysk start
 		$('#delivery_flag2').click(function() {
-			//if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') == true && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
@@ -287,8 +287,8 @@ $html .= "
 		
 		//$('#pref').change(function() {
 		$('#delivery_pref').change(function() {
-			//if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') == true && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
@@ -332,7 +332,10 @@ $html .= "
 						}
 						//配達日数加算
 //20110428ysk start
-						if(delivery_days_value[delivery_days[selected]] != undefined && 0 < delivery_days_value[delivery_days[selected]].length) {
+//20110712ysk start
+						//if(delivery_days_value[delivery_days[selected]] != undefined && 0 < delivery_days_value[delivery_days[selected]].length) {
+						if(delivery_days_value[delivery_days[selected]] != undefined) {
+//20110712ysk end
 							if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
 								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
 							}

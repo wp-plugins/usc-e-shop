@@ -122,6 +122,7 @@ function usces_pdf_out(&$pdf, $data){
 		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
+			$optstr = '';
 			foreach($cart_row['options'] as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -225,7 +226,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 							apply_filters('usces_filter_publisher', get_option('blogname')));
 			$message = apply_filters('usces_filter_pdf_invoice_message', $message, $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('M j, Y', 'usces'), strtotime($data->order['date']));
-			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
+			$siharai = __('payment division', 'usces').' : ' . apply_filters('usces_filter_pdf_payment_name', $data->order['payment_name'], $data);
 			$sign_image = apply_filters('usces_filter_pdf_invoice_sign', NULL);
 			if( empty($data->order['delidue_date']) ){
 				$effective_date = ' ';
@@ -241,7 +242,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$title = __('Receipt', 'usces');
 			$message = apply_filters('usces_filter_pdf_receipt_message', __("Your payment has been received.", 'usces'), $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('M j, Y', 'usces'), strtotime($data->order['date']));
-			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
+			$siharai = __('payment division', 'usces').' : ' . apply_filters('usces_filter_pdf_payment_name', $data->order['payment_name'], $data);
 			$sign_image = apply_filters('usces_filter_pdf_receipt_sign', NULL);
 			$receipted_date = $usces->get_order_meta_value('receipted_date', $data->order['ID']);
 			if( empty($receipted_date) )
@@ -255,7 +256,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$title = __('Invoice', 'usces');
 			$message = apply_filters('usces_filter_pdf_bill_message', __("Please remit payment at your earliest convenience.", 'usces'), $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('M j, Y', 'usces'), strtotime($data->order['date']));
-			$siharai = __('payment division', 'usces').' : '.$data->order['payment_name'];
+			$siharai = __('payment division', 'usces').' : ' . apply_filters('usces_filter_pdf_payment_name', $data->order['payment_name'], $data);
 			$sign_image = apply_filters('usces_filter_pdf_bill_sign', NULL);
 			$effective_date = date(__('M j, Y', 'usces'), current_time('timestamp', 0));
 			break;
