@@ -3187,6 +3187,8 @@ class usc_e_shop
 			if( $res !== false ){
 				$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $_POST['member_id']);
 				$res = $this->reg_custom_member($_POST['member_id']);
+				unset($_SESSION['usces_member']);
+				$this->member_just_login(trim($_POST['customer']['mailaddress1']), trim($_POST['customer']['password1']));
 			}
 			
 			return 'newcompletion';
