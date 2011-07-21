@@ -1669,14 +1669,14 @@ function get_order_item( $item_code ) {
 			$r .= "\n<select name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_select{$multiple_array}'{$multiple}>\n";
 			if($essential == 1)
 				$r .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
-			$i=0;
+			$s=0;
 			foreach($selects as $v) {
-				if($i == 0 && $essential == 0) 
+				if($s == 0 && $essential == 0) 
 					$selected = ' selected="selected"';
 				else
 					$selected = '';
 				$r .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
-				$i++;
+				$s++;
 			}
 			$r .= "</select>\n";
 			break;
