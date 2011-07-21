@@ -1647,7 +1647,7 @@ function get_order_item( $item_code ) {
 	if ( 0 < count($optkeys) ) :
 		$r .= "<td colspan='7'>\n";
 		foreach ($optkeys as $optkey) :
-			
+			$r .= "<div>\n";
 			$value = get_post_custom_values(('_iopt_' . $optkey), $post_id);
 			$key = '_iopt_' . esc_attr($optkey);
 			if(!$value) continue;
@@ -1689,7 +1689,7 @@ function get_order_item( $item_code ) {
 		}
 //20110715ysk end
 			$r .= "<input name=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" type=\"hidden\" id=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" value=\"{$optkey}\" />\n";
-			
+			$r .= "</div>\n";
 		endforeach;
 		$r .= "</td>\n";
 	endif;
