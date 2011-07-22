@@ -278,7 +278,10 @@ $html .= "
 //20110317ysk start
 		$('#delivery_flag2').click(function() {
 			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
+//20110722ysk start 0000210
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').get(0).selectedIndex) {
+//20110722ysk end
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
@@ -288,7 +291,10 @@ $html .= "
 		//$('#pref').change(function() {
 		$('#delivery_pref').change(function() {
 			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
+//20110722ysk start 0000210
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').get(0).selectedIndex) {
+//20110722ysk end
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
