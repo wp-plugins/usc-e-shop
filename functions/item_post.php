@@ -1681,10 +1681,10 @@ function get_order_item( $item_code ) {
 			$r .= "</select>\n";
 			break;
 		case 2://Text
-			$r .= "\n<input name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' type='text' id='itemOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
+			$r .= "\n<input name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' type='text' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
 			break;
 		case 5://Text-area
-			$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_textarea' /></textarea>\n";
+			$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_textarea' /></textarea>\n";
 			break;
 		}
 //20110715ysk end
