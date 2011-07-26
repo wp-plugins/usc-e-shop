@@ -5096,10 +5096,12 @@ class usc_e_shop
 					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
 					exit;
 				}else{
+					usces_log('zeus card : Certification Error', 'acting_transaction.log');
 					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
 					exit;
 				}
 			}else{
+				usces_log('zeus card : Socket Error', 'acting_transaction.log');
 				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
 			}
 			exit;
@@ -6588,7 +6590,7 @@ class usc_e_shop
 		global $wp_query;
 
 
-		if( ($this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin()) || is_home() ){
+		if( ($this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin()) ){
 			$ids = $this->getItemIds( 'front' );
 			$wp_query->query_vars['post__not_in'] = $ids;
 			
