@@ -733,16 +733,16 @@ function usces_mail_custom_field_info( $custom_field, $position, $id ) {
 function usces_send_mail( $para ) {
 	global $usces;
 
-	$header = "From: " . html_entity_decode($para['from_name'], ENT_QUOTES) . " <{$para['from_address']}>\r\n"
-//			."To: " . mb_convert_encoding($para['to_name'], "SJIS") . " <{$para['to_address']}>\r\n"
-			."Return-Path: {$para['return_path']}\r\n";
+	$from = htmlspecialchars(html_entity_decode($para['from_name'], ENT_QUOTES)) . " <{$para['from_address']}>";
+	$header = "From: " . apply_filters('usces_filter_send_mail_from', $from, $para) . "\r\n";
+	$header .= "Return-Path: {$para['return_path']}\r\n";
 
 	$subject = html_entity_decode($para['subject'], ENT_QUOTES);
 	$message = $para['message'];
 	
 	ini_set( "SMTP", "{$usces->options['smtp_hostname']}" );
 	if( !ini_get( "smtp_port" ) ){
-		ini_set( "smtp_port", 25 );
+		ini_set( "smtp_port", apply_filters('usces_filter_send_mail_port', 25, $para) );
 	}
 	ini_set( "sendmail_from", "" );
 	

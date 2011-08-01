@@ -5093,16 +5093,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}else{
 					usces_log('zeus card : Certification Error', 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}
 			}else{
 				usces_log('zeus card : Socket Error', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0&uscesid=' . $this->get_uscesid(false));
 			}
 			exit;
 
@@ -5162,16 +5162,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus conv entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr . '&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}else{
 					usces_log('zeus data NG : '.$page, 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}
 			}else{
 				usces_log('zeus : sockopen NG', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0&uscesid=' . $this->get_uscesid(false));
 			}
 			exit;
 
