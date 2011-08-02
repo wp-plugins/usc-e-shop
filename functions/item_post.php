@@ -549,11 +549,11 @@ function add_item_option_meta( $post_ID ) {
 		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', $_POST['newoptvalue'] ) : '';
 		foreach((array)$newoptvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = trim( $v );
+				$nov[] = str_replace('\\', '&yen;', trim( $v ));
 		}
 	}else{
 		$newoptvalue = isset($_POST['newoptvalue']) ? $_POST['newoptvalue'] : '';
-		$nov = $newoptvalue;
+		$nov = str_replace('\\', '&yen;', $newoptvalue);
 	}
 
 	if ( ($newoptmeans >= 2 || '0' === $newoptvalue || !empty ( $newoptvalue )) && !empty ( $newoptname) ) {
@@ -693,11 +693,11 @@ function up_item_option_meta( $post_ID ) {
 		$optvalue = isset($_POST['optvalue']) ? explode('\n', trim( $_POST['optvalue'] ) ) : '';
 		foreach((array)$optvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = trim( $v );
+				$nov[] = str_replace('\\', '&yen;', trim( $v ));
 		}
 	}else{
 		$optvalue = isset($_POST['optvalue']) ? trim( $_POST['optvalue'] ) : '';
-		$nov = $optvalue;
+		$nov = str_replace('\\', '&yen;', $optvalue);
 	}
 
 	$value['means'] = $optmeans;
