@@ -2883,6 +2883,184 @@ msgstr "会員ID"
 msgid "Name"
 msgstr "氏名"
 
+msgid "International Shipment"
+msgstr "国際便"
+
+msgid "Domestic Shipment"
+msgstr "国内便"
+
+msgid "Delivery Date Not Specified"
+msgstr "配送希望日を利用しない"
+
+msgid "'Okay to Delete Delivery Days Setting ' + delname + '?'"
+msgstr "'配達日数設定「' + delname + '」を削除してもよろしいですか?'"
+
+msgid "'Okay to Change All Delivery Days to ' + days + '?'"
+msgstr "'配達日数を全て ' + days + ' 日に変更してもよろしいですか?'"
+
+msgid "Deadline for Delivery"
+msgstr "配送業務締時間"
+
+msgid "Set deadline for merchandise delivery. This number is used to calculate the earliest delivery date."
+msgstr "商品発送を締め切る時間を指定します。この値は最短発送日を算出するために使用します。"
+
+msgid "Morning Delivery Option"
+msgstr "午前着の可否"
+
+msgid "Do Not Apply"
+msgstr "利用しない"
+
+msgid "Morning Delivery"
+msgstr "午前着可"
+
+msgid "No Morning Delivery"
+msgstr "午前着不可"
+
+msgid "Set if the merchandise can be delivered on the morning of earliest possible delivery date."
+msgstr "商品が最短発送日の午前中に到着が可能かどうかを指定します。"
+
+msgid "Set Delivery Dates"
+msgstr "配送希望日表示数"
+
+msgid "Set the choices of possible delivery dates for the customer."
+msgstr "お客様が選択する配送希望日の選択数を指定します。"
+
+msgid "Possible Delivery Area"
+msgstr "配送対象地域"
+
+msgid "Choose possible delivery area for this shipment method."
+msgstr "この配送方法が対象とする配送可能地域を選択します。"
+
+msgid "Applied Module"
+msgstr "適用モジュール"
+
+msgid "No possible Module"
+msgstr "利用できるモジュールがありません"
+
+msgid "When delivery module is chosen, the module overrules all rules including shipping fee."
+msgstr "配送モジュールを選択した場合は、送料を含め全てのルールがモジュール優先となります。"
+
+msgid "Input possible delivery hours. Leave it blank when the customer cannot choose delivery time. <br />example）<br />morning<br />12：00～14：00<br />14：00～16：00<br />16：00～18：00"
+msgstr "配送可能な時間帯を入力します。お客様に時間帯を選択させない場合は空白にします。<br />例）<br />午前中<br />12：00～14：00<br />14：00～16：00<br />16：00～18：00"
+
+msgid "Weight Added"
+msgstr "重量加算"
+
+msgid "Add shipment fee by the total weight of merchandise."
+msgstr "商品の合計重量によって送料を加算します。"
+
+msgid "Delivery Days"
+msgstr "配達日数"
+
+msgid "Choose the Name of 'Delivery Days' registered in Delivery Days setting below. To be used to calculate the fastest delivery date. If you're not letting the customer set the delivery date, set to 'Delivery Date Not Specified'."
+msgstr "下の配達日数設定で登録した配達日数名を選択します。最短配送日を算出するために使用します。お客様に配送希望日を選択させない場合は「配送希望日を利用しない」を指定します。"
+
+msgid "Check for no COD."
+msgstr "代引き支払いができない場合はチェックを入れます。"
+
+msgid "Choose countries to apply this shipment fee."
+msgstr "この送料を適用する国を選択します。"
+
+msgid "Name of 'Delivery Days'"
+msgstr "配達日数名"
+
+msgid "Choose countries to apply this Delivery Days."
+msgstr "この配達日数を適用する国を選択します。"
+
+msgid "You can choose Delivery Days for each merchandise."
+msgstr "商品ごとに配達日数を選ぶことができます。"
+
+msgid "Name of the Additional Fee"
+msgstr "加算ルール名"
+
+msgid "Amount of the Additional Fee"
+msgstr "加算金額"
+
+msgid "Calculate the shipping fee based on the total weight of the merchandises."
+msgstr "商品の合計重量を元に送料に料金を加算します。"
+
+msgid "PayPal Express Checkout"
+msgstr "PayPalエクスプレスチェックアウト決済サービス"
+
+msgid "Test thoroughly before use."
+msgstr "十分にテストを行ってから運用してください。"
+
+# 各証書の購入明細のタイトル
+msgid "PayPal Settlement"
+msgstr "PayPal決済"
+
+msgid "Use"
+msgstr "利用する"
+
+msgid "Do not Use"
+msgstr "利用しない"
+
+msgid "Choose if to use PayPal settlement."
+msgstr "PayPal決済を利用するかどうかを選択します。"
+
+msgid "Operation Environment"
+msgstr "動作環境"
+
+msgid "Test (Sandbox)"
+msgstr "テスト(Sandbox)"
+
+msgid "Formal Installment"
+msgstr "本稼動"
+
+msgid "Choose 'Test (Sandbox)' when testing payment settlement by Sandbox."
+msgstr "Sandbox を利用した決済テストの場合は「テスト(Sandbox)」を選択します。"
+
+msgid "API User Name"
+msgstr "APIユーザー名"
+
+msgid "Type in the API user name from API credential. User name will be different in the formal installment of Sandbox."
+msgstr "API信用証明書のAPIユーザー名を入力します。Sandbox と本稼動では別のユーザー名となります。"
+
+msgid "API Password"
+msgstr "APIパスワード"
+
+msgid "Type in the API password from API credential. Password will be different in formal installment of Sandbox."
+msgstr "API信用証明書のAPIパスワードを入力します。Sandbox と本稼動では別のパスワードとなります。"
+
+msgid "Signature"
+msgstr "署名"
+
+msgid "Type in the signature from API credential. Signature will be different in the formal installment of Sandbox."
+msgstr "PayPalから発行されるAPI信用証明書の署名を入力します。Sandbox と本稼動では別の署名となります。"
+
+msgid "Recurring Payment"
+msgstr "定期支払い"
+
+msgid "It is a function that enables the automation of tedious payment settlement such as monthly membership fee that occurs regularly. <br /> For details, contact PayPal."
+msgstr "定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくは「PayPal」にお問合せください。"
+
+msgid "Update PayPal Settings"
+msgstr "PayPalの設定を更新する"
+
+msgid "For the details on PayPal settlement service, click here >>"
+msgstr "PayPal決済サービスの詳細はこちら 》"
+
+msgid "This settlement uses 'Express Checkout'."
+msgstr "この決済は、「エクスプレスチェックアウト」を使用しています。"
+
+msgid "If the 'OpenSSL' module is not installed in the server you're using, you cannot settle payments by 'ExpressCheckout'."
+msgstr "ご利用のサーバーに「OpenSSL」モジュールがインストールされていない場合、「エクスプレスチェックアウト」での決済はできません。"
+
+msgid "ZEUS"
+msgstr "ゼウス"
+
+msgid "Remise"
+msgstr "ルミーズ"
+
+msgid "ZEUS Japanese Settlement"
+msgstr "ゼウス決済サービス"
+
+msgid "Remise Japanese Settlement"
+msgstr "ルミーズ決済サービス"
+
+msgid "J-Payment Japanese Settlement"
+msgstr "J-Payment決済サービス"
+
 #~ msgid "print the invoice"
 #~ msgstr "納品書印刷"
 #~ msgid "Invoices"
@@ -2908,8 +3086,6 @@ msgstr "氏名"
 #~ msgstr "（税込）"
 #~ msgid "Special discount"
 #~ msgstr "特別割引"
-#~ msgid "current month"
-#~ msgstr "今月"
 #~ msgid "OK-stocks"
 #~ msgstr "在庫有り"
 #~ msgid "h"
