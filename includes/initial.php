@@ -52,6 +52,9 @@ $shipping_rule = array(
 					'8' => __('about 3 weeks later', 'usces'),
 					'9' => __('after we get new items', 'usces')
 					);
+					
+$shipping_indication = array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0);
+
 //20100914ysk start
 //$item_option_select = array(__('Single-select','usces'), __('Multi-select','usces'), __('Text','usces'));
 $item_option_select = array(
@@ -204,6 +207,8 @@ $usces_op['mail_default']['footer']['receiptmail'] = "==========================
 $usces_op['mail_default']['footer']['mitumorimail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
 $usces_op['mail_default']['footer']['cancelmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
 $usces_op['mail_default']['footer']['othermail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
+
+$usces_op['usces_shipping_indication'] = $shipping_indication;
 
 update_option('usces', $usces_op);
 

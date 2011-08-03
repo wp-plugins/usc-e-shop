@@ -3884,4 +3884,77 @@ function usces_make_agreement_description($cart, $amt) {
 	return($desc);
 }
 //20110421ysk end
+
+function usces_get_send_out_date(){
+	global $usces;
+
+	$bus_day_arr = (isset($usces->options['business_days'])) ? $usces->options['business_days'] : false;
+	list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = split( '([^0-9])', current_time('mysql') );
+	if( !is_array($bus_day_arr) ){
+		$today_bus_flag = 1;
+	}else{
+		$today_bus_flag = isset($bus_day_arr[(int)$today_year][(int)$today_month][(int)$today_day]) ? (int)$bus_day_arr[(int)$today_year][(int)$today_month][(int)$today_day] : 1;
+	}
+	// get the time limit addition
+	$limit_hour = (!empty($usces->options['delivery_time_limit']['hour'])) ? $usces->options['delivery_time_limit']['hour'] : false;
+	$limit_min = (!empty($usces->options['delivery_time_limit']['min'])) ? $usces->options['delivery_time_limit']['min'] : false;
+
+	if( false === $hour || false === $min ){
+		$time_limit_addition = false;
+	}elseif( ($hour.':'.$minute.':'.$second) > ($limit_hour.':'.$limit_min.':00') ){
+		$time_limit_addition = 1;
+	}else{
+		$time_limit_addition = 0;
+	}
+	// get the shipping indication in cart
+	$cart = $usces->cart->get_cart();
+	$shipping_indication = apply_filters('usces_filter_shipping_indication', $usces->options['usces_shipping_indication']);
+	$shipping = 0;
+	$indication_flag = true;
+	for($i = 0; $i < count($cart); $i++) {
+		$cart_row = $cart[$i];
+		$post_id = $cart_row['post_id'];
+		$itemShipping = (int)$usces->getItemShipping($post_id);
+		if($itemShipping === 0 or $itemShipping === 9) {
+			$indication_flag = false;
+			break;
+		}
+		if($shipping < $itemShipping) $shipping = $itemShipping;
+	}
+	$indication_incart = ( $indication_flag ) ? $shipping_indication[$shipping] : false;
+	// get the send out date
+	$sendout_num = 0;
+	if( $today_bus_flag ){
+		if( $time_limit_addition ){
+			$sendout_num += 1;
+		}
+		if( false !== $indication_incart ){
+			$sendout_num += $indication_incart;
+		}
+	}else{
+		if( false !== $indication_incart ){
+			$sendout_num += $indication_incart;
+		}
+	}
+	$holiday = 0;
+	for( $i=0; $i<=$sendout_num; $i++ ){
+		list($yyyy, $mm, $dd) = explode('-', date('Y-m-d', mktime(0,0,0,(int)$today_month,($today_day + $i),(int)$today_year)));
+		if( isset($bus_day_arr[(int)$yyyy][(int)$mm][(int)$dd]) && !$bus_day_arr[(int)$yyyy][(int)$mm][(int)$dd] ){
+			$holiday++;
+			$sendout_num++;	
+		}
+		if( 100 < $sendout_num ) break;
+	}
+	list($send_y, $send_m, $send_d) = explode('-', date('Y-m-d', mktime(0,0,0,(int)$today_month,($today_day + $sendout_num),(int)$today_year)));
+	
+	$res = array(
+			'today_bus_flag'	=> $today_bus_flag, 
+			'time_limit_addition'=> $time_limit_addition, 
+			'indication_incart'	=> $indication_incart, 
+			'holiday'			=> $holiday, 
+			'sendout_num'		=> $sendout_num, 
+			'sendout_date'		=> array('year' => $send_y, 'month' => $send_m, 'day' => $send_d)
+			);
+	return $res;
+}
 ?>
