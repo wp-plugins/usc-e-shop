@@ -3140,7 +3140,7 @@ class usc_e_shop
 					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
 //20100818ysk start
 					//$res = $this->reg_custom_member($wpdb->insert_id);
-					$res = $this->reg_custom_member($member_id);
+				$res = $this->reg_custom_member($member_id);
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
@@ -6092,6 +6092,15 @@ class usc_e_shop
 	function reg_custom_member($member_id) {
 		if( !empty($_POST['custom_member']) ) {
 			foreach( $_POST['custom_member'] as $key => $value ) {
+				$csmb_key = 'csmb_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$res = $this->set_member_meta_value($csmb_key, $value, $member_id);
+				if(false === $res) 
+					return false;
+			}
+		}elseif( isset($_POST['custom_customer']) ){
+			foreach( $_POST['custom_customer'] as $key => $value ) {
 				$csmb_key = 'csmb_'.$key;
 				if( is_array($value) ) 
 					 $value = serialize($value);
