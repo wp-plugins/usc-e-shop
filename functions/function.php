@@ -746,8 +746,15 @@ function usces_send_mail( $para ) {
 	}
 	ini_set( "sendmail_from", "" );
 	
-	if( is_email( $para['to_address'] ) ){
-		$res = @wp_mail( $para['to_address'] , $subject , $message, $header );
+	$mails = explode( ',', $para['to_address'] );
+	$to_mailes = array();
+	foreach( $mails as $mail ){
+		if( is_email( trim($mail) ) ){
+			$to_mailes[] = $mail;
+		}
+	}
+	if( !empty( $to_mailes ) ){
+		$res = @wp_mail( $to_mailes , $subject , $message, $header );
 	}else{
 		$res = false;
 	}
