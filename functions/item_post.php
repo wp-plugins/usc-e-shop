@@ -549,11 +549,11 @@ function add_item_option_meta( $post_ID ) {
 		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', $_POST['newoptvalue'] ) : '';
 		foreach((array)$newoptvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = trim( $v );
+				$nov[] = str_replace('\\', '&yen;', trim( $v ));
 		}
 	}else{
 		$newoptvalue = isset($_POST['newoptvalue']) ? $_POST['newoptvalue'] : '';
-		$nov = $newoptvalue;
+		$nov = str_replace('\\', '&yen;', $newoptvalue);
 	}
 
 	if ( ($newoptmeans >= 2 || '0' === $newoptvalue || !empty ( $newoptvalue )) && !empty ( $newoptname) ) {
@@ -693,11 +693,11 @@ function up_item_option_meta( $post_ID ) {
 		$optvalue = isset($_POST['optvalue']) ? explode('\n', trim( $_POST['optvalue'] ) ) : '';
 		foreach((array)$optvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = trim( $v );
+				$nov[] = str_replace('\\', '&yen;', trim( $v ));
 		}
 	}else{
 		$optvalue = isset($_POST['optvalue']) ? trim( $_POST['optvalue'] ) : '';
-		$nov = $optvalue;
+		$nov = str_replace('\\', '&yen;', $optvalue);
 	}
 
 	$value['means'] = $optmeans;
@@ -1647,7 +1647,7 @@ function get_order_item( $item_code ) {
 	if ( 0 < count($optkeys) ) :
 		$r .= "<td colspan='7'>\n";
 		foreach ($optkeys as $optkey) :
-			
+			$r .= "<div>\n";
 			$value = get_post_custom_values(('_iopt_' . $optkey), $post_id);
 			$key = '_iopt_' . esc_attr($optkey);
 			if(!$value) continue;
@@ -1669,27 +1669,27 @@ function get_order_item( $item_code ) {
 			$r .= "\n<select name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_select{$multiple_array}'{$multiple}>\n";
 			if($essential == 1)
 				$r .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
-			$i=0;
+			$s=0;
 			foreach($selects as $v) {
-				if($i == 0 && $essential == 0) 
+				if($s == 0 && $essential == 0) 
 					$selected = ' selected="selected"';
 				else
 					$selected = '';
 				$r .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
-				$i++;
+				$s++;
 			}
 			$r .= "</select>\n";
 			break;
 		case 2://Text
-			$r .= "\n<input name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' type='text' id='itemOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
+			$r .= "\n<input name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' type='text' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
 			break;
 		case 5://Text-area
-			$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_textarea' /></textarea>\n";
+			$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_textarea' /></textarea>\n";
 			break;
 		}
 //20110715ysk end
 			$r .= "<input name=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" type=\"hidden\" id=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" value=\"{$optkey}\" />\n";
-			
+			$r .= "</div>\n";
 		endforeach;
 		$r .= "</td>\n";
 	endif;
