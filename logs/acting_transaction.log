@@ -1,22 +1,121 @@
-1[2011-07-02 11:36:28]	zeus data NG : HTTP/1.1 200 OK
-Date: Sat, 02 Jul 2011 02:36:27 GMT
-Server: Apache
-Set-Cookie: cookie=13095741881003527374; domain=.cardservice.co.jp; path=/cgi-bin/; expires=Thu, 18-May-1905 20:08:12 GMT; secure
-Connection: close
-Transfer-Encoding: chunked
-Content-Type: text/html; charset=shift_jis
+1[2011-07-22 12:39:16]	je_action_reg_orderdata : Array
+(
+    [cart] => Array
+        (
+            [0] => Array
+                (
+                    [serial] => a:1:{i:9;a:1:{s:6:"a001-1";i:0;}}
+                    [post_id] => 9
+                    [sku] => a001-1
+                    [options] => 0
+                    [price] => 600
+                    [quantity] => 1
+                    [advance] => Array
+                        (
+                        )
 
-54
-rel=failure_order
-order_no=
-pay_no1=
-pay_no2=
-pay_url=
-pay_limit=
-error_code=800001
+                )
 
-0
+        )
 
+    [entry] => Array
+        (
+            [customer] => Array
+                (
+                    [ID] => 1000
+                    [mailaddress1] => nanbu@uscons.co.jp
+                    [mailaddress2] => nanbu@uscons.co.jp
+                    [point] => 0
+                    [name1] => 南部
+                    [name2] => 正光
+                    [name3] => 
+                    [name4] => 
+                    [zipcode] => 910-0845
+                    [pref] => 福井県
+                    [address1] => 福井市志比口
+                    [address2] => 3-2-14
+                    [address3] => はさきビル1F
+                    [tel] => 0776-52-3557
+                    [fax] => 
+                    [delivery_flag] => 0
+                    [delivery] => 
+                    [registered] => 2011-07-21 10:59:46
+                    [nicename] => 
+                    [country] => JP
+                )
 
-[2011-07-02 15:12:44]	remise construct : 1107021512300000851041893285
-[2011-07-02 15:12:45]	remise card transaction : 1107021512300000851041893285
+            [delivery] => Array
+                (
+                    [delivery_flag] => 0
+                    [name1] => 南部
+                    [name2] => 正光
+                    [name3] => 
+                    [name4] => 
+                    [zipcode] => 910-0845
+                    [country] => JP
+                    [pref] => 福井県
+                    [address1] => 福井市志比口
+                    [address2] => 3-2-14
+                    [address3] => はさきビル1F
+                    [tel] => 0776-52-3557
+                    [fax] => 
+                    [ID] => 1000
+                    [mailaddress1] => nanbu@uscons.co.jp
+                    [mailaddress2] => nanbu@uscons.co.jp
+                    [point] => 0
+                    [delivery] => 
+                    [registered] => 2011-07-21 10:59:46
+                    [nicename] => 
+                )
+
+            [order] => Array
+                (
+                    [delivery_method] => 0
+                    [delivery_date] => 指定できません
+                    [delivery_time] => 指定できません
+                    [payment_name] => 銀行
+                    [note] => 
+                    [cus_id] => 
+                    [total_items_price] => 600
+                    [total_price] => 700
+                    [total_full_price] => 700
+                    [getpoint] => 0
+                    [usedpoint] => 
+                    [discount] => 0
+                    [shipping_charge] => 100
+                    [cod_fee] => 0
+                    [tax] => 0
+                )
+
+            [reserve] => Array
+                (
+                    [pre_order_id] => 4e28f0d1e941f
+                )
+
+            [condition] => Array
+                (
+                    [display_mode] => Usualsale
+                    [campaign_privilege] => 
+                    [privilege_point] => 0
+                    [privilege_discount] => 0
+                )
+
+            [custom_order] => 
+            [custom_customer] => 
+            [custom_delivery] => 
+        )
+
+    [order_id] => 1002
+    [member_id] => 1000
+    [payments] => Array
+        (
+            [name] => 銀行
+            [explanation] => 
+            [settlement] => transferAdvance
+            [module] => 
+        )
+
+    [charging_type] => once
+)
+
+[2011-07-22 12:39:16]	je_action_reg_orderdata : 

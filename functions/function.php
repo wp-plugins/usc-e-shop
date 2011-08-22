@@ -985,7 +985,7 @@ function usces_reg_orderdata( $results = array() ) {
 			if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
 		}
 		
-		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type, 'receipt_status'=>$status);
 		do_action('usces_action_reg_orderdata', $args);
 	
 	endif;
