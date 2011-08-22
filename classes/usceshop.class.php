@@ -3727,17 +3727,19 @@ class usc_e_shop
 			$mes .= __('Name is not correct', 'usces') . "<br />";
 //		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( trim($_POST['member']["zipcode"]) == "" )
-			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST['member']["pref"] == __('-- Select --', 'usces') )
-			$mes .= __('enter the prefecture', 'usces') . "<br />";
-		if ( trim($_POST['member']["address1"]) == "" )
-			$mes .= __('enter the city name', 'usces') . "<br />";
-		if ( trim($_POST['member']["address2"]) == "" )
-			$mes .= __('enter house numbers', 'usces') . "<br />";
-		if ( trim($_POST['member']["tel"]) == "" )
-			$mes .= __('enter phone numbers', 'usces') . "<br />";
+//		if ( trim($_POST['member']["zipcode"]) == "" )
+//			$mes .= __('postal code is not correct', 'usces') . "<br />";
+//		if ( $_POST['member']["pref"] == __('-- Select --', 'usces') )
+//			$mes .= __('enter the prefecture', 'usces') . "<br />";
+//		if ( trim($_POST['member']["address1"]) == "" )
+//			$mes .= __('enter the city name', 'usces') . "<br />";
+//		if ( trim($_POST['member']["address2"]) == "" )
+//			$mes .= __('enter house numbers', 'usces') . "<br />";
+//		if ( trim($_POST['member']["tel"]) == "" )
+//			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
+		$mes = apply_filters('usces_filter_admin_member_check', $mes);
+
 		return $mes;
 	}
 
