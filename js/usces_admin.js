@@ -440,7 +440,7 @@
 			s.data = query;
 			s.success = function(data, dataType){
 				if(data == 'nodata'){return;}
-				var pict = "<img src='" + $("#newitemform img").attr("src") + "' height='60' width='60' alt='' />";
+				var pict = "<img src='" + $("#newitemform img").attr("src") + "' width='" + $("#newitemform img").attr("width") + "' height='" + $("#newitemform img").attr("height") + "' alt='' />";
 				var itemName = $("input[name='itemNEWName\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='itemNEWCode\["+newid+"\]\["+newsku+"\]']").val();
 				var zaiko = $("input[name='zaiNEWko\["+newid+"\]\["+newsku+"\]']").val();
 				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' onchange='orderfunc.sumPrice()' />";

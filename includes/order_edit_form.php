@@ -909,7 +909,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
-		<td><?php echo wp_get_attachment_image( $pictid, array(60, 60), true ); ?></td>
+		<td><?php echo wp_get_attachment_image( $pictid, array(150, 150), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
 		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
 		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>

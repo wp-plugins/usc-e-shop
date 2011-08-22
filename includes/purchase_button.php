@@ -428,6 +428,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="SHIPTOSTATE" value="'.esc_html($usces_entries['customer']['pref']).'">
 				<input type="hidden" name="SHIPTOCOUNTRYCODE" value="'.$country.'">
 				<input type="hidden" name="SHIPTOZIP" value="'.$zip.'">
+				<input type="hidden" name="SOLUTIONTYPE" value="Sole">
+				<input type="hidden" name="LANDINGPAGE" value="Billing">
 				<input type="hidden" name="SHIPTOPHONENUM" value="'.$tel.'">
 				<input type="hidden" name="CURRENCYCODE" value="'.$currency_code.'">
 				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';

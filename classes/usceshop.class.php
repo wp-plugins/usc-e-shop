@@ -3140,7 +3140,7 @@ class usc_e_shop
 					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
 //20100818ysk start
 					//$res = $this->reg_custom_member($wpdb->insert_id);
-					$res = $this->reg_custom_member($member_id);
+				$res = $this->reg_custom_member($member_id);
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
@@ -3727,17 +3727,19 @@ class usc_e_shop
 			$mes .= __('Name is not correct', 'usces') . "<br />";
 //		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( trim($_POST['member']["zipcode"]) == "" )
-			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST['member']["pref"] == __('-- Select --', 'usces') )
-			$mes .= __('enter the prefecture', 'usces') . "<br />";
-		if ( trim($_POST['member']["address1"]) == "" )
-			$mes .= __('enter the city name', 'usces') . "<br />";
-		if ( trim($_POST['member']["address2"]) == "" )
-			$mes .= __('enter house numbers', 'usces') . "<br />";
-		if ( trim($_POST['member']["tel"]) == "" )
-			$mes .= __('enter phone numbers', 'usces') . "<br />";
+//		if ( trim($_POST['member']["zipcode"]) == "" )
+//			$mes .= __('postal code is not correct', 'usces') . "<br />";
+//		if ( $_POST['member']["pref"] == __('-- Select --', 'usces') )
+//			$mes .= __('enter the prefecture', 'usces') . "<br />";
+//		if ( trim($_POST['member']["address1"]) == "" )
+//			$mes .= __('enter the city name', 'usces') . "<br />";
+//		if ( trim($_POST['member']["address2"]) == "" )
+//			$mes .= __('enter house numbers', 'usces') . "<br />";
+//		if ( trim($_POST['member']["tel"]) == "" )
+//			$mes .= __('enter phone numbers', 'usces') . "<br />";
 	
+		$mes = apply_filters('usces_filter_admin_member_check', $mes);
+
 		return $mes;
 	}
 
@@ -5093,14 +5095,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}else{
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
+					usces_log('zeus card : Certification Error', 'acting_transaction.log');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}
 			}else{
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
+				usces_log('zeus card : Socket Error', 'acting_transaction.log');
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0&uscesid=' . $this->get_uscesid(false));
 			}
 			exit;
 
@@ -5160,16 +5164,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus conv entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr . '&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}else{
 					usces_log('zeus data NG : '.$page, 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0&uscesid=' . $this->get_uscesid(false));
 					exit;
 				}
 			}else{
 				usces_log('zeus : sockopen NG', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0&uscesid=' . $this->get_uscesid(false));
 			}
 			exit;
 
@@ -6097,6 +6101,15 @@ class usc_e_shop
 				if(false === $res) 
 					return false;
 			}
+		}elseif( isset($_POST['custom_customer']) ){
+			foreach( $_POST['custom_customer'] as $key => $value ) {
+				$csmb_key = 'csmb_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$res = $this->set_member_meta_value($csmb_key, $value, $member_id);
+				if(false === $res) 
+					return false;
+			}
 		}
 	}
 //20100818ysk end
@@ -6588,7 +6601,7 @@ class usc_e_shop
 		global $wp_query;
 
 
-		if( ($this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin()) || is_home() ){
+		if( ($this->options['divide_item'] && !is_category() && !is_search() && !is_singular() && !is_admin()) ){
 			$ids = $this->getItemIds( 'front' );
 			$wp_query->query_vars['post__not_in'] = $ids;
 			
