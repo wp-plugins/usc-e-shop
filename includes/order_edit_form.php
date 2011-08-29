@@ -4,6 +4,9 @@ $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
 
+$pname = array();
+$payment_method = array();
+
 $management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
 $payment_method = $this->options['payment_method'];
 foreach( $payment_method as $pmet){
