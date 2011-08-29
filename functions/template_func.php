@@ -2184,7 +2184,7 @@ function usces_singleitem_error_message($post_id, $skukey, $out = ''){
 function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '', $seperator_flag = true ) {
 	global $usces;
 	$price = esc_html($usces->get_currency($float, $symbol_pre, $symbol_post, $seperator_flag ));
-	$res = apply_filters('usces_filter_crform', $price, $amount);
+	$res = apply_filters('usces_filter_crform', $price, $float);
 	
 	if($out == 'return'){
 		return $res;
