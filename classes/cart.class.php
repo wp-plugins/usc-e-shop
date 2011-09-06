@@ -467,7 +467,9 @@ class usces_cart {
 		} else {
 			$p = $price;
 		}
-		
+//20110905ysk start 0000251
+		$p = apply_filters('usces_filter_realprice', $p, $this->serial);
+//20110905ysk end
 		if( !$skus[$sku]['gptekiyo'] ) return $p;
 		
 		$GpN1 = $usces->getItemGpNum1($post_id);
