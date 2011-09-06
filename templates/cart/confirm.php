@@ -285,7 +285,7 @@ $html .= '<tr>
 //require_once( USCES_PLUGIN_DIR . "/includes/confirm_custom_order_form.php");
 $html .= usces_custom_field_info($usces_entries, 'order', '', 'return');
 $html .= '<tr>
-	<th>'.__('Notes', 'usces').'</th><td>' . nl2br($usces_entries['order']['note']) . '</td>
+	<th>'.__('Notes', 'usces').'</th><td>' . nl2br(esc_html($usces_entries['order']['note'])) . '</td>
 	</tr>';
 //20100818ysk end
 $html .= '</table>';

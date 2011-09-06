@@ -704,6 +704,7 @@ div.usccart_navi li.usccart_confirm {
 	margin-left: 0px;
 	margin-right: 3px;
 }
+#delivery-info .customer_form em,
 #customer-info .customer_form em {
 	font-style: normal;
 	color: #ff0000;

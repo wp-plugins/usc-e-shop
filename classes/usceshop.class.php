@@ -10,7 +10,7 @@ class usc_e_shop
 	var $itemskus, $itemsku, $itemopts, $itemopt, $item;
 	var $zaiko_status, $payment_structure, $display_mode, $shipping_rule;
 	var $member_status;
-	var $options;
+	var $options, $mail_para;
 	var $login_mail, $current_member, $member_form;
 	var $payment_results, $log_flg, $delim, $use_js;
 
@@ -4501,10 +4501,13 @@ class usc_e_shop
 	}
 	
 	function getGuidTax() {
-		if ( (int)$this->options['tax_rate'] > 0 )
-			return '<em class="tax">'.__('(Excl. Tax)', 'usces').'</em>';
+		$tax_rate = (int)$this->options['tax_rate'];
+		if ( 0 < $tax_rate )
+			$str = '<em class="tax">'.__('(Excl. Tax)', 'usces').'</em>';
 		else
-			return '<em class="tax">'.__('(Incl. Tax)', 'usces').'</em>';
+			$str = '<em class="tax">'.__('(Incl. Tax)', 'usces').'</em>';
+			
+		return apply_filters('usces_filter_tax_guid', $str, $tax_rate);
 	}
 
 	function getItemCode($post_id) {

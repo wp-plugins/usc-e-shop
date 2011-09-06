@@ -32,7 +32,7 @@ function usces_ajax_send_mail() {
 				'to_name' => 'Shop Admin',
 				'to_address' => $usces->options['sender_mail'], 
 				'from_name' => 'Welcart Auto BCC', 
-				'from_address' => 'Welcart', 
+				'from_address' => $usces->options['sender_mail'], 
 				'return_path' => $usces->options['error_mail'],
 				'subject' => trim(urldecode($_POST['subject'])) . ' to ' . sprintf(__('Mr/Mrs %s', 'usces'), trim(urldecode($_POST['name']))),
 				'message' => trim(urldecode($_POST['message']))
@@ -763,6 +763,63 @@ function usces_send_mail( $para ) {
 
 }
 
+function usces_send_mail2( $para ) {
+	global $usces;
+
+	$usces->mail_para = $para;
+	add_action('phpmailer_init','usces_send_mail_init', 11);
+
+//	$from = htmlspecialchars(html_entity_decode($para['from_name'], ENT_QUOTES)) . " <{$para['from_address']}>";
+//	$header = "From: " . apply_filters('usces_filter_send_mail_from', $from, $para) . "\r\n";
+//	$header .= "Return-Path: {$para['return_path']}\r\n";
+
+	$subject = html_entity_decode($para['subject'], ENT_QUOTES);
+	$message = $para['message'];
+	
+//	ini_set( "SMTP", "{$usces->options['smtp_hostname']}" );
+//	if( !ini_get( "smtp_port" ) ){
+//		ini_set( "smtp_port", apply_filters('usces_filter_send_mail_port', 25, $para) );
+//	}
+//	ini_set( "sendmail_from", "" );
+	
+	$mails = explode( ',', $para['to_address'] );
+	$to_mailes = array();
+	foreach( $mails as $mail ){
+		if( is_email( trim($mail) ) ){
+			$to_mailes[] = $mail;
+		}
+	}
+	if( !empty( $to_mailes ) ){
+		$res = @wp_mail( $to_mailes , $subject , $message );
+	}else{
+		$res = false;
+	}
+//usces_log('mail : '.print_r($res, true), 'acting_transaction.log');
+	
+	remove_action('phpmailer_init','usces_send_mail_init', 11);
+	$usces->mail_para = array();
+	return $res;
+
+}
+
+function usces_send_mail_init($phpmailer){
+	global $usces;
+
+	$phpmailer->Mailer = 'mail';
+	$phpmailer->From = $usces->mail_para['from_address'];
+	$phpmailer->FromName = apply_filters('usces_filter_send_mail_from', $usces->mail_para['from_name'], $usces->mail_para);
+	$phpmailer->Sender = $usces->mail_para['from_address'];
+	
+//	$phpmailer->Mailer = 'smtp';
+//	$phpmailer->SMTPSecure = '';
+//	$phpmailer->Host = 'sample.com';
+//	$phpmailer->Port = 25;
+//	$phpmailer->SMTPAuth = true;
+//	$phpmailer->Username = 'sample@sample.com';
+//	$phpmailer->Password = 'password';
+
+	do_action('usces_filter_phpmailer_init', array( &$phpmailer ));
+}
 
 function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
