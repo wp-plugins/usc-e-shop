@@ -1491,14 +1491,16 @@ function usces_categories_checkbox($output=''){
 	foreach ($categories as $cat) {
 		$children =  get_categories('child_of='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
 		if(!empty($children)){
-			$htm .= "<fieldset><legend>" . $cat->cat_name . "</legend><ul>\n";
+			$htm .= "<fieldset class='catfield-" . $cat->term_id . "'><legend>" . $cat->cat_name . "</legend><ul>\n";
 			foreach ($children as $child) {
 				$checked = in_array($child->term_id, $retcats) ? " checked='checked'" : "";
-				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]'>".esc_html($child->cat_name)."</label></li>\n";
+				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]' class='catlabel-" . $child->term_id . "'>".esc_html($child->cat_name)."</label></li>\n";
 			}
 			$htm .= "</ul></fieldset>\n";
 		}
 	}
+	$htm = apply_filters('usces_filter_categories_checkbox', $htm, $categories);
+	
 	if($output == '' || $output == 'echo')
 		echo $htm;
 	else
