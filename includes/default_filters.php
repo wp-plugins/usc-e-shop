@@ -9,8 +9,8 @@ add_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 //add_action('wp_dashboard_setup', 'usces_dashboard_setup' );	
 //add_action( 'login_head', 'usces_admin_login_head' );
 //add_action('restrict_manage_posts', array(&$usces, 'postfilter'));
-
-add_action('save_post', 'item_save_metadata');
+add_action( 'added_post_meta', 'usces_added_post_meta', 10, 4);
+add_action( 'save_post', 'item_save_metadata');
 add_action( 'wp_ajax_order_item2cart_ajax', 'order_item2cart_ajax' );
 add_action( 'wp_ajax_order_item_ajax', 'order_item_ajax' );
 add_action( 'wp_ajax_payment_ajax', 'payment_ajax' );
@@ -47,28 +47,22 @@ add_shortcode('button_to_cart', array(&$usces, 'sc_button_to_cart'));
 add_shortcode('direct_intoCart', 'sc_direct_intoCart');
 
 
-if (version_compare($wp_version, '2.8', '>=')){
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_category.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_bestseller.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_calendar.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_search.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_featured.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_page.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_post.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_login.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_blog_calendar.php");
-	require_once(USCES_PLUGIN_DIR."/widgets/usces_recent_posts.php");
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_category");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_bestseller");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_calendar");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_search");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_featured");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_page");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_post");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_login");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_Blog_Calendar");'));
-	add_action('widgets_init', create_function('', 'return register_widget("Welcart_Recent_Posts");'));
+add_action('widgets_init', 'usces_widgets_init');
+function usces_widgets_init() {
+	register_widget('Welcart_Widget_Archives');
+	register_widget('Welcart_Widget_Search');
+	register_widget('Welcart_Widget_Categories');
+	register_widget('Welcart_Widget_Recent_Posts');
+	register_widget('Welcart_Widget_Recent_Comments');
+	register_widget('Welcart_Widget_Tag_Cloud');
+	register_widget('Welcart_bestseller');
+	register_widget('Welcart_calendar');
+	register_widget('Welcart_featured');
+	register_widget('Welcart_login');
+	register_widget('Welcart_page');
+	register_widget('Welcart_post');
 }
+
 
 add_filter('usces_filter_cart_page_header', array(&$usces, 'filter_cart_page_header'));
 add_filter('usces_filter_cart_page_footer', array(&$usces, 'filter_cart_page_footer'));

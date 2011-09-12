@@ -78,7 +78,7 @@ $html .= '<tr>
 		</tr>';
 //20101208ysk end
 $html .= '<tr>
-	<th scope="row"><em>' . __('*', 'usces') . '</em>'.__('payment method', 'usces').'</th>
+	<th scope="row"><em>*</em>'.__('payment method', 'usces').'</th>
 	<td colspan="2">' . usces_the_payment_method( $usces_entries['order']['payment_name'], 'return' ) . '</td>
 	</tr>
 	</table>';

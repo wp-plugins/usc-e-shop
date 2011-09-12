@@ -61,7 +61,7 @@ get_header();
 			<td colspan="2"><?php usces_the_delivery_time( $usces_entries['order']['delivery_time']); ?></td>
 		</tr>
 		<tr>
-			<th scope="row"><em><?php _e('*', 'usces'); ?></em><?php _e('payment method', 'usces'); ?></th>
+			<th scope="row"><em>*</em><?php _e('payment method', 'usces'); ?></th>
 			<td colspan="2"><?php usces_the_payment_method( $usces_entries['order']['payment_name']); ?></td>
 		</tr>
 	</table>

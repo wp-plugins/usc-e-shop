@@ -29,7 +29,7 @@
 		$itemName = $this->getItemName($post_id);
 		$cartItemName = $this->getCartItemName($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictid = $this->get_mainpictid($itemCode);
+		$pictids = $this->get_pictids($itemCode);
 		$optstr =  '';
 		foreach((array)$options as $key => $value){
 			if( !empty($key) )
@@ -38,7 +38,7 @@
 ?>
 		<tr>
 			<td><?php echo $i + 1; ?></td>
-			<td><?php echo wp_get_attachment_image( $pictid, array(60, 60), true ); ?></td>
+			<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
 			<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
 			<td class="aright"><?php echo number_format($skuPrice); ?></td>
 			<td><?php echo esc_html($cart_row['quantity']); ?></td>

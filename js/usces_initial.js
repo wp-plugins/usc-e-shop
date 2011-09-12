@@ -46,6 +46,50 @@ jQuery(function($) {
 		}
 	};
 	
+	$( "#item-opt-list" ).sortable({
+		//placeholder: "ui-state-highlight",
+		handle : 'th',
+		axis : 'y',
+		cursor : "move",
+		tolerance : "pointer",
+		forceHelperSize : true,
+		forcePlaceholderSize : true,
+		revert : 300,
+		opacity: 0.6,
+		cancel: ":input,button",
+		update : function(){
+			var data=[];
+			$("table","#item-opt-list").each(function(i,v){
+				data.push($(this).attr('id'));
+			});
+			if( 1 < data.length ){
+				itemOpt.dosort(data.toString());
+			}
+		}
+	});
+
+	$( "#payment-list" ).sortable({
+		//placeholder: "ui-state-highlight",
+		handle : 'th',
+		axis : 'y',
+		cursor : "move",
+		tolerance : "pointer",
+		forceHelperSize : true,
+		forcePlaceholderSize : true,
+		revert : 300,
+		opacity: 0.6,
+		cancel: ":input,button",
+		update : function(){
+			var data=[];
+			$("table","#payment-list").each(function(i,v){
+				data.push($(this).attr('id'));
+			});
+			if( 1 < data.length ){
+				payment.dosort(data.toString());
+			}
+		}
+	});
+
 	$("#cod_dialog").dialog({
 		autoOpen: false,
 		height: 500,

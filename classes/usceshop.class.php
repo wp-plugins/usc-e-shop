@@ -390,8 +390,8 @@ class usc_e_shop
 	
 		add_object_page('Welcart Shop', 'Welcart Shop', 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 6, 'usces_itemedit', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 6, 'usces_itemnew', array($this, 'item_master_page'));
+//		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 6, 'usces_itemedit', array($this, 'item_master_page'));
+//		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 6, 'usces_itemnew', array($this, 'item_master_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 6, 'usces_initial', array($this, 'admin_setup_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 6, 'usces_schedule', array($this, 'admin_schedule_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 6, 'usces_delivery', array($this, 'admin_delivery_page'));
@@ -929,11 +929,9 @@ class usc_e_shop
 				case 'zeus':
 					unset( $options['acting_settings']['zeus'] );
 					$options['acting_settings']['zeus']['card_url'] = $_POST['card_url'];
-					$options['acting_settings']['zeus']['card_secureurl'] = $_POST['card_secureurl'];
 					$options['acting_settings']['zeus']['ipaddrs'] = $_POST['ipaddrs'];
 					$options['acting_settings']['zeus']['pay_cvs'] = $_POST['pay_cvs'];
 					$options['acting_settings']['zeus']['card_activate'] = $_POST['card_activate'];
-					$options['acting_settings']['zeus']['3dsecure'] = $_POST['3dsecure'];
 					$options['acting_settings']['zeus']['quickcharge'] = $_POST['quickcharge'];
 					$options['acting_settings']['zeus']['clientip'] = trim($_POST['clientip']);
 					$options['acting_settings']['zeus']['howpay'] = $_POST['howpay'];
@@ -1968,6 +1966,7 @@ class usc_e_shop
 			switch( $_REQUEST['page'] ){
 			
 				case 'usces_initial':
+					wp_enqueue_script('jquery-ui-sortable', array());
 					$js = USCES_FRONT_PLUGIN_URL.'/js/usces_initial.js';
 					wp_enqueue_script('usces_initial.js', $js, array('jquery-ui-dialog'));
 					break;
@@ -4804,13 +4803,6 @@ class usc_e_shop
 		return $results;
 	}
 	
-	function get_mainpictid($item_code) {
-		global $wpdb;
-		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'attachment' LIMIT 1", $item_code);
-		$id = $wpdb->get_var( $query );
-		return $id;
-	}
-	
 	function get_skus( $post_id, $output='' ) {
 		$fields = get_post_custom($post_id);
 		if( !is_array($fields)) $fields = array();
@@ -4950,21 +4942,7 @@ class usc_e_shop
 			header("location: " . $redirect . $query);
 			exit;
 			
-		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && !isset($_REQUEST['PaRes'])){
-	
-			usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-			usces_zeus_3dsecure_enrol();
-			
-		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && isset($_REQUEST['PaRes'])){
-
-			usces_zeus_3dsecure_auth();
-
-		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && !empty($this->options['acting_settings']['zeus']['authkey']) && !isset($_REQUEST['PaRes'])){
-
-			$res = usces_zeus_secure_payreq();
-			return $res;
-
-		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && empty($this->options['acting_settings']['zeus']['authkey']) ){
+		}else if($acting_flg == 'acting_zeus_card'){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);

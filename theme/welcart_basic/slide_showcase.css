@@ -1,0 +1,61 @@
+/*************************************/
+/*   welcart_1 Style
+/*************************************/
+.jcarousel-skin-welcart_1 .jcarousel-container {
+    border: 1px solid #333;
+}
+
+.jcarousel-skin-welcart_1 .jcarousel-container-horizontal {
+	width: 648px;
+	padding: 20px 50px;
+}
+
+.jcarousel-skin-welcart_1 .jcarousel-container-vertical {
+    width: 152px;
+    padding: 40px 19px;
+}
+
+.jcarousel-skin-welcart_1 .jcarousel-clip-horizontal {
+	width:  648px;
+}
+
+.jcarousel-skin-welcart_1 .jcarousel-clip-vertical {
+    width:  152px;
+}
+
+/*************************************/
+/*   welcart_2 Style
+/*************************************/
+.jcarousel-skin-welcart_2 .jcarousel-container-horizontal {
+	width: 648px;
+	padding: 20px 50px;
+}
+
+.jcarousel-skin-welcart_2 .jcarousel-container-vertical {
+    width: 152px;
+    padding: 40px 19px;
+}
+
+.jcarousel-skin-welcart_2 .jcarousel-clip-horizontal {
+	width:  648px;
+}
+
+.jcarousel-skin-welcart_2 .jcarousel-clip-vertical {
+}
+
+/*************************************/
+/*   welcart_3 Style
+/*************************************/
+.jcarousel-skin-welcart_3 .jcarousel-container-horizontal {
+	width: 648px;
+	padding: 20px 50px;
+	background-image: url(images/slide_showcase/welcart_3_bg_horizontal.jpg);
+}
+
+.jcarousel-skin-welcart_3 .jcarousel-clip-horizontal {
+	width:  648px;
+}
+
+.jcarousel-skin-welcart_3 .jcarousel-item {
+	padding: 5px 6px;
+}

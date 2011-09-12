@@ -44,19 +44,19 @@ if(usces_is_membersystem_state()){
 $html .= '<form action="' . USCES_CART_URL . '" method="post" name="customer_form" onKeyDown="if (event.keyCode == 13) {return false;}">
 <table border="0" cellpadding="0" cellspacing="0" class="customer_form">
 <tr>
-<th scope="row"><em>' . __('*', 'usces') . '</em>'.__('e-mail adress', 'usces').'</th>';
+<th scope="row"><em>*</em>'.__('e-mail adress', 'usces').'</th>';
 
 $html .= '<td colspan="2"><input name="customer[mailaddress1]" id="mailaddress1" type="text" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '" /></td>
 </tr>
 <tr>
-<th scope="row"><em>' . __('*', 'usces') . '</em>'.__('e-mail adress', 'usces').'('.__('Re-input', 'usces').')</th>
+<th scope="row"><em>*</em>'.__('e-mail adress', 'usces').'('.__('Re-input', 'usces').')</th>
 <td colspan="2"><input name="customer[mailaddress2]" id="mailaddress2" type="text" value="' . esc_attr($usces_entries['customer']['mailaddress2']) . '" /></td>
 </tr>';
 
 if(usces_is_membersystem_state()){
 	$html .= '<tr><th scope="row">';
 	if( $member_regmode == 'editmemberfromcart' ){
-		$html .= '<em>' . __('*', 'usces') . '</em>';
+		$html .= '<em>*</em>';
 	}
 	$html .= __('password', 'usces').'</th>
 	<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="' . esc_attr($usces_entries['customer']['password1']) . '" />';
@@ -66,7 +66,7 @@ if(usces_is_membersystem_state()){
 	$html .= '</td></tr>';
 	$html .= '<tr><th scope="row">';
 	if( $member_regmode == 'editmemberfromcart' ){
-		$html .= '<em>' . __('*', 'usces') . '</em>';
+		$html .= '<em>*</em>';
 	}
 	$html .= __('Password (confirm)', 'usces').'</th>
 	<td colspan="2"><input name="customer[password2]" style="width:100px" type="password" value="' . esc_attr($usces_entries['customer']['password2']) . '" />';

@@ -17,7 +17,6 @@ foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
 				$cnum2 = isset( $_POST['cnum2'] ) ? esc_html($_POST['cnum2']) : '';
 				$cnum3 = isset( $_POST['cnum3'] ) ? esc_html($_POST['cnum3']) : '';
 				$cnum4 = isset( $_POST['cnum4'] ) ? esc_html($_POST['cnum4']) : '';
-				$securecode = isset( $_POST['securecode'] ) ? esc_html($_POST['securecode']) : '';
 				$expyy = isset( $_POST['expyy'] ) ? esc_html($_POST['expyy']) : '';
 				$expmm = isset( $_POST['expmm'] ) ? esc_html($_POST['expmm']) : '';
 				$username = isset( $_POST['username'] ) ? esc_html($_POST['username']) : '';
@@ -46,14 +45,8 @@ foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
 					$html .= '<tr>
 						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
 						<td colspan="2"><input name="cnum1" type="text" size="6" maxlength="4" value="' . esc_attr($cnum1) . '" />-<input name="cnum2" type="text" size="6" maxlength="4" value="' . esc_attr($cnum2) . '" />-<input name="cnum3" type="text" size="6" maxlength="4" value="' . esc_attr($cnum3) . '" />-<input name="cnum4" type="text" size="6" maxlength="4" value="' . esc_attr($cnum4) . '" /></td>
-						</tr>';
-					if( 'on' == $usces->options['acting_settings'][$paymod_id]['3dsecure'] ){
-						$html .= '<tr>
-						<th scope="row">'.__('カード暗証番号', 'usces').'</th>
-						<td colspan="2"><input name="securecode" type="password" size="6" maxlength="4" value="' . esc_attr($securecode) . '" /></td>
-						</tr>';
-					}
-					$html .= '<tr>
+						</tr>
+						<tr>
 						<th scope="row">'.__('カード有効期限', 'usces').'</th>
 						<td colspan="2">
 						<select name="expyy">

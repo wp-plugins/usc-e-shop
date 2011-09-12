@@ -112,18 +112,16 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 			if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
-				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}else{
 				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . esc_attr($_POST['cnum2']) . esc_attr($_POST['cnum3']) . esc_attr($_POST['cnum4']) . '">';
-				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}
 			$html .= '<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
-				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
+				<input type="hidden" name="sendid" value="' . $memid . '">
 				<input type="hidden" name="username" value="' . esc_attr($_POST['username']) . '">
 				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
@@ -149,7 +147,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_zeus_conv':
-			$member = $usces->get_member();
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			$usces->save_order_acting_data($rand);
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
@@ -160,7 +157,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
 				<input type="hidden" name="pay_cvs" value="' . $_POST['pay_cvs'] . '">
-				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
+				<input type="hidden" name="sendid" value="' . $memid . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">';
 			if( '' != $acting_opts['testid_conv'] ){	
 				$html .= '<input type="hidden" name="testid" value="' . $acting_opts['testid_conv'] . '">';
@@ -174,7 +171,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_zeus_bank':
-			$member = $usces->get_member();
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			$usces->save_order_acting_data($rand);
 			$html .= '<form action="' . $acting_opts['bank_url'] . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">';
@@ -190,7 +186,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">';
 			}	
 			$html .= '<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
-				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
+				<input type="hidden" name="sendid" value="' . $memid . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
 				<input type="hidden" name="siteurl" value="' . get_option('home') . '">
 				<input type="hidden" name="sitestr" value="「' . esc_attr(get_option('blogname')) . '」トップページへ">
@@ -435,8 +431,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			//$frequency = $usces->getItemFrequency($cart[0]['post_id']);
 			if( 'continue' != $charging_type) {
 				//通常購入
-//20110606ysk start
-/*				for($i = 0; $i < count($cart); $i++) {
+				for($i = 0; $i < count($cart); $i++) {
 					$cart_row = $cart[$i];
 					$post_id = $cart_row['post_id'];
 					$itemCode = $usces->getItemCode($post_id);
@@ -454,24 +449,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="SHIPPINGAMT" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'">';
 				if( !empty($usces_entries['order']['cod_fee']) ) 
 					$html .= '<input type="hidden" name="HANDLINGAMT" value="'.usces_crform($usces_entries['order']['cod_fee'], false, false, 'return', false).'">';
-				$discamt = 0;
-				if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) 
-					$discamt += $usces_entries['order']['usedpoint'];
 				if( !empty($usces_entries['order']['discount']) ) 
-					$discamt += $usces_entries['order']['discount'];
-				if( 0 < $discamt ) 
-					$html .= '<input type="hidden" name="SHIPDISCAMT" value="-'.usces_crform($discamt, false, false, 'return', false).'">';
-*/
-				$itemName = $usces->getItemName($cart[0]['post_id']);
-				if(1 < count($cart)) $itemName .= ','.__('Others', 'usces');
-				if(50 < mb_strlen($itemName)) $itemName = mb_substr($itemName, 0, 50).'...';
-				$quantity = 0;
-				foreach($cart as $cart_row) {
-					$quantity += $cart_row['quantity'];
-				}
-				$desc = $itemName.' '.__('Quantity','usces').':'.$quantity;
-				$html .= '<input type="hidden" name="DESC" value="'.$desc.'">';
-//20110606ysk end
+					$html .= '<input type="hidden" name="SHIPDISCAMT" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return', false).'">';
 				$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">';
 			} else {
 				//定期支払い

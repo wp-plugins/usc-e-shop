@@ -94,7 +94,6 @@ $custom_field_position_select = array(
 					'name_after' => __('After the name', 'usces'),
 					'fax_after' => __('After the fax', 'usces')
 					);
-					
 //20100818ysk end
 //20110331ysk start
 /*
@@ -578,20 +577,4 @@ $usces_states['US'] = array(__('-- Select --', 'usces'),"Alabama","Alaska","Ariz
 				"Virginia","Washington","West Virginia","Wisconsin","Wyoming");
 if( !get_option('usces_states') )
 	update_option('usces_states',$usces_states);
-
-
-$usces_essential_mark = array(
-					'name1' => '<em>' . __('*', 'usces') . '</em>',
-					'name2' => '',
-					'name3' => '',
-					'name4' => '',
-					'zipcode' => '<em>' . __('*', 'usces') . '</em>',
-					'country' => '<em>' . __('*', 'usces') . '</em>',
-					'states' => '<em>' . __('*', 'usces') . '</em>',
-					'address1' => '<em>' . __('*', 'usces') . '</em>',
-					'address2' => '<em>' . __('*', 'usces') . '</em>',
-					'address3' => '',
-					'tel' => '<em>' . __('*', 'usces') . '</em>',
-					'fax' => ''
-					);
 ?>

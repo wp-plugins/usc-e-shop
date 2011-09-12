@@ -101,9 +101,6 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) != 4 )
 				$mes .= __('カード番号が不正です', 'usces') . "<br />";
 			
-			if ( '' == $_POST["securecode"] && 'on' == $usces->options['acting_settings']['zeus']['3dsecure'] )
-				$mes .= __('カードの暗証番号をしてください', 'usces') . "<br />";
-				
 			if ( '' == $_POST["expyy"] )
 				$mes .= __('カードの有効年を選択してください', 'usces') . "<br />";
 				

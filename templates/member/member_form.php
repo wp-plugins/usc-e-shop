@@ -20,19 +20,19 @@ $html .= '<div class="error_message">' . $this->error_message . '</div>
 <form action="' . apply_filters('usces_filter_newmember_form_action', USCES_MEMBER_URL) . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 <table border="0" cellpadding="0" cellspacing="0" class="customer_form">';
 $html .= '<tr>
-<th scope="row"><em>' . __('*', 'usces') . '</em>' . __('e-mail adress', 'usces') . '</th>
+<th scope="row"><em>*</em>' . __('e-mail adress', 'usces') . '</th>
 <td colspan="2"><input name="member[mailaddress1]" id="mailaddress1" type="text" value="' . esc_attr($usces_members['mailaddress1']) . '" /></td>
 </tr>
 <tr>
-<th scope="row"><em>' . __('*', 'usces') . '</em>' . __('E-mail address (for verification)', 'usces') . '</th>
+<th scope="row"><em>*</em>' . __('E-mail address (for verification)', 'usces') . '</th>
 <td colspan="2"><input name="member[mailaddress2]" id="mailaddress2" type="text" value="' . esc_attr($usces_members['mailaddress2']) . '" /></td>
 </tr>
 <tr>
-<th scope="row"><em>' . __('*', 'usces') . '</em>' . __('password', 'usces') . '</th>
+<th scope="row"><em>*</em>' . __('password', 'usces') . '</th>
 <td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" /></td>
 </tr>
 <tr>
-<th scope="row"><em>' . __('*', 'usces') . '</em>' . __('Password (confirm)', 'usces') . '</th>
+<th scope="row"><em>*</em>' . __('Password (confirm)', 'usces') . '</th>
 <td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . esc_attr($usces_members['password2']) . '" /></td>
 </tr>';
 

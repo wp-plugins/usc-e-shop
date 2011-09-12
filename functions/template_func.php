@@ -418,10 +418,11 @@ function usces_have_zaiko_anyone( $post_id = NULL ){
 	 global $post, $usces;
 	if( NULL == $post_id ) $post_id = $post->ID;
 	
-	$skus = $usces->get_skus($post_id, 'ARRAY_A');
+	//$skus = $usces->get_skus($post_id, 'ARRAY_A');
+	$skus = usces_get_skus( $post_id );
 	$status = false;
 	foreach($skus as $value){
-		if( ('' == $value['zaikonum'] || 0 < (int)$value['zaikonum']) && 2 > (int)$value['zaiko']) {
+		if( ('' == $value['stocknum'] || 0 < (int)$value['stocknum']) && 2 > (int)$value['stock']) {
 			$status = true;
 			break;
 		}
@@ -676,28 +677,15 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 	$name = get_post_custom_values('_itemName', $post_id);
 	
-	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
-		$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
-		if( 'item' == $media ){
-			$alt = 'alt="'.esc_attr($code[0]).'"';
-			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
-			$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-			$title = 'title="'.esc_attr($name[0]).'"';
-			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
-			$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
-		}
-	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
-		if( 'item' == $media ){
-			$alt = 'alt="'.esc_attr($code[0]).'"';
-			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictids[$number]);
-			$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-			$title = 'title="'.esc_attr($name[0]).'"';
-			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictids[$number]);
-			$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
-		}
+	$pictids = $usces->get_pictids($code[0]);
+	$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
+	if( 'item' == $media ){
+		$alt = 'alt="'.esc_attr($code[0]).'"';
+		$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictids[$number]);
+		$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
+		$title = 'title="'.esc_attr($name[0]).'"';
+		$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictids[$number]);
+		$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 	}
 	if($out == 'return'){
 		return $html;
@@ -714,13 +702,8 @@ function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 	$code =  get_post_custom_values('_itemCode', $post_id);
 	if(!$code) return false;
 	$name = get_post_custom_values('_itemName', $post_id);
-	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
-		$html = wp_get_attachment_url( $pictid );
-	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$html = wp_get_attachment_url( $pictids[$number] );
-	}
+	$pictids = $usces->get_pictids($code[0]);
+	$html = wp_get_attachment_url( $pictids[$number] );
 	if($out == 'return'){
 		return $html;
 	}else{
@@ -738,14 +721,9 @@ function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
 	if(!$code) return false;
 	
 	$name = get_post_custom_values('_itemName', $post_id);
-
-	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
-		$attach_ob = get_post($pictid);
-	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$attach_ob = get_post($pictids[$number]);
-	}
+	
+	$pictids = $usces->get_pictids($code[0]);
+	$attach_ob = get_post($pictids[$number]);
 	$excerpt = $attach_ob->post_excerpt;
 
 	if($out == 'return'){
@@ -766,13 +744,8 @@ function usces_the_itemImageDescription($number = 0, $post = '', $out = '' ) {
 	
 	$name = get_post_custom_values('_itemName', $post_id);
 	
-	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
-		$attach_ob = get_post($pictid);
-	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$attach_ob = get_post($pictids[$number]);
-	}
+	$pictids = $usces->get_pictids($code[0]);
+	$attach_ob = get_post($pictids[$number]);
 	$excerpt = $attach_ob->post_content;
 
 	if($out == 'return'){
@@ -1443,7 +1416,7 @@ function usces_list_bestseller($num, $days = ''){
 }
 
 function usces_list_post( $slug, $rownum, $widget_id=NULL ){
-	global $usces, $post;
+	global $usces;
 	usces_remove_filter();
 	
 	$li = '';
@@ -1857,7 +1830,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 				}
 				$value = trim($value);
 
-				$e = ($essential == 1) ? '<em>' . __('*', 'usces') . '</em>' : '';
+				$e = ($essential == 1) ? '<em>*</em>' : '';
 				$html .= '
 					<tr>
 					<th scope="row">'.$e.esc_html($name).'</th>';
@@ -2298,7 +2271,7 @@ function usces_member_history(){
 			$cartItemName = $usces->getCartItemName($post_id, $sku);
 			//$skuPrice = $usces->getItemPrice($post_id, $sku);
 			$skuPrice = $cart_row['price'];
-			$pictid = $usces->get_mainpictid($itemCode);
+			$pictids = $usces->get_pictids($itemCode);
 			$optstr =  '';
 			if( is_array($options) && count($options) > 0 ){
 				foreach($options as $key => $value){
@@ -2309,7 +2282,7 @@ function usces_member_history(){
 				
 			$history_cart_row = '<tr>
 				<td>' . ($i + 1) . '</td>
-				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a></td>
+				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictids[0], array(60, 60), true ) . '</a></td>
 				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>

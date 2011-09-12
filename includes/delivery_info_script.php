@@ -76,13 +76,7 @@ for($i = 0; $i < count($cart); $i++) {
 	$cart_row = $cart[$i];
 	$post_id = $cart_row['post_id'];
 	$itemShipping = $usces->getItemShipping($post_id);
-//20110606ysk start
-	if($itemShipping == 0 or $itemShipping == 9) {
-		$shipping = 0;
-		break;
-	}
 	if($shipping < $itemShipping) $shipping = $itemShipping;
-//20110606ysk end
 }
 $html .= 'var shipping = '.$shipping.';';
 //配送業務締時間
@@ -300,10 +294,7 @@ $html .= "
 			make_delivery_date : function(selected) {
 				var option = '';
 				var message = '';
-//20110606ysk start
-				//if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
-				if(delivery_days[selected] != undefined && 0 <= delivery_days[selected]) {
-//20110606ysk end
+				if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
 					switch(shipping) {
 					case 0://指定なし
 					case 9://商品入荷後

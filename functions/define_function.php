@@ -81,43 +81,41 @@ function usces_item_uploadcsv(){
 	
 	$lines = array();
 	$sp = ",";
-	if('csv' !== $fext) {
-		$res['status'] = 'error';
-		$res['message'] = __('このファイルはCSVファイルでは有りません。', 'usces').$fname.'.'.$fext;
-		return $res;
-
-//		$sp = "\t";
-//		$data = @file_get_contents($workfile);
-//		if (!$data) {
-//			$res['status'] = 'error';
-//			$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
-//			return $res;
-//		}
-//		if(substr($data, 0, 8) != IDENTIFIER_OLE) {
-//			//$fext = 'tsv';
-//			//while (! feof ($fpo)) {
-//			//	$temp = fgets ($fpo, 10240);
-//			//	if( 5 < strlen($temp) )
-//			//		$lines[] = str_replace('"', '', $temp);
-//			//}
-//			//20101208ysk
-//			$res['status'] = 'error';
-//			$res['message'] = __('このファイルはExcelファイルでは有りません。', 'usces').$fname.'.'.$fext;
-//			return $res;
-//		} else {
-//			$excel = new Spreadsheet_Excel_Reader();
-//			$excel->read($workfile);
-//			$rows = $excel->rowcount();//最大行数
-//			$cols = $excel->colcount();//最大列数
-//			for($r = 1; $r <= $rows; $r++) {
-//				$line = '';
-//				for($c = 1; $c <= $cols; $c++) {
-//					$line .= mb_convert_encoding($excel->val($r, $c), "SJIS", "UTF-8").$sp;
-//				}
-//				$line = trim($line, $sp);
-//				$lines[] = $line;
-//			}
-//		}
+	if('xls' === $fext) {
+		$sp = "\t";
+		$data = @file_get_contents($workfile);
+		if (!$data) {
+			$res['status'] = 'error';
+			$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
+			return $res;
+		}
+		if(substr($data, 0, 8) != IDENTIFIER_OLE) {
+			//$fext = 'tsv';
+			//while (! feof ($fpo)) {
+			//	$temp = fgets ($fpo, 10240);
+			//	if( 5 < strlen($temp) )
+			//		$lines[] = str_replace('"', '', $temp);
+			//}
+			//20101208ysk
+			$res['status'] = 'error';
+			$res['message'] = __('このファイルはExcelファイルでは有りません。', 'usces').$fname.'.'.$fext;
+			return $res;
+		} else {
+			$excel = new Spreadsheet_Excel_Reader();
+			$excel->read($workfile);
+			$rows = $excel->rowcount();//最大行数
+			$cols = $excel->colcount();//最大列数
+			for($r = 1; $r <= $rows; $r++) {
+				$line = '';
+				for($c = 1; $c <= $cols; $c++) {
+					//$line .= mb_convert_encoding($excel->val($r, $c), "SJIS", "UTF-8").$sp;
+					$line .= mb_convert_encoding($excel->val($r, $c), "UTF-8", "SJIS").$sp;
+					$line .= $excel->val($r, $c).$sp;
+				}
+				$line = trim($line, $sp);
+				$lines[] = $line;
+			}
+		}
 	} else {
 		$buf = '';
 		$lines = array();
@@ -126,6 +124,7 @@ function usces_item_uploadcsv(){
 			if( 0 == strlen($temp) ) continue;
 			
 			$num = substr_count($temp, '"');
+usces_log('lines : '.print_r($num,true), 'acting_transaction.log');
 			if( 0 == $num % 2 && '' == $buf ){
 				$lines[] = $temp;
 			}elseif( 1 == $num % 2 && '' == $buf ){
@@ -140,41 +139,47 @@ function usces_item_uploadcsv(){
 		}
 	}
 	$total_num = count($lines);
+usces_log('lines : '.print_r($lines,true), 'acting_transaction.log');
 
 	//data check & reg
 	foreach($lines as $rows_num => $line){
 		$datas = array();
 		$logtemp = '';
-		$line = trim($line);
-		if( empty($line) ) continue;
-		
+//20110201ysk start
+		//$datas = explode($sp, $line);
 		$d = explode($sp, $line);
 		$buf = '';
 		foreach($d as $data) {
 			$num = substr_count($data, '"');
 			if( 0 == $num % 2 && '' == $buf ){
+				//$datas[] = trim(str_replace(array('""'), '"', $data),'\".');
+usces_log('data : '.print_r($data[0],true), 'acting_transaction.log');
 				if( '"' == substr($data, 0, 1) )
 					$data = substr($data, 1);
 				if( '"' == substr($data, -1) )
 					$data = substr($data, 0, -1);
-				$data = str_replace(array('""'), '"', $data);
-				$datas[] = ( false !== $data ) ? $data : '';
+				$datas[] = str_replace(array('""'), '"', $data);
 			}elseif( 1 == $num % 2 && '' == $buf ){
 				$buf .= $data;
 			}elseif( 0 == $num % 2 && '' != $buf ){
 				$buf .= $data;
 			}elseif( 1 == $num % 2 && '' != $buf ){
+				//$datas[] = trim(str_replace(array('""'), '"', $buf), '\".');
 				$buf .= $data;
 				if( '"' == substr($buf, 0, 1) )
 					$buf = substr($buf, 1);
 				if( '"' == substr($buf, -1) )
 					$buf = substr($buf, 0, -1);
-				$buf = str_replace(array('""'), '"', $buf);
-				$datas[] = ( false !== $buf ) ? $buf : '';
+				$datas[] = str_replace(array('""'), '"', $buf);
 				$buf = '';
 			}
 		}
-
+//		foreach($d as $key => $data) {
+//			$data = str_replace(array("\r\n","\r","\n"), '', $data);//20110525ysk
+//			$datas[$key] = trim($data, '"');
+//		}
+usces_log('datas : '.print_r($datas,true), 'acting_transaction.log');
+//20110201ysk end
 //		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
 		if( $min_field_num > count($datas) ){
 			$err_num++;
@@ -503,7 +508,7 @@ function usces_item_uploadcsv(){
 				}
 //20110525ysk start 0000172
 				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_') OR (SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_')) AND post_id = %d", $post_id);
+				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_')) AND post_id = %d", $post_id);
 //20110525ysk end
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
@@ -870,7 +875,7 @@ function usces_download_item_list() {
 			$line_options .= $td_h.usces_entity_decode($value, $ext).$td_f;
 		}
 
-		$sku_meta = has_item_sku_meta($post_id);
+		$sku_meta = usces_get_skus($post_id);
 		foreach($sku_meta as $sku) {
 			$sku_value = maybe_unserialize($sku['meta_value']);
 
