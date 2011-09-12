@@ -64,10 +64,12 @@ for($i=0; $i<count($cart); $i++) {
 	$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictids[0], $i);
 	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
 	if( is_array($options) && count($options) > 0 ){
+		$optstr = '';
 		foreach($options as $key => $value){
 			if( !empty($key) )
-				$html .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		}
+		$html .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 	}
 	$html .= '</td>
 		<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
@@ -283,7 +285,7 @@ $html .= '<tr>
 //require_once( USCES_PLUGIN_DIR . "/includes/confirm_custom_order_form.php");
 $html .= usces_custom_field_info($usces_entries, 'order', '', 'return');
 $html .= '<tr>
-	<th>'.__('Notes', 'usces').'</th><td>' . nl2br($usces_entries['order']['note']) . '</td>
+	<th>'.__('Notes', 'usces').'</th><td>' . nl2br(esc_html($usces_entries['order']['note'])) . '</td>
 	</tr>';
 //20100818ysk end
 $html .= '</table>';

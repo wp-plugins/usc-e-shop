@@ -52,6 +52,9 @@ $shipping_rule = array(
 					'8' => __('about 3 weeks later', 'usces'),
 					'9' => __('after we get new items', 'usces')
 					);
+					
+$shipping_indication = array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0);
+
 //20100914ysk start
 //$item_option_select = array(__('Single-select','usces'), __('Multi-select','usces'), __('Text','usces'));
 $item_option_select = array(
@@ -204,6 +207,8 @@ $usces_op['mail_default']['footer']['mitumorimail'] = "=========================
 $usces_op['mail_default']['footer']['cancelmail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
 $usces_op['mail_default']['footer']['othermail'] = "=============================================\r\n" . get_option('blogname') . "\r\n" . $usces_op['company_name'] . "\r\n" . __('zip code', 'usces') . " " . $usces_op['zip_code'] . "\r\n" . $usces_op['address1'] . "\r\n" . $usces_op['address2'] . "\r\n" . "TEL " . $usces_op['tel_number'] . "\r\n" . "FAX " . $usces_op['fax_number'] . "\r\n" . __('contact', 'usces') . " " . $usces_op['inquiry_mail'] . "\r\n" . get_option('home') . "\r\n" . "=============================================\r\n";
 
+$usces_op['usces_shipping_indication'] = $shipping_indication;
+
 update_option('usces', $usces_op);
 
 /************************************************************************/
@@ -253,7 +258,7 @@ $usces_settings['currency'] = array(
 					'ES' => array('EUR', 2, '.', ',', '&#x20AC;'),
 					'SW' => array('SEK', 2, '.', ',', ''),
 					'CH' => array('CHF', 2, '.', ',', 'Fr.'),
-					'NT' => array('NTD', 2, '.', ',', '元'),
+					'NT' => array('NT$', 0, '.', ',', '元'),
 					'TH' => array('THB', 2, '.', ',', '฿'),
 					'TR' => array('TRY', 2, '.', ',', '₤'),
 					'GB' => array('GBP', 2, '.', ',', '£'),
@@ -304,7 +309,7 @@ $usces_settings['nameform'] = array(
 					'ES' => 1,
 					'SW' => 1,
 					'CH' => 1,
-					'NT' => 1,
+					'NT' => 0,
 					'TH' => 1,
 					'TR' => 1,
 					'GB' => 1,
@@ -355,7 +360,7 @@ $usces_settings['addressform'] = array(
 					'ES' => 'US',
 					'SW' => 'US',
 					'CH' => 'US',
-					'NT' => 'US',
+					'NT' => 'JP',
 					'TH' => 'US',
 					'TR' => 'US',
 					'GB' => 'US',
@@ -577,4 +582,20 @@ $usces_states['US'] = array(__('-- Select --', 'usces'),"Alabama","Alaska","Ariz
 				"Virginia","Washington","West Virginia","Wisconsin","Wyoming");
 if( !get_option('usces_states') )
 	update_option('usces_states',$usces_states);
+
+
+$usces_essential_mark = array(
+					'name1' => '<em>' . __('*', 'usces') . '</em>',
+					'name2' => '',
+					'name3' => '',
+					'name4' => '',
+					'zipcode' => '<em>' . __('*', 'usces') . '</em>',
+					'country' => '<em>' . __('*', 'usces') . '</em>',
+					'states' => '<em>' . __('*', 'usces') . '</em>',
+					'address1' => '<em>' . __('*', 'usces') . '</em>',
+					'address2' => '<em>' . __('*', 'usces') . '</em>',
+					'address3' => '',
+					'tel' => '<em>' . __('*', 'usces') . '</em>',
+					'fax' => ''
+					);
 ?>

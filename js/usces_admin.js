@@ -651,7 +651,6 @@
 			var optob;
 			var optvalue = '';
 			var query = 'action=order_item2cart_ajax&order_id='+ID;
-			
 			for( var i = 0; i < cnum; i++) {
 				name = $(priceob[i]).attr("name");
 				strs = name.split('[');
@@ -664,31 +663,61 @@
 				optob = $("input[name*='optName\[" + i + "\]\[" + post_ids[i] + "\]\[" + skus[i] + "\]']");
 				optvalue = '';
 				for( var o = 0; o < optob.length; o++) {
-					optvalue = $("input[name='itemOption\[" + i + "\]\[" + post_ids[i] + "\]\[" + skus[i] + "\]\[" + $(optob[o]).val() + "\]']").val();
-					if( '#NONE#' != optvalue){
-						query += "&itemOption["+i+"]["+post_ids[i]+"]["+skus[i]+"][" + $(optob[o]).val() + "]="+optvalue;
+//20110715ysk start 0000202
+					//optvalue = $("input[name='itemOption\[" + i + "\]\[" + post_ids[i] + "\]\[" + skus[i] + "\]\[" + $(optob[o]).val() + "\]']").val();
+					//if( '#NONE#' != optvalue){
+					//	query += "&itemOption["+i+"]["+post_ids[i]+"]["+skus[i]+"][" + $(optob[o]).val() + "]="+optvalue;
+					//}
+					var cnt = 0;
+					$("input[name^='itemOption\[" + i + "\]\[" + post_ids[i] + "\]\[" + skus[i] + "\]\[" + $(optob[o]).val() + "\]\[']").each(function(idx, obj) {
+						cnt++;
+					});
+					if(0 < cnt) {
+						$("input[name^='itemOption\[" + i + "\]\[" + post_ids[i] + "\]\[" + skus[i] + "\]\[" + $(optob[o]).val() + "\]\[']").each(function(idx, obj) {
+							query += "&itemOption["+i+"]["+post_ids[i]+"]["+skus[i]+"][" + $(optob[o]).val() + "][" + $(this).val() + "]="+$(this).val();
+						});
+					} else {
+						optvalue = $("input[name='itemOption\["+i+"\]\["+post_ids[i]+"\]\["+skus[i]+"\]\["+$(optob[o]).val()+"\]']").val();
+						query += "&itemOption["+i+"]["+post_ids[i]+"]["+skus[i]+"]["+$(optob[o]).val()+"]="+optvalue;
 					}
+//20110715ysk end
 				}
 			}
-			
 			query += "&skuPrice["+cnum+"]["+newid+"]["+newsku+"]="+$("input[name='skuNEWPrice\[" + newid + "\]\[" + newsku + "\]']").val();
 			query += "&quant["+cnum+"]["+newid+"]["+newsku+"]=1";
 			var newoptob = $("input[name*='optNEWName\[" + newid + "\]\[" + newsku + "\]']");
 			var newoptvalue = '';
 			for( var n = 0; n < newoptob.length; n++) {
-				newoptvalue = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
-				if( '#NONE#' != newoptvalue){
+//20110715ysk start 0000202
+				//newoptvalue = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
+				newoptvalue = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
+				var newoptclass = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").attr("class");
+				switch(newoptclass) {
+				case 'iopt_select_multiple':
+					$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]'] option:selected").each(function(idx, obj) {
+						if( '#NONE#' != newoptvalue) {
+							query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "][" + $(this).val() + "]="+$(this).val();
+						}
+					});
+					break;
+				case 'iopt_select':
+					if( '#NONE#' != newoptvalue) {
+						query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "]="+newoptvalue;
+					}
+					break;
+				case 'iopt_text':
+				case 'iopt_textarea':
 					query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "]="+newoptvalue;
+					break;
 				}
+//20110715ysk end
 			}
-				
-				
-				
+		
 			var s = orderItem.settings;
 			s.data = query;
 			s.success = function(data, dataType){
 				if(data == 'nodata'){return;}
-				var pict = "<img src='" + $("#newitemform img").attr("src") + "' height='60' width='60' alt='' />";
+				var pict = "<img src='" + $("#newitemform img").attr("src") + "' width='" + $("#newitemform img").attr("width") + "' height='" + $("#newitemform img").attr("height") + "' alt='' />";
 				var itemName = $("input[name='itemNEWName\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='itemNEWCode\["+newid+"\]\["+newsku+"\]']").val();
 				var zaiko = $("input[name='zaiNEWko\["+newid+"\]\["+newsku+"\]']").val();
 				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' onchange='orderfunc.sumPrice()' />";
@@ -702,12 +731,42 @@
 				var hiddenoptn = '';
 				for( var i = 0; i < sucoptob.length; i++) {
 					sucoptname = $(sucoptob[i]).val();
-					sucoptvalue = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]']").val();
-					if( '#NONE#' != sucoptvalue){
-						skuOptValue += sucoptvalue + ' ';
+//20110715ysk start 0000202
+					//sucoptvalue = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]']").val();
+					sucoptvalue = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]']").val();
+					//if( '#NONE#' != sucoptvalue){
+					//	skuOptValue += sucoptvalue + ' ';
+					//	hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptvalue+"' />";
+					//	hiddenoptn += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptname+"' />";
+					//}
+					skuOptValue += sucoptname + ' : ';
+					var sucoptclass= $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]']").attr("class");
+					switch(sucoptclass) {
+					case 'iopt_select_multiple':
+						var c = '';
+						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]'] option:selected").each(function(idx, obj) {
+							if( '#NONE#' != sucoptvalue) {
+								skuOptValue += c + $(this).val();
+								c = ', ';
+								hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "][" + $(this).val() + "]' class='text quantity' type='hidden' value='"+$(this).val()+"' />";
+							}
+						});
+						break;
+					case 'iopt_select':
+						if( '#NONE#' != sucoptvalue) {
+							skuOptValue += sucoptvalue;
+							hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptvalue+"' />";
+						}
+						break;
+					case 'iopt_text':
+					case 'iopt_textarea':
+						skuOptValue += sucoptvalue;
 						hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptvalue+"' />";
-						hiddenoptn += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptname+"' />";
+						break;
 					}
+					skuOptValue += '<br />';
+					hiddenoptn += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptname+"' />";
+//20110715ysk end
 				}
 				var htm = "<tr>\n";
 				htm += "<td>"+(cnum+1)+"</td>\n";

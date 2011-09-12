@@ -217,17 +217,32 @@ jQuery(document).ready(function($){
 	$cartItemName = $this->getCartItemName($post_id, $sku);
 	//$skuPrice = $this->getItemPrice($post_id, $sku);
 	$skuPrice = $cart_row['price'];
-	$pictids = $this->get_pictids($itemCode);
+	$pictid = $this->get_mainpictid($itemCode);
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
-		if( !empty($key) )
-			$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+		//if( !empty($key) )
+		//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+		if( !empty($key) ) {
+			if(is_array($value)) {
+				$c = '';
+				$optstr .= esc_html($key) . ' : '; 
+				foreach($value as $v) {
+					$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+					$c = ', ';
+				}
+				$optstr .= "<br />\n"; 
+			} else {
+				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+			}
+		}
+//20110629ysk end
 	}
 	
 	?>
 	<tr>
 	<td><?php echo $i + 1; ?></td>
-	<td><?php echo wp_get_attachment_image( $pictids[0], array(60, 60), true ); ?></td>
+	<td><?php echo wp_get_attachment_image( $pictid, array(60, 60), true ); ?></td>
 	<td class="aleft"><?php echo esc_html($cartItemName); ?><br /><?php echo $optstr; ?></td>
 	<td class="rightnum"><?php usces_crform( $skuPrice, true, false ); ?></td>
 	<td class="rightnum"><?php echo number_format($cart_row['quantity']); ?></td>

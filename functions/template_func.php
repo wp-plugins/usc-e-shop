@@ -826,6 +826,9 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$sku = esc_attr($usces->itemsku['key']);
 	$name = esc_attr($name);
 	$label = esc_attr($label);
+//20110715ysk start 0000208
+	$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
+//20110715ysk end
 //20100914ysk start
 	//if($means < 2){
 	switch($means) {
@@ -834,8 +837,12 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk end
 		$selects = explode("\n", $values['value'][0]);
 		$multiple = ($means === 0) ? '' : ' multiple';
-		$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
-		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+		$multiple_array = ($means == 0) ? '' : '[]';//20110629ysk 0000190
+		//$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_label'>{$label}</label>\n";
+//20110629ysk start 0000190
+		//$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$name}]{$multiple_array}' id='itemOption[{$post_id}][{$sku}][{$name}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+//20110629ysk end
 		if($essential == 1){
 			if(  '#NONE#' == $session_value || NULL == $session_value ) 
 				$selected = ' selected="selected"';
@@ -1457,14 +1464,16 @@ function usces_categories_checkbox($output=''){
 	foreach ($categories as $cat) {
 		$children =  get_categories('child_of='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
 		if(!empty($children)){
-			$htm .= "<fieldset><legend>" . $cat->cat_name . "</legend><ul>\n";
+			$htm .= "<fieldset class='catfield-" . $cat->term_id . "'><legend>" . $cat->cat_name . "</legend><ul>\n";
 			foreach ($children as $child) {
 				$checked = in_array($child->term_id, $retcats) ? " checked='checked'" : "";
-				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]'>".esc_html($child->cat_name)."</label></li>\n";
+				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]' class='catlabel-" . $child->term_id . "'>".esc_html($child->cat_name)."</label></li>\n";
 			}
 			$htm .= "</ul></fieldset>\n";
 		}
 	}
+	$htm = apply_filters('usces_filter_categories_checkbox', $htm, $categories);
+	
 	if($output == '' || $output == 'echo')
 		echo $htm;
 	else
@@ -1833,60 +1842,57 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 				$e = ($essential == 1) ? '<em>*</em>' : '';
 				$html .= '
 					<tr>
-					<th scope="row">'.$e.esc_html($name).'</th>';
+					<th scope="row">'.$e.esc_html($name).apply_filters('usces_filter_custom_field_input_label', NULL, $key, $entry).'</th>';
 				switch($means) {
-				case 0://シングルセレクト
-				case 1://マルチセレクト
-					$selects = explode("\n", $value);
-					$multiple = ($means == 0) ? '' : ' multiple';
-					$multiple_array = ($means == 0) ? '' : '[]';
-					$html .= '
-						<td colspan="2">
-						<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
-					if($essential == 1) 
+					case 0://シングルセレクト
+					case 1://マルチセレクト
+						$selects = explode("\n", $value);
+						$multiple = ($means == 0) ? '' : ' multiple';
+						$multiple_array = ($means == 0) ? '' : '[]';
 						$html .= '
-							<option value="#NONE#">'.__('Choose','usces').'</option>';
-					foreach($selects as $v) {
-						$selected = ($data[$label][$key] == $v) ? ' selected' : '';
-						$html .= '
-							<option value="'.esc_attr($v).'"'.$selected.'>'.esc_html($v).'</option>';
-					}
-					$html .= '
-						</select></td>';
-					break;
-				case 2://テキスト
-					$html .= '
-						<td colspan="2"><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data[$label][$key]).'" /></td>';
-					break;
-				case 3://ラジオボタン
-					$selects = explode("\n", $value);
-					$html .= '
-						<td colspan="2">';
-					foreach($selects as $v) {
-						$checked = ($data[$label][$key] == $v) ? ' checked' : '';
-						$html .= '
-						<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
-					}
-					$html .= '
-						</td>';
-					break;
-				case 4://チェックボックス
-					$selects = explode("\n", $value);
-					$html .= '
-						<td colspan="2">';
-					foreach($selects as $v) {
-						if(is_array($data[$label][$key])) {
-							$checked = (array_key_exists($v, $data[$label][$key])) ? ' checked' : '';
-						} else {
-							$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+							<td colspan="2">
+							<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+						if($essential == 1) 
+							$html .= '
+								<option value="#NONE#">'.__('Choose','usces').'</option>';
+						foreach($selects as $v) {
+							$selected = ($data[$label][$key] == $v) ? ' selected' : '';
+							$html .= '
+								<option value="'.esc_attr($v).'"'.$selected.'>'.esc_html($v).'</option>';
 						}
 						$html .= '
-						<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
-					}
-					$html .= '
-						</td>';
-					break;
+							</select>';
+						break;
+					case 2://テキスト
+						$html .= '
+							<td colspan="2"><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data[$label][$key]).'" />';
+						break;
+					case 3://ラジオボタン
+						$selects = explode("\n", $value);
+						$html .= '
+							<td colspan="2">';
+						foreach($selects as $v) {
+							$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+							$html .= '
+							<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+						}
+						break;
+					case 4://チェックボックス
+						$selects = explode("\n", $value);
+						$html .= '
+							<td colspan="2">';
+						foreach($selects as $v) {
+							if(is_array($data[$label][$key])) {
+								$checked = (array_key_exists($v, $data[$label][$key])) ? ' checked' : '';
+							} else {
+								$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+							}
+							$html .= '
+							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+						}
+						break;
 				}
+				$html .= apply_filters('usces_filter_custom_field_input_value', NULL, $key, $entry).'</td>';
 				$html .= '
 					</tr>';
 			}
@@ -2153,7 +2159,7 @@ function usces_singleitem_error_message($post_id, $skukey, $out = ''){
 function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '', $seperator_flag = true ) {
 	global $usces;
 	$price = esc_html($usces->get_currency($float, $symbol_pre, $symbol_post, $seperator_flag ));
-	$res = apply_filters('usces_filter_crform', $price, $amount);
+	$res = apply_filters('usces_filter_crform', $price, $float);
 	
 	if($out == 'return'){
 		return $res;
@@ -2274,10 +2280,27 @@ function usces_member_history(){
 			$pictids = $usces->get_pictids($itemCode);
 			$optstr =  '';
 			if( is_array($options) && count($options) > 0 ){
+				$optstr = '';
 				foreach($options as $key => $value){
-					if( !empty($key) )
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//20110629ysk start 0000190
+					//f( !empty($key) )
+					//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+					if( !empty($key) ) {
+						if(is_array($value)) {
+							$c = '';
+							$optstr .= esc_html($key) . ' : '; 
+							foreach($value as $v) {
+								$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+								$c = ', ';
+							}
+							$optstr .= "<br />\n"; 
+						} else {
+							$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+						}
+					}
+//20110629ysk end
 				}
+				$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 			}
 				
 			$history_cart_row = '<tr>

@@ -255,8 +255,8 @@ jQuery(document).ready(function($) {
 	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript1"><?php _e('利用する', 'usces'); ?></label></td>
 		<td><div id="ex_use_javascript" class="explanation"><?php _e("初期状態ではJavaScript を利用します。JavaScript を利用できないブラウザにも対応したい場合は「利用しない」を選択します。「利用しない」を選択するとJavaScript を使用しているWelcart 専用拡張プラグインも利用できなくなりますのでご注意下さい。その他のプラグインの制御は行いません。あくまでフロントの動作においてWelcart が利用しているJavaScript を停止するだけです。", 'usces'); ?></div></td>
 	</tr>
-</table>-->
-</div>
+</table>
+--></div>
 <!--20110331ysk start-->
 </div><!--postbox-->
 </div><!--system_page_setting_1-->

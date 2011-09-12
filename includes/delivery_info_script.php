@@ -9,10 +9,12 @@ $html .= '
 	jQuery(function($){
 		';
 */
+$sendout = usces_get_send_out_date();
+
 if(isset($this))
 	$usces = &$this;
 	
-$shipping_indication = apply_filters('usces_filter_shipping_indication', array(0, 0, 2, 3, 5, 6, 7, 14, 21, 0));
+//$shipping_indication = apply_filters('usces_filter_shipping_indication', $usces->options['usces_shipping_indication']);
 
 $html .= '
 <script type="text/javascript">
@@ -25,14 +27,13 @@ $html .= '
 	var selected_delivery_method = \'\';
 	var selected_delivery_date = \'\';
 	var selected_delivery_time = \'\';	
-	var add_shipping = new Array(';
-$c = '';
-foreach($shipping_indication as $value){
-	$html .= $c.$value;
-	$c = ',';
-}
-$html .= ');//発送日目安
-
+	var add_shipping = new Array();//発送日目安';
+//$c = '';
+//foreach($shipping_indication as $value){
+//	$html .= $c.$value;
+//	$c = ',';
+//}
+$html .= '
 	function addDate(year, month, day, add) {
 		var date = new Date(Number(year), (Number(month) - 1), Number(day));
 		var baseSec = date.getTime();
@@ -76,7 +77,13 @@ for($i = 0; $i < count($cart); $i++) {
 	$cart_row = $cart[$i];
 	$post_id = $cart_row['post_id'];
 	$itemShipping = $usces->getItemShipping($post_id);
+//20110606ysk start
+	if($itemShipping == 0 or $itemShipping == 9) {
+		$shipping = 0;
+		break;
+	}
 	if($shipping < $itemShipping) $shipping = $itemShipping;
+//20110606ysk end
 }
 $html .= 'var shipping = '.$shipping.';';
 //配送業務締時間
@@ -271,8 +278,11 @@ $html .= "
 		
 //20110317ysk start
 		$('#delivery_flag2').click(function() {
-			//if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') == true && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
+//20110722ysk start 0000210
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').get(0).selectedIndex) {
+//20110722ysk end
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
@@ -281,8 +291,11 @@ $html .= "
 		
 		//$('#pref').change(function() {
 		$('#delivery_pref').change(function() {
-			//if($('#delivery_flag2').attr('checked') == true && 0 < $('#pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') == true && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
+//20110722ysk start 0000210
+			//if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
+			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').get(0).selectedIndex) {
+//20110722ysk end
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
 				orderfunc.make_delivery_date(($('#delivery_method_select option:selected').val()-0));
@@ -294,41 +307,25 @@ $html .= "
 			make_delivery_date : function(selected) {
 				var option = '';
 				var message = '';
-				if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
+//20110606ysk start
+				//if(delivery_days[selected] != undefined && 0 < delivery_days[selected].length) {
+				if(delivery_days[selected] != undefined && 0 <= delivery_days[selected]) {
+//20110606ysk end
 					switch(shipping) {
 					case 0://指定なし
 					case 9://商品入荷後
 						break;
 					default:
-						var now = new Date();
 						var date = new Array();
-						date[\"year\"] = now.getFullYear() + \"\";
-						date[\"month\"] = toDoubleDigits(now.getMonth() + 1);
-						date[\"day\"] = toDoubleDigits(now.getDate());
-						//配送業務締時間を超えていたら1日加算
-						var hh = toDoubleDigits(now.getHours());
-						var mm = toDoubleDigits(now.getMinutes());
-						if(delivery_time_limit_hour+delivery_time_limit_min < hh+mm) {
-							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
-						}
-//20110131ysk start
-						//発送業務休日加算
-						if(0 < business_days) {
-							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], business_days);
-						}
-//20110131ysk end
-						//発送日目安加算
-						if(0 < add_shipping[shipping]) {
-							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], add_shipping[shipping]);
-						}
+						date['year'] = '" . $sendout['sendout_date']['year'] . "';
+						date['month'] = '" . $sendout['sendout_date']['month'] . "';
+						date['day'] = '" . $sendout['sendout_date']['day'] . "';
 						//配達日数加算
-//20110428ysk start
-						if(delivery_days_value[delivery_days[selected]] != undefined && 0 < delivery_days_value[delivery_days[selected]].length) {
+						if(delivery_days_value[delivery_days[selected]] != undefined) {
 							if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
 								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
 							}
 						}
-//20110428ysk end
 						//最短配送時間帯メッセージ
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 						switch(shortest_delivery_time) {

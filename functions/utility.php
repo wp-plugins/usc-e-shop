@@ -98,7 +98,7 @@ function usces_filter_delivery_secure_check( $mes ){
 
 	switch( $settlement ){
 		case 'acting_zeus_card':
-			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) != 4 )
+			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) < 2 )
 				$mes .= __('カード番号が不正です', 'usces') . "<br />";
 			
 			if ( '' == $_POST["expyy"] )
@@ -516,7 +516,10 @@ function usces_download_member_list() {
 //20110411ysk end
 
 	//==========================================================================
-	$usces_opt_member = unserialize(get_option('usces_opt_member'));
+	$usces_opt_member = get_option('usces_opt_member');
+	if(!is_array($usces_opt_member)){
+		$usces_opt_member = array();
+	}
 	$usces_opt_member['ftype_mem'] = $ext;
 	$chk_mem = array();
 	$chk_mem['ID'] = 1;
@@ -577,7 +580,7 @@ function usces_download_member_list() {
 	$chk_mem['point'] = (isset($_REQUEST['check']['point'])) ? 1 : 0;
 	$chk_mem['rank'] = (isset($_REQUEST['check']['rank'])) ? 1 : 0;
 	$usces_opt_member['chk_mem'] = $chk_mem;
-	update_option('usces_opt_member', serialize($usces_opt_member));
+	update_option('usces_opt_member', $usces_opt_member);
 	//==========================================================================
 
 	$_REQUEST['searchIn'] = "searchIn";
@@ -886,7 +889,10 @@ function usces_download_product_list() {
 	}
 
 	//==========================================================================
-	$usces_opt_order = unserialize(get_option('usces_opt_order'));
+	$usces_opt_order = get_option('usces_opt_order');
+	if(!is_array($usces_opt_order)){
+		$usces_opt_order = array();
+	}
 	$usces_opt_order['ftype_pro'] = $ext;
 	$chk_pro = array();
 	$chk_pro['ID'] = 1;
@@ -904,7 +910,7 @@ function usces_download_product_list() {
 	$chk_pro['price'] = 1;
 	$chk_pro['unit'] = (isset($_REQUEST['check']['unit'])) ? 1 : 0;
 	$usces_opt_order['chk_pro'] = $chk_pro;
-	update_option('usces_opt_order', serialize($usces_opt_order));
+	update_option('usces_opt_order', $usces_opt_order);
 	//==========================================================================
 
 	$_REQUEST['searchIn'] = "searchIn";
@@ -1084,7 +1090,10 @@ function usces_download_order_list() {
 //20110411ysk end
 
 	//==========================================================================
-	$usces_opt_order = unserialize(get_option('usces_opt_order'));
+	$usces_opt_order = get_option('usces_opt_order');
+	if(!is_array($usces_opt_order)){
+		$usces_opt_order = array();
+	}
 	$usces_opt_order['ftype_ord'] = $ext;
 	$chk_ord = array();
 	$chk_ord['ID'] = 1;
@@ -1224,7 +1233,7 @@ function usces_download_order_list() {
 		}
 	}
 	$usces_opt_order['chk_ord'] = $chk_ord;
-	update_option('usces_opt_order', serialize($usces_opt_order));
+	update_option('usces_opt_order', $usces_opt_order);
 	//==========================================================================
 
 	if(isset($_REQUEST['check']['status'])) {
@@ -1776,7 +1785,7 @@ function usces_is_entity($entity){
 		return true;
 }
 
-function usces_p($var){
+function usces_p( $var ){
 	echo '<pre>' . print_r($var, true) . '</pre>';
 }
 ?>

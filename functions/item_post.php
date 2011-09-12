@@ -790,11 +790,11 @@ function add_item_option_meta( $post_ID ) {
 		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', $_POST['newoptvalue'] ) : '';
 		foreach((array)$newoptvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = trim( $v );
+				$nov[] = str_replace('\\', '&yen;', trim( $v ));
 		}
 	}else{
 		$newoptvalue = isset($_POST['newoptvalue']) ? $_POST['newoptvalue'] : '';
-		$nov = $newoptvalue;
+		$nov = str_replace('\\', '&yen;', $newoptvalue);
 	}
 
 	if ( ($newoptmeans >= 2 || '0' === $newoptvalue || !empty ( $newoptvalue )) && !empty ( $newoptname) ) {
@@ -951,11 +951,11 @@ function up_item_option_meta( $post_ID ) {
 		$optvalue = isset($_POST['optvalue']) ? explode('\n', $_POST['optvalue']) : '';
 		foreach((array)$optvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = trim( $v );
+				$nov[] = str_replace('\\', '&yen;', trim( $v ));
 		}
 	}else{
 		$optvalue = isset($_POST['optvalue']) ? trim( $_POST['optvalue'] ) : '';
-		$nov = $optvalue;
+		$nov = str_replace('\\', '&yen;', $optvalue);
 	}
 
 	$metakey = '_iopt_';
@@ -1795,6 +1795,9 @@ function order_item_ajax()
 		case 'ordercheckpost':
 			$res = usces_update_ordercheck();
 			break;
+		case 'getmember':
+			$res = usces_get_member_neworder();
+			break;
 	}
 	
 	if( $res === false )  die(0);
@@ -1807,6 +1810,55 @@ function order_item_ajax()
 /**
  * order Item html
  */
+function usces_get_member_neworder() {
+	global $wpdb;
+	$wpdb->show_errors();
+	$res = '';
+	$member_table = $wpdb->prefix . "usces_member";
+	$query = $wpdb->prepare("SELECT * FROM $member_table WHERE mem_email = %s", trim($_POST['email']));
+	$value = $wpdb->get_row( $query, ARRAY_A );
+	if( !$value ){
+		die( 'none#usces#1' );
+	}else{
+		$res .= 'ok#usces#member_id=' . $value['ID'];
+		$res .= '#usces#customer[name1]=' . $value['mem_name1'];
+		$res .= '#usces#customer[name2]=' . $value['mem_name2'];
+		$res .= '#usces#customer[name3]=' . $value['mem_name3'];
+		$res .= '#usces#customer[name4]=' . $value['mem_name4'];
+		$res .= '#usces#customer[zipcode]=' . $value['mem_zip'];
+		$res .= '#usces#customer[pref]=' . $value['mem_pref'];
+		$res .= '#usces#customer[address1]=' . $value['mem_address1'];
+		$res .= '#usces#customer[address2]=' . $value['mem_address2'];
+		$res .= '#usces#customer[address3]=' . $value['mem_address3'];
+		$res .= '#usces#customer[tel]=' . $value['mem_tel'];
+		$res .= '#usces#customer[fax]=' . $value['mem_fax'];
+		$res .= '#usces#delivery[name1]=' . $value['mem_name1'];
+		$res .= '#usces#delivery[name2]=' . $value['mem_name2'];
+		$res .= '#usces#delivery[name3]=' . $value['mem_name3'];
+		$res .= '#usces#delivery[name4]=' . $value['mem_name4'];
+		$res .= '#usces#delivery[zipcode]=' . $value['mem_zip'];
+		$res .= '#usces#delivery[pref]=' . $value['mem_pref'];
+		$res .= '#usces#delivery[address1]=' . $value['mem_address1'];
+		$res .= '#usces#delivery[address2]=' . $value['mem_address2'];
+		$res .= '#usces#delivery[address3]=' . $value['mem_address3'];
+		$res .= '#usces#delivery[tel]=' . $value['mem_tel'];
+		$res .= '#usces#delivery[fax]=' . $value['mem_fax'];
+		
+		$member_metetable = $wpdb->prefix . "usces_member_meta";
+		$query = $wpdb->prepare("SELECT * FROM $member_metetable WHERE meta_key LIKE %s AND member_id = %d", 'csmb_%', $value['ID']);
+		$customs = $wpdb->get_results( $query, ARRAY_A );
+		if( !empty($customs) ){
+			foreach( $customs as $cusv ){
+				$res .= '#usces#custom_customer[' . substr($cusv['meta_key'], 5) . ']=' . $cusv['meta_value'];
+				$res .= '#usces#custom_delivery[' . substr($cusv['meta_key'], 5) . ']=' . $cusv['meta_value'];
+			}
+		}
+		//die( urlencode($res) );
+	}
+		
+	die( $res );
+}
+
 function order_item2cart() {
 	global $usces;
 
@@ -1892,32 +1944,49 @@ function get_order_item( $item_code ) {
 	if ( 0 < count($optkeys) ) :
 		$r .= "<td colspan='7'>\n";
 		foreach ($optkeys as $optkey) :
-			
+			$r .= "<div>\n";
 			$value = get_post_custom_values(('_iopt_' . $optkey), $post_id);
 			$key = '_iopt_' . esc_attr($optkey);
 			if(!$value) continue;
 			$values = maybe_unserialize($value[0]);
-			$means = (int)$values['means'][0];
-			$essential = (int)$values['essential'][0];
+//20110715ysk start 0000202
+			//$means = (int)$values['means'][0];
+			$means = (int)$values['means'];
+			//$essential = (int)$values['essential'][0];
+			$essential = (int)$values['essential'];
+			$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
+		switch($means) {
+		case 0://Single-select
+		case 1://Multi-select
 			$selects = explode("\n", $values['value'][0]);
 			$multiple = ($means === 0) ? '' : ' multiple';
+			$multiple_array = ($means === 0) ? '' : '_multiple';
 			
-			$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
-			$r .= "\n<select name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_select'{$multiple}>\n";
+			//$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
+			$r .= "\n<select name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_select{$multiple_array}'{$multiple}>\n";
 			if($essential == 1)
 				$r .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
-			$i=0;
+			$s=0;
 			foreach($selects as $v) {
-				if($i == 0 && $essential == 0) 
+				if($s == 0 && $essential == 0) 
 					$selected = ' selected="selected"';
 				else
 					$selected = '';
 				$r .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
-				$i++;
+				$s++;
 			}
 			$r .= "</select>\n";
+			break;
+		case 2://Text
+			$r .= "\n<input name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' type='text' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
+			break;
+		case 5://Text-area
+			$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_textarea' /></textarea>\n";
+			break;
+		}
+//20110715ysk end
 			$r .= "<input name=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" type=\"hidden\" id=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" value=\"{$optkey}\" />\n";
-			
+			$r .= "</div>\n";
 		endforeach;
 		$r .= "</td>\n";
 	endif;

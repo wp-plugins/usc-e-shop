@@ -27,7 +27,7 @@ $rows = $DT->rows;
 
 //20100908ysk start
 $csmb_meta = usces_has_custom_field_meta('member');
-$usces_opt_member = unserialize(get_option('usces_opt_member'));
+$usces_opt_member = get_option('usces_opt_member');
 $chk_mem = $usces_opt_member['chk_mem'];
 //20100908ysk end
 //20110411ysk start
@@ -108,7 +108,7 @@ jQuery(document).ready(function($){
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_mem[]"]:checked').val();
 		$('*[class=check_member]').each(function(i) {
-			if($(this).attr('checked') == true) {
+			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
 			}
 		});
@@ -214,8 +214,8 @@ jQuery(document).ready(function($){
 		$ftype_mem_csv = '';
 	}
 ?>
-		<label for="ftype_mem_xls"><input type="radio" name="ftype_mem[]" id="ftype_mem_xls" value="xls"<?php echo $ftype_mem_xls; ?> /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_mem_csv"><input type="radio" name="ftype_mem[]" id="ftype_mem_csv" value="csv"<?php echo $ftype_mem_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<label for="ftype_mem_xls"><input type="radio" name="ftype_mem[]" id="ftype_mem_xls" value="xls"<?php echo $ftype_mem_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_mem_csv"><input type="radio" name="ftype_mem[]" id="ftype_mem_csv" value="csv"<?php echo $ftype_mem_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_mem" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Membership information', 'usces'); ?></legend>

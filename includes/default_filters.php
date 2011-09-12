@@ -6,6 +6,7 @@ add_action( 'admin_head', array(&$usces, 'admin_head'));
 add_action( 'wp_head', array(&$usces, 'shop_head'));
 add_action( 'wp_footer', array(&$usces, 'shop_foot'));
 add_action( 'wp_footer', array(&$usces, 'lastprocessing'));
+add_action( 'wp_footer', 'usces_action_footer_comment');
 //add_action('wp_dashboard_setup', 'usces_dashboard_setup' );	
 //add_action( 'login_head', 'usces_admin_login_head' );
 //add_action('restrict_manage_posts', array(&$usces, 'postfilter'));
@@ -118,10 +119,6 @@ if( $usces->options['itemimg_anchor_rel'] )
 	
 add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
 add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata', 10, 2);
-
-
-
-add_filter('usces_filter_delivery_check', 'usces_filter_delivery_secure_check', 9);
 
 
 //20100818ysk start

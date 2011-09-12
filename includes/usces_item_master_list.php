@@ -38,7 +38,7 @@ $status = isset($_REQUEST['usces_status']) ? $_REQUEST['usces_status'] : $DT->ge
 $message = isset($_REQUEST['usces_message']) ? urldecode($_REQUEST['usces_message']) : $DT->get_action_message();
 $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 //20101111ysk start
-$usces_opt_item = unserialize(get_option('usces_opt_item'));
+$usces_opt_item = get_option('usces_opt_item');
 //20101111ysk end
 ?>
 <!--<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
@@ -223,7 +223,7 @@ jQuery(function($){
 //20101111ysk end
 			$('#upload_dialog').dialog( 'option' , 'title' , '<?php _e('Collective registration item', 'usces'); ?>' );
 			$('#upload_dialog').dialog( 'option' , 'width' , 500 );
-			$('#dialogExp').html( '<?php _e('Upload prescribed CSV or an Excel file and perform the collective registration of the article.<br />Please choose a file, and push the registration start.', 'usces'); ?>' );
+			$('#dialogExp').html( '<?php _e('Upload prescribed CSV file and perform the collective registration of the article.<br />Please choose a file, and push the registration start.', 'usces'); ?>' );
 			$('#upload_dialog').dialog( 'open' );
 	});
 //20101111ysk start
@@ -244,10 +244,10 @@ jQuery(function($){
 	});
 	$('#dl_item').click(function() {
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
-			+"&search[word]="+$(':input[name="search[word]"]').val()
+			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();
-		if($('#chk_header').attr('checked') == true) {
+		if($('#chk_header').attr('checked')) {
 			args += '&chk_header=on';
 		}
 		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_itemedit&action=dlitemlist&noheader=true"+args;
@@ -393,13 +393,13 @@ jQuery(document).ready(function($){
 <?php endforeach; ?>
 	</tr>
 <?php foreach ( (array)$rows as $array ) :
-		$pctid = $this->get_pictids($array['item_code']); 
+		$pctid = $this->get_mainpictid($array['item_code']); 
 		$sku_values = unserialize($array['sku_value']);
 		$post = get_post($array['ID']);
 ?>
 	<tr>
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
-	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid[0], array(50, 50), true ); ?></a></td>
+	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : 
 			$skus = $this->get_skus( $array['ID'], 'ARRAY_A' );
 	?>
@@ -469,7 +469,7 @@ jQuery(document).ready(function($){
 			</td>
 			<td class="zaikonum">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php echo esc_html($sv['zaikonum']); ?></div>
+				<div class="priceline<?php echo $bgc; ?>"><?php echo (( '' != $sv['zaikonum']) ? esc_html($sv['zaikonum']) : "&nbsp;"); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 			<td class="zaiko">
@@ -531,8 +531,8 @@ jQuery(document).ready(function($){
 		$ftype_item_csv = '';
 	}
 ?>
-		<label for="ftype_item_xls"><input type="radio" name="ftype_item[]" id="ftype_item_xls" value="xls"<?php echo $ftype_item_xls; ?> /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_item_csv"><input type="radio" name="ftype_item[]" id="ftype_item_csv" value="csv"<?php echo $ftype_item_csv; ?> /><?php _e('csv', 'usces'); ?></label>
+		<label for="ftype_item_xls"><input type="radio" name="ftype_item[]" id="ftype_item_xls" value="xls"<?php echo $ftype_item_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
+		<label for="ftype_item_csv"><input type="radio" name="ftype_item[]" id="ftype_item_csv" value="csv"<?php echo $ftype_item_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_item" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 </div>
