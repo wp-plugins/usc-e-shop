@@ -678,7 +678,7 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 	if( 0 == $number ){
 		$pictid = $usces->get_mainpictid($code[0]);
-		$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
+		$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
 		if( 'item' == $media ){
 			$alt = 'alt="'.esc_attr($code[0]).'"';
 			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
