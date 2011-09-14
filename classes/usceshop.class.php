@@ -475,26 +475,26 @@ class usc_e_shop
 				do_action('usces_pre_update_orderdata', $_REQUEST['order_id']);
 				$res = usces_update_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_update_orderdata', $_REQUEST['order_id']);
 					$this->set_action_status('success', __('order date is updated','usces').' <a href="'.stripslashes( $_POST['usces_referer'] ).'">'.__('back to the summary','usces').'</a>');
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
 					$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 				}
+				do_action('usces_after_update_orderdata', $_REQUEST['order_id'], $res);
 				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
 				break;
 			case 'newpost':
 				do_action('usces_pre_new_orderdata');
 				$res = usces_new_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_new_orderdata');
 					$this->set_action_status('success', __('New date is add','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
 					$this->set_action_status('error', 'ERROR : '.__('failure in addition','usces'));
 				}
+				do_action('usces_after_new_orderdata', $res);
 				$_REQUEST['order_action'] = 'edit';
 				$order_action = $_REQUEST['order_action'];
 				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
@@ -507,13 +507,13 @@ class usc_e_shop
 				do_action('usces_pre_delete_orderdata', $_REQUEST['order_id']);
 				$res = usces_delete_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_delete_orderdata', $_REQUEST['order_id']);
 					$this->set_action_status('success', __('the order date is deleted','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
 					$this->set_action_status('error', 'ERROR : '.__('failure in delete','usces'));
 				}
+				do_action('usces_after_delete_orderdata', $_REQUEST['order_id'], $res);
 			default:
 				require_once(USCES_PLUGIN_DIR . '/includes/order_list.php');	
 		}
@@ -3536,7 +3536,7 @@ class usc_e_shop
 					'cod_fee' => $value->order_cod_fee,
 					'tax' => $value->order_tax,
 					'end_price' => $value->order_item_total_price - ($value->order_getpoint*$usces->options['system']['pointreduction']) - $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
-					'status' => $value->order_tax,
+					'status' => $value->order_status,
 					'date' => mysql2date(__('Y/m/d'), $value->order_date),
 					'modified' => mysql2date(__('Y/m/d'), $value->order_modified)
 					);
@@ -5465,6 +5465,7 @@ class usc_e_shop
 		$use_point = $entries['order']['usedpoint'];
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
+		$cod_fee = apply_filters('usces_filter_set_cart_fees_cod', $cod_fee, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$tax = $this->getTax( $total_price );
