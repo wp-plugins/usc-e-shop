@@ -4,6 +4,9 @@ $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
 
+$pname = array();
+$payment_method = array();
+
 $management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
 $payment_method = $this->options['payment_method'];
 foreach( $payment_method as $pmet){
@@ -666,7 +669,7 @@ jQuery(document).ready(function($){
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
         <td class="label">e-mail</td>
-        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr($data['order_email']); ?>" /><?php if($order_action == 'new'){ ?><input name="get_member" type="button" id="get_member" value="会員情報取込" /><?php } ?></td>
+        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr($data['order_email']); ?>" /><?php if($order_action == 'new'){ ?><!--<input name="get_member" type="button" id="get_member" value="会員情報取込" />--><?php } ?></td>
     </tr>
 	
 <?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>

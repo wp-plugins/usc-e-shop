@@ -678,7 +678,7 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 	if( 0 == $number ){
 		$pictid = $usces->get_mainpictid($code[0]);
-		$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
+		$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
 		if( 'item' == $media ){
 			$alt = 'alt="'.esc_attr($code[0]).'"';
 			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
@@ -1491,14 +1491,16 @@ function usces_categories_checkbox($output=''){
 	foreach ($categories as $cat) {
 		$children =  get_categories('child_of='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
 		if(!empty($children)){
-			$htm .= "<fieldset><legend>" . $cat->cat_name . "</legend><ul>\n";
+			$htm .= "<fieldset class='catfield-" . $cat->term_id . "'><legend>" . $cat->cat_name . "</legend><ul>\n";
 			foreach ($children as $child) {
 				$checked = in_array($child->term_id, $retcats) ? " checked='checked'" : "";
-				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]'>".esc_html($child->cat_name)."</label></li>\n";
+				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]' class='catlabel-" . $child->term_id . "'>".esc_html($child->cat_name)."</label></li>\n";
 			}
 			$htm .= "</ul></fieldset>\n";
 		}
 	}
+	$htm = apply_filters('usces_filter_categories_checkbox', $htm, $categories);
+	
 	if($output == '' || $output == 'echo')
 		echo $htm;
 	else
@@ -2184,7 +2186,7 @@ function usces_singleitem_error_message($post_id, $skukey, $out = ''){
 function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '', $seperator_flag = true ) {
 	global $usces;
 	$price = esc_html($usces->get_currency($float, $symbol_pre, $symbol_post, $seperator_flag ));
-	$res = apply_filters('usces_filter_crform', $price, $amount);
+	$res = apply_filters('usces_filter_crform', $price, $float);
 	
 	if($out == 'return'){
 		return $res;

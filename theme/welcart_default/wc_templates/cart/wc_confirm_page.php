@@ -143,7 +143,7 @@ get_header();
 		</tr>
 <?php usces_custom_field_info($usces_entries, 'order', ''); ?>
 		<tr>
-			<th><?php _e('Notes', 'usces'); ?></th><td><?php echo nl2br($usces_entries['order']['note']); ?></td>
+			<th><?php _e('Notes', 'usces'); ?></th><td><?php echo nl2br(esc_html($usces_entries['order']['note'])); ?></td>
 		</tr>
 	</table>
 
