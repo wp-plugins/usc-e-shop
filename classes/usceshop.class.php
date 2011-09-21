@@ -3603,12 +3603,13 @@ class usc_e_shop
 		if($ioptkeys){
 			foreach($ioptkeys as $key => $value){
 				$optValues = $this->get_itemOptions( $value, $post_id );
+				$code = $optValues['code'];
 				if( 2 > $optValues['means'] ){ //case of select
-					if( $optValues['essential'] && '#NONE#' == $_POST['itemOption'][$post_id][$sku][$value] ){
+					if( $optValues['essential'] && '#NONE#' == $_POST['itemOption'][$post_id][$sku][$code] ){
 						$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), $value) . "<br />";
 					}
 				}else{ //case of text
-					if( $optValues['essential'] && '' == trim($_POST['itemOption'][$post_id][$sku][$value]) ){
+					if( $optValues['essential'] && '' == trim($_POST['itemOption'][$post_id][$sku][$code]) ){
 						$mes[$post_id][$sku] .= sprintf(__("Input the %s", 'usces'), $value) . "<br />";
 					}
 				}

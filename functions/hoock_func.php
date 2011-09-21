@@ -291,7 +291,7 @@ function usces_action_acting_transaction(){
 		//foreach((array)$_GET as $key => $value) {
 		//	$args.='&('.$key.')=('.$value.')';
 		//}
-		//usces_log('jpayment card : '.$args, 'acting_transaction.log');
+		usces_log('jpayment card : '.$args, 'acting_transaction.log');
 
 	//*** jpayment_conv ***//
 	} elseif(isset($_REQUEST['acting']) && 'jpayment_conv' == $_REQUEST['acting'] && isset($_GET['ap'])) {

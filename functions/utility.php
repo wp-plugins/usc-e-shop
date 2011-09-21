@@ -1,7 +1,7 @@
 <?php
 // Utility.php
 
-function usces_optvalue_change( $update_key ){
+function usces_optvalue_change( &$update_key ){
 	global $wpdb;
 	define('USCES_KEY_OPTVALUE_CHANGE', 1);
 	if( (int)$update_key & USCES_KEY_OPTVALUE_CHANGE ) return;
@@ -30,7 +30,7 @@ function usces_optvalue_change( $update_key ){
 	update_option( 'usces_update_key', $update_key );
 }
 
-function usces_metakey_change( $update_key ){
+function usces_metakey_change( &$update_key ){
 	global $wpdb;
 	$rets = array();
 	define('USCES_KEY_METAKEY_CHANGE', 2);
