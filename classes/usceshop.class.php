@@ -1396,11 +1396,13 @@ class usc_e_shop
 					$key_opts_str .= "'{$value}',";
 					$opt_means .= "'{$optValues['means']}',";
 					$opt_esse .= "'{$optValues['essential']}',";
+					$opt_code .= "'{$optValues['code']}',";
 				}
 				$mes_opts_str = rtrim($mes_opts_str, ',');
 				$key_opts_str = rtrim($key_opts_str, ',');
 				$opt_means = rtrim($opt_means, ',');
 				$opt_esse = rtrim($opt_esse, ',');
+				$opt_code = rtrim($opt_code, ',');
 			}
 			$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
 		
@@ -1415,6 +1417,7 @@ class usc_e_shop
 				'is_cart_row': <?php echo ( (0 < $this->cart->num_row()) ? 'true' : 'false'); ?>,
 				'opt_esse': new Array( <?php echo $opt_esse; ?> ),
 				'opt_means': new Array( <?php echo $opt_means; ?> ),
+				'opt_code': new Array( <?php echo $opt_code; ?> ),
 				'mes_opts': new Array( <?php echo $mes_opts_str; ?> ),
 				'key_opts': new Array( <?php echo $key_opts_str; ?> ), 
 				'previous_url': "<?php echo $this->previous_url; ?>", 
@@ -1468,8 +1471,8 @@ class usc_e_shop
 							}
 					}
 				}
-				for(i=0; i<uscesL10n.key_opts.length; i++){
-					var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]");
+				for(i=0; i<uscesL10n.opt_code.length; i++){
+					var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.opt_code[i]+"]");
 					if( uscesL10n.opt_esse[i] == '1' ){
 						
 						if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
@@ -3945,7 +3948,9 @@ class usc_e_shop
 
 	function set_initial()
 	{
-		$rets = usces_metakey_change();
+		$update_key = get_option('usces_update_key'); 
+		usces_metakey_change( $update_key );
+		usces_optvalue_change( $update_key );
 		
 		$this->set_default_theme();
 		$this->set_default_page();

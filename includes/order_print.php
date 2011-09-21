@@ -124,20 +124,21 @@ function usces_pdf_out(&$pdf, $data){
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
 			$optstr = '';
 			foreach($cart_row['options'] as $key => $value){
+				$name = usces_get_optname( $post_id, $key );
 //20110629ysk start 0000190
 				//if( !empty($key) )
 				//	$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
-				if( !empty($key) ) {
+				if( !empty($name) ) {
 					if(is_array($value)) {
 						$c = '';
-						$optstr .= esc_html($key) . ' = ';
+						$optstr .= esc_html($name) . ' = ';
 						foreach($value as $v) {
 							$optstr .= $c.esc_html(urldecode($v));
 							$c = ', ';
 						}
 						$optstr .= "\n"; 
 					} else {
-						$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
+						$optstr .= esc_html($name) . ' = ' . esc_html(urldecode($value)) . "\n"; 
 					}
 				}
 //20110629ysk end

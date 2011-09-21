@@ -1,9 +1,40 @@
 <?php
 // Utility.php
 
-function usces_metakey_change(){
+function usces_optvalue_change( $update_key ){
+	global $wpdb;
+	define('USCES_KEY_OPTVALUE_CHANGE', 1);
+	if( (int)$update_key & USCES_KEY_OPTVALUE_CHANGE ) return;
+
+	$query = $wpdb->prepare("SELECT 
+				post.post_type, post.post_mime_type, post.ID 
+				FROM {$wpdb->posts} AS post 
+				WHERE post.post_mime_type = 'item' AND post.post_type = 'post' AND post.post_status <> 'trash' 
+				GROUP BY post.ID ");
+	$rows = $wpdb->get_results($query, ARRAY_A);
+	foreach( $rows as $row ) {
+		$meta = has_item_option_meta( $row['ID'] );
+		foreach( $meta as $entry ) {
+			if( is_serialized( $entry['meta_value'] )) {
+				$entry['meta_value'] = maybe_unserialize( $entry['meta_value'] );
+				$entry['meta_value']['code'] = uniqid();
+				$valueserialized = maybe_serialize( $entry['meta_value'] );
+				$optmetaid = $entry['meta_id'];
+				wp_cache_delete($post_ID, 'post_meta');
+				$res = $wpdb->query( $wpdb->prepare("UPDATE {$wpdb->postmeta} SET meta_value = %s WHERE meta_id = %d", $valueserialized, $optmetaid) );
+			}
+		}
+	}
+
+	(int)$update_key += USCES_KEY_OPTVALUE_CHANGE;
+	update_option( 'usces_update_key', $update_key );
+}
+
+function usces_metakey_change( $update_key ){
 	global $wpdb;
 	$rets = array();
+	define('USCES_KEY_METAKEY_CHANGE', 2);
+	if( (int)$update_key & USCES_KEY_METAKEY_CHANGE ) return $rets;
 	
 	$tableName = $wpdb->prefix . "postmeta";
 	$mquery = "UPDATE $tableName SET meta_key = REPLACE(meta_key, 'iopt_', '_iopt_') WHERE meta_key LIKE 'iopt_%'";
@@ -69,6 +100,9 @@ function usces_metakey_change(){
 	$mquery = "UPDATE $tableName SET meta_key = REPLACE(meta_key, 'itemIndividualSCharge', '_itemIndividualSCharge') WHERE meta_key LIKE 'itemIndividualSCharge'";
 	if( $wpdb->query( $mquery ) )
 		$rets[] = 1;
+
+	(int)$update_key += USCES_KEY_METAKEY_CHANGE;
+	update_option( 'usces_update_key', $update_key );
 
 	return $rets;
 }

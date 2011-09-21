@@ -112,20 +112,21 @@ function usces_order_confirm_message($order_id) {
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
+				$name = usces_get_optname( $post_id, $key );
 //20110629ysk start 0000190
 				//if( !empty($key) )
 				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
-				if( !empty($key) ) {
+				if( !empty($name) ) {
 					if(is_array($value)) {
 						$c = '';
-						$optstr .= $key . ' : ';
+						$optstr .= $name . ' : ';
 						foreach($value as $v) {
 							$optstr .= $c.urldecode($v);
 							$c = ', ';
 						}
 						$optstr .= "\r\n"; 
 					} else {
-						$optstr .= $key . ' : ' . urldecode($value) . "\r\n"; 
+						$optstr .= $name . ' : ' . urldecode($value) . "\r\n"; 
 					}
 				}
 //20110629ysk end
@@ -321,20 +322,21 @@ function usces_send_ordermail($order_id) {
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
+				$name = usces_get_optname( $post_id, $key );
 //20110629ysk start 0000190
 				//if( !empty($key) )
 				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
-				if( !empty($key) ) {
+				if( !empty($name) ) {
 					if(is_array($value)) {
 						$c = '';
-						$optstr .= $key. ' : ';
+						$optstr .= $name. ' : ';
 						foreach($value as $v) {
 							$optstr .= $c.urldecode($v);
 							$c = ', ';
 						}
 						$optstr .= "\r\n"; 
 					} else {
-						$optstr .= $key . ' : ' . urldecode($value) . "\r\n"; 
+						$optstr .= $name . ' : ' . urldecode($value) . "\r\n"; 
 					}
 				}
 //20110629ysk end
@@ -1978,6 +1980,7 @@ function usces_all_change_order_reciept(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_reciept', array(&$obj));
 }
 
 function usces_all_change_order_status(&$obj){
@@ -2060,6 +2063,7 @@ function usces_all_change_order_status(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_status', array(&$obj));
 }
 
 function usces_all_delete_order_data(&$obj){
@@ -2086,6 +2090,7 @@ function usces_all_delete_order_data(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_delete', array(&$obj));
 }
 
 function usces_check_acting_return() {
@@ -3338,6 +3343,20 @@ function usces_shipping_country_option( $selected ){
 	}
 }
 
+function usces_get_optname( $post_id, $code ){
+	$opts = has_item_option_meta( $post_id );
+	$name = NULL;
+	foreach( $opts as $opt ){
+		$meta_key = $opt['meta_key'];
+		$meta_value = $opt['meta_value'];
+		if( strpos( $meta_value, $code ) ){
+			$name = substr($meta_key, 6);
+			break;
+		}
+	}
+	return $name;
+}
+
 function usces_get_cart_rows( $out = '' ) {
 	global $usces;
 	$cart = $usces->cart->get_cart();
@@ -3375,20 +3394,21 @@ function usces_get_cart_rows( $out = '' ) {
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
+				$name = usces_get_optname( $post_id, $key );
 //20110629ysk start 0000190
 				//if( !empty($key) )
 				//	$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-				if( !empty($key) ) {
+				if( !empty($name) ) {
 					if(is_array($value)) {
 						$c = '';
-						$optstr .= esc_html($key) . ' : '; 
+						$optstr .= esc_html($name) . ' : '; 
 						foreach($value as $v) {
 							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
 							$c = ', ';
 						}
 						$optstr .= "<br />\n"; 
 					} else {
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+						$optstr .= esc_html($name) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 					}
 				}
 //20110629ysk end
@@ -3472,20 +3492,21 @@ function usces_get_confirm_rows( $out = '' ) {
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
+				$name = usces_get_optname( $post_id, $key );
 //20110629ysk start 0000190
 				//if( !empty($key) )
 				//	 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-				if( !empty($key) ) {
+				if( !empty($name) ) {
 					if(is_array($value)) {
 						$c = '';
-						$optstr .= esc_html($key) . ' : '; 
+						$optstr .= esc_html($name) . ' : '; 
 						foreach($value as $v) {
 							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
 							$c = ', ';
 						}
 						$optstr .= "<br />\n"; 
 					} else {
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+						$optstr .= esc_html($name) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 					}
 				}
 //20110629ysk end

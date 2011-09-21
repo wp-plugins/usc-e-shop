@@ -220,20 +220,21 @@ jQuery(document).ready(function($){
 	$pictid = $this->get_mainpictid($itemCode);
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
+		$name = usces_get_optname( $post_id, $key );
 //20110629ysk start 0000190
 		//if( !empty($key) )
 		//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-		if( !empty($key) ) {
+		if( !empty($name) ) {
 			if(is_array($value)) {
 				$c = '';
-				$optstr .= esc_html($key) . ' : '; 
+				$optstr .= esc_html($name) . ' : '; 
 				foreach($value as $v) {
 					$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
 					$c = ', ';
 				}
 				$optstr .= "<br />\n"; 
 			} else {
-				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				$optstr .= esc_html($name) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
 		}
 //20110629ysk end

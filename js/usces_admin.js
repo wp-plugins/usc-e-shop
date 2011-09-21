@@ -86,8 +86,10 @@
 			vs = document.getElementById('itemopt\['+meta_id+'\]\[value\]');
 			ms = document.getElementById('itemopt\['+meta_id+'\]\[means\]');
 			es = document.getElementById('itemopt\['+meta_id+'\]\[essential\]');
+			cd = document.getElementById('itemopt\['+meta_id+'\]\[code\]');
 			var value = $(vs).val();
 			var means = $(ms).val();
+			var code = $(cd).val();
 			if($(es).attr("checked")){
 				var essential = '1';
 			}else{
@@ -95,7 +97,7 @@
 			}
 			
 			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optvalue=" + value + "&optmeans=" + means + "&optessential=" + essential + "&optmetaid=" + meta_id;
+			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optvalue=" + value + "&optmeans=" + means + "&optessential=" + essential + "&optcode=" + code + "&optmetaid=" + meta_id;
 			$.ajax( s );
 			return false;
 		},
@@ -119,9 +121,10 @@
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&select=1&key=" + encodeURIComponent(key);
 			s.success = function(data, dataType){
-				var means = data.substring(0,1);
-				var essential = data.substring(1,2);
-				var value = data.substring(2,data.length-1);
+				strs = data.split('#usces#');
+				var means = strs[0];
+				var essential = strs[1];
+				var value = strs[2];
 				$("#newoptvalue").val(value);
 				$("#newoptmeans").val(means);
 				if( essential == '1') {
@@ -129,6 +132,7 @@
 				}else{
 					$("#newoptessential").attr({checked: false});
 				}
+				
 			};
 			$.ajax( s );
 			return false;

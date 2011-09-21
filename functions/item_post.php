@@ -175,6 +175,7 @@ function _list_item_option_meta_row( $entry ) {
 	
 	$readonly = " readonly='true'";
 	$key = esc_attr(substr($entry['meta_key'],6));
+	$code = $entry['meta_value']['code'];
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
 		if($meankey == $entry['meta_value']['means']) {
@@ -200,6 +201,7 @@ function _list_item_option_meta_row( $entry ) {
 	$r .= "<input name='itemopt[{$id}][essential]' id='itemopt[{$id}][essential]' type='checkbox' value='1'{$essential} /><label for='itemopt[{$id}][essential]'>" . __('Required','usces') . "</label></div>";
 	$r .= "\n\t\t<div class='submit'><input name='deleteitemopt[{$id}]' id='deleteitemopt[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"deleteitemopt\", {$id});' />";
 	$r .= "\n\t\t<input name='updateitemopt' id='updateitemopt[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemOpt.post(\"updateitemopt\", {$id});' /></div>";
+	$r .= "<input name='itemopt[{$id}][code]' id='itemopt[{$id}][code]' type='hidden' value='{$code}' />";
 	$r .= "</td>";
 
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='itemopt[{$id}][value]' id='itemopt[{$id}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
@@ -397,6 +399,7 @@ function item_option_meta_form() {
 </tr>
 
 <tr><td colspan="2" class="submit">
+<!--<input name="newoptcode" id="newoptcode" type="hidden" />-->
 <?php if( $keys ) { ?>
 <input name="add_itemopt" type="button" id="add_itemopt" tabindex="9" value="<?php _e('Apply an option','usces') ?>" onclick="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('additemopt', 0);" />
 <?php } ?>
@@ -544,6 +547,7 @@ function add_item_option_meta( $post_ID ) {
 	$newoptname = isset($_POST['newoptname']) ? trim( $_POST['newoptname'] ) : '';
 	$newoptmeans = isset($_POST['newoptmeans']) ? $_POST['newoptmeans']: 0;
 	$newoptessential = isset($_POST['newoptessential']) ? $_POST['newoptessential']: 0;
+	$newoptcode = isset($_POST['newoptcode']) ? $_POST['newoptcode']: uniqid();
 
 	if($newoptmeans == 0 || $newoptmeans == 1){
 		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', $_POST['newoptvalue'] ) : '';
@@ -572,6 +576,7 @@ function add_item_option_meta( $post_ID ) {
 		$value['means'] = $newoptmeans;
 		$value['essential'] = $newoptessential;
 		$value['value'] = $nov;
+		$value['code'] = $newoptcode;
 		$unique = true;
 		
 		add_post_meta($post_ID, $metakey, $value, $unique);
@@ -688,6 +693,7 @@ function up_item_option_meta( $post_ID ) {
 	$optmetaid = isset($_POST['optmetaid']) ? (int)$_POST['optmetaid'] : '';
 	$optmeans = isset($_POST['optmeans']) ? $_POST['optmeans']: 0;
 	$optessential = isset($_POST['optessential']) ? $_POST['optessential']: 0;
+	$optcode = isset($_POST['optcode']) ? $_POST['optcode']: uniqid();
 
 	if($optmeans == 0 || $optmeans == 1){
 		$optvalue = isset($_POST['optvalue']) ? explode('\n', trim( $_POST['optvalue'] ) ) : '';
@@ -703,6 +709,7 @@ function up_item_option_meta( $post_ID ) {
 	$value['means'] = $optmeans;
 	$value['essential'] = $optessential;
 	$value['value'] = $nov;
+	$value['code'] = $optcode;
 	$valueserialized = maybe_serialize($value);
 
 	if ( $optmeans >= 2 || '0' === $optvalue || !empty ( $optvalue ) ) {
@@ -879,7 +886,7 @@ function select_common_option( $post_ID ) {
 	}else{
 			$value .= trim($array['value']) . "\n";
 	}
-	$res = $means . $essential . $value;
+	$res = $means . '#usces#' . $essential . '#usces#' . $value;
 	return $res;
 } // select_common_option
 
