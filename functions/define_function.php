@@ -592,6 +592,7 @@ function usces_item_uploadcsv(){
 							break;
 					}
 				}
+				$opt['code'] = uniqid();
 				if( $opflg == true )
 					$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(maybe_serialize($opt)) . "'),";
 			}

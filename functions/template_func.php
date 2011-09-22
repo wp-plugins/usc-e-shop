@@ -897,7 +897,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk start
 		break;
 	case 5://Text-area
-		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$code}]' id='itemOption[{$post_id}][{$sku}][{$code}]' class='iopt_textarea' />" . esc_attr($session_value) . "</textarea>\n";
+		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$code}]' id='itemOption[{$post_id}][{$sku}][{$code}]' class='iopt_textarea' >" . esc_attr($session_value) . "</textarea>\n";
 		break;
 //20100914ysk end
 	}
