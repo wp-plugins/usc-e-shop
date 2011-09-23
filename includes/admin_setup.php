@@ -270,8 +270,8 @@ function toggleVisibility(id) {
 <div class="inside">
 	<div id="postoptcustomstuff"><div id="ajax-response"></div>
 <?php
-	$metadata = has_item_option_meta(USCES_CART_NUMBER);
-	list_item_option_meta($metadata);
+	$opts = usces_get_opts(USCES_CART_NUMBER);
+	list_item_option_meta($opts);
 	common_option_meta_form();
 ?>
 <hr size="1" color="#CCCCCC" />

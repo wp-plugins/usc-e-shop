@@ -9,6 +9,8 @@
 if ( !defined('ABSPATH') )
 	die('-1');
 
+global $usces;
+//echo $GLOBALS['hook_suffix'];
 //wp_enqueue_script('post');
 //
 //if ( post_type_supports($post_type, 'editor') ) {
@@ -291,6 +293,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 ?>
 
 <?php wp_nonce_field($nonce_action); ?>
+<input type="hidden" name="usces_nonce" id="usces_nonce" value="<?php echo wp_create_nonce( 'usc-e-shop' ); ?>" />
 <input type="hidden" id="user-id" name="user_ID" value="<?php echo (int) $user_ID ?>" />
 <input type="hidden" id="hiddenaction" name="action" value="<?php echo esc_attr($form_action) ?>" />
 <input type="hidden" id="originalaction" name="originalaction" value="<?php echo esc_attr($form_action) ?>" />
@@ -330,7 +333,9 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 
 
 
-<div id="postitemcustomstuff">
+<!--<div id="postitemcustomstuff">-->
+<div id="meta_box_product_first_box" class="postbox " >
+<div class="inside">
 <table class="iteminfo_table">
 <tr>
 <th><?php _e('item code', 'usces'); ?></th>
@@ -365,8 +370,11 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <?php apply_filters('usces_item_master_first_section', NULL, $post_ID); ?>
 </table>
 </div>
+</div>
 
-<div id="postitemcustomstuff">
+<!--<div id="postitemcustomstuff">-->
+<div id="meta_box_product_second_box" class="postbox " >
+<div class="inside">
 <table class="iteminfo_table">
 <?php
 $second_section = '<tr class="shipped">
@@ -419,19 +427,23 @@ echo $second_section;
 ?>
 </table>
 </div>
+</div>
 
-<!--<div class="meta-box-sortables">-->
 
 <div id="itemsku" class="postbox">
 <h3 class="hndle"><span>SKU <?php _e('Price', 'usces'); ?></span></h3>
 <div class="inside">
-<div id="postskucustomstuff"><div id="skuajax-response"></div>
+	<div id="postskucustomstuff" class="skustuff">
 <?php
-$metadata = has_item_sku_meta($post->ID);
-list_item_sku_meta($metadata);
+//$metadata = has_item_sku_meta($post->ID);
+//list_item_sku_meta($metadata);
+//item_sku_meta_form();
+$skus = $usces->get_skus($post->ID);
+list_item_sku_meta($skus);
 item_sku_meta_form();
+
 ?>
-</div>
+	</div>
 </div>
 </div>
 
@@ -440,38 +452,27 @@ item_sku_meta_form();
 <div class="inside">
 <div id="postoptcustomstuff"><div id="optajax-response"></div>
 <?php
-$metadata = has_item_option_meta($post->ID);
-list_item_option_meta($metadata);
+//$metadata = has_item_option_meta($post->ID);
+//list_item_option_meta($metadata);
+//item_option_meta_form();
+$opts = usces_get_opts($post->ID);
+list_item_option_meta($opts);
 item_option_meta_form();
 ?>
 </div>
 </div>
 </div>
 
-<?php if ( defined('USCES_EX_PLUGIN') ){ ?>
-<!--<div id="itemoption" class="postbox">
-<h3 class="hndle"><span><?php _e('Options for EX-plugin', 'usces'); ?></span></h3>
-<div class="inside">
-<div id="postoptcustomstuff">
-<?php 
-	apply_filters('usces_ex_plugin_options', &$usces_expo, $post->ID, 'A', 'B');
-	echo $usces_expo;
-?>
-</div>
-</div>
-</div>-->
-<?php } ?>
 
-
-
-
+<div class="postbox">
 <?php if ( post_type_supports($post_type, 'title') ) { ?>
-<div id="titlediv">
-<div id="titlewrap">
-	<label class="hide-if-no-js" style="visibility:hidden" id="title-prompt-text" for="title"><?php _e('Enter title here') ?></label>
-	<input type="text" name="post_title" size="30" tabindex="1" value="<?php echo esc_attr( htmlspecialchars( $post->post_title ) ); ?>" id="title" autocomplete="off" />
-</div>
 <div class="inside">
+<div class="itempagetitle">商品詳細ページタイトル</div>
+<div id="titlediv">
+	<div id="titlewrap">
+		<label class="hide-if-no-js" style="visibility:hidden" id="title-prompt-text" for="title"><?php _e('Enter title here') ?></label>
+		<input type="text" name="post_title" size="30" tabindex="1" value="<?php echo esc_attr( htmlspecialchars( $post->post_title ) ); ?>" id="title" autocomplete="off" />
+	</div>
 <?php
 $sample_permalink_html = get_sample_permalink_html($post->ID);
 $shortlink = wp_get_shortlink($post->ID, 'post');
@@ -492,10 +493,9 @@ if ( !( 'pending' == $post->post_status && !current_user_can( $post_type_object-
 <?php
 wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 ?>
-</div>
 <?php } ?>
-
 <?php if ( post_type_supports($post_type, 'editor') ) { ?>
+<div class="itempagetitle">商品詳細本文</div>
 <div id="<?php echo user_can_richedit() ? 'postdivrich' : 'postdiv'; ?>" class="postarea">
 
 <?php the_editor($post->post_content); ?>
@@ -522,7 +522,10 @@ wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 
 <?php
 }
-
+?>
+</div>
+</div>
+<?php
 do_meta_boxes($post_type, 'normal', $post);
 
 ( 'page' == $post_type ) ? do_action('edit_page_form') : do_action('edit_form_advanced');
@@ -553,11 +556,11 @@ try{
 jQuery(document).ready(function($){
 	$("#in-category-"+<?php echo USCES_ITEM_CAT_PARENT_ID; ?>).attr({checked: "checked"});
 
-	$('#itemCode').blur( 
-						function() { 
-							if ( $("#itemCode").val().length == 0 ) return;
-							uscesItem.newdraft($('#itemCode').val());
-						});
+//	$('#itemCode').blur( 
+//						function() { 
+//							if ( $("#itemCode").val().length == 0 ) return;
+//							uscesItem.newdraft($('#itemCode').val());
+//						});
 });
 </script>
 <?php endif; ?>

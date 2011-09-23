@@ -651,7 +651,7 @@ $itemIndividualSCharge = get_post_custom_values('_itemIndividualSCharge', $post_
 $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 
 ?>
-
+<input type="hidden" name="usces_nonce" id="usces_nonce" value="<?php echo wp_create_nonce( 'usc-e-shop' ); ?>" />
 <input type="hidden" name="post_mime_type" value="item" />
 <input type="hidden" name="page" value="usces_itemedit" />
 <input type="hidden" id="user-id" name="user_ID" value="<?php echo (int) $user_ID ?>" />

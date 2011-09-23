@@ -4027,4 +4027,27 @@ function usces_get_send_out_date(){
 function usces_action_footer_comment(){
 	echo "<!-- Welcart version : v".USCES_VERSION." -->\n";
 }
+
+function usces_is_same_itemcode( $post_id, $item_code ){
+	global $wpdb, $usces;
+
+	$query = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE post_id <> %d AND meta_key = %s AND meta_value = %s", $post_id, '_itemCode', $item_code);
+	$ids = $wpdb->get_col( $query );
+//			usces_log('ids : '.print_r($query,true), 'acting_transaction.log');
+//			usces_log('ids : '.print_r($ids,true), 'acting_transaction.log');
+	if( !$ids ){
+		return false;
+	}
+	$id_str = implode(',', $ids);
+	$query = "SELECT ID FROM $wpdb->posts WHERE ID IN({$id_str}) AND post_status = 'publish'";
+	$res = $wpdb->get_col( $query );
+//			usces_log('res : '.print_r($res,true), 'acting_transaction.log');
+//			usces_log('res : '.print_r($query,true), 'acting_transaction.log');
+	if( !$res ){
+		return false;
+	}
+	
+	return $res;
+}
+
 ?>

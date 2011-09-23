@@ -7,11 +7,17 @@ add_action( 'wp_head', array(&$usces, 'shop_head'));
 add_action( 'wp_footer', array(&$usces, 'shop_foot'));
 add_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 add_action( 'wp_footer', 'usces_action_footer_comment');
+add_action( 'admin_footer-welcart-shop_page_usces_itemnew', 'admin_prodauct_footer');
+add_action( 'admin_footer-welcart-shop_page_usces_itemedit', 'admin_prodauct_footer');
+add_action( 'admin_footer-welcart-shop_page_usces_initial', 'admin_prodauct_footer');
+add_action( 'transition_post_status', 'usces_action_transition_post_status', 10, 3);
+add_filter( 'redirect_post_location', 'usces_filter_redirect_post_location', 10, 2);
+add_action( 'dbx_post_advanced', 'usces_action_updated_messages');
 //add_action('wp_dashboard_setup', 'usces_dashboard_setup' );	
 //add_action( 'login_head', 'usces_admin_login_head' );
 //add_action('restrict_manage_posts', array(&$usces, 'postfilter'));
 
-add_action('save_post', 'item_save_metadata');
+add_action('save_post', 'item_save_metadata', 10, 2);
 add_action( 'wp_ajax_order_item2cart_ajax', 'order_item2cart_ajax' );
 add_action( 'wp_ajax_order_item_ajax', 'order_item_ajax' );
 add_action( 'wp_ajax_payment_ajax', 'payment_ajax' );

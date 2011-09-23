@@ -1728,6 +1728,10 @@ class usc_e_shop
 					</script>
 <?php
 					break;
+//				case 'usces_itemnew':
+//				case 'usces_itemedit':
+//					wp_enqueue_script('jquery-ui-sortable', array('jquery'));
+					break;
 			}
 		}
 ?>
@@ -1985,7 +1989,8 @@ class usc_e_shop
 			
 				case 'usces_initial':
 					$js = USCES_FRONT_PLUGIN_URL.'/js/usces_initial.js';
-					wp_enqueue_script('usces_initial.js', $js, array('jquery-ui-dialog'));
+					wp_enqueue_script('usces_initial.js', $js, array('jquery-ui-dialog', 'jquery-ui-sortable'));
+					//wp_enqueue_script('jquery-ui-sortable');
 					break;
 					
 				case 'usces_settlement':
@@ -2019,6 +2024,8 @@ class usc_e_shop
 					break;
 //20100908ysk end
 //20101111ysk start
+				case 'usces_itemnew':
+					wp_enqueue_script('jquery-ui-sortable');
 				case 'usces_itemedit':
 					wp_enqueue_script('jquery-ui-dialog');
 					break;
@@ -4896,36 +4903,59 @@ class usc_e_shop
 		return $id;
 	}
 	
-	function get_skus( $post_id, $output='' ) {
-		$fields = get_post_custom($post_id);
-		if( !is_array($fields)) $fields = array();
-		ksort($fields);
-		foreach($fields as $k => $v){
-			if( preg_match('/^_isku_/', $k, $match) ){
-				$values = maybe_unserialize($v[0]);
-				$key[] = substr($k, 6);
-				$cprice[] = $values['cprice'];
-				$price[] = $values['price'];
-				$zaiko[] = $values['zaiko'];
-				$zaikonum[] = $values['zaikonum'];
-				$disp[] = $values['disp'];
-				$unit[] = $values['unit'];
-				$gptekiyo[] = $values['gptekiyo'];
-				
-				$res[substr($k, 6)]['cprice'] = $values['cprice'];
-				$res[substr($k, 6)]['price'] = $values['price'];
-				$res[substr($k, 6)]['zaiko'] = $values['zaiko'];
-				$res[substr($k, 6)]['zaikonum'] = $values['zaikonum'];
-				$res[substr($k, 6)]['disp'] = $values['disp'];
-				$res[substr($k, 6)]['unit'] = $values['unit'];
-				$res[substr($k, 6)]['gptekiyo'] = $values['gptekiyo'];
-			}
+	function get_skus( $post_id, $keyflag = 'sort' ) {
+		$skus = array();
+		$metas = usces_get_post_meta($post_id, '_isku_');
+		if( empty($metas) ) return $skus;
+		
+		foreach( $metas as $rows ){
+			$values = unserialize($rows['meta_value']);
+			$key = isset($values[$keyflag]) ? $values[$keyflag] : $values['sort'];
+			$skus[$key] = array(
+								'meta_id' => $rows['meta_id'],
+								'code' => $values['code'],
+								'name' => $values['name'],
+								'cprice' => $values['cprice'],
+								'price' => $values['price'],
+								'unit' => $values['unit'],
+								'stocknum' => $values['stocknum'],
+								'stock' => $values['stock'],
+								'gp' => $values['gp'],
+								'sort' => $values['sort']
+							);
 		}
-		if($output == 'ARRAY_A'){
-			return $res;
-		}else{
-			return compact('key', 'cprice', 'price', 'zaiko', 'zaikonum', 'disp', 'unit', 'gptekiyo' );
-		}
+		ksort($skus);
+	
+		return $skus;
+//		$fields = get_post_custom($post_id);
+//		if( !is_array($fields)) $fields = array();
+//		ksort($fields);
+//		foreach($fields as $k => $v){
+//			if( preg_match('/^_isku_/', $k, $match) ){
+//				$values = maybe_unserialize($v[0]);
+//				$key[] = substr($k, 6);
+//				$cprice[] = $values['cprice'];
+//				$price[] = $values['price'];
+//				$zaiko[] = $values['zaiko'];
+//				$zaikonum[] = $values['zaikonum'];
+//				$disp[] = $values['disp'];
+//				$unit[] = $values['unit'];
+//				$gptekiyo[] = $values['gptekiyo'];
+//				
+//				$res[substr($k, 6)]['cprice'] = $values['cprice'];
+//				$res[substr($k, 6)]['price'] = $values['price'];
+//				$res[substr($k, 6)]['zaiko'] = $values['zaiko'];
+//				$res[substr($k, 6)]['zaikonum'] = $values['zaikonum'];
+//				$res[substr($k, 6)]['disp'] = $values['disp'];
+//				$res[substr($k, 6)]['unit'] = $values['unit'];
+//				$res[substr($k, 6)]['gptekiyo'] = $values['gptekiyo'];
+//			}
+//		}
+//		if($output == 'ARRAY_A'){
+//			return $res;
+//		}else{
+//			return compact('key', 'cprice', 'price', 'zaiko', 'zaikonum', 'disp', 'unit', 'gptekiyo' );
+//		}
 	}
 	
 	function is_item( $post ) {
