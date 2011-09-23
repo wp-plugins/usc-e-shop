@@ -2282,7 +2282,7 @@ function usces_member_history(){
 		$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
 		$html .= '<tr>
 			<td class="retail" colspan="' . $colspan . '">
-				<table id="retail_table">';
+				<table id="retail_table_' . $umhs['ID'] . '" class="retail">';
 		$history_cart_head = '<tr>
 				<th scope="row" class="num">No.</th>
 				<th class="thumbnail">&nbsp;</th>
