@@ -2379,6 +2379,7 @@ function usces_assistance_item($post_id, $title ){
 			//update_post_caches($posts); 
 			usces_remove_filter();
 			usces_the_item();
+			ob_start();
 ?>
 			<li>
 			<div class="listbox clearfix">
@@ -2398,7 +2399,11 @@ function usces_assistance_item($post_id, $title ){
 				</div>
 			</div>
 			</li>
-		<?php endwhile; ?>
+		<?php
+			$list = ob_get_contents();
+			ob_end_clean();
+			echo apply_filters('usces_filter_assistance_item_list', $list, $post);
+		 endwhile; ?>
 		
 		</ul>
 	</div><!-- end of assistance_item -->
