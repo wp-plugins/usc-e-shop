@@ -268,7 +268,7 @@ class dataList
 						FROM {$this->table} AS post 
 						LEFT JOIN $wpdb->postmeta AS mc ON post.ID = mc.post_id AND mc.meta_key = '_itemCode' 
 						LEFT JOIN $wpdb->postmeta AS mn ON post.ID = mn.post_id AND mn.meta_key = '_itemName' 
-						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 6) = %s 
+						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND meta.meta_key = %s 
 						LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
 						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
 						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
@@ -307,7 +307,7 @@ class dataList
 						END AS display_status, 
 						post.post_type, post.post_mime_type, post.ID 
 						FROM {$this->table} AS post 
-						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND SUBSTRING(meta.meta_key, 1, 6) = %s 
+						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND meta.meta_key = %s 
 						LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
 						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
 						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",

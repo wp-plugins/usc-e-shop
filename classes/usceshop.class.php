@@ -1393,7 +1393,7 @@ class usc_e_shop
 					}else{
 						$mes_opts_str .= "'" . sprintf(__("Input the %s", 'usces'), $value) . "',";
 					}
-					$key_opts_str .= "'{$value}',";
+					$key_opts_str .= "'" . urlencode($value) . "',";
 					$opt_means .= "'{$optValues['means']}',";
 					$opt_esse .= "'{$optValues['essential']}',";
 				}
@@ -1486,7 +1486,7 @@ class usc_e_shop
 					alert( mes );
 					return false;
 				}else{
-					<?php echo apply_filters('usces_filter_js_intoCart', "return true;\n", $item->ID, $this->itemsku['key']); ?>
+					<?php echo apply_filters('usces_filter_js_intoCart', "return true;\n", $item->ID, $this->itemsku['code']); ?>
 				}
 			},
 			
@@ -1728,9 +1728,18 @@ class usc_e_shop
 					</script>
 <?php
 					break;
-//				case 'usces_itemnew':
-//				case 'usces_itemedit':
-//					wp_enqueue_script('jquery-ui-sortable', array('jquery'));
+				case 'usces_itemnew':
+				case 'usces_itemedit':
+?>
+					<style type="text/css">
+					<!--
+					#usces_mess {
+						color: #FF0000;
+						font-weight: bold;
+					}
+					-->
+					</style>
+<?php
 					break;
 			}
 		}
@@ -3485,6 +3494,7 @@ class usc_e_shop
 			$status = $umhs['order_status'];
 			for($i=0; $i<count($cart); $i++) { 
 				$cart_row = $cart[$i];
+				$sku_code = urldecode($cart_row['sku']);
 				if( empty($sku) ){
 					if( $cart_row['post_id'] == $post_id && ('noreceipt' != $status && 'pending' != $status) ){
 						$res = true;
@@ -3494,10 +3504,10 @@ class usc_e_shop
 						break 2;
 					}
 				}else{
-					if( $cart_row['post_id'] == $post_id && $cart_row['sku'] == $sku && ('noreceipt' != $status && 'pending' != $status) ){
+					if( $cart_row['post_id'] == $post_id && $sku_code == $sku && ('noreceipt' != $status && 'pending' != $status) ){
 						$res = true;
 						break 2;
-					}elseif( $cart_row['post_id'] == $post_id && $cart_row['sku'] == $sku && ('noreceipt' == $status || 'pending' == $status) ){
+					}elseif( $cart_row['post_id'] == $post_id && $sku_code == $sku && ('noreceipt' == $status || 'pending' == $status) ){
 						$res = 'noreceipt';
 						break 2;
 					}
@@ -3580,7 +3590,7 @@ class usc_e_shop
 
 	function incart_check() {
 		$mes = array();
-		
+
 		$ids = array_keys($_POST['inCart']);
 		$post_id = $ids[0];
 		$skus = array_keys($_POST['inCart'][$post_id]);
@@ -3599,10 +3609,8 @@ class usc_e_shop
 		}else if( 1 < $zaiko_id ){
 			$mes[$post_id][$sku] = __('Sorry, this item is sold out.', 'usces') . "<br />";
 		}
-		
-		
-		
-		$ioptkeys = $this->get_itemOptionKey( $post_id );
+
+		$ioptkeys = $this->get_itemOptionKey( $post_id, true );
 		//if($ioptkeys && isset($_POST['itemOption'][$post_id][$sku])){
 		if($ioptkeys){
 			foreach($ioptkeys as $key => $value){
@@ -3640,11 +3648,12 @@ class usc_e_shop
 			$cart_row = $cart[$i];
 			$post_id = $cart_row['post_id'];
 			$sku = $cart_row['sku'];
+			$sku_code = urldecode($cart_row['sku']);
 			
 			$quant = ( isset($_POST['quant']) ) ? trim($_POST['quant'][$i][$post_id][$sku]) : $cart_row['quantity'];
 			//$zaiko_status = $this->getItemZaiko($post_id, $sku);
-			$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku);
-			$stock = $this->getItemZaikoNum($post_id, $sku);
+			$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku_code);
+			$stock = $this->getItemZaikoNum($post_id, $sku_code);
 			$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
 			
 			//$red = (in_array($zaiko_status, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
@@ -4588,37 +4597,32 @@ class usc_e_shop
 	}
 	
 	function getItemSku($post_id, $index = '') {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$skus[] = $key;
-			}
+		$array =array();
+		$skus = $this->get_skus($post_id, 'sort');
+		foreach((array)$skus as $sku){
+			$array[] = $sku['code'];
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($index == ''){
-			return $skus;
-		}else if(isset($skus[$index])){
-			return $skus[$index];
+			return $array;
+		}else if(isset($array[$index])){
+			return $array[$index];
 		}else{
 			return false;
 		}
 	}
 	
 	function getItemPrice($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$skus[$key] = (float)str_replace(',', '', $values['price']);
-			}
+		$array =array();
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$array[$key] = (float)str_replace(',', '', $sku['price']);
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($skukey == ''){
-			return $skus;
-		}else if(isset($skus[$skukey])){
-			return $skus[$skukey];
+			return $array;
+		}else if(isset($array[$skukey])){
+			return $array[$skukey];
 		}else{
 			return false;
 		}
@@ -4626,120 +4630,100 @@ class usc_e_shop
 	
 	function getItemDiscount($post_id, $skukey = '') {
 		$display_mode = $this->options['display_mode'];
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$price = (float)str_replace(',', '', $values['price']);
-				if ( $display_mode == 'Promotionsale' ) {
-					if ( $this->options['campaign_privilege'] == 'discount' ){
-						if( 0 === (int)$this->options['campaign_category'] || in_category((int)$this->options['campaign_category'], $post_id) ){
-							$discount = $price * $this->options['privilege_discount'] / 100;
-						}else{
-							$discount = 0;
-						}
-					}else if ( $this->options['campaign_privilege'] == 'point' ){
+		$array =array();
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$price = (float)str_replace(',', '', $sku['price']);
+			if ( $display_mode == 'Promotionsale' ) {
+				if ( $this->options['campaign_privilege'] == 'discount' ){
+					if( 0 === (int)$this->options['campaign_category'] || in_category((int)$this->options['campaign_category'], $post_id) ){
+						$discount = $price * $this->options['privilege_discount'] / 100;
+					}else{
 						$discount = 0;
 					}
+				}else if ( $this->options['campaign_privilege'] == 'point' ){
+					$discount = 0;
 				}
-		
-				$discount = ceil($discount);
-				$skus[$key] = $discount;
 			}
+	
+			$discount = ceil($discount);
+			$array[$key] = $discount;
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($skukey == ''){
-			return $skus;
-		}else if(isset($skus[$skukey])){
-			return $skus[$skukey];
+			return $array;
+		}else if(isset($array[$skukey])){
+			return $array[$skukey];
 		}else{
 			return false;
 		}
 	}
 	
 	function getItemZaiko($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$num = $values['zaiko'];
-				$skus[$key] = $this->zaiko_status[$num];
-			}
+		$array =array();
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$num = $sku['stock'];
+			$array[$key] = $this->zaiko_status[$num];
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($skukey == ''){
-			return $skus;
-		}else if(isset($skus[$skukey])){
-			return $skus[$skukey];
+			return $array;
+		}else if(isset($array[$skukey])){
+			return $array[$skukey];
 		}else{
 			return false;
 		}
 	}
 	
 	function getItemZaikoStatusId($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$num = $values['zaiko'];
-				$skus[$key] = $num;
-			}
+		$array =array();
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$num = $sku['stock'];
+			$array[$key] = $num;
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($skukey == ''){
-			return $skus;
-		}else if(isset($skus[$skukey])){
-			return $skus[$skukey];
+			return $array;
+		}else if(isset($array[$skukey])){
+			return $array[$skukey];
 		}else{
 			return false;
 		}
 	}
 	
-	function updateItemZaiko($post_id, $skukey, $status) {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			$turekey = '_isku_'.$skukey;
-			if( $key == $turekey ){
-				$values = maybe_unserialize($value[0]);
-				$values['zaiko'] = $status;
-				update_post_meta($post_id, $turekey, $values);
-				return;
-			}
+	function updateItemZaiko($post_id, $skucode, $value) {
+		$res = usces_update_sku( $post_id, $skucode, 'stock', $value );
+		if( !$res ){
+			return false;
+		}else{
+			return true;
 		}
 	}
 	
 	function getItemZaikoNum($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$skus[$key] = $values['zaikonum'];
-			}
+		$array =array();
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$array[$key] = $sku['stocknum'];
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($skukey == ''){
-			return $skus;
-		}else if(isset($skus[$skukey])){
-			return $skus[$skukey];
+			return $array;
+		}else if(isset($array[$skukey])){
+			return $array[$skukey];
 		}else{
 			return false;
 		}
 	}
 	
 	function updateItemZaikoNum($post_id, $skukey, $num) {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			$turekey = '_isku_'.$skukey;
-			if( $key == $turekey ){
-				$values = maybe_unserialize($value[0]);
-				$values['zaikonum'] = $num;
-				update_post_meta($post_id, $turekey, $values);
-				return;
-			}
+		$res = usces_update_sku( $post_id, $skucode, 'stocknum', $value );
+		if( !$res ){
+			return false;
+		}else{
+			return true;
 		}
 	}
 	
@@ -4776,19 +4760,16 @@ class usc_e_shop
 	}
 	
 	function getItemSkuDisp($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$skus[$key] = $values['disp'];
-			}
+		$array =array();
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$array[$key] = $sku['name'];
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($skukey == ''){
-			return $skus;
-		}else if(isset($skus[$skukey])){
-			return $skus[$skukey];
+			return $array;
+		}else if(isset($array[$skukey])){
+			return $array[$skukey];
 		}else{
 			return false;
 		}
@@ -4819,19 +4800,16 @@ class usc_e_shop
 //	}
 	
 	function getItemSkuUnit($post_id, $skukey = '') {
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$skus[$key] = $values['unit'];
-			}
+		$array =array();
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$array[$key] = $sku['unit'];
 		}
-		if(!$skus) return false;
+		if(!$array) return false;
 		if($skukey == ''){
-			return $skus;
-		}else if(isset($skus[$skukey])){
-			return $skus[$skukey];
+			return $array;
+		}else if(isset($array[$skukey])){
+			return $array[$skukey];
 		}else{
 			return false;
 		}
@@ -4842,14 +4820,10 @@ class usc_e_shop
 		$usces_item['itemCode'] = $this->getItemCode($post_id);
 		$usces_item['itemName'] = $this->getItemName($post_id);
 		
-		$fields = get_post_custom($post_id);
-		foreach((array)$fields as $key => $value){
-			if( preg_match('/^_isku_/', $key, $match) ){
-				$key = substr($key, 6);
-				$values = maybe_unserialize($value[0]);
-				$usces_item['skuCodes'][] = $key;
-				$usces_item['skuValues'][] = $values;
-			}
+		$skus = $this->get_skus($post_id, 'code');
+		foreach((array)$skus as $key => $sku){
+			$usces_item['skuCodes'][] = $key;
+			$usces_item['skuValues'][] = $sku;
 		}
 		
 		$usces_item = apply_filters('usces_filter_get_item', $usces_item, $post_id);
@@ -4857,25 +4831,26 @@ class usc_e_shop
 		return $usces_item;
 	}
 
-	function get_itemOptionKey( $post_id ) {
-		$custom_field_keys = get_post_custom_keys( $post_id );
-		if(empty($custom_field_keys)) return;
+	function get_itemOptionKey( $post_id, $enc = false ) {
+		$opts = usces_get_opts( $post_id );
+		if(empty($opts)) return;
 		
-		foreach ( (array)$custom_field_keys as $key => $value ) {
-			if ( '_iopt_' == substr($value,0 , 6) )
-				$res[] = substr($value, 6);
+		$res = array();
+		foreach ( (array)$opts as $opt ) {
+			if( $enc )
+				$res[] = urlencode($opt['name']);
+			else
+				$res[] = $opt['name'];
 		}
-		if($res)
-			natcasesort($res);
 		return $res;
 	}
 	
 	function get_itemOptions( $key, $post_id ) {
-		$metakey = '_iopt_' . $key;
-		$values = get_post_custom_values( $metakey, $post_id );
-		if(empty($values)) return;
-
-		return unserialize($values[0]);
+		$opts = usces_get_opts( $post_id, 'name' );
+		if(empty($opts[$key]))
+			return;
+		else
+			return $opts[$key];
 	}
 	
 	function get_postIDbyCode( $itemcode ) {
@@ -5793,23 +5768,28 @@ class usc_e_shop
 
 	function get_items_skus() {
 		global $wpdb;
-		
-		$query = $wpdb->prepare("SELECT ID, meta_key, meta_value FROM {$wpdb->posts} 
-									INNER JOIN {$wpdb->postmeta} ON ID = post_id AND SUBSTRING(meta_key, 1, 6) = %s 
-									WHERE post_mime_type = %s AND post_status = %s 
-									ORDER BY ID, meta_key", 
-									'_isku_', 'item', 'publish');
-		$res = $wpdb->get_results($query, ARRAY_A);
-		
 		$sku = array();
 		$status = array();
-		foreach((array)$res as $key => $value){
-			$sku['data'][$key]['ID'] = $value['ID'];
-			$sku['data'][$key]['code'] = $this->getItemCode($value['ID']);
-			$sku['data'][$key]['name'] = $this->getItemName($value['ID']);
-			$sku['data'][$key]['sku'] = substr($value['meta_key'], 6);
-			$sku['data'][$key]['num'] = $this->getItemZaikoNum($value['ID'], $sku['data'][$key]['sku']);
-			$status[] = $this->getItemZaiko($value['ID'], $sku['data'][$key]['sku']);
+		
+		$query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} 
+								WHERE post_mime_type = %s AND post_status = %s", 'item', 'publish');
+		$IDs = $wpdb->get_col($query);
+		if( !$IDs )
+			return $sku;
+		$key = 0;
+		foreach((array)$IDs as $post_id){
+			$item_code = $this->getItemCode($post_id);
+			$item_nema = $this->getItemName($post_id);
+			$skus = $this->get_skus($post_id);
+			foreach( (array)$skus as $sku ){
+				$sku['data'][$key]['ID'] = $post_id;
+				$sku['data'][$key]['code'] = $item_code;
+				$sku['data'][$key]['name'] = $item_nema;
+				$sku['data'][$key]['sku'] = $sku['code'];
+				$sku['data'][$key]['num'] = $sku['stocknum'];
+				$status[] = $sku['stocknum'];
+				$key++;
+			}
 		}
 		$sku['count'] = array_count_values($status);
 		return $sku;
@@ -5895,8 +5875,8 @@ class usc_e_shop
 	}
 	
 	function is_gptekiyo( $post_id, $sku, $quant ) {
-		$skus = $this->get_skus( $post_id, 'ARRAY_A' );
-		if( !$skus[$sku]['gptekiyo'] ) return false;
+		$skus = $this->get_skus( $post_id, 'code' );
+		if( !$skus[$sku]['gp'] ) return false;
 
 		$GpN1 = $this->getItemGpNum1($post_id);
 		$GpN2 = $this->getItemGpNum2($post_id);
@@ -6382,11 +6362,11 @@ class usc_e_shop
 			return '<div class="button_status">' . __('Sold Out', 'usces') . '</div>';
 		}
 		
-		$datas = $this->get_skus( $post_id, 'ARRAY_A' );
+		$datas = $this->get_skus( $post_id, 'code' );
 	
-		$zaikonum = $datas[$sku]['zaikonum'];
-		$zaiko = $datas[$sku]['zaiko'];
-		$gptekiyo = $datas[$sku]['gptekiyo'];
+		$zaikonum = $datas[$sku]['stocknum'];
+		$zaiko = $datas[$sku]['stock'];
+		$gptekiyo = $datas[$sku]['gp'];
 		$skuPrice = $datas[$sku]['price'];
 		
 		$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\">\n";

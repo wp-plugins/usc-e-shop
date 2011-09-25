@@ -968,7 +968,7 @@ function usces_download_product_list() {
 		for($i = 0; $i < count($cart); $i++) {
 			$cart_row = $cart[$i];
 			$post_id = $cart_row['post_id'];
-			$sku = $cart_row['sku'];
+			$sku = urldecode($cart_row['sku']);
 
 			$line .= $tr_h;
 			$line .= $td_h1.$order_id.$td_f;

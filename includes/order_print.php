@@ -119,7 +119,7 @@ function usces_pdf_out(&$pdf, $data){
 
 		//---------------------------------------------------------
 		$post_id = $cart_row['post_id'];
-		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+		$cartItemName = $usces->getCartItemName($post_id, urldecode($cart_row['sku']));
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
 			$optstr = '';
@@ -128,6 +128,7 @@ function usces_pdf_out(&$pdf, $data){
 				//if( !empty($key) )
 				//	$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= esc_html($key) . ' = ';
@@ -168,7 +169,7 @@ function usces_pdf_out(&$pdf, $data){
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
 			$pdf->SetXY($x+99.6, $line_y[$index]);
-			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($usces->getItemSkuUnit($post_id, $cart_row['sku'])), $border, 'C');
+			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($usces->getItemSkuUnit($post_id, urldecode($cart_row['sku']))), $border, 'C');
 			$pdf->SetXY($x+111.5, $line_y[$index]);
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);
 			$pdf->SetFont(GOTHIC, '', $fontsize);

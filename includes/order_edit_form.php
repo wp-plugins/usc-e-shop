@@ -877,14 +877,15 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
 		$sku = $cart_row['sku'];
+		$sku_code = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$advance = $this->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
-		$cartItemName = $this->getCartItemName($post_id, $sku);
+		$cartItemName = $this->getCartItemName($post_id, $sku_code);
 		$skuPrice = $cart_row['price'];
-		$stock = $this->getItemZaiko($post_id, $sku);
+		$stock = $this->getItemZaiko($post_id, $sku_code);
 		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictid = $this->get_mainpictid($itemCode);
 		$optstr =  '';
@@ -894,6 +895,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 				//if( !empty($key) )
 				//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= esc_html($key) . ' : '; 

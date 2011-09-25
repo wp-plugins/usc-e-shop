@@ -127,14 +127,12 @@
 		updateitemopt : function(meta_id) {
 			var id = $("#post_ID").val();
 			nm = document.getElementById('itemopt\['+meta_id+'\]\[name\]');
-			cd = document.getElementById('itemopt\['+meta_id+'\]\[code\]');
 			vs = document.getElementById('itemopt\['+meta_id+'\]\[value\]');
 			ms = document.getElementById('itemopt\['+meta_id+'\]\[means\]');
 			es = document.getElementById('itemopt\['+meta_id+'\]\[essential\]');
 			so = document.getElementById('itemopt\['+meta_id+'\]\[sort\]');
 			var name = $(nm).val();
-			var code = $(cd).val();
-			var value = usces.trim($(vs).val());
+			var value = uscesItem.trim($(vs).val());
 			var means = $(ms).val();
 			var sortnum = $(so).val();
 			if($(es).attr("checked")){
@@ -157,7 +155,7 @@
 			$("#itemopt_loading-" + meta_id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = itemOpt.settings;
-			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optname=" + encodeURIComponent(name) + "&optcode=" + code + "&optvalue=" + encodeURIComponent(value) + "&optmeans=" + means + "&optessential=" + essential + "&sort=" + sortnum + "&optmetaid=" + meta_id;
+			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optname=" + encodeURIComponent(name) + "&optvalue=" + encodeURIComponent(value) + "&optmeans=" + means + "&optessential=" + essential + "&sort=" + sortnum + "&optmetaid=" + meta_id;
 			s.success = function(data, dataType){
 				$("#itemopt_ajax-response").html("");
 				$("#itemopt_loading-" + meta_id).html('');
@@ -1062,9 +1060,9 @@
 	
 	uscesItem = {
 		
-		newdraft : function(itemCode) {
+		newdraft : function(itemName) {
 			if(jQuery("#title").val().length == 0 || jQuery("#title").val() == '') {
-				$("#title").val(itemCode);
+				$("#title").val(itemName);
 			}
 			//autosave();
 			
@@ -1072,7 +1070,13 @@
 
 		cahngepict : function(code) {
 			$("div#item-select-pict").html(code);
+		},
+		
+		trim : function(target){
+			target = target.replace(/(^\s+)|(\s+$)|(^\n+)|(\n+$)/g, "");
+			return target;
 		}
+
 		
 	};
 	

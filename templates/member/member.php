@@ -101,7 +101,7 @@ foreach ( $usces_member_history as $umhs ) {
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
-		$sku = $cart_row['sku'];
+		$sku = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
@@ -115,6 +115,7 @@ foreach ( $usces_member_history as $umhs ) {
 			$optstr = '';
 			foreach($options as $key => $value){
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= esc_html($key) . ' : '; 

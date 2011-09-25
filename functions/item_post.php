@@ -1906,15 +1906,15 @@ function get_order_item( $item_code ) {
 	$r .= "</tr>\n";
 	$r .= "</thead>\n";
 	$r .= "<tbody>\n";
-	for ($i=0; $i<count($skus['key']); $i++) :
-		$sku = esc_attr($skus['key'][$i]);
+	for ($i=0; $i<count($skus['code']); $i++) :
+		$sku = esc_attr($skus['code'][$i]);
 		$cprice = esc_attr($skus['cprice'][$i]);
 		$price = esc_attr($skus['price'][$i]);
-		$zaiko = esc_attr($usces->zaiko_status[$skus['zaiko'][$i]]);
-		$zaikonum = esc_attr($skus['zaikonum'][$i]);
-		$disp = esc_attr($skus['disp'][$i]);
+		$zaiko = esc_attr($usces->zaiko_status[$skus['stock'][$i]]);
+		$zaikonum = esc_attr($skus['stocknum'][$i]);
+		$disp = esc_attr($skus['name'][$i]);
 		$unit = esc_attr($skus['unit'][$i]);
-		$gptekiyo = $skus['gptekiyo'][$i];
+		$gptekiyo = $skus['gp'][$i];
 		$r .= "<tr>\n";
 		$r .= "<td rowspan='2'>" . $sku . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
@@ -2075,8 +2075,9 @@ function item_sku_ajax(){
 }
 
 function item_save_metadata( $post_id, $post ) {
-
 	global $usces, $wpdb;
+
+	$message = '';
 	
 	if ( 'post' != $post->post_type) {
 		return $post_id;
@@ -2096,23 +2097,33 @@ function item_save_metadata( $post_id, $post ) {
 
 	// パーミッションチェック
 	if ( 'post' == $_POST['post_type'] ) {
-		if ( !current_user_can( 'edit_post', $post_id ) )
+		if ( !current_user_can( 'edit_post', $post_id ) ){
+			$usces->set_action_status('error', 'ERROR : '.__('Sorry, you do not have the right to edit this post.'));
 			return $post_id;
+		}
 	} else {
 			return $post_id;
 	}
 
 
+	
 	$itemCode  = trim($_POST['itemCode' ]);
 	if( preg_match('/[^0-9a-zA-Z\-_]/', $itemCode) ){
 //		$itemCode  = '';
 //		$usces->action_message = '商品コードは半角英数（-_を含む）で入力して下さい。' . "<br />";
-	}elseif( empty($itemCode) ){
-		$itemCode  = '';
-		$usces->action_message = '商品コードが入力されていません。' . "<br />";
-	}else{
-		update_post_meta($post_id, '_itemCode', $itemCode);
 	}
+	if( empty($itemCode) ){
+		$itemCode  = '';
+		$message .= __('商品コードが入力されていません。', 'usces') . "<br />";
+	}elseif( $res = usces_is_same_itemcode($post->ID, $itemCode)) {
+		$message .= 'post_ID ';
+		foreach( $res as $postid )
+			$message .= $postid . ', ';
+		$message .= 'に同じ商品コードが登録されています。' . "<br />";
+		$usces->set_action_status('error', 'ERROR : '.$message);
+	}
+	update_post_meta($post_id, '_itemCode', $itemCode);
+	
 
 	if(isset($_POST['itemName'])){
 		$itemName = trim($_POST['itemName']);
@@ -2222,83 +2233,85 @@ function item_save_metadata( $post_id, $post ) {
 			if( '' == $skucode )
 				$irreg_code = true;
 					
-			if( '' == $skuprice || preg_match('/[^0-9.]/', $skuprice) )
+			if( '' == $skuprice || preg_match('/[^0-9.]/', $skuprice) || 1 < substr_count($skuprice, '.' ) )
 				$irreg_price = true;
 				
 			$codes[] = $skucode;
 		}
 		
 		if( $uniq_code ){
-			$usces->action_message .= 'SKUコードが重複しています。' . "<br />";
+			$message .= 'SKUコードが重複しています。' . "<br />";
 		}
 		if( $irreg_code ){
-			$usces->action_message .= 'SKUコードの値が不正です。' . "<br />";
+			$message .= 'SKUコードの値が不正です。' . "<br />";
 		}
 		if( $irreg_price ){
-			$usces->action_message .= '売価の値が不正なSKUが存在します。' . "<br />";
+			$message .= '売価の値が不正なSKUが存在します。' . "<br />";
 		}
 	}
 	//OPT
-	if( 'vvv' == isset($_POST['itemsku']) ){
+	if( isset($_POST['itemopt']) ){
 		$meta_ids = array();
-		$codes = array();
-		$uniq_code = false;
-		$irreg_code = false;
-		$irreg_price = false;
+		$names = array();
+		$uniq_name = false;
+		$irreg_name = false;
+		$irreg_value = false;
 		
-		foreach($_POST['itemsku'] as $mid => $temp){
+		foreach($_POST['itemopt'] as $mid => $temp){
 			$meta_ids[] = $mid;
 		}
 		$meta_ids = array_unique($meta_ids);
 		foreach( $meta_ids as $meta_id ){
 		
-			$skucode = isset($_POST['itemsku'][$meta_id]['key']) ? trim( $_POST['itemsku'][$meta_id]['key'] ) : '';
-			$skucprice = isset($_POST['itemsku'][$meta_id]['cprice']) ? trim( $_POST['itemsku'][$meta_id]['cprice'] ): 0;
-			$skuprice = isset($_POST['itemsku'][$meta_id]['price']) ? trim( $_POST['itemsku'][$meta_id]['price'] ): 0;
-			$skustocknum = isset($_POST['itemsku'][$meta_id]['zaikonum']) ? trim( $_POST['itemsku'][$meta_id]['zaikonum'] ): 0;
-			$skustock = isset($_POST['itemsku'][$meta_id]['zaiko']) ? (int)$_POST['itemsku'][$meta_id]['zaiko'] : '';
-			$skuname = isset($_POST['itemsku'][$meta_id]['skudisp']) ? trim( $_POST['itemsku'][$meta_id]['skudisp'] ): '';
-			$skuunit = isset($_POST['itemsku'][$meta_id]['skuunit']) ? trim( $_POST['itemsku'][$meta_id]['skuunit'] ): '';
-			$skugp = isset($_POST['itemsku'][$meta_id]['skugptekiyo']) ? (int)$_POST['itemsku'][$meta_id]['skugptekiyo'] : 0;
-			$skusort = isset($_POST['itemsku'][$meta_id]['sort']) ? $_POST['itemsku'][$meta_id]['sort']: 0;
+			$optname = isset($_POST['itemopt'][$meta_id]['name']) ? trim( $_POST['itemopt'][$meta_id]['name'] ) : '';
+			$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? trim( $_POST['itemopt'][$meta_id]['value'] ): '';
+			$optmeans = isset($_POST['itemopt'][$meta_id]['means']) ? (int)$_POST['itemopt'][$meta_id]['means']: 0;
+			$optessential = isset($_POST['itemopt'][$meta_id]['essential']) ? (int)$_POST['itemopt'][$meta_id]['essential']: 0;
+			$optsort = isset($_POST['itemopt'][$meta_id]['sort']) ? $_POST['itemopt'][$meta_id]['sort']: 0;
 		
-			$value['code'] = $skucode;
-			$value['name'] = $skuname;
-			$value['cprice'] = $skucprice;
-			$value['price'] = $skuprice;
-			$value['unit'] = $skuunit;
-			$value['stocknum'] = $skustocknum;
-			$value['stock'] = $skustock;
-			$value['gp'] = $skugp;
-			$value['sort'] = $skusort;
+			$value['name'] = $optname;
+			$value['value'] = $optvalue;
+			$value['means'] = $optmeans;
+			$value['essential'] = $optessential;
+			$value['sort'] = $optsort;
 			
 			$valueserialized = serialize($value);
 			$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $meta_id) );
 			
-			if( in_array( $skucode, $codes ) )
-				$uniq_code = true;
+			if( in_array( $optname, $names ) )
+				$uniq_name = true;
 				
-			if( '' == $skucode || preg_match('/[^0-9a-zA-Z\-_]/', $skucode) )
-				$irreg_code = true;
+			if( '' == $optname )
+				$irreg_name = true;
 					
-			if( '' == $skuprice || preg_match('/[^0-9.]/', $skuprice) )
-				$irreg_price = true;
+			if( '' == $optvalue && 1 >= $optmeans )
+				$irreg_value = true;
 				
-			$codes[] = $skucode;
+			$names[] = $optname;
 		}
 		
-		if( $uniq_code ){
-			$usces->action_message .= 'SKUコードが重複しています。' . "<br />";
+		if( $uniq_name ){
+			$message .= 'オプション名が重複している商品オプションが存在します。' . "<br />";
 		}
-		if( $irreg_code ){
-			$usces->action_message .= 'SKUコードの値が不正なSKUが存在します。' . "<br />";
+		if( $irreg_name ){
+			$message .= 'オプション名が未入力の商品オプションが存在します。' . "<br />";
 		}
-		if( $irreg_price ){
-			$usces->action_message .= '売価の値が不正なSKUが存在します。' . "<br />";
+		if( $irreg_value ){
+			$message .= '商品オプションで「シングルセレクト」、「マルチセレクト」を選択した場合は、セレクト値を入力してください。' . "<br />";
 		}
 	}
 	
 	do_action('usces_action_save_product', $post_id, $post);
+	
+//	$usces->action_status = 'none';
+//	$usces->action_message = '';
+	if( $message ){
+		$usces->set_action_status('error', 'ERROR : '.$message);
+	}else{
+		$usces->set_action_status('success', '商品の登録が完了しました。 ');
+	}
+
+
 //	if(isset($_POST['newskuname'])){
 //		$value = array();
 //	

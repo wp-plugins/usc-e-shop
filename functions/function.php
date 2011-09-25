@@ -92,7 +92,7 @@ function usces_order_confirm_message($order_id) {
 	$meisai = "";
 	foreach ( (array)$cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
-		$sku = $cart_row['sku'];
+		$sku = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$itemCode = $usces->getItemCode($post_id);
@@ -116,6 +116,7 @@ function usces_order_confirm_message($order_id) {
 				//if( !empty($key) )
 				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= $key . ' : ';
@@ -301,7 +302,7 @@ function usces_send_ordermail($order_id) {
 	$meisai = "";
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
-		$sku = $cart_row['sku'];
+		$sku = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$itemCode = $usces->getItemCode($post_id);
@@ -325,6 +326,7 @@ function usces_send_ordermail($order_id) {
 				//if( !empty($key) )
 				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= $key. ' : ';
@@ -1042,11 +1044,12 @@ function usces_reg_orderdata( $results = array() ) {
 		}
 
 		foreach($cart as $cartrow){
-			$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
+			$sku = urldecode($cartrow['sku']);
+			$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $sku );
 			if($zaikonum == '') continue;
 			$zaikonum = $zaikonum - $cartrow['quantity'];
-			$usces->updateItemZaikoNum( $cartrow['post_id'], $cartrow['sku'], $zaikonum );
-			if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
+			$usces->updateItemZaikoNum( $cartrow['post_id'], $sku, $zaikonum );
+			if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $sku, 2 );
 		}
 		
 		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
@@ -1657,227 +1660,217 @@ function usces_export_xml() {
 <?php
 }
 
-function usces_import_xml() {
-	global $usces, $wpdb;
-	
-	if($_FILES['data']['error'] != 0) return false;
-	if (!is_uploaded_file($_FILES['data']['tmp_name'])) return false;
-	if(!ereg("^usces.+\.xml$",$_FILES['data']['name'])) return false;
-	
-	$fp = fopen ($_FILES['data']['tmp_name'], "r");
-	$xml = '';
-	while (!feof($fp)) {
-		$xml .= fgets($fp, 1024);
-	}
-	fclose ($fp);
-	
-	$parts = explode('<usces>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces>', $parts[1]);
-		$opt_usces = $parts[0];
-		$usces->options = unserialize($opt_usces);
-		update_option('usces', $usces->options);	
-	}
-	///////////////////////////////////////////////////////////////
-
-	$parts = explode('<usces_management_status>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces_management_status>', $parts[1]);
-		$opt = $parts[0];
-		$option = unserialize($opt);
-		update_option('usces_management_status', $option);	
-	}
-
-	$parts = explode('<usces_customer_status>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces_customer_status>', $parts[1]);
-		$opt = $parts[0];
-		$option = unserialize($opt);
-		update_option('usces_customer_status', $option);	
-	}
-//20110331ysk start
-/*	$parts = explode('<usces_pref>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces_pref>', $parts[1]);
-		$opt = $parts[0];
-		$option = unserialize($opt);
-		update_option('usces_pref', $option);	
-	}*/
-//20110331ysk start
-	///////////////////////////////////////////////////////////////
-	
-	$parts = explode('<usces_zaiko_status>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces_zaiko_status>', $parts[1]);
-		$opt = $parts[0];
-		$usces->zaiko_status = unserialize($opt);
-		update_option('usces_zaiko_status', $usces->zaiko_status);	
-	}
-
-	$parts = explode('<usces_payment_structure>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces_payment_structure>', $parts[1]);
-		$opt = $parts[0];
-		$usces->payment_structure = unserialize($opt);
-		update_option('usces_payment_structure', $usces->payment_structure);	
-	}
-
-	$parts = explode('<usces_display_mode>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces_display_mode>', $parts[1]);
-		$opt = $parts[0];
-		$usces->display_mode = unserialize($opt);
-		update_option('usces_display_mode', $usces->display_mode);	
-	}
-
-	$parts = explode('<usces_shipping_rule>', $xml);
-	if(count($parts) > 1){
-		$parts = explode('</usces_shipping_rule>', $parts[1]);
-		$opt = $parts[0];
-		$usces->shipping_rule = unserialize($opt);
-		update_option('usces_shipping_rule', $usces->shipping_rule);	
-	}
-
-	//category item post
-	$slug = urlencode(__('Items','usces'));
-	$query = $wpdb->prepare("SELECT tr.object_id FROM $wpdb->terms AS t 
-								INNER JOIN $wpdb->term_relationships AS tr ON tr.term_taxonomy_id = t.term_id 
-								WHERE t.slug = %s", $slug);
-	$term_id = $wpdb->get_col( $query );
-	$id_str = implode(',', $term_id);
-
-	$query = "UPDATE $wpdb->posts SET post_mime_type = 'item' WHERE ID IN ({$id_str}) AND post_type = 'post'";
-	$wpdb->query( $query );
-
-	$query = "SELECT ID FROM $wpdb->posts WHERE post_mime_type = 'item'";
-	$item_id = $wpdb->get_col( $query );
-
-	foreach ( $item_id as $id ) {
-	
-		$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
-									WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", $id);
-		$metas = $wpdb->get_results( $query, ARRAY_A );
-
-		if(!empty($metas)) {
-			foreach ( $metas as $meta ) {
-				$new_valu = unserialize($meta['meta_value']);
-				$meta_id = $meta['meta_id'];
-				$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d AND SUBSTRING(meta_value,1,2) = 's:'", 
-										$new_valu, $meta_id);
-				$wpdb->query( $query );
-			
-			}
-		}
-	}
-
-	$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
-								WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", USCES_CART_NUMBER);
-	$metas = $wpdb->get_results( $query, ARRAY_A );
-
-	if(!empty($metas)) {
-		foreach ( $metas as $meta ) {
-			$new_valu = unserialize($meta['meta_value']);
-			$meta_id = $meta['meta_id'];
-			$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d AND SUBSTRING(meta_value,1,2) = 's:'", 
-									$new_valu, $meta_id);
-			$wpdb->query( $query );
-		
-		}
-	}
-		
-	$query = "SELECT name, term_id FROM $wpdb->terms WHERE slug = 'item'";
-	$item_parent = $wpdb->get_row( $query, ARRAY_A );
-	if(empty($item_parent) && $item_parent !== 0) return false;
-
-	$query = $wpdb->prepare("SELECT term_id FROM $wpdb->terms WHERE name = %s AND term_id <> %d", $item_parent['name'], $item_parent['term_id']);
-	$mis_id = $wpdb->get_var( $query );
-	if($mis_id > 0){
-		$query = $wpdb->prepare("SELECT object_id FROM $wpdb->term_relationships AS tr 
-						INNER JOIN $wpdb->posts AS p ON p.ID = tr.object_id
-						WHERE tr.term_taxonomy_id = %d AND p.post_mime_type = 'item'", $mis_id);
-		$post_ids = $wpdb->get_col( $query );
-		if(count($post_ids) > 0){
-			foreach ( $post_ids as $id ) {
-				$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
-							WHERE object_id = %d AND term_taxonomy_id = %d", $id, $item_parent['term_id']);
-				$ct = $wpdb->get_var( $query );
-				if($ct > 0) continue;
-				
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
-							(object_id, term_taxonomy_id, term_order) VALUES (%d, %d, %d)", $id, $item_parent['term_id'], 0);
-				$wpdb->query( $query );
-			}
-			$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d WHERE term_id = %d", 
-										count($post_ids), $item_parent['term_id']);
-			$wpdb->query( $query );
-		}
-	}
-	
-	$query = $wpdb->prepare("SELECT term_id FROM $wpdb->term_taxonomy WHERE parent = %d", $item_parent['term_id']);
-	$item_childlen = $wpdb->get_col( $query );
-	if(empty($item_childlen)) return false;
-
-	foreach ( $item_childlen as $child_id ) {
-		$query = $wpdb->prepare("SELECT name FROM $wpdb->terms WHERE term_id = %d", $child_id);
-		$child_name = $wpdb->get_var( $query );
-	
-		$query = $wpdb->prepare("SELECT term_id FROM $wpdb->terms WHERE name = %s AND term_id <> %d", $child_name, $child_id);
-		$mis_id = $wpdb->get_var( $query );
-		if($mis_id > 0){
-			$query = $wpdb->prepare("SELECT object_id FROM $wpdb->term_relationships AS tr 
-							INNER JOIN $wpdb->posts AS p ON p.ID = tr.object_id
-							WHERE tr.term_taxonomy_id = %d AND p.post_mime_type = 'item'", $mis_id);
-			$post_ids = $wpdb->get_col( $query );
-			if(count($post_ids) > 0){
-				foreach ( $post_ids as $id ) {
-					$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
-								WHERE object_id = %d AND term_taxonomy_id = %d", $id, $child_id);
-					$ct = $wpdb->get_var( $query );
-					if($ct > 0) continue;
-					
-					$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
-								(object_id, term_taxonomy_id, term_order) VALUES (%d, %d, %d)", $id, $child_id, 0);
-					$wpdb->query( $query );
-				}
-				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d WHERE term_id = %d", 
-											count($post_ids), $child_id);
-				$wpdb->query( $query );
-			}
-			
-		} else {
-			$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = 0 WHERE term_id = %d", $child_id);
-			$wpdb->query( $query );
-		}
-	
-	}
-	
-
-	$usces->action_message = count($post_ids);
-	return false;
-	
-}
+//function usces_import_xml() {
+//	global $usces, $wpdb;
+//	
+//	if($_FILES['data']['error'] != 0) return false;
+//	if (!is_uploaded_file($_FILES['data']['tmp_name'])) return false;
+//	if(!ereg("^usces.+\.xml$",$_FILES['data']['name'])) return false;
+//	
+//	$fp = fopen ($_FILES['data']['tmp_name'], "r");
+//	$xml = '';
+//	while (!feof($fp)) {
+//		$xml .= fgets($fp, 1024);
+//	}
+//	fclose ($fp);
+//	
+//	$parts = explode('<usces>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces>', $parts[1]);
+//		$opt_usces = $parts[0];
+//		$usces->options = unserialize($opt_usces);
+//		update_option('usces', $usces->options);	
+//	}
+//	///////////////////////////////////////////////////////////////
+//
+//	$parts = explode('<usces_management_status>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces_management_status>', $parts[1]);
+//		$opt = $parts[0];
+//		$option = unserialize($opt);
+//		update_option('usces_management_status', $option);	
+//	}
+//
+//	$parts = explode('<usces_customer_status>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces_customer_status>', $parts[1]);
+//		$opt = $parts[0];
+//		$option = unserialize($opt);
+//		update_option('usces_customer_status', $option);	
+//	}
+////20110331ysk start
+///*	$parts = explode('<usces_pref>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces_pref>', $parts[1]);
+//		$opt = $parts[0];
+//		$option = unserialize($opt);
+//		update_option('usces_pref', $option);	
+//	}*/
+////20110331ysk start
+//	///////////////////////////////////////////////////////////////
+//	
+//	$parts = explode('<usces_zaiko_status>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces_zaiko_status>', $parts[1]);
+//		$opt = $parts[0];
+//		$usces->zaiko_status = unserialize($opt);
+//		update_option('usces_zaiko_status', $usces->zaiko_status);	
+//	}
+//
+//	$parts = explode('<usces_payment_structure>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces_payment_structure>', $parts[1]);
+//		$opt = $parts[0];
+//		$usces->payment_structure = unserialize($opt);
+//		update_option('usces_payment_structure', $usces->payment_structure);	
+//	}
+//
+//	$parts = explode('<usces_display_mode>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces_display_mode>', $parts[1]);
+//		$opt = $parts[0];
+//		$usces->display_mode = unserialize($opt);
+//		update_option('usces_display_mode', $usces->display_mode);	
+//	}
+//
+//	$parts = explode('<usces_shipping_rule>', $xml);
+//	if(count($parts) > 1){
+//		$parts = explode('</usces_shipping_rule>', $parts[1]);
+//		$opt = $parts[0];
+//		$usces->shipping_rule = unserialize($opt);
+//		update_option('usces_shipping_rule', $usces->shipping_rule);	
+//	}
+//
+//	//category item post
+//	$slug = urlencode(__('Items','usces'));
+//	$query = $wpdb->prepare("SELECT tr.object_id FROM $wpdb->terms AS t 
+//								INNER JOIN $wpdb->term_relationships AS tr ON tr.term_taxonomy_id = t.term_id 
+//								WHERE t.slug = %s", $slug);
+//	$term_id = $wpdb->get_col( $query );
+//	$id_str = implode(',', $term_id);
+//
+//	$query = "UPDATE $wpdb->posts SET post_mime_type = 'item' WHERE ID IN ({$id_str}) AND post_type = 'post'";
+//	$wpdb->query( $query );
+//
+//	$query = "SELECT ID FROM $wpdb->posts WHERE post_mime_type = 'item'";
+//	$item_id = $wpdb->get_col( $query );
+//
+//	foreach ( $item_id as $id ) {
+//	
+//		$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
+//									WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", $id);
+//		$metas = $wpdb->get_results( $query, ARRAY_A );
+//
+//		if(!empty($metas)) {
+//			foreach ( $metas as $meta ) {
+//				$new_valu = unserialize($meta['meta_value']);
+//				$meta_id = $meta['meta_id'];
+//				$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d AND SUBSTRING(meta_value,1,2) = 's:'", 
+//										$new_valu, $meta_id);
+//				$wpdb->query( $query );
+//			
+//			}
+//		}
+//	}
+//
+//	$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
+//								WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", USCES_CART_NUMBER);
+//	$metas = $wpdb->get_results( $query, ARRAY_A );
+//
+//	if(!empty($metas)) {
+//		foreach ( $metas as $meta ) {
+//			$new_valu = unserialize($meta['meta_value']);
+//			$meta_id = $meta['meta_id'];
+//			$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d AND SUBSTRING(meta_value,1,2) = 's:'", 
+//									$new_valu, $meta_id);
+//			$wpdb->query( $query );
+//		
+//		}
+//	}
+//		
+//	$query = "SELECT name, term_id FROM $wpdb->terms WHERE slug = 'item'";
+//	$item_parent = $wpdb->get_row( $query, ARRAY_A );
+//	if(empty($item_parent) && $item_parent !== 0) return false;
+//
+//	$query = $wpdb->prepare("SELECT term_id FROM $wpdb->terms WHERE name = %s AND term_id <> %d", $item_parent['name'], $item_parent['term_id']);
+//	$mis_id = $wpdb->get_var( $query );
+//	if($mis_id > 0){
+//		$query = $wpdb->prepare("SELECT object_id FROM $wpdb->term_relationships AS tr 
+//						INNER JOIN $wpdb->posts AS p ON p.ID = tr.object_id
+//						WHERE tr.term_taxonomy_id = %d AND p.post_mime_type = 'item'", $mis_id);
+//		$post_ids = $wpdb->get_col( $query );
+//		if(count($post_ids) > 0){
+//			foreach ( $post_ids as $id ) {
+//				$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
+//							WHERE object_id = %d AND term_taxonomy_id = %d", $id, $item_parent['term_id']);
+//				$ct = $wpdb->get_var( $query );
+//				if($ct > 0) continue;
+//				
+//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+//							(object_id, term_taxonomy_id, term_order) VALUES (%d, %d, %d)", $id, $item_parent['term_id'], 0);
+//				$wpdb->query( $query );
+//			}
+//			$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d WHERE term_id = %d", 
+//										count($post_ids), $item_parent['term_id']);
+//			$wpdb->query( $query );
+//		}
+//	}
+//	
+//	$query = $wpdb->prepare("SELECT term_id FROM $wpdb->term_taxonomy WHERE parent = %d", $item_parent['term_id']);
+//	$item_childlen = $wpdb->get_col( $query );
+//	if(empty($item_childlen)) return false;
+//
+//	foreach ( $item_childlen as $child_id ) {
+//		$query = $wpdb->prepare("SELECT name FROM $wpdb->terms WHERE term_id = %d", $child_id);
+//		$child_name = $wpdb->get_var( $query );
+//	
+//		$query = $wpdb->prepare("SELECT term_id FROM $wpdb->terms WHERE name = %s AND term_id <> %d", $child_name, $child_id);
+//		$mis_id = $wpdb->get_var( $query );
+//		if($mis_id > 0){
+//			$query = $wpdb->prepare("SELECT object_id FROM $wpdb->term_relationships AS tr 
+//							INNER JOIN $wpdb->posts AS p ON p.ID = tr.object_id
+//							WHERE tr.term_taxonomy_id = %d AND p.post_mime_type = 'item'", $mis_id);
+//			$post_ids = $wpdb->get_col( $query );
+//			if(count($post_ids) > 0){
+//				foreach ( $post_ids as $id ) {
+//					$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
+//								WHERE object_id = %d AND term_taxonomy_id = %d", $id, $child_id);
+//					$ct = $wpdb->get_var( $query );
+//					if($ct > 0) continue;
+//					
+//					$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+//								(object_id, term_taxonomy_id, term_order) VALUES (%d, %d, %d)", $id, $child_id, 0);
+//					$wpdb->query( $query );
+//				}
+//				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d WHERE term_id = %d", 
+//											count($post_ids), $child_id);
+//				$wpdb->query( $query );
+//			}
+//			
+//		} else {
+//			$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = 0 WHERE term_id = %d", $child_id);
+//			$wpdb->query( $query );
+//		}
+//	
+//	}
+//	
+//
+//	$usces->action_message = count($post_ids);
+//	return false;
+//	
+//}
 
 function usces_all_change_zaiko(&$obj) {
 	global $wpdb;
 
 	$ids = $_POST['listcheck'];
 	$status = true;
-	foreach ( (array)$ids as $post_id ):
-		$query = $wpdb->prepare("SELECT * FROM $wpdb->postmeta WHERE post_id = %d AND SUBSTRING(meta_key, 1, 6) = '_isku_'", $post_id);
-		$metas = $wpdb->get_results( $query, ARRAY_A );
-		if(!$metas) continue;
-		foreach ( (array)$metas as $meta ) {
-			$meta_id = $meta['meta_id'];
-			$sku = unserialize($meta['meta_value']);
-			$sku['zaiko'] = (int)$_POST['change']['word']['zaiko'];
-			$skustr = serialize($sku);
-			$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $skustr, $meta_id);
-			$res = $wpdb->query( $query );
-			if( $res === false ) {
-				$status = false;
-			}
+	foreach ( (array)$ids as $post_id ){
+		$res = usces_update_sku( $post_id, $skucode, 'stock', (int)$_POST['change']['word']['zaiko'] );
+		if( !$res ){
+			$status = false;
 		}
-	endforeach;
+	}
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
@@ -1900,45 +1893,6 @@ function usces_all_change_itemdisplay(&$obj){
 			$status = false;
 		}
 	endforeach;
-	if ( true === $status ) {
-		$obj->set_action_status('success', __('I completed collective operation.','usces'));
-	} elseif ( false === $status ) {
-		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
-	} else {
-		$obj->set_action_status('none', '');
-	}
-}
-
-function usces_all_delete_itemdata(&$obj){
-	global $wpdb;
-
-	$ids = $_POST['listcheck'];
-	$status = true;
-	foreach ( (array)$ids as $post_id ){
-		$query = $wpdb->prepare("DELETE FROM $wpdb->posts WHERE ID = %d", $post_id);
-		$res = $wpdb->query( $query );
-		if( $res !== false ) {
-			$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
-			$res = $wpdb->query( $query );
-			if( $res === false ) {
-				$status = false;
-			}
-			$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
-			$res = $wpdb->query( $query );
-			if( $res === false ) {
-				$status = false;
-			}
-			$query = "SELECT term_taxonomy_id, COUNT(*) AS ct FROM $wpdb->term_relationships 
-					GROUP BY term_taxonomy_id";
-			$relation_data = $wpdb->get_results( $query, ARRAY_A);
-			foreach((array)$relation_data as $rows){
-				
-				$term_ids['term_taxonomy_id'] = $rows['term_taxonomy_id'];
-				$updatas['count'] = $rows['ct'];
-				$wpdb->update( $wpdb->term_taxonomy, $updatas, $term_ids );
-			}
-		}
-	}
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
 	} elseif ( false === $status ) {
@@ -2290,149 +2244,6 @@ function usces_check_acting_return_duplicate( $results = array() ) {
 }
 //20110203ysk end
 
-function usces_item_dupricate($post_id){
-	global $wpdb;
-	if( empty($post_id) ) return;
-	
-	$query = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE ID = %d", $post_id);
-	$post_data = $wpdb->get_row( $query, ARRAY_A );
-	if(!$post_data) return;
-	foreach($post_data as $key => $value){
-		switch( $key ){
-			case 'ID':
-				break;
-			case 'post_date':
-			case 'post_modified':
-				$datas[$key] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-				break;
-			case 'post_date_gmt':
-			case 'post_modified_gmt':
-				$datas[$key] = gmdate('Y-m-d H:i:s');
-				break;
-			case 'post_status':
-				$datas[$key] = 'draft';
-				break;
-			case 'post_name':
-			case 'guid':
-				$datas[$key] = '';
-				break;
-			case 'post_parent':
-			case 'comment_count':
-				$datas[$key] = 0;
-				break;
-			default:
-				$datas[$key] = $value;
-		}
-	}
-	$wpdb->insert( $wpdb->posts, $datas );
-	$ids['ID'] = $wpdb->insert_id;
-	$updatas['post_name'] = $ids['ID'];
-	$updatas['guid'] = get_option('home') . '?p=' . $ids['ID'];
-	$wpdb->update( $wpdb->posts, $updatas, $ids );
-	
-	$newpost_id = $wpdb->insert_id;
-	
-	$query = $wpdb->prepare("SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
-	$meta_data = $wpdb->get_results( $query );
-	if(!$meta_data) return;
-	$valstr = '';
-	foreach($meta_data as $data){
-		
-		$prefix = substr($data->meta_key, 0, 5);
-		$prefix2 = substr($data->meta_key, 0, 11);
-		
-		if( $prefix == '_item' ){
-		
-			switch( $data->meta_key ){
-				case '_itemCode':
-					$value = $data->meta_value . '(copy)';
-					break;
-				default:
-					$value = $data->meta_value;
-			}
-			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
-		
-		}else if( $prefix == '_isku' ){
-		
-			$value = $data->meta_value;
-			$key = $data->meta_key . '(copy)';
-			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
-		
-		}else{
-		
-			$value = $data->meta_value;
-			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
-		
-		}
-
-//		if( $prefix == 'item' ){
-//		
-//			switch( $data->meta_key ){
-//				case '_itemCode':
-//					$value = $data->meta_value . '(copy)';
-//					break;
-//				default:
-//					$value = $data->meta_value;
-//			}
-//			$key = $data->meta_key;
-//			$valstr .= '(' . $newpost_id . ", '_usces_" . $key . "','" . $value . "'),";
-//		
-//		}else if( $prefix == '_isku' ){
-//		
-//			$value = $data->meta_value;
-//			$key = $data->meta_key . '(copy)';
-//			$valstr .= '(' . $newpost_id . ", '_usces_" . $key . "','" . $value . "'),";
-//		
-//		}else if( $prefix2 == '_usces_item' ){
-//		
-//			switch( $data->meta_key ){
-//				case '_usces_itemCode':
-//					$value = $data->meta_value . '(copy)';
-//					break;
-//				default:
-//					$value = $data->meta_value;
-//			}
-//			$key = $data->meta_key;
-//			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
-//		
-//		}else if( $prefix == '_usces_isku' ){
-//		
-//			$value = $data->meta_value;
-//			$key = $data->meta_key . '(copy)';
-//			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
-//		
-//		}
-	}
-	$valstr = rtrim($valstr, ',');
-	$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
-	$res = mysql_query($query);
-	if(!$res ) return;
-
-	$query = $wpdb->prepare("SELECT * FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
-	$relation_data = $wpdb->get_results( $query );
-	if(!$relation_data) return;
-
-	foreach($relation_data as $data){
-		$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
-						(object_id, term_taxonomy_id, term_order) VALUES 
-						(%d, %d, 0)", 
-						$newpost_id, $data->term_taxonomy_id
-				);
-		$res = mysql_query($query);
-		if( !$res ) return;
-		$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = count + 1 
-						WHERE term_taxonomy_id = %d", 
-						$data->term_taxonomy_id
-				);
-		$res = mysql_query($query);
-		if( !$res ) return;
-	}
-
-	return $newpost_id;
-}
-
 //20111111ysk start
 function usces_dates_interconv( $date_str ) {
 	$base_struc = split('[/.-]', 'd/m/Y' );
@@ -2721,7 +2532,7 @@ function usces_trackPageview_ordercompletion($push){
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
-		$sku = $cart_row['sku'];
+		$sku = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 //		$options = $cart_row['options'];
 //		$advance = $usces->cart->wc_serialize($cart_row['advance']);
@@ -2801,243 +2612,6 @@ function usces_trackPageview_deletemember($push){
 		$push[] = "'_trackPageview','/wc_deletemember'";
 	}
 	return $push;
-}
-
-// uesces_addressform( $type, $data, $out = '' )
-// $type = 'menber' or 'cuntomer' or 'delivery'
-function uesces_addressform( $type, $data, $out = 'return' ){
-	global $usces, $usces_settings;
-	$options = get_option('usces');
-	$applyform = usces_get_apply_addressform($options['system']['addressform']);
-	$formtag = '';
-	switch( $type ){
-	case 'confirm':
-	case 'member':
-		$values =  $data;
-		break;
-	case 'customer':
-	case 'delivery':
-		$values = $data[$type];
-		break;
-	}
-	$values['country'] = !empty($values['country']) ? $values['country'] : usces_get_local_addressform();
-	
-	if( 'confirm' == $type ){
-	
-		switch ($applyform){
-		
-		case 'JP':
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name1']) . ' ' . esc_html($values['customer']['name2']) . '</td></tr>';
-			$furigana_customer = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['customer']['name3']) . ' ' . esc_html($values['customer']['name4']) . '</td></tr>';
-			$formtag .= apply_filters( 'usces_filter_furigana_confirm_customer', $furigana_customer, $type, $values );
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
-			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
-			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
-			<tr><th>'.__('building name', 'usces').'</th><td>' . esc_html($values['customer']['address3']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
-			//20100818ysk end
-			
-			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			//20100818ysk start
-			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			//20100818ysk end
-			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
-			$furigana_delivery = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
-			$formtag .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
-			//20100818ysk start
-			$shipping_address_info .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
-			//20100818ysk end
-			$shipping_address_info .= '
-			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
-			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
-			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
-			<tr><th>'.__('building name', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
-			//20100818ysk end
-			$formtag .= apply_filters('usces_filter_shipping_address_info', $shipping_address_info);
-			break;
-			
-		case 'US':
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name3']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
-			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['customer']['address3']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
-			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
-			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
-			//20100818ysk end
-			
-			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			//20100818ysk start
-			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			//20100818ysk end
-			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
-			//20100818ysk start
-			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
-			//20100818ysk end
-			$shipping_address_info .= '
-			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
-			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
-			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
-			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
-			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
-			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
-			//20100818ysk start
-			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
-			//20100818ysk end
-			$formtag .= apply_filters('usces_filter_shipping_address_info', $shipping_address_info);
-			break;
-		}
-		$res = apply_filters('usces_filter_apply_addressform_confirm', $formtag, $type, $data);
-	
-	}else{
-	
-		switch ($applyform){
-		
-		case 'JP':
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr class="inp1">
-			<th width="127" scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces').'</th>
-			<td width="257">'.__('Familly name', 'usces').'<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			<td width="257">'.__('Given name', 'usces').'<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			</tr>';
-			$furigana = '<tr class="inp1">
-			<th scope="row">' . usces_get_essential_mark('name3').__('furigana', 'usces').'</th>
-			<td>'.__('Familly name', 'usces').'<input name="' . $type . '[name3]" id="name3" type="text" value="' . esc_attr($values['name3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			<td>'.__('Given name', 'usces').'<input name="' . $type . '[name4]" id="name4" type="text" value="' . esc_attr($values['name4']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>
-			</tr>';
-			$formtag .= apply_filters( 'usces_filter_furigana_form', $furigana, $type, $values );
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '<tr>
-			<th scope="row">' . usces_get_essential_mark('zipcode').__('Zip/Postal Code', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_zipcode', '100-1000', $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
-			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('states').__('Province', 'usces').'</th>
-			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
-			</tr>
-			<tr class="inp2">
-			<th scope="row">' . usces_get_essential_mark('address1').__('city', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address1', __('Kitakami Yokohama', 'usces'), $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('address2').__('numbers', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address2', '3-24-555', $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('address3').__('building name', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address3', __('tuhanbuild 4F', 'usces'), $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('tel').__('Phone number', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_tel', '1000-10-1000', $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('fax').__('FAX number', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_fax', '1000-10-1000', $applyform ) . '</td>
-			</tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'fax_after', 'return');
-			//20100818ysk end
-			break;
-			
-		case 'US':
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
-			//20100818ysk end
-			$formtag .= '<tr class="inp1">
-			<th scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces') . '</th>
-			<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" /></td>
-			<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" /></td>
-			</tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			//20100818ysk end
-			$formtag .= '
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('address2') . __('Address Line1', 'usces') . '</th>
-			<td colspan="2">' . __('Street address', 'usces') . '<br /><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" />' . apply_filters( 'usces_filter_after_address2', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('address3') . __('Address Line2', 'usces') . '</th>
-			<td colspan="2">' . __('Apartment, building, etc.', 'usces') . '<br /><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" />' . apply_filters( 'usces_filter_after_address3', NULL, $applyform ) . '</td>
-			</tr>
-			<tr class="inp2">
-			<th scope="row">' . usces_get_essential_mark('address1') . __('city', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" />' . apply_filters( 'usces_filter_after_address1', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('states') . __('State', 'usces') . '</th>
-			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
-			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('zipcode') . __('Zip', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" />' . apply_filters( 'usces_filter_after_zipcode', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('tel') . __('Phone number', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" />' . apply_filters( 'usces_filter_after_tel', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('fax') . __('FAX number', 'usces') . '</th>
-			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" />' . apply_filters( 'usces_filter_after_fax', NULL, $applyform ) . '</td>
-			</tr>';
-			//20100818ysk start
-			$formtag .= usces_custom_field_input($data, $type, 'fax_after', 'return');
-			//20100818ysk end
-			break;
-		}
-		$res = apply_filters('usces_filter_apply_addressform', $formtag, $type, $data);
-	
-	}
-
-	if($out == 'return') {
-		return $res;
-	} else {
-		echo $res;
-	}
 }
 
 function usces_get_essential_mark( $type ){
@@ -3338,176 +2912,6 @@ function usces_shipping_country_option( $selected ){
 	}
 }
 
-function usces_get_cart_rows( $out = '' ) {
-	global $usces;
-	$cart = $usces->cart->get_cart();
-	$usces_gp = 0;
-	$res = '';
-	
-	for($i=0; $i<count($cart); $i++) { 
-		$cart_row = $cart[$i];
-		$post_id = $cart_row['post_id'];
-		$sku = esc_attr($cart_row['sku']);
-		$quantity = $cart_row['quantity'];
-		$options = $cart_row['options'];
-		$advance = $usces->cart->wc_serialize($cart_row['advance']);
-		$itemCode = $usces->getItemCode($post_id);
-		$itemName = $usces->getItemName($post_id);
-		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
-		$itemRestriction = $usces->getItemRestriction($post_id);
-		$skuPrice = $cart_row['price'];
-		$skuZaikonum = $usces->getItemZaikonum($post_id, $cart_row['sku']);
-		$stockid = $usces->getItemZaikoStatusId($post_id, $cart_row['sku']);
-		$stock = $usces->getItemZaiko($post_id, $cart_row['sku']);
-		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
-		$pictid = $usces->get_mainpictid($itemCode);
-		if ( empty($options) ) {
-			$optstr =  '';
-			$options =  array();
-		}
-
-		$res .= '<tr>
-			<td>' . ($i + 1) . '</td>
-			<td>';
-			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
-			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
-			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
-		if( is_array($options) && count($options) > 0 ){
-			$optstr = '';
-			foreach($options as $key => $value){
-//20110629ysk start 0000190
-				//if( !empty($key) )
-				//	$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-				if( !empty($key) ) {
-					if(is_array($value)) {
-						$c = '';
-						$optstr .= esc_html($key) . ' : '; 
-						foreach($value as $v) {
-							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
-							$c = ', ';
-						}
-						$optstr .= "<br />\n"; 
-					} else {
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-					}
-				}
-//20110629ysk end
-			}
-			$res .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
-		}
-		$res .= '</td>
-			<td class="aright">';
-		if( usces_is_gptekiyo($post_id, $cart_row['sku'], $quantity) ) {
-			$usces_gp = 1;
-			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
-			$res .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
-		}
-		$res .= usces_crform($skuPrice, true, false, 'return') . '
-			</td>
-			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
-			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
-			<td ' . $red . '>' . $stock . '</td>
-			<td>';
-		foreach($options as $key => $value){
-//20110629ysk start 0000190
-			//$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
-			if(is_array($value)) {
-				foreach($value as $v) {
-					$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
-				}
-			} else {
-				$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
-			}
-//20110629ysk end
-		}
-		$res .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
-			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
-			<input name="itempostid[' . $i . ']" type="hidden" value="' . $post_id . '" />
-			<input name="itemsku[' . $i . ']" type="hidden" value="' . $sku . '" />
-			<input name="zaikonum[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuZaikonum) . '" />
-			<input name="skuPrice[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuPrice) . '" />
-			<input name="advance[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($advance) . '" />
-			<input name="delButton[' . $i . '][' . $post_id . '][' . $sku . ']" class="delButton" type="submit" value="' . __('Delete','usces') . '" />
-			</td>
-		</tr>';
-	}
-	
-	if($out == 'return'){
-		return $res;
-	}else{
-		echo $res;
-	}
-}
-function usces_get_confirm_rows( $out = '' ) {
-	global $usces, $usces_members, $usces_entries;
-//	$usces_members = $usces->get_member();
-	$memid = ( empty($usces_members['ID']) ) ? 999999999 : $usces_members['ID'];
-//	$usces_entries = $usces->cart->get_entry();
-	$usces->set_cart_fees( $usces_members, $usces_entries );
-	
-	$cart = $usces->cart->get_cart();
-	$res = '';
-	for($i=0; $i<count($cart); $i++) { 
-		$cart_row = $cart[$i];
-		$post_id = $cart_row['post_id'];
-		$sku = esc_attr($cart_row['sku']);
-		$quantity = $cart_row['quantity'];
-		$options = $cart_row['options'];
-		$itemCode = $usces->getItemCode($post_id);
-		$itemName = $usces->getItemName($post_id);
-		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
-		$skuPrice = $cart_row['price'];
-		$pictid = $usces->get_mainpictid($itemCode);
-		if (empty($options)) {
-			$optstr =  '';
-			$options =  array();
-		}
-	
-		 $res .= '<tr>
-			<td>' . ($i + 1) . '</td>
-			<td>';
-		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
-		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
-		if( is_array($options) && count($options) > 0 ){
-			$optstr = '';
-			foreach($options as $key => $value){
-//20110629ysk start 0000190
-				//if( !empty($key) )
-				//	 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-				if( !empty($key) ) {
-					if(is_array($value)) {
-						$c = '';
-						$optstr .= esc_html($key) . ' : '; 
-						foreach($value as $v) {
-							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
-							$c = ', ';
-						}
-						$optstr .= "<br />\n"; 
-					} else {
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-					}
-				}
-//20110629ysk end
-			}
-			$res .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
-		}
-		 $res .= '</td>
-			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
-			<td>' . $cart_row['quantity'] . '</td>
-			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
-			<td>';
-		 $res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $cart_row['sku']));
-		 $res .= '</td>
-		</tr>';
-	} 
-	
-	if($out == 'return'){
-		return $res;
-	}else{
-		echo $res;
-	}
-}
 
 function usces_get_cart_button( $out = '' ) {
 	global $usces;
@@ -4050,4 +3454,26 @@ function usces_is_same_itemcode( $post_id, $item_code ){
 	return $res;
 }
 
+function usces_update_sku( $post_id, $skucode, $fieldname, $value ){
+		global $wpdb;
+		$metas = usces_get_post_meta($post_id, '_isku_');
+		if( ! $metas )
+			return false;
+		
+		foreach( $metas as $meta ){
+			$sku = unserialize($meta['meta_value']);
+			if( $skucode == $sku['code'] ){
+				$meta_id = $meta['meta_id'];
+				$sku[$fieldname] = $value;
+				break;
+			}
+		}
+		$serialized_values = serialize($sku);
+		$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $serialized_values, $meta_id) );
+		if( !$res ){
+			return false;
+		}else{
+			return true;
+		}
+}
 ?>

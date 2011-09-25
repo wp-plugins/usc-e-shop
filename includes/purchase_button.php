@@ -443,7 +443,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					$post_id = $cart_row['post_id'];
 					$itemCode = $usces->getItemCode($post_id);
 					$itemName = $usces->getItemName($post_id);
-					$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+					$cartItemName = $usces->getCartItemName($post_id, urldecode($cart_row['sku']));
 					$html .= '<input type="hidden" name="L_NAME'.$i.'" value="'.esc_html($itemName).'">
 						<input type="hidden" name="L_NUMBER'.$i.'" value="'.esc_html($itemCode).'">
 						<input type="hidden" name="L_DESC'.$i.'" value="'.esc_html($cartItemName).'">

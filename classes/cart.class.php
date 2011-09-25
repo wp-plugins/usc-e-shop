@@ -102,14 +102,16 @@ class usces_cart {
 	function wc_serialize( $value ){
 		$out = NULL;
 		if( !empty($value) )
-			$out = urlencode(serialize($value));
+//			$out = urlencode(serialize($value));
+			$out = serialize($value);
 		return $out;
 	}
 
 	function wc_unserialize( $str ){
 		$out = array();
 		if( !empty($str) )
-			$out = unserialize(urldecode($str));
+//			$out = unserialize(urldecode($str));
+			$out = unserialize($str);
 		return $out;
 	}
 
@@ -459,8 +461,8 @@ class usces_cart {
 	// get realprice ***************************************************************
 	function get_realprice($post_id, $sku, $quant, $price = NULL) {
 		global $usces;
-		
-		$skus = $usces->get_skus( $post_id, 'ARRAY_A' );
+		$sku = urldecode($sku);
+		$skus = $usces->get_skus( $post_id, 'code' );
 		
 		if($price === NULL) {
 			$p = $skus[$sku]['price'];
@@ -470,7 +472,7 @@ class usces_cart {
 //20110905ysk start 0000251
 		$p = apply_filters('usces_filter_realprice', $p, $this->serial);
 //20110905ysk end
-		if( !$skus[$sku]['gptekiyo'] ) return $p;
+		if( !$skus[$sku]['gp'] ) return $p;
 		
 		$GpN1 = $usces->getItemGpNum1($post_id);
 		$GpN2 = $usces->getItemGpNum2($post_id);

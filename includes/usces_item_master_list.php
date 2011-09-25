@@ -401,7 +401,7 @@ jQuery(document).ready(function($){
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
 	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : 
-			$skus = $this->get_skus( $array['ID'], 'ARRAY_A' );
+			$skus = $this->get_skus( $array['ID'], 'code' );
 	?>
 		<?php if( $key == 'item_code') : ?>
 			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('_itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
@@ -469,11 +469,11 @@ jQuery(document).ready(function($){
 			</td>
 			<td class="zaikonum">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php echo (( '' != $sv['zaikonum']) ? esc_html($sv['zaikonum']) : "&nbsp;"); ?></div>
+				<div class="priceline<?php echo $bgc; ?>"><?php echo (( '' != $sv['stocknum']) ? esc_html($sv['stocknum']) : "&nbsp;"); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 			<td class="zaiko">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $zaikokey = $sv['zaiko']; $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+			<?php $i=0; foreach((array)$skus as $key => $sv) { $zaikokey = $sv['stock']; $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
 				<div class="zaikoline<?php echo $bgc; ?>"><?php echo esc_html($zaiko_status[$zaikokey]); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>

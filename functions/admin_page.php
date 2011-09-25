@@ -1,8 +1,8 @@
 <?php
 function admin_prodauct_footer(){
-	switch( $_REQUEST['page'] ){
+	switch( $_GET['page'] ){
 		case 'usces_itemedit':
-			if( !isset($_REQUEST['action']) ){
+			if( !isset($_GET['action']) ){
 				break;
 			}
 		case 'usces_itemnew':
@@ -20,13 +20,17 @@ function admin_prodauct_footer(){
 		var itemCode = $("#itemCode").val();
 		var itemName = $("#itemName").val();
 		var itemsku = $("input[name^='itemsku\[']");
+		var DeliveryMethod = $("input[name^='itemDeliveryMethod\[']");
         if (submit_event) {
-//			if ( "" == itemCode ) {
-//				mes += '商品コードが入力されていません。<br />';
-//				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
-//					$(this).css({'background-color': '#FFF'});
-//				});
-//			}
+			if ( 0 == DeliveryMethod.length ) {
+				mes += '配送方法が選択できません。商品登録を行う前に「配送設定」より配送方法の登録を済ませてください。<br />';
+			}
+			if ( "" == itemCode ) {
+				mes += '商品コードが入力されていません。<br />';
+				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
 //			if ( ! checkCode( itemCode ) ) {
 //				mes += '商品コードは半角英数（-_を含む）で入力して下さい。<br />';
 //				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
@@ -49,15 +53,15 @@ function admin_prodauct_footer(){
 				});
 			}
 			if ( '' != mes) {
-				$("#major-publishing-actions").append('<div id="usces_ess"></div>');
+				$("#major-publishing-actions").append('<div id="usces_mess"></div>');
 				$('#ajax-loading').css({'visibility': 'hidden'});
 				$('#draft-ajax-loading').css({'visibility': 'hidden'});
 				$('#publish').removeClass('button-primary-disabled');
 				$('#save-post').removeClass('button-disabled');
-				$("#usces_ess").html(mes);
+				$("#usces_mess").html(mes);
 				return false;
 			} else {
-	            $('#usces_ess').fadeOut();
+	            $('#usces_mess').fadeOut();
 				return true;
 			}
         } else {
@@ -66,10 +70,10 @@ function admin_prodauct_footer(){
     });
 	
 //	$('#postimagediv h3').html('<span>商品画像</span>');
-	$('#itemCode').blur( 
+	$('#itemName').blur( 
 		function() { 
-			if ( $("#itemCode").val().length == 0 ) return;
-			uscesItem.newdraft($('#itemCode').val());
+			if ( $("#itemName").val().length == 0 ) return;
+			uscesItem.newdraft($('#itemName').val());
 	});
 	
 	$( "#item-sku-list" ).sortable({
@@ -152,32 +156,162 @@ function admin_prodauct_footer(){
 	}
 }
 
-function usces_action_transition_post_status( $new_status, $old_status, $post){
-	global $usces;
-	$itemCode  = trim($_POST['itemCode' ]);
-	//usces_log('postarr : '.print_r($post,true), 'acting_transaction.log');
-	if( 'publish' == $new_status && 'post' == $post->post_type && $res = usces_is_same_itemcode($post->ID, $itemCode)) {
-		$usces->action_message .= 'post_ID ';
-		foreach( $res as $postid )
-			$usces->action_message .= $postid . ', ';
-		$usces->action_message .= 'に同じ商品コードが登録されています。' . "<br />";
-	}
-}
+//function usces_action_transition_post_status( $new_status, $old_status, $post){
+//	global $usces;
+//	$itemCode  = trim($_POST['itemCode' ]);
+//	//usces_log('postarr : '.print_r($post,true), 'acting_transaction.log');
+//	if( 'publish' == $new_status && 'post' == $post->post_type && $res = usces_is_same_itemcode($post->ID, $itemCode)) {
+//		$usces->action_message .= 'post_ID ';
+//		foreach( $res as $postid )
+//			$usces->action_message .= $postid . ', ';
+//		$usces->action_message .= 'に同じ商品コードが登録されています。' . "<br />";
+//	}
+//}
+//
+//function usces_filter_redirect_post_location( $location, $post_id ){
+//	global $usces;
+////	usces_log('usces_filter_redirect_post_location : '.print_r($location,true), 'acting_transaction.log');
+//	if( !empty($usces->action_message) )
+//		$location = add_query_arg( 'usces_notice', urlencode($usces->action_message), $location );
+//	return $location;
+//}
+//
+//function usces_action_updated_messages(){
+//	global $notice;
+//	
+//	if( isset($_GET['usces_notice']) ){
+//		$notice = urldecode($_GET['usces_notice']) . $notice;
+//	}
+//}
 
-function usces_filter_redirect_post_location( $location, $post_id ){
-	global $usces;
-//	usces_log('usces_filter_redirect_post_location : '.print_r($location,true), 'acting_transaction.log');
-	if( !empty($usces->action_message) )
-		$location = add_query_arg( 'usces_notice', urlencode($usces->action_message), $location );
-	return $location;
-}
+function usces_item_dupricate($post_id){
+	global $wpdb;
 
-function usces_action_updated_messages(){
-	global $notice;
+	if ( !current_user_can( 'edit_posts' ) )
+		wp_die( __( 'Sorry, you do not have the right to access this site.' ) );
+
+	if( empty($post_id) )
+		wp_die( __( 'データが存在しません。。', 'usces' ) );
 	
-	if( isset($_GET['usces_notice']) ){
-		$notice = urldecode($_GET['usces_notice']) . $notice;
+	if ( !$post_data = wp_get_single_post($post_id, ARRAY_A) )
+		wp_die( __( 'データが存在しません。。', 'usces' ) );
+
+	$datas = array();
+	foreach($post_data as $key => $value){
+		switch( $key ){
+			case 'ID':
+				break;
+			case 'post_date':
+			case 'post_modified':
+				//$datas[$key] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+				break;
+			case 'post_date_gmt':
+			case 'post_modified_gmt':
+				//$datas[$key] = gmdate('Y-m-d H:i:s');
+				break;
+			case 'post_status':
+				$datas[$key] = 'draft';
+				break;
+			case 'post_name':
+			case 'guid':
+				//$datas[$key] = '';
+				break;
+			case 'menu_order':
+			case 'post_parent':
+			case 'comment_count':
+				$datas[$key] = 0;
+				break;
+			default:
+				$datas[$key] = $value;
+		}
+	}
+
+	$datas['post_category'] = wp_get_post_categories( $post_id );
+	
+	$newpost_id = wp_insert_post( $datas );
+	
+	$query = $wpdb->prepare("SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+	$meta_data = $wpdb->get_results( $query );
+	if(!$meta_data) return;
+	$valstr = '';
+	foreach($meta_data as $data){
+		
+		$prefix = substr($data->meta_key, 0, 5);
+		$prefix2 = substr($data->meta_key, 0, 11);
+		
+		if( $prefix == '_item' ){
+		
+			switch( $data->meta_key ){
+				case '_itemCode':
+					$value = $data->meta_value . '(copy)';
+					break;
+				default:
+					$value = $data->meta_value;
+			}
+			$key = $data->meta_key;
+			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+		
+		}else if( $prefix == '_isku' || $prefix == '_iopt' ){
+		
+			$value = $data->meta_value;
+			$key = $data->meta_key;
+			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+		
+		}
+
+	}
+	$valstr = rtrim($valstr, ',');
+	$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
+	$res = mysql_query($query);
+	if(!$res ) return;
+
+	return $newpost_id;
+}
+
+function usces_all_delete_itemdata(&$obj){
+	global $wpdb;
+
+	if ( !current_user_can( 'edit_posts' ) )
+		wp_die( __( 'Sorry, you do not have the right to access this site.' ) );
+
+	$ids = $_POST['listcheck'];
+	$status = true;
+	foreach ( (array)$ids as $post_id ){
+		if ( !wp_delete_post($post_id) )
+			$status = false;
+//		$query = $wpdb->prepare("DELETE FROM $wpdb->posts WHERE ID = %d", $post_id);
+//		$res = $wpdb->query( $query );
+//		if( $res !== false ) {
+//			$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+//			$res = $wpdb->query( $query );
+//			if( $res === false ) {
+//				$status = false;
+//			}
+//			$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
+//			$res = $wpdb->query( $query );
+//			if( $res === false ) {
+//				$status = false;
+//			}
+//			$query = "SELECT term_taxonomy_id, COUNT(*) AS ct FROM $wpdb->term_relationships 
+//					GROUP BY term_taxonomy_id";
+//			$relation_data = $wpdb->get_results( $query, ARRAY_A);
+//			foreach((array)$relation_data as $rows){
+//				
+//				$term_ids['term_taxonomy_id'] = $rows['term_taxonomy_id'];
+//				$updatas['count'] = $rows['ct'];
+//				$wpdb->update( $wpdb->term_taxonomy, $updatas, $term_ids );
+//			}
+//		}
+
+	}
+	if ( true === $status ) {
+		$obj->set_action_status('success', __('I completed collective operation.','usces'));
+	} elseif ( false === $status ) {
+		$obj->set_action_status('error', __('ERROR: I was not able to complete collective operation','usces'));
+	} else {
+		$obj->set_action_status('none', '');
 	}
 }
+
 
 ?>
