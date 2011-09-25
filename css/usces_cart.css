@@ -1245,6 +1245,7 @@ div.usccart_navi li.usccart_confirm {
 	font-style: normal;
 	color: #ff0000;
 }
+table.retail td, 
 #retail_table td {
 	white-space: normal;
 	word-break:break-all;
