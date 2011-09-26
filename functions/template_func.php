@@ -858,7 +858,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk start
 		break;
 	case 5://Text-area
-		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$optcode}]' id='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_textarea' />" . esc_attr($session_value) . "</textarea>\n";
+		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$optcode}]' id='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_textarea'>" . esc_attr($session_value) . "</textarea>\n";
 		break;
 //20100914ysk end
 	}
@@ -2280,7 +2280,7 @@ function usces_member_history(){
 							$c = '';
 							$optstr .= esc_html($key) . ' : '; 
 							foreach($value as $v) {
-								$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+								$optstr .= $c.nl2br(esc_html(urldecode($v)));
 								$c = ', ';
 							}
 							$optstr .= "<br />\n"; 
@@ -2426,7 +2426,7 @@ function usces_get_cart_rows( $out = '' ) {
 						$c = '';
 						$optstr .= esc_html($key) . ' : '; 
 						foreach($value as $v) {
-							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$optstr .= $c.nl2br(esc_html(urldecode($v)));
 							$c = ', ';
 						}
 						$optstr .= "<br />\n"; 
@@ -2525,7 +2525,7 @@ function usces_get_confirm_rows( $out = '' ) {
 						$c = '';
 						$optstr .= esc_html($key) . ' : '; 
 						foreach($value as $v) {
-							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$optstr .= $c.nl2br(esc_html(urldecode($v)));
 							$c = ', ';
 						}
 						$optstr .= "<br />\n"; 

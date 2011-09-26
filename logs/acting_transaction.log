@@ -24,3 +24,85 @@
 [2011-09-23 15:58:53]	item_save_metadata : DOING_AUTOSAVE
 [2011-09-23 15:58:53]	item_save_metadata : 28
 [2011-09-23 15:58:53]	item_save_metadata : 28
+[2011-09-26 15:33:02]	up_payment_method : Array
+(
+    [action] => payment_ajax
+    [update] => 1
+    [id] => 0
+    [name] => aaaa
+    [explanation] => 
+    [settlement] => transferAdvance
+    [module] => 
+    [sort] => 0
+)
+
+[2011-09-26 15:34:59]	up_payment_method : Array
+(
+    [name] => aaaa
+    [explanation] => dgdgdg
+    [settlement] => transferAdvance
+    [module] => ggg
+    [sort] => 0
+)
+
+[2011-09-26 15:35:51]	up_payment_method : Array
+(
+    [name] => 銀行
+    [explanation] => 銀行振込前払いでお願いします
+    [settlement] => transferDeferred
+    [module] => 
+    [sort] => 0
+)
+
+[2011-09-26 16:42:26]	ids : 10
+[2011-09-26 16:42:26]	ids : 01
+[2011-09-26 16:45:30]	ids : 10
+[2011-09-26 16:45:30]	options : Array
+[2011-09-26 16:45:30]	ids : 01
+[2011-09-26 16:45:30]	options : Array
+[2011-09-26 16:46:36]	ids : 10
+[2011-09-26 16:46:36]	options : Array
+(
+    [0] => Array
+        (
+            [name] => 銀行
+            [explanation] => 銀行振込前払いでお願いします
+            [settlement] => transferDeferred
+            [module] => 
+            [sort] => 1
+        )
+
+    [1] => Array
+        (
+            [name] => 代引き
+            [explanation] => 
+            [settlement] => COD
+            [module] => 
+            [sort] => 0
+        )
+
+)
+
+[2011-09-26 16:46:36]	ids : 01
+[2011-09-26 16:46:36]	options : Array
+(
+    [0] => Array
+        (
+            [name] => 銀行
+            [explanation] => 銀行振込前払いでお願いします
+            [settlement] => transferDeferred
+            [module] => 
+            [sort] => 1
+        )
+
+    [1] => Array
+        (
+            [name] => 代引き
+            [explanation] => 
+            [settlement] => COD
+            [module] => 
+            [sort] => 0
+        )
+
+)
+

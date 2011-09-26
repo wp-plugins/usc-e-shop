@@ -520,7 +520,7 @@ function _payment_list_row( $id, $payments ) {
 					foreach ($usces->payment_structure as $psk => $psv){
 						$selected = ($psk == $settlement) ? ' selected="selected"' : '';
 					?>
-						<option value='<?php echo $psk; ?>'{$selected}><?php echo $psv; ?></option>
+						<option value='<?php echo $psk; ?>'<?php echo $selected; ?>><?php echo esc_html($psv); ?></option>
 					<?php
 					}
 					?>
@@ -622,7 +622,7 @@ function item_option_meta_form() {
 			<td class='item-opt-key'>
 			<?php if ( !empty($opts) ) { ?>
 				<select id="optkeyselect" name="optkeyselect" class="optkeyselect metaboxfield" tabindex="7" onchange="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('keyselect', this.value);">
-					<option value="#NONE#"><?php _e( '- Select -' ); ?></option>
+					<option value="#NONE#"><?php _e( '-- Select --' ); ?></option>
 				<?php foreach ( $opts as $opt ){ ?>
 					<option value='<?php echo $opt['meta_id']; ?>'><?php esc_attr_e($opt['name']); ?></option>
 				<?php } ?>
@@ -1062,41 +1062,62 @@ function usces_update_system_option( $opt_key, $id, $value ){
 	
 	return $lid;
 }
+function usces_get_system_option( $opt_key, $keyflag = 'sort' ) {
+	$sysopts = array();
+	$metas = $usces->options[$opt_key];
+
+	if( empty($metas) ) return $sysopts;
+	
+	foreach( $metas as $rows ){
+		$key = isset($values[$keyflag]) ? $values[$keyflag] : $values['sort'];
+		$sysopts[$key] = array(
+							'name' => $rows['name'],
+							'explanation' => $rows['explanation'],
+							'settlement' => $rows['settlement'],
+							'module' => $rows['module'],
+							'sort' => $rows['sort']
+						);
+	}
+	ksort($sysopts);
+
+	return $sysopts;
+}
+
+function usces_sort_system_option( $opt_key, $idstr ) {
+	global $usces;
+	$usces->options = get_option('usces');
+
+	if( isset($usces->options[$opt_key]) ){
+		$ids = explode(',', $idstr);
+		$c = 0;
+		foreach( (array)$ids as $id ){
+			usces_log('ids : '.$id.$c, 'acting_transaction.log');
+			$usces->options[$opt_key][$id]['sort'] = $c;
+			$c++;
+			usces_log('options : '.print_r($usces->options[$opt_key],true), 'acting_transaction.log');
+		}
+		update_option('usces', $usces->options);
+	}
+	return;
+}
+
 function up_payment_method() {
 	global $usces;
 	
 	$protected = array( '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
+	$value = array();
 	//$id = isset($_POST['id']) ? (int)$_POST['id'] : '';
 	$id = $_POST['id'];
 	$value['name'] = isset($_POST['name']) ? trim( $_POST['name'] ) : '';
 	$value['explanation'] = isset($_POST['explanation']) ? trim( $_POST['explanation'] ) : '';
 	$value['settlement'] = isset($_POST['settlement']) ? $_POST['settlement'] : '';
 	$value['module'] = isset($_POST['module']) ? trim( $_POST['module'] ) : '';
+	$value['sort'] = isset($_POST['sort']) ?(int)$_POST['sort'] : 0;
 
-	if ( !empty( $name) && $id != '') {
-		$id = usces_update_system_option( $opt_key, $id, $value );
-//		// We have a key/value pair. If both the select and the
-//		// input for the key have data, the input takes precedence:
-//
-//		$usces->options = get_option('usces');
-//		
-//		if( isset($usces->options['payment_method']) ){
-//			$c = 0;
-//			foreach( (array)$usces->options['payment_method'] as $payment ){
-//				if( $payment['name'] == $name && $c != $id ){
-//					return -1;
-//					break;
-//				}
-//				$c++;
-//			}
-//		}
-//		$usces->options['payment_method'][$id]['name'] = $name;
-//		$usces->options['payment_method'][$id]['explanation'] = $explanation;
-//		$usces->options['payment_method'][$id]['settlement'] = $settlement;
-//		$usces->options['payment_method'][$id]['module'] = $module;
-//		
-//		update_option('usces', $usces->options);
+	if ( !empty( $value['name'] ) && $id != '') {
+
+		$id = usces_update_system_option( 'payment_method', $id, $value );
 		
 		return $id;
 	}
@@ -1736,8 +1757,7 @@ function payment_ajax()
 		$id = del_payment_method();
 		
 	}else if(isset($_POST['sort'])){
-		$res = usces_sort_post_meta( $_POST['ID'], $_POST['meta'] );
-		die( $res );
+		$res = usces_sort_system_option( 'payment_method', $_POST['meta'] );
 		
 	}else{
 		$id = add_payment_method();

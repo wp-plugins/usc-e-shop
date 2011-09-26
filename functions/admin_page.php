@@ -125,6 +125,7 @@ function admin_prodauct_footer(){
 		break;
 		case 'usces_initial':
 ?>
+
 <script type="text/javascript">
 (function($) {
 	$( "#item-opt-list" ).sortable({
@@ -145,6 +146,28 @@ function admin_prodauct_footer(){
 			});
 			if( 1 < data.length ){
 				itemOpt.dosort(data.toString());
+			}
+		}
+	});
+	
+	$( "#payment-list" ).sortable({
+		//placeholder: "ui-state-highlight",
+		handle : 'th',
+		axis : 'y',
+		cursor : "move",
+		tolerance : "pointer",
+		forceHelperSize : true,
+		forcePlaceholderSize : true,
+		revert : 300,
+		opacity: 0.6,
+		cancel: ":input,button",
+		update : function(){
+			var data=[];
+			$("table","#payment-list").each(function(i,v){
+				data.push($(this).attr('id'));
+			});
+			if( 1 < data.length ){
+				payment.dosort(data.toString());
 			}
 		}
 	});
@@ -312,6 +335,5 @@ function usces_all_delete_itemdata(&$obj){
 		$obj->set_action_status('none', '');
 	}
 }
-
 
 ?>

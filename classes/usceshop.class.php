@@ -3614,14 +3614,14 @@ class usc_e_shop
 		//if($ioptkeys && isset($_POST['itemOption'][$post_id][$sku])){
 		if($ioptkeys){
 			foreach($ioptkeys as $key => $value){
-				$optValues = $this->get_itemOptions( $value, $post_id );
+				$optValues = $this->get_itemOptions( urldecode($value), $post_id );
 				if( 2 > $optValues['means'] ){ //case of select
 					if( $optValues['essential'] && '#NONE#' == $_POST['itemOption'][$post_id][$sku][$value] ){
-						$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), $value) . "<br />";
+						$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), urldecode($value)) . "<br />";
 					}
 				}else{ //case of text
 					if( $optValues['essential'] && '' == trim($_POST['itemOption'][$post_id][$sku][$value]) ){
-						$mes[$post_id][$sku] .= sprintf(__("Input the %s", 'usces'), $value) . "<br />";
+						$mes[$post_id][$sku] .= sprintf(__("Input the %s", 'usces'), urldecode($value)) . "<br />";
 					}
 				}
 			}

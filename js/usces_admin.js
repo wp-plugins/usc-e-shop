@@ -779,22 +779,44 @@
 		},
 
 		add : function() {
-			if($("#newname").val() == '') return;
-			
 			var name = $("#newname").val();
 			var explanation = $("#newexplanation").val();
 			var settlement = $("#newsettlement").val();
 			var module = $("#newmodule").val();
 			
+			if( '' == name ){
+				$mes = '<div class="error">';
+				$mes += '<p>支払方法名の値を入力してください。</p>';
+				$mes += '</div>';
+				$("#payment_ajax-response").html($mes);
+				return false;
+			}
+				
+			$("#newpayment_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
+
 			var s = payment.settings;
 			s.data = "action=payment_ajax&newname=" + encodeURIComponent(name) + "&newexplanation=" + encodeURIComponent(explanation) + "&newsettlement=" + encodeURIComponent(settlement) + "&newmodule=" + encodeURIComponent(module);
 			s.success = function(data, dataType){
-					$("table#payment-table").removeAttr("style");
-					$("tbody#payment-list").html( data );
+				$("#newpayment_loading").html('');
+				$("#payment_ajax-response").html('');
+				strs = data.split('#usces#');
+				$("table#payment-table").removeAttr("style");
+				var meta_id = strs[1];
+				if( 0 > meta_id ){
+					$("#payment_ajax-response").html('<div class="error"><p>同じ支払方法名が存在します。</p></div>');
+				}else{
+					$("tbody#payment-list").html( strs[0] );
 					$("#newname").val("");
 					$("#newexplanation").val("");
-					$("#newsettlement").attr({selectedIndex:0});
+					$("#newsettlement").val('acting');
 					$("#newmodule").val("");
+					$("#payment-" + meta_id).css({'background-color': '#FF4'});
+					$("#payment-" + meta_id).animate({ 'background-color': '#FFFFEE' }, 2000 );
+				}
+			};
+			s.error = function(msg){
+				$("#payment_ajax-response").html(msg);
+				$("#newpayment_loading").html('');
 			};
 			$.ajax( s );
 			return false;
@@ -805,23 +827,157 @@
 			ve = document.getElementById('payment\[' + id + '\]\[explanation\]');
 			vs = document.getElementById('payment\[' + id + '\]\[settlement\]');
 			vm = document.getElementById('payment\[' + id + '\]\[module\]');
+			so = document.getElementById('payment\[' + id + '\]\[sort\]');
 			var name = $(vn).val();
 			var explanation = $(ve).val();
 			var settlement = $(vs).val();
 			var module = $(vm).val();
+			var sortid = $(so).val();
 			var s = payment.settings;
-			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + encodeURIComponent(name) + "&explanation=" + encodeURIComponent(explanation) + "&settlement=" + encodeURIComponent(settlement) + "&module=" + encodeURIComponent(module);
+				
+			if( '' == name ){
+				$mes = '<div class="error">';
+				$mes += '<p>支払方法名の値を入力してください。</p>';
+				$mes += '</div>';
+				$("#payment_ajax-response").html($mes);
+				return false;
+			}
+				
+			$("#payment_loading-" + id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
+
+			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + encodeURIComponent(name) + "&explanation=" + encodeURIComponent(explanation) + "&settlement=" + encodeURIComponent(settlement) + "&module=" + encodeURIComponent(module) + "&sort=" + sortid;
+			s.success = function(data, dataType){
+				$("#payment_loading-" + id).html('');
+				$("#payment_ajax-response").html("");
+				strs = data.split('#usces#');
+				var meta_id = strs[1];
+				if( 0 > meta_id ){
+					$("#payment_ajax-response").html('<div class="error"><p>同じ支払方法名が存在します。</p></div>');
+				}else{
+					$("tbody#payment-list").html( strs[0] );
+					$("#payment-" + id).css({'background-color': '#FF4'});
+					$("#payment-" + id).animate({ 'background-color': '#FFFFEE' }, 2000 );
+				}
+			};
+			s.error = function(msg){
+				$("#payment_ajax-response").html(msg);
+				$("#newpayment_loading").html('');
+			};
 			$.ajax( s );
 			return false;
 		},
 
 		del : function(id) {
+			$("#payment-" + id).css({'background-color': '#F00'});
+			$("#payment-" + id).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			var s = payment.settings;
 			s.data = "action=payment_ajax&delete=1&id=" + id;
+			s.success = function(data, dataType){
+				strs = data.split('#usces#');
+				$("tbody#payment-list").html( strs[0] );
+			};
+			s.error = function(msg){
+				$("#payment_ajax-response").html(msg);
+			};
+			$.ajax( s );
+			return false;
+		},
+		
+		dosort : function( str ) {
+			if( !str ) return;
+			var meta_id_str = str.replace(/payment-/g, "");
+			var meta_ids = meta_id_str.split(',');
+			if( 2 > meta_ids.length ) return;
+
+			for(i=0; i<meta_ids.length; i++){
+				$("#payment_loading-" + meta_ids[i]).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
+			}
+			var s = payment.settings;
+			s.data = "action=payment_ajax&sort=1&meta=" + encodeURIComponent(meta_id_str);
+			s.success = function(data, dataType){
+				strs = data.split('#usces#');
+				$("tbody#payment-list").html( strs[0] );
+				for(i=0; i<meta_ids.length; i++){
+					$("#payment_loading-" + meta_ids[i]).html('');
+					$("#payment-" + meta_ids[i]).css({'background-color': '#FF4'});
+					$("#payment-" + meta_ids[i]).animate({ 'background-color': '#FFFFEE' }, 2000 );
+				}
+			};
+			s.error = function(msg){
+				$("#payment_ajax-response").html('<div class="error"><p>error sort</p></div>');
+			};
 			$.ajax( s );
 			return false;
 		}
 	};
+//	payment = {
+//		settings: {
+//			url: uscesL10n.requestFile,
+//			type: 'POST',
+//			cache: false,
+//			success: function(data, dataType){
+//				$("tbody#payment-list").html( data );
+//
+//			}, 
+//			error: function(msg){
+//				$("#payment-response").html(msg);
+//			}
+//		},
+//		
+//		post : function(action, arg) {
+//			if( action == 'update' ) {
+//				payment.update(arg);
+//			} else if( action == 'del' ) {
+//				payment.del(arg);
+//			} else if( action == 'add' ) {
+//				payment.add();
+//			}
+//		},
+//
+//		add : function() {
+//			if($("#newname").val() == '') return;
+//			
+//			var name = $("#newname").val();
+//			var explanation = $("#newexplanation").val();
+//			var settlement = $("#newsettlement").val();
+//			var module = $("#newmodule").val();
+//			
+//			var s = payment.settings;
+//			s.data = "action=payment_ajax&newname=" + encodeURIComponent(name) + "&newexplanation=" + encodeURIComponent(explanation) + "&newsettlement=" + encodeURIComponent(settlement) + "&newmodule=" + encodeURIComponent(module);
+//			s.success = function(data, dataType){
+//					$("table#payment-table").removeAttr("style");
+//					$("tbody#payment-list").html( data );
+//					$("#newname").val("");
+//					$("#newexplanation").val("");
+//					$("#newsettlement").attr({selectedIndex:0});
+//					$("#newmodule").val("");
+//			};
+//			$.ajax( s );
+//			return false;
+//		},
+//
+//		update : function(id) {
+//			vn = document.getElementById('payment\[' + id + '\]\[name\]');
+//			ve = document.getElementById('payment\[' + id + '\]\[explanation\]');
+//			vs = document.getElementById('payment\[' + id + '\]\[settlement\]');
+//			vm = document.getElementById('payment\[' + id + '\]\[module\]');
+//			var name = $(vn).val();
+//			var explanation = $(ve).val();
+//			var settlement = $(vs).val();
+//			var module = $(vm).val();
+//			var s = payment.settings;
+//			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + encodeURIComponent(name) + "&explanation=" + encodeURIComponent(explanation) + "&settlement=" + encodeURIComponent(settlement) + "&module=" + encodeURIComponent(module);
+//			$.ajax( s );
+//			return false;
+//		},
+//
+//		del : function(id) {
+//			var s = payment.settings;
+//			s.data = "action=payment_ajax&delete=1&id=" + id;
+//			$.ajax( s );
+//			return false;
+//		}
+//	};
 
 	orderItem = {
 		settings: {
