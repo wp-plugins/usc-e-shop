@@ -1667,8 +1667,9 @@ class usc_e_shop
 	
 	function admin_head() {
 		$payments_str = '';
-		foreach ( (array)$this->options['payment_method'] as $id => $array ) {
-			$payments_str .= "'" . $this->options['payment_method'][$id]['name'] . "': '" . $this->options['payment_method'][$id]['settlement'] . "', ";
+		$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+		foreach ( (array)$payments as $id => $array ) {
+			$payments_str .= "'" . $array['name'] . "': '" . $array['settlement'] . "', ";
 		}
 		$payments_str .= "'" . __('Transfer (prepayment)', 'usces') . "': 'transferAdvance', ";
 		$payments_str .= "'" . __('Transfer (postpay)', 'usces') . "': 'transferDeferred', ";
@@ -5500,12 +5501,8 @@ class usc_e_shop
 	}
 	
 	function getPayments( $payment_name ) {
-		foreach ( (array)$this->options['payment_method'] as $id => $array ) {
-			if ( $this->options['payment_method'][$id]['name'] == $payment_name )
-				break;
-		}
-
-		return $this->options['payment_method'][$id];
+		$payments = usces_get_system_option( 'usces_payment_method', 'name' );
+		return $payments[$payment_name];
 	}
 
 	function is_maintenance() {
@@ -6300,7 +6297,7 @@ class usc_e_shop
 		return htmlspecialchars($this->options['inquiry_mail']);
 	}
 	function sc_payment() {
-		$payments = $this->options['payment_method'];
+		$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 		$htm = "<ul>\n";
 		foreach ( (array)$payments as $payment ) {
 			$htm .= "<li>" . htmlspecialchars($payment['name']) . "<br />\n";

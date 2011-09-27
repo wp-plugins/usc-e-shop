@@ -89,9 +89,11 @@ function usces_filter_delivery_secure_check( $mes ){
 	$usces_secure_link = get_option('usces_secure_link');
 	$paymod_id = '';
 	
-	foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
-		if( $array['name'] == $_POST['offer']['payment_name']){
-			$settlement = $array['settlement'];
+		$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+
+	foreach ( (array)$payments as $id => $value ) {
+		if( $value['name'] == $_POST['offer']['payment_name']){
+			$settlement = $value['settlement'];
 			break;
 		}
 	}	

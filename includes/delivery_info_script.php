@@ -180,7 +180,8 @@ foreach((array)$usces->options['delivery_method'] as $dmid => $dm){
 
 $payments_str = '';
 $payments_arr = array();
-foreach ( (array)$usces->options['payment_method'] as $array ) {
+$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+foreach ( (array)$payments as $array ) {
 	switch( $array['settlement'] ){
 		case 'acting_zeus_card':
 			$paymod_base = 'zeus';

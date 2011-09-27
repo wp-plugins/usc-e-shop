@@ -2,7 +2,8 @@
 if(isset($this))
 	$usces = &$this;
 
-foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
+$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+foreach ( (array)$payments as $id => $array ) {
 	if( !empty( $array['settlement'] ) ){
 
 		switch( $array['settlement'] ){

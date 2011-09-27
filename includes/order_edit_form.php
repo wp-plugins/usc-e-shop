@@ -8,7 +8,7 @@ $pname = array();
 $payment_method = array();
 
 $management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
-$payment_method = $this->options['payment_method'];
+$payment_method = usces_get_system_option( 'usces_payment_method', 'sort' );
 foreach( $payment_method as $pmet){
 	$pname[] = $pmet['name'];
 }

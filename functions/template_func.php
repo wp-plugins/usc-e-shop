@@ -1003,46 +1003,47 @@ function usces_point_rate( $post_id = NULL, $out = '' ){
 
 function usces_the_payment_method( $value = '', $out = '' ){
 	global $usces;
-	if( !$usces->options['payment_method'] ) return;
+	$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+	if( empty($payments) ) return;
 	
 	$cart = $usces->cart->get_cart();
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 	$html = "<dl>\n";
 	$list = '';
-	$payment_ct = count($usces->options['payment_method']);
-	foreach ($usces->options['payment_method'] as $id => $payments) {
+	$payment_ct = count($payments);
+	foreach ($payments as $id => $value) {
 		if( 'continue' == $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
-			if( 'acting_remise_card' != $payments['settlement'] && 'acting_paypal_ec' != $payments['settlement']) {
+			if( 'acting_remise_card' != $value['settlement'] && 'acting_paypal_ec' != $value['settlement']) {
 				$payment_ct--;
 				continue;
 			}
-			//if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement'])
+			//if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $value['settlement'])
 			//	continue;
-			if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $payments['settlement']) {
+			if( 'on' !== $usces->options['acting_settings']['remise']['continuation'] && 'acting_remise_card' == $value['settlement']) {
 				$payment_ct--;
 				continue;
-			} elseif( 'on' !== $usces->options['acting_settings']['paypal']['continuation'] && 'acting_paypal_ec' == $payments['settlement']) {
+			} elseif( 'on' !== $usces->options['acting_settings']['paypal']['continuation'] && 'acting_paypal_ec' == $value['settlement']) {
 				$payment_ct--;
 				continue;
 			}
 //20110412ysk end
 		}
-		if( $payments['name'] != '' ) {
-			$module = trim($payments['module']);
+		if( $value['name'] != '' ) {
+			$module = trim($value['module']);
 			if( '' != $value ){
-				$checked = ($payments['name'] == $value) ? ' checked' : '';
+				$checked = ($value['name'] == $value) ? ' checked' : '';
 			}else if( 1 === $payment_ct ){
 				$checked = ' checked';
 			}else{
 				$checked = '';
 			}
-			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payments['settlement'] == 'acting' ) {
+			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $value['settlement'] == 'acting' ) {
 				$checked = '';
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($value['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($value['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
 			}else{
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payments['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payments['name'])."</label></dt>\n";
+				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($value['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($value['name'])."</label></dt>\n";
 			}
 			$list .= "\t<dd>{$payments['explanation']}</dd>\n";
 		}
@@ -1062,12 +1063,11 @@ function usces_the_payment_method( $value = '', $out = '' ){
 
 function usces_get_payments_by_name( $name ){
 	global $usces;
-	if( !$usces->options['payment_method'] ) return false;
+	$payments = usces_get_system_option( 'usces_payment_method', 'name' );
+	if( empty($payments) ) return false;
 	
-	foreach ($usces->options['payment_method'] as $id => $payments) {
-		if( $payments['name'] == $name ) {
-			return $payments;
-		}
+	if( isset($payments[$name]) ) {
+		return $payments[$name];
 	}
 
 	return false;

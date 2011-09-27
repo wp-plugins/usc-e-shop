@@ -251,12 +251,8 @@ function toggleVisibility(id) {
 <div class="inside">
 	<div id="postpayment"><div id="payment-response"></div>
 <?php
-//	$option = get_option('usces');
-//	$option['payment_method'] = array();
-//	update_option('usces', $option);
-//	$this->options = get_option('usces');
-	$metadata = $this->options['payment_method'];
-	payment_list($metadata);
+	$option_value = usces_get_system_option('usces_payment_method', 'sort');
+	payment_list($option_value);
 	payment_form();
 ?>
 <hr size="1" color="#CCCCCC" />

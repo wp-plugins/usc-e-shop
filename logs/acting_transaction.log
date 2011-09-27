@@ -106,3 +106,89 @@
 
 )
 
+[2011-09-26 17:00:11]	ids : 10
+[2011-09-26 17:00:11]	options : Array
+(
+    [0] => Array
+        (
+            [name] => 銀行
+            [explanation] => 銀行振込前払いでお願いします
+            [settlement] => transferDeferred
+            [module] => 
+            [sort] => 1
+        )
+
+    [1] => Array
+        (
+            [name] => 代引き
+            [explanation] => 
+            [settlement] => COD
+            [module] => 
+            [sort] => 0
+        )
+
+)
+
+[2011-09-26 17:00:11]	ids : 01
+[2011-09-26 17:00:11]	options : Array
+(
+    [0] => Array
+        (
+            [name] => 銀行
+            [explanation] => 銀行振込前払いでお願いします
+            [settlement] => transferDeferred
+            [module] => 
+            [sort] => 1
+        )
+
+    [1] => Array
+        (
+            [name] => 代引き
+            [explanation] => 
+            [settlement] => COD
+            [module] => 
+            [sort] => 0
+        )
+
+)
+
+[2011-09-27 11:41:11]	option_value : Array
+(
+    [name] => 銀行
+    [explanation] => 
+    [settlement] => acting
+    [module] => 
+    [sort] => 1
+)
+
+[2011-09-27 11:41:11]	option_value : Array
+(
+    [name] => 銀行
+    [explanation] => 前払い
+あああ
+    [settlement] => transferDeferred
+    [module] => 
+    [sort] => 0
+)
+
+[2011-09-27 11:42:12]	option_value : Array
+(
+    [name] => 銀行
+    [explanation] => 前払い
+あああ
+    [settlement] => transferDeferred
+    [module] => 
+    [sort] => 0
+)
+
+[2011-09-27 11:42:12]	option_value : Array
+(
+    [name] => 銀行
+    [explanation] => 前払い
+あああ
+    [settlement] => transferDeferred
+    [module] => 
+    [sort] => 0
+)
+
+[2011-09-27 12:13:45]	option_value : 銀行銀行

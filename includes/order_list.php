@@ -41,8 +41,9 @@ foreach((array)$target_market as $country) {
 	}
 }
 //20110331ysk end
-foreach ( (array)$this->options['payment_method'] as $id => $array ) {
-	$payment_name[$id] = $this->options['payment_method'][$id]['name'];
+$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+foreach ( (array)$payments as $array ) {
+	$payment_name[$id] = $array['name'];
 }
 $ums = get_option('usces_management_status');
 foreach((array)$ums as $key => $value){

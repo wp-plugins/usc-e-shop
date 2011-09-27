@@ -801,8 +801,7 @@
 				$("#payment_ajax-response").html('');
 				strs = data.split('#usces#');
 				$("table#payment-table").removeAttr("style");
-				var meta_id = strs[1];
-				if( 0 > meta_id ){
+				if( -1 == strs[1] ){
 					$("#payment_ajax-response").html('<div class="error"><p>同じ支払方法名が存在します。</p></div>');
 				}else{
 					$("tbody#payment-list").html( strs[0] );
@@ -810,8 +809,8 @@
 					$("#newexplanation").val("");
 					$("#newsettlement").val('acting');
 					$("#newmodule").val("");
-					$("#payment-" + meta_id).css({'background-color': '#FF4'});
-					$("#payment-" + meta_id).animate({ 'background-color': '#FFFFEE' }, 2000 );
+					$("#payment-" + strs[1]).css({'background-color': '#FF4'});
+					$("#payment-" + strs[1]).animate({ 'background-color': '#FFFFEE' }, 2000 );
 				}
 			};
 			s.error = function(msg){
@@ -850,8 +849,7 @@
 				$("#payment_loading-" + id).html('');
 				$("#payment_ajax-response").html("");
 				strs = data.split('#usces#');
-				var meta_id = strs[1];
-				if( 0 > meta_id ){
+				if( -1 == strs[1] ){
 					$("#payment_ajax-response").html('<div class="error"><p>同じ支払方法名が存在します。</p></div>');
 				}else{
 					$("tbody#payment-list").html( strs[0] );
@@ -893,7 +891,7 @@
 				$("#payment_loading-" + meta_ids[i]).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 			}
 			var s = payment.settings;
-			s.data = "action=payment_ajax&sort=1&meta=" + encodeURIComponent(meta_id_str);
+			s.data = "action=payment_ajax&sort=1&idstr=" + encodeURIComponent(meta_id_str);
 			s.success = function(data, dataType){
 				strs = data.split('#usces#');
 				$("tbody#payment-list").html( strs[0] );
