@@ -483,7 +483,7 @@ function item_option_meta_form() {
 			<td class='item-opt-key'>
 			<?php if ( !empty($opts) ) { ?>
 				<select id="optkeyselect" name="optkeyselect" class="optkeyselect metaboxfield" tabindex="7" onchange="if( jQuery('#post_ID').val() < 0 ) return; itemOpt.post('keyselect', this.value);">
-					<option value="#NONE#"><?php _e( '-- Select --' ); ?></option>
+					<option value="#NONE#"><?php _e( '-- Select --','usces' ); ?></option>
 				<?php foreach ( $opts as $opt ){ ?>
 					<option value='<?php echo $opt['meta_id']; ?>'><?php esc_attr_e($opt['name']); ?></option>
 				<?php } ?>
@@ -1223,24 +1223,10 @@ function item_save_metadata( $post_id, $post ) {
 
 	$message = '';
 	
-	if ( 'post' != $post->post_type) {
-		return $post_id;
-	}
-  
-	if ( !wp_verify_nonce( $_POST['usces_nonce'], 'usc-e-shop' )) {
-		return $post_id;
-	}
-
-  	// 自動保存ルーチンかどうかチェック。そうだった場合はフォームを送信しない（何もしない）
-	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
-		return $post_id;
-
-//	usces_log('item_save_metadata : '.print_r($_POST['post_ID'],true), 'acting_transaction.log');
-	$post_id = $_POST['post_ID'];
-	if( $post_id < 0 ) return $post_id;
-
+	usces_log('item_save_metadata : '.print_r($post_id,true), 'acting_transaction.log');
+	usces_log('item_save_metadata : '.print_r($_POST['post_ID'],true), 'acting_transaction.log');
 	// パーミッションチェック
-	if ( 'post' == $_POST['post_type'] ) {
+	if ( isset($_POST['page']) && 'usces_itemedit' == $_POST['page']) {
 		if ( !current_user_can( 'edit_post', $post_id ) ){
 			$usces->set_action_status('error', 'ERROR : '.__('Sorry, you do not have the right to edit this post.'));
 			return $post_id;
@@ -1249,7 +1235,22 @@ function item_save_metadata( $post_id, $post ) {
 			return $post_id;
 	}
 
+	if ( !wp_verify_nonce( $_POST['usces_nonce'], 'usc-e-shop' )) {
+		return $post_id;
+	}
 
+//	$post_id = $_POST['post_ID'];
+//	if( $post_id < 0 ){
+//		return $post_id;
+//	}
+	
+
+
+  	// 自動保存ルーチンかどうかチェック。そうだった場合はフォームを送信しない（何もしない）
+	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
+		return $post_id;
+
+	$usces->set_item_mime($post_id, 'item');
 	
 	$itemCode  = trim($_POST['itemCode' ]);
 	if( preg_match('/[^0-9a-zA-Z\-_]/', $itemCode) ){
@@ -1272,7 +1273,6 @@ function item_save_metadata( $post_id, $post ) {
 	if(isset($_POST['itemName'])){
 		$itemName = trim($_POST['itemName']);
 		update_post_meta($post_id, '_itemName', $itemName);
-		$usces->set_item_mime($post_id, 'item');
 	}
 //	if(isset($_POST['itemCode'])){
 //		$itemCode = trim($_POST['itemCode']);

@@ -12,7 +12,8 @@ function admin_prodauct_footer(){
     var submit_event = true;
     // 下書き保存やプレビューの場合は必須チェックを行わない
     $('#post-preview, #save-post').click(function(){
-        submit_event = false;
+		if(!$("#auto_draft").val())
+	        submit_event = false;
         return true;
     });
     $('#post').submit(function(e){

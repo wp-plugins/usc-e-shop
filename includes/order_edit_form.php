@@ -900,7 +900,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 						$c = '';
 						$optstr .= esc_html($key) . ' : '; 
 						foreach($value as $v) {
-							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$optstr .= $c.nl2br(esc_html(urldecode($v)));
 							$c = ', ';
 						}
 						$optstr .= "<br />\n"; 

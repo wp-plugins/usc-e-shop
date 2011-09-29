@@ -49,6 +49,7 @@ function usces_item_uploadcsv(){
 	$min_field_num = 29;
 	$log = '';
 	$pre_code = '';
+	$sku_index = 0;
 	$res = array();
 	$date_pattern = "/(\d{4})-(\d{2}|\d)-(\d{2}|\d) (\d{2}):(\d{2}|\d):(\d{2}|\d)/";
 	
@@ -144,6 +145,7 @@ function usces_item_uploadcsv(){
 	//data check & reg
 	foreach($lines as $rows_num => $line){
 		$datas = array();
+
 		$logtemp = '';
 		$line = trim($line);
 		if( empty($line) ) continue;
@@ -182,6 +184,11 @@ function usces_item_uploadcsv(){
 			$log .= $logtemp;
 			continue;
 		}
+
+		if( 0 === $sku_index ){
+			$skus = $usces->get_skus( $datas[USCES_COL_ITEM_CODE], 'code' );
+		}
+
 		foreach($datas as $key => $data){
 			$data = trim(mb_convert_encoding($data, 'UTF-8', 'SJIS'));
 			switch($key){
@@ -287,13 +294,13 @@ function usces_item_uploadcsv(){
 					if( 0 == strlen($data) ){
 						$logtemp .= "No." . ($rows_num+1) . "\t".__('A SKU cord is non-input.', 'usces')."\r\n";
 					}else if( $pre_code == $datas[USCES_COL_ITEM_CODE] ){
-						$query = $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta 
-												WHERE post_id = %d AND meta_key = %s", 
-												$post_id, 
-												'_isku_'.trim(mb_convert_encoding($data, 'UTF-8', 'SJIS'))
-								);
-						$meta_id = $wpdb->get_var( $query );
-						if($meta_id !== NULL)
+//						$query = $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta 
+//												WHERE post_id = %d AND meta_key = %s", 
+//												$post_id, 
+//												'_isku_'.trim(mb_convert_encoding($data, 'UTF-8', 'SJIS'))
+//								);
+//						$meta_id = $wpdb->get_var( $query );
+						if( array_key_exists( trim(mb_convert_encoding($data, 'UTF-8', 'SJIS')), $skus ) )
 							$logtemp .= "No." . ($rows_num+1) . "\t".__('A SKU cord repeats.', 'usces')."\r\n";
 					}
 					break;
@@ -341,9 +348,9 @@ function usces_item_uploadcsv(){
 				}
 				switch($o){
 					case 1:
-//						if( isset($datas[$key]) && 0 == strlen($datas[$key]) )
+//						if( empty($value) )
 //							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces')."\r\n";
-						break;
+//						break;
 					case 2:
 						if( $value != NULL && ((0 != (int)$value) and (1 != (int)$value) and (2 != (int)$value) and (5 != (int)$value)) )
 							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces')."\r\n";
@@ -362,9 +369,6 @@ function usces_item_uploadcsv(){
 		if( 0 < strlen($logtemp) ){
 			$err_num++;
 			$log .= $logtemp;
-//20110315ysk start
-			//$pre_code = $datas[USCES_COL_ITEM_CODE];
-//20110315ysk end
 			continue;
 		}
 		
@@ -375,164 +379,221 @@ function usces_item_uploadcsv(){
 		$opt = array();
 		$valstr = '';
 
-		$mode = 'add';
-		if($pre_code != $datas[USCES_COL_ITEM_CODE]) {
-//20101207ysk start
-			//$post_id = $usces->get_postIDbyCode($datas[USCES_COL_ITEM_CODE]);
-			$query = $wpdb->prepare("SELECT meta.post_id FROM $wpdb->postmeta AS meta 
-				INNER JOIN $wpdb->posts AS post ON meta.post_id = post.ID AND post.post_status <> 'trash' AND post.post_mime_type = 'item' 
-				WHERE meta.meta_value = %s LIMIT 1", trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
-			$post_id = $wpdb->get_var( $query );
-//20101207ysk end
-			if(!empty($post_id)) $mode = 'upd';
-		}
+//		$mode = 'add';
+//		if($pre_code != $datas[USCES_COL_ITEM_CODE]) {
+////20101207ysk start
+//			//$post_id = $usces->get_postIDbyCode($datas[USCES_COL_ITEM_CODE]);
+//			$query = $wpdb->prepare("SELECT meta.post_id FROM $wpdb->postmeta AS meta 
+//				INNER JOIN $wpdb->posts AS post ON meta.post_id = post.ID AND post.post_status <> 'trash' AND post.post_mime_type = 'item' 
+//				WHERE meta.meta_value = %s LIMIT 1", trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
+//			$post_id = $wpdb->get_var( $query );
+////20101207ysk end
+//			if(!empty($post_id)) $mode = 'upd';
+//		}
 
 		if( $pre_code != $datas[USCES_COL_ITEM_CODE] ){
-		
+			if( $ID = $usces->get_postIDbyCode( $datas[USCES_COL_ITEM_CODE] ) ){
+				$mode = 'add';
+			}else{
+				$mode = 'upd';
+			}
 			//add posts
-			$query = "SHOW FIELDS FROM $wpdb->posts";
-			$results = $wpdb->get_results( $query, ARRAY_A );
-			if($mode == 'add') {
-				foreach($results as $ind => $rows){
-					$post_fields[] = $rows['Field'];
+//			$query = "SHOW FIELDS FROM $wpdb->posts";
+//			$results = $wpdb->get_results( $query, ARRAY_A );
+//			if($mode == 'add') {
+//				foreach($results as $ind => $rows){
+//					$post_fields[] = $rows['Field'];
+//				}
+//			} elseif($mode == 'upd') {
+//				$post_fields[] = 'post_modified';
+//				$post_fields[] = 'post_modified_gmt';
+//				$post_fields[] = 'post_content';
+//				$post_fields[] = 'post_title';
+//				$post_fields[] = 'post_excerpt';
+//				$post_fields[] = 'post_status';
+//			}
+//			foreach($post_fields as $key){
+//				switch( $key ){
+//					case 'ID':
+//						break;
+//					case 'post_author':
+//						$cdatas[$key] = 1;
+//						break;
+//					case 'post_date':
+//					case 'post_modified':
+//						$data = $datas[USCES_COL_POST_MODIFIED];
+//						if( $data == '' || $data == '0000-00-00 00:00:00' ){
+//							$cdatas[$key] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+//						}else{
+//							//$cdatas[$key] = $data;
+//
+//							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
+//								$cdatas[$key] = $data;
+//							} else {
+//								$datetime = explode(' ', $data);
+//								$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
+//								$cdatas[$key] = $date_str;
+//							}
+//						}
+//						break;
+//					case 'post_date_gmt':
+//					case 'post_modified_gmt':
+//						$data = $datas[USCES_COL_POST_MODIFIED];
+//						if( $data == '' || $data == '0000-00-00 00:00:00' ){
+//							$cdatas[$key] = gmdate('Y-m-d H:i:s');
+//						}else{
+//							//$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
+//							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
+//								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
+//							} else {
+//								$datetime = explode(' ', $data);
+//								$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
+//								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($date_str));
+//							}
+//						}
+//						break;
+//					case 'post_content':
+//						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS'));
+//						break;
+//					case 'post_title':
+//						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS'));
+//						break;
+//					case 'post_excerpt':
+//						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS'));
+//						break;
+//					case 'post_status':
+//						$cdatas[$key] = $datas[USCES_COL_POST_STATUS];
+//						break;
+//					case 'comment_status':
+//					case 'ping_status':
+//						$cdatas[$key] = 'close';
+//						break;
+//					case 'post_password':
+//					case 'post_name':
+//					case 'to_ping':
+//					case 'pinged':
+//					case 'post_content_filtered':
+//					case 'guid':
+//						$cdatas[$key] = '';
+//						break;
+//					case 'post_parent':
+//					case 'menu_order':
+//					case 'comment_count':
+//						$cdatas[$key] = 0;
+//						break;
+//					case 'post_type':
+//						$cdatas[$key] = 'post';
+//						break;
+//					case 'post_mime_type':
+//						$cdatas[$key] = 'item';
+//						break;
+//					default:
+//						$cdatas[$key] = '';
+//				}
+//			}
+			$cdatas['ID'] = $ID;
+			$cdatas['post_author'] = 1;
+			
+			$data = $datas[USCES_COL_POST_MODIFIED];
+			if( $data == '' || $data == '0000-00-00 00:00:00' ){
+				$cdatas['post_date'] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+				$cdatas['post_modified'] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+			}else{
+				if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
+					$cdatas['post_date'] = $data;
+					$cdatas['post_modified'] = $data;
+				} else {
+					$datetime = explode(' ', $data);
+					$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
+					$cdatas['post_date'] = $date_str;
+					$cdatas['post_modified'] = $date_str;
 				}
-			} elseif($mode == 'upd') {
-				$post_fields[] = 'post_modified';
-				$post_fields[] = 'post_modified_gmt';
-				$post_fields[] = 'post_content';
-				$post_fields[] = 'post_title';
-				$post_fields[] = 'post_excerpt';
-				$post_fields[] = 'post_status';
 			}
-			foreach($post_fields as $key){
-				switch( $key ){
-					case 'ID':
-						break;
-					case 'post_author':
-						$cdatas[$key] = 1;
-						break;
-					case 'post_date':
-					case 'post_modified':
-						$data = $datas[USCES_COL_POST_MODIFIED];
-						if( $data == '' || $data == '0000-00-00 00:00:00' ){
-							$cdatas[$key] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-						}else{
-							//$cdatas[$key] = $data;
 
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
-								$cdatas[$key] = $data;
-							} else {
-								$datetime = explode(' ', $data);
-								$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
-								$cdatas[$key] = $date_str;
-							}
-						}
-						break;
-					case 'post_date_gmt':
-					case 'post_modified_gmt':
-						$data = $datas[USCES_COL_POST_MODIFIED];
-						if( $data == '' || $data == '0000-00-00 00:00:00' ){
-							$cdatas[$key] = gmdate('Y-m-d H:i:s');
-						}else{
-							//$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
-								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
-							} else {
-								$datetime = explode(' ', $data);
-								$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
-								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($date_str));
-							}
-						}
-						break;
-					case 'post_content':
-						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS'));
-						break;
-					case 'post_title':
-						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS'));
-						break;
-					case 'post_excerpt':
-						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS'));
-						break;
-					case 'post_status':
-						$cdatas[$key] = $datas[USCES_COL_POST_STATUS];
-						break;
-					case 'comment_status':
-					case 'ping_status':
-						$cdatas[$key] = 'close';
-						break;
-					case 'post_password':
-					case 'post_name':
-					case 'to_ping':
-					case 'pinged':
-					case 'post_content_filtered':
-					case 'guid':
-						$cdatas[$key] = '';
-						break;
-					case 'post_parent':
-					case 'menu_order':
-					case 'comment_count':
-						$cdatas[$key] = 0;
-						break;
-					case 'post_type':
-						$cdatas[$key] = 'post';
-						break;
-					case 'post_mime_type':
-						$cdatas[$key] = 'item';
-						break;
-					default:
-						$cdatas[$key] = '';
+			$data = $datas[USCES_COL_POST_MODIFIED];
+			if( $data == '' || $data == '0000-00-00 00:00:00' ){
+				$cdatas['post_date'] = gmdate('Y-m-d H:i:s');
+				$cdatas['post_modified'] = gmdate('Y-m-d H:i:s');
+			}else{
+				if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
+					$cdatas['post_date'] = gmdate('Y-m-d H:i:s', strtotime($data));
+					$cdatas['post_modified'] = gmdate('Y-m-d H:i:s', strtotime($data));
+				} else {
+					$datetime = explode(' ', $data);
+					$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
+					$cdatas['post_date'] = gmdate('Y-m-d H:i:s', strtotime($date_str));
+					$cdatas['post_modified'] = gmdate('Y-m-d H:i:s', strtotime($date_str));
 				}
 			}
-			if($mode == 'add') {
-				$wpdb->insert( $wpdb->posts, $cdatas );
-				$post_id = $wpdb->insert_id;
-				if( $post_id == NULL ){
+
+			$cdatas['post_content'] = trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS'));
+			$cdatas['post_title'] = trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS'));
+			$cdatas['post_excerpt'] = trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS'));
+			$cdatas['post_status'] = $datas[USCES_COL_POST_STATUS];
+			$cdatas['comment_status'] = 'close';
+			$cdatas['ping_status'] = 'close';
+			$cdatas['post_type'] = 'post';
+			$cdatas['post_mime_type'] = 'item';
+			
+			$categories = explode(';', $datas[USCES_COL_CATEGORY]);
+			$cdatas['post_category'] = $categories;
+			
+			$tags = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
+			$cdatas['tags_input'] = $tags;
+			
+			$post_id = wp_insert_post($cdatas);
+
+//			if($mode == 'add') {
+//				$wpdb->insert( $wpdb->posts, $cdatas );
+//				$post_id = $wpdb->insert_id;
+				if( !$post_id ){
 					$err_num++;
 					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
-			} elseif($mode == 'upd') {
-				$ids['ID'] = $post_id;
-				$dbres = $wpdb->update( $wpdb->posts, $cdatas, $ids );
-				if( $dbres === false ) {
-					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
-					continue;
-				}
+//			} else
+			
+			if($mode == 'upd') {
+//				$ids['ID'] = $post_id;
+//				$dbres = $wpdb->update( $wpdb->posts, $cdatas, $ids );
+//				if( $dbres === false ) {
+//					$err_num++;
+//					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+//					$pre_code = $datas[USCES_COL_ITEM_CODE];
+//					continue;
+//				}
 //20110525ysk start 0000172
 				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_') OR (SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_')) AND post_id = %d", $post_id);
+//				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_') OR (SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_')) AND post_id = %d", $post_id);
 //20110525ysk end
+				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ( meta_key = '_iopt_' OR meta_key = '_isku_' OR ( SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_') ) AND post_id = %d", $post_id);
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
 					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
-				$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
-				$dbres = $wpdb->query( $query );
-				if( $dbres === false ) {
-					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
-					continue;
-				}
-				$query = "SELECT term_taxonomy_id, COUNT(*) AS ct FROM $wpdb->term_relationships GROUP BY term_taxonomy_id";
-				$relation_data = $wpdb->get_results( $query, ARRAY_A );
-				foreach((array)$relation_data as $relation_rows) {
-					$term_taxonomy_ids['term_taxonomy_id'] = $relation_rows['term_taxonomy_id'];
-					$term_taxonomy_updatas['count'] = $relation_rows['ct'];
-					$dbres = $wpdb->update( $wpdb->term_taxonomy, $term_taxonomy_updatas, $term_taxonomy_ids );
-					if( $dbres === false ) {
-						$err_num++;
-						$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
-						$pre_code = $datas[USCES_COL_ITEM_CODE];
-						continue;
-					}
-				}
+//				$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
+//				$dbres = $wpdb->query( $query );
+//				if( $dbres === false ) {
+//					$err_num++;
+//					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+//					$pre_code = $datas[USCES_COL_ITEM_CODE];
+//					continue;
+//				}
+//				$query = "SELECT term_taxonomy_id, COUNT(*) AS ct FROM $wpdb->term_relationships GROUP BY term_taxonomy_id";
+//				$relation_data = $wpdb->get_results( $query, ARRAY_A );
+//				foreach((array)$relation_data as $relation_rows) {
+//					$term_taxonomy_ids['term_taxonomy_id'] = $relation_rows['term_taxonomy_id'];
+//					$term_taxonomy_updatas['count'] = $relation_rows['ct'];
+//					$dbres = $wpdb->update( $wpdb->term_taxonomy, $term_taxonomy_updatas, $term_taxonomy_ids );
+//					if( $dbres === false ) {
+//						$err_num++;
+//						$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+//						$pre_code = $datas[USCES_COL_ITEM_CODE];
+//						continue;
+//					}
+//				}
 			}
 
 			//add postmeta
@@ -551,19 +612,58 @@ function usces_item_uploadcsv(){
 			$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
 			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_SHIPPINGCHARGE], 'UTF-8', 'SJIS'))) . "'),";
 			$valstr .= '(' . $post_id . ", '_itemIndividualSCharge','" . $datas[USCES_COL_ITEM_INDIVIDUALSCHARGE] . "'),";
-			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
-			$sku['cprice'] = $datas[USCES_COL_SKU_CPRICE];
-			$sku['price'] = $datas[USCES_COL_SKU_PRICE];
-			$sku['zaikonum'] = $datas[USCES_COL_SKU_ZAIKONUM];
-			$sku['zaiko'] = $datas[USCES_COL_SKU_ZAIKO];
-			$sku['disp'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
-			$sku['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
-			$sku['gptekiyo'] = $datas[USCES_COL_SKU_GPTEKIYO];
+		
 			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
 			
+//			print_r($valstr);
+			$valstr = rtrim($valstr, ',');
+			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
+			$dbres = mysql_query($query) or die(mysql_error());
+
+			//add term_relationships, edit term_taxonomy
+			//category
+//			$categories = explode(';', $datas[USCES_COL_CATEGORY]);
+//			foreach((array)$categories as $category){
+//				$query = $wpdb->prepare("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy 
+//										WHERE term_id = %d", $category);
+//				$term_taxonomy_id = $wpdb->get_var( $query );
+//				if($term_taxonomy_id == NULL) continue;
+//
+//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+//								(object_id, term_taxonomy_id, term_order) VALUES 
+//								(%d, %d, 0)", 
+//								$post_id, $term_taxonomy_id
+//						);
+//				$dbres = $wpdb->query($query);
+//				if( !$dbres ) continue;
+//				
+//				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
+//										WHERE term_taxonomy_id = %d", $term_taxonomy_id);
+//				$tct = $wpdb->get_var( $query );
+//				
+//				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
+//								WHERE term_taxonomy_id = %d", 
+//								$tct, $term_taxonomy_id
+//						);
+//				$dbres = $wpdb->query($query);
+//			}
+//			//tag
+//			$tags = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
+//			wp_set_object_terms($post_id, (array)$tags, 'post_tag');
+//			
+//			if($mode == 'add') {
+//				//edit posts
+//				$ids['ID'] = $post_id;
+//				$updatas['post_name'] = $post_id;
+//				$updatas['guid'] = get_option('home') . '?p=' . $post_id;
+//				$wpdb->update( $wpdb->posts, $updatas, $ids );
+//			}
+
+
+//	Add Item Option	
 			for($i=0; $i<$opnum; $i++){
 				$opflg = true;
-				$opt = array();
+				$optvalue = array();
 				for($o=1; $o<=4; $o++){
 					$key = ($min_field_num-1)+$o+($i*4);
 //					if( !isset($datas[$key]) ){
@@ -575,89 +675,67 @@ function usces_item_uploadcsv(){
 					}
 					switch($o){
 						case 1:
-							$ometa_key = '_iopt_' . trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
+							$opvaluet['name'] = trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
 							break;
 						case 2:
-							$opt['means'] = (int)$datas[$key];
+							$opvaluet['means'] = (int)$datas[$key];
 							break;
 						case 3:
-							$opt['essential'] = (int)$datas[$key];
+							$opvaluet['essential'] = (int)$datas[$key];
 							break;
 						case 4:
 							if( !empty($datas[$key]) ) {
-								$opt['value'][0] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS')));
+								$opvaluet['value'] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS')));
 							}else{
-								$opt['value'][0] = "";
+								$opvaluet['value'] = "";
 							}
 							break;
 					}
 				}
-				if( $opflg == true )
-					$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(maybe_serialize($opt)) . "'),";
+				if( $opflg == true && !empty($optvalue) )
+					usces_add_opt($post_id, $opvaluet);
+					//$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(maybe_serialize($opt)) . "'),";
 			}
-//			print_r($valstr);
-			$valstr = rtrim($valstr, ',');
-			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
-			$dbres = mysql_query($query) or die(mysql_error());
 
-			//add term_relationships, edit term_taxonomy
-			//category
-			$categories = explode(';', $datas[USCES_COL_CATEGORY]);
-			foreach((array)$categories as $category){
-				$query = $wpdb->prepare("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy 
-										WHERE term_id = %d", $category);
-				$term_taxonomy_id = $wpdb->get_var( $query );
-				if($term_taxonomy_id == NULL) continue;
-
-				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
-								(object_id, term_taxonomy_id, term_order) VALUES 
-								(%d, %d, 0)", 
-								$post_id, $term_taxonomy_id
-						);
-				$dbres = $wpdb->query($query);
-				if( !$dbres ) continue;
-				
-				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
-										WHERE term_taxonomy_id = %d", $term_taxonomy_id);
-				$tct = $wpdb->get_var( $query );
-				
-				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
-								WHERE term_taxonomy_id = %d", 
-								$tct, $term_taxonomy_id
-						);
-				$dbres = $wpdb->query($query);
-			}
-			//tag
-			$tags = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
-			wp_set_object_terms($post_id, (array)$tags, 'post_tag');
-			
-			if($mode == 'add') {
-				//edit posts
-				$ids['ID'] = $post_id;
-				$updatas['post_name'] = $post_id;
-				$updatas['guid'] = get_option('home') . '?p=' . $post_id;
-				$wpdb->update( $wpdb->posts, $updatas, $ids );
-			}
-			
-		}else{
-			$valstr = '';
-			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
-			$sku['cprice'] = $datas[USCES_COL_SKU_CPRICE];
-			$sku['price'] = $datas[USCES_COL_SKU_PRICE];
-			$sku['zaikonum'] = $datas[USCES_COL_SKU_ZAIKONUM];
-			$sku['zaiko'] = $datas[USCES_COL_SKU_ZAIKO];
-			$sku['disp'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
-			$sku['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
-			$sku['gptekiyo'] = $datas[USCES_COL_SKU_GPTEKIYO];
-			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
-			
-			$valstr = rtrim($valstr, ',');
-			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
-			$dbres = mysql_query($query) or die(mysql_error());
-		
 		}
+//		else{
+//			$valstr = '';
+//			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
+//			$sku['cprice'] = $datas[USCES_COL_SKU_CPRICE];
+//			$sku['price'] = $datas[USCES_COL_SKU_PRICE];
+//			$sku['zaikonum'] = $datas[USCES_COL_SKU_ZAIKONUM];
+//			$sku['zaiko'] = $datas[USCES_COL_SKU_ZAIKO];
+//			$sku['disp'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
+//			$sku['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
+//			$sku['gptekiyo'] = $datas[USCES_COL_SKU_GPTEKIYO];
+//			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
+//			
+//			$valstr = rtrim($valstr, ',');
+//			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
+//			$dbres = mysql_query($query) or die(mysql_error());
+//		
+//		}
 
 
+//	Add Item SKU	
+		$sku_code = trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
+		if( array_key_exists( $sku_code, $skus ) ){
+			$skuvalue['code'] = $sku_code;
+			$skuvalue['name'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
+			$skuvalue['cprice'] = $datas[USCES_COL_SKU_CPRICE];
+			$skuvalue['price'] = $datas[USCES_COL_SKU_PRICE];
+			$skuvalue['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
+			$skuvalue['stocknum'] = $datas[USCES_COL_SKU_ZAIKONUM];
+			$skuvalue['stock'] = $datas[USCES_COL_SKU_ZAIKO];
+			$skuvalue['gp'] = $datas[USCES_COL_SKU_GPTEKIYO];
+		}
+		add_item_sku_meta( $post_id, $skuvalue );
+		
+		if( $pre_code != $datas[USCES_COL_ITEM_CODE] ){
+			$sku_index = 0;
+		}else{
+			$sku_index++;
+		}
 		$comp_num++;
 		$pre_code = $datas[USCES_COL_ITEM_CODE];
 	}
@@ -854,9 +932,10 @@ function usces_download_item_list() {
 		$line_item .= $td_h.$tag.$td_f;
 
 		$line_options = '';
-		$option_meta = has_item_option_meta($post_id);
-		foreach($option_meta as $option) {
-			$option_value = maybe_unserialize($option['meta_value']);
+//		$option_meta = has_item_option_meta($post_id);
+		$option_meta = usces_get_opts( $post_id, 'sort' );
+		foreach($option_meta as $option_value) {
+//			$option_value = maybe_unserialize($option['meta_value']);
 			$value = '';
 			if(is_array($option_value['value'])) {
 				foreach($option_value['value'] as $k => $v) {
@@ -870,24 +949,26 @@ function usces_download_item_list() {
 				$value = $option_value['value'];
 			}
 
-			$line_options .= $td_h.usces_entity_decode(substr($option['meta_key'], 6), $ext).$td_f;
+//			$line_options .= $td_h.usces_entity_decode(substr($option['meta_key'], 6), $ext).$td_f;
+			$line_options .= $td_h.usces_entity_decode($option_value['name'], $ext).$td_f;
 			$line_options .= $td_h.$option_value['means'].$td_f;
 			$line_options .= $td_h.$option_value['essential'].$td_f;
 			$line_options .= $td_h.usces_entity_decode($value, $ext).$td_f;
 		}
 
-		$sku_meta = has_item_sku_meta($post_id);
-		foreach($sku_meta as $sku) {
-			$sku_value = maybe_unserialize($sku['meta_value']);
+//		$sku_meta = has_item_sku_meta($post_id);
+		$sku_meta = $usces->get_skus( $post_id, 'sort' );
+		foreach($sku_meta as $sku_value) {
+//			$sku_value = maybe_unserialize($sku['meta_value']);
 
-			$line_sku = $td_h.substr($sku['meta_key'], 6).$td_f;
-			$line_sku .= $td_h.usces_entity_decode($sku_value['disp'], $ext).$td_f;
+			$line_sku = $td_h.$sku_value['code'].$td_f;
+			$line_sku .= $td_h.usces_entity_decode($sku_value['name'], $ext).$td_f;
 			$line_sku .= $td_h.$sku_value['cprice'].$td_f;
 			$line_sku .= $td_h.$sku_value['price'].$td_f;
-			$line_sku .= $td_h.$sku_value['zaikonum'].$td_f;
-			$line_sku .= $td_h.$sku_value['zaiko'].$td_f;
+			$line_sku .= $td_h.$sku_value['stocknum'].$td_f;
+			$line_sku .= $td_h.$sku_value['stock'].$td_f;
 			$line_sku .= $td_h.usces_entity_decode($sku_value['unit'], $ext).$td_f;
-			$line_sku .= $td_h.$sku_value['gptekiyo'].$td_f;
+			$line_sku .= $td_h.$sku_value['gp'].$td_f;
 
 			$line .= $tr_h.$line_item.$line_sku.$line_options.$tr_f.$lf;
 		}
