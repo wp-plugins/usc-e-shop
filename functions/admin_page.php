@@ -301,7 +301,7 @@ function usces_all_delete_itemdata(&$obj){
 	$ids = $_POST['listcheck'];
 	$status = true;
 	foreach ( (array)$ids as $post_id ){
-		if ( !wp_delete_post($post_id) )
+		if ( !wp_delete_post($post_id, true) )
 			$status = false;
 //		$query = $wpdb->prepare("DELETE FROM $wpdb->posts WHERE ID = %d", $post_id);
 //		$res = $wpdb->query( $query );

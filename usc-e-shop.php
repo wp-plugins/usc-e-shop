@@ -7,7 +7,7 @@ Version: 1.0.6
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
-define('USCES_VERSION', '1.1.r1109291');
+define('USCES_VERSION', '1.1.r1110051');
 define('USCES_DB_ACCESS', '1.4');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -33,6 +33,7 @@ require_once(USCES_PLUGIN_DIR."/functions/included_first.php");
 add_filter( 'locale', 'usces_filter_locale' );
 load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLDER.'/languages');
 
+require_once(USCES_PLUGIN_DIR."/functions/filters.php");
 require_once(USCES_PLUGIN_DIR."/functions/redirect.php");
 require_once(USCES_PLUGIN_DIR."/includes/initial.php");
 require_once(USCES_PLUGIN_DIR.'/functions/define_function.php');

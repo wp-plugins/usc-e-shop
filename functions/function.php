@@ -1034,7 +1034,8 @@ function usces_reg_orderdata( $results = array() ) {
 		if(isset($_REQUEST['acting']) && ('jpayment_conv' == $_REQUEST['acting'] || 'jpayment_bank' == $_REQUEST['acting'])) {
 			$usces->set_order_meta_value('settlement_id', $_GET['cod'], $order_id);
 			foreach($_GET as $key => $value) {
-				$data[$key] = mysql_real_escape_string($value);
+				if( 'purchase_jpayment' != $key)
+					$data[$key] = mysql_real_escape_string($value);
 			}
 			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 		}
@@ -3476,4 +3477,98 @@ function usces_update_sku( $post_id, $skucode, $fieldname, $value ){
 			return true;
 		}
 }
+
+function usces_get_items_skus() {
+	global $wpdb, $usces;
+	$res = array();
+	$item_codes = array();
+	$item_names = array();
+	$status = array();
+
+	$query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} 
+							WHERE post_mime_type = %s AND post_status = %s", 'item', 'publish');
+	$IDs = $wpdb->get_col($query);
+	if( !$IDs )
+		return $res;
+		
+	wp_cache_set( 'item_ids', $IDs );
+	
+	$key = 0;
+	foreach((array)$IDs as $post_id){
+		$item_codes[$post_id] = $usces->getItemCode($post_id);
+		$item_names[$post_id] = $usces->getItemName($post_id);
+		
+		//$skus = $usces->get_skus($post_id);
+		$metas = usces_get_post_meta($post_id, '_isku_');
+		foreach( (array)$metas as $mkey => $rows ){
+			$metas[$mkey]['meta_value'] = unserialize($rows['meta_value']);
+			$allmetas[] = $metas;
+//			$sku_post_id[] = $post_id;
+//			$sku_code[] = $values['code'];
+//			$sku_stocknum[] = $values['stocknum'];
+			$status[] = $metas[$mkey]['meta_value']['stock'];
+			$key++;
+		}
+		//usces_log('implode : '.strlen(explode(',', $res)), 'acting_transaction.log');
+	}
+//	wp_cache_set( 'item_ids', $IDs );
+//	wp_cache_set( 'item_codes', $item_codes );
+//	wp_cache_set( 'item_names', $item_names );
+//	wp_cache_set( 'sku_data', $res );
+//	wp_cache_set( 'stock_ct', array_count_values($status) );
+
+}
+function usces_get_non_stoc_skus() {
+	global $wpdb, $usces;
+	$res = array();
+
+	$query = $wpdb->prepare("SELECT ID, code.meta_value AS code, name.meta_value AS name FROM {$wpdb->posts} 
+							LEFT JOIN {$wpdb->postmeta} AS code ON ID = code.post_id AND code.meta_key = '_itemCode' 
+							LEFT JOIN {$wpdb->postmeta} AS name ON ID = name.post_id AND name.meta_key = '_itemName' 
+							WHERE post_mime_type = %s AND post_status = %s", 'item', 'publish');
+	$items = $wpdb->get_results($query, ARRAY_A);
+	if( !$items )
+		return $res;
+		
+	$key = 0;
+	foreach((array)$items as $item){
+//		$ItemCode = $usces->getItemCode($item['ID']);
+//		$ItemName = $usces->getItemName($item['ID']);
+		
+		//$skus = $usces->get_skus($post_id);
+		$metas = usces_get_post_meta($item['ID'], '_isku_');
+		foreach( (array)$metas as $rows ){
+			$meta_value = unserialize($rows['meta_value']);
+			if( "" != $meta_value['stocknum'] && 0 === (int)$meta_value['stocknum'] ){
+				$res[$key]['ID'] = $item['ID'];
+				$res[$key]['code'] = $item['code'];
+				$res[$key]['name'] = $item['name'];
+				$res[$key]['sku'] = $meta_value['code'];
+			}
+			$key++;
+		}
+	}
+	return $res;
+}
+function usces_get_stocs() {
+	global $wpdb, $usces;
+	$status = array();
+
+	$query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} 
+							WHERE post_mime_type = %s AND post_status = %s", 'item', 'publish');
+	$IDs = $wpdb->get_col($query);
+	if( !$IDs )
+		return $res;
+		
+	foreach((array)$IDs as $post_id){
+		$metas = usces_get_post_meta($post_id, '_isku_');
+		foreach( (array)$metas as $mkey => $rows ){
+			$meta_value = unserialize($rows['meta_value']);
+			$status[] = $meta_value['stock'];
+		}
+	}
+	return array_count_values($status);
+}
+
+
 ?>

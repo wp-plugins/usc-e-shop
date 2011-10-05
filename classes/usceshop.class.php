@@ -980,7 +980,7 @@ class usc_e_shop
 						$this->action_status = 'error';
 						$this->action_message = __('データに不備が有ります','usces');
 						$options['acting_settings']['zeus']['activate'] = 'off';
-						unset($this->payment_structure['acting_zeus_card'], $this->payment_structure['acting_zeus_bank']);
+						unset($this->payment_structure['acting_zeus_card'], $this->payment_structure['acting_zeus_bank'], $this->payment_structure['acting_zeus_conv']);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure',$this->payment_structure);
@@ -4528,72 +4528,72 @@ class usc_e_shop
 	}
 
 	function getItemCode($post_id) {
-		$str = get_post_custom_values('_itemCode', $post_id);
-		return $str[0];
+		$str = get_post_meta($post_id, '_itemCode', true);
+		return $str;
 	}
 	
 	function getItemName($post_id) {
-		$str = get_post_custom_values('_itemName', $post_id);
-		return $str[0];
+		$str = get_post_meta($post_id, '_itemName', true);
+		return $str;
 	}
 	
 	function getItemRestriction($post_id) {
-		$str = get_post_custom_values('_itemRestriction', $post_id);
+		$str = get_post_meta($post_id, '_itemRestriction', true);
 		return $str[0];
 	}
 	
 	function getItemPointrate($post_id) {
-		$str = get_post_custom_values('_itemPointrate', $post_id);
+		$str = get_post_meta($post_id, '_itemPointrate', true);
 		return $str[0];
 	}
 	
 	function getItemShipping($post_id) {
-		$str = get_post_custom_values('_itemShipping', $post_id);
+		$str = get_post_meta($post_id, '_itemShipping', true);
 		return $str[0];
 	}
 	
 	function getItemShippingCharge($post_id) {
-		$str = get_post_custom_values('_itemShippingCharge', $post_id);
+		$str = get_post_meta($post_id, '_itemShippingCharge', true);
 		return (int)$str[0];
 	}
 	
 	function getItemDeliveryMethod($post_id) {
-		$str = get_post_custom_values('_itemDeliveryMethod', $post_id);
+		$str = get_post_meta($post_id, '_itemDeliveryMethod', true);
 		return unserialize($str[0]);
 	}
 	
 	function getItemIndividualSCharge($post_id) {
-		$str = get_post_custom_values('_itemIndividualSCharge', $post_id);
+		$str = get_post_meta($post_id, '_itemIndividualSCharge', true);
 		return $str[0];
 	}
 	
 	function getItemGpNum1($post_id) {
-		$str = get_post_custom_values('_itemGpNum1', $post_id);
+		$str = get_post_meta($post_id, '_itemGpNum1', true);
 		return $str[0];
 	}
 	
 	function getItemGpNum2($post_id) {
-		$str = get_post_custom_values('_itemGpNum2', $post_id);
+		$str = get_post_meta($post_id, '_itemGpNum2', true);
 		return $str[0];
 	}
 	
 	function getItemGpNum3($post_id) {
-		$str = get_post_custom_values('_itemGpNum3', $post_id);
+		$str = get_post_meta($post_id, '_itemGpNum3', true);
 		return $str[0];
 	}
 	
 	function getItemGpDis1($post_id) {
-		$str = get_post_custom_values('_itemGpDis1', $post_id);
+		$str = get_post_meta($post_id, '_itemGpDis1', true);
 		return $str[0];
 	}
 	
 	function getItemGpDis2($post_id) {
-		$str = get_post_custom_values('_itemGpDis2', $post_id);
+		$str = get_post_meta($post_id, '_itemGpDis2', true);
 		return $str[0];
 	}
 	
 	function getItemGpDis3($post_id) {
-		$str = get_post_custom_values('_itemGpDis3', $post_id);
+		$str = get_post_meta($post_id, '_itemGpDis3', true);
 		return $str[0];
 	}
 	
@@ -4857,8 +4857,7 @@ class usc_e_shop
 	function get_postIDbyCode( $itemcode ) {
 		global $wpdb;
 		
-		$codestr = $itemcode;
-		$query = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_value = %s", $codestr);
+		$query = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s LIMIT 1", '_itemCode', $itemcode);
 		$res = $wpdb->get_var( $query );
 		return $res;
 	}
@@ -4903,48 +4902,10 @@ class usc_e_shop
 		ksort($skus);
 	
 		return $skus;
-//		$fields = get_post_custom($post_id);
-//		if( !is_array($fields)) $fields = array();
-//		ksort($fields);
-//		foreach($fields as $k => $v){
-//			if( preg_match('/^_isku_/', $k, $match) ){
-//				$values = maybe_unserialize($v[0]);
-//				$key[] = substr($k, 6);
-//				$cprice[] = $values['cprice'];
-//				$price[] = $values['price'];
-//				$zaiko[] = $values['zaiko'];
-//				$zaikonum[] = $values['zaikonum'];
-//				$disp[] = $values['disp'];
-//				$unit[] = $values['unit'];
-//				$gptekiyo[] = $values['gptekiyo'];
-//				
-//				$res[substr($k, 6)]['cprice'] = $values['cprice'];
-//				$res[substr($k, 6)]['price'] = $values['price'];
-//				$res[substr($k, 6)]['zaiko'] = $values['zaiko'];
-//				$res[substr($k, 6)]['zaikonum'] = $values['zaikonum'];
-//				$res[substr($k, 6)]['disp'] = $values['disp'];
-//				$res[substr($k, 6)]['unit'] = $values['unit'];
-//				$res[substr($k, 6)]['gptekiyo'] = $values['gptekiyo'];
-//			}
-//		}
-//		if($output == 'ARRAY_A'){
-//			return $res;
-//		}else{
-//			return compact('key', 'cprice', 'price', 'zaiko', 'zaikonum', 'disp', 'unit', 'gptekiyo' );
-//		}
 	}
 	
 	function is_item( $post ) {
 	
-//		$catids = wp_get_post_categories($post_id);
-//		
-//		$res = '';
-//		foreach($catids as $id){
-//			$cat = get_category($id);
-//			if( $cat->slug == 'item' || $cat->parent == USCES_ITEM_CAT_PARENT_ID )
-//				$res = 'ok';
-//		}
-		
 		if( $post->post_mime_type == 'item' )
 			return true;
 		else
@@ -5763,35 +5724,6 @@ class usc_e_shop
 			return $res['price'] - $res['point'] + $res['discount'] + $res['shipping'] + $res['cod'] + $res['tax'];
 	}
 
-	function get_items_skus() {
-		global $wpdb;
-		$sku = array();
-		$status = array();
-		
-		$query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} 
-								WHERE post_mime_type = %s AND post_status = %s", 'item', 'publish');
-		$IDs = $wpdb->get_col($query);
-		if( !$IDs )
-			return $sku;
-		$key = 0;
-		foreach((array)$IDs as $post_id){
-			$item_code = $this->getItemCode($post_id);
-			$item_nema = $this->getItemName($post_id);
-			$skus = $this->get_skus($post_id);
-			foreach( (array)$skus as $sku ){
-				$sku['data'][$key]['ID'] = $post_id;
-				$sku['data'][$key]['code'] = $item_code;
-				$sku['data'][$key]['name'] = $item_nema;
-				$sku['data'][$key]['sku'] = $sku['code'];
-				$sku['data'][$key]['num'] = $sku['stocknum'];
-				$status[] = $sku['stocknum'];
-				$key++;
-			}
-		}
-		$sku['count'] = array_count_values($status);
-		return $sku;
-	}
-
 	function is_status($need, $str){
 		$array = explode(',', $str);
 		return in_array($need, $array);
@@ -6225,8 +6157,10 @@ class usc_e_shop
 				}
 			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){
 				$meta_values = unserialize($value['meta_value']);
-				foreach( $meta_values as $key => $meta_value ){
-					$fields[$key] = $meta_value;
+				if(is_array($meta_values)){
+					foreach( $meta_values as $key => $meta_value ){
+						$fields[$key] = $meta_value;
+					}
 				}
 			}
 		}

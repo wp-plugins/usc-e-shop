@@ -45,8 +45,8 @@ function usces_update_system_option( $option_name, $index, $newvalue ){
 
 	if( !empty($option_value) ){
 		$unique = true;
-		foreach( (array)$option_value as $value ){
-			if( $value['name'] == $newvalue['name'] ){
+		foreach( (array)$option_value as $value_id => $value ){
+			if( $value['name'] == $newvalue['name'] && $value_id != $index ){
 				$unique = false;
 				break;
 			}

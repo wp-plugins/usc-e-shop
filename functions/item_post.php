@@ -53,40 +53,42 @@ function usces_get_opts( $post_id, $keyflag = 'sort' ) {
 
 	return $opts;
 }
-function usces_add_opt( $post_id, $newvalue ) {
+function usces_add_opt( $post_id, $newvalue, $check = true ) {
 	global $wpdb;
-	$metas = usces_get_post_meta($post_id, '_iopt_');
-	if( !empty($metas) ){
-		$meta_num = count($metas);
-		$unique = true;
-		$sortnull = true;
-		foreach( $metas as $meta ){
-			$values = unserialize($rows['meta_value']);
-			if( $values['name'] == $newvalue['name'] )
-				$unique = false;
-			if( !isset($values['sort']) )
-				$sortnull = false;
-			$sort[] = $values['sort'];
-		}
-		if( !$unique )
-			return -1;
-		
-		rsort($sort);
-		$next_number = $sort[0] + 1;
-		$unique_sort = array_unique($sort, SORT_REGULAR);
-		if( $meta_num != count($unique_sort) || $meta_num != $next_number || !$sortnull){
-			//To repair the sort data
-			$i = 0;
-			foreach( $metas as $rows ){
+	if( $check ){
+		$metas = usces_get_post_meta($post_id, '_iopt_');
+		if( !empty($metas) ){
+			$meta_num = count($metas);
+			$unique = true;
+			$sortnull = true;
+			foreach( $metas as $meta ){
 				$values = unserialize($rows['meta_value']);
-				$values['sort'] = $i;
-				$serialized_values = serialize($values);
-				$wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $serialized_values, $rows['meta_id']) );
-				$i++;
+				if( $values['name'] == $newvalue['name'] )
+					$unique = false;
+				if( !isset($values['sort']) )
+					$sortnull = false;
+				$sort[] = $values['sort'];
+			}
+			if( !$unique )
+				return -1;
+			
+			rsort($sort);
+			$next_number = $sort[0] + 1;
+			$unique_sort = array_unique($sort, SORT_REGULAR);
+			if( $meta_num != count($unique_sort) || $meta_num != $next_number || !$sortnull){
+				//To repair the sort data
+				$i = 0;
+				foreach( $metas as $rows ){
+					$values = unserialize($rows['meta_value']);
+					$values['sort'] = $i;
+					$serialized_values = serialize($values);
+					$wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $serialized_values, $rows['meta_id']) );
+					$i++;
+				}
 			}
 		}
+		$newvalue['sort'] = !empty($meta_num) ? $meta_num : 0;
 	}
-	$newvalue['sort'] = !empty($meta_num) ? $meta_num : 0;
 	$serialized_newvalue = serialize($newvalue);
 	$wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value ) VALUES (%d, '_iopt_', %s)", $post_id, $serialized_newvalue) );
 	$id = $wpdb->insert_id;
@@ -122,40 +124,42 @@ function usces_add_opt( $post_id, $newvalue ) {
 //	return $skus;
 //}
 
-function usces_add_sku( $post_id, $newvalue ) {
+function usces_add_sku( $post_id, $newvalue, $check = true ) {
 	global $wpdb;
-	$metas = usces_get_post_meta($post_id, '_isku_');
-	if( !empty($metas) ){
-		$meta_num = count($metas);
-		$unique = true;
-		$sortnull = true;
-		foreach( $metas as $rows ){
-			$values = unserialize($rows['meta_value']);
-			if( $values['code'] == $newvalue['code'] )
-				$unique = false;
-			if( !isset($values['sort']) )
-				$sortnull = false;
-			$sort[] = $values['sort'];
-		}
-		if( !$unique )
-			return -1;
-		
-		rsort($sort);
-		$next_number = $sort[0] + 1;
-		$unique_sort = array_unique($sort, SORT_REGULAR);
-		if( $meta_num != count($unique_sort) || $meta_num != $next_number || !$sortnull){
-			//To repair the sort data
-			$i = 0;
+	if( $check ){
+		$metas = usces_get_post_meta($post_id, '_isku_');
+		if( !empty($metas) ){
+			$meta_num = count($metas);
+			$unique = true;
+			$sortnull = true;
 			foreach( $metas as $rows ){
 				$values = unserialize($rows['meta_value']);
-				$values['sort'] = $i;
-				$serialized_values = serialize($values);
-				$wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $serialized_values, $rows['meta_id']) );
-				$i++;
+				if( $values['code'] == $newvalue['code'] )
+					$unique = false;
+				if( !isset($values['sort']) )
+					$sortnull = false;
+				$sort[] = $values['sort'];
+			}
+			if( !$unique )
+				return -1;
+			
+			rsort($sort);
+			$next_number = $sort[0] + 1;
+			$unique_sort = array_unique($sort, SORT_REGULAR);
+			if( $meta_num != count($unique_sort) || $meta_num != $next_number || !$sortnull){
+				//To repair the sort data
+				$i = 0;
+				foreach( $metas as $rows ){
+					$values = unserialize($rows['meta_value']);
+					$values['sort'] = $i;
+					$serialized_values = serialize($values);
+					$wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $serialized_values, $rows['meta_id']) );
+					$i++;
+				}
 			}
 		}
+		$newvalue['sort'] = !empty($meta_num) ? $meta_num : 0;
 	}
-	$newvalue['sort'] = !empty($meta_num) ? $meta_num : 0;
 	$serialized_newvalue = serialize($newvalue);
 	$wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value ) VALUES (%d, '_isku_', %s)", $post_id, $serialized_newvalue) );
 	$id = $wpdb->insert_id;
@@ -1223,8 +1227,8 @@ function item_save_metadata( $post_id, $post ) {
 
 	$message = '';
 	
-	usces_log('item_save_metadata : '.print_r($post_id,true), 'acting_transaction.log');
-	usces_log('item_save_metadata : '.print_r($_POST['post_ID'],true), 'acting_transaction.log');
+//	usces_log('item_save_metadata : '.print_r($post_id,true), 'acting_transaction.log');
+//	usces_log('item_save_metadata : '.print_r($_POST['post_ID'],true), 'acting_transaction.log');
 	// パーミッションチェック
 	if ( isset($_POST['page']) && 'usces_itemedit' == $_POST['page']) {
 		if ( !current_user_can( 'edit_post', $post_id ) ){

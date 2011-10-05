@@ -256,6 +256,7 @@ jQuery(function($){
 		$('#dlItemListDialog').dialog('open');
 	});
 //20101111ysk end
+
 });
 
 function toggleVisibility(id) {
@@ -401,7 +402,7 @@ jQuery(document).ready(function($){
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
 	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : 
-			$skus = $this->get_skus( $array['ID'], 'code' );
+			$skus = $this->get_skus( $array['ID'], 'sort' );
 	?>
 		<?php if( $key == 'item_code') : ?>
 			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('_itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
@@ -457,7 +458,7 @@ jQuery(document).ready(function($){
 		
 			<td class="sku">
 			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="skuline<?php echo $bgc; ?>"><?php echo esc_html($key); ?></div>
+				<div class="skuline<?php echo $bgc; ?>"><?php echo esc_html($sv['code']); ?></div>
 			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
 			</td>
 
@@ -511,6 +512,7 @@ jQuery(document).ready(function($){
 	</form>
 	<p><?php _e('Indication is updated after upload completion.', 'usces'); ?></p>
 	<p><?php _e('Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload.', 'usces'); ?></p>
+
 </div>
 <!--20101111ysk start-->
 <div id="dlItemListDialog" title="<?php _e('Download Item List', 'usces'); ?>">

@@ -26,6 +26,7 @@ class dataList
 //20101202ysk start
 	var $pageLimit;		//ページ制限
 //20101202ysk end
+	var $exportMode;	//IDのみ
 		
 	//Constructor
 	function dataList($tableName, $arr_column)
@@ -43,6 +44,7 @@ class dataList
 //20101202ysk start
 		$this->pageLimit = 'on';
 //20101202ysk end
+		$this->exportMode = false;
 
 		$this->SetParamByQuery();
 
@@ -101,9 +103,11 @@ class dataList
 				break;
 		}
 		
-		$this->SetNavi();
-		$this->SetHeaders();
-		$this->SetSESSION();
+		if( ! $this->exportMode ){
+			$this->SetNavi();
+			$this->SetHeaders();
+			$this->SetSESSION();
+		}
 		
 		if($res){
 		
@@ -253,8 +257,27 @@ class dataList
 		$order = ' ORDER BY ' . $this->sortColumn . ' ' . $this->sortSwitchs[$this->sortColumn];
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
 		
-		if(USCES_MYSQL_VERSION >= 5){			
-			$query = $wpdb->prepare("SELECT mc.meta_value AS item_code, mn.meta_value AS item_name, 
+		if(USCES_MYSQL_VERSION >= 5){
+			if( $this->exportMode ){
+				$query = $wpdb->prepare("SELECT mc.meta_value AS item_code, mn.meta_value AS item_name,
+				 		CASE post.post_status 
+							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
+							WHEN 'future' THEN '" . __('Scheduled', 'usces') . "' 
+							WHEN 'draft' THEN '" . __('Draft', 'usces') . "' 
+							WHEN 'pending' THEN '" . __('Pending Review', 'usces') . "' 
+							WHEN 'trash' THEN '" . __('Trash', 'usces') . "' 
+							ELSE '" . __('Closed', 'usces') . "' 
+						END AS display_status, post.post_status, post.ID 
+						FROM {$this->table} AS post 
+						LEFT JOIN $wpdb->postmeta AS mc ON post.ID = mc.post_id AND mc.meta_key = '_itemCode' 
+						LEFT JOIN $wpdb->postmeta AS mn ON post.ID = mn.post_id AND mn.meta_key = '_itemName' 
+						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND meta.meta_key = %s 
+						LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
+						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
+						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
+						'_isku_');
+			}else{		
+				$query = $wpdb->prepare("SELECT mc.meta_value AS item_code, mn.meta_value AS item_name, 
 						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.term_id AS category, post.post_status, 
 						CASE post.post_status 
 							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
@@ -273,6 +296,7 @@ class dataList
 						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
 						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
 						'_isku_');
+			}
 //			$query = $wpdb->prepare("SELECT 
 //						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = '_itemCode') AS item_code, 
 //						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = '_itemName') AS item_name, 
@@ -293,7 +317,26 @@ class dataList
 //						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
 //						'_isku_');
 		} else {
-			$query = $wpdb->prepare("SELECT 
+			if( $this->exportMode ){
+				$query = $wpdb->prepare("SELECT mc.meta_value AS item_code, mn.meta_value AS item_name,
+				 		CASE post.post_status 
+							WHEN 'publish' THEN '" . __('Published', 'usces') . "' 
+							WHEN 'future' THEN '" . __('Scheduled', 'usces') . "' 
+							WHEN 'draft' THEN '" . __('Draft', 'usces') . "' 
+							WHEN 'pending' THEN '" . __('Pending Review', 'usces') . "' 
+							WHEN 'trash' THEN '" . __('Trash', 'usces') . "' 
+							ELSE '" . __('Closed', 'usces') . "' 
+						END AS display_status, post.post_status, post.ID 
+						FROM {$this->table} AS post 
+						LEFT JOIN $wpdb->postmeta AS mc ON post.ID = mc.post_id AND mc.meta_key = '_itemCode' 
+						LEFT JOIN $wpdb->postmeta AS mn ON post.ID = mn.post_id AND mn.meta_key = '_itemName' 
+						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND meta.meta_key = %s 
+						LEFT JOIN $wpdb->term_relationships AS tr ON tr.object_id = post.ID 
+						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
+						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
+						'_isku_');
+			}else{
+				$query = $wpdb->prepare("SELECT 
 						'item_code' AS item_code, 
 						post.post_title, 
 						meta.meta_key AS sku_key, meta.meta_value AS sku_value, te.name AS category, post.post_status, 
@@ -312,6 +355,7 @@ class dataList
 						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id 
 						LEFT JOIN $wpdb->terms AS te ON te.term_id = tt.term_id ",
 						'_isku_');
+			}	
 		}
 					
 		$query .= $where . $order;// . $limit;
@@ -335,7 +379,7 @@ class dataList
 	function SetTotalRow()
 	{
 		global $wpdb;
-		$query = "SELECT COUNT(ID) AS ct FROM {$this->table} WHERE post_mime_type = 'item' AND post_status <> 'trash'";
+		$query = "SELECT COUNT(ID) AS ct FROM {$this->table} WHERE post_mime_type = 'item' AND post_type = 'post' AND post_status <> 'trash'";
 		$res = $wpdb->get_var($query);
 		$this->totalRow = $res;
 	}
@@ -393,11 +437,11 @@ class dataList
 				break;
 			case 'zaiko_num':
 				$column = 'meta.meta_value';
-				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('"zaikonum";i:0') . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('"zaikonum";s:1:"0"')."%') AND post_status <> 'trash'";
+				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('"stocknum";i:0') . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('"stocknum";s:1:"0"')."%') AND post_status <> 'trash'";
 				break;
 			case 'zaiko':
 				$column = 'meta.meta_value';
-				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('zaiko";s:1:"'.$this->arr_search['word']['zaiko']) . "%') AND post_status <> 'trash'";
+				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('stock";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('stock";s:1:"'.$this->arr_search['word']['zaiko']) . "%') AND post_status <> 'trash'";
 				break;
 			case 'category':
 				$column = 'te.term_id';
