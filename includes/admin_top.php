@@ -89,10 +89,10 @@ unset($stocs);
 <th colspan="6"><?php _e('List of items without stock', 'usces'); ?></th>
 </tr>
 <?php
-$non_stoc_skus = usces_get_non_stoc_skus();
-foreach((array)$non_stoc_skus as $value): ?>
+$zerostoc_items = usces_get_non_zerostoc_items();
+foreach((array)$zerostoc_items as $item): ?>
 <tr>
-<td colspan="6"><a href="<?php echo get_option('siteurl') . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $value['ID']; ?>"><?php echo $value['name'] . ' ' . $value['code'] . ' ' . $value['sku']; ?></a></td>
+<td colspan="6"><a href="<?php echo get_option('siteurl') . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $item['ID']; ?>"><?php echo esc_html($item['name']), ' ', esc_html($item['code']); ?></a></td>
 </tr>
 <?php
 endforeach;

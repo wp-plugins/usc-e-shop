@@ -4,13 +4,89 @@ function usces_define_functions(){
 //20101111ysk start
 if( !function_exists('usces_item_uploadcsv') ):
 function usces_item_uploadcsv(){
+	global $wpdb, $usces, $user_ID;
+	
+	if( !current_user_can( 'import' ) ){
+		$res['status'] = 'error';
+		$res['message'] = __('You do not have permission to do that.');
+		$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+		wp_redirect($url);
+		exit;
+	}
+	
+	//check dataSELECT id,title FROM table GROUP BY id HAVING COUNT(id) > 1;
+	$query = $wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s 
+								GROUP BY meta_value HAVING COUNT(meta_value) > 1", 
+							'_itemCode');
+	$db_check = $wpdb->get_results( $query, ARRAY_A );
+	if( $db_check ) {
+		$res['status'] = 'error';
+		$res['message'] .= __('商品コードが重複して登録されています。', 'usces');
+		foreach($db_check as $d_item){
+			$res['message'] .= ' , ' . $d_item['meta_value'];
+		}
+		$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+		wp_redirect($url);
+		exit;
+	}	
+
+
+	$path = WP_CONTENT_DIR . '/uploads/';
+/*********************************************************************/
+//	Upload
+/**********************************************************************/
+	if( isset($_REQUEST['action']) && 'itemcsv' == $_REQUEST['action'] ){
+		$workfile = $_FILES["usces_upcsv"]["tmp_name"];
+	
+		if ( !is_uploaded_file($workfile) ) {
+			$res['status'] = 'error';
+			$res['message'] = __('The file was not uploaded.', 'usces');
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			wp_redirect($url);
+			exit;
+		}
+	
+		//check ext
+		list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
+		if( $fext != 'csv' ) {
+			$res['status'] = 'error';
+			$res['message'] =  __('The file is not supported.', 'usces').$fname.'.'.$fext;
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			wp_redirect($url);
+			exit;
+		}
+		
+		$new_filename = base64_encode($fname . '_' . time() . '.' .$fext);
+		if ( ! move_uploaded_file($_FILES['usces_upcsv']['tmp_name'], $path.$new_filename) ) {
+			$res['status'] = 'error';
+			$res['message'] =  __('ファイルを保存できませんでした。', 'usces').$fname.'.'.$fext;
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			wp_redirect($url);
+			exit;
+		}
+		return $new_filename;
+  	}
+
+
+/*********************************************************************/
+//	Register
+/**********************************************************************/
+	if( isset($_REQUEST['regfile']) && '' != $_REQUEST['regfile'] && isset($_REQUEST['action']) && 'upload_register' == $_REQUEST['action'] ){
+		$file_name = $_REQUEST['regfile'];
+		$decode_filename = base64_decode($file_name);
+		if( ! file_exists($path.$file_name) ){
+			$res['status'] = 'error';
+			$res['message'] =  __('CSVファイルが存在しません。', 'usces').esc_html($decode_filename);
+			echo $res['status'] . ' : ' . $res['message'];
+			return;
+		}
+	}
 	/*////////////////////////////////////////*/
 	// ready 
 	/*////////////////////////////////////////*/
+	$yn = "\n";
 	$start = microtime(true);
 	
-//	require_once( USCES_PLUGIN_DIR . "/libs/excel_reader2.php" );
-	global $wpdb, $usces, $user_ID;
 	//$wpdb->show_errors();
 	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
 	set_time_limit(1800);
@@ -55,7 +131,7 @@ function usces_item_uploadcsv(){
 	define('USCES_COL_SKU_GPTEKIYO', 34);	//28
 //	define('IDENTIFIER_OLE', pack("CCCCCCCC",0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1));
 
-	$workfile = $_FILES["usces_upcsv"]["tmp_name"];
+
 	$lines = array();
 	$total_num = 0;
 	$comp_num = 0;
@@ -67,108 +143,64 @@ function usces_item_uploadcsv(){
 	$res = array();
 	$date_pattern = "/(\d{4})-(\d{2}|\d)-(\d{2}|\d) (\d{2}):(\d{2}|\d):(\d{2}|\d)/";
 	
-	if ( !is_uploaded_file($workfile) ) {
-		$res['status'] = 'error';
-		$res['message'] = __('The file was not uploaded.', 'usces');
-		return $res;
-	}
-
-	//check ext
-	list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
-	if( $fext != 'csv' && $fext != 'xls' ) {
-		$res['status'] = 'error';
-		$res['message'] =  __('The file is not supported.', 'usces').$fname.'.'.$fext;
-		return $res;
-	}
 	
 	//log
 	if ( ! ($fpi = fopen (USCES_PLUGIN_DIR.'/logs/itemcsv_log.txt', "w"))) {
 		$res['status'] = 'error';
-		$res['message'] = __('The log file was not prepared for.', 'usces');
-		return $res;
+		$res['message'] = __('The log file was not prepared for.', 'usces').esc_html($decode_filename);
+		echo $res['status'] . ' : ' . $res['message'];
+		return;
 	}
 	//read data
-	if ( ! ($fpo = fopen ($workfile, "r"))) {
+	if ( ! ($fpo = fopen ($path.$file_name, "r"))) {
 		$res['status'] = 'error';
-		$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
-		return $res;
+		$res['message'] = __('A file does not open.', 'usces').esc_html($decode_filename);
+		echo $res['status'] . ' : ' . $res['message'];
+		return;
 	}
-	
-	$lines = array();
-	$sp = ",";
-	if('csv' !== $fext) {
-		$res['status'] = 'error';
-		$res['message'] = __('このファイルはCSVファイルでは有りません。', 'usces').$fname.'.'.$fext;
-		return $res;
 
-//		$sp = "\t";
-//		$data = @file_get_contents($workfile);
-//		if (!$data) {
-//			$res['status'] = 'error';
-//			$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
-//			return $res;
-//		}
-//		if(substr($data, 0, 8) != IDENTIFIER_OLE) {
-//			//$fext = 'tsv';
-//			//while (! feof ($fpo)) {
-//			//	$temp = fgets ($fpo, 10240);
-//			//	if( 5 < strlen($temp) )
-//			//		$lines[] = str_replace('"', '', $temp);
-//			//}
-//			//20101208ysk
-//			$res['status'] = 'error';
-//			$res['message'] = __('このファイルはExcelファイルでは有りません。', 'usces').$fname.'.'.$fext;
-//			return $res;
-//		} else {
-//			$excel = new Spreadsheet_Excel_Reader();
-//			$excel->read($workfile);
-//			$rows = $excel->rowcount();//最大行数
-//			$cols = $excel->colcount();//最大列数
-//			for($r = 1; $r <= $rows; $r++) {
-//				$line = '';
-//				for($c = 1; $c <= $cols; $c++) {
-//					$line .= mb_convert_encoding($excel->val($r, $c), "SJIS", "UTF-8").$sp;
-//				}
-//				$line = trim($line, $sp);
-//				$lines[] = $line;
-//			}
-//		}
+
+	$orglines = array();
+	$sp = ",";
+	$fname_parts = explode('.', $decode_filename);
+	if('csv' !== end($fname_parts)) {
+		$res['status'] = 'error';
+		$res['message'] = __('このファイルはCSVファイルでは有りません。', 'usces').esc_html($decode_filename);
+		echo $res['status'] . ' : ' . $res['message'];
+		return;
+
 	} else {
 		$buf = '';
-		$lines = array();
 		while (! feof ($fpo)) {
 			$temp = fgets ($fpo, 10240);
 			if( 0 == strlen($temp) ) continue;
 			
 			$num = substr_count($temp, '"');
 			if( 0 == $num % 2 && '' == $buf ){
-				$lines[] = $temp;
+				$orglines[] = $temp;
 			}elseif( 1 == $num % 2 && '' == $buf ){
 				$buf .= $temp;
 			}elseif( 0 == $num % 2 && '' != $buf ){
 				$buf .= $temp;
 			}elseif( 1 == $num % 2 && '' != $buf ){
 				$buf .= $temp;
-				$lines[] = $buf;
+				$orglines[] = $buf;
 				$buf = '';
 			}
 		}
 	}
-	$total_num = count($lines);
 	fclose($fpo);
 	
-	
-	//check dataSELECT id,title FROM table GROUP BY id HAVING COUNT(id) > 1;
-	$query = $wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s 
-								GROUP BY meta_value HAVING COUNT(meta_value) > 1", 
-							'_itemCode');
-	$db_check = $wpdb->get_results( $query );
-	if('csv' !== $fext) {
-		$res['status'] = 'error';
-		$res['message'] = __('このファイルはCSVファイルでは有りません。', 'usces').$fname.'.'.$fext;
-		return $res;
-	}	
-	
+	echo '<script type="text/javascript">changeMsg("処理中...");</script>'.$yn;
+	ob_flush();
+	flush();
+
+	foreach($orglines as $line){
+		if( 0 !== strpos( $line, 'Post ID' ) && !empty($line) )
+			$lines[] = $line;
+	}
+	$total_num = count($lines);
+
 	$readytime = microtime(true);
 	//reg loop
 	foreach($lines as $rows_num => $line){
@@ -240,6 +272,7 @@ function usces_item_uploadcsv(){
 
 		
 		
+
 		
 		$lineready = microtime(true);
 		$linereadytime += $lineready-$linestart;
@@ -537,7 +570,7 @@ function usces_item_uploadcsv(){
 			$cdatas['post_password'] = ( 'private' == $post_status ) ? '' : $datas[USCES_COL_POST_PASSWORD];
 			$cdatas['post_type'] = 'post';
 			$cdatas['post_parent'] = 0;
-			$cdatas['post_name'] = 	wp_unique_post_slug(trim(mb_convert_encoding($datas[USCES_COL_POST_NAME], 'UTF-8', 'SJIS')), $cdatas['ID'], $cdatas['post_status'], $cdatas['post_type'], $cdatas['post_parent']);
+			$cdatas['post_name'] = 	urlencode(wp_unique_post_slug(trim(mb_convert_encoding($datas[USCES_COL_POST_NAME], 'UTF-8', 'SJIS')), $cdatas['ID'], $cdatas['post_status'], $cdatas['post_type'], $cdatas['post_parent']));
 			$cdatas['to_ping'] = '';
 			$cdatas['pinged'] = '';
 			$cdatas['menu_order'] = 0;
@@ -545,7 +578,9 @@ function usces_item_uploadcsv(){
 			$cdatas['post_content_filtered'] = '';
 			
 			
-//			$post_id = wp_insert_post($cdatas);
+			if ( empty($cdatas['post_name']) && !in_array( $cdatas['post_status'], array( 'draft', 'pending', 'auto-draft' ) ) ) {
+				$cdatas['post_name'] = sanitize_title($cdatas['post_title'], $post_id);
+			}
 
 			if($mode == 'add') {
 			
@@ -830,7 +865,6 @@ function usces_item_uploadcsv(){
 			$sku_index++;
 		}
 
-
 		/******************/
 		$optionmeta = microtime(true);
 		$AddOptiontime += $optionmeta-$add_postmeta;
@@ -860,8 +894,21 @@ function usces_item_uploadcsv(){
 		$AddSKUtime += $addsku-$optionmeta;
 		$onelinetime += $addsku-$linestart;
 
+		if( 0 === (($rows_num+1) % 10) ){
+			$av = $onelinetime/$rows_num;
+			$nt = round($av*($total_num-$rows_num));
+			if( 60 < $nt ){
+				$mtime = ceil($nt/60) . '分' . ($nt%60) . '秒　';
+			}else{
+				$mtime = $nt . '秒　';
+			}
+			echo '<script type="text/javascript">changeMsg("処理中...残り時間：'.$mtime.'");</script>'.$yn;
+			echo '<script type="text/javascript">setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
+			ob_flush();
+			flush();
+		}
   	}
-	
+
 	flock($fpi, LOCK_EX);
 	fputs($fpi, mb_convert_encoding($log, 'SJIS', 'UTF-8'));
 	flock($fpi, LOCK_UN);
@@ -883,6 +930,14 @@ function usces_item_uploadcsv(){
 	usces_log('finish    : '.round($finish-$start, 4), 'acting_transaction.log');
 	usces_log('totalLines: '.$total_num, 'acting_transaction.log');
 	usces_log('--------------------------------------------------------------', 'acting_transaction.log');
+
+	echo '<script type="text/javascript">changeMsg("");setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
+	if( $log ){
+		echo '<div class="error_log">' . $log . '</div>'.$yn;
+	}else{
+		echo '<div class="error_log">終了しました。</div>'.$yn;
+	}
+	unlink($path.$file_name);
 	return $res;
 }
 endif;

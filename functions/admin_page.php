@@ -2,7 +2,7 @@
 function admin_prodauct_footer(){
 	switch( $_GET['page'] ){
 		case 'usces_itemedit':
-			if( !isset($_GET['action']) ){
+			if( !isset($_GET['action']) || ( isset($_REQUEST['action']) && 'upload_register' == $_REQUEST['action'] ) ){
 				break;
 			}
 		case 'usces_itemnew':

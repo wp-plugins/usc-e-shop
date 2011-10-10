@@ -28,6 +28,7 @@ $system_front_lang =  ( isset($this->options['system']['front_lang']) && !empty(
 $system_currency =  ( isset($this->options['system']['currency']) && !empty($this->options['system']['currency']) ) ? $this->options['system']['currency'] : usces_get_base_country();
 $system_addressform =  ( isset($this->options['system']['addressform']) && !empty($this->options['system']['addressform']) ) ? $this->options['system']['addressform'] : usces_get_local_addressform();
 $system_target_markets =  ( isset($this->options['system']['target_market']) && !empty($this->options['system']['target_market']) ) ? $this->options['system']['target_market'] : usces_get_local_target_market();
+$no_cart_css = isset($this->options['system']['no_cart_css']) ? $this->options['system']['no_cart_css'] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -234,6 +235,15 @@ jQuery(document).ready(function($) {
 </table>
 <table class="form_table">
 	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_no_cart_css');"><?php _e('To disable usces_cart.css','usces'); ?></a></th>
+		<?php $checked = $no_cart_css == 1 ? ' checked="checked"' : ''; ?>
+		<td width="10"><input name="no_cart_css" type="checkbox" id="no_cart_css" value="<?php echo esc_attr($no_cart_css); ?>"<?php echo $checked; ?> /></td>
+		<td width="300">&nbsp;</td>
+	    <td><div id="ex_no_cart_css" class="explanation"><?php _e('When checked, Welcart will not output the usces_cart.css. If you want to make own usces_cart.css file, please copy and paste it in your theme folder currently in use.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<!--<table class="form_table">
+	<tr height="50">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('商品SKUの並び順', 'usces'); ?></a></th>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku0" type="radio" value="0"<?php if($orderby_itemsku === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku0"><?php _e('SKU cord Order', 'usces'); ?></label></td>
 	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku1" type="radio" value="1"<?php if($orderby_itemsku === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku1"><?php _e('Registration Order', 'usces'); ?></label></td>
@@ -247,7 +257,7 @@ jQuery(document).ready(function($) {
 	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt1" type="radio" value="1"<?php if($orderby_itemopt === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt1"><?php _e('Registration Order', 'usces'); ?></label></td>
 		<td><div id="ex_orderby_itemopt" class="explanation"><?php _e("You can appoint a common option and the equal thing order of the item option. When You want to make it registered order, choose 'Registration Order'. The initial state becomes 'Optional excellent Order'.", 'usces'); ?></div></td>
 	</tr>
-</table>
+</table>-->
 <!--<table class="form_table">
 	<tr height="50">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript 利用の有無', 'usces'); ?></a></th>

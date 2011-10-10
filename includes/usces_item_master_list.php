@@ -41,11 +41,6 @@ $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 $usces_opt_item = get_option('usces_opt_item');
 //20101111ysk end
 ?>
-<!--<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.resizable.js"></script>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.draggable.js"></script>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.dialog.js"></script>
--->
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
@@ -155,12 +150,12 @@ jQuery(function($){
 			}else if( column == 'display_status' ) {
 				label = '';
 				html = '<select name="search[word][display_status]" class="searchselect">';
-				html += '<option value="<?php _e('Published', 'usces'); ?>"<?php if( __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Scheduled', 'usces'); ?>"<?php if( __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Draft', 'usces'); ?>"<?php if( __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Pending Review', 'usces'); ?>"<?php if( __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Closed', 'usces'); ?>"<?php if( __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Trash', 'usces'); ?>"<?php if( __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
+				html += '<option value="publish"<?php if( __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
+				html += '<option value="future"<?php if( __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
+				html += '<option value="draft"<?php if( __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
+				html += '<option value="pending"<?php if( __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
+				html += '<option value="private"<?php if( __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
+				html += '<option value="trash"<?php if( __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
 				html += '</select>';
 			} 
 			
@@ -395,15 +390,15 @@ jQuery(document).ready(function($){
 	</tr>
 <?php foreach ( (array)$rows as $array ) :
 		$pctid = $this->get_mainpictid($array['item_code']); 
-		$sku_values = unserialize($array['sku_value']);
 		$post = get_post($array['ID']);
+		$array['sku'] = $skus = $this->get_skus( $array['ID'], 'sort' );
+		$array['category'] = "";
+		$array['post_status'] = $post->post_status;
 ?>
 	<tr>
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
 	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
-	<?php foreach ( (array)$array as $key => $value ) : 
-			$skus = $this->get_skus( $array['ID'], 'sort' );
-	?>
+	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $key == 'item_code') : ?>
 			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('_itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
 			<td class="item">
@@ -442,8 +437,8 @@ jQuery(document).ready(function($){
 			</td>
 			
 		<?php elseif( $key == 'post_title' ) : ?>
-			<?php if( $value != '' ) : ?> 
-				<strong><?php echo esc_html($value); ?></strong>
+			<?php if( $post->post_title != '' ) : ?> 
+				<strong><?php echo esc_html($post->post_title); ?></strong>
 			<?php else : ?> 
 				&nbsp;
 			<?php endif; ?>
@@ -454,29 +449,27 @@ jQuery(document).ready(function($){
 			</ul>
 			</td>
 			
-		<?php elseif( $key == 'sku_key' ): ?>
+		<?php elseif( $key == 'sku' ): 	$no_sku = ( 0 === count($value) ) ? "&nbsp;" : ""; ?>
 		
 			<td class="sku">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
 				<div class="skuline<?php echo $bgc; ?>"><?php echo esc_html($sv['code']); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php } echo $no_sku; ?>
 			</td>
-
-		<?php elseif( $key == 'sku_value' ): ?>
 			<td class="price">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
 				<div class="priceline<?php echo $bgc; ?>"><?php usces_crform( $sv['price'], true, false ); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php } echo $no_sku; ?>
 			</td>
 			<td class="zaikonum">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
 				<div class="priceline<?php echo $bgc; ?>"><?php echo (( '' != $sv['stocknum']) ? esc_html($sv['stocknum']) : "&nbsp;"); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php } echo $no_sku; ?>
 			</td>
 			<td class="zaiko">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $zaikokey = $sv['stock']; $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $zaikokey = $sv['stock']; $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
 				<div class="zaikoline<?php echo $bgc; ?>"><?php echo esc_html($zaiko_status[$zaikokey]); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php } echo $no_sku; ?>
 			</td>
 		<?php elseif( $key == 'category' ) : ?>
 			<td class="listcat">
@@ -492,8 +485,27 @@ jQuery(document).ready(function($){
 				}
 			?>
 			</td>
-		<?php elseif( $key == 'display_status' ): ?>
-			<td><?php echo esc_html($value); ?><?php if( !empty( $post->post_password) ){echo '<br />'.__('Password protected');} ?></td>
+		<?php elseif( $key == 'post_status' ): ?>
+			<td><?php
+			 		switch ($value){
+						case 'publish':
+							echo __('Published', 'usces');
+							break;
+						case 'future':
+							echo __('Scheduled', 'usces');
+							break;
+						case 'draft':
+							echo __('Draft', 'usces');
+							break;
+						case 'pending':
+							echo __('Pending Review', 'usces');
+							break;
+						case 'trash':
+							echo __('Trash', 'usces');
+							break;
+						default:
+							echo __('Closed', 'usces');
+					} ?><?php if( !empty( $post->post_password) ){echo '<br />'.__('Password protected');} ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
 	</tr>
@@ -542,3 +554,4 @@ jQuery(document).ready(function($){
 
 </div><!--usces_admin-->
 </div><!--wrap-->
+[memory peak usage] <?php echo round(memory_get_peak_usage()/1048576, 1); ?>Mb

@@ -404,10 +404,11 @@ class usc_e_shop
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
 		do_action('usces_action_shop_admin_menue');
 		
-		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
+		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_management', array($this, 'order_list_page'));
+		add_submenu_page('usces_management', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_management', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
+		add_submenu_page('usces_management', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
+		add_submenu_page('usces_management', __('New Member','usces'), __('New Member','usces'), 6, 'usces_membernew', array($this, 'member_list_page'));
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -429,11 +430,12 @@ class usc_e_shop
 		}
 
 		switch ( $action ) {
-//20101111ysk start
 			case 'dlitemlist':
 				usces_download_item_list();
 				break;
-//20101111ysk end
+			case 'upload_register':
+				require_once(USCES_PLUGIN_DIR . '/includes/usces_item_master_upload_register.php');
+				break;
 			case 'delete':
 			case 'new':
 			case 'editpost':
@@ -547,6 +549,7 @@ class usc_e_shop
 				}
 				require_once(USCES_PLUGIN_DIR . '/includes/member_edit_form.php');	
 				break;
+			case 'new':
 			case 'edit':
 				require_once(USCES_PLUGIN_DIR . '/includes/member_edit_form.php');	
 				break;
@@ -864,8 +867,9 @@ class usc_e_shop
 			$this->options['system']['currency'] = (isset($_POST['currency']) && 'others' != $_POST['currency']) ? $_POST['currency'] : usces_get_base_country();
 			$this->options['system']['addressform'] = (isset($_POST['addressform']) ) ? $_POST['addressform'] : usces_get_local_addressform();
 			$this->options['system']['target_market'] = (isset($_POST['target_market']) ) ? $_POST['target_market'] : usces_get_local_target_market();
-			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
-			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
+			$this->options['system']['no_cart_css'] = isset($_POST['no_cart_css']) ? 1 : 0;
+//			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
+//			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
 //20110331ysk start
 			unset($this->options['province']);
 			$action_status = '';
@@ -1346,6 +1350,7 @@ class usc_e_shop
 	function shop_head() {
 		global $post;
 		$this->item = $post;
+		$no_cart_css = isset($this->options['system']['no_cart_css']) ? $this->options['system']['no_cart_css'] : 0;
 		
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
@@ -1356,7 +1361,9 @@ class usc_e_shop
 			echo "	<meta name='robots' content='noindex,nofollow' />\n";
 			wp_print_scripts( array( 'sack' )); 
 		}
-		echo '<link href="' . $css_url . '" rel="stylesheet" type="text/css" />';
+		if( !$no_cart_css ){
+			echo '<link href="' . $css_url . '" rel="stylesheet" type="text/css" />';
+		}
 		if( file_exists(get_stylesheet_directory() . '/usces_cart.css') ){
 			echo '<link href="' . get_stylesheet_directory_uri() . '/usces_cart.css" rel="stylesheet" type="text/css" />';
 		}
@@ -1886,8 +1893,8 @@ class usc_e_shop
 			wp_redirect($url);
 			exit;
 		}else if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'itemcsv' ){
-			$res = usces_item_uploadcsv();
-			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			$filename = usces_item_uploadcsv();
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=none&usces_message=&action=upload_register&regfile='.$filename;
 			wp_redirect($url);
 			exit;
 		}
@@ -2036,8 +2043,15 @@ class usc_e_shop
 //20101111ysk start
 				case 'usces_itemnew':
 					wp_enqueue_script('jquery-ui-sortable');
+					break;
 				case 'usces_itemedit':
-					wp_enqueue_script('jquery-ui-dialog');
+					if( isset($_REQUEST['action']) && 'upload_register' == $_REQUEST['action'] ){
+						ob_end_flush();
+						ob_start();
+					}else{
+						wp_enqueue_script('jquery-ui-sortable');
+						wp_enqueue_script('jquery-ui-dialog');
+					}
 					break;
 //20101111ysk end
 //20101208ysk start
@@ -5796,8 +5810,9 @@ class usc_e_shop
 	
 	function get_items_num(){
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT COUNT(ID) AS ct FROM {$wpdb->posts} WHERE post_mime_type = %s AND post_status = %s", 
-								'item', 'publish');
+		$query = $wpdb->prepare("SELECT COUNT(ID) AS ct FROM {$wpdb->posts} 
+								WHERE post_mime_type = %s AND post_type = %s AND post_status <> %s", 
+								'item', 'post', 'trush');
 		$res = $wpdb->get_var($query);
 
 		return $res;
