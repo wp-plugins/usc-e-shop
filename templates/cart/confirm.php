@@ -33,53 +33,8 @@ $html .= '<div id="cart">
 		<tbody>';
 
 $member = $this->get_member();
-$memid = ( empty($member['ID']) ) ? 999999999 : $member['ID'];
-$usces_entries = $this->cart->get_entry();
-$this->set_cart_fees( $member, $usces_entries );
 
-$cart = $this->cart->get_cart();
-
-for($i=0; $i<count($cart); $i++) { 
-	$cart_row = $cart[$i];
-	$post_id = $cart_row['post_id'];
-	$sku = esc_attr($cart_row['sku']);
-	$quantity = $cart_row['quantity'];
-	$options = $cart_row['options'];
-	$itemCode = $this->getItemCode($post_id);
-	$itemName = $this->getItemName($post_id);
-	$cartItemName = $this->getCartItemName($post_id, $cart_row['sku']);
-	$skuPrice = $cart_row['price'];
-	$pictid = $this->get_mainpictid($itemCode);
-	if (!empty($options)) {
-//		$optstr = implode(',', $options);
-	} else { 
-		$optstr =  '';
-		$options =  array();
-	}
-
-	$html .= '<tr>
-		<td>' . ($i + 1) . '</td>
-		<td>';
-	$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-	$html .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
-	$html .= '</td><td class="aleft">' . $cartItemName . '<br />';
-	if( is_array($options) && count($options) > 0 ){
-		$optstr = '';
-		foreach($options as $key => $value){
-			if( !empty($key) )
-				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-		}
-		$html .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
-	}
-	$html .= '</td>
-		<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
-		<td>' . $cart_row['quantity'] . '</td>
-		<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
-		<td>';
-	$html = apply_filters('usces_additional_confirm', $html, array($i, $post_id, $cart_row['sku']));
-	$html .= '</td>
-	</tr>';
-} 
+$html .= usces_get_confirm_rows('return');
 
 $html .= '</tbody>
 	<tfoot>

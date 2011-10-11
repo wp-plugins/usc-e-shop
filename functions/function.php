@@ -4024,7 +4024,36 @@ function usces_get_send_out_date(){
 			);
 	return $res;
 }
+
 function usces_action_footer_comment(){
 	echo "<!-- Welcart version : v".USCES_VERSION." -->\n";
+}
+
+function usces_set_acting_notification_time( $key ){
+	global $wpdb;
+	$tableName = $wpdb->prefix . "usces_access";
+	$query = $wpdb->prepare("SELECT ID FROM $tableName WHERE acc_type = %s AND acc_key = %s", 'notification_time', $key);
+	$res = $wpdb->get_var( $query );
+	if( $res )
+		return;
+		
+	$query = $wpdb->prepare("INSERT INTO $tableName (acc_key, acc_type, acc_num1) VALUES (%s, %s, %d)", 
+							$key, 'notification_time', time());
+	$res = $wpdb->query( $query );
+}
+
+function usces_check_notification_time( $key, $time ){
+	global $wpdb;
+	$tableName = $wpdb->prefix . "usces_access";
+	$query = $wpdb->prepare("SELECT acc_num1 FROM $tableName WHERE acc_type = %s AND acc_key = %s", 'notification_time', $key);
+	$res = $wpdb->get_var( $query );
+	if( !$res )
+		return false;
+		
+	$past = time() - $res;
+	if( $time <= $past )
+		return false;
+	else
+		return true;		
 }
 ?>

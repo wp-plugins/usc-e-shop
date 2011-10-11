@@ -1041,6 +1041,7 @@ function usces_point_rate( $post_id = NULL, $out = '' ){
 
 function usces_the_payment_method( $value = '', $out = '' ){
 	global $usces;
+	
 	if( !$usces->options['payment_method'] ) return;
 	
 	$cart = $usces->cart->get_cart();

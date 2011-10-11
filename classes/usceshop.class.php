@@ -5464,6 +5464,7 @@ class usc_e_shop
 		$discount = $this->get_order_discount();
 		$use_point = $entries['order']['usedpoint'];
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
+		$amount_by_cod = apply_filters('usces_filter_set_cart_fees_amount_by_cod', $amount_by_cod, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$cod_fee = apply_filters('usces_filter_set_cart_fees_cod', $cod_fee, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
