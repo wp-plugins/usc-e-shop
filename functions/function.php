@@ -3566,7 +3566,7 @@ function usces_get_stocs() {
 		
 	foreach((array)$values as $value){
 			$meta_value = unserialize($value);
-			$status[] = $meta_value['stock'];
+			$status[] = (string)$meta_value['stock'];
 	}
 	return array_count_values($status);
 }

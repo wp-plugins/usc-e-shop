@@ -404,11 +404,11 @@ class usc_e_shop
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
 		do_action('usces_action_shop_admin_menue');
 		
-		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_management', array($this, 'order_list_page'));
-		add_submenu_page('usces_management', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_management', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
-		add_submenu_page('usces_management', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
-		add_submenu_page('usces_management', __('New Member','usces'), __('New Member','usces'), 6, 'usces_membernew', array($this, 'member_list_page'));
+		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
+		add_submenu_page('usces_orderlist', __('New Member','usces'), __('New Member','usces'), 6, 'usces_membernew', array($this, 'member_list_page'));
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -4553,62 +4553,62 @@ class usc_e_shop
 	
 	function getItemRestriction($post_id) {
 		$str = get_post_meta($post_id, '_itemRestriction', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemPointrate($post_id) {
 		$str = get_post_meta($post_id, '_itemPointrate', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemShipping($post_id) {
 		$str = get_post_meta($post_id, '_itemShipping', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemShippingCharge($post_id) {
 		$str = get_post_meta($post_id, '_itemShippingCharge', true);
-		return (int)$str[0];
+		return (int)$str;
 	}
 	
 	function getItemDeliveryMethod($post_id) {
 		$str = get_post_meta($post_id, '_itemDeliveryMethod', true);
-		return unserialize($str[0]);
+		return $str;
 	}
 	
 	function getItemIndividualSCharge($post_id) {
 		$str = get_post_meta($post_id, '_itemIndividualSCharge', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemGpNum1($post_id) {
 		$str = get_post_meta($post_id, '_itemGpNum1', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemGpNum2($post_id) {
 		$str = get_post_meta($post_id, '_itemGpNum2', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemGpNum3($post_id) {
 		$str = get_post_meta($post_id, '_itemGpNum3', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemGpDis1($post_id) {
 		$str = get_post_meta($post_id, '_itemGpDis1', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemGpDis2($post_id) {
 		$str = get_post_meta($post_id, '_itemGpDis2', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemGpDis3($post_id) {
 		$str = get_post_meta($post_id, '_itemGpDis3', true);
-		return $str[0];
+		return $str;
 	}
 	
 	function getItemSku($post_id, $index = '') {
