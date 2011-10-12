@@ -4051,9 +4051,9 @@ function usces_check_notification_time( $key, $time ){
 		return false;
 		
 	$past = time() - $res;
-	if( $time <= $past )
-		return false;
+	if( $time > $past )
+		return true;
 	else
-		return true;		
+		return false;		
 }
 ?>

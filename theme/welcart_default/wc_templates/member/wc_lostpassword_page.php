@@ -36,7 +36,7 @@ get_header();
 	</p>
 	<?php do_action('usces_action_newpass_page_inform'); ?>
 	</form>
-	<div><?php _e('Chenge th epassword according to the e-mail.', 'usces'); ?></div>
+	<div><?php _e('Change your password by following the instruction in this mail.', 'usces'); ?></div>
 	<p id="nav">
 	<?php if ( ! usces_is_login() ) : ?>
 	<a href="<?php usces_url('login'); ?>" title="<?php _e('Log-in', 'usces'); ?>"><?php _e('Log-in', 'usces'); ?></a>

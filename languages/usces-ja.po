@@ -1647,7 +1647,7 @@ msgstr "会員情報を更新いたしました。"
 msgid "I transmitted an email."
 msgstr "メールを送信いたしました。"
 
-msgid "Chenge th epassword according to the e-mail."
+msgid "Change your password by following the instruction in this mail."
 msgstr "メールの内容にしたがってパスワードを変更してください。"
 
 msgid "Password has been changed."
@@ -3061,6 +3061,8 @@ msgstr "ルミーズ決済サービス"
 msgid "J-Payment Japanese Settlement"
 msgstr "J-Payment決済サービス"
 
+#~ msgid "Chenge th epassword according to the e-mail."
+#~ msgstr "メールの内容にしたがってパスワードを変更してください。"
 #~ msgid "print the invoice"
 #~ msgstr "納品書印刷"
 #~ msgid "Invoices"

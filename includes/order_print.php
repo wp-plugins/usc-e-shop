@@ -417,7 +417,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	
 	// My company
 	if( !empty($sign_image) ){
-		$pdf->Image($sign_image, 140,40, 25, 25); 
+		$sign_data = apply_filters( 'usces_filter_pdf_sign_data', array(140, 40, 25, 25));
+		$pdf->Image($sign_image, $sign_data[0], $sign_data[1], $sign_data[2], $sign_data[3]); 
 	}
 	$x = 110;
 	$y = 45;

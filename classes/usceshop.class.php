@@ -3976,8 +3976,8 @@ class usc_e_shop
 		
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_key VARCHAR( 20 ) NOT NULL ,
-				acc_type VARCHAR( 20 ) NULL ,
+				acc_key VARCHAR( 50 ) NOT NULL ,
+				acc_type VARCHAR( 50 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
 				acc_num1 INT( 11 ) NOT NULL DEFAULT 0,
@@ -3986,7 +3986,9 @@ class usc_e_shop
 				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
-				KEY acc_date ( acc_date )  
+				KEY acc_date ( acc_date ), 
+				KEY acc_num1 ( acc_num1 ), 
+				KEY acc_num2 ( acc_num2 )  
 				) ENGINE = MYISAM AUTO_INCREMENT=0 $charset_collate;";
 		
 			dbDelta($sql);
@@ -4124,8 +4126,8 @@ class usc_e_shop
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_key VARCHAR( 20 ) NOT NULL ,
-				acc_type VARCHAR( 20 ) NULL ,
+				acc_key VARCHAR( 50 ) NOT NULL ,
+				acc_type VARCHAR( 50 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
 				acc_num1 INT( 11 ) NOT NULL DEFAULT 0,
@@ -4134,7 +4136,9 @@ class usc_e_shop
 				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
-				KEY acc_date ( acc_date )  
+				KEY acc_date ( acc_date ), 
+				KEY acc_num1 ( acc_num1 ), 
+				KEY acc_num2 ( acc_num2 )  
 				) ENGINE = MYISAM;";
 			
 			dbDelta($sql);
@@ -5353,7 +5357,7 @@ class usc_e_shop
 		$discount = ceil($discount * -1);
 		$discount = apply_filters('usces_order_discount', $discount, $cart);
 		return $discount;
-	} 
+	}
 
 	function getShippingCharge( $pref, $cart = array(), $entry = array() ) {
 		if( empty($cart) )
@@ -5460,6 +5464,7 @@ class usc_e_shop
 		} else {
 			$shipping_charge = 0;
 		}
+		$shipping_charge = apply_filters('usces_filter_set_cart_fees_shipping_charge', $shipping_charge, $cart, $entry);
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
 		$discount = $this->get_order_discount();
 		$use_point = $entries['order']['usedpoint'];
