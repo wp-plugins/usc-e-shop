@@ -475,26 +475,26 @@ class usc_e_shop
 				do_action('usces_pre_update_orderdata', $_REQUEST['order_id']);
 				$res = usces_update_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_update_orderdata', $_REQUEST['order_id']);
 					$this->set_action_status('success', __('order date is updated','usces').' <a href="'.stripslashes( $_POST['usces_referer'] ).'">'.__('back to the summary','usces').'</a>');
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
 					$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 				}
+				do_action('usces_after_update_orderdata', $_REQUEST['order_id'], $res);
 				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
 				break;
 			case 'newpost':
 				do_action('usces_pre_new_orderdata');
 				$res = usces_new_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_new_orderdata');
 					$this->set_action_status('success', __('New date is add','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
 					$this->set_action_status('error', 'ERROR : '.__('failure in addition','usces'));
 				}
+				do_action('usces_after_new_orderdata', $res);
 				$_REQUEST['order_action'] = 'edit';
 				$order_action = $_REQUEST['order_action'];
 				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
@@ -507,13 +507,13 @@ class usc_e_shop
 				do_action('usces_pre_delete_orderdata', $_REQUEST['order_id']);
 				$res = usces_delete_orderdata();
 				if ( 1 === $res ) {
-					do_action('usces_after_delete_orderdata', $_REQUEST['order_id']);
 					$this->set_action_status('success', __('the order date is deleted','usces'));
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
 					$this->set_action_status('error', 'ERROR : '.__('failure in delete','usces'));
 				}
+				do_action('usces_after_delete_orderdata', $_REQUEST['order_id'], $res);
 			default:
 				require_once(USCES_PLUGIN_DIR . '/includes/order_list.php');	
 		}
@@ -3087,6 +3087,8 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
+					
+					do_action('usces_action_member_registered', $_POST['member']);
 				}
 				
 				return 'newcompletion';
@@ -3152,6 +3154,7 @@ class usc_e_shop
 						$_SESSION['usces_entry']['member_regmode'] = 'editmemberfromcart';
 						return 'newcompletion';
 					}
+					do_action('usces_action_member_registered', $_POST['customer']);
 				}
 				
 				return false;
@@ -3536,7 +3539,7 @@ class usc_e_shop
 					'cod_fee' => $value->order_cod_fee,
 					'tax' => $value->order_tax,
 					'end_price' => $value->order_item_total_price - ($value->order_getpoint*$usces->options['system']['pointreduction']) - $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
-					'status' => $value->order_tax,
+					'status' => $value->order_status,
 					'date' => mysql2date(__('Y/m/d'), $value->order_date),
 					'modified' => mysql2date(__('Y/m/d'), $value->order_modified)
 					);
@@ -5521,9 +5524,7 @@ class usc_e_shop
 		global $wpdb;
 		$order_table = $wpdb->prefix . "usces_order";
 	
-		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
-								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
-							FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
+		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
 		$results = $wpdb->get_results( $query );
 	
 		$i=0;
@@ -5539,6 +5540,7 @@ class usc_e_shop
 							'usedpoint' => $value->order_usedpoint,
 							'discount' => $value->order_discount,
 							'shipping_charge' => $value->order_shipping_charge,
+							'payment_name' => $value->order_payment_name,
 							'cod_fee' => $value->order_cod_fee,
 							'tax' => $value->order_tax,
 							'order_status' => $value->order_status,

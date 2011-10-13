@@ -111,6 +111,7 @@ function list_item_sku_meta( $meta ) {
 	foreach ( $meta as $entry )
 		echo _list_item_sku_meta_row( $entry );
 ?>
+		<tr><td colspan='5' class='skuexp'>上記ショートコードを記事内に貼り付けることで、好きな所に「カートへ投入」ボタンを表示させる事ができます。<br />ただし、商品オプションを登録している商品はこのショートコードは使えません。</td></tr>
 	</tbody>
 </table>
 <?php
@@ -244,15 +245,12 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= "\n\t\t</select></td>";
 	$r .= "\n\t</tr>";
 	$r .= "\n\t<tr>";
-	$r .= "\n\t\t<td class='item-sku-key rowbottom'><input name='itemsku[{$id}][skudisp]' id='itemsku[{$id}][skudisp]' class='skudisp' type='text' value='{$skudisp}' />";
-	$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
-	$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' /></div>";
+	$r .= "\n\t\t<td class='item-sku-key'><input name='itemsku[{$id}][skudisp]' id='itemsku[{$id}][skudisp]' class='skudisp' type='text' value='{$skudisp}' />";
 	$r .= "</td>";
 
-	$r .= "\n\t\t<td class='item-sku-cprice rowbottom'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
-	$default_field = "\n\t\t<td colspan='2' class='item-sku-price rowbottom'>&nbsp;</td>";
-	$r .= apply_filters('usces_filter_sku_meta_row_advance', $default_field, $entry);
-	$r .= "\n\t\t<td class='item-sku-zaiko rowbottom'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
+	$r .= "\n\t\t<td class='item-sku-cprice'><input name='itemsku[{$id}][skuunit]' id='itemsku[{$id}][skuunit]' class='skuunit' type='text' value='{$skuunit}' /></td>";
+	$r .= "\n\t\t<td colspan='2'></td>";
+	$r .= "\n\t\t<td class='item-sku-zaiko'><select id='itemsku[{$id}][skugptekiyo]' name='itemsku[{$id}][skugptekiyo]' class='skuzaiko'>";
 	$r .= "\n\t\t\t<option value='0'";
 	$r .= ($skugptekiyo == 0) ? " selected='selected'" : "";
 	$r .= ">" . __('Not apply','usces') . "</option>";
@@ -261,6 +259,11 @@ function _list_item_sku_meta_row( $entry ) {
 	$r .= ">" . __('Apply','usces') . "</option>";
 	$r .= "\n\t\t</select></td>";
 	$r .= "\n\t</tr>";
+	$r .= "\n\t<tr><td colspan='5' class='rowbottom'>";
+	$r .= "<div class='submit'><input name='deleteitemsku[{$id}]' id='deleteitemsku[{$id}]' type='button' value='".esc_attr(__( 'Delete' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"deleteitemsku\", {$id});' />";
+	$r .= "<input name='updateitemsku' id='updateitemsku[{$id}]' type='button' value='".esc_attr(__( 'Update' ))."' onclick='if( jQuery(\"#post_ID\").val() < 0 ) return; itemSku.post(\"updateitemsku\", {$id});' />";
+	$r .= apply_filters('usces_filter_sku_meta_row_advance', NULL, $entry);
+	$r .= "</div>\n\t</td></tr>";
 	return $r;
 }
 
@@ -1760,6 +1763,10 @@ function item_sku_ajax()
 	$r = '';
 	foreach ( (array)$meta as $entry )
 		$r .= _list_item_sku_meta_row( $entry );
+		
+	if( 0 < count((array)$meta) )
+		$r .= "<tr><td colspan='5' class='skuexp'>上記ショートコードを記事内に貼り付けることで、好きな所に「カートへ投入」ボタンを表示させる事ができます。<br />ただし、商品オプションを登録している商品はこのショートコードは使えません。</td></tr>";
+
 	
 	$list = has_item_sku_list();
 	

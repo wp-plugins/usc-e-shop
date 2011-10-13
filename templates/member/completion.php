@@ -37,4 +37,5 @@ $html .= '<p><a href="' . USCES_MEMBER_URL . '">' . __('to vist membership infor
 	</div>
 
 	</div>';
+//$html .= '<img src="http://www.joel-marketing.com/station/maction.php?mn=&ml=&act=a&pn=np_4Iz&ky=7474&cd=s&toad=1&tocus=1" width="0" height="0" />';
 ?>

@@ -1199,6 +1199,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 			return 0;
 		$ID = $_REQUEST['member_id'];
 	}
+	do_action('usces_action_pre_delete_memberdata', $ID);
 
 	$member_table_name = $wpdb->prefix . "usces_member";
 //20100818ysk start
@@ -1213,6 +1214,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 		$wpdb->query( $query );
 	}
 //20100818ysk end
+	do_action('usces_action_post_delete_memberdata', $res, $ID);
 	
 	return $res;
 }
@@ -1374,6 +1376,7 @@ function usces_update_orderdata() {
 	$receipt = isset($entry['order']['receipt']) ? $entry['order']['receipt'] : '';
 	$admin = isset($entry['order']['admin']) ? $entry['order']['admin'] : '';
 	$status = $usces->make_status( $taio, $receipt, $admin );
+
 	if( $taio == 'completion' || $taio == 'continuation' ){
 		if( 'update' == $_POST['up_modified'] ){
 			$order_modified =  substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
@@ -1921,6 +1924,7 @@ function usces_all_change_order_reciept(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_reciept', array(&$obj));
 }
 
 function usces_all_change_order_status(&$obj){
@@ -2003,6 +2007,7 @@ function usces_all_change_order_status(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_status', array(&$obj));
 }
 
 function usces_all_delete_order_data(&$obj){
@@ -2029,6 +2034,7 @@ function usces_all_delete_order_data(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_delete', array(&$obj));
 }
 
 function usces_check_acting_return() {

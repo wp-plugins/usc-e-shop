@@ -246,9 +246,11 @@
 			
 			var s = itemSku.settings;
 			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skugptekiyo=" + skugptekiyo + "&skumetaid=" + meta_id + charging_type + skuadvance;
-			s.success = function(data, dataType){
-				//alert(data);
-			};
+//			s.success = function(data, dataType){
+//				//alert(data);
+//				strs = data.split('#usces#');
+//				$("tbody#item-sku-list").html( strs[0] );
+//			};
 			$.ajax( s );
 			return false;
 		},
