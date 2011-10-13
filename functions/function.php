@@ -4062,4 +4062,35 @@ function usces_check_notification_time( $key, $time ){
 	else
 		return false;		
 }
+
+function usces_get_member_custom_field_data( $member_id ) {
+	global $usces;
+	$csmb_meta = usces_has_custom_field_meta( 'member' );
+	$res = array();
+
+	if( empty($csmb_meta) || !is_array($csmb_meta) )
+		return $res;
+
+	foreach($csmb_meta as $key => $entry) {
+		$csmb_key = 'csmb_'.$key;
+		$value = maybe_unserialize($usces->get_member_meta_value($csmb_key, $member_id));
+		if(empty($value)) {
+			$value = '';
+		} elseif(is_array($value)) {
+			$concatval = '';
+			$c = '';
+			foreach($value as $v) {
+				$concatval .= $c.$v;
+				$c = ' ';
+			}
+			$value = $concatval;
+		}
+		$res[$key]['name'] .= $entry['name'];
+		$res[$key]['value'] = usces_entity_decode($value, NULL);
+		
+	}
+
+	return $res;
+}
+
 ?>
