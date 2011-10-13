@@ -7,7 +7,7 @@ Version: JE.1.0.6
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
-define('USCES_VERSION', 'JE.1.0.6');
+define('USCES_VERSION', 'JE.1.0.6.r1110131');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
