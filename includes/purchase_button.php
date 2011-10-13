@@ -202,7 +202,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
 			$html .= '</form>'."\n";
 			break;
 			
@@ -268,7 +268,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
 			$html .= '</form>'."\n";
 			break;
 			
@@ -329,7 +329,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
 			$html .= '</form>'."\n";
 			break;
 			
@@ -354,7 +354,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
 			$html .= '</form>'."\n";
 			break;
 		case 'acting_jpayment_conv'://コンビニ・ペーパーレス決済(J-Payment)
@@ -377,7 +377,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
 			$html .= '</form>'."\n";
 			break;
 		case 'acting_jpayment_bank'://バンクチェック決済(J-Payment)
@@ -401,7 +401,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' />&nbsp;&nbsp;</div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html);
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
 			$html .= '</form>'."\n";
 			break;
 //20101018ysk end

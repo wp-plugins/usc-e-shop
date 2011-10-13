@@ -10,7 +10,7 @@ class usc_e_shop
 	var $itemskus, $itemsku, $itemopts, $itemopt, $item;
 	var $zaiko_status, $payment_structure, $display_mode, $shipping_rule;
 	var $member_status;
-	var $options;
+	var $options, $mail_para;
 	var $login_mail, $current_member, $member_form;
 	var $payment_results, $log_flg, $delim, $use_js;
 
@@ -3979,8 +3979,8 @@ class usc_e_shop
 		
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_key VARCHAR( 20 ) NOT NULL ,
-				acc_type VARCHAR( 20 ) NULL ,
+				acc_key VARCHAR( 50 ) NOT NULL ,
+				acc_type VARCHAR( 50 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
 				acc_num1 INT( 11 ) NOT NULL DEFAULT 0,
@@ -3989,7 +3989,9 @@ class usc_e_shop
 				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
-				KEY acc_date ( acc_date )  
+				KEY acc_date ( acc_date ), 
+				KEY acc_num1 ( acc_num1 ), 
+				KEY acc_num2 ( acc_num2 )  
 				) ENGINE = MYISAM AUTO_INCREMENT=0 $charset_collate;";
 		
 			dbDelta($sql);
@@ -4127,8 +4129,8 @@ class usc_e_shop
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_key VARCHAR( 20 ) NOT NULL ,
-				acc_type VARCHAR( 20 ) NULL ,
+				acc_key VARCHAR( 50 ) NOT NULL ,
+				acc_type VARCHAR( 50 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
 				acc_num1 INT( 11 ) NOT NULL DEFAULT 0,
@@ -4137,7 +4139,9 @@ class usc_e_shop
 				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
-				KEY acc_date ( acc_date )  
+				KEY acc_date ( acc_date ), 
+				KEY acc_num1 ( acc_num1 ), 
+				KEY acc_num2 ( acc_num2 )  
 				) ENGINE = MYISAM;";
 			
 			dbDelta($sql);
@@ -4504,10 +4508,13 @@ class usc_e_shop
 	}
 	
 	function getGuidTax() {
-		if ( (int)$this->options['tax_rate'] > 0 )
-			return '<em class="tax">'.__('(Excl. Tax)', 'usces').'</em>';
+		$tax_rate = (int)$this->options['tax_rate'];
+		if ( 0 < $tax_rate )
+			$str = '<em class="tax">'.__('(Excl. Tax)', 'usces').'</em>';
 		else
-			return '<em class="tax">'.__('(Incl. Tax)', 'usces').'</em>';
+			$str = '<em class="tax">'.__('(Incl. Tax)', 'usces').'</em>';
+			
+		return apply_filters('usces_filter_tax_guid', $str, $tax_rate);
 	}
 
 	function getItemCode($post_id) {
@@ -5353,7 +5360,7 @@ class usc_e_shop
 		$discount = ceil($discount * -1);
 		$discount = apply_filters('usces_order_discount', $discount, $cart);
 		return $discount;
-	} 
+	}
 
 	function getShippingCharge( $pref, $cart = array(), $entry = array() ) {
 		if( empty($cart) )
@@ -5460,11 +5467,14 @@ class usc_e_shop
 		} else {
 			$shipping_charge = 0;
 		}
+		$shipping_charge = apply_filters('usces_filter_set_cart_fees_shipping_charge', $shipping_charge, $cart, $entry);
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
 		$discount = $this->get_order_discount();
 		$use_point = $entries['order']['usedpoint'];
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
+		$amount_by_cod = apply_filters('usces_filter_set_cart_fees_amount_by_cod', $amount_by_cod, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
+		$cod_fee = apply_filters('usces_filter_set_cart_fees_cod', $cod_fee, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$tax = $this->getTax( $total_price );
