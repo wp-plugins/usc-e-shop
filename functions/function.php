@@ -1256,6 +1256,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 			return 0;
 		$ID = $_REQUEST['member_id'];
 	}
+	do_action('usces_action_pre_delete_memberdata', $ID);
 
 	$member_table_name = $wpdb->prefix . "usces_member";
 //20100818ysk start
@@ -1270,6 +1271,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 		$wpdb->query( $query );
 	}
 //20100818ysk end
+	do_action('usces_action_post_delete_memberdata', $res, $ID);
 	
 	return $res;
 }
@@ -1978,6 +1980,7 @@ function usces_all_change_order_reciept(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_reciept', array(&$obj));
 }
 
 function usces_all_change_order_status(&$obj){
@@ -2060,6 +2063,7 @@ function usces_all_change_order_status(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_status', array(&$obj));
 }
 
 function usces_all_delete_order_data(&$obj){
@@ -2086,6 +2090,7 @@ function usces_all_delete_order_data(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_delete', array(&$obj));
 }
 
 function usces_check_acting_return() {
@@ -2855,7 +2860,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk end
 			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
 			$furigana_delivery = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
-			$formtag .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
+			$shipping_address_info .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
 			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
 			//20100818ysk end

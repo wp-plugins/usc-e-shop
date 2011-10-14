@@ -3087,6 +3087,8 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
+					
+					do_action('usces_action_member_registered', $_POST['member']);
 				}
 				
 				return 'newcompletion';
@@ -3152,6 +3154,7 @@ class usc_e_shop
 						$_SESSION['usces_entry']['member_regmode'] = 'editmemberfromcart';
 						return 'newcompletion';
 					}
+					do_action('usces_action_member_registered', $_POST['customer']);
 				}
 				
 				return false;
@@ -5531,9 +5534,10 @@ class usc_e_shop
 		global $wpdb;
 		$order_table = $wpdb->prefix . "usces_order";
 	
-		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
-								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
-							FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
+		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
+//		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
+//								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
+//							FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
 		$results = $wpdb->get_results( $query );
 	
 		$i=0;
@@ -5549,6 +5553,7 @@ class usc_e_shop
 							'usedpoint' => $value->order_usedpoint,
 							'discount' => $value->order_discount,
 							'shipping_charge' => $value->order_shipping_charge,
+							'payment_name' => $value->order_payment_name,
 							'cod_fee' => $value->order_cod_fee,
 							'tax' => $value->order_tax,
 							'order_status' => $value->order_status,
