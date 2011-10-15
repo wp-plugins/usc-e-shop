@@ -53,22 +53,22 @@ function usces_pdf_out(&$pdf, $data){
 	switch ($_REQUEST['type'] ){
 		case  'mitumori':
 			$pdf->SetTitle('estimate');
-			$filename = 'estimate_' . $data->order['ID'] . '.pdf';
+			$filename = 'estimate_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 		
 		case 'nohin':
 			$pdf->SetTitle('invoice');
-			$filename = 'invoice_' . $data->order['ID'] . '.pdf';
+			$filename = 'invoice_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 		
 		case 'receipt':
 			$pdf->SetTitle('receipt');
-			$filename = 'receipt_' . $data->order['ID'] . '.pdf';
+			$filename = 'receipt_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 		
 		case 'bill':
 			$pdf->SetTitle('bill');
-			$filename = 'bill_' . $data->order['ID'] . '.pdf';
+			$filename = 'bill_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 	}
 	
@@ -269,10 +269,10 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	$pdf->SetLineWidth(0.4);
 	$pdf->Line(65, 23, 110, 23);
 	$pdf->SetLineWidth(0.1);
-	$pdf->Line(135, 19, 165, 19);
+	$pdf->Line(124, 19, 167, 19);
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
-	$pdf->SetXY(136, 15.0);
+	$pdf->SetXY(125, 15.0);
 	$pdf->Write(5, 'No.');
 	
 	// Title
@@ -288,8 +288,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	$pdf->MultiCell(45.5, $lineheight, usces_conv_euc($effective_date), $border, 'C');
 
 	// Order No.
-	$pdf->SetXY(142, 15.4);
-	$pdf->MultiCell(24, $lineheight,  $data->order['ID'], $border, 'C');
+	$pdf->SetXY(131, 15.4);
+	$pdf->MultiCell(36, $lineheight,  usces_get_deco_order_id( $data->order['ID'] ), $border, 'R');
 
 	// Page No.
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(13);

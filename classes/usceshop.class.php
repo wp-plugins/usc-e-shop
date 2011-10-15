@@ -60,6 +60,9 @@ class usc_e_shop
 		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_base_country();
 		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
+		if(!isset($this->options['system']['dec_orderID_flag'])) $this->options['system']['dec_orderID_flag'] = 0;
+		if(!isset($this->options['system']['dec_orderID_prefix'])) $this->options['system']['dec_orderID_prefix'] = '';
+		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
 //20010420ysk start
 		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
 		$this->options['system']['base_country'] = usces_get_base_country();
@@ -868,8 +871,18 @@ class usc_e_shop
 			$this->options['system']['addressform'] = (isset($_POST['addressform']) ) ? $_POST['addressform'] : usces_get_local_addressform();
 			$this->options['system']['target_market'] = (isset($_POST['target_market']) ) ? $_POST['target_market'] : usces_get_local_target_market();
 			$this->options['system']['no_cart_css'] = isset($_POST['no_cart_css']) ? 1 : 0;
-//			$this->options['system']['orderby_itemsku'] = isset($_POST['orderby_itemsku']) ? (int)$_POST['orderby_itemsku'] : 0;
-//			$this->options['system']['orderby_itemopt'] = isset($_POST['orderby_itemopt']) ? (int)$_POST['orderby_itemopt'] : 0;
+			$this->options['system']['dec_orderID_flag'] = isset($_POST['dec_orderID_flag']) ? (int)$_POST['dec_orderID_flag'] : 0;
+			$this->options['system']['dec_orderID_prefix'] = isset($_POST['dec_orderID_prefix']) ? esc_html(rtrim($_POST['dec_orderID_prefix'])) : '';
+			if( isset($_POST['dec_orderID_digit']) ){
+				$dec_orderID_digit = (int)rtrim($_POST['dec_orderID_digit']);
+				if( 6 > $dec_orderID_digit ){
+					$this->options['system']['dec_orderID_digit'] = 6;
+				}else{
+					$this->options['system']['dec_orderID_digit'] = $dec_orderID_digit;
+				}
+			}else{
+				$this->options['system']['dec_orderID_digit'] = 6;
+			}
 //20110331ysk start
 			unset($this->options['province']);
 			$action_status = '';
@@ -3974,10 +3987,10 @@ class usc_e_shop
 		}
 	}
 
-	function set_initial()
-	{
-		$rets = usces_metakey_change();
+	function set_initial() {
 		
+		$rets07 = usces_upgrade_07();
+		$rets11 = usces_upgrade_11();
 		$this->set_default_theme();
 		$this->set_default_page();
 		$this->set_default_categories();
@@ -3986,8 +3999,7 @@ class usc_e_shop
 
 	}
 	
-	function create_table()
-	{
+	function create_table() {
 		global $wpdb;
 		
 		if ( ! empty($wpdb->charset) )
@@ -4007,8 +4019,8 @@ class usc_e_shop
 		
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_key VARCHAR( 20 ) NOT NULL ,
-				acc_type VARCHAR( 20 ) NULL ,
+				acc_key VARCHAR( 50 ) NOT NULL ,
+				acc_type VARCHAR( 50 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
 				acc_num1 INT( 11 ) NOT NULL DEFAULT 0,
@@ -4017,7 +4029,9 @@ class usc_e_shop
 				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
-				KEY acc_date ( acc_date )  
+				KEY acc_date ( acc_date ), 
+				KEY acc_num1 ( acc_num1 ), 
+				KEY acc_num2 ( acc_num2 )  
 				) ENGINE = MYISAM AUTO_INCREMENT=0 $charset_collate;";
 		
 			dbDelta($sql);
@@ -4155,8 +4169,8 @@ class usc_e_shop
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_key VARCHAR( 20 ) NOT NULL ,
-				acc_type VARCHAR( 20 ) NULL ,
+				acc_key VARCHAR( 50 ) NOT NULL ,
+				acc_type VARCHAR( 50 ) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
 				acc_num1 INT( 11 ) NOT NULL DEFAULT 0,
@@ -4165,7 +4179,9 @@ class usc_e_shop
 				acc_str2 VARCHAR( 200 ) NULL ,
 				KEY acc_key ( acc_key ),  
 				KEY acc_type ( acc_type ),  
-				KEY acc_date ( acc_date )  
+				KEY acc_date ( acc_date ), 
+				KEY acc_num1 ( acc_num1 ), 
+				KEY acc_num2 ( acc_num2 )  
 				) ENGINE = MYISAM;";
 			
 			dbDelta($sql);

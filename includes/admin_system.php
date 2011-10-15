@@ -29,6 +29,9 @@ $system_currency =  ( isset($this->options['system']['currency']) && !empty($thi
 $system_addressform =  ( isset($this->options['system']['addressform']) && !empty($this->options['system']['addressform']) ) ? $this->options['system']['addressform'] : usces_get_local_addressform();
 $system_target_markets =  ( isset($this->options['system']['target_market']) && !empty($this->options['system']['target_market']) ) ? $this->options['system']['target_market'] : usces_get_local_target_market();
 $no_cart_css = isset($this->options['system']['no_cart_css']) ? $this->options['system']['no_cart_css'] : 0;
+$dec_orderID_flag = isset($this->options['system']['dec_orderID_flag']) ? $this->options['system']['dec_orderID_flag'] : 0;
+$dec_orderID_prefix = isset($this->options['system']['dec_orderID_prefix']) ? $this->options['system']['dec_orderID_prefix'] : '';
+$dec_orderID_digit = isset($this->options['system']['dec_orderID_digit']) ? $this->options['system']['dec_orderID_digit'] : 6;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -242,31 +245,29 @@ jQuery(document).ready(function($) {
 	    <td><div id="ex_no_cart_css" class="explanation"><?php _e('When checked, Welcart will not output the usces_cart.css. If you want to make own usces_cart.css file, please copy and paste it in your theme folder currently in use.', 'usces'); ?></div></td>
 	</tr>
 </table>
-<!--<table class="form_table">
+<table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemsku');"><?php _e('商品SKUの並び順', 'usces'); ?></a></th>
-	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku0" type="radio" value="0"<?php if($orderby_itemsku === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku0"><?php _e('SKU cord Order', 'usces'); ?></label></td>
-	    <td width="10"><input name="orderby_itemsku" id="orderby_itemsku1" type="radio" value="1"<?php if($orderby_itemsku === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemsku1"><?php _e('Registration Order', 'usces'); ?></label></td>
-		<td><div id="ex_orderby_itemsku" class="explanation"><?php _e("You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'.", 'usces'); ?></div></td>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_dec_orderID_flag');"><?php _e('Rules of order-ID numbering', 'usces'); ?></a></th>
+	    <td width="10"><input name="dec_orderID_flag" id="dec_orderID_flag0" type="radio" value="0"<?php if($dec_orderID_flag === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="dec_orderID_flag0"><?php _e('Sequential number', 'usces'); ?></label></td>
+	    <td width="10"><input name="dec_orderID_flag" id="dec_orderID_flag1" type="radio" value="1"<?php if($dec_orderID_flag === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="dec_orderID_flag1"><?php _e('Random string', 'usces'); ?></label></td>
+		<td><div id="ex_dec_orderID_flag" class="explanation"><?php _e("The initial value is a sequential number starting from 1000.", 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_orderby_itemopt');"><?php _e('Order of Item Option', 'usces'); ?></a></th>
-	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt0" type="radio" value="0"<?php if($orderby_itemopt === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt0"><?php _e('Optional excellent Order', 'usces'); ?></label></td>
-	    <td width="10"><input name="orderby_itemopt" id="orderby_itemopt1" type="radio" value="1"<?php if($orderby_itemopt === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="orderby_itemopt1"><?php _e('Registration Order', 'usces'); ?></label></td>
-		<td><div id="ex_orderby_itemopt" class="explanation"><?php _e("You can appoint a common option and the equal thing order of the item option. When You want to make it registered order, choose 'Registration Order'. The initial state becomes 'Optional excellent Order'.", 'usces'); ?></div></td>
-	</tr>
-</table>-->
-<!--<table class="form_table">
-	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_javascript');"><?php _e('JavaScript 利用の有無', 'usces'); ?></a></th>
-	    <td width="10"><input name="use_javascript" id="use_javascript0" type="radio" value="0"<?php if($this->options['use_javascript'] == 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript0"><?php _e('利用しない', 'usces'); ?></label></td>
-	    <td width="10"><input name="use_javascript" id="use_javascript1" type="radio" value="1"<?php if($this->options['use_javascript'] == 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="use_javascript1"><?php _e('利用する', 'usces'); ?></label></td>
-		<td><div id="ex_use_javascript" class="explanation"><?php _e("初期状態ではJavaScript を利用します。JavaScript を利用できないブラウザにも対応したい場合は「利用しない」を選択します。「利用しない」を選択するとJavaScript を使用しているWelcart 専用拡張プラグインも利用できなくなりますのでご注意下さい。その他のプラグインの制御は行いません。あくまでフロントの動作においてWelcart が利用しているJavaScript を停止するだけです。", 'usces'); ?></div></td>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_dec_orderID_prefix');"><?php _e('Prefix of order-ID', 'usces'); ?></a></th>
+		<td><input name="dec_orderID_prefix" type="text" id="dec_orderID_prefix" value="<?php echo esc_attr($dec_orderID_prefix); ?>" size="7" /></td>
+	    <td><div id="ex_dec_orderID_prefix" class="explanation"><?php _e('If you do not need it, leave it blank.', 'usces'); ?></div></td>
 	</tr>
 </table>
---></div>
+<table class="form_table">
+	<tr height="50">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_dec_orderID_digit');"><?php _e('Digits of order-ID', 'usces'); ?></a></th>
+		<td><input name="dec_orderID_digit" type="text" id="dec_orderID_digit" value="<?php echo esc_attr($dec_orderID_digit); ?>" size="7" /></td>
+	    <td><div id="ex_dec_orderID_digit" class="explanation"><?php _e('This value must be at least six digits. The prefix is ​​not included.', 'usces'); ?></div></td>
+	</tr>
+</table>
+</div>
 <!--20110331ysk start-->
 </div><!--postbox-->
 </div><!--system_page_setting_1-->

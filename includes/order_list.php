@@ -4,7 +4,8 @@ global $wpdb;
 
 $tableName = $wpdb->prefix . "usces_order";
 $arr_column = array(
-			__('Order number', 'usces') => 'ID', 
+			__('ID', 'usces') => 'ID', 
+			__('Order number', 'usces') => 'deco_id', 
 			__('date', 'usces') => 'date', 
 			__('membership number', 'usces') => 'mem_id', 
 			__('name', 'usces') => 'name', 
@@ -138,6 +139,9 @@ jQuery(function($){
 			if( column == 'ID' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][ID]" type="text" value="<?php echo esc_attr($arr_search['word']['ID']); ?>" class="searchword" maxlength="50" />';
+			}else if( column == 'deco_id' ) {
+				label = '<?php _e('key words', 'usces'); ?>';
+				html = '<input name="search[word][deco_id]" type="text" value="<?php echo esc_attr($arr_search['word']['deco_id']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'date' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
 				html = '<input name="search[word][date]" type="text" value="<?php echo esc_attr($arr_search['word']['date']); ?>" class="searchword" maxlength="50" />';
@@ -459,8 +463,8 @@ jQuery(document).ready(function($){
 	<td><input name="listcheck[]" type="checkbox" value="<?php echo $array['ID']; ?>" /></td>
 	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $value == '' || $value == ' ' ) $value = '&nbsp;'; ?>
-		<?php if( $key == 'ID' ): ?>
-		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo esc_html($value); ?></a></td>
+		<?php if( $key == 'ID' || $key == 'deco_id' ): ?>
+		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $array['ID'] . '&usces_referer=' . $curent_url; ?>"><?php echo esc_html($value); ?></a></td>
 		<?php elseif( $key == 'total_price' ): ?>
 		<td class="price"><?php usces_crform( $value, true, false ); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
@@ -485,6 +489,8 @@ jQuery(document).ready(function($){
 </table>
 
 </div>
+[memory peak usage] <?php echo round(memory_get_peak_usage()/1048576, 1); ?>Mb
+
 <!--20100908ysk start-->
 <div id="dlProductListDialog" title="<?php _e('Download Product List', 'usces'); ?>">
 	<p><?php _e('出力したい項目を選択して、ダウンロードを押してください。', 'usces'); ?></p>
@@ -506,7 +512,8 @@ jQuery(document).ready(function($){
 		<input type="button" id="dl_pro" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Header Information', 'usces'); ?></legend>
-		<label for="chk_pro[ID]"><input type="checkbox" class="check_product" id="chk_pro[ID]" value="ID" checked disabled /><?php _e('order number', 'usces'); ?></label>
+		<label for="chk_pro[ID]"><input type="checkbox" class="check_product" id="chk_pro[ID]" value="ID" checked disabled /><?php _e('ID', 'usces'); ?></label>
+		<label for="chk_pro[deco_id]"><input type="checkbox" class="check_product" id="chk_pro[deco_id]" value="deco_id" checked disabled /><?php _e('order number', 'usces'); ?></label>
 		<label for="chk_pro[date]"><input type="checkbox" class="check_product" id="chk_pro[date]" value="date"<?php if($chk_pro['date'] == 1) echo ' checked'; ?> /><?php _e('order date', 'usces'); ?></label>
 		<label for="chk_pro[mem_id]"><input type="checkbox" class="check_product" id="chk_pro[mem_id]" value="mem_id"<?php if($chk_pro['mem_id'] == 1) echo ' checked'; ?> /><?php _e('membership number', 'usces'); ?></label>
 		<label for="chk_pro[name]"><input type="checkbox" class="check_product" id="chk_pro[name]" value="name"<?php if($chk_pro['name'] == 1) echo ' checked'; ?> /><?php _e('name', 'usces'); ?></label>
@@ -544,7 +551,8 @@ jQuery(document).ready(function($){
 		<input type="button" id="dl_ord" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Customer Information', 'usces'); ?></legend>
-		<label for="chk_ord[ID]"><input type="checkbox" class="check_order" id="chk_ord[ID]" value="ID" checked disabled /><?php _e('Order number', 'usces'); ?></label>
+		<label for="chk_ord[ID]"><input type="checkbox" class="check_order" id="chk_ord[ID]" value="ID" checked disabled /><?php _e('ID', 'usces'); ?></label>
+		<label for="chk_ord[deco_id]"><input type="checkbox" class="check_order" id="chk_ord[deco_id]" value="deco_id" checked disabled /><?php _e('Order number', 'usces'); ?></label>
 		<label for="chk_ord[date]"><input type="checkbox" class="check_order" id="chk_ord[date]" value="date" checked disabled /><?php _e('order date', 'usces'); ?></label>
 		<label for="chk_ord[mem_id]"><input type="checkbox" class="check_order" id="chk_ord[mem_id]" value="mem_id"<?php if($chk_ord['mem_id'] == 1) echo ' checked'; ?> /><?php _e('membership number', 'usces'); ?></label>
 		<label for="chk_ord[email]"><input type="checkbox" class="check_order" id="chk_ord[email]" value="email"<?php if($chk_ord['email'] == 1) echo ' checked'; ?> /><?php _e('e-mail', 'usces'); ?></label>

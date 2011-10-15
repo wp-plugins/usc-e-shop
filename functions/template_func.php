@@ -2228,7 +2228,7 @@ function usces_member_history(){
 		}
 		$html .= '</tr>
 			<tr>
-			<td class="rightnum">' . $umhs['ID'] . '</td>
+			<td class="rightnum">' . usces_get_deco_order_id($umhs['ID']) . '</td>
 			<td class="date">' . $umhs['date'] . '</td>
 			<td class="rightnum">' . usces_crform(($usces->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
 		if( usces_is_membersystem_point() ){
@@ -2607,7 +2607,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk end
 			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
 			$furigana_delivery = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
-			$formtag .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
+			$shipping_address_info .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
 			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
 			//20100818ysk end

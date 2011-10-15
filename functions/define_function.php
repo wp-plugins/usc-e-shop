@@ -68,6 +68,8 @@ function usces_item_uploadcsv(){
   	}
 
 
+	$yn = "\r\n";
+	$br = "<br />";
 /*********************************************************************/
 //	Register
 /**********************************************************************/
@@ -84,7 +86,6 @@ function usces_item_uploadcsv(){
 	/*////////////////////////////////////////*/
 	// ready 
 	/*////////////////////////////////////////*/
-	$yn = "\n";
 	$start = microtime(true);
 	
 	//$wpdb->show_errors();
@@ -192,10 +193,12 @@ function usces_item_uploadcsv(){
 	fclose($fpo);
 	
 	echo '<script type="text/javascript">changeMsg("処理中...");</script>'.$yn;
+	echo '<div class="error_log">'.$yn;
 	ob_flush();
 	flush();
 
 	foreach($orglines as $line){
+		$line = trim($line);
 		if( 0 !== strpos( $line, 'Post ID' ) && !empty($line) )
 			$lines[] = $line;
 	}
@@ -213,6 +216,7 @@ function usces_item_uploadcsv(){
 		$datas = array();
 
 		$logtemp = '';
+		$mestemp = '';
 		$line = trim($line);
 		if( empty($line) ) continue;
 		
@@ -249,8 +253,10 @@ function usces_item_uploadcsv(){
 
 		if( $min_field_num > count($datas) ){
 			$err_num++;
-			$logtemp .= "No." . ($rows_num+1)." ".count($datas) . "\t".__('The number of the columns is abnormal.', 'usces')."\r\n";
+			$mes = "No." . ($rows_num+1)." ".count($datas) . "\t".__('The number of the columns is abnormal.', 'usces');
+			$logtemp .= $mes.$yn;
 			$log .= $logtemp;
+			echo $mes.$br.$yn;
 			continue;
 		}
 
@@ -259,7 +265,10 @@ function usces_item_uploadcsv(){
 			$db_res = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID = %d", $post_id) );
 			if( !$db_res ){
 				$err_num++;
-				$log .= "No." . ($rows_num+1) . "\t".__("Post-ID {$post_id} does not exist in the database.", 'usces')."\r\n";
+				$mes = "No." . ($rows_num+1) . "\t".__("Post-ID {$post_id} does not exist in the database.", 'usces');
+				$logtemp .= $mes.$yn;
+				$log .= $logtemp;
+				echo $mes.$br.$yn;
 				continue;
 			}
 		}
@@ -285,7 +294,9 @@ function usces_item_uploadcsv(){
 			switch($key){
 				case USCES_COL_ITEM_CODE:
 					if( 0 == strlen($data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('An item cord is non-input.', 'usces')."\r\n";
+						$mes = "No." . ($rows_num+1) . "\t".__('An item cord is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
 					}else{
 						$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
 												WHERE meta_key = %s AND meta_value = %s", 
@@ -293,84 +304,143 @@ function usces_item_uploadcsv(){
 						$db_res1 = $wpdb->get_results( $query );
 						if( 'upd' == $mode ){
 							if( 1 < count($db_res1) ){
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('This Item-Code has been duplicated.', 'usces')."\r\n";
+								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has been duplicated.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+								$mes = '';
 								foreach($db_res as $res_val){
-									$logtemp .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
+									$mes .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
 								}
-								$logtemp .= "\r\n";
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
 							}
 							$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
 													WHERE post_id <> %d AND meta_key = %s AND meta_value = %s", 
 													$post_id, '_itemCode', $data);
 							$db_res2 = $wpdb->get_results( $query );
 							if( 0 < count($db_res2) ){
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces')."\r\n";
+								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+								$mes = '';
 								foreach($db_res as $res_val){
-									$logtemp .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
+									$mes .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
 								}
-								$logtemp .= "\r\n";
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
 							}
 						}else if( 'add' == $mode ){
 							if( 0 < count($db_res1) ){
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces')."\r\n";
+								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+								$mes = '';
 								foreach($db_res as $res_val){
-									$logtemp .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
+									$mes .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
 								}
-								$logtemp .= "\r\n";
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
 							}
 						}
 					}
 					break;
 				case USCES_COL_ITEM_NAME:
-					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('An item name is non-input.', 'usces')."\r\n";
+					if( 0 == strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('An item name is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_RESTRICTION:
-					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the purchase limit number is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the purchase limit number is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_POINTRATE:
-					if( !preg_match("/^[0-9]+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the point rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the point rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPNUM1:
-					if( !preg_match("/^[0-9]+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('umerical value is abnormality.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('umerical value is abnormality.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPDIS1:
-					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM1] && 1 > $data ) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM1] && 1 > $data ) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPNUM2:
-					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM1] >= $data && 0 != $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('umerical value is abnormality.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM1] >= $data && 0 != $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('umerical value is abnormality.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPDIS2:
-					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM2] && 1 > $data ) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM2] && 1 > $data ) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPNUM3:
-					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM2] >= $data && 0 != $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('umerical value is abnormality.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM2] >= $data && 0 != $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('umerical value is abnormality.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPDIS3:
-					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM3] && 1 > $data ) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM3] && 1 > $data ) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_SHIPPING:
-					if( !preg_match("/^[0-9]+$/", $data) || 9 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the shipment day is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 9 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the shipment day is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_DELIVERYMETHOD:
+					if( 0 === strlen($data) || !preg_match("/^[0-9;]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Invalid value of Delivery method.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
+					break;
 				case USCES_COL_ITEM_SHIPPINGCHARGE:
+					if( 0 === strlen($data) || !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Invalid type of shipping charge.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_INDIVIDUALSCHARGE:
-					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the postage individual charging is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the postage individual charging is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_POST_ID:
-					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the Post-ID is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the Post-ID is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_POST_AUTHOR:
 				case USCES_COL_POST_COMMENT_STATUS:
@@ -382,8 +452,11 @@ function usces_item_uploadcsv(){
 					break;
 				case USCES_COL_POST_STATUS:
 					$array17 = array('publish', 'future', 'draft', 'pending', 'private');
-					if( !in_array($data, $array17) || '' == $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces')."\r\n";
+					if( !in_array($data, $array17) || '' == $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_POST_MODIFIED:
 					if( 'future' == $datas[USCES_COL_POST_STATUS] && ('' == $data || '0000-00-00 00:00:00' == $data) ){
@@ -392,31 +465,42 @@ function usces_item_uploadcsv(){
 										(0 < $match[4] && 24 > $match[4]) && 
 										(0 < $match[5] && 60 > $match[5]) && 
 										(0 < $match[6] && 60 > $match[6]) ){
-								$logtemp .= "";
+								$mes = "";
 							}else{
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+								$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
 							}
 							
 						}else{
-							$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+							$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+							$logtemp .= $mes.$yn;
+							$mestemp .= $mes.$br.$yn;
 						}
 					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
-						//if( !preg_match($date_pattern, $data, $match) || strtotime($data) === false || strtotime($data) == -1 )
-						//	$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
-							if(strtotime($data) === false)
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+							if(strtotime($data) === false){
+								$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+							}
 						} else {
 							$datetime = explode(' ', $data);
 							$date_str = usces_dates_interconv($datetime[0]).' '.$datetime[1];
-							if(strtotime($date_str) === false)
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+							if(strtotime($date_str) === false){
+								$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+							}
 						}
 					}
 					break;
 				case USCES_COL_CATEGORY:
-					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A category is non-input.', 'usces')."\r\n";
+					if( 0 == strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A category is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_POST_TAG:
 					break;
@@ -424,39 +508,49 @@ function usces_item_uploadcsv(){
 					break;
 				case USCES_COL_SKU_CODE:
 					if( 0 == strlen($data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A SKU cord is non-input.', 'usces')."\r\n";
+						$mes = "No." . ($rows_num+1) . "\t".__('A SKU cord is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
 					}
 					break;
 				case USCES_COL_SKU_NAME:
-//20110315ysk start
 					break;
 				case USCES_COL_SKU_CPRICE:
-					if( 0 < strlen($data) and !preg_match("/^\d$|^\d+\.?\d+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the price is abnormal.', 'usces')."\r\n";
+					if( 0 < strlen($data) and !preg_match("/^\d$|^\d+\.?\d+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the price is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
-//20110315ysk end
 				case USCES_COL_SKU_PRICE:
-//20110315ysk start
-					//if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) )
-					if( !preg_match("/^\d$|^\d+\.?\d+$/", $data) || 0 == strlen($data) )
-//20110315ysk end
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the normal price is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^\d$|^\d+\.?\d+$/", $data) || 0 == strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the normal price is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_SKU_ZAIKONUM:
-//20110315ysk start
-					if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the stock amount is abnormal.', 'usces')."\r\n";
-//20110315ysk end
+					if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the stock amount is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_SKU_ZAIKO:
-					if( !preg_match("/^[0-9]+$/", $data) || 4 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the stock status is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 4 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the stock status is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_SKU_UNIT:
 					break;
 				case USCES_COL_SKU_GPTEKIYO:
-					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('The value of the duties pack application is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('The value of the duties pack application is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 			}
 		}
@@ -464,6 +558,7 @@ function usces_item_uploadcsv(){
 		for($i=0; $i<$opnum; $i++){
 			$val = array();
 			$oplogtemp = '';
+			$opmestemp = '';
 			for($o=1; $o<=4; $o++){
 				$key = ($min_field_num-1)+$o+($i*4);
 				if( isset($datas[$key]) ){
@@ -473,34 +568,44 @@ function usces_item_uploadcsv(){
 				}
 				switch($o){
 					case 1:
-						if( empty($value) )
-							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces')."\r\n";
+						if( empty($value) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces').$br.$yn;
+						}
 						$val['name'] = $value;
 						break;
 					case 2:
-						if( $value != NULL && ((0 != (int)$value) and (1 != (int)$value) and (2 != (int)$value) and (5 != (int)$value)) )
-							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces')."\r\n";
+						if( $value != NULL && ((0 != (int)$value) and (1 != (int)$value) and (2 != (int)$value) and (5 != (int)$value)) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces').$br.$yn;
+						}
 						$val['mean'] = $value;
 						break;
 					case 3:
-						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 1 < (int)$value) )
-							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-required-item of No.%s option is abnormal.', ($i+1)), 'usces')."\r\n";
+						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 1 < (int)$value) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-required-item of No.%s option is abnormal.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-required-item of No.%s option is abnormal.', ($i+1)), 'usces').$br.$yn;
+						}
 						$val['essential'] = $value;
 						break;
 					case 4:
-						if( ($value != NULL && $value == '') && (2 > $datas[($key-2)] && 0 < strlen($datas[($key-2)])) )
-							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-select of No.%s option is non-input.', ($i+1)), 'usces')."\r\n";
+						if( ($value != NULL && $value == '') && (2 > $datas[($key-2)] && 0 < strlen($datas[($key-2)])) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-select of No.%s option is non-input.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-select of No.%s option is non-input.', ($i+1)), 'usces').$br.$yn;
+						}
 						$val['value'] = $value;
 						break;
 				}
 			}
 			if( '' != $val['name'] || '' != $val['mean'] || '' != $val['essential'] || '' != $val['value'] ){
 				$logtemp .= $oplogtemp;
+				$mestemp .= $opmestemp;
 			}
 		}
 		if( 0 < strlen($logtemp) ){
 			$err_num++;
 			$log .= $logtemp;
+			echo $mestemp;
 			continue;
 		}
 		
@@ -587,7 +692,9 @@ function usces_item_uploadcsv(){
 				$cdatas['guid'] = '';
 				if ( false === $wpdb->insert( $wpdb->posts, $cdatas ) ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('This data was not registered in the database.', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('This data was not registered in the database.', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
@@ -604,7 +711,9 @@ function usces_item_uploadcsv(){
 				$where = array( 'ID' => $post_id );
 				if ( false === $wpdb->update( $wpdb->posts, $cdatas, $where ) ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
@@ -624,7 +733,9 @@ function usces_item_uploadcsv(){
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('Error : delete postmeta', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete postmeta', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
@@ -633,7 +744,9 @@ function usces_item_uploadcsv(){
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('Error : delete revisions', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete revisions', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
@@ -642,7 +755,9 @@ function usces_item_uploadcsv(){
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(category)', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(category)', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
@@ -655,7 +770,9 @@ function usces_item_uploadcsv(){
 					$dbres = $wpdb->update( $wpdb->term_taxonomy, $term_taxonomy_updatas, $term_taxonomy_ids );
 					if( $dbres === false ) {
 						$err_num++;
-						$log .= "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(tag)', 'usces')."\r\n";
+						$mes = "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(tag)', 'usces');
+						$log .= $mes.$yn;
+						echo $mes.$br.$yn;
 						$pre_code = $datas[USCES_COL_ITEM_CODE];
 						continue;
 					}
@@ -682,7 +799,7 @@ function usces_item_uploadcsv(){
 			$valstr .= '(' . $post_id . ", '_itemGpDis3','" . $datas[USCES_COL_ITEM_GPDIS3] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemShipping','" . $datas[USCES_COL_ITEM_SHIPPING] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
-			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_SHIPPINGCHARGE], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . $datas[USCES_COL_ITEM_SHIPPINGCHARGE] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemIndividualSCharge','" . $datas[USCES_COL_ITEM_INDIVIDUALSCHARGE] . "'),";
 		
 			//$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
@@ -915,7 +1032,7 @@ function usces_item_uploadcsv(){
 	fclose($fpi);
 
 	$res['status'] = 'success';
-	$res['message'] = __(sprintf('%2$s of %1$s lines registration completion, %3$s lines error.',$total_num,$comp_num,$err_num), 'usces');
+	$res['message'] = __(sprintf('%2$s of %1$s lines registration completion, error on %3$s lines.',$total_num,$comp_num,$err_num), 'usces');
 	/******************/
 	$finish = microtime(true);
 	usces_log('ready     : '.round($readytime-$start, 4), 'acting_transaction.log');
@@ -931,12 +1048,13 @@ function usces_item_uploadcsv(){
 	usces_log('totalLines: '.$total_num, 'acting_transaction.log');
 	usces_log('--------------------------------------------------------------', 'acting_transaction.log');
 
-	echo '<script type="text/javascript">changeMsg("");setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
+	echo '<script type="text/javascript">changeMsg("', __(sprintf('Successful %1$s lines, Failed %2$s lines.',$comp_num,$err_num), 'usces'), ' ");setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
 	if( $log ){
-		echo '<div class="error_log">' . $log . '</div>'.$yn;
+		//echo '<div class="error_log">' . $log . '</div>'.$yn;
 	}else{
-		echo '<div class="error_log">終了しました。</div>'.$yn;
+		echo '終了しました。'.$yn;
 	}
+	echo '</div>'.$yn;
 	unlink($path.$file_name);
 	return $res;
 }

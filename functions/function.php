@@ -85,7 +85,7 @@ function usces_order_confirm_message($order_id) {
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
-		$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
+		$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	}
 	$msg_body .= __('Items','usces') . " : \r\n";
 
@@ -296,7 +296,7 @@ function usces_send_ordermail($order_id) {
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
-	$msg_body .= __('Order number','usces') . " : " . $order_id . "\r\n";
+	$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	$msg_body .= __('Items','usces') . " : \r\n";
 	
 	$meisai = "";
@@ -3571,5 +3571,13 @@ function usces_get_stocs() {
 	return array_count_values($status);
 }
 
-
+function usces_get_deco_order_id( $order_id ) {
+	global $usces;
+	
+	$dec_order_id = $usces->get_order_meta_value( 'dec_order_id', $order_id);
+	if( !$dec_order_id ){
+		$dec_order_id = str_pad($order_id, $usces->options['system']['dec_orderID_digit'], "0", STR_PAD_LEFT);
+	}
+	return $dec_order_id;
+}
 ?>

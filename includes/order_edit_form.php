@@ -659,7 +659,7 @@ jQuery(document).ready(function($){
 <td colspan="6" class="midasi0"><?php _e('order details', 'usces'); ?></td>
 </tr>
 <tr>
-<td class="label border"><?php _e('Order number', 'usces'); ?></td><td class="col1 border"><div class="rod large short"><?php esc_html_e($data['ID']); ?></div></td>
+<td class="label border"><?php _e('Order number', 'usces'); ?><br />(<?php esc_html_e($data['ID']); ?>)</td><td class="col1 border"><div class="rod"><?php esc_html_e(usces_get_deco_order_id( $data['ID'] )); ?></div></td>
 <td class="col3 label border"><?php _e('order date', 'usces'); ?></td><td class="col2 border"><div class="rod long"><?php esc_html_e($data['order_date']); ?></div></td>
 <td class="label border"><?php echo apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ); ?></td><td class="border"><div id="order_modified" class="rod long"><?php esc_html_e($data['order_modified']); ?></div></td>
 </tr>

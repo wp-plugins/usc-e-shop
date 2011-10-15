@@ -133,6 +133,7 @@ if( $usces->options['itemimg_anchor_rel'] )
 	
 add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
 add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata', 10, 2);
+add_action('usces_action_reg_orderdata', 'usces_action_reg_orderdata');
 
 
 //20100818ysk start
