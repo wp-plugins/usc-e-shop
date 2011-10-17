@@ -5944,9 +5944,9 @@ class usc_e_shop
 				$temp[$index] = $id;
 			}
 			ksort($temp);
-			if(!$intersect){
+			if( empty($intersect) ){
 				$deli = array();
-				$deli[0] = (int)$temp[0];
+				$deli[0] = (int)reset($temp);
 				return $deli;
 			}else{
 				return $intersect;
