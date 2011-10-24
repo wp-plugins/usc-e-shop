@@ -62,7 +62,7 @@ function usces_add_opt( $post_id, $newvalue, $check = true ) {
 			$unique = true;
 			$sortnull = true;
 			foreach( $metas as $meta ){
-				$values = unserialize($rows['meta_value']);
+				$values = unserialize($meta['meta_value']);
 				if( $values['name'] == $newvalue['name'] )
 					$unique = false;
 				if( !isset($values['sort']) )
@@ -73,7 +73,7 @@ function usces_add_opt( $post_id, $newvalue, $check = true ) {
 				return -1;
 			
 			rsort($sort);
-			$next_number = $sort[0] + 1;
+			$next_number = reset($sort) + 1;
 			$unique_sort = array_unique($sort, SORT_REGULAR);
 			if( $meta_num != count($unique_sort) || $meta_num != $next_number || !$sortnull){
 				//To repair the sort data
@@ -294,7 +294,8 @@ function _list_item_option_meta_row( $opt ) {
 			$value .= $v . "\n";
 		}
 	}else{
-		$value = esc_attr(trim($opt['value']));
+		//$value = esc_attr(trim($opt['value']));
+		$value = $opt['value'];
 	}
 	$value = trim($value);
 	$id = (int) $opt['meta_id'];
@@ -314,7 +315,7 @@ function _list_item_option_meta_row( $opt ) {
 					</div>
 				</td>
 				<td class='item-opt-value'>
-					<textarea name='itemopt[<?php echo $id; ?>][value]' id='itemopt[<?php echo $id; ?>][value]' class='metaboxfield'><?php echo $value; ?></textarea>
+					<textarea name='itemopt[<?php echo $id; ?>][value]' id='itemopt[<?php echo $id; ?>][value]' class='metaboxfield'><?php echo esc_html($value); ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -610,10 +611,10 @@ function add_item_option_meta( $post_ID ) {
 	$newoptessential = isset($_POST['newoptessential']) ? $_POST['newoptessential']: 0;
 
 	if($newoptmeans === 0 || $newoptmeans === 1){
-		$newoptvalue = isset($_POST['newoptvalue']) ? explode('\n', $_POST['newoptvalue'] ) : '';
+		$newoptvalue = isset($_POST['newoptvalue']) ? explode("\n", $_POST['newoptvalue'] ) : '';
 		foreach((array)$newoptvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = str_replace('\\', '&yen;', trim( $v ));
+				$nov .= str_replace('\\', '&yen;', trim( $v )) . "\n";
 		}
 	}else{
 		$newoptvalue = isset($_POST['newoptvalue']) ? $_POST['newoptvalue'] : '';
@@ -641,7 +642,7 @@ function add_item_option_meta( $post_ID ) {
 		$value['name'] = $newoptname;
 		$value['means'] = $newoptmeans;
 		$value['essential'] = $newoptessential;
-		$value['value'] = $nov;
+		$value['value'] = trim($nov);
 //		$value['sort'] = $sort;
 //		$valuestr = serialize($value);
 
@@ -731,10 +732,10 @@ function up_item_option_meta( $post_ID ) {
 	$optsort = isset($_POST['sort']) ? $_POST['sort']: 0;
 
 	if($optmeans === 0 || $optmeans === 1){
-		$optvalue = isset($_POST['optvalue']) ? explode('\n', $_POST['optvalue']) : '';
+		$optvalue = isset($_POST['optvalue']) ? explode("\n", $_POST['optvalue']) : '';
 		foreach((array)$optvalue as $v){
 			if(trim( $v ) != '') 
-				$nov[] = str_replace('\\', '&yen;', trim( $v ));
+				$nov .= str_replace('\\', '&yen;', trim( $v )) . "\n";
 		}
 	}else{
 		$optvalue = isset($_POST['optvalue']) ? trim( $_POST['optvalue'] ) : '';
@@ -745,7 +746,7 @@ function up_item_option_meta( $post_ID ) {
 	$value['name'] = $optname;
 	$value['means'] = $optmeans;
 	$value['essential'] = $optessential;
-	$value['value'] = $nov;
+	$value['value'] = trim($nov);
 	$value['sort'] = $optsort;
 	$valueserialized = serialize($value);
 
@@ -889,13 +890,13 @@ function select_common_option( $post_ID ) {
 	$means = $array_val['means'];
 	$essential = $array_val['essential'];
 	$value = '';
-	if($means < 2){
-		foreach($array_val['value'] as $k => $v){
-			$value .= trim($v) . "\n";
-		}
-	}else{
-			$value .= trim($array_val['value']) . "\n";
-	}
+//	if($means < 2){
+//		foreach($array_val['value'] as $k => $v){
+//			$value .= trim($v) . "\n";
+//		}
+//	}else{
+			$value .= $array_val['value'];
+//	}
 	$res = $means . '#usces#' . $essential . '#usces#' . $value;
 	return $res;
 } // select_common_option
@@ -1362,17 +1363,17 @@ function item_save_metadata( $post_id, $post ) {
 			$skugp = isset($_POST['itemsku'][$meta_id]['skugptekiyo']) ? (int)$_POST['itemsku'][$meta_id]['skugptekiyo'] : 0;
 			$skusort = isset($_POST['itemsku'][$meta_id]['sort']) ? $_POST['itemsku'][$meta_id]['sort']: 0;
 		
-			$value['code'] = $skucode;
-			$value['name'] = $skuname;
-			$value['cprice'] = $skucprice;
-			$value['price'] = $skuprice;
-			$value['unit'] = $skuunit;
-			$value['stocknum'] = $skustocknum;
-			$value['stock'] = $skustock;
-			$value['gp'] = $skugp;
-			$value['sort'] = $skusort;
+			$skus['code'] = $skucode;
+			$skus['name'] = $skuname;
+			$skus['cprice'] = $skucprice;
+			$skus['price'] = $skuprice;
+			$skus['unit'] = $skuunit;
+			$skus['stocknum'] = $skustocknum;
+			$skus['stock'] = $skustock;
+			$skus['gp'] = $skugp;
+			$skus['sort'] = $skusort;
 			
-			$valueserialized = serialize($value);
+			$valueserialized = serialize($skus);
 			$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $meta_id) );
 			
 			if( in_array( $skucode, $codes ) )
@@ -1412,18 +1413,30 @@ function item_save_metadata( $post_id, $post ) {
 		foreach( $meta_ids as $meta_id ){
 		
 			$optname = isset($_POST['itemopt'][$meta_id]['name']) ? trim( $_POST['itemopt'][$meta_id]['name'] ) : '';
-			$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? trim( $_POST['itemopt'][$meta_id]['value'] ): '';
 			$optmeans = isset($_POST['itemopt'][$meta_id]['means']) ? (int)$_POST['itemopt'][$meta_id]['means']: 0;
 			$optessential = isset($_POST['itemopt'][$meta_id]['essential']) ? (int)$_POST['itemopt'][$meta_id]['essential']: 0;
 			$optsort = isset($_POST['itemopt'][$meta_id]['sort']) ? $_POST['itemopt'][$meta_id]['sort']: 0;
-		
-			$value['name'] = $optname;
-			$value['value'] = $optvalue;
-			$value['means'] = $optmeans;
-			$value['essential'] = $optessential;
-			$value['sort'] = $optsort;
 			
-			$valueserialized = serialize($value);
+			$nov = '';
+			if($optmeans === 0 || $optmeans === 1){
+				$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? explode("\n", $_POST['itemopt'][$meta_id]['value'] ) : '';
+				foreach((array)$optvalue as $v){
+					if(trim( $v ) != '') 
+						$nov .= str_replace('\\', '&yen;', trim( $v )) . "\n";
+				}
+				//$nov = trim($nov, '\n');
+			}else{
+				$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? $_POST['itemopt'][$meta_id]['value'] : '';
+				$nov = str_replace('\\', '&yen;', $optvalue);
+			}
+
+			$opts['name'] = $optname;
+			$opts['value'] = trim($nov);
+			$opts['means'] = $optmeans;
+			$opts['essential'] = $optessential;
+			$opts['sort'] = $optsort;
+			
+			$valueserialized = serialize($opts);
 			$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $meta_id) );
 			
 			if( in_array( $optname, $names ) )

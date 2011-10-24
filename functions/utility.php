@@ -198,7 +198,16 @@ function usces_upgrade_11(){
 					$newvalue['essential'] = $v;
 					break;
 				case 'value':
-					$newvalue['value'] = $v;
+					if( is_array($v) ){
+						$nov = '';
+						foreach((array)$v as $vs){
+							if(trim( $vs ) != '') 
+								$nov .= str_replace('\\', '&yen;', trim( $vs )) . "\n";
+						}
+						$newvalue['value'] = $nov;
+					}else{
+						$newvalue['value'] = $v;
+					}
 					break;
 				default:
 					$newvalue[$k] = $v;

@@ -58,7 +58,7 @@
 				meta_id = strs[1];
 				$("tbody#item-opt-list").html( strs[0] );
 				$("#optkeyselect").val('#NONE#');
-				$("#newoptvalue").val("");
+				$("#newoptvalue").html("");
 				$("#newoptmeans").val(0);
 				$("#newoptessential").attr({checked: false});
 				$("#itemopt-" + meta_id).css({'background-color': '#FF4'});
@@ -75,7 +75,7 @@
 		addcommonopt : function() {
 			var id = $("#post_ID").val();
 			var name = $("#newoptname").val();
-			var value = $("#newoptvalue").val();
+			var value = $("#newoptvalue").html();
 			var means = $("#newoptmeans").val();
 			if($("input#newoptessential").attr("checked")){
 				var essential = '1';
@@ -109,7 +109,7 @@
 				}else{
 					$("tbody#item-opt-list").html( strs[0] );
 					$("#newoptname").val("");
-					$("#newoptvalue").val("");
+					$("#newoptvalue").html("");
 					$("#newoptmeans").val(0);
 					$("#newoptessential").attr({checked: false});
 					$("#itemopt-" + meta_id).css({'background-color': '#FF4'});
@@ -140,7 +140,6 @@
 			}else{
 				var essential = '0';
 			}
-			
 			if( '' == name || (2 > means && '' == value) ){
 				$mes = '<div class="error">';
 				if( '' == name )
@@ -192,7 +191,7 @@
 		
 		keyselect : function( meta_id ) {
 			if(meta_id == '#NONE#'){
-				$("#newoptvalue").val("");
+				$("#newoptvalue").html("");
 				$("#newoptmeans").val(0);
 				$("#newoptessential").attr({checked: false});
 				return;
@@ -210,7 +209,7 @@
 				var means = strs[0];
 				var essential = strs[1];
 				var value = strs[2];
-				$("#newoptvalue").val(value);
+				$("#newoptvalue").html(value);
 				$("#newoptmeans").val(means);
 				if( essential == '1') {
 					$("#newoptessential").attr({checked: true});

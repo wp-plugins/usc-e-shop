@@ -402,7 +402,7 @@ class usc_e_shop
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 6, 'usces_mail', array($this, 'admin_mail_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 6, 'usces_cart', array($this, 'admin_cart_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 6, 'usces_member', array($this, 'admin_member_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 6, 'usces_system', array($this, 'admin_system_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 10, 'usces_system', array($this, 'admin_system_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Settlement Setting','usces'), __('Settlement Setting','usces'), 10, 'usces_settlement', array($this, 'admin_settlement_page'));
 		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
 		do_action('usces_action_shop_admin_menue');
@@ -1251,21 +1251,53 @@ class usc_e_shop
 	}
 
 	function usces_session_start() {
+		$options = get_option('usces');
+		if( !isset($options['usces_key']) || empty($options['usces_key']) ){
+			$options['usces_key'] =  uniqid('uk');
+			update_option('usces', $options);
+		}
 
 		if(defined( 'USCES_KEY' )){
 			session_name( USCES_KEY );
 		}else{
-			session_name();
+			session_name( $options['usces_key'] );
 		}
 		if(isset($_GET['uscesid']) && ($_GET['uscesid'] != '')) {
 			$sessid = $_GET['uscesid'];
 			$sessid = $this->uscesdc($sessid);
 			session_id($sessid);
 		}
+		
 		//$timeout = 0;
 		//$domain = $_SERVER['HTTP_HOST'];
 		//@session_set_cookie_params($timeout, USCES_COOKIEPATH, $domain);
 		@session_start();
+		
+//usces_log('HTTP_USER_AGENT : '.$_SERVER['HTTP_USER_AGENT'], 'acting_transaction.log');
+//usces_log('HTTP_ACCEPT_CHARSET : '.$_SERVER['HTTP_ACCEPT_CHARSET'], 'acting_transaction.log');
+usces_log('session_id : '.session_id(), 'acting_transaction.log');
+//usces_log('session_name : '.session_name(), 'acting_transaction.log');
+//usces_log('uscesid : '.$_GET['uscesid'], 'acting_transaction.log');
+//usces_log('session_name_REQUEST : '.$_REQUEST[session_name()], 'acting_transaction.log');
+//usces_log('USCES_KEY_REQUEST : '.$_REQUEST[USCES_KEY], 'acting_transaction.log');
+//		if ( ! isset( $_SESSION['fingerprint'] ) ) {
+//			$_SESSION['fingerprint'] = $this->get_fingerprint();
+//			if( is_admin() ){
+//				wp_redirect(get_option('site_url'));
+//			}elseif( ( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ) && false === strpos($_SERVER['REQUEST_URI'], 'wp-login.php') ){
+//				wp_redirect(get_option('home'));
+//				exit;
+//			}
+//		}
+//
+//		$fingerprint = $this->get_fingerprint();
+////			usces_log('fingerprint : '.$fingerprint, 'acting_transaction.log');
+////			usces_log('_SESSION[fingerprint] : '.$_SESSION['fingerprint'], 'acting_transaction.log');
+//		if ( $fingerprint !== $_SESSION['fingerprint'] ) {
+//			usces_log('Illegal access : '.$_SERVER['REMOTE_ADDR'], 'acting_transaction.log');
+//			die();
+//		}
+//		$_SESSION['fingerprint'] = $fingerprint;
 		
 		if ( !isset($_SESSION['usces_member']) ){
 			$_SESSION['usces_member'] = array();
@@ -1274,6 +1306,19 @@ class usc_e_shop
 		if(!isset($_SESSION['usces_checked_business_days']))
 			$this->update_business_days();
 	}
+	
+//	function get_fingerprint(){
+//		$fingerprint = defined(USCES_KEY) ? USCES_KEY : DB_NAME;
+//	
+//		if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+//			$fingerprint .= $_SERVER['HTTP_USER_AGENT'];
+//		}
+//		if ( ! empty( $_SERVER['HTTP_ACCEPT_CHARSET'] ) ) {
+//			$fingerprint .= $_SERVER['HTTP_ACCEPT_CHARSET'];
+//		}
+//		$fingerprint .= session_id();
+//		return md5( $fingerprint );
+//	}
 	
 	function usces_cookie() {
 		//if( !isset($_SESSION['usces_cookieid']) ) {
@@ -1355,7 +1400,10 @@ class usc_e_shop
 	function get_uscesid( $flag = true) {
 
 		$sessname = session_name();
-		$sessid = isset($_REQUEST[$sessname]) ? $_REQUEST[$sessname] : session_id();
+//usces_log('sessname : '.$sessname, 'acting_transaction.log');
+//usces_log('_REQUEST : '.$_REQUEST[$sessname], 'acting_transaction.log');
+//		$sessid = isset($_REQUEST[$sessname]) ? $_REQUEST[$sessname] : session_id();
+		$sessid = session_id();
 		$sessid = $this->uscescv($sessid, $flag);
 		return $sessid;
 	}
@@ -1882,6 +1930,8 @@ class usc_e_shop
 		do_action('usces_main');
 		$this->usces_cookie();
 		$this->update_table();
+	
+usces_log('usces_cookie : '.print_r($this->get_cookie(),true), 'acting_transaction.log');
 		
 //		if( 'customer' == $this->page ){
 //			header("Pragma: private");
@@ -3654,10 +3704,13 @@ class usc_e_shop
 				}
 			}
 		}
+		
+		$mes = apply_filters('usces_filter_incart_check', $mes);
+
 		foreach( (array)$mes[$post_id] as $skukey => $skuvalue ){
 			$mes[$post_id][$skukey] = rtrim($skuvalue, "<br />");
 		}
-		
+
 		if( !empty($mes) ){
 			$_SESSION['usces_singleitem']['itemOption'] = $_POST['itemOption'];
 			$_SESSION['usces_singleitem']['quant'] = $_POST['quant'];

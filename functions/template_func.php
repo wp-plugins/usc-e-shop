@@ -2408,7 +2408,6 @@ function usces_get_cart_rows( $out = '' ) {
 			$optstr =  '';
 			$options =  array();
 		}
-
 		$res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';

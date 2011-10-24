@@ -180,6 +180,29 @@ function admin_prodauct_footer(){
 	}
 }
 
+function admin_post_footer(){
+	switch( $GLOBALS['hook_suffix'] ){
+		case 'post.php':
+		case 'post-new.php':
+			$categories = get_categories( array('child_of' => USCES_ITEM_CAT_PARENT_ID) );
+?>
+<script type="text/javascript">
+(function($) {
+	$("#category-<?php echo USCES_ITEM_CAT_PARENT_ID ?>").remove();
+	$("#popular-category-<?php echo USCES_ITEM_CAT_PARENT_ID ?>").remove();
+	<?php
+			foreach ( $categories as $category ){
+	?>
+	$("#popular-category-<?php echo $category->term_id ?>").remove();
+	<?php
+			}
+	?>
+})(jQuery);
+</script>
+<?php
+			break;
+	}
+}
 //function usces_action_transition_post_status( $new_status, $old_status, $post){
 //	global $usces;
 //	$itemCode  = trim($_POST['itemCode' ]);
