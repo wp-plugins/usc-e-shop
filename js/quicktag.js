@@ -5,7 +5,7 @@
 	};
 	 
 	function JeCartShortCode(){
-		edInsertContent( edCanvas, '[cart_buttom code="" sku=""]' );
+		edInsertContent( edCanvas, '[cart_button code="" sku=""]' );
 	};
 	 
 	function JeRegisterQuickTag(){

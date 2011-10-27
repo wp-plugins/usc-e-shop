@@ -38,7 +38,7 @@
 			return str;
 		},
 		_JeCart : function(d, fmt) {
-			str = '[cart_buttom code="" sku=""]';
+			str = '[cart_button code="" sku=""]';
 			return str;
 		}
     });

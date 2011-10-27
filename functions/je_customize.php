@@ -112,7 +112,7 @@ add_filter('usces_filter_sku_meta_row_advance', 'je_filter_sku_meta_row_advance'
 function je_filter_sku_meta_row_advance($default_field, $entry){
 	$itemcode = get_post_meta($entry['post_id'], '_itemCode', true);
 	$skucode = substr($entry['meta_key'],6);
-	$default_field = '　　カート投入ボタン・ショートコード ： <span class="sku_shortcode">[cart_button item="' . esc_html($itemcode) . '" sku="' . esc_html($skucode) . '"]</span>';
+	$default_field = '　　カート投入ボタン・ショートコード ： <span class="sku_shortcode">[cart_button code="' . esc_html($itemcode) . '" sku="' . esc_html($skucode) . '"]</span>';
 	return $default_field;
 }
 
