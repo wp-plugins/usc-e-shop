@@ -65,7 +65,7 @@ function usces_order_confirm_message($order_id) {
 
 	if($_POST['mode'] == 'mitumoriConfirmMail'){
 		$msg_body = "\r\n\r\n\r\n" . __('Estimate','usces') . "\r\n";
-		$msg_body .= "******************************************************************\r\n";
+		$msg_body .= usces_mail_line( 1, $data['order_email'] );//********************
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
@@ -76,7 +76,7 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= __('estimate number','usces') . " : " . $order_id . "\r\n";
 	}else{
 		$msg_body = "\r\n\r\n\r\n" . __('** Article order contents **','usces') . "\r\n";
-		$msg_body .= "******************************************************************\r\n";
+		$msg_body .= usces_mail_line( 1, $data['order_email'] );//********************
 		$msg_body .= apply_filters('usces_filter_order_confirm_mail_first', NULL, $data);
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
@@ -107,7 +107,7 @@ function usces_order_confirm_message($order_id) {
 			$options =  array();
 		}
 		
-		$meisai .= "------------------------------------------------------------------\r\n";
+		$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
@@ -136,7 +136,7 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	
-	$meisai .= "=================================================================\r\n";
+	$meisai .= usces_mail_line( 3, $data['order_email'] );//====================
 	$meisai .= __('total items','usces') . "    : " . usces_crform( $data['order_item_total_price'], true, false, 'return' ) . "\r\n";
 
 	if ( $data['order_usedpoint'] != 0 )
@@ -148,9 +148,9 @@ function usces_order_confirm_message($order_id) {
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
 		$meisai .= __('consumption tax','usces') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
-	$meisai .= "------------------------------------------------------------------\r\n";
+	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, false, 'return' ) . "\r\n";
-	$meisai .= "------------------------------------------------------------------\r\n";
+	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
 	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
 	
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data);
@@ -158,7 +158,7 @@ function usces_order_confirm_message($order_id) {
 
 	
 	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
-	$msg_shipping .= "******************************************************************\r\n";
+	$msg_shipping .= usces_mail_line( 1, $data['order_email'] );//********************
 	
 	$msg_shipping .= uesces_get_mail_addressform( 'admin_mail', $deli, $order_id );
 
@@ -184,16 +184,16 @@ function usces_order_confirm_message($order_id) {
 
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . " \r\n";
-//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= usces_mail_line( 2, $data['order_email'] )."\r\n";
 
 	$msg_body .= __('** Payment method **','usces') . "\r\n";
-	$msg_body .= "******************************************************************\r\n";
+	$msg_body .= usces_mail_line( 1, $data['order_email'] );//********************
 	$msg_body .= $payment['name']. "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
 		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
-		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+		$msg_body .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
@@ -204,7 +204,7 @@ function usces_order_confirm_message($order_id) {
 		if($args['cv'] != '030') {//ファミリーマート以外
 			$msg_body .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
 		}
-		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+		$msg_body .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
 		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
@@ -218,23 +218,23 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= __('口座番号','usces').' : '.$bank[5]."\r\n";
 		$msg_body .= __('口座名義','usces').' : '.$bank[6]."\r\n";
 		$msg_body .= __('支払期限','usces').' : '.substr($args['exp'], 0, 4).'年'.substr($args['exp'], 4, 2).'月'.substr($args['exp'], 6, 2)."日\r\n";
-		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+		$msg_body .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 //20101018ysk end
 	}
 	
 //20100818ysk start
-	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id );
+	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id, $data['order_email'] );
 //20100818ysk end
 	
 	$msg_body .= "\r\n";
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
-	$msg_body .= "******************************************************************\r\n";
+	$msg_body .= usces_mail_line( 1, $data['order_email'] );//********************
 	$msg_body .= $data['order_note'] . "\r\n\r\n";
-//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 //	$msg_body .= "\r\n";
 
 //	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
-//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_body', NULL, $data);
 
@@ -287,7 +287,7 @@ function usces_send_ordermail($order_id) {
 	$res = false;
 
 	$msg_body = "\r\n\r\n\r\n" . __('** content of ordered items **','usces') . "\r\n";
-	$msg_body .= "******************************************************************\r\n";
+	$msg_body .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	$msg_body .= apply_filters('usces_filter_send_order_mail_first', NULL, $data);
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
@@ -317,7 +317,7 @@ function usces_send_ordermail($order_id) {
 			$options =  array();
 		}
 		
-		$meisai .= "------------------------------------------------------------------\r\n";
+		$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
 		$meisai .= "$cartItemName \r\n";
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
@@ -345,7 +345,7 @@ function usces_send_ordermail($order_id) {
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
-	$meisai .= "=================================================================\r\n";
+	$meisai .= usces_mail_line( 3, $entry['customer']['mailaddress1'] );//====================
 	$meisai .= __('total items','usces') . "    : " . usces_crform( $entry['order']['total_items_price'], true, false, 'return' ) . "\r\n";
 
 	if ( $entry['order']['usedpoint'] != 0 )
@@ -357,9 +357,9 @@ function usces_send_ordermail($order_id) {
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, false, 'return' ) . "\r\n";
 	if ( !empty($usces->options['tax_rate']) )
 		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
-	$meisai .= "------------------------------------------------------------------\r\n";
+	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $entry['order']['total_full_price'], true, false, 'return' ) . "\r\n";
-	$meisai .= "------------------------------------------------------------------\r\n";
+	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
 	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
@@ -367,7 +367,7 @@ function usces_send_ordermail($order_id) {
 
 	
 	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
-	$msg_shipping .= "******************************************************************\r\n";
+	$msg_shipping .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	
 	$msg_shipping .= uesces_get_mail_addressform( 'order_mail', $entry, $order_id );
 
@@ -381,21 +381,21 @@ function usces_send_ordermail($order_id) {
 	$msg_shipping .= __('Delivery date','usces') . " : " . $entry['order']['delivery_date'] . "\r\n";
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
 //20101208ysk end
-//	$msg_body .= "------------------------------------------------------------------\r\n";
+//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= " " . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
-//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 	$msg_shipping .= "\r\n";
 	$msg_body .= apply_filters('usces_filter_send_order_mail_shipping', $msg_shipping, $data);
 
 	$msg_body .= __('** Payment method **','usces') . "\r\n";
-	$msg_body .= "******************************************************************\r\n";
+	$msg_body .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	$msg_body .= $payment['name'] . usces_payment_detail($entry) . "\r\n\r\n";
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
 		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
 		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
-		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+		$msg_body .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
@@ -406,7 +406,7 @@ function usces_send_ordermail($order_id) {
 		if($args['cv'] != '030') {//ファミリーマート以外
 			$msg_body .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
 		}
-		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+		$msg_body .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
 		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
 		$msg_body .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
@@ -420,24 +420,24 @@ function usces_send_ordermail($order_id) {
 		$msg_body .= __('口座番号','usces').' : '.$bank[5]."\r\n";
 		$msg_body .= __('口座名義','usces').' : '.$bank[6]."\r\n";
 		$msg_body .= __('支払期限','usces').' : '.substr($args['exp'], 0, 4).'年'.substr($args['exp'], 4, 2).'月'.substr($args['exp'], 6, 2)."日\r\n";
-		$msg_body .= "\r\n------------------------------------------------------------------\r\n\r\n";
+		$msg_body .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 //20101018ysk end
 	}
 
 //20100818ysk start
-	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id );
+	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id, $entry['customer']['mailaddress1'] );
 //20100818ysk end
 
 	$msg_body .= "\r\n";
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
-	$msg_body .= "******************************************************************\r\n";
+	$msg_body .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	$msg_body .= $entry['order']['note'] . "\r\n\r\n";
-//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 //	$msg_body .= "\r\n";
 
 //	$msg_body .= __('I will inform it of shipment completion by an email.','usces') . "\r\n";
 //	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
-//	$msg_body .= "------------------------------------------------------------------\r\n\r\n";
+//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_body', NULL, $data);
 
@@ -605,7 +605,8 @@ function usces_lostmail($url) {
 }
 
 //20100818ysk start
-function usces_mail_custom_field_info( $custom_field, $position, $id ) {
+//function usces_mail_custom_field_info( $custom_field, $position, $id ) {
+function usces_mail_custom_field_info( $custom_field, $position, $id, $mailaddress = '' ) {
 	global $usces;
 
 	$msg_body = '';
@@ -637,7 +638,7 @@ function usces_mail_custom_field_info( $custom_field, $position, $id ) {
 		switch($custom_field) {
 		case 'order':
 			$msg_body .= "\r\n";
-			$msg_body .= "******************************************************************\r\n";
+			$msg_body .= usces_mail_line( 1, $mailaddress );
 			foreach($keys as $key) {
 				$value = maybe_unserialize($usces->get_order_meta_value($cs.$key, $id));
 				if(is_array($value)) {
@@ -651,7 +652,7 @@ function usces_mail_custom_field_info( $custom_field, $position, $id ) {
 				}
 				$msg_body .= $meta[$key]['name']."  : ".$value."\r\n";
 			}
-			$msg_body .= "******************************************************************\r\n";
+			$msg_body .= usces_mail_line( 1, $mailaddress );
 			break;
 
 		case 'customer':
@@ -3579,5 +3580,25 @@ function usces_get_deco_order_id( $order_id ) {
 		$dec_order_id = str_pad($order_id, $usces->options['system']['dec_orderID_digit'], "0", STR_PAD_LEFT);
 	}
 	return $dec_order_id;
+}
+
+function usces_mail_line( $type, $email = '' ) {
+	$line = '';
+
+	switch( $type ) {
+	case 1:
+		$line = "******************************************************************";
+		break;
+	case 2:
+		$line = "------------------------------------------------------------------";
+		break;
+	case 3:
+		$line = "==================================================================";
+		break;
+	}
+
+	$line = apply_filters( 'usces_filter_mail_line', $line, $type, $email );
+
+	return $line."\r\n";
 }
 ?>

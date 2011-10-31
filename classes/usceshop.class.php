@@ -652,7 +652,6 @@ class usc_e_shop
 			if(isset($_POST['business_days'])) $this->options['business_days'] = $_POST['business_days'];
 
 
-
 			update_option('usces', $this->options);
 			
 			$this->action_status = 'success';
@@ -3704,8 +3703,8 @@ usces_log('usces_cookie : '.print_r($this->get_cookie(),true), 'acting_transacti
 				}
 			}
 		}
-		
-		$mes = apply_filters('usces_filter_incart_check', $mes);
+
+		$mes = apply_filters('usces_filter_incart_check', $mes, $post_id, $sku);
 
 		foreach( (array)$mes[$post_id] as $skukey => $skuvalue ){
 			$mes[$post_id][$skukey] = rtrim($skuvalue, "<br />");
@@ -4005,13 +4004,15 @@ usces_log('usces_cookie : '.print_r($this->get_cookie(),true), 'acting_transacti
 		$dyear = (int)substr($datetimestr, 0, 4);
 		$dtimestamp = mktime($dhour, $dminute, $dsecond, $dmonth, $dday, $dyear);
 		$datenow = getdate($dtimestamp);
-		list($year, $mon, $mday) = getBeforeMonth($datenow['year'], $datenow['mon'], $datenow['mday'], 1);
+		//list($year, $mon, $mday) = getBeforeMonth($datenow['year'], $datenow['mon'], $datenow['mday'], 1);
+		list($year, $mon, $mday) = getBeforeMonth($datenow['year'], $datenow['mon'], 1, 1);
 		
 		if(isset($options['business_days'][$year][$mon][1]))
 			unset($options['business_days'][$year][$mon]);
 		
 		for($i=0; $i<3; $i++){
-			list($year, $mon, $mday) = getAfterMonth($datenow['year'], $datenow['mon'], $datenow['mday'], $i);
+			//list($year, $mon, $mday) = getAfterMonth($datenow['year'], $datenow['mon'], $datenow['mday'], $i);
+			list($year, $mon, $mday) = getAfterMonth($datenow['year'], $datenow['mon'], 1, $i);
 			$last = getLastDay($year, $mon);
 			for($j=1; $j<=$last; $j++){
 				if(!isset($options['business_days'][$year][$mon][$j]))
