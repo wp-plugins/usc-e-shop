@@ -3692,9 +3692,19 @@ usces_log('usces_cookie : '.print_r($this->get_cookie(),true), 'acting_transacti
 		if($ioptkeys){
 			foreach($ioptkeys as $key => $value){
 				$optValues = $this->get_itemOptions( urldecode($value), $post_id );
-				if( 2 > $optValues['means'] ){ //case of select
+				if( 0 == $optValues['means'] ){ //case of select
 					if( $optValues['essential'] && '#NONE#' == $_POST['itemOption'][$post_id][$sku][$value] ){
 						$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), urldecode($value)) . "<br />";
+					}
+				}elseif( 1 == $optValues['means'] ){ //case of multiselect
+					if( $optValues['essential'] ){
+						$mselect = 0;
+						foreach((array)$_POST['itemOption'][$post_id][$sku][$value] as $mvalue){
+							if(!empty($mvalue) and '#NONE#' != $mvalue) $mselect++;
+						}
+						if( $mselect == 0 ){
+							$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), urldecode($value)) . "<br />";
+						}
 					}
 				}else{ //case of text
 					if( $optValues['essential'] && '' == trim($_POST['itemOption'][$post_id][$sku][$value]) ){

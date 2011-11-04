@@ -51,14 +51,14 @@
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" + encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
 			s.success = function(data, dataType){
-				$("#itemopt_ajax-response").html("");
+				$("#itemopt_ajax-response").html('');
 				$("#newitemopt_loading").html('');
 				$("table#optlist-table").removeAttr("style");
 				strs = data.split('#usces#');
 				meta_id = strs[1];
 				$("tbody#item-opt-list").html( strs[0] );
 				$("#optkeyselect").val('#NONE#');
-				$("#newoptvalue").html("");
+				$("#newoptvalue").html('');
 				$("#newoptmeans").val(0);
 				$("#newoptessential").attr({checked: false});
 				$("#itemopt-" + meta_id).css({'background-color': '#FF4'});
@@ -75,7 +75,7 @@
 		addcommonopt : function() {
 			var id = $("#post_ID").val();
 			var name = $("#newoptname").val();
-			var value = $("#newoptvalue").html();
+			var value = $("#newoptvalue").val();
 			var means = $("#newoptmeans").val();
 			if($("input#newoptessential").attr("checked")){
 				var essential = '1';
@@ -108,8 +108,8 @@
 					$("#itemopt_ajax-response").html('<div class="error"><p>同じ名前のオプションが存在します。</p></div>');
 				}else{
 					$("tbody#item-opt-list").html( strs[0] );
-					$("#newoptname").val("");
-					$("#newoptvalue").html("");
+					$("#newoptname").val('');
+					$("#newoptvalue").html('');
 					$("#newoptmeans").val(0);
 					$("#newoptessential").attr({checked: false});
 					$("#itemopt-" + meta_id).css({'background-color': '#FF4'});
@@ -156,7 +156,7 @@
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optname=" + encodeURIComponent(name) + "&optvalue=" + encodeURIComponent(value) + "&optmeans=" + means + "&optessential=" + essential + "&sort=" + sortnum + "&optmetaid=" + meta_id;
 			s.success = function(data, dataType){
-				$("#itemopt_ajax-response").html("");
+				$("#itemopt_ajax-response").html('');
 				$("#itemopt_loading-" + meta_id).html('');
 				strs = data.split('#usces#');
 				$("tbody#item-opt-list").html( strs[0] );
@@ -191,7 +191,7 @@
 		
 		keyselect : function( meta_id ) {
 			if(meta_id == '#NONE#'){
-				$("#newoptvalue").html("");
+				$("#newoptvalue").val('');
 				$("#newoptmeans").val(0);
 				$("#newoptessential").attr({checked: false});
 				return;
