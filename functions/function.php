@@ -69,7 +69,7 @@ function usces_order_confirm_message($order_id) {
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-		$msg_body .= __('Request of','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+		$msg_body .= __('Request of','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -81,7 +81,7 @@ function usces_order_confirm_message($order_id) {
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -291,7 +291,7 @@ function usces_send_ordermail($order_id) {
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['customer']['name1'] . ' ' . $entry['customer']['name2'])) . "\r\n";
+	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $entry['customer']['name1'], $entry['customer']['name2'], 'return' )) . "\r\n";
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -3375,7 +3375,7 @@ function usces_get_cart_rows( $out = '' ) {
 			<td>' . ($i + 1) . '</td>
 			<td>';
 			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
-			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
+			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i,$cart_row);
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
@@ -3472,7 +3472,7 @@ function usces_get_confirm_rows( $out = '' ) {
 			<td>' . ($i + 1) . '</td>
 			<td>';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
+		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
 		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';

@@ -19,7 +19,7 @@ get_header();
 		
 <div id="error-page">
 
-<h2>ERROE</h2>
+<h2>ERROR</h2>
 <div class="post">
 <p><?php _e('Your order has not been completed', 'usces'); ?></p>
 <p>(error <?php echo urldecode($_REQUEST['acting_return']); ?>)</p>

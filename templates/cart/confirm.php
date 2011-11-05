@@ -1,4 +1,5 @@
 <?php
+global $usces_entries;
 $html = '<div id="info-confirm">
 	
 	<div class="usccart_navi">
