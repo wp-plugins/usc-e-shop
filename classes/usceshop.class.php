@@ -652,6 +652,7 @@ class usc_e_shop
 			if(isset($_POST['business_days'])) $this->options['business_days'] = $_POST['business_days'];
 
 
+
 			update_option('usces', $this->options);
 			
 			$this->action_status = 'success';
@@ -1274,7 +1275,8 @@ class usc_e_shop
 		
 //usces_log('HTTP_USER_AGENT : '.$_SERVER['HTTP_USER_AGENT'], 'acting_transaction.log');
 //usces_log('HTTP_ACCEPT_CHARSET : '.$_SERVER['HTTP_ACCEPT_CHARSET'], 'acting_transaction.log');
-usces_log('session_id : '.session_id(), 'acting_transaction.log');
+//usces_log(' : ', 'acting_transaction.log');
+//usces_log('session_id : '.session_id(), 'acting_transaction.log');
 //usces_log('session_name : '.session_name(), 'acting_transaction.log');
 //usces_log('uscesid : '.$_GET['uscesid'], 'acting_transaction.log');
 //usces_log('session_name_REQUEST : '.$_REQUEST[session_name()], 'acting_transaction.log');
@@ -1320,8 +1322,74 @@ usces_log('session_id : '.session_id(), 'acting_transaction.log');
 //	}
 	
 	function usces_cookie() {
-		//if( !isset($_SESSION['usces_cookieid']) ) {
-			$cookie = $this->get_cookie();
+		$actionflag = false;
+		$rckid = NULL;
+		$cookie = $this->get_cookie();
+//usces_log('$_SERVER[HTTP_REFERER] : '.$_SERVER['HTTP_REFERER'], 'acting_transaction.log');
+//usces_log('first cookieid : '.$cookie['id'], 'acting_transaction.log');
+		
+		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']))){
+			
+			$refer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL;
+			$sslid = isset($cookie['sslid']) ? $cookie['sslid'] : NULL;
+			if( isset($_GET['uscesid']) && $_GET['uscesid'] != '' ){
+				$sessid = base64_decode(urldecode($_GET['uscesid']));
+				list($sess, $addr, $rckid, $none) = explode('_', $sessid, 4);
+			}else{
+				$rckid = NULL;
+			}
+			$option = get_option('usces');
+			$parsed = parse_url(get_option('home'));
+			$home = $parsed['host'] . $parsed['path'];
+			$parsed = parse_url($option['ssl_url']);
+			$sslhome = $parsed['host'] . $parsed['path'];
+//usces_log('sslid : '.$sslid, 'acting_transaction.log');
+//usces_log('rckid : '.$rckid, 'acting_transaction.log');
+//usces_log('home : '.$home, 'acting_transaction.log');
+//usces_log('sslhome : '.$sslhome, 'acting_transaction.log');
+
+			//リファラーが無い
+			if( empty($refer) ){
+				//sslid と uscesid がNULL では無く、値が同じならばTRUE
+				if( !empty($sslid) && !empty($rckid) && $sslid === $rckid ){
+//usces_log('flag : リファラーが無い sslid と rckid がNULL では無く、値が同じならばTRUE', 'acting_transaction.log');
+					$actionflag = true;
+				//上記以外はFALSE
+				}else{
+//usces_log('flag : リファラーが無い 上記以外', 'acting_transaction.log');
+					$actionflag = false;
+				}
+			
+			//リファラーがHome and SSLHome のどちらとも一致しない
+			}elseif( false === strpos($refer, $home) && false === strpos($refer, $sslhome) ){
+				//全てFALSE
+//usces_log('flag : リファラーがHome and SSLHome のどちらとも一致しない', 'acting_transaction.log');
+				$actionflag = false;
+			//リファラーが一致
+			}else{
+				//sslid がNULL では無く、uscesid と一致しない場合はFALSE
+				if( !empty($sslid) && $sslid !== $rckid ){
+					$actionflag = false;
+//usces_log('flag : リファラーが一致 sslid がNULL では無く、rckid と一致しない場合はFALSE', 'acting_transaction.log');
+				//上記以外はTRUE
+				}else{
+//usces_log('flag : リファラーが一致 上記以外', 'acting_transaction.log');
+					$actionflag = true;
+				}
+			}
+				
+			if( $actionflag ){
+				$values = array(
+							'id' => $rckid,
+							'sslid' => $rckid,
+							'name' => '',
+							'rme' => ''
+							);
+				$this->set_cookie($values);
+			}else{
+				wp_redirect( 'http://'.$home );
+			}
+		}else{
 			if( !isset($cookie['id']) || $cookie['id'] == '' ) {
 				$values = array(
 							'id' => md5(uniqid(rand(), true)),
@@ -1330,19 +1398,14 @@ usces_log('session_id : '.session_id(), 'acting_transaction.log');
 							);
 				$this->set_cookie($values);
 				$_SESSION['usces_cookieid'] = $values['id'];
-				//unset($_SESSION['usces_member']);
-				//$this->cnt_access('first');
 			} else {
-				if( $_SESSION['usces_cookieid'] != $cookie['id'])
-					//unset($_SESSION['usces_member']);
-
-				$_SESSION['usces_cookieid'] = $cookie['id'];
-				//$this->cnt_access();
+				if( !isset($_SESSION['usces_cookieid']) || $_SESSION['usces_cookieid'] != $cookie['id'])
+					$_SESSION['usces_cookieid'] = $cookie['id'];
 			}
-		//}
-			
-			
+		}
+
 	}
+
 	function set_cookie($values){
 		$value = serialize($values);
 		$timeout = time()+7*86400;
@@ -1923,14 +1986,15 @@ usces_log('session_id : '.session_id(), 'acting_transaction.log');
 			$_POST = $this->stripslashes_deep_post($_POST);
 		}
 		
+		$this->usces_cookie();
 		$this->make_url();
 
+//usces_log('HTTP_REFERER : '.$_SERVER['HTTP_REFERER'], 'acting_transaction.log');
+//usces_log('REQUEST_URI : '.$_SERVER['REQUEST_URI'], 'acting_transaction.log');
 
 		do_action('usces_main');
-		$this->usces_cookie();
 		$this->update_table();
 	
-usces_log('usces_cookie : '.print_r($this->get_cookie(),true), 'acting_transaction.log');
 		
 //		if( 'customer' == $this->page ){
 //			header("Pragma: private");
@@ -5659,6 +5723,14 @@ usces_log('usces_cookie : '.print_r($this->get_cookie(),true), 'acting_transacti
 		$chars = '';
 		$i=0;
 		$h=0;
+		$usces_cookie = $this->get_cookie();
+		if( isset($usces_cookie['id']) && !empty($usces_cookie['id']) ){
+			$cid = $usces_cookie['id'];
+		}elseif( isset($_SESSION['usces_cookieid']) && !empty($_SESSION['usces_cookieid']) ){
+			$cid = $_SESSION['usces_cookieid'];
+		}else{
+			$cid = 0;
+		}
 		while($h<strlen($sessid)){
 			if(0 == $i % 3){
 				$chars .= substr($i, -1);
@@ -5671,23 +5743,43 @@ usces_log('usces_cookie : '.print_r($this->get_cookie(),true), 'acting_transacti
 		if( $flag ){
 			$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
 			$postfix = apply_filters('usces_sessid_force', $postfix);
-			$sessid = $chars . '_' . $postfix . '_A';
+			$sessid = $chars . '_' . $postfix . '_' . $cid . '_A';
 		}else{
-			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting') . '_A';
+			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting') . '_acting_A';
 		}
+//usces_log('sessid1 : '.$sessid, 'acting_transaction.log');
 		$sessid = urlencode(base64_encode($sessid));
+//usces_log('sessid2 : '.$sessid, 'acting_transaction.log');
 
 		return $sessid;
 	}
 	
 	function uscesdc( $sessid ) {
+//		$usces_cookie = $this->get_cookie();
+//		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']))){
+//			if( isset($usces_cookie['sslid']) && !empty($usces_cookie['sslid']) ){
+//				$cid = $usces_cookie['sslid'];
+//			}else{
+//				$cid = 0;
+//			}
+//		}else{
+//			if( isset($usces_cookie['id']) && !empty($usces_cookie['id']) ){
+//				$cid = $usces_cookie['id'];
+//			}else{
+//				$cid = 0;
+//			}
+//		}
 		$sessid = base64_decode(urldecode($sessid));
-		list($sess, $addr, $none) = explode('_', $sessid, 3);
+		list($sess, $addr, $cookieid, $none) = explode('_', $sessid, 4);
 		$postfix = ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : 'REMOTE_ADDR';
 		$postfix = apply_filters('usces_sessid_force', $postfix);
-		if( 'acting' != $addr && 'mobile' != $addr && $postfix != $addr ) {
+//usces_log('cid : '.$cid, 'acting_transaction.log');
+//usces_log('cookieid : '.$cookieid, 'acting_transaction.log');
+//usces_log('postfix : '.$postfix, 'acting_transaction.log');
+//usces_log('addr : '.$addr, 'acting_transaction.log');
+		if( 'acting' !== $addr && 'mobile' !== $addr && $postfix !== $addr ) {
 			$sessid = '';
-			return '';
+			return NULL;
 		}
 		$chars = '';
 		$h=0;

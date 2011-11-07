@@ -425,7 +425,7 @@ function usces_send_ordermail($order_id) {
 	}
 
 //20100818ysk start
-	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id, $entry['customer']['mailaddress1'] );
+	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id );
 //20100818ysk end
 
 	$msg_body .= "\r\n";

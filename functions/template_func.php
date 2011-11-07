@@ -547,8 +547,9 @@ function usces_the_itemGpExp( $out = '' ) {
 function usces_the_itemQuant( $out = '' ) {
 	global $usces, $post;
 	$post_id = $post->ID;
-	$value = isset( $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['code']] ) ? $_SESSION['usces_singleitem']['quant'][$post_id][$usces->itemsku['code']] : 1;
-	$quant = "<input name=\"quant[{$post_id}][" . esc_attr($usces->itemsku['code']) . "]\" type=\"text\" id=\"quant[{$post_id}][" . esc_attr($usces->itemsku['code']) . "]\" class=\"skuquantity\" value=\"" . $value . "\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+	$sku = esc_attr(urlencode($usces->itemsku['code']));
+	$value = isset( $_SESSION['usces_singleitem']['quant'][$post_id][$sku] ) ? $_SESSION['usces_singleitem']['quant'][$post_id][$sku] : 1;
+	$quant = "<input name=\"quant[{$post_id}][" . $sku . "]\" type=\"text\" id=\"quant[{$post_id}][" . $sku . "]\" class=\"skuquantity\" value=\"" . $value . "\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
 	$html = apply_filters('usces_filter_the_itemQuant', $quant, $post);
 		
 	if( $out == 'return' ){
@@ -811,7 +812,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$essential = (int)$opt['essential'];
 
 	$html = '';
-	$sku = esc_attr($usces->itemsku['code']);
+	$sku = esc_attr(urlencode($usces->itemsku['code']));
 	$optcode = esc_attr(urlencode($name));
 	$name = esc_attr($name);
 	$label = esc_attr($label);
@@ -863,7 +864,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk end
 	}
 	
-	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label, $post_id, $sku);
+	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label, $post_id, $usces->itemsku['code']);
 	
 	if( $out == 'return' ){
 		return $html;
