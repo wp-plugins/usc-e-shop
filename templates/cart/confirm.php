@@ -1,5 +1,7 @@
 <?php
-global $usces_entries;
+global $usces_entries, $usces_carts;
+usces_get_entries();
+usces_get_carts();
 $html = '<div id="info-confirm">
 	
 	<div class="usccart_navi">
