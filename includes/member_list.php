@@ -186,6 +186,22 @@ jQuery(document).ready(function($){
 		<?php if( $value == '' || $value == ' ' ) $value = '&nbsp;'; ?>
 		<?php if( $key == 'ID' ): ?>
 		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=edit&member_id=' . $value; ?>"><?php echo $value; ?></a></td>
+		<?php elseif( $key == 'name' ): ?>
+		<td>
+		<?php
+			$options = get_option('usces');
+			$applyform = usces_get_apply_addressform($options['system']['addressform']);
+			switch ($applyform){
+			case 'JP': 
+				esc_html_e($value);
+				break;
+			case 'US':
+			default:
+				$names = explode(' ', $value);
+				esc_html_e($names[1].' '.$names[0]);
+			}
+		?>
+		</td>
 		<?php elseif( $key == 'point' ): ?>
 		<td class="right"><?php echo $value; ?></td>
 		<?php else: ?>

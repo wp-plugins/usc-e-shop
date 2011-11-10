@@ -460,22 +460,36 @@ jQuery(document).ready(function($){
 		<?php if( $value == '' || $value == ' ' ) $value = '&nbsp;'; ?>
 		<?php if( $key == 'ID' ): ?>
 		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $value.'&usces_referer='.$curent_url; ?>"><?php echo esc_html($value); ?></a></td>
+		<?php elseif( $key == 'name' ): ?>
+		<td><?php
+			$options = get_option('usces');
+			$applyform = usces_get_apply_addressform($options['system']['addressform']);
+			switch ($applyform){
+			case 'JP': 
+				esc_html_e($value);
+				break;
+			case 'US':
+			default:
+				$names = explode(' ', $value);
+				esc_html_e($names[1].' '.$names[0]);
+			}
+		?></td>
 		<?php elseif( $key == 'total_price' ): ?>
 		<td class="price"><?php usces_crform( $value, true, false ); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
-		<td class="red"><?php echo $value; ?></td>
+		<td class="red"><?php esc_html_e($value); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == 'Pending'): ?>
-		<td class="red"><?php echo $value; ?></td>
+		<td class="red"><?php esc_html_e($value); ?></td>
 		<?php elseif( $key == 'receipt_status' && $value == __('payment confirmed', 'usces')): ?>
-		<td class="green"><?php echo $value; ?></td>
+		<td class="green"><?php esc_html_e($value); ?></td>
 		<?php elseif( $key == 'order_status' && $value == __('It has sent it out.', 'usces')): ?>
-		<td class="green"><?php echo $value; ?></td>
+		<td class="green"><?php esc_html_e($value); ?></td>
 		<?php elseif( $key == 'delivery_method'): ?>
 		<td class="green"><?php $delivery_method_index = $this->get_delivery_method_index($value); echo esc_html($this->options['delivery_method'][$delivery_method_index]['name']); ?></td>
 		<?php elseif( $key == 'payment_name' && $value == '#none#'): ?>
 		<td>&nbsp;</td>
 		<?php else: ?>
-		<td><?php echo $value; ?></td>
+		<td><?php esc_html_e($value); ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
 	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=delete&order_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;"><?php _e('Delete', 'usces'); ?></span></a></td>

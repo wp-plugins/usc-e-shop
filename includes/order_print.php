@@ -600,13 +600,15 @@ function usces_get_pdf_myaddress(&$pdf, $lineheight){
 	$name = '';
 	switch ($applyform){
 	case 'JP': 
+		$address = ( empty($usces->options['address2']) ) ? $usces->options['address1'] : $usces->options['address1'] . "\n" . $usces->options['address2'];
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc(__('zip code', 'usces').' '.$usces->options['zip_code']), 0, 'L');
-		$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['address1']), 0, 'L');
+		$pdf->MultiCell(60, $lineheight, usces_conv_euc($address), 0, 'L');
 		break;
 		
 	case 'US':
 	default:
-		$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['address1']), 0, 'L');
+		$address = ( empty($usces->options['address2']) ) ? $usces->options['address1'] : $usces->options['address2'] . "\n" . $usces->options['address1'];
+		$pdf->MultiCell(60, $lineheight, usces_conv_euc($address), 0, 'L');
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc(__('zip code', 'usces').' '.$usces->options['zip_code']), 0, 'L');
 		break;
 	}

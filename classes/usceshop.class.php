@@ -2827,6 +2827,7 @@ class usc_e_shop
 				case 'delivery':
 					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php') ){
 						usces_get_entries();
+						usces_get_carts();
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php');
 						exit;
 					}
@@ -4745,7 +4746,7 @@ class usc_e_shop
 	
 	function getItemChargingType( $post_id ){
 		if( usces_is_item($post_id) ){
-			$chargings = get_post_custom_values('_item_charging_type', $post_id);
+			$chargings = get_post_meta($post_id, '_item_charging_type', true);
 			$charging = empty($chargings[0]) ? 0 : $chargings[0];
 		}else{
 			$charging = NULL;
