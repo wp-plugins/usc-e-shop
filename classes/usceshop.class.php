@@ -3441,7 +3441,7 @@ class usc_e_shop
 	function get_member_info( $mid ) {
 		global $wpdb;
 		
-		if( !current_user_can('activate_plugins') ) return array();
+		//if( !current_user_can('activate_plugins') ) return array();
 		
 		$table = $wpdb->prefix . "usces_member";
 		$query = $wpdb->prepare("SELECT * FROM $table WHERE ID = %d", $mid);

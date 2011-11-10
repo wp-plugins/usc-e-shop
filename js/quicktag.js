@@ -1,7 +1,7 @@
 (function() {
 	
 	function JeMemberShortCode(){
-		edInsertContent( edCanvas, "[member][/member]\n[nonmember][/nonmenber]" );
+		edInsertContent( edCanvas, "[member][/member]\n[nonmember][/nonmember]" );
 	};
 	 
 	function JeCartShortCode(){

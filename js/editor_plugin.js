@@ -34,7 +34,7 @@
 			});
 		},
 		_JeMember : function(d, fmt) {
-			str = '[member][/member]<br />\n[nonmember][/nonmenber]';
+			str = '[member][/member]<br />\n[nonmember][/nonmember]';
 			return str;
 		},
 		_JeCart : function(d, fmt) {

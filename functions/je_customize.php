@@ -578,11 +578,16 @@ function je_is_authority(){
 	
 	$permission = get_post_meta($post->ID, '_je_permission', true);
 	$permission_lank = $js_lank_ids[$permission];
+//usces_log('js_lank_ids : '.print_r($js_lank_ids, true), 'acting_transaction.log');
+//usces_log('permission_lank : '.print_r($permission_lank, true), 'acting_transaction.log');
 	
 	if ( $usces->is_member_logged_in() ){
 		$usces->get_current_member();
 		$member_info = $usces->get_member_info( $usces->current_member['id'] );
 		$member_lank = (int)$member_info['mem_status'];
+//usces_log('current_member : '.print_r($usces->current_member, true), 'acting_transaction.log');
+//usces_log('member_info : '.print_r($member_info, true), 'acting_transaction.log');
+		
 	}else{
 		$member_lank = NULL;
 	}
@@ -746,10 +751,10 @@ function je_make_add_data( $type, $member, $smops ){
 		$query .= '&act=add';
 		$query .= '&charaset=u';// . $neo['ml_encode'];
 		$query .= '&email=' . urlencode($member['mailaddress1']);
-		$query .= ( $neo['ml_name'] ) ? '&name=' . urlencode($member['name1'] . $member['name2']) : '';
-		$query .= ( $neo['ml_zip'] ) ? '&zip=' . urlencode($member['zipcode']) : '';
-		$query .= ( $neo['ml_pref'] ) ? '&pref=' . urlencode($member['pref']) : '';
-		$query .= ( $neo['ml_addr'] ) ? '&address=' . urlencode($member['address1'] . $member['address2'] . $member['address3']) : '';
+		$query .= ( $neo['ml_user_name'] ) ? '&name=' . urlencode($member['name1'] . $member['name2']) : '';
+		$query .= ( $neo['ml_user_zip'] ) ? '&zip=' . urlencode($member['zipcode']) : '';
+		$query .= ( $neo['ml_user_pref'] ) ? '&pref=' . urlencode($member['pref']) : '';
+		$query .= ( $neo['ml_user_addr'] ) ? '&address=' . urlencode($member['address1'] . $member['address2'] . $member['address3']) : '';
 		$query .= '&attr1=';
 		$query .= '&type=form';
 		$header = "POST " . $url_parts['path'] . " HTTP/1.1\r\n";
@@ -768,22 +773,23 @@ function je_make_add_data( $type, $member, $smops ){
 		$params_proste = isset($smops['proste']['params']) ? $smops['proste']['params'] : array();
 		$proste = isset($params_proste[$key_proste]) ? $params_proste[$key_proste] : array();
 
-		$query .= 'mn=' . urlencode($member['name1']);
-		$query .= ( $proste['ml_name2'] ) ? '&mn2=' . urlencode($member['name2']) : '';
+//usces_log('name1 : '.$member['name1'].$member['name2'], 'acting_transaction.log');
+		$query .= 'mn=' . urlencode(mb_convert_encoding($member['name1'], 'EUC', 'UTF8'));
+		$query .= ( $proste['ml_user_name2'] ) ? '&mn2=' . urlencode(mb_convert_encoding($member['name2'], 'EUC', 'UTF8')) : '';
 		$query .= '&ml=' . urlencode($member['mailaddress1']);
 		$query .= '&act=a';
 		$query .= '&pn=' . urlencode($proste['ml_id']);
-		$query .= ( $proste['ml_zip'] ) ? '&zp=' . urlencode($member['zipcode']) : '';
-		$query .= ( $proste['ml_pref'] ) ? '&pf=' . urlencode($member['pref']) : '';
-		$query .= ( $proste['ml_addr1'] ) ? '&ad1=' . urlencode($member['address1'] . $member['address2']) : '';
-		$query .= ( $proste['ml_addr2'] ) ? '&ad2=' . urlencode($member['address3']) : '';
+		$query .= ( $proste['ml_user_zip'] ) ? '&zp=' . urlencode($member['zipcode']) : '';
+		$query .= ( $proste['ml_user_pref'] ) ? '&pf=' . urlencode(mb_convert_encoding($member['pref'], 'EUC', 'UTF8')) : '';
+		$query .= ( $proste['ml_user_addr1'] ) ? '&ad1=' . urlencode(mb_convert_encoding($member['address1'] . $member['address2'], 'EUC', 'UTF8')) : '';
+		$query .= ( $proste['ml_user_addr2'] ) ? '&ad2=' . urlencode(mb_convert_encoding($member['address3'], 'EUC', 'UTF8')) : '';
 		if( isset( $_POST['custom_member'] ) && is_array( $_POST['custom_member'] ) ){
 			$mi = 1;
 			$csmb_meta = usces_has_custom_field_meta( 'member' );
 			//usces_log('csmb_meta : '.print_r($csmb_meta,true), 'step_mail.log');
 			foreach( $csmb_meta as $cmfkey => $cmfvalue ){
 				if( isset($_POST['custom_member'][$cmfkey]) ){
-					$query .= ( $proste['ml_user_cus'.$mi] ) ? '&c'.$mi.'='.urlencode($cmfvalue['name'].':'.esc_html($_POST['custom_member'][$cmfkey])) : '';
+					$query .= ( $proste['ml_user_cus'.$mi] ) ? '&c'.$mi.'='.urlencode(mb_convert_encoding($cmfvalue['name'].':'.esc_html($_POST['custom_member'][$cmfkey]), 'EUC', 'UTF8')) : '';
 				}
 				$mi++;
 				if( 5 < $mi )
@@ -799,6 +805,7 @@ function je_make_add_data( $type, $member, $smops ){
 		$header .= "Host: " . $url_parts['host'] . "\r\n";
 		$header .= "Accept: text/html\r\n";
 		$header .= "Connection: close\r\n\r\n";
+//usces_log('header : '.print_r($header,true), 'step_mail.log');
 		break;
 	}
 	$data = compact('url_parts', 'header');
@@ -841,7 +848,7 @@ function je_make_del_data( $type, $member, $smops ){
 		$proste = isset($params_proste[$key_proste]) ? $params_proste[$key_proste] : array();
 
 		$query .= 'mn=' . urlencode($member['mem_name1']);
-		$query .= ( $proste['ml_name2'] ) ? '&mn2=' . urlencode($member['mem_name2']) : '';
+		$query .= ( $proste['ml_user_name2'] ) ? '&mn2=' . urlencode($member['mem_name2']) : '';
 		$query .= '&ml=' . urlencode($member['mem_email']);
 		$query .= '&act=d';
 		$query .= '&pn=' . urlencode($proste['ml_id']);
