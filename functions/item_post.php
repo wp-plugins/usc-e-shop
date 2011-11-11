@@ -75,7 +75,7 @@ function usces_add_opt( $post_id, $newvalue, $check = true ) {
 			rsort($sort);
 			$next_number = reset($sort) + 1;
 			$unique_sort = array_unique($sort, SORT_REGULAR);
-			if( $meta_num != count($unique_sort) || $meta_num != $next_number || !$sortnull){
+			if( $meta_num !== count($unique_sort) || $meta_num !== $next_number || !$sortnull){
 				//To repair the sort data
 				$i = 0;
 				foreach( $metas as $rows ){

@@ -9,6 +9,7 @@ function usces_add_system_option( $option_name, $newvalue ){
 	if( !empty($option_value) ){
 		$option_num = count($option_value);
 		$unique = true;
+		$sortnull = true;
 		foreach( (array)$option_value as $value ){
 			if( $value['name'] == $newvalue['name'] )
 				$unique = false;
@@ -20,12 +21,14 @@ function usces_add_system_option( $option_name, $newvalue ){
 			return -1;
 		
 		rsort($sort);
-		$next_number = $sort[0] + 1;
+		$next_number = reset($sort) + 1;
 		$unique_sort = array_unique($sort, SORT_REGULAR);
-		if( $option_num != count($unique_sort) || $option_num != $next_number || !$sortnull){
+		if( $option_num !== count($unique_sort) || $option_num !== $next_number || !$sortnull){
 			//To repair the sort data
-			for( $i=0; $i<$option_num; $i++ ){
-				$option_value[$i]['sort'] = $i;
+			$i = 0;
+			foreach( $option_value as $opkey => $opvalue ){
+				$option_value[$opkey]['sort'] = $i;
+				$i++;
 			}
 		}
 	}
@@ -113,9 +116,14 @@ function usces_del_system_option( $option_name, $id ) {
 
 	if( !empty($option_value) && isset($option_value[$id])){
 		unset($option_value[$id]);
+		foreach( (array)$option_value as $opkey => $opvalue ){
+			$op[$opvalue['sort']] = $opkey;
+		}
+		ksort($op);
+		
 		$c = 0;
-		foreach( (array)$option_value as $key => $value ){
-			$option_value[$key]['sort'] = $c;
+		foreach( (array)$op as $opid ){
+			$option_value[$opid]['sort'] = $c;
 			$c++;
 		}
 		update_option( $option_name, $option_value );
