@@ -1960,20 +1960,14 @@ function usces_download_order_list() {
 
 function usces_entity_decode($str, $ftype) {
 	$pos = strpos($str, '&');
-	if($pos !== false) $str = htmlspecialchars_decode($str);
-//20110201ysk start
-	//if($ftype == 'xls') {
-		return str_replace('"', '""', $str);
-	//} elseif($ftype == 'csv') {
-	//	if(substr($str, 0, 1) == '"' and substr($str, -1, 1) == '"') {
-	//		$str = '"""'.substr($str, 1);
-	//		$str = substr($str, 0, -1).'"""';
-	//	}
-	//	return $str;
-	//}
-//20110201ysk end
+	if($pos !== false)
+		$str = htmlspecialchars_decode($str);
+	
+	if($ftype == 'csv')
+		$str = str_replace('"', '""', $str);
+		
+		return $str;
 }
-//20100908ysk end
 
 function usces_is_entity($entity){
 	$temp = substr($entity, 0, 1);

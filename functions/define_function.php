@@ -1262,6 +1262,7 @@ function usces_download_item_list() {
 			$line_options .= $td_h.$option_value['means'].$td_f;
 			$line_options .= $td_h.$option_value['essential'].$td_f;
 			$line_options .= $td_h.usces_entity_decode($value, $ext).$td_f;
+
 		}
 
 		//SKUs

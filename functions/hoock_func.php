@@ -14,6 +14,7 @@ function usces_action_acting_construct(){
 			usces_log('remise construct : error1', 'acting_transaction.log');
 		}else{
 			usces_log('remise construct : '.$_POST['X-TRANID'], 'acting_transaction.log');
+			usces_set_acting_notification_time( $rand );
 		}
 			
 	}elseif( in_array($_SERVER['REMOTE_ADDR'], array('210.164.6.67', '202.221.139.50')) ){//zeus
@@ -42,6 +43,10 @@ function usces_action_acting_transaction(){
 		if( empty($rand) ){
 			usces_log('remise card error1 : '.print_r($data, true), 'acting_transaction.log');
 			die('error1');
+		}else{
+			$res = usces_check_notification_time( $rand, 15 );
+			if( !$res )
+				die('error : time over');
 		}
 		
 		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){

@@ -69,7 +69,7 @@ function usces_order_confirm_message($order_id) {
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-		$msg_body .= __('Request of','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+		$msg_body .= __('Request of','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -81,7 +81,7 @@ function usces_order_confirm_message($order_id) {
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($data['order_name1'] . ' ' . $data['order_name2'])) . "\r\n";
+		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -292,7 +292,7 @@ function usces_send_ordermail($order_id) {
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), ($entry['customer']['name1'] . ' ' . $entry['customer']['name2'])) . "\r\n";
+	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $entry['customer']['name1'], $entry['customer']['name2'], 'return' )) . "\r\n";
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -1261,6 +1261,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 			return 0;
 		$ID = $_REQUEST['member_id'];
 	}
+	do_action('usces_action_pre_delete_memberdata', $ID);
 
 	$member_table_name = $wpdb->prefix . "usces_member";
 //20100818ysk start
@@ -1275,6 +1276,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 		$wpdb->query( $query );
 	}
 //20100818ysk end
+	do_action('usces_action_post_delete_memberdata', $res, $ID);
 	
 	return $res;
 }
@@ -1934,6 +1936,7 @@ function usces_all_change_order_reciept(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_reciept', array(&$obj));
 }
 
 function usces_all_change_order_status(&$obj){
@@ -2016,6 +2019,7 @@ function usces_all_change_order_status(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_status', array(&$obj));
 }
 
 function usces_all_delete_order_data(&$obj){
@@ -2042,6 +2046,7 @@ function usces_all_delete_order_data(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+	do_action('usces_action_collective_order_delete', array(&$obj));
 }
 
 function usces_check_acting_return() {
@@ -2914,7 +2919,6 @@ function usces_shipping_country_option( $selected ){
 	}
 }
 
-
 function usces_get_cart_button( $out = '' ) {
 	global $usces;
 	$res = '';
@@ -3430,8 +3434,37 @@ function usces_get_send_out_date(){
 			);
 	return $res;
 }
+
 function usces_action_footer_comment(){
 	echo "<!-- Welcart version : v".USCES_VERSION." -->\n";
+}
+
+function usces_set_acting_notification_time( $key ){
+	global $wpdb;
+	$tableName = $wpdb->prefix . "usces_access";
+	$query = $wpdb->prepare("SELECT ID FROM $tableName WHERE acc_type = %s AND acc_key = %s", 'notification_time', $key);
+	$res = $wpdb->get_var( $query );
+	if( $res )
+		return;
+		
+	$query = $wpdb->prepare("INSERT INTO $tableName (acc_key, acc_type, acc_num1) VALUES (%s, %s, %d)", 
+							$key, 'notification_time', time());
+	$res = $wpdb->query( $query );
+}
+
+function usces_check_notification_time( $key, $time ){
+	global $wpdb;
+	$tableName = $wpdb->prefix . "usces_access";
+	$query = $wpdb->prepare("SELECT acc_num1 FROM $tableName WHERE acc_type = %s AND acc_key = %s", 'notification_time', $key);
+	$res = $wpdb->get_var( $query );
+	if( !$res )
+		return false;
+		
+	$past = time() - $res;
+	if( $time > $past )
+		return true;
+	else
+		return false;		
 }
 
 function usces_is_same_itemcode( $post_id, $item_code ){

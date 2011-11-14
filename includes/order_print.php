@@ -418,7 +418,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	
 	// My company
 	if( !empty($sign_image) ){
-		$pdf->Image($sign_image, 140,40, 25, 25); 
+		$sign_data = apply_filters( 'usces_filter_pdf_sign_data', array(140, 40, 25, 25));
+		$pdf->Image($sign_image, $sign_data[0], $sign_data[1], $sign_data[2], $sign_data[3]); 
 	}
 	$x = 110;
 	$y = 45;
@@ -429,7 +430,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc(apply_filters('usces_filter_publisher', get_option('blogname'))), 0, 'L');
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
-	$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['company_name']), 0, 'L');
+	$pdf->MultiCell(60, $lineheight, usces_conv_euc(apply_filters('usces_filter_pdf_mycompany', $usces->options['company_name'])), 0, 'L');
 	usces_get_pdf_myaddress(&$pdf, $lineheight );
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('TEL：'.$usces->options['tel_number']), 0, 'L');
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('FAX：'.$usces->options['fax_number']), 0, 'L');
@@ -600,13 +601,15 @@ function usces_get_pdf_myaddress(&$pdf, $lineheight){
 	$name = '';
 	switch ($applyform){
 	case 'JP': 
+		$address = ( empty($usces->options['address2']) ) ? $usces->options['address1'] : $usces->options['address1'] . "\n" . $usces->options['address2'];
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc(__('zip code', 'usces').' '.$usces->options['zip_code']), 0, 'L');
-		$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['address1']), 0, 'L');
+		$pdf->MultiCell(60, $lineheight, usces_conv_euc($address), 0, 'L');
 		break;
 		
 	case 'US':
 	default:
-		$pdf->MultiCell(60, $lineheight, usces_conv_euc($usces->options['address1']), 0, 'L');
+		$address = ( empty($usces->options['address2']) ) ? $usces->options['address1'] : $usces->options['address2'] . "\n" . $usces->options['address1'];
+		$pdf->MultiCell(60, $lineheight, usces_conv_euc($address), 0, 'L');
 		$pdf->MultiCell(60, $lineheight, usces_conv_euc(__('zip code', 'usces').' '.$usces->options['zip_code']), 0, 'L');
 		break;
 	}

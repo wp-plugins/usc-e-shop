@@ -1645,7 +1645,7 @@ msgstr "会員情報を更新いたしました。"
 msgid "I transmitted an email."
 msgstr "メールを送信いたしました。"
 
-msgid "Chenge th epassword according to the e-mail."
+msgid "Change your password by following the instruction in this mail."
 msgstr "メールの内容にしたがってパスワードを変更してください。"
 
 msgid "Password has been changed."

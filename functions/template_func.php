@@ -1008,6 +1008,10 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$payments = apply_filters('usces_fiter_the_payment_method', $payments, $value);
 	if( empty($payments) ) return;
 	
+
+
+
+
 	$cart = $usces->cart->get_cart();
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 	$html = "<dl>\n";

@@ -32,7 +32,7 @@ get_header();
 	
 	<?php elseif ( 'lostcompletion' == $member_compmode ) : ?>
 	<p><?php _e('I transmitted an email.', 'usces'); ?></p>
-	<p><?php _e('Chenge th epassword according to the e-mail.', 'usces'); ?></p>
+	<p><?php _e('Change your password by following the instruction in this mail.', 'usces'); ?></p>
 	
 	<?php elseif ( 'changepasscompletion' == $member_compmode ) : ?>
 	<p><?php _e('Password has been changed.', 'usces'); ?></p>

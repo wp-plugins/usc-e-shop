@@ -2988,6 +2988,7 @@ class usc_e_shop
 				case 'delivery':
 					if( file_exists(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php') ){
 						usces_get_entries();
+						usces_get_carts();
 						include(get_stylesheet_directory() . '/wc_templates/cart/wc_delivery_page.php');
 						exit;
 					}
@@ -3248,6 +3249,8 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
+					
+					do_action('usces_action_member_registered', $_POST['member']);
 				}
 				
 				return 'newcompletion';
@@ -3313,6 +3316,7 @@ class usc_e_shop
 						$_SESSION['usces_entry']['member_regmode'] = 'editmemberfromcart';
 						return 'newcompletion';
 					}
+					do_action('usces_action_member_registered', $_POST['customer']);
 				}
 				
 				return false;
@@ -3599,7 +3603,7 @@ class usc_e_shop
 	function get_member_info( $mid ) {
 		global $wpdb;
 		
-		if( !current_user_can('activate_plugins') ) return array();
+		//if( !current_user_can('activate_plugins') ) return array();
 		
 		$table = $wpdb->prefix . "usces_member";
 		$query = $wpdb->prepare("SELECT * FROM $table WHERE ID = %d", $mid);
@@ -4892,7 +4896,7 @@ class usc_e_shop
 	
 	function getItemChargingType( $post_id ){
 		if( usces_is_item($post_id) ){
-			$chargings = get_post_custom_values('_item_charging_type', $post_id);
+			$chargings = get_post_meta($post_id, '_item_charging_type', true);
 			$charging = empty($chargings[0]) ? 0 : $chargings[0];
 		}else{
 			$charging = NULL;
@@ -5490,7 +5494,7 @@ class usc_e_shop
 		$discount = ceil($discount * -1);
 		$discount = apply_filters('usces_order_discount', $discount, $cart);
 		return $discount;
-	} 
+	}
 
 	function getShippingCharge( $pref, $cart = array(), $entry = array() ) {
 		if( empty($cart) )
@@ -5597,10 +5601,12 @@ class usc_e_shop
 		} else {
 			$shipping_charge = 0;
 		}
+		$shipping_charge = apply_filters('usces_filter_set_cart_fees_shipping_charge', $shipping_charge, $cart, $entry);
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
 		$discount = $this->get_order_discount();
 		$use_point = $entries['order']['usedpoint'];
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
+		$amount_by_cod = apply_filters('usces_filter_set_cart_fees_amount_by_cod', $amount_by_cod, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$cod_fee = apply_filters('usces_filter_set_cart_fees_cod', $cod_fee, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
@@ -5658,9 +5664,10 @@ class usc_e_shop
 		global $wpdb;
 		$order_table = $wpdb->prefix . "usces_order";
 	
-		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
-								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
-							FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
+		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
+//		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
+//								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
+//							FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
 		$results = $wpdb->get_results( $query );
 	
 		$i=0;
@@ -5676,6 +5683,7 @@ class usc_e_shop
 							'usedpoint' => $value->order_usedpoint,
 							'discount' => $value->order_discount,
 							'shipping_charge' => $value->order_shipping_charge,
+							'payment_name' => $value->order_payment_name,
 							'cod_fee' => $value->order_cod_fee,
 							'tax' => $value->order_tax,
 							'order_status' => $value->order_status,
@@ -6071,9 +6079,9 @@ class usc_e_shop
 				$temp[$index] = $id;
 			}
 			ksort($temp);
-			if(!$intersect){
+			if( empty($intersect) ){
 				$deli = array();
-				$deli[0] = (int)$temp[0];
+				$deli[0] = (int)reset($temp);
 				return $deli;
 			}else{
 				return $intersect;

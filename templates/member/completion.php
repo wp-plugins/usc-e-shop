@@ -17,7 +17,7 @@ if ( $member_compmode == 'newcompletion' ) {
 	$html .= '<p>' . __('Membership information has been updated.', 'usces') . '</p>';
 }else if ( $member_compmode == 'lostcompletion' ) {
 	$html .= '<p>' . __('I transmitted an email.', 'usces') . '</p>
-		<p>' . __('Chenge th epassword according to the e-mail.', 'usces') . '</p>';
+		<p>' . __('Change your password by following the instruction in this mail.', 'usces') . '</p>';
 }else if ( $member_compmode == 'changepasscompletion' ) {
 	$html .= '<p>' . __('Password has been changed.', 'usces') . '</p>';
 }
