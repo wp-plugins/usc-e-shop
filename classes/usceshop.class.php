@@ -63,6 +63,7 @@ class usc_e_shop
 		if(!isset($this->options['system']['dec_orderID_flag'])) $this->options['system']['dec_orderID_flag'] = 0;
 		if(!isset($this->options['system']['dec_orderID_prefix'])) $this->options['system']['dec_orderID_prefix'] = '';
 		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
+		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 0;
 //20010420ysk start
 		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
 		$this->options['system']['base_country'] = usces_get_base_country();
@@ -411,7 +412,7 @@ class usc_e_shop
 		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
-		add_submenu_page('usces_orderlist', __('New Member','usces'), __('New Member','usces'), 6, 'usces_membernew', array($this, 'member_list_page'));
+		//add_submenu_page('usces_orderlist', __('New Member','usces'), __('New Member','usces'), 6, 'usces_membernew', array($this, 'member_list_page'));
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -883,6 +884,7 @@ class usc_e_shop
 			}else{
 				$this->options['system']['dec_orderID_digit'] = 6;
 			}
+			$this->options['system']['subimage_rule'] = isset($_POST['subimage_rule']) ? (int)$_POST['subimage_rule'] : 0;
 //20110331ysk start
 			unset($this->options['province']);
 			$action_status = '';
@@ -1203,52 +1205,52 @@ class usc_e_shop
 	}
 	/********************************************************************************/
 
-	function get_request() {
-		$host = $_SERVER['HTTP_HOST'];
-		$uri = $_SERVER['REQUEST_URI'];
-		$port = $_SERVER['REMOTE_PORT'];
-		$scheme = ( $port == 443 ) ? 'https://' : 'http://';
-		return $scheme . $host . $uri;
-	}
-	
-	function redirect() {
-	
-		$redirect = '';
-
-		$req = $_SERVER['QUERY_STRING'];
-		$port = $_SERVER['SERVER_PORT'];
-		
-		$request = $this->get_request();
-		
-		$conjunction = ( empty($req) && (!strpos($request, USCES_CART_FOLDER, 1) && !strpos($request, USCES_MEMBER_FOLDER, 1)) ) ? '?' : '&';
-		
-		$sessid = $conjunction . 'uscesid=' . $this->get_uscesid();
-	
-		
-		if( false === strpos($request, 'uscesid=') )
-			$uri = $request . $sessid;
-		else
-			$uri = $request;
-		
-
-		if( $this->use_ssl ) {
-		
-			if ( '80' == $port && strpos($uri, USCES_CART_FOLDER, 1))
-				$redirect = USCES_SSL_URL . '/?page_id=' . USCES_CART_NUMBER . $sessid;
-		
-			if ( '80' == $port && strpos($uri, USCES_MEMBER_FOLDER, 1))
-				$redirect = USCES_SSL_URL . '/?page_id=' . USCES_MEMBER_NUMBER . $sessid;
-
-			if ( '443' == $port && false === strpos($uri, 'wp-admin') && false === strpos($uri, 'wp-login.php') && false === strpos($uri, '?page_id=' . USCES_CART_NUMBER) && false === strpos($uri, '?page_id=' . USCES_MEMBER_NUMBER) && !strpos($uri, USCES_CART_FOLDER, 1) && !strpos($uri, USCES_MEMBER_FOLDER, 1) )
-				$redirect = get_option('home');
-		}
-
-	
-		if($redirect != '') {
-			//wp_redirect($redirect);
-			exit;
-		}
-	}
+//	function get_request() {
+//		$host = $_SERVER['HTTP_HOST'];
+//		$uri = $_SERVER['REQUEST_URI'];
+//		$port = $_SERVER['REMOTE_PORT'];
+//		$scheme = ( $port == 443 ) ? 'https://' : 'http://';
+//		return $scheme . $host . $uri;
+//	}
+//	
+//	function redirect() {
+//	
+//		$redirect = '';
+//
+//		$req = $_SERVER['QUERY_STRING'];
+//		$port = $_SERVER['SERVER_PORT'];
+//		
+//		$request = $this->get_request();
+//		
+//		$conjunction = ( empty($req) && (!strpos($request, USCES_CART_FOLDER, 1) && !strpos($request, USCES_MEMBER_FOLDER, 1)) ) ? '?' : '&';
+//		
+//		$sessid = $conjunction . 'uscesid=' . $this->get_uscesid();
+//	
+//		
+//		if( false === strpos($request, 'uscesid=') )
+//			$uri = $request . $sessid;
+//		else
+//			$uri = $request;
+//		
+//
+//		if( $this->use_ssl ) {
+//		
+//			if ( '80' == $port && strpos($uri, USCES_CART_FOLDER, 1))
+//				$redirect = USCES_SSL_URL . '/?page_id=' . USCES_CART_NUMBER . $sessid;
+//		
+//			if ( '80' == $port && strpos($uri, USCES_MEMBER_FOLDER, 1))
+//				$redirect = USCES_SSL_URL . '/?page_id=' . USCES_MEMBER_NUMBER . $sessid;
+//
+//			if ( '443' == $port && false === strpos($uri, 'wp-admin') && false === strpos($uri, 'wp-login.php') && false === strpos($uri, '?page_id=' . USCES_CART_NUMBER) && false === strpos($uri, '?page_id=' . USCES_MEMBER_NUMBER) && !strpos($uri, USCES_CART_FOLDER, 1) && !strpos($uri, USCES_MEMBER_FOLDER, 1) )
+//				$redirect = get_option('home');
+//		}
+//
+//	
+//		if($redirect != '') {
+//			//wp_redirect($redirect);
+//			exit;
+//		}
+//	}
 
 	function usces_session_start() {
 		$options = get_option('usces');
@@ -1402,6 +1404,8 @@ class usc_e_shop
 				if( !isset($_SESSION['usces_cookieid']) || $_SESSION['usces_cookieid'] != $cookie['id'])
 					$_SESSION['usces_cookieid'] = $cookie['id'];
 			}
+			
+			do_action('usces_action_nonssl_cookie');
 		}
 
 	}
@@ -5021,10 +5025,18 @@ class usc_e_shop
 	}
 
 	function get_pictids($item_code) {
-		global $wpdb;
+		global $wpdb, $usces;
 		
-		$codestr = $item_code.'%';
-		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title LIKE %s AND post_type = 'attachment' ORDER BY post_title", $codestr);
+		if( empty($item_code) )
+			return false;
+		
+		if( !$usces->options['system']['subimage_rule'] ){
+			$codestr = $item_code.'%';
+			$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title LIKE %s AND post_title <> %s AND post_type = 'attachment' ORDER BY post_title", $codestr, $item_code);
+		}else{
+			$codestr = $item_code.'--%';
+			$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title LIKE %s AND post_type = 'attachment' ORDER BY post_title", $codestr);
+		}
 		$results = $wpdb->get_col( $query );
 		return $results;
 	}

@@ -1627,7 +1627,13 @@ function usces_has_custom_field_meta($fieldname) {
 		return array();
 	}
 	$fields = get_option($field);
-	$meta = ($fields) ? unserialize($fields) : array();
+	if( empty($fields) ){
+		$meta = array();
+	}elseif( is_array($fields) ){
+		$meta = $fields;
+	}else{
+		$meta = unserialize($fields);
+	}
 	return $meta;
 }
 
@@ -1741,7 +1747,7 @@ function custom_field_ajax() {
 				$meta[$newkey]['essential'] = $newessential;
 				$meta[$newkey]['value'] = $nv;
 				if($newposition != '') $meta[$newkey]['position'] = $newposition;
-				update_option($field, serialize($meta));
+				update_option($field, $meta);
 			}
 		}
 
@@ -1770,13 +1776,13 @@ function custom_field_ajax() {
 			$meta[$key]['essential'] = $essential;
 			$meta[$key]['value'] = $nv;
 			if($position != '') $meta[$key]['position'] = $position;
-			update_option($field, serialize($meta));
+			update_option($field, $meta);
 		}
 
 	} elseif(isset($_POST['delete'])) {
 		$key = isset($_POST['key']) ? trim($_POST['key']) : '';
 		unset($meta[$key]);
-		update_option($field, serialize($meta));
+		update_option($field, $meta);
 	}
 
 	$r = '';

@@ -162,15 +162,15 @@ if ( post_type_supports($post_type, 'revisions') && 0 < $post_ID && wp_get_post_
 
 /****************************************************************************/
 function post_item_pict_box($post) {
-	global $wpdb;
-	$custom_fields = get_post_custom($post->ID);
-	if(!$custom_fields){
-			$item_picts[0] = wp_get_attachment_image( NULL, array(260, 200), true );
-	}else{
-		$item_code = $custom_fields['_itemCode'][0];
-		$codestr = $item_code . '%';
-		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title LIKE %s AND post_type = 'attachment' ORDER BY post_title", $codestr);
-		$item_pictids = $wpdb->get_col( $query );
+	global $usces;
+	$item_picts = array();
+	$item_sumnails = array();
+	$item_code = get_post_meta($post->ID, '_itemCode', true);
+	if( !empty($item_code) ){
+		$pictid = $usces->get_mainpictid($item_code);
+		$item_picts[] = wp_get_attachment_image( $pictid, array(260, 200), true );
+		$item_sumnails[] = wp_get_attachment_image( $pictid, array(50, 50), true );
+		$item_pictids = $usces->get_pictids($item_code);
 		for($i=0; $i<count($item_pictids); $i++){
 			$item_picts[] = wp_get_attachment_image( $item_pictids[$i], array(260, 200), true );
 			$item_sumnails[] = wp_get_attachment_image( $item_pictids[$i], array(50, 50), true );

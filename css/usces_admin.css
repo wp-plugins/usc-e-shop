@@ -29,6 +29,11 @@ div.error_message {
 	color: #444444;
 	width: 100%;	/*font-size: 1em;*/
 }
+.usces_admin hr {
+	background-color: #DDD;
+	border: none;
+	height: 1px;
+}
 .usces_admin .upButton {
 	color: #666666;
 	font-size: 13px;
@@ -509,19 +514,7 @@ div.explanation  {
 /*************************************************************************************/
 /* meta box */
 /*************************************************************************************/
-/*
-.item-main-pict {
-	text-align: center;
-	margin: 0px;
-	padding: 0px;
-}
-.item-main-pict .subpict {
-	float: left;
-	padding-top: 5px;
-	padding-right: 1px;
-	padding-bottom: 0px;
-	padding-left: 1px;
-}
+
 #postoptcustomstuff textarea.optvalue {
 	width: 95%;
 	height: 5em;
@@ -530,10 +523,6 @@ div.explanation  {
 	margin-bottom: 5px;
 	margin-left: 3px;
 }
-#postpayment td.paymentname,
-#postpayment td.paymentexplanation,
-#postpayment td.paymentsettlement,
-#postpayment td.paymentmodule,
 #postoptcustomstuff td.item-opt-value,
 #postskucustomstuff td.item-sku-zaikonum,
 #postskucustomstuff td.item-sku-zaiko,
@@ -542,160 +531,37 @@ div.explanation  {
 	vertical-align: top;
 }
 
-table#newsku, 
-#postpayment table, 
-#postoptcustomstuff table, 
-#skulist-table {
+#postoptcustomstuff table {
 	border: 1px solid #CCCCCC;
 	width: 100%;
 	background-color: #F9F9F9;
 }
-
-#postpayment th, 
-#postoptcustomstuff th, 
-table#newsku th, 
-#postskucustomstuff th {
+#postoptcustomstuff table.list {
+	background-color: #FFFFEE;
+}
+#postoptcustomstuff th {
 	font-weight: bold;
 	background-color: #F1F1F1;
 	font-size: 13px;
 	line-height: 24px;
 }
 
-table#newsku td.item-sku-key,
-#skulist-table table td.item-sku-key,
-#skulist-table th.item-sku-key {
-	width: 30%;
-	vertical-align: top;
-}
-
-table#newsku td.item-sku-price,
-#skulist-table table td.item-sku-price,
-#skulist-table th.item-sku-price {
-	width: 20%;
-	vertical-align: top;
-}
-
-table#newsku td.item-sku-cprice,
-#skulist-table table td.item-sku-cprice,
-#skulist-table th.item-sku-cprice {
-	width: 20%;
-	vertical-align: top;
-}
-
-table#newsku td.item-sku-zaikonum,
-#skulist-table table td.item-sku-zaikonum,
-#skulist-table th.item-sku-zaikonum {
-	width: 10%;
-	vertical-align: top;
-}
-
-table#newsku td.item-sku-zaiko ,
-#skulist-table table td.item-sku-zaiko,
-#skulist-table th.item-sku-zaiko {
-	width: 20%;
-	vertical-align: top;
-}
-
-#postpayment td.submit, 
-#postoptcustomstuff td.submit, 
-#postskucustomstuff td.submittd {
+#postoptcustomstuff td.submit {
 	width: 100%;
 }
 
-#postpayment div.submit, 
-#postoptcustomstuff div.submit, 
-#postskucustomstuff div.submit {
+#postoptcustomstuff div.submit {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	padding-left: 20px;
 	float: none;
 }
 
-#postskucustomstuff .skuname, 
-table#newsku .newskuname {
-	width: 87%;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 10px;
-	font-size: 13px;
-	line-height: 16px;
-}
-
-#postskucustomstuff .skudisp, 
-table#newsku .newskudisp {
-	width: 87%;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 10px;
-	font-size: 13px;
-	line-height: 16px;
-}
-
-#postskucustomstuff .skuprice, 
-table#newsku .newskuprice {
-	width: 80%;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 3px;
-	font-size: 13px;
-	line-height: 16px;
-	text-align: right;
-	padding-right: 4px;
-}
-
-#postskucustomstuff .skuunit, 
-table#newsku .newskuunit {
-	width: 80%;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 3px;
-	font-size: 13px;
-	line-height: 16px;
-	text-align: right;
-	padding-right: 4px;
-}
-
-#postskucustomstuff .newskuzaikonum,
-table#newsku .skuzaikonum {
-	width: 70%;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 3px;
-	font-size: 13px;
-	line-height: 16px;
-	text-align: right;
-	padding-right: 4px;
-}
-
-#postskucustomstuff .skuzaiko, 
-table#newsku .newskuzaikoselect {
-	width: 85%;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 3px;
-	font-size: 12px;
-}
-
-#postskucustomstuff .skugptekiyo, 
-table#newsku .newskugptekiyo {
-	width: 85%;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 3px;
-	font-size: 12px;
-}
-
-#postskucustomstuff .itemtoggle {
-	margin-top: 3px;
-	margin-right: 3px;
-	margin-bottom: 0px;
-	margin-left: 10px;
-}
-
 #postoptcustomstuff div.optmeans {
 	margin-top: 6px;
 	margin-bottom: 10px;
 }
+
 #postoptcustomstuff input.optmeans {
 	border-top-style: none;
 	border-right-style: none;
@@ -714,21 +580,13 @@ table#newsku .newskugptekiyo {
 	margin-left: 10px;
 	background-color: transparent;
 }
-#postpayment div.submit,
-#postoptcustomstuff div.submit {
-	padding: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 5px;
-	margin-left: 0px;
-}
+
+/*
 #normal-sortables .postbox div.skustuff div.submit {
 	float: none;
 }
-
-#postpayment table.metastufftable, 
-#postoptcustomstuff table.metastufftable, 
-#postskucustomstuff table.metastufftable {
+*/
+#postoptcustomstuff table.metastufftable {
 	width: 100%;
 	background-color: #FFFFEE;
 	padding-bottom: 8px;
@@ -740,43 +598,10 @@ table#newsku .newskugptekiyo {
 	border-bottom: 1px dotted #CCCCCC;
 	border-left: 0px none;
 }
-/*#postpayment table tr, 
-#postoptcustomstuff table tr, 
-#postskucustomstuff table tr {
+#postoptcustomstuff table tr {
 	border-bottom-width: 1px;
 	border-bottom-style: dotted;
 	border-bottom-color: #CCCCCC;
-}
-#postpayment td.paymentname {
-	width: 25%;
-}
-
-#postpayment td.paymentexplanation {
-	width: 40%;
-}
-
-#postpayment td.paymentsettlement {
-	width: 15%;
-}
-
-#postpayment td.paymentmodule {
-	width: 20%;
-}
-
-#postpayment input.paymentname {
-	width: 94%;
-}
-
-#postpayment textarea.paymentexplanation {
-	width: 96%;
-}
-
-#postpayment select.paymentsettlement {
-	width: 94%;
-}
-
-#postpayment input.paymentmodule {
-	width: 94%;
 }
 
 #postoptcustomstuff td.item-opt-key {
@@ -804,68 +629,17 @@ table#newsku .newskugptekiyo {
 	margin-left: 10px;
 	font-size: 13px;
 	line-height: 16px;
+	margin-top: 10px;
 }
-
-#postitemcustomstuff table {
-	border: 1px solid #CCCCCC;
-	width: 100%;
-	background-color: #F9F9F9;
-	margin-bottom: 20px;
+#postoptcustomstuff div.optcheck {
+	padding-left: 10px;
 }
-
-#postitemcustomstuff th {
-	font-weight: bold;
-	background-color: #F1F1F1;
-	font-size: 13px;
-	line-height: 24px;
-	width: 30%;
-}
-
-#postitemcustomstuff input.itemCode,
-#postitemcustomstuff input.itemName{
-	font-size: 15px;
-	line-height: 18px;
-	width: 99%;
-	padding-top: 1px;
-	padding-right: 2%;
-	padding-bottom: 1px;
-	padding-left: 2%;
-}
-*html #postitemcustomstuff input.itemCode,
-*html #postitemcustomstuff input.itemName{
-	width: 93%;
-}
-*:first-child+html #postitemcustomstuff input.itemCode,
-*:first-child+html #postitemcustomstuff input.itemName{
-	width: 90%;
-}
-
-#postitemcustomstuff input.itemRestriction,
-#postitemcustomstuff input.itemPointrate{
-	font-size: 15px;
-	line-height: 18px;
-	width: 60px;
-	padding-top: 1px;
-	padding-right: 5px;
-	padding-bottom: 1px;
-	padding-left: 5px;
-	text-align: right;
-}
-
-#postitemcustomstuff select.itemShippingCharge, 
-#postitemcustomstuff select.itemShipping{
-	font-size: 14px;
-	line-height: 16px;
-	border: 1px solid #7F9DB9;
-}
-*:first-child+html #postitemcustomstuff select.itemShipping{
-	line-height: 18px;
-}
-
+/*
 .metastuffrow {
 	border-bottom: 1px dashed #CCCCCC;
 }
-*//*************************************************************************************/
+*/
+/*************************************************************************************/
 /* meta box */
 /*************************************************************************************/
 .item-main-pict {

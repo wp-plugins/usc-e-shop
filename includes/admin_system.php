@@ -31,7 +31,7 @@ $system_target_markets =  ( isset($this->options['system']['target_market']) && 
 $no_cart_css = isset($this->options['system']['no_cart_css']) ? $this->options['system']['no_cart_css'] : 0;
 $dec_orderID_flag = isset($this->options['system']['dec_orderID_flag']) ? $this->options['system']['dec_orderID_flag'] : 0;
 $dec_orderID_prefix = isset($this->options['system']['dec_orderID_prefix']) ? $this->options['system']['dec_orderID_prefix'] : '';
-$dec_orderID_digit = isset($this->options['system']['dec_orderID_digit']) ? $this->options['system']['dec_orderID_digit'] : 6;
+$subimage_rule = isset($this->options['system']['subimage_rule']) ? $this->options['system']['subimage_rule'] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -59,7 +59,7 @@ jQuery(function($){
 				target_text.push($(this).text());
 			});
 			if(target.length == 0) {
-				alert('<?php _e('いずれかの国を選択してください', 'usces'); ?>');
+				alert('<?php _e('Please select one of the country.', 'usces'); ?>');
 				return -1;
 			}
 			var sel = $('select_target_market_province').val();
@@ -156,7 +156,7 @@ jQuery(document).ready(function($) {
 <div class="uscestabs" id="uscestabs_system">
 	<ul>
 		<li><a href="#system_page_setting_1"><?php _e('System Setting','usces'); ?></a></li>
-		<li><a href="#system_page_setting_2"><?php _e('国・言語・通貨','usces'); ?></a></li>
+		<li><a href="#system_page_setting_2"><?php _e('Language Currency Country','usces'); ?></a></li>
 	</ul>
 <div id="system_page_setting_1">
 <!--20110331ysk end-->
@@ -164,7 +164,7 @@ jQuery(document).ready(function($) {
 <h3 class="hndle"><span><?php _e('System Setting','usces'); ?></span></h3>
 <div class="inside">
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_divide_item');"><?php _e('Display Modes','usces'); ?></a></th>
 		<?php $checked = $divide_item == 1 ? ' checked="checked"' : ''; ?>
 		<td width="10"><input name="divide_item" type="checkbox" id="divide_item" value="<?php echo esc_attr($divide_item); ?>"<?php echo $checked; ?> /></td>
@@ -172,8 +172,9 @@ jQuery(document).ready(function($) {
 	    <td><div id="ex_divide_item" class="explanation"><?php _e('In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_itemimg_anchor_rel');"><?php _e('rel attribute', 'usces'); ?></a></th>
 		<td width="30">rel="</td>
 		<td width="100"><input name="itemimg_anchor_rel" id="itemimg_anchor_rel" type="text" value="<?php echo esc_attr($itemimg_anchor_rel); ?>" /></td>
@@ -181,8 +182,9 @@ jQuery(document).ready(function($) {
 	    <td><div id="ex_itemimg_anchor_rel" class="explanation"><?php _e('In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_orderby');"><?php _e('compound category sort item', 'usces'); ?></a></th>
 		<td width="10"><select name="fukugo_category_orderby" id="fukugo_category_orderby">
 		    <option value="ID"<?php if($fukugo_category_orderby == 'ID') echo ' selected="selected"'; ?>><?php _e('category ID', 'usces'); ?></option>
@@ -190,7 +192,7 @@ jQuery(document).ready(function($) {
 		</select></td>
 	    <td><div id="ex_fcat_orderby" class="explanation"><?php _e('In a category to display in a compound category search page, you can choose an object to sort.', 'usces'); ?></div></td>
 	</tr>
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_fcat_order');"><?php _e('compound category sort order', 'usces'); ?></a></th>
 		<td width="10"><select name="fukugo_category_order" id="fukugo_category_order">
 		    <option value="ASC"<?php if($fukugo_category_order == 'ASC') echo ' selected="selected"'; ?>><?php _e('Ascending', 'usces'); ?></option>
@@ -199,15 +201,17 @@ jQuery(document).ready(function($) {
 	    <td><div id="ex_fcat_order" class="explanation"><?php _e('In a category to display in a compound category search page, you can choose sort order.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_path');"><?php _e('settlement module path', 'usces'); ?></a></th>
 		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo esc_attr($settlement_path); ?>" size="60" /></td>
 	    <td><div id="ex_settlement_path" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_ssl');"><?php _e('Use SSL','usces'); ?></a></th>
 		<?php $checked = $use_ssl == 1 ? ' checked="checked"' : ''; ?>
 		<td width="10"><input name="use_ssl" type="checkbox" id="use_ssl" value="<?php echo esc_attr($use_ssl); ?>"<?php echo $checked; ?> /></td>
@@ -216,28 +220,30 @@ jQuery(document).ready(function($) {
 	</tr>
 </table>
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url_admin');"><?php _e('WordPress address (SSL)', 'usces'); ?></a></th>
 		<td><input name="ssl_url_admin" type="text" id="ssl_url_admin" value="<?php echo esc_attr($ssl_url_admin); ?>" size="60" /></td>
 	    <td><div id="ex_ssl_url_admin" class="explanation"><?php _e('https://*WordPress address*<br />You can use common use SSL.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_ssl_url');"><?php _e('Blog address (SSL)', 'usces'); ?></a></th>
 		<td><input name="ssl_url" type="text" id="ssl_url" value="<?php echo esc_attr($ssl_url); ?>" size="60" /></td>
 	    <td><div id="ex_ssl_url" class="explanation"><?php _e('https://*Blog address*<br />You can use common use SSL.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_inquiry_id');"><?php _e('The page_id of the inquiry-form', 'usces'); ?></a></th>
 		<td><input name="inquiry_id" type="text" id="inquiry_id" value="<?php echo esc_attr($inquiry_id); ?>" size="7" /></td>
 	    <td><div id="ex_inquiry_id" class="explanation"><?php _e('When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_no_cart_css');"><?php _e('To disable usces_cart.css','usces'); ?></a></th>
 		<?php $checked = $no_cart_css == 1 ? ' checked="checked"' : ''; ?>
 		<td width="10"><input name="no_cart_css" type="checkbox" id="no_cart_css" value="<?php echo esc_attr($no_cart_css); ?>"<?php echo $checked; ?> /></td>
@@ -245,8 +251,9 @@ jQuery(document).ready(function($) {
 	    <td><div id="ex_no_cart_css" class="explanation"><?php _e('When checked, Welcart will not output the usces_cart.css. If you want to make own usces_cart.css file, please copy and paste it in your theme folder currently in use.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_dec_orderID_flag');"><?php _e('Rules of order-ID numbering', 'usces'); ?></a></th>
 	    <td width="10"><input name="dec_orderID_flag" id="dec_orderID_flag0" type="radio" value="0"<?php if($dec_orderID_flag === 0) echo 'checked="checked"'; ?> /></td><td width="100"><label for="dec_orderID_flag0"><?php _e('Sequential number', 'usces'); ?></label></td>
 	    <td width="10"><input name="dec_orderID_flag" id="dec_orderID_flag1" type="radio" value="1"<?php if($dec_orderID_flag === 1) echo 'checked="checked"'; ?> /></td><td width="100"><label for="dec_orderID_flag1"><?php _e('Random string', 'usces'); ?></label></td>
@@ -254,74 +261,86 @@ jQuery(document).ready(function($) {
 	</tr>
 </table>
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_dec_orderID_prefix');"><?php _e('Prefix of order-ID', 'usces'); ?></a></th>
 		<td><input name="dec_orderID_prefix" type="text" id="dec_orderID_prefix" value="<?php echo esc_attr($dec_orderID_prefix); ?>" size="7" /></td>
 	    <td><div id="ex_dec_orderID_prefix" class="explanation"><?php _e('If you do not need it, leave it blank.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
-	<tr height="50">
+	<tr height="35">
 	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_dec_orderID_digit');"><?php _e('Digits of order-ID', 'usces'); ?></a></th>
 		<td><input name="dec_orderID_digit" type="text" id="dec_orderID_digit" value="<?php echo esc_attr($dec_orderID_digit); ?>" size="7" /></td>
 	    <td><div id="ex_dec_orderID_digit" class="explanation"><?php _e('This value must be at least six digits. The prefix is ​​not included.', 'usces'); ?></div></td>
 	</tr>
 </table>
+<hr />
+<table class="form_table">
+	<tr height="30">
+	    <th class="system_th" rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_subimage_rule');"><?php _e('Product sub-image rule', 'usces'); ?></a></th>
+	    <td width="10"><input name="subimage_rule" id="subimage_rule0" type="radio" value="0"<?php if($subimage_rule === 0) echo 'checked="checked"'; ?> /></td><td width="400"><label for="subimage_rule0"><?php _e('not apply the new rule<br />(Truncation Product Code)', 'usces'); ?></label></td>
+	    <td rowspan="2"><div id="ex_subimage_rule" class="explanation"><?php _e('If the sub-images are not applied correctly, please apply the new rules.<br />And insert Tow hyphens between the Product Code and serial number.', 'usces'); ?></div></td>
+	</tr>
+	<tr height="30">
+	    <td width="10"><input name="subimage_rule" id="subimage_rule1" type="radio" value="1"<?php if($subimage_rule === 1) echo 'checked="checked"'; ?> /></td><td width="400"><label for="subimage_rule1"><?php _e('apply the new rule<br />(Tow hyphens between the Product Code and serial number)', 'usces'); ?></label></td>
+	</tr>
+</table>
+<hr />
 </div>
 <!--20110331ysk start-->
 </div><!--postbox-->
 </div><!--system_page_setting_1-->
 <div id="system_page_setting_2">
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('国・言語・通貨','usces'); ?></span></h3>
+<h3 class="hndle"><span><?php _e('Language Currency Country','usces'); ?></span></h3>
 <div class="inside">
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('フロントエンドの言語', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_front_lang');"><?php _e('The language of the front-end', 'usces'); ?></a></th>
 		<td width="10"><select name="front_lang" id="front_lang">
 		<?php foreach( $usces_settings['language'] as $Lkey => $Lvalue ){ ?>
 		    <option value="<?php echo $Lkey; ?>"<?php echo ($system_front_lang == $Lkey ? ' selected="selected"' : ''); ?>><?php echo $Lvalue; ?></option>
 		<?php } ?>
 		</select></td>
-	    <td><div id="ex_front_lang" class="explanation"><?php _e('フロントエンド（ショップ側）の言語を選択できます。バックエンド（管理パネル）の言語はconfig.php の設定に従います。', 'usces'); ?></div></td>
+	    <td><div id="ex_front_lang" class="explanation"><?php _e('You can select the Front-end language. The Back-end language follows setting config.php.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_currency');"><?php _e('通貨表示', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_currency');"><?php _e('Currencies', 'usces'); ?></a></th>
 		<td width="10"><select name="currency" id="currency">
 		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
 		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>
 		    <option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
 		</select></td>
-	    <td><div id="ex_currency" class="explanation"><?php _e('選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロントエンド（ショップ側）、バックエンド（管理パネル）共通です。', 'usces'); ?></div></td>
+	    <td><div id="ex_currency" class="explanation"><?php _e('Displays the currency symbol for each country, the amount separator, the decimal digits. This is a common item in both front end and back end.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
-	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_addressform');"><?php _e('住所氏名の様式', 'usces'); ?></a></th>
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_addressform');"><?php _e('The name and address form', 'usces'); ?></a></th>
 		<td width="10"><select name="addressform" id="addressform">
 		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
 		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_addressform == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>
 		</select></td>
-	    <td><div id="ex_addressform" class="explanation"><?php _e('住所氏名などの入力フォームの様式を、どの国のものにするか選択します。', 'usces'); ?></div></td>
+	    <td><div id="ex_addressform" class="explanation"><?php _e('For entry form style, choose your country.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr height="50">
 	    <th class="system_th">
 			<a style="cursor:pointer;" onclick="toggleVisibility('ex_target_market');"><?php _e('Target Market', 'usces'); ?></a>
-			<div><input name="set_target_market" id="set_target_market" type="button" value="<?php _e('選択', 'usces'); ?>" onclick="operation.set_target_market();" /></div>
+			<div><input name="set_target_market" id="set_target_market" type="button" value="<?php _e('Choose', 'usces'); ?>" onclick="operation.set_target_market();" /></div>
 		</th>
 		<td width="20"><select name="target_market[]" size="10" multiple="multiple" class="multipleselect" id="target_market">
-		    <!--<option value="all"<?php echo ($system_target_market == 'all' ? ' selected="selected"' : ''); ?>><?php _e('全ての国', 'usces'); ?></option>-->
+		    <!--<option value="all"<?php echo ($system_target_market == 'all' ? ' selected="selected"' : ''); ?>><?php _e('All countries', 'usces'); ?></option>-->
 		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
 		    <option value="<?php echo $Ckey; ?>"<?php echo (in_array($Ckey, $system_target_markets) ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>
 		</select></td>
-	    <td><div id="ex_target_market" class="explanation"><?php _e('販売・発送可能な地域を国単位で選択します。複数選択可。', 'usces'); ?></div></td>
+	    <td><div id="ex_target_market" class="explanation"><?php _e('Select the number of possible areas within the country. Allows multiple selections.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
