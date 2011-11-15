@@ -3143,10 +3143,11 @@ class usc_e_shop
 					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
 //20100818ysk start
 					//$res = $this->reg_custom_member($wpdb->insert_id);
-				$res = $this->reg_custom_member($member_id);
+					$res = $this->reg_custom_member($member_id);
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
+					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
@@ -3155,7 +3156,6 @@ class usc_e_shop
 						$_SESSION['usces_entry']['member_regmode'] = 'editmemberfromcart';
 						return 'newcompletion';
 					}
-					do_action('usces_action_member_registered', $_POST['customer']);
 				}
 				
 				return false;
