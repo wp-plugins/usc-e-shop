@@ -310,10 +310,10 @@ function usces_action_acting_transaction(){
 		}
 
 		switch($_GET['ap']) {
-		case 'CPL_PRE'://ƒRƒ“ƒrƒjƒy[ƒp[ƒŒƒXŒˆÏŽ¯•ÊƒR[ƒh
+		case 'CPL_PRE'://ã‚³ãƒ³ãƒ“ãƒ‹ãƒšãƒ¼ãƒ‘ãƒ¼ãƒ¬ã‚¹æ±ºæ¸ˆè­˜åˆ¥ã‚³ãƒ¼ãƒ‰
 			break;
 
-		case 'CPL'://“ü‹àŠm’è
+		case 'CPL'://å…¥é‡‘ç¢ºå®š
 			$table_name = $wpdb->prefix."usces_order";
 			$table_meta_name = $wpdb->prefix."usces_order_meta";
 
@@ -351,7 +351,7 @@ function usces_action_acting_transaction(){
 			die('J-Payment');
 			break;
 
-		case 'CVS_CAN'://“ü‹àŽæÁ
+		case 'CVS_CAN'://å…¥é‡‘å–æ¶ˆ
 			$table_name = $wpdb->prefix."usces_order";
 			$table_meta_name = $wpdb->prefix."usces_order_meta";
 
@@ -402,11 +402,11 @@ function usces_action_acting_transaction(){
 		}
 
 		switch($_GET['ap']) {
-		case 'BANK'://Žó•tŠ®—¹
+		case 'BANK'://å—ä»˜å®Œäº†
 			break;
 
-		case 'BAN_SAL'://“ü‹àŠ®—¹
-			if($_GET['mf'] == '1') {//“ü‹àƒ}ƒbƒ`ƒ“ƒO‚Ìê‡
+		case 'BAN_SAL'://å…¥é‡‘å®Œäº†
+			if($_GET['mf'] == '1') {//å…¥é‡‘ãƒžãƒƒãƒãƒ³ã‚°ã®å ´åˆ
 				$table_name = $wpdb->prefix."usces_order";
 				$table_meta_name = $wpdb->prefix."usces_order_meta";
 

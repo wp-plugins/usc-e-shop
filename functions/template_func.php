@@ -2559,8 +2559,6 @@ function usces_get_confirm_rows( $out = '' ) {
 	}
 }
 
-// uesces_addressform( $type, $data, $out = '' )
-// $type = 'menber' or 'cuntomer' or 'delivery'
 function uesces_addressform( $type, $data, $out = 'return' ){
 	global $usces, $usces_settings;
 	$options = get_option('usces');
