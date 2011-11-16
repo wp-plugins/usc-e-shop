@@ -3852,7 +3852,7 @@ class usc_e_shop
 			
 		}
 		if ( trim($_POST["member"]["name1"]) == "" )
-			$mes .= __('Name is not correct', 'usces');
+			$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //		if ( trim($_POST["member"]["name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["member"]["zipcode"]) == "" )
