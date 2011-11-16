@@ -2615,7 +2615,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
 			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name1']) . ' ' . esc_html($values['customer']['name2']) . '</td></tr>';
+			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['customer']['name1'], $values['customer']['name2'], 'return' )) . '</td></tr>';
 			$furigana_customer = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['customer']['name3']) . ' ' . esc_html($values['customer']['name4']) . '</td></tr>';
 			$formtag .= apply_filters( 'usces_filter_furigana_confirm_customer', $furigana_customer, $type, $values );
 			//20100818ysk start
@@ -2638,7 +2638,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
 			//20100818ysk end
-			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['delivery']['name1'], $values['delivery']['name2'], 'return' )) . '</td></tr>';
 			$furigana_delivery = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
 			$shipping_address_info .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
 			//20100818ysk start
@@ -2663,7 +2663,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
 			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name3']) . '</td></tr>';
+			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['customer']['name1'], $values['customer']['name2'], 'return' )) . '</td></tr>';
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
 			//20100818ysk end
@@ -2684,7 +2684,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
 			//20100818ysk end
-			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['delivery']['name1'], $values['delivery']['name2'], 'return' )) . '</td></tr>';
 			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
 			//20100818ysk end

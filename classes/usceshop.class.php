@@ -3147,6 +3147,7 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
+					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
@@ -3155,7 +3156,6 @@ class usc_e_shop
 						$_SESSION['usces_entry']['member_regmode'] = 'editmemberfromcart';
 						return 'newcompletion';
 					}
-					do_action('usces_action_member_registered', $_POST['customer']);
 				}
 				
 				return false;
@@ -5227,6 +5227,7 @@ class usc_e_shop
 			exit;
 //20110208ysk end
 		}
+		do_action('usces_action_acting_processing', $acting_flg, $query);
 	}
 
 	function inquiry_processing() {
