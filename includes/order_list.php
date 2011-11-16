@@ -580,7 +580,7 @@ jQuery(document).ready(function($){
 				$checked = ($chk_ord[$cscs_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
 				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -607,7 +607,7 @@ jQuery(document).ready(function($){
 				$checked = ($chk_ord[$cscs_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
 				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -652,7 +652,7 @@ jQuery(document).ready(function($){
 				$checked = ($chk_ord[$cscs_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
 				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$cscs_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$cscs_key.']" value="'.$cscs_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -670,7 +670,7 @@ jQuery(document).ready(function($){
 				$checked = ($chk_ord[$csde_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
 				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -697,7 +697,7 @@ jQuery(document).ready(function($){
 				$checked = ($chk_ord[$csde_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
 				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -742,7 +742,7 @@ jQuery(document).ready(function($){
 				$checked = ($chk_ord[$csde_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
 				//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_ord['.$csde_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csde_key.']" value="'.$csde_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -775,7 +775,7 @@ jQuery(document).ready(function($){
 			$checked = ($chk_ord[$csod_key] == 1) ? ' checked' : '';
 			$name = esc_attr($entry['name']);
 			//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-			echo '<label for="chk_ord['.$csod_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csod_key.']" value="'.$csod_key.'"'.$checked.' />'.$name.'</label>';
+			echo '<label for="chk_ord['.$csod_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csod_key.']" value="'.$csod_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 		}
 	}
