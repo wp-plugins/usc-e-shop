@@ -644,8 +644,8 @@ function je_change_lank_Invalid( $order_data ){
 		return;
 
 	$history = $usces->get_member_history($member_id);
-	if( !$history )
-		return;
+//	if( !$history )
+//		return;
 
 	foreach ( (array)$history as $umhs ) {
 		$cart = $umhs['cart'];
