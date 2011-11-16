@@ -319,7 +319,7 @@ jQuery(document).ready(function($){
 				$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
 				$name = esc_attr($entry['name']);
 				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>';
+				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>\n';//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
