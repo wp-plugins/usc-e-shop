@@ -215,9 +215,10 @@ update_option('usces', $usces_op);
 /************************************************************************/
 /* usces_settings */
 $usces_settings['language'] = array();
+//20111117ysk 0000308
 $usces_settings['currency'] = array(
 					'AR' => array('ARS', 2, '.', ',', '$'),
-					'AU' => array('AUS', 2, '.', ',', '$'),
+					'AU' => array('AUD', 2, '.', ',', '$'),
 					'AT' => array('EUR', 2, '.', ',', '&#x20AC;'),
 					'BE' => array('EUR', 2, '.', ',', '&#x20AC;'),
 					'BR' => array('BRL', 2, '.', ',', '$'),
@@ -252,8 +253,8 @@ $usces_settings['currency'] = array(
 					'PL' => array('PLN', 2, '.', ',', ''),
 					'PT' => array('EUR', 2, '.', ',', '&#x20AC;'),
 					'PR' => array('USD', 2, '.', ',', '$'),
-					'RO' => array('RON', 2, '.', ',', 'L'),
-					'RU' => array('RUB', 2, '.', ',', ''),
+					'RO' => array('ROL', 2, '.', ',', 'L'),
+					'RU' => array('RUR', 2, '.', ',', ''),
 					'SG' => array('SGD', 2, '.', ',', '$'),
 					'KR' => array('KRW', 0, '.', ',', '&#x20A9;'),
 					'ES' => array('EUR', 2, '.', ',', '&#x20AC;'),
@@ -261,7 +262,7 @@ $usces_settings['currency'] = array(
 					'CH' => array('CHF', 2, '.', ',', 'Fr.'),
 					'NT' => array('NT$', 0, '.', ',', '元'),
 					'TH' => array('THB', 2, '.', ',', '฿'),
-					'TR' => array('TRY', 2, '.', ',', '₤'),
+					'TR' => array('TRL', 2, '.', ',', '₤'),
 					'GB' => array('GBP', 2, '.', ',', '£'),
 					'US' => array('USD', 2, '.', ',', '$'),
 					'VN' => array('VND', 2, '.', ',', '₫'),
