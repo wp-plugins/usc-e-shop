@@ -1,0 +1,2887 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: usc <nanbu@uscons.co.jp>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "This month"
+msgstr "เดือนนี้"
+
+msgid "Last month"
+msgstr "เดือนที่แล้ว"
+
+msgid "The past one week"
+msgstr "สัปดาห์ที่ผ่านนมา"
+
+msgid "Last 30 days"
+msgstr "30วันที่ผ่านมา"
+
+msgid "Last 90days"
+msgstr "90วันที่ผ่านมา"
+
+msgid "All"
+msgstr "ทั้งหมด"
+
+msgid "Show the Operation field"
+msgstr "แสดง Operation field"
+
+msgid "hide the Operation field"
+msgstr "ไม่แสดง Operation field"
+
+msgid "updates it to latest information"
+msgstr "อัพเดทเป็นข้อมูลล่าสุด"
+
+msgid "Pattern List"
+msgstr "Pattern List"
+
+msgid "Display Search"
+msgstr "Display Search"
+
+msgid "Hide Search"
+msgstr "Hide Search"
+
+msgid "CSV format is invalid!"
+msgstr "CSV fomat ไม่ถูกต้อง"
+
+msgid "Published"
+msgstr "เผยแพร่"
+
+msgid "Draft"
+msgstr "ฉบับร่าง"
+
+msgid "Pending Review"
+msgstr "รอการ Review อยู่"
+
+msgid "Scheduled"
+msgstr "ตั้งกำหนดเวลาแล้ว"
+
+msgid "Trash"
+msgstr "ทิ้ง"
+
+msgid "Closed"
+msgstr "ไม่เผยแพร่"
+
+msgid "unpaid"
+msgstr "ยังไม่ได้ชำระ"
+
+msgid "payment confirmed"
+msgstr "ชำระแล้ว"
+
+msgid "temporaly out of stock"
+msgstr "รอสินค้าเข้า"
+
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+msgid "It has sent it out."
+msgstr "ส่งสินค้าแล้ว"
+
+msgid "An estimate"
+msgstr "ใบเสนอราคา"
+
+msgid "Management of Note"
+msgstr "ทำการสั่งซื้อด้วยมือ"
+
+msgid "new order"
+msgstr "รับสมัครสมาชิกใหม่"
+
+msgid "Welcart shop"
+msgstr "Welcart shop"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Master Items"
+msgstr "Master Items"
+
+msgid "Add New Item"
+msgstr "เพิ่มสินค้าใหม่"
+
+msgid "General Setting"
+msgstr "ตั้งค่าทั่วไป"
+
+msgid "Business Days Setting"
+msgstr "ตั้งค่าวันทำการ"
+
+msgid "Shipping Setting"
+msgstr "ตั้งค่าการขนส่ง"
+
+msgid "E-mail Setting"
+msgstr "ตั้งค่า email"
+
+msgid "System Setting"
+msgstr "ตั้งค่าระบบ"
+
+msgid "Backup"
+msgstr "Backup"
+
+msgid "Welcart Management"
+msgstr "Welcart Management"
+
+msgid "Order List"
+msgstr "รายงานการสั่งซื้อ"
+
+msgid "New Order or Estimate"
+msgstr "ใส่ข้อมูลการสั่งซื้อด้วยมือ / ทำใบเสนอราคา"
+
+msgid "List of Members"
+msgstr "รายชื่อสมาชิก"
+
+msgid "order date is updated"
+msgstr "อัพเดทข้อมูการสั่งซื้อเสร็จเรียบร้อยแล้ว"
+
+msgid "back to the summary"
+msgstr "กลับไปดูหน้าสรุป"
+
+msgid "failure in update"
+msgstr "อัพเดทไม่สำเร็จ"
+
+msgid "New date is add"
+msgstr "เพิ่มข้อมูลใหม่เสร็จเรียบร้อยแล้ว"
+
+msgid "failure in addition"
+msgstr "เพิ่มข้อมูลใหม่ไม่เสร็จ"
+
+msgid "the order date is deleted"
+msgstr "ลบข้อมูลการสั่งซื้อเรียบร้อยแล้ว"
+
+msgid "failure in delete"
+msgstr "ลบข้อมูลการสั่งซื้อไม่สำเรจ"
+
+msgid "Membership information is updated"
+msgstr "อัพเดทข้อมูลสมาชิกเรียบร้อยแล้ว"
+
+msgid "options are updated"
+msgstr "อัพเดท option เรียบร้อย"
+
+msgid "Chose the %s"
+msgstr "กรุณาเลือก%sหน่อย"
+
+msgid "Input the %s"
+msgstr "กรุณาใส่ข้อมูล%sหน่อย"
+
+msgid "temporaly out of stock now"
+msgstr "สินค้าหมด"
+
+msgid "enter the correct amount"
+msgstr "จำนวนไม่ถูกต้อง"
+
+msgid "'enter the correct amount for the No.' + (i+1) + ' item'"
+msgstr "กรุณาใส่จำนวนถูกต้องในสินค้าเบอร์(i+1)"
+
+msgid "enter in between 1 to num"
+msgstr "ใสค่า 1 ถึง num"
+
+msgid "Import is cmpleted"
+msgstr "import เสร็จเรียบร้อยแล้ว"
+
+msgid "Import was not completed."
+msgstr "error: import ไม่สำเร็จ"
+
+msgid "Failed in update due to time-out"
+msgstr "การเปลี่ยนรหัสผ่านไม่สำเร็จ"
+
+msgid "Error: failure in updating password"
+msgstr "error: การเปลี่ยนรหัสผ่านไม่สำเร็จ"
+
+msgid "Error:failure in update"
+msgstr "error: อัพเดทไม่สำเร็จ"
+
+msgid "This e-mail address has been already registered."
+msgstr "email นี้มีคนใช้อยู่แล้ว"
+
+msgid "<b>Error:</b> Enter the password."
+msgstr "<b>error:</b> กรุณาใส่รหัสผ่านหน่อย"
+
+msgid "<b>Error:</b> E-mail address is not correct."
+msgstr "<b>error:</b> email ไม่ถูกต้อง"
+
+msgid "<b>Error:</b> Password is not correct."
+msgstr "<b>error:</b> email ไม่ถูกต้อง"
+
+msgid "Item genre"
+msgstr "Item genre"
+
+msgid "guest"
+msgstr "guest"
+
+msgid "Sold Out"
+msgstr "ขายหมดแล้ว"
+
+msgid "Out Of Stock"
+msgstr "รอสินค้าเข้า"
+
+msgid "Out of print"
+msgstr "เลิกผลิตแล้ว"
+
+msgid "Sorry, this item is sold out."
+msgstr "ขอโทษค่ะ สินค้าขายหมดแล้ว"
+
+msgid "Sorry, stock is insufficient."
+msgstr "ขอโทษค่ะ สินค้าในสต๊อกมีไม่พอ"
+
+msgid "Password is not correct."
+msgstr "รหัสผ่านไม่ถูกต้อง"
+
+msgid "e-mail address is not correct"
+msgstr "email ไม่ถูกต้อง"
+
+msgid "E-mail address is not correct"
+msgstr "email ไม่ถูกต้อง"
+
+msgid "Name is not correct"
+msgstr "ชื่อไม่ถูกต้อง"
+
+msgid "Invalid CANNAT pretend."
+msgstr "Invalid CANNAT pretend."
+
+msgid "postal code is not correct"
+msgstr "รหัสไปรษณีย์ไม่ถูกต้อง"
+
+msgid "enter the prefecture"
+msgstr "กรุณาใส่จังหวัด"
+
+msgid "enter the city name"
+msgstr "กรุณาใส่อำเภอ"
+
+msgid "enter house numbers"
+msgstr "กรุณาใส่เบอร์โทรศัพท์ที่บ้าน"
+
+msgid "enter phone numbers"
+msgstr "กรุณาใส่เบอร์โทรศัพท์"
+
+msgid "chose one from delivery method."
+msgstr "กรุณาระบุที่อยู่ในการจัดส่งสินค้า"
+
+msgid "chose one from payment options."
+msgstr "กรุณาเลือกวิธีการชำระเงินเพียงหนึ่งข้อ"
+
+msgid "Invalid value. Please enter in the numbers."
+msgstr "ข้อมูลไม่ถูกต้อง กรุณาใส่ตัวเลข"
+
+msgid "You have exceeded the maximum available."
+msgstr "คุณใส่จำนวนเกินจำนวนสินค้าที่เหลืออยู่"
+
+msgid "There are no items in your cart."
+msgstr "ไม่มีสินค้าอยู่ในตะกร้าค่ะ"
+
+msgid "It is the e-mail address that there is not."
+msgstr "e-mail ไม่ถูกต้อง"
+
+msgid "Dummy page for fotter nabigation"
+msgstr "Dummy page for footer navigation"
+
+msgid "Dummy page for maine nabigation"
+msgstr "Dummy page for main navigation"
+
+msgid "Items"
+msgstr "สินค้า"
+
+msgid "Items recommended"
+msgstr "สินค้าแนะนำ"
+
+msgid "items recommended"
+msgstr "สินค้าแนะนำ"
+
+msgid "(Excl. Tax)"
+msgstr "(ไม่รวม VAT)"
+
+msgid "(Incl. Tax)"
+msgstr "(รวม VAT)"
+
+msgid "Mr/Mrs %s"
+msgstr "คุณ %s"
+
+msgid "Request of"
+msgstr "จาก"
+
+msgid "estimate number"
+msgstr "หมายเลขใบเสนอราคา"
+
+msgid "** content of ordered items **"
+msgstr "** รายการสินค้า **"
+
+msgid "Unit price"
+msgstr "ราคาต่อหน่วย"
+
+msgid "dollars"
+msgstr "bahts"
+
+msgid "total items"
+msgstr "จำนวนสินค้ารวม"
+
+msgid "use of points"
+msgstr "คะแนนที่ต้องการใช้"
+
+msgid "Special Price"
+msgstr "ราคาพิเศษ"
+
+msgid "Shipping"
+msgstr "ค่าขนส่ง"
+
+msgid "C.O.D"
+msgstr "C.O.D"
+
+msgid "consumption tax"
+msgstr "VAT"
+
+msgid "Payment amount"
+msgstr "ยอดชำระ"
+
+msgid "** A shipping address **"
+msgstr "** ที่อยู่ที่จัดส่งสินค้า **"
+
+msgid "A destination name"
+msgstr "ชื่อ"
+
+msgid "Zip/Postal Code"
+msgstr "รหัสไปรษณีย์"
+
+msgid "Address"
+msgstr "ที่อยู่"
+
+msgid "Phone number"
+msgstr "เบอร์โทรศัพท์"
+
+msgid "Delivery Time"
+msgstr "เวาลาที่ให้จัดส่งสินค้า"
+
+msgid "Delivery Method"
+msgstr "วิธีการจัดส่งสินค้า"
+
+msgid "** WE may not always be able to deliver the items on time which you desire."
+msgstr "** อาจมีกรณีที่ไม่สามารถจัดส่งสินค้าตามที่กำหนดได้"
+
+msgid "** For some region, to deliver the items in the morning is not possible."
+msgstr "** สำรับบางเขต ไม่สามารถเลือกเวลาจัดส่งสินค้า"
+
+msgid "Failure in deleting in bulk"
+msgstr "Failure in deleting in bulk"
+
+msgid "option name"
+msgstr "ชื่อ option"
+
+msgid "selected amount"
+msgstr "selected amount"
+
+msgid "normal price"
+msgstr "ราคาปกติ"
+
+msgid "Sale price"
+msgstr "ราคาลดเหลือ"
+
+msgid "SKU display name "
+msgstr "SKU display name "
+
+msgid "unit"
+msgstr "จำนวน"
+
+msgid "Apply business package"
+msgstr "ใช้ business package"
+
+msgid "A payment method name"
+msgstr "ชื่อวิธีการชำระเงิน"
+
+msgid "explanation"
+msgstr "คำอธิบาย"
+
+msgid "Type of payment"
+msgstr "ประเภทการชำระเงิน"
+
+msgid "Payment module"
+msgstr "Payment module"
+
+msgid "Single-select"
+msgstr "ราคาปกติ"
+
+msgid "Multi-select"
+msgstr "Multi-select"
+
+msgid "Text"
+msgstr "Text"
+
+msgid "Required"
+msgstr "ต้องการ"
+
+msgid "Add a new option"
+msgstr "เพิ่ม option ใหม่"
+
+msgid "Add common options"
+msgstr "เพิ่ม option ใหม่"
+
+msgid "Applicable product options"
+msgstr "ใช้ระบบ option สำหรับสินค้า"
+
+msgid "Please create a common option."
+msgstr "สร้าง option รวม"
+
+msgid "Apply an option"
+msgstr "ใช้ระบบ option"
+
+msgid "Add new SKU"
+msgstr "เพิ่ม SKU ใหม่"
+
+msgid "Apply"
+msgstr "ใช้"
+
+msgid "Not apply"
+msgstr "ไม่ใช้"
+
+msgid "Add SKU"
+msgstr "เพิ่ม SKU"
+
+msgid "Add a new method forpayment "
+msgstr "เพิ่มวิธีการชำระเงินใหม่"
+
+msgid "Add method for shipping"
+msgstr "เพิ่มวิธีการส่งของใหม่"
+
+msgid "order number"
+msgstr "รหัสการสั่งซื้อ"
+
+msgid "List price"
+msgstr "ราคาปกติ"
+
+msgid "Add to Whish List"
+msgstr "ใส่ใน wish list"
+
+msgid "Choose"
+msgstr "เลือก"
+
+msgid "Business package discount"
+msgstr "ส่วนลดพิเศษสำหรับนิติบุคคล"
+
+msgid "**par 1unit for more than ~"
+msgstr "**มากกว่า ~ ○○ต่อหน่วย"
+
+msgid "**par 1unit for ~"
+msgstr "**~ ○○ต่อหน่วย"
+
+msgid "size"
+msgstr "ขนาด"
+
+msgid "Price"
+msgstr "ราคา"
+
+msgid "Add to Shopping Cart"
+msgstr "หยิบใส่ตะกร้า"
+
+msgid "Quantity"
+msgstr "จำนวน"
+
+msgid "No preference"
+msgstr "ไม่เลือก"
+
+msgid "Non-request"
+msgstr "ไม่เลือก"
+
+msgid "sending completed"
+msgstr "ส่งข้อมูลเรียบร้อยแล้ว"
+
+msgid "Failure in sending"
+msgstr "ส่งข้อมูลไม่สำเร็จ"
+
+msgid "All the personal information which you are sending with this form will be treated with maximum care. Your information is entrusted to us for the purpose of providing information and respond to your requests, but to be used for any other purpose. More information, please visit our Privacy  Notice. All the items are required to be filled. Please use Alphanumeric characters for numbers."
+msgstr "All the personal information which you are sending with this form will be treated with maximum care. Your information is entrusted to us for the purpose of providing information and respond to your requests, but to be used for any other purpose. More information, please visit our Privacy  Notice. All the items are required to be filled. Please use Alphanumeric characters for numbers."
+
+msgid "Please use Alphanumeric characters for numbers."
+msgstr "กรุณาใช้ ตัวอกษรภาษาอังกฤษ หรือ ตัวเลข"
+
+msgid "Full name"
+msgstr "ชื่อ-นามสกุล"
+
+msgid "e-mail adress"
+msgstr "email"
+
+msgid "contents"
+msgstr "เนื้อหา"
+
+msgid "Admit to send it with this information."
+msgstr "ส่งข้อมูลตามนี้"
+
+msgid "Log-in"
+msgstr "Log-in"
+
+msgid "Log out"
+msgstr "ออกจากระบบ"
+
+msgid "Export"
+msgstr "Export"
+
+msgid "Start Exporting"
+msgstr "Start Exporting"
+
+msgid "Import"
+msgstr "Import"
+
+msgid "Start importing"
+msgstr "Start importing"
+
+msgid "Back-up functions is now under testing."
+msgstr "Back-up functions is now under testing."
+
+msgid "Please set the shipping price"
+msgstr "ตั้งค่าค่าขยส่งหน่อย"
+
+msgid "Add"
+msgstr "เพิ่ม"
+
+msgid "Delete"
+msgstr "ลบ"
+
+msgid "update"
+msgstr "อัพเดท"
+
+msgid "Are you sure of deleting the shipping option 'Delname'?"
+msgstr "ยืนยังจะลบวิธีการขนส่ง「delname」"
+
+msgid "Not fixing shipping."
+msgstr "ไม่ FIX ค่าขนส่ง"
+
+# JavaScript
+msgid "'Are you sure of deleting shipping [' + delname + ']?'"
+msgstr "'ยืนยังจะลบค่าขนส่ง「'+delname+'」'"
+
+# JavaScript
+msgid "'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'"
+msgstr "'ตั้งค่าค่าขนส่งเป็น%s' + charge + 'สำหรับทุกทุกจังหวัด'"
+
+msgid "shipping option"
+msgstr "วิธีการจัดส่งสินค้า"
+
+msgid "(Explain)"
+msgstr "(คำอธิบาย)"
+
+msgid "New item"
+msgstr "เพิ่มสินค้าใหม่"
+
+msgid "New addition"
+msgstr "เพิ่มวิธีการจัดส่งสินค้าใหม่"
+
+msgid "Shipping charge name"
+msgstr "ชื่อค่าขนส่ง"
+
+msgid "You can choose the shipping every item."
+msgstr "สามารถเลือกค่าขนส่งแต่ละสินค้า"
+
+msgid "Deliverly time"
+msgstr "กำหนดเวลาส่งของ"
+
+msgid "Raise the priority"
+msgstr "ให้ขึ้น"
+
+msgid "Lower the priority"
+msgstr "ให้ลง"
+
+msgid "Postage fixation"
+msgstr "FIX ค่าขนส่ง"
+
+msgid "Please make entry of appointment time to a party by one."
+msgstr "ใส่เวลาที่สามารถจัดส่งสินค้าได้"
+
+msgid "It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'."
+msgstr "หากเลือก \"FIX ค่าขนส่ง\" ค่าขนส่งจะตามรายการด้านบน หากเลือก \"ไม่ FIX\" ค่าขนส่งตามราคาที่ตั้งไว้ต่อสินค้า"
+
+msgid "This is an e-mail which will be sent aytomatically to your customers at the contact from customer."
+msgstr "email ที่ส่งให้ลูกค้าจากระบบโดยอัตโนมัติตอนเมื่อได้รักการสอบถาม"
+
+msgid "Conformation e-mail of membership registeration."
+msgstr "email แจ้งการสมัครสมาชิกเรียบร้อย"
+
+msgid "This is an e-mail which will be snnt automatically to your customers when their membership registration is completed."
+msgstr "email ที่ส่งให้ลูกค้าโดยอัตโนมัติ เมื่อสมัครสมาชิกเสร็จเรียบร้อยแล้ว"
+
+msgid "Shipping complete email (sent from the admin)"
+msgstr "email แจ้งการจัดส่งสินค้าเรียบร้อย (ส่งจากหน้า admin)"
+
+msgid "Order confirmation email (sent from the admin)"
+msgstr "email ยืนยังการสังซื้อสินค้า (ส่งจากหน้า admin)"
+
+msgid "Confirmation mail for change of orders. (sent by admin.)"
+msgstr "email ยืนยังการแก้ไขข้อมูลในการสั่งซื้อสินค้า (ส่งจากหน้า admin)"
+
+msgid "This is an e-mail which will be sent manually from admin screen, when there is changes of order."
+msgstr "email ที่ส่งเมื่อได้รับการแก้ไขข้อมูลในการสั่งซื้อสินค้า (ส่งจากหน้า admin)"
+
+msgid "Mail for Confirmation of payment. ( sent from admin)"
+msgstr "email แจ้งได้รับการชำระเงิน (ส่งจากหน้า admin)"
+
+msgid "This is an e-mail which will be sent to customers when their transfer payment is confirmed."
+msgstr "email ที่ส่งให้ลูกค้าเมื่อได้รับการชำระเงิน ส่งจากหน้า admin"
+
+msgid "Estimate email (sent from the admin)"
+msgstr "email ส่งใบเสนอราคา (ส่งจากหน้า admin)"
+
+msgid "E-mail for confirmation of cancellation. (sent from admin)"
+msgstr "email ยืนยังการยกเลิกในการสั่งซื้อสินค้า (ส่งจากหน้า admin)"
+
+msgid "This is an e-mail which will be sent when order has been canselled."
+msgstr "email ที่ส่งให้ลูกค้าเมื่อได้รับการยกเลิกในการสั่งซื้อสินค้า ส่งจากหน้า admin"
+
+msgid "Other e-mails(sent from admin)"
+msgstr "mail อืนๆ (ส่งจากหน้า admin)"
+
+msgid "e-mail which will be sent on temporaly basis"
+msgstr "email ที่ส่งให้ลูกค้าตามผู้บริหารต้องการ (ส่งจากหน้า admin)"
+
+msgid "change decision"
+msgstr "อัพเดท"
+
+msgid "Campaign Schedule"
+msgstr "Campaign Schedule"
+
+msgid "starting time"
+msgstr "วันที่ลงทะเบียน"
+
+msgid "year"
+msgstr "ปี"
+
+msgid "month"
+msgstr "เดือน"
+
+msgid "day"
+msgstr "วัน"
+
+msgid "hour"
+msgstr "โมง"
+
+msgid "min"
+msgstr "นาที"
+
+msgid "%2$s/%1$s"
+msgstr "ปี%1$sเดือน%2$s"
+
+msgid "%2$s %3$s, %1$s"
+msgstr "วันที่%3$sปี%1$sเดือน%2$s"
+
+msgid "date and time of termination"
+msgstr "วันที่จบสิ้น"
+
+msgid "reserve the period of campaign."
+msgstr "ตั้งระยะเวลา campaign"
+
+msgid "Business Calendar"
+msgstr "ปฎิทิน"
+
+msgid "Sun"
+msgstr "Sun"
+
+msgid "Mon"
+msgstr "Mon"
+
+msgid "Tue"
+msgstr "Tue"
+
+msgid "Wed"
+msgstr "Wed"
+
+msgid "Thu"
+msgstr "Thu"
+
+msgid "Fri"
+msgstr "Fri"
+
+msgid "Sat"
+msgstr "Sat"
+
+msgid "Working day"
+msgstr "วันทำการ"
+
+msgid "Holiday for Shipping Operations"
+msgstr "วันหยุดการจัดส่งlbo8hk"
+
+msgid "Next month"
+msgstr "เดือนหน้า"
+
+msgid "Month after next month"
+msgstr "สองเดือนข้างหน้า"
+
+msgid "Business settings"
+msgstr "ตั้งค่าการทำการ"
+
+msgid "Display Modes"
+msgstr "Display Mode"
+
+msgid "<strong>Normal operating</strong> -Normal display"
+msgstr "<strong>・เปิดทำการปกติ</strong> --- แสดงหน้าปกติ"
+
+msgid "<strong>Campaign</strong>--Showing the campaige mode"
+msgstr "<strong>・Campaign</strong> --- แสดงหน้าตาม Campaign"
+
+msgid "<strong>Maintenance</strong> ---Showing  maintenance page. Administrater is able to see the page with normal display."
+msgstr "<strong>・กำลังปรับปรุงอยู่</strong> --- แสดงหน้า maintenance ผู้บริหารสามารถ Log-in แล้วดูหน้าปกติได้"
+
+msgid "Campaign target items"
+msgstr "Category ที่อยู่ในช่วง Campaign"
+
+msgid "This is a category of the objects to add a privilege to in the case of a campaign mode. You can choose a campaign object article freely by installing a 'campaign' category for an article."
+msgstr "สามารถเลือก Category ที่ให้ Campaign"
+
+msgid "Example)"
+msgstr "ตัวอย่าง)"
+
+msgid "all the items"
+msgstr "สินค้าทั้งหมด"
+
+msgid "Campaign Award"
+msgstr "สิทธิพิเศษ"
+
+msgid "Points"
+msgstr "ได้คะแนนสะสม"
+
+msgid "times"
+msgstr "สองเท่า"
+
+msgid "'Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers."
+msgstr "เฉพาะสมาชิกจะได้คะแนนสะสม สามารถตั้งอัตราที่ได้คะแนนสะสม<br />\"ส่วนลด\"จะมีผลต่อลูกค้าทุกคน "
+
+msgid "%"
+msgstr "%"
+
+msgid "Configuration of management and display mode of shop."
+msgstr "ตั้งค่าข้อมูลร้าน และวิธีการบริหารร้าน"
+
+msgid "Shop setting"
+msgstr "ตั้งค่าเกี่ยวกับร้าน"
+
+msgid "The company name"
+msgstr "ชื่อบริษัท"
+
+msgid "Fill out this if you are a corporation."
+msgstr "ถ้าเป็นบริษัท ใส่ชื่อบริษัท"
+
+msgid "FAX number"
+msgstr "เบอร์ FAX."
+
+msgid "E-mail address for ordering"
+msgstr "email ที่รับการสั่งซื้อ"
+
+msgid "<em>[Required]</em> the administrator's e-mail address to receive the order"
+msgstr "<em>*</em>email สำหรับรับการสั่งซื้อ"
+
+msgid "Contact e-mail address"
+msgstr "Contact email"
+
+msgid "<em>[Required]</em> the administrator's e-mail address to receive the contact meils."
+msgstr "<em>*</em>email ที่รับการติดต่อ หรือสอบถามจากลูกค้า"
+
+msgid "Sender's e-mail address"
+msgstr "Sender's email"
+
+msgid "<em>[Required]</em> the sender's e-mail address to send 'thank you e-mail' to cuscomers."
+msgstr "<em>*</em>email ที่ส่ง Thank you mail ถึงลูกค้า"
+
+msgid "<em>[Required]</em>The transmission of a message ahead of the error email."
+msgstr "<em>*</em>email ที่ส่งการแจ้งเมื่อ email ร้านไม่ถึงที่ลูกค้า"
+
+msgid "Address for Error mail"
+msgstr "email ที่ส่งการแจ้ง error"
+
+msgid "copy rights"
+msgstr "ลิขสิทธิ์"
+
+msgid "Conditions for free shipping"
+msgstr "คุณสมบัติที่ได้ค่าขนส่งฟรี"
+
+msgid "Above"
+msgstr "(สั่งซื้อมากกว่านี้)"
+
+msgid "Total purchase prise to have free shipping. Leave it blank if it is not necessary."
+msgstr "มียอดการส่งซื้อมากกว่านี้จะได้ฟรีค่าขนส่ง ไม่ใช้ก็ปล่อยให้ว่าง"
+
+msgid "default limitation number of purchase"
+msgstr "จำนวนจำกัดที่ซื้อได้ตอนแรก"
+
+msgid "maximum amount"
+msgstr "(ไม่เกิน)"
+
+msgid "initial value at registration of items. Leave it blank if it is not necessary."
+msgstr "ไม่ใช้ก็ปล่อยให้ว่าง"
+
+msgid "initial value of date of sending out."
+msgstr "วันที่จัดส่งสินค้าตอนแรก"
+
+msgid "initial value at registration of items. Do not chose this if it does not apply to you."
+msgstr "ไม่ใช้ก็ไม่ต้องเลือก"
+
+msgid "Percentage of Consumption tax"
+msgstr "VAT"
+
+msgid "method of Calculation of the tax"
+msgstr "วิธีคำนวณภาษี"
+
+msgid "drop fractions"
+msgstr "ตัดเศษ"
+
+msgid "raise to a unit"
+msgstr "ปัดเศษขึ้น"
+
+msgid "round up numbers of five and above and round down anything under"
+msgstr "ปัดเศษ"
+
+msgid "Leave it as blank if tax is included"
+msgstr "ถ้าใช้ราคาที่รวมภาษีแล้วก็ไม่ต้องเลือก"
+
+msgid "Cost for C.O.D. leave it blank if it in not necessary."
+msgstr "ค่าทำเนียมสำหรับ C.O.D ไม่คิดก็ปล่อยให้ว่าง"
+
+msgid "Account information for transfer"
+msgstr "เลขบัญชีให้โอนเงิน"
+
+msgid "The acount number for bank transfer. You can enter the information as you wish.  The contents will apear in the mail."
+msgstr "เลขบัญชีนี้จะใส่ใน mail ที่ส่งจากระบบ"
+
+msgid "membership syetem"
+msgstr "รัะบบสมาชิก"
+
+msgid "to use"
+msgstr "ใช้"
+
+msgid "not to use"
+msgstr "ไม่ใช้"
+
+msgid "Would you like to use membership system or not?"
+msgstr "ใช้ระบบสมาชิก หรือไม่"
+
+msgid "membership points"
+msgstr "คะแนนสะสม"
+
+msgid "to grant"
+msgstr "ให้"
+
+msgid "not to grant"
+msgstr "ไม่ให้"
+
+msgid "Would you like to use 'points granting syetem' when you choose to use membership system?"
+msgstr "ใช้ระบบคะแนนสมาชิกเมื่อใชระบบสมาชิก หรือไม่"
+
+msgid "The initial value of point rate"
+msgstr "อัตราคะแนนสะสมตอนแรก"
+
+msgid "Point at the registration of membership"
+msgstr "คะแนนแถมให้เมื่อสมัครสมาชิก"
+
+msgid "Points granted  at the first membersip registration."
+msgstr "คะแนนแถมให้เมื่อสมัครสมาชิก"
+
+msgid "the initial rate of the shop"
+msgstr "ตั้งข้อมูลเกี่ยวกับร้าน"
+
+msgid "payment method"
+msgstr "วิธีการชำระ"
+
+msgid "** Payment method **"
+msgstr "** วิธีการชำระเงิน **"
+
+msgid "<em>[Required]</em>possible payment method"
+msgstr "<em>【ต้องการ】</em>วิธีการชำระที่สามารถรับได้"
+
+msgid "Common Options"
+msgstr "Common Options"
+
+msgid "Conditions which will be selected at the purchase. You can use the options which you hve registered here, as an option in the master items."
+msgstr "ตัวเลือกที่สามารถใช้เป็น option ได้สำหรับ item master"
+
+msgid "Special Benefits"
+msgstr "สิทธิพิเศษ"
+
+msgid " times (limited to members)"
+msgstr "สองเท่า (เฉพาะสมาชิก)"
+
+msgid "applied material"
+msgstr "สำหรับ"
+
+msgid "Period"
+msgstr "ระยะเวลา"
+
+msgid "Cart page"
+msgstr "หน้าตะกล้า"
+
+msgid "Membership page"
+msgstr "หน้าสมาชิก"
+
+msgid "Membership"
+msgstr "สมาชิก"
+
+msgid "There is no news for this moment."
+msgstr "ไม่มีข่างใหม่"
+
+msgid "number & amount of order"
+msgstr "จำนวนการสั่งซื้อ / ยอดขาย"
+
+msgid "number of order"
+msgstr "จำนวนที่ได้รับการสั่งซื้อ"
+
+msgid "amount of order"
+msgstr "ยอดขาย"
+
+msgid "today"
+msgstr "วันนี้"
+
+msgid "Same date in last year"
+msgstr "เดือนนี้ของปีที่แล้ว"
+
+msgid "information for registration of items"
+msgstr "ข้อมูลเกี่ยวกับสินค้า"
+
+msgid "number of item"
+msgstr "จำนวนสินค้า"
+
+msgid "SKU total number"
+msgstr "จำนวน SKU ทั้งหมด"
+
+msgid "In Stock"
+msgstr "มีสินค้าอยู่ในสต๊อก"
+
+msgid "OK"
+msgstr "มี"
+
+msgid "List of items without stock"
+msgstr "รายการที่ไม่มีสต๊อกทั้หมด"
+
+msgid "Your environment"
+msgstr "System Preference"
+
+msgid "Software Version"
+msgstr "Software Version"
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Safe mode"
+msgstr "Safe mode"
+
+msgid "Amount"
+msgstr "ราคา"
+
+msgid "Used points"
+msgstr "จำนวนคะแนน"
+
+msgid "Campaign disnount"
+msgstr "ส่วนลดพิเศษสำหรับ Campaign"
+
+msgid "Disnount"
+msgstr "ได้ส่วนลด"
+
+msgid "Total Amount"
+msgstr "ราคารวม"
+
+msgid "The current point"
+msgstr "ยอดคะแนนสะสมปัจจุบัน"
+
+msgid "Points you are using here"
+msgstr "คะแนนที่จะใช้"
+
+msgid "Use the points"
+msgstr "ใช้คะแนนสะสม"
+
+msgid "Re-input"
+msgstr "ซ้ำอีกครั้ง"
+
+msgid "Familly name"
+msgstr "นามสกุล"
+
+msgid "Given name"
+msgstr "ชื่อ         "
+
+msgid "furigana"
+msgstr "furigana"
+
+msgid "Province"
+msgstr "จังหวัด"
+
+msgid "State"
+msgstr "จังหวัด"
+
+msgid "city"
+msgstr "อำเภอ"
+
+msgid "numbers"
+msgstr "บ้านเลขที่"
+
+msgid "building name"
+msgstr "ชื่ออาคาร"
+
+msgid "Address Line1"
+msgstr "ที่อยู่ (ชื่ออาคาร)"
+
+msgid "Address Line2"
+msgstr "ที่อยู่"
+
+msgid "Zip"
+msgstr "รหัสไปรษณีย์"
+
+msgid "This mark shows the required items."
+msgstr "* ช่องที่ต้องใส่ข้อมูล"
+
+msgid "Please make sure that your e-mail address is correct."
+msgstr "ยืนยัน email"
+
+msgid "Press the `update` button when you change the amount of items."
+msgstr "กดปุ่ม 'อัพเดทจำนวน' เมื่อเท่านปรับเปลี่ยนจำนวน"
+
+msgid "The price with this mark applys to Business pack discount."
+msgstr "สามารถใช้ Business package ได้"
+
+msgid "Save the data"
+msgstr "save ข้อมูล"
+
+msgid "Item image"
+msgstr "รูปภาพสินค้า"
+
+msgid "This excerpt is a summary of the product description."
+msgstr "อันนี้เป็นการสรุปของคำอธิบายสินค้า"
+
+msgid "Back"
+msgstr "กลับ"
+
+msgid "item code"
+msgstr "รหัสสินค้า"
+
+msgid "item name"
+msgstr "ชื่อสินค้า"
+
+msgid "SKU code"
+msgstr "รหัส SKU"
+
+msgid "Limited amount for purchase"
+msgstr "จำนวนจำกัดที่สั่งซื้อได้"
+
+msgid "Percentage of points"
+msgstr "อัตราคะแนนสะสม"
+
+msgid "Integer"
+msgstr "จำนวนเต็ม"
+
+msgid "limit by%s%s%s"
+msgstr "ไม่เกิน%s%s%sชิ้น"
+
+msgid "in more than%s%s%s%s%s %s%s%s,"
+msgstr "สั่งซื้อมากกว่า%s%s%s%s%s %s%s%sชิ้น"
+
+msgid "%discount"
+msgstr "ลด%"
+
+msgid "estimated shipping date"
+msgstr "วันที่จะจัดส่งสินค้า"
+
+msgid "SKU price"
+msgstr "ราคา SKU"
+
+msgid "options for items"
+msgstr "option สำหรับสินค้า"
+
+msgid "Title of detail page"
+msgstr "หัวข้อหน้ารายละเอียด"
+
+msgid "A Few Stock"
+msgstr "สินค้าใกล้หมด"
+
+msgid "notmal member"
+msgstr "สมาชิกทั่วไป"
+
+msgid "good member"
+msgstr "สมาชิกพิเศษ"
+
+msgid "bad member"
+msgstr "สมาชิกไม่ดี"
+
+msgid "VIP member"
+msgstr "สมาชิก VIP"
+
+msgid "Transfer (prepayment)"
+msgstr "โอนเงิน (ชำระก่อน)"
+
+msgid "Transfer (postpay)"
+msgstr "โอนเงิน (ชำระภายหลัง)"
+
+msgid "COD"
+msgstr "COD"
+
+msgid "COD fee"
+msgstr "ค่าทำเนียม C.O.D."
+
+msgid "During the campaign"
+msgstr "เปิด Campaign อยู่"
+
+msgid "Under Maintenance"
+msgstr "กำลังปรับปรุงอยู่"
+
+msgid "-- Select --"
+msgstr "-- เลือก --"
+
+msgid "immediately"
+msgstr "วันนี้"
+
+msgid "1-2 days"
+msgstr "1 ถึง 2วัน"
+
+msgid "2-3days"
+msgstr "2 ถึง 3วัน"
+
+msgid "3-5days"
+msgstr "3 ถึง 5วัน"
+
+msgid "4-6days"
+msgstr "4 ถึง 6วัน"
+
+msgid "about 1 week later"
+msgstr "ประมาณ 1 สบดาห์"
+
+msgid "about 2 weeks later"
+msgstr "ประมาณ 2 สบดาห์"
+
+msgid "about 3 weeks later"
+msgstr "ประมาณ 3 สบดาห์"
+
+msgid "after we get new items"
+msgstr "หลังสินค้าเข้า"
+
+msgid "Confirmation of order details"
+msgstr "[ยืนยังการสั่งซื้อ]"
+
+msgid "An order report"
+msgstr "[รายงานได้รับการสั่งซื้อ]"
+
+msgid "Your question is sent"
+msgstr "[ได้รับเรื่องเรยบร้อย]"
+
+msgid "About your question"
+msgstr "[เรื่องสอบถาม]"
+
+msgid "Comfirmation of your registration for membership"
+msgstr "[การแจ้งการสมัครสมาชิกเรียบร้อย]"
+
+msgid "Information for shipping of your ordered items"
+msgstr "[การแจ้งการจัดส่งสินค้าเรียบร้อย]"
+
+msgid "Confirmation of change for your order details"
+msgstr "[การแจ้งยืนยังการแก้ไขข้อมูลในการสั่งซื้อ]"
+
+msgid "Confirmation mail for your transfer"
+msgstr "[การแจ้งได้รับการชำระเงิน]"
+
+msgid "Estimate"
+msgstr "[ใบเสนอราคา]"
+
+msgid "Confirmatin of your cancellation"
+msgstr "[การแจ้งยืนยังการยกเลิกในการสั่งซื้อ]"
+
+msgid "Thank you for choosing %s."
+msgstr "ขอขอบคุณมากที่ใช้บริการของ %s นะคะ"
+
+msgid "We have received your order. Please check following information."
+msgstr "เราได้รับการสั่งซื้อสินค้าตามนี้ กรุณายืนยังข้อมูลนะคะ"
+
+msgid "We will inform you by e-mail when we are ready to ship ordered items to you."
+msgstr "เราจะแจ้งอีกทีหลังจากได้เตรียมสินค้าเรียบร้อย"
+
+msgid "There is new order by %s."
+msgstr "ได้รับการสั่งซื้อสินค้า %s"
+
+msgid "We have received following e-mail."
+msgstr "เรายืนยังว่าได้รับการตืดต่อ / สอบถามตามรายการดังต่อไปนี้"
+
+msgid "We will contact you by e-mail soon."
+msgstr "เราจะแจ้งอีกทีหลังจากได้เตรียมสินค้าเรียบร้อย"
+
+msgid "Than you for registrating as %s membership."
+msgstr "ขอบุคุณม่กที่สมัครสมาชิกของ %s "
+
+msgid "You can chek your purchase status at section 'membership information'."
+msgstr "คุณสามารถดูประวัติการสั่งซื้อจาก\"ข้อมูลสมาชิก\""
+
+msgid "Your ordered items have been sent today."
+msgstr "ยืนยังว่าการจัดส่งสินค้าเสร็จเรียบร้อยแล้ว"
+
+msgid "It will be delivered by company xxx in couple of days."
+msgstr "ขนส่งสินค้าโดยบริษัท xx"
+
+msgid "Please contact us in case you have any problems with receiving your items."
+msgstr "ท่านจะได้รับสินค้าภายใน 3 วันทำการ หากไม่ได้กรุณาแจ้งกลับมา"
+
+msgid "You have changed your order as following."
+msgstr "แจ้งว่าเราแก้ไข้ข้อมูลตามด้านล่างนะคะ"
+
+msgid "We will inform you by e-mail when we are ready to send your items."
+msgstr "เราจะแจ้งอีกทีหลังจากได้เตรียมสินค้าเรียบร้อย "
+
+msgid "Your transfer have been made successfully."
+msgstr "เรายืนยังว่าได้รับการชำระเงินเสร็จเรียบรอยแล้ว"
+
+msgid "We will send you following estimate for your items."
+msgstr "เรามีความยินดีขอเสนอราคา รายละเอียดของสินค้าตามรายการดังต่อไปนี้"
+
+msgid "This estimate is valid for one week."
+msgstr "กำหนดยืนยังราคา 7 วันนับตั้งแต่วันที่ระบุในใบเสนอราคาฉบับนี้"
+
+msgid "We have received your cancellationfor your order."
+msgstr "ได้รับการยกเลิกการสังซื้อสินค้าเรียบร้อย"
+
+msgid "zip code"
+msgstr "รหัสไปรษณีย์"
+
+msgid "contact"
+msgstr "contact"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "Registration date"
+msgstr "วันที่ลงทะเบียน"
+
+msgid "Edit membership data"
+msgstr "แก้ไขข้อมูลสมาชิก"
+
+msgid "When you change amount, please click 'Edit' before you finish your process."
+msgstr "หลังจากแก้ไขข้อมูล กรุณากดปุ่ม\"อัพเดท\""
+
+msgid "membership number"
+msgstr "หมายเลขสมาชิก"
+
+msgid "Rank"
+msgstr "Rank"
+
+msgid "name"
+msgstr "ชื่อ"
+
+msgid "current point"
+msgstr "คะแนนสะสม"
+
+msgid "Strated date"
+msgstr "วันที่เริ่ม"
+
+msgid "There is no purchase history for this moment."
+msgstr "ยังไม่มีประวัติการสั่งซื้อสินค้า"
+
+msgid "Purchase history"
+msgstr "ประวัติการสั่งซื้อสินค้า"
+
+msgid "Purchase date"
+msgstr "วันที่ทำการสังซื้อสินค้า"
+
+msgid "Purchase price"
+msgstr "ยอดการสั่งซื้อสินค้า"
+
+msgid "Acquired points"
+msgstr "คะแนนสะสมที่จะได้"
+
+msgid "e-mail"
+msgstr "email"
+
+msgid "'Are you sure of deleting your membership number ' + member_id + ' ?'"
+msgstr "'ยืนยังลบหมายเลขสมาชิก ' + member_id + ' ?'"
+
+msgid "search fields"
+msgstr "search fields"
+
+msgid "key words"
+msgstr "key words"
+
+msgid "Transfer"
+msgstr "หมายเลขบัญชีที่ให้ชำระ"
+
+msgid "transfer statement"
+msgstr "สถานะในการชำระเงิน"
+
+msgid "close"
+msgstr "ปิด"
+
+msgid "Mail for Shipping"
+msgstr "mail แจ้งการจัดส่งสินค้า"
+
+msgid "Mail for confirmation of order"
+msgstr "mail แจ้งยืนยังการสั่งซื้อสินค้า"
+
+msgid "Mail for confiemation of change"
+msgstr "mail แจ้งยืนยังการแก้ไขข้อมูลในการสั่งซื้อสินค้า"
+
+msgid "Mail for confirmation of transter"
+msgstr "mail แจ้งยืนยังได้รับการชำระเงิน"
+
+msgid "estimate mail"
+msgstr "mail ใบเสนอราคา"
+
+msgid "Cancelling mail"
+msgstr "mail แจ้งยกเลิก"
+
+msgid "Other mail"
+msgstr "mail อื่นๆ"
+
+msgid "E-mail has been sent."
+msgstr "ส่ง mail เสร็จเรียบร้อย"
+
+msgid "Failure in sending e-mails."
+msgstr "ส่ง mail ไม่สำเร็จ"
+
+msgid "Are you sure of deleting items?"
+msgstr "ยืนยังลบสินค้า"
+
+msgid "Edit order data"
+msgstr "แก้ไขข้อมูลการสั่งซื้อ"
+
+msgid "show the mail/print field"
+msgstr "แสดงพื้นที่ email / พิมพ์"
+
+msgid "print out the estimate"
+msgstr "พิมพ์ใบเสนอราคา"
+
+msgid "print the invoice"
+msgstr "พิมพ์ใบแจ้งหนี้"
+
+msgid "When there is any change, please press the 'change decision' before you send or print."
+msgstr "*กดปุ่มอัพเดทก่อนพิมพ์ หรือส่ง"
+
+msgid "order details"
+msgstr "รายละเอียดในการสั่งซื้อ"
+
+msgid "order date"
+msgstr "วันที่สั่งซื้อ"
+
+msgid "shpping date"
+msgstr "วันที่จัดส่งสินค้า"
+
+msgid "Date Modified"
+msgstr "วันที่แก้ไขล่าสุด"
+
+msgid "shipping address"
+msgstr "ที่อยู่ในการจัดส่ง"
+
+msgid "delivery time"
+msgstr "กำหนดเวลาจัดส่งสินค้า"
+
+msgid "Shipping date"
+msgstr "กำหนดวันที่จัดส่งสินค้า"
+
+msgid "Not notified"
+msgstr "ไม่แจ้งเตือน"
+
+msgid "The correspondence situation"
+msgstr "สถานะ"
+
+msgid "normal sale"
+msgstr "ลดปกติ"
+
+msgid "Sale Campaign"
+msgstr "ลดโดย Campaign"
+
+msgid "% Discount"
+msgstr "ลด%"
+
+msgid "Notes"
+msgstr "หมายเหตุ"
+
+msgid "Current stock"
+msgstr "สต๊อกล่าสุด"
+
+msgid "Add item"
+msgstr "เพิ่มสินค้า"
+
+msgid "granted points"
+msgstr "คะแนนสะสมที่ให้"
+
+msgid "Discounted amount should be shown by -(Minus)"
+msgstr "*ส่วนลดแสดงโดย - (ลบ)"
+
+msgid "It will be not caluculated automatically."
+msgstr "*ไม่ได้คำนวณโดยอัตโนมัติ"
+
+msgid "Enter the item code, then press 'Obtain'"
+msgstr "พิมพ์รหัสสินค้า และกดปุ่ม\"ขอ\""
+
+msgid "Obtain"
+msgstr "ขอ"
+
+msgid "Check the mail and click 'send'"
+msgstr "กรูณายืนยังเนื้อหาใน mail และกดปุ่ม \"ส่ง\""
+
+msgid "Client name"
+msgstr "ชื่อลูกค้า"
+
+msgid "subject"
+msgstr "หัวข้อ"
+
+msgid "send"
+msgstr "ส่ง"
+
+msgid "date"
+msgstr "วันที่"
+
+msgid "Region"
+msgstr "จังหวัด"
+
+msgid "Processing"
+msgstr "สถานะ"
+
+msgid "Choose the data."
+msgstr "เลือก data หน่อย"
+
+msgid "'Transfer status of the items which you have checked will be changed in to ' + %s + '. %sDo you agree?'"
+msgstr "'ยืนยังว่าเปลี่ยนสถานะการชำระเงินที่เลือกทั้งหมดเป็น「' + %s + '」'"
+
+msgid "'Data status which you have cheked will be changed in to ' + %s + '. %sDo you agree?'"
+msgstr "'ยืนยังว่าเปลี่ยนสถานะข้อมูลที่เลือกทั้งหมดเป็น「' + %s + '」'"
+
+msgid "Are you sure of deleting all the checked data in bulk?"
+msgstr "ยืนยังว่าลบข้อมลที่เลือกทั้งหมด"
+
+msgid "'Are you sure of deleting an order number ' + order_id + ' ?'"
+msgstr "'ยืนยังว่าลบการสั่งซื้อสินค้าที่รหัสการสั่งซื้สินค้า ' + order_id + ' ?'"
+
+msgid "Oparation in bulk"
+msgstr "Oparation in bulk"
+
+msgid "Edit the receiving money status"
+msgstr "แก้ไขสถานะการชำระเงิน"
+
+msgid "Edit of status process"
+msgstr "แก้ไขข้อมูล"
+
+msgid "Delete in bulk"
+msgstr "ลบทั้งหมด"
+
+msgid "start"
+msgstr "เริ่ม"
+
+msgid "Thank you for choosing '%s' we send you following estimate. "
+msgstr "ขอขอบคุณมากที่ใช้บริการของ %s นะคะเรามีความยินดีขอเสนอราคา และรายละเอียดดังต่อไปนี้"
+
+msgid "Valid:7days"
+msgstr "Valid:7days"
+
+msgid "Invoices"
+msgstr "ใบแจ้งหนี้"
+
+msgid "Thak you for choosing '%s'. We deliver your items as following."
+msgstr "ขอขอบคุณมากที่ใช้บริการของ %s เราจัดส่งสินค้าตามรายการดังต่อไปนี้"
+
+msgid "date of receiving the order"
+msgstr "วันที่ได้รับการสั่งซื้อ"
+
+msgid "payment division"
+msgstr "payment division - 支払区分"
+
+msgid "Mj, Y"
+msgstr "Mj, Y"
+
+msgid "Edit item"
+msgstr "แก้ไขข้อมูลสินค้า"
+
+msgid "display status"
+msgstr "สถานะโพสต์"
+
+msgid "no items are selected"
+msgstr "เลือกสินค้าหน่อย"
+
+msgid "'Stock status of items which you have checked will be changed into ' + %s + ' Stock status of each SKU will be all shown as ' + %s + ' Do you agree with this oparation?'"
+msgstr "'ยืนยังว่าแก้ไขข้อมูลสต๊อกเป็น' + %s + '"
+
+msgid "'Are you sure of changing all the items you have checked in to ' + %s + ' ?'"
+msgstr "'ยืนยังว่าแก้ไขข้อมูลที่เลือกทั้งหมดเป็น「' + %s + '」'"
+
+msgid "'Are you sure of deleting all the items you have checked in bulk?'"
+msgstr "'ยืนยังว่าลบสินค้าที่เลือกทั้งหมด'"
+
+msgid "'Are you sure of deleting the item, item code ' + item_id + ' ?'"
+msgstr "'ลบสินค้าที่รหัสสินค้า ' + item_id + ''"
+
+msgid "'Are you sure of deleting the delivery method ' + delname + ' ?'"
+msgstr "'ยืนยังว่าลบวิธีการจัดส่งสินค้า「'+delname+'」'"
+
+msgid "Item list"
+msgstr "รายการสินค้า"
+
+msgid "items without stock"
+msgstr "สินค้าที่ไม่มีสต๊อก"
+
+msgid "Changes in stock status"
+msgstr "แก้ไขสถานะในการสต๊อก"
+
+msgid "Edit the display status"
+msgstr "แก้ไขสถานะโพสต์"
+
+msgid "edit"
+msgstr "แก้ไข"
+
+msgid "now loading"
+msgstr "กำลังโหลด"
+
+msgid "top page"
+msgstr "หน้าแรก"
+
+msgid "New items"
+msgstr "สินค้าใหม่"
+
+msgid "Special price"
+msgstr "ราคาพิเศษ"
+
+msgid "Membership information"
+msgstr "ข้อมูลสมาชิก"
+
+msgid "Proceed to checkout"
+msgstr "ชำระเงิน"
+
+msgid "Product Details"
+msgstr "ดูรายละเอียด"
+
+msgid "Visit/Contact Us"
+msgstr "ติดต่อ / สอบถาม"
+
+msgid "Item Category"
+msgstr "Item Category"
+
+msgid "artist"
+msgstr "artist"
+
+msgid "keyword search"
+msgstr "keyword search"
+
+msgid "best seller"
+msgstr "best seller"
+
+msgid "diary"
+msgstr "diary"
+
+msgid "Information"
+msgstr "Information"
+
+msgid "Product Search"
+msgstr "Product Search"
+
+msgid "Categories: AND Search"
+msgstr "Categories: AND Search"
+
+msgid "Search"
+msgstr "เริ่มค้นหา"
+
+msgid "Cancellation"
+msgstr "ยกเลิก"
+
+msgid "Search results"
+msgstr "Search results"
+
+msgid "Search Results"
+msgstr "Search results"
+
+msgid "&laquo; Previous page"
+msgstr "&laquo; หน้าก่อนหน้า"
+
+msgid "next page &raquo;"
+msgstr "หน้าถัดไป &raquo;"
+
+msgid "Next article &raquo;"
+msgstr "หน้าถัดไป &raquo;"
+
+msgid "&laquo; Previous article"
+msgstr "&laquo; หน้าก่อนหน้า"
+
+msgid "Cart"
+msgstr "ตะกร้า"
+
+msgid "Customer Information"
+msgstr "ข้อมูลของท่าน"
+
+msgid "Shipping / Payment options"
+msgstr "การจัดส่งสินค้า / การชำระเงิน"
+
+msgid "Confirmation"
+msgstr "ตรวจสอบข้อมูล"
+
+msgid "continue shopping"
+msgstr "ซื้อสินค้าเพิ่ม"
+
+msgid "Enter customer information as mentioned above."
+msgstr "ยืนยังว่าลงทะเบียนข้อมลตามด้านบน"
+
+msgid "It has been sent succesfully."
+msgstr "ส่งเรียบร้อยแล้ว"
+
+msgid "Thank you for shopping."
+msgstr "ขอบคุณที่ใช้บริการค่ะ"
+
+msgid "If you have any questions, please contact us by 'Contact'."
+msgstr "หากมีข้อสนสัย กรูณาติดต่อเราจากติดต่อ / สอบถาม"
+
+msgid "Back to the top page."
+msgstr "กลับไปหน้าแรก"
+
+msgid "Back to payment method page."
+msgstr "กลับไปหน้าวิธีการชำระเงิน"
+
+msgid "Shipping address information"
+msgstr "ข้อมูลที่จะให้จัดส่งสินค้า"
+
+msgid "Others"
+msgstr "อื่น"
+
+msgid "Sipping/Payment Option"
+msgstr "Option วิธีการจัดส่งสินค้า / วิธีการชำระเงิน"
+
+msgid "same as customer information"
+msgstr "ที่เดียวกันกับข้อมูลของท่าน"
+
+msgid "Chose another shipping address."
+msgstr "ใช้ที่อยู่อื่น"
+
+msgid "Confirm your order."
+msgstr "ยืนยังการสั่งซื้อสินค้าตามด้านบน"
+
+msgid "Your order has not been completed"
+msgstr "การสั่งซื้สินค้าไม่สำเร็จ"
+
+msgid "Thank you for contacting us. Please wait for our answer to your questions."
+msgstr "ขอบคุณมากที่ติดต่อเรา กรุณารอสักครู่"
+
+msgid "password"
+msgstr "รหัสผ่าน"
+
+msgid "Password (confirm)"
+msgstr "รหัสผ่าน (ยืนยัง)"
+
+msgid "Register"
+msgstr "ลงทะเบียน"
+
+msgid "Thank you in new membership."
+msgstr "ขอบคุณที่สมัครสมาชิก"
+
+msgid "Membership information has been updated."
+msgstr "อัพเดทข้อมูลสมาชิกให้ล่าสุดเรียบร้อยแล้ว"
+
+msgid "I transmitted an email."
+msgstr "ส่ง mail เรียบร้อยแล้ว"
+
+msgid "Chenge th epassword according to the e-mail."
+msgstr "เปลี่ยนรหัสผ่านโดยปฏิบัติตาม email ที่ได้รับ"
+
+msgid "Password has been changed."
+msgstr "เปลี่ยนรหัสเสร็จเรียบร้อยแล้ว"
+
+msgid "to vist membership information page"
+msgstr "หน้าข้อมูสมาชิก"
+
+msgid "Log-in for members"
+msgstr "Log in สำหรับสมาชิก"
+
+msgid "New enrollment for membership."
+msgstr "สมัครสมาชิกใหม่"
+
+msgid "Membership Registration"
+msgstr "สมัครสมาชิก"
+
+msgid "Obtain new password"
+msgstr "ขอรหัสผ่านใหม่"
+
+msgid "Registered membership information"
+msgstr "ข้อมูลสมาชิก"
+
+msgid "member number"
+msgstr "หมายเลขสมาชิก"
+
+msgid "Leave it blank in case of no change."
+msgstr "ถ้าไม่ต้องการเปลี่ยนปล่อยให้ว่าง"
+
+msgid "update it"
+msgstr "อัพเดท"
+
+msgid "New enrollment form"
+msgstr "ฟอร์มสมัครสมาชิกใหม่"
+
+msgid "All your personal information  will be protected and handled with carefull attention."
+msgstr "เรายืนยังว่าข้อมูลส่วนตัวข้องท่านเก็บให้ดี และไม่ให้รั่วไปยังข้างนอก"
+
+msgid "Your information is entrusted to us for the purpose of providing information and respond to your requests, but to be used for any other purpose. More information, please visit our Privacy  Notice."
+msgstr "เรายืนยังว่าเราไม่นำข้อม,ส่วนตัวของท่านไปใช้ที่อื่น หรือเปิดให้องค์กรใดๆ รายละเอียดกรุณาดู\"Privacy Policy\""
+
+msgid "The items marked with *, are mandatory. Please complete."
+msgstr "*จำเป็นต้องใส่ข้อมูล"
+
+msgid "E-mail address (for verification)"
+msgstr "email (ยืนยัง)"
+
+msgid "transmit a message"
+msgstr "ส่งข้อมูล"
+
+msgid "list"
+msgstr "รายการ"
+
+msgid "tag"
+msgstr "tag"
+
+msgid "Next item"
+msgstr "สินค้าถัดไป"
+
+msgid "previous item"
+msgstr "สินค้าก่อนหน้า"
+
+msgid "～in not yet registered"
+msgstr "ยงไม่มีข้อมลของ ～"
+
+msgid "Data for this date is not yet registered."
+msgstr "ยงไม่มีข้อมลของ ณ วันนี้"
+
+msgid "Data by ~is not yet registered."
+msgstr "ยงไม่มีข้อมลของ ～"
+
+msgid "next article"
+msgstr "พสต์ถัดไป"
+
+msgid "Previous aorticle"
+msgstr "โพสต์ก่อนหน้า"
+
+msgid "selling price"
+msgstr "ราคาพิเศษ"
+
+msgid "stock"
+msgstr "จำนวนสต๊อก"
+
+msgid "stock status"
+msgstr "สถานะในการสต๊อก"
+
+msgid "Add to a cart"
+msgstr "หยิบใส่ตะกร้า"
+
+msgid "to the cart"
+msgstr "หยิบสินค้าไปตกร้า"
+
+msgid "In the cart"
+msgstr "สินค้าในตะกร้า"
+
+msgid "see the details"
+msgstr "ดูรายละเอียด"
+
+msgid "page title"
+msgstr "หัวข้อ"
+
+msgid "Cart Page Setting"
+msgstr "ตั้งค่าหน้าตะกร้า"
+
+msgid "Explanation in a Cart page"
+msgstr "คำอธิบายที่ใส่ในหน้าตะกล้า"
+
+msgid "You can set additional explanation to insert in a cart page."
+msgstr "สามารถตั้งคำอธิบายที่ใส่ในหน้าตะกล้าได้"
+
+msgid "Explanation in a Customer Info page"
+msgstr "คำอธิบายที่ใส่ในหน้าข้อมูลลูกค้า"
+
+msgid "You can set additional explanation to insert in a customer information page."
+msgstr "สามารถตั้งคำอธิบายที่ใส่ในหน้าข้อมูลลูกค้าได้"
+
+msgid "Explanation in Delivery and Payment method page"
+msgstr "คำอธิบายที่ใส่ในหน้าวิธีการจัดส่งสินค้า / การชำระเงิน"
+
+msgid "You can set additional explanation to insert in a delivery and a payment method page."
+msgstr "สามารถตั้งคำอธิบายที่ใส่ในหน้าวิธีการจัดส่งสินค้า / การชำระเงินได้"
+
+msgid "Explanation in a Confirm page"
+msgstr "คำอธิบายที่ใส่ในหน้ายืนยังข้อมูล"
+
+msgid "You can set additional explanation to insert in a confirm page."
+msgstr "สามารถตั้งคำอธิบายที่ใส่ในหน้ายืนยังข้อมูลได้"
+
+msgid "Explanation in a Completion page"
+msgstr "คำอธิบายที่ใส่ในหน้า complete"
+
+msgid "You can set additional explanation to insert in a completion page."
+msgstr "สามารถตั้งคำอธิบายที่ใส่ในหน้า complete ได้"
+
+msgid "Explanation in Member page"
+msgstr "คำอธิบายสำหรับหน้าสมาชิก"
+
+msgid "Member Page Setting"
+msgstr "ตั้งค่าสมาชิก"
+
+msgid "Login Page"
+msgstr "หน้า Login"
+
+msgid "header"
+msgstr "header"
+
+msgid "footer"
+msgstr "footer"
+
+msgid "1.Cart"
+msgstr "1. ตะกร้า"
+
+msgid "2.Customer Info"
+msgstr "2. ข้อมูลของท่าน"
+
+msgid "3.Deli. & Pay."
+msgstr "3. การจัดส่งสินค้า / การชำระเงิน"
+
+msgid "4.Confirm"
+msgstr "4. ตรวจสอบข้อมูล"
+
+msgid " Next "
+msgstr "หน้าถัดไป"
+
+msgid "Quantity renewal"
+msgstr "อัพเดทจำนวน"
+
+msgid "** Article order contents **"
+msgstr "** รายการสินค้าที่สั่งซื้อ **"
+
+msgid "Buyer"
+msgstr "ผู้สั่งซื้อ"
+
+msgid "** Others / a demand **"
+msgstr "**อื่น**"
+
+msgid "I will inform it of shipment completion by an email."
+msgstr "เราจะแจ้งการจัดส่งสินค้าเมื่อจัดส่งสินค้าเสร็จเรียบร้อยแล้ว"
+
+msgid "Please inform it of any questions from [an inquiry]."
+msgstr "หากมีอะไรสนสัยกรุณาติดต่อจาก \"ติดต่อ / สอบถาม\" ด้วยคะ"
+
+msgid "** An inquiry **"
+msgstr "**สอบถาม**"
+
+msgid "An inquiry email"
+msgstr "email สอบถาม"
+
+msgid "Change password"
+msgstr "เปลี่ยนรหัสผ่าน"
+
+msgid "The new password acquisition"
+msgstr "ขอรหัสผ่านใหม่"
+
+msgid "Please, click the following URL, and please change a password."
+msgstr "คลิก URL ด้านล่างเพื่อทำการเปลี่ยนรหัสผ่าน"
+
+msgid "If you have not requested this email please kindly ignore and delete it."
+msgstr "หากไม่รู้จัก email นี้กรุณาทิ้งด้วยคะ"
+
+msgid "Error: I was not able to transmit an email."
+msgstr "error: ไม่สามารถส่ง mail"
+
+msgid "Explanation in a Login page"
+msgstr "คำอธิบายที่ใส่ในหน้า Login"
+
+msgid "You can set additional explanation to insert in a login page."
+msgstr "สามารถตั้งคำอธิบายที่ใส่ในหน้า Login"
+
+msgid "Explanation in a New Member page"
+msgstr "คำอธิบายที่ใส่ในหน้าสมัครสมาชิกใหม่"
+
+msgid "You can set additional explanation to insert in a new member page."
+msgstr "สามารถตั้งคำอธิบายที่ใส่ในหน้าสมัครสมาชิกใหม่ได้"
+
+msgid "Explanation in New Password page"
+msgstr "คำอธิบายที่ใส่ในหน้าขอรหัสผ่านใหม่"
+
+msgid "You can set additional explanation to insert in a new password page."
+msgstr "สามารถคำอธิบายที่ใส่ในหน้าขอรหัสผ่านใหม่ได้"
+
+msgid "Explanation in a Change Password page"
+msgstr "คำอธิบายที่ใส่ในหน้าเปลี่ยนรหัสผ่าน"
+
+msgid "You can set additional explanation to insert in a change password page."
+msgstr "สามารถคำอธิบายที่ใส่ในหน้าเปลี่ยนรหัสผ่านได้"
+
+msgid "Explanation in a Member Information page"
+msgstr "ตำอธิบายที่ใส่ในหน้าข้อมูลสมาชิก"
+
+msgid "You can set additional explanation to insert in a member information page."
+msgstr "สามารถใส่คำอธิบายที่ใส่หน้าข้อมูลสมาชิกได้"
+
+msgid "Did you forget your password?"
+msgstr "ลืมรหัสผ่าน"
+
+msgid "memorize login information"
+msgstr "ให้เก็บข้อมูล Log in"
+
+msgid "To member information editing"
+msgstr "แก้ไขขอมูลสมาชิก≫"
+
+msgid "Member information editing"
+msgstr "แก้ไขขอมูลสมาชิก"
+
+msgid "An article category keyword search"
+msgstr "keyword search รวม category"
+
+msgid "The representation supplier settlement"
+msgstr "ชำระผ่านบริษัท payment"
+
+msgid "Payment in installments"
+msgstr "ผ่อนชำระ"
+
+msgid "Normal business"
+msgstr "เปิดทำการปกติ"
+
+msgid "I send a reply email to a visitor. I ask in a few minutes to be able to have you refer in there being the fear that e-mail address is different again when the email from this shop does not arrive."
+msgstr "เราส่ง mail กลับไปให้ท่านเรียบร้อยแล้ว หากไม่ได้รับ email จากเรา กรุณาติดต่อสอบถามเราอีกทีหน่อยนะคะ"
+
+msgid "<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s"
+msgstr "มากกว่า%4$s%3$s<span class=%6$s>%5$s%1$s</span>%2$sต่อ 1%3$s"
+
+msgid "<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s"
+msgstr "กรณีที่%4$s～%5$s%3$s <span class=%7$s>%6$s%1$s</span>%2$sต่อ1%3$sあたり"
+
+msgid "$"
+msgstr "฿"
+
+msgid "cases"
+msgstr "รายการ"
+
+msgid "Completion"
+msgstr "เสร็จเรียบร้อย"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "'AND' search by categories"
+msgstr "'AND' search by categories"
+
+msgid "'This article is limited by '+checknum+' at a time.'"
+msgstr "'สินค้ารายการนี้สามารดสั่งซื้อได้'+checknum+'ชิ้นต่อคน'"
+
+msgid "'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'"
+msgstr "รหัสสินค้า(i+1) + 'สามารถซื้อได้'+checknum+'ชิ้นต่อคน'"
+
+msgid "'Stock is remainder '+checknum+'.'"
+msgstr "'สินค้าที่อยู่ในสต๊อกเหลือ'+checknum+''"
+
+msgid "'Stock of No.' + (i+1) + ' item is remainder '+checknum+'.'"
+msgstr "'สินค้าหมายเลข (i+1) + 'เหลือ'+checknum+'"
+
+msgid "* A shipment due date is a day to ship an article, and it's not the arrival day."
+msgstr "*วันที่จัดส่งสินค้าหมายความว่าเป็นวันที่ทำการจัดส่งสินค้า ไม่ใช่วันที่ถึงลูกค้านะคะ"
+
+msgid "The file was not uploaded."
+msgstr "อัปโหลดไฟล์ไม่สำเร็จ"
+
+msgid "The file is not supported."
+msgstr "ไม่สามารถอัปโหลดนามสกุลของไฟล์นี้ได้"
+
+msgid "The log file was not prepared for."
+msgstr "เตรียม lof file ไท่สำเร็จ"
+
+msgid "A file does not open."
+msgstr "ไม่สามารถเปิดไฟล์ได้"
+
+msgid "The number of the columns is abnormal."
+msgstr "The number of the columns is not correct."
+
+msgid "An item cord is non-input."
+msgstr "กรุณาใส่รหัสสินค้า"
+
+msgid "An item name is non-input."
+msgstr "กรุณาใส่ชื่อสินค้า"
+
+msgid "A value of the purchase limit number is abnormal."
+msgstr "จำนวนสินค้าที่สามารถสั่งซื้อได้ไม่ถูกต้อง"
+
+msgid "A value of the point rate is abnormal."
+msgstr "อัตราที่จะได้รับคะแนนสะสมไม่ถุกต้อง"
+
+msgid "umerical value is abnormality."
+msgstr "กรุณาใส่ตัวเลขที่เป้นจำนวนเต็ม"
+
+msgid "rate is abnormal."
+msgstr "อัตราไม่ถูกต้อง"
+
+msgid "A value of the shipment day is abnormal."
+msgstr "ช่อง \"วันที่จะจัดส่งสินค้า\" ไม่ถูกต้อง"
+
+msgid "A value of the postage individual charging is abnormal."
+msgstr "ช่อง \"ค่าขนส่ง\" ไม่ถูกต้อง"
+
+msgid "A value of the display status is abnormal."
+msgstr "ช่อง \"display status\" ไม่ถูกต้อง"
+
+msgid "A value of the schedule is abnormal."
+msgstr "ช่อง \"schedule\" ไม่ถูกต้อง"
+
+msgid "A category is non-input."
+msgstr "กรุณาใส่ข้อมูลในช่อง category"
+
+msgid "A SKU cord is non-input."
+msgstr "กรุณาใส่รหัส SKU"
+
+msgid "A SKU cord repeats."
+msgstr "รหัส SKU ซ้ำ"
+
+msgid "A value of the sale price is abnormal."
+msgstr "ราคาสินค้าไม่ถูกต้อง"
+
+msgid "A value of the stock status is abnormal."
+msgstr "สต๊อกไม่ถูกต้อง"
+
+msgid "The value of the duties pack application is abnormal."
+msgstr "สต๊อกไม่ถูกต้อง"
+
+msgid "Option name of No.%s option is non-input."
+msgstr "กรูณาใส่ชื่อ Option No.%s option"
+
+msgid "Option-entry-field of No.%s option is abnormal."
+msgstr "กรุณาใส่ Option-entry-field No.%s"
+
+msgid "Option-required-item of No.%s option is abnormal."
+msgstr "Option-required-item of No.%s ไม่ถูกต้อง"
+
+msgid "Option-select of No.%s option is non-input."
+msgstr "กรุณาใส่ Option-select of No.%s"
+
+msgid "The data were not registered with a database."
+msgstr "The data were not registered with a database."
+
+msgid "%2$s of %1$s lines registration completion, %3$s lines error."
+msgstr "%2$s ของบรรทัดที่ %1$s ซ้ำ %3$s ไม่ถูกต้อง"
+
+msgid "SMTP server host"
+msgstr "SMTP server host"
+
+msgid "Host name"
+msgstr "Host name"
+
+msgid "This is a field setting the host name of a server for email transmission of a message. When the transmission of a message is not possible in localhost, a SMTP server is necessary."
+msgstr "This is a field setting the host name of a server for email transmission of a message. When the transmission of a message is not possible in localhost, a SMTP server is necessary."
+
+msgid "Thanks email(automatic transmission)"
+msgstr "Thank you mail (ส่งจากระบบโดยอัตโนมัติ)"
+
+msgid "Order email(automatic transmission)"
+msgstr "email การแจ้งได้รับการสั่งซื้ออสินค้า (ส่งจากระบบโดยอัตโนมัติ)"
+
+msgid "Inquiry receptionist email(automatic transmission)"
+msgstr "email การแจ้งยืนยังได้รับการสอบถาม (ส่งจากระบบโดยอัตโนมัติ)"
+
+msgid "Title"
+msgstr "หัวข้อ"
+
+msgid "This is an email transmitting a message for a visitor at the time of an order."
+msgstr "email ที่ส่งให้ลูกค้าที่ทำการสั่งซื้อสินค้า ส่งจากระบบโดยอัตโนมัติ"
+
+msgid "This is an email transmitting a message for owner of shop(%s)."
+msgstr "email ที่ส่งให้ (%s) ตอนเมื่อได้รับการสั่งซื้อสินค้าจากลูกค้า"
+
+msgid "This is an email transmitted manual operation to than a management screen, when the shipment of the article was completed."
+msgstr "email ที่ส่งให้ลูกค้าตอนเมื่อได้ทำการจัดส่งสินค้าเสร็จเรียบร้อยแล้ว (ส่งจากหน้า admin)"
+
+msgid "This is an email transmitted manual operation to than a management screen, when you registered a new order."
+msgstr "email ที่ส่งให้ลูกค้าเพื่อยืนยังการสังซื้อสินค้า (ส่งจากหน้า admin)"
+
+msgid "This is an email transmitted manual operation to than a management screen, when you  registered an estimate."
+msgstr "email ที่ส่งให้ลูกค้าเมื่อทำใบเสนอราคาเสร็จเรียบร้อย (ส่งจากหน้า admin)"
+
+msgid "The district where sale is possible"
+msgstr "เขตที่สามารถขายได้"
+
+msgid "One line one by one."
+msgstr "1 บรรทัดต่อ 1 สินค้า"
+
+msgid "Not display an article in blog"
+msgstr "Not display an article in blog"
+
+msgid "In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item."
+msgstr "In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item."
+
+msgid "rel attribute"
+msgstr "rel attribute"
+
+msgid "In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin."
+msgstr "In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin."
+
+msgid "compound category sort item"
+msgstr "compound category sort item"
+
+msgid "category ID"
+msgstr "category ID"
+
+msgid "category name"
+msgstr "category name"
+
+msgid "In a category to display in a compound category search page, you can choose an object to sort."
+msgstr "In a category to display in a compound category search page, you can choose an object to sort."
+
+msgid "compound category sort order"
+msgstr "compound category sort order"
+
+msgid "Ascending"
+msgstr "จากน้อยไปมาก"
+
+msgid "Descendin"
+msgstr "จากมากไปน้อย"
+
+msgid "In a category to display in a compound category search page, you can choose sort order."
+msgstr "In a category to display in a compound category search page, you can choose sort order."
+
+msgid "settlement module path"
+msgstr "module path ของบริการการชำระเงิน"
+
+msgid "This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder."
+msgstr "ตั้ง module path ของบริการการชำระเงิน ต้องตั้งหใเม่ออัพเดท"
+
+msgid "The hierarchy category of the item"
+msgstr "The hierarchy category of the item"
+
+msgid "Postage individual charging"
+msgstr "คิดค่าขนส่งแต่ละสินค้า"
+
+msgid "Options for EX-plugin"
+msgstr "EX-plugin options"
+
+msgid "Push 'change decision' button, to be settled with an order number."
+msgstr "กด「อัพเดท」เพื่อตั้งรหัสการสั่งซื้อสินค้า"
+
+msgid "Order number"
+msgstr "รหัสการสั่งซื้อ"
+
+msgid "Status"
+msgstr "สถานะ"
+
+msgid "estimate order"
+msgstr "ได้รับการขอใบเสนอราคา"
+
+msgid "Collective registration item"
+msgstr "商品一括登録"
+
+msgid "Upload prescribed CSV or an Excel file and perform the collective registration of the article.<br />Please choose a file, and push the registration start."
+msgstr "規定のCSVまたはエクセルファイルをアップロードして商品の一括登録を行います。<br />ファイルを選択して登録開始を押してください。"
+
+msgid "Indication is updated after upload completion."
+msgstr "アップロード完了後に表示が更新されます。"
+
+msgid "Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload."
+msgstr "登録状況はログ（usc-e-shop/logs/itemcsv_log.txt）をご覧下さい。<br />ログはアップロードごとに上書き更新されます。"
+
+msgid "IPN Start"
+msgstr "IPN Start"
+
+msgid "IPN Connection Error"
+msgstr "IPN Connection Error"
+
+msgid "PDT Refusal"
+msgstr "PDT Refusal"
+
+msgid "IPN Refusal"
+msgstr "IPN Refusal"
+
+msgid "PayPal gives back 'FAIL'. Please confirm setting."
+msgstr "PayPalが「FAIL」を返しています。設定を確認してください。"
+
+msgid "<p>The settlement is not completed.<br />Please remit the price from the PayPal Maia count page.After receipt of money confirmation, I will prepare for the article shipment.</p>"
+msgstr "<p>お取引は完了しておりません。<br />PayPalマイアカウント･ページから代金をご送金ください。ご入金確認後、商品発送の準備をさせていただきます。</p>"
+
+msgid "Checkout"
+msgstr "ทำการสั่งซื้อตามข้อมูลนี้"
+
+msgid "and others"
+msgstr "และ อื่นๆ"
+
+msgid "The member please enter at here."
+msgstr "สำหรับสมาชิก▼"
+
+msgid "The nonmember please enter at here."
+msgstr "สำหรับลูกค้าที่ไม่เป็นสมาชิก▼"
+
+msgid "When you enroll newly, please fill it out."
+msgstr "新規会員登録する場合にご記入ください。"
+
+msgid "To the next while enrolling"
+msgstr "会員登録しながら次へ"
+
+msgid "Revise member information, and to next"
+msgstr "会員情報を修正して次へ"
+
+msgid "Maintaining now"
+msgstr "กำลังปรับปรุงอยู่"
+
+msgid "Please wait for a while."
+msgstr "โปรดรอสักครู่"
+
+msgid "Please appoint an option."
+msgstr "オプションを指定してください。"
+
+msgid "An article concerned"
+msgstr "関連商品"
+
+msgid "display of icon"
+msgstr "アイコンの表示"
+
+msgid "number of indication"
+msgstr "表示数"
+
+msgid "automatic count"
+msgstr "自動集計"
+
+msgid "Indication"
+msgstr "表示する"
+
+msgid "Non-indication"
+msgstr "表示しない"
+
+msgid "automatic list"
+msgstr "集計リストを表示"
+
+msgid "handwriting list"
+msgstr "手書きリストを表示"
+
+msgid "Please input an article cord."
+msgstr "商品コードを入力してください"
+
+msgid "Calendar"
+msgstr "ปฎิทิน"
+
+msgid "The setting of the business day, In a 'business day setting' page of the admin screen."
+msgstr "営業日の設定はWelcartショップの「営業日設定」で行います"
+
+msgid "parent category(slug)"
+msgstr "parent category(slug)"
+
+msgid "category slug"
+msgstr "category slug"
+
+msgid "Pssword Lost and Found"
+msgstr "パスワード紛失取り扱い"
+
+msgid "Lost your password?"
+msgstr "ถ้าลืมรหัสผ่าน"
+
+msgid "Remember Me"
+msgstr "ログイン情報を記憶"
+
+msgid "Page"
+msgstr "หน้า"
+
+msgid "Page ID(comma separate)"
+msgstr "Page ID(comma separate)"
+
+msgid "Post"
+msgstr "โพสต์"
+
+msgid "The article was not found."
+msgstr "ไม่มีสินค้าที่เหมาะสม"
+
+msgid "No posts found."
+msgstr "ไม่มีโพสต์ที่เหมาะสม"
+
+msgid "make a copy"
+msgstr "make a copy"
+
+msgid "back to item list"
+msgstr "กลับไปดูหน้ารายการสินค้า"
+
+msgid "same as"
+msgstr "ตั้งค่าให้ทั้งหมด"
+
+msgid "Rule of the column for a item name"
+msgstr "ตั้งค่าวิธีแสดงชื่อสินค้า"
+
+msgid "You can appoint indication, non-indication, sort of the item name to show the cart.<br />This rule is applied as brand names such as a cart page, contents confirmation page, a member information purchase history, an email, a written estimate, the statement of delivery."
+msgstr "ตั้งค่าเกี่ยวกับการเรียงลำดับ, แสดง / ไม่แแสดงของข้มูลสินค้า<br />ค่าที่ตั้งไว้ที่นี่จะมีผลต่อหน้าตะกร้า, หน้ายืนยังข้อมูล, หน้าข้อมูลสมาชิก, หน้าประวัติการสั่งซื้อ, mail, ใบเสนอราคา, ใบส่งสินค้า"
+
+msgid "Indication of item name"
+msgstr "แสดงชื่อสินค้า"
+
+msgid "Position of item name"
+msgstr "ลำดับชื่อสินค้า"
+
+msgid "Indication of item code"
+msgstr "แสดงรหัสสินค้า"
+
+msgid "Position of item code"
+msgstr "ลำดับรหัสสินค้า"
+
+msgid "Indication of SKU name"
+msgstr "แสดงชื่อ SKU"
+
+msgid "Position of SKU name"
+msgstr "ลำดับชื่อ SKU"
+
+msgid "Indication of SKU code"
+msgstr "แสดงรหัส SKU"
+
+msgid "Position of SKU code"
+msgstr "ลำดับรหัส SKU"
+
+msgid "WordPress address (SSL)"
+msgstr "WordPress URL (SSL)"
+
+msgid "Blog address (SSL)"
+msgstr "Blog URL (SSL)"
+
+msgid "https://*WordPress address*<br />You can use common use SSL."
+msgstr "https://*WordPress address*<br />You can use common use SSL."
+
+msgid "https://*Blog address*<br />You can use common use SSL."
+msgstr "https://*Blog address*<br />You can use common use SSL."
+
+msgid "Please decide whether you use SSL"
+msgstr "ต้องการใช้ SSL กรุณาติ้กช่อง"
+
+msgid "Shipping name"
+msgstr "วิธีการขนส่ง"
+
+msgid "There is not a choice."
+msgstr "ไม่สามารถกำหนดได้"
+
+msgid "Please input your name."
+msgstr "*กรุณาใส่ชื่อ"
+
+msgid "Please input your e-mail address."
+msgstr "*กรุณาใส่ email"
+
+msgid "E-mail address is not correct."
+msgstr "email ไท่ถูกต้อง"
+
+msgid "Please input contents."
+msgstr "*กรุณาใส่ข้อมูล"
+
+msgid " - "
+msgstr " - "
+
+msgid "* It is necessary to perform the delivery setting before than the item registration."
+msgstr "*จำเป็นต้องตั้งค่าการขนส่งก่อนใส่ข้อมูสินค้า"
+
+msgid "* When you performed the addition and deletion of the delivery method after item registration, please be careful because the update of all items is necessary."
+msgstr "*หากเพิ่ม หรือลบวิธีการขนส่งหลังจากใส่ข้อมูลสินค้า จำเป็นต้องอัพเดททุกรายการ"
+
+msgid "* Please register an item, after you finished delivery setting!"
+msgstr "*ตั้งค่าการขนส่งก่อนใส่ข้อมูลสินค้า"
+
+msgid "[ASC]"
+msgstr "▲"
+
+msgid "[DESC]"
+msgstr "▼"
+
+msgid " * "
+msgstr " * "
+
+msgid "I completed collective operation."
+msgstr "Bulk action is complete"
+
+msgid "ERROR: I was not able to complete collective operation"
+msgstr "error: ไม่สามารถเสร็จงาน"
+
+msgid "*"
+msgstr "*"
+
+msgid "Kitakami Yokohama"
+msgstr "พระโขนง คลองเตย"
+
+msgid "tuhanbuild 4F"
+msgstr "อาคาร EC"
+
+msgid "numeric"
+msgstr "ตัวเลข"
+
+msgid "Header Navigation"
+msgstr "Header Navigation"
+
+msgid "Sidebar Navigation"
+msgstr "Sidebar Navigation"
+
+msgid "Footer Navigation"
+msgstr "Footer Navigation"
+
+msgid "Please be settled for a fee in spite of Update."
+msgstr "หลังจากตั้งค่าทำเนียม กดปุ่มอัพเดทด้วย"
+
+msgid "Type of the fee"
+msgstr "แบบค่าทำเนียม"
+
+msgid "Fee"
+msgstr "ค่าทำเนียม"
+
+msgid "A purchase amount"
+msgstr "ยอดการสั่งซื้อ"
+
+msgid "Fixation C.O.D."
+msgstr "FIX"
+
+msgid "Variable C.O.D."
+msgstr "ไม่ FIX"
+
+msgid "Add row"
+msgstr "เพิ่มบรรทัด"
+
+msgid "Delete row"
+msgstr "ลบบรรทัด"
+
+msgid "C.O.D. Detailed setting"
+msgstr "ตั้งค่ารายละเอียด C.O.D."
+
+msgid "Detailed setting"
+msgstr "ตั้งค่า"
+
+msgid "There is the item where a value is dirty."
+msgstr "มีตัวเลขไม่ถูกต้อง"
+
+msgid "The page_id of the inquiry-form"
+msgstr "page ID ของหน้าติดต่อ / สอบถาม"
+
+msgid "When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry."
+msgstr "หากต้องการใช้ หน้าติดต่อ / สอบถามของ Welcart โดยผ่าน SSL ตั้ง page_id และจำเป็นต้องตั้งค่า SSL ตามด้านบน<br />ไม่จำเป็นต้องผ่าน SSL ก็กรูณาปลอยให้ว่าง<br />กรณีที่ใช้ permanet link, permanet link ของหน้าต้องเป็น usces-inquiry"
+
+msgid "Tags:"
+msgstr "Tags:"
+
+msgid "Comments Closed"
+msgstr "Comments Closed"
+
+msgid "Posted in %s"
+msgstr "Category：%s"
+
+msgid "No Comments &#187;"
+msgstr "No Comments &#187;"
+
+msgid "1 Comment &#187;"
+msgstr "1 Comment &#187;"
+
+msgid "Posts Tagged &#8216;%s&#8217;"
+msgstr "Posts Tagged &#8216;%s&#8217;"
+
+msgid "Archive for %s|Daily archive page"
+msgstr "Archive for %s|Daily archive page"
+
+msgid "Settlement Setting"
+msgstr "ตั้งค่าการชำระเงินทาง internet"
+
+msgid "Custom order field"
+msgstr "Custom order field"
+
+msgid "Custom customer field"
+msgstr "Custom customer field"
+
+msgid "Custom delivery field"
+msgstr "Custom delivery field"
+
+msgid "Custom member field"
+msgstr "Custom member field"
+
+msgid "key name"
+msgstr "key name"
+
+msgid "field name"
+msgstr "field name"
+
+msgid "Add a new custom order field"
+msgstr "Add a new custom order field"
+
+msgid "Add a new custom customer field"
+msgstr "Add a new custom customer field"
+
+msgid "Add a new custom delivery field"
+msgstr "Add a new custom delivery field"
+
+msgid "Add a new custom member field"
+msgstr "Add a new custom member field"
+
+msgid "Add custom order field"
+msgstr "เพิ่ม"
+
+msgid "Add custom customer field"
+msgstr "เพิ่ม"
+
+msgid "Add custom delivery field"
+msgstr "เพิ่ม"
+
+msgid "Add custom member field"
+msgstr "เพิ่ม"
+
+msgid "Radio-button"
+msgstr "Radio-button"
+
+msgid "Check-box"
+msgstr "Check-box"
+
+msgid "Previous the name"
+msgstr "ใส่ก่อนชื่อ"
+
+msgid "After the name"
+msgstr "ใส่หลังชื่อ"
+
+msgid "After the fax"
+msgstr "ใส่หลังเบอร์ FAX"
+
+msgid "You can add an arbitrary field to customer information."
+msgstr "เพิ่มตัวเลือกใหม่ในหน้าข้อมูลลูกค้า"
+
+msgid "You can add an arbitrary field to the page of the payment method."
+msgstr "เพิ่มตัวเลือกใหม่ในหน้าการชำนะเงิน"
+
+msgid "You can add an arbitrary field to delivery information."
+msgstr "เพิ่มตัวเลือกใหม่ในข้อมูลให้จัดส่งสินค้า"
+
+msgid "You can add an arbitrary field to the member information page."
+msgstr "เพิ่มตัวเลือกใหม่ในหน้าข้อมูลสมาชิก"
+
+msgid "cannot use this payment method now."
+msgstr "ไม่สามารถเลือกวิธีการชำระเงินนี้"
+
+msgid "Charging type"
+msgstr "วิธีแบบคิดเงิน"
+
+msgid "Continuation"
+msgstr "คิดเงินแบบต่อเนื่อง"
+
+msgid "Termination"
+msgstr "ยกเลิกการคิดเงินแบบต่อเนื่อง継"
+
+msgid "Setting"
+msgstr "ตั้งค่า"
+
+msgid "Text-area"
+msgstr "Text-area"
+
+msgid "M j, Y"
+msgstr "M j, Y"
+
+msgid "Header Information"
+msgstr "Header Information"
+
+msgid "Product Information"
+msgstr "รายละเอียดสินค้า"
+
+msgid "Order Infomation"
+msgstr "รายละเอียดการสั่งซื้อ"
+
+msgid "Download"
+msgstr "โหลด"
+
+msgid "Download Member List"
+msgstr "โหลดรายการสมาชิก"
+
+msgid "Download Product List"
+msgstr "โหลดรายการการสินค้า"
+
+msgid "Download Order List"
+msgstr "โหลดรายการการสั่งซื้อ"
+
+msgid "delete it"
+msgstr "ลบข้อมูลสมาชิก"
+
+msgid "All information about the member is deleted. Are you all right?"
+msgstr "ยืนยังว่าลบข้อมูลทั้งหมดของสมาชิก"
+
+msgid "This article is limited by %d at a time."
+msgstr "สินค้านี้ซื้อได้ไม่เกิน %d ต่อคน"
+
+msgid "Enter the correct amount for the No.%d item."
+msgstr "จำนวนของสินค้าเบอร์ %d ไม่ถูกต้อง"
+
+msgid "This article is limited by %1$d at a time for the No.%2$d item."
+msgstr "สินค้าเบอร์ %2$d ซื้อได้ไม่เกิน%1$d ต่อคน"
+
+msgid "Stock of No.%1$d item is remainder %2$d."
+msgstr "สต๊อกของสินค้าเบอร์ %1$d เหลือ %2$d"
+
+msgid "Sorry, No.%d item is sold out."
+msgstr "ขอโทษค่ะ สินค้าเบอร์ %d ขายหมดแล้วค่ะ"
+
+msgid "The language of the front-end"
+msgstr "ภาษาของ front-end"
+
+msgid "You can choose the language of the front-end.The language of the admin panel obeys config.php."
+msgstr "สามารถเลือกภาษาของ front-end ได้ แต่หน้า admin ตาม config.php"
+
+msgid "Order of Item SKU"
+msgstr "วิธีเรียงลำดับของสินค้า SKU"
+
+msgid "Order of Item Option"
+msgstr "วิธีเรียงลำดับของสินค้า option"
+
+msgid "You can appoint equal thing order of SKU. When I want to make it registered order, choose 'Registration Order'. The initial state becomes 'SKU cord Order'."
+msgstr "商品SKUの並び順を指定します。登録されている順にしたい場合は「登録順」を選択します。初期状態は「SKUコード順」となっています。"
+
+msgid "You can appoint a common option and the equal thing order of the item option. When You want to make it registered order, choose 'Registration Order'. The initial state becomes 'Optional excellent Order'."
+msgstr "共通オプション及び商品オプションの並び順を指定します。登録されている順にしたい場合は「登録順」を選択します。初期状態は「オプション名順」となっています。"
+
+msgid "Registration Order"
+msgstr "ตามลงทะเบียน"
+
+msgid "Optional excellent Order"
+msgstr "ตามชื่อ option"
+
+msgid "SKU cord Order"
+msgstr "ตามรหัส SKU"
+
+msgid "Download Item List"
+msgstr "โหลดข้อมูลสินค้า"
+
+msgid "excerpt"
+msgstr "excerpt"
+
+msgid "Field type"
+msgstr "Field type"
+
+msgid "No COD"
+msgstr "ไม่สามารถเลือกวิธีการขำระเงิน COD"
+
+msgid "Registration start"
+msgstr "เริ่มลงทะเบียน"
+
+msgid "Choose the file format, and push the download."
+msgstr "เลือก Formart และกด'โหลด'"
+
+msgid "Not yet ready for the payment method. Please refer to a manager."
+msgstr "ยังไม่สามารถใช้วิธีการชำระเงินนี้<br />กรุณาติดต่อ admin ค่ะ"
+
+# 領収書のメッセージ
+msgid "Your payment has been received."
+msgstr "เรายืนยังไว่าได้รับการชำระเงินตามรายการด้านบนเสร็จเรียบร้อยแล้ว"
+
+# 請求書のメッセージ
+msgid "Please remit payment at your earliest convenience."
+msgstr "เราแจ้งหนี้ตามรายการดังต่อไปนี้"
+
+# 各証書の購入明細のタイトル
+msgid "Statement"
+msgstr "Statement"
+
+# お客様が法人だった場合の担当者ラベル
+msgid "Attn"
+msgstr "ถึง"
+
+# 領収書タイトル
+msgid "Receipt"
+msgstr "ใบเสร็จ"
+
+# 請求書タイトル
+msgid "Invoice"
+msgstr "ใบแจ้งหนี้"
+
+msgid "Shipping Name"
+msgstr "ชื่อของที่ให้จัดส่งสินค้า"
+
+msgid "Shipping Furigana"
+msgstr "วิธีอ่านของที่ให้จัดส่งสินค้า"
+
+msgid "Shipping Zip"
+msgstr "รหัสไปรษณีย์ของที่ให้จัดส่งสินค้า"
+
+msgid "Shipping State"
+msgstr "จังหวัดของที่ให้จัดส่งสินค้า"
+
+msgid "Shipping City"
+msgstr "เมืองที่ให้จัดส่งสินค้า"
+
+msgid "Shipping Address1"
+msgstr "ที่อยู่ที่ให้จัดส่งสินค้า 1"
+
+msgid "Shipping Address2"
+msgstr "ที่อยู่ที่ให้จัดส่งสินค้า 2 (ชื่ออาดาร)"
+
+msgid "Shipping Phone"
+msgstr "เบอร์ติดต่อของที่ให้จัดส่งสินค้า"
+
+msgid "Shipping FAX"
+msgstr "เบอร์ FAX ของที่ให้จัดส่งสินค้า"
+
+msgid "num"
+msgstr "จำนวน"
+
+msgid "rate"
+msgstr "อัตรา"
+
+msgid "Areas of Point Redemption"
+msgstr "ขอบเขตที่ได้คะแนนสะสม"
+
+msgid "Limited Only to Total Merchandise Price"
+msgstr "เฉพาะยอดการสั่งซื้อ"
+
+msgid "Applicable to Total Merchandise Price and Handling Fee"
+msgstr "รวมค่าทำเนียม และอื่นๆ"
+
+msgid "To add a subject title at the first line"
+msgstr "ใส่หัวข้อในบรรทัดแรก"
+
+msgid "The member data is deleted"
+msgstr "ลบข้อมูสมาชิกเรียบร้อยแล้ว"
+
+msgid "Delivery date"
+msgstr "วันที่จะให้จัดส่งสินค้า"
+
+msgid "JPY"
+msgstr "เยน"
+
+msgid "Japan"
+msgstr "ญี่ปุ่น"
+
+msgid "Currency"
+msgstr "หน่วย"
+
+msgid "No Preference"
+msgstr "ไม่ระบุ"
+
+msgid "Unit"
+msgstr "หน่วย"
+
+msgid "Quant"
+msgstr "จำนวน"
+
+msgid "Country"
+msgstr "ประเทศ"
+
+msgid "Target Market"
+msgstr "ตลาดเป้าหมาย"
+
+msgid "COD is not available."
+msgstr "ไม่สามารถใช้บีการ COD"
+
+msgid "Argentina"
+msgstr "อาร์เจนตินา"
+
+msgid "Australia"
+msgstr "ออสเตรเลีย"
+
+msgid "Austria"
+msgstr "ออสเตรีย"
+
+msgid "Belgium"
+msgstr "เบลเยี่ยม"
+
+msgid "Brazil"
+msgstr "บราซิล"
+
+msgid "Canada"
+msgstr "แคนนาดา"
+
+msgid "Chile"
+msgstr "ชิลี"
+
+msgid "China"
+msgstr "จีน"
+
+msgid "Costa Rica"
+msgstr "คอสตาริกา"
+
+msgid "Czech Republic"
+msgstr "สาธารณรัฐเช็ก"
+
+msgid "Denmark"
+msgstr "เดนมาร์ก"
+
+msgid "Dominican Republic"
+msgstr "สาธารณรัฐโดมินิกัน"
+
+msgid "Finland"
+msgstr "ฟินแลนด์"
+
+msgid "France"
+msgstr "ฝรั่งเศส"
+
+msgid "Germany"
+msgstr "เยอรมัน"
+
+msgid "Greece"
+msgstr "กรีซ"
+
+msgid "Guatemala"
+msgstr "กัวเตมาลา"
+
+msgid "Hong Kong"
+msgstr "ฮ่องกง"
+
+msgid "Hungary"
+msgstr "ฮังการี"
+
+msgid "India"
+msgstr "อินเดีย"
+
+msgid "Indonesia"
+msgstr "อินโดนีเซีย"
+
+msgid "Ireland"
+msgstr "ไอร์แลนด์"
+
+msgid "Israel"
+msgstr "อิสราเอล"
+
+msgid "Italy"
+msgstr "อิตาลี"
+
+msgid "Macau"
+msgstr "มาเก๊า"
+
+msgid "Malaysia"
+msgstr "มาเลเซีย"
+
+msgid "Mexico"
+msgstr "เม็กซิโก"
+
+msgid "Netherlands"
+msgstr "เนเธอร์แลนด์"
+
+msgid "New Zealand"
+msgstr "นิวซีแลนด์"
+
+msgid "Norway"
+msgstr "นอร์เวย์"
+
+msgid "Panama"
+msgstr "ปานามา"
+
+msgid "Philippines"
+msgstr "ฟิลิปปินส์"
+
+msgid "Poland"
+msgstr "โปแลนด์"
+
+msgid "Portugal"
+msgstr "โปรตุเกส"
+
+msgid "Puerto Rico"
+msgstr "เปอโตริโก"
+
+msgid "Romania"
+msgstr "โรมาเนีย"
+
+msgid "Russia"
+msgstr "รัสเซีย"
+
+msgid "Singapore"
+msgstr "สิงคโปร์"
+
+msgid "South Korea"
+msgstr "เกาหลีใต้"
+
+msgid "Spain"
+msgstr "สเปน"
+
+msgid "Sweden"
+msgstr "สวีเดน"
+
+msgid "Switzerland"
+msgstr "สวิตเซอร์แลนด์"
+
+msgid "Taiwan"
+msgstr "ไต้หวัน"
+
+msgid "Thailand"
+msgstr "ไทย"
+
+msgid "Turkey"
+msgstr "ตุรกี"
+
+msgid "United Kingdom"
+msgstr "อังกฤษ"
+
+msgid "United States"
+msgstr "สหรัฐอเมริกา"
+
+msgid "Vietnam"
+msgstr "เวียดนาม"
+
+msgid "Print Invoice"
+msgstr "พิมพ์ใบแจ้งราคาสินค้า"
+
+msgid "Print Receipt"
+msgstr "พิมพ์ใบเสร็จ"
+
+msgid "Oreder ID"
+msgstr "รหัสการสั่งซื้อสินค้า"
+
+msgid "Member ID"
+msgstr "เลขที่สมาชิก"
+
+msgid "Name"
+msgstr "ชื่อ"
+

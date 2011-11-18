@@ -507,7 +507,7 @@ jQuery(document).ready(function($){
 
 <!--20100908ysk start-->
 <div id="dlProductListDialog" title="<?php _e('Download Product List', 'usces'); ?>">
-	<p><?php _e('出力したい項目を選択して、ダウンロードを押してください。', 'usces'); ?></p>
+	<p><?php _e('Select the item you want, please press the download.', 'usces'); ?></p>
 	<fieldset>
 <?php 
 	if($usces_opt_order['ftype_pro'] == 'xls') {
@@ -546,7 +546,7 @@ jQuery(document).ready(function($){
 	</fieldset>
 </div>
 <div id="dlOrderListDialog" title="<?php _e('Download Order List', 'usces'); ?>">
-	<p><?php _e('出力したい項目を選択して、ダウンロードを押してください。', 'usces'); ?></p>
+	<p><?php _e('Select the item you want, please press the download.', 'usces'); ?></p>
 	<fieldset>
 <?php 
 	if($usces_opt_order['ftype_ord'] == 'xls') {

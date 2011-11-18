@@ -827,8 +827,8 @@ for ($i=0; $i<50; $i++) {
 <div class="info_head">
 <table>
 <tr>
-<td class="midasi0"><?php _e('カスタム・オーダーフィールド', 'usces'); ?></td>
-<td class="midasi0"><?php _e('支払情報', 'usces'); ?></td>
+<td class="midasi0"><?php _e('Custom order field', 'usces'); ?></td>
+<td class="midasi0"><?php _e('Payment information', 'usces'); ?></td>
 </tr>
 <tr>
 <td class="wrap_td">

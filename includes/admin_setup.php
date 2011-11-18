@@ -62,7 +62,7 @@ function toggleVisibility(id) {
 ?>
 	    <td><div id="ex_display_mode" class="explanation">
 <?php _e('<strong>Normal operating</strong> -Normal display', 'usces'); ?><br />
-<?php _e('<strong>Campaign</strong>--Showing the campaige mode', 'usces'); ?><br />
+<?php //_e('<strong>Campaign</strong>--Showing the campaige mode', 'usces'); ?><br />
 <?php _e('<strong>Maintenance</strong> ---Showing  maintenance page. Administrater is able to see the page with normal display.', 'usces'); ?></div>
 </td>
 	</tr>
@@ -108,7 +108,7 @@ function toggleVisibility(id) {
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_zip_code');"><?php _e('Zip/Postal Code', 'usces'); ?></a></th>
 	    <td><input name="zip_code" type="text" class="short_str" value="<?php echo esc_attr($this->options['zip_code']); ?>" /></td>
-		<td><div id="ex_zip_code" class="explanation"><?php _e('Example)', 'usces'); ?>100-1001</div></td>
+		<td><div id="ex_zip_code" class="explanation"><?php _e('Example)', 'usces'); ?><?php _e('100-1001', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_address1');"><?php _e('Address', 'usces'); ?>1</a></th>
@@ -123,12 +123,12 @@ function toggleVisibility(id) {
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tel_number');"><?php _e('Phone number', 'usces'); ?></a></th>
 	    <td><input name="tel_number" type="text" class="long_str" value="<?php echo esc_attr($this->options['tel_number']); ?>" /></td>
-		<td><div id="ex_tel_number" class="explanation"><?php _e('Example)', 'usces'); ?>100-100-10000</div></td>
+		<td><div id="ex_tel_number" class="explanation"><?php _e('Example)', 'usces'); ?><?php _e('100-100-10000', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_fax_number');"><?php _e('FAX number', 'usces'); ?></a></th>
 	    <td><input name="fax_number" type="text" class="long_str" value="<?php echo esc_attr($this->options['fax_number']); ?>" /></td>
-		<td><div id="ex_fax_number" class="explanation"><?php _e('Example)', 'usces'); ?>100-100-10000</div></td>
+		<td><div id="ex_fax_number" class="explanation"><?php _e('Example)', 'usces'); ?><?php _e('100-100-10000', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><em><?php _e('*', 'usces'); ?> </em><a style="cursor:pointer;" onclick="toggleVisibility('ex_order_mail');"><?php _e('E-mail address for ordering', 'usces'); ?></a></th>
@@ -235,7 +235,7 @@ function toggleVisibility(id) {
 	<tr>
 	    <th rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_coverage');"><?php _e('Areas of Point Redemption', 'usces'); ?></a></th>
 	    <td><input name="point_coverage" type="radio" id="point_coverage0" value="0"<?php if( !$this->options['point_coverage'] ) echo 'checked="checked"'; ?> /></td><td width="220"><label for="point_coverage0"><?php _e('Limited Only to Total Merchandise Price', 'usces'); ?></label></td>
-		<td rowspan="2"><div id="ex_point_coverage" class="explanation"><?php _e('お客様が利用できるポイントの適用範囲を選択します。<br />初期値は「商品合計金額のみに制限」されています。「商品合計額及び手数料などにも適用」を選択すると送料や代引き手数料もポイントで支払う事ができるようになります。', 'usces'); ?></div></td>
+		<td rowspan="2"><div id="ex_point_coverage" class="explanation"><?php _e("Select the scope of the point that customers can use.<br />Default is 'Limited Only to Total Merchandise Price'. 'Applicable to Total Merchandise Price and Handling Fee' If you choose, you can pay shipping and COD fee in points.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <td><input name="point_coverage" type="radio" id="point_coverage1" value="1"<?php if( $this->options['point_coverage'] ) echo 'checked="checked"'; ?> /></td><td width="220"><label for="point_coverage1"><?php _e('Applicable to Total Merchandise Price and Handling Fee', 'usces'); ?></label></td>
