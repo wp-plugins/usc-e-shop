@@ -2400,7 +2400,9 @@ function usces_get_local_language(){
 
 function usces_get_base_country(){
 	global $usces_settings;
-	$locale = get_locale();
+//	$locale = get_locale();
+	$wplang = defined('WPLANG') ? WPLANG : '';
+	$locale = empty( $wplang ) ? 'en' : $wplang;
 	if( array_key_exists($locale, $usces_settings['lungage2country']) )
 		return $usces_settings['lungage2country'][$locale];
 	else
