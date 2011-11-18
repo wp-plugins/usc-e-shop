@@ -1658,6 +1658,11 @@ class usc_e_shop
 			uscesCart.changeStates( country ); 
 		});
 			
+		$("#purchase_button").click(function () {
+			$(this).attr("disabled", "disabled");
+			$("#back_button").attr("disabled", "disabled");
+		});
+			
 		})(jQuery);
 		</script>
 		<?php endif; ?>

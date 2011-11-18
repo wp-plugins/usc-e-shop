@@ -460,7 +460,7 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ){
 			$data[$key] = $value;
 		}
-		usces_log('paypal_ipn in ', 'acting_transaction.log');
+		usces_log('paypal_ipn in '.print_r($data,true), 'acting_transaction.log');
 		require_once($usces->options['settlement_path'] . 'paypal.php');
 		$ipn_res = paypal_ipn_check($usces_paypal_url);
 		if( $ipn_res[0] === true ){
