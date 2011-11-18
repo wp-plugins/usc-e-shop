@@ -3878,7 +3878,7 @@ class usc_e_shop
 		if ( !is_email($_POST['customer']['mailaddress1']) || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["name1"]) == "" )
-			$mes .= __('Name is not correct', 'usces');
+			$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //		if ( trim($_POST["customer"]["name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["zipcode"]) == "" )
@@ -3926,7 +3926,7 @@ class usc_e_shop
 		if ( !is_email($_POST['customer']['mailaddress1']) || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["name1"]) == "" )
-			$mes .= __('Name is not correct', 'usces');
+			$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //		if ( trim($_POST["customer"]["name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["zipcode"]) == "" )
@@ -3949,7 +3949,7 @@ class usc_e_shop
 		$mes = '';
 		if ( $_POST['delivery']['delivery_flag'] == '1' ) {
 			if ( trim($_POST["delivery"]["name1"]) == "" )
-				$mes .= __('Name is not correct', 'usces');
+				$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //			if ( trim($_POST["delivery"]["name3"]) == "" && USCES_JP )
 //				$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 			if ( trim($_POST["delivery"]["zipcode"]) == "" )

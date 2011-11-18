@@ -1477,8 +1477,10 @@ function usces_categories_checkbox($output=''){
 
 function usces_search_categories(){
 	$cats = array();
-	if(isset($_POST['category']))
-		$cats = $_POST['category'];
+	//if(isset($_POST['category']))
+	//	$cats = $_POST['category'];
+	if(isset($_REQUEST['category']))
+		$cats = $_REQUEST['category'];
 	else
 		$cats = array(USCES_ITEM_CAT_PARENT_ID);
 	return $cats;
