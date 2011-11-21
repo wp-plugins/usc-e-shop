@@ -261,6 +261,18 @@ function usces_the_itemZaiko( $out = '' ) {
 	}
 }
 
+function usces_get_itemZaiko( $field = 'name' ) {
+	global $usces;
+	$num = (int)$usces->itemsku['value']['zaiko'];
+	
+	if( 'id' == $field ){
+		$res = $num;
+	}else{
+		$res = $usces->zaiko_status[$num];
+	}
+	return $res;
+}
+
 function usces_the_itemZaikoNum( $out = '' ) {
 	global $usces;
 	$num = $usces->itemsku['value']['zaikonum'];
