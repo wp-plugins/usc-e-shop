@@ -152,6 +152,9 @@ update_option('usces_secure_link', $usces_secure_link);
 update_option('usces_secure_link', $usces_secure_link);
 
 $usces_op = get_option('usces');
+if( !is_array($usces_op) || empty($usces_op) ){
+	$usces_op = array();
+}
 
 $usces_op['mail_default']['title']['thankyou'] = __('Confirmation of order details', 'usces');
 $usces_op['mail_default']['title']['order'] = __('An order report', 'usces');

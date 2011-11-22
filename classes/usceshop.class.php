@@ -1784,12 +1784,23 @@ class usc_e_shop
 					return false;
 				}
 				return true;
-			}
+			},
+			purchase : 0
 		};
 		$("#country").change(function () {
 			var country = $("#country option:selected").val();
 			$("#newcharging_type option:selected").val()
 			uscesCart.changeStates( country ); 
+		});
+		$("#purchase_form").submit(function () {
+			if( 0 == uscesCart.purchase ){
+				uscesCart.purchase = 1;
+				return true;
+			}else{ 
+				$("#purchase_button").attr("disabled", "disabled");
+				$("#back_button").attr("disabled", "disabled");
+				return false;
+			}
 		});
 			
 		})(jQuery);
