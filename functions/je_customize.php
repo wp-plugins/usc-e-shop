@@ -773,9 +773,9 @@ function je_make_add_data( $type, $member, $smops ){
 		$params_proste = isset($smops['proste']['params']) ? $smops['proste']['params'] : array();
 		$proste = isset($params_proste[$key_proste]) ? $params_proste[$key_proste] : array();
 
-//usces_log('name1 : '.$member['name1'].$member['name2'], 'acting_transaction.log');
-		$query .= 'mn=' . urlencode(mb_convert_encoding($member['name1'], 'EUC', 'UTF8'));
-		$query .= ( $proste['ml_user_name2'] ) ? '&mn2=' . urlencode(mb_convert_encoding($member['name2'], 'EUC', 'UTF8')) : '';
+		//usces_log('name1 : '.$member['name1'].$member['name2'], 'acting_transaction.log');
+		$query .= 'nm=' . urlencode(mb_convert_encoding($member['name1'], 'EUC', 'UTF8'));
+		$query .= ( $proste['ml_user_name2'] ) ? '&nm2=' . urlencode(mb_convert_encoding($member['name2'], 'EUC', 'UTF8')) : '';
 		$query .= '&ml=' . urlencode($member['mailaddress1']);
 		$query .= '&act=a';
 		$query .= '&pn=' . urlencode($proste['ml_id']);
@@ -786,7 +786,6 @@ function je_make_add_data( $type, $member, $smops ){
 		if( isset( $_POST['custom_member'] ) && is_array( $_POST['custom_member'] ) ){
 			$mi = 1;
 			$csmb_meta = usces_has_custom_field_meta( 'member' );
-			//usces_log('csmb_meta : '.print_r($csmb_meta,true), 'step_mail.log');
 			foreach( $csmb_meta as $cmfkey => $cmfvalue ){
 				if( isset($_POST['custom_member'][$cmfkey]) ){
 					$query .= ( $proste['ml_user_cus'.$mi] ) ? '&c'.$mi.'='.urlencode(mb_convert_encoding($cmfvalue['name'].':'.esc_html($_POST['custom_member'][$cmfkey]), 'EUC', 'UTF8')) : '';
@@ -800,12 +799,12 @@ function je_make_add_data( $type, $member, $smops ){
 		$query .= '&cd=u';// . $proste['ml_encode'];
 		$query .= '&toad=' . $proste['ml_toadmin'];
 		$query .= '&tocus=' . $proste['ml_tocustomer'];
+		$query .= '&rz=30';
 		$query .= '&tmsp=' . time();
 		$header = "GET " . $url_parts['path'] . '?' . $query . " HTTP/1.1\r\n";
 		$header .= "Host: " . $url_parts['host'] . "\r\n";
 		$header .= "Accept: text/html\r\n";
 		$header .= "Connection: close\r\n\r\n";
-//usces_log('header : '.print_r($header,true), 'step_mail.log');
 		break;
 	}
 	$data = compact('url_parts', 'header');
@@ -847,8 +846,8 @@ function je_make_del_data( $type, $member, $smops ){
 		$params_proste = isset($smops['proste']['params']) ? $smops['proste']['params'] : array();
 		$proste = isset($params_proste[$key_proste]) ? $params_proste[$key_proste] : array();
 
-		$query .= 'mn=' . urlencode($member['mem_name1']);
-		$query .= ( $proste['ml_user_name2'] ) ? '&mn2=' . urlencode($member['mem_name2']) : '';
+		$query .= 'nm=' . urlencode($member['mem_name1']);
+		$query .= ( $proste['ml_user_name2'] ) ? '&nm2=' . urlencode($member['mem_name2']) : '';
 		$query .= '&ml=' . urlencode($member['mem_email']);
 		$query .= '&act=d';
 		$query .= '&pn=' . urlencode($proste['ml_id']);
@@ -881,8 +880,6 @@ function je_send_data( $data ){
 			}
 		}
 		fclose($fp);
-//		usces_log('send_data : '.$return, 'step_mail.log');
-//		usces_log('send_data : '.$data['header'], 'step_mail.log');
 		if( 'neo' == $second ){
 			preg_match('/mag_id\" value=\"(\d+)\"/s', $return, $id_match);
 			preg_match('/email\" value=\"([^\"]+)\"/s', $return, $mail_match);
@@ -905,8 +902,6 @@ function je_send_data( $data ){
 				$second_return .= $scr;
 			}
 			fclose($fp);
-//			usces_log('second_data : '.$header, 'step_mail.log');
-//			usces_log('second_data : '.$second_return, 'step_mail.log');
 		}
 	}else{
 		usces_log('send_data : error ' . print_r($data, true), 'step_mail.log');
