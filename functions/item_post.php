@@ -882,7 +882,7 @@ function select_common_option( $post_ID ) {
 	}else{
 			$value .= trim($array['value']) . "\n";
 	}
-	$res = $means . $essential . $value;
+	$res = $means . '#usces#' . $essential . '#usces#' . $value;
 	return $res;
 } // select_common_option
 

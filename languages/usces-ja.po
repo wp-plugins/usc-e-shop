@@ -3061,6 +3061,18 @@ msgstr "ルミーズ決済サービス"
 msgid "J-Payment Japanese Settlement"
 msgstr "J-Payment決済サービス"
 
+msgid "State"
+msgstr "州"
+
+msgid "Address Line1"
+msgstr "番地"
+
+msgid "Address Line2"
+msgstr "ビル・アパート"
+
+msgid "Zip"
+msgstr "郵便番号"
+
 #~ msgid "Chenge th epassword according to the e-mail."
 #~ msgstr "メールの内容にしたがってパスワードを変更してください。"
 #~ msgid "print the invoice"
