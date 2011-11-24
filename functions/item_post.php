@@ -177,7 +177,7 @@ function list_item_option_meta( $opts ) {
 		<table id="optlist-table" class="list" style="display: none;">
 			<thead>
 			<tr>
-				<th class="hanldh">@</th>
+				<th class="hanldh">ã€€</th>
 				<th class="item-opt-key"><?php _e('option name','usces') ?></th>
 				<th class="item-opt-value"><?php _e('selected amount','usces') ?></th>
 			</tr>
@@ -192,7 +192,7 @@ function list_item_option_meta( $opts ) {
 		<table id="optlist-table" class="list">
 			<thead>
 			<tr>
-				<th class="hanldh">@</th>
+				<th class="hanldh">ã€€</th>
 				<th class="item-opt-key"><?php _e('option name','usces') ?></th>
 				<th class="item-opt-value"><?php _e('selected amount','usces') ?></th>
 			</tr>
@@ -218,7 +218,7 @@ function list_item_sku_meta( $skus ) {
 		<table id="skulist-table" class="list" style="display: none;">
 			<thead>
 			<tr>
-				<th class="hanldh" rowspan="2">@</th>
+				<th class="hanldh" rowspan="2">ã€€</th>
 				<th><?php _e('SKU code','usces'); ?></th>
 				<th><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 				<th><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
@@ -236,7 +236,7 @@ function list_item_sku_meta( $skus ) {
 		<table id="skulist-table" class="list">
 			<thead>
 			<tr>
-				<th class="hanldh" rowspan="2">@</th>
+				<th class="hanldh" rowspan="2">ã€€</th>
 				<th class="item-sku-key"><?php _e('SKU code','usces'); ?></th>
 				<th class="item-sku-cprice"><?php echo apply_filters('usces_filter_listprice_label', __('normal price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
 				<th class="item-sku-price"><?php echo apply_filters('usces_filter_sellingprice_label', __('Sale price','usces'), NULL, NULL); ?>(<?php usces_crcode(); ?>)</th>
@@ -306,7 +306,7 @@ function _list_item_option_meta_row( $opt ) {
 	<tr class="metastuffrow"><td colspan="3">
 		<table id="itemopt-<?php echo $id; ?>" class="metastufftable">
 			<tr>
-				<th class='handlb' rowspan='2'>@</th>
+				<th class='handlb' rowspan='2'>ã€€</th>
 				<td class='item-opt-key'>
 					<div><input name='itemopt[<?php echo $id; ?>][name]' id='itemopt[<?php echo $id; ?>][name]' class='metaboxfield' type='text' size='20' value='<?php echo $name; ?>'{$readonly} /></div>
 					<div class='optcheck'>
@@ -361,7 +361,7 @@ function _list_item_sku_meta_row( $sku ) {
 	<tr class='metastuffrow'><td colspan='6'>
 		<table id='itemsku-<?php echo $id; ?>' class='metastufftable'>
 			<tr class='{$style}'>
-				<th class='handlb' rowspan='3'>@</th>
+				<th class='handlb' rowspan='3'>ã€€</th>
 				<td class='item-sku-key'><input name='itemsku[<?php echo $id; ?>][key]' id='itemsku[<?php echo $id; ?>][key]' class='skuname metaboxfield' type='text' value='<?php echo $key; ?>'{$readonly} /></td>
 				<td class='item-sku-cprice'><input name='itemsku[<?php echo $id; ?>][cprice]' id='itemsku[<?php echo $id; ?>][cprice]' class='skuprice metaboxfield' type='text' value='<?php echo $cprice; ?>' /></td>
 				<td class='item-sku-price'><input name='itemsku[<?php echo $id; ?>][price]' id='itemsku[<?php echo $id; ?>][price]' class='skuprice metaboxfield' type='text' value='<?php echo $price; ?>' /></td>
@@ -1230,7 +1230,7 @@ function item_save_metadata( $post_id, $post ) {
 	
 //	usces_log('item_save_metadata : '.print_r($post_id,true), 'acting_transaction.log');
 //	usces_log('item_save_metadata : '.print_r($_POST['post_ID'],true), 'acting_transaction.log');
-	// ƒp[ƒ~ƒbƒVƒ‡ƒ“ƒ`ƒFƒbƒN
+	// ãƒ‘ãƒ¼ãƒŸãƒƒã‚·ãƒ§ãƒ³ãƒã‚§ãƒƒã‚¯
 	if ( isset($_POST['page']) && 'usces_itemedit' == $_POST['page']) {
 		if ( !current_user_can( 'edit_post', $post_id ) ){
 			$usces->set_action_status('error', 'ERROR : '.__('Sorry, you do not have the right to edit this post.'));
@@ -1251,7 +1251,7 @@ function item_save_metadata( $post_id, $post ) {
 	
 
 
-  	// ©“®•Û‘¶ƒ‹[ƒ`ƒ“‚©‚Ç‚¤‚©ƒ`ƒFƒbƒNB‚»‚¤‚¾‚Á‚½ê‡‚ÍƒtƒH[ƒ€‚ğ‘—M‚µ‚È‚¢i‰½‚à‚µ‚È‚¢j
+  	// è‡ªå‹•ä¿å­˜ãƒ«ãƒ¼ãƒãƒ³ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯ã€‚ãã†ã ã£ãŸå ´åˆã¯ãƒ•ã‚©ãƒ¼ãƒ ã‚’é€ä¿¡ã—ãªã„ï¼ˆä½•ã‚‚ã—ãªã„ï¼‰
 	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
 		return $post_id;
 
@@ -1260,16 +1260,16 @@ function item_save_metadata( $post_id, $post ) {
 	$itemCode  = trim($_POST['itemCode' ]);
 	if( preg_match('/[^0-9a-zA-Z\-_]/', $itemCode) ){
 //		$itemCode  = '';
-//		$usces->action_message = '¤•iƒR[ƒh‚Í”¼Šp‰p”i-_‚ğŠÜ‚Şj‚Å“ü—Í‚µ‚Ä‰º‚³‚¢B' . "<br />";
+//		$usces->action_message = 'å•†å“ã‚³ãƒ¼ãƒ‰ã¯åŠè§’è‹±æ•°ï¼ˆ-_ã‚’å«ã‚€ï¼‰ã§å…¥åŠ›ã—ã¦ä¸‹ã•ã„ã€‚' . "<br />";
 	}
 	if( empty($itemCode) ){
 		$itemCode  = '';
-		$message .= __('¤•iƒR[ƒh‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB', 'usces') . "<br />";
+		$message .= __('å•†å“ã‚³ãƒ¼ãƒ‰ãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚', 'usces') . "<br />";
 	}elseif( $res = usces_is_same_itemcode($post->ID, $itemCode)) {
 		$message .= 'post_ID ';
 		foreach( $res as $postid )
 			$message .= $postid . ', ';
-		$message .= '‚É“¯‚¶¤•iƒR[ƒh‚ª“o˜^‚³‚ê‚Ä‚¢‚Ü‚·B' . "<br />";
+		$message .= 'ã«åŒã˜å•†å“ã‚³ãƒ¼ãƒ‰ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã™ã€‚' . "<br />";
 		$usces->set_action_status('error', 'ERROR : '.$message);
 	}
 	update_post_meta($post_id, '_itemCode', $itemCode);
@@ -1389,13 +1389,13 @@ function item_save_metadata( $post_id, $post ) {
 		}
 		
 		if( $uniq_code ){
-			$message .= 'SKUƒR[ƒh‚ªd•¡‚µ‚Ä‚¢‚Ü‚·B' . "<br />";
+			$message .= 'SKUã‚³ãƒ¼ãƒ‰ãŒé‡è¤‡ã—ã¦ã„ã¾ã™ã€‚' . "<br />";
 		}
 		if( $irreg_code ){
-			$message .= 'SKUƒR[ƒh‚Ì’l‚ª•s³‚Å‚·B' . "<br />";
+			$message .= 'SKUã‚³ãƒ¼ãƒ‰ã®å€¤ãŒä¸æ­£ã§ã™ã€‚' . "<br />";
 		}
 		if( $irreg_price ){
-			$message .= '”„‰¿‚Ì’l‚ª•s³‚ÈSKU‚ª‘¶İ‚µ‚Ü‚·B' . "<br />";
+			$message .= 'å£²ä¾¡ã®å€¤ãŒä¸æ­£ãªSKUãŒå­˜åœ¨ã—ã¾ã™ã€‚' . "<br />";
 		}
 	}
 	//OPT
@@ -1452,13 +1452,13 @@ function item_save_metadata( $post_id, $post ) {
 		}
 		
 		if( $uniq_name ){
-			$message .= 'ƒIƒvƒVƒ‡ƒ“–¼‚ªd•¡‚µ‚Ä‚¢‚é¤•iƒIƒvƒVƒ‡ƒ“‚ª‘¶İ‚µ‚Ü‚·B' . "<br />";
+			$message .= 'ã‚ªãƒ—ã‚·ãƒ§ãƒ³åãŒé‡è¤‡ã—ã¦ã„ã‚‹å•†å“ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãŒå­˜åœ¨ã—ã¾ã™ã€‚' . "<br />";
 		}
 		if( $irreg_name ){
-			$message .= 'ƒIƒvƒVƒ‡ƒ“–¼‚ª–¢“ü—Í‚Ì¤•iƒIƒvƒVƒ‡ƒ“‚ª‘¶İ‚µ‚Ü‚·B' . "<br />";
+			$message .= 'ã‚ªãƒ—ã‚·ãƒ§ãƒ³åãŒæœªå…¥åŠ›ã®å•†å“ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãŒå­˜åœ¨ã—ã¾ã™ã€‚' . "<br />";
 		}
 		if( $irreg_value ){
-			$message .= '¤•iƒIƒvƒVƒ‡ƒ“‚ÅuƒVƒ“ƒOƒ‹ƒZƒŒƒNƒgvAuƒ}ƒ‹ƒ`ƒZƒŒƒNƒgv‚ğ‘I‘ğ‚µ‚½ê‡‚ÍAƒZƒŒƒNƒg’l‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B' . "<br />";
+			$message .= 'å•†å“ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§ã€Œã‚·ãƒ³ã‚°ãƒ«ã‚»ãƒ¬ã‚¯ãƒˆã€ã€ã€Œãƒãƒ«ãƒã‚»ãƒ¬ã‚¯ãƒˆã€ã‚’é¸æŠã—ãŸå ´åˆã¯ã€ã‚»ãƒ¬ã‚¯ãƒˆå€¤ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚' . "<br />";
 		}
 	}
 	
@@ -1469,7 +1469,7 @@ function item_save_metadata( $post_id, $post ) {
 	if( $message ){
 		$usces->set_action_status('error', 'ERROR : '.$message);
 	}else{
-		$usces->set_action_status('success', '¤•i‚Ì“o˜^‚ªŠ®—¹‚µ‚Ü‚µ‚½B ');
+		$usces->set_action_status('success', 'å•†å“ã®ç™»éŒ²ãŒå®Œäº†ã—ã¾ã—ãŸã€‚ ');
 	}
 
 

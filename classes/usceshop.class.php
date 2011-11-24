@@ -23,15 +23,10 @@ class usc_e_shop
 //20110331ysk end
 		do_action('usces_construct');
 		add_action('after_setup_theme', array(&$this, 'usces_session_start'));
-		//$this->usces_session_start();
-		
-//		if ( !isset($_SESSION['usces_member']) ){
-//			$_SESSION['usces_member'] = array();
-//		}
+
 		if ( is_admin() ){
 			clean_term_cache( get_option('usces_item_cat_parent_id'), 'category' );
 		}
-//		if(!isset($_SESSION['usces_checked_business_days'])) $this->update_business_days();
 		$this->check_display_mode();
 		
 		$locales = usces_locales();
@@ -45,9 +40,6 @@ class usc_e_shop
 		if(!isset($this->options['divide_item'])) $this->options['divide_item'] = 0;
 		if(!isset($this->options['fukugo_category_orderby'])) $this->options['fukugo_category_orderby'] = 'ID';
 		if(!isset($this->options['fukugo_category_order'])) $this->options['fukugo_category_order'] = 'ASC';
-//20110331ysk start
-		//if(!isset($this->options['province'])) $this->options['province'] = get_option('usces_pref');
-//20110331ysk end
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
 		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
@@ -1205,53 +1197,6 @@ class usc_e_shop
 	}
 	/********************************************************************************/
 
-//	function get_request() {
-//		$host = $_SERVER['HTTP_HOST'];
-//		$uri = $_SERVER['REQUEST_URI'];
-//		$port = $_SERVER['REMOTE_PORT'];
-//		$scheme = ( $port == 443 ) ? 'https://' : 'http://';
-//		return $scheme . $host . $uri;
-//	}
-//	
-//	function redirect() {
-//	
-//		$redirect = '';
-//
-//		$req = $_SERVER['QUERY_STRING'];
-//		$port = $_SERVER['SERVER_PORT'];
-//		
-//		$request = $this->get_request();
-//		
-//		$conjunction = ( empty($req) && (!strpos($request, USCES_CART_FOLDER, 1) && !strpos($request, USCES_MEMBER_FOLDER, 1)) ) ? '?' : '&';
-//		
-//		$sessid = $conjunction . 'uscesid=' . $this->get_uscesid();
-//	
-//		
-//		if( false === strpos($request, 'uscesid=') )
-//			$uri = $request . $sessid;
-//		else
-//			$uri = $request;
-//		
-//
-//		if( $this->use_ssl ) {
-//		
-//			if ( '80' == $port && strpos($uri, USCES_CART_FOLDER, 1))
-//				$redirect = USCES_SSL_URL . '/?page_id=' . USCES_CART_NUMBER . $sessid;
-//		
-//			if ( '80' == $port && strpos($uri, USCES_MEMBER_FOLDER, 1))
-//				$redirect = USCES_SSL_URL . '/?page_id=' . USCES_MEMBER_NUMBER . $sessid;
-//
-//			if ( '443' == $port && false === strpos($uri, 'wp-admin') && false === strpos($uri, 'wp-login.php') && false === strpos($uri, '?page_id=' . USCES_CART_NUMBER) && false === strpos($uri, '?page_id=' . USCES_MEMBER_NUMBER) && !strpos($uri, USCES_CART_FOLDER, 1) && !strpos($uri, USCES_MEMBER_FOLDER, 1) )
-//				$redirect = get_option('home');
-//		}
-//
-//	
-//		if($redirect != '') {
-//			//wp_redirect($redirect);
-//			exit;
-//		}
-//	}
-
 	function usces_session_start() {
 		$options = get_option('usces');
 		if( !isset($options['usces_key']) || empty($options['usces_key']) ){
@@ -1270,37 +1215,7 @@ class usc_e_shop
 			session_id($sessid);
 		}
 		
-		//$timeout = 0;
-		//$domain = $_SERVER['HTTP_HOST'];
-		//@session_set_cookie_params($timeout, USCES_COOKIEPATH, $domain);
 		@session_start();
-		
-//usces_log('HTTP_USER_AGENT : '.$_SERVER['HTTP_USER_AGENT'], 'acting_transaction.log');
-//usces_log('HTTP_ACCEPT_CHARSET : '.$_SERVER['HTTP_ACCEPT_CHARSET'], 'acting_transaction.log');
-//usces_log(' : ', 'acting_transaction.log');
-//usces_log('session_id : '.session_id(), 'acting_transaction.log');
-//usces_log('session_name : '.session_name(), 'acting_transaction.log');
-//usces_log('uscesid : '.$_GET['uscesid'], 'acting_transaction.log');
-//usces_log('session_name_REQUEST : '.$_REQUEST[session_name()], 'acting_transaction.log');
-//usces_log('USCES_KEY_REQUEST : '.$_REQUEST[USCES_KEY], 'acting_transaction.log');
-//		if ( ! isset( $_SESSION['fingerprint'] ) ) {
-//			$_SESSION['fingerprint'] = $this->get_fingerprint();
-//			if( is_admin() ){
-//				wp_redirect(get_option('site_url'));
-//			}elseif( ( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ) && false === strpos($_SERVER['REQUEST_URI'], 'wp-login.php') ){
-//				wp_redirect(get_option('home'));
-//				exit;
-//			}
-//		}
-//
-//		$fingerprint = $this->get_fingerprint();
-////			usces_log('fingerprint : '.$fingerprint, 'acting_transaction.log');
-////			usces_log('_SESSION[fingerprint] : '.$_SESSION['fingerprint'], 'acting_transaction.log');
-//		if ( $fingerprint !== $_SESSION['fingerprint'] ) {
-//			usces_log('Illegal access : '.$_SERVER['REMOTE_ADDR'], 'acting_transaction.log');
-//			die();
-//		}
-//		$_SESSION['fingerprint'] = $fingerprint;
 		
 		if ( !isset($_SESSION['usces_member']) ){
 			$_SESSION['usces_member'] = array();
@@ -1310,25 +1225,10 @@ class usc_e_shop
 			$this->update_business_days();
 	}
 	
-//	function get_fingerprint(){
-//		$fingerprint = defined(USCES_KEY) ? USCES_KEY : DB_NAME;
-//	
-//		if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-//			$fingerprint .= $_SERVER['HTTP_USER_AGENT'];
-//		}
-//		if ( ! empty( $_SERVER['HTTP_ACCEPT_CHARSET'] ) ) {
-//			$fingerprint .= $_SERVER['HTTP_ACCEPT_CHARSET'];
-//		}
-//		$fingerprint .= session_id();
-//		return md5( $fingerprint );
-//	}
-	
 	function usces_cookie() {
 		$actionflag = false;
 		$rckid = NULL;
 		$cookie = $this->get_cookie();
-//usces_log('$_SERVER[HTTP_REFERER] : '.$_SERVER['HTTP_REFERER'], 'acting_transaction.log');
-//usces_log('first cookieid : '.$cookie['id'], 'acting_transaction.log');
 		
 		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']))){
 			
@@ -1345,37 +1245,29 @@ class usc_e_shop
 			$home = $parsed['host'] . $parsed['path'];
 			$parsed = parse_url($option['ssl_url']);
 			$sslhome = $parsed['host'] . $parsed['path'];
-//usces_log('sslid : '.$sslid, 'acting_transaction.log');
-//usces_log('rckid : '.$rckid, 'acting_transaction.log');
-//usces_log('home : '.$home, 'acting_transaction.log');
-//usces_log('sslhome : '.$sslhome, 'acting_transaction.log');
+			//usces_log('sslid : '.$sslid, 'acting_transaction.log');
 
 			//リファラーが無い
 			if( empty($refer) ){
 				//sslid と uscesid がNULL では無く、値が同じならばTRUE
 				if( !empty($sslid) && !empty($rckid) && $sslid === $rckid ){
-//usces_log('flag : リファラーが無い sslid と rckid がNULL では無く、値が同じならばTRUE', 'acting_transaction.log');
 					$actionflag = true;
 				//上記以外はFALSE
 				}else{
-//usces_log('flag : リファラーが無い 上記以外', 'acting_transaction.log');
 					$actionflag = false;
 				}
 			
 			//リファラーがHome and SSLHome のどちらとも一致しない
 			}elseif( false === strpos($refer, $home) && false === strpos($refer, $sslhome) ){
 				//全てFALSE
-//usces_log('flag : リファラーがHome and SSLHome のどちらとも一致しない', 'acting_transaction.log');
 				$actionflag = false;
 			//リファラーが一致
 			}else{
 				//sslid がNULL では無く、uscesid と一致しない場合はFALSE
 				if( !empty($sslid) && $sslid !== $rckid ){
 					$actionflag = false;
-//usces_log('flag : リファラーが一致 sslid がNULL では無く、rckid と一致しない場合はFALSE', 'acting_transaction.log');
 				//上記以外はTRUE
 				}else{
-//usces_log('flag : リファラーが一致 上記以外', 'acting_transaction.log');
 					$actionflag = true;
 				}
 			}

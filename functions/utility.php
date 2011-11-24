@@ -204,13 +204,13 @@ function usces_upgrade_11(){
 							if(trim( $vs ) != '') 
 								$nov .= str_replace('\\', '&yen;', trim( $vs )) . "\n";
 						}
-						$newvalue['value'] = $nov;
+						$newvalue['value'] =  trim($nov);
 					}else{
-						$newvalue['value'] = $v;
+						$newvalue['value'] = trim($v);
 					}
 					break;
 				default:
-					$newvalue[$k] = $v;
+					$newvalue[$k] = trim($v);
 			}
 		}
 		$newvalue['sort'] = $sort_id;
