@@ -471,6 +471,7 @@ function usces_action_acting_transaction(){
 				usces_log('paypal_ipn error : '.print_r($data, true), 'acting_transaction.log');
 				die('error1');
 			}
+			do_action('usces_action_paypal_ipn', $res, $ipn_res);
 		}
 		usces_log('PayPal IPN transaction : '.$_REQUEST['txn_id'], 'acting_transaction.log');
 		die('PayPal');

@@ -5380,10 +5380,12 @@ class usc_e_shop
 			$cart = $this->cart->get_cart();
 		if( empty($entry) )
 			$entry = $this->cart->get_entry();
-			
-		$d_method_id = $entry['order']['delivery_method'];
-		$d_method_index = $this->get_delivery_method_index($d_method_id);
 		
+		//配送方法ID
+		$d_method_id = $entry['order']['delivery_method'];
+		//配送方法index
+		$d_method_index = $this->get_delivery_method_index($d_method_id);
+		//送料ID
 		$fixed_charge_id = $this->options['delivery_method'][$d_method_index]['charge'];
 		$individual_quant = 0;
 		$total_quant = 0;
@@ -5393,7 +5395,9 @@ class usc_e_shop
 		foreach ( $cart as $rows ) {
 		
 			if( -1 == $fixed_charge_id ){
+				//商品送料ID
 				$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
+				//商品送料index
 				$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
 				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
 			}else{
@@ -5401,7 +5405,6 @@ class usc_e_shop
 				$s_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
 				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
 			}
-
 			
 			if($this->getItemIndividualSCharge($rows['post_id'])){
 				$individual_quant += $rows['quantity'];
