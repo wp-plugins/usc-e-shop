@@ -3321,7 +3321,8 @@ function usces_paypal_doecp( &$results ) {
 		$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
 		$billingFreq = urlencode($usces->getItemFrequency($post_id));
 		//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
-		$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
+		//$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
+		$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_full_price']));//20111125ysk 0000320
 
 		$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
 
