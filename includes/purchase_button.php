@@ -478,7 +478,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">';
 			} else {
 				//定期支払い
-				$desc = usces_make_agreement_description($cart, $usces_entries['order']['total_items_price']);
+				//$desc = usces_make_agreement_description($cart, $usces_entries['order']['total_items_price']);
+				$desc = usces_make_agreement_description($cart, $usces_entries['order']['total_full_price']);//20111125ysk 0000320
 				$html .= '<input type="hidden" name="L_BILLINGTYPE0" value="RecurringPayments">
 					<input type="hidden" name="L_BILLINGAGREEMENTDESCRIPTION0" value="'.esc_html($desc).'">
 					<input type="hidden" name="AMT" value="0">';
