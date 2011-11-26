@@ -4560,8 +4560,11 @@ class usc_e_shop
 	}
 	
 	function getItemDeliveryMethod($post_id) {
-		$str = get_post_custom_values('_itemDeliveryMethod', $post_id);
-		return unserialize($str[0]);
+		$str = get_post_meta($post_id, '_itemDeliveryMethod', true);
+		if( empty($str) )
+			return array();
+		else
+			return $str;
 	}
 	
 	function getItemIndividualSCharge($post_id) {
@@ -5940,12 +5943,15 @@ class usc_e_shop
 			$cart = $this->cart->get_cart();
 			$before_deli = array();
 			$intersect = array();
+			$integration = array();
+			$temp = array();
 			foreach($cart as $key => $row){
 				$deli = $this->getItemDeliveryMethod($row['post_id']);
-				if(!is_array($deli)) {
-					return array();
-				}
-				if( $key === 0 ){
+				if( empty($deli))
+					continue;
+
+			//usces_log('deli : '.print_r($deli, true), 'acting_transaction.log');
+				if( empty($intersect) ){
 					$intersect = $deli;
 				}
 				$intersect = array_intersect($deli, $intersect);
@@ -5961,9 +5967,7 @@ class usc_e_shop
 			}
 			ksort($temp);
 			if( empty($intersect) ){
-				$deli = array();
-				$deli[0] = (int)reset($temp);
-				return $deli;
+				return array();
 			}else{
 				return $intersect;
 			}

@@ -1129,14 +1129,19 @@ function usces_get_payments_by_name( $name ){
 function usces_the_delivery_method( $value = '', $out = '' ){
 	global $usces;
 	$deli_id = $usces->get_available_delivery_method();
-	$html = '<select name="offer[delivery_method]"  id="delivery_method_select" class="delivery_time" onKeyDown="if (event.keyCode == 13) {return false;}">'."\n";
-	foreach ($deli_id as $id) {
-		$index = $usces->get_delivery_method_index($id);
-		$selected = ($id == $value) ? ' selected="selected"' : '';
-		$html .= "\t<option value='{$id}'{$selected}>" . esc_html($usces->options['delivery_method'][$index]['name']) . "</option>\n";
-	}
+	if( empty($deli_id) ){
+		$html = '<p>' . __('No valid shipping methods.', 'usces') . '</p>';
+	}else{
 
-	$html .= "</select>\n";
+		$html = '<select name="offer[delivery_method]"  id="delivery_method_select" class="delivery_time" onKeyDown="if (event.keyCode == 13) {return false;}">'."\n";
+		foreach ($deli_id as $id) {
+			$index = $usces->get_delivery_method_index($id);
+			$selected = ($id == $value) ? ' selected="selected"' : '';
+			$html .= "\t<option value='{$id}'{$selected}>" . esc_html($usces->options['delivery_method'][$index]['name']) . "</option>\n";
+		}
+	
+		$html .= "</select>\n";
+	}
 	
 	if( $out == 'return' ){
 		return $html;

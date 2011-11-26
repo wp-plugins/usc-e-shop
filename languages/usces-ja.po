@@ -3073,6 +3073,9 @@ msgstr "ビル・アパート"
 msgid "Zip"
 msgstr "郵便番号"
 
+msgid "No valid shipping methods."
+msgstr "有効な配送方法が見当たりません。"
+
 #~ msgid "Chenge th epassword according to the e-mail."
 #~ msgstr "メールの内容にしたがってパスワードを変更してください。"
 #~ msgid "print the invoice"
