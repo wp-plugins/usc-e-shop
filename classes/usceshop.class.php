@@ -1229,6 +1229,8 @@ class usc_e_shop
 		$actionflag = false;
 		$rckid = NULL;
 		$cookie = $this->get_cookie();
+//usces_log('is_admin : '.print_r(is_admin(),true), 'acting_transaction.log');
+//usces_log('cookie : '.print_r($cookie,true), 'acting_transaction.log');
 		
 		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']))){
 			
@@ -1245,10 +1247,15 @@ class usc_e_shop
 			$home = $parsed['host'] . $parsed['path'];
 			$parsed = parse_url($option['ssl_url']);
 			$sslhome = $parsed['host'] . $parsed['path'];
-			//usces_log('sslid : '.$sslid, 'acting_transaction.log');
 
-			//リファラーが無い
-			if( empty($refer) ){
+//usces_log('refer : '.$refer, 'acting_transaction.log');
+//usces_log('sslid : '.$sslid, 'acting_transaction.log');
+//usces_log('rckid : '.$rckid, 'acting_transaction.log');
+//usces_log('usces_cookieid : '.$_SESSION['usces_cookieid'], 'acting_transaction.log');
+//usces_log('request : '.print_r($_SERVER['REQUEST_URI'],true), 'acting_transaction.log');
+
+			//リファラーが無い、若しくはリファラーがHome and SSLHome のどちらとも一致しない
+			if( empty($refer) || (false === strpos($refer, $home) && false === strpos($refer, $sslhome)) ){
 				//sslid と uscesid がNULL では無く、値が同じならばTRUE
 				if( !empty($sslid) && !empty($rckid) && $sslid === $rckid ){
 					$actionflag = true;
@@ -1256,15 +1263,10 @@ class usc_e_shop
 				}else{
 					$actionflag = false;
 				}
-			
-			//リファラーがHome and SSLHome のどちらとも一致しない
-			}elseif( false === strpos($refer, $home) && false === strpos($refer, $sslhome) ){
-				//全てFALSE
-				$actionflag = false;
 			//リファラーが一致
 			}else{
 				//sslid がNULL では無く、uscesid と一致しない場合はFALSE
-				if( !empty($sslid) && $sslid !== $rckid ){
+				if( !empty($sslid) && $sslid !== $rckid && 'acting' !== $rckid ){
 					$actionflag = false;
 				//上記以外はTRUE
 				}else{
@@ -1272,18 +1274,20 @@ class usc_e_shop
 				}
 			}
 				
-			if( $actionflag ){
+			if( $actionflag && 'acting' !== $rckid ){
 				$values = array(
 							'id' => $rckid,
 							'sslid' => $rckid,
 							'name' => '',
 							'rme' => ''
 							);
-				$this->set_cookie($values);
+				if( 'acting' !== $rckid )
+					$this->set_cookie($values);
 			}else{
 				wp_redirect( 'http://'.$home );
 			}
-		}else{
+		}elseif( !is_admin() ){
+//usces_log('is_admin : '.print_r(is_admin(),true), 'acting_transaction.log');
 			if( !isset($cookie['id']) || $cookie['id'] == '' ) {
 				$values = array(
 							'id' => md5(uniqid(rand(), true)),
@@ -5142,16 +5146,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1&uscesid=' . $this->get_uscesid(false));
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
 					exit;
 				}else{
 					usces_log('zeus card : Certification Error', 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0&uscesid=' . $this->get_uscesid(false));
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
 					exit;
 				}
 			}else{
 				usces_log('zeus card : Socket Error', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0&uscesid=' . $this->get_uscesid(false));
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
 			}
 			exit;
 
@@ -5211,16 +5215,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus conv entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr . '&uscesid=' . $this->get_uscesid(false));
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
 					exit;
 				}else{
 					usces_log('zeus data NG : '.$page, 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0&uscesid=' . $this->get_uscesid(false));
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
 					exit;
 				}
 			}else{
 				usces_log('zeus : sockopen NG', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0&uscesid=' . $this->get_uscesid(false));
+				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
 			}
 			exit;
 
@@ -5234,7 +5238,7 @@ class usc_e_shop
 			$nvpstr .= '&PAYMENTACTION=Sale';
 
 			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.
-			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=1&uscesid='.$this->get_uscesid(false));
+			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=1');
 
 			//The cancelURL is the location buyers are sent to when they hit the cancel button during authorization of payment during the PayPal flow
 			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$this->delim.'confirm=1');
@@ -5669,9 +5673,8 @@ class usc_e_shop
 			$postfix = apply_filters('usces_sessid_force', $postfix);
 			$sessid = $chars . '_' . $postfix . '_' . $cid . '_A';
 		}else{
-			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting') . '_acting_A';
+			$sessid = $chars . '_' . apply_filters('usces_sessid_flag', 'acting') . '_' . $cid . '_A';
 		}
-//usces_log('sessid1 : '.$sessid, 'acting_transaction.log');
 		$sessid = urlencode(base64_encode($sessid));
 //usces_log('sessid2 : '.$sessid, 'acting_transaction.log');
 
