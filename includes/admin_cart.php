@@ -55,31 +55,55 @@ jQuery(function($){
 		//** Custom Order **
 		//add: function() {
 		addOrder: function() {
-			if($("#newcsodkey").val() == '' || $("#newcsodname").val() == '') return;
+			//if($("#newcsodkey").val() == '' || $("#newcsodname").val() == '') return;
 
 			var key = $("#newcsodkey").val();
 			var name = $("#newcsodname").val();
 			var value = $("#newcsodvalue").val();
 			var means = $("#newcsodmeans").val();
 			var essential = ($("input#newcsodessential").attr("checked")) ? '1' : '0';
+			var mes = '';
+			if( '' == key || !checkCode( key ) ) 
+				mes += '<p>フィールドキーは半角英数（-_を含む）で入力して下さい。</p>';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-csod").html(mes);
+				return false;
+			}
+
+			$("#newcsod_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			//var s = customOrder.settings;
 			var s = customField.settings;
 			//s.data = "action=custom_order_ajax&add=1&newcsodkey="+key+"&newcsodname="+name+"&newcsodvalue="+value+"&newcsodmeans="+means+"&newcsodessential="+essential;
 			s.data = "action=custom_field_ajax&field=order&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential;
 			s.success = function(data, dataType) {
-				//$("table#optlist-table").removeAttr("style");
-				//$("tbody#item-opt-list").html(data);
-				if(data.length > 1) $("table#csod-list-table").removeAttr("style");
-				$("tbody#csod-list").html(data);
-				$("#newcsodkey").val("");
-				$("#newcsodname").val("");
-				$("#newcsodvalue").val("");
-				$("#newcsodmeans").attr({selectedIndex: 0});
-				$("#newcsodessential").attr({checked: false});
+				$("#ajax-response-csod").html('');
+				$("#newcsod_loading").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				var dupkey = strs[1];
+				if( 0 < dupkey ) {
+					$("#ajax-response-csod").html('<div class="error"><p>同じフィールドキーが存在します。</p></div>');
+				}else{
+					if(list.length > 1) $("table#csod-list-table").removeAttr("style");
+					$("tbody#csod-list").html(list);
+					$("#csod-" + key).css({'background-color': '#FF4'});
+					$("#csod-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
+					$("#newcsodkey").val("");
+					$("#newcsodname").val("");
+					$("#newcsodvalue").val("");
+					$("#newcsodmeans").val(0);
+					$("#newcsodessential").attr({checked: false});
+				}
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csod").html(msg);
+				$("#newcsod_loading").html('');
 			};
 			$.ajax(s);
 			return false;
@@ -91,16 +115,35 @@ jQuery(function($){
 			var value = $(':input[name="csod['+key+'][value]"]').val();
 			var means = $(':input[name="csod['+key+'][means]"]').val();
 			var essential = ($(':input[name="csod['+key+'][essential]"]').attr("checked")) ? '1' : '0';
+			var mes = '';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-csod").html(mes);
+				return false;
+			}
+
+			$("#csod_loading-" + key).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			//var s = customOrder.settings;
 			var s = customField.settings;
 			//s.data = "action=custom_order_ajax&update=1&csodkey="+key+"&csodname="+name+"&csodvalue="+value+"&csodmeans="+means+"&csodessential="+essential;
 			s.data = "action=custom_field_ajax&field=order&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential;
 			s.success = function(data, dataType) {
-				$("tbody#csod-list").html(data);
+				$("#ajax-response-csod").html('');
+				$("#csod_loading-" + key).html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#csod-list").html(list);
+				$("#csod-" + key).css({'background-color': '#FF4'});
+				$("#csod-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csod").html(msg);
+				$("#csod_loading-" + key).html('');
 			};
 			$.ajax(s);
 			return false;
@@ -108,13 +151,18 @@ jQuery(function($){
 
 		//del: function(key) {
 		delOrder: function(key) {
+			$("#csod-" + key).css({'background-color': '#F00'});
+			$("#csod-" + key).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			//var s = customOrder.settings;
 			var s = customField.settings;
 			//s.data = "action=custom_order_ajax&delete=1&csodkey="+key;
 			s.data = "action=custom_field_ajax&field=order&delete=1&key="+key;
 			s.success = function(data, dataType) {
-				$("tbody#csod-list").html(data);
-				if(data.length < 1) $("table#csod-list-table").attr("style", "display: none");
+				$("#ajax-response-csod").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#csod-list").html(list);
+				if(list.length < 1) $("table#csod-list-table").attr("style", "display: none");
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csod").html(msg);
@@ -125,7 +173,7 @@ jQuery(function($){
 
 		//** Custom Customer **
 		addCustomer: function() {
-			if($("#newcscskey").val() == '' || $("#newcscsname").val() == '') return;
+			//if($("#newcscskey").val() == '' || $("#newcscsname").val() == '') return;
 
 			var key = $("#newcscskey").val();
 			var name = $("#newcscsname").val();
@@ -133,20 +181,46 @@ jQuery(function($){
 			var means = $("#newcscsmeans").val();
 			var essential = ($("input#newcscsessential").attr("checked")) ? '1' : '0';
 			var position = $("#newcscsposition").val();
+			var mes = '';
+			if( '' == key || !checkCode( key ) ) 
+				mes += '<p>フィールドキーは半角英数（-_を含む）で入力して下さい。</p>';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-cscs").html(mes);
+				return false;
+			}
+
+			$("#newcscs_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=customer&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position;
 			s.success = function(data, dataType) {
-				if(data.length > 1) $("table#cscs-list-table").removeAttr("style");
-				$("tbody#cscs-list").html(data);
-				$("#newcscskey").val("");
-				$("#newcscsname").val("");
-				$("#newcscsvalue").val("");
-				$("#newcscsmeans").attr({selectedIndex: 0});
-				$("#newcscsessential").attr({checked: false});
+				$("#ajax-response-cscs").html('');
+				$("#newcscs_loading").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				var dupkey = strs[1];
+				if( 0 < dupkey ) {
+					$("#ajax-response-cscs").html('<div class="error"><p>同じフィールドキーが存在します。</p></div>');
+				}else{
+					if(list.length > 1) $("table#cscs-list-table").removeAttr("style");
+					$("tbody#cscs-list").html(list);
+					$("#cscs-" + key).css({'background-color': '#FF4'});
+					$("#cscs-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
+					$("#newcscskey").val("");
+					$("#newcscsname").val("");
+					$("#newcscsvalue").val("");
+					$("#newcscsmeans").val(0);
+					$("#newcscsessential").attr({checked: false});
+				}
 			};
 			s.error = function(msg) {
 				$("#ajax-response-cscs").html(msg);
+				$("#newcscs_loading").html('');
 			};
 			$.ajax(s);
 			return false;
@@ -158,25 +232,49 @@ jQuery(function($){
 			var means = $(':input[name="cscs['+key+'][means]"]').val();
 			var essential = ($(':input[name="cscs['+key+'][essential]"]').attr("checked")) ? '1' : '0';
 			var position = $(':input[name="cscs['+key+'][position]"]').val();
+			var mes = '';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-cscs").html(mes);
+				return false;
+			}
+
+			$("#cscs_loading-" + key).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=customer&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position;
 			s.success = function(data, dataType) {
-				$("tbody#cscs-list").html(data);
+				$("#ajax-response-cscs").html('');
+				$("#cscs_loading-" + key).html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#cscs-list").html(list);
+				$("#cscs-" + key).css({'background-color': '#FF4'});
+				$("#cscs-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
 			};
 			s.error = function(msg) {
 				$("#ajax-response-cscs").html(msg);
+				$("#cscs_loading-" + key).html('');
 			};
 			$.ajax(s);
 			return false;
 		},
 
 		delCustomer: function(key) {
+			$("#cscs-" + key).css({'background-color': '#F00'});
+			$("#cscs-" + key).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=customer&delete=1&key="+key;
 			s.success = function(data, dataType) {
-				$("tbody#cscs-list").html(data);
-				if(data.length < 1) $("table#cscs-list-table").attr("style", "display: none");
+				$("#ajax-response-cscs").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#cscs-list").html(list);
+				if(list.length < 1) $("table#cscs-list-table").attr("style", "display: none");
 			};
 			s.error = function(msg) {
 				$("#ajax-response-cscs").html(msg);
@@ -187,7 +285,7 @@ jQuery(function($){
 
 		//** Custom Delivery **
 		addDelivery: function() {
-			if($("#newcsdekey").val() == '' || $("#newcsdename").val() == '') return;
+			//if($("#newcsdekey").val() == '' || $("#newcsdename").val() == '') return;
 
 			var key = $("#newcsdekey").val();
 			var name = $("#newcsdename").val();
@@ -195,20 +293,46 @@ jQuery(function($){
 			var means = $("#newcsdemeans").val();
 			var essential = ($("input#newcsdeessential").attr("checked")) ? '1' : '0';
 			var position = $("#newcsdeposition").val();
+			var mes = '';
+			if( '' == key || !checkCode( key ) ) 
+				mes += '<p>フィールドキーは半角英数（-_を含む）で入力して下さい。</p>';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-csde").html(mes);
+				return false;
+			}
+
+			$("#newcsde_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=delivery&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position;
 			s.success = function(data, dataType) {
-				if(data.length > 1) $("table#csde-list-table").removeAttr("style");
-				$("tbody#csde-list").html(data);
-				$("#newcsdekey").val("");
-				$("#newcsdename").val("");
-				$("#newcsdevalue").val("");
-				$("#newcsdemeans").attr({selectedIndex: 0});
-				$("#newcsdeessential").attr({checked: false});
+				$("#ajax-response-csde").html('');
+				$("#newcsde_loading").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				var dupkey = strs[1];
+				if( 0 < dupkey ) {
+					$("#ajax-response-csde").html('<div class="error"><p>同じフィールドキーが存在します。</p></div>');
+				}else{
+					if(list.length > 1) $("table#csde-list-table").removeAttr("style");
+					$("tbody#csde-list").html(list);
+					$("#csde-" + key).css({'background-color': '#FF4'});
+					$("#csde-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
+					$("#newcsdekey").val("");
+					$("#newcsdename").val("");
+					$("#newcsdevalue").val("");
+					$("#newcsdemeans").val(0);
+					$("#newcsdeessential").attr({checked: false});
+				}
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csde").html(msg);
+				$("#newcsde_loading").html('');
 			};
 			$.ajax(s);
 			return false;
@@ -220,25 +344,49 @@ jQuery(function($){
 			var means = $(':input[name="csde['+key+'][means]"]').val();
 			var essential = ($(':input[name="csde['+key+'][essential]"]').attr("checked")) ? '1' : '0';
 			var position = $(':input[name="csde['+key+'][position]"]').val();
+			var mes = '';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-csde").html(mes);
+				return false;
+			}
+
+			$("#csde_loading-" + key).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=delivery&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position;
 			s.success = function(data, dataType) {
-				$("tbody#csde-list").html(data);
+				$("#ajax-response-cscs").html('');
+				$("#cscs_loading-" + key).html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#csde-list").html(list);
+				$("#cscs-" + key).css({'background-color': '#FF4'});
+				$("#cscs-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csde").html(msg);
+				$("#cscs_loading-" + key).html('');
 			};
 			$.ajax(s);
 			return false;
 		},
 
 		delDelivery: function(key) {
+			$("#csde-" + key).css({'background-color': '#F00'});
+			$("#csde-" + key).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=delivery&delete=1&key="+key;
 			s.success = function(data, dataType) {
-				$("tbody#csde-list").html(data);
-				if(data.length < 1) $("table#csde-list-table").attr("style", "display: none");
+				$("#ajax-response-csde").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#csde-list").html(list);
+				if(list.length < 1) $("table#csde-list-table").attr("style", "display: none");
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csde").html(msg);
@@ -446,7 +594,7 @@ function toggleVisibility(id) {
 <!--20100818ysk end-->
 	<div class="inside">
 <!--20100818ysk start-->
-	<div id="postoptcustomstuff"><div id="ajax-response-csod"></div>
+	<div id="postoptcustomstuff">
 	<table id="csod-list-table" class="list"<?php echo $csod_display; ?>>
 <!--20100818ysk end-->
 		<thead>
@@ -469,7 +617,7 @@ function toggleVisibility(id) {
 ?>
 		</tbody>
 	</table>
-
+	<div id="ajax-response-csod"></div>
 <!--20100818ysk start-->
 	<p><strong><?php _e('Add a new custom order field','usces') ?> : </strong></p>
 <!--20100818ysk end-->
@@ -499,6 +647,7 @@ function toggleVisibility(id) {
 <!--20100818ysk start-->
 		<input type="button" name="add_csod" id="add_csod" value="<?php _e('Add custom order field','usces') ?>" onclick="customField.addOrder();" />
 <!--20100818ysk end-->
+		<div id="newcsod_loading" class="meta_submit_loading"></div>
 		</td></tr>
 		</tbody>
 	</table>
@@ -528,7 +677,7 @@ function toggleVisibility(id) {
 	<div class="postbox">
 	<h3 class="hndle"><span><?php _e('Custom customer field', 'usces'); ?><a style="cursor:pointer;" onclick="toggleVisibility('ex_custom_customer');"><?php _e('(Explain)','usces'); ?></a></span></h3>
 	<div class="inside">
-	<div id="postoptcustomstuff"><div id="ajax-response-cscs"></div>
+	<div id="postoptcustomstuff">
 	<table id="cscs-list-table" class="list"<?php echo $cscs_display; ?>>
 		<thead>
 		<tr>
@@ -548,7 +697,7 @@ function toggleVisibility(id) {
 ?>
 		</tbody>
 	</table>
-
+	<div id="ajax-response-cscs"></div>
 	<p><strong><?php _e('Add a new custom customer field','usces') ?> : </strong></p>
 	<table id="newmeta2">
 		<thead>
@@ -575,6 +724,7 @@ function toggleVisibility(id) {
 
 		<tr><td colspan="2" class="submit">
 		<input type="button" name="add_cscs" id="add_cscs" value="<?php _e('Add custom customer field','usces') ?>" onclick="customField.addCustomer();" />
+		<div id="newcscs_loading" class="meta_submit_loading"></div>
 		</td></tr>
 		</tbody>
 	</table>
@@ -598,7 +748,7 @@ function toggleVisibility(id) {
 	<div class="postbox">
 	<h3 class="hndle"><span><?php _e('Custom delivery field', 'usces'); ?><a style="cursor:pointer;" onclick="toggleVisibility('ex_custom_delivery');"><?php _e('(Explain)','usces'); ?></a></span></h3>
 	<div class="inside">
-	<div id="postoptcustomstuff"><div id="ajax-response-csde"></div>
+	<div id="postoptcustomstuff">
 	<table id="csde-list-table" class="list"<?php echo $csde_display; ?>>
 		<thead>
 		<tr>
@@ -618,7 +768,7 @@ function toggleVisibility(id) {
 ?>
 		</tbody>
 	</table>
-
+	<div id="ajax-response-csde"></div>
 	<p><strong><?php _e('Add a new custom delivery field','usces') ?> : </strong></p>
 	<table id="newmeta2">
 		<thead>
@@ -645,6 +795,7 @@ function toggleVisibility(id) {
 
 		<tr><td colspan="2" class="submit">
 		<input type="button" name="add_csde" id="add_csde" value="<?php _e('Add custom delivery field','usces') ?>" onclick="customField.addDelivery();" />
+		<div id="newcsde_loading" class="meta_submit_loading"></div>
 		</td></tr>
 		</tbody>
 	</table>

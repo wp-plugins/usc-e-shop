@@ -330,8 +330,8 @@ $html .= "
 						//最短配送時間帯メッセージ
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 						switch(shortest_delivery_time) {
-						case 0://指定しない 20110106ysk
-							message = " . __("'最短 ' + date_str + ' からご指定いただけます。'", 'usces') . ";
+						case 0://指定しない 20110106ysk -> 20111128ysk DEL
+							//message = " . __("'最短 ' + date_str + ' からご指定いただけます。'", 'usces') . ";
 							break;
 						case 1://午前着可
 							message = " . __("'最短 ' + date_str + ' の午前中からご指定いただけます。'", 'usces') . ";

@@ -484,8 +484,8 @@
 					if( undefined != $("select[name='newskuadvance']").val() )
 						$("#newskuadvance").val(0);
 				}
-				$("#itemsku-" + meta_id).css({'background-color': '#FF4'});
-				$("#itemsku-" + meta_id).animate({ 'background-color': '#FFFFEE' }, 2000 );
+				//$("#itemsku-" + meta_id).css({'background-color': '#FF4'});
+				//$("#itemsku-" + meta_id).animate({ 'background-color': '#FFFFEE' }, 2000 );
 			};
 			s.error = function(msg){
 				$("#sku_ajax-response").html(msg);

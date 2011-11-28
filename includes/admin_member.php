@@ -40,7 +40,7 @@ jQuery(function($){
 
 		//** Custom Member **
 		addMember: function() {
-			if($("#newcsmbkey").val() == '' || $("#newcsmbname").val() == '') return;
+			//if($("#newcsmbkey").val() == '' || $("#newcsmbname").val() == '') return;
 
 			var key = $("#newcsmbkey").val();
 			var name = $("#newcsmbname").val();
@@ -48,20 +48,46 @@ jQuery(function($){
 			var means = $("#newcsmbmeans").val();
 			var essential = ($("input#newcsmbessential").attr("checked")) ? '1' : '0';
 			var position = $("#newcsmbposition").val();
+			var mes = '';
+			if( '' == key || !checkCode( key ) ) 
+				mes += '<p>フィールドキーは半角英数（-_を含む）で入力して下さい。</p>';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-csmb").html(mes);
+				return false;
+			}
+
+			$("#newcsmb_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=member&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position;
 			s.success = function(data, dataType) {
-				if(data.length > 1) $("table#csmb-list-table").removeAttr("style");
-				$("tbody#csmb-list").html(data);
-				$("#newcsmbkey").val("");
-				$("#newcsmbname").val("");
-				$("#newcsmbvalue").val("");
-				$("#newcsmbmeans").attr({selectedIndex: 0});
-				$("#newcsmbessential").attr({checked: false});
+				$("#ajax-response-csmb").html('');
+				$("#newcsmb_loading").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				var dupkey = strs[1];
+				if( 0 < dupkey ) {
+					$("#ajax-response-csmb").html('<div class="error"><p>同じフィールドキーが存在します。</p></div>');
+				}else{
+					if(list.length > 1) $("table#csmb-list-table").removeAttr("style");
+					$("tbody#csmb-list").html(list);
+					$("#csmb-" + key).css({'background-color': '#FF4'});
+					$("#csmb-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
+					$("#newcsmbkey").val("");
+					$("#newcsmbname").val("");
+					$("#newcsmbvalue").val("");
+					$("#newcsmbmeans").val(0);
+					$("#newcsmbessential").attr({checked: false});
+				}
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csmb").html(msg);
+				$("#newcsmb_loading").html('');
 			};
 			$.ajax(s);
 			return false;
@@ -73,25 +99,49 @@ jQuery(function($){
 			var means = $(':input[name="csmb['+key+'][means]"]').val();
 			var essential = ($(':input[name="csmb['+key+'][essential]"]').attr("checked")) ? '1' : '0';
 			var position = $(':input[name="csmb['+key+'][position]"]').val();
+			var mes = '';
+			if( '' == name ) 
+				mes += '<p>フィールド名の値を入力してください。</p>';
+			if( 2 != means && '' == value ) 
+				mes += '<p>セレクト値を入力してください。</p>';
+			if( '' != mes ) {
+				mes = '<div class="error">'+mes+'</div>';
+				$("#ajax-response-csmb").html(mes);
+				return false;
+			}
+
+			$("#csmb_loading-" + key).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=member&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position;
 			s.success = function(data, dataType) {
-				$("tbody#csmb-list").html(data);
+				$("#ajax-response-csmb").html('');
+				$("#csmb_loading-" + key).html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#csmb-list").html(list);
+				$("#csmb-" + key).css({'background-color': '#FF4'});
+				$("#csmb-" + key).animate({ 'background-color': '#FFFFEE' }, 2000 );
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csmb").html(msg);
+				$("#csmb_loading-" + key).html('');
 			};
 			$.ajax(s);
 			return false;
 		},
 
 		delMember: function(key) {
+			$("#csmb-" + key).css({'background-color': '#F00'});
+			$("#csmb-" + key).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			var s = customField.settings;
 			s.data = "action=custom_field_ajax&field=member&delete=1&key="+key;
 			s.success = function(data, dataType) {
-				$("tbody#csmb-list").html(data);
-				if(data.length < 1) $("table#csmb-list-table").attr("style", "display: none");
+				$("#ajax-response-csmb").html('');
+				var strs = data.split('#usces#');
+				var list = strs[0];
+				$("tbody#csmb-list").html(list);
+				if(list.length < 1) $("table#csmb-list-table").attr("style", "display: none");
 			};
 			s.error = function(msg) {
 				$("#ajax-response-csmb").html(msg);
@@ -274,7 +324,7 @@ function toggleVisibility(id) {
 	<div class="postbox">
 	<h3 class="hndle"><span><?php _e('Custom member field', 'usces'); ?><a style="cursor:pointer;" onclick="toggleVisibility('ex_custom_member');"><?php _e('(Explain)','usces'); ?></a></span></h3>
 	<div class="inside">
-	<div id="postoptcustomstuff"><div id="ajax-response-csmb"></div>
+	<div id="postoptcustomstuff">
 	<table id="csmb-list-table" class="list"<?php echo $csmb_display; ?>>
 		<thead>
 		<tr>
@@ -294,7 +344,7 @@ function toggleVisibility(id) {
 ?>
 		</tbody>
 	</table>
-
+	<div id="ajax-response-csmb"></div>
 	<p><strong><?php _e('Add a new custom member field','usces') ?> : </strong></p>
 	<table id="newmeta2">
 		<thead>
@@ -321,6 +371,7 @@ function toggleVisibility(id) {
 
 		<tr><td colspan="2" class="submit">
 		<input type="button" name="add_csmb" id="add_csmb" value="<?php _e('Add custom member field','usces') ?>" onclick="customField.addMember();" />
+		<div id="newcsmb_loading" class="meta_submit_loading"></div>
 		</td></tr>
 		</tbody>
 	</table>

@@ -357,6 +357,8 @@ jQuery(function($){
 		},
 		
 		update_delivery_method : function() {
+			if($("input[name='delivery_method_name']").val() == "") return;
+			
 			$("#delivery_method_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#delivery_method_name_select option:selected").val();
 			var name = encodeURIComponent($("input[name='delivery_method_name']").val());
@@ -710,6 +712,8 @@ jQuery(function($){
 		},
 		
 		update_shipping_charge : function() {
+			if($("input[name='shipping_charge_name']").val() == "") return;
+			
 			$("#shipping_charge_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#shipping_charge_name_select option:selected").val();
 			var name = encodeURIComponent($("input[name='shipping_charge_name']").val());
@@ -916,6 +920,8 @@ jQuery(function($){
 		},
 		
 		update_delivery_days : function() {
+			if($("input[name='delivery_days_name']").val() == "") return;
+			
 			$("#delivery_days_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#delivery_days_name_select option:selected").val();
 			var name = $("input[name='delivery_days_name']").val();

@@ -1599,6 +1599,7 @@ function _list_custom_order_meta_row($key, $entry) {
 	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csod[{$key}]' id='del_csod[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delOrder(\"{$key}\");' />";
 	$r .= "\n\t\t<input type='button' name='upd_csod[{$key}]' id='upd_csod[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updOrder(\"{$key}\");' /></div>";
 //20100818ysk end
+	$r .= "\n\t\t<div id='csod_loading-{$key}' class='meta_submit_loading'></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csod[{$key}][value]' id='csod[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;
@@ -1720,6 +1721,7 @@ function custom_field_ajax() {
 	}
 
 	$meta = usces_has_custom_field_meta($_POST['field']);
+	$dupkey = 0;
 
 	if(isset($_POST['add'])) {
 		$newkey = isset($_POST['newkey']) ? trim($_POST['newkey']) : '';
@@ -1749,6 +1751,8 @@ function custom_field_ajax() {
 				if($newposition != '') $meta[$newkey]['position'] = $newposition;
 				update_option($field, $meta);
 			}
+		} else {
+			$dupkey = 1;
 		}
 
 	} elseif(isset($_POST['update'])) {
@@ -1805,9 +1809,10 @@ function custom_field_ajax() {
 		break;
 	}
 
+	$res = $r . '#usces#' . $dupkey;
 	//REGEX BUG: but it'll return info
 	// Compose JavaScript for return
-	die($r);
+	die($res);
 }
 
 /**
@@ -1848,6 +1853,7 @@ function _list_custom_customer_meta_row($key, $entry) {
 	$r .= "<select name='cscs[{$key}][position]' id='cscs[{$key}][position]'>".$positionsoption."</select></div>";
 	$r .= "\n\t\t<div class='submit'><input type='button' name='del_cscs[{$key}]' id='del_cscs[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delCustomer(\"{$key}\");' />";
 	$r .= "\n\t\t<input type='button' name='upd_cscs[{$key}]' id='upd_cscs[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updCustomer(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div id='cscs_loading-{$key}' class='meta_submit_loading'></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='cscs[{$key}][value]' id='cscs[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;
@@ -1891,6 +1897,7 @@ function _list_custom_delivery_meta_row($key, $entry) {
 	$r .= "<select name='csde[{$key}][position]' id='csde[{$key}][position]'>".$positionsoption."</select></div>";
 	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csde[{$key}]' id='del_csde[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delDelivery(\"{$key}\");' />";
 	$r .= "\n\t\t<input type='button' name='upd_csde[{$key}]' id='upd_csde[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updDelivery(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div id='csde_loading-{$key}' class='meta_submit_loading'></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csde[{$key}][value]' id='csde[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;
@@ -1933,6 +1940,7 @@ function _list_custom_member_meta_row($key, $entry) {
 	$r .= "<select name='csmb[{$key}][position]' id='csmb[{$key}][position]'>".$positionsoption."</select></div>";
 	$r .= "\n\t\t<div class='submit'><input type='button' name='del_csmb[{$key}]' id='del_csmb[{$key}]' value='".esc_attr(__( 'Delete' ))."' onclick='customField.delMember(\"{$key}\");' />";
 	$r .= "\n\t\t<input type='button' name='upd_csmb[{$key}]' id='upd_csmb[{$key}]' value='".esc_attr(__( 'Update' ))."' onclick='customField.updMember(\"{$key}\");' /></div>";
+	$r .= "\n\t\t<div id='csmb_loading-{$key}' class='meta_submit_loading'></div>";
 	$r .= "</td>";
 	$r .= "\n\t\t<td class='item-opt-value'><textarea name='csmb[{$key}][value]' id='csmb[{$key}][value]' class='optvalue'>{$value}</textarea></td>\n\t</tr>";
 	return $r;
