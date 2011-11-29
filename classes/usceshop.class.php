@@ -591,9 +591,9 @@ class usc_e_shop
 
 		if(isset($_POST['usces_option_update'])) {
 			if( empty($_POST['order_mail']) or 
+				empty($_POST['inquiry_mail']) or 
 				empty($_POST['sender_mail']) or 
-				empty($_POST['sender_mail']) or 
-				empty($_POST['sender_mail']) ) {
+				empty($_POST['error_mail']) ) {
 				$this->action_status = 'error';
 				$this->action_message = __('データに不備が有ります','usces');
 
