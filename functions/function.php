@@ -3316,8 +3316,9 @@ function usces_paypal_doecp( &$results ) {
 		$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
 		$token = urlencode($_REQUEST['token']);
 		$currencyCodeType = urlencode($usces->get_currency_code());
-		$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-		$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
+		//$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
+		//$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
+		$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
 		$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
 		$billingFreq = urlencode($usces->getItemFrequency($post_id));
 		//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);

@@ -3160,6 +3160,9 @@ msgstr "100-1001"
 msgid "Select the scope of the point that customers can use.<br />Default is 'Limited Only to Total Merchandise Price'. 'Applicable to Total Merchandise Price and Handling Fee' If you choose, you can pay shipping and COD fee in points."
 msgstr "お客様が利用できるポイントの適用範囲を選択します。<br />初期値は「商品合計金額のみに制限」されています。「商品合計額及び手数料などにも適用」を選択すると送料や代引き手数料もポイントで支払う事ができるようになります。"
 
+msgid "No valid shipping methods."
+msgstr "有効な配送方法が見当たりません。"
+
 #~ msgid "print the invoice"
 #~ msgstr "納品書印刷"
 #~ msgid "Invoices"
