@@ -1,56 +1,56 @@
 <?php
 class dataTable
 {
-	var $dbCon;			//¥Ç¡¼¥¿¥Ù¡¼¥¹ÀÜÂ³¥ê¥½¡¼¥¹
-	var $table;			//¥Æ¡¼¥Ö¥ëÌ¾
-	var $optionTableName;	//¥ª¥×¥·¥ç¥ó¥Æ¡¼¥Ö¥ëÌ¾
-	var $errorMes;		//¥¨¥é¡¼¥á¥Ã¥»¡¼¥¸
-	var $action;		//¥¢¥¯¥·¥ç¥ó
-	var $maxRow;		//ºÇÂçÉ½¼¨¹Ô¿ô
-	var $startRow;		//É½¼¨³«»Ï¹ÔÈÖ¹æ
-	var $sortColumn;	//¸½ºß¥½¡¼¥ÈÃæ¤Î¥Õ¥£¡¼¥ë¥É
-	var $sortOldColumn;	//Èæ³ÓÍÑ
-	var $listPatternId;	//¹Ê¹þ¤ßlistPatternID
-	var $listPatternRows;	//listPattern¥ª¥Ö¥¸¥§¥¯¥È
-	var $listPatternTableName;	//listPattern¥Æ¡¼¥Ö¥ëÌ¾
-	var $listPatternNavigation;	//¥Ê¥ô¥£¥²¡¼¥·¥ç¥óhtml¥³¡¼¥É
-	var $listPatternSelect;	//¥»¥ì¥¯¥Èhtml¥³¡¼¥É
-	var $totalRow;		//Á´¹Ô¿ô
-	var $selectedRow;	//¹Ê¤ê¹þ¤Þ¤ì¤¿¹Ô¿ô
-	var $currentPage;	//¸½ºß¤Î¥Ú¡¼¥¸No
-	var $firstPage;		//ºÇ½é¤Î¥Ú¡¼¥¸No
-	var $previousPage;	//Á°¤Î¥Ú¡¼¥¸No
-	var $nextPage;		//¼¡¤Î¥Ú¡¼¥¸No
-	var $lastPage;		//ºÇ½ª¥Ú¡¼¥¸No
-	var $naviMaxButton;	//¥Ú¡¼¥¸¥Í¡¼¥·¥ç¥ó¡¦¥Ê¥Ó¤Î¥Ü¥¿¥ó¤Î¿ô
-	var $displayColumns;//É½¼¨¤¹¤ë¥Õ¥£¡¼¥ë¥É
-	var $defaultColumns;//Á´¤Æ¤Î¥Õ¥£¡¼¥ë¥É
-	var $userHeaderNames;	//¥æ¡¼¥¶¡¼»ØÄê¤Î¥Ø¥Ã¥ÀÌ¾
-	var $columnTypes;	//¥Õ¥£¡¼¥ë¥É¤Î¥Ç¡¼¥¿¥¿¥¤¥×
-	var $valueLabels;	//ÁªÂò¥¿¥¤¥×ÍÑ¥ô¥¡¥ê¥å¡¼
-	var $headers;		//É½¼¨¤¹¤ë¥Ø¥Ã¥ÀÊ¸»úÎó
-	var $rows;			//¥á¥¤¥ó¥Æ¡¼¥Ö¥ë¥ª¥Ö¥¸¥§¥¯¥È
-	var $sortSwitchs;	//³Æ¥Õ¥£¡¼¥ë¥ÉËè¤Î¾º½ç¹ß½ç¥¹¥¤¥Ã¥Á
-	var $dataTableNavigation;	//¥Ê¥ô¥£¥²¡¼¥·¥ç¥óhtml¥³¡¼¥É
-	var $expiration;	//CookieÍ­¸ú´ü¸Â
-	var $editMemberId;	//ÊÔ½¸ÂÐ¾Ý¤Î¥á¥ó¥Ð¡¼ID
-	var $searchs;		//´Ê°×¹Ê¹þ¤ßÂÐ¾Ý¥Õ¥£¡¼¥ë¥É¡¢¼°¡¢¥­¡¼¥ï¡¼¥É
-	var $searchSql;		//´Ê°×¹Ê¹þ¤ßSQL
-	var $searchSwitchStatus;	//¥µ¡¼¥ÁÉ½¼¨¥¹¥¤¥Ã¥Á
-	var $useListPattern;//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $useEditField;	//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $useUpload;		//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $useDownload;	//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $useAllDelete;	//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $useBackButton;	//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $useNewButton;	//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $useDoubleClickEdit;	//¥Ü¥¿¥óÉ½¼¨¥Õ¥é¥°
-	var $editListPatternName;		//¥Ñ¥¿¡¼¥ó¥ê¥¹¥ÈÊÔ½¸ÍÑ
-	var $editListPatternShikis;		//¥Ñ¥¿¡¼¥ó¥ê¥¹¥ÈÊÔ½¸ÍÑ
-	var $editListPatternFieldNames;	//¥Ñ¥¿¡¼¥ó¥ê¥¹¥ÈÊÔ½¸ÍÑ
-	var $editListPatternFieldDatas;	//¥Ñ¥¿¡¼¥ó¥ê¥¹¥ÈÊÔ½¸ÍÑ
-	var $tableValue;	//°ì»þ¥Ç¡¼¥¿
-	var $overlap;	//sendMail ½ÅÊ£µö²Ä
+	var $dbCon;			//ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹æŽ¥ç¶šãƒªã‚½ãƒ¼ã‚¹
+	var $table;			//ãƒ†ãƒ¼ãƒ–ãƒ«å
+	var $optionTableName;	//ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãƒ†ãƒ¼ãƒ–ãƒ«å
+	var $errorMes;		//ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	var $action;		//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
+	var $maxRow;		//æœ€å¤§è¡¨ç¤ºè¡Œæ•°
+	var $startRow;		//è¡¨ç¤ºé–‹å§‹è¡Œç•ªå·
+	var $sortColumn;	//ç¾åœ¨ã‚½ãƒ¼ãƒˆä¸­ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+	var $sortOldColumn;	//æ¯”è¼ƒç”¨
+	var $listPatternId;	//çµžè¾¼ã¿listPatternID
+	var $listPatternRows;	//listPatternã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	var $listPatternTableName;	//listPatternãƒ†ãƒ¼ãƒ–ãƒ«å
+	var $listPatternNavigation;	//ãƒŠãƒ´ã‚£ã‚²ãƒ¼ã‚·ãƒ§ãƒ³htmlã‚³ãƒ¼ãƒ‰
+	var $listPatternSelect;	//ã‚»ãƒ¬ã‚¯ãƒˆhtmlã‚³ãƒ¼ãƒ‰
+	var $totalRow;		//å…¨è¡Œæ•°
+	var $selectedRow;	//çµžã‚Šè¾¼ã¾ã‚ŒãŸè¡Œæ•°
+	var $currentPage;	//ç¾åœ¨ã®ãƒšãƒ¼ã‚¸No
+	var $firstPage;		//æœ€åˆã®ãƒšãƒ¼ã‚¸No
+	var $previousPage;	//å‰ã®ãƒšãƒ¼ã‚¸No
+	var $nextPage;		//æ¬¡ã®ãƒšãƒ¼ã‚¸No
+	var $lastPage;		//æœ€çµ‚ãƒšãƒ¼ã‚¸No
+	var $naviMaxButton;	//ãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒŠãƒ“ã®ãƒœã‚¿ãƒ³ã®æ•°
+	var $displayColumns;//è¡¨ç¤ºã™ã‚‹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+	var $defaultColumns;//å…¨ã¦ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+	var $userHeaderNames;	//ãƒ¦ãƒ¼ã‚¶ãƒ¼æŒ‡å®šã®ãƒ˜ãƒƒãƒ€å
+	var $columnTypes;	//ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ãƒ‡ãƒ¼ã‚¿ã‚¿ã‚¤ãƒ—
+	var $valueLabels;	//é¸æŠžã‚¿ã‚¤ãƒ—ç”¨ãƒ´ã‚¡ãƒªãƒ¥ãƒ¼
+	var $headers;		//è¡¨ç¤ºã™ã‚‹ãƒ˜ãƒƒãƒ€æ–‡å­—åˆ—
+	var $rows;			//ãƒ¡ã‚¤ãƒ³ãƒ†ãƒ¼ãƒ–ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	var $sortSwitchs;	//å„ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰æ¯Žã®æ˜‡é †é™é †ã‚¹ã‚¤ãƒƒãƒ
+	var $dataTableNavigation;	//ãƒŠãƒ´ã‚£ã‚²ãƒ¼ã‚·ãƒ§ãƒ³htmlã‚³ãƒ¼ãƒ‰
+	var $expiration;	//Cookieæœ‰åŠ¹æœŸé™
+	var $editMemberId;	//ç·¨é›†å¯¾è±¡ã®ãƒ¡ãƒ³ãƒãƒ¼ID
+	var $searchs;		//ç°¡æ˜“çµžè¾¼ã¿å¯¾è±¡ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã€å¼ã€ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰
+	var $searchSql;		//ç°¡æ˜“çµžè¾¼ã¿SQL
+	var $searchSwitchStatus;	//ã‚µãƒ¼ãƒè¡¨ç¤ºã‚¹ã‚¤ãƒƒãƒ
+	var $useListPattern;//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $useEditField;	//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $useUpload;		//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $useDownload;	//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $useAllDelete;	//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $useBackButton;	//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $useNewButton;	//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $useDoubleClickEdit;	//ãƒœã‚¿ãƒ³è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	var $editListPatternName;		//ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒªã‚¹ãƒˆç·¨é›†ç”¨
+	var $editListPatternShikis;		//ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒªã‚¹ãƒˆç·¨é›†ç”¨
+	var $editListPatternFieldNames;	//ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒªã‚¹ãƒˆç·¨é›†ç”¨
+	var $editListPatternFieldDatas;	//ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒªã‚¹ãƒˆç·¨é›†ç”¨
+	var $tableValue;	//ä¸€æ™‚ãƒ‡ãƒ¼ã‚¿
+	var $overlap;	//sendMail é‡è¤‡è¨±å¯
 	
 	//Constructor
 	function dataTable($dbConnection, $databaseName, $tableName)
@@ -222,7 +222,7 @@ class dataTable
 		$this->SetDefaultColumns();
 		
 		
-		//¥ê¥¹¥È¥Ñ¥¿¡¼¥ó
+		//ãƒªã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³
 		if(isset($_COOKIE[$this->table.'listPatternId']) && $this->listPatternTableName != ''){
 			$this->listPatternId = $_COOKIE[$this->table.'listPatternId'];
 		}else if($this->listPatternTableName != ''){
@@ -235,7 +235,7 @@ class dataTable
 //			$this->listPatternId =1;
 //			$this->SetOptions($this->table, 'listPatternId', $this->listPatternId);
 //		}
-		//¥Ø¥Ã¥ÀÉ½¼¨Ê¸»úÎó
+		//ãƒ˜ãƒƒãƒ€è¡¨ç¤ºæ–‡å­—åˆ—
 //		if(isset($_COOKIE[$this->table.'userHeaderNames'])){
 //			$this->userHeaderNames = $this->GetCookieArray($this->table.'userHeaderNames');
 //		}else{
@@ -254,7 +254,7 @@ class dataTable
 			}
 			$this->SetOptions($this->table, 'userHeaderNames', $this->userHeaderNames);
 		}
-		//É½¼¨¥Õ¥£¡¼¥ë¥É
+		//è¡¨ç¤ºãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
 //		if(isset($_COOKIE[$this->table.'displayColumns'])){
 //			$this->displayColumns = $this->GetCookieArray($this->table.'displayColumns');
 //		}else{
@@ -267,7 +267,7 @@ class dataTable
 			$this->displayColumns = $this->defaultColumns;
 			$this->SetOptions($this->table, 'displayColumns', $this->displayColumns);
 		}
-		//¥Õ¥£¡¼¥ë¥É¤Î¥Ç¡¼¥¿¥¿¥¤¥×
+		//ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ãƒ‡ãƒ¼ã‚¿ã‚¿ã‚¤ãƒ—
 //		if(isset($_COOKIE[$this->table.'columnTypes'])){
 //			$this->columnTypes = $this->GetCookieArray($this->table.'columnTypes');
 //		}else{
@@ -286,7 +286,7 @@ class dataTable
 			}
 			$this->SetOptions($this->table, 'columnTypes', $this->columnTypes);
 		}
-		//ÁªÂò¥¿¥¤¥×ÍÑ¥ô¥¡¥ê¥å¡¼
+		//é¸æŠžã‚¿ã‚¤ãƒ—ç”¨ãƒ´ã‚¡ãƒªãƒ¥ãƒ¼
 //		if(isset($_COOKIE[$this->table.'valueLabels'])){
 //			$this->valueLabels = $this->GetCookieArray($this->table.'valueLabels');
 //		}else{
@@ -307,7 +307,7 @@ class dataTable
 		}
 		
 	
-		//¥È¡¼¥¿¥ë¹Ô¿ô¡¢¥Ç¥Õ¥©¥ë¥È¥Õ¥£¡¼¥ë¥ÉÌ¾
+		//ãƒˆãƒ¼ã‚¿ãƒ«è¡Œæ•°ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å
 		$this->SetTotalRow();
 		$this->SetSelectedRow();
 
@@ -748,30 +748,30 @@ class dataTable
 	function SetSESSION()
 	{
 	
-//		var $dbCon;			//¥Ç¡¼¥¿¥Ù¡¼¥¹ÀÜÂ³¥ê¥½¡¼¥¹
-//		var $table;			//¥Æ¡¼¥Ö¥ëÌ¾
-//		var $errorMes;		//¥¨¥é¡¼¥á¥Ã¥»¡¼¥¸
-//		var $action;		//¥¢¥¯¥·¥ç¥ó
-//		var $maxRow;		//ºÇÂçÉ½¼¨¹Ô¿ô
-		$_SESSION[$this->table]['startRow'] = $this->startRow;		//É½¼¨³«»Ï¹ÔÈÖ¹æ
-		$_SESSION[$this->table]['sortColumn'] = $this->sortColumn;	//¸½ºß¥½¡¼¥ÈÃæ¤Î¥Õ¥£¡¼¥ë¥É
-//		var $sortNewColumn;	//¿·¤¿¤Ë¥½¡¼¥È¥ê¥¯¥¨¥¹¥È¤¬¤¢¤Ã¤¿¥Õ¥£¡¼¥ë¥É
-		$_SESSION[$this->table]['totalRow'] = $this->totalRow;		//Á´¹Ô¿ô
-		$_SESSION[$this->table]['selectedRow'] = $this->selectedRow;	//¹Ê¤ê¹þ¤Þ¤ì¤¿¹Ô¿ô
-		$_SESSION[$this->table]['currentPage'] = $this->currentPage;	//¸½ºß¤Î¥Ú¡¼¥¸No
-//		var $firstPage;		//ºÇ½é¤Î¥Ú¡¼¥¸No
-		$_SESSION[$this->table]['previousPage'] = $this->previousPage;	//Á°¤Î¥Ú¡¼¥¸No
-		$_SESSION[$this->table]['nextPage'] = $this->nextPage;		//¼¡¤Î¥Ú¡¼¥¸No
-		$_SESSION[$this->table]['lastPage'] = $this->lastPage;		//ºÇ½ª¥Ú¡¼¥¸No
-//		var $naviMaxButton;	//¥Ú¡¼¥¸¥Í¡¼¥·¥ç¥ó¡¦¥Ê¥Ó¤Î¥Ü¥¿¥ó¤Î¿ô
-		$_SESSION[$this->table]['displayColumns'] = $this->displayColumns;//¼ÂºÝ¤ËÉ½¼¨¤¹¤ë¥Õ¥£¡¼¥ë¥É
-		$_SESSION[$this->table]['defaultColumns'] = $this->defaultColumns;//Á´¤Æ¤Î¥Õ¥£¡¼¥ë¥É
-		$_SESSION[$this->table]['userHeaderNames'] = $this->userHeaderNames;//Á´¤Æ¤Î¥Õ¥£¡¼¥ë¥É
-		$_SESSION[$this->table]['headers'] = $this->headers;//É½¼¨¤¹¤ë¥Ø¥Ã¥ÀÊ¸»úÎó
-		$_SESSION[$this->table]['rows'] = $this->rows;			//É½¼¨¤¹¤ë¹Ô¥ª¥Ö¥¸¥§¥¯¥È
-		$_SESSION[$this->table]['sortSwitchs'] = $this->sortSwitchs;	//³Æ¥Õ¥£¡¼¥ë¥ÉËè¤Î¾º½ç¹ß½ç¥¹¥¤¥Ã¥Á
+//		var $dbCon;			//ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹æŽ¥ç¶šãƒªã‚½ãƒ¼ã‚¹
+//		var $table;			//ãƒ†ãƒ¼ãƒ–ãƒ«å
+//		var $errorMes;		//ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+//		var $action;		//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
+//		var $maxRow;		//æœ€å¤§è¡¨ç¤ºè¡Œæ•°
+		$_SESSION[$this->table]['startRow'] = $this->startRow;		//è¡¨ç¤ºé–‹å§‹è¡Œç•ªå·
+		$_SESSION[$this->table]['sortColumn'] = $this->sortColumn;	//ç¾åœ¨ã‚½ãƒ¼ãƒˆä¸­ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+//		var $sortNewColumn;	//æ–°ãŸã«ã‚½ãƒ¼ãƒˆãƒªã‚¯ã‚¨ã‚¹ãƒˆãŒã‚ã£ãŸãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+		$_SESSION[$this->table]['totalRow'] = $this->totalRow;		//å…¨è¡Œæ•°
+		$_SESSION[$this->table]['selectedRow'] = $this->selectedRow;	//çµžã‚Šè¾¼ã¾ã‚ŒãŸè¡Œæ•°
+		$_SESSION[$this->table]['currentPage'] = $this->currentPage;	//ç¾åœ¨ã®ãƒšãƒ¼ã‚¸No
+//		var $firstPage;		//æœ€åˆã®ãƒšãƒ¼ã‚¸No
+		$_SESSION[$this->table]['previousPage'] = $this->previousPage;	//å‰ã®ãƒšãƒ¼ã‚¸No
+		$_SESSION[$this->table]['nextPage'] = $this->nextPage;		//æ¬¡ã®ãƒšãƒ¼ã‚¸No
+		$_SESSION[$this->table]['lastPage'] = $this->lastPage;		//æœ€çµ‚ãƒšãƒ¼ã‚¸No
+//		var $naviMaxButton;	//ãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒŠãƒ“ã®ãƒœã‚¿ãƒ³ã®æ•°
+		$_SESSION[$this->table]['displayColumns'] = $this->displayColumns;//å®Ÿéš›ã«è¡¨ç¤ºã™ã‚‹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+		$_SESSION[$this->table]['defaultColumns'] = $this->defaultColumns;//å…¨ã¦ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+		$_SESSION[$this->table]['userHeaderNames'] = $this->userHeaderNames;//å…¨ã¦ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+		$_SESSION[$this->table]['headers'] = $this->headers;//è¡¨ç¤ºã™ã‚‹ãƒ˜ãƒƒãƒ€æ–‡å­—åˆ—
+		$_SESSION[$this->table]['rows'] = $this->rows;			//è¡¨ç¤ºã™ã‚‹è¡Œã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+		$_SESSION[$this->table]['sortSwitchs'] = $this->sortSwitchs;	//å„ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰æ¯Žã®æ˜‡é †é™é †ã‚¹ã‚¤ãƒƒãƒ
 		$_SESSION[$this->table]['dataTableNavigation'] = $this->dataTableNavigation;	
-		$_SESSION[$this->table]['listPatternId'] = $this->listPatternId;	//¹Ê¹þ¤ßSQLÊ¸¡ÊlistPattern¥Æ¡¼¥Ö¥ë¤è¤ê¼èÆÀ¡Ë
+		$_SESSION[$this->table]['listPatternId'] = $this->listPatternId;	//çµžè¾¼ã¿SQLæ–‡ï¼ˆlistPatternãƒ†ãƒ¼ãƒ–ãƒ«ã‚ˆã‚Šå–å¾—ï¼‰
 		$_SESSION[$this->table]['listPatternRows'] = $this->listPatternRows;	
 		$_SESSION[$this->table]['searchSql'] = $this->searchSql;
 		$_SESSION[$this->table]['listPatternNavigation'] = $this->listPatternNavigation;
@@ -1208,7 +1208,7 @@ class dataTable
 	
 	function SetSelectedRow()
 	{
-		//¹Ê¹þ¤ß¸å¹Ô¿ô
+		//çµžè¾¼ã¿å¾Œè¡Œæ•°
 		$where = $this->GetWhere($this->listPatternTableName);
 		if($this->overlap == 'DISALLOW'){
 			$group = ' GROUP BY mailaddress';
@@ -1388,7 +1388,7 @@ class dataTable
 		}
 	}
 	
-	//¥Ñ¥¿¡¼¥ó¥ê¥¹¥ÈÄÉ²Ã
+	//ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒªã‚¹ãƒˆè¿½åŠ 
 	function AddPatternList()
 	{
 		$flag = '';

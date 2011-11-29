@@ -4560,8 +4560,11 @@ class usc_e_shop
 	}
 	
 	function getItemDeliveryMethod($post_id) {
-		$str = get_post_custom_values('_itemDeliveryMethod', $post_id);
-		return unserialize($str[0]);
+		$str = get_post_meta($post_id, '_itemDeliveryMethod', true);
+		if( empty($str) )
+			return array();
+		else
+			return $str;
 	}
 	
 	function getItemIndividualSCharge($post_id) {
@@ -5380,10 +5383,12 @@ class usc_e_shop
 			$cart = $this->cart->get_cart();
 		if( empty($entry) )
 			$entry = $this->cart->get_entry();
-			
-		$d_method_id = $entry['order']['delivery_method'];
-		$d_method_index = $this->get_delivery_method_index($d_method_id);
 		
+		//配送方法ID
+		$d_method_id = $entry['order']['delivery_method'];
+		//配送方法index
+		$d_method_index = $this->get_delivery_method_index($d_method_id);
+		//送料ID
 		$fixed_charge_id = $this->options['delivery_method'][$d_method_index]['charge'];
 		$individual_quant = 0;
 		$total_quant = 0;
@@ -5393,7 +5398,9 @@ class usc_e_shop
 		foreach ( $cart as $rows ) {
 		
 			if( -1 == $fixed_charge_id ){
+				//商品送料ID
 				$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
+				//商品送料index
 				$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
 				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
 			}else{
@@ -5401,7 +5408,6 @@ class usc_e_shop
 				$s_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
 				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
 			}
-
 			
 			if($this->getItemIndividualSCharge($rows['post_id'])){
 				$individual_quant += $rows['quantity'];
@@ -5934,12 +5940,15 @@ class usc_e_shop
 			$cart = $this->cart->get_cart();
 			$before_deli = array();
 			$intersect = array();
+			$integration = array();
+			$temp = array();
 			foreach($cart as $key => $row){
 				$deli = $this->getItemDeliveryMethod($row['post_id']);
-				if(!is_array($deli)) {
-					return array();
-				}
-				if( $key === 0 ){
+				if( empty($deli))
+					continue;
+
+			//usces_log('deli : '.print_r($deli, true), 'acting_transaction.log');
+				if( empty($intersect) ){
 					$intersect = $deli;
 				}
 				$intersect = array_intersect($deli, $intersect);
@@ -5955,9 +5964,7 @@ class usc_e_shop
 			}
 			ksort($temp);
 			if( empty($intersect) ){
-				$deli = array();
-				$deli[0] = (int)reset($temp);
-				return $deli;
+				return array();
 			}else{
 				return $intersect;
 			}
