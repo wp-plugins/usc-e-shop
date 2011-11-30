@@ -5323,7 +5323,14 @@ class usc_e_shop
 		$total = $this->get_total_price( $cart );
 		if ( $display_mode == 'Promotionsale' ) {
 			if ( $this->options['campaign_privilege'] == 'discount' ) {
-				$point = 0;
+				foreach ( $cart as $rows ) {
+					$cats = $this->get_post_term_ids($rows['post_id'], 'category');
+					if ( !in_array($this->options['campaign_category'], $cats) ){
+						$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
+						$price = $rows['price'] * $rows['quantity'];
+						$point += $price * $rate[0] / 100;
+					}
+				}
 			} elseif ( $this->options['campaign_privilege'] == 'point' ) {
 				foreach ( $cart as $rows ) {
 					$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);

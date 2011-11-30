@@ -1,5 +1,6 @@
 <?php
-global $usces_entries, $usces_carts;
+global $usces_entries, $usces_carts, $usces_members;
+usces_get_members();
 usces_get_entries();
 usces_get_carts();
 $html = '<div id="info-confirm">
