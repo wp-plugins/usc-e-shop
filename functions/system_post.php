@@ -279,6 +279,8 @@ function payment_form() {
 function payment_ajax()
 {
 	global $usces;
+	
+	$id = NULL;
 
 	if( $_POST['action'] != 'payment_ajax' ) die(0);
 	

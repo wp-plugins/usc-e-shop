@@ -16,7 +16,7 @@ if(isset($this))
 	
 //$shipping_indication = apply_filters('usces_filter_shipping_indication', $usces->options['usces_shipping_indication']);
 
-$html .= '
+$html = '
 <script type="text/javascript">
 	//1桁の数字を0埋めで2桁にする
 	var toDoubleDigits = function(num) {

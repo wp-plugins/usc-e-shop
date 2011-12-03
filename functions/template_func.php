@@ -648,7 +648,7 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	$name = get_post_custom_values('_itemName', $post_id);
 	
 	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
+		$pictid = (int)$usces->get_mainpictid($code[0]);
 		$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
 		if( 'item' == $media ){
 			$alt = 'alt="'.esc_attr($code[0]).'"';
@@ -660,13 +660,14 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 		}
 	}else{
 		$pictids = $usces->get_pictids($code[0]);
-		$html = wp_get_attachment_image( $pictids[$number], array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
+		$pictid = ( isset($pictids[$number]) && (int)$pictids[$number] ) ? $pictids[$number] : 0;
+		$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
 		if( 'item' == $media ){
 			$alt = 'alt="'.esc_attr($code[0]).'"';
-			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictids[$number]);
+			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
 			$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
 			$title = 'title="'.esc_attr($name[0]).'"';
-			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictids[$number]);
+			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 			$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 		}
 	}
@@ -686,11 +687,12 @@ function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 	if(!$code) return false;
 	$name = get_post_custom_values('_itemName', $post_id);
 	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
+		$pictid = (int)$usces->get_mainpictid($code[0]);
 		$html = wp_get_attachment_url( $pictid );
 	}else{
 		$pictids = $usces->get_pictids($code[0]);
-		$html = wp_get_attachment_url( $pictids[$number] );
+		$pictid = ( isset($pictids[$number]) && (int)$pictids[$number] ) ? $pictids[$number] : 0;
+		$html = wp_get_attachment_url( $pictid );
 	}
 	if($out == 'return'){
 		return $html;
@@ -876,7 +878,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 //20100914ysk end
 	}
 	
-	$html = apply_filters('usces_filter_the_itemOption', $html, $values, $name, $label, $post_id, $usces->itemsku['code']);
+	$html = apply_filters('usces_filter_the_itemOption', $html, $opts, $name, $label, $post_id, $usces->itemsku['code']);
 	
 	if( $out == 'return' ){
 		return $html;
@@ -1063,7 +1065,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			}else{
 				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payment['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payment['name'])."</label></dt>\n";
 			}
-			$list .= "\t<dd>{$payments['explanation']}</dd>\n";
+			$list .= "\t<dd>{$payment['explanation']}</dd>\n";
 		}
 	}
 
@@ -1324,12 +1326,12 @@ function usces_remembername( $out = '' ){
 	$value = $usces->get_cookie();
 	
 	if( $out == 'return' ){
-		if($value)
+		if(isset($value['name']))
 			return $value['name'];
 		else
 			return '';
 	}else{
-		if($value)
+		if(isset($value['name']))
 			echo esc_html($value['name']);
 		else
 			echo '';
@@ -1340,12 +1342,12 @@ function usces_rememberpass( $out = '' ){
 	$value = $usces->get_cookie();
 	
 	if( $out == 'return' ){
-		if($value)
+		if(isset($value['pass']))
 			return $value['pass'];
 		else
 			return '';
 	}else{
-		if($value)
+		if(isset($value['pass']))
 			echo esc_html($value['pass']);
 		else
 			echo '';
@@ -1356,12 +1358,12 @@ function usces_remembercheck( $out = '' ){
 	$value = $usces->get_cookie();
 	
 	if( $out == 'return' ){
-		if($value && $value['name'] != '')
+		if(isset($value['name']) && $value['name'] != '')
 			return ' checked="checked"';
 		else
 			return '';
 	}else{
-		if($value && $value['name'] != '')
+		if(isset($value['name']) && $value['name'] != '')
 			echo ' checked="checked"';
 		else
 			echo '';
@@ -1499,7 +1501,8 @@ function usces_search_categories(){
 	if(isset($_REQUEST['category']))
 		$cats = $_REQUEST['category'];
 	else
-		$cats = array(USCES_ITEM_CAT_PARENT_ID);
+		$cats[] = USCES_ITEM_CAT_PARENT_ID;
+	sort($cats);
 	return $cats;
 }
 
@@ -1637,7 +1640,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 	$str = '';
 	$fields = $usces->get_settle_info_field( $order_id );
 //20101018ysk start
-	$acting = $fields['acting'];
+	$acting = isset($fields['acting']) ? $fields['acting'] : '';
 	foreach($fields as $key => $value){
 		//if( 'acting' == $key )
 		//	$acting = $value;
@@ -1870,7 +1873,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 							$html .= '
 								<option value="#NONE#">'.__('Choose','usces').'</option>';
 						foreach($selects as $v) {
-							$selected = ($data[$label][$key] == $v) ? ' selected' : '';
+							$selected = (isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' selected' : '';
 							$html .= '
 								<option value="'.esc_attr($v).'"'.$selected.'>'.esc_html($v).'</option>';
 						}
@@ -1886,7 +1889,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						$html .= '
 							<td colspan="2">';
 						foreach($selects as $v) {
-							$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+							$checked = ( isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							$html .= '
 							<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
 						}
@@ -1897,9 +1900,9 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 							<td colspan="2">';
 						foreach($selects as $v) {
 							if(is_array($data[$label][$key])) {
-								$checked = (array_key_exists($v, $data[$label][$key])) ? ' checked' : '';
+								$checked = (isset($data[$label][$key]) && array_key_exists($v, $data[$label][$key])) ? ' checked' : '';
 							} else {
-								$checked = ($data[$label][$key] == $v) ? ' checked' : '';
+								$checked = (isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							}
 							$html .= '
 							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
@@ -2163,10 +2166,15 @@ function usces_item_discount( $out = '', $post_id = '', $sku = '' ){
 }
 
 function usces_singleitem_error_message($post_id, $skukey, $out = ''){
+	if( !isset($_SESSION['usces_singleitem']['error_message'][$post_id][$skukey]) )
+		$ret = '';
+	else
+		$ret = $_SESSION['usces_singleitem']['error_message'][$post_id][$skukey];
+		
 	if($out == 'return') {
-		return $_SESSION['usces_singleitem']['error_message'][$post_id][$skukey];
+		return $ret;
 	} else {
-		echo $_SESSION['usces_singleitem']['error_message'][$post_id][$skukey];
+		echo $ret;
 	}
 }
 
@@ -2193,7 +2201,7 @@ function usces_memberinfo( $key, $out = '' ){
 			$res = mysql2date(__('Mj, Y', 'usces'), $info['registered']);
 			break;
 		default:
-			$res = $info[$key];
+			$res = isset($info[$key]) ? $info[$key] : '';
 	}
 	
 	if($out == 'return'){
@@ -2228,7 +2236,7 @@ function usces_member_history(){
 	$usces_member_history = $usces->get_member_history($usces_members['ID']);
 	$colspan = usces_is_membersystem_point() ? 9 : 7;
 
-	$html .= '<table>';
+	$html = '<table>';
 	if ( !count($usces_member_history) ) {
 		$html .= '<tr>
 		<td>' . __('There is no purchase history for this moment.', 'usces') . '</td>
@@ -2291,7 +2299,7 @@ function usces_member_history(){
 			$cartItemName = $usces->getCartItemName($post_id, $sku);
 			//$skuPrice = $usces->getItemPrice($post_id, $sku);
 			$skuPrice = $cart_row['price'];
-			$pictid = $usces->get_mainpictid($itemCode);
+			$pictid = (int)$usces->get_mainpictid($itemCode);
 			$optstr =  '';
 			if( is_array($options) && count($options) > 0 ){
 				$optstr = '';
@@ -2347,7 +2355,7 @@ function usces_newmember_button($member_regmode){
 
 function usces_login_button(){
 	$loginbutton = '<input type="submit" name="member_login" id="member_login" class="member_login_button" value="' . __('Log-in', 'usces') . '" />';
-	$html .= apply_filters('usces_filter_login_button', $loginbutton);
+	$html = apply_filters('usces_filter_login_button', $loginbutton);
 	echo $html;
 }
 
@@ -2405,7 +2413,7 @@ function usces_assistance_item($post_id, $title ){
 }
 
 function usces_get_cart_rows( $out = '' ) {
-	global $usces;
+	global $usces, $usces_gp;
 	$cart = $usces->cart->get_cart();
 	$usces_gp = 0;
 	$res = '';
@@ -2427,7 +2435,7 @@ function usces_get_cart_rows( $out = '' ) {
 		$stockid = $usces->getItemZaikoStatusId($post_id, $sku_code);
 		$stock = $usces->getItemZaiko($post_id, $sku_code);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
-		$pictid = $usces->get_mainpictid($itemCode);
+		$pictid = (int)$usces->get_mainpictid($itemCode);
 		if ( empty($options) ) {
 			$optstr =  '';
 			$options =  array();

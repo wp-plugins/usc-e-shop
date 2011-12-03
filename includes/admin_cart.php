@@ -6,7 +6,8 @@ $this->action_message = '';
 if( !empty($this->options['cart_page_data']) ){
 	$cart_page_datas = stripslashes_deep($this->options['cart_page_data']);
 }else{
-	$cart_page_datas = array();
+	$cart_page_datas['header'] = array();
+	$cart_page_datas['footer'] = array();
 }
 $indi_item_name = $this->options['indi_item_name'];
 $pos_item_name = $this->options['pos_item_name'];
@@ -483,12 +484,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[cart]" id="header[cart]" class="mail_header"><?php echo $cart_page_datas['header']['cart']; ?></textarea></td>
+	    <td><textarea name="header[cart]" id="header[cart]" class="mail_header"><?php echo (isset($cart_page_datas['header']['cart']) ? $cart_page_datas['header']['cart'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[cart]" id="footer[cart]" class="mail_footer"><?php echo $cart_page_datas['footer']['cart']; ?></textarea></td>
+	    <td><textarea name="footer[cart]" id="footer[cart]" class="mail_footer"><?php echo (isset($cart_page_datas['footer']['cart']) ? $cart_page_datas['footer']['cart'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -503,12 +504,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[customer]" id="header[customer]" class="mail_header"><?php echo $cart_page_datas['header']['customer']; ?></textarea></td>
+	    <td><textarea name="header[customer]" id="header[customer]" class="mail_header"><?php echo (isset($cart_page_datas['header']['customer']) ? $cart_page_datas['header']['customer'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[customer]" id="footer[customer]" class="mail_footer"><?php echo $cart_page_datas['footer']['customer']; ?></textarea></td>
+	    <td><textarea name="footer[customer]" id="footer[customer]" class="mail_footer"><?php echo (isset($cart_page_datas['footer']['customer']) ? $cart_page_datas['footer']['customer'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>

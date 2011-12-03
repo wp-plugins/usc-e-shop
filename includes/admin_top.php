@@ -1,20 +1,8 @@
-<?php
-//define('MAGPIE_FETCH_TIME_OUT', 10);
-//define('MAGPIE_CACHE_ON', false);
-//include_once(ABSPATH . WPINC . '/rss.php');
-//$vcfeed = fetch_rss('http://www.welcart.com/archives/category/version_check/feed');
-//$vc_content = array_slice($vcfeed->items, 0, 1);
-//preg_match('/.+{version_check_start}(.+){version_check_end}.+/', $vc_content[0]['content']['encoded'], $matches);
-?>
 <script type="text/javascript">jQuery(function($){uscesInformation.getinfo2();});</script>
 <?php
-//if( empty($matches[1]) ){
-//	$vcparse = NULL;
-//}else{
-//	parse_str($matches[1], $vcparse);
-//}
 
 $display_mode = $this->options['display_mode'];
+$stocs = usces_get_stocs();
 $items_num = $this->get_items_num();
 ?>
 <div class="wrap">
@@ -64,7 +52,7 @@ $items_num = $this->get_items_num();
 <th><?php _e('number of item', 'usces'); ?></th><th colspan="5"><?php _e('SKU total number', 'usces'); ?></th>
 </tr>
 <tr>
-<td rowspan="3" class="bignum"><?php echo number_format($items_num); ?></td><td colspan="5" class="bignum"><?php echo number_format(count($data['data'])); ?></td>
+<td rowspan="3" class="bignum"><?php echo number_format($items_num); ?></td><td colspan="5" class="bignum"><?php echo number_format(array_sum($stocs)); ?></td>
 </tr>
 <tr>
 <?php 
@@ -77,7 +65,6 @@ endforeach;
 </tr>
 <tr>
 <?php
-$stocs = usces_get_stocs();
 foreach($this->zaiko_status as $stock_key => $value): $count = isset($stocs[$stock_key]) ? $stocs[$stock_key] : 0; ?>
 <td class="bignum"><?php echo number_format($count); ?></td>
 <?php

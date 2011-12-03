@@ -1,6 +1,6 @@
 <?php
 require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
-global $wpdb;
+global $wpdb, $post;
 $wpdb->show_errors();
 
 $tableName = $wpdb->posts;
@@ -109,13 +109,13 @@ jQuery(function($){
 			
 			if( column == 'item_name' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][item_name]" type="text" value="<?php echo esc_attr($arr_search['word']['item_name']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][item_name]" type="text" value="<?php if(isset($arr_search['word']['item_name'])) echo esc_attr($arr_search['word']['item_name']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'item_code' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][item_code]" type="text" value="<?php echo esc_attr($arr_search['word']['item_code']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][item_code]" type="text" value="<?php if(isset($arr_search['word']['item_code'])) echo esc_attr($arr_search['word']['item_code']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'post_title' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][post_title]" type="text" value="<?php echo esc_attr($arr_search['word']['post_title']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][post_title]" type="text" value="<?php if(isset($arr_search['word']['post_title'])) echo esc_attr($arr_search['word']['post_title']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'zaiko_num' ) {
 				label = '';
 				html = '';
@@ -123,7 +123,7 @@ jQuery(function($){
 				label = '';
 				html = '<select name="search[word][zaiko]" class="searchselect">';
 		<?php foreach($zaiko_status as $zkey => $zvalue){ 
-				if($zkey == $arr_search['word']['zaiko']){
+				if(isset($arr_search['word']['zaiko']) && $zkey == $arr_search['word']['zaiko']){
 					$zselected = ' selected="selected"';
 				}else{
 					$zselected = '';
@@ -138,7 +138,7 @@ jQuery(function($){
 		<?php 
 			$categories = get_categories(array('child_of' => USCES_ITEM_CAT_PARENT_ID));
 			foreach($categories as $ckey => $cvalue){ 
-				if($cvalue->term_id == $arr_search['word']['category']){
+				if(isset($arr_search['word']['category']) && $cvalue->term_id == $arr_search['word']['category']){
 					$cselected = ' selected="selected"';
 				}else{
 					$cselected = '';
@@ -150,12 +150,12 @@ jQuery(function($){
 			}else if( column == 'display_status' ) {
 				label = '';
 				html = '<select name="search[word][display_status]" class="searchselect">';
-				html += '<option value="publish"<?php if( __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
-				html += '<option value="future"<?php if( __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
-				html += '<option value="draft"<?php if( __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
-				html += '<option value="pending"<?php if( __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
-				html += '<option value="private"<?php if( __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
-				html += '<option value="trash"<?php if( __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
+				html += '<option value="publish"<?php if(isset($arr_search['word']['display_status']) && __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
+				html += '<option value="future"<?php if(isset($arr_search['word']['display_status']) && __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
+				html += '<option value="draft"<?php if(isset($arr_search['word']['display_status']) && __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
+				html += '<option value="pending"<?php if(isset($arr_search['word']['display_status']) && __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
+				html += '<option value="private"<?php if(isset($arr_search['word']['display_status']) && __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
+				html += '<option value="trash"<?php if(isset($arr_search['word']['display_status']) && __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
 				html += '</select>';
 			} 
 			
@@ -389,7 +389,7 @@ jQuery(document).ready(function($){
 <?php endforeach; ?>
 	</tr>
 <?php foreach ( (array)$rows as $array ) :
-		$pctid = $this->get_mainpictid($array['item_code']); 
+		$pctid = (int)$this->get_mainpictid($array['item_code']); 
 		$post = get_post($array['ID']);
 		$array['sku'] = $skus = $this->get_skus( $array['ID'], 'sort' );
 		$array['category'] = "";
@@ -400,7 +400,7 @@ jQuery(document).ready(function($){
 	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $key == 'item_code') : ?>
-			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('_itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
+			<?php if( USCES_MYSQL_VERSION < 5 ){ $value = get_post_meta($array['ID'], '_itemCode', true); $array['item_code'] = $value; } ?>
 			<td class="item">
 			<?php if( $value != '' ) : ?> 
 				<strong><?php echo esc_html($value); ?></strong>

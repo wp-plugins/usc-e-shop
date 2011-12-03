@@ -31,6 +31,7 @@ $system_target_markets =  ( isset($this->options['system']['target_market']) && 
 $no_cart_css = isset($this->options['system']['no_cart_css']) ? $this->options['system']['no_cart_css'] : 0;
 $dec_orderID_flag = isset($this->options['system']['dec_orderID_flag']) ? $this->options['system']['dec_orderID_flag'] : 0;
 $dec_orderID_prefix = isset($this->options['system']['dec_orderID_prefix']) ? $this->options['system']['dec_orderID_prefix'] : '';
+$dec_orderID_digit = isset($this->options['system']['dec_orderID_digit']) ? $this->options['system']['dec_orderID_digit'] : '';
 $subimage_rule = isset($this->options['system']['subimage_rule']) ? $this->options['system']['subimage_rule'] : 0;
 ?>
 <script type="text/javascript">

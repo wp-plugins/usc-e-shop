@@ -157,7 +157,7 @@ function usces_order_confirm_message($order_id) {
 
 
 	
-	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
+	$msg_shipping = __('** A shipping address **','usces') . "\r\n";
 	$msg_shipping .= usces_mail_line( 1, $data['order_email'] );//********************
 	
 	$msg_shipping .= uesces_get_mail_addressform( 'admin_mail', $deli, $order_id );
@@ -365,8 +365,7 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
 
 
-	
-	$msg_shipping .= __('** A shipping address **','usces') . "\r\n";
+	$msg_shipping = __('** A shipping address **','usces') . "\r\n";
 	$msg_shipping .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	
 	$msg_shipping .= uesces_get_mail_addressform( 'order_mail', $entry, $order_id );
@@ -855,7 +854,7 @@ function usces_reg_orderdata( $results = array() ) {
 		$order_modified = NULL;
 	}
 	$payments = $usces->getPayments($entry['order']['payment_name']);
-	if($results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
+	if( isset($results['payment_status']) && $results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
 	
 	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
 	
@@ -1336,7 +1335,7 @@ function usces_update_memberdata() {
 	}
 	
 	$meta_keys = "'zeus_pcid', 'remise_pcid'";
-	$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
+	$query = $wpdb->prepare("DELETE FROM $member_table_meta_name WHERE member_id = %d AND meta_key IN( $meta_keys )", 
 			$_POST['member_id'] 
 			);
 	$res[$i] = $wpdb->query( $query );
@@ -2203,43 +2202,44 @@ function usces_check_acting_return() {
 //20110203ysk start
 function usces_check_acting_return_duplicate( $results = array() ) {
 	global $wpdb;
+	$acting = isset($_GET['acting']) ? $_GET['acting'] : '';
 //		usces_log('$_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
 //		usces_log('$results : '.print_r($results,true), 'acting_transaction.log');
 
-	switch($_GET['acting']) {
+	switch($acting) {
 	case 'epsilon':
-		$trans_id = $_REQUEST['trans_code'];
+		$trans_id = isset($_REQUEST['trans_code']) ? $_REQUEST['trans_code'] : '';
 		break;
 //20110208ysk start
 	case 'paypal':
-		$trans_id = $results['txn_id'];
+		$trans_id = isset($results['txn_id']) ? $results['txn_id'] : '';
 		break;
 //20110208ysk end
 	case 'paypal_ipn':
-		$trans_id = $_REQUEST['txn_id'];
+		$trans_id = isset($_REQUEST['txn_id']) ? $_REQUEST['txn_id'] : '';
 		break;
 //20110208ysk start
 	case 'paypal_ec':
-		$trans_id = $_REQUEST['token'];
+		$trans_id = isset($_REQUEST['token']) ? $_REQUEST['token'] : '';
 		break;
 //20110208ysk end
 	case 'zeus_card':
-		$trans_id = $_REQUEST['ordd'];
+		$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
 		break;
 	case 'zeus_conv':
 	case 'zeus_bank':
-		$trans_id = $_REQUEST['order_no'];
+		$trans_id = isset($_REQUEST['order_no']) ? $_REQUEST['order_no'] : '';
 		break;
 	case 'remise_card':
-		$trans_id = $_REQUEST['X-TRANID'];
+		$trans_id = isset($_REQUEST['X-TRANID']) ? $_REQUEST['X-TRANID'] : '';
 		break;
 	case 'remise_conv':
-		$trans_id = $_REQUEST['X-JOB_ID'];
+		$trans_id = isset($_REQUEST['X-JOB_ID']) ? $_REQUEST['X-JOB_ID'] : '';
 		break;
 	case 'jpayment_card':
 	case 'jpayment_conv':
 	case 'jpayment_bank':
-		$trans_id = $_REQUEST['gid'];
+		$trans_id = isset($_REQUEST['gid']) ? $_REQUEST['gid'] : '';
 		break;
 	default:
 		$trans_id = '';
@@ -2472,6 +2472,7 @@ function usces_reset_filter(){
 
 
 function usces_get_wcex(){
+	$wcex = array();
 	if( defined('WCEX_DLSELLER_VERSION'))
 		$wcex['DLSELLER'] = array('name'=>'Dl Seller', 'version'=>WCEX_DLSELLER_VERSION);
 	if( defined('WCEX_ITEM_LIST_LAYOUT_VERSION'))
@@ -2489,6 +2490,7 @@ function usces_get_wcex(){
 }
 
 function usces_trackPageview_cart($push){
+	$push = array();
 	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
 		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_cart'";
 	}else{
@@ -2498,6 +2500,7 @@ function usces_trackPageview_cart($push){
 }
 
 function usces_trackPageview_customer($push){
+	$push = array();
 	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
 		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_customer'";
 	}else{
@@ -2507,6 +2510,7 @@ function usces_trackPageview_customer($push){
 }
 
 function usces_trackPageview_delivery($push){
+	$push = array();
 	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
 		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_delivery'";
 	}else{
@@ -2516,6 +2520,7 @@ function usces_trackPageview_delivery($push){
 }
 
 function usces_trackPageview_confirm($push){
+	$push = array();
 	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
 		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_confirm'";
 	}else{
@@ -2931,7 +2936,7 @@ function usces_get_cart_button( $out = '' ) {
 			$res .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', ' onclick="return uscesCart.cartNext();"') . ' />';
 		}
 	}else{
-		$res .= '<a href="' . get_bloginfo('home') . '" class="continue_shopping_button">' . __('continue shopping','usces') . '</a>&nbsp;&nbsp;';
+		$res .= '<a href="' . get_home_url() . '" class="continue_shopping_button">' . __('continue shopping','usces') . '</a>&nbsp;&nbsp;';
 		if( usces_is_cart() ) {
 			$res .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', NULL) . ' />';
 		}
@@ -3125,24 +3130,24 @@ function usces_page_name( $out = '') {
 function usces_post_reg_orderdata($order_id, $results){
 	global $usces, $wpdb;
 	//$entry = $usces->cart->get_entry();//20110621ysk 0000184
-	$acting = $_GET['acting'];
+	$acting = isset($_GET['acting']) ? $_GET['acting'] : '';
 	$data = array();
 
 	if( $order_id ){
 
 		switch ( $acting ) {
 			case 'epsilon':
-				$trans_id = $_REQUEST['trans_code'];
+				$trans_id = isset($_REQUEST['trans_code']) ? $_REQUEST['trans_code'] : '';
 				break;
 			case 'paypal_ipn':
-				$trans_id = $_REQUEST['txn_id'];
+				$trans_id = isset($_REQUEST['txn_id']) ? $_REQUEST['txn_id'] : '';
 				break;
 			case 'paypal':
-				$trans_id = $results['txn_id'];
+				$trans_id = isset($results['txn_id']) ? $results['txn_id'] : '';
 				break;
 //20110208ysk start
 			case 'paypal_ec':
-				$trans_id = $_REQUEST['token'];
+				$trans_id = isset($_REQUEST['token']) ? $_REQUEST['token'] : '';
 //20110621ysk start 0000184
 /*
 //20110412ysk start
@@ -3222,43 +3227,43 @@ function usces_post_reg_orderdata($order_id, $results){
 				break;
 //20110208ysk end
 			case 'zeus_card':
-				$trans_id = $_REQUEST['ordd'];
+				$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
 				foreach($_GET as $key => $value) {
 					$data[$key] = mysql_real_escape_string($value);
 				}
 				$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
 				if( $usces->is_member_logged_in() )
 					$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
-				usces_log('zeus card transaction : '.$_GET['sendpoint'], 'acting_transaction.log');
+				usces_log('zeus card transaction : '.(isset($_GET['sendpoint']) ? $_GET['sendpoint'] : ''), 'acting_transaction.log');
 				break;
 			case 'zeus_conv':
-				$trans_id = $_REQUEST['order_no'];
+				$trans_id = isset($_REQUEST['order_no']) ? $_REQUEST['sendpoint'] : '';
 				$zeus_convs = array(
 									'acting' => 'zeus_conv',
-									'pay_cvs' => $_REQUEST['pay_cvs'],
-									'order_no' => $_REQUEST['order_no'],
-									'money' => $_REQUEST['money'],
-									'pay_no1' => $_REQUEST['pay_no1'],
-									'pay_no2' => $_REQUEST['pay_no2'],
-									'pay_limit' => $_REQUEST['pay_limit'],
-									'status' => $_REQUEST['status'],
-									'error_code' => $_REQUEST['error_code']
+									'pay_cvs' => isset($_REQUEST['pay_cvs']) ? $_REQUEST['pay_cvs'] : '',
+									'order_no' => isset($_REQUEST['order_no']) ? $_REQUEST['order_no'] : '',
+									'money' => isset($_REQUEST['money']) ? $_REQUEST['money'] : '',
+									'pay_no1' => isset($_REQUEST['pay_no1']) ? $_REQUEST['pay_no1'] : '',
+									'pay_no2' => isset($_REQUEST['pay_no2']) ? $_REQUEST['pay_no2'] : '',
+									'pay_limit' => isset($_REQUEST['pay_limit']) ? $_REQUEST['pay_limit'] : '',
+									'status' => isset($_REQUEST['status']) ? $_REQUEST['status'] : '',
+									'error_code' => isset($_REQUEST['error_code']) ? $_REQUEST['error_code'] : ''
 									);
-				$usces->set_order_meta_value('acting_'.$_REQUEST['sendpoint'], serialize($zeus_convs), $order_id);
+				$usces->set_order_meta_value('acting_'.(isset($_REQUEST['sendpoint']) ? $_REQUEST['sendpoint'] : ''), serialize($zeus_convs), $order_id);
 				break;
 			case 'zeus_bank':
-				$trans_id = $_REQUEST['order_no'];
+				$trans_id = isset($_REQUEST['order_no']) ? $_REQUEST['order_no'] : '';
 				break;
 			case 'remise_card':
-				$trans_id = $_REQUEST['X-TRANID'];
+				$trans_id = isset($_REQUEST['X-TRANID']) ? $_REQUEST['X-TRANID'] : '';
 				break;
 			case 'remise_conv':
-				$trans_id = $_REQUEST['X-JOB_ID'];
+				$trans_id = isset($_REQUEST['X-JOB_ID']) ? $_REQUEST['X-JOB_ID'] : '';
 				break;
 			case 'jpayment_card':
 			case 'jpayment_conv':
 			case 'jpayment_bank':
-				$trans_id = $_REQUEST['gid'];
+				$trans_id = isset($_REQUEST['gid']) ? $_REQUEST['gid'] : '';
 				break;
 			default:
 				$trans_id = '';
@@ -3380,7 +3385,7 @@ function usces_get_send_out_date(){
 	$limit_hour = (!empty($usces->options['delivery_time_limit']['hour'])) ? $usces->options['delivery_time_limit']['hour'] : false;
 	$limit_min = (!empty($usces->options['delivery_time_limit']['min'])) ? $usces->options['delivery_time_limit']['min'] : false;
 
-	if( false === $hour || false === $min ){
+	if( false === $hour || false === $minute ){
 		$time_limit_addition = false;
 	}elseif( ($hour.':'.$minute.':'.$second) > ($limit_hour.':'.$limit_min.':00') ){
 		$time_limit_addition = 1;
@@ -3529,7 +3534,7 @@ function usces_get_items_skus() {
 	if( !$IDs )
 		return $res;
 		
-	wp_cache_set( 'item_ids', $IDs );
+	//wp_cache_set( 'item_ids', $IDs );
 	
 	$key = 0;
 	foreach((array)$IDs as $post_id){

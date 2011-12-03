@@ -191,12 +191,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[login]" id="header[login]" class="mail_header"><?php echo $member_page_datas['header']['login']; ?></textarea></td>
+	    <td><textarea name="header[login]" id="header[login]" class="mail_header"><?php echo (isset($member_page_datas['header']['login']) ? $member_page_datas['header']['login'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[login]" id="footer[login]" class="mail_footer"><?php echo $member_page_datas['footer']['login']; ?></textarea></td>
+	    <td><textarea name="footer[login]" id="footer[login]" class="mail_footer"><?php echo (isset($member_page_datas['footer']['login']) ? $member_page_datas['footer']['login'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -211,12 +211,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[newmember]" id="header[newmember]" class="mail_header"><?php echo $member_page_datas['header']['newmember']; ?></textarea></td>
+	    <td><textarea name="header[newmember]" id="header[newmember]" class="mail_header"><?php echo (isset($member_page_datas['header']['newmember']) ? $member_page_datas['header']['newmember'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[newmember]" id="footer[newmember]" class="mail_footer"><?php echo $member_page_datas['footer']['newmember']; ?></textarea></td>
+	    <td><textarea name="footer[newmember]" id="footer[newmember]" class="mail_footer"><?php echo (isset($member_page_datas['footer']['newmember']) ? $member_page_datas['footer']['newmember'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -231,12 +231,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[newpass]" id="header[newpass]" class="mail_header"><?php echo $member_page_datas['header']['newpass']; ?></textarea></td>
+	    <td><textarea name="header[newpass]" id="header[newpass]" class="mail_header"><?php echo (isset($member_page_datas['header']['newpass']) ? $member_page_datas['header']['newpass'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[newpass]" id="footer[newpass]" class="mail_footer"><?php echo $member_page_datas['footer']['newpass']; ?></textarea></td>
+	    <td><textarea name="footer[newpass]" id="footer[newpass]" class="mail_footer"><?php echo (isset($member_page_datas['footer']['newpass']) ? $member_page_datas['footer']['newpass'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -251,12 +251,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[changepass]" id="header[changepass]" class="mail_header"><?php echo $member_page_datas['header']['changepass']; ?></textarea></td>
+	    <td><textarea name="header[changepass]" id="header[changepass]" class="mail_header"><?php echo (isset($member_page_datas['header']['changepass']) ? $member_page_datas['header']['changepass'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[changepass]" id="footer[changepass]" class="mail_footer"><?php echo $member_page_datas['footer']['changepass']; ?></textarea></td>
+	    <td><textarea name="footer[changepass]" id="footer[changepass]" class="mail_footer"><?php echo (isset($member_page_datas['footer']['changepass']) ? $member_page_datas['footer']['changepass'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -271,12 +271,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[memberinfo]" id="header[memberinfo]" class="mail_header"><?php echo $member_page_datas['header']['memberinfo']; ?></textarea></td>
+	    <td><textarea name="header[memberinfo]" id="header[memberinfo]" class="mail_header"><?php echo (isset($member_page_datas['header']['memberinfo']) ? $member_page_datas['header']['memberinfo'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[memberinfo]" id="footer[memberinfo]" class="mail_footer"><?php echo $member_page_datas['footer']['memberinfo']; ?></textarea></td>
+	    <td><textarea name="footer[memberinfo]" id="footer[memberinfo]" class="mail_footer"><?php echo (isset($member_page_datas['footer']['memberinfo']) ? $member_page_datas['footer']['memberinfo'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
@@ -291,12 +291,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><?php _e('header','usces'); ?></th>
-	    <td><textarea name="header[completion]" id="header[completion]" class="mail_header"><?php echo $member_page_datas['header']['completion']; ?></textarea></td>
+	    <td><textarea name="header[completion]" id="header[completion]" class="mail_header"><?php echo (isset($member_page_datas['header']['completion']) ? $member_page_datas['header']['completion'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 	    <th><?php _e('footer','usces'); ?></th>
-	    <td><textarea name="footer[completion]" id="footer[completion]" class="mail_footer"><?php echo $member_page_datas['footer']['completion']; ?></textarea></td>
+	    <td><textarea name="footer[completion]" id="footer[completion]" class="mail_footer"><?php echo (isset($member_page_datas['footer']['completion']) ? $member_page_datas['footer']['completion'] : ''); ?></textarea></td>
 		<td>&nbsp;</td>
 	</tr>
 </table>

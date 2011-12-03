@@ -109,7 +109,7 @@ foreach ( $usces_member_history as $umhs ) {
 		$cartItemName = $this->getCartItemName($post_id, $sku);
 		//$skuPrice = $this->getItemPrice($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictid = $this->get_mainpictid($itemCode);
+		$pictid = (int)$this->get_mainpictid($itemCode);
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';

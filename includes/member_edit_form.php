@@ -214,7 +214,7 @@ function addComma(str)
 	$cartItemName = $this->getCartItemName($post_id, $sku);
 	//$skuPrice = $this->getItemPrice($post_id, $sku);
 	$skuPrice = $cart_row['price'];
-	$pictid = $this->get_mainpictid($itemCode);
+	$pictid = (int)$this->get_mainpictid($itemCode);
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
 //20110629ysk start 0000190

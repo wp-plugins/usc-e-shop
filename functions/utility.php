@@ -274,11 +274,11 @@ function usces_filter_delivery_secure_check( $mes ){
 	global $usces;
 	$usces_secure_link = get_option('usces_secure_link');
 	$paymod_id = '';
-	
-		$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+	$settlement = '';
+	$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 
 	foreach ( (array)$payments as $id => $value ) {
-		if( $value['name'] == $_POST['offer']['payment_name']){
+		if( isset($_POST['offer']['payment_name']) && $value['name'] == $_POST['offer']['payment_name']){
 			$settlement = $value['settlement'];
 			break;
 		}
@@ -289,7 +289,7 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) < 2 )
 				$mes .= __('カード番号が不正です', 'usces') . "<br />";
 			
-			if ( '' == $_POST["securecode"] && 'on' == $usces->options['acting_settings']['zeus']['3dsecure'] )
+			if ( isset($_POST["securecode"]) && '' == $_POST["securecode"] && 'on' == $usces->options['acting_settings']['zeus']['3dsecure'] )
 				$mes .= __('カードの暗証番号をしてください', 'usces') . "<br />";
 				
 			if ( '' == $_POST["expyy"] )
@@ -301,7 +301,7 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( '' == trim($_POST["username"]) )
 				$mes .= __('カード名義を入力してください', 'usces') . "<br />";
 				
-			if ( '0' == $_POST["howpay"] && '' == $_POST["cbrand"] )
+			if ( isset($_POST["howpay"]) && '0' == $_POST["howpay"] && '' == $_POST["cbrand"] )
 				$mes .= __('カードブランドを選択してください', 'usces') . "<br />";
 				
 			if ( 'zeus' != $_POST['acting'] )

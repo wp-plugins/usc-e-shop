@@ -1648,6 +1648,7 @@ function usces_has_custom_field_meta($fieldname) {
 
 function usces_getinfo_ajax(){
 	$wcex_str = '';
+	$res = '';
 	$wcex = usces_get_wcex();
 	foreach ( (array)$wcex as $key => $values ) {
 		$wcex_str .= $key . "-" . $values['version'] . ",";
@@ -1660,7 +1661,7 @@ function usces_getinfo_ajax(){
 	$theme = urlencode($themedata['Name'] . '-' . $themedata['Version']);
 	$wcex = urlencode($wcex_str);
 	$interface_url = 'http://www.welcart.com/util/welcart_information2.php';
-	$wcurl = urlencode(get_bloginfo('home'));
+	$wcurl = urlencode(get_home_url());
 	$interface = parse_url($interface_url);
 
 	$vars ="v=$v&wcid=$wcid&locale=$locale&theme=$theme&wcex=$wcex&wcurl=$wcurl";
@@ -1672,7 +1673,7 @@ function usces_getinfo_ajax(){
 	$header .= "Connection: close\r\n\r\n";
 	$header .= $vars;
 	$fp = fsockopen($interface['host'],80,$errno,$errstr,30);
-	if(fp){
+	if( $fp ){
 		fwrite($fp, $header);
 		$i=0;
 		while ( !feof($fp) ) {

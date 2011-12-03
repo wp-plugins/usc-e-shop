@@ -3,8 +3,8 @@ $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
-$delivery_method = $this->options['delivery_method'];
-$shipping_charge = $this->options['shipping_charge'];
+$delivery_method = isset($this->options['delivery_method']) ? $this->options['delivery_method'] : array();
+$shipping_charge = isset($this->options['shipping_charge']) ? $this->options['shipping_charge'] : array();
 //	$prefs = get_option('usces_pref');
 //20110317ysk start
 	//$prefs = $this->options['province'];
@@ -24,7 +24,7 @@ $delivery_time_limit['hour'] = $this->options['delivery_time_limit']['hour'];
 $delivery_time_limit['min'] = $this->options['delivery_time_limit']['min'];
 $shortest_delivery_time = $this->options['shortest_delivery_time'];
 $delivery_after_days = (empty($this->options['delivery_after_days'])) ? 15 : (int)$this->options['delivery_after_days'];
-$delivery_days = $this->options['delivery_days'];
+$delivery_days = isset($this->options['delivery_days']) ? $this->options['delivery_days'] : array();
 //20101208ysk end
 //20110317ysk start
 $base_country = $this->options['system']['base_country'];
@@ -81,7 +81,7 @@ jQuery(function($){
 //20110317ysk start
 	var pref = [];
 <?php //foreach((array)$prefs as $pref){ ?>
-	//pref.push('<?php echo $pref; ?>');
+	//pref.push('<?php //echo $pref; ?>');
 <?php //} ?>
 <?php foreach((array)$target_market as $tm){ ?>
 	pref['<?php echo $tm; ?>'] = [];

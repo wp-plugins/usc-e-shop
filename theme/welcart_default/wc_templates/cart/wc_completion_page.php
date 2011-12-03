@@ -32,7 +32,7 @@ get_header();
 	<?php do_action('usces_action_cartcompletion_page_footer', $usces_entries, $usces_carts); ?>
 	</div><!-- footer_explanation -->
 
-	<form action="<?php bloginfo('home'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+	<form action="<?php echo home_url(); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<div class="send"><input name="top" class="back_to_top_button" type="submit" value="<?php _e('Back to the top page.', 'usces'); ?>" /></div>
 	<?php do_action('usces_action_cartcompletion_page_inform'); ?>
 	</form>

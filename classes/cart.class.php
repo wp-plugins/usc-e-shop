@@ -20,7 +20,7 @@ class usces_cart {
 		if( $_SERVER['HTTP_REFERER'] ){
 			$_SESSION['usces_previous_url'] = $_SERVER['HTTP_REFERER'];
 		}else{
-			$_SESSION['usces_previous_url'] = str_replace('https://', 'http://', get_bloginfo('home')).'/';
+			$_SESSION['usces_previous_url'] = str_replace('https://', 'http://', get_home_url()).'/';
 		}
 			
 		$ids = array_keys($_POST['inCart']);
@@ -30,15 +30,20 @@ class usces_cart {
 		$sku = $skus[0];
 			
 		$this->in_serialize($post_id, $sku);
+		if( !isset($_SESSION['usces_cart'][$this->serial]['quant']) ){
+			$_SESSION['usces_cart'][$this->serial]['quant'] = 0;
+		}
 		
 		if ( isset($_POST['quant']) && $_POST['quant'][$post_id][$sku] != '') {
 		
-			$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
+			//$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
+			$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$post_id][$sku];
 			
 		} else {
 		
 			if ( isset($_SESSION['usces_cart'][$this->serial]) )
-				$_SESSION['usces_cart'][$this->serial]['quant'] += 1;
+				//$_SESSION['usces_cart'][$this->serial]['quant'] += 1;
+				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
 			else
 				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
 				
@@ -287,9 +292,10 @@ class usces_cart {
 //20110203ysk end
 	// entry information ***************************************************************
 	function entry() {
+		global $usces;
 		if(isset($_SESSION['usces_member']['ID']) && !empty($_SESSION['usces_member']['ID'])) {
 //20110126ysk start
-			if($this->page !== 'confirm') {
+			if($usces->page !== 'confirm') {
 				foreach( $_SESSION['usces_member'] as $key => $value ){
 //20100818ysk start
 					if($key === 'custom_member') {
@@ -414,20 +420,72 @@ class usces_cart {
 	// get entry information ***************************************************************
 	function get_entry() {
 	
-		if(isset($_SESSION['usces_entry']['customer']))
-			$res['customer'] = $_SESSION['usces_entry']['customer'];
-		else
-			$res['customer'] = NULL;
+		$res['customer'] = array(
+								'mailaddress1' => '', 
+								'mailaddress2' => '', 
+								'password1' => '', 
+								'password2' => '', 
+								'name1' => '', 
+								'name2' => '', 
+								'name3' => '', 
+								'name4' => '', 
+								'zipcode' => '',
+								'address1' => '',
+								'address2' => '',
+								'address3' => '',
+								'tel' => '',
+								'fax' => '',
+								'country' => '',
+								'pref' => ''
+							 );
+		if(isset($_SESSION['usces_entry']['customer'])){
+			foreach((array)$_SESSION['usces_entry']['customer'] as $key => $val){
+				$res['customer'][$key] = $val;
+			}
+		}
+
+		$res['delivery'] = array(
+								'name1' => '', 
+								'name2' => '', 
+								'name3' => '', 
+								'name4' => '', 
+								'zipcode' => '',
+								'address1' => '',
+								'address2' => '',
+								'address3' => '',
+								'tel' => '',
+								'fax' => '',
+								'country' => '',
+								'pref' => '',
+								'delivery_flag' => ''
+							 );
+		if(isset($_SESSION['usces_entry']['delivery'])){
+			foreach((array)$_SESSION['usces_entry']['delivery'] as $key => $val){
+				$res['delivery'][$key] = $val;
+			}
+		}
 			
-		if(isset($_SESSION['usces_entry']['delivery']))
-			$res['delivery'] = $_SESSION['usces_entry']['delivery'];
-		else
-			$res['delivery'] = NULL;
-			
-		if(isset($_SESSION['usces_entry']['order']))
-			$res['order'] = $_SESSION['usces_entry']['order'];
-		else
-			$res['order'] = NULL;
+		$res['order'] = array(
+							'usedpoint' => '', 
+							'total_items_price' => '', 
+							'discount' => '', 
+							'shipping_charge' => '', 
+							'cod_fee' => '',
+							'shipping_charge' => '',
+							'payment_name' => '',
+							'delivery_method' => '',
+							'delivery_date' => '',
+							'delivery_time' => '',
+							'total_full_price' => '',
+							'note' => '',
+							'tax' => '',
+							'payment_name' => ''
+						 );
+		if(isset($_SESSION['usces_entry']['order'])){
+			foreach((array)$_SESSION['usces_entry']['order'] as $key => $val){
+				$res['order'][$key] = $val;
+			}
+		}
 			
 		if(isset($_SESSION['usces_entry']['reserve']))
 			$res['reserve'] = $_SESSION['usces_entry']['reserve'];

@@ -149,11 +149,16 @@ if ( !( 'pending' == $post->post_status && !current_user_can( $post_type_object-
 	add_meta_box('slugdiv', __('Slug'), 'post_slug_meta_box', $post_type, 'normal', 'core');
 
 if ( post_type_supports($post_type, 'author') ) {
-	$authors = get_editable_user_ids( $current_user->id ); // TODO: ROLE SYSTEM
-	if ( $post->post_author && !in_array($post->post_author, $authors) )
-		$authors[] = $post->post_author;
-	if ( ( $authors && count( $authors ) > 1 ) || is_super_admin() )
-		add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
+	if ( version_compare($wp_version, '3.1', '>=') ){
+		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) )
+			add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
+	}else{
+		$authors = get_editable_user_ids( $current_user->id ); // TODO: ROLE SYSTEM
+		if ( $post->post_author && !in_array($post->post_author, $authors) )
+			$authors[] = $post->post_author;
+		if ( ( $authors && count( $authors ) > 1 ) || is_super_admin() )
+			add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
+	}
 }
 
 if ( post_type_supports($post_type, 'revisions') && 0 < $post_ID && wp_get_post_revisions( $post_ID ) )
@@ -162,12 +167,12 @@ if ( post_type_supports($post_type, 'revisions') && 0 < $post_ID && wp_get_post_
 
 /****************************************************************************/
 function post_item_pict_box($post) {
-	global $usces;
+	global $usces, $current_screen;
 	$item_picts = array();
 	$item_sumnails = array();
 	$item_code = get_post_meta($post->ID, '_itemCode', true);
 	if( !empty($item_code) ){
-		$pictid = $usces->get_mainpictid($item_code);
+		$pictid = (int)$usces->get_mainpictid($item_code);
 		$item_picts[] = wp_get_attachment_image( $pictid, array(260, 200), true );
 		$item_sumnails[] = wp_get_attachment_image( $pictid, array(50, 50), true );
 		$item_pictids = $usces->get_pictids($item_code);

@@ -43,7 +43,7 @@ foreach((array)$target_market as $country) {
 }
 //20110331ysk end
 $payments = usces_get_system_option( 'usces_payment_method', 'sort' );
-foreach ( (array)$payments as $array ) {
+foreach ( (array)$payments as $id => $array ) {
 	$payment_name[$id] = $array['name'];
 }
 $ums = get_option('usces_management_status');
@@ -138,27 +138,27 @@ jQuery(function($){
 			
 			if( column == 'ID' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][ID]" type="text" value="<?php echo esc_attr($arr_search['word']['ID']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][ID]" type="text" value="<?php echo esc_attr(isset($arr_search['word']['ID']) ? $arr_search['word']['ID'] : ''); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'deco_id' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][deco_id]" type="text" value="<?php echo esc_attr($arr_search['word']['deco_id']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][deco_id]" type="text" value="<?php echo esc_attr(isset($arr_search['word']['deco_id']) ? $arr_search['word']['deco_id'] : ''); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'date' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][date]" type="text" value="<?php echo esc_attr($arr_search['word']['date']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][date]" type="text" value="<?php echo esc_attr(isset($arr_search['word']['date']) ? $arr_search['word']['date'] : ''); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'mem_id' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][mem_id]" type="text" value="<?php echo esc_attr($arr_search['word']['mem_id']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][mem_id]" type="text" value="<?php echo esc_attr(isset($arr_search['word']['mem_id']) ? $arr_search['word']['mem_id'] : ''); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'name' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][name]" type="text" value="<?php echo esc_attr($arr_search['word']['name']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][name]" type="text" value="<?php echo esc_attr(isset($arr_search['word']['name']) ? $arr_search['word']['name'] : ''); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'order_modified' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][order_modified]" type="text" value="<?php echo esc_attr($arr_search['word']['order_modified']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][order_modified]" type="text" value="<?php echo esc_attr(isset($arr_search['word']['order_modified']) ? $arr_search['word']['order_modified'] : ''); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'pref' ) {
 				label = '';
 				html = '<select name="search[word][pref]" class="searchselect">';
 		<?php foreach((array)$pref as $pkey => $pvalue){ 
-				if($pvalue == $arr_search['word']['pref']){
+				if( isset($arr_search['word']['pref']) && $pvalue == $arr_search['word']['pref']){
 					$pselected = ' selected="selected"';
 				}else{
 					$pselected = '';
@@ -171,7 +171,7 @@ jQuery(function($){
 				label = '';
 				html = '<select name="search[word][delivery_method]" class="searchselect">';
 		<?php foreach((array)$this->options['delivery_method'] as $dkey => $dvalue){ 
-				if($dvalue['id'] == $arr_search['word']['delivery_method']){
+				if( isset($arr_search['word']['delivery_method']) && $dvalue['id'] == $arr_search['word']['delivery_method']){
 					$dselected = ' selected="selected"';
 				}else{
 					$dselected = '';
@@ -184,7 +184,7 @@ jQuery(function($){
 				label = '';
 				html = '<select name="search[word][payment_name]" class="searchselect">';
 		<?php foreach((array)$payment_name as $pnkey => $pnvalue){ 
-				if($pnvalue == $arr_search['word']['payment_name']){
+				if( isset($arr_search['word']['payment_name']) && $pnvalue == $arr_search['word']['payment_name']){
 					$pnselected = ' selected="selected"';
 				}else{
 					$pnselected = '';
@@ -197,7 +197,7 @@ jQuery(function($){
 				label = '';
 				html = '<select name="search[word][receipt_status]" class="searchselect">';
 		<?php foreach((array)$receipt_status as $rkey => $rvalue){ 
-				if($rvalue == $arr_search['word']['receipt_status']){
+				if( isset($arr_search['word']['receipt_status']) && $rvalue == $arr_search['word']['receipt_status']){
 					$rselected = ' selected="selected"';
 				}else{
 					$rselected = '';
@@ -210,7 +210,7 @@ jQuery(function($){
 				label = '';
 				html = '<select name="search[word][order_status]" class="searchselect">';
 		<?php foreach((array)$order_status as $okey => $ovalue){ 
-				if($ovalue == $arr_search['word']['order_status']){
+				if( isset($arr_search['word']['order_status']) && $ovalue == $arr_search['word']['order_status']){
 					$oselected = ' selected="selected"';
 				}else{
 					$oselected = '';
@@ -772,7 +772,7 @@ jQuery(document).ready(function($){
 //20110208ysk start
 			$csod_key = 'csod_'.$key;
 			//$checked = ($chk_ord[$entry['name']] == 1) ? ' checked' : '';
-			$checked = ($chk_ord[$csod_key] == 1) ? ' checked' : '';
+			$checked = (isset($chk_ord[$csod_key]) && $chk_ord[$csod_key] == 1) ? ' checked' : '';
 			$name = esc_attr($entry['name']);
 			//echo '<label for="chk_ord['.$name.']"><input type="checkbox" class="check_order" id="chk_ord['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
 			echo '<label for="chk_ord['.$csod_key.']"><input type="checkbox" class="check_order" id="chk_ord['.$csod_key.']" value="'.$csod_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302

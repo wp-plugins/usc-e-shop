@@ -3,6 +3,8 @@ function usces_redirect(){
 	
 	if ( isset($_POST['wp-preview']) && 'dopreview' == $_POST['wp-preview'] ){
 		$action = 'preview';
+	}else{
+		$action = '';
 	}
 	
 	switch( $action ){
