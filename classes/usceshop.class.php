@@ -2651,6 +2651,7 @@ class usc_e_shop
 		$res = $this->member_login();
 		if( 'member' == $res ){
 			$this->page = 'member';
+			do_action('usces_action_member_logined');
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_member');
 		}elseif( 'login' == $res ){
 			$this->page = 'login';
