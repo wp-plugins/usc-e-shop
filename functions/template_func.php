@@ -2531,12 +2531,12 @@ function usces_get_confirm_rows( $out = '' ) {
 			$options =  array();
 		}
 	
-		 $res .= '<tr>
+		$res .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-		 $res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
-		 $res .= '</td><td class="aleft">' . $cartItemName . '<br />';
+		$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
+		$res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
@@ -2561,13 +2561,13 @@ function usces_get_confirm_rows( $out = '' ) {
 			}
 			$res .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
-		 $res .= '</td>
+		$res .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td>' . $cart_row['quantity'] . '</td>
 			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 			<td>';
-		 $res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $sku_code));
-		 $res .= '</td>
+		$res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $sku_code));
+		$res .= '</td>
 		</tr>';
 	} 
 	

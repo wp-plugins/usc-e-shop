@@ -17,6 +17,8 @@ jQuery(function($){
 	$("#aAdditionalURLs").click(function () {
 		$("#AdditionalURLs").toggle();
 	});
+
+	$(".num").bind("change", function(){ usces_check_num($(this)); });
 });
 
 function toggleVisibility(id) {
@@ -84,11 +86,11 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_cat_privilege');"><?php _e('Campaign Award', 'usces'); ?></a></th>
-	    <td><input name="cat_privilege" type="radio" id="privilege_point" value="point"<?php if($this->options['campaign_privilege'] == 'point') echo 'checked="checked"'; ?> /></td><td><label for="privilege_point"><?php _e('Points', 'usces'); ?></label></td><td><input name="point_num" type="text" class="short_str" value="<?php echo esc_attr($this->options['privilege_point']); ?>" /><?php _e('times', 'usces'); ?></td>
+	    <td><input name="cat_privilege" type="radio" id="privilege_point" value="point"<?php if($this->options['campaign_privilege'] == 'point') echo 'checked="checked"'; ?> /></td><td><label for="privilege_point"><?php _e('Points', 'usces'); ?></label></td><td><input name="point_num" type="text" class="short_str num" value="<?php echo esc_attr($this->options['privilege_point']); ?>" /><?php _e('times', 'usces'); ?></td>
 		<td rowspan="2"><div id="ex_cat_privilege" class="explanation"><?php _e("'Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers.", 'usces'); ?></div></td>
 	</tr>
 	<tr>
-	    <td><input name="cat_privilege" type="radio" id="privilege_discount" value="discount"<?php if($this->options['campaign_privilege'] == 'discount') echo 'checked="checked"'; ?> /></td><td><label for="privilege_discount"><?php _e('Disnount', 'usces'); ?></label></td><td><input name="discount_num" type="text" class="short_str" value="<?php echo esc_attr($this->options['privilege_discount']); ?>" />%</td>
+	    <td><input name="cat_privilege" type="radio" id="privilege_discount" value="discount"<?php if($this->options['campaign_privilege'] == 'discount') echo 'checked="checked"'; ?> /></td><td><label for="privilege_discount"><?php _e('Disnount', 'usces'); ?></label></td><td><input name="discount_num" type="text" class="short_str num" value="<?php echo esc_attr($this->options['privilege_discount']); ?>" />%</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />
@@ -159,14 +161,14 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_postage_privilege');"><?php _e('Conditions for free shipping', 'usces'); ?></a></th>
-	    <td><input name="postage_privilege" type="text" class="short_str" value="<?php echo esc_attr($this->options['postage_privilege']); ?>" /><?php _e('Above', 'usces'); ?></td>
+	    <td><input name="postage_privilege" type="text" class="short_str num" value="<?php echo esc_attr($this->options['postage_privilege']); ?>" /><?php _e('Above', 'usces'); ?></td>
 		<td><div id="ex_postage_privilege" class="explanation"><?php _e('Total purchase prise to have free shipping. Leave it blank if it is not necessary.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_purchase_limit');"><?php _e('default limitation number of purchase', 'usces'); ?></a></th>
-	    <td><input name="purchase_limit" type="text" class="short_str" value="<?php echo esc_attr($this->options['purchase_limit']); ?>" /><?php _e('maximum amount', 'usces'); ?></td>
+	    <td><input name="purchase_limit" type="text" class="short_str num" value="<?php echo esc_attr($this->options['purchase_limit']); ?>" /><?php _e('maximum amount', 'usces'); ?></td>
 		<td><div id="ex_purchase_limit" class="explanation"><?php _e('initial value at registration of items. Leave it blank if it is not necessary.', 'usces'); ?></div></td>
 	</tr>
 	<tr>
@@ -180,7 +182,7 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_rate');"><?php _e('Percentage of Consumption tax', 'usces'); ?></a></th>
-	    <td><input name="tax_rate" type="text" class="short_str" value="<?php echo esc_attr($this->options['tax_rate']); ?>" />%</td>
+	    <td><input name="tax_rate" type="text" class="short_str num" value="<?php echo esc_attr($this->options['tax_rate']); ?>" />%</td>
 		<td><div id="ex_tax_rate" class="explanation"><?php _e('Leave it as blank if tax is included', 'usces'); ?></div></td>
 	</tr>
 </table>
@@ -224,12 +226,12 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_rate');"><?php _e('The initial value of point rate', 'usces'); ?></a></th>
-	    <td colspan="2"><input name="point_rate" type="text" class="short_str" value="<?php echo esc_attr($this->options['point_rate']); ?>" />%</td>
+	    <td colspan="2"><input name="point_rate" type="text" class="short_str num" value="<?php echo esc_attr($this->options['point_rate']); ?>" />%</td>
 		<td><div id="ex_point_rate" class="explanation"><?php _e('initial value at registration of items. Leave it blank if it is not necessary.', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_start_point');"><?php _e('Point at the registration of membership', 'usces'); ?></a></th>
-	    <td colspan="2"><input name="start_point" type="text" class="short_str" value="<?php echo esc_attr($this->options['start_point']); ?>" />pt</td>
+	    <td colspan="2"><input name="start_point" type="text" class="short_str num" value="<?php echo esc_attr($this->options['start_point']); ?>" />pt</td>
 		<td><div id="ex_start_point" class="explanation"><?php _e('Points granted  at the first membersip registration.', 'usces'); ?></div></td>
 	</tr>
 	<tr>

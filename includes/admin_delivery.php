@@ -39,6 +39,10 @@ jQuery(function($){
 <?php }else if($status == 'error'){ ?>
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
+
+	$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
+	$(".days_text").bind("change", function(){ usces_check_num($(this)); });
+
 //20110317ysk start
 <?php
 	$target_market_arr = '';
@@ -208,6 +212,7 @@ jQuery(function($){
 		$("#shipping_charge_value").html(valuehtml);
 		$("#shipping_charge_button").html('<input name="cancel_shipping_charge" id="cancel_shipping_charge" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_shipping_charge(0);" /><input name="add_shipping_charge" id="add_shipping_charge" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_shipping_charge();" />');
 		$("input[name='shipping_charge_name']").focus().select();
+		$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
 	});
 	
 //20101208ysk start
@@ -228,6 +233,7 @@ jQuery(function($){
 		$("#delivery_days_value").html(valuehtml);
 		$("#delivery_days_button").html('<input name="cancel_delivery_days" id="cancel_delivery_days" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_delivery_days(0);" /><input name="add_delivery_days" id="add_delivery_days" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_delivery_days();" />');
 		$("input[name='delivery_days_name']").focus().select();
+		$(".days_text").bind("change", function(){ usces_check_num($(this)); });
 	});
 //20101208ysk end
 	
@@ -656,6 +662,7 @@ jQuery(function($){
 				$("#shipping_charge_value").html(valuehtml);
 				$("#shipping_charge_button").html("<input name='delete_shipping_charge' id='delete_shipping_charge' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_shipping_charge();' /><input name='update_shipping_charge' id='update_shipping_charge' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_shipping_charge();' />");
 			}
+			$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
 		},
 		
 		add_shipping_charge : function() {
@@ -864,6 +871,7 @@ jQuery(function($){
 				$("#delivery_days_value").html(valuehtml);
 				$("#delivery_days_button").html("<input name='delete_delivery_days' id='delete_delivery_days' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_delivery_days();' /><input name='update_delivery_days' id='update_delivery_days' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_delivery_days();' />");
 			}
+			$(".days_text").bind("change", function(){ usces_check_num($(this)); });
 		},
 		
 		add_delivery_days : function() {
@@ -1052,6 +1060,7 @@ jQuery(function($){
 			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[country][i] + "]' value='" + value + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 		}
 		$("#shipping_charge_value").html(valuehtml);
+		$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
 	});
 
 	$("#delivery_days_country").change(function () {
@@ -1071,6 +1080,7 @@ jQuery(function($){
 			valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[country][i] + "</label><input type='text' name='delivery_days_value[" + pref[country][i] + "]' value='" + value + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 		}
 		$("#delivery_days_value").html(valuehtml);
+		$(".days_text").bind("change", function(){ usces_check_num($(this)); });
 	});
 //20110317ysk end
 });
@@ -1162,7 +1172,7 @@ jQuery(document).ready(function($){
 	<tr style="height:40px;">
 		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting03');"><?php _e('Set Delivery Dates', 'usces'); ?></a></th>
 		<td colspan="3">
-			<input name="delivery_after_days" type="text" value="<?php echo $delivery_after_days; ?>">
+			<input name="delivery_after_days" type="text" class="charge_text" value="<?php echo $delivery_after_days; ?>">
 		</td>
 		<td><div id="ex_shipping_setting03" class="explanation"><?php _e('Set the choices of possible delivery dates for the customer.', 'usces'); ?></div></td>
 	</tr>

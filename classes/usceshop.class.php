@@ -584,20 +584,28 @@ class usc_e_shop
 	
 	/* Shop Setup Page */
 	function admin_setup_page() {
-	
 		$this->options = get_option('usces');
 		//$this->options = array();
 		
 
 		if(isset($_POST['usces_option_update'])) {
+			$action_message = '';
+
 			if( empty($_POST['order_mail']) or 
 				empty($_POST['inquiry_mail']) or 
 				empty($_POST['sender_mail']) or 
-				empty($_POST['error_mail']) ) {
-				$this->action_status = 'error';
-				$this->action_message = __('データに不備が有ります','usces');
+				empty($_POST['error_mail']) or 
+				( isset($_POST['point_num']) and !preg_match("/^[0-9]+$/", $_POST['point_num']) ) or 
+				( isset($_POST['discount_num']) and !preg_match("/^[0-9]+$/", $_POST['discount_num']) ) or 
+				( isset($_POST['postage_privilege']) and !preg_match("/^[0-9]+$/", $_POST['postage_privilege']) ) or 
+				( isset($_POST['purchase_limit']) and !preg_match("/^[0-9]+$/", $_POST['purchase_limit']) ) or 
+				( isset($_POST['tax_rate']) and !preg_match("/^[0-9]+$/", $_POST['tax_rate']) ) or 
+				( isset($_POST['point_rate']) and !preg_match("/^[0-9]+$/", $_POST['point_rate']) ) or 
+				( isset($_POST['start_point']) and !preg_match("/^[0-9]+$/", $_POST['start_point']) ) ){
+				$action_message = __('データに不備が有ります','usces');
+			}
 
-			} else {
+			if( $action_message == '' ) {
 
 				$this->options['display_mode'] = isset($_POST['display_mode']) ? trim($_POST['display_mode']) : '';
 				$this->options['campaign_category'] = empty($_POST['cat']) ? USCES_ITEM_CAT_PARENT_ID : $_POST['cat'];
@@ -621,9 +629,7 @@ class usc_e_shop
 				$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? trim($_POST['shipping_rule']) : '';
 				$this->options['tax_rate'] = isset($_POST['tax_rate']) ? (int)$_POST['tax_rate'] : '';
 				$this->options['tax_method'] = isset($_POST['tax_method']) ? trim($_POST['tax_method']) : '';
-		
 				$this->options['cod_type'] = isset($this->options['cod_type']) ? $this->options['cod_type'] : 'fix';
-
 				$this->options['transferee'] = isset($_POST['transferee']) ? trim($_POST['transferee']) : '';
 				$this->options['copyright'] = isset($_POST['copyright']) ? trim($_POST['copyright']) : '';
 				$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? trim($_POST['membersystem_state']) : '';
@@ -634,6 +640,10 @@ class usc_e_shop
 				
 				$this->action_status = 'success';
 				$this->action_message = __('options are updated','usces');
+
+			} else {
+				$this->action_status = 'error';
+				$this->action_message = $action_message;
 			}
 
 		} else {

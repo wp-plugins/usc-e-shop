@@ -77,6 +77,8 @@ jQuery(function($){
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 
+	$(".num").bind("change", function(){ usces_check_num($(this)); });
+
 });
 
 
@@ -92,11 +94,6 @@ function addComma(str)
 	}
 	return n;
 };
-
-
-jQuery(document).ready(function($){
-
-});
 </script>
 <div class="wrap">
 <div class="usces_admin">
@@ -154,7 +151,7 @@ jQuery(document).ready(function($){
 </select></td>
 </tr>
 <tr>
-<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
+<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short num" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
 <?php if( USCES_JP ): ?>
 <?php endif; ?>
 </tr>

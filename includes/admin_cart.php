@@ -28,6 +28,8 @@ jQuery(function($){
 		$("#AdditionalURLs").toggle();
 	});
 
+	$(".num").bind("change", function(){ usces_check_num($(this)); });
+
 	//20100818ysk start
 	//20100809ysk start
 	var $tabs = $('#uscestabs_cart').tabs({
@@ -443,25 +445,25 @@ function toggleVisibility(id) {
 	    <th><?php _e('Indication of item name','usces'); ?></th>
 	    <td><input name="indication[item_name]" type="checkbox" id="indi_item_name" value="<?php echo esc_attr($indi_item_name['item_name']); ?>"<?php echo $checked_item_name['item_name']; ?> /></td>
 	    <th><?php _e('Position of item name','usces'); ?></th>
-		<td><input name="position[item_name]" type="text" id="pos_item_name" value="<?php echo esc_attr($pos_item_name['item_name']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
+		<td><input name="position[item_name]" type="text" class="num" id="pos_item_name" value="<?php echo esc_attr($pos_item_name['item_name']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
 	</tr>
 	<tr>
 	    <th><?php _e('Indication of item code','usces'); ?></th>
 	    <td><input name="indication[item_code]" type="checkbox" id="indi_item_code" value="<?php echo esc_attr($indi_item_name['item_code']); ?>"<?php echo $checked_item_name['item_code']; ?> /></td>
 	    <th><?php _e('Position of item code','usces'); ?></th>
-		<td><input name="position[item_code]" type="text" id="pos_item_code" value="<?php echo esc_attr($pos_item_name['item_code']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
+		<td><input name="position[item_code]" type="text" class="num" id="pos_item_code" value="<?php echo esc_attr($pos_item_name['item_code']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
 	</tr>
 	<tr>
 	    <th><?php _e('Indication of SKU name','usces'); ?></th>
 	    <td><input name="indication[sku_name]" type="checkbox" id="indi_sku_name" value="<?php echo esc_attr($indi_item_name['sku_name']); ?>"<?php echo $checked_item_name['sku_name']; ?> /></td>
 	    <th><?php _e('Position of SKU name','usces'); ?></th>
-		<td><input name="position[sku_name]" type="text" id="pos_sku_name" value="<?php echo esc_attr($pos_item_name['sku_name']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
+		<td><input name="position[sku_name]" type="text" class="num" id="pos_sku_name" value="<?php echo esc_attr($pos_item_name['sku_name']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
 	</tr>
 	<tr>
 	    <th><?php _e('Indication of SKU code','usces'); ?></th>
 	    <td><input name="indication[sku_code]" type="checkbox" id="indi_sku_code" value="<?php echo esc_attr($indi_item_name['sku_code']); ?>"<?php echo $checked_item_name['sku_code']; ?> /></td>
 	    <th><?php _e('Position of SKU code','usces'); ?></th>
-		<td><input name="position[sku_code]" type="text" id="pos_sku_code" value="<?php echo esc_attr($pos_item_name['sku_code']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
+		<td><input name="position[sku_code]" type="text" class="num" id="pos_sku_code" value="<?php echo esc_attr($pos_item_name['sku_code']); ?>" />(<?php _e('numeric','usces'); ?>)</td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />

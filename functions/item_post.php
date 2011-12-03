@@ -1038,7 +1038,6 @@ function get_order_item( $item_code ) {
 	$r .= "<h3>" . $itemName . "</h3>\n";
 	$r .= "<div class='skuform'>\n";
 
-
 	$r .= "<table class='skumulti'>\n";
 	$r .= "<thead>\n";
 	$r .= "<tr>\n";
@@ -1055,90 +1054,99 @@ function get_order_item( $item_code ) {
 	$r .= "</tr>\n";
 	$r .= "</thead>\n";
 	$r .= "<tbody>\n";
-	for ($i=0; $i<count($skus['code']); $i++) :
-		$sku = esc_attr($skus['code'][$i]);
-		$cprice = esc_attr($skus['cprice'][$i]);
-		$price = esc_attr($skus['price'][$i]);
-		$zaiko = esc_attr($usces->zaiko_status[$skus['stock'][$i]]);
-		$zaikonum = esc_attr($skus['stocknum'][$i]);
-		$disp = esc_attr($skus['name'][$i]);
-		$unit = esc_attr($skus['unit'][$i]);
-		$gptekiyo = $skus['gp'][$i];
+	//for ($i=0; $i<count($skus['code']); $i++) :
+	//	$sku = esc_attr($skus['code'][$i]);
+	//	$cprice = esc_attr($skus['cprice'][$i]);
+	//	$price = esc_attr($skus['price'][$i]);
+	//	$zaiko = esc_attr($usces->zaiko_status[$skus['stock'][$i]]);
+	//	$zaikonum = esc_attr($skus['stocknum'][$i]);
+	//	$disp = esc_attr($skus['name'][$i]);
+	//	$unit = esc_attr($skus['unit'][$i]);
+	//	$gptekiyo = $skus['gp'][$i];
+	foreach($skus as $sku) :
+		$key = esc_attr($sku['code']);
+		$cprice = esc_attr($sku['cprice']);
+		$price = esc_attr($sku['price']);
+		$zaiko = esc_attr($usces->zaiko_status[$sku['stock']]);
+		$zaikonum = esc_attr($sku['stocknum']);
+		$disp = esc_attr($sku['name']);
+		$unit = esc_attr($sku['unit']);
+		$gptekiyo = $sku['gp'];
+		$sort = (int)$sku['sort'];
 		$r .= "<tr>\n";
-		$r .= "<td rowspan='2'>" . $sku . "</td>\n";
+		$r .= "<td rowspan='2'>" . $key . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
 		$r .= "<td><span class='cprice'>" . usces_crform( $cprice, true, false, 'return' ) . "</span></td>\n";
 		$r .= "<td><span class='price'>" . usces_crform( $price, true, false, 'return' ) . "</span></td>\n";
 		$r .= "<td>" . $zaiko . "</td>\n";
 		$r .= "<td>" . $zaikonum . "</td>\n";
-//			$r .= "<td>" . usces_the_itemQuant() . "</td>\n";
+//		$r .= "<td>" . usces_the_itemQuant() . "</td>\n";
 		$r .= "<td>" . $unit . "</td>\n";
 		$r .= "<td>\n";
-	$r .= "<input name=\"itemNEWName[{$post_id}][{$sku}]\" type=\"hidden\" id=\"itemNEWName[{$post_id}][{$sku}]\" value=\"{$itemName}\" />\n";
-	$r .= "<input name=\"itemNEWCode[{$post_id}][{$sku}]\" type=\"hidden\" id=\"itemNEWCode[{$post_id}][{$sku}]\" value=\"{$item_code}\" />\n";
-	$r .= "<input name=\"skuNEWName[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuNEWName[{$post_id}][{$sku}]\" value=\"{$sku}\" />\n";
-	$r .= "<input name=\"skuNEWCprice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuNEWCprice[{$post_id}][{$sku}]\" value=\"{$cprice}\" />\n";
-	$r .= "<input name=\"skuNEWDisp[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuNEWDisp[{$post_id}][{$sku}]\" value=\"{$disp}\" />\n";
-	$r .= "<input name=\"zaikoNEWnum[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaikoNEWnum[{$post_id}][{$sku}]\" value=\"{$zaikonum}\" />\n";
-	$r .= "<input name=\"zaiNEWko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiNEWko[{$post_id}][{$sku}]\" value=\"{$zaiko}\" />\n";
-	$r .= "<input name=\"uniNEWt[{$post_id}][{$sku}]\" type=\"hidden\" id=\"uniNEWt[{$post_id}][{$sku}]\" value=\"{$unit}\" />\n";
-	$r .= "<input name=\"gpNEWtekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gpNEWtekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
-	$r .= "<input name=\"skuNEWPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuNEWPrice[{$post_id}][{$sku}]\" value=\"{$price}\" />\n";
-	$r .= "<input name=\"inNEWCart[{$post_id}][{$sku}]\" type=\"button\" id=\"inNEWCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"" . __('Add to Whish List','usces') . "\" onclick=\"orderItem.add2cart('{$post_id}', '{$sku}');\" />";
+		$r .= "<input name=\"itemNEWName[{$post_id}][{$key}]\" type=\"hidden\" id=\"itemNEWName[{$post_id}][{$key}]\" value=\"{$itemName}\" />\n";
+		$r .= "<input name=\"itemNEWCode[{$post_id}][{$key}]\" type=\"hidden\" id=\"itemNEWCode[{$post_id}][{$key}]\" value=\"{$item_code}\" />\n";
+		$r .= "<input name=\"skuNEWName[{$post_id}][{$key}]\" type=\"hidden\" id=\"skuNEWName[{$post_id}][{$key}]\" value=\"{$key}\" />\n";
+		$r .= "<input name=\"skuNEWCprice[{$post_id}][{$key}]\" type=\"hidden\" id=\"skuNEWCprice[{$post_id}][{$key}]\" value=\"{$cprice}\" />\n";
+		$r .= "<input name=\"skuNEWDisp[{$post_id}][{$key}]\" type=\"hidden\" id=\"skuNEWDisp[{$post_id}][{$key}]\" value=\"{$disp}\" />\n";
+		$r .= "<input name=\"zaikoNEWnum[{$post_id}][{$key}]\" type=\"hidden\" id=\"zaikoNEWnum[{$post_id}][{$key}]\" value=\"{$zaikonum}\" />\n";
+		$r .= "<input name=\"zaiNEWko[{$post_id}][{$key}]\" type=\"hidden\" id=\"zaiNEWko[{$post_id}][{$key}]\" value=\"{$zaiko}\" />\n";
+		$r .= "<input name=\"uniNEWt[{$post_id}][{$key}]\" type=\"hidden\" id=\"uniNEWt[{$post_id}][{$key}]\" value=\"{$unit}\" />\n";
+		$r .= "<input name=\"gpNEWtekiyo[{$post_id}][{$key}]\" type=\"hidden\" id=\"gpNEWtekiyo[{$post_id}][{$key}]\" value=\"{$gptekiyo}\" />\n";
+		$r .= "<input name=\"skuNEWPrice[{$post_id}][{$key}]\" type=\"hidden\" id=\"skuNEWPrice[{$post_id}][{$key}]\" value=\"{$price}\" />\n";
+		$r .= "<input name=\"inNEWCart[{$post_id}][{$key}]\" type=\"button\" id=\"inNEWCart[{$post_id}][{$key}]\" class=\"skubutton\" value=\"" . __('Add to Whish List','usces') . "\" onclick=\"orderItem.add2cart('{$post_id}', '{$key}');\" />";
 		$r .= "</td>\n";
 		$r .= "</tr>\n";
-	$r .= "<tr>\n";
-	if ( 0 < count($optkeys) ) :
-		$r .= "<td colspan='7'>\n";
-		foreach ($optkeys as $optkey) :
-			$r .= "<div>\n";
-			$value = get_post_custom_values(('_iopt_' . $optkey), $post_id);
-			$key = '_iopt_' . esc_attr($optkey);
-			if(!$value) continue;
-			$values = maybe_unserialize($value[0]);
+		$r .= "<tr>\n";
+		if($optkeys) :
+			$r .= "<td colspan='7'>\n";
+			foreach($optkeys as $optkey => $optvalue) :
+				$r .= "<div>\n";
+				$name = esc_attr($optvalue);
+				$optcode = esc_attr(urlencode($name));
+				$opts = usces_get_opts($post_id, 'name');
+				$opt = $opts[$optvalue];
 //20110715ysk start 0000202
-			//$means = (int)$values['means'][0];
-			$means = (int)$values['means'];
-			//$essential = (int)$values['essential'][0];
-			$essential = (int)$values['essential'];
-			$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
-		switch($means) {
-		case 0://Single-select
-		case 1://Multi-select
-			$selects = explode("\n", $values['value'][0]);
-			$multiple = ($means === 0) ? '' : ' multiple';
-			$multiple_array = ($means === 0) ? '' : '_multiple';
-			
-			//$r .= "\n<label for='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_label'>{$optkey}</label>\n";
-			$r .= "\n<select name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_select{$multiple_array}'{$multiple}>\n";
-			if($essential == 1)
-				$r .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
-			$s=0;
-			foreach($selects as $v) {
-				if($s == 0 && $essential == 0) 
-					$selected = ' selected="selected"';
-				else
-					$selected = '';
-				$r .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
-				$s++;
-			}
-			$r .= "</select>\n";
-			break;
-		case 2://Text
-			$r .= "\n<input name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' type='text' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
-			break;
-		case 5://Text-area
-			$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' id='itemNEWOption[{$post_id}][{$sku}][{$optkey}]' class='iopt_textarea' /></textarea>\n";
-			break;
-		}
+				$means = (int)$opt['means'];
+				$essential = (int)$opt['essential'];
+				$r .= "\n<label for='itemNEWOption[{$post_id}][{$key}][{$optcode}]' class='iopt_label'>{$name}</label>\n";
+				switch($means) {
+				case 0://Single-select
+				case 1://Multi-select
+					$selects = explode("\n", $opt['value']);
+					$multiple = ($means === 0) ? '' : ' multiple';
+					$multiple_array = ($means === 0) ? '' : '_multiple';
+					
+					$r .= "\n<select name='itemNEWOption[{$post_id}][{$key}][{$optcode}]' id='itemNEWOption[{$post_id}][{$key}][{$optcode}]' class='iopt_select{$multiple_array}'{$multiple}>\n";
+					if($essential == 1)
+						$r .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
+					$s=0;
+					foreach($selects as $v) {
+						if($s == 0 && $essential == 0) 
+							$selected = ' selected="selected"';
+						else
+							$selected = '';
+						$r .= "\t<option value='{$v}'{$selected}>{$v}</option>\n";
+						$s++;
+					}
+					$r .= "</select>\n";
+					break;
+				case 2://Text
+					$r .= "\n<input name='itemNEWOption[{$post_id}][{$key}][{$optcode}]' type='text' id='itemNEWOption[{$post_id}][{$key}][{$optcode}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
+					break;
+				case 5://Text-area
+					$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$key}][{$optcode}]' id='itemNEWOption[{$post_id}][{$key}][{$optcode}]' class='iopt_textarea'></textarea>\n";
+					break;
+				}
 //20110715ysk end
-			$r .= "<input name=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" type=\"hidden\" id=\"optNEWName[{$post_id}][{$sku}][{$optkey}]\" value=\"{$optkey}\" />\n";
-			$r .= "</div>\n";
-		endforeach;
-		$r .= "</td>\n";
-	endif;
-	$r .= "</tr>\n";
-	endfor;
+				$r .= "<input name=\"optNEWCode[{$post_id}][{$key}][{$optcode}]\" type=\"hidden\" id=\"optNEWCode[{$post_id}][{$key}][{$optcode}]\" value=\"{$optcode}\" />\n";
+				$r .= "<input name=\"optNEWName[{$post_id}][{$key}][{$optcode}]\" type=\"hidden\" id=\"optNEWName[{$post_id}][{$key}][{$optcode}]\" value=\"{$name}\" />\n";
+				$r .= "</div>\n";
+			endforeach;
+			$r .= "</td>\n";
+		endif;
+		$r .= "</tr>\n";
+	//endfor;
+	endforeach;
 	$r .= "</tbody>\n";
 	$r .= "</table>\n";
 

@@ -1036,7 +1036,7 @@
 			}
 			query += "&skuPrice["+cnum+"]["+newid+"]["+newsku+"]="+$("input[name='skuNEWPrice\[" + newid + "\]\[" + newsku + "\]']").val();
 			query += "&quant["+cnum+"]["+newid+"]["+newsku+"]=1";
-			var newoptob = $("input[name*='optNEWName\[" + newid + "\]\[" + newsku + "\]']");
+			var newoptob = $("input[name*='optNEWCode\[" + newid + "\]\[" + newsku + "\]']");
 			var newoptvalue = '';
 			for( var n = 0; n < newoptob.length; n++) {
 //20110715ysk start 0000202
@@ -1069,54 +1069,55 @@
 			s.success = function(data, dataType){
 				if(data == 'nodata'){return;}
 				var pict = "<img src='" + $("#newitemform img").attr("src") + "' width='" + $("#newitemform img").attr("width") + "' height='" + $("#newitemform img").attr("height") + "' alt='' />";
-				var itemName = $("input[name='itemNEWName\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='itemNEWCode\["+newid+"\]\["+newsku+"\]']").val();
+				var itemName = $("input[name='itemNEWName\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='itemNEWCode\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='skuNEWName\["+newid+"\]\["+newsku+"\]']").val();
 				var zaiko = $("input[name='zaiNEWko\["+newid+"\]\["+newsku+"\]']").val();
 				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' onchange='orderfunc.sumPrice()' />";
 				var quant = "<input name='quant[" + cnum + "][" + newid + "][" + newsku + "]' class='text quantity' type='text' value='1' onchange='orderfunc.sumPrice()' />";
 				var delButton = "<input name='delButton[" + cnum + "][" + newid + "][" + newsku + "]' class='delCartButton' type='submit' value='削除' />";
 				
-				var sucoptob = $("input[name*='optNEWName\[" + newid + "\]\[" + newsku + "\]']");
+				var sucoptob = $("input[name*='optNEWCode\[" + newid + "\]\[" + newsku + "\]']");
 				var skuOptValue = '';
-				var sucoptvalue = '';
+				var skuoptval = '';
 				var hiddenopt = '';
-				var hiddenoptn = '';
+				var hiddenoptname = '';
 				for( var i = 0; i < sucoptob.length; i++) {
-					sucoptname = $(sucoptob[i]).val();
+					skuoptcode = $(sucoptob[i]).val();
+					skuoptname = $(":input[name='optNEWName\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").val();
 //20110715ysk start 0000202
-					//sucoptvalue = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]']").val();
-					sucoptvalue = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]']").val();
-					//if( '#NONE#' != sucoptvalue){
-					//	skuOptValue += sucoptvalue + ' ';
-					//	hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptvalue+"' />";
-					//	hiddenoptn += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptname+"' />";
+					//skuoptval = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").val();
+					skuoptval = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").val();
+					//if( '#NONE#' != skuoptval){
+					//	skuOptValue += skuoptval + ' ';
+					//	hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptval+"' />";
+					//	hiddenoptname += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptcode+"' />";
 					//}
-					skuOptValue += sucoptname + ' : ';
-					var sucoptclass= $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]']").attr("class");
+					skuOptValue += skuoptname + ' : ';
+					var sucoptclass= $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").attr("class");
 					switch(sucoptclass) {
 					case 'iopt_select_multiple':
 						var c = '';
-						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + sucoptname + "\]'] option:selected").each(function(idx, obj) {
-							if( '#NONE#' != sucoptvalue) {
+						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]'] option:selected").each(function(idx, obj) {
+							if( '#NONE#' != skuoptval) {
 								skuOptValue += c + $(this).val();
 								c = ', ';
-								hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "][" + $(this).val() + "]' class='text quantity' type='hidden' value='"+$(this).val()+"' />";
+								hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "][" + $(this).val() + "]' class='text quantity' type='hidden' value='"+$(this).val()+"' />";
 							}
 						});
 						break;
 					case 'iopt_select':
-						if( '#NONE#' != sucoptvalue) {
-							skuOptValue += sucoptvalue;
-							hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptvalue+"' />";
+						if( '#NONE#' != skuoptval) {
+							skuOptValue += skuoptval;
+							hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptval+"' />";
 						}
 						break;
 					case 'iopt_text':
 					case 'iopt_textarea':
-						skuOptValue += sucoptvalue;
-						hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptvalue+"' />";
+						skuOptValue += skuoptval;
+						hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptval+"' />";
 						break;
 					}
 					skuOptValue += '<br />';
-					hiddenoptn += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + sucoptname + "]' class='text quantity' type='hidden' value='"+sucoptname+"' />";
+					hiddenoptname += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptname + "]' class='text quantity' type='hidden' value='"+skuoptname+"' />";
 //20110715ysk end
 				}
 				var htm = "<tr>\n";
@@ -1127,7 +1128,7 @@
 				htm += "<td>"+quant+"</td>\n";
 				htm += "<td id='sub_total["+cnum+"]' class='aright'>&nbsp;</td>\n";
 				htm += "<td>"+zaiko+"</td>\n";
-				htm += "<td>"+delButton+hiddenopt+hiddenoptn+"</td>\n";
+				htm += "<td>"+delButton+hiddenopt+hiddenoptname+"</td>\n";
 				htm += "</tr>\n";
 
 				$("#orderitemlist").append( htm );
@@ -1229,11 +1230,20 @@
 			target = target.replace(/(^\s+)|(\s+$)|(^\n+)|(\n+$)/g, "");
 			return target;
 		}
-
 		
 	};
 	
 })(jQuery);
+
+function usces_check_num(obj) {
+	if(!checkNum(obj.val())) {
+		alert('数値で入力して下さい。');
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
 function checkCode(argValue) {
 	if(argValue.match(/[^0-9|^a-z|^A-Z|^\-|^_]/g)) {
 		return false;

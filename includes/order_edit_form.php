@@ -333,7 +333,15 @@ jQuery(function($){
 	});
 
 	orderfunc = {
-		sumPrice : function() {
+		sumPrice : function(obj) {
+			if(obj != null) {
+				if(!checkNum(obj.val())) {
+					alert('数値で入力して下さい。');
+					obj.focus();
+					return false;
+				}
+			}
+
 			var p = $("input[name*='skuPrice']");
 			var q = $("input[name*='quant']");
 			var t = $("td[id*='sub_total']");
@@ -391,15 +399,6 @@ jQuery(function($){
 							$(":input[name='" + val[0] + "']").val(val[1]);
 						}
 					}
-
-
-
-
-
-
-
-
-
 				}else if( 'none' == values[0]){
 					alert( '該当する会員情報は存在しません。' );
 				}else{
@@ -567,21 +566,21 @@ jQuery(document).ready(function($){
 	var t = $("td[id*='sub_total']");
 	var db = $("input[name*='delButton']");
 
-	orderfunc.sumPrice();
+	orderfunc.sumPrice(null);
 	
 	for( var i = 0; i < p.length; i++) {
-		$(p[i]).bind("change", function(){ orderfunc.sumPrice(); });
-		$(q[i]).bind("change", function(){ orderfunc.sumPrice(); });
-		$(db[i]).bind("click", function(){ return delConfirm(); });
+		$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
+		$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
+		$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
 	}
-	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_discount").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_shipping_charge").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_cod_fee").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_tax").bind("change", function(){ orderfunc.sumPrice(); });
+	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice($("#order_usedpoint")); });
+	$("#order_discount").bind("change", function(){ orderfunc.sumPrice($("#order_discount")); });
+	$("#order_shipping_charge").bind("change", function(){ orderfunc.sumPrice($("#order_shipping_charge")); });
+	$("#order_cod_fee").bind("change", function(){ orderfunc.sumPrice($("#order_cod_fee")); });
+	$("#order_tax").bind("change", function(){ orderfunc.sumPrice($("#order_tax")); });
 	$("input[name*='upButton']").click(function(){
 		if( ('completion' == $("#order_taio option:selected").val() || 'continuation' == $("#order_taio option:selected").val()) && '<?php echo substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10); ?>' != $('#modified').val() ){
-			if( confirm("<?php _e("更新日を今日の日付に変更しますか？", 'usces'); ?>\n<?php _e("更新日日を変更せずに更新する場合はキャンセルを押してください。", 'usces'); ?>") ){
+			if( confirm("<?php _e("更新日を今日の日付に変更しますか？", 'usces'); ?>\n<?php _e("更新日を変更せずに更新する場合はキャンセルを押してください。", 'usces'); ?>") ){
 				$('#up_modified').val('update');
 			}else{
 				$('#up_modified').val('');
