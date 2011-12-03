@@ -26,7 +26,7 @@ get_header();
 <?php if(usces_sku_num() === 1) : usces_have_skus(); ?>
 <!--1SKU-->
 	<h2 class="item_name"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h2>
-	<div class="exp">
+	<div class="exp clearfix">
 		<div class="field">
 		<?php if( usces_the_itemCprice('return') > 0 ) : ?>
 			<div class="field_name"><?php _e('List price', 'usces'); ?><?php usces_guid_tax(); ?></div>
@@ -68,7 +68,7 @@ get_header();
 <?php elseif(usces_sku_num() > 1) : usces_have_skus(); ?>
 <!--some SKU-->
 	<h2 class="item_name"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h2>
-	<div class="exp">
+	<div class="exp clearfix">
 		<?php the_content(); ?>
 		<?php if( $item_custom = usces_get_item_custom( $post->ID, 'list', 'return' ) ) : ?>
 		<div class="field">

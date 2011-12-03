@@ -3318,7 +3318,8 @@ function usces_paypal_doecp( &$results ) {
 
 	} else {
 		//定期支払い
-		$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
+		//$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
+		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);//20111129ysk 0000320
 		$token = urlencode($_REQUEST['token']);
 		$currencyCodeType = urlencode($usces->get_currency_code());
 		//$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
