@@ -129,6 +129,88 @@ function admin_prodauct_footer(){
 
 <script type="text/javascript">
 (function($) {
+    $('#option_form').submit(function(e) {
+		var status = 'normal';
+
+		if( "" == $("*[name='order_mail']").val() ) {
+			status = 'error';
+			$("*[name='order_mail']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( "" == $("*[name='inquiry_mail']").val() ) {
+			status = 'error';
+			$("*[name='inquiry_mail']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( "" == $("*[name='sender_mail']").val() ) {
+			status = 'error';
+			$("*[name='sender_mail']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( "" == $("*[name='error_mail']").val() ) {
+			status = 'error';
+			$("*[name='error_mail']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("*[name='point_num']").val() ) ) {
+			status = 'error';
+			$("*[name='point_num']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("*[name='discount_num']").val() ) ) {
+			status = 'error';
+			$("*[name='discount_num']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("*[name='postage_privilege']").val() ) ) {
+			status = 'error';
+			$("*[name='postage_privilege']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("*[name='purchase_limit']").val() ) ) {
+			status = 'error';
+			$("*[name='purchase_limit']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("*[name='tax_rate']").val() ) ) {
+			status = 'error';
+			$("*[name='tax_rate']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("*[name='point_rate']").val() ) ) {
+			status = 'error';
+			$("*[name='point_rate']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("*[name='start_point']").val() ) ) {
+			status = 'error';
+			$("*[name='start_point']").css({'background-color': '#FFA'}).click(function(){
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+
+		if( status != 'normal' ) {
+			$("#aniboxStatus").removeClass("none");
+			$("#aniboxStatus").addClass("error");
+			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
+			$("#info_massage").html("データに不備があります");
+			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+			return false;
+		} else {
+			return true;
+		}
+	});
+
 	$( "#item-opt-list" ).sortable({
 		//placeholder: "ui-state-highlight",
 		handle : 'th',
@@ -238,10 +320,10 @@ function usces_item_dupricate($post_id){
 		wp_die( __( 'Sorry, you do not have the right to access this site.' ) );
 
 	if( empty($post_id) )
-		wp_die( __( 'データが存在しません。。', 'usces' ) );
+		wp_die( __( 'データが存在しません。', 'usces' ) );
 	
 	if ( !$post_data = wp_get_single_post($post_id, ARRAY_A) )
-		wp_die( __( 'データが存在しません。。', 'usces' ) );
+		wp_die( __( 'データが存在しません。', 'usces' ) );
 
 	$datas = array();
 	foreach($post_data as $key => $value){

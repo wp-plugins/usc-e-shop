@@ -20,9 +20,9 @@ foreach((array)$target_market as $tm) {
 }
 //20110317ysk end
 //20101208ysk start
-$delivery_time_limit['hour'] = $this->options['delivery_time_limit']['hour'];
-$delivery_time_limit['min'] = $this->options['delivery_time_limit']['min'];
-$shortest_delivery_time = $this->options['shortest_delivery_time'];
+$delivery_time_limit['hour'] = isset($this->options['delivery_time_limit']['hour']) ? $this->options['delivery_time_limit']['hour'] : '00';
+$delivery_time_limit['min'] = isset($this->options['delivery_time_limit']['min']) ? $this->options['delivery_time_limit']['min'] : '00';
+$shortest_delivery_time = isset($this->options['shortest_delivery_time']) ? $this->options['shortest_delivery_time'] : '0';
 $delivery_after_days = (empty($this->options['delivery_after_days'])) ? 15 : (int)$this->options['delivery_after_days'];
 $delivery_days = isset($this->options['delivery_days']) ? $this->options['delivery_days'] : array();
 //20101208ysk end

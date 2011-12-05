@@ -34,7 +34,7 @@ function toggleVisibility(id) {
 <h2>Welcart Shop <?php _e('General Setting','usces'); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
-		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
+		<img id="info_image" src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>

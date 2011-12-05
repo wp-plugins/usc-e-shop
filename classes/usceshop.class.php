@@ -595,62 +595,40 @@ class usc_e_shop
 		
 
 		if(isset($_POST['usces_option_update'])) {
-			$action_message = '';
 
-			if( empty($_POST['order_mail']) or 
-				empty($_POST['inquiry_mail']) or 
-				empty($_POST['sender_mail']) or 
-				empty($_POST['error_mail']) or 
-				( isset($_POST['point_num']) and !preg_match("/^[0-9]+$/", $_POST['point_num']) ) or 
-				( isset($_POST['discount_num']) and !preg_match("/^[0-9]+$/", $_POST['discount_num']) ) or 
-				( isset($_POST['postage_privilege']) and !preg_match("/^[0-9]+$/", $_POST['postage_privilege']) ) or 
-				( isset($_POST['purchase_limit']) and !preg_match("/^[0-9]+$/", $_POST['purchase_limit']) ) or 
-				( isset($_POST['tax_rate']) and !preg_match("/^[0-9]+$/", $_POST['tax_rate']) ) or 
-				( isset($_POST['point_rate']) and !preg_match("/^[0-9]+$/", $_POST['point_rate']) ) or 
-				( isset($_POST['start_point']) and !preg_match("/^[0-9]+$/", $_POST['start_point']) ) ){
-				$action_message = __('データに不備が有ります','usces');
-			}
+			$this->options['display_mode'] = isset($_POST['display_mode']) ? trim($_POST['display_mode']) : '';
+			$this->options['campaign_category'] = empty($_POST['cat']) ? USCES_ITEM_CAT_PARENT_ID : $_POST['cat'];
+			$this->options['campaign_privilege'] = isset($_POST['cat_privilege']) ? trim($_POST['cat_privilege']) : '';
+			$this->options['privilege_point'] = isset($_POST['point_num']) ? (int)$_POST['point_num'] : '';
+			$this->options['privilege_discount'] = isset($_POST['discount_num']) ? (int)$_POST['discount_num'] : '';
+			$this->options['company_name'] = isset($_POST['company_name']) ? trim($_POST['company_name']) : '';
+			$this->options['zip_code'] = isset($_POST['zip_code']) ? trim($_POST['zip_code']) : '';
+			$this->options['address1'] = isset($_POST['address1']) ? trim($_POST['address1']) : '';
+			$this->options['address2'] = isset($_POST['address2']) ? trim($_POST['address2']) : '';
+			$this->options['tel_number'] = isset($_POST['tel_number']) ? trim($_POST['tel_number']) : '';
+			$this->options['fax_number'] = isset($_POST['fax_number']) ? trim($_POST['fax_number']) : '';
+			$this->options['order_mail'] = isset($_POST['order_mail']) ? trim($_POST['order_mail']) : '';
+			$this->options['inquiry_mail'] = isset($_POST['inquiry_mail']) ? trim($_POST['inquiry_mail']) : '';
+			$this->options['sender_mail'] = isset($_POST['sender_mail']) ? trim($_POST['sender_mail']) : '';
+			$this->options['error_mail'] = isset($_POST['error_mail']) ? trim($_POST['error_mail']) : '';
+			$this->options['postage_privilege'] = isset($_POST['postage_privilege']) ? trim($_POST['postage_privilege']) : '';
+			$this->options['purchase_limit'] = isset($_POST['purchase_limit']) ? trim($_POST['purchase_limit']) : '';
+			$this->options['point_rate'] = isset($_POST['point_rate']) ? (int)$_POST['point_rate'] : '';
+			$this->options['start_point'] = isset($_POST['start_point']) ? (int)$_POST['start_point'] : '';
+			$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? trim($_POST['shipping_rule']) : '';
+			$this->options['tax_rate'] = isset($_POST['tax_rate']) ? (int)$_POST['tax_rate'] : '';
+			$this->options['tax_method'] = isset($_POST['tax_method']) ? trim($_POST['tax_method']) : '';
+			$this->options['cod_type'] = isset($this->options['cod_type']) ? $this->options['cod_type'] : 'fix';
+			$this->options['transferee'] = isset($_POST['transferee']) ? trim($_POST['transferee']) : '';
+			$this->options['copyright'] = isset($_POST['copyright']) ? trim($_POST['copyright']) : '';
+			$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? trim($_POST['membersystem_state']) : '';
+			$this->options['membersystem_point'] = isset($_POST['membersystem_point']) ? trim($_POST['membersystem_point']) : '';
+			$this->options['point_coverage'] = isset($_POST['point_coverage']) ? (int)$_POST['point_coverage'] : 0;
 
-			if( $action_message == '' ) {
-
-				$this->options['display_mode'] = isset($_POST['display_mode']) ? trim($_POST['display_mode']) : '';
-				$this->options['campaign_category'] = empty($_POST['cat']) ? USCES_ITEM_CAT_PARENT_ID : $_POST['cat'];
-				$this->options['campaign_privilege'] = isset($_POST['cat_privilege']) ? trim($_POST['cat_privilege']) : '';
-				$this->options['privilege_point'] = isset($_POST['point_num']) ? (int)$_POST['point_num'] : '';
-				$this->options['privilege_discount'] = isset($_POST['discount_num']) ? (int)$_POST['discount_num'] : '';
-				$this->options['company_name'] = isset($_POST['company_name']) ? trim($_POST['company_name']) : '';
-				$this->options['zip_code'] = isset($_POST['zip_code']) ? trim($_POST['zip_code']) : '';
-				$this->options['address1'] = isset($_POST['address1']) ? trim($_POST['address1']) : '';
-				$this->options['address2'] = isset($_POST['address2']) ? trim($_POST['address2']) : '';
-				$this->options['tel_number'] = isset($_POST['tel_number']) ? trim($_POST['tel_number']) : '';
-				$this->options['fax_number'] = isset($_POST['fax_number']) ? trim($_POST['fax_number']) : '';
-				$this->options['order_mail'] = isset($_POST['order_mail']) ? trim($_POST['order_mail']) : '';
-				$this->options['inquiry_mail'] = isset($_POST['inquiry_mail']) ? trim($_POST['inquiry_mail']) : '';
-				$this->options['sender_mail'] = isset($_POST['sender_mail']) ? trim($_POST['sender_mail']) : '';
-				$this->options['error_mail'] = isset($_POST['error_mail']) ? trim($_POST['error_mail']) : '';
-				$this->options['postage_privilege'] = isset($_POST['postage_privilege']) ? trim($_POST['postage_privilege']) : '';
-				$this->options['purchase_limit'] = isset($_POST['purchase_limit']) ? trim($_POST['purchase_limit']) : '';
-				$this->options['point_rate'] = isset($_POST['point_rate']) ? (int)$_POST['point_rate'] : '';
-				$this->options['start_point'] = isset($_POST['start_point']) ? (int)$_POST['start_point'] : '';
-				$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? trim($_POST['shipping_rule']) : '';
-				$this->options['tax_rate'] = isset($_POST['tax_rate']) ? (int)$_POST['tax_rate'] : '';
-				$this->options['tax_method'] = isset($_POST['tax_method']) ? trim($_POST['tax_method']) : '';
-				$this->options['cod_type'] = isset($this->options['cod_type']) ? $this->options['cod_type'] : 'fix';
-				$this->options['transferee'] = isset($_POST['transferee']) ? trim($_POST['transferee']) : '';
-				$this->options['copyright'] = isset($_POST['copyright']) ? trim($_POST['copyright']) : '';
-				$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? trim($_POST['membersystem_state']) : '';
-				$this->options['membersystem_point'] = isset($_POST['membersystem_point']) ? trim($_POST['membersystem_point']) : '';
-				$this->options['point_coverage'] = isset($_POST['point_coverage']) ? (int)$_POST['point_coverage'] : 0;
-
-				update_option('usces', $this->options);
-				
-				$this->action_status = 'success';
-				$this->action_message = __('options are updated','usces');
-
-			} else {
-				$this->action_status = 'error';
-				$this->action_message = $action_message;
-			}
+			update_option('usces', $this->options);
+			
+			$this->action_status = 'success';
+			$this->action_message = __('options are updated','usces');
 
 		} else {
 			$this->action_status = 'none';
@@ -3984,7 +3962,7 @@ class usc_e_shop
 
 	function point_check( $entries ) {
 		$member = $this->get_member();
-		$this->set_cart_fees( $member, &$entries );
+		$this->set_cart_fees( $member, $entries );
 //var_dump($entries);
 		$mes = '';
 		if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
