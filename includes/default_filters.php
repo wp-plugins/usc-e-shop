@@ -10,6 +10,7 @@ add_action( 'wp_footer', 'usces_action_footer_comment');
 add_action( 'admin_footer-welcart-shop_page_usces_itemnew', 'admin_prodauct_footer');
 add_action( 'admin_footer-welcart-shop_page_usces_itemedit', 'admin_prodauct_footer');
 add_action( 'admin_footer-welcart-shop_page_usces_initial', 'admin_prodauct_footer');
+add_action( 'admin_footer-welcart-shop_page_usces_cart', 'admin_prodauct_footer');
 add_action( 'admin_footer-post.php', 'admin_post_footer');
 add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 //add_action( 'transition_post_status', 'usces_action_transition_post_status', 10, 3);

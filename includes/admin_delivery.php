@@ -666,13 +666,33 @@ jQuery(function($){
 		},
 		
 		add_shipping_charge : function() {
-			if($("input[name='shipping_charge_name']").val() == "") return;
+			var error = 0;
+			if($("input[name='shipping_charge_name']").val() == "") {
+				error++;
+				$("input[name='shipping_charge_name']").css({'background-color': '#FFA'}).click(function() {
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+			var country = $("#shipping_charge_country").val();
+			for(var i=0; i<pref[country].length; i++){
+				var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+				if( "" == value || !checkNum(value) ) {
+					error++;
+					$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+						$(this).css({'background-color': '#FFF'});
+					});
+				}
+			}
+			if( 0 < error ) {
+				alert("データに不備があります。");
+				return false;
+			}
 			
 			$("#shipping_charge_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var name = encodeURIComponent($("input[name='shipping_charge_name']").val());
 			var query = '';
 //20110317ysk start
-			var country = $("#shipping_charge_country").val();
+			//var country = $("#shipping_charge_country").val();
 			//for(var i=0; i<pref.length; i++){
 			//	query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[i] + "\]']").val();
 			//}
@@ -719,14 +739,34 @@ jQuery(function($){
 		},
 		
 		update_shipping_charge : function() {
-			if($("input[name='shipping_charge_name']").val() == "") return;
+			var error = 0;
+			if($("input[name='shipping_charge_name']").val() == "") {
+				error++;
+				$("input[name='shipping_charge_name']").css({'background-color': '#FFA'}).click(function() {
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+			var country = $("#shipping_charge_country").val();
+			for(var i=0; i<pref[country].length; i++){
+				var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+				if( "" == value || !checkNum(value) ) {
+					error++;
+					$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+						$(this).css({'background-color': '#FFF'});
+					});
+				}
+			}
+			if( 0 < error ) {
+				alert("データに不備があります。");
+				return false;
+			}
 			
 			$("#shipping_charge_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#shipping_charge_name_select option:selected").val();
 			var name = encodeURIComponent($("input[name='shipping_charge_name']").val());
 			var query = '';
 //20110317ysk start
-			var country = $("#shipping_charge_country").val();
+			//var country = $("#shipping_charge_country").val();
 			//for(var i=0; i<pref.length; i++){
 			//	query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[i] + "\]']").val();
 			//}
@@ -804,7 +844,7 @@ jQuery(function($){
 		
 		allCharge : function () {
 			var charge = $("#allcharge").val();
-			if(charge == '') return;
+			if( charge == '' ) return;
 			if( confirm(<?php echo sprintf(__("'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'", 'usces'), esc_js(usces_crsymbol('return', 'js'))); ?>) ){
 //20110317ysk start
 				var country = $("#shipping_charge_country").val();
@@ -875,13 +915,33 @@ jQuery(function($){
 		},
 		
 		add_delivery_days : function() {
-			if($("input[name='delivery_days_name']").val() == "") return;
+			var error = 0;
+			if($("input[name='delivery_days_name']").val() == "") {
+				error++;
+				$("input[name='delivery_days_name']").css({'background-color': '#FFA'}).click(function() {
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+			var country = $("#delivery_days_country").val();
+			for(var i=0; i<pref[country].length; i++){
+				var value = $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+				if( "" == value || !checkNum(value) ) {
+					error++;
+					$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+						$(this).css({'background-color': '#FFF'});
+					});
+				}
+			}
+			if( 0 < error ) {
+				alert("データに不備があります。");
+				return false;
+			}
 			
 			$("#delivery_days_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var name = $("input[name='delivery_days_name']").val();
 			var query = '';
 //20110317ysk start
-			var country = $("#delivery_days_country").val();
+			//var country = $("#delivery_days_country").val();
 			//for(var i=0; i<pref.length; i++){
 			//	query += '&value[]=' + $("input[name='delivery_days_value\[" + pref[i] + "\]']").val();
 			//}
@@ -928,7 +988,27 @@ jQuery(function($){
 		},
 		
 		update_delivery_days : function() {
-			if($("input[name='delivery_days_name']").val() == "") return;
+			var error = 0;
+			if($("input[name='delivery_days_name']").val() == "") {
+				error++;
+				$("input[name='delivery_days_name']").css({'background-color': '#FFA'}).click(function() {
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+			var country = $("#delivery_days_country").val();
+			for(var i=0; i<pref[country].length; i++){
+				var value = $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+				if( "" == value || !checkNum(value) ) {
+					error++;
+					$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+						$(this).css({'background-color': '#FFF'});
+					});
+				}
+			}
+			if( 0 < error ) {
+				alert("データに不備があります。");
+				return false;
+			}
 			
 			$("#delivery_days_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var id = $("#delivery_days_name_select option:selected").val();
@@ -1013,7 +1093,7 @@ jQuery(function($){
 		
 		allDeliveryDays : function () {
 			var days = $("#all_delivery_days").val();//20110106ysk [all]->[days]
-			if(days == '') return;
+			if( days == '' ) return;
 			if( confirm(<?php _e("'Okay to Change All Delivery Days to ' + days + '?'", 'usces'); ?>) ){
 //20110317ysk start
 				var country = $("#delivery_days_country").val();
@@ -1314,7 +1394,7 @@ jQuery(document).ready(function($){
 	<tr style="height:40px;">
 	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting20');"><?php _e('Country', 'usces'); ?></a></th>
 	    <td><label class="shipping_charge_label"></label><select name="shipping_charge_country" id="shipping_charge_country">
-	    		<?php usces_shipping_country_option( $selected ); ?>
+	    		<?php usces_shipping_country_option( '' ); ?>
 	    </select></td>
 <!--20110317ysk start-->
 		<td><div id="ex_shipping_setting20" class="explanation"><?php _e('Choose countries to apply this shipment fee.', 'usces'); ?></div></td>
@@ -1369,7 +1449,7 @@ jQuery(document).ready(function($){
 		<td></td>-->
 		<th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_delivery_days_setting20');"><?php _e('Country', 'usces'); ?></a></th>
 		<td><label class="shipping_charge_label"></label><select name="delivery_days_country" id="delivery_days_country">
-				<?php usces_shipping_country_option( $selected ); ?>
+				<?php usces_shipping_country_option( '' ); ?>
 		</select></td>
 		<td><div id="ex_delivery_days_setting20" class="explanation"><?php _e('Choose countries to apply this Delivery Days.', 'usces'); ?></div></td>
 <!--20110317ysk end-->

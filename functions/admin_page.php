@@ -123,83 +123,82 @@ function admin_prodauct_footer(){
 })(jQuery);
 </script>
 <?php
-		break;
+			break;
 		case 'usces_initial':
 ?>
-
 <script type="text/javascript">
 (function($) {
-    $('#option_form').submit(function(e) {
-		var status = 'normal';
+	$('#option_form').submit(function(e) {
+		var error = 0;
 
 		if( "" == $("*[name='order_mail']").val() ) {
-			status = 'error';
-			$("*[name='order_mail']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='order_mail']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( "" == $("*[name='inquiry_mail']").val() ) {
-			status = 'error';
-			$("*[name='inquiry_mail']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='inquiry_mail']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( "" == $("*[name='sender_mail']").val() ) {
-			status = 'error';
-			$("*[name='sender_mail']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='sender_mail']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( "" == $("*[name='error_mail']").val() ) {
-			status = 'error';
-			$("*[name='error_mail']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='error_mail']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( !checkNum( $("*[name='point_num']").val() ) ) {
-			status = 'error';
-			$("*[name='point_num']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='point_num']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( !checkNum( $("*[name='discount_num']").val() ) ) {
-			status = 'error';
-			$("*[name='discount_num']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='discount_num']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( !checkNum( $("*[name='postage_privilege']").val() ) ) {
-			status = 'error';
-			$("*[name='postage_privilege']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='postage_privilege']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( !checkNum( $("*[name='purchase_limit']").val() ) ) {
-			status = 'error';
-			$("*[name='purchase_limit']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='purchase_limit']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( !checkNum( $("*[name='tax_rate']").val() ) ) {
-			status = 'error';
-			$("*[name='tax_rate']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='tax_rate']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( !checkNum( $("*[name='point_rate']").val() ) ) {
-			status = 'error';
-			$("*[name='point_rate']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='point_rate']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 		if( !checkNum( $("*[name='start_point']").val() ) ) {
-			status = 'error';
-			$("*[name='start_point']").css({'background-color': '#FFA'}).click(function(){
+			error++;
+			$("*[name='start_point']").css({'background-color': '#FFA'}).click(function() {
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
 
-		if( status != 'normal' ) {
+		if( 0 < error ) {
 			$("#aniboxStatus").removeClass("none");
 			$("#aniboxStatus").addClass("error");
 			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
@@ -258,7 +257,85 @@ function admin_prodauct_footer(){
 })(jQuery);
 </script>
 <?php
-		break;
+			break;
+		case 'usces_cart':
+?>
+<script type="text/javascript">
+(function($) {
+	$('#option_form').submit(function(e) {
+		var error = 0;
+
+		if( !$("#indi_item_name").attr("checked") && 
+			!$("#indi_item_code").attr("checked") && 
+			!$("#indi_sku_name").attr("checked") && 
+			!$("#indi_sku_code").attr("checked") ) {
+			error++;
+			$("#indi_item_name").parent().css({'background-color': '#FFA'}).click(function() {
+				$("#indi_item_name").parent().css({'background-color': '#FFF'});
+				$("#indi_item_code").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_name").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_code").parent().css({'background-color': '#FFF'});
+			});
+			$("#indi_item_code").parent().css({'background-color': '#FFA'}).click(function() {
+				$("#indi_item_name").parent().css({'background-color': '#FFF'});
+				$("#indi_item_code").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_name").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_code").parent().css({'background-color': '#FFF'});
+			});
+			$("#indi_sku_name").parent().css({'background-color': '#FFA'}).click(function() {
+				$("#indi_item_name").parent().css({'background-color': '#FFF'});
+				$("#indi_item_code").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_name").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_code").parent().css({'background-color': '#FFF'});
+			});
+			$("#indi_sku_code").parent().css({'background-color': '#FFA'}).click(function() {
+				$("#indi_item_name").parent().css({'background-color': '#FFF'});
+				$("#indi_item_code").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_name").parent().css({'background-color': '#FFF'});
+				$("#indi_sku_code").parent().css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("#pos_item_name").val() ) ) {
+			error++;
+			$("#pos_item_name").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("#pos_item_code").val() ) ) {
+			error++;
+			$("#pos_item_code").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("#pos_sku_name").val() ) ) {
+			error++;
+			$("#pos_sku_name").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("#pos_sku_code").val() ) ) {
+			error++;
+			$("#pos_sku_code").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+
+		if( 0 < error ) {
+			$("#aniboxStatus").removeClass("none");
+			$("#aniboxStatus").addClass("error");
+			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
+			$("#info_massage").html("データに不備があります");
+			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+			$('#uscestabs_cart').tabs("select", 0);
+			return false;
+		} else {
+			return true;
+		}
+	});
+})(jQuery);
+</script>
+<?php
+			break;
 	}
 }
 

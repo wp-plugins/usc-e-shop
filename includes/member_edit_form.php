@@ -79,8 +79,34 @@ jQuery(function($){
 
 	$(".num").bind("change", function(){ usces_check_num($(this)); });
 
-});
+	$('form').submit(function() {
+		var error = 0;
 
+		if( "" == $("input[name='member\[email\]']").val() ) {
+			error++;
+			$("input[name='member\[email\]']").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("input[name='member\[point\]']").val() ) ) {
+			error++;
+			$("input[name='member\[point\]']").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+
+		if( 0 < error ) {
+			$("#aniboxStatus").removeClass("none");
+			$("#aniboxStatus").addClass("error");
+			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
+			$("#info_massage").html("データに不備があります");
+			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+			return false;
+		} else {
+			return true;
+		}
+	});
+});
 
 function addComma(str)
 {
@@ -103,7 +129,7 @@ function addComma(str)
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
-		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
+		<img id="info_image" src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>

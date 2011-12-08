@@ -2908,7 +2908,7 @@ function usces_is_member_system_point(){
 		return false;
 }
 
-function usces_shipping_country_option( $selected ){
+function usces_shipping_country_option( $selected, $out = '' ){
 	global $usces_settings;
 	$options = get_option('usces');
 	$res = '';

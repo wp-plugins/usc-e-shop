@@ -116,6 +116,61 @@ jQuery(function($){
 
 	$('form').submit(function() {
 		$('#province_'+pre_target).val($("#province").val());
+
+		var error = 0;
+		var tabs = 0;
+
+		if( !checkAlp( $("#dec_orderID_prefix").val() ) ) {
+			error++;
+			$("#dec_orderID_prefix").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("#dec_orderID_digit").val() ) ) {
+			error++;
+			$("#dec_orderID_digit").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+
+		var target = [];
+		$("#target_market option:selected").each(function() {
+			target.push($(this).val());
+		});
+		if( target.length == 0 ) {
+			error++;
+			tabs = 1;
+			$("#target_market").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+
+		} else {
+			var province = 'OK';
+			for(var i=0; i<target.length; i++) {
+				if(target[i] != 'JP' && target[i] != 'US') {
+					if( "" == $("#province_"+target[i]).val() ) province = 'NG';
+				}
+			}
+			if( 'OK' != province ) {
+				error++;
+				tabs = 1;
+				$("#province").css({'background-color': '#FFA'}).click(function() {
+					$(this).css({'background-color': '#FFF'});
+				});
+			}
+		}
+
+		if( 0 < error ) {
+			$("#aniboxStatus").removeClass("none");
+			$("#aniboxStatus").addClass("error");
+			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
+			$("#info_massage").html("データに不備があります");
+			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+			$('#uscestabs_system').tabs("select", tabs);
+			return false;
+		} else {
+			return true;
+		}
 	});
 //20110331ysk end
 });
@@ -145,7 +200,7 @@ jQuery(document).ready(function($) {
 <h2>Welcart Shop <?php _e('System Setting','usces'); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
-		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
+		<img id="info_image" src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>

@@ -1243,7 +1243,12 @@ function usces_check_num(obj) {
 	}
 	return true;
 }
-
+function checkAlp(argValue) {
+	if(argValue.match(/[^a-z|^A-Z]/g)) {
+		return false;
+	}
+	return true;
+}
 function checkCode(argValue) {
 	if(argValue.match(/[^0-9|^a-z|^A-Z|^\-|^_]/g)) {
 		return false;

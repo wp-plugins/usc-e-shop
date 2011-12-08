@@ -1028,7 +1028,7 @@ function get_order_item( $item_code ) {
 	$pict_id = $usces->get_mainpictid( $item_code );
 	$pict_link = wp_get_attachment_link($pict_id, array(200, 100), false);
 	preg_match("/^\<a .+\>(\<img .+\/\>)\<\/a\>$/", $pict_link, $match);
-	$pict = $match[1];
+	$pict = isset($match[1]) ? $match[1] : '';
 	$skus = $usces->get_skus( $post_id );
 	$optkeys = $usces->get_itemOptionKey( $post_id );
 	$itemName = esc_html($usces->getItemName($post_id));
@@ -1041,8 +1041,8 @@ function get_order_item( $item_code ) {
 	$r .= "<table class='skumulti'>\n";
 	$r .= "<thead>\n";
 	$r .= "<tr>\n";
-	$r .= "<th>" . __('order number','usces') . "</th>\n";
-	$r .= "<th>" . __('title','usces') . "</th>\n";
+	$r .= "<th>" . __('SKU code','usces') . "</th>\n";
+	$r .= "<th>" . __('SKU display name ','usces') . "</th>\n";
 	$usces_listprice = __('List price', 'usces') . usces_guid_tax('return');
 	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), usces_guid_tax('return')) . "</th>\n";
 	$usces_sellingprice = __('Sale price','usces') . usces_guid_tax('return');
@@ -1993,15 +1993,19 @@ function get_usces_states($country) {
 					array_push($states, $state);
 			}
 			if(count($states) == 0) {
+				if( !empty($usces_states[$country]) ) {
+					$prefs = $usces_states[$country];
+					if(is_array($prefs)) {
+						$states = $prefs;
+					}
+				}
+			}
+		} else {
+			if( !empty($usces_states[$country]) ) {
 				$prefs = $usces_states[$country];
 				if(is_array($prefs)) {
 					$states = $prefs;
 				}
-			}
-		} else {
-			$prefs = $usces_states[$country];
-			if(is_array($prefs)) {
-				$states = $prefs;
 			}
 		}
 	} else {
