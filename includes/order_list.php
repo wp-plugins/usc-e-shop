@@ -490,7 +490,7 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'order_status' && $value == __('It has sent it out.', 'usces')): ?>
 		<td class="green"><?php esc_html_e($value); ?></td>
 		<?php elseif( $key == 'delivery_method'): ?>
-		<td class="green"><?php $delivery_method_index = $this->get_delivery_method_index($value); echo esc_html($this->options['delivery_method'][$delivery_method_index]['name']); ?></td>
+		<td class="green"><?php if( -1 != $value ){$delivery_method_index = $this->get_delivery_method_index($value); echo esc_html($this->options['delivery_method'][$delivery_method_index]['name']);} ?></td>
 		<?php elseif( $key == 'payment_name' && $value == '#none#'): ?>
 		<td>&nbsp;</td>
 		<?php else: ?>

@@ -391,7 +391,7 @@ jQuery(document).ready(function($) {
 			<div><input name="set_target_market" id="set_target_market" type="button" value="<?php _e('Choose', 'usces'); ?>" onclick="operation.set_target_market();" /></div>
 		</th>
 		<td width="20"><select name="target_market[]" size="10" multiple="multiple" class="multipleselect" id="target_market">
-		    <!--<option value="all"<?php echo ($system_target_market == 'all' ? ' selected="selected"' : ''); ?>><?php _e('All countries', 'usces'); ?></option>-->
+		    <!--<option value="all"<?php echo ($system_target_markets == 'all' ? ' selected="selected"' : ''); ?>><?php _e('All countries', 'usces'); ?></option>-->
 		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
 		    <option value="<?php echo $Ckey; ?>"<?php echo (in_array($Ckey, $system_target_markets) ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>

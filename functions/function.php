@@ -2919,11 +2919,7 @@ function usces_shipping_country_option( $selected, $out = '' ){
 //20110317ysk start
 	//$res .= '<option value="world_wide"' . ($selected == $key ? ' selected="selected"' : '') . '>World Wide' . "</option>\n";
 //20110317ysk end
-	if($out == 'return') {
-		return $res;
-	} else {
 		echo $res;
-	}
 }
 
 function usces_get_cart_button( $out = '' ) {
@@ -2973,7 +2969,7 @@ function usces_get_customer_button( $out = '' ) {
 
 function usces_delivery_secure_form( $out = '' ) {
 	global $usces, $usces_entries, $usces_carts;
-	$thml = '';
+	$html = '';
 	include( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
 
 	if($out == 'return'){
@@ -2985,7 +2981,7 @@ function usces_delivery_secure_form( $out = '' ) {
 
 function usces_delivery_info_script( $out ='' ){
 	global $usces, $usces_entries, $usces_carts;
-	$thml = '';
+	$html = '';
 	include( USCES_PLUGIN_DIR . "/includes/delivery_info_script.php");
 
 	if($out == 'return'){
@@ -3606,7 +3602,7 @@ function usces_get_stocs() {
 							, '_isku_', 'item', 'post', 'trush');
 	$values = $wpdb->get_col($query);
 	if( !$values )
-		return $res;
+		return $status;
 		
 	foreach((array)$values as $value){
 			$meta_value = unserialize($value);

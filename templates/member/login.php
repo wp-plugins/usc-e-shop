@@ -52,7 +52,7 @@ $html .= '</div>
 </div>
 
 <script type="text/javascript">';
-if ( $usces_is_login ) {
+if ( usces_is_login() ) {
 	$html .= 'setTimeout( function(){ try{
 		d = document.getElementById(\'loginpass\');
 		d.value = \'\';
@@ -62,5 +62,6 @@ if ( $usces_is_login ) {
 } else {
 	$html .= 'try{document.getElementById(\'loginmail\').focus();}catch(e){}';
 }
-$html .= '</script>';
+global $usces;
+$html .= '</script>'.$usces->page;
 ?>

@@ -48,23 +48,23 @@ $messages['post'] = array(
 	 8 => sprintf( __('Post submitted. <a target="_blank" href="%s">Preview post</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
 	 9 => sprintf( __('Post scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview post</a>'),
 		// translators: Publish box date format, see http://php.net/date
-		date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+		(isset($post->post_date) ? date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ) : ''), esc_url( get_permalink($post_ID) ) ),
 	10 => sprintf( __('Post draft updated. <a target="_blank" href="%s">Preview post</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
 );
-$messages['page'] = array(
-	 0 => '', // Unused. Messages start at index 1.
-	 1 => sprintf( __('Page updated. <a href="%s">View page</a>'), esc_url( get_permalink($post_ID) ) ),
-	 2 => __('Custom field updated.'),
-	 3 => __('Custom field deleted.'),
-	 4 => __('Page updated.'),
-	 5 => isset($_GET['revision']) ? sprintf( __('Page restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-	 6 => sprintf( __('Page published. <a href="%s">View page</a>'), esc_url( get_permalink($post_ID) ) ),
-	 7 => __('Page saved.'),
-	 8 => sprintf( __('Page submitted. <a target="_blank" href="%s">Preview page</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-	 9 => sprintf( __('Page scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview page</a>'), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
-	10 => sprintf( __('Page draft updated. <a target="_blank" href="%s">Preview page</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-);
-
+//$messages['page'] = array(
+//	 0 => '', // Unused. Messages start at index 1.
+//	 1 => sprintf( __('Page updated. <a href="%s">View page</a>'), esc_url( get_permalink($post_ID) ) ),
+//	 2 => __('Custom field updated.'),
+//	 3 => __('Custom field deleted.'),
+//	 4 => __('Page updated.'),
+//	 5 => isset($_GET['revision']) ? sprintf( __('Page restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+//	 6 => sprintf( __('Page published. <a href="%s">View page</a>'), esc_url( get_permalink($post_ID) ) ),
+//	 7 => __('Page saved.'),
+//	 8 => sprintf( __('Page submitted. <a target="_blank" href="%s">Preview page</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+//	 9 => sprintf( __('Page scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview page</a>'), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+//	10 => sprintf( __('Page draft updated. <a target="_blank" href="%s">Preview page</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+//);
+//
 $messages = apply_filters( 'post_updated_messages', $messages );
 
 $message = false;
@@ -78,7 +78,7 @@ if ( isset($_GET['message']) ) {
 
 $notice = false;
 $form_extra = '';
-if ( 'auto-draft' == $post->post_status ) {
+if ( isset($post->post_status) && 'auto-draft' == $post->post_status ) {
 	if ( 'edit' == $action )
 		$post->post_title = '';
 	$autosave = false;
@@ -89,7 +89,7 @@ if ( 'auto-draft' == $post->post_status ) {
 
 $form_action = 'editpost';
 $nonce_action = 'update-' . $post_type . '_' . $post_ID;
-$form_extra .= "<input type='hidden' id='post_ID' name='post_ID' value='" . esc_attr($post_ID) . "' />";
+$form_extra .= "<input type='hidden' id='post_ID' name='post_ID' value='" . esc_attr($post->ID) . "' />";
 
 // Detect if there exists an autosave newer than the post and if that autosave is different than the post
 if ( $autosave && mysql2date( 'U', $autosave->post_modified_gmt, false ) > mysql2date( 'U', $post->post_modified_gmt, false ) ) {
@@ -142,10 +142,10 @@ do_action('dbx_post_advanced');
 if ( post_type_supports($post_type, 'comments') )
 	add_meta_box('commentstatusdiv', __('Discussion'), 'post_comment_status_meta_box', $post_type, 'normal', 'core');
 
-if ( ('publish' == $post->post_status || 'private' == $post->post_status) && post_type_supports($post_type, 'comments') )
+if ( (isset($post->post_status) && ('publish' == $post->post_status || 'private' == $post->post_status) ) && post_type_supports($post_type, 'comments') )
 	add_meta_box('commentsdiv', __('Comments'), 'post_comment_meta_box', $post_type, 'normal', 'core');
 
-if ( !( 'pending' == $post->post_status && !current_user_can( $post_type_object->cap->publish_posts ) ) )
+if ( !( (isset( $post->post_status ) && 'pending' == $post->post_status) && !current_user_can( $post_type_object->cap->publish_posts ) ) )
 	add_meta_box('slugdiv', __('Slug'), 'post_slug_meta_box', $post_type, 'normal', 'core');
 
 if ( post_type_supports($post_type, 'author') ) {
@@ -154,7 +154,7 @@ if ( post_type_supports($post_type, 'author') ) {
 			add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
 	}else{
 		$authors = get_editable_user_ids( $current_user->id ); // TODO: ROLE SYSTEM
-		if ( $post->post_author && !in_array($post->post_author, $authors) )
+		if ( isset($post->post_author) && $post->post_author && !in_array($post->post_author, $authors) )
 			$authors[] = $post->post_author;
 		if ( ( $authors && count( $authors ) > 1 ) || is_super_admin() )
 			add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
@@ -170,7 +170,9 @@ function post_item_pict_box($post) {
 	global $usces, $current_screen;
 	$item_picts = array();
 	$item_sumnails = array();
-	$item_code = get_post_meta($post->ID, '_itemCode', true);
+	$post_id = isset($post->ID) ? $post->ID : 0;
+	$item_code = get_post_meta($post_id, '_itemCode', true);
+	
 	if( !empty($item_code) ){
 		$pictid = (int)$usces->get_mainpictid($item_code);
 		$item_picts[] = wp_get_attachment_image( $pictid, array(260, 200), true );
@@ -293,7 +295,6 @@ $itemDeliveryMethod = get_post_custom_values('_itemDeliveryMethod', $post_ID);
 $itemShippingCharge = get_post_custom_values('_itemShippingCharge', $post_ID);
 $itemIndividualSCharge = get_post_custom_values('_itemIndividualSCharge', $post_ID);
 $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
-
 /*************************************** 30 */
 ?>
 
@@ -312,7 +313,7 @@ $itemDeliveryMethod[0] = unserialize($itemDeliveryMethod[0]);
 <input name="usces_referer" type="hidden" id="usces_referer" value="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>" />
 
 <?php
-if ( 'draft' != $post->post_status )
+if ( isset($post->post_status) && 'draft' != $post->post_status )
 	wp_original_referer_field(true, 'previous');
 
 echo $form_extra;
@@ -322,7 +323,7 @@ wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 ?>
 
-<div id="refbutton"><a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID.'&usces_referer='.urlencode($_REQUEST['usces_referer']); ?>">[<?php _e('make a copy', 'usces'); ?>]</a> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('back to item list', 'usces'); ?>]</a></div>
+<div id="refbutton"><a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID.'&usces_referer='.(isset($_REQUEST['usces_referer']) ? urlencode($_REQUEST['usces_referer']) : ''); ?>">[<?php _e('make a copy', 'usces'); ?>]</a> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('back to item list', 'usces'); ?>]</a></div>
 <div id="poststuff" class="metabox-holder has-right-sidebar">
 <div id="side-info-column" class="inner-sidebar">
 <div id="item-main-pict"></div>
@@ -395,7 +396,7 @@ $second_section .= '</select>
 <tr class="shipped">
 <th>' . __('shipping option','usces') . '</th>
 <td>';
-$delivery_methods = (array)$this->options['delivery_method'];
+$delivery_methods = $this->options['delivery_method'];
 if( count($delivery_methods) === 0 ){
 	$second_section .= __('* Please register an item, after you finished delivery setting!','usces');
 }else{
@@ -412,7 +413,7 @@ $second_section .= '</td>
 <tr class="shipped">
 <th>' . __('Shipping', 'usces') . '</th>
 <td><select name="itemShippingCharge" id="itemShippingCharge" class="itemShippingCharge">';
-foreach( (array)$this->options['shipping_charge'] as $cahrge){
+foreach( $this->options['shipping_charge'] as $cahrge){
 	$selected = $cahrge['id'] == $itemShippingCharge[0] ? ' selected="selected"' : '';
 	$second_section .= '<option value="' . $cahrge['id'] . '"' . $selected . '>' . esc_html($cahrge['name']) . '</option>';
 }
@@ -516,7 +517,8 @@ wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 			$last_user = get_userdata($last_id);
 			printf(__('Last edited by %1$s on %2$s at %3$s'), esc_html( $last_user->display_name ), mysql2date(get_option('date_format'), $post->post_modified), mysql2date(get_option('time_format'), $post->post_modified));
 		} else {
-			printf(__('Last edited on %1$s at %2$s'), mysql2date(get_option('date_format'), $post->post_modified), mysql2date(get_option('time_format'), $post->post_modified));
+			if( isset($post->post_modified) )
+				printf(__('Last edited on %1$s at %2$s'), mysql2date(get_option('date_format'), $post->post_modified), mysql2date(get_option('time_format'), $post->post_modified));
 		}
 		echo '</span>';
 	} ?>

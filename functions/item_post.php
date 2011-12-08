@@ -341,6 +341,7 @@ function _list_item_option_meta_row( $opt ) {
  */
 function _list_item_sku_meta_row( $sku ) {
 	$r = '';
+	$style = '';
 
 	$readonly = "";
 	$key = esc_attr($sku['code']);
@@ -360,7 +361,7 @@ function _list_item_sku_meta_row( $sku ) {
 	?>
 	<tr class='metastuffrow'><td colspan='6'>
 		<table id='itemsku-<?php echo $id; ?>' class='metastufftable'>
-			<tr class='{$style}'>
+			<tr>
 				<th class='handlb' rowspan='3'>　</th>
 				<td class='item-sku-key'><input name='itemsku[<?php echo $id; ?>][key]' id='itemsku[<?php echo $id; ?>][key]' class='skuname metaboxfield' type='text' value='<?php echo $key; ?>'{$readonly} /></td>
 				<td class='item-sku-cprice'><input name='itemsku[<?php echo $id; ?>][cprice]' id='itemsku[<?php echo $id; ?>][cprice]' class='skuprice metaboxfield' type='text' value='<?php echo $cprice; ?>' /></td>
@@ -379,7 +380,7 @@ function _list_item_sku_meta_row( $sku ) {
 					</select>
 				</td>
 			</tr>
-			<tr class='<?php echo $style; ?>'>
+			<tr>
 				<td class='item-sku-key'><input name='itemsku[<?php echo $id; ?>][skudisp]' id='itemsku[<?php echo $id; ?>][skudisp]' class='skudisp metaboxfield' type='text' value='<?php echo $skudisp; ?>' />
 				</td>
 				<td class='item-sku-cprice'><input name='itemsku[<?php echo $id; ?>][skuunit]' id='itemsku[<?php echo $id; ?>][skuunit]' class='skuunit metaboxfield' type='text' value='<?php echo $skuunit; ?>' /></td>
@@ -394,7 +395,7 @@ function _list_item_sku_meta_row( $sku ) {
 					</select>
 				</td>
 			</tr>
-			<tr class='<?php echo $style; ?>'>
+			<tr>
 				<td colspan='5' class='submittd'>
 					<div id='skusubmit-<?php echo $id; ?>' class='submit'>
 						<input name='deleteitemsku[<?php echo $id; ?>]' id='deleteitemsku[<?php echo $id; ?>]' type='button' value='<?php esc_attr_e(__( 'Delete' )) ?>' onclick="if( jQuery('#post_ID').val() < 0 ) return; itemSku.post('deleteitemsku', <?php echo $id; ?>);" />
@@ -604,6 +605,7 @@ function add_item_option_meta( $post_ID ) {
 	$post_ID = (int) $post_ID;
 	$value = array();
 	$opts = array();
+	$nov = '';
 	$protected = array( '#NONE#', '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
 	$newoptname = isset($_POST['newoptname']) ? trim( $_POST['newoptname'] ) : '';

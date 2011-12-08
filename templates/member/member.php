@@ -35,7 +35,8 @@ $html .= '</tr>
 	</tr>
 	</table>
 	 <br /> 
-	<a href="#edit">' . __('To member information editing', 'usces') . '</a>';
+	<a href="#edit">' . __('To member information editing', 'usces') . '</a>
+	<br />'	. usces_loginout('return');
 	
 
 $html .= '<div class="header_explanation">';

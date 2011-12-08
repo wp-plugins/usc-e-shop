@@ -19,11 +19,11 @@ function usces_action_reg_orderdata( $args ){
 	extract($args);
 
 	/*  Register decorated order id ***************************************************/
+	$olimit = 0;
 	if( ! $options['system']['dec_orderID_flag'] ){
 		$dec_order_id = str_pad($order_id, $options['system']['dec_orderID_digit'], "0", STR_PAD_LEFT);
 	}else{
 		$otable = $wpdb->prefix . 'usces_order_meta';
-		$olimit = 0;
 		while( $ukey = usces_get_key( $options['system']['dec_orderID_digit'] ) ){
 			$ores = $wpdb->get_var($wpdb->prepare("SELECT meta_key FROM $otable WHERE meta_key = %s AND meta_value = %s LIMIT 1", 'dec_order_id', $ukey));
 			if( !$ores || 100 < $olimit )

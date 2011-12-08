@@ -236,7 +236,7 @@ usces_log('payment : ' . print_r($payment,true), 'database_error.log');
 	if( empty($payment) ) {
 	
 		$options = get_option('usces');
-		$old_payment = $options['payment_method'];
+		$old_payment = isset($options['payment_method']) ? $options['payment_method'] : '';
 	usces_log('old_payment : ' . print_r($old_payment,true), 'database_error.log');
 		if( !empty($old_payment) && is_array($old_payment) ) {
 			foreach( $old_payment as $key => $value ){

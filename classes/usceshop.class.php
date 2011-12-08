@@ -36,28 +36,86 @@ class usc_e_shop
 		
 		$this->options = get_option('usces');
 		if(!isset($this->options['smtp_hostname']) || empty($this->options['smtp_hostname'])){ $this->options['smtp_hostname'] = 'localhost';}
-		if(!isset($this->options['divide_item'])) $this->options['divide_item'] = 0;
-		if(!isset($this->options['fukugo_category_orderby'])) $this->options['fukugo_category_orderby'] = 'ID';
-		if(!isset($this->options['fukugo_category_order'])) $this->options['fukugo_category_order'] = 'ASC';
+		if(!isset($this->options['delivery_method']) || !is_array($this->options['delivery_method'])) $this->options['delivery_method'] = array();
+		if(!isset($this->options['shipping_charge']) || !is_array($this->options['shipping_charge'])) $this->options['shipping_charge'] = array();
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = 'activate';
-		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
 		if(!isset($this->options['use_ssl'])) $this->options['use_ssl'] = 0;
 		if(!isset($this->options['point_coverage'])) $this->options['point_coverage'] = 0;
 		if(!isset($this->options['use_javascript'])) $this->options['use_javascript'] = 1;
+		if(!isset($this->options['privilege_discount'])) $this->options['privilege_discount'] = '';
+		if(!isset($this->options['privilege_point'])) $this->options['privilege_point'] = '';
+		if(!isset($this->options['campaign_privilege'])) $this->options['campaign_privilege'] = '';
+		if(!isset($this->options['campaign_category'])) $this->options['campaign_category'] = 0;
+		if(!isset($this->options['campaign_schedule']['start'])) $this->options['campaign_schedule']['start'] = array();
+		if(!isset($this->options['campaign_schedule']['end'])) $this->options['campaign_schedule']['end'] = array();
+		if(!isset($this->options['acting_settings']['paypal']['ec_activate'])) $this->options['acting_settings']['paypal']['ec_activate'] = '';
+		if(!isset($this->options['purchase_limit'])) $this->options['purchase_limit'] = '';
+		if(!isset($this->options['point_rate'])) $this->options['point_rate'] = '';
+		if(!isset($this->options['shipping_rule'])) $this->options['shipping_rule'] = '';
+		if(!isset($this->options['company_name'])) $this->options['company_name'] = '';
+		if(!isset($this->options['address1'])) $this->options['address1'] = '';
+		if(!isset($this->options['address2'])) $this->options['address2'] = '';
+		if(!isset($this->options['zip_code'])) $this->options['zip_code'] = '';
+		if(!isset($this->options['tel_number'])) $this->options['tel_number'] = '';
+		if(!isset($this->options['fax_number'])) $this->options['fax_number'] = '';
+		if(!isset($this->options['order_mail'])) $this->options['order_mail'] = '';
+		if(!isset($this->options['inquiry_mail'])) $this->options['inquiry_mail'] = '';
+		if(!isset($this->options['sender_mail'])) $this->options['sender_mail'] = '';
+		if(!isset($this->options['error_mail'])) $this->options['error_mail'] = '';
+		if(!isset($this->options['copyright'])) $this->options['copyright'] = '';
+		if(!isset($this->options['purchase_limit'])) $this->options['purchase_limit'] = '';
+		if(!isset($this->options['postage_privilege'])) $this->options['postage_privilege'] = '';
+		if(!isset($this->options['shipping_rule'])) $this->options['shipping_rule'] = '';
+		if(!isset($this->options['tax_rate'])) $this->options['tax_rate'] = '';
+		if(!isset($this->options['tax_method'])) $this->options['tax_method'] = 'cutting';
+		if(!isset($this->options['transferee'])) $this->options['transferee'] = '';
+		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
+		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = '';
+		if(!isset($this->options['point_rate'])) $this->options['point_rate'] = '';
+		if(!isset($this->options['start_point'])) $this->options['start_point'] = '';
+		if(!isset($this->options['point_coverage'])) $this->options['point_coverage'] = 1;
+		if(!isset($this->options['cod_type'])) $this->options['cod_type'] = 'fix';
+		if(!isset($this->options['mail_data']['title'])) $this->options['mail_data']['title'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
+		if(!isset($this->options['mail_data']['header'])) $this->options['mail_data']['header'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
+		if(!isset($this->options['mail_data']['footer'])) $this->options['mail_data']['footer'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
+		if(!isset($this->options['cart_page_data']['header'])) $this->options['cart_page_data']['header'] = array('cart'=>'','customer'=>'','delivery'=>'','confirm'=>'','completion'=>'');
+		if(!isset($this->options['cart_page_data']['footer'])) $this->options['cart_page_data']['footer'] = array('cart'=>'','customer'=>'','delivery'=>'','confirm'=>'','completion'=>'');
+		if(!isset($this->options['member_page_data']['header'])) $this->options['member_page_data']['header'] = array('login'=>'','newmember'=>'','newpass'=>'','changepass'=>'','memberinfo'=>'','completion'=>'');
+		if(!isset($this->options['member_page_data']['footer'])) $this->options['member_page_data']['footer'] = array('login'=>'','newmember'=>'','newpass'=>'','changepass'=>'','memberinfo'=>'','completion'=>'');
+
+		if(!isset($this->options['shortest_delivery_time'])) $this->options['shortest_delivery_time'] = '0';
+		if(!isset($this->options['delivery_after_days'])) $this->options['delivery_after_days'] = 15;
+		if(!isset($this->options['delivery_days'])) $this->options['delivery_days'] = array();
+		if(!isset($this->options['delivery_time_limit']['hour'])) $this->options['delivery_time_limit']['hour'] = '00';
+		if(!isset($this->options['delivery_time_limit']['min'])) $this->options['delivery_time_limit']['min'] = '00';
+
+		if(!isset($this->options['divide_item'])) $this->options['divide_item'] = 0;
+		if(!isset($this->options['itemimg_anchor_rel'])) $this->options['itemimg_anchor_rel'] = '';
+		if(!isset($this->options['fukugo_category_orderby'])) $this->options['fukugo_category_orderby'] = 'ID';
+		if(!isset($this->options['fukugo_category_order'])) $this->options['fukugo_category_order'] = 'ASC';
+		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
+		if(!isset($this->options['use_ssl'])) $this->options['use_ssl'] = 0;
+		if(!isset($this->options['ssl_url'])) $this->options['ssl_url'] = '';
+		if(!isset($this->options['ssl_url_admin'])) $this->options['ssl_url_admin'] = '';
+		if(!isset($this->options['inquiry_id'])) $this->options['inquiry_id'] = '';
 		if(!isset($this->options['system']['orderby_itemsku'])) $this->options['system']['orderby_itemsku'] = 0;
 		if(!isset($this->options['system']['orderby_itemopt'])) $this->options['system']['orderby_itemopt'] = 0;
 		if(!isset($this->options['system']['front_lang'])) $this->options['system']['front_lang'] = usces_get_local_language();
 		if(!isset($this->options['system']['currency'])) $this->options['system']['currency'] = usces_get_base_country();
 		if(!isset($this->options['system']['addressform'])) $this->options['system']['addressform'] = usces_get_local_addressform();
 		if(!isset($this->options['system']['target_market'])) $this->options['system']['target_market'] = usces_get_local_target_market();
+		if(!isset($this->options['system']['no_cart_css'])) $this->options['system']['no_cart_css'] = 0;
 		if(!isset($this->options['system']['dec_orderID_flag'])) $this->options['system']['dec_orderID_flag'] = 0;
 		if(!isset($this->options['system']['dec_orderID_prefix'])) $this->options['system']['dec_orderID_prefix'] = '';
 		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
 		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 0;
-		if(!isset($this->options['campaign_schedule']['start'])) $this->options['campaign_schedule']['start'] = array();
-		if(!isset($this->options['campaign_schedule']['end'])) $this->options['campaign_schedule']['end'] = array();
-		if(!isset($this->options['acting_settings']['paypal']['ec_activate'])) $this->options['acting_settings']['paypal']['ec_activate'] = '';
+
+		if(!isset($this->options['acting_settings']['zeus'])) $this->options['acting_settings']['zeus'] = array('activate'=>'','card_activate'=>'','clientip'=>'','authkey'=>'','3dsecure'=>'','quickcharge'=>'', 'howpay'=>'','bank_activate'=>'','clientip_bank'=>'','testid_bank'=>'','conv_activate'=>'','clientip_conv'=>'','testid_conv'=>'','test_type_conv'=>'');
+		if(!isset($this->options['acting_settings']['remise'])) $this->options['acting_settings']['remise'] = array('activate'=>'','plan'=>'','SHOPCO'=>'','HOSTID'=>'','card_activate'=>'','card_jb'=>'', 'payquick'=>'','howpay'=>'','continuation'=>'','card_pc_ope'=>'','send_url_pc'=>'','conv_activate'=>'','S_PAYDATE'=>'','conv_pc_ope'=>'','send_url_cvs_pc'=>'');
+		if(!isset($this->options['acting_settings']['jpayment'])) $this->options['acting_settings']['jpayment'] = array('activate'=>'','aid'=>'','card_activate'=>'','card_jb'=>'','conv_activate'=>'','webm_activate'=>'', 'bitc_activate'=>'','suica_activate'=>'','bank_activate'=>'');
+		if(!isset($this->options['acting_settings']['paypal'])) $this->options['acting_settings']['paypal'] = array('activate'=>'','ec_activate'=>'','sandbox'=>'','user'=>'','pwd'=>'','signature'=>'', 'continuation'=>'');
+
 
 //20010420ysk start
 		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
@@ -671,9 +729,6 @@ class usc_e_shop
 
 		if(isset($_POST['usces_option_update'])) {
 
-			//$this->options['delivery_time'] = isset($_POST['delivery_time']) ? $_POST['delivery_time'] : '';
-			//$this->options['shipping_charges'] = isset($_POST['shipping_charge']) ? $_POST['shipping_charge'] : '';
-
 //20101208ysk start
 			if(isset($_POST['delivery_time_limit'])) $this->options['delivery_time_limit'] = $_POST['delivery_time_limit'];
 			if(isset($_POST['shortest_delivery_time'])) $this->options['shortest_delivery_time'] =  $_POST['shortest_delivery_time'];
@@ -894,7 +949,7 @@ class usc_e_shop
 						$province[] = trim($temp_pref[$i]);
 					}
 				} else {
-					if(is_array($usces_states[$target_market])) {
+					if(isset($usces_states[$target_market]) && is_array($usces_states[$target_market])) {
 						$province = $usces_states[$target_market];
 					} else {
 						$action_status = 'error';
@@ -1400,7 +1455,10 @@ class usc_e_shop
 	function shop_foot() {
 		global $current_user;
 		$item = $this->item;
-		
+		if( empty($item) ){
+			$item->ID = 0;
+			$item->post_mime_type = '';
+		}
 		get_currentuserinfo();
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$javascript_url = USCES_FRONT_PLUGIN_URL . '/js/usces_cart.js';
@@ -1413,7 +1471,7 @@ class usc_e_shop
 //		usces_log('post_type : '.$item->post_mime_type, 'test.log');
 //		usces_log('is_single : '.(is_single() ? 'true' : 'false'), 'test.log');
 
-		if( $this->use_js ) : 
+		if( $this->use_js && !empty($this->item)) : 
 
 			$ioptkeys = $this->get_itemOptionKey( $item->ID );
 			$mes_opts_str = "";
@@ -1459,7 +1517,8 @@ class usc_e_shop
 		</script>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
 		<?php endif; ?>
-		<?php if( $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $item->post_mime_type)) ) : ?>
+		<?php //if( !is_home() && !is_front_page() && $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $item->post_mime_type)) ) : ?>
+		<?php if( $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || (is_singular() && 'item' == $item->post_mime_type)) ) : ?>
 		<script type='text/javascript'>
 		(function($) {
 		uscesCart = {
@@ -1960,9 +2019,9 @@ class usc_e_shop
 		
 		wp_enqueue_script('jquery');
 		
-		if( isset($_REQUEST['page']) && isset($_REQUEST['action']) && ($_REQUEST['action'] == 'edit' || $itemnew == 'new' || $_REQUEST['action'] == 'editpost')) {
+		if( isset($_REQUEST['page']) && ((isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') || $itemnew == 'new' || (isset($_REQUEST['action']) && $_REQUEST['action'] == 'editpost'))) {
 		
-			if($_REQUEST['action'] != 'editpost' && $itemnew == 'new'){
+			if(isset($_REQUEST['action']) && $_REQUEST['action'] != 'editpost' && $itemnew == 'new'){
 				if ( version_compare($wp_version, '3.0-beta', '>') ){
 					if ( !isset($_GET['post_type']) )
 						$post_type = 'post';
@@ -3395,6 +3454,8 @@ class usc_e_shop
 			$this->current_member['email'] = trim($_POST['loginmail']);
 			$this->error_message = __('<b>Error:</b> Enter the password.', 'usces');
 			return 'login';
+		} else if ( !isset($_POST['loginmail']) ){
+			return 'login';
 		} else {
 			$email = isset($_POST['loginmail']) ? trim($_POST['loginmail']) : '';
 			$pass = isset($_POST['loginpass']) ? md5(trim($_POST['loginpass'])) : '';
@@ -4019,7 +4080,7 @@ class usc_e_shop
 	
 	function check_display_mode() {
 		$options = get_option('usces');
-		if( $options['display_mode'] == 'Maintenancemode' ) return;
+		if( isset($options['display_mode']) && $options['display_mode'] == 'Maintenancemode' ) return;
 		
 		$start['hour'] = empty($options['campaign_schedule']['start']['hour']) ? 0 : $options['campaign_schedule']['start']['hour'];
 		$start['min'] = empty($options['campaign_schedule']['start']['min']) ? 0 : $options['campaign_schedule']['start']['min'];
@@ -4493,106 +4554,30 @@ class usc_e_shop
 	{
 		global $wpdb;
 		
-		
-		//$wpdb->show_errors();
-
-		//item_parent
-//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'item'";
-//		$item_parent = $wpdb->get_var( $query );
-//		if($item_parent === NULL) {
-//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-//				__('Items', 'usces'), 'item', 0);
-//			$wpdb->query($query);
-//			$item_parent = $wpdb->insert_id;
-//			if( $item_parent !== NULL ) {
-//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-//					VALUES (%d, %s, %s, %d, %d)", $item_parent, 'category', '', 0, 0);
-//				$wpdb->query($query);
-//			}
-//		}
-//		update_option('usces_item_cat_parent_id', $item_parent);
 		$idObj = get_category_by_slug('item'); 
-		$item_cat_id = $idObj->term_id;
-		if( !$item_cat_id ) {
+		if( empty($idObj) ) {
 			$item_cat = array('cat_name' => __('Items', 'usces'), 'category_description' => '', 'category_nicename' => 'item', 'category_parent' => 0);
 			$item_cat_id = wp_insert_category($item_cat);	
+			update_option('usces_item_cat_parent_id', $item_cat_id);	
 		}
-		update_option('usces_item_cat_parent_id', $item_cat_id);	
-		$ids[] = $item_cat_id;
-		//item_reco
-//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemreco'";
-//		$item_id = $wpdb->get_var( $query );
-//		if($item_id === NULL) {
-//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-//				__('Items recommended', 'usces'), 'itemreco', 0);
-//			$wpdb->query($query);
-//			$item_id = $wpdb->insert_id;
-//			if( $item_id !== NULL ) {
-//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-//					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
-//				$wpdb->query($query);
-//			}
-//		}
+
 		$idObj = get_category_by_slug('itemreco'); 
-		$itemreco_id = $idObj->term_id;
-		if( !$itemreco_id ) {
+		if( empty($idObj) && isset($item_cat_id) ) {
 			$itemreco_cat = array('cat_name' => __('Items recommended', 'usces'), 'category_description' => '', 'category_nicename' => 'itemreco', 'category_parent' => $item_cat_id);
 			$itemreco_cat_id = wp_insert_category($itemreco_cat);	
-			$ids[] = $itemreco_cat_id;
 		}
 
-		//item_new
-//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemnew'";
-//		$item_id = $wpdb->get_var( $query );
-//		if($item_id === NULL) {
-//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-//				__('New items', 'usces'), 'itemnew', 0);
-//			$wpdb->query($query);
-//			$item_id = $wpdb->insert_id;
-//			if( $item_id !== NULL ) {
-//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-//					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
-//				$wpdb->query($query);
-//			}
-//		}
 		$idObj = get_category_by_slug('itemnew'); 
-		$itemnew_id = $idObj->term_id;
-		if( !$itemnew_id ) {
+		if( empty($idObj) && isset($item_cat_id) ) {
 			$itemnew_cat = array('cat_name' => __('New items', 'usces'), 'category_description' => '', 'category_nicename' => 'itemnew', 'category_parent' => $item_cat_id);
 			$itemnew_cat_id = wp_insert_category($itemnew_cat);	
-			$ids[] = $itemnew_cat_id;
 		}
 
-		//item_category
-//		$query = "SELECT term_id FROM $wpdb->terms WHERE slug = 'itemgenre'";
-//		$item_id = $wpdb->get_var( $query );
-//		if($item_id === NULL) {
-//			$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %d)", 
-//				__('Item genre', 'usces'), 'itemgenre', 0);
-//			$wpdb->query($query);
-//			$item_id = $wpdb->insert_id;
-//			if( $item_id !== NULL ) {
-//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) 
-//					VALUES (%d, %s, %s, %d, %d)", $item_id, 'category', '', $item_parent, 0);
-//				$wpdb->query($query);
-//			}
-//		}
 		$idObj = get_category_by_slug('itemgenre'); 
-		$itemgenre_id = $idObj->term_id;
-		if( !$itemgenre_id ) {
+		if( empty($idObj) && isset($item_cat_id) ) {
 			$itemgenre_cat = array('cat_name' => __('Item genre', 'usces'), 'category_description' => '', 'category_nicename' => 'itemgenre', 'category_parent' => $item_cat_id);
 			$itemgenre_cat_id = wp_insert_category($itemgenre_cat);	
-			$ids[] = $itemgenre_cat_id;
 		}
-		
-//		$children = array();
-//		$terms = get_terms('category', array('get' => 'all', 'orderby' => 'id', 'fields' => 'id=>parent'));
-//
-//		foreach ( $terms as $term_id => $parent ) {
-//			if ( $parent > 0 )
-//				$children[$parent][] = $term_id;
-//		}
-//		update_option("category_children", $children);
 	}
 
 	function get_item_cat_ids(){
@@ -5025,6 +5010,9 @@ class usc_e_shop
 	}
 	
 	function get_skus( $post_id, $keyflag = 'sort' ) {
+		if( !$post_id )
+			return array();
+			
 		$skus = array();
 		$metas = usces_get_post_meta($post_id, '_isku_');
 		if( empty($metas) ) return $skus;

@@ -94,7 +94,9 @@ if($order_action == 'new'){
 		'order_fax' => '',
 		'order_country' => '',
 		'order_pref' => '',
-		'ID' => ''
+		'ID' => '',
+		'order_date' => current_time('mysql'),
+		'order_delivery_date' => '',
 	 );
 	$deli = array(
 		'name1' => '', 
@@ -204,12 +206,20 @@ jQuery(function($){
 <?php } ?>
 	var selected_delivery_time = '<?php esc_html_e(isset($data['order_delivery_time']) ? $data['order_delivery_time'] : ''); ?>';
 	var delivery_time = [];
-<?php foreach((array)$this->options['delivery_method'] as $dmid => $dm){	$lines = split("\n", $dm['time']); ?>
-	delivery_time[<?php echo $dm['id']; ?>] = [];
-	<?php foreach((array)$lines as $line){ 	if(trim($line) != ''){ ?>
-	delivery_time[<?php echo $dm['id']; ?>].push("<?php echo trim($line); ?>");
-	<?php } } ?>
-<?php } ?>
+<?php
+	foreach((array)$this->options['delivery_method'] as $dmid => $dm){
+		$lines = split("\n", $dm['time']);
+?>
+		delivery_time[<?php echo $dm['id']; ?>] = [];
+<?php
+		foreach((array)$lines as $line){
+			if(trim($line) != ''){
+?>
+				delivery_time[<?php echo $dm['id']; ?>].push("<?php echo trim($line); ?>");
+<?php		}
+		}
+	}
+?>
 
 	$("#order_payment_name").change(function () {
 		var pay_name = $("select[name='offer\[payment_name\]'] option:selected").val();
@@ -435,7 +445,7 @@ jQuery(function($){
 		
 		make_delivery_time : function(selected) {
 			var option = '';
-			if(selected == -1 || delivery_time[selected] == undefined){
+			if(selected == -1 || delivery_time[selected] == undefined || 0 == delivery_time[selected].length){
 				option += '<option value="<?php _e('Non-request', 'usces'); ?>"><?php _e('Non-request', 'usces'); ?></option>' + "\n";
 			}else{
 				for(var i=0; i<delivery_time[selected].length; i++){
@@ -773,9 +783,9 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 }
 ?>
 </select></td>
-<?php if( USCES_JP ): ?>
+<?php //if( USCES_JP ): ?>
 </tr>
-<?php endif; ?>
+<?php //endif; ?>
 <!--20101208ysk start-->
 <tr>
 <td class="label"><?php _e('Delivery date', 'usces'); ?></td>
@@ -796,21 +806,11 @@ for($i = 0; $i < 50; $i++) {
 <!--20101208ysk end-->
 <tr>
 <td class="label"><?php _e('delivery time', 'usces'); ?></td>
-<td class="col1"><select name="offer[delivery_time]" id="delivery_time_select">
-	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
-<?php
-if( !$this->options['delivery_time'] == '' ) {
-	$array = explode("\n", $this->options['delivery_time']);
-	foreach ((array)$array as $delivery) {
-		$delivery = trim($delivery);
-		if( $delivery != '' ) {
-			$selected = ($delivery == $value) ? ' selected="selected"' : '';
-			echo "\t<option value='" . esc_attr($delivery) . "'{$selected}>" . esc_html($delivery) . "</option>\n";
-		}
-	}
-}
-?>
-</select></td>
+<td class="col1">
+<select name="offer[delivery_time]" id="delivery_time_select">
+	<option value="<?php _e('Non-request', 'usces'); ?>"><?php _e('Non-request', 'usces'); ?></option>
+</select>
+</td>
 </tr>
 <tr>
 <td class="label"><?php _e('Shipping date', 'usces'); ?></td>
@@ -843,11 +843,7 @@ for ($i=0; $i<50; $i++) {
 <?php 
 	}
 ?>
-<!--	<option value='cancel'<?php if($taio == 'cancel'){ echo 'selected="selected"';} ?>><?php echo $management_status['cancel']; ?></option>
-	<option value='completion'<?php if($taio == 'completion'){ echo 'selected="selected"';} ?>><?php echo $management_status['completion']; ?></option>
-	<option value='continuation'<?php if($taio == 'continuation'){ echo 'selected="selected"';} ?>><?php echo $management_status['continuation']; ?></option>
-	<option value='termination'<?php if($taio == 'termination'){ echo 'selected="selected"';} ?>><?php echo $management_status['termination']; ?></option>
---></select></td>
+</select></td>
 </tr>
 <tr>
 <td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>
@@ -938,9 +934,11 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 	</thead>
 	<tbody id="orderitemlist">
 <?php
+	global $post;
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
+		$post = get_post($post_id);
 		$sku = $cart_row['sku'];
 		$sku_code = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];

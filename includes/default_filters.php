@@ -1,4 +1,6 @@
 <?php
+global $wp_version;
+
 add_action( 'init', array(&$usces, 'main'), 10);
 add_action( 'admin_init', 'usces_redirect', 10);
 add_action( 'admin_menu', array(&$usces, 'add_pages'));

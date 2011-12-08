@@ -189,10 +189,10 @@ class dataList
 		} else if(isset($_REQUEST['searchIn'])){
 		
 			$this->action = 'searchIn';
-			$this->arr_search['column'] = $_REQUEST['search']['column'];
-			$this->arr_search['word'] = $_REQUEST['search']['word'];
-			$this->arr_search['period'] = intval($_REQUEST['search']['period']);
-			$this->searchSwitchStatus = $_REQUEST['searchSwitchStatus'];
+			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? $_REQUEST['search']['column'] : '';
+			$this->arr_search['word'] = isset($_REQUEST['search']['word']) ? $_REQUEST['search']['word'] : '';
+			$this->arr_search['period'] = isset($_REQUEST['search']['period']) ? (int)$_REQUEST['search']['period'] : '';
+			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
 			
 			$this->currentPage = 1;
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
@@ -206,7 +206,7 @@ class dataList
 			$this->arr_search['column'] = '';
 			$this->arr_search['word'] = '';
 			$this->arr_search['period'] = $_SESSION[$this->table]['arr_search']['period'];
-			$this->searchSwitchStatus = $_REQUEST['searchSwitchStatus'];
+			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
 			
 			$this->currentPage = 1;
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];

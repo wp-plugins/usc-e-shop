@@ -1132,9 +1132,7 @@ function usces_the_delivery_date( $value = '', $out = '' ){
 //20101208ysk end
 function usces_the_delivery_time( $value = '', $out = '' ){
 	global $usces;
-	//if( $usces->options['delivery_time'] == '' ) return;
 	
-	//$array = explode("\n", $usces->options['delivery_time']);
 //20101208ysk start
 	//$html = "<select name='offer[delivery_time]' id='delivery_time_select' class='delivery_time'>\n";
 	$html = "<div id='delivery_time_limit_message'></div>\n";
@@ -1258,12 +1256,18 @@ function usces_the_calendar() {
 	include (USCES_PLUGIN_DIR . '/includes/widget_calendar.php'); 
 }
 
-function usces_loginout() {
+function usces_loginout( $out = '') {
 	global $usces;
 	if ( !$usces->is_member_logged_in() )
-		echo '<a href="' . USCES_LOGIN_URL . '" class="usces_login_a">' . apply_filters('usces_filter_loginlink_label', __('Log-in','usces')) . '</a>';
+		$res = '<a href="' . USCES_LOGIN_URL . '" class="usces_login_a">' . apply_filters('usces_filter_loginlink_label', __('Log-in','usces')) . '</a>';
 	else
-		echo '<a href="' . USCES_LOGOUT_URL . '" class="usces_logout_a">' . apply_filters('usces_filter_logoutlink_label', __('Log out','usces')) . '</a>';
+		$res = '<a href="' . USCES_LOGOUT_URL . '" class="usces_logout_a">' . apply_filters('usces_filter_logoutlink_label', __('Log out','usces')) . '</a>';
+
+	if( $out == 'return' ){
+		return $res;
+	}else{
+		echo $res;
+	}
 }
 
 function usces_is_login() {
@@ -1400,6 +1404,7 @@ function usces_sc_payment_title() {
 
 
 function usces_posts_random_offset( $posts ){
+	$ids = array();
 	foreach( (array)$posts as $post ){
 		$ids[] = $post->ID;
 	}
