@@ -733,6 +733,7 @@ function up_item_option_meta( $post_ID ) {
 	$optessential = isset($_POST['optessential']) ? $_POST['optessential']: 0;
 	$optsort = isset($_POST['sort']) ? $_POST['sort']: 0;
 
+	$nov = '';
 	if($optmeans === 0 || $optmeans === 1){
 		$optvalue = isset($_POST['optvalue']) ? explode("\n", $_POST['optvalue']) : '';
 		foreach((array)$optvalue as $v){
@@ -1036,7 +1037,7 @@ function get_order_item( $item_code ) {
 	$itemName = esc_html($usces->getItemName($post_id));
 	
 	$r = '';
-	$r .= $pict . "\n";
+	$r .= $pict_link . "\n";
 	$r .= "<h3>" . $itemName . "</h3>\n";
 	$r .= "<div class='skuform'>\n";
 
@@ -1141,7 +1142,7 @@ function get_order_item( $item_code ) {
 				}
 //20110715ysk end
 				$r .= "<input name=\"optNEWCode[{$post_id}][{$key}][{$optcode}]\" type=\"hidden\" id=\"optNEWCode[{$post_id}][{$key}][{$optcode}]\" value=\"{$optcode}\" />\n";
-				$r .= "<input name=\"optNEWName[{$post_id}][{$key}][{$optcode}]\" type=\"hidden\" id=\"optNEWName[{$post_id}][{$key}][{$optcode}]\" value=\"{$name}\" />\n";
+				$r .= "<input name=\"optNEWEssential[{$post_id}][{$key}][{$optcode}]\" type=\"hidden\" id=\"optNEWEssential[{$post_id}][{$key}][{$optcode}]\" value=\"{$essential}\" />\n";
 				$r .= "</div>\n";
 			endforeach;
 			$r .= "</td>\n";

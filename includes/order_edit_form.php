@@ -593,6 +593,58 @@ jQuery(function($){
 			}
 		}
 	};
+
+	$('form').submit(function() {
+		var error = 0;
+
+		if( !checkNum( $("#order_usedpoint").val() ) ) {
+			error++;
+			$("#order_usedpoint").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("#order_getdpoint").val() ) ) {
+			error++;
+			$("#order_getdpoint").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_discount").val() ) ) {
+			error++;
+			$("#order_discount").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_shipping_charge").val() ) ) {
+			error++;
+			$("#order_shipping_charge").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_cod_fee").val() ) ) {
+			error++;
+			$("#order_cod_fee").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_tax").val() ) ) {
+			error++;
+			$("#order_tax").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+
+		if( 0 < error ) {
+			$("#aniboxStatus").removeClass("none");
+			$("#aniboxStatus").addClass("error");
+			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
+			$("#info_massage").html("データに不備があります");
+			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+			return false;
+		} else {
+			return true;
+		}
+	});
 });
 
 function toggleVisibility(id) {
@@ -934,13 +986,13 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 	</thead>
 	<tbody id="orderitemlist">
 <?php
-	global $post;
+	//global $post;
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
-		$post = get_post($post_id);
+		//$post = get_post($post_id);
 		$sku = $cart_row['sku'];
-		$sku_code = urldecode($cart_row['sku']);
+		$sku_code = esc_attr(urldecode($cart_row['sku']));
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$advance = $this->cart->wc_serialize($cart_row['advance']);
@@ -949,10 +1001,14 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		$cartItemName = $this->getCartItemName($post_id, $sku_code);
 		$skuPrice = $cart_row['price'];
 		$stock = $this->getItemZaiko($post_id, $sku_code);
-		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
+		$red = (in_array($stock, array(__('sellout', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictid = (int)$this->get_mainpictid($itemCode);
-		$optstr =  '';
+		if( empty($options) ) {
+			$optstr =  '';
+			$options =  array();
+		}
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -979,23 +1035,23 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictid, array(150, 150), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
-		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
-		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
+		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
+		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>
 		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
 		<td>
 		<?php foreach((array)$options as $key => $value){ ?>
-		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_attr($key); ?>" />
+		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo esc_attr($key); ?>" />
 			<?php if(is_array($value)): //20110715ysk 0000202 ?>
 				<?php foreach($value as $v): ?>
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>][<?php echo esc_html(urldecode($v)); ?>]" type="hidden" value="<?php echo esc_html(urldecode($v)); ?>" />
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>][<?php echo $v; ?>]" type="hidden" value="<?php echo $v; ?>" />
 				<?php endforeach; ?>
 			<?php else: ?>
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_html(urldecode($value)); ?>" />
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
 			<?php endif; ?>
 		<?php } ?>
-		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
-		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
+		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
+		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
 		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
 		</td>
 	</tr>

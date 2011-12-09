@@ -1969,7 +1969,7 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 					case 0://シングルセレクト
 					case 2://テキスト
 					case 3://ラジオボタン
-						$html .= esc_html($data[$label][$key]);
+						if(!empty($data[$label][$key])) $html .= esc_html($data[$label][$key]);
 						break;
 					case 1://マルチセレクト
 					case 4://チェックボックス
@@ -1980,7 +1980,7 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 								$c = ', ';
 							}
 						} else {
-							$html .= esc_html($data[$label][$key]);
+							if(!empty($data[$label][$key])) $html .= esc_html($data[$label][$key]);
 						}
 						break;
 					}
@@ -2493,7 +2493,7 @@ function usces_get_cart_rows( $out = '' ) {
 			//$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 			if(is_array($value)) {
 				foreach($value as $v) {
-					$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . urldecode($v) . ']" type="hidden" value="' . $v . '" />';
+					$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
 				}
 			} else {
 				$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';

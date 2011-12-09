@@ -1038,30 +1038,54 @@
 			query += "&quant["+cnum+"]["+newid+"]["+newsku+"]=1";
 			var newoptob = $("input[name*='optNEWCode\[" + newid + "\]\[" + newsku + "\]']");
 			var newoptvalue = '';
+			var mes = '';
 			for( var n = 0; n < newoptob.length; n++) {
 //20110715ysk start 0000202
 				//newoptvalue = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
 				newoptvalue = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
 				var newoptclass = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").attr("class");
+				var essential = $(":input[name='optNEWEssential\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
 				switch(newoptclass) {
 				case 'iopt_select_multiple':
-					$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]'] option:selected").each(function(idx, obj) {
-						if( '#NONE#' != newoptvalue) {
-							query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "][" + $(this).val() + "]="+$(this).val();
-						}
-					});
+					var sel = 0;
+					if( essential == 1 ) {
+						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]'] option:selected").each(function(idx, obj) {
+							if( '#NONE#' != $(this).val()) {
+								sel++;
+							}
+						});
+					}
+					if( sel == 0 ) {
+						mes += decodeURIComponent($(newoptob[n]).val())+'を選択してください'+"\n";
+					} else {
+						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]'] option:selected").each(function(idx, obj) {
+							if( '#NONE#' != $(this).val()) {
+								query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "][" + $(this).val() + "]="+$(this).val();
+							}
+						});
+					}
 					break;
 				case 'iopt_select':
-					if( '#NONE#' != newoptvalue) {
+					if( essential == 1 && newoptvalue == '#NONE#' ) {
+						mes += decodeURIComponent($(newoptob[n]).val())+'を選択してください'+"\n";
+					} else {
 						query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "]="+newoptvalue;
 					}
 					break;
 				case 'iopt_text':
 				case 'iopt_textarea':
-					query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "]="+newoptvalue;
+					if( essential == 1 && newoptvalue == '' ) {
+						mes += decodeURIComponent($(newoptob[n]).val())+'を入力してください'+"\n";
+					} else {
+						query += "&itemOption["+cnum+"]["+newid+"]["+newsku+"][" + $(newoptob[n]).val() + "]="+newoptvalue;
+					}
 					break;
 				}
 //20110715ysk end
+			}
+			if( mes != '' ) {
+				alert(mes);
+				return;
 			}
 		
 			var s = orderItem.settings;
@@ -1073,7 +1097,7 @@
 				var zaiko = $("input[name='zaiNEWko\["+newid+"\]\["+newsku+"\]']").val();
 				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' onchange='orderfunc.sumPrice()' />";
 				var quant = "<input name='quant[" + cnum + "][" + newid + "][" + newsku + "]' class='text quantity' type='text' value='1' onchange='orderfunc.sumPrice()' />";
-				var delButton = "<input name='delButton[" + cnum + "][" + newid + "][" + newsku + "]' class='delCartButton' type='submit' value='削除' />";
+				var delButton = "<input name='delButton[" + cnum + "][" + newid + "][" + newsku + "]' class='delCartButton' type='submit' value='削除' />\n<input name='advance[" + cnum + "][" + newid + "][" + newsku + "]' type='hidden' value='' />\n";
 				
 				var sucoptob = $("input[name*='optNEWCode\[" + newid + "\]\[" + newsku + "\]']");
 				var skuOptValue = '';
@@ -1082,42 +1106,42 @@
 				var hiddenoptname = '';
 				for( var i = 0; i < sucoptob.length; i++) {
 					skuoptcode = $(sucoptob[i]).val();
-					skuoptname = $(":input[name='optNEWName\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").val();
+					skuoptname = decodeURIComponent($(sucoptob[i]).val());
+					hiddenoptname += "<input name='optName[" + newid + "][" + newsku + "][" + skuoptcode + "]' type='hidden' value='"+skuoptcode+"' />\n";
 //20110715ysk start 0000202
 					//skuoptval = $("select[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").val();
 					skuoptval = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").val();
 					//if( '#NONE#' != skuoptval){
 					//	skuOptValue += skuoptval + ' ';
-					//	hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptval+"' />";
-					//	hiddenoptname += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptcode+"' />";
+					//	hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' type='hidden' value='"+skuoptval+"' />";
+					//	hiddenoptname += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' type='hidden' value='"+skuoptcode+"' />";
 					//}
 					skuOptValue += skuoptname + ' : ';
-					var sucoptclass= $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").attr("class");
+					var sucoptclass = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]']").attr("class");
 					switch(sucoptclass) {
 					case 'iopt_select_multiple':
 						var c = '';
 						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + skuoptcode + "\]'] option:selected").each(function(idx, obj) {
-							if( '#NONE#' != skuoptval) {
+							if( '#NONE#' != $(this).val() ) {
 								skuOptValue += c + $(this).val();
 								c = ', ';
-								hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "][" + $(this).val() + "]' class='text quantity' type='hidden' value='"+$(this).val()+"' />";
+								hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "][" + encodeURIComponent($(this).val()) + "]' type='hidden' value='"+encodeURIComponent($(this).val())+"' />\n";
 							}
 						});
 						break;
 					case 'iopt_select':
-						if( '#NONE#' != skuoptval) {
+						if( '#NONE#' != skuoptval ) {
 							skuOptValue += skuoptval;
-							hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptval+"' />";
+							hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' type='hidden' value='"+encodeURIComponent(skuoptval)+"' />\n";
 						}
 						break;
 					case 'iopt_text':
 					case 'iopt_textarea':
 						skuOptValue += skuoptval;
-						hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' class='text quantity' type='hidden' value='"+skuoptval+"' />";
+						hiddenopt += "<input name='itemOption[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptcode + "]' type='hidden' value='"+encodeURIComponent(skuoptval)+"' />\n";
 						break;
 					}
 					skuOptValue += '<br />';
-					hiddenoptname += "<input name='optName[" + cnum + "][" + newid + "][" + newsku + "][" + skuoptname + "]' class='text quantity' type='hidden' value='"+skuoptname+"' />";
 //20110715ysk end
 				}
 				var htm = "<tr>\n";
@@ -1128,7 +1152,7 @@
 				htm += "<td>"+quant+"</td>\n";
 				htm += "<td id='sub_total["+cnum+"]' class='aright'>&nbsp;</td>\n";
 				htm += "<td>"+zaiko+"</td>\n";
-				htm += "<td>"+delButton+hiddenopt+hiddenoptname+"</td>\n";
+				htm += "<td>"+delButton+hiddenoptname+hiddenopt+"</td>\n";
 				htm += "</tr>\n";
 
 				$("#orderitemlist").append( htm );
@@ -1257,6 +1281,12 @@ function checkCode(argValue) {
 }
 function checkNum(argValue) {
 	if(argValue.match(/[^0-9]/g)) {
+		return false;
+	}
+	return true;
+}
+function checkPrice(argValue) {
+	if(argValue.match(/[^0-9|^\-|^\,|^\.]/g)) {
 		return false;
 	}
 	return true;
