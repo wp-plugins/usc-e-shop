@@ -34,7 +34,7 @@ class usces_cart {
 			$_SESSION['usces_cart'][$this->serial]['quant'] = 0;
 		}
 		
-		if ( isset($_POST['quant']) && $_POST['quant'][$post_id][$sku] != '') {
+		if ( isset($_POST['quant'][$post_id][$sku]) && $_POST['quant'][$post_id][$sku] != '') {
 		
 			//$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
 			$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$post_id][$sku];
@@ -156,7 +156,9 @@ class usces_cart {
 
 	// number of data in cart ***********************************************************
 	function num_row() {
-	
+		if( !isset($_SESSION['usces_cart']) )
+			return false;
+			
 		$num = count($_SESSION['usces_cart']);
 		
 		if( $num > 0 ) {
