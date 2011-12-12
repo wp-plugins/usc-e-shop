@@ -27,15 +27,23 @@ $EUC2SJIS = false;
 
 // Short Font Name ------------------------------------------------------------
 // For Acrobat Reader (Windows, MacOS, Linux, Solaris etc)
-DEFINE("BIG5",    'MSungStd-Light-Acro');
-DEFINE("GB",      'STSongStd-Light-Acro');
-DEFINE("KOZMIN",  'KozMinPro-Regular-Acro');
+if(!defined("BIG5"))
+	DEFINE("BIG5",    'MSungStd-Light-Acro');
+if(!defined("GB"))
+	DEFINE("GB",      'STSongStd-Light-Acro');
+if(!defined("KOZMIN"))
+	DEFINE("KOZMIN",  'KozMinPro-Regular-Acro');
 // For Japanese Windows Only
-DEFINE("GOTHIC",  'MS-Gothic');
-DEFINE("PGOTHIC", 'MS-PGothic');
-DEFINE("UIGOTHIC",'MS-UIGothic');
-DEFINE("MINCHO",  'MS-Mincho');
-DEFINE("PMINCHO", 'MS-PMincho');
+if(!defined("GOTHIC"))
+	DEFINE("GOTHIC",  'MS-Gothic');
+if(!defined("PGOTHIC"))
+	DEFINE("PGOTHIC", 'MS-PGothic');
+if(!defined("UIGOTHIC"))
+	DEFINE("UIGOTHIC",'MS-UIGothic');
+if(!defined("MINCHO"))
+	DEFINE("MINCHO",  'MS-Mincho');
+if(!defined("PMINCHO"))
+	DEFINE("PMINCHO", 'MS-PMincho');
 
 class MBfpdi extends fpdi
 {

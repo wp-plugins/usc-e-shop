@@ -109,7 +109,7 @@
 				}else{
 					$("tbody#item-opt-list").html( strs[0] );
 					$("#newoptname").val('');
-					$("#newoptvalue").html('');
+					$("#newoptvalue").val('');
 					$("#newoptmeans").val(0);
 					$("#newoptessential").attr({checked: false});
 					$("#itemopt-" + meta_id).css({'background-color': '#FF4'});

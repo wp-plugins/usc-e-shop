@@ -986,11 +986,11 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 	</thead>
 	<tbody id="orderitemlist">
 <?php
-	//global $post;
+	global $post;
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
-		//$post = get_post($post_id);
+		$post = get_post($post_id);
 		$sku = $cart_row['sku'];
 		$sku_code = esc_attr(urldecode($cart_row['sku']));
 		$quantity = $cart_row['quantity'];

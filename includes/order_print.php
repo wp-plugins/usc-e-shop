@@ -1,10 +1,11 @@
 <?PHP
+global $usces;
 require_once(USCES_PLUGIN_DIR.'/classes/fpdf/mbfpdi.php');
 require_once(USCES_PLUGIN_DIR.'/classes/orderData.class.php');
 
 //用紙サイズ(B5)
 // MBfpdiクラスのインスタンス生成
-if($usces->options['print_size'] == 'A4')
+if(isset($usces->options['print_size']) && $usces->options['print_size'] == 'A4')
 	$pdf = new MBfpdi('P', 'mm', array(201, 297));
 else
 	$pdf = new MBfpdi('P', 'mm', array(182, 257));
@@ -32,7 +33,7 @@ function usces_pdf_out(&$pdf, $data){
 	//$GLOBALS['EUC2SJIS'] = true;
 
 	// テンプレートファイル
-	if($usces->options['print_size'] == 'A4')
+	if(isset($usces->options['print_size']) && $usces->options['print_size'] == 'A4')
 		$tplfile = USCES_PLUGIN_DIR."/images/orderform_A4.pdf";
 	else
 		$tplfile = USCES_PLUGIN_DIR."/images/orderform_B5.pdf";
@@ -565,6 +566,7 @@ function usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $l
 	$options = get_option('usces');
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
 	$name = '';
+	$border = '';
 	switch ($applyform){
 	case 'JP': 
 		$pdf->SetXY($leftside, $y);

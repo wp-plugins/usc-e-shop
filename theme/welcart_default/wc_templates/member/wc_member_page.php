@@ -50,7 +50,7 @@ get_header();
 	<br /> 
 	<a href="#edit"><?php _e('To member information editing', 'usces'); ?></a>
 	<br /> 
-	usces_loginout();
+	<?php usces_loginout(); ?>
 	
 	<div class="header_explanation">
 	<?php do_action('usces_action_memberinfo_page_header'); ?>

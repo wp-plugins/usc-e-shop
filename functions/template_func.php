@@ -1099,11 +1099,11 @@ function usces_the_delivery_method( $value = '', $out = '' ){
 	if( empty($deli_id) ){
 		$html = '<p>' . __('No valid shipping methods.', 'usces') . '</p>';
 	}else{
-
+		$cdeliid = count($deli_id);
 		$html = '<select name="offer[delivery_method]"  id="delivery_method_select" class="delivery_time" onKeyDown="if (event.keyCode == 13) {return false;}">'."\n";
 		foreach ($deli_id as $id) {
 			$index = $usces->get_delivery_method_index($id);
-			$selected = ($id == $value) ? ' selected="selected"' : '';
+			$selected = ($id == $value || 1 === $cdeliid) ? ' selected="selected"' : '';
 			$html .= "\t<option value='{$id}'{$selected}>" . esc_html($usces->options['delivery_method'][$index]['name']) . "</option>\n";
 		}
 	
@@ -2380,6 +2380,7 @@ function usces_assistance_item($post_id, $title ){
 			//update_post_caches($posts); 
 			usces_remove_filter();
 			usces_the_item();
+			$post = get_post(get_the_ID());
 			ob_start();
 ?>
 			<li>
