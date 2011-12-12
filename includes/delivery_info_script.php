@@ -57,7 +57,8 @@ $html .= '
 
 //選択可能な配送方法
 $default_deli = array_values($usces->get_available_delivery_method());
-if($usces_entries['order']['delivery_method'] === NULL){
+//if($usces_entries['order']['delivery_method'] === NULL){
+if(empty($usces_entries['order']['delivery_method'])){
 	//$default_deli = $usces->get_available_delivery_method();
 	//$html .= 'selected_delivery_method = \'' . $default_deli[0] . '\';';
 	$selected_delivery_method = $default_deli[0];

@@ -4081,9 +4081,8 @@ class usc_e_shop
 	function point_check( $entries ) {
 		$member = $this->get_member();
 		$this->set_cart_fees( $member, $entries );
-//var_dump($entries);
 		$mes = '';
-		if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
+		if ( trim($_POST['offer']["usedpoint"]) == "" || !preg_match("/^[0-9]+$/", $_POST['offer']["usedpoint"]) || (int)$_POST['offer']["usedpoint"] < 0 ) {
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 		} else {
 			if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
