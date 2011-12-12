@@ -1965,11 +1965,12 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 				$html .= '<tr>
 					<th>'.esc_html($name).'</th>
 					<td>';
+				if(!empty($data[$label][$key])) {
 					switch($means) {
 					case 0://シングルセレクト
 					case 2://テキスト
 					case 3://ラジオボタン
-						if(!empty($data[$label][$key])) $html .= esc_html($data[$label][$key]);
+						$html .= esc_html($data[$label][$key]);
 						break;
 					case 1://マルチセレクト
 					case 4://チェックボックス
@@ -1984,6 +1985,7 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 						}
 						break;
 					}
+				}
 				$html .= '
 					</td>
 					</tr>';

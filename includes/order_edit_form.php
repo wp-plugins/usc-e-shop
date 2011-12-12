@@ -1004,8 +1004,8 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		$red = (in_array($stock, array(__('sellout', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictid = (int)$this->get_mainpictid($itemCode);
 		if( empty($options) ) {
-			$optstr =  '';
-			$options =  array();
+			$optstr = '';
+			$options = array();
 		}
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';

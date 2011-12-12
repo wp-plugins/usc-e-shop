@@ -5579,7 +5579,7 @@ class usc_e_shop
 			$fee = 0;
 		
 		}else if( 'change' != $this->options['cod_type'] ){
-			$fee = $this->options['cod_fee'];
+			$fee = isset($this->options['cod_fee']) ? $this->options['cod_fee'] : '';
 		
 		}else{	
 			$price = $amount_by_cod + $this->getTax( $amount_by_cod );

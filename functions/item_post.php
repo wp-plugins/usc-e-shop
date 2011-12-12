@@ -1023,13 +1023,14 @@ function order_item2cart() {
 }
 
 function get_order_item( $item_code ) {
-	global $usces;
+	global $usces, $post;
 	
 	$post_id = $usces->get_postIDbyCode( $item_code );
 	if( $post_id == NULL ) return false;
+	$post = get_post($post_id);
 	
 	$pict_id = $usces->get_mainpictid( $item_code );
-	$pict_link = wp_get_attachment_link($pict_id, array(200, 100), false);
+	$pict_link = wp_get_attachment_image($pict_id, array(150, 150), true);
 	preg_match("/^\<a .+\>(\<img .+\/\>)\<\/a\>$/", $pict_link, $match);
 	$pict = isset($match[1]) ? $match[1] : '';
 	$skus = $usces->get_skus( $post_id );
