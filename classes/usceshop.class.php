@@ -3842,7 +3842,10 @@ class usc_e_shop
 		$this->set_cart_fees( $member, &$entries );
 //var_dump($entries);
 		$mes = '';
-		if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
+//20111213ysk start 0000357
+		//if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
+		if ( trim($_POST['offer']["usedpoint"]) == "" || !preg_match("/^[0-9]+$/", $_POST['offer']["usedpoint"]) || (int)$_POST['offer']["usedpoint"] < 0 ) {
+//20111213ysk end
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 		} else {
 			if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
