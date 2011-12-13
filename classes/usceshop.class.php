@@ -3840,33 +3840,36 @@ class usc_e_shop
 	function point_check( $entries ) {
 		$member = $this->get_member();
 		$this->set_cart_fees( $member, &$entries );
-//var_dump($entries);
+		$usedpoint = abs((int)trim($_POST['offer']["usedpoint"]));
 		$mes = '';
-//20111213ysk start 0000357
-		//if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
-		if ( trim($_POST['offer']["usedpoint"]) == "" || !preg_match("/^[0-9]+$/", $_POST['offer']["usedpoint"]) || (int)$_POST['offer']["usedpoint"] < 0 ) {
-//20111213ysk end
+		if ( trim($_POST['offer']["usedpoint"]) == "" || !$usedpoint ) {
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 		} else {
-			if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
+			if ( $usedpoint > $member['point'] ){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".$member['point']."pt<br />";
 				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif($this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
+			}elseif($this->options['point_coverage'] && $usedpoint > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])."pt<br />";
 				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif(!$this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
+			}elseif(!$this->options['point_coverage'] && $usedpoint > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
 				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
+						);
+				$this->cart->set_order_entry( $array );
+			}else{
+				$_POST['offer']["usedpoint"] = $usedpoint;
+				$array = array(
+						'usedpoint' => $usedpoint
 						);
 				$this->cart->set_order_entry( $array );
 			}
