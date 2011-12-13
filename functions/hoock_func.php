@@ -50,36 +50,34 @@ function usces_action_acting_transaction(){
 		}
 		
 		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){
-			usces_log('remise card error2 : '.print_r($data, true), 'acting_transaction.log');
-			die('error2');
-		}
-		
-		if( '0000000' === substr($rand, 0, 7) ){//card up
-			usces_log('remise card_update : '.print_r($data, true), 'acting_transaction.log');
-			if( isset($_POST['X-EXPIRE']) ){
-				$expire = substr($_POST['X-EXPIRE'], 0, 2) . '/' . substr($_POST['X-EXPIRE'], 2, 2);
-				$usces->set_member_meta_value('limitofcard', $expire, $_POST['X-AC_S_KAIIN_NO']);
-			}
-			if( isset($_POST['X-PARTOFCARD']) )
-				$usces->set_member_meta_value('partofcard', $_POST['X-PARTOFCARD'], $_POST['X-AC_S_KAIIN_NO']);
-			
-			die('<SDBKDATA>STATUS=800</SDBKDATA>');
-		}
-		
-//20110203ysk start
-		$res = $usces->order_processing();
-		if( 'error' == $res ){
-			usces_log('remise card error3 : '.print_r($data, true), 'acting_transaction.log');
-			die('error3');
+
+			usces_log('remise card errorlevel : '.$_POST['X-ERRLEVEL'].' : '.print_r($data, true), 'acting_transaction.log');
+
 		}else{
-			if( isset($_POST['X-PAYQUICKID']) )
-				$usces->set_member_meta_value('remise_pcid', $_POST['X-PAYQUICKID']);
-			if( isset($_POST['X-AC_MEMBERID']) )
-				$usces->set_member_meta_value('remise_memid', $_POST['X-AC_MEMBERID']);
-			usces_log('remise card transaction : '.$_POST['X-TRANID'], 'acting_transaction.log');
-			die('<SDBKDATA>STATUS=800</SDBKDATA>');
+		
+			if( '0000000' === substr($rand, 0, 7) ){//card up
+				usces_log('remise card_update : '.print_r($data, true), 'acting_transaction.log');
+				if( isset($_POST['X-EXPIRE']) ){
+					$expire = substr($_POST['X-EXPIRE'], 0, 2) . '/' . substr($_POST['X-EXPIRE'], 2, 2);
+					$usces->set_member_meta_value('limitofcard', $expire, $_POST['X-AC_S_KAIIN_NO']);
+				}
+				if( isset($_POST['X-PARTOFCARD']) )
+					$usces->set_member_meta_value('partofcard', $_POST['X-PARTOFCARD'], $_POST['X-AC_S_KAIIN_NO']);
+			}
+			
+			$res = $usces->order_processing();
+			if( 'error' == $res ){
+				usces_log('remise card error3 : '.print_r($data, true), 'acting_transaction.log');
+				die('error3');
+			}else{
+				if( isset($_POST['X-PAYQUICKID']) )
+					$usces->set_member_meta_value('remise_pcid', $_POST['X-PAYQUICKID']);
+				if( isset($_POST['X-AC_MEMBERID']) )
+					$usces->set_member_meta_value('remise_memid', $_POST['X-AC_MEMBERID']);
+				usces_log('remise card transaction : '.$_POST['X-TRANID'], 'acting_transaction.log');
+			}
 		}
-//20110203ysk end
+		die('<SDBKDATA>STATUS=800</SDBKDATA>');
 		
 	//*** remise_conv ***//
 	}elseif( isset($_POST['S_TORIHIKI_NO']) && isset($_POST['REC_FLG']) ){
