@@ -338,7 +338,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_jpayment_card'://クレジット決済(J-Payment)
 			$acting_opts = $usces->options['acting_settings']['jpayment'];
 			$usces->save_order_acting_data($rand);
-			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+//20111213ysk start 0000359
+/*			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="'.$acting_opts['card_jb'].'" />
@@ -349,7 +350,24 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="acting" value="jpayment_card" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';*/
+			$am = $usces_entries['order']['total_items_price'];
+			if( !empty($usces_entries['order']['cod_fee']) ) $am += $usces_entries['order']['cod_fee'];
+			if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) $am -= $usces_entries['order']['usedpoint'];
+			if( !empty($usces_entries['order']['discount']) ) $am -= $usces_entries['order']['discount'];
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="'.$acting_opts['card_jb'].'" />
+				<input type="hidden" name="am" value="'.usces_crform($am, false, false, 'return', false).'" />
+				<input type="hidden" name="tx" value="'.usces_crform($usces_entries['order']['tax'], false, false, 'return', false).'" />
+				<input type="hidden" name="sf" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'" />
+				<input type="hidden" name="pt" value="1" />
+				<input type="hidden" name="acting" value="jpayment_card" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
 				';
+//20111213ysk end
 			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
 			$html .= '</form>';
@@ -361,7 +379,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_jpayment_conv'://コンビニ・ペーパーレス決済(J-Payment)
 			$acting_opts = $usces->options['acting_settings']['jpayment'];
 			$usces->save_order_acting_data($rand);
-			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+//20111213ysk start 0000359
+/*			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="CAPTURE" />
@@ -372,7 +391,24 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="acting" value="jpayment_conv" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';*/
+			$am = $usces_entries['order']['total_items_price'];
+			if( !empty($usces_entries['order']['cod_fee']) ) $am += $usces_entries['order']['cod_fee'];
+			if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) $am -= $usces_entries['order']['usedpoint'];
+			if( !empty($usces_entries['order']['discount']) ) $am -= $usces_entries['order']['discount'];
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="CAPTURE" />
+				<input type="hidden" name="am" value="'.usces_crform($am, false, false, 'return', false).'" />
+				<input type="hidden" name="tx" value="'.usces_crform($usces_entries['order']['tax'], false, false, 'return', false).'" />
+				<input type="hidden" name="sf" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'" />
+				<input type="hidden" name="pt" value="2" />
+				<input type="hidden" name="acting" value="jpayment_conv" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
 				';
+//20111213ysk end
 			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
 			$html .= '</form>';
@@ -384,7 +420,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_jpayment_bank'://バンクチェック決済(J-Payment)
 			$acting_opts = $usces->options['acting_settings']['jpayment'];
 			$usces->save_order_acting_data($rand);
-			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+//20111213ysk start 0000359
+/*			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="CAPTURE" />
@@ -395,9 +432,25 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="acting" value="jpayment_bank" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				';*/
+			$am = $usces_entries['order']['total_items_price'];
+			if( !empty($usces_entries['order']['cod_fee']) ) $am += $usces_entries['order']['cod_fee'];
+			if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) $am -= $usces_entries['order']['usedpoint'];
+			if( !empty($usces_entries['order']['discount']) ) $am -= $usces_entries['order']['discount'];
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
+				<input type="hidden" name="cod" value="'.$rand.'" />
+				<input type="hidden" name="jb" value="CAPTURE" />
+				<input type="hidden" name="am" value="'.usces_crform($am, false, false, 'return', false).'" />
+				<input type="hidden" name="tx" value="'.usces_crform($usces_entries['order']['tax'], false, false, 'return', false).'" />
+				<input type="hidden" name="sf" value="'.usces_crform($usces_entries['order']['shipping_charge'], false, false, 'return', false).'" />
+				<input type="hidden" name="pt" value="7" />
+				<input type="hidden" name="acting" value="jpayment_bank" />
+				<input type="hidden" name="acting_return" value="1" />
+				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
 				';
+//20111213ysk end
 			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
-
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
