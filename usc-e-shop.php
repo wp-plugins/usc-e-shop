@@ -7,7 +7,7 @@ Version: 1.0.9
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
-define('USCES_VERSION', '1.0.9.1112141');
+define('USCES_VERSION', '1.0.9.1112142');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -45,6 +45,9 @@ require_once(USCES_PLUGIN_DIR."/classes/usceshop.class.php");
 require_once(USCES_PLUGIN_DIR."/functions/hoock_func.php");
 require_once(USCES_PLUGIN_DIR."/classes/httpRequest.class.php");
 require_once(USCES_PLUGIN_DIR."/functions/admin_func.php");
+if( is_admin() ){
+	require_once(USCES_PLUGIN_DIR."/functions/admin_page.php");
+}
 
 global $usces;
 $usces = new usc_e_shop();

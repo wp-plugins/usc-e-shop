@@ -384,5 +384,4 @@ function usces_get_xml($url, $paras){
 	
 	return $xml;
 }
-
 ?>
