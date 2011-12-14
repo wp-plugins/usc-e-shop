@@ -999,9 +999,20 @@ function usces_download_product_list() {
 				$optstr = '';
 				if(is_array($options) && count($options) > 0) {
 					foreach((array)$options as $key => $value) {
-						if(!empty($key))
+						if(!empty($key)) {
+							if(is_array($value)) {
+								$concatval = '';
+								$c = '';
+								foreach($value as $v) {
+									$concatval .= $c.$v;
+									$c = ' ';
+								}
+								$optstr .= usces_entity_decode($key.$sp.urldecode($concatval), $ext).$nb;
+							} else {
 							//$optstr .= usces_entity_decode($key, $ext).$sp.usces_entity_decode($value, $ext).$nb;
 							$optstr .= usces_entity_decode($key.$sp.urldecode($value), $ext).$nb;
+							}
+						}
 					}
 				}
 				$line .= $td_h.$optstr.$td_f;
