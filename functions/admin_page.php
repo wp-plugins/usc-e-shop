@@ -17,7 +17,8 @@ function admin_prodauct_footer(){
         return true;
     });
     $('#post').submit(function(e){
- 		var mes = '';
+ 		$('form#post').attr('action', '');
+		var mes = '';
 		var itemCode = $("#itemCode").val();
 		var itemName = $("#itemName").val();
 		var itemsku = $("input[name^='itemsku\[']");
@@ -517,6 +518,12 @@ function usces_all_delete_itemdata(&$obj){
 	} else {
 		$obj->set_action_status('none', '');
 	}
+}
+
+function usces_typenow(){
+	global $typenow;
+	if( isset($_GET['page']) && ('usces_itemedit' == $_GET['page'] || 'usces_itemnew' == $_GET['page']) )
+		$typenow = '';
 }
 
 ?>

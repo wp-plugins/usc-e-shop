@@ -794,6 +794,54 @@ td.submittd div.submit,
 #wpcontent .metaboxfield {
 	font-size: 12px;
 }
+.iteminfo_table th {
+	font-weight: bold;
+	background-color: #F1F1F1;
+	font-size: 13px;
+	line-height: 24px;
+	width: 30%;
+}
+
+.iteminfo_table input.itemCode,
+.iteminfo_table input.itemName{
+	font-size: 15px;
+	line-height: 18px;
+	width: 99%;
+	padding-top: 1px;
+	padding-right: 2%;
+	padding-bottom: 1px;
+	padding-left: 2%;
+}
+*html .iteminfo_table input.itemCode,
+*html .iteminfo_table input.itemName{
+	width: 93%;
+}
+*:first-child+html .iteminfo_table input.itemCode,
+*:first-child+html .iteminfo_table input.itemName{
+	width: 90%;
+}
+
+.iteminfo_table input.itemRestriction,
+.iteminfo_table input.itemPointrate{
+	font-size: 15px;
+	line-height: 18px;
+	width: 60px;
+	padding-top: 1px;
+	padding-right: 5px;
+	padding-bottom: 1px;
+	padding-left: 5px;
+	text-align: right;
+}
+
+.iteminfo_table select.itemShippingCharge, 
+.iteminfo_table select.itemShipping{
+/*	font-size: 14px;
+	line-height: 16px;
+	border: 1px solid #7F9DB9;
+*/}
+*:first-child+html .iteminfo_table select.itemShipping{
+	line-height: 18px;
+}
 /*************************************************************************************/
 .calendar {
 	border-top-width: 1px;
@@ -1415,7 +1463,6 @@ tr.rowSelection_selected td {
 	height: 26px;
 	margin: 0px;
 	width: 130px;
-	font-size: 24px;
 	border: 1px solid #7F9DB9;
 }
 
@@ -1898,8 +1945,8 @@ div.optcheck {
 }
 
 .iteminfo_table td label {
-	margin-right: 15px;
-	width: 160px;
+	margin-right: 25px;
+	/*width: 160px;*/
 	display: block;
 	float: left;
 }

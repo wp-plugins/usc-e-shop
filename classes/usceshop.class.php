@@ -1264,9 +1264,17 @@ class usc_e_shop
 		}
 
 		if(defined( 'USCES_KEY' )){
-			session_name( USCES_KEY );
+			if( is_admin() ){
+				session_name( 'adm'.USCES_KEY );
+			}else{
+				session_name( USCES_KEY );
+			}
 		}else{
-			session_name( $options['usces_key'] );
+			if( is_admin() ){
+				session_name( 'adm'.$options['usces_key'] );
+			}else{
+				session_name( $options['usces_key'] );
+			}
 		}
 		if(isset($_GET['uscesid']) && ($_GET['uscesid'] != '')) {
 			$sessid = $_GET['uscesid'];
@@ -1289,6 +1297,7 @@ class usc_e_shop
 		$actionflag = false;
 		$rckid = NULL;
 		$cookie = $this->get_cookie();
+		if(is_admin()) return;
 		
 		if(	apply_filters( 'usces_filter_cookie', false) ) return;
 
@@ -2026,7 +2035,7 @@ class usc_e_shop
 		
 		wp_enqueue_script('jquery');
 		
-		if( isset($_REQUEST['page']) && ((isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') || $itemnew == 'new' || (isset($_REQUEST['action']) && $_REQUEST['action'] == 'editpost'))) {
+		if( is_admin() && isset($_REQUEST['page']) && ((isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') || $itemnew == 'new' || (isset($_REQUEST['action']) && $_REQUEST['action'] == 'editpost'))) {
 		
 			if(isset($_REQUEST['action']) && $_REQUEST['action'] != 'editpost' && $itemnew == 'new'){
 				if ( version_compare($wp_version, '3.0-beta', '>') ){
@@ -2099,14 +2108,14 @@ class usc_e_shop
 			wp_enqueue_script('autosave');
 			wp_enqueue_script('post');
 			//if ( user_can_richedit() )
-			wp_enqueue_script('editor');
+			//wp_enqueue_script('editor');
 			add_thickbox();
 			wp_enqueue_script('media-upload');
 			wp_enqueue_script('word-count');
 			wp_enqueue_script( 'admin-comments' );
 		
-//			add_action( 'admin_head', 'wp_tiny_mce' );
-			add_action( 'admin_print_footer_scripts', 'wp_tiny_mce', 25 );
+			if ( version_compare($wp_version, '3.3', '<') )
+				add_action( 'admin_print_footer_scripts', 'wp_tiny_mce', 25 );
 			wp_enqueue_script('quicktags');
 
 		}
