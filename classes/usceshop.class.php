@@ -4035,7 +4035,7 @@ class usc_e_shop
 
 	function delivery_check() {
 		$mes = '';
-		if ( $_POST['delivery']['delivery_flag'] == '1' ) {
+		if ( isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == '1' ) {
 			if ( trim($_POST["delivery"]["name1"]) == "" )
 				$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //			if ( trim($_POST["delivery"]["name3"]) == "" && USCES_JP )
@@ -5553,11 +5553,11 @@ class usc_e_shop
 				$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
 				//商品送料index
 				$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
-				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
+				$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
 			}else{
 			
 				$s_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
-				$charge = $this->options['shipping_charge'][$s_charge_index]['value'][$pref];
+				$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
 			}
 			
 			if($this->getItemIndividualSCharge($rows['post_id'])){

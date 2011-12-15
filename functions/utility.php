@@ -559,7 +559,7 @@ function usces_filter_customer_check_custom_customer( $mes ) {
 function usces_filter_delivery_check_custom_delivery( $mes ) {
 	global $usces;
 
-	if( $_POST['delivery']['delivery_flag'] == '1' ) {
+	if( isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == '1' ) {
 		$meta = usces_has_custom_field_meta('delivery');
 		foreach($meta as $key => $entry) {
 			$essential = $entry['essential'];

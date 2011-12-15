@@ -252,7 +252,7 @@ class usces_cart {
 		$row['post_id'] = $ids[0];
 		$row['sku'] = $skus[0];
 		$row['options'] = $array[$ids[0]][$skus[0]];
-		$row['price'] = $_SESSION['usces_cart'][$serial]['price'];
+		$row['price'] = isset($_SESSION['usces_cart'][$serial]['price']) ? $_SESSION['usces_cart'][$serial]['price'] : 0;
 		$row['quantity'] = $_SESSION['usces_cart'][$serial]['quant'];
 		$row['advance'] = isset($_SESSION['usces_cart'][$serial]['advance']) ? $_SESSION['usces_cart'][$serial]['advance'] : array();
 		
