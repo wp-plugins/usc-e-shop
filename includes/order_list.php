@@ -42,6 +42,7 @@ foreach((array)$target_market as $country) {
 	}
 }
 //20110331ysk end
+$payment_name = array();
 $payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 foreach ( (array)$payments as $id => $array ) {
 	$payment_name[$id] = $array['name'];

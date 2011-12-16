@@ -505,9 +505,6 @@ wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 <div class="itempagetitle">商品詳細本文</div>
 <div id="<?php echo user_can_richedit() ? 'postdivrich' : 'postdiv'; ?>" class="postarea">
 
-<?php
-		if ( version_compare($wp_version, '3.3-beta', '>') ){
-		?>
 <style type="text/css">
 <!--
 .wp_themeSkin table td {
@@ -515,7 +512,8 @@ wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 }		
 -->
 </style>
-		<?php
+<?php
+		if ( version_compare($wp_version, '3.3-beta', '>') ){
 			wp_editor($post->post_content, 'content', array('dfw' => true, 'tabindex' => 1) );
 		}else{
 			the_editor($post->post_content);

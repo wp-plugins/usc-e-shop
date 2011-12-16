@@ -144,7 +144,7 @@ function usces_pdf_out(&$pdf, $data){
 				}
 //20110629ysk end
 			}
-			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $options);
+			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $cart_row['options']);
 		}
 
 			$line_y[$index] = $next_y;
@@ -382,7 +382,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		
-		usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
+		usces_get_pdf_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
 	
 		$pdf->MultiCell($width, $lineheight, usces_conv_euc('TEL ' . $data->customer['tel']), $border, 'L');
 	
@@ -432,7 +432,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc(apply_filters('usces_filter_pdf_mycompany', $usces->options['company_name'])), 0, 'L');
-	usces_get_pdf_myaddress(&$pdf, $lineheight );
+	usces_get_pdf_myaddress($pdf, $lineheight );
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('TEL：'.$usces->options['tel_number']), 0, 'L');
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('FAX：'.$usces->options['fax_number']), 0, 'L');
 	

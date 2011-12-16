@@ -143,7 +143,14 @@ function usces_item_uploadcsv(){
 	$sku_index = 0;
 	$res = array();
 	$date_pattern = "/(\d{4})-(\d{2}|\d)-(\d{2}|\d) (\d{2}):(\d{2}|\d):(\d{2}|\d)/";
-	
+	$linereadytime = 0;
+	$checktime = 0;
+	$insertposttime = 0;
+	$metadeletetime = 0;
+	$addmetatime = 0;
+	$AddOptiontime = 0;
+	$AddSKUtime = 0;
+	$onelinetime = 0;
 	
 	//log
 	if ( ! ($fpi = fopen (USCES_PLUGIN_DIR.'/logs/itemcsv_log.txt', "w"))) {
@@ -1281,8 +1288,10 @@ function usces_download_item_list() {
 			$line .= $tr_h.$line_item.$line_sku.$line_options.$tr_f.$lf;
 		}
 		print(mb_convert_encoding($line, "SJIS-win", "UTF-8"));
-		ob_flush();
-		flush();
+		if(ob_get_contents ()){
+			ob_flush();
+			flush();
+		}
 		$line = '';
 		wp_cache_flush();
 	}
