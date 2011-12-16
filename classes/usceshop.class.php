@@ -2359,6 +2359,8 @@ class usc_e_shop
 					define('USCES_NEWMEMBER_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=newmember');
 				if( ! defined('USCES_LOGIN_URL') )
 					define('USCES_LOGIN_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=login');
+				if( ! defined('USCES_LOGOUT_URL') )
+					define('USCES_LOGOUT_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
 				if( ! defined('USCES_CART_NONSESSION_URL') )
 					define('USCES_CART_NONSESSION_URL', get_option('home') . '/?page_id=' . USCES_MEMBER_NUMBER . '&page=logout');
 				if( ! defined('USCES_MEMBER_URL') )

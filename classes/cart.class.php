@@ -83,7 +83,7 @@ class usces_cart {
 			if ( $_POST['quant'][$index][$post_id][$sku] != '') {
 		
 				$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$index][$post_id][$sku];
-				$_SESSION['usces_cart'][$this->serial]['advance'] = $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]);
+				$_SESSION['usces_cart'][$this->serial]['advance'] = isset($_POST['advance'][$index][$post_id][$sku]) ? $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]) : array();
 				if( isset($_POST['order_action']) ){
 					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
 				}else{

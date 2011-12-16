@@ -1237,7 +1237,7 @@ function usces_download_item_list() {
 				if( 0 !== strpos($cfkey, '_') )
 					$cfield .= usces_entity_decode($cfkey, $ext) . $eq . usces_entity_decode($cfvalues[0], $ext) . $sp;
 			}
-			$cfield = rtrim($cfield, $cm);
+			$cfield = rtrim($cfield, $sp);
 		}
 		$line_item .= $td_h.$cfield.$td_f;
 		
