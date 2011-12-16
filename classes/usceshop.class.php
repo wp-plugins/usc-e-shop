@@ -4909,7 +4909,7 @@ class usc_e_shop
 		}
 	}
 	
-	function updateItemZaikoNum($post_id, $skukey, $num) {
+	function updateItemZaikoNum($post_id, $skucode, $value) {
 		$res = usces_update_sku( $post_id, $skucode, 'stocknum', $value );
 		if( !$res ){
 			return false;

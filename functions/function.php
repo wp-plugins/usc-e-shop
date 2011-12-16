@@ -3502,6 +3502,7 @@ function usces_update_sku( $post_id, $skucode, $fieldname, $value ){
 		if( ! $metas )
 			return false;
 		
+		$meta_id = '';
 		foreach( $metas as $meta ){
 			$sku = unserialize($meta['meta_value']);
 			if( $skucode == $sku['code'] ){
@@ -3511,7 +3512,7 @@ function usces_update_sku( $post_id, $skucode, $fieldname, $value ){
 			}
 		}
 		$serialized_values = serialize($sku);
-		$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $serialized_values, $meta_id) );
+		if( !empty($meta_id) ) $res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $serialized_values, $meta_id) );
 		if( !$res ){
 			return false;
 		}else{

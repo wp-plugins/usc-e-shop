@@ -33,7 +33,7 @@ function usces_is_item( $post_id = NULL ) {
 	}else{
 		$post = get_post($post_id);
 	}
-	if ( $post->post_mime_type == 'item' )
+	if ( isset($post->post_mime_type) && $post->post_mime_type == 'item' )
 		return true;
 	else
 		return false;

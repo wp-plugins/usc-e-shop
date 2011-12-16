@@ -349,6 +349,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="acting" value="jpayment_card" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				<input type="hidden" name="uscesid" value="' . $usces->get_uscesid(false) . '">
 				';
 			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
@@ -372,6 +373,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="acting" value="jpayment_conv" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				<input type="hidden" name="uscesid" value="' . $usces->get_uscesid(false) . '">
 				';
 			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
@@ -395,6 +397,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="acting" value="jpayment_bank" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
+				<input type="hidden" name="uscesid" value="' . $usces->get_uscesid(false) . '">
 				';
 			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).' /></div>';
 
