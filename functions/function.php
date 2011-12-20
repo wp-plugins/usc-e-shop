@@ -446,7 +446,7 @@ function usces_send_ordermail($order_id) {
 	$confirm_para = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
 			'to_address' => $entry['customer']['mailaddress1'], 
-			'from_name' => get_bloginfo('name'),
+			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
@@ -505,7 +505,7 @@ function usces_send_inquirymail() {
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $inq_name),
 			'to_address' => $inq_mailaddress, 
-			'from_name' => get_bloginfo('name'),
+			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
@@ -554,7 +554,7 @@ function usces_send_regmembermail($user) {
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $name),
 			'to_address' => $mailaddress1, 
-			'from_name' => get_bloginfo('name'),
+			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
@@ -583,7 +583,7 @@ function usces_lostmail($url) {
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_SESSION["usces_lostmail"]),
 			'to_address' => $_SESSION["usces_lostmail"], 
-			'from_name' => get_bloginfo('name'),
+			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
@@ -1648,7 +1648,7 @@ return $result;
 
 function usces_export_xml() {
 	$options = get_option('usces');
-	echo '<?xml version="1.0" encoding="' . get_bloginfo('charset') . '"?' . ">\n";
+	echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . ">\n";
 ?>
 	<usces><?php echo serialize($options); ?></usces>
 	<usces_management_status><?php echo serialize(get_option('usces_management_status')); ?></usces_management_status>
@@ -2543,7 +2543,7 @@ function usces_trackPageview_ordercompletion($push){
 	}else{
 		$push[] = "'_trackPageview','/wc_ordercompletion'";
 	}
-	$push[] = "'_addTrans', '" . $order_id . "', '" . get_bloginfo('name') . "', '" . $total_price . "', '" . $data['order_tax'] . "', '" . $data['order_shipping_charge'] . "', '" . $data['order_address1'].$data['order_address2'] . "', '" . $data['order_pref'] . "', '" . get_locale() . "'";
+	$push[] = "'_addTrans', '" . $order_id . "', '" . get_option('blogname') . "', '" . $total_price . "', '" . $data['order_tax'] . "', '" . $data['order_shipping_charge'] . "', '" . $data['order_address1'].$data['order_address2'] . "', '" . $data['order_pref'] . "', '" . get_locale() . "'";
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];

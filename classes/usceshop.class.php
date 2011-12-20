@@ -3675,14 +3675,15 @@ class usc_e_shop
 					'country' => '',
 					'pref' => ''
 				 );
-				 
-		foreach ( $_SESSION['usces_member'] as $key => $value ) {
-//20100818ysk start
-			if(is_array($_SESSION['usces_member'][$key])) 
-				$res[$key] = stripslashes_deep($value);
-			else
-//20100818ysk end
-				$res[$key] = stripslashes($value);
+		if(!empty($_SESSION['usces_member'])) {
+			foreach ( $_SESSION['usces_member'] as $key => $value ) {
+	//20100818ysk start
+				if(is_array($_SESSION['usces_member'][$key])) 
+					$res[$key] = stripslashes_deep($value);
+				else
+	//20100818ysk end
+					$res[$key] = stripslashes($value);
+			}
 		}
 		return $res;
 	}
