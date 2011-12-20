@@ -2716,6 +2716,54 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return');
 		//20100818ysk end
 		break;
+			
+	case 'CN':
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre', 'return');
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('name', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[name1]" type="text" class="text short" value="' . esc_attr($values['name1']) . '" /><input name="' . $type . '[name2]" type="text" class="text short" value="' . esc_attr($values['name2']) . '" /></td>
+		</tr>';
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after', 'return');
+		$formtag .= '
+		<tr>
+			<td class="label">' . __('Country', 'usces') . '</td>
+			<td class="col2">' . uesces_get_target_market_form( $type, $values['country'] ) . '</td>
+		</tr>
+		<tr>
+			<td class="label">' . __('State', 'usces') . '</td>
+			<td class="col2">';
+			
+		$formtag .= usces_pref_select( $type, $values );
+			
+		$formtag .= '</td>
+		</tr>';
+		$formtag .= '<tr>
+			<td class="label">' . __('city', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address1]" type="text" class="text long" value="' . esc_attr($values['address1']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Address Line1', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address2]" type="text" class="text long" value="' . esc_attr($values['address2']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Address Line2', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[address3]" type="text" class="text long" value="' . esc_attr($values['address3']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Zip', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[zipcode]" type="text" class="text short" value="' . esc_attr($values['zipcode']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('Phone number', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[tel]" type="text" class="text long" value="' . esc_attr($values['tel']) . '" /></td>
+		</tr>
+		<tr>
+			<td class="label">' . __('FAX number', 'usces') . '</td>
+			<td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td>
+		</tr>';
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return');
+		break;
 		
 	case 'US':
 	default:
@@ -2812,6 +2860,26 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Address','usces') . "    : " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
+		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
+		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
+		//20110118ysk start
+		$formtag .= usces_mail_custom_field_info( 'delivery', 'fax_after', $order_id );
+		//20110118ysk end
+		break;
+		
+	case 'CN':
+		//20110118ysk start
+		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_pre', $order_id );
+		//20110118ysk end
+		$formtag .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
+		//20110118ysk start
+		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id );
+		//20110118ysk end
+		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
+		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
+		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
+		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
 		//20110118ysk start

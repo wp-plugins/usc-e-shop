@@ -189,17 +189,8 @@ jQuery(document).ready(function($){
 		<?php elseif( $key == 'name' ): ?>
 		<td>
 		<?php
-			$options = get_option('usces');
-			$applyform = usces_get_apply_addressform($options['system']['addressform']);
-			switch ($applyform){
-			case 'JP': 
-				esc_html_e($value);
-				break;
-			case 'US':
-			default:
-				$names = explode(' ', $value);
-				esc_html_e($names[1].' '.$names[0]);
-			}
+			$names = explode(' ', $value);
+			usces_localized_name( $names[0], $names[1]);
 		?>
 		</td>
 		<?php elseif( $key == 'point' ): ?>

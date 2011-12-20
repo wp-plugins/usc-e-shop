@@ -1,8 +1,8 @@
 <?php
 require(USCES_PLUGIN_DIR.'/classes/fpdf/mbfpdf.php');
 
-// EUC-JP->SJIS ÊÑ´¹¤ò¼«Æ°Åª¤Ë¹Ô¤Ê¤ï¤»¤ë¾ì¹ç¤Ë mbfpdf.php Æâ¤Î $EUC2SJIS ¤ò
-// true ¤Ë½¤Àµ¤¹¤ë¤«¡¢¤³¤Î¤è¤¦¤Ë¼Â¹Ô»þ¤Ë true ¤ËÀßÄê¤·¤Æ¤âÊÑ´¹¤·¤Æ¤¯¤Þ¤¹¡£
+// EUC-JP->SJIS å¤‰æ›ã‚’è‡ªå‹•çš„ã«è¡Œãªã‚ã›ã‚‹å ´åˆã« mbfpdf.php å†…ã® $EUC2SJIS ã‚’
+// true ã«ä¿®æ­£ã™ã‚‹ã‹ã€ã“ã®ã‚ˆã†ã«å®Ÿè¡Œæ™‚ã« true ã«è¨­å®šã—ã¦ã‚‚å¤‰æ›ã—ã¦ãã¾ã™ã€‚
 $GLOBALS['EUC2SJIS'] = true;
 
 $pdf=new MBFPDF();
@@ -14,14 +14,14 @@ $pdf->AddMBFont(KOZMIN ,'SJIS');
 $pdf->Open();
 $pdf->AddPage();
 $pdf->SetFont(GOTHIC,'U',20);
-$pdf->Write(10,"MS¥´¥·¥Ã¥¯ ÀÝ»á 18 C ¼¾ÅÙ 83 %\n");
+$pdf->Write(10,"MSã‚´ã‚·ãƒƒã‚¯ æ‘‚æ° 18 C æ¹¿åº¦ 83 %\n");
 $pdf->SetFont(PGOTHIC,'U',20);
-$pdf->Write(10,"MSP¥´¥·¥Ã¥¯ ÀÝ»á 18 C ¼¾ÅÙ 83 %\n");
+$pdf->Write(10,"MSPã‚´ã‚·ãƒƒã‚¯ æ‘‚æ° 18 C æ¹¿åº¦ 83 %\n");
 $pdf->SetFont(MINCHO,'U',20);
-$pdf->Write(10,"MSÌÀÄ« ÀÝ»á 18 C ¼¾ÅÙ 83 %\n");
+$pdf->Write(10,"MSæ˜Žæœ æ‘‚æ° 18 C æ¹¿åº¦ 83 %\n");
 $pdf->SetFont(PMINCHO,'U',20);
-$pdf->Write(10,"MSPÌÀÄ« ÀÝ»á 18 C ¼¾ÅÙ 83 %\n");
+$pdf->Write(10,"MSPæ˜Žæœ æ‘‚æ° 18 C æ¹¿åº¦ 83 %\n");
 $pdf->SetFont(KOZMIN,'U',20);
-$pdf->Write(10,"¾®ÄÍÌÀÄ« ÀÝ»á 18 C ¼¾ÅÙ 83 %\n");
+$pdf->Write(10,"å°å¡šæ˜Žæœ æ‘‚æ° 18 C æ¹¿åº¦ 83 %\n");
 $pdf->Output();
 ?>
