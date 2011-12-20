@@ -18,7 +18,6 @@ class usc_e_shop
 	{
 
 //20110331ysk start
-		//global $post, $usces_settings;
 		global $post, $usces_settings, $usces_states;
 //20110331ysk end
 		do_action('usces_construct');
@@ -3152,11 +3151,10 @@ class usc_e_shop
 //20110714ysk start 0000207
 					$member_id = $wpdb->insert_id;
 					//$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
-					//$this->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
-					$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $member_id);//0000365
+					$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $member_id);
 //20100818ysk start
 					//$res = $this->reg_custom_member($wpdb->insert_id);
-					$res = $this->reg_custom_member($member_id);
+				$res = $this->reg_custom_member($member_id);
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
