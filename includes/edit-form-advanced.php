@@ -504,7 +504,7 @@ wp_nonce_field( 'get-comments', 'add_comment_nonce', false );
 <thead>
 	<tr>
     <th scope="col" class="column-author"><?php _e('Author') ?></th>
-    <th scope="col" class="column-comment"><?php echo _c('Comment|noun') ?></th>
+    <th scope="col" class="column-comment"><?php echo _x('Comment','noun') ?></th>
   </tr>
 </thead>
 <tbody id="the-comment-list" class="list:comment">
