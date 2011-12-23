@@ -45,7 +45,7 @@
 <div id="wrap">
 <div id="header">
 	<?php $heading_tag = ( is_home() || is_front_page() ) ? 'h1' : 'div'; ?>
-	<<?php echo $heading_tag; ?> id="site-title"><a href="<?php echo home_url( '/' ); ?>" title="<?php bloginfo( 'name' ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></<?php echo $heading_tag; ?>>
+	<<?php echo $heading_tag; ?> id="site-title"><a href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></<?php echo $heading_tag; ?>>
 	<p class="discprition"><?php bloginfo('description'); ?></p>
 	
 	<?php if(function_exists('wp_nav_menu')): ?>

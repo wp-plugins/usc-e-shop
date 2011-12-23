@@ -1982,7 +1982,7 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 								$c = ', ';
 							}
 						} else {
-							$html .= esc_html($data[$label][$key]);
+							if(!empty($data[$label][$key])) $html .= esc_html($data[$label][$key]);
 						}
 						break;
 					}

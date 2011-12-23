@@ -727,7 +727,6 @@ jQuery(document).ready(function($){
 	
 	orderfunc.make_delivery_time(<?php echo $order_delivery_method; ?>);
 
-<?php if($order_action == 'new'){ ?>
 	$("#get_member").click(function(){ 
 		if( '' == $("input[name='customer[mailaddress]']").val() ){
 			alert('e-mail を入力して下さい。');
@@ -738,7 +737,6 @@ jQuery(document).ready(function($){
 			}
 		} 
 	});
-<?php } ?>
 });
 </script>
 <div class="wrap">
@@ -796,7 +794,7 @@ jQuery(document).ready(function($){
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
         <td class="label">e-mail</td>
-        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr(isset($data['order_email']) ? $data['order_email'] : ''); ?>" /><?php if($order_action == 'new'){ ?><!--<input name="get_member" type="button" id="get_member" value="会員情報取込" />--><?php } ?></td>
+        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr(isset($data['order_email']) ? $data['order_email'] : ''); ?>" /><input name="get_member" type="button" id="get_member" value="会員情報取込" /></td>
     </tr>
 	
 <?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
