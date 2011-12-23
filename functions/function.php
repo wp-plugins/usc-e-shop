@@ -239,31 +239,31 @@ function usces_order_confirm_message($order_id) {
 
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
-			$subject = $mail_data['title']['completionmail'];
+			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['completionmail'], $data, $_POST['mode']);
 			$message = $mail_data['header']['completionmail'] . $msg_body . $mail_data['footer']['completionmail'];
 			break;
 		case 'orderConfirmMail':
-			$subject = $mail_data['title']['ordermail'];
+			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['ordermail'], $data, $_POST['mode']);
 			$message = $mail_data['header']['ordermail'] . $msg_body . $mail_data['footer']['ordermail'];
 			break;
 		case 'changeConfirmMail':
-			$subject = $mail_data['title']['changemail'];
+			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['changemail'], $data, $_POST['mode']);
 			$message = $mail_data['header']['changemail'] . $msg_body . $mail_data['footer']['changemail'];
 			break;
 		case 'receiptConfirmMail':
-			$subject = $mail_data['title']['receiptmail'];
+			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['receiptmail'], $data, $_POST['mode']);
 			$message = $mail_data['header']['receiptmail'] . $msg_body . $mail_data['footer']['receiptmail'];
 			break;
 		case 'mitumoriConfirmMail':
-			$subject = $mail_data['title']['mitumorimail'];
+			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['mitumorimail'], $data, $_POST['mode']);
 			$message = $mail_data['header']['mitumorimail'] . $msg_body . $mail_data['footer']['mitumorimail'];
 			break;
 		case 'cancelConfirmMail':
-			$subject = $mail_data['title']['cancelmail'];
+			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['cancelmail'], $data, $_POST['mode']);
 			$message = $mail_data['header']['cancelmail'] . $msg_body . $mail_data['footer']['cancelmail'];
 			break;
 		case 'otherConfirmMail':
-			$subject = $mail_data['title']['othermail'];
+			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['othermail'], $data, $_POST['mode']);
 			$message = $mail_data['header']['othermail'] . $msg_body . $mail_data['footer']['othermail'];
 			break;
 	}
@@ -439,9 +439,8 @@ function usces_send_ordermail($order_id) {
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_body', NULL, $data);
 
-	$subject = $mail_data['title']['thankyou'];
+	$subject = apply_filters('usces_filter_send_order_mail_subject_thankyou', $mail_data['title']['thankyou'], $data);
 	$message = $mail_data['header']['thankyou'] . $msg_body . $mail_data['footer']['thankyou'];
-//var_dump($msg_body);exit;
 	$confirm_para = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
 			'to_address' => $entry['customer']['mailaddress1'], 
@@ -454,7 +453,7 @@ function usces_send_ordermail($order_id) {
 
 	if ( usces_send_mail( $confirm_para ) ) {
 	
-		$subject = $mail_data['title']['order'];
+		$subject = apply_filters('usces_filter_send_order_mail_subject_order', $mail_data['title']['order'], $data);
 		$message = $mail_data['header']['order'] . $msg_body
 		 . $mail_data['footer']['order']
 		 . "\n----------------------------------------------------\n"

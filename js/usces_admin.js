@@ -39,6 +39,9 @@
 			}else{
 				var essential = '0';
 			}
+			if( 2 == means || 5 == means ){
+				value = '';
+			}
 			
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" + encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
@@ -66,6 +69,9 @@
 			}else{
 				var essential = '0';
 			}
+			if( 2 == means || 5 == means ){
+				value = '';
+			}
 			
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" +encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
@@ -92,6 +98,9 @@
 				var essential = '1';
 			}else{
 				var essential = '0';
+			}
+			if( 2 == means || 5 == means ){
+				value = '';
 			}
 			
 			var s = itemOpt.settings;
@@ -123,6 +132,9 @@
 				var means = strs[0];
 				var essential = strs[1];
 				var value = strs[2];
+				if( 2 == means || 5 == means ){
+					value = '';
+				}
 				$("#newoptvalue").html(value);
 				$("#newoptmeans").val(means);
 				if( essential == '1') {
