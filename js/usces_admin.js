@@ -39,10 +39,15 @@
 			}else{
 				var essential = '0';
 			}
+			
 			var check = true;
 			$("input[name*='\[name\]']").each(function(){ if( name == $(this).val() ){ check = false; }});
 			if( !check ){
 				$("#itemopt_ajax-response").html('<div class="error"><p>同じ名前のオプションが存在します。</p></div>');
+				return false;
+			}else if( '' != value && (2 == means || 5 == means) ){
+				value = '';
+				$("#itemopt_ajax-response").html('<div class="error"><p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p></div>');
 				return false;
 			}
 			
@@ -82,7 +87,6 @@
 			}else{
 				var essential = '0';
 			}
-			
 			if( '' == name || (2 > means && '' == value) ){
 				$mes = '<div class="error">';
 				if( '' == name )
@@ -91,6 +95,10 @@
 					$mes += '<p>セレクト値を入力してください。</p>';
 				$mes += '</div>';
 				$("#itemopt_ajax-response").html($mes);
+				return false;
+			}else if( '' != value && (2 == means || 5 == means) ){
+				value = '';
+				$("#itemopt_ajax-response").html('<div class="error"><p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p></div>');
 				return false;
 			}
 				
@@ -148,6 +156,10 @@
 					$mes += '<p>セレクト値を入力してください。</p>';
 				$mes += '</div>';
 				$("#itemopt_ajax-response").html($mes);
+				return false;
+			}else if( '' != value && (2 == means || 5 == means) ){
+				value = '';
+				$("#itemopt_ajax-response").html('<div class="error"><p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p></div>');
 				return false;
 			}
 
@@ -209,6 +221,9 @@
 				var means = strs[0];
 				var essential = strs[1];
 				var value = strs[2];
+				if( 2 == means || 5 == means ){
+					value = '';
+				}
 				$("#newoptvalue").html(value);
 				$("#newoptmeans").val(means);
 				if( essential == '1') {
