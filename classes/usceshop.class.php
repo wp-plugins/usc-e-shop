@@ -3373,6 +3373,7 @@ class usc_e_shop
 					//usces_send_regmembermail();
 					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
+					$user['ID'] = $member_id;
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
 					$_POST['loginpass'] = trim($_POST['customer']['password1']);
