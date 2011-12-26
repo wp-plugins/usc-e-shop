@@ -240,34 +240,33 @@ function usces_order_confirm_message($order_id) {
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
 			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['completionmail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['completionmail'] . $msg_body . $mail_data['footer']['completionmail'];
+			$message = do_shortcode($mail_data['header']['completionmail']) . $msg_body . do_shortcode($mail_data['footer']['completionmail']);
 			break;
 		case 'orderConfirmMail':
 			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['ordermail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['ordermail'] . $msg_body . $mail_data['footer']['ordermail'];
+			$message = do_shortcode($mail_data['header']['ordermail']) . $msg_body . do_shortcode($mail_data['footer']['ordermail']);
 			break;
 		case 'changeConfirmMail':
 			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['changemail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['changemail'] . $msg_body . $mail_data['footer']['changemail'];
+			$message = do_shortcode($mail_data['header']['changemail']) . $msg_body . do_shortcode($mail_data['footer']['changemail']);
 			break;
 		case 'receiptConfirmMail':
 			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['receiptmail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['receiptmail'] . $msg_body . $mail_data['footer']['receiptmail'];
+			$message = do_shortcode($mail_data['header']['receiptmail']) . $msg_body . do_shortcode($mail_data['footer']['receiptmail']);
 			break;
 		case 'mitumoriConfirmMail':
 			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['mitumorimail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['mitumorimail'] . $msg_body . $mail_data['footer']['mitumorimail'];
+			$message = do_shortcode($mail_data['header']['mitumorimail']) . $msg_body . do_shortcode($mail_data['footer']['mitumorimail']);
 			break;
 		case 'cancelConfirmMail':
 			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['cancelmail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['cancelmail'] . $msg_body . $mail_data['footer']['cancelmail'];
+			$message = do_shortcode($mail_data['header']['cancelmail']) . $msg_body . do_shortcode($mail_data['footer']['cancelmail']);
 			break;
 		case 'otherConfirmMail':
 			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['othermail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['othermail'] . $msg_body . $mail_data['footer']['othermail'];
+			$message = do_shortcode($mail_data['header']['othermail']) . $msg_body . do_shortcode($mail_data['footer']['othermail']);
 			break;
 	}
-		
 	return $message;
 
 }
