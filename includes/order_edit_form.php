@@ -295,7 +295,7 @@ jQuery(function($){
 		orderItem.getmailmessage('completionMail');
 		$("#sendmailaddress").val($("input[name='customer\[mailaddress\]']").val());
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
-		$("#sendmailsubject").val('<?php echo esc_js($this->options['mail_data']['title']['completionmail']); ?>');
+		$("#sendmailsubject").val('<?php echo esc_js(apply_filters('usces_filter_order_confirm_mail_subject', $this->options['mail_data']['title']['completionmail'], $data, 'completionMail')); ?>');
 		$('#mailChecked').val('completionmail');
 		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for Shipping', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
@@ -304,7 +304,7 @@ jQuery(function($){
 		orderItem.getmailmessage('orderConfirmMail');
 		$("#sendmailaddress").val($("input[name='customer\[mailaddress\]']").val());
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
-		$("#sendmailsubject").val('<?php echo esc_js($this->options['mail_data']['title']['ordermail']); ?>');
+		$("#sendmailsubject").val('<?php echo esc_js(apply_filters('usces_filter_order_confirm_mail_subject', $this->options['mail_data']['title']['ordermail'], $data, 'orderConfirmMail')); ?>');
 		$('#mailChecked').val('ordermail');
 		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for confirmation of order', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
@@ -313,7 +313,7 @@ jQuery(function($){
 		orderItem.getmailmessage('changeConfirmMail');
 		$("#sendmailaddress").val($("input[name='customer\[mailaddress\]']").val());
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
-		$("#sendmailsubject").val('<?php echo esc_js($this->options['mail_data']['title']['changemail']); ?>');
+		$("#sendmailsubject").val('<?php echo esc_js(apply_filters('usces_filter_order_confirm_mail_subject', $this->options['mail_data']['title']['changemail'], $data, 'changeConfirmMail')); ?>');
 		$('#mailChecked').val('changemail');
 		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for confiemation of change', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
@@ -322,7 +322,7 @@ jQuery(function($){
 		orderItem.getmailmessage('receiptConfirmMail');
 		$("#sendmailaddress").val($("input[name='customer\[mailaddress\]']").val());
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
-		$("#sendmailsubject").val('<?php echo esc_js($this->options['mail_data']['title']['receiptmail']); ?>');
+		$("#sendmailsubject").val('<?php echo esc_js(apply_filters('usces_filter_order_confirm_mail_subject', $this->options['mail_data']['title']['receiptmail'], $data, 'receiptConfirmMail')); ?>');
 		$('#mailChecked').val('receiptmail');
 		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Mail for confirmation of transter', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
@@ -331,7 +331,7 @@ jQuery(function($){
 		orderItem.getmailmessage('mitumoriConfirmMail');
 		$("#sendmailaddress").val($("input[name='customer\[mailaddress\]']").val());
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
-		$("#sendmailsubject").val('<?php echo esc_js($this->options['mail_data']['title']['mitumorimail']); ?>');
+		$("#sendmailsubject").val('<?php echo esc_js(apply_filters('usces_filter_order_confirm_mail_subject', $this->options['mail_data']['title']['mitumorimail'], $data, 'mitumoriConfirmMail')); ?>');
 		$('#mailChecked').val('mitumorimail');
 		$('#mailSendDialog').dialog('option', 'title', '<?php _e('estimate mail', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
@@ -340,7 +340,7 @@ jQuery(function($){
 		orderItem.getmailmessage('cancelConfirmMail');
 		$("#sendmailaddress").val($("input[name='customer\[mailaddress\]']").val());
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
-		$("#sendmailsubject").val('<?php echo esc_js($this->options['mail_data']['title']['cancelmail']); ?>');
+		$("#sendmailsubject").val('<?php echo esc_js(apply_filters('usces_filter_order_confirm_mail_subject', $this->options['mail_data']['title']['cancelmail'], $data, 'cancelConfirmMail')); ?>');
 		$('#mailChecked').val('cancelmail');
 		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Cancelling mail', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');
@@ -349,7 +349,7 @@ jQuery(function($){
 		orderItem.getmailmessage('otherConfirmMail');
 		$("#sendmailaddress").val($("input[name='customer\[mailaddress\]']").val());
 		$("#sendmailname").val($("input[name='customer\[name1\]']").val()+$("input[name='customer\[name2\]']").val());
-		$("#sendmailsubject").val('<?php echo esc_js($this->options['mail_data']['title']['othermail']); ?>');
+		$("#sendmailsubject").val('<?php echo esc_js(apply_filters('usces_filter_order_confirm_mail_subject', $this->options['mail_data']['title']['othermail'], $data, 'otherConfirmMail')); ?>');
 		$('#mailChecked').val('othermail');
 		$('#mailSendDialog').dialog('option', 'title', '<?php _e('Other mail', 'usces'); ?>');
 		$('#mailSendDialog').dialog('open');

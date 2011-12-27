@@ -240,35 +240,27 @@ function usces_order_confirm_message($order_id) {
 
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
-			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['completionmail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['completionmail'] . $msg_body . $mail_data['footer']['completionmail'];
+			$message = do_shortcode($mail_data['header']['completionmail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['completionmail']);
 			break;
 		case 'orderConfirmMail':
-			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['ordermail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['ordermail'] . $msg_body . $mail_data['footer']['ordermail'];
+			$message = do_shortcode($mail_data['header']['ordermail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['ordermail']);
 			break;
 		case 'changeConfirmMail':
-			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['changemail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['changemail'] . $msg_body . $mail_data['footer']['changemail'];
+			$message = do_shortcode($mail_data['header']['changemail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['changemail']);
 			break;
 		case 'receiptConfirmMail':
-			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['receiptmail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['receiptmail'] . $msg_body . $mail_data['footer']['receiptmail'];
+			$message = do_shortcode($mail_data['header']['receiptmail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['receiptmail']);
 			break;
 		case 'mitumoriConfirmMail':
-			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['mitumorimail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['mitumorimail'] . $msg_body . $mail_data['footer']['mitumorimail'];
+			$message = do_shortcode($mail_data['header']['mitumorimail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['mitumorimail']);
 			break;
 		case 'cancelConfirmMail':
-			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['cancelmail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['cancelmail'] . $msg_body . $mail_data['footer']['cancelmail'];
+			$message = do_shortcode($mail_data['header']['cancelmail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['cancelmail']);
 			break;
 		case 'otherConfirmMail':
-			$subject = apply_filters('usces_filter_order_confirm_mail_subject', $mail_data['title']['othermail'], $data, $_POST['mode']);
-			$message = $mail_data['header']['othermail'] . $msg_body . $mail_data['footer']['othermail'];
+			$message = do_shortcode($mail_data['header']['othermail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['othermail']);
 			break;
 	}
-		
 	return $message;
 
 }
@@ -441,7 +433,7 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= apply_filters('usces_filter_send_order_mail_body', NULL, $data);
 
 	$subject = apply_filters('usces_filter_send_order_mail_subject_thankyou', $mail_data['title']['thankyou'], $data);
-	$message = $mail_data['header']['thankyou'] . $msg_body . $mail_data['footer']['thankyou'];
+	$message = do_shortcode($mail_data['header']['thankyou']) . $msg_body . do_shortcode($mail_data['footer']['thankyou']);
 //var_dump($msg_body);exit;
 	$confirm_para = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
@@ -456,7 +448,7 @@ function usces_send_ordermail($order_id) {
 	if ( usces_send_mail( $confirm_para ) ) {
 	
 		$subject = apply_filters('usces_filter_send_order_mail_subject_order', $mail_data['title']['order'], $data);
-		$message = $mail_data['header']['order'] . $msg_body
+		$message = do_shortcode($mail_data['header']['order']) . $msg_body
 		 . $mail_data['footer']['order']
 		 . "\n----------------------------------------------------\n"
 		 . "REMOTE_ADDR : " . $_SERVER['REMOTE_ADDR']
@@ -509,7 +501,7 @@ function usces_send_inquirymail() {
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
-			'message' => $message
+			'message' => do_shortcode($message),
 			);
 			
 		$res0 = usces_send_mail( $para1 );
@@ -528,7 +520,7 @@ function usces_send_inquirymail() {
 				'from_address' => $inq_mailaddress,
 				'return_path' => $usces->options['error_mail'],
 				'subject' => $subject,
-				'message' => $message
+				'message' => do_shortcode($message),
 				);
 		sleep(1);
 		$res = usces_send_mail( $para2 );
@@ -558,7 +550,7 @@ function usces_send_regmembermail($user) {
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
-			'message' => $message
+			'message' => do_shortcode($message),
 			);
 
 	$res = usces_send_mail( $para1 );
@@ -587,7 +579,7 @@ function usces_lostmail($url) {
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
-			'message' => $message
+			'message' => do_shortcode($message),
 			);
 
 	$res = usces_send_mail( $para1 );
