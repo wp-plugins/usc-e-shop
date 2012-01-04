@@ -1284,7 +1284,10 @@ class usc_e_shop
 		
 		@session_start();
 		
-		if ( !isset($_SESSION['usces_member']) ){
+//20111222ysk start 0000367
+		//if ( !isset($_SESSION['usces_member']) ){
+		if ( !isset($_SESSION['usces_member']) || $options['membersystem_state'] != 'activate' ){
+//20111222ysk end
 			$_SESSION['usces_member'] = array();
 		}
 
@@ -1299,7 +1302,7 @@ class usc_e_shop
 		$cookie = $this->get_cookie();
 		if(is_admin()) return;
 		
-		if(	apply_filters( 'usces_filter_cookie', false) ) return;
+		if( apply_filters( 'usces_filter_cookie', false) ) return;
 
 //usces_log('is_admin : '.print_r(is_admin(),true), 'acting_transaction.log');
 //usces_log('cookie : '.print_r($cookie,true), 'acting_transaction.log');
@@ -2219,6 +2222,7 @@ class usc_e_shop
 	function make_url(){
 	
 		$permalink_structure = get_option('permalink_structure');
+usces_log('use_ssl : '.$this->use_ssl, 'acting_transaction.log');
 		if($this->use_ssl) {
 			if( $permalink_structure ){
 				$this->delim = '&';
@@ -6574,13 +6578,14 @@ class usc_e_shop
 		$temp_path = apply_filters('usces_template_path_single_item', USCES_PLUGIN_DIR . '/templates/single_item.php');
 		include( $temp_path );
 		
-		$content = apply_filters('usces_filter_itemPage', $html, $post->ID);
+		$content = apply_filters('usces_filter_itemPage', $content, $post->ID);
 
 		return $content;
 	}
 
 	function filter_cartContent($content) {
 		global $post;
+		$html = '';
 		
 		switch($this->page){
 			case 'cart':
@@ -6693,6 +6698,7 @@ class usc_e_shop
 		
 	function filter_memberContent($content) {
 		global $post;
+		$html = '';
 		
 		if($this->options['membersystem_state'] == 'activate'){
 		
