@@ -2222,7 +2222,7 @@ class usc_e_shop
 	function make_url(){
 	
 		$permalink_structure = get_option('permalink_structure');
-usces_log('use_ssl : '.$this->use_ssl, 'acting_transaction.log');
+//usces_log('use_ssl : '.$this->use_ssl, 'acting_transaction.log');
 		if($this->use_ssl) {
 			if( $permalink_structure ){
 				$this->delim = '&';
