@@ -442,10 +442,10 @@ function usces_payment_detail($usces_entries){
 			break;
 		
 		case 'acting_zeus_card':
-			$div_name = 'div_' . $_POST['cbrand'];
-			if( isset($_POST['howpay']) && '1' === $_POST['howpay'] ){
+			if( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ){
 				$str = '　一括払い';
 			}else{
+				$div_name = 'div_' . $_POST['cbrand'];
 				switch($_POST[$div_name]){
 					case '01':
 						$str = '　一括払い';
