@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
 "PO-Revision-Date: \n"
-"Last-Translator: usc <nanbu@uscons.co.jp>\n"
+"Last-Translator: Welcart <info@welcart.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2439,7 +2439,7 @@ msgstr "コメント 1件 &#187;"
 msgid "Posts Tagged &#8216;%s&#8217;"
 msgstr "タグ &#8216;%s&#8217; に属する投稿;"
 
-msgid "Archive for %s|Daily archive page"
+msgid "Archive for %s"
 msgstr "%s の記事"
 
 msgid "Settlement Setting"
@@ -3076,119 +3076,177 @@ msgstr "郵便番号"
 msgid "No valid shipping methods."
 msgstr "有効な配送方法が見当たりません。"
 
+#~ msgid "Archive for %s|Daily archive page"
+#~ msgstr "%s の記事"
+
 #~ msgid "Chenge th epassword according to the e-mail."
 #~ msgstr "メールの内容にしたがってパスワードを変更してください。"
+
 #~ msgid "print the invoice"
 #~ msgstr "納品書印刷"
+
 #~ msgid "Invoices"
 #~ msgstr "納品書"
+
 #~ msgid ""
 #~ "I seem to have you cancel it when the body does not have memorizing to "
 #~ "this email."
 #~ msgstr ""
 #~ "このメールに身に覚えが無い場合は破棄していただくようお願い申し上げます。"
+
 #~ msgid "Period(months)"
 #~ msgstr "契約期間（月数）"
+
 #~ msgid "% Comments &#187;"
 #~ msgstr "コメント %件 &#187;"
+
 #~ msgid "〜％ discount at the purchase of more then 〜units."
 #~ msgstr "～個以上で～％引き（単価）"
+
 #~ msgid "Only few stocks left for this item."
 #~ msgstr "在庫僅少"
+
 #~ msgid "Sellout"
 #~ msgstr "売切れ"
+
 #~ msgid "Temporarily out of stock"
 #~ msgstr "入荷待ち"
+
 #~ msgid "(Tax included)"
 #~ msgstr "（税込）"
+
 #~ msgid "Special discount"
 #~ msgstr "特別割引"
+
 #~ msgid "OK-stocks"
 #~ msgstr "在庫有り"
+
 #~ msgid "h"
 #~ msgstr "時"
+
 #~ msgid "new item"
 #~ msgstr "新着商品"
+
 #~ msgid "cart"
 #~ msgstr "カート"
+
 #~ msgid "chose the value"
 #~ msgstr "valueを選択してください。"
+
 #~ msgid "<em>【必須】</em>メールが不達の場合のエラーメールの送信先。"
 #~ msgstr "<em>【必須】</em>メールが不達の場合のエラーメールの送信先。"
+
 #~ msgid "new arrival"
 #~ msgstr "新着商品"
+
 #~ msgid "～yen"
 #~ msgstr "円"
+
 #~ msgid "number of the stock"
 #~ msgstr "在庫"
+
 #~ msgid "uCart back-up"
 #~ msgstr "uCart shop バックアップ"
+
 #~ msgid "Start Start importing"
 #~ msgstr "インポート開始"
+
 #~ msgid "yen"
 #~ msgstr "円"
+
 #~ msgid "uCart shop shipping option"
 #~ msgstr "uCart shop 配送設定"
+
 #~ msgid "edit the setting"
 #~ msgstr "設定を更新"
+
 #~ msgid "set the uCart buisiness days"
 #~ msgstr "uCart shop 営業日設定"
+
 #~ msgid "general setting of ucart shop"
 #~ msgstr "uCart shop 基本設定"
+
 #~ msgid "Home for uCart shop"
 #~ msgstr "uCart shop ホーム"
+
 #~ msgid "item amount"
 #~ msgstr "商品数"
+
 #~ msgid "There are stocks for this item."
 #~ msgstr "在庫有り"
+
 #~ msgid "MySQL"
 #~ msgstr "MySQL"
+
 #~ msgid "PHP"
 #~ msgstr "PHP"
+
 #~ msgid "Total items"
 #~ msgstr "商品合計"
+
 #~ msgid "e-mail address(confirmation)"
 #~ msgstr "メールアドレス（再入力）"
+
 #~ msgid "[]"
 #~ msgstr "【】"
+
 #~ msgid "SKU"
 #~ msgstr "ＳＫＵ"
+
 #~ msgid "Update Confirmed"
 #~ msgstr "更新確定"
+
 #~ msgid "Your current PT"
 #~ msgstr "保有PT"
+
 #~ msgid "Building name"
 #~ msgstr "ビル名"
+
 #~ msgid "points"
 #~ msgstr "獲得ポイント"
+
 #~ msgid "A list of uCart management members."
 #~ msgstr "uCart management 会員リスト"
+
 #~ msgid "Search Items"
 #~ msgstr "検索項目"
+
 #~ msgid "Bank transfer"
 #~ msgstr "銀行振り込み"
+
 #~ msgid "edit the uCart management order data"
 #~ msgstr "uCart management 受注データ編集"
+
 #~ msgid "on sale"
 #~ msgstr "通常セール"
+
 #~ msgid "〜times more. Limited to members."
 #~ msgstr "～倍、会員のみ"
+
 #~ msgid "A list of received order for uCart management"
 #~ msgstr "uCart management 受注リスト"
+
 #~ msgid "mmddyyyy"
 #~ msgstr "Y年m月d日"
+
 #~ msgid "edit information of uCart shop items"
 #~ msgstr "uCart shop 商品情報編集"
+
 #~ msgid "Previous page"
 #~ msgstr "前のページ"
+
 #~ msgid "next page"
 #~ msgstr "次のページ"
+
 #~ msgid "inside of the cart"
 #~ msgstr "カートの中身"
+
 #~ msgid "To ～"
 #~ msgstr "～様"
+
 #~ msgid "** A password change **"
 #~ msgstr "パスワード変更"
+
 #~ msgid ""
 #~ "Than you for registrating as 'blog name' membership. You can chek your "
 #~ "purchase status at section 'membership information'."
@@ -3201,6 +3259,7 @@ msgstr "有効な配送方法が見当たりません。"
 #~ msgstr ""
 #~ "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしく"
 #~ "お願いいたします。"
+
 #~ msgid ""
 #~ "Thank you for chosing 'blogname'. We have received following e-mail. We "
 #~ "will contact you by e-mail soon."
@@ -3208,6 +3267,7 @@ msgstr "有効な配送方法が見当たりません。"
 #~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお問合"
 #~ "せをお受けいたしました。準備ができ次第、メールにてご返答させていただきま"
 #~ "す。しばらくお待ちください。"
+
 #~ msgid ""
 #~ "Thank you for chosing 'blogname'. You have changed your order as "
 #~ "following. We will inform you by e-mail when we are ready to send your "
@@ -3216,6 +3276,7 @@ msgstr "有効な配送方法が見当たりません。"
 #~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りご注文"
 #~ "内容を変更いたしましたのでご確認をお願いいたします。商品の準備ができ次第、"
 #~ "メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
+
 #~ msgid ""
 #~ "Thank you for chosing 'blogname'. Your transfer have been made "
 #~ "successfully. We will inform you by e-mail when we are ready to send you "
@@ -3224,6 +3285,7 @@ msgstr "有効な配送方法が見当たりません。"
 #~ "この度はblognameをご利用下さいまして誠に有難うございます。ご入金の確認がで"
 #~ "きましたのでご連絡いたします。商品の準備ができ次第、メールにて発送のご案内"
 #~ "をさせていただきます。よろしくお願いいたします。"
+
 #~ msgid ""
 #~ "Thank you for chosing 'blogname'. We will send you following estimate for "
 #~ "your items. This estimate is valid for one week. "
@@ -3231,50 +3293,70 @@ msgstr "有効な配送方法が見当たりません。"
 #~ "この度はblognameをご利用下さいまして誠に有難うございます。下記の通りお見積"
 #~ "りいたしましたのでご確認をお願いいたします。お見積りの有効期限は一週間と"
 #~ "なっております。よろしくお願いいたします。"
+
 #~ msgid "Thank you for chosing 'blogname'."
 #~ msgstr "この度はblognameをご利用下さいまして誠に有難うございます。"
+
 #~ msgid "TEL"
 #~ msgstr "TEL"
+
 #~ msgid "FAX"
 #~ msgstr "FAX"
+
 #~ msgid "Sales tax"
 #~ msgstr "消費税"
+
 #~ msgid "about three weeks later"
 #~ msgstr "約3週間後"
+
 #~ msgid "** estimate **"
 #~ msgstr "お見積り書"
+
 #~ msgid "～pt"
 #~ msgstr "～pt"
+
 #~ msgid "Yen"
 #~ msgstr "円"
+
 #~ msgid "～Point"
 #~ msgstr "～ポイント"
+
 #~ msgid "～%"
 #~ msgstr "～%"
+
 #~ msgid "adds new items"
 #~ msgstr "新規商品追加"
+
 #~ msgid "Stock status"
 #~ msgstr "在庫ステータス"
 
 #, fuzzy
 #~ msgid "e-mail set up"
 #~ msgstr "メール設定"
+
 #~ msgid "【estimate】"
 #~ msgstr "【お見積り】"
+
 #~ msgid "Data by"
 #~ msgstr "～による"
+
 #~ msgid "is not yet registered."
 #~ msgstr "～はまだ登録されていません。"
+
 #~ msgid "par"
 #~ msgstr "あたり"
+
 #~ msgid "A buyer"
 #~ msgstr "ご購入者"
+
 #~ msgid "An order number"
 #~ msgstr "注文番号"
+
 #~ msgid "An order email"
 #~ msgstr "受注明細"
+
 #~ msgid "I ask."
 #~ msgstr "お願いいたします。"
+
 #~ msgid "ken"
 #~ msgstr "件"
-

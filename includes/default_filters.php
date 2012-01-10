@@ -1,12 +1,19 @@
 <?php
 add_action( 'init', array(&$usces, 'main'), 10);
 add_action( 'admin_init', 'usces_redirect', 10);
+add_action( 'admin_init', 'usces_typenow');
 add_action( 'admin_menu', array(&$usces, 'add_pages'));
 add_action( 'admin_head', array(&$usces, 'admin_head'));
 add_action( 'wp_head', array(&$usces, 'shop_head'));
 add_action( 'wp_footer', array(&$usces, 'shop_foot'));
 add_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 add_action( 'wp_footer', 'usces_action_footer_comment');
+add_action( 'admin_footer-welcart-shop_page_usces_itemnew', 'admin_prodauct_footer');
+add_action( 'admin_footer-welcart-shop_page_usces_itemedit', 'admin_prodauct_footer');
+add_action( 'admin_footer-welcart-shop_page_usces_initial', 'admin_prodauct_footer');
+add_action( 'admin_footer-welcart-shop_page_usces_cart', 'admin_prodauct_footer');
+add_action( 'admin_footer-post.php', 'admin_post_footer');
+add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 //add_action('wp_dashboard_setup', 'usces_dashboard_setup' );	
 //add_action( 'login_head', 'usces_admin_login_head' );
 //add_action('restrict_manage_posts', array(&$usces, 'postfilter'));

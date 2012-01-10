@@ -22,7 +22,7 @@ get_header();
 <h2>ERROR</h2>
 <div class="post">
 <p><?php _e('Your order has not been completed', 'usces'); ?></p>
-<p>(error <?php echo urldecode($_REQUEST['acting_return']); ?>)</p>
+<p>(error <?php esc_html_e(urldecode($_REQUEST['acting_return'])); ?>)</p>
 
 <?php uesces_get_error_settlement(); ?>
 

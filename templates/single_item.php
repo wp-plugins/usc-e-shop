@@ -17,7 +17,7 @@ if(usces_sku_num() === 1) { //1SKU
 	usces_have_skus();
 	
 	$html .= '<h3>' . esc_html(usces_the_itemName( 'return' )) . '&nbsp; (' . esc_html(usces_the_itemCode( 'return' )) . ') </h3>'."\n";
-	$html .= '<div class="exp">'."\n";
+	$html .= '<div class="exp clearfix">'."\n";
 	$html .= '<div class="field">'."\n";
 	if( usces_the_itemCprice('return') > 0 ){
 		$usces_listprice = __('List price', 'usces') . usces_guid_tax('return');
@@ -62,7 +62,7 @@ if(usces_sku_num() === 1) { //1SKU
 } elseif(usces_sku_num() > 1) { //some SKU
 	usces_have_skus();
 	$html .= '<h3>' . usces_the_itemName( 'return' ) . '&nbsp; (' . usces_the_itemCode( 'return' ) . ') </h3>'."\n";
-	$html .= '<div class="exp">'."\n";
+	$html .= '<div class="exp clearfix">'."\n";
 	$html .= $content."\n";
 	$item_custom = usces_get_item_custom( $post->ID, 'list', 'return' );
 	if($item_custom){

@@ -239,35 +239,27 @@ function usces_order_confirm_message($order_id) {
 
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
-			$subject = $mail_data['title']['completionmail'];
-			$message = $mail_data['header']['completionmail'] . $msg_body . $mail_data['footer']['completionmail'];
+			$message = do_shortcode($mail_data['header']['completionmail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['completionmail']);
 			break;
 		case 'orderConfirmMail':
-			$subject = $mail_data['title']['ordermail'];
-			$message = $mail_data['header']['ordermail'] . $msg_body . $mail_data['footer']['ordermail'];
+			$message = do_shortcode($mail_data['header']['ordermail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['ordermail']);
 			break;
 		case 'changeConfirmMail':
-			$subject = $mail_data['title']['changemail'];
-			$message = $mail_data['header']['changemail'] . $msg_body . $mail_data['footer']['changemail'];
+			$message = do_shortcode($mail_data['header']['changemail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['changemail']);
 			break;
 		case 'receiptConfirmMail':
-			$subject = $mail_data['title']['receiptmail'];
-			$message = $mail_data['header']['receiptmail'] . $msg_body . $mail_data['footer']['receiptmail'];
+			$message = do_shortcode($mail_data['header']['receiptmail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['receiptmail']);
 			break;
 		case 'mitumoriConfirmMail':
-			$subject = $mail_data['title']['mitumorimail'];
-			$message = $mail_data['header']['mitumorimail'] . $msg_body . $mail_data['footer']['mitumorimail'];
+			$message = do_shortcode($mail_data['header']['mitumorimail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['mitumorimail']);
 			break;
 		case 'cancelConfirmMail':
-			$subject = $mail_data['title']['cancelmail'];
-			$message = $mail_data['header']['cancelmail'] . $msg_body . $mail_data['footer']['cancelmail'];
+			$message = do_shortcode($mail_data['header']['cancelmail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['cancelmail']);
 			break;
 		case 'otherConfirmMail':
-			$subject = $mail_data['title']['othermail'];
-			$message = $mail_data['header']['othermail'] . $msg_body . $mail_data['footer']['othermail'];
+			$message = do_shortcode($mail_data['header']['othermail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['othermail']);
 			break;
 	}
-		
 	return $message;
 
 }
@@ -439,9 +431,8 @@ function usces_send_ordermail($order_id) {
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_body', NULL, $data);
 
-	$subject = $mail_data['title']['thankyou'];
-	$message = $mail_data['header']['thankyou'] . $msg_body . $mail_data['footer']['thankyou'];
-//var_dump($msg_body);exit;
+	$subject = apply_filters('usces_filter_send_order_mail_subject_thankyou', $mail_data['title']['thankyou'], $data);
+	$message = do_shortcode($mail_data['header']['thankyou']) . $msg_body . do_shortcode($mail_data['footer']['thankyou']);
 	$confirm_para = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
 			'to_address' => $entry['customer']['mailaddress1'], 
@@ -454,8 +445,8 @@ function usces_send_ordermail($order_id) {
 
 	if ( usces_send_mail( $confirm_para ) ) {
 	
-		$subject = $mail_data['title']['order'];
-		$message = $mail_data['header']['order'] . $msg_body
+		$subject = apply_filters('usces_filter_send_order_mail_subject_order', $mail_data['title']['order'], $data);
+		$message = do_shortcode($mail_data['header']['order']) . $msg_body
 		 . $mail_data['footer']['order']
 		 . "\n----------------------------------------------------\n"
 		 . "REMOTE_ADDR : " . $_SERVER['REMOTE_ADDR']
@@ -508,7 +499,7 @@ function usces_send_inquirymail() {
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
-			'message' => $message
+			'message' => do_shortcode($message),
 			);
 			
 		$res0 = usces_send_mail( $para1 );
@@ -527,7 +518,7 @@ function usces_send_inquirymail() {
 				'from_address' => $inq_mailaddress,
 				'return_path' => $usces->options['error_mail'],
 				'subject' => $subject,
-				'message' => $message
+				'message' => do_shortcode($message),
 				);
 		sleep(1);
 		$res = usces_send_mail( $para2 );
@@ -557,7 +548,7 @@ function usces_send_regmembermail($user) {
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
-			'message' => $message
+			'message' => do_shortcode($message),
 			);
 
 	$res = usces_send_mail( $para1 );
@@ -586,7 +577,7 @@ function usces_lostmail($url) {
 			'from_address' => $usces->options['sender_mail'],
 			'return_path' => $usces->options['error_mail'],
 			'subject' => $subject,
-			'message' => $message
+			'message' => do_shortcode($message),
 			);
 
 	$res = usces_send_mail( $para1 );
@@ -1433,7 +1424,6 @@ function usces_update_orderdata() {
 	$receipt = isset($entry['order']['receipt']) ? $entry['order']['receipt'] : '';
 	$admin = isset($entry['order']['admin']) ? $entry['order']['admin'] : '';
 	$status = $usces->make_status( $taio, $receipt, $admin );
-
 	if( $taio == 'completion' || $taio == 'continuation' ){
 		if( 'update' == $_POST['up_modified'] ){
 			$order_modified =  substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
@@ -2898,6 +2888,54 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return');
 		//20100818ysk end
 		break;
+
+	case 'CN': 
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_pre', 'return'); 
+		$formtag .= ' 
+		<tr> 
+			  <td class="label">' . __('name', 'usces') . '</td> 
+			  <td class="col2"><input name="' . $type . '[name1]" type="text" class="text short" value="' . esc_attr($values['name1']) . '" /><input name="' . $type . '[name2]" type="text" class="text short" value="' . esc_attr($values['name2']) . '" /></td> 
+		</tr>'; 
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'name_after', 'return'); 
+		$formtag .= ' 
+		<tr> 
+			  <td class="label">' . __('Country', 'usces') . '</td> 
+			  <td class="col2">' . uesces_get_target_market_form( $type, $values['country'] ) . '</td> 
+		</tr> 
+		<tr> 
+			  <td class="label">' . __('State', 'usces') . '</td> 
+			  <td class="col2">'; 
+			   
+		$formtag .= usces_pref_select( $type, $values ); 
+			   
+		$formtag .= '</td> 
+		</tr>'; 
+		$formtag .= '<tr> 
+			  <td class="label">' . __('city', 'usces') . '</td> 
+			  <td class="col2"><input name="' . $type . '[address1]" type="text" class="text long" value="' . esc_attr($values['address1']) . '" /></td> 
+		</tr> 
+		<tr> 
+			  <td class="label">' . __('Address Line1', 'usces') . '</td> 
+			  <td class="col2"><input name="' . $type . '[address2]" type="text" class="text long" value="' . esc_attr($values['address2']) . '" /></td> 
+		</tr> 
+		<tr> 
+			  <td class="label">' . __('Address Line2', 'usces') . '</td> 
+			  <td class="col2"><input name="' . $type . '[address3]" type="text" class="text long" value="' . esc_attr($values['address3']) . '" /></td> 
+		</tr> 
+		<tr> 
+			  <td class="label">' . __('Zip', 'usces') . '</td> 
+			  <td class="col2"><input name="' . $type . '[zipcode]" type="text" class="text short" value="' . esc_attr($values['zipcode']) . '" /></td> 
+		</tr> 
+		<tr> 
+			  <td class="label">' . __('Phone number', 'usces') . '</td> 
+			  <td class="col2"><input name="' . $type . '[tel]" type="text" class="text long" value="' . esc_attr($values['tel']) . '" /></td> 
+		</tr> 
+		<tr> 
+			  <td class="label">' . __('FAX number', 'usces') . '</td> 
+			  <td class="col2"><input name="' . $type . '[fax]" type="text" class="text long" value="' . esc_attr($values['fax']) . '" /></td> 
+		</tr>'; 
+		$formtag .= usces_admin_custom_field_input($customdata, $type, 'fax_after', 'return'); 
+		break;
 		
 	case 'US':
 	default:
@@ -2994,6 +3032,27 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Address','usces') . "    : " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
+		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
+		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n"; 
+		//20110118ysk start 
+		$formtag .= usces_mail_custom_field_info( 'delivery', 'fax_after', $order_id ); 
+		//20110118ysk end 
+		break; 
+		
+	case 'CN': 
+		//20110118ysk start 
+		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_pre', $order_id ); 
+		//20110118ysk end 
+		$formtag .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n"; 
+		//20110118ysk start 
+		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id ); 
+		//20110118ysk end 
+		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n"; 
+		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n"; 
+		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n"; 
+		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n"; 
+		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
+
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
 		//20110118ysk start

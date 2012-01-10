@@ -39,8 +39,11 @@
 			}else{
 				var essential = '0';
 			}
-			
-			var s = itemOpt.settings;
+			if( 2 == means || 5 == means ){ 
+				value = ''; 
+			}
+
+ 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" + encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
 			s.success = function(data, dataType){
 					$("table#optlist-table").removeAttr("style");
@@ -66,7 +69,10 @@
 			}else{
 				var essential = '0';
 			}
-			
+			if( 2 == means || 5 == means ){ 
+				value = ''; 
+			}
+
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&newoptname=" + encodeURIComponent(name) + "&newoptvalue=" +encodeURIComponent(value) + "&newoptmeans=" + encodeURIComponent(means) + "&newoptessential=" + encodeURIComponent(essential);
 			s.success = function(data, dataType){
@@ -93,7 +99,10 @@
 			}else{
 				var essential = '0';
 			}
-			
+			if( 2 == means || 5 == means ){ 
+				value = ''; 
+			}
+
 			var s = itemOpt.settings;
 			s.data = "action=item_option_ajax&ID=" + id + "&update=1&optvalue=" + value + "&optmeans=" + means + "&optessential=" + essential + "&optmetaid=" + meta_id;
 			$.ajax( s );
@@ -123,6 +132,9 @@
 				var means = strs[0];
 				var essential = strs[1];
 				var value = strs[2];
+				if( 2 == means || 5 == means ){ 
+					value = ''; 
+				}
 				$("#newoptvalue").html(value);
 				$("#newoptmeans").val(means);
 				if( essential == '1') {

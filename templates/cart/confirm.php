@@ -1,5 +1,6 @@
 <?php
-global $usces_entries, $usces_carts;
+global $usces_entries, $usces_carts, $usces_members;
+usces_get_members();
 usces_get_entries();
 usces_get_carts();
 $html = '<div id="info-confirm">
@@ -248,7 +249,7 @@ $html .= '<tr>
 //20100818ysk end
 $html .= '</table>';
 
-require_once( USCES_PLUGIN_DIR . "/includes/purchase_button.php");
+require( USCES_PLUGIN_DIR . "/includes/purchase_button.php");
 
 
 $html .= '<div class="footer_explanation">';

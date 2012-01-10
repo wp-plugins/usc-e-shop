@@ -18,7 +18,6 @@ class usc_e_shop
 	{
 
 //20110331ysk start
-		//global $post, $usces_settings;
 		global $post, $usces_settings, $usces_states;
 //20110331ysk end
 		do_action('usces_construct');
@@ -389,25 +388,25 @@ class usc_e_shop
 	function add_pages() {
 
 	
-		add_object_page('Welcart Shop', 'Welcart Shop', 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 6, USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 6, 'usces_itemedit', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 6, 'usces_itemnew', array($this, 'item_master_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 6, 'usces_initial', array($this, 'admin_setup_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 6, 'usces_schedule', array($this, 'admin_schedule_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 6, 'usces_delivery', array($this, 'admin_delivery_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 6, 'usces_mail', array($this, 'admin_mail_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 6, 'usces_cart', array($this, 'admin_cart_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 6, 'usces_member', array($this, 'admin_member_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 6, 'usces_system', array($this, 'admin_system_page'));
-		add_submenu_page(USCES_PLUGIN_BASENAME, __('Settlement Setting','usces'), __('Settlement Setting','usces'), 10, 'usces_settlement', array($this, 'admin_settlement_page'));
-		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 6, 'usces_backup', array($this, 'admin_backup_page'));
+		add_object_page('Welcart Shop', 'Welcart Shop', 'level_6', USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 'level_6', USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Master Items','usces'), __('Master Items','usces'), 'level_6', 'usces_itemedit', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Add New Item','usces'), __('Add New Item','usces'), 'level_6', 'usces_itemnew', array($this, 'item_master_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('General Setting','usces'), __('General Setting','usces'), 'level_6', 'usces_initial', array($this, 'admin_setup_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Business Days Setting','usces'), __('Business Days Setting','usces'), 'level_6', 'usces_schedule', array($this, 'admin_schedule_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Shipping Setting','usces'), __('Shipping Setting','usces'), 'level_6', 'usces_delivery', array($this, 'admin_delivery_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('E-mail Setting','usces'), __('E-mail Setting','usces'), 'level_6', 'usces_mail', array($this, 'admin_mail_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Cart Page Setting','usces'), __('Cart Page Setting','usces'), 'level_6', 'usces_cart', array($this, 'admin_cart_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Member Page Setting','usces'), __('Member Page Setting','usces'), 'level_6', 'usces_member', array($this, 'admin_member_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('System Setting','usces'), __('System Setting','usces'), 'level_6', 'usces_system', array($this, 'admin_system_page'));
+		add_submenu_page(USCES_PLUGIN_BASENAME, __('Settlement Setting','usces'), __('Settlement Setting','usces'), 'level_10', 'usces_settlement', array($this, 'admin_settlement_page'));
+		//add_submenu_page(USCES_PLUGIN_BASENAME, __('Backup','usces'), __('Backup','usces'), 'level_6', 'usces_backup', array($this, 'admin_backup_page'));
 		do_action('usces_action_shop_admin_menue');
 		
-		add_object_page('Welcart Management', 'Welcart Management', 6, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 6, 'usces_orderlist', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 6, 'usces_ordernew', array($this, 'order_list_page'));
-		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 6, 'usces_memberlist', array($this, 'member_list_page'));
+		add_object_page('Welcart Management', 'Welcart Management', 'level_6', 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 'level_6', 'usces_orderlist', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 'level_6', 'usces_ordernew', array($this, 'order_list_page'));
+		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 'level_6', 'usces_memberlist', array($this, 'member_list_page'));
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -2651,6 +2650,7 @@ class usc_e_shop
 		$res = $this->member_login();
 		if( 'member' == $res ){
 			$this->page = 'member';
+			do_action('usces_action_member_logined');
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_member');
 		}elseif( 'login' == $res ){
 			$this->page = 'login';
@@ -3151,15 +3151,16 @@ class usc_e_shop
 //20110714ysk start 0000207
 					$member_id = $wpdb->insert_id;
 					//$this->set_member_meta_value('customer_country', $_POST['member']['country'], $wpdb->insert_id);
-					$this->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
+					$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $member_id);
 //20100818ysk start
 					//$res = $this->reg_custom_member($wpdb->insert_id);
-					$res = $this->reg_custom_member($member_id);
+				$res = $this->reg_custom_member($member_id);
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
 					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
+					$user['ID'] = $member_id;
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
 					$_POST['loginpass'] = trim($_POST['customer']['password1']);
@@ -3839,30 +3840,36 @@ class usc_e_shop
 	function point_check( $entries ) {
 		$member = $this->get_member();
 		$this->set_cart_fees( $member, &$entries );
-//var_dump($entries);
+		$usedpoint = abs((int)trim($_POST['offer']["usedpoint"]));
 		$mes = '';
-		if ( trim($_POST['offer']["usedpoint"]) == "" || !(int)$_POST['offer']["usedpoint"] || (int)$_POST['offer']["usedpoint"] < 0 ) {
+		if ( trim($_POST['offer']["usedpoint"]) == "" || !$usedpoint ) {
 			$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 		} else {
-			if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
+			if ( $usedpoint > $member['point'] ){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".$member['point']."pt<br />";
 				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif($this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
+			}elseif($this->options['point_coverage'] && $usedpoint > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])){ 
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])."pt<br />";
 				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
 						);
 				$this->cart->set_order_entry( $array );
-			}elseif(!$this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
+			}elseif(!$this->options['point_coverage'] && $usedpoint > ($entries['order']['total_items_price'] + $entries['order']['discount'])){
 				$mes .= __('You have exceeded the maximum available.', 'usces') . "max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
 				$_POST['offer']["usedpoint"] = 0;
 				$array = array(
 						'usedpoint' => 0
+						);
+				$this->cart->set_order_entry( $array ); 
+			}else{
+				$_POST['offer']["usedpoint"] = $usedpoint; 
+				$array = array(
+						'usedpoint' => $usedpoint
 						);
 				$this->cart->set_order_entry( $array );
 			}
@@ -5323,7 +5330,14 @@ class usc_e_shop
 		$total = $this->get_total_price( $cart );
 		if ( $display_mode == 'Promotionsale' ) {
 			if ( $this->options['campaign_privilege'] == 'discount' ) {
-				$point = 0;
+				foreach ( $cart as $rows ) {
+					$cats = $this->get_post_term_ids($rows['post_id'], 'category');
+					if ( !in_array($this->options['campaign_category'], $cats) ){
+						$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
+						$price = $rows['price'] * $rows['quantity'];
+						$point += $price * $rate[0] / 100;
+					}
+				}
 			} elseif ( $this->options['campaign_privilege'] == 'point' ) {
 				foreach ( $cart as $rows ) {
 					$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
