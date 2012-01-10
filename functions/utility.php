@@ -202,7 +202,8 @@ function usces_upgrade_11(){
 						$nov = '';
 						foreach((array)$v as $vs){
 							if(trim( $vs ) != '') 
-								$nov .= str_replace('\\', '&yen;', trim( $vs )) . "\n";
+								//$nov .= str_replace('\\', '&yen;', trim( $vs )) . "\n";
+								$nov .= $vs . "\n";
 						}
 						$newvalue['value'] =  trim($nov);
 					}else{
@@ -232,7 +233,7 @@ function usces_upgrade_11(){
 	
 	/* PAYMENT METHOD DATA */
 	$payment = get_option('usces_payment_method');
-usces_log('payment : ' . print_r($payment,true), 'database_error.log');
+//usces_log('payment : ' . print_r($payment,true), 'database_error.log');
 	if( empty($payment) ) {
 	
 		$options = get_option('usces');
