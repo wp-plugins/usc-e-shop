@@ -3119,7 +3119,7 @@ function usces_total_price( $out = ''){
 }
 
 function usces_completion_settlement( $out ='' ){
-	global $usces;
+	global $usces, $usces_entries;
 	$html = '';
 	require( USCES_PLUGIN_DIR . "/includes/completion_settlement.php");
 	

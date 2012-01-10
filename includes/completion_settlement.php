@@ -16,7 +16,7 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '<tr><th>'.__('お支払先', 'usces').'</th><td>' . esc_html(usces_get_conv_name($_REQUEST["X-PAY_CSV"])) . "</td></tr>\n";
 	$html .= usces_get_remise_conv_return($_REQUEST["X-PAY_CSV"]);
 	$html .= '</table>'."\n";
-	$html .= '<p>「お支払いのご案内」は、' . esc_html($entry['customer']['mailaddress1']) . '　宛にメールさせて頂いております。</p>'."\n";
+	$html .= '<p>「お支払いのご案内」は、' . esc_html($usces_entries['customer']['mailaddress1']) . '　宛にメールさせて頂いております。</p>'."\n";
 	$html .= "</div>\n";
 		
 }elseif( isset($_REQUEST['acting']) && 'zeus_conv' == $_REQUEST['acting'] ){ //remise_conv
@@ -46,7 +46,7 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '<tr><th>'.__('お支払期限', 'usces').'</th><td>' . esc_html(substr($usces->payment_results['pay_limit'], 0, 4).'年' . substr($usces->payment_results['pay_limit'], 4, 2).'月' . substr($usces->payment_results['pay_limit'], 6, 2).'日') . "(期限を過ぎますとお支払ができません)</td></tr>\n";
 	$html .= '<!-- <tr><th>'.__('エラーコード', 'usces').'</th><td>' . esc_html($usces->payment_results['error_code']) . "</td></tr> -->\n";
 	$html .= '</table>'."\n";
-	$html .= '<p>「お支払いのご案内」は、' . esc_html($entry['customer']['mailaddress1']) . '　宛にメールさせて頂いております。</p>'."\n";
+	$html .= '<p>「お支払いのご案内」は、' . esc_html($usces_entries['customer']['mailaddress1']) . '　宛にメールさせて頂いております。</p>'."\n";
 	$html .= "</div>\n";
 		
 }elseif( isset($usces->payment_results['mc_gross']) ){ //PayPal
@@ -79,7 +79,7 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '<tr><th>'.__('コンビニ受付番号情報URL', 'usces').'</th><td><a href="'.esc_html($_GET['cu']).'" target="_blank">'.esc_html($_GET['cu'])."</a></td></tr>\n";
 	}
 	$html .= '</table>'."\n";
-	$html .= '<p>「お支払いのご案内」は、'.esc_html($entry['customer']['mailaddress1']).'　宛にメールさせて頂いております。</p>'."\n";
+	$html .= '<p>「お支払いのご案内」は、'.esc_html($usces_entries['customer']['mailaddress1']).'　宛にメールさせて頂いております。</p>'."\n";
 	$html .= "</div>\n";
 //20101018ysk end
 }
