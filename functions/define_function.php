@@ -90,7 +90,7 @@ function usces_item_uploadcsv(){
 	
 	//$wpdb->show_errors();
 	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
-	set_time_limit(1800);
+	//set_time_limit(1800);
 
 	define('USCES_COL_POST_ID', 0);	//new
 	define('USCES_COL_POST_AUTHOR', 1);	//new
@@ -267,29 +267,29 @@ function usces_item_uploadcsv(){
 			continue;
 		}
 
-		$post_id = ( '' != $datas[USCES_COL_POST_ID] ) ? (int)$datas[USCES_COL_POST_ID] : NULL;
-		if( $post_id ){
-			$db_res = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID = %d", $post_id) );
-			if( !$db_res ){
-				$err_num++;
-				$mes = "No." . ($rows_num+1) . "\t".__("Post-ID {$post_id} does not exist in the database.", 'usces');
-				$logtemp .= $mes.$yn;
-				$log .= $logtemp;
-				echo $mes.$br.$yn;
-				continue;
+		if( $pre_code == $datas[USCES_COL_ITEM_CODE] && '' == $datas[USCES_COL_POST_ID] ){
+			$mode = 'add';
+
+		}else{
+			$post_id = ( '' != $datas[USCES_COL_POST_ID] ) ? (int)$datas[USCES_COL_POST_ID] : NULL;
+			if( $post_id ){
+				$db_res = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID = %d", $post_id) );
+				if( !$db_res ){
+					$err_num++;
+					$mes = "No." . ($rows_num+1) . "\t".__("Post-ID {$post_id} does not exist in the database.", 'usces');
+					$logtemp .= $mes.$yn;
+					$log .= $logtemp;
+					echo $mes.$br.$yn;
+					continue;
+				}
+			}
+			if( $post_id ){
+				$mode = 'upd';
+			}else{
+				$mode = 'add';
 			}
 		}
-		if( $post_id ){
-			$mode = 'upd';
-		}else{
-			$mode = 'add';
-		}
 
-
-		
-		
-
-		
 		$lineready = microtime(true);
 		$linereadytime += $lineready-$linestart;
 		/*////////////////////////////////////////*/
@@ -308,15 +308,15 @@ function usces_item_uploadcsv(){
 						$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
 												WHERE meta_key = %s AND meta_value = %s", 
 												'_itemCode', $data);
-						$db_res1 = $wpdb->get_results( $query );
+						$db_res1 = $wpdb->get_results( $query, ARRAY_A );
 						if( 'upd' == $mode ){
 							if( 1 < count($db_res1) ){
 								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has been duplicated.', 'usces');
 								$logtemp .= $mes.$yn;
 								$mestemp .= $mes.$br.$yn;
 								$mes = '';
-								foreach($db_res as $res_val){
-									$mes .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
+								foreach($db_res1 as $res_val){
+									$mes .= "meta_id=" . $res_val['meta_id'] . ", post_id=" . $res_val['post_id'] . "<br />";
 								}
 								$logtemp .= $mes.$yn;
 								$mestemp .= $mes.$br.$yn;
@@ -324,29 +324,31 @@ function usces_item_uploadcsv(){
 							$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
 													WHERE post_id <> %d AND meta_key = %s AND meta_value = %s", 
 													$post_id, '_itemCode', $data);
-							$db_res2 = $wpdb->get_results( $query );
+							$db_res2 = $wpdb->get_results( $query, ARRAY_A );
 							if( 0 < count($db_res2) ){
 								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces');
 								$logtemp .= $mes.$yn;
 								$mestemp .= $mes.$br.$yn;
 								$mes = '';
-								foreach($db_res as $res_val){
-									$mes .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
+								foreach($db_res2 as $res_val){
+									$mes .= "meta_id=" . $res_val['meta_id'] . ", post_id=" . $res_val['post_id'] . "<br />";
 								}
 								$logtemp .= $mes.$yn;
 								$mestemp .= $mes.$br.$yn;
 							}
 						}else if( 'add' == $mode ){
-							if( 0 < count($db_res1) ){
-								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces');
-								$logtemp .= $mes.$yn;
-								$mestemp .= $mes.$br.$yn;
-								$mes = '';
-								foreach($db_res as $res_val){
-									$mes .= "meta_id=" . $res_val['meta_id'] . "&post_id=" . $res_val['post_id'] . ", ";
+							if( $data != $pre_code ) {
+								if( 0 < count($db_res1) ){
+									$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces');
+									$logtemp .= $mes.$yn;
+									$mestemp .= $mes.$br.$yn;
+									$mes = '';
+									foreach($db_res1 as $res_val){
+										$mes .= "meta_id=" . $res_val['meta_id'] . ", post_id=" . $res_val['post_id'] . "<br />";
+									}
+									$logtemp .= $mes.$yn;
+									$mestemp .= $mes.$br.$yn;
 								}
-								$logtemp .= $mes.$yn;
-								$mestemp .= $mes.$br.$yn;
 							}
 						}
 					}
