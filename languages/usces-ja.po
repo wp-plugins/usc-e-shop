@@ -3163,6 +3163,30 @@ msgstr "お客様が利用できるポイントの適用範囲を選択します
 msgid "No valid shipping methods."
 msgstr "有効な配送方法が見当たりません。"
 
+msgid "The same product cord is registered."
+msgstr "商品コードが重複して登録されています。"
+
+msgid "The file was not stored."
+msgstr "ファイルを保存できませんでした。"
+
+msgid "CSV file does not exist."
+msgstr "CSVファイルが存在しません。"
+
+msgid "This file is not in the CSV file."
+msgstr "このファイルはCSVファイルでは有りません。"
+
+msgid "Processing..."
+msgstr "処理中..."
+
+msgid "Remaining time:"
+msgstr "残り時間："
+
+msgid "sec"
+msgstr "秒"
+
+msgid "Finished"
+msgstr "終了しました。"
+
 #~ msgid "print the invoice"
 #~ msgstr "納品書印刷"
 

@@ -21,7 +21,7 @@ function usces_item_uploadcsv(){
 	$db_check = $wpdb->get_results( $query, ARRAY_A );
 	if( $db_check ) {
 		$res['status'] = 'error';
-		$res['message'] .= __('商品コードが重複して登録されています。', 'usces');
+		$res['message'] .= __('The same product cord is registered.', 'usces');
 		foreach($db_check as $d_item){
 			$res['message'] .= ' , ' . $d_item['meta_value'];
 		}
@@ -59,7 +59,7 @@ function usces_item_uploadcsv(){
 		$new_filename = base64_encode($fname . '_' . time() . '.' .$fext);
 		if ( ! move_uploaded_file($_FILES['usces_upcsv']['tmp_name'], $path.$new_filename) ) {
 			$res['status'] = 'error';
-			$res['message'] =  __('ファイルを保存できませんでした。', 'usces').$fname.'.'.$fext;
+			$res['message'] =  __('The file was not stored.', 'usces').$fname.'.'.$fext;
 			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
 			wp_redirect($url);
 			exit;
@@ -78,7 +78,7 @@ function usces_item_uploadcsv(){
 		$decode_filename = base64_decode($file_name);
 		if( ! file_exists($path.$file_name) ){
 			$res['status'] = 'error';
-			$res['message'] =  __('CSVファイルが存在しません。', 'usces').esc_html($decode_filename);
+			$res['message'] =  __('CSV file does not exist.', 'usces').esc_html($decode_filename);
 			echo $res['status'] . ' : ' . $res['message'];
 			return;
 		}
@@ -173,7 +173,7 @@ function usces_item_uploadcsv(){
 	$fname_parts = explode('.', $decode_filename);
 	if('csv' !== end($fname_parts)) {
 		$res['status'] = 'error';
-		$res['message'] = __('このファイルはCSVファイルでは有りません。', 'usces').esc_html($decode_filename);
+		$res['message'] = __('This file is not in the CSV file.', 'usces').esc_html($decode_filename);
 		echo $res['status'] . ' : ' . $res['message'];
 		return;
 
@@ -199,7 +199,7 @@ function usces_item_uploadcsv(){
 	}
 	fclose($fpo);
 	
-	echo '<script type="text/javascript">changeMsg("処理中...");</script>'.$yn;
+	echo '<script type="text/javascript">changeMsg("' . __('Processing...', 'usces') . '");</script>'.$yn;
 	echo '<div class="error_log">'.$yn;
 	ob_flush();
 	flush();
@@ -1024,11 +1024,11 @@ function usces_item_uploadcsv(){
 			$av = $onelinetime/$rows_num;
 			$nt = round($av*($total_num-$rows_num));
 			if( 60 < $nt ){
-				$mtime = ceil($nt/60) . '分' . ($nt%60) . '秒　';
+				$mtime = ceil($nt/60) . _('min', 'usces') . ($nt%60) . _('sec', 'usces') . '　';
 			}else{
-				$mtime = $nt . '秒　';
+				$mtime = $nt . _('sec', 'usces') . '　';
 			}
-			echo '<script type="text/javascript">changeMsg("処理中...残り時間：'.$mtime.'");</script>'.$yn;
+			echo '<script type="text/javascript">changeMsg("' . _('Processing...', 'usces') . _('Remaining time:', 'usces').$mtime.'");</script>'.$yn;
 			echo '<script type="text/javascript">setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
 			ob_flush();
 			flush();
@@ -1061,7 +1061,7 @@ function usces_item_uploadcsv(){
 	if( $log ){
 		//echo '<div class="error_log">' . $log . '</div>'.$yn;
 	}else{
-		echo '終了しました。'.$yn;
+		echo _('Finished', 'usces').$yn;
 	}
 	echo '</div>'.$yn;
 	unlink($path.$file_name);

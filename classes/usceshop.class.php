@@ -1296,27 +1296,26 @@ class usc_e_shop
 	}
 	
 	function usces_cookie() {
-			
+		if(is_admin()) return;
+
 		$actionflag = false;
 		$rckid = NULL;
 		$cookie = $this->get_cookie();
-		if(is_admin()) return;
 		
+		if( isset($_GET['uscesid']) && $_GET['uscesid'] != '' ){
+			$sessid = base64_decode(urldecode($_GET['uscesid']));
+			list($sess, $addr, $rckid, $none) = explode('_', $sessid, 4);
+		}else{
+			$rckid = NULL;
+		}
+		if('acting' == $addr) return;
+
 		if( apply_filters( 'usces_filter_cookie', false) ) return;
 
-//usces_log('is_admin : '.print_r(is_admin(),true), 'acting_transaction.log');
-//usces_log('cookie : '.print_r($cookie,true), 'acting_transaction.log');
-		
 		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']))){
 			
 			$refer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL;
 			$sslid = isset($cookie['sslid']) ? $cookie['sslid'] : NULL;
-			if( isset($_GET['uscesid']) && $_GET['uscesid'] != '' ){
-				$sessid = base64_decode(urldecode($_GET['uscesid']));
-				list($sess, $addr, $rckid, $none) = explode('_', $sessid, 4);
-			}else{
-				$rckid = NULL;
-			}
 			$option = get_option('usces');
 			$parsed = parse_url(get_option('home'));
 			$home = $parsed['host'] . $parsed['path'];
@@ -1329,21 +1328,15 @@ class usc_e_shop
 //usces_log('usces_cookieid : '.$_SESSION['usces_cookieid'], 'acting_transaction.log');
 //usces_log('request : '.print_r($_SERVER['REQUEST_URI'],true), 'acting_transaction.log');
 
-			//リファラーが無い、若しくはリファラーがHome and SSLHome のどちらとも一致しない
 			if( empty($refer) || (false === strpos($refer, $home) && false === strpos($refer, $sslhome)) ){
-				//sslid と uscesid がNULL では無く、値が同じならばTRUE
 				if( !empty($sslid) && !empty($rckid) && $sslid === $rckid ){
 					$actionflag = true;
-				//上記以外はFALSE
 				}else{
 					$actionflag = false;
 				}
-			//リファラーが一致
 			}else{
-				//sslid がNULL では無く、uscesid と一致しない場合はFALSE
 				if( !empty($sslid) && $sslid !== $rckid ){
 					$actionflag = false;
-				//上記以外はTRUE
 				}else{
 					$actionflag = true;
 				}
@@ -1357,14 +1350,16 @@ class usc_e_shop
 							'name' => '',
 							'rme' => ''
 							);
-				if( 'acting' !== $rckid )
+				if( 'acting' !== $rckid ){
 					$this->set_cookie($values);
+				}
 			}else{
-				unset($_SESSION['usces_member'], $_SESSION['usces_cart'], $_SESSION['usces_entry'] );
-				wp_redirect( 'http://'.$home );
+				if( 'acting' !== $rckid ){
+					unset($_SESSION['usces_member'], $_SESSION['usces_cart'], $_SESSION['usces_entry'] );
+					wp_redirect( 'http://'.$home );
+				}
 			}
 		}else{
-//usces_log('is_admin : '.print_r(is_admin(),true), 'acting_transaction.log');
 			if( !isset($cookie['id']) || $cookie['id'] == '' ) {
 				$values = array(
 							'id' => md5(uniqid(rand(), true)),
@@ -1439,9 +1434,6 @@ class usc_e_shop
 	function get_uscesid( $flag = true) {
 
 		$sessname = session_name();
-//usces_log('sessname : '.$sessname, 'acting_transaction.log');
-//usces_log('_REQUEST : '.$_REQUEST[$sessname], 'acting_transaction.log');
-//		$sessid = isset($_REQUEST[$sessname]) ? $_REQUEST[$sessname] : session_id();
 		$sessid = session_id();
 		$sessid = $this->uscescv($sessid, $flag);
 		return $sessid;
