@@ -6563,6 +6563,7 @@ class usc_e_shop
 
 	function filter_itemPage($content){
 		global $post;
+		$html = '';
 
 		if( ($post->post_mime_type != 'item' || !is_single()) ) return $content;
 		if( post_password_required($post) ) return $content;
@@ -6570,7 +6571,7 @@ class usc_e_shop
 		$temp_path = apply_filters('usces_template_path_single_item', USCES_PLUGIN_DIR . '/templates/single_item.php');
 		include( $temp_path );
 		
-		$content = apply_filters('usces_filter_itemPage', $content, $post->ID);
+		$content = apply_filters('usces_filter_itemPage', $html, $post->ID);
 
 		return $content;
 	}
