@@ -227,9 +227,20 @@ function onAdminFooter(){
         echo '<script type="text/javascript" src="' . USCES_PLUGIN_URL . '/js/quicktag.js"></script>';
     }
 }
- 
+function je_add_my_quicktag() {
+?>
+    <script type="text/javascript">
+    QTags.addButton('ed_JeCartShortCode', 'カート投入ボタン', '[cart_button code="" sku=""]', '');
+    QTags.addButton('ed_JeMemberShortCode', 'メンバー/ノンメンバー', '[member][/member]\n[nonmember][/nonmember]', '');
+    </script>
+<?php
+}
 if( is_admin() ){
-    add_filter( "admin_footer", "onAdminFooter" );
+	if ( version_compare($wp_version, '3.3-beta', '>') ){
+		add_action('admin_print_footer_scripts',  'je_add_my_quicktag');
+	}else{
+    	add_filter( "admin_footer", "onAdminFooter" );
+	}
 }
 
 /* Lank Auto Change ******************************************************/
