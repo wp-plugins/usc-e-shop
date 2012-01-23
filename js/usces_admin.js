@@ -805,7 +805,16 @@
 				$("#payment_ajax-response").html($mes);
 				return false;
 			}
-				
+			if( 'acting' == settlement ) {//代行業者決済のとき
+				if( '' == module ) {
+					$mes = '<div class="error">';
+					$mes += '<p>決済モジュールの値を入力してください。</p>';
+					$mes += '</div>';
+					$("#payment_ajax-response").html($mes);
+					return false;
+				}
+			}
+			
 			$("#newpayment_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = payment.settings;
@@ -855,7 +864,16 @@
 				$("#payment_ajax-response").html($mes);
 				return false;
 			}
-				
+			if( 'acting' == settlement ) {//代行業者決済のとき
+				if( '' == module ) {
+					$mes = '<div class="error">';
+					$mes += '<p>決済モジュールの値を入力してください。</p>';
+					$mes += '</div>';
+					$("#payment_ajax-response").html($mes);
+					return false;
+				}
+			}
+			
 			$("#payment_loading-" + id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + encodeURIComponent(name) + "&explanation=" + encodeURIComponent(explanation) + "&settlement=" + encodeURIComponent(settlement) + "&module=" + encodeURIComponent(module) + "&sort=" + sortid;
