@@ -943,7 +943,10 @@ class usc_e_shop
 				$province = array();
 				if(!empty($_POST['province_'.$target_market])) {
 					$temp_pref = explode("\n", $_POST['province_'.$target_market]);
-					$province[] = __('-- Select --', 'usces');
+//20120123ysk start 0000386
+					//$province[] = __('-- Select --', 'usces');
+					$province[] = '-- Select --';
+//20120123ysk end
 					for($i = 0; $i < count($temp_pref); $i++) {
 						$province[] = trim($temp_pref[$i]);
 					}
@@ -1300,13 +1303,15 @@ class usc_e_shop
 
 		$actionflag = false;
 		$rckid = NULL;
+		$sess = NULL;
+		$addr = NULL;
+		$rckid = NULL;
+		$none = NULL;
 		$cookie = $this->get_cookie();
 		
 		if( isset($_GET['uscesid']) && $_GET['uscesid'] != '' ){
 			$sessid = base64_decode(urldecode($_GET['uscesid']));
 			list($sess, $addr, $rckid, $none) = explode('_', $sessid, 4);
-		}else{
-			$rckid = NULL;
 		}
 		if('acting' == $addr) return;
 

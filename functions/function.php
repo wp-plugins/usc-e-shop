@@ -2942,8 +2942,17 @@ function usces_pref_select( $type, $values, $out = 'return' ){
 	$prefs = get_usces_states($country);
 //20110331ysk end
 	$html = '<select name="' . esc_attr($type . '[pref]') . '" id="' . esc_attr($type) . '_pref" class="pref">';
-	foreach((array)$prefs as $pref)
-		$html .= "\t".'<option value="' . esc_attr($pref) . '"' . ($pref == $values['pref'] ? ' selected="selected"' : '') . '>' . esc_html($pref) . "</option>\n";
+//20120123ysk start 0000386
+	//foreach((array)$prefs as $pref)
+	//	$html .= "\t".'<option value="' . esc_attr($pref) . '"' . ($pref == $values['pref'] ? ' selected="selected"' : '') . '>' . esc_html($pref) . "</option>\n";
+	$prefs_count = count($prefs);
+	if($prefs_count > 0) {
+		$select = __('-- Select --', 'usces');
+		$html .= "\t".'<option value="' . esc_attr($select) . '">' . esc_html($select) . "</option>\n";
+		for($i = 1; $i < $prefs_count; $i++) 
+			$html .= "\t".'<option value="' . esc_attr($prefs[$i]) . '"' . ($prefs[$i] == $values['pref'] ? ' selected="selected"' : '') . '>' . esc_html($prefs[$i]) . "</option>\n";
+	}
+//20120123ysk end
 	$html .= "</select>\n";
 	
 	if( $out == 'return' ){

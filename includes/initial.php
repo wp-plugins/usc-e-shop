@@ -584,7 +584,9 @@ $usces_states['JP'] = array(__('-- Select --', 'usces'),"北海道","青森県",
 				"大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県",
 				"徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県",
 				"宮崎県","鹿児島県","沖縄県");
-$usces_states['US'] = array(__('-- Select --', 'usces'),"Alabama","Alaska","Arizona","Arkansas","California","Colorado",
+//20120123ysk 0000386
+//$usces_states['US'] = array(__('-- Select --', 'usces'),"Alabama","Alaska","Arizona","Arkansas","California","Colorado",
+$usces_states['US'] = array('-- Select --',"Alabama","Alaska","Arizona","Arkansas","California","Colorado",
 				"Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii",
 				"Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
 				"Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri",
