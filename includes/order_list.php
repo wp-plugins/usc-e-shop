@@ -315,11 +315,18 @@ jQuery(document).ready(function($){
 		}
 	});
 	$('#dl_pro').click(function() {
+//20120123ysk start 0000385
+		//var args = "&search[column]="+$(':input[name="search[column]"]').val()
+		//	+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+		//	+"&search[period]="+$(':input[name="search[period]"]').val()
+		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+		//	+"&ftype="+$(':input[name="ftype_pro[]"]:checked').val();
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
 			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 			+"&search[period]="+$(':input[name="search[period]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
-			+"&ftype="+$(':input[name="ftype_pro[]"]:checked').val();
+			+"&ftype=csv";
+//20120123ysk end
 		$(".check_product").each(function(i) {
 			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
@@ -347,11 +354,18 @@ jQuery(document).ready(function($){
 		}
 	});
 	$('#dl_ord').click(function() {
+//20120123ysk start 0000385
+		//var args = "&search[column]="+$(':input[name="search[column]"]').val()
+		//	+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+		//	+"&search[period]="+$(':input[name="search[period]"]').val()
+		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+		//	+"&ftype="+$(':input[name="ftype_ord[]"]:checked').val();
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
 			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 			+"&search[period]="+$(':input[name="search[period]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
-			+"&ftype="+$(':input[name="ftype_ord[]"]:checked').val();
+			+"&ftype=csv";
+//20120123ysk end
 		$(".check_order").each(function(i) {
 			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
@@ -511,7 +525,8 @@ jQuery(document).ready(function($){
 	<p><?php _e('Select the item you want, please press the download.', 'usces'); ?></p>
 	<fieldset>
 <?php 
-	if($usces_opt_order['ftype_pro'] == 'xls') {
+//20120123ysk start 0000385
+/*	if($usces_opt_order['ftype_pro'] == 'xls') {
 		$ftype_pro_xls = ' checked';
 		$ftype_pro_csv = '';
 	} elseif($usces_opt_order['ftype_pro'] == 'csv') {
@@ -520,10 +535,13 @@ jQuery(document).ready(function($){
 	} else {
 		$ftype_pro_xls = ' checked';
 		$ftype_pro_csv = '';
-	}
+	}*/
+//20120123ysk end
 ?>
+<!--20120123ysk start 0000385
 		<label for="ftype_pro_xls"><input type="radio" name="ftype_pro[]" id="ftype_pro_xls" value="xls"<?php echo $ftype_pro_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
 		<label for="ftype_pro_csv"><input type="radio" name="ftype_pro[]" id="ftype_pro_csv" value="csv"<?php echo $ftype_pro_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
+<!--20120123ysk end-->
 		<input type="button" id="dl_pro" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Header Information', 'usces'); ?></legend>
@@ -549,20 +567,6 @@ jQuery(document).ready(function($){
 <div id="dlOrderListDialog" title="<?php _e('Download Order List', 'usces'); ?>">
 	<p><?php _e('Select the item you want, please press the download.', 'usces'); ?></p>
 	<fieldset>
-<?php 
-	if($usces_opt_order['ftype_ord'] == 'xls') {
-		$ftype_ord_xls = ' checked';
-		$ftype_ord_csv = '';
-	} elseif($usces_opt_order['ftype_ord'] == 'csv') {
-		$ftype_ord_xls = '';
-		$ftype_ord_csv = ' checked';
-	} else {
-		$ftype_ord_xls = ' checked';
-		$ftype_ord_csv = '';
-	}
-?>
-		<label for="ftype_ord_xls"><input type="radio" name="ftype_ord[]" id="ftype_ord_xls" value="xls"<?php echo $ftype_ord_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_ord_csv"><input type="radio" name="ftype_ord[]" id="ftype_ord_csv" value="csv"<?php echo $ftype_ord_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_ord" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Customer Information', 'usces'); ?></legend>

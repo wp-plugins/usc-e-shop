@@ -238,10 +238,16 @@ jQuery(function($){
 		}
 	});
 	$('#dl_item').click(function() {
+//20120123ysk start 0000385
+		//var args = "&search[column]="+$(':input[name="search[column]"]').val()
+		//	+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+		//	+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();//20120123ysk 0000385
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
 			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
-			+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();
+			+"&ftype=csv";
+//20120123ysk end
 		if($('#chk_header').attr('checked')) {
 			args += '&chk_header=on';
 		}
@@ -531,23 +537,9 @@ jQuery(document).ready(function($){
 	<p><?php _e('Choose the file format, and push the download.', 'usces'); ?></p>
 	<fieldset>
 		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('To add a subject title at the first line','usces'); ?></label>
-	</fieldset>
-	<fieldset>
-<?php 
-	if($usces_opt_item['ftype_item'] == 'xls') {
-		$ftype_item_xls = ' checked';
-		$ftype_item_csv = '';
-	} elseif($usces_opt_item['ftype_item'] == 'csv') {
-		$ftype_item_xls = '';
-		$ftype_item_csv = ' checked';
-	} else {
-		$ftype_item_xls = ' checked';
-		$ftype_item_csv = '';
-	}
-?>
-		<label for="ftype_item_xls"><input type="radio" name="ftype_item[]" id="ftype_item_xls" value="xls"<?php echo $ftype_item_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_item_csv"><input type="radio" name="ftype_item[]" id="ftype_item_csv" value="csv"<?php echo $ftype_item_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
+<!--20120123ysk start 0000385-->
 		<input type="button" id="dl_item" value="<?php _e('Download', 'usces'); ?>" />
+<!--20120123ysk end-->
 	</fieldset>
 </div>
 <!--20101111ysk end-->

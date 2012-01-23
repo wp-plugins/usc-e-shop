@@ -103,10 +103,16 @@ jQuery(document).ready(function($){
 		}
 	});
 	$('#dl_mem').click(function() {
+//20120123ysk start 0000385
+		//var args = "&search[column]="+$(':input[name="search[column]"]').val()
+		//	+"&search[word]="+$(':input[name="search[word]"]').val()
+		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+		//	+"&ftype="+$(':input[name="ftype_mem[]"]:checked').val();
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
 			+"&search[word]="+$(':input[name="search[word]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
-			+"&ftype="+$(':input[name="ftype_mem[]"]:checked').val();
+			+"&ftype=csv";
+//20120123ysk end
 		$('*[class=check_member]').each(function(i) {
 			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
@@ -209,20 +215,6 @@ jQuery(document).ready(function($){
 <div id="dlMemberListDialog" title="<?php _e('Download Member List', 'usces'); ?>">
 	<p><?php _e('Select the item you want, please press the download.', 'usces'); ?></p>
 	<fieldset>
-<?php 
-	if($usces_opt_member['ftype_mem'] == 'xls') {
-		$ftype_mem_xls = ' checked';
-		$ftype_mem_csv = '';
-	} elseif($usces_opt_member['ftype_mem'] == 'csv') {
-		$ftype_mem_xls = '';
-		$ftype_mem_csv = ' checked';
-	} else {
-		$ftype_mem_xls = ' checked';
-		$ftype_mem_csv = '';
-	}
-?>
-		<label for="ftype_mem_xls"><input type="radio" name="ftype_mem[]" id="ftype_mem_xls" value="xls"<?php echo $ftype_mem_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_mem_csv"><input type="radio" name="ftype_mem[]" id="ftype_mem_csv" value="csv"<?php echo $ftype_mem_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_mem" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Membership information', 'usces'); ?></legend>
