@@ -22,7 +22,7 @@ $html .= '<div class="loginbox">
 <input type="submit" name="lostpassword" id="member_login" value="' . __('Obtain new password', 'usces') . '" />
 </p>
 </form>
-<div>' . __('Chenge th epassword according to the e-mail.', 'usces') . '</div>
+<div>' . __('Change your password by following the instruction in this mail.', 'usces') . '</div>
 <p id="nav">';
 
 if ( ! usces_is_login() ) {
