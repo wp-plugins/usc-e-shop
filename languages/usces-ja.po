@@ -3187,6 +3187,9 @@ msgstr "秒"
 msgid "Finished"
 msgstr "終了しました。"
 
+msgid "Data have deficiency."
+msgstr "データに不備が有ります。"
+
 #~ msgid "print the invoice"
 #~ msgstr "納品書印刷"
 

@@ -1458,11 +1458,11 @@ function usces_list_post( $slug, $rownum, $widget_id=NULL ){
 	}
 	while ($infolist->have_posts()) {
 		$infolist->the_post();
-		$list = "<li>\n";
+		$list = '<li class="post_list'. apply_filters('usces_filter_post_list_class', NULL, $list_index, count($infolist)) . '">'."\n";
 		$list .= "<div class='title'><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></div>\n";
 		$list .= "<p>" . get_the_excerpt() . "</p>\n";
 		$list .= "</li>\n";
-		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug);
+		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug, $list_inde);
 	}
 	wp_reset_query();
 	usces_reset_filter();

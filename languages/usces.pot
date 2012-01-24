@@ -3186,3 +3186,6 @@ msgstr "秒"
 
 msgid "Finished"
 msgstr "終了しました。"
+
+msgid "Data have deficiency."
+msgstr "データに不備が有ります。"

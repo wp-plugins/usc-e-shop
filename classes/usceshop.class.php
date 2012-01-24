@@ -962,7 +962,7 @@ class usc_e_shop
 
 			if($action_status != '') {
 				$this->action_status = 'error';
-				$this->action_message = __('データに不備が有ります','usces');
+				$this->action_message = __('Data have deficiency.','usces');
 			} else {
 				$this->action_status = 'success';
 				$this->action_message = __('options are updated','usces');
