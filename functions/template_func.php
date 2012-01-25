@@ -1456,13 +1456,15 @@ function usces_list_post( $slug, $rownum, $widget_id=NULL ){
 		if( function_exists('welcart_widget_post_excerpt_mblength_'.$widget_id) )
 			add_filter( 'excerpt_mblength', 'welcart_widget_post_excerpt_mblength_'.$widget_id );
 	}
+	$list_index = 0;
 	while ($infolist->have_posts()) {
 		$infolist->the_post();
 		$list = '<li class="post_list'. apply_filters('usces_filter_post_list_class', NULL, $list_index, count($infolist)) . '">'."\n";
 		$list .= "<div class='title'><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></div>\n";
 		$list .= "<p>" . get_the_excerpt() . "</p>\n";
 		$list .= "</li>\n";
-		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug, $list_inde);
+		$li .= apply_filters( 'usces_filter_widget_post', $list, $post, $slug, $list_index);
+		$list_index++;
 	}
 	wp_reset_query();
 	usces_reset_filter();

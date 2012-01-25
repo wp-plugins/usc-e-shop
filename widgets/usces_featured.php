@@ -30,6 +30,7 @@ class Welcart_featured extends WP_Widget {
 //			$offset = usces_posts_random_offset(get_posts('category='.usces_get_cat_id( 'itemreco' )));
 //			$myposts = get_posts('numberposts=' . $num . '&offset='.$offset.'&category='.usces_get_cat_id( 'itemreco' ));
 			$myposts = get_posts('numberposts=' . $num . '&category='.usces_get_cat_id( 'itemreco' ) . '&orderby=rand');
+			$list_index = 0;
 			foreach($myposts as $post) :
 				$post_id = $post->ID;
 			?>
@@ -37,7 +38,7 @@ class Welcart_featured extends WP_Widget {
 				<div class="thumimg"><a href="<?php echo get_permalink($post_id); ?>"><?php usces_the_itemImage($number = 0, $width = 150, $height = 150, $post ); ?></a></div>
 				<div class="thumtitle"><a href="<?php echo get_permalink($post_id); ?>" rel="bookmark"><?php echo $usces->getItemName($post_id); ?>&nbsp;(<?php echo $usces->getItemCode($post_id); ?>)</a></div>
 				</li>
-			<?php endforeach; ?>
+			<?php $list_index++; endforeach; ?>
 		</ul>
 				  
               <?php echo $after_widget; ?>
