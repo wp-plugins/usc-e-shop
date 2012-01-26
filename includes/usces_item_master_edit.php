@@ -238,9 +238,8 @@ case 'editpost':
 
 		global $post;
 		$title = 'Welcart Shop '.__('Edit item', 'usces');
-	
-		if ( !current_user_can('edit_post', $post_ID) )
-			die ( __('You are not allowed to edit this post.') );
+//		if ( !current_user_can('edit_post', $post->ID) )
+//			die ( __('You are not allowed to edit this post.') );
 	
 	if ( version_compare($wp_version, '3.0-beta', '>') ){
 		if ( $post ) {
@@ -302,10 +301,10 @@ case 'editpost':
 case 'new':
 
 	$title = 'Welcart Shop ' . __('Add New Item', 'usces');
-	
+	global $post;
 
 	if ( version_compare($wp_version, '3.0-beta', '>') ){
-		global $post;
+		global $post_ID, $current_screen;
 		if ( !isset($_GET['post_type']) )
 			$post_type = 'post';
 		elseif ( in_array( $_GET['post_type'], get_post_types( array('public' => true ) ) ) )
@@ -314,7 +313,9 @@ case 'new':
 			wp_die( __('Invalid post type') );
 		
 		$action = 'post';
+		$post = get_default_post_to_edit( $post_type, true );
 		$post_ID = $post->ID;
+
 		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
 	}else{
 		if ( current_user_can('edit_pages') ) {

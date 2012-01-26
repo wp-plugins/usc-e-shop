@@ -109,7 +109,7 @@ $html .= '<table class="customer_form" id="notes_table">
 	</tr>
 	</table>
 
-	<div class="send"><input name="offer[cus_id]" type="hidden" value="' . $this->cus_id . '" />		
+	<div class="send"><input name="offer[cus_id]" type="hidden" value="" />		
 	<input name="backCustomer" type="submit" class="back_to_customer_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_prebutton', NULL) . ' />&nbsp;&nbsp;
 	<input name="confirm" type="submit" class="to_confirm_button" value="'.__(' Next ', 'usces').'"' . apply_filters('usces_filter_deliveryinfo_nextbutton', NULL) . ' /></div>
 	</form>';

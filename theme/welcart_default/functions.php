@@ -13,6 +13,8 @@ add_action( 'after_setup_theme', 'welcart_setup' );
 if ( ! function_exists( 'welcart_setup' ) ):
 function welcart_setup() {
 	
+	load_theme_textdomain( 'uscestheme', TEMPLATEPATH . '/languages' );
+	
 	register_nav_menus( array(
 		'header' => __('Header Navigation', 'usces' ),
 		'footer' => __('Footer Navigation', 'usces' ),

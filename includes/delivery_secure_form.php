@@ -2,7 +2,8 @@
 if(isset($this))
 	$usces = &$this;
 
-foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
+$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+foreach ( (array)$payments as $id => $array ) {
 	if( !empty( $array['settlement'] ) ){
 
 		switch( $array['settlement'] ){
@@ -25,7 +26,7 @@ foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
 				$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
 				
-				$html .= '<input type="hidden" name="acting" value="zeus">'."\n";
+				$html = '<input type="hidden" name="acting" value="zeus">'."\n";
 				$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
 				
 				$pcid = NULL;
@@ -178,7 +179,7 @@ foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
 					|| 'continue' == $charging_type ){
 					continue;
 				}
-				
+					
 					
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '0';
 				

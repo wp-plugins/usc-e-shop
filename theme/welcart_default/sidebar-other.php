@@ -14,7 +14,7 @@ global $usces;
 		<div class="widget_title"><img src="<?php bloginfo('template_url'); ?>/images/search.png" alt="<?php _e('keyword search','usces') ?>" /><?php _e('keyword search','usces') ?></div>
 		<ul class="welcart_search_body welcart_widget_body">
 			<li>
-			<form method="get" id="searchform" action="<?php bloginfo('home'); ?>" >
+			<form method="get" id="searchform" action="<?php echo home_url(); ?>" >
 			<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" value="<?php _e('Search','usces') ?>" />
 			<div><a href="<?php echo USCES_CART_URL . $usces->delim; ?>page=search_item"><?php _e('An article category keyword search','usces') ?>&gt;</a></div>
 			</form>

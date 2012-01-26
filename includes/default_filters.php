@@ -1,4 +1,6 @@
 <?php
+global $wp_version;
+
 add_action( 'init', array(&$usces, 'main'), 10);
 add_action( 'admin_init', 'usces_redirect', 10);
 add_action( 'admin_init', 'usces_typenow');
@@ -14,11 +16,14 @@ add_action( 'admin_footer-welcart-shop_page_usces_initial', 'admin_prodauct_foot
 add_action( 'admin_footer-welcart-shop_page_usces_cart', 'admin_prodauct_footer');
 add_action( 'admin_footer-post.php', 'admin_post_footer');
 add_action( 'admin_footer-post-new.php', 'admin_post_footer');
+//add_action( 'transition_post_status', 'usces_action_transition_post_status', 10, 3);
+//add_filter( 'redirect_post_location', 'usces_filter_redirect_post_location', 10, 2);
+//add_action( 'dbx_post_advanced', 'usces_action_updated_messages');
 //add_action('wp_dashboard_setup', 'usces_dashboard_setup' );	
 //add_action( 'login_head', 'usces_admin_login_head' );
 //add_action('restrict_manage_posts', array(&$usces, 'postfilter'));
 
-add_action('save_post', 'item_save_metadata');
+add_action('save_post', 'item_save_metadata', 10, 2);
 add_action( 'wp_ajax_order_item2cart_ajax', 'order_item2cart_ajax' );
 add_action( 'wp_ajax_order_item_ajax', 'order_item_ajax' );
 add_action( 'wp_ajax_payment_ajax', 'payment_ajax' );
@@ -34,6 +39,8 @@ add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 //20110331ysk start
 add_action( 'wp_ajax_target_market_ajax', 'target_market_ajax' );
 //20110331ysk end
+
+add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
 
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));
 add_shortcode('company_name', array(&$usces, 'sc_company_name'));
@@ -132,6 +139,7 @@ if( $usces->options['itemimg_anchor_rel'] )
 	
 add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
 add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata', 10, 2);
+add_action('usces_action_reg_orderdata', 'usces_action_reg_orderdata');
 
 
 //20100818ysk start

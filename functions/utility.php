@@ -1,7 +1,10 @@
 <?php
 // Utility.php
 
-function usces_metakey_change(){
+function usces_upgrade_07(){
+	$upgrade = (int)get_option('usces_upgrade');
+	if( $upgrade & USCES_UP07 ) return false;
+
 	global $wpdb;
 	$rets = array();
 	
@@ -70,6 +73,190 @@ function usces_metakey_change(){
 	if( $wpdb->query( $mquery ) )
 		$rets[] = 1;
 
+	usces_log('USCES_UP07 : '.print_r($rets,true), 'database_error.log');
+	$upgrade += USCES_UP07;
+	update_option('usces_upgrade', $upgrade);
+	return $rets;
+}
+
+function usces_upgrade_11(){
+	$options = get_option('usces');
+	$upgrade = (int)get_option('usces_upgrade');
+	if( $upgrade & USCES_UP11 ) return false;
+
+	global $wpdb;
+	$rets = array();
+	
+	/* ITEM SKU DATA */
+	$sort = (int)$options['system']['orderby_itemsku'];
+	if( $sort ){
+		$query = "SELECT * FROM $wpdb->postmeta WHERE meta_key <> '_isku_' AND meta_key LIKE '_isku_%' ORDER BY post_id, meta_key";
+	}else{
+		$query = "SELECT * FROM $wpdb->postmeta WHERE meta_key <> '_isku_' AND meta_key LIKE '_isku_%' ORDER BY post_id, meta_id";
+	}
+	$res = $wpdb->get_results($query, ARRAY_A);
+
+	$conclusion = true;
+	$pre_post_id = 0;
+	$sort_id = 0;
+	$check_code = array();
+	$dep_num = array();
+	foreach( (array)$res as $metarow ){
+		$meta_value = unserialize($metarow['meta_value']);
+		$newvalue = array();
+		$newvalue['code'] = substr($metarow['meta_key'], 6);
+		if( $pre_post_id == $metarow['post_id'] ){
+			if( in_array( $newvalue['code'], $check_code ) ){
+				$newvalue['code'] .= 'dupricate_' . (int)$dep_num[$newvalue['code']];
+				$dep_num[$newvalue['code']]++;
+			}
+		}else{
+			$check_code = array();
+			$dep_num = array();
+			$sort_id = 0;
+		}
+		foreach( (array)$meta_value as $k => $v ){
+			switch ( $k ){
+				case 'disp':
+					$newvalue['name'] = $v;
+					break;
+				case 'cprice':
+					$newvalue['cprice'] = $v;
+					break;
+				case 'price':
+					$newvalue['price'] = $v;
+					break;
+				case 'unit':
+					$newvalue['unit'] = $v;
+					break;
+				case 'zaikonum':
+					$newvalue['stocknum'] = $v;
+					break;
+				case 'zaiko':
+					$newvalue['stock'] = $v;
+					break;
+				case 'gptekiyo':
+					$newvalue['gp'] = $v;
+					break;
+				case 'charging_type':
+					break;
+				default:
+					$newvalue[$k] = $v;
+			}
+		}
+		$newvalue['sort'] = $sort_id;
+	
+		$id = usces_add_sku($metarow['post_id'], $newvalue, false);
+		$pre_post_id = $metarow['post_id'];
+		$check_code[] = $newvalue['code'];
+		$sort_id++;
+		
+		$res_key = $metarow['post_id'] . '_' . $newvalue['code'];
+		if( $id ) {
+			delete_post_meta($metarow['post_id'], $metarow['meta_key']);
+			$rets['sku'][$res_key] = 1;
+		}else{
+			$rets['sku'][$res_key] = 0;
+			usces_log('meta_id ' . $metarow['meta_id'] . ' : ' . __('This SKU-data has not been rebuilt.', 'usces'), 'database_error.log');
+		}
+	}
+	
+	/* ITEM OPTION DATA */
+	$sort = (int)$options['system']['orderby_itemopt'];
+	if( $sort ){
+		$query = "SELECT * FROM $wpdb->postmeta WHERE meta_key <> '_iopt_' AND meta_key LIKE '_iopt_%' ORDER BY post_id, meta_key";
+	}else{
+		$query = "SELECT * FROM $wpdb->postmeta WHERE meta_key <> '_iopt_' AND meta_key LIKE '_iopt_%' ORDER BY post_id, meta_id";
+	}
+	$res = $wpdb->get_results($query, ARRAY_A);
+
+	$conclusion = true;
+	$pre_post_id = 0;
+	$sort_id = 0;
+	$check_code = array();
+	$dep_num = array();
+	foreach( (array)$res as $metarow ){
+		$meta_value = unserialize($metarow['meta_value']);
+		$newvalue = array();
+		$newvalue['name'] = substr($metarow['meta_key'], 6);
+		if( $pre_post_id == $metarow['post_id'] ){
+			if( in_array( $newvalue['name'], $check_code ) ){
+				$newvalue['name'] .= 'dupricate_' . (int)$dep_num[$newvalue['name']];
+				$dep_num[$newvalue['name']]++;
+			}
+		}else{
+			$check_code = array();
+			$dep_num = array();
+			$sort_id = 0;
+		}
+		foreach( (array)$meta_value as $k => $v ){
+			switch ( $k ){
+				case 'means':
+					$newvalue['means'] = $v;
+					break;
+				case 'essential':
+					$newvalue['essential'] = $v;
+					break;
+				case 'value':
+					if( is_array($v) ){
+						$nov = '';
+						foreach((array)$v as $vs){
+							if(trim( $vs ) != '') 
+								//$nov .= str_replace('\\', '&yen;', trim( $vs )) . "\n";
+								$nov .= $vs . "\n";
+						}
+						$newvalue['value'] =  trim($nov);
+					}else{
+						$newvalue['value'] = trim($v);
+					}
+					break;
+				default:
+					$newvalue[$k] = trim($v);
+			}
+		}
+		$newvalue['sort'] = $sort_id;
+	
+		$id = usces_add_opt($metarow['post_id'], $newvalue, false);
+		$pre_post_id = $metarow['post_id'];
+		$check_code[] = $newvalue['name'];
+		$sort_id++;
+		
+		$res_key = $metarow['post_id'] . '_' . $newvalue['name'];
+		if( $id ) {
+			delete_post_meta($metarow['post_id'], $metarow['meta_key']);
+			$rets['opt'][$res_key] = 1;
+		}else{
+			$rets['opt'][$res_key] = 0;
+			usces_log('meta_id ' . $metarow['meta_id'] . ' : ' . __('This Item-Option-data has not been rebuilt.', 'usces'), 'database_error.log');
+		}
+	}
+	
+	/* PAYMENT METHOD DATA */
+	$payment = get_option('usces_payment_method');
+//usces_log('payment : ' . print_r($payment,true), 'database_error.log');
+	if( empty($payment) ) {
+	
+		$options = get_option('usces');
+		$old_payment = isset($options['payment_method']) ? $options['payment_method'] : '';
+	usces_log('old_payment : ' . print_r($old_payment,true), 'database_error.log');
+		if( !empty($old_payment) && is_array($old_payment) ) {
+			foreach( $old_payment as $key => $value ){
+				$res_key = $key . '_' . $value['name'];
+				$id = usces_add_system_option( 'usces_payment_method', $value );
+				if( $id ) {
+					$rets['payment'][$res_key] = 1;
+				}else{
+					$rets['payment'][$res_key] = 0;
+					usces_log('payment_method ' . $value['name'] . ' : ' . __('This Payment-Method-data has not been rebuilt.', 'usces'), 'database_error.log');
+				}
+			}
+		}
+	}
+
+	usces_log('USCES_UP11 : ' . print_r($rets,true), 'database_error.log');
+
+//	$upgrade += USCES_UP11;
+//	update_option('usces_upgrade', $upgrade);
 	return $rets;
 }
 
@@ -88,10 +275,12 @@ function usces_filter_delivery_secure_check( $mes ){
 	global $usces;
 	$usces_secure_link = get_option('usces_secure_link');
 	$paymod_id = '';
-	
-	foreach ( (array)$usces->options['payment_method'] as $id => $array ) {
-		if( $array['name'] == $_POST['offer']['payment_name']){
-			$settlement = $array['settlement'];
+	$settlement = '';
+	$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+
+	foreach ( (array)$payments as $id => $value ) {
+		if( isset($_POST['offer']['payment_name']) && $value['name'] == $_POST['offer']['payment_name']){
+			$settlement = $value['settlement'];
 			break;
 		}
 	}	
@@ -101,7 +290,7 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) < 2 )
 				$mes .= __('カード番号が不正です', 'usces') . "<br />";
 			
-			if ( '' == $_POST["securecode"] && 'on' == $usces->options['acting_settings']['zeus']['3dsecure'] )
+			if ( isset($_POST["securecode"]) && '' == $_POST["securecode"] && 'on' == $usces->options['acting_settings']['zeus']['3dsecure'] )
 				$mes .= __('カードの暗証番号をしてください', 'usces') . "<br />";
 				
 			if ( '' == $_POST["expyy"] )
@@ -113,7 +302,7 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( '' == trim($_POST["username"]) )
 				$mes .= __('カード名義を入力してください', 'usces') . "<br />";
 				
-			if ( '0' == $_POST["howpay"] && '' == $_POST["cbrand"] )
+			if ( isset($_POST["howpay"]) && '0' == $_POST["howpay"] && '' == $_POST["cbrand"] )
 				$mes .= __('カードブランドを選択してください', 'usces') . "<br />";
 				
 			if ( 'zeus' != $_POST['acting'] )
@@ -254,10 +443,10 @@ function usces_payment_detail($usces_entries){
 			break;
 		
 		case 'acting_zeus_card':
-			$div_name = 'div_' . $_POST['cbrand'];
-			if( isset($_POST['howpay']) && '1' === $_POST['howpay'] ){
+			if( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ){
 				$str = '　一括払い';
 			}else{
+				$div_name = 'div_' . $_POST['cbrand'];
 				switch($_POST[$div_name]){
 					case '01':
 						$str = '　一括払い';
@@ -371,7 +560,7 @@ function usces_filter_customer_check_custom_customer( $mes ) {
 function usces_filter_delivery_check_custom_delivery( $mes ) {
 	global $usces;
 
-	if( $_POST['delivery']['delivery_flag'] == '1' ) {
+	if( isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == '1' ) {
 		$meta = usces_has_custom_field_meta('delivery');
 		foreach($meta as $key => $entry) {
 			$essential = $entry['essential'];
@@ -899,6 +1088,7 @@ function usces_download_product_list() {
 	$usces_opt_order['ftype_pro'] = $ext;
 	$chk_pro = array();
 	$chk_pro['ID'] = 1;
+	$chk_pro['deco_id'] = 1;
 	$chk_pro['date'] = (isset($_REQUEST['check']['date'])) ? 1 : 0;
 	$chk_pro['mem_id'] = (isset($_REQUEST['check']['mem_id'])) ? 1 : 0;
 	$chk_pro['name'] = (isset($_REQUEST['check']['name'])) ? 1 : 0;
@@ -919,7 +1109,8 @@ function usces_download_product_list() {
 	$_REQUEST['searchIn'] = "searchIn";
 	$tableName = $wpdb->prefix."usces_order";
 	$arr_column = array(
-				__('Order number', 'usces') => 'ID', 
+				__('ID', 'usces') => 'ID', 
+				__('Order number', 'usces') => 'deco_id', 
 				__('date', 'usces') => 'date', 
 				__('membership number', 'usces') => 'mem_id', 
 				__('name', 'usces') => 'name', 
@@ -940,7 +1131,8 @@ function usces_download_product_list() {
 	//==========================================================================
 	$line = $table_h;
 	$line .= $tr_h;
-	$line .= $th_h1.__('Order number', 'usces').$th_f;
+	$line .= $th_h1.__('ID', 'usces').$th_f;
+	$line .= $th_h.__('Order number', 'usces').$th_f;
 	if(isset($_REQUEST['check']['date'])) $line .= $th_h.__('order date', 'usces').$th_f;
 	if(isset($_REQUEST['check']['mem_id'])) $line .= $th_h.__('membership number', 'usces').$th_f;
 	if(isset($_REQUEST['check']['name'])) $line .= $th_h.__('name', 'usces').$th_f;
@@ -968,10 +1160,11 @@ function usces_download_product_list() {
 		for($i = 0; $i < count($cart); $i++) {
 			$cart_row = $cart[$i];
 			$post_id = $cart_row['post_id'];
-			$sku = $cart_row['sku'];
+			$sku = urldecode($cart_row['sku']);
 
 			$line .= $tr_h;
 			$line .= $td_h1.$order_id.$td_f;
+			$line .= $td_h.$array['deco_id'].$td_f;
 			if(isset($_REQUEST['check']['date'])) $line .= $td_h.$array['date'].$td_f;
 			if(isset($_REQUEST['check']['mem_id'])) $line .= $td_h.$array['mem_id'].$td_f;
 			if(isset($_REQUEST['check']['name'])) $line .= $td_h.usces_entity_decode($data['order_name1'].$data['order_name2'], $ext).$td_f;
@@ -999,20 +1192,9 @@ function usces_download_product_list() {
 				$optstr = '';
 				if(is_array($options) && count($options) > 0) {
 					foreach((array)$options as $key => $value) {
-						if(!empty($key)) {
-							if(is_array($value)) {
-								$concatval = '';
-								$c = '';
-								foreach($value as $v) {
-									$concatval .= $c.$v;
-									$c = ' ';
-								}
-								$optstr .= usces_entity_decode($key.$sp.urldecode($concatval), $ext).$nb;
-							} else {
+						if(!empty($key))
 							//$optstr .= usces_entity_decode($key, $ext).$sp.usces_entity_decode($value, $ext).$nb;
 							$optstr .= usces_entity_decode($key.$sp.urldecode($value), $ext).$nb;
-							}
-						}
 					}
 				}
 				$line .= $td_h.$optstr.$td_f;
@@ -1111,6 +1293,7 @@ function usces_download_order_list() {
 	$usces_opt_order['ftype_ord'] = $ext;
 	$chk_ord = array();
 	$chk_ord['ID'] = 1;
+	$chk_ord['deco_id'] = 1;
 	$chk_ord['date'] = 1;
 	$chk_ord['mem_id'] = (isset($_REQUEST['check']['mem_id'])) ? 1 : 0;
 	$chk_ord['email'] = (isset($_REQUEST['check']['email'])) ? 1 : 0;
@@ -1258,7 +1441,8 @@ function usces_download_order_list() {
 	$_REQUEST['searchIn'] = "searchIn";
 	$tableName = $wpdb->prefix."usces_order";
 	$arr_column = array(
-				__('Order number', 'usces') => 'ID', 
+				__('ID', 'usces') => 'ID', 
+				__('Order number', 'usces') => 'deco_id', 
 				__('date', 'usces') => 'date', 
 				__('membership number', 'usces') => 'mem_id', 
 				__('name', 'usces') => 'name', 
@@ -1279,7 +1463,8 @@ function usces_download_order_list() {
 	//==========================================================================
 	$line = $table_h;
 	$line .= $tr_h;
-	$line .= $th_h1.__('Order number', 'usces').$th_f;
+	$line .= $th_h1.__('ID', 'usces').$th_f;
+	$line .= $th_h.__('Order number', 'usces').$th_f;
 	$line .= $th_h.__('order date', 'usces').$th_f;
 	if(isset($_REQUEST['check']['mem_id'])) $line .= $th_h.__('membership number', 'usces').$th_f;
 	if(isset($_REQUEST['check']['email'])) $line .= $th_h.__('e-mail', 'usces').$th_f;
@@ -1459,6 +1644,7 @@ function usces_download_order_list() {
 
 		$line .= $tr_h;
 		$line .= $td_h1.$order_id.$td_f;
+		$line .= $td_h.usces_get_deco_order_id( $order_id ).$td_f;
 		$line .= $td_h.$data['order_date'].$td_f;
 		if(isset($_REQUEST['check']['mem_id'])) $line .= $td_h.$data['mem_id'].$td_f;
 		if(isset($_REQUEST['check']['email'])) $line .= $td_h.usces_entity_decode($data['order_email'], $ext).$td_f;
@@ -1795,5 +1981,15 @@ function usces_is_entity($entity){
 
 function usces_p( $var ){
 	echo '<pre>' . print_r($var, true) . '</pre>';
+}
+
+function usces_get_key( $digit ){
+	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	$max = strlen($chars) - 1;
+	$str = '';
+	for($i=0; $i<$digit; $i++){
+		$str .= $chars[mt_rand(0, $max)];
+	}
+	return $str;
 }
 ?>

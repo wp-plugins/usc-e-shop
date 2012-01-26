@@ -77,8 +77,36 @@ jQuery(function($){
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 
-});
+	$(".num").bind("change", function(){ usces_check_num($(this)); });
 
+	$('form').submit(function() {
+		var error = 0;
+
+		if( "" == $("input[name='member\[email\]']").val() ) {
+			error++;
+			$("input[name='member\[email\]']").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("input[name='member\[point\]']").val() ) ) {
+			error++;
+			$("input[name='member\[point\]']").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+
+		if( 0 < error ) {
+			$("#aniboxStatus").removeClass("none");
+			$("#aniboxStatus").addClass("error");
+			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
+			$("#info_massage").html("データに不備があります");
+			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+			return false;
+		} else {
+			return true;
+		}
+	});
+});
 
 function addComma(str)
 {
@@ -92,11 +120,6 @@ function addComma(str)
 	}
 	return n;
 };
-
-
-jQuery(document).ready(function($){
-
-});
 </script>
 <div class="wrap">
 <div class="usces_admin">
@@ -106,7 +129,7 @@ jQuery(document).ready(function($){
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
-		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
+		<img id="info_image" src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>
@@ -154,7 +177,7 @@ jQuery(document).ready(function($){
 </select></td>
 </tr>
 <tr>
-<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
+<td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short num" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
 <?php if( USCES_JP ): ?>
 <?php endif; ?>
 </tr>
@@ -209,7 +232,7 @@ jQuery(document).ready(function($){
 	for($i=0; $i<count($cart); $i++) { 
 	$cart_row = $cart[$i];
 	$post_id = $cart_row['post_id'];
-	$sku = $cart_row['sku'];
+	$sku = urldecode($cart_row['sku']);
 	$quantity = $cart_row['quantity'];
 	$options = $cart_row['options'];
 	$itemCode = $this->getItemCode($post_id);
@@ -217,18 +240,19 @@ jQuery(document).ready(function($){
 	$cartItemName = $this->getCartItemName($post_id, $sku);
 	//$skuPrice = $this->getItemPrice($post_id, $sku);
 	$skuPrice = $cart_row['price'];
-	$pictid = $this->get_mainpictid($itemCode);
+	$pictid = (int)$this->get_mainpictid($itemCode);
 	$optstr =  '';
 	foreach((array)$options as $key => $value){
 //20110629ysk start 0000190
 		//if( !empty($key) )
 		//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 		if( !empty($key) ) {
+			$key = urldecode($key);
 			if(is_array($value)) {
 				$c = '';
 				$optstr .= esc_html($key) . ' : '; 
 				foreach($value as $v) {
-					$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+					$optstr .= $c.nl2br(esc_html(urldecode($v)));
 					$c = ', ';
 				}
 				$optstr .= "<br />\n"; 

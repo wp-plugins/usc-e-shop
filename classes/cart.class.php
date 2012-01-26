@@ -20,7 +20,7 @@ class usces_cart {
 		if( $_SERVER['HTTP_REFERER'] ){
 			$_SESSION['usces_previous_url'] = $_SERVER['HTTP_REFERER'];
 		}else{
-			$_SESSION['usces_previous_url'] = str_replace('https://', 'http://', get_bloginfo('home')).'/';
+			$_SESSION['usces_previous_url'] = str_replace('https://', 'http://', get_home_url()).'/';
 		}
 			
 		$ids = array_keys($_POST['inCart']);
@@ -30,15 +30,20 @@ class usces_cart {
 		$sku = $skus[0];
 			
 		$this->in_serialize($post_id, $sku);
+		if( !isset($_SESSION['usces_cart'][$this->serial]['quant']) ){
+			$_SESSION['usces_cart'][$this->serial]['quant'] = 0;
+		}
 		
-		if ( isset($_POST['quant']) && $_POST['quant'][$post_id][$sku] != '') {
+		if ( isset($_POST['quant'][$post_id][$sku]) && $_POST['quant'][$post_id][$sku] != '') {
 		
-			$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
+			//$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
+			$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$post_id][$sku];
 			
 		} else {
 		
 			if ( isset($_SESSION['usces_cart'][$this->serial]) )
-				$_SESSION['usces_cart'][$this->serial]['quant'] += 1;
+				//$_SESSION['usces_cart'][$this->serial]['quant'] += 1;
+				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
 			else
 				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
 				
@@ -78,7 +83,7 @@ class usces_cart {
 			if ( $_POST['quant'][$index][$post_id][$sku] != '') {
 		
 				$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$index][$post_id][$sku];
-				$_SESSION['usces_cart'][$this->serial]['advance'] = $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]);
+				$_SESSION['usces_cart'][$this->serial]['advance'] = isset($_POST['advance'][$index][$post_id][$sku]) ? $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]) : array();
 				if( isset($_POST['order_action']) ){
 					$price = (int)$_POST['skuPrice'][$index][$post_id][$sku];
 				}else{
@@ -102,14 +107,16 @@ class usces_cart {
 	function wc_serialize( $value ){
 		$out = NULL;
 		if( !empty($value) )
-			$out = urlencode(serialize($value));
+//			$out = urlencode(serialize($value));
+			$out = serialize($value);
 		return $out;
 	}
 
 	function wc_unserialize( $str ){
 		$out = array();
 		if( !empty($str) )
-			$out = unserialize(urldecode($str));
+//			$out = unserialize(urldecode($str));
+			$out = unserialize($str);
 		return $out;
 	}
 
@@ -149,7 +156,9 @@ class usces_cart {
 
 	// number of data in cart ***********************************************************
 	function num_row() {
-	
+		if( !isset($_SESSION['usces_cart']) )
+			return false;
+			
 		$num = count($_SESSION['usces_cart']);
 		
 		if( $num > 0 ) {
@@ -243,7 +252,7 @@ class usces_cart {
 		$row['post_id'] = $ids[0];
 		$row['sku'] = $skus[0];
 		$row['options'] = $array[$ids[0]][$skus[0]];
-		$row['price'] = $_SESSION['usces_cart'][$serial]['price'];
+		$row['price'] = isset($_SESSION['usces_cart'][$serial]['price']) ? $_SESSION['usces_cart'][$serial]['price'] : 0;
 		$row['quantity'] = $_SESSION['usces_cart'][$serial]['quant'];
 		$row['advance'] = isset($_SESSION['usces_cart'][$serial]['advance']) ? $_SESSION['usces_cart'][$serial]['advance'] : array();
 		
@@ -285,9 +294,10 @@ class usces_cart {
 //20110203ysk end
 	// entry information ***************************************************************
 	function entry() {
+		global $usces;
 		if(isset($_SESSION['usces_member']['ID']) && !empty($_SESSION['usces_member']['ID'])) {
 //20110126ysk start
-			if($this->page !== 'confirm') {
+			if($usces->page !== 'confirm') {
 				foreach( $_SESSION['usces_member'] as $key => $value ){
 //20100818ysk start
 					if($key === 'custom_member') {
@@ -412,20 +422,72 @@ class usces_cart {
 	// get entry information ***************************************************************
 	function get_entry() {
 	
-		if(isset($_SESSION['usces_entry']['customer']))
-			$res['customer'] = $_SESSION['usces_entry']['customer'];
-		else
-			$res['customer'] = NULL;
+		$res['customer'] = array(
+								'mailaddress1' => '', 
+								'mailaddress2' => '', 
+								'password1' => '', 
+								'password2' => '', 
+								'name1' => '', 
+								'name2' => '', 
+								'name3' => '', 
+								'name4' => '', 
+								'zipcode' => '',
+								'address1' => '',
+								'address2' => '',
+								'address3' => '',
+								'tel' => '',
+								'fax' => '',
+								'country' => '',
+								'pref' => ''
+							 );
+		if(isset($_SESSION['usces_entry']['customer'])){
+			foreach((array)$_SESSION['usces_entry']['customer'] as $key => $val){
+				$res['customer'][$key] = $val;
+			}
+		}
+
+		$res['delivery'] = array(
+								'name1' => '', 
+								'name2' => '', 
+								'name3' => '', 
+								'name4' => '', 
+								'zipcode' => '',
+								'address1' => '',
+								'address2' => '',
+								'address3' => '',
+								'tel' => '',
+								'fax' => '',
+								'country' => '',
+								'pref' => '',
+								'delivery_flag' => ''
+							 );
+		if(isset($_SESSION['usces_entry']['delivery'])){
+			foreach((array)$_SESSION['usces_entry']['delivery'] as $key => $val){
+				$res['delivery'][$key] = $val;
+			}
+		}
 			
-		if(isset($_SESSION['usces_entry']['delivery']))
-			$res['delivery'] = $_SESSION['usces_entry']['delivery'];
-		else
-			$res['delivery'] = NULL;
-			
-		if(isset($_SESSION['usces_entry']['order']))
-			$res['order'] = $_SESSION['usces_entry']['order'];
-		else
-			$res['order'] = NULL;
+		$res['order'] = array(
+							'usedpoint' => '', 
+							'total_items_price' => '', 
+							'discount' => '', 
+							'shipping_charge' => '', 
+							'cod_fee' => '',
+							'shipping_charge' => '',
+							'payment_name' => '',
+							'delivery_method' => '',
+							'delivery_date' => '',
+							'delivery_time' => '',
+							'total_full_price' => '',
+							'note' => '',
+							'tax' => '',
+							'payment_name' => ''
+						 );
+		if(isset($_SESSION['usces_entry']['order'])){
+			foreach((array)$_SESSION['usces_entry']['order'] as $key => $val){
+				$res['order'][$key] = $val;
+			}
+		}
 			
 		if(isset($_SESSION['usces_entry']['reserve']))
 			$res['reserve'] = $_SESSION['usces_entry']['reserve'];
@@ -459,8 +521,8 @@ class usces_cart {
 	// get realprice ***************************************************************
 	function get_realprice($post_id, $sku, $quant, $price = NULL) {
 		global $usces;
-		
-		$skus = $usces->get_skus( $post_id, 'ARRAY_A' );
+		$sku = urldecode($sku);
+		$skus = $usces->get_skus( $post_id, 'code' );
 		
 		if($price === NULL) {
 			$p = $skus[$sku]['price'];
@@ -470,7 +532,7 @@ class usces_cart {
 //20110905ysk start 0000251
 		$p = apply_filters('usces_filter_realprice', $p, $this->serial);
 //20110905ysk end
-		if( !$skus[$sku]['gptekiyo'] ) return $p;
+		if( !$skus[$sku]['gp'] ) return $p;
 		
 		$GpN1 = $usces->getItemGpNum1($post_id);
 		$GpN2 = $usces->getItemGpNum2($post_id);

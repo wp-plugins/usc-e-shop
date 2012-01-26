@@ -4,147 +4,226 @@ function usces_define_functions(){
 //20101111ysk start
 if( !function_exists('usces_item_uploadcsv') ):
 function usces_item_uploadcsv(){
-	require_once( USCES_PLUGIN_DIR . "/libs/excel_reader2.php" );
-	global $wpdb, $usces;
+	global $wpdb, $usces, $user_ID;
+	
+	if( !current_user_can( 'import' ) ){
+		$res['status'] = 'error';
+		$res['message'] = __('You do not have permission to do that.');
+		$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+		wp_redirect($url);
+		exit;
+	}
+	
+	//check dataSELECT id,title FROM table GROUP BY id HAVING COUNT(id) > 1;
+	$query = $wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s 
+								GROUP BY meta_value HAVING COUNT(meta_value) > 1", 
+							'_itemCode');
+	$db_check = $wpdb->get_results( $query, ARRAY_A );
+	if( $db_check ) {
+		$res['status'] = 'error';
+		$res['message'] .= __('The same product cord is registered.', 'usces');
+		foreach($db_check as $d_item){
+			$res['message'] .= ' , ' . $d_item['meta_value'];
+		}
+		$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+		wp_redirect($url);
+		exit;
+	}	
+
+
+	$path = WP_CONTENT_DIR . '/uploads/';
+/*********************************************************************/
+//	Upload
+/**********************************************************************/
+	if( isset($_REQUEST['action']) && 'itemcsv' == $_REQUEST['action'] ){
+		$workfile = $_FILES["usces_upcsv"]["tmp_name"];
+	
+		if ( !is_uploaded_file($workfile) ) {
+			$res['status'] = 'error';
+			$res['message'] = __('The file was not uploaded.', 'usces');
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			wp_redirect($url);
+			exit;
+		}
+	
+		//check ext
+		list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
+		if( $fext != 'csv' ) {
+			$res['status'] = 'error';
+			$res['message'] =  __('The file is not supported.', 'usces').$fname.'.'.$fext;
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			wp_redirect($url);
+			exit;
+		}
+		
+		$new_filename = base64_encode($fname . '_' . time() . '.' .$fext);
+		if ( ! move_uploaded_file($_FILES['usces_upcsv']['tmp_name'], $path.$new_filename) ) {
+			$res['status'] = 'error';
+			$res['message'] =  __('The file was not stored.', 'usces').$fname.'.'.$fext;
+			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
+			wp_redirect($url);
+			exit;
+		}
+		return $new_filename;
+  	}
+
+
+	$yn = "\r\n";
+	$br = "<br />";
+/*********************************************************************/
+//	Register
+/**********************************************************************/
+	if( isset($_REQUEST['regfile']) && '' != $_REQUEST['regfile'] && isset($_REQUEST['action']) && 'upload_register' == $_REQUEST['action'] ){
+		$file_name = $_REQUEST['regfile'];
+		$decode_filename = base64_decode($file_name);
+		if( ! file_exists($path.$file_name) ){
+			$res['status'] = 'error';
+			$res['message'] =  __('CSV file does not exist.', 'usces').esc_html($decode_filename);
+			echo $res['status'] . ' : ' . $res['message'];
+			return;
+		}
+	}
+	/*////////////////////////////////////////*/
+	// ready 
+	/*////////////////////////////////////////*/
+	$start = microtime(true);
+	
 	//$wpdb->show_errors();
 	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
-	set_time_limit(1800);
-	
-	define('USCES_COL_ITEM_CODE', 0);
-	define('USCES_COL_ITEM_NAME', 1);
-	define('USCES_COL_ITEM_RESTRICTION', 2);
-	define('USCES_COL_ITEM_POINTRATE', 3);
-	define('USCES_COL_ITEM_GPNUM1', 4);
-	define('USCES_COL_ITEM_GPDIS1', 5);
-	define('USCES_COL_ITEM_GPNUM2', 6);
-	define('USCES_COL_ITEM_GPDIS2', 7);
-	define('USCES_COL_ITEM_GPNUM3', 8);
-	define('USCES_COL_ITEM_GPDIS3', 9);
-	define('USCES_COL_ITEM_SHIPPING', 10);
-	define('USCES_COL_ITEM_DELIVERYMETHOD', 11);
-	define('USCES_COL_ITEM_SHIPPINGCHARGE', 12);
-	define('USCES_COL_ITEM_INDIVIDUALSCHARGE', 13);
-	define('USCES_COL_POST_TITLE', 14);
-	define('USCES_COL_POST_CONTENT', 15);
-	define('USCES_COL_POST_EXCERPT', 16);
-	define('USCES_COL_POST_STATUS', 17);
-	define('USCES_COL_POST_MODIFIED', 18);
-	define('USCES_COL_CATEGORY', 19);
-	define('USCES_COL_POST_TAG', 20);
-	define('USCES_COL_SKU_CODE', 21);
-	define('USCES_COL_SKU_NAME', 22);
-	define('USCES_COL_SKU_CPRICE', 23);
-	define('USCES_COL_SKU_PRICE', 24);
-	define('USCES_COL_SKU_ZAIKONUM', 25);
-	define('USCES_COL_SKU_ZAIKO', 26);
-	define('USCES_COL_SKU_UNIT', 27);
-	define('USCES_COL_SKU_GPTEKIYO', 28);
-	define('IDENTIFIER_OLE', pack("CCCCCCCC",0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1));
+	//set_time_limit(1800);
 
-	$workfile = $_FILES["usces_upcsv"]["tmp_name"];
+	define('USCES_COL_POST_ID', 0);	//new
+	define('USCES_COL_POST_AUTHOR', 1);	//new
+	define('USCES_COL_POST_CONTENT', 2);	//15
+	define('USCES_COL_POST_TITLE', 3);	//14
+	define('USCES_COL_POST_EXCERPT', 4);	//16
+	define('USCES_COL_POST_STATUS', 5);	//17
+	define('USCES_COL_POST_COMMENT_STATUS', 6);	//new
+	define('USCES_COL_POST_PASSWORD', 7);	//new
+	define('USCES_COL_POST_NAME', 8);	//new
+	define('USCES_COL_POST_MODIFIED', 9);	//18
+
+	define('USCES_COL_ITEM_CODE', 10);	//0
+	define('USCES_COL_ITEM_NAME', 11);	//1
+	define('USCES_COL_ITEM_RESTRICTION', 12);	//2
+	define('USCES_COL_ITEM_POINTRATE', 13);	//3
+	define('USCES_COL_ITEM_GPNUM1', 14);	//4
+	define('USCES_COL_ITEM_GPDIS1', 15);	//5
+	define('USCES_COL_ITEM_GPNUM2', 16);	//6
+	define('USCES_COL_ITEM_GPDIS2', 17);	//7
+	define('USCES_COL_ITEM_GPNUM3', 18);	//8
+	define('USCES_COL_ITEM_GPDIS3', 19);	//9
+	define('USCES_COL_ITEM_SHIPPING', 20);	//10
+	define('USCES_COL_ITEM_DELIVERYMETHOD', 21);	//11
+	define('USCES_COL_ITEM_SHIPPINGCHARGE', 22);	//12
+	define('USCES_COL_ITEM_INDIVIDUALSCHARGE', 23);	//13
+	
+	define('USCES_COL_CATEGORY', 24);	//19
+	define('USCES_COL_POST_TAG', 25);	//20
+	define('USCES_COL_CUSTOM_FIELD', 26);	//new
+	
+	define('USCES_COL_SKU_CODE', 27);	//21
+	define('USCES_COL_SKU_NAME', 28);	//22
+	define('USCES_COL_SKU_CPRICE', 29);	//23
+	define('USCES_COL_SKU_PRICE', 30);	//24
+	define('USCES_COL_SKU_ZAIKONUM', 31);	//25
+	define('USCES_COL_SKU_ZAIKO', 32);	//26
+	define('USCES_COL_SKU_UNIT', 33);	//27
+	define('USCES_COL_SKU_GPTEKIYO', 34);	//28
+//	define('IDENTIFIER_OLE', pack("CCCCCCCC",0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1));
+
+
 	$lines = array();
 	$total_num = 0;
 	$comp_num = 0;
 	$err_num = 0;
-	$min_field_num = 29;
+	$min_field_num = 35;//29
 	$log = '';
 	$pre_code = '';
+	$sku_index = 0;
 	$res = array();
 	$date_pattern = "/(\d{4})-(\d{2}|\d)-(\d{2}|\d) (\d{2}):(\d{2}|\d):(\d{2}|\d)/";
-	
-	if ( !is_uploaded_file($workfile) ) {
-		$res['status'] = 'error';
-		$res['message'] = __('The file was not uploaded.', 'usces');
-		return $res;
-	}
-
-	//check ext
-	list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
-	if( $fext != 'csv' && $fext != 'xls' ) {
-		$res['status'] = 'error';
-		$res['message'] =  __('The file is not supported.', 'usces').$fname.'.'.$fext;
-		return $res;
-	}
+	$linereadytime = 0;
+	$checktime = 0;
+	$insertposttime = 0;
+	$metadeletetime = 0;
+	$addmetatime = 0;
+	$AddOptiontime = 0;
+	$AddSKUtime = 0;
+	$onelinetime = 0;
 	
 	//log
 	if ( ! ($fpi = fopen (USCES_PLUGIN_DIR.'/logs/itemcsv_log.txt', "w"))) {
 		$res['status'] = 'error';
-		$res['message'] = __('The log file was not prepared for.', 'usces');
-		return $res;
+		$res['message'] = __('The log file was not prepared for.', 'usces').esc_html($decode_filename);
+		echo $res['status'] . ' : ' . $res['message'];
+		return;
 	}
 	//read data
-	if ( ! ($fpo = fopen ($workfile, "r"))) {
+	if ( ! ($fpo = fopen ($path.$file_name, "r"))) {
 		$res['status'] = 'error';
-		$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
-		return $res;
+		$res['message'] = __('A file does not open.', 'usces').esc_html($decode_filename);
+		echo $res['status'] . ' : ' . $res['message'];
+		return;
 	}
-	
-	$lines = array();
-	$sp = ",";
-	if('csv' !== $fext) {
-		$res['status'] = 'error';
-		$res['message'] = __('このファイルはCSVファイルでは有りません。', 'usces').$fname.'.'.$fext;
-		return $res;
 
-//		$sp = "\t";
-//		$data = @file_get_contents($workfile);
-//		if (!$data) {
-//			$res['status'] = 'error';
-//			$res['message'] = __('A file does not open.', 'usces').$fname.'.'.$fext;
-//			return $res;
-//		}
-//		if(substr($data, 0, 8) != IDENTIFIER_OLE) {
-//			//$fext = 'tsv';
-//			//while (! feof ($fpo)) {
-//			//	$temp = fgets ($fpo, 10240);
-//			//	if( 5 < strlen($temp) )
-//			//		$lines[] = str_replace('"', '', $temp);
-//			//}
-//			//20101208ysk
-//			$res['status'] = 'error';
-//			$res['message'] = __('このファイルはExcelファイルでは有りません。', 'usces').$fname.'.'.$fext;
-//			return $res;
-//		} else {
-//			$excel = new Spreadsheet_Excel_Reader();
-//			$excel->read($workfile);
-//			$rows = $excel->rowcount();//最大行数
-//			$cols = $excel->colcount();//最大列数
-//			for($r = 1; $r <= $rows; $r++) {
-//				$line = '';
-//				for($c = 1; $c <= $cols; $c++) {
-//					$line .= mb_convert_encoding($excel->val($r, $c), "SJIS", "UTF-8").$sp;
-//				}
-//				$line = trim($line, $sp);
-//				$lines[] = $line;
-//			}
-//		}
+
+	$orglines = array();
+	$sp = ",";
+	$fname_parts = explode('.', $decode_filename);
+	if('csv' !== end($fname_parts)) {
+		$res['status'] = 'error';
+		$res['message'] = __('This file is not in the CSV file.', 'usces').esc_html($decode_filename);
+		echo $res['status'] . ' : ' . $res['message'];
+		return;
+
 	} else {
 		$buf = '';
-		$lines = array();
 		while (! feof ($fpo)) {
 			$temp = fgets ($fpo, 10240);
 			if( 0 == strlen($temp) ) continue;
 			
 			$num = substr_count($temp, '"');
 			if( 0 == $num % 2 && '' == $buf ){
-				$lines[] = $temp;
+				$orglines[] = $temp;
 			}elseif( 1 == $num % 2 && '' == $buf ){
 				$buf .= $temp;
 			}elseif( 0 == $num % 2 && '' != $buf ){
 				$buf .= $temp;
 			}elseif( 1 == $num % 2 && '' != $buf ){
 				$buf .= $temp;
-				$lines[] = $buf;
+				$orglines[] = $buf;
 				$buf = '';
 			}
 		}
 	}
+	fclose($fpo);
+	
+	echo '<script type="text/javascript">changeMsg("' . __('Processing...', 'usces') . '");</script>'.$yn;
+	echo '<div class="error_log">'.$yn;
+	ob_flush();
+	flush();
+
+	foreach($orglines as $line){
+		$line = trim($line);
+		if( 0 !== strpos( $line, 'Post ID' ) && !empty($line) )
+			$lines[] = $line;
+	}
 	$total_num = count($lines);
 
-	//data check & reg
+	$readytime = microtime(true);
+	//reg loop
 	foreach($lines as $rows_num => $line){
+	
+	
+		/*////////////////////////////////////////*/
+		// lineReady 
+		/*////////////////////////////////////////*/
+		$linestart = microtime(true);
 		$datas = array();
+
 		$logtemp = '';
+		$mestemp = '';
 		$line = trim($line);
 		if( empty($line) ) continue;
 		
@@ -175,78 +254,218 @@ function usces_item_uploadcsv(){
 			}
 		}
 
-//		if( $min_field_num > count($datas) || 0 < (count($datas) - $min_field_num) % 4 ){
+		if( 'Post ID' == $datas[USCES_COL_POST_ID] )
+			continue;
+
+
 		if( $min_field_num > count($datas) ){
 			$err_num++;
-			$logtemp .= "No." . ($rows_num+1)." ".count($datas) . "\t".__('The number of the columns is abnormal.', 'usces')."\r\n";
+			$mes = "No." . ($rows_num+1)." ".count($datas) . "\t".__('The number of the columns is abnormal.', 'usces');
+			$logtemp .= $mes.$yn;
 			$log .= $logtemp;
+			echo $mes.$br.$yn;
 			continue;
 		}
+
+		if( $pre_code == $datas[USCES_COL_ITEM_CODE] && '' == $datas[USCES_COL_POST_ID] ){
+			$mode = 'add';
+
+		}else{
+			$post_id = ( '' != $datas[USCES_COL_POST_ID] ) ? (int)$datas[USCES_COL_POST_ID] : NULL;
+			if( $post_id ){
+				$db_res = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID = %d", $post_id) );
+				if( !$db_res ){
+					$err_num++;
+					$mes = "No." . ($rows_num+1) . "\t".__("Post-ID {$post_id} does not exist in the database.", 'usces');
+					$logtemp .= $mes.$yn;
+					$log .= $logtemp;
+					echo $mes.$br.$yn;
+					continue;
+				}
+			}
+			if( $post_id ){
+				$mode = 'upd';
+			}else{
+				$mode = 'add';
+			}
+		}
+
+		$lineready = microtime(true);
+		$linereadytime += $lineready-$linestart;
+		/*////////////////////////////////////////*/
+		// dataCheck 
+		/*////////////////////////////////////////*/
+		//data check loop
 		foreach($datas as $key => $data){
 			$data = trim(mb_convert_encoding($data, 'UTF-8', 'SJIS'));
 			switch($key){
 				case USCES_COL_ITEM_CODE:
-					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('An item cord is non-input.', 'usces')."\r\n";
+					if( 0 == strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('An item cord is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}else{
+						$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
+												WHERE meta_key = %s AND meta_value = %s", 
+												'_itemCode', $data);
+						$db_res1 = $wpdb->get_results( $query, ARRAY_A );
+						if( 'upd' == $mode ){
+							if( 1 < count($db_res1) ){
+								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has been duplicated.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+								$mes = '';
+								foreach($db_res1 as $res_val){
+									$mes .= "meta_id=" . $res_val['meta_id'] . ", post_id=" . $res_val['post_id'] . "<br />";
+								}
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+							}
+							$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
+													WHERE post_id <> %d AND meta_key = %s AND meta_value = %s", 
+													$post_id, '_itemCode', $data);
+							$db_res2 = $wpdb->get_results( $query, ARRAY_A );
+							if( 0 < count($db_res2) ){
+								$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+								$mes = '';
+								foreach($db_res2 as $res_val){
+									$mes .= "meta_id=" . $res_val['meta_id'] . ", post_id=" . $res_val['post_id'] . "<br />";
+								}
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+							}
+						}else if( 'add' == $mode ){
+							if( $data != $pre_code ) {
+								if( 0 < count($db_res1) ){
+									$mes = "No." . ($rows_num+1) . "\t".__('This Item-Code has already been used.', 'usces');
+									$logtemp .= $mes.$yn;
+									$mestemp .= $mes.$br.$yn;
+									$mes = '';
+									foreach($db_res1 as $res_val){
+										$mes .= "meta_id=" . $res_val['meta_id'] . ", post_id=" . $res_val['post_id'] . "<br />";
+									}
+									$logtemp .= $mes.$yn;
+									$mestemp .= $mes.$br.$yn;
+								}
+							}
+						}
+					}
 					break;
 				case USCES_COL_ITEM_NAME:
-					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('An item name is non-input.', 'usces')."\r\n";
+					if( 0 == strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('An item name is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_RESTRICTION:
-					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the purchase limit number is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the purchase limit number is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_POINTRATE:
-					if( !preg_match("/^[0-9]+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the point rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the point rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPNUM1:
-					if( !preg_match("/^[0-9]+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('umerical value is abnormality.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('umerical value is abnormality.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPDIS1:
-					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM1] && 1 > $data ) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM1] && 1 > $data ) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."1-".__('rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPNUM2:
-					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM1] >= $data && 0 != $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('umerical value is abnormality.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM1] >= $data && 0 != $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('umerical value is abnormality.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPDIS2:
-					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM2] && 1 > $data ) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM2] && 1 > $data ) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."2-".__('rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPNUM3:
-					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM2] >= $data && 0 != $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('umerical value is abnormality.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ($datas[USCES_COL_ITEM_GPNUM2] >= $data && 0 != $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('umerical value is abnormality.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_GPDIS3:
-					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM3] && 1 > $data ) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('rate is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || ( 0 < $datas[USCES_COL_ITEM_GPNUM3] && 1 > $data ) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Business package discount', 'usces')."3-".__('rate is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_SHIPPING:
-					if( !preg_match("/^[0-9]+$/", $data) || 9 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the shipment day is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 9 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the shipment day is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_DELIVERYMETHOD:
+					if( 0 === strlen($data) || !preg_match("/^[0-9;]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Invalid value of Delivery method.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
+					break;
 				case USCES_COL_ITEM_SHIPPINGCHARGE:
+					if( 0 === strlen($data) || !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('Invalid type of shipping charge.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_ITEM_INDIVIDUALSCHARGE:
-					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the postage individual charging is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the postage individual charging is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
+				case USCES_COL_POST_ID:
+					if( !preg_match("/^[0-9]+$/", $data) && 0 != strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the Post-ID is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
+					break;
+				case USCES_COL_POST_AUTHOR:
+				case USCES_COL_POST_COMMENT_STATUS:
+				case USCES_COL_POST_PASSWORD:
+				case USCES_COL_POST_NAME:
 				case USCES_COL_POST_TITLE:
 				case USCES_COL_POST_CONTENT:
 				case USCES_COL_POST_EXCERPT:
 					break;
 				case USCES_COL_POST_STATUS:
-//20110421ysk start
-					//$array17 = array('publish', 'future', 'draft', 'pending');
 					$array17 = array('publish', 'future', 'draft', 'pending', 'private');
-//20110421ysk end
-					if( !in_array($data, $array17) || '' == $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces')."\r\n";
+					if( !in_array($data, $array17) || '' == $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_POST_MODIFIED:
 					if( 'future' == $datas[USCES_COL_POST_STATUS] && ('' == $data || '0000-00-00 00:00:00' == $data) ){
@@ -255,83 +474,100 @@ function usces_item_uploadcsv(){
 										(0 < $match[4] && 24 > $match[4]) && 
 										(0 < $match[5] && 60 > $match[5]) && 
 										(0 < $match[6] && 60 > $match[6]) ){
-								$logtemp .= "";
+								$mes = "";
 							}else{
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+								$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
 							}
 							
 						}else{
-							$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+							$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+							$logtemp .= $mes.$yn;
+							$mestemp .= $mes.$br.$yn;
 						}
 					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
-						//if( !preg_match($date_pattern, $data, $match) || strtotime($data) === false || strtotime($data) == -1 )
-						//	$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
 						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
-							if(strtotime($data) === false)
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+							if(strtotime($data) === false){
+								$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+							}
 						} else {
 							$datetime = explode(' ', $data);
 							$date_str = usces_dates_interconv($datetime[0]).' '.$datetime[1];
-							if(strtotime($date_str) === false)
-								$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces')."\r\n";
+							if(strtotime($date_str) === false){
+								$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
+								$logtemp .= $mes.$yn;
+								$mestemp .= $mes.$br.$yn;
+							}
 						}
 					}
 					break;
 				case USCES_COL_CATEGORY:
-					if( 0 == strlen($data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A category is non-input.', 'usces')."\r\n";
+					if( 0 == strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A category is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_POST_TAG:
 					break;
+				case USCES_COL_CUSTOM_FIELD:
+					break;
 				case USCES_COL_SKU_CODE:
 					if( 0 == strlen($data) ){
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A SKU cord is non-input.', 'usces')."\r\n";
-					}else if( $pre_code == $datas[USCES_COL_ITEM_CODE] ){
-						$query = $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta 
-												WHERE post_id = %d AND meta_key = %s", 
-												$post_id, 
-												'_isku_'.trim(mb_convert_encoding($data, 'UTF-8', 'SJIS'))
-								);
-						$meta_id = $wpdb->get_var( $query );
-						if($meta_id !== NULL)
-							$logtemp .= "No." . ($rows_num+1) . "\t".__('A SKU cord repeats.', 'usces')."\r\n";
+						$mes = "No." . ($rows_num+1) . "\t".__('A SKU cord is non-input.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
 					}
 					break;
 				case USCES_COL_SKU_NAME:
-//20110315ysk start
 					break;
 				case USCES_COL_SKU_CPRICE:
-					if( 0 < strlen($data) and !preg_match("/^\d$|^\d+\.?\d+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the price is abnormal.', 'usces')."\r\n";
+					if( 0 < strlen($data) and !preg_match("/^\d$|^\d+\.?\d+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the price is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
-//20110315ysk end
 				case USCES_COL_SKU_PRICE:
-//20110315ysk start
-					//if( !preg_match("/^[0-9]+$/", $data) || 0 == strlen($data) )
-					if( !preg_match("/^\d$|^\d+\.?\d+$/", $data) || 0 == strlen($data) )
-//20110315ysk end
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the normal price is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^\d$|^\d+\.?\d+$/", $data) || 0 == strlen($data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the normal price is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_SKU_ZAIKONUM:
-//20110315ysk start
-					if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the stock amount is abnormal.', 'usces')."\r\n";
-//20110315ysk end
+					if( 0 < strlen($data) and !preg_match("/^[0-9]+$/", $data) ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the stock amount is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_SKU_ZAIKO:
-					if( !preg_match("/^[0-9]+$/", $data) || 4 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('A value of the stock status is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 4 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('A value of the stock status is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 				case USCES_COL_SKU_UNIT:
 					break;
 				case USCES_COL_SKU_GPTEKIYO:
-					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data )
-						$logtemp .= "No." . ($rows_num+1) . "\t".__('The value of the duties pack application is abnormal.', 'usces')."\r\n";
+					if( !preg_match("/^[0-9]+$/", $data) || 1 < $data ){
+						$mes = "No." . ($rows_num+1) . "\t".__('The value of the duties pack application is abnormal.', 'usces');
+						$logtemp .= $mes.$yn;
+						$mestemp .= $mes.$br.$yn;
+					}
 					break;
 			}
 		}
 		$opnum = ceil((count($datas) - $min_field_num) / 4);
 		for($i=0; $i<$opnum; $i++){
+			$val = array();
+			$oplogtemp = '';
+			$opmestemp = '';
 			for($o=1; $o<=4; $o++){
 				$key = ($min_field_num-1)+$o+($i*4);
 				if( isset($datas[$key]) ){
@@ -341,33 +577,55 @@ function usces_item_uploadcsv(){
 				}
 				switch($o){
 					case 1:
-//						if( isset($datas[$key]) && 0 == strlen($datas[$key]) )
-//							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces')."\r\n";
+						if( empty($value) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option name of No.%s option is non-input.', ($i+1)), 'usces').$br.$yn;
+						}
+						$val['name'] = $value;
 						break;
 					case 2:
-						if( $value != NULL && ((0 != (int)$value) and (1 != (int)$value) and (2 != (int)$value) and (5 != (int)$value)) )
-							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces')."\r\n";
+						if( $value != NULL && ((0 != (int)$value) and (1 != (int)$value) and (2 != (int)$value) and (5 != (int)$value)) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces').$br.$yn;
+						}
+						$val['mean'] = $value;
 						break;
 					case 3:
-						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 1 < (int)$value) )
-							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-required-item of No.%s option is abnormal.', ($i+1)), 'usces')."\r\n";
+						if( $value != NULL && (!preg_match("/^[0-9]+$/", $value) || 1 < (int)$value) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-required-item of No.%s option is abnormal.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-required-item of No.%s option is abnormal.', ($i+1)), 'usces').$br.$yn;
+						}
+						$val['essential'] = $value;
 						break;
 					case 4:
-						if( ($value != NULL && $value == '') && (2 > $datas[($key-2)] && 0 < strlen($datas[($key-2)])) )
-							$logtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-select of No.%s option is non-input.', ($i+1)), 'usces')."\r\n";
+						if( ($value != NULL && $value == '') && (2 > $datas[($key-2)] && 0 < strlen($datas[($key-2)])) ){
+							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-select of No.%s option is non-input.', ($i+1)), 'usces').$yn;
+							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-select of No.%s option is non-input.', ($i+1)), 'usces').$br.$yn;
+						}
+						$val['value'] = $value;
 						break;
 				}
+			}
+			if( '' != $val['name'] || '' != $val['mean'] || '' != $val['essential'] || '' != $val['value'] ){
+				$logtemp .= $oplogtemp;
+				$mestemp .= $opmestemp;
 			}
 		}
 		if( 0 < strlen($logtemp) ){
 			$err_num++;
 			$log .= $logtemp;
-//20110315ysk start
-			//$pre_code = $datas[USCES_COL_ITEM_CODE];
-//20110315ysk end
+			echo $mestemp;
 			continue;
 		}
 		
+		
+		
+		/******************/
+		$checkend = microtime(true);
+		$checktime += $checkend-$lineready;
+		/*////////////////////////////////////////*/
+		// insPost 
+		/*////////////////////////////////////////*/
 		//wp_posts data reg;
 		$cdatas = array();
 		$post_fields = array();
@@ -375,151 +633,144 @@ function usces_item_uploadcsv(){
 		$opt = array();
 		$valstr = '';
 
-		$mode = 'add';
-		if($pre_code != $datas[USCES_COL_ITEM_CODE]) {
-//20101207ysk start
-			//$post_id = $usces->get_postIDbyCode($datas[USCES_COL_ITEM_CODE]);
-			$query = $wpdb->prepare("SELECT meta.post_id FROM $wpdb->postmeta AS meta 
-				INNER JOIN $wpdb->posts AS post ON meta.post_id = post.ID AND post.post_status <> 'trash' AND post.post_mime_type = 'item' 
-				WHERE meta.meta_value = %s LIMIT 1", trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')));
-			$post_id = $wpdb->get_var( $query );
-//20101207ysk end
-			if(!empty($post_id)) $mode = 'upd';
-		}
-
-		if( $pre_code != $datas[USCES_COL_ITEM_CODE] ){
 		
-			//add posts
-			$query = "SHOW FIELDS FROM $wpdb->posts";
-			$results = $wpdb->get_results( $query, ARRAY_A );
-			if($mode == 'add') {
-				foreach($results as $ind => $rows){
-					$post_fields[] = $rows['Field'];
-				}
-			} elseif($mode == 'upd') {
-				$post_fields[] = 'post_modified';
-				$post_fields[] = 'post_modified_gmt';
-				$post_fields[] = 'post_content';
-				$post_fields[] = 'post_title';
-				$post_fields[] = 'post_excerpt';
-				$post_fields[] = 'post_status';
-			}
-			foreach($post_fields as $key){
-				switch( $key ){
-					case 'ID':
-						break;
-					case 'post_author':
-						$cdatas[$key] = 1;
-						break;
-					case 'post_date':
-					case 'post_modified':
-						$data = $datas[USCES_COL_POST_MODIFIED];
-						if( $data == '' || $data == '0000-00-00 00:00:00' ){
-							$cdatas[$key] = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-						}else{
-							//$cdatas[$key] = $data;
+		if( $pre_code != $datas[USCES_COL_ITEM_CODE] ){
+			$sku_index = 0;
 
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
-								$cdatas[$key] = $data;
-							} else {
-								$datetime = explode(' ', $data);
-								$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
-								$cdatas[$key] = $date_str;
-							}
-						}
-						break;
-					case 'post_date_gmt':
-					case 'post_modified_gmt':
-						$data = $datas[USCES_COL_POST_MODIFIED];
-						if( $data == '' || $data == '0000-00-00 00:00:00' ){
-							$cdatas[$key] = gmdate('Y-m-d H:i:s');
-						}else{
-							//$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
-							if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
-								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($data));
-							} else {
-								$datetime = explode(' ', $data);
-								$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
-								$cdatas[$key] = gmdate('Y-m-d H:i:s', strtotime($date_str));
-							}
-						}
-						break;
-					case 'post_content':
-						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS'));
-						break;
-					case 'post_title':
-						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS'));
-						break;
-					case 'post_excerpt':
-						$cdatas[$key] = trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS'));
-						break;
-					case 'post_status':
-						$cdatas[$key] = $datas[USCES_COL_POST_STATUS];
-						break;
-					case 'comment_status':
-					case 'ping_status':
-						$cdatas[$key] = 'close';
-						break;
-					case 'post_password':
-					case 'post_name':
-					case 'to_ping':
-					case 'pinged':
-					case 'post_content_filtered':
-					case 'guid':
-						$cdatas[$key] = '';
-						break;
-					case 'post_parent':
-					case 'menu_order':
-					case 'comment_count':
-						$cdatas[$key] = 0;
-						break;
-					case 'post_type':
-						$cdatas[$key] = 'post';
-						break;
-					case 'post_mime_type':
-						$cdatas[$key] = 'item';
-						break;
-					default:
-						$cdatas[$key] = '';
+			$cdatas['ID'] = $post_id;
+			
+			$data = $datas[USCES_COL_POST_MODIFIED];
+			if( $data == '' || $data == '0000-00-00 00:00:00' ){
+				if( 'add' == $mode ){
+					$cdatas['post_date'] = current_time( 'mysql' );
+					$cdatas['post_date_gmt'] = current_time( 'mysql', 1 );
 				}
+				$cdatas['post_modified'] = current_time( 'mysql' );
+				$cdatas['post_modified_gmt'] = current_time( 'mysql', 1 );
+			}else{
+				if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
+					$time_data =strtotime($data);
+				} else {
+					$datetime = explode(' ', $data);
+					$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
+					$time_data =strtotime($date_str);
+				}
+				if( 'add' == $mode ){
+					$cdatas['post_date'] = date('Y-m-d H:i:s', $time_data);
+					$cdatas['post_date_gmt'] = gmdate('Y-m-d H:i:s', $time_data);
+				}
+				$cdatas['post_modified'] = date('Y-m-d H:i:s', $time_data);
+				$cdatas['post_modified_gmt'] = gmdate('Y-m-d H:i:s', $time_data);
 			}
+//usces_log('mysql2date : '.mysql2date('U', $cdatas['post_modified'], false) . '/' . mysql2date('U', current_time( 'mysql' ), false), 'acting_transaction.log');
+			if ( 'publish' == $datas[USCES_COL_POST_STATUS] ) {
+				$now = current_time( 'mysql' );
+				if ( mysql2date('U', $cdatas['post_modified'], false) > mysql2date('U', $now, false) )
+					$datas[USCES_COL_POST_STATUS] = 'future';
+			} elseif( 'future' == $datas[USCES_COL_POST_STATUS] ) {
+				$now = current_time( 'mysql' );
+				if ( mysql2date('U', $cdatas['post_modified'], false) <= mysql2date('U', $now, false) )
+					$datas[USCES_COL_POST_STATUS] = 'publish';
+			}
+
+			$cdatas['ID'] = $post_id;
+			$cdatas['post_author'] = ( '' != $datas[USCES_COL_POST_AUTHOR] ) ? $datas[USCES_COL_POST_AUTHOR] : 1;
+			$cdatas['post_content'] = trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS'));
+			$cdatas['post_title'] = trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS'));
+			$cdatas['post_excerpt'] = trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS'));
+			$cdatas['post_status'] = $datas[USCES_COL_POST_STATUS];
+			$cdatas['comment_status'] = ( '' != $datas[USCES_COL_POST_COMMENT_STATUS] ) ? $datas[USCES_COL_POST_COMMENT_STATUS] : 'close';
+			$cdatas['ping_status'] = 'close';
+			$cdatas['post_password'] = ( 'private' == $cdatas['post_status'] ) ? '' : $datas[USCES_COL_POST_PASSWORD];
+			$cdatas['post_type'] = 'post';
+			$cdatas['post_parent'] = 0;
+			$cdatas['post_name'] = 	urlencode(wp_unique_post_slug(trim(mb_convert_encoding($datas[USCES_COL_POST_NAME], 'UTF-8', 'SJIS')), $cdatas['ID'], $cdatas['post_status'], $cdatas['post_type'], $cdatas['post_parent']));
+			$cdatas['to_ping'] = '';
+			$cdatas['pinged'] = '';
+			$cdatas['menu_order'] = 0;
+			$cdatas['post_mime_type'] = 'item';
+			$cdatas['post_content_filtered'] = '';
+			
+			
+			if ( empty($cdatas['post_name']) && !in_array( $cdatas['post_status'], array( 'draft', 'pending', 'auto-draft' ) ) ) {
+				$cdatas['post_name'] = sanitize_title($cdatas['post_title'], $post_id);
+			}
+
 			if($mode == 'add') {
-				$wpdb->insert( $wpdb->posts, $cdatas );
+			
+				$cdatas['guid'] = '';
+				if ( false === $wpdb->insert( $wpdb->posts, $cdatas ) ) {
+					$err_num++;
+					$mes = "No." . ($rows_num+1) . "\t".__('This data was not registered in the database.', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
+					$pre_code = $datas[USCES_COL_ITEM_CODE];
+					continue;
+				}
 				$post_id = $wpdb->insert_id;
-				if( $post_id == NULL ){
+				$where = array( 'ID' => $post_id );
+				$wpdb->update( $wpdb->posts, array( 'guid' => get_permalink( $post_id ) ), $where );
+				
+				/******************/
+				$insert_post = microtime(true);
+				$insertposttime += $insert_post-$checkend;
+
+			}elseif($mode == 'upd') {
+			
+				$where = array( 'ID' => $post_id );
+				if ( false === $wpdb->update( $wpdb->posts, $cdatas, $where ) ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
-			} elseif($mode == 'upd') {
-				$ids['ID'] = $post_id;
-				$dbres = $wpdb->update( $wpdb->posts, $cdatas, $ids );
-				if( $dbres === false ) {
-					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
-					continue;
-				}
-//20110525ysk start 0000172
-				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ((SUBSTRING(meta_key,1,6) = '_iopt_') OR (SUBSTRING(meta_key,1,6) = '_isku_') OR (SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_')) AND post_id = %d", $post_id);
-//20110525ysk end
+
+				/******************/
+				$insert_post = microtime(true);
+				$insertposttime += $insert_post-$checkend;
+				//end of wp_insert_post
+				/************************************************************************************************/
+				/*////////////////////////////////////////*/
+				// delMeta 
+				/*////////////////////////////////////////*/
+
+				//delete all metas of Item
+				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ( meta_key = '_iopt_' OR meta_key = '_isku_' OR ( SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_') ) AND post_id = %d", $post_id);
+				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete postmeta', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
+				// delete Item revisions
+				$query = $wpdb->prepare("DELETE FROM $wpdb->posts WHERE post_parent = %d AND post_type = %s", $post_id, 'revision');
+				$dbres = $wpdb->query( $query );
+				if( $dbres === false ) {
+					$err_num++;
+					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete revisions', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
+					$pre_code = $datas[USCES_COL_ITEM_CODE];
+					continue;
+				}
+				// delete relationships of category 
 				$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
-					$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(category)', 'usces');
+					$log .= $mes.$yn;
+					echo $mes.$br.$yn;
 					$pre_code = $datas[USCES_COL_ITEM_CODE];
 					continue;
 				}
+				// delete relationships of tag 
 				$query = "SELECT term_taxonomy_id, COUNT(*) AS ct FROM $wpdb->term_relationships GROUP BY term_taxonomy_id";
 				$relation_data = $wpdb->get_results( $query, ARRAY_A );
 				foreach((array)$relation_data as $relation_rows) {
@@ -528,13 +779,21 @@ function usces_item_uploadcsv(){
 					$dbres = $wpdb->update( $wpdb->term_taxonomy, $term_taxonomy_updatas, $term_taxonomy_ids );
 					if( $dbres === false ) {
 						$err_num++;
-						$log .= "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces')."\r\n";
+						$mes = "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(tag)', 'usces');
+						$log .= $mes.$yn;
+						echo $mes.$br.$yn;
 						$pre_code = $datas[USCES_COL_ITEM_CODE];
 						continue;
 					}
 				}
 			}
 
+			/******************/
+			$metadelete = microtime(true);
+			$metadeletetime += $metadelete-$insert_post;
+			/*////////////////////////////////////////*/
+			// addMeta 
+			/*////////////////////////////////////////*/
 			//add postmeta
 			$itemDeliveryMethod = explode(';',  $datas[USCES_COL_ITEM_DELIVERYMETHOD]);
 			$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS'))) . "'),";
@@ -549,56 +808,41 @@ function usces_item_uploadcsv(){
 			$valstr .= '(' . $post_id . ", '_itemGpDis3','" . $datas[USCES_COL_ITEM_GPDIS3] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemShipping','" . $datas[USCES_COL_ITEM_SHIPPING] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
-			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_SHIPPINGCHARGE], 'UTF-8', 'SJIS'))) . "'),";
+			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . $datas[USCES_COL_ITEM_SHIPPINGCHARGE] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemIndividualSCharge','" . $datas[USCES_COL_ITEM_INDIVIDUALSCHARGE] . "'),";
-			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
-			$sku['cprice'] = $datas[USCES_COL_SKU_CPRICE];
-			$sku['price'] = $datas[USCES_COL_SKU_PRICE];
-			$sku['zaikonum'] = $datas[USCES_COL_SKU_ZAIKONUM];
-			$sku['zaiko'] = $datas[USCES_COL_SKU_ZAIKO];
-			$sku['disp'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
-			$sku['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
-			$sku['gptekiyo'] = $datas[USCES_COL_SKU_GPTEKIYO];
-			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
+		
+			//$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
 			
-			for($i=0; $i<$opnum; $i++){
-				$opflg = true;
-				$opt = array();
-				for($o=1; $o<=4; $o++){
-					$key = ($min_field_num-1)+$o+($i*4);
-//					if( !isset($datas[$key]) ){
-//						break 2;
-//					}
-					if( $o === 1 && $datas[$key] == '' ){
-						$opflg = false;
-						break 1;
-					}
-					switch($o){
-						case 1:
-							$ometa_key = '_iopt_' . trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
-							break;
-						case 2:
-							$opt['means'] = (int)$datas[$key];
-							break;
-						case 3:
-							$opt['essential'] = (int)$datas[$key];
-							break;
-						case 4:
-							if( !empty($datas[$key]) ) {
-								$opt['value'][0] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS')));
-							}else{
-								$opt['value'][0] = "";
-							}
-							break;
-					}
-				}
-				if( $opflg == true )
-					$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(maybe_serialize($opt)) . "'),";
-			}
 //			print_r($valstr);
 			$valstr = rtrim($valstr, ',');
-			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
-			$dbres = mysql_query($query) or die(mysql_error());
+			$dbres = $wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr");
+//			$dbres = mysql_query($query) or die(mysql_error());
+
+			/*////////////////////////////////////////*/
+			// Set Taxonomy 
+			/*////////////////////////////////////////*/
+//			$post_categories = explode(';', $datas[USCES_COL_CATEGORY]);
+//			if ( is_object_in_taxonomy($cdatas['post_type'], 'category') )
+//				wp_set_post_categories( $post_id, $post_category );
+//
+//			$tags_input = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
+//			if ( isset( $tags_input ) && is_object_in_taxonomy($cdatas['post_type'], 'post_tag') )
+//				wp_set_post_tags( $post_id, $tags_input );
+//		
+//			// new-style support for all custom taxonomies
+//			if ( !empty($datas[USCES_COL_POST_TAX]) ) {
+//				foreach ( $datas[USCES_COL_POST_TAX] as $taxonomy => $tags ) {
+//					$taxonomy_obj = get_taxonomy($taxonomy);
+//					if ( is_array($tags) ) // array = hierarchical, string = non-hierarchical.
+//						$tags = array_filter($tags);
+//					if ( current_user_can($taxonomy_obj->cap->assign_terms) )
+//						wp_set_post_terms( $post_id, $tags, $taxonomy );
+//				}
+//			}
+
+
+
+
 
 			//add term_relationships, edit term_taxonomy
 			//category
@@ -629,52 +873,202 @@ function usces_item_uploadcsv(){
 			}
 			//tag
 			$tags = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
-			wp_set_object_terms($post_id, (array)$tags, 'post_tag');
-			
-			if($mode == 'add') {
-				//edit posts
-				$ids['ID'] = $post_id;
-				$updatas['post_name'] = $post_id;
-				$updatas['guid'] = get_option('home') . '?p=' . $post_id;
-				$wpdb->update( $wpdb->posts, $updatas, $ids );
+//			wp_set_object_terms($post_id, (array)$tags, 'post_tag');
+			foreach((array)$tags as $tag){
+				$tag = trim($tag, " \n\t\r\0\x0B,");
+				if( empty($tag) )
+					continue;
+				$query = $wpdb->prepare("SELECT term_id FROM $wpdb->terms WHERE name = %s", $tag);
+				$term_id = $wpdb->get_var( $query );
+				//new tag
+				if( empty($term_id) ){
+					$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES 
+											(%s, %s, 0)", $tag, urlencode($tag));
+					$dbres = $wpdb->get_var( $query );
+					if( !$dbres )
+						continue;
+					$term_id = $wpdb->insert_id;
+				}
+				$query = $wpdb->prepare("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy 
+										WHERE term_id = %d", $term_id);
+				$term_taxonomy_id = $wpdb->get_var( $query );
+				if( !$term_taxonomy_id ){
+					$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy 
+											(term_id, taxonomy, description, parent, count) VALUES 
+											(%d, %s, %s, 0, 0)", $term_id, 'post_tag', '');
+					$dbres = $wpdb->get_var( $query );
+					if( !$dbres )
+						continue;
+					$term_taxonomy_id = $wpdb->insert_id;
+				}
+				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
+								(object_id, term_taxonomy_id, term_order) VALUES 
+								(%d, %d, 0)", 
+								$post_id, $term_taxonomy_id
+						);
+				$dbres = $wpdb->query($query);
+				if( !$dbres ) continue;
+				
+				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
+										WHERE term_taxonomy_id = %d", $term_taxonomy_id);
+				$tct = $wpdb->get_var( $query );
+				
+				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
+								WHERE term_taxonomy_id = %d", 
+								$tct, $term_taxonomy_id
+						);
+				$dbres = $wpdb->query($query);
+			}
+
+
+
+
+
+			/*////////////////////////////////////////*/
+			// Add Custom Field 
+			/*////////////////////////////////////////*/
+			$cfrows = explode(';', trim(mb_convert_encoding($datas[USCES_COL_CUSTOM_FIELD], 'UTF-8', 'SJIS')));
+			if( !(1 === count($cfrows) && '' == reset($cfrows)) ){
+				$valstr = '';
+				foreach( $cfrows as $row ){
+					list($meta_key, $meta_value) = explode( '=', $row );
+					if( '' != trim($meta_key) )
+						$valstr .=  $wpdb->prepare("( %d, %s, %s),", $post_id, trim($meta_key), trim($meta_value));
+				}
+				if( '' != $valstr ){
+					$valstr = rtrim($valstr, ',');
+					$dbres = $wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr");
+				}
 			}
 			
+			/******************/
+			$add_postmeta = microtime(true);
+			$addmetatime += $add_postmeta-$metadelete;
+			/*////////////////////////////////////////*/
+			// addOption 
+			/*////////////////////////////////////////*/
+			//	Add Item Option	
+			for($i=0; $i<$opnum; $i++){
+				$opflg = true;
+				$optvalue = array();
+				for($o=1; $o<=4; $o++){
+					$key = ($min_field_num-1)+$o+($i*4);
+//					if( !isset($datas[$key]) ){
+//						break 2;
+//					}
+					if( $o === 1 && $datas[$key] == '' ){
+						$opflg = false;
+						break 1;
+					}
+					switch($o){
+						case 1:
+							$optvalue['name'] = trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
+							break;
+						case 2:
+							$optvalue['means'] = (int)$datas[$key];
+							break;
+						case 3:
+							$optvalue['essential'] = (int)$datas[$key];
+							break;
+						case 4:
+							if( !empty($datas[$key]) ) {
+								$optvalue['value'] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS')));
+							}else{
+								$optvalue['value'] = "";
+							}
+							break;
+					}
+				}
+
+				if( $opflg && !empty($optvalue) ){
+					$optvalue['sort'] = $i;
+					$resopt = usces_add_opt($post_id, $optvalue, false);
+				}
+					//$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(maybe_serialize($opt)) . "'),";
+			}
+
 		}else{
-			$valstr = '';
-			$meta_key = '_isku_' . trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
-			$sku['cprice'] = $datas[USCES_COL_SKU_CPRICE];
-			$sku['price'] = $datas[USCES_COL_SKU_PRICE];
-			$sku['zaikonum'] = $datas[USCES_COL_SKU_ZAIKONUM];
-			$sku['zaiko'] = $datas[USCES_COL_SKU_ZAIKO];
-			$sku['disp'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
-			$sku['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
-			$sku['gptekiyo'] = $datas[USCES_COL_SKU_GPTEKIYO];
-			$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
-			
-			$valstr = rtrim($valstr, ',');
-			$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
-			$dbres = mysql_query($query) or die(mysql_error());
-		
+			$sku_index++;
 		}
 
-
+		/******************/
+		$optionmeta = microtime(true);
+		$AddOptiontime += $optionmeta-$add_postmeta;
+		/*////////////////////////////////////////*/
+		// addSku 
+		/*////////////////////////////////////////*/
+		//	Add Item SKU	
+		$sku_code = trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
+		$skuvalue['code'] = $sku_code;
+		$skuvalue['name'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
+		$skuvalue['cprice'] = $datas[USCES_COL_SKU_CPRICE];
+		$skuvalue['price'] = $datas[USCES_COL_SKU_PRICE];
+		$skuvalue['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
+		$skuvalue['stocknum'] = $datas[USCES_COL_SKU_ZAIKONUM];
+		$skuvalue['stock'] = $datas[USCES_COL_SKU_ZAIKO];
+		$skuvalue['gp'] = $datas[USCES_COL_SKU_GPTEKIYO];
+		$skuvalue['sort'] = $sku_index;
+		usces_add_sku( $post_id, $skuvalue, false );
+		
+//		usces_log('skuvalue : '.$post_id.print_r($skuvalue,true), 'acting_transaction.log');
 		$comp_num++;
 		$pre_code = $datas[USCES_COL_ITEM_CODE];
-	}
-	
+		clean_post_cache($post_id);
+
+		/******************/
+		$addsku = microtime(true);
+		$AddSKUtime += $addsku-$optionmeta;
+		$onelinetime += $addsku-$linestart;
+
+		if( 0 === (($rows_num+1) % 10) ){
+			$av = $onelinetime/$rows_num;
+			$nt = round($av*($total_num-$rows_num));
+			if( 60 < $nt ){
+				$mtime = ceil($nt/60) . _('min', 'usces') . ($nt%60) . _('sec', 'usces') . '　';
+			}else{
+				$mtime = $nt . _('sec', 'usces') . '　';
+			}
+			echo '<script type="text/javascript">changeMsg("' . _('Processing...', 'usces') . _('Remaining time:', 'usces').$mtime.'");</script>'.$yn;
+			echo '<script type="text/javascript">setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
+			ob_flush();
+			flush();
+		}
+  	}
+
 	flock($fpi, LOCK_EX);
 	fputs($fpi, mb_convert_encoding($log, 'SJIS', 'UTF-8'));
 	flock($fpi, LOCK_UN);
-	fclose($fpo);
 	fclose($fpi);
 
 	$res['status'] = 'success';
-	$res['message'] = __(sprintf('%2$s of %1$s lines registration completion, %3$s lines error.',$total_num,$comp_num,$err_num), 'usces');
+	$res['message'] = __(sprintf('%2$s of %1$s lines registration completion, error on %3$s lines.',$total_num,$comp_num,$err_num), 'usces');
+	/******************/
+	$finish = microtime(true);
+	usces_log('ready     : '.round($readytime-$start, 4), 'acting_transaction.log');
+	usces_log('lineReady : '.round($linereadytime/$total_num, 4), 'acting_transaction.log');
+	usces_log('dataCheck : '.round($checktime/$total_num, 4), 'acting_transaction.log');
+	usces_log('insPost   : '.round($insertposttime/$total_num, 4), 'acting_transaction.log');
+	usces_log('delMeta   : '.round($metadeletetime/$total_num, 4), 'acting_transaction.log');
+	usces_log('addMeta   : '.round($addmetatime/$total_num, 4), 'acting_transaction.log');
+	usces_log('addOption : '.round($AddOptiontime/$total_num, 4), 'acting_transaction.log');
+	usces_log('addSku    : '.round($AddSKUtime/$total_num, 4), 'acting_transaction.log');
+	usces_log('oneline   : '.round($onelinetime/$total_num, 4), 'acting_transaction.log');
+	usces_log('finish    : '.round($finish-$start, 4), 'acting_transaction.log');
+	usces_log('totalLines: '.$total_num, 'acting_transaction.log');
+	usces_log('--------------------------------------------------------------', 'acting_transaction.log');
+
+	echo '<script type="text/javascript">changeMsg("', __(sprintf('Successful %1$s lines, Failed %2$s lines.',$comp_num,$err_num), 'usces'), ' ");setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
+	if( $log ){
+		//echo '<div class="error_log">' . $log . '</div>'.$yn;
+	}else{
+		echo _('Finished', 'usces').$yn;
+	}
+	echo '</div>'.$yn;
+	unlink($path.$file_name);
 	return $res;
 }
 endif;
 
-//20101111ysk start
 // item list download
 if( !function_exists('usces_download_item_list') ):
 function usces_download_item_list() {
@@ -682,39 +1076,19 @@ function usces_download_item_list() {
 	global $wpdb, $usces;
 
 	$ext = $_REQUEST['ftype'];
-	if($ext == 'xls') {//TSV
+	if($ext == 'csv') {//CSV
 		$table_h = "";
 		$table_f = "";
 		$tr_h = "";
 		$tr_f = "";
 		$th_h1 = '"';
-		$th_h = "\t".'"';
-		$th_f = '"';
-		$td_h1 = '"';
-		$td_h = "\t".'"';
-		$td_f = '"';
-		$sp = ";";
-		$lf = "\n";
-	} elseif($ext == 'csv') {//CSV
-		$table_h = "";
-		$table_f = "";
-		$tr_h = "";
-		$tr_f = "";
-//20110201ysk start
-		//$th_h1 = "";
-		$th_h1 = '"';
-		//$th_h = ",";
 		$th_h = ',"';
-		//$th_f = "";
 		$th_f = '"';
-		//$td_h1 = "";
 		$td_h1 = '"';
-		//$td_h = ",";
 		$td_h = ',"';
-		//$td_f = "";
 		$td_f = '"';
-//20110201ysk end
 		$sp = ";";
+		$eq = "=";
 		$lf = "\n";
 	} else {
 		exit();
@@ -753,21 +1127,28 @@ function usces_download_item_list() {
 					__('display status', 'usces') => 'display_status');
 	}
 
-//20110221ysk start 
 	$_REQUEST['searchIn'] = "searchIn"; 
-//20110221ysk end 
 	$DT = new dataList($tableName, $arr_column);
-//20101202ysk start
 	$DT->pageLimit = 'off';
-//20101202ysk end
+	$DT->exportMode = true;
 	$res = $DT->MakeTable();
 	$rows = $DT->rows;
-
 	//==========================================================================
 	$line = $table_h;
 	if($usces_opt_item['chk_header'] == 1) {
 		$line .= $tr_h;
-		$line .= $th_h1.__('item code', 'usces').$th_f;
+		$line .= $th_h1.'Post ID'.$th_f;
+		$line .= $th_h.__('Post Author', 'usces').$th_f;
+		$line .= $th_h.__('explanation', 'usces').$th_f;
+		$line .= $th_h.__('Title', 'usces').$th_f;
+		$line .= $th_h.__('excerpt', 'usces').$th_f;
+		$line .= $th_h.__('display status', 'usces').$th_f;
+		$line .= $th_h.__('Comment Status', 'usces').$th_f;
+		$line .= $th_h.__('Post PAssword', 'usces').$th_f;
+		$line .= $th_h.__('Post Name', 'usces').$th_f;
+		$line .= $th_h.__('Publish on:').$th_f;
+		
+		$line .= $th_h.__('item code', 'usces').$th_f;
 		$line .= $th_h.__('item name', 'usces').$th_f;
 		$line .= $th_h.__('Limited amount for purchase', 'usces').$th_f;
 		$line .= $th_h.__('Percentage of points', 'usces').$th_f;
@@ -778,13 +1159,11 @@ function usces_download_item_list() {
 		$line .= $th_h.__('shipping option', 'usces').$th_f;
 		$line .= $th_h.__('Shipping', 'usces').$th_f;
 		$line .= $th_h.__('Postage individual charging', 'usces').$th_f;
-		$line .= $th_h.__('Title', 'usces').$th_f;
-		$line .= $th_h.__('explanation', 'usces').$th_f;
-		$line .= $th_h.__('excerpt', 'usces').$th_f;
-		$line .= $th_h.__('display status', 'usces').$th_f;
-		$line .= $th_h.__('Publish on:').$th_f;
+		
 		$line .= $th_h.__('Categories', 'usces').$th_f;
 		$line .= $th_h.__('tag', 'usces').$th_f;
+		$line .= $th_h.__('Custom Field', 'usces').$th_f;
+
 		$line .= $th_h.__('SKU code', 'usces').$th_f;
 		$line .= $th_h.__('SKU display name ', 'usces').$th_f;
 		$line .= $th_h.__('normal price', 'usces').$th_f;
@@ -797,11 +1176,31 @@ function usces_download_item_list() {
 		$line .= $tr_f.$lf;
 	}
 	//==========================================================================
+	mb_http_output('pass');
+	set_time_limit(0);
+	header("Content-Type: application/octet-stream");
+	header("Content-Disposition: attachment; filename=usces_item_list.".$ext);
+	ob_end_flush();
+	flush();
+
 	foreach((array)$rows as $array) {
 		$post_id = $array['ID'];
 		$post = get_post($post_id);
-
-		$line_item = $td_h1.$usces->getItemCode($post_id).$td_f;
+		
+		//Post Data
+		$line_item = $td_h1.$post->ID.$td_f;
+		$line_item .= $td_h.$post->post_author.$td_f;
+		$line_item .= $td_h.usces_entity_decode($post->post_content, $ext).$td_f;
+		$line_item .= $td_h.usces_entity_decode($post->post_title, $ext).$td_f;
+		$line_item .= $td_h.usces_entity_decode($post->post_excerpt, $ext).$td_f;
+		$line_item .= $td_h.$post->post_status.$td_f;
+		$line_item .= $td_h.$post->comment_status.$td_f;
+		$line_item .= $td_h.$post->post_password.$td_f;
+		$line_item .= $td_h.urldecode($post->post_name).$td_f;
+		$line_item .= $td_h.$post->post_modified.$td_f;
+		
+		//Item Meta
+		$line_item .= $td_h.$usces->getItemCode($post_id).$td_f;
 		$line_item .= $td_h.usces_entity_decode($usces->getItemName($post_id), $ext).$td_f;
 		$line_item .= $td_h.$usces->getItemRestriction($post_id).$td_f;
 		$line_item .= $td_h.$usces->getItemPointrate($post_id).$td_f;
@@ -809,7 +1208,6 @@ function usces_download_item_list() {
 		$line_item .= $td_h.$usces->getItemGpNum2($post_id).$td_f.$td_h.$usces->getItemGpDis2($post_id).$td_f;
 		$line_item .= $td_h.$usces->getItemGpNum3($post_id).$td_f.$td_h.$usces->getItemGpDis3($post_id).$td_f;
 		$line_item .= $td_h.$usces->getItemShipping($post_id).$td_f;
-
 		$delivery_method = '';
 		$itemDeliveryMethod = $usces->getItemDeliveryMethod($post_id);
 		foreach((array)$itemDeliveryMethod as $k => $v) {
@@ -817,24 +1215,10 @@ function usces_download_item_list() {
 		}
 		$delivery_method = rtrim($delivery_method, $sp);
 		$line_item .= $td_h.$delivery_method.$td_f;
-
 		$line_item .= $td_h.$usces->getItemShippingCharge($post_id).$td_f;
 		$line_item .= $td_h.$usces->getItemIndividualSCharge($post_id).$td_f;
-
-		$line_item .= $td_h.usces_entity_decode($post->post_title, $ext).$td_f;
-		$line_item .= $td_h.usces_entity_decode($post->post_content, $ext).$td_f;
-		$line_item .= $td_h.usces_entity_decode($post->post_excerpt, $ext).$td_f;
-		$line_item .= $td_h.$array['post_status'].$td_f;
-		//if($ext == 'xls') {//TSV
-		//	$line_item .= "\t".'="'.$post->post_modified.'"';
-		//} elseif($ext == 'csv') {//CSV
-		//	$line_item .= ",".'="'.$post->post_modified.'"';
-		//}
-//20110421ysk start
-		//$line_item .= $td_h.$post->post_modified.$td_f;
-		$line_item .= $td_h.$post->post_date.$td_f;
-//20110421ysk end
-
+		
+		//Categories
 		$category = '';
 		$cat_ids = wp_get_post_categories($post_id);
 		if(!empty($cat_ids)) {
@@ -844,7 +1228,8 @@ function usces_download_item_list() {
 			$category = rtrim($category, $sp);
 		}
 		$line_item .= $td_h.$category.$td_f;
-
+		
+		//Tags
 		$tag = '';
 		$tags_ob = wp_get_object_terms($post_id, 'post_tag');
 		foreach($tags_ob as $ob) {
@@ -853,10 +1238,22 @@ function usces_download_item_list() {
 		$tag = rtrim($tag, $sp);
 		$line_item .= $td_h.$tag.$td_f;
 
+		//Custom Fields
+		$cfield = '';
+		$custom_fields = get_post_custom($post_id);
+		if( is_array($custom_fields) && 0 < count($custom_fields) ){
+			foreach($custom_fields as $cfkey => $cfvalues ) {
+				if( 0 !== strpos($cfkey, '_') )
+					$cfield .= usces_entity_decode($cfkey, $ext) . $eq . usces_entity_decode($cfvalues[0], $ext) . $sp;
+			}
+			$cfield = rtrim($cfield, $sp);
+		}
+		$line_item .= $td_h.$cfield.$td_f;
+		
+		//Item Options
 		$line_options = '';
-		$option_meta = has_item_option_meta($post_id);
-		foreach($option_meta as $option) {
-			$option_value = maybe_unserialize($option['meta_value']);
+		$option_meta = usces_get_opts( $post_id, 'sort' );
+		foreach($option_meta as $option_value) {
 			$value = '';
 			if(is_array($option_value['value'])) {
 				foreach($option_value['value'] as $k => $v) {
@@ -870,44 +1267,43 @@ function usces_download_item_list() {
 				$value = $option_value['value'];
 			}
 
-			$line_options .= $td_h.usces_entity_decode(substr($option['meta_key'], 6), $ext).$td_f;
+			$line_options .= $td_h.usces_entity_decode($option_value['name'], $ext).$td_f;
 			$line_options .= $td_h.$option_value['means'].$td_f;
 			$line_options .= $td_h.$option_value['essential'].$td_f;
 			$line_options .= $td_h.usces_entity_decode($value, $ext).$td_f;
 
 		}
 
-		$sku_meta = has_item_sku_meta($post_id);
-		foreach($sku_meta as $sku) {
-			$sku_value = maybe_unserialize($sku['meta_value']);
+		//SKUs
+		$sku_meta = $usces->get_skus( $post_id, 'sort' );
+		foreach($sku_meta as $sku_value) {
 
-			$line_sku = $td_h.substr($sku['meta_key'], 6).$td_f;
-			$line_sku .= $td_h.usces_entity_decode($sku_value['disp'], $ext).$td_f;
+			$line_sku = $td_h.$sku_value['code'].$td_f;
+			$line_sku .= $td_h.usces_entity_decode($sku_value['name'], $ext).$td_f;
 			$line_sku .= $td_h.$sku_value['cprice'].$td_f;
 			$line_sku .= $td_h.$sku_value['price'].$td_f;
-			$line_sku .= $td_h.$sku_value['zaikonum'].$td_f;
-			$line_sku .= $td_h.$sku_value['zaiko'].$td_f;
+			$line_sku .= $td_h.$sku_value['stocknum'].$td_f;
+			$line_sku .= $td_h.$sku_value['stock'].$td_f;
 			$line_sku .= $td_h.usces_entity_decode($sku_value['unit'], $ext).$td_f;
-			$line_sku .= $td_h.$sku_value['gptekiyo'].$td_f;
+			$line_sku .= $td_h.$sku_value['gp'].$td_f;
 
 			$line .= $tr_h.$line_item.$line_sku.$line_options.$tr_f.$lf;
 		}
+		print(mb_convert_encoding($line, "SJIS-win", "UTF-8"));
+		if(ob_get_contents ()){
+			ob_flush();
+			flush();
+		}
+		$line = '';
+		wp_cache_flush();
 	}
-	$line .= $table_f.$lf;
+	$end = $table_f.$lf;
 	//==========================================================================
-
-	if($ext == 'xls') {
-		header("Content-Type: application/vnd.ms-excel; charset=Shift-JIS");
-	} elseif($ext == 'csv') {
-		header("Content-Type: application/octet-stream");
-	}
-	header("Content-Disposition: attachment; filename=usces_item_list.".$ext);
-	mb_http_output('pass');
-	print(mb_convert_encoding($line, "SJIS-win", "UTF-8"));
+	print(mb_convert_encoding($end, "SJIS-win", "UTF-8"));
+	unset($rows, $DT, $line, $line_item, $line_options, $line_sku);
 	exit();
 }
 endif;
-//20101111ysk end
 
 }
 ?>

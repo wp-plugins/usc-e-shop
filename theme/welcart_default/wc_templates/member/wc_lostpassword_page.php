@@ -29,7 +29,7 @@ get_header();
 	<form name="loginform" id="loginform" action="<?php usces_url('member'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<p>
 	<label><?php _e('e-mail adress', 'usces'); ?><br />
-	<input type="text" name="loginmail" id="loginmail" class="loginmail" value="<?php echo esc_attr($usces_memberinfo['email']); ?>" size="20" /></label>
+	<input type="text" name="loginmail" id="loginmail" class="loginmail" value="" size="20" /></label>
 	</p>
 	<p class="submit">
 	<input type="submit" name="lostpassword" id="member_login" value="<?php _e('Obtain new password', 'usces'); ?>" />

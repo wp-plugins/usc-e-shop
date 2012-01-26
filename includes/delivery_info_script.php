@@ -16,7 +16,7 @@ if(isset($this))
 	
 //$shipping_indication = apply_filters('usces_filter_shipping_indication', $usces->options['usces_shipping_indication']);
 
-$html .= '
+$html = '
 <script type="text/javascript">
 	//1桁の数字を0埋めで2桁にする
 	var toDoubleDigits = function(num) {
@@ -57,7 +57,8 @@ $html .= '
 
 //選択可能な配送方法
 $default_deli = array_values($usces->get_available_delivery_method());
-if($usces_entries['order']['delivery_method'] === NULL){
+//if($usces_entries['order']['delivery_method'] === NULL){
+if(empty($usces_entries['order']['delivery_method'])){
 	//$default_deli = $usces->get_available_delivery_method();
 	//$html .= 'selected_delivery_method = \'' . $default_deli[0] . '\';';
 	$selected_delivery_method = $default_deli[0];
@@ -180,7 +181,8 @@ foreach((array)$usces->options['delivery_method'] as $dmid => $dm){
 
 $payments_str = '';
 $payments_arr = array();
-foreach ( (array)$usces->options['payment_method'] as $array ) {
+$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+foreach ( (array)$payments as $array ) {
 	switch( $array['settlement'] ){
 		case 'acting_zeus_card':
 			$paymod_base = 'zeus';
@@ -329,8 +331,8 @@ $html .= "
 						//最短配送時間帯メッセージ
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 						switch(shortest_delivery_time) {
-						case 0://指定しない 20110106ysk
-							message = " . __("'最短 ' + date_str + ' からご指定いただけます。'", 'usces') . ";
+						case 0://指定しない 20110106ysk -> 20111128ysk DEL
+							//message = " . __("'最短 ' + date_str + ' からご指定いただけます。'", 'usces') . ";
 							break;
 						case 1://午前着可
 							message = " . __("'最短 ' + date_str + ' の午前中からご指定いただけます。'", 'usces') . ";

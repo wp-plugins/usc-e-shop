@@ -25,7 +25,7 @@ class Welcart_post extends WP_Widget {
                       . apply_filters( 'usces_filter_post_widget_title', esc_html($title), $instance)
                       . $after_title; ?>
 					  
-		<ul class="ucart_widget_body">
+		<ul class="ucart_widget_body <?php echo $instance['category']; ?>">
 		<?php usces_list_post( $instance['category'], $rows_num, $wid ) ; ?>
 		</ul>
 				  

@@ -49,6 +49,8 @@ get_header();
 	</table>
 	<br /> 
 	<a href="#edit"><?php _e('To member information editing', 'usces'); ?></a>
+	<br /> 
+	<?php usces_loginout(); ?>
 	
 	<div class="header_explanation">
 	<?php do_action('usces_action_memberinfo_page_header'); ?>
@@ -81,7 +83,7 @@ get_header();
 	<input name="member_regmode" type="hidden" value="editmemberform" />
 	<input name="member_id" type="hidden" value="<?php usces_memberinfo('ID'); ?>" />
 	<div class="send">
-	<input name="top" type="button" value="<?php _e('Back to the top page.', 'usces'); ?>" onclick="location.href='<?php bloginfo('home'); ?>'" />
+	<input name="top" type="button" value="<?php _e('Back to the top page.', 'usces'); ?>" onclick="location.href='<?php echo home_url(); ?>'" />
 	<input name="editmember" type="submit" value="<?php _e('update it', 'usces'); ?>" />
 	<input name="deletemember" type="submit" value="<?php _e('delete it', 'usces'); ?>" onclick="return confirm('<?php _e('All information about the member is deleted. Are you all right?', 'usces'); ?>');" />
 	</div>

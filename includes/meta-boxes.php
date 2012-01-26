@@ -307,7 +307,7 @@ function post_categories_meta_box( $post, $box ) {
             echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
             ?>
 			<ul id="<?php echo $taxonomy; ?>checklist" class="list:<?php echo $taxonomy?> categorychecklist form-no-clear">
-				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids, 'descendants_and_self' => USCES_ITEM_CAT_PARENT_ID ) ) ?>
+				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'descendants_and_self' => USCES_ITEM_CAT_PARENT_ID ) ) ?>
 			</ul>
 		</div>
 		<div id="<?php echo $taxonomy; ?>-pop" class="tabs-panel" style="display: none;">
@@ -534,13 +534,30 @@ function post_slug_meta_box($post) {
  * @param object $post
  */
 function post_author_meta_box($post) {
-	global $current_user, $user_ID;
-	$authors = get_editable_user_ids( $current_user->id, true, $post->post_type ); // TODO: ROLE SYSTEM
-	if ( $post->post_author && !in_array($post->post_author, $authors) )
-		$authors[] = $post->post_author;
-?>
-<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label><?php wp_dropdown_users( array('include' => $authors, 'name' => 'post_author_override', 'selected' => empty($post->ID) ? $user_ID : $post->post_author) ); ?>
-<?php
+	global $wp_version;
+	if ( version_compare($wp_version, '3.1', '>=') ){
+		global $user_ID;
+	?>
+	<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label>
+	<?php
+		wp_dropdown_users( array(
+			'who' => 'authors',
+			'name' => 'post_author_override',
+			'selected' => empty($post->ID) ? $user_ID : $post->post_author,
+			'include_selected' => true
+		) );
+	
+	}else{
+
+		global $current_user, $user_ID;
+		$authors = get_editable_user_ids( $current_user->id, true, $post->post_type ); // TODO: ROLE SYSTEM
+		if ( $post->post_author && !in_array($post->post_author, $authors) )
+			$authors[] = $post->post_author;
+	?>
+	<label class="screen-reader-text" for="post_author_override"><?php _e('Author'); ?></label><?php wp_dropdown_users( array('include' => $authors, 'name' => 'post_author_override', 'selected' => empty($post->ID) ? $user_ID : $post->post_author) ); ?>
+	<?php
+		
+	}
 }
 
 

@@ -25,7 +25,7 @@ class Welcart_search extends WP_Widget {
                       . $after_title; ?>
 					  
 		<ul class="ucart_search_body ucart_widget_body"><li>
-		<form method="get" id="searchform" action="<?php bloginfo('home'); ?>" >
+		<form method="get" id="searchform" action="<?php echo home_url(); ?>" >
 		<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" value="<?php _e('Search', 'usces'); ?>" />
 		<div><a href="<?php echo (USCES_CART_URL . $usces->delim); ?>page=search_item"><?php _e("'AND' search by categories", 'usces'); ?>&gt;</a></div>
 		</form>

@@ -23,6 +23,17 @@ $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
+
+$campaign_schedule_start_year = isset($this->options['campaign_schedule']['start']['year']) ? $this->options['campaign_schedule']['start']['year'] : 0;
+$campaign_schedule_start_month = isset($this->options['campaign_schedule']['start']['month']) ? $this->options['campaign_schedule']['start']['month'] : 0;
+$campaign_schedule_start_day = isset($this->options['campaign_schedule']['start']['day']) ? $this->options['campaign_schedule']['start']['day'] : 0;
+$campaign_schedule_start_hour = isset($this->options['campaign_schedule']['start']['hour']) ? $this->options['campaign_schedule']['start']['hour'] : 0;
+$campaign_schedule_start_min = isset($this->options['campaign_schedule']['start']['min']) ? $this->options['campaign_schedule']['start']['min'] : 0;
+$campaign_schedule_end_year = isset($this->options['campaign_schedule']['end']['year']) ? $this->options['campaign_schedule']['end']['year'] : 0;
+$campaign_schedule_end_month = isset($this->options['campaign_schedule']['end']['month']) ? $this->options['campaign_schedule']['end']['month'] : 0;
+$campaign_schedule_end_day = isset($this->options['campaign_schedule']['end']['day']) ? $this->options['campaign_schedule']['end']['day'] : 0;
+$campaign_schedule_end_hour = isset($this->options['campaign_schedule']['end']['hour']) ? $this->options['campaign_schedule']['end']['hour'] : 0;
+$campaign_schedule_end_min = isset($this->options['campaign_schedule']['end']['min']) ? $this->options['campaign_schedule']['end']['min'] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -128,34 +139,34 @@ function cangeWday3(id, c) {
 	<tr>
 	    <th><?php _e('starting time','usces'); ?></th>
 	    <td><select name="campaign_schedule[start][year]">
-	    		<option value="0"<?php if($this->options['campaign_schedule']['start']['year'] == 0) echo ' selected="selected"'; ?>></option>
-	    		<option value="<?php echo $yearstr; ?>"<?php if($this->options['campaign_schedule']['start']['year'] == $yearstr) echo ' selected="selected"'; ?>><?php echo $yearstr; ?></option>
-	    		<option value="<?php echo $yearstr+1; ?>"<?php if($this->options['campaign_schedule']['start']['year'] == ($yearstr+1)) echo ' selected="selected"'; ?>><?php echo $yearstr+1; ?></option>
+	    		<option value="0"<?php if($campaign_schedule_start_year == 0) echo ' selected="selected"'; ?>></option>
+	    		<option value="<?php echo $yearstr; ?>"<?php if($campaign_schedule_start_year == $yearstr) echo ' selected="selected"'; ?>><?php echo $yearstr; ?></option>
+	    		<option value="<?php echo $yearstr+1; ?>"<?php if($campaign_schedule_start_year == ($yearstr+1)) echo ' selected="selected"'; ?>><?php echo $yearstr+1; ?></option>
 		</select></td>
 		<td><?php _e('year','usces'); ?></td>
 	    <td><select name="campaign_schedule[start][month]">
-	    		<option value="0"<?php if($this->options['campaign_schedule']['start']['month'] == 0) echo ' selected="selected"'; ?>></option>
+	    		<option value="0"<?php if($campaign_schedule_start_month == 0) echo ' selected="selected"'; ?>></option>
 <?php for($i=1; $i<13; $i++) : ?>
-	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['start']['month'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
+	    		<option value="<?php echo $i; ?>"<?php if($campaign_schedule_start_month == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('month','usces'); ?></td>
 	    <td><select name="campaign_schedule[start][day]">
-	    		<option value="0"<?php if($this->options['campaign_schedule']['start']['day'] == 0) echo ' selected="selected"'; ?>></option>
+	    		<option value="0"<?php if($campaign_schedule_start_day == 0) echo ' selected="selected"'; ?>></option>
 <?php for($i=1; $i<32; $i++) : ?>
-	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['start']['day'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
+	    		<option value="<?php echo $i; ?>"<?php if($campaign_schedule_start_day == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('day','usces'); ?></td>
 	    <td><select name="campaign_schedule[start][hour]">
 <?php for($i=0; $i<24; $i++) : ?>
-	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['start']['hour'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
+	    		<option value="<?php echo $i; ?>"<?php if($campaign_schedule_start_hour == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('hour','usces'); ?></td>
 	    <td><select name="campaign_schedule[start][min]">
 <?php for($i=0; $i<12; $i++) : ?>
-	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['start']['min'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
+	    		<option value="<?php echo $i*5; ?>"<?php if($campaign_schedule_start_min == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('min','usces'); ?></td>
@@ -163,34 +174,34 @@ function cangeWday3(id, c) {
 	<tr>
 	    <th><?php _e('date and time of termination','usces'); ?></th>
 	    <td><select name="campaign_schedule[end][year]">
-	    		<option value="0"<?php if($this->options['campaign_schedule']['end']['year'] == 0) echo ' selected="selected"'; ?>></option>
-	    		<option value="<?php echo $yearstr; ?>"<?php if($this->options['campaign_schedule']['end']['year'] == $yearstr) echo ' selected="selected"'; ?>><?php echo $yearstr; ?></option>
-	    		<option value="<?php echo $yearstr+1; ?>"<?php if($this->options['campaign_schedule']['end']['year'] == ($yearstr+1)) echo ' selected="selected"'; ?>><?php echo $yearstr+1; ?></option>
+	    		<option value="0"<?php if($campaign_schedule_end_year == 0) echo ' selected="selected"'; ?>></option>
+	    		<option value="<?php echo $yearstr; ?>"<?php if($campaign_schedule_end_year == $yearstr) echo ' selected="selected"'; ?>><?php echo $yearstr; ?></option>
+	    		<option value="<?php echo $yearstr+1; ?>"<?php if($campaign_schedule_end_year == ($yearstr+1)) echo ' selected="selected"'; ?>><?php echo $yearstr+1; ?></option>
 		</select></td>
 		<td><?php _e('year','usces'); ?></td>
 	    <td><select name="campaign_schedule[end][month]">
-	    		<option value="0"<?php if($this->options['campaign_schedule']['end']['month'] == 0) echo ' selected="selected"'; ?>></option>
+	    		<option value="0"<?php if($campaign_schedule_end_month == 0) echo ' selected="selected"'; ?>></option>
 <?php for($i=1; $i<13; $i++) : ?>
-	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['end']['month'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
+	    		<option value="<?php echo $i; ?>"<?php if($campaign_schedule_end_month == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('month','usces'); ?></td>
 	    <td><select name="campaign_schedule[end][day]">
-	    		<option value="0"<?php if($this->options['campaign_schedule']['end']['day'] == 0) echo ' selected="selected"'; ?>></option>
+	    		<option value="0"<?php if($campaign_schedule_end_day == 0) echo ' selected="selected"'; ?>></option>
 <?php for($i=1; $i<32; $i++) : ?>
-	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['end']['day'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
+	    		<option value="<?php echo $i; ?>"<?php if($campaign_schedule_end_day == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('day','usces'); ?></td>
 	    <td><select name="campaign_schedule[end][hour]">
 <?php for($i=0; $i<24; $i++) : ?>
-	    		<option value="<?php echo $i; ?>"<?php if($this->options['campaign_schedule']['end']['hour'] == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
+	    		<option value="<?php echo $i; ?>"<?php if($campaign_schedule_end_hour == $i) echo ' selected="selected"'; ?>><?php echo $i; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('hour','usces'); ?></td>
 	    <td><select name="campaign_schedule[end][min]">
 <?php for($i=0; $i<12; $i++) : ?>
-	    		<option value="<?php echo $i*5; ?>"<?php if($this->options['campaign_schedule']['end']['min'] == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
+	    		<option value="<?php echo $i*5; ?>"<?php if($campaign_schedule_end_min == ($i*5)) echo ' selected="selected"'; ?>><?php echo $i*5; ?></option>
 <?php endfor; ?>
 		</select></td>
 		<td><?php _e('min','usces'); ?></td>

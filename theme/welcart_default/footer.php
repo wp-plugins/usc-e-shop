@@ -14,7 +14,7 @@
 	<?php wp_nav_menu(array('menu_class' => 'footernavi clearfix', 'theme_location' => 'footer')); ?>
 <?php else: ?>
 	<ul class="footernavi clearfix">
-		<li><a href="<?php bloginfo('url'); ?>/"><?php _e('top page','usces') ?></a></li>
+		<li><a href="<?php echo home_url( '/' ); ?>/"><?php _e('top page','usces') ?></a></li>
 		<?php wp_list_pages('title_li=&exclude=' . USCES_MEMBER_NUMBER . ',' . USCES_CART_NUMBER ); ?>
 	</ul>
 <?php endif; ?>

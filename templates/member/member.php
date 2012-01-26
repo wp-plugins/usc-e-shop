@@ -35,7 +35,8 @@ $html .= '</tr>
 	</tr>
 	</table>
 	 <br /> 
-	<a href="#edit">' . __('To member information editing', 'usces') . '</a>';
+	<a href="#edit">' . __('To member information editing', 'usces') . '</a>
+	<br />'	. usces_loginout('return');
 	
 
 $html .= '<div class="header_explanation">';
@@ -101,7 +102,7 @@ foreach ( $usces_member_history as $umhs ) {
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
-		$sku = $cart_row['sku'];
+		$sku = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$itemCode = $this->getItemCode($post_id);
@@ -109,17 +110,18 @@ foreach ( $usces_member_history as $umhs ) {
 		$cartItemName = $this->getCartItemName($post_id, $sku);
 		//$skuPrice = $this->getItemPrice($post_id, $sku);
 		$skuPrice = $cart_row['price'];
-		$pictid = $this->get_mainpictid($itemCode);
+		$pictid = (int)$this->get_mainpictid($itemCode);
 		$optstr =  '';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= esc_html($key) . ' : '; 
 						foreach($value as $v) {
-							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$optstr .= $c.nl2br(esc_html(urldecode($v)));
 							$c = ', ';
 						}
 						$optstr .= "<br />\n"; 

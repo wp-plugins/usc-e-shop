@@ -2439,7 +2439,22 @@ msgstr "コメント 1件 &#187;"
 msgid "Posts Tagged &#8216;%s&#8217;"
 msgstr "タグ &#8216;%s&#8217; に属する投稿;"
 
-msgid "Archive for %s|Daily archive page"
+# Daily archive page
+#, fuzzy
+msgctxt "Daily archive page"
+msgid "Archive for %s"
+msgstr "%s の記事"
+
+# Daily archive page
+#, fuzzy
+msgctxt "Monthly archive page"
+msgid "Archive for %s"
+msgstr "%s の記事"
+
+# Daily archive page
+#, fuzzy
+msgctxt "Yearly archive page"
+msgid "Archive for %s"
 msgstr "%s の記事"
 
 msgid "Settlement Setting"
@@ -3073,11 +3088,125 @@ msgstr "ビル・アパート"
 msgid "Zip"
 msgstr "郵便番号"
 
+msgid "Please select one of the country."
+msgstr "いずれかの国を選択してください。"
+
+msgid "Language Currency Country"
+msgstr "国・言語・通貨"
+
+msgid "You can select the Front-end language. The Back-end language follows setting config.php."
+msgstr "フロントエンド（ショップ側）の言語を選択できます。バックエンド（管理パネル）の言語はconfig.php の設定に従います。"
+
+msgid "Currencies"
+msgstr "通貨表示"
+
+msgid "Displays the currency symbol for each country, the amount separator, the decimal digits. This is a common item in both front end and back end."
+msgstr "選択した国に合わせた通貨記号や金額の区切り文字や少数桁を表示します。フロントエンド（ショップ側）、バックエンド（管理パネル）共通です。"
+
+msgid "The name and address form"
+msgstr "住所氏名の様式"
+
+msgid "For entry form style, choose your country."
+msgstr "住所氏名などの入力フォームの様式を、どの国のものにするか選択します。"
+
+msgid "All countries"
+msgstr "全ての国"
+
+msgid "Select the number of possible areas within the country. Allows multiple selections."
+msgstr "販売・発送可能な地域を国単位で選択します。複数選択可。"
+
+msgid "Product sub-image rule"
+msgstr "商品サブ画像適用ルール"
+
+msgid "not apply the new rule<br />(Truncation Product Code)"
+msgstr "新しいルールを適用しない<br />（商品コード前方一致）"
+
+msgid "apply the new rule<br />(Tow hyphens between the Product Code and serial number)"
+msgstr "新しいルールを適用する<br />（商品コードと連番の間にハイフンを2つ置く【例：a001--01】）"
+
+msgid "If the sub-images are not applied correctly, please apply the new rules.<br />And insert Tow hyphens between the Product Code and serial number."
+msgstr "サブ画像が正常に適用されない場合は新しいルールを適用してください。<br />サブ画像のファイル名は商品コードと連番の間にハイフンを2つ置きます。（例：a001--01.jpg）"
+
+msgid "To disable usces_cart.css"
+msgstr "usces_cart.css の無効化"
+
+msgid "When checked, Welcart will not output the usces_cart.css. If you want to make own usces_cart.css file, please copy and paste it in your theme folder currently in use."
+msgstr "Welcart が適用するusces_cart.css を無効化したい場合はこれをチェックしてください。ご利用中のテーマのフォルダにusces_cart.css を作成することでオリジナルのスタイルを組む事ができます。"
+
+msgid "Rules of order-ID numbering"
+msgstr "注文番号ルール"
+
+msgid "Sequential number"
+msgstr "連番（数値）"
+
+msgid "Random string"
+msgstr "ランダムな文字列（英字）"
+
+msgid "The initial value is a sequential number starting from 1000."
+msgstr "初期値は1000から始まる連番です。"
+
+msgid "Prefix of order-ID"
+msgstr "注文番号プレフィックス"
+
+msgid "If you do not need it, leave it blank."
+msgstr "【半角英字】必要ない場合は空白にします。"
+
+msgid "Digits of order-ID"
+msgstr "注文番号の桁数"
+
+msgid "This value must be at least six digits. The prefix is ​​not included."
+msgstr "【数値（6以上）】10桁前後が望ましい。プレフィックスの桁数は含まれません。"
+
+msgid "Use SSL"
+msgstr "SSLを使用する"
+
+msgid "Select the item you want, please press the download."
+msgstr "出力したい項目を選択して、ダウンロードを押してください。"
+
+msgid "Payment information"
+msgstr "支払情報"
+
+msgid "100-100-10000"
+msgstr "100-100-10000"
+
+msgid "100-1001"
+msgstr "100-1001"
+
+msgid "Select the scope of the point that customers can use.<br />Default is 'Limited Only to Total Merchandise Price'. 'Applicable to Total Merchandise Price and Handling Fee' If you choose, you can pay shipping and COD fee in points."
+msgstr "お客様が利用できるポイントの適用範囲を選択します。<br />初期値は「商品合計金額のみに制限」されています。「商品合計額及び手数料などにも適用」を選択すると送料や代引き手数料もポイントで支払う事ができるようになります。"
+
 msgid "No valid shipping methods."
 msgstr "有効な配送方法が見当たりません。"
 
-#~ msgid "Chenge th epassword according to the e-mail."
-#~ msgstr "メールの内容にしたがってパスワードを変更してください。"
+msgid "The same product cord is registered."
+msgstr "商品コードが重複して登録されています。"
+
+msgid "The file was not stored."
+msgstr "ファイルを保存できませんでした。"
+
+msgid "CSV file does not exist."
+msgstr "CSVファイルが存在しません。"
+
+msgid "This file is not in the CSV file."
+msgstr "このファイルはCSVファイルでは有りません。"
+
+msgid "Processing..."
+msgstr "処理中..."
+
+msgid "Remaining time:"
+msgstr "残り時間："
+
+msgid "sec"
+msgstr "秒"
+
+msgid "Finished"
+msgstr "終了しました。"
+
+msgid "Data have deficiency."
+msgstr "データに不備が有ります。"
+
+#~ msgid "Archive for %s|Daily archive page"
+#~ msgstr "%s の記事"
 
 #~ msgid "print the invoice"
 #~ msgstr "納品書印刷"
@@ -3345,9 +3474,6 @@ msgstr "有効な配送方法が見当たりません。"
 
 #~ msgid "A buyer"
 #~ msgstr "ご購入者"
-
-#~ msgid "An order number"
-#~ msgstr "注文番号"
 
 #~ msgid "An order email"
 #~ msgstr "受注明細"

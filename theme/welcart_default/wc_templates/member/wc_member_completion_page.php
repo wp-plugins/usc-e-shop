@@ -32,7 +32,7 @@ get_header();
 	
 	<?php elseif ( 'lostcompletion' == $member_compmode ) : ?>
 	<p><?php _e('I transmitted an email.', 'usces'); ?></p>
-	<p><?php _e('Chenge th epassword according to the e-mail.', 'usces'); ?></p>
+	<p><?php _e('Change your password by following the instruction in this mail.', 'usces'); ?></p>
 	
 	<?php elseif ( 'changepasscompletion' == $member_compmode ) : ?>
 	<p><?php _e('Password has been changed.', 'usces'); ?></p>
@@ -45,7 +45,7 @@ get_header();
 	</div>
 
 	<p><a href="<?php usces_url('member'); ?>"><?php _e('to vist membership information page', 'usces'); ?></a></p>
-	<form action="<?php bloginfo('home'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+	<form action="<?php echo home_url(); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<div class="send"><input name="top" type="submit" value="<?php _e('Back to the top page.', 'usces'); ?>" /></div>
 	<?php do_action('usces_action_membercompletion_page_inform'); ?>
 	</form>

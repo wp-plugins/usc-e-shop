@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 3.0
 Tested up to: 3.3
-Stable tag: 1.0.10
+Stable tag: 1.1.0
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -55,6 +55,16 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 3. An attached default theme
 
 == Changelog ==
+
+= V1.1 =
+25 Jan 2012
+-----------
+* Change specifications Registration also allows large amounts of data at once, CSV export and import of product data.
+* Added the ability to disable 'usces_cart.css'.
+* Added the ability to randomize the order number string.
+* Added the ability to choose the applicable rules of product Sub-Image.
+* Changed the specification to order that can be changed by dragging the SKU and product options.
+* Changed the specification to order that can be changed by dragging common options and payment methods.
 
 = V1.0 =
 30 Apr 2011

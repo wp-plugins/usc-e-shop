@@ -257,7 +257,7 @@ class dataList
 			$this->action = 'searchIn';
 			$this->arr_search['column'] = $_REQUEST['search']['column'];
 			$this->arr_search['word'] = $_REQUEST['search']['word'];
-			$this->arr_search['period'] = intval($_REQUEST['search']['period']);
+			$this->arr_search['period'] = isset($_REQUEST['search']['period']) ? intval($_REQUEST['search']['period']) : 0;
 			$this->searchSwitchStatus = $_REQUEST['searchSwitchStatus'];
 			
 			$this->currentPage = 1;
@@ -493,8 +493,10 @@ class dataList
 //20101202ysk start
 		if($this->pageLimit == 'on') {
 //20101202ysk end
-		$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
+			$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
 //20101202ysk start
+		}else{
+			$limit = '';
 		}
 //20101202ysk end
 			
@@ -612,7 +614,7 @@ class dataList
 		
 		$html = '';
 		$html .= '<ul class="clearfix">'."\n";
-		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' 件</li>' . "\n";
+		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' ' . __('cases', 'usces') . '</li>' . "\n";
 		if(($this->currentPage == 1) || ($this->selectedRow == 0)){
 			$html .= '<li class="navigationStr">first&lt;&lt;</li>' . "\n";
 			$html .= '<li class="navigationStr">prev&lt;</li>'."\n";

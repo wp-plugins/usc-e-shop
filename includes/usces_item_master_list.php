@@ -1,6 +1,6 @@
 <?php
 require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
-global $wpdb;
+global $wpdb, $post;
 $wpdb->show_errors();
 
 $tableName = $wpdb->posts;
@@ -41,11 +41,6 @@ $curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
 $usces_opt_item = get_option('usces_opt_item');
 //20101111ysk end
 ?>
-<!--<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.core.js"></script>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.resizable.js"></script>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.draggable.js"></script>
-<script type="text/javascript" src="<?php echo get_option('siteurl'); ?>/wp-includes/js/jquery/ui.dialog.js"></script>
--->
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
@@ -114,13 +109,13 @@ jQuery(function($){
 			
 			if( column == 'item_name' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][item_name]" type="text" value="<?php echo esc_attr($arr_search['word']['item_name']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][item_name]" type="text" value="<?php if(isset($arr_search['word']['item_name'])) echo esc_attr($arr_search['word']['item_name']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'item_code' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][item_code]" type="text" value="<?php echo esc_attr($arr_search['word']['item_code']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][item_code]" type="text" value="<?php if(isset($arr_search['word']['item_code'])) echo esc_attr($arr_search['word']['item_code']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'post_title' ) {
 				label = '<?php _e('key words', 'usces'); ?>';
-				html = '<input name="search[word][post_title]" type="text" value="<?php echo esc_attr($arr_search['word']['post_title']); ?>" class="searchword" maxlength="50" />';
+				html = '<input name="search[word][post_title]" type="text" value="<?php if(isset($arr_search['word']['post_title'])) echo esc_attr($arr_search['word']['post_title']); ?>" class="searchword" maxlength="50" />';
 			}else if( column == 'zaiko_num' ) {
 				label = '';
 				html = '';
@@ -128,7 +123,7 @@ jQuery(function($){
 				label = '';
 				html = '<select name="search[word][zaiko]" class="searchselect">';
 		<?php foreach($zaiko_status as $zkey => $zvalue){ 
-				if($zkey == $arr_search['word']['zaiko']){
+				if(isset($arr_search['word']['zaiko']) && $zkey == $arr_search['word']['zaiko']){
 					$zselected = ' selected="selected"';
 				}else{
 					$zselected = '';
@@ -143,7 +138,7 @@ jQuery(function($){
 		<?php 
 			$categories = get_categories(array('child_of' => USCES_ITEM_CAT_PARENT_ID));
 			foreach($categories as $ckey => $cvalue){ 
-				if($cvalue->term_id == $arr_search['word']['category']){
+				if(isset($arr_search['word']['category']) && $cvalue->term_id == $arr_search['word']['category']){
 					$cselected = ' selected="selected"';
 				}else{
 					$cselected = '';
@@ -155,12 +150,12 @@ jQuery(function($){
 			}else if( column == 'display_status' ) {
 				label = '';
 				html = '<select name="search[word][display_status]" class="searchselect">';
-				html += '<option value="<?php _e('Published', 'usces'); ?>"<?php if( __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Scheduled', 'usces'); ?>"<?php if( __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Draft', 'usces'); ?>"<?php if( __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Pending Review', 'usces'); ?>"<?php if( __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Closed', 'usces'); ?>"<?php if( __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
-				html += '<option value="<?php _e('Trash', 'usces'); ?>"<?php if( __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
+				html += '<option value="publish"<?php if(isset($arr_search['word']['display_status']) && __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
+				html += '<option value="future"<?php if(isset($arr_search['word']['display_status']) && __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
+				html += '<option value="draft"<?php if(isset($arr_search['word']['display_status']) && __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
+				html += '<option value="pending"<?php if(isset($arr_search['word']['display_status']) && __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
+				html += '<option value="private"<?php if(isset($arr_search['word']['display_status']) && __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
+				html += '<option value="trash"<?php if(isset($arr_search['word']['display_status']) && __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
 				html += '</select>';
 			} 
 			
@@ -243,10 +238,16 @@ jQuery(function($){
 		}
 	});
 	$('#dl_item').click(function() {
+//20120123ysk start 0000385
+		//var args = "&search[column]="+$(':input[name="search[column]"]').val()
+		//	+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+		//	+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();//20120123ysk 0000385
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
 			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
-			+"&ftype="+$(':input[name="ftype_item[]"]:checked').val();
+			+"&ftype=csv";
+//20120123ysk end
 		if($('#chk_header').attr('checked')) {
 			args += '&chk_header=on';
 		}
@@ -256,6 +257,7 @@ jQuery(function($){
 		$('#dlItemListDialog').dialog('open');
 	});
 //20101111ysk end
+
 });
 
 function toggleVisibility(id) {
@@ -393,18 +395,18 @@ jQuery(document).ready(function($){
 <?php endforeach; ?>
 	</tr>
 <?php foreach ( (array)$rows as $array ) :
-		$pctid = $this->get_mainpictid($array['item_code']); 
-		$sku_values = unserialize($array['sku_value']);
+		$pctid = (int)$this->get_mainpictid($array['item_code']); 
 		$post = get_post($array['ID']);
+		$array['sku'] = $skus = $this->get_skus( $array['ID'], 'sort' );
+		$array['category'] = "";
+		$array['post_status'] = $post->post_status;
 ?>
 	<tr>
 	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
 	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
-	<?php foreach ( (array)$array as $key => $value ) : 
-			$skus = $this->get_skus( $array['ID'], 'ARRAY_A' );
-	?>
+	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $key == 'item_code') : ?>
-			<?php if( USCES_MYSQL_VERSION < 5 ){ $usceskey_values = get_post_custom_values('_itemCode', $array['ID']); $value = $usceskey_values[0]; $array['item_code'] = $usceskey_values[0]; } ?>
+			<?php if( USCES_MYSQL_VERSION < 5 ){ $value = get_post_meta($array['ID'], '_itemCode', true); $array['item_code'] = $value; } ?>
 			<td class="item">
 			<?php if( $value != '' ) : ?> 
 				<strong><?php echo esc_html($value); ?></strong>
@@ -441,8 +443,8 @@ jQuery(document).ready(function($){
 			</td>
 			
 		<?php elseif( $key == 'post_title' ) : ?>
-			<?php if( $value != '' ) : ?> 
-				<strong><?php echo esc_html($value); ?></strong>
+			<?php if( $post->post_title != '' ) : ?> 
+				<strong><?php echo esc_html($post->post_title); ?></strong>
 			<?php else : ?> 
 				&nbsp;
 			<?php endif; ?>
@@ -453,29 +455,27 @@ jQuery(document).ready(function($){
 			</ul>
 			</td>
 			
-		<?php elseif( $key == 'sku_key' ): ?>
+		<?php elseif( $key == 'sku' ): 	$no_sku = ( 0 === count($value) ) ? "&nbsp;" : ""; ?>
 		
 			<td class="sku">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="skuline<?php echo $bgc; ?>"><?php echo esc_html($key); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+				<div class="skuline<?php echo $bgc; ?>"><?php echo esc_html($sv['code']); ?></div>
+			<?php } echo $no_sku; ?>
 			</td>
-
-		<?php elseif( $key == 'sku_value' ): ?>
 			<td class="price">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
 				<div class="priceline<?php echo $bgc; ?>"><?php usces_crform( $sv['price'], true, false ); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php } echo $no_sku; ?>
 			</td>
 			<td class="zaikonum">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php echo (( '' != $sv['zaikonum']) ? esc_html($sv['zaikonum']) : "&nbsp;"); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+				<div class="priceline<?php echo $bgc; ?>"><?php echo (( '' != $sv['stocknum']) ? esc_html($sv['stocknum']) : "&nbsp;"); ?></div>
+			<?php } echo $no_sku; ?>
 			</td>
 			<td class="zaiko">
-			<?php $i=0; foreach((array)$skus as $key => $sv) { $zaikokey = $sv['zaiko']; $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
+			<?php $i=0; foreach((array)$value as $key => $sv) { $zaikokey = $sv['stock']; $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
 				<div class="zaikoline<?php echo $bgc; ?>"><?php echo esc_html($zaiko_status[$zaikokey]); ?></div>
-			<?php } if(count($skus) === 0) echo "&nbsp;"; ?>
+			<?php } echo $no_sku; ?>
 			</td>
 		<?php elseif( $key == 'category' ) : ?>
 			<td class="listcat">
@@ -491,8 +491,27 @@ jQuery(document).ready(function($){
 				}
 			?>
 			</td>
-		<?php elseif( $key == 'display_status' ): ?>
-			<td><?php echo esc_html($value); ?><?php if( !empty( $post->post_password) ){echo '<br />'.__('Password protected');} ?></td>
+		<?php elseif( $key == 'post_status' ): ?>
+			<td><?php
+			 		switch ($value){
+						case 'publish':
+							echo __('Published', 'usces');
+							break;
+						case 'future':
+							echo __('Scheduled', 'usces');
+							break;
+						case 'draft':
+							echo __('Draft', 'usces');
+							break;
+						case 'pending':
+							echo __('Pending Review', 'usces');
+							break;
+						case 'trash':
+							echo __('Trash', 'usces');
+							break;
+						default:
+							echo __('Closed', 'usces');
+					} ?><?php if( !empty( $post->post_password) ){echo '<br />'.__('Password protected');} ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
 	</tr>
@@ -511,32 +530,20 @@ jQuery(document).ready(function($){
 	</form>
 	<p><?php _e('Indication is updated after upload completion.', 'usces'); ?></p>
 	<p><?php _e('Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload.', 'usces'); ?></p>
+
 </div>
 <!--20101111ysk start-->
 <div id="dlItemListDialog" title="<?php _e('Download Item List', 'usces'); ?>">
 	<p><?php _e('Choose the file format, and push the download.', 'usces'); ?></p>
 	<fieldset>
 		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('To add a subject title at the first line','usces'); ?></label>
-	</fieldset>
-	<fieldset>
-<?php 
-	if($usces_opt_item['ftype_item'] == 'xls') {
-		$ftype_item_xls = ' checked';
-		$ftype_item_csv = '';
-	} elseif($usces_opt_item['ftype_item'] == 'csv') {
-		$ftype_item_xls = '';
-		$ftype_item_csv = ' checked';
-	} else {
-		$ftype_item_xls = ' checked';
-		$ftype_item_csv = '';
-	}
-?>
-		<label for="ftype_item_xls"><input type="radio" name="ftype_item[]" id="ftype_item_xls" value="xls"<?php echo $ftype_item_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_item_csv"><input type="radio" name="ftype_item[]" id="ftype_item_csv" value="csv"<?php echo $ftype_item_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
+<!--20120123ysk start 0000385-->
 		<input type="button" id="dl_item" value="<?php _e('Download', 'usces'); ?>" />
+<!--20120123ysk end-->
 	</fieldset>
 </div>
 <!--20101111ysk end-->
 
 </div><!--usces_admin-->
 </div><!--wrap-->
+[memory peak usage] <?php echo round(memory_get_peak_usage()/1048576, 1); ?>Mb

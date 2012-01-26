@@ -8,8 +8,8 @@ $pname = array();
 $payment_method = array();
 
 $management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
-$payment_method = $this->options['payment_method'];
-foreach( (array)$payment_method as $pmet){
+$payment_method = usces_get_system_option( 'usces_payment_method', 'sort' );
+foreach( $payment_method as $pmet){
 	$pname[] = $pmet['name'];
 }
 if( !in_array( __('Transfer (prepayment)', 'usces'), $pname) ){
@@ -42,17 +42,85 @@ if($order_action == 'new'){
 	$receipt = '';
 	$ordercheck = array();
 	$order_delivery_method = -1;
-//20100818ysk start
+	$order_id = NULL;
+
 	$csod_meta = usces_has_custom_field_meta('order');
+	if(is_array($csod_meta)) {
+		$keys = array_keys($csod_meta);
+		foreach($keys as $key) {
+			$csod_key = 'csod_'.$key;
+			$csod_meta[$key]['data'] = NULL;
+		}
+	}
 	$cscs_meta = usces_has_custom_field_meta('customer');
+	if(is_array($cscs_meta)) {
+		$keys = array_keys($cscs_meta);
+		foreach($keys as $key) {
+			$cscs_key = 'cscs_'.$key;
+			$cscs_meta[$key]['data'] = NULL;
+		}
+	}
 	$csde_meta = usces_has_custom_field_meta('delivery');
-//20100818ysk end
+	if(is_array($csde_meta)) {
+		$keys = array_keys($csde_meta);
+		foreach($keys as $key) {
+			$csde_key = 'csde_'.$key;
+			$csde_meta[$key]['data'] = NULL;
+		}
+	}
+
+	$data = array(
+		'mem_name1' => '', 
+		'mem_name2' => '', 
+		'mem_name3' => '', 
+		'mem_name4' => '', 
+		'mem_zip' => '',
+		'mem_address1' => '',
+		'mem_address2' => '',
+		'mem_address3' => '',
+		'mem_tel' => '',
+		'mem_fax' => '',
+		'mem_country' => '',
+		'mem_pref' => '',
+		'order_name1' => '', 
+		'order_name2' => '', 
+		'order_name3' => '', 
+		'order_name4' => '', 
+		'order_zip' => '',
+		'order_address1' => '',
+		'order_address2' => '',
+		'order_address3' => '',
+		'order_tel' => '',
+		'order_fax' => '',
+		'order_country' => '',
+		'order_pref' => '',
+		'ID' => '',
+		'order_date' => current_time('mysql'),
+		'order_delivery_date' => '',
+	 );
+	$deli = array(
+		'name1' => '', 
+		'name2' => '', 
+		'name3' => '', 
+		'name4' => '', 
+		'zipcode' => '',
+		'address1' => '',
+		'address2' => '',
+		'address3' => '',
+		'tel' => '',
+		'fax' => '',
+		'country' => '',
+		'pref' => ''
+	 );
+	$condition = $this->get_condition();
+	$cart = array();
+	 
 
 }else{
 
 	$oa = 'editpost';
 
-	$order_id = (int)$_REQUEST['order_id'];
+	$order_id = $_REQUEST['order_id'];
 	
 	global $wpdb;
 	
@@ -136,14 +204,22 @@ jQuery(function($){
 <?php }else if($status == 'error'){ ?>
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
-	var selected_delivery_time = '<?php esc_html_e($data['order_delivery_time']); ?>';
+	var selected_delivery_time = '<?php esc_html_e(isset($data['order_delivery_time']) ? $data['order_delivery_time'] : ''); ?>';
 	var delivery_time = [];
-<?php foreach((array)$this->options['delivery_method'] as $dmid => $dm){	$lines = split("\n", $dm['time']); ?>
-	delivery_time[<?php echo $dm['id']; ?>] = [];
-	<?php foreach((array)$lines as $line){ 	if(trim($line) != ''){ ?>
-	delivery_time[<?php echo $dm['id']; ?>].push("<?php echo trim($line); ?>");
-	<?php } } ?>
-<?php } ?>
+<?php
+	foreach((array)$this->options['delivery_method'] as $dmid => $dm){
+		$lines = split("\n", $dm['time']);
+?>
+		delivery_time[<?php echo $dm['id']; ?>] = [];
+<?php
+		foreach((array)$lines as $line){
+			if(trim($line) != ''){
+?>
+				delivery_time[<?php echo $dm['id']; ?>].push("<?php echo trim($line); ?>");
+<?php		}
+		}
+	}
+?>
 
 	$("#order_payment_name").change(function () {
 		var pay_name = $("select[name='offer\[payment_name\]'] option:selected").val();
@@ -333,7 +409,15 @@ jQuery(function($){
 	});
 
 	orderfunc = {
-		sumPrice : function() {
+		sumPrice : function(obj) {
+			if(obj != null) {
+				if(!checkNum(obj.val())) {
+					alert('数値で入力して下さい。');
+					obj.focus();
+					return false;
+				}
+			}
+
 			var p = $("input[name*='skuPrice']");
 			var q = $("input[name*='quant']");
 			var t = $("td[id*='sub_total']");
@@ -361,7 +445,7 @@ jQuery(function($){
 		
 		make_delivery_time : function(selected) {
 			var option = '';
-			if(selected == -1 || delivery_time[selected] == undefined){
+			if(selected == -1 || delivery_time[selected] == undefined || 0 == delivery_time[selected].length){
 				option += '<option value="<?php _e('Non-request', 'usces'); ?>"><?php _e('Non-request', 'usces'); ?></option>' + "\n";
 			}else{
 				for(var i=0; i<delivery_time[selected].length; i++){
@@ -391,15 +475,6 @@ jQuery(function($){
 							$(":input[name='" + val[0] + "']").val(val[1]);
 						}
 					}
-
-
-
-
-
-
-
-
-
 				}else if( 'none' == values[0]){
 					alert( '該当する会員情報は存在しません。' );
 				}else{
@@ -518,6 +593,58 @@ jQuery(function($){
 			}
 		}
 	};
+
+	$('form').submit(function() {
+		var error = 0;
+
+		if( !checkNum( $("#order_usedpoint").val() ) ) {
+			error++;
+			$("#order_usedpoint").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkNum( $("#order_getdpoint").val() ) ) {
+			error++;
+			$("#order_getdpoint").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_discount").val() ) ) {
+			error++;
+			$("#order_discount").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_shipping_charge").val() ) ) {
+			error++;
+			$("#order_shipping_charge").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_cod_fee").val() ) ) {
+			error++;
+			$("#order_cod_fee").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+		if( !checkPrice( $("#order_tax").val() ) ) {
+			error++;
+			$("#order_tax").css({'background-color': '#FFA'}).click(function() {
+				$(this).css({'background-color': '#FFF'});
+			});
+		}
+
+		if( 0 < error ) {
+			$("#aniboxStatus").removeClass("none");
+			$("#aniboxStatus").addClass("error");
+			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
+			$("#info_massage").html("データに不備があります");
+			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+			return false;
+		} else {
+			return true;
+		}
+	});
 });
 
 function toggleVisibility(id) {
@@ -567,21 +694,21 @@ jQuery(document).ready(function($){
 	var t = $("td[id*='sub_total']");
 	var db = $("input[name*='delButton']");
 
-	orderfunc.sumPrice();
+	orderfunc.sumPrice(null);
 	
 	for( var i = 0; i < p.length; i++) {
-		$(p[i]).bind("change", function(){ orderfunc.sumPrice(); });
-		$(q[i]).bind("change", function(){ orderfunc.sumPrice(); });
-		$(db[i]).bind("click", function(){ return delConfirm(); });
+		$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
+		$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
+		$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
 	}
-	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_discount").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_shipping_charge").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_cod_fee").bind("change", function(){ orderfunc.sumPrice(); });
-	$("#order_tax").bind("change", function(){ orderfunc.sumPrice(); });
+	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice($("#order_usedpoint")); });
+	$("#order_discount").bind("change", function(){ orderfunc.sumPrice($("#order_discount")); });
+	$("#order_shipping_charge").bind("change", function(){ orderfunc.sumPrice($("#order_shipping_charge")); });
+	$("#order_cod_fee").bind("change", function(){ orderfunc.sumPrice($("#order_cod_fee")); });
+	$("#order_tax").bind("change", function(){ orderfunc.sumPrice($("#order_tax")); });
 	$("input[name*='upButton']").click(function(){
 		if( ('completion' == $("#order_taio option:selected").val() || 'continuation' == $("#order_taio option:selected").val()) && '<?php echo substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10); ?>' != $('#modified').val() ){
-			if( confirm("<?php _e("更新日を今日の日付に変更しますか？", 'usces'); ?>\n<?php _e("更新日日を変更せずに更新する場合はキャンセルを押してください。", 'usces'); ?>") ){
+			if( confirm("<?php _e("更新日を今日の日付に変更しますか？", 'usces'); ?>\n<?php _e("更新日を変更せずに更新する場合はキャンセルを押してください。", 'usces'); ?>") ){
 				$('#up_modified').val('update');
 			}else{
 				$('#up_modified').val('');
@@ -600,7 +727,6 @@ jQuery(document).ready(function($){
 	
 	orderfunc.make_delivery_time(<?php echo $order_delivery_method; ?>);
 
-<?php if($order_action == 'new'){ ?>
 	$("#get_member").click(function(){ 
 		if( '' == $("input[name='customer[mailaddress]']").val() ){
 			alert('e-mail を入力して下さい。');
@@ -610,8 +736,8 @@ jQuery(document).ready(function($){
 				orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 			}
 		} 
+		orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 	});
-<?php } ?>
 });
 </script>
 <div class="wrap">
@@ -622,7 +748,7 @@ jQuery(document).ready(function($){
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
-		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
+		<img id="info_image" src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
 		<div class="mes" id="info_massage"><?php echo $message; ?></div>
 	</div>
 </div>
@@ -659,17 +785,17 @@ jQuery(document).ready(function($){
 <td colspan="6" class="midasi0"><?php _e('order details', 'usces'); ?></td>
 </tr>
 <tr>
-<td class="label border"><?php _e('Order number', 'usces'); ?></td><td class="col1 border"><div class="rod large short"><?php esc_html_e($data['ID']); ?></div></td>
-<td class="col3 label border"><?php _e('order date', 'usces'); ?></td><td class="col2 border"><div class="rod long"><?php esc_html_e($data['order_date']); ?></div></td>
-<td class="label border"><?php echo apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ); ?></td><td class="border"><div id="order_modified" class="rod long"><?php esc_html_e($data['order_modified']); ?></div></td>
+<td class="label border"><?php _e('Order number', 'usces'); ?><br />(<?php esc_html_e(isset($data['ID']) ? $data['ID'] : ''); ?>)</td><td class="col1 border"><div class="rod"><?php esc_html_e(isset($data['ID']) ? usces_get_deco_order_id( $data['ID'] ) : ''); ?></div></td>
+<td class="col3 label border"><?php _e('order date', 'usces'); ?></td><td class="col2 border"><div class="rod long"><?php esc_html_e(isset($data['order_date']) ? $data['order_date'] : ''); ?></div></td>
+<td class="label border"><?php echo apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ); ?></td><td class="border"><div id="order_modified" class="rod long"><?php esc_html_e(isset($data['order_modified']) ? $data['order_modified'] : ''); ?></div></td>
 </tr>
 <tr>
-<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div id="member_id_label" class="rod large short"><?php esc_html_e($data['mem_id']); ?></div><?php if($order_action == 'new'){ ?><input name="member_id" id="member_id" type="hidden" /><?php } ?></td>
+<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div id="member_id_label" class="rod large short"><?php esc_html_e(isset($data['mem_id']) ? $data['mem_id'] : ''); ?></div><?php if($order_action == 'new'){ ?><input name="member_id" id="member_id" type="hidden" /><?php } ?></td>
 <td colspan="2" rowspan="10" class="wrap_td">
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
         <td class="label">e-mail</td>
-        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr($data['order_email']); ?>" /><?php if($order_action == 'new'){ ?><!--<input name="get_member" type="button" id="get_member" value="会員情報取込" />--><?php } ?></td>
+        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr(isset($data['order_email']) ? $data['order_email'] : ''); ?>" /><input name="get_member" type="button" id="get_member" value="会員情報取込" /></td>
     </tr>
 	
 <?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
@@ -685,7 +811,7 @@ jQuery(document).ready(function($){
 if( $payment_method ) {
 	foreach ((array)$payment_method as $payments) {
 	if( $payments['name'] != '' ) {
-		$selected = ($payments['name'] == $data['order_payment_name']) ? ' selected="selected"' : '';
+		$selected = (isset($data['order_payment_name']) && $payments['name'] == $data['order_payment_name']) ? ' selected="selected"' : '';
 ?>
     <option value="<?php echo esc_attr($payments['name']); ?>"<?php echo $selected; ?>><?php echo esc_attr($payments['name']); ?></option>
 <?php } } } ?>
@@ -708,9 +834,9 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 }
 ?>
 </select></td>
-<?php if( USCES_JP ): ?>
+<?php //if( USCES_JP ): ?>
 </tr>
-<?php endif; ?>
+<?php //endif; ?>
 <!--20101208ysk start-->
 <tr>
 <td class="label"><?php _e('Delivery date', 'usces'); ?></td>
@@ -722,7 +848,7 @@ $order_date = explode("-", $data_order_date[0]);
 for($i = 0; $i < 50; $i++) {
 	$value = date('Y-m-d', mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
 	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
-	$selected = ($data['order_delivery_date'] == $value) ? ' selected="selected"' : '';
+	$selected = (isset($data['order_delivery_date']) && $data['order_delivery_date'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$date}</option>\n";
 }
 ?>
@@ -731,21 +857,11 @@ for($i = 0; $i < 50; $i++) {
 <!--20101208ysk end-->
 <tr>
 <td class="label"><?php _e('delivery time', 'usces'); ?></td>
-<td class="col1"><select name="offer[delivery_time]" id="delivery_time_select">
-	<option value='<?php _e('Non-request', 'usces'); ?>'><?php _e('Non-request', 'usces'); ?></option>
-<?php
-if( !$this->options['delivery_time'] == '' ) {
-	$array = explode("\n", $this->options['delivery_time']);
-	foreach ((array)$array as $delivery) {
-		$delivery = trim($delivery);
-		if( $delivery != '' ) {
-			$selected = ($delivery == $value) ? ' selected="selected"' : '';
-			echo "\t<option value='" . esc_attr($delivery) . "'{$selected}>" . esc_html($delivery) . "</option>\n";
-		}
-	}
-}
-?>
-</select></td>
+<td class="col1">
+<select name="offer[delivery_time]" id="delivery_time_select">
+	<option value="<?php _e('Non-request', 'usces'); ?>"><?php _e('Non-request', 'usces'); ?></option>
+</select>
+</td>
 </tr>
 <tr>
 <td class="label"><?php _e('Shipping date', 'usces'); ?></td>
@@ -755,7 +871,7 @@ if( !$this->options['delivery_time'] == '' ) {
 for ($i=0; $i<50; $i++) {
 	$value = date('Y-m-d', mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
 	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
-	$selected = ($data['order_delidue_date'] == $value) ? ' selected="selected"' : '';
+	$selected = (isset($data['order_delidue_date']) && $data['order_delidue_date'] == $value) ? ' selected="selected"' : '';
 	echo "\t<option value='{$value}'{$selected}>{$date}</option>\n";
 }
 ?>
@@ -778,11 +894,7 @@ for ($i=0; $i<50; $i++) {
 <?php 
 	}
 ?>
-<!--	<option value='cancel'<?php if($taio == 'cancel'){ echo 'selected="selected"';} ?>><?php echo $management_status['cancel']; ?></option>
-	<option value='completion'<?php if($taio == 'completion'){ echo 'selected="selected"';} ?>><?php echo $management_status['completion']; ?></option>
-	<option value='continuation'<?php if($taio == 'continuation'){ echo 'selected="selected"';} ?>><?php echo $management_status['continuation']; ?></option>
-	<option value='termination'<?php if($taio == 'termination'){ echo 'selected="selected"';} ?>><?php echo $management_status['termination']; ?></option>
---></select></td>
+</select></td>
 </tr>
 <tr>
 <td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>
@@ -819,7 +931,7 @@ for ($i=0; $i<50; $i++) {
 <?php endif; ?>
 </div></td>
 <td class="label"><?php _e('Notes', 'usces'); ?></td>
-<td colspan="3"><textarea name="offer[note]"><?php echo esc_attr($data['order_note']); ?></textarea></td>
+<td colspan="3"><textarea name="offer[note]"><?php echo esc_attr(isset($data['order_note']) ? $data['order_note'] : ''); ?></textarea></td>
 </tr>
 </table>
 </div>
@@ -827,8 +939,8 @@ for ($i=0; $i<50; $i++) {
 <div class="info_head">
 <table>
 <tr>
-<td class="midasi0"><?php _e('カスタム・オーダーフィールド', 'usces'); ?></td>
-<td class="midasi0"><?php _e('支払情報', 'usces'); ?></td>
+<td class="midasi0"><?php _e('Custom order field', 'usces'); ?></td>
+<td class="midasi0"><?php _e('Payment information', 'usces'); ?></td>
 </tr>
 <tr>
 <td class="wrap_td">
@@ -873,32 +985,40 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 	</thead>
 	<tbody id="orderitemlist">
 <?php
+	global $post;
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
 		$post_id = $cart_row['post_id'];
+		$post = get_post($post_id);
 		$sku = $cart_row['sku'];
+		$sku_code = esc_attr(urldecode($cart_row['sku']));
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$advance = $this->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $this->getItemCode($post_id);
 		$itemName = $this->getItemName($post_id);
-		$cartItemName = $this->getCartItemName($post_id, $sku);
+		$cartItemName = $this->getCartItemName($post_id, $sku_code);
 		$skuPrice = $cart_row['price'];
-		$stock = $this->getItemZaiko($post_id, $sku);
-		$red = (in_array($stock, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
-		$pictid = $this->get_mainpictid($itemCode);
-		$optstr =  '';
+		$stock = $this->getItemZaiko($post_id, $sku_code);
+		$red = (in_array($stock, array(__('sellout', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
+		$pictid = (int)$this->get_mainpictid($itemCode);
+		if( empty($options) ) {
+			$optstr = '';
+			$options = array();
+		}
 		if( is_array($options) && count($options) > 0 ){
+			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
 				//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= esc_html($key) . ' : '; 
 						foreach($value as $v) {
-							$optstr .= $c.esc_html(nl2br(esc_html(urldecode($v))));
+							$optstr .= $c.nl2br(esc_html(urldecode($v)));
 							$c = ', ';
 						}
 						$optstr .= "<br />\n"; 
@@ -914,23 +1034,23 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictid, array(150, 150), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
-		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
-		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
+		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
+		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>
 		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
 		<td>
 		<?php foreach((array)$options as $key => $value){ ?>
-		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_attr($key); ?>" />
+		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo esc_attr($key); ?>" />
 			<?php if(is_array($value)): //20110715ysk 0000202 ?>
 				<?php foreach($value as $v): ?>
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>][<?php echo esc_html(urldecode($v)); ?>]" type="hidden" value="<?php echo esc_html(urldecode($v)); ?>" />
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>][<?php echo $v; ?>]" type="hidden" value="<?php echo $v; ?>" />
 				<?php endforeach; ?>
 			<?php else: ?>
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>][<?php echo esc_attr($key); ?>]" type="hidden" value="<?php echo esc_html(urldecode($value)); ?>" />
+		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
 			<?php endif; ?>
 		<?php } ?>
-		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
-		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo esc_attr($sku); ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
+		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
+		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
 		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
 		</td>
 	</tr>
@@ -946,28 +1066,28 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( isset($data['order_usedpoint']) && !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
 			<td><?php _e('granted points', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( isset($data['order_getpoint']) && !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Campaign disnount', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( isset($data['order_discount']) && !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( !empty($data['order_shipping_charge']) ) { usces_crform( $data['order_shipping_charge'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[shipping_charge]" id="order_shipping_charge" class="text price" type="text" value="<?php if( isset($data['order_shipping_charge']) && !empty($data['order_shipping_charge']) ) { usces_crform( $data['order_shipping_charge'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></td>
-			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( !empty($data['order_cod_fee']) ) { usces_crform( $data['order_cod_fee'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[cod_fee]" id="order_cod_fee" class="text price" type="text" value="<?php if( isset($data['order_cod_fee']) && !empty($data['order_cod_fee']) ) { usces_crform( $data['order_cod_fee'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
+			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( isset($data['order_tax']) && !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
@@ -981,11 +1101,11 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 <div class="ordernavi"><input name="upButton2" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 
 <input name="order_action" type="hidden" value="<?php echo $oa; ?>" />
-<input name="order_id" id="order_id" type="hidden" value="<?php echo esc_attr($data['ID']); ?>" />
-<input name="old_getpoint" type="hidden" value="<?php echo esc_attr($data['order_getpoint']); ?>" />
-<input name="old_usedpoint" type="hidden" value="<?php echo esc_attr($data['order_usedpoint']); ?>" />
+<input name="order_id" id="order_id" type="hidden" value="<?php echo esc_attr(isset($data['ID']) ? $data['ID'] : ''); ?>" />
+<input name="old_getpoint" type="hidden" value="<?php echo esc_attr(isset($data['order_getpoint']) ? $data['order_getpoint'] : ''); ?>" />
+<input name="old_usedpoint" type="hidden" value="<?php echo esc_attr(isset($data['order_usedpoint']) ? $data['order_usedpoint'] : ''); ?>" />
 <input name="up_modified" id="up_modified" type="hidden" value="" />
-<input name="modified" id="modified" type="hidden" value="<?php echo esc_attr($data['order_modified']); ?>" />
+<input name="modified" id="modified" type="hidden" value="<?php echo esc_attr(isset($data['order_modified']) ? $data['order_modified'] : ''); ?>" />
 
 
 

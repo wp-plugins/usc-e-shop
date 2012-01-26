@@ -1,10 +1,11 @@
 <?PHP
+global $usces;
 require_once(USCES_PLUGIN_DIR.'/classes/fpdf/mbfpdi.php');
 require_once(USCES_PLUGIN_DIR.'/classes/orderData.class.php');
 
 //用紙サイズ(B5)
 // MBfpdiクラスのインスタンス生成
-if($usces->options['print_size'] == 'A4')
+if(isset($usces->options['print_size']) && $usces->options['print_size'] == 'A4')
 	$pdf = new MBfpdi('P', 'mm', array(201, 297));
 else
 	$pdf = new MBfpdi('P', 'mm', array(182, 257));
@@ -32,7 +33,7 @@ function usces_pdf_out(&$pdf, $data){
 	//$GLOBALS['EUC2SJIS'] = true;
 
 	// テンプレートファイル
-	if($usces->options['print_size'] == 'A4')
+	if(isset($usces->options['print_size']) && $usces->options['print_size'] == 'A4')
 		$tplfile = USCES_PLUGIN_DIR."/images/orderform_A4.pdf";
 	else
 		$tplfile = USCES_PLUGIN_DIR."/images/orderform_B5.pdf";
@@ -53,22 +54,22 @@ function usces_pdf_out(&$pdf, $data){
 	switch ($_REQUEST['type'] ){
 		case  'mitumori':
 			$pdf->SetTitle('estimate');
-			$filename = 'estimate_' . $data->order['ID'] . '.pdf';
+			$filename = 'estimate_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 		
 		case 'nohin':
 			$pdf->SetTitle('invoice');
-			$filename = 'invoice_' . $data->order['ID'] . '.pdf';
+			$filename = 'invoice_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 		
 		case 'receipt':
 			$pdf->SetTitle('receipt');
-			$filename = 'receipt_' . $data->order['ID'] . '.pdf';
+			$filename = 'receipt_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 		
 		case 'bill':
 			$pdf->SetTitle('bill');
-			$filename = 'bill_' . $data->order['ID'] . '.pdf';
+			$filename = 'bill_' . usces_get_deco_order_id( $data->order['ID'] ) . '.pdf';
 			break;
 	}
 	
@@ -119,7 +120,7 @@ function usces_pdf_out(&$pdf, $data){
 
 		//---------------------------------------------------------
 		$post_id = $cart_row['post_id'];
-		$cartItemName = $usces->getCartItemName($post_id, $cart_row['sku']);
+		$cartItemName = $usces->getCartItemName($post_id, urldecode($cart_row['sku']));
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
 			$optstr = '';
@@ -128,6 +129,7 @@ function usces_pdf_out(&$pdf, $data){
 				//if( !empty($key) )
 				//	$optstr .= esc_html($key) . ' = ' . esc_html(urldecode($value)) . "\n"; 
 				if( !empty($key) ) {
+					$key = urldecode($key);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= esc_html($key) . ' = ';
@@ -142,7 +144,7 @@ function usces_pdf_out(&$pdf, $data){
 				}
 //20110629ysk end
 			}
-			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $options);
+			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $cart_row['options']);
 		}
 
 			$line_y[$index] = $next_y;
@@ -168,7 +170,7 @@ function usces_pdf_out(&$pdf, $data){
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
 			$pdf->SetXY($x+99.6, $line_y[$index]);
-			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($usces->getItemSkuUnit($post_id, $cart_row['sku'])), $border, 'C');
+			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($usces->getItemSkuUnit($post_id, urldecode($cart_row['sku']))), $border, 'C');
 			$pdf->SetXY($x+111.5, $line_y[$index]);
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
@@ -268,10 +270,10 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	$pdf->SetLineWidth(0.4);
 	$pdf->Line(65, 23, 110, 23);
 	$pdf->SetLineWidth(0.1);
-	$pdf->Line(135, 19, 165, 19);
+	$pdf->Line(124, 19, 167, 19);
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
-	$pdf->SetXY(136, 15.0);
+	$pdf->SetXY(125, 15.0);
 	$pdf->Write(5, 'No.');
 	
 	// Title
@@ -287,8 +289,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	$pdf->MultiCell(45.5, $lineheight, usces_conv_euc($effective_date), $border, 'C');
 
 	// Order No.
-	$pdf->SetXY(142, 15.4);
-	$pdf->MultiCell(24, $lineheight,  $data->order['ID'], $border, 'C');
+	$pdf->SetXY(131, 15.4);
+	$pdf->MultiCell(36, $lineheight,  usces_get_deco_order_id( $data->order['ID'] ), $border, 'R');
 
 	// Page No.
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(13);
@@ -380,7 +382,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		
-		usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
+		usces_get_pdf_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
 	
 		$pdf->MultiCell($width, $lineheight, usces_conv_euc('TEL ' . $data->customer['tel']), $border, 'L');
 	
@@ -430,7 +432,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc(apply_filters('usces_filter_pdf_mycompany', $usces->options['company_name'])), 0, 'L');
-	usces_get_pdf_myaddress(&$pdf, $lineheight );
+	usces_get_pdf_myaddress($pdf, $lineheight );
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('TEL：'.$usces->options['tel_number']), 0, 'L');
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('FAX：'.$usces->options['fax_number']), 0, 'L');
 	
@@ -564,6 +566,7 @@ function usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $l
 	$options = get_option('usces');
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
 	$name = '';
+	$border = '';
 	switch ($applyform){
 	case 'JP': 
 		$pdf->SetXY($leftside, $y);

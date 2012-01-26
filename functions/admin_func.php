@@ -76,7 +76,7 @@ function usces_states_form_js(){
 				uscesForm.changeStates( country, "delivery" ); 
 			});';
 			
-		}elseif( (true === $usces->is_member_logged_in() && '' == $usces->page) || 'member' == $usces->page || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page ){
+		}elseif( (true === $usces->is_member_logged_in() && '' == $usces->page) || (true === $usces->is_member_logged_in() && 'member' == $usces->page) || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page ){
 			
 			$js .= 'var customerstate = "";
 			var customercountry = "";
@@ -384,4 +384,5 @@ function usces_get_xml($url, $paras){
 	
 	return $xml;
 }
+
 ?>

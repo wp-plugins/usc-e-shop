@@ -61,7 +61,7 @@ get_header();
 </div><!-- end of memberpages -->
 
 <script type="text/javascript">
-<?php if ( $usces_is_login ) : ?>
+<?php if ( usces_is_login() ) : ?>
 	setTimeout( function(){ try{
 	d = document.getElementById('loginpass');
 	d.value = '';

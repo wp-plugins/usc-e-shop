@@ -1,4 +1,6 @@
 <?php
+global $usces_gp;
+
 $html = '<div id="inside-cart">
 
 <div class="usccart_navi">
@@ -42,7 +44,7 @@ if( usces_is_cart() ) {
 		<tbody>';
 		
 	$html .= usces_get_cart_rows('return');
-
+		
 	$html .= '</tbody>
 		<tfoot>
 		<tr>
@@ -53,7 +55,7 @@ if( usces_is_cart() ) {
 		</tfoot>
 	</table>
 	<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>';
-	if( $usces_gp ) {
+	if( isset($usces_gp) && $usces_gp ) {
 		$Business_pack_discount = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
 		$html .= apply_filters('usces_filter_itemGpExp_cart_message', $Business_pack_discount);
 	}
@@ -72,7 +74,7 @@ if($this->use_js){
 		$html .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', ' onclick="return uscesCart.cartNext();"') . ' />';
 	}
 }else{
-	$html .= '<a href="' . get_bloginfo('home') . '" class="continue_shopping_button">' . __('continue shopping','usces') . '</a>&nbsp;&nbsp;';
+	$html .= '<a href="' . get_home_url() . '" class="continue_shopping_button">' . __('continue shopping','usces') . '</a>&nbsp;&nbsp;';
 	if( usces_is_cart() ) {
 		$html .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', NULL) . ' />';
 	}

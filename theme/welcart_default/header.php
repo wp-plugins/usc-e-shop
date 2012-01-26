@@ -23,7 +23,7 @@
 		bloginfo( 'name' );
 	
 		// Add the blog description for the home/front page.
-		$site_description = get_bloginfo( 'description', 'display' );
+		$site_description = get_option( 'blogdescription' );
 		if ( $site_description && ( is_home() || is_front_page() ) )
 			echo " | $site_description";
 	
@@ -52,7 +52,7 @@
 		<?php wp_nav_menu(array('menu_class' => 'mainnavi clearfix', 'theme_location' => 'header')); ?>
 	<?php else: ?>
 		<ul class="mainnavi clearfix">
-			<li><a href="<?php bloginfo('url'); ?>/"><?php _e('top page','usces') ?></a></li>
+			<li><a href="<?php echo home_url( '/' ); ?>/"><?php _e('top page','usces') ?></a></li>
 			<?php wp_list_pages('title_li=&exclude=' . USCES_MEMBER_NUMBER . ',' . USCES_CART_NUMBER ); ?>
 		</ul>
 	<?php endif; ?>

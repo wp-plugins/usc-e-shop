@@ -103,10 +103,16 @@ jQuery(document).ready(function($){
 		}
 	});
 	$('#dl_mem').click(function() {
+//20120123ysk start 0000385
+		//var args = "&search[column]="+$(':input[name="search[column]"]').val()
+		//	+"&search[word]="+$(':input[name="search[word]"]').val()
+		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
+		//	+"&ftype="+$(':input[name="ftype_mem[]"]:checked').val();
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
 			+"&search[word]="+$(':input[name="search[word]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
-			+"&ftype="+$(':input[name="ftype_mem[]"]:checked').val();
+			+"&ftype=csv";
+//20120123ysk end
 		$('*[class=check_member]').each(function(i) {
 			if($(this).attr('checked')) {
 				args += '&check['+$(this).val()+']=on';
@@ -207,22 +213,8 @@ jQuery(document).ready(function($){
 </div>
 <!--20100908ysk start-->
 <div id="dlMemberListDialog" title="<?php _e('Download Member List', 'usces'); ?>">
-	<p><?php _e('出力したい項目を選択して、ダウンロードを押してください。', 'usces'); ?></p>
+	<p><?php _e('Select the item you want, please press the download.', 'usces'); ?></p>
 	<fieldset>
-<?php 
-	if($usces_opt_member['ftype_mem'] == 'xls') {
-		$ftype_mem_xls = ' checked';
-		$ftype_mem_csv = '';
-	} elseif($usces_opt_member['ftype_mem'] == 'csv') {
-		$ftype_mem_xls = '';
-		$ftype_mem_csv = ' checked';
-	} else {
-		$ftype_mem_xls = ' checked';
-		$ftype_mem_csv = '';
-	}
-?>
-		<label for="ftype_mem_xls"><input type="radio" name="ftype_mem[]" id="ftype_mem_xls" value="xls"<?php echo $ftype_mem_xls; ?> disabled="disabled" /><?php _e('excel', 'usces'); ?></label>
-		<label for="ftype_mem_csv"><input type="radio" name="ftype_mem[]" id="ftype_mem_csv" value="csv"<?php echo $ftype_mem_csv; ?> checked="checked" /><?php _e('csv', 'usces'); ?></label>
 		<input type="button" id="dl_mem" value="<?php _e('Download', 'usces'); ?>" />
 	</fieldset>
 	<fieldset><legend><?php _e('Membership information', 'usces'); ?></legend>
@@ -322,14 +314,6 @@ jQuery(document).ready(function($){
 	</fieldset>
 </div>
 <!--20100908ysk end-->
-
-<!--<div class="chui">
-<h3>受注詳細画面（作成中）について</h3>
-<p>各行の受注番号をクリックすると受注詳細画面が表示されます。受注詳細画面では注文商品の追加、修正、削除など受注に関する全ての情報を編集することができま、問い合わせや電話での変更依頼に対応します。</p>
-<p>「見積り」ステイタスを利用することで見積りをメール送信できます。見積書印刷でFAX対応も可能です。注文をいただいた場合は「受注」ステイタスに変更することで、見積りの内容がそのまま受注データとなります。</p>
-<p>その他のステイタスには銀行振り込みの場合の「入金」ステイタス、発送完了した場合の「完了」、注文の「キャンセル」などがあり、各業務の終了後にステイタスを変更することを習慣付ければ、複数の担当者での業務もスムーズに行うことができます。</p>
-</div>
--->
 </div><!--usces_admin-->
 </div><!--wrap-->
 <script type="text/javascript">
