@@ -736,6 +736,7 @@ jQuery(document).ready(function($){
 				orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 			}
 		} 
+		orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 	});
 });
 </script>
