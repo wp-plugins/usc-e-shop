@@ -23,8 +23,9 @@ function admin_prodauct_footer(){
 		var itemName = $("#itemName").val();
 		var itemsku = $("input[name^='itemsku\[']");
 		var DeliveryMethod = $("input[name^='itemDeliveryMethod\[']");
-        if (submit_event) {
-			if ( 0 == DeliveryMethod.length ) {
+ 		var itemDivision = $("input[name='item_division']:checked").val();
+       if (submit_event) {
+			if ( 0 == DeliveryMethod.length && (!itemDivision || 'shipped' == itemDivision) ) {
 				mes += '配送方法が選択できません。商品登録を行う前に「配送設定」より配送方法の登録を済ませてください。<br />';
 			}
 			if ( "" == itemCode ) {
