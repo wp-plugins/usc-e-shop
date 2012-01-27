@@ -4225,8 +4225,10 @@ class usc_e_shop
 
 	function set_initial() {
 		
+	usces_log('set_initial : OK', 'database_error.log');
 		$rets07 = usces_upgrade_07();
 		$rets11 = usces_upgrade_11();
+	usces_log('rets11 : ' . print_r($rets11,true), 'database_error.log');
 		$this->set_default_theme();
 		$this->set_default_page();
 		$this->set_default_categories();
