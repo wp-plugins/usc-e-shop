@@ -660,7 +660,8 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 		}
 	}else{
 		$pictids = $usces->get_pictids($code[0]);
-		$pictid = ( isset($pictids[$number]) && (int)$pictids[$number] ) ? $pictids[$number] : 0;
+		$ind = $number - 1;
+		$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
 		$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
 		if( 'item' == $media ){
 			$alt = 'alt="'.esc_attr($code[0]).'"';
@@ -691,7 +692,8 @@ function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 		$html = wp_get_attachment_url( $pictid );
 	}else{
 		$pictids = $usces->get_pictids($code[0]);
-		$pictid = ( isset($pictids[$number]) && (int)$pictids[$number] ) ? $pictids[$number] : 0;
+		$ind = $number - 1;
+		$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
 		$html = wp_get_attachment_url( $pictid );
 	}
 	if($out == 'return'){
@@ -717,7 +719,8 @@ function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
 		$attach_ob = get_post($pictid);
 	}else{
 		$pictids = $usces->get_pictids($code[0]);
-		$attach_ob = get_post($pictids[$number]);
+		$ind = $number - 1;
+		$attach_ob = get_post($pictids[$ind]);
 	}
 	$excerpt = $attach_ob->post_excerpt;
 
@@ -744,7 +747,8 @@ function usces_the_itemImageDescription($number = 0, $post = '', $out = '' ) {
 		$attach_ob = get_post($pictid);
 	}else{
 		$pictids = $usces->get_pictids($code[0]);
-		$attach_ob = get_post($pictids[$number]);
+		$ind = $number - 1;
+		$attach_ob = get_post($pictids[$ind]);
 	}
 	$excerpt = $attach_ob->post_content;
 
@@ -764,7 +768,7 @@ function usces_get_itemSubImageNums() {
 	if(!$code) return false;
 	$name = get_post_custom_values('_itemName', $post_id);
 	$pictids = $usces->get_pictids($code[0]);
-	for($i=1; $i<count($pictids); $i++){
+	for($i=1; $i<=count($pictids); $i++){
 		$res[] = $i;
 	}
 	return  $res;

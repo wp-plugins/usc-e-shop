@@ -60,8 +60,8 @@ $usces->regist_action();
 
 require_once(USCES_PLUGIN_DIR."/functions/template_func.php");
 
-//register_activation_hook( __FILE__, array($usces, 'set_initial') );
-register_activation_hook( WP_PLUGIN_DIR . '/usc-e-shop/usc-e-shop.php', 'usc_e_shop::set_initial' );
+register_activation_hook( __FILE__, array($usces, 'set_initial') );
+//register_activation_hook( WP_PLUGIN_DIR . '/usc-e-shop/usc-e-shop.php', 'usc_e_shop::set_initial' );
 
 require_once(USCES_PLUGIN_DIR."/includes/default_filters.php");
 ?>
