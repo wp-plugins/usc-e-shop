@@ -1024,11 +1024,11 @@ function usces_item_uploadcsv(){
 			$av = $onelinetime/$rows_num;
 			$nt = round($av*($total_num-$rows_num));
 			if( 60 < $nt ){
-				$mtime = ceil($nt/60) . _('min', 'usces') . ($nt%60) . _('sec', 'usces') . '　';
+				$mtime = ceil($nt/60) . __('min', 'usces') . ($nt%60) . __('sec', 'usces') . '　';
 			}else{
-				$mtime = $nt . _('sec', 'usces') . '　';
+				$mtime = $nt . __('sec', 'usces') . '　';
 			}
-			echo '<script type="text/javascript">changeMsg("' . _('Processing...', 'usces') . _('Remaining time:', 'usces').$mtime.'");</script>'.$yn;
+			echo '<script type="text/javascript">changeMsg("' . __('Processing...', 'usces') . __('Remaining time:', 'usces').$mtime.'");</script>'.$yn;
 			echo '<script type="text/javascript">setProgress(', ($rows_num+1) . ',' . $total_num, ');</script>'.$yn;
 			ob_flush();
 			flush();
@@ -1061,7 +1061,7 @@ function usces_item_uploadcsv(){
 	if( $log ){
 		//echo '<div class="error_log">' . $log . '</div>'.$yn;
 	}else{
-		echo _('Finished', 'usces').$yn;
+		echo __('Finished', 'usces').$yn;
 	}
 	echo '</div>'.$yn;
 	unlink($path.$file_name);
