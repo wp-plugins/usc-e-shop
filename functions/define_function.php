@@ -90,7 +90,7 @@ function usces_item_uploadcsv(){
 	
 	//$wpdb->show_errors();
 	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
-	//set_time_limit(1800);
+	set_time_limit(3600);
 
 	define('USCES_COL_POST_ID', 0);	//new
 	define('USCES_COL_POST_AUTHOR', 1);	//new
@@ -931,7 +931,7 @@ function usces_item_uploadcsv(){
 			if( !(1 === count($cfrows) && '' == reset($cfrows)) ){
 				$valstr = '';
 				foreach( $cfrows as $row ){
-					list($meta_key, $meta_value) = explode( '=', $row );
+					list($meta_key, $meta_value) = explode( '=', $row, 2 );
 					if( '' != trim($meta_key) )
 						$valstr .=  $wpdb->prepare("( %d, %s, %s),", $post_id, trim($meta_key), trim($meta_value));
 				}
@@ -1177,7 +1177,7 @@ function usces_download_item_list() {
 	}
 	//==========================================================================
 	mb_http_output('pass');
-	set_time_limit(0);
+	set_time_limit(3600);
 	header("Content-Type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=usces_item_list.".$ext);
 	ob_end_flush();

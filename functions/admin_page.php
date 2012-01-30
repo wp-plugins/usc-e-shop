@@ -472,6 +472,8 @@ function usces_item_dupricate($post_id){
 	$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
 	$res = mysql_query($query);
 	if(!$res ) return;
+	
+	do_action('usces_action_item_dupricate', $post_id, $newpost_id);
 
 	return $newpost_id;
 }
