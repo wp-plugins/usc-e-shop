@@ -1267,13 +1267,13 @@ class usc_e_shop
 		}
 
 		if(defined( 'USCES_KEY' )){
-			if( is_admin() ){
+			if( is_admin() || preg_match('/\/wp-login\.php/', $_SERVER['REQUEST_URI']) ){
 				session_name( 'adm'.USCES_KEY );
 			}else{
 				session_name( USCES_KEY );
 			}
 		}else{
-			if( is_admin() ){
+			if( is_admin() || preg_match('/\/wp-login\.php/', $_SERVER['REQUEST_URI']) ){
 				session_name( 'adm'.$options['usces_key'] );
 			}else{
 				session_name( $options['usces_key'] );
