@@ -2243,7 +2243,7 @@ function usces_localized_name( $Familly_name, $Given_name, $out = '' ){
 	}
 }
 
-function usces_member_history(){
+function usces_member_history( $out = '' ){
 	global $usces;
 	
 	$usces_members = $usces->get_member();
@@ -2357,7 +2357,11 @@ function usces_member_history(){
 	
 	$html .= '</table>';
 
-	echo $html;
+	if($out == 'return'){
+		return $html;
+	}else{
+		echo $html;
+	}
 }
 
 function usces_newmember_button($member_regmode){
