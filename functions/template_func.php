@@ -267,7 +267,7 @@ function usces_the_itemZaiko( $out = '' ) {
 
 function usces_get_itemZaiko( $field = 'name' ) {
 	global $usces;
-	$num = (int)$usces->itemsku['value']['zaiko'];
+	$num = (int)$usces->itemsku['stock'];
 	
 	if( 'id' == $field ){
 		$res = $num;
