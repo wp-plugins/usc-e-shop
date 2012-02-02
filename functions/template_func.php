@@ -1263,9 +1263,9 @@ function usces_the_calendar() {
 function usces_loginout( $out = '') {
 	global $usces;
 	if ( !$usces->is_member_logged_in() )
-		$res = '<a href="' . USCES_LOGIN_URL . '" class="usces_login_a">' . apply_filters('usces_filter_loginlink_label', __('Log-in','usces')) . '</a>';
+		$res = '<a href="' . apply_filters('usces_filter_login_uri', USCES_LOGIN_URL) . '" class="usces_login_a">' . apply_filters('usces_filter_loginlink_label', __('Log-in','usces')) . '</a>';
 	else
-		$res = '<a href="' . USCES_LOGOUT_URL . '" class="usces_logout_a">' . apply_filters('usces_filter_logoutlink_label', __('Log out','usces')) . '</a>';
+		$res = '<a href="' . apply_filters('usces_filter_logout_uri', USCES_LOGOUT_URL) . '" class="usces_logout_a">' . apply_filters('usces_filter_logoutlink_label', __('Log out','usces')) . '</a>';
 
 	if( $out == 'return' ){
 		return $res;
