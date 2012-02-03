@@ -1857,14 +1857,17 @@ function usces_export_xml() {
 //}
 
 function usces_all_change_zaiko(&$obj) {
-	global $wpdb;
+	global $wpdb, $usces;
 
 	$ids = $_POST['listcheck'];
 	$status = true;
 	foreach ( (array)$ids as $post_id ){
-		$res = usces_update_sku( $post_id, $skucode, 'stock', (int)$_POST['change']['word']['zaiko'] );
-		if( !$res ){
-			$status = false;
+		$skus = $usces->get_skus($post_id);
+		foreach ( (array)$skus as $sku ){
+			$res = usces_update_sku( $post_id, $sku['code'], 'stock', (int)$_POST['change']['word']['zaiko'] );
+			if( !$res ){
+				$status = false;
+			}
 		}
 	}
 	if ( true === $status ) {

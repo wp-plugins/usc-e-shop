@@ -66,7 +66,8 @@ function cangeBus(id, r, c) {
 		v.style.backgroundColor = '#DFFFDD';
 	} else {
 		e.value = '0';
-		v.style.backgroundColor = '#FFECCE';
+		v.style.backgroundColor = '#FFAA55';
+		v.style.color = '#FFFFFF';
 	}
 }
 
@@ -80,7 +81,8 @@ function cangeWday1(id, c) {
 			v.style.backgroundColor = '#DFFFDD';
 		} else {
 			e.value = '0';
-			v.style.backgroundColor = '#FFECCE';
+			v.style.backgroundColor = '#FFAA55';
+			v.style.color = '#FFFFFF';
 		}
 	}
 <?php endfor; ?>
@@ -96,7 +98,8 @@ function cangeWday2(id, c) {
 			v.style.backgroundColor = '#DFFFDD';
 		} else {
 			e.value = '0';
-			v.style.backgroundColor = '#FFECCE';
+			v.style.backgroundColor = '#FFAA55';
+			v.style.color = '#FFFFFF';
 		}
 	}
 <?php endfor; ?>
@@ -112,7 +115,8 @@ function cangeWday3(id, c) {
 			v.style.backgroundColor = '#DFFFDD';
 		} else {
 			e.value = '0';
-			v.style.backgroundColor = '#FFECCE';
+			v.style.backgroundColor = '#FFAA55';
+			v.style.color = '#FFFFFF';
 		}
 	}
 <?php endfor; ?>
@@ -235,7 +239,7 @@ function cangeWday3(id, c) {
 			$mday = $cal1->getDateText($i, $d);
 			if ($mday != "") {
 				$business = $this->options['business_days'][$todayyy][$todaymm][$mday];
-				$color = ($business == 1) ? "#DFFFDD" : "#FFECCE"; ?>
+				$color = ($business == 1) ? '#DFFFDD' : '#FFAA55;color:#FFFFFF;'; ?>
 				<td class="cal" style="background-color:<?php echo $color; ?>"><div onclick="cangeBus('calendar1', <?php echo ($i + 1); ?>, <?php echo $d; ?>);"><?php echo $mday; ?></div>
 				<input name="business_days[<?php echo $todayyy; ?>][<?php echo $todaymm; ?>][<?php echo $mday; ?>]" id="calendar1_<?php echo ($i+1); ?>_<?php echo $d; ?>" type="hidden" value="<?php echo $business; ?>"></td>
 		<?php } else { ?>
@@ -246,7 +250,7 @@ function cangeWday3(id, c) {
 <?php endfor; ?>
 		</table>
 		</td>
-		<td><span class="business_days_exp_box" style="background-color:#DFFFDD">&nbsp;&nbsp;&nbsp;</span><?php _e('Working day', 'usces'); ?><br /><span class="business_days_exp_box" style="background-color:#FFECCE">&nbsp;&nbsp;&nbsp;</span><?php _e('Holiday for Shipping Operations', 'usces'); ?></td>
+		<td><span class="business_days_exp_box" style="background-color:#DFFFDD">&nbsp;&nbsp;&nbsp;</span><?php _e('Working day', 'usces'); ?><br /><span class="business_days_exp_box" style="background-color:#FFAA55">&nbsp;&nbsp;&nbsp;</span><?php _e('Holiday for Shipping Operations', 'usces'); ?></td>
 	</tr>
 	<tr>
 	    <th><?php _e('Next month', 'usces'); ?><br /><?php echo sprintf(__('%2$s/%1$s', 'usces'),$nextyy,$nextmm); ?></th>
@@ -267,7 +271,7 @@ function cangeWday3(id, c) {
 			$mday = $cal2->getDateText($i, $d);
 			if ($mday != "") {
 				$business = $this->options['business_days'][$nextyy][$nextmm][$mday];
-				$color = ($business == 1) ? "#DFFFDD" : "#FFECCE"; ?>
+				$color = ($business == 1) ? '#DFFFDD' : '#FFAA55;color:#FFFFFF;'; ?>
 				<td class="cal" style="background-color:<?php echo $color; ?>"><div onclick="cangeBus('calendar2', <?php echo ($i + 1); ?>, <?php echo $d; ?>);"><?php echo $mday; ?></div>
 				<input name="business_days[<?php echo $nextyy; ?>][<?php echo $nextmm; ?>][<?php echo $mday; ?>]" id="calendar2_<?php echo ($i+1); ?>_<?php echo $d; ?>" type="hidden" value="<?php echo $business; ?>"></td>
 		<?php } else { ?>
@@ -303,7 +307,7 @@ function cangeWday3(id, c) {
 				//if(empty($business)) $business = '0';
 				if($business != 0) $business = 1;
 //20110131ysk end
-				$color = ($business == 1) ? "#DFFFDD" : "#FFECCE"; ?>
+				$color = ($business == 1) ? '#DFFFDD' : '#FFAA55;color:#FFFFFF;'; ?>
 				<td class="cal" style="background-color:<?php echo $color; ?>"><div onclick="cangeBus('calendar3', <?php echo ($i + 1); ?>, <?php echo $d; ?>);"><?php echo $mday; ?></div>
 				<input name="business_days[<?php echo $lateryy; ?>][<?php echo $latermm; ?>][<?php echo $mday; ?>]" id="calendar3_<?php echo ($i+1); ?>_<?php echo $d; ?>" type="hidden" value="<?php echo $business; ?>"></td>
 		<?php } else { ?>
