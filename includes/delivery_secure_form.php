@@ -26,7 +26,7 @@ foreach ( (array)$payments as $id => $array ) {
 				$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
 				
-				$html = '<input type="hidden" name="acting" value="zeus">'."\n";
+				$html .= '<input type="hidden" name="acting" value="zeus">'."\n";
 				$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
 				
 				$pcid = NULL;
