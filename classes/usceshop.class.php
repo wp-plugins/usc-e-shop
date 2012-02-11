@@ -4544,7 +4544,7 @@ class usc_e_shop
 		if( file_exists($themepath) ) return false;
 		if(!file_exists($resourcepath) ) return false;
 		
-		mkdir($themepath);
+		mkdir($themepath, 0775);
 		$this->dir_copy($resourcepath, $themepath);
 	
 	}

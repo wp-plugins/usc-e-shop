@@ -102,7 +102,7 @@ $html .= 'var delivery_after_days = '.$delivery_after_days.';';
 //配送先県(customer)
 $html .= 'var customer_pref = "'.$usces_entries['customer']['pref'].'";';
 //配送先県(customer/delivery)
-$delivery_pref = isset($usces_entries['delivery']['pref']) ? $usces_entries['delivery']['pref'] : $usces_entries['customer']['pref'];
+$delivery_pref = (isset($usces_entries['delivery']['pref']) && !empty($usces_entries['delivery']['pref'])) ? $usces_entries['delivery']['pref'] : $usces_entries['customer']['pref'];
 $html .= 'var delivery_pref = "'.$delivery_pref.'";';
 //選択可能な配送方法に設定されている配達日数
 $html .= 'var delivery_days = [];';
