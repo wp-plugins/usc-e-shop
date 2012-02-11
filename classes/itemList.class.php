@@ -264,7 +264,8 @@ class dataList
 						LEFT JOIN $wpdb->postmeta AS mc ON post.ID = mc.post_id AND %s = mc.meta_key 
 						LEFT JOIN $wpdb->postmeta AS mn ON post.ID = mn.post_id AND %s = mn.meta_key 
 						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND %s = meta.meta_key 
-						LEFT JOIN $wpdb->term_relationships AS tr ON post.ID = tr.object_id "
+						LEFT JOIN $wpdb->term_relationships AS tr ON post.ID = tr.object_id 
+						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id "
 						, '_itemCode', '_itemName', '_isku_');
 			}else{		
 //				$query = $wpdb->prepare("SELECT mc.meta_value AS item_code, mn.meta_value AS item_name, 
@@ -291,7 +292,8 @@ class dataList
 						LEFT JOIN $wpdb->postmeta AS mc ON post.ID = mc.post_id AND %s = mc.meta_key 
 						LEFT JOIN $wpdb->postmeta AS mn ON post.ID = mn.post_id AND %s = mn.meta_key 
 						LEFT JOIN $wpdb->postmeta AS meta ON post.ID = meta.post_id AND %s = meta.meta_key 
-						LEFT JOIN $wpdb->term_relationships AS tr ON post.ID = tr.object_id "
+						LEFT JOIN $wpdb->term_relationships AS tr ON post.ID = tr.object_id 
+						LEFT JOIN $wpdb->term_taxonomy AS tt ON tt.term_taxonomy_id = tr.term_taxonomy_id "
 						, '_itemCode', '_itemName', '_isku_');
 //			$query = $wpdb->prepare("SELECT 
 //						(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = post.ID AND meta_key = '_itemCode') AS item_code, 
@@ -439,7 +441,7 @@ class dataList
 				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('stock";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('stock";s:1:"'.$this->arr_search['word']['zaiko']) . "%')";
 				break;
 			case 'category':
-				$column = 'tr.term_taxonomy_id';
+				$column = 'tt.term_id';
 				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['category']) . "'";
 				break;
 			case 'display_status':
