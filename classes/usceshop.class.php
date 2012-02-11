@@ -1971,7 +1971,8 @@ class usc_e_shop
 		update_option('usces_shipping_rule', apply_filters('usces_filter_shipping_rule', get_option('usces_shipping_rule')));
 		$this->shipping_rule = get_option('usces_shipping_rule');
 
-		if( isset($_POST) && isset($_POST['_wp_http_referer']) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_POST['_wp_http_referer']) ){
+		$_wp_http_referer = isset($_POST['_wp_http_referer']) ? $_POST['_wp_http_referer'] : 'a';
+		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_wp_http_referer) ){
 			$_POST = $this->stripslashes_deep_post($_POST);
 		}
 		

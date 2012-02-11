@@ -2526,6 +2526,8 @@ function usces_get_cart_rows( $out = '' ) {
 		</tr>';
 	}
 	
+	$res = apply_filters( 'usces_filter_cart_rows', $res, $cart);
+
 	if($out == 'return'){
 		return $res;
 	}else{
@@ -2599,6 +2601,8 @@ function usces_get_confirm_rows( $out = '' ) {
 		</tr>';
 	} 
 	
+	$res = apply_filters( 'usces_filter_confirm_rows', $res, $cart);
+
 	if($out == 'return'){
 		return $res;
 	}else{
