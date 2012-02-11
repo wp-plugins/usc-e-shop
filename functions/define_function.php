@@ -15,7 +15,9 @@ function usces_item_uploadcsv(){
 	}
 	
 	//check dataSELECT id,title FROM table GROUP BY id HAVING COUNT(id) > 1;
-	$query = $wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s 
+	$query = $wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} 
+								LEFT JOIN {$wpdb->posts} ON ID = post_id
+								WHERE meta_key = %s AND (post_status = 'pending' OR post_status = 'publish' OR post_status = 'draft' OR post_status = 'private' OR post_status = 'future') 
 								GROUP BY meta_value HAVING COUNT(meta_value) > 1", 
 							'_itemCode');
 	$db_check = $wpdb->get_results( $query, ARRAY_A );
@@ -306,7 +308,8 @@ function usces_item_uploadcsv(){
 						$mestemp .= $mes.$br.$yn;
 					}else{
 						$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
-												WHERE meta_key = %s AND meta_value = %s", 
+												LEFT JOIN {$wpdb->posts} ON ID = post_id
+												WHERE meta_key = %s AND meta_value = %s AND (post_status = 'pending' OR post_status = 'publish' OR post_status = 'draft' OR post_status = 'private' OR post_status = 'future')", 
 												'_itemCode', $data);
 						$db_res1 = $wpdb->get_results( $query, ARRAY_A );
 						if( 'upd' == $mode ){
@@ -322,7 +325,8 @@ function usces_item_uploadcsv(){
 								$mestemp .= $mes.$br.$yn;
 							}
 							$query = $wpdb->prepare("SELECT meta_id, post_id FROM {$wpdb->postmeta} 
-													WHERE post_id <> %d AND meta_key = %s AND meta_value = %s", 
+													LEFT JOIN {$wpdb->posts} ON ID = post_id
+													WHERE post_id <> %d AND meta_key = %s AND meta_value = %s AND (post_status = 'pending' OR post_status = 'publish' OR post_status = 'draft' OR post_status = 'private' OR post_status = 'future')", 
 													$post_id, '_itemCode', $data);
 							$db_res2 = $wpdb->get_results( $query, ARRAY_A );
 							if( 0 < count($db_res2) ){

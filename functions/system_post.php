@@ -114,15 +114,17 @@ function usces_del_system_option( $option_name, $id ) {
 	global $usces;
 	$option_value = get_option($option_name);
 
-	if( !empty($option_value) && isset($option_value[$id])){
+	if( !empty($option_value) && isset($option_value[$id]) && !empty($option_value)){
 		unset($option_value[$id]);
+		$op = array();
 		foreach( (array)$option_value as $opkey => $opvalue ){
 			$op[$opvalue['sort']] = $opkey;
 		}
+		
 		ksort($op);
 		
 		$c = 0;
-		foreach( (array)$op as $opid ){
+		foreach( $op as $opid ){
 			$option_value[$opid]['sort'] = $c;
 			$c++;
 		}
