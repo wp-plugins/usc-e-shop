@@ -365,15 +365,18 @@ $side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
 <input type="hidden" name="itemPointrate_nonce" id="itemPointrate_nonce" value="<?php echo wp_create_nonce( 'itemPointrate_nonce' ); ?>" /></td>
 </tr>
 <tr>
-<th rowspan="3"><?php _e('Business package discount', 'usces'); ?></th>
-<td>1.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum1[0]), '" />'); ?><input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="<?php echo esc_attr($itemGpDis1[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
+<?php
+$gp_row = '<th rowspan="3">' . __('Business package discount', 'usces') . '</th>
+<td>1.' . sprintf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum1', '" id="', 'itemGpNum1', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum1[0]), '" />') . '<input type="text" name="itemGpDis1" id="itemGpDis1" class="itemPointrate" value="' . esc_attr($itemGpDis1[0]) . '" />' . __('%discount','usces') . '(' . __('Unit price','usces') . ')</td>
 </tr>
 <tr>
-<td>2.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum2', '" id="', 'itemGpNum2', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum2[0]), '" />'); ?><input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="<?php echo esc_attr($itemGpDis2[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
+<td>2.' . sprintf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum2', '" id="', 'itemGpNum2', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum2[0]), '" />') . '<input type="text" name="itemGpDis2" id="itemGpDis2" class="itemPointrate" value="' . esc_attr($itemGpDis2[0]) . '" />' . __('%discount','usces') . '(' . __('Unit price','usces') . ')</td>
 </tr>
 <tr>
-<td>3.<?php printf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum3[0]), '" />'); ?><input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="<?php echo esc_attr($itemGpDis3[0]); ?>" /><?php _e('%discount','usces'); ?>(<?php _e('Unit price','usces'); ?>)</td>
-</tr>
+<td>3.' . sprintf(__('in more than%s%s%s%s%s %s%s%s,', 'usces'), '<input type="text" name="', 'itemGpNum3', '" id="', 'itemGpNum3', '" class="itemPointrate"', 'value="', esc_attr($itemGpNum3[0]), '" />') . '<input type="text" name="itemGpDis3" id="itemGpDis3" class="itemPointrate" value="' . esc_attr($itemGpDis3[0]) . '" />' . __('%discount','usces') . '(' . __('Unit price','usces') . ')</td>
+</tr>';
+?>
+<?php echo apply_filters('usces_item_master_gp_row', $gp_row, $post_ID); ?>
 <?php apply_filters('usces_item_master_first_section', NULL, $post_ID); ?>
 </table>
 </div>

@@ -534,48 +534,7 @@ class usces_cart {
 //20110905ysk end
 		if( !$skus[$sku]['gp'] ) return $p;
 		
-		$GpN1 = $usces->getItemGpNum1($post_id);
-		$GpN2 = $usces->getItemGpNum2($post_id);
-		$GpN3 = $usces->getItemGpNum3($post_id);
-		$GpD1 = $usces->getItemGpDis1($post_id);
-		$GpD2 = $usces->getItemGpDis2($post_id);
-		$GpD3 = $usces->getItemGpDis3($post_id);
-	
-		if( empty($GpN1) || empty($GpD1) ) {
-		
-				$realprice = $p;
-				
-		}else if( (!empty($GpN1) && !empty($GpD1)) && (empty($GpN2) || empty($GpD2)) ) {
-		
-			if( $quant >= $GpN1 ) {
-				$realprice = round($p * (100 - $GpD1) / 100);
-			}else{
-				$realprice = $p;
-			}
-			
-		}else if( (!empty($GpN1) && !empty($GpD1)) && (!empty($GpN2) && !empty($GpD2)) && (empty($GpN3) || empty($GpD3)) ) {
-		
-			if( $quant >= $GpN2 ) {
-				$realprice = round($p * (100 - $GpD2) / 100);
-			}else if( $quant >= $GpN1 && $quant < $GpN2 ) {
-				$realprice = round($p * (100 - $GpD1) / 100);
-			}else{
-				$realprice = $p;
-			}
-			
-		}else if( (!empty($GpN1) && !empty($GpD1)) && (!empty($GpN2) && !empty($GpD2)) && (!empty($GpN3) && !empty($GpD3)) ) {
-		
-			if( $quant >= $GpN3 ) {
-				$realprice = round($p * (100 - $GpD3) / 100);
-			}else if( $quant >= $GpN2 && $quant < $GpN3 ) {
-				$realprice = round($p * (100 - $GpD2) / 100);
-			}else if( $quant >= $GpN1 && $quant < $GpN2 ) {
-				$realprice = round($p * (100 - $GpD1) / 100);
-			}else{
-				$realprice = $p;
-			}
-			
-		}
+		$realprice = usces_get_gp_price($post_id, $p, $quant);
 		
 		return $realprice;
 	}

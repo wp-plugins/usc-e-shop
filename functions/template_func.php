@@ -548,6 +548,8 @@ function usces_the_itemGpExp( $out = '' ) {
 		}
 	}
 	$html .= "</ul></dd></dl>";
+	
+	$html = apply_filters('usces_filter_itemGpExp', $html);
 		
 	if( $out == 'return' ){
 		return $html;
