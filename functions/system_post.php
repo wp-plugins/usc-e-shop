@@ -22,7 +22,7 @@ function usces_add_system_option( $option_name, $newvalue ){
 		
 		rsort($sort);
 		$next_number = reset($sort) + 1;
-		$unique_sort = array_unique($sort, SORT_REGULAR);
+		$unique_sort = array_unique($sort);
 		if( $option_num !== count($unique_sort) || $option_num !== $next_number || !$sortnull){
 			//To repair the sort data
 			$i = 0;

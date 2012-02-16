@@ -74,7 +74,7 @@ function usces_add_opt( $post_id, $newvalue, $check = true ) {
 			
 			rsort($sort);
 			$next_number = reset($sort) + 1;
-			$unique_sort = array_unique($sort, SORT_REGULAR);
+			$unique_sort = array_unique($sort);
 			if( $meta_num !== count($unique_sort) || $meta_num !== $next_number || !$sortnull){
 				//To repair the sort data
 				$i = 0;
@@ -145,7 +145,7 @@ function usces_add_sku( $post_id, $newvalue, $check = true ) {
 			
 			rsort($sort);
 			$next_number = $sort[0] + 1;
-			$unique_sort = array_unique($sort, SORT_REGULAR);
+			$unique_sort = array_unique($sort);
 			if( $meta_num != count($unique_sort) || $meta_num != $next_number || !$sortnull){
 				//To repair the sort data
 				$i = 0;
