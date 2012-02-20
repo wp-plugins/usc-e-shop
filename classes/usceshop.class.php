@@ -163,12 +163,13 @@ class usc_e_shop
 			$ssl_url_admin = $this->options['ssl_url_admin'];
 			if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 				define('USCES_FRONT_PLUGIN_URL', $ssl_url_admin . '/wp-content/plugins/' . USCES_PLUGIN_FOLDER);
+				define('USCES_COOKIEPATH', preg_replace('|https?://[^/]+|i', '', $ssl_url . '/' ) );
 			}else{
 				define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
+				define('USCES_COOKIEPATH', COOKIEPATH);
 			}
 			define('USCES_SSL_URL', $ssl_url);
 			define('USCES_SSL_URL_ADMIN', $ssl_url_admin);
-			define('USCES_COOKIEPATH', preg_replace('|https?://[^/]+|i', '', $ssl_url . '/' ) );
 		}else{
 			define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
 			define('USCES_SSL_URL', get_option('home'));
