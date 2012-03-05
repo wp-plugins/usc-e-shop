@@ -3351,6 +3351,7 @@ function usces_paypal_doecp( &$results ) {
 	$entry = $usces->cart->get_entry();
 
 	$cart = $usces->cart->get_cart();
+
 	$post_id = $cart[0]['post_id'];
 	$charging_type = $usces->getItemChargingType($post_id);
 	if( 'continue' != $charging_type) {

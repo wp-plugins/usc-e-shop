@@ -3911,8 +3911,13 @@ class usc_e_shop
 			//$zaiko_status = $this->getItemZaiko($post_id, $sku);
 			$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku_code);
 			$stock = $this->getItemZaikoNum($post_id, $sku_code);
+			if( !isset($stocks[$post_id][$sku]) && '' != $stock ){
+				$stocks[$post_id][$sku] = $stock;
+			}
+			$checkstock = $stocks[$post_id][$sku];
+			$stocks[$post_id][$sku] = $stocks[$post_id][$sku] - $quant;
 			$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
-			
+
 			//$red = (in_array($zaiko_status, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
 
 			if( 1 > (int)$quant ){
@@ -3921,8 +3926,8 @@ class usc_e_shop
 				$mes .= sprintf(__('Sorry, No.%d item is sold out.', 'usces'), ($i+1)) . "<br />";
 			}else if( $quant > (int)$itemRestriction[0] && '' != $itemRestriction[0] && '0' != $itemRestriction[0] ){
 				$mes .= sprintf(__('This article is limited by %1$d at a time for the No.%2$d item.', 'usces'), $itemRestriction[0], ($i+1)) . "<br />";
-			}else if( $quant > (int)$stock && '' != $stock ){
-				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $stock) . "<br />";
+			}else if( 0 > $stocks[$post_id][$sku] && '' != $stock ){
+				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $checkstock) . "<br />";
 			}
 		}
 		return $mes;	
