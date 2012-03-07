@@ -1484,27 +1484,41 @@ function usces_list_post( $slug, $rownum, $widget_id=NULL ){
 
 function usces_categories_checkbox($output=''){
 	global $usces;
-	$htm = '';
 	$retcats = usces_search_categories();
 	$parent_id = apply_filters('usces_search_categories_checkbox_parent', USCES_ITEM_CAT_PARENT_ID);
-	$categories =  get_categories('child_of='.$parent_id . "&hide_empty=0&orderby=ID"); 
-	foreach ($categories as $cat) {
-		$children =  get_categories('child_of='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
-		if(!empty($children)){
-			$htm .= "<fieldset class='catfield-" . $cat->term_id . "'><legend>" . $cat->cat_name . "</legend><ul>\n";
-			foreach ($children as $child) {
-				$checked = in_array($child->term_id, $retcats) ? " checked='checked'" : "";
-				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]' class='catlabel-" . $child->term_id . "'>".esc_html($child->cat_name)."</label></li>\n";
-			}
-			$htm .= "</ul></fieldset>\n";
-		}
-	}
+	$htm = usces_get_categories_checkbox($parent_id);
 	$htm = apply_filters('usces_filter_categories_checkbox', $htm, $categories);
 	
 	if($output == '' || $output == 'echo')
 		echo $htm;
 	else
 		return $htm;
+}
+
+function usces_get_categories_checkbox($parent_id){
+	global $usces;
+	$htm = '';
+	$retcats = usces_search_categories();
+	$parent_cat = get_category($parent_id);
+	$categories =  get_categories('parent='.$parent_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']); 
+	$htm .= "<fieldset class='catfield-" . $parent_cat->term_id . "'><legend>" . $parent_cat->cat_name . "</legend><ul>\n";
+	foreach ($categories as $cat) {
+		$children =  get_categories('parent='.$cat->term_id . "&hide_empty=0");
+		if( 0 === count($children) ){
+			$checked = in_array($cat->term_id, $retcats) ? " checked='checked'" : "";
+			$htm .= "<li><input name='category[".$cat->term_id."]' type='checkbox' id='category[".$cat->term_id."]' value='".$cat->term_id."'".$checked." /><label for='category[".$cat->term_id."]' class='catlabel-" . $cat->term_id . "'>".esc_html($cat->cat_name)."</label></li>\n";
+		}
+	}
+	$htm .= "</ul>\n";
+	foreach ($categories as $cat) {
+		$children =  get_categories('parent='.$cat->term_id . "&hide_empty=0");
+		if( 0 < count($children) ){
+			$htm .= usces_get_categories_checkbox($cat->term_id);
+		}
+	}
+	$htm .= "</fieldset>\n";
+
+	return $htm;
 }
 
 function usces_search_categories(){
