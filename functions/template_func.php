@@ -1028,10 +1028,6 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	$payments = apply_filters('usces_fiter_the_payment_method', $payments, $value);
 	if( empty($payments) ) return;
 	
-
-
-
-
 	$cart = $usces->cart->get_cart();
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 	$html = "<dl>\n";
@@ -1060,7 +1056,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			$module = trim($payment['module']);
 			if( '' != $value ){
 				$checked = ($payment['name'] == $value) ? ' checked' : '';
-			}else if( 1 === $payment_ct ){
+			}else if( 1 == $payment_ct ){//0000428
 				$checked = ' checked';
 			}else{
 				$checked = '';
@@ -1101,7 +1097,7 @@ function usces_get_payments_by_name( $name ){
 
 function usces_the_delivery_method( $value = '', $out = '' ){
 	global $usces;
-	$deli_id = $usces->get_available_delivery_method();
+	$deli_id = apply_filters('usces_filter_get_available_delivery_method', $usces->get_available_delivery_method());
 	if( empty($deli_id) ){
 		$html = '<p>' . __('No valid shipping methods.', 'usces') . '</p>';
 	}else{
@@ -2813,7 +2809,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk end
 			$formtag .= '<tr>
 			<th scope="row">' . usces_get_essential_mark('zipcode').__('Zip/Postal Code', 'usces').'</th>
-			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_zipcode', '100-1000', $applyform ) . '</td>
+			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.apply_filters('usces_filter_addressform_zipcode', NULL, $type) . apply_filters( 'usces_filter_after_zipcode', '100-1000', $applyform ) . '</td>
 			</tr>
 			<tr>
 			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>

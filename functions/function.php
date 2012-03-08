@@ -342,7 +342,10 @@ function usces_send_ordermail($order_id) {
 
 	if ( $entry['order']['usedpoint'] != 0 )
 		$meisai .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
-	if ( $data['order_discount'] != 0 )
+//20120308ysk start 0000433
+	//if ( $data['order_discount'] != 0 )
+	if ( $entry['order']['discount'] != 0 )
+//20120308ysk end
 		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
@@ -354,7 +357,10 @@ function usces_send_ordermail($order_id) {
 	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
 	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
 
-	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
+//20120308ysk start 0000433
+	//$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
+	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data, $cart, $entry);
+//20120308ysk end
 
 
 	$msg_shipping = __('** A shipping address **','usces') . "\r\n";
@@ -850,6 +856,7 @@ function usces_reg_orderdata( $results = array() ) {
 	if( isset($results['payment_status']) && $results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
 	
 	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
+	$status = apply_filters('usces_filter_reg_orderdata_status', $status);
 	
 //20101208ysk start
 /*
@@ -2030,7 +2037,7 @@ function usces_all_delete_order_data(&$obj){
 		if( $res === false ) {
 			$status = false;
 		}else{
-			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $ID);
+			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $id);//0000427
 			$metares = $wpdb->query( $metaquery );
 		}
 	endforeach;
@@ -2672,7 +2679,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 		$formtag .= '
 		<tr>
 			<td class="label">' . __('Zip/Postal Code', 'usces') . '</td>
-			<td class="col2"><input name="' . $type . '[zipcode]" type="text" class="text short" value="' . esc_attr($values['zipcode']) . '" /></td>
+			<td class="col2"><input name="' . $type . '[zipcode]" type="text" class="text short" value="' . esc_attr($values['zipcode']) . '" />'.apply_filters('usces_filter_admin_addressform_zipcode', NULL, $type).'</td>
 		</tr>
 		<tr>
 			<td class="label">' . __('Country', 'usces') . '</td>

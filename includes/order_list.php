@@ -250,14 +250,14 @@ jQuery(function($){
 			}else if( column == 'delete' ) {
 				label = '';
 				html = '';
-			} 
+			}
 			
 			$("#changelabel").html( label );
 			$("#changefield").html( html );
 		
 		}
 	};
-
+<?php apply_filters('usces_filter_order_list_page_js', NULL); ?>
 });
 
 function toggleVisibility(id) {
@@ -457,6 +457,7 @@ jQuery(document).ready(function($){
 <!--20100908ysk start-->
 		<table id="dl_list_table">
 		<tr>
+		<?php apply_filters('usces_filter_dl_list_table', NULL); ?>
 		<td><input type="button" id="dl_productlist" class="searchbutton" value="<?php _e('Download Product List', 'usces'); ?>" /></td>
 		<td><input type="button" id="dl_orderlist" class="searchbutton" value="<?php _e('Download Order List', 'usces'); ?>" /></td>
 		</tr>
