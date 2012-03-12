@@ -1318,6 +1318,9 @@ class usc_e_shop
 		if('acting' == $addr) return;
 
 		if( apply_filters( 'usces_filter_cookie', false) ) return;
+		
+		//There is a need to consider.
+		return;
 
 		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']))){
 			
