@@ -1086,6 +1086,7 @@ function usces_new_orderdata() {
 	$status .= ( $_POST['offer']['taio'] != '' && $_POST['offer']['taio'] != '#none#' ) ? $_POST['offer']['taio'].',' : '';
 //20120314ysk end
 	$status .= $_POST['offer']['admin'];
+	$status = apply_filters('usces_filter_new_orderdata_status', $status);
 	$order_conditions = $usces->get_condition();
 
 //20101208ysk start
