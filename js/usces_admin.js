@@ -1189,7 +1189,14 @@
 				htm += "</tr>\n";
 
 				$("#orderitemlist").append( htm );
-				orderfunc.sumPrice();
+//20120307ysk start 0000432
+				orderfunc.sumPrice(null);
+				orderfunc.getPoint(-1, '', '');
+
+				$("input[name='skuPrice["+cnum+"]["+newid+"]["+newsku+"]']").bind("change", {index:cnum, post_id:newid, sku:newsku}, function(e){ orderfunc.sumPrice($(this)); orderfunc.getPoint( e.data.index, e.data.post_id, e.data.sku ); });
+				$("input[name='quant["+cnum+"]["+newid+"]["+newsku+"]']").bind("change", {index:cnum, post_id:newid, sku:newsku}, function(e){ orderfunc.sumPrice($(this)); orderfunc.getPoint( e.data.index, e.data.post_id, e.data.sku ); });
+				$("input[name='delButton["+cnum+"]["+newid+"]["+newsku+"]']").bind("click", {index:cnum, post_id:newid, sku:newsku}, function(e){ return delConfirm($(this)); });
+//20120307ysk end
 			};
 			$.ajax( s );
 			return false;

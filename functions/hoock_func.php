@@ -120,6 +120,8 @@ function usces_action_acting_transaction(){
 			die('error3');
 		}
 		
+		usces_action_acting_getpoint( $order_id );//20120306ysk 0000324
+
 		//usces_send_receipted_mail( $order_id, 'remise_conv' );
 		usces_log('remise conv transaction : '.$_POST['S_TORIHIKI_NO'], 'acting_transaction.log');
 		die('<SDBKDATA>STATUS=800</SDBKDATA>');
@@ -180,6 +182,7 @@ function usces_action_acting_transaction(){
 			$value = unserialize($values['meta_value']);
 			$status = ( '03' == $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
 			$order_id = $values['order_id'];
+			$add_point = true;//20120306ysk 0000324
 			if( 'receipted,' == $status ){
 				$mquery = $wpdb->prepare("
 				UPDATE $table_name SET order_status = 
@@ -198,6 +201,7 @@ function usces_action_acting_transaction(){
 					ELSE CONCAT('noreceipt,', order_status ) 
 				END 
 				WHERE ID = %d", $order_id);
+				$add_point = false;//20120306ysk 0000324
 			}
 			$res = $wpdb->query( $mquery );
 			if(!$res){
@@ -212,6 +216,7 @@ function usces_action_acting_transaction(){
 				usces_log('zeus bank error3 : '.print_r($data, true), 'acting_transaction.log');
 				die('error3');
 			}
+			usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
 		}
 
 		usces_log('zeus bank transaction : '.$_REQUEST['tracking_no'], 'acting_transaction.log');
@@ -250,6 +255,7 @@ function usces_action_acting_transaction(){
 			$value = unserialize($values['meta_value']);
 			$status = ( '04' == $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
 			$order_id = $values['order_id'];
+			$add_point = true;//20120306ysk 0000324
 			if( 'receipted,' == $status ){
 				$mquery = $wpdb->prepare("
 				UPDATE $table_name SET order_status = 
@@ -268,6 +274,7 @@ function usces_action_acting_transaction(){
 					ELSE CONCAT('noreceipt,', order_status ) 
 				END 
 				WHERE ID = %d", $order_id);
+				$add_point = false;//20120306ysk 0000324
 			}
 			$res = $wpdb->query( $mquery );
 			if(!$res){
@@ -284,6 +291,7 @@ function usces_action_acting_transaction(){
 				usces_log('zeus conv error3 : '.print_r($data, true), 'acting_transaction.log');
 				die('error3');
 			}
+			usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
 		}
 
 		usces_log('zeus conv transaction : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
@@ -347,6 +355,8 @@ function usces_action_acting_transaction(){
 				die('error3');
 			}
 
+			usces_action_acting_getpoint( $order_id );//20120306ysk 0000324
+
 			usces_log('J-Payment conv transaction : '.$_GET['gid'], 'acting_transaction.log');
 			die('J-Payment');
 			break;
@@ -384,6 +394,8 @@ function usces_action_acting_transaction(){
 				usces_log('jpayment conv error3 : '.print_r($data, true), 'acting_transaction.log');
 				die('error3');
 			}
+
+			usces_action_acting_getpoint( $order_id, false );//20120306ysk 0000324
 
 			usces_log('J-Payment conv transaction : '.$_GET['gid'], 'acting_transaction.log');
 			die('J-Payment');
@@ -439,6 +451,8 @@ function usces_action_acting_transaction(){
 					usces_log('jpayment bank error3 : '.print_r($data, true), 'acting_transaction.log');
 					die('error3');
 				}
+
+				usces_action_acting_getpoint( $order_id );//20120306ysk 0000324
 			}
 
 			usces_log('J-Payment bank transaction : '.$_REQUEST['gid'], 'acting_transaction.log');

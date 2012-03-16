@@ -442,7 +442,23 @@ jQuery(function($){
 			$("#total_full").html(addComma(total_full+''));
 			$("#total_full_top").html(addComma(total_full+''));
 		},
-		
+//20120306ysk start 0000324
+		getPoint : function( index, post_id, sku ) {
+			var price = ( 0 > index ) ? 0 : $("input[name='skuPrice["+index+"]["+post_id+"]["+sku+"]']").val();
+			var quantity = ( 0 > index ) ? 0 : $("input[name='quant["+index+"]["+post_id+"]["+sku+"]']").val();
+			var s = orderfunc.settings;
+			s.url = uscesL10n.requestFile;
+			s.data = "action=order_item_ajax&mode=getpoint&member_id=<?php echo (isset($data['mem_id']) ? $data['mem_id'] : ''); ?>&display_mode=<?php echo (isset($condition['display_mode']) ? $condition['display_mode'] : ''); ?>&order_id=<?php echo $order_id; ?>&index="+index+"&price="+price+"&quantity="+quantity;
+			s.success = function(data, dataType){
+				$("#order_getpoint").val(data);
+			};
+			s.error = function(data, dataType){
+				//alert( 'ERROR' );
+			};
+			$.ajax( s );
+			return false;
+		},
+//20120306ysk end		
 		make_delivery_time : function(selected) {
 			var option = '';
 			if(selected == -1 || delivery_time[selected] == undefined || 0 == delivery_time[selected].length){
@@ -688,6 +704,16 @@ function pdfWindow( type ) {
 	printWin = window.open("<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>"+"&type="+type,"sub","left="+x+",top="+y+",width="+wx+",height="+wy+",scrollbars=yes");
 }
 
+//20120307ysk start 0000432
+function delConfirm(){
+	if(confirm('<?php _e('Are you sure of deleting items?', 'usces'); ?>')){
+		return true;
+	}else{
+		return false;
+	}
+}
+//20120307ysk end
+
 jQuery(document).ready(function($){
 	var p = $("input[name*='skuPrice']");
 	var q = $("input[name*='quant']");
@@ -697,9 +723,19 @@ jQuery(document).ready(function($){
 	orderfunc.sumPrice(null);
 	
 	for( var i = 0; i < p.length; i++) {
-		$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
-		$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
-		$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
+//20120307ysk start 0000432
+		var name = $(p[i]).attr("name");
+		var strs = name.split('[');
+		var index = strs[1].replace(/[\]]+$/g, '');
+		var post_id = strs[2].replace(/[\]]+$/g, '');
+		var sku = strs[3].replace(/[\]]+$/g, '');
+		//$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
+		//$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
+		//$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
+		$(p[i]).bind("change", {index:index, post_id:post_id, sku:sku}, function(e){ orderfunc.sumPrice($(this)); orderfunc.getPoint( e.data.index, e.data.post_id, e.data.sku ); });
+		$(q[i]).bind("change", {index:index, post_id:post_id, sku:sku}, function(e){ orderfunc.sumPrice($(this)); orderfunc.getPoint( e.data.index, e.data.post_id, e.data.sku ); });
+		$(db[i]).bind("click", {index:index, post_id:post_id, sku:sku}, function(e){ return delConfirm($(this)); });
+//20120307ysk end
 	}
 	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice($("#order_usedpoint")); });
 	$("#order_discount").bind("change", function(){ orderfunc.sumPrice($("#order_discount")); });
@@ -717,13 +753,15 @@ jQuery(document).ready(function($){
 		return true;
 	});
 	
-	function delConfirm(){
-		if(confirm('<?php _e('Are you sure of deleting items?', 'usces'); ?>')){
-			return true;
-		}else{
-			return false;
-		}
-	}
+//20120307ysk start 0000432
+	//function delConfirm(){
+	//	if(confirm('<?php _e('Are you sure of deleting items?', 'usces'); ?>')){
+	//		return true;
+	//	}else{
+	//		return false;
+	//	}
+	//}
+//20120307ysk end
 	
 	orderfunc.make_delivery_time(<?php echo $order_delivery_method; ?>);
 

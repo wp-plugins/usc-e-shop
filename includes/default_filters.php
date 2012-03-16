@@ -39,6 +39,9 @@ add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 //20110331ysk start
 add_action( 'wp_ajax_target_market_ajax', 'target_market_ajax' );
 //20110331ysk end
+//20120309ysk start 0000430
+add_action( 'wp_ajax_usces_admin_ajax', 'usces_admin_ajax' );
+//20120309ysk end
 
 add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
 

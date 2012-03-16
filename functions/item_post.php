@@ -948,6 +948,11 @@ function order_item_ajax()
 		case 'getmember':
 			$res = usces_get_member_neworder();
 			break;
+//20120306ysk start 0000324
+		case 'getpoint':
+			$res = usces_get_order_point( $_POST['member_id'], $_POST['display_mode'], $_POST['order_id'], $_POST['index'], $_POST['price'], $_POST['quantity'] );
+			break;
+//20120306ysk end
 	}
 	
 	if( $res === false )  die(0);
@@ -2041,4 +2046,47 @@ function target_market_ajax() {
 	die($res);
 }
 //20110331ysk end
+//20120306ysk start 0000324
+function usces_get_order_point( $member_id, $display_mode, $order_id, $index, $price, $quantity ) {
+	global $usces, $wpdb;
+	$tableName = $wpdb->prefix . "usces_order";
+	$query = $wpdb->prepare("SELECT order_cart FROM $tableName WHERE ID = %d", $order_id);
+	$data = $wpdb->get_var( $query );
+	$cart = stripslashes_deep(unserialize($data));
+	if( 0 <= $index ) {
+		$cart[$index]['price'] = $price;
+		$cart[$index]['quantity'] = $quantity;
+	}
+
+	$point = $usces->get_order_point( $member_id, $display_mode, $cart );
+	return $point;
+}
+//20120306ysk end
+//20120309ysk start 0000430
+function usces_admin_ajax() {
+	switch($_POST['mode']) {
+	case 'options_backup':
+		$options = get_option('usces');
+		$res = true;
+		if( is_array($options) ) {
+			update_option('usces_backup', $options);
+		} else {
+			$res = false;
+		}
+		die($res);
+		break;
+	case 'options_restore':
+		$options = get_option('usces_backup');
+		$res = true;
+		if( is_array($options) ) {
+			update_option('usces', $options);
+		} else {
+			$res = false;
+		}
+		die($res);
+		break;
+	}
+	do_action('usces_action_admin_ajax');
+}
+//20120309ysk end
 ?>
