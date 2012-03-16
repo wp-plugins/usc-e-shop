@@ -1075,8 +1075,16 @@ function usces_new_orderdata() {
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $_POST['offer']['payment_name'] );
 	//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' ) ? 'noreceipt,' : '';
-	$status = 'noreceipt,';
-	$status .= ( $_POST['offer']['taio'] != '' ) ? $_POST['offer']['taio'].',' : '';
+//20120314ysk start 0000435
+	//$status = 'noreceipt,';
+	if( isset($_POST['offer']['receipt']) ) {
+		$status = $_POST['offer']['receipt'].',';
+	} else {
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' ) ? 'noreceipt,' : '';
+	}
+	//$status .= ( $_POST['offer']['taio'] != '' ) ? $_POST['offer']['taio'].',' : '';
+	$status .= ( $_POST['offer']['taio'] != '' && $_POST['offer']['taio'] != '#none#' ) ? $_POST['offer']['taio'].',' : '';
+//20120314ysk end
 	$status .= $_POST['offer']['admin'];
 	$order_conditions = $usces->get_condition();
 
@@ -1244,6 +1252,10 @@ function usces_new_orderdata() {
 			$value = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 			$usces->set_order_meta_value('receipted_date', $value, $order_id);
 		}
+//20120314ysk start 0000435
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member_id);
+		do_action('usces_action_reg_orderdata', $args);
+//20120314ysk end
 	endif;
 //20100818ysk end
 	
