@@ -36,14 +36,13 @@ class usces_cart {
 		
 		if ( isset($_POST['quant'][$post_id][$sku]) && $_POST['quant'][$post_id][$sku] != '') {
 		
-			//$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
-			$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$post_id][$sku];
+			$post_quant = (int)$_POST['quant'][$post_id][$sku];
+			$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filters('usces_filter_post_quant', $post_quant, $_SESSION['usces_cart'][$this->serial]['quant']);
 			
 		} else {
 		
 			if ( isset($_SESSION['usces_cart'][$this->serial]) )
-				//$_SESSION['usces_cart'][$this->serial]['quant'] += 1;
-				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
+				$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filters('usces_filter_post_quant', 1, $_SESSION['usces_cart'][$this->serial]['quant']);
 			else
 				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
 				
