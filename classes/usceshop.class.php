@@ -521,6 +521,7 @@ class usc_e_shop
 		}else{
 			$order_action = isset($_REQUEST['order_action']) ? $_REQUEST['order_action'] : '';
 		}
+		do_action('usces_action_order_list_page', $order_action);
 		switch ($order_action) {
 //20100908ysk start
 			case 'dlproductlist':
@@ -1317,6 +1318,9 @@ class usc_e_shop
 		if('acting' == $addr) return;
 
 		if( apply_filters( 'usces_filter_cookie', false) ) return;
+		
+		//There is a need to consider.
+		return;
 
 		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']))){
 			
@@ -1651,12 +1655,14 @@ class usc_e_shop
 						}
 					}
 				}
-	
+				
+				<?php apply_filters( 'usces_filter_upCart_js_check', $item->ID ); ?>
+				
 				if( mes != '' ){
 					alert( mes );
 					return false;
 				}else{
-					return true;
+					<?php echo apply_filters('usces_filter_js_upCart', "return true;\n", $item->ID, NULL); ?>
 				}
 			},
 			

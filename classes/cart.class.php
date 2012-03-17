@@ -36,14 +36,13 @@ class usces_cart {
 		
 		if ( isset($_POST['quant'][$post_id][$sku]) && $_POST['quant'][$post_id][$sku] != '') {
 		
-			//$_SESSION['usces_cart'][$this->serial]['quant'] += (int)$_POST['quant'][$post_id][$sku];
-			$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$post_id][$sku];
+			$post_quant = (int)$_POST['quant'][$post_id][$sku];
+			$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filters('usces_filter_post_quant', $post_quant, $_SESSION['usces_cart'][$this->serial]['quant']);
 			
 		} else {
 		
 			if ( isset($_SESSION['usces_cart'][$this->serial]) )
-				//$_SESSION['usces_cart'][$this->serial]['quant'] += 1;
-				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
+				$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filters('usces_filter_post_quant', 1, $_SESSION['usces_cart'][$this->serial]['quant']);
 			else
 				$_SESSION['usces_cart'][$this->serial]['quant'] = 1;
 				
@@ -152,6 +151,7 @@ class usces_cart {
 			unset($_SESSION['usces_cart'][$this->serial]);
 			
 		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
+		do_action('usces_action_after_cart_del_row', $index);
 	}
 
 	// number of data in cart ***********************************************************
@@ -213,7 +213,7 @@ class usces_cart {
 		}else{
 			$sels[$id][$sku] = 0;
 		}
-		
+		$sels = apply_filters('usces_filter_in_serialize', $sels, $id, $sku);
 		$this->serial = serialize($sels);
 	}
 
@@ -237,7 +237,7 @@ class usces_cart {
 		}else{
 			$sels[$id][$sku] = 0;
 		}
-		
+		$sels = apply_filters('usces_filter_up_serialize', $sels, $index, $id, $sku);
 		$this->serial = serialize($sels);
 	}
 
@@ -251,7 +251,7 @@ class usces_cart {
 		$row['serial'] = $serial;
 		$row['post_id'] = $ids[0];
 		$row['sku'] = $skus[0];
-		$row['options'] = $array[$ids[0]][$skus[0]];
+		$row['options'] = apply_filters('usces_filter_key_unserialize_options', $array[$ids[0]][$skus[0]], $ids[0], $skus[0]);
 		$row['price'] = isset($_SESSION['usces_cart'][$serial]['price']) ? $_SESSION['usces_cart'][$serial]['price'] : 0;
 		$row['quantity'] = $_SESSION['usces_cart'][$serial]['quant'];
 		$row['advance'] = isset($_SESSION['usces_cart'][$serial]['advance']) ? $_SESSION['usces_cart'][$serial]['advance'] : array();

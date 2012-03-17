@@ -661,6 +661,7 @@ jQuery(function($){
 			return true;
 		}
 	});
+<?php apply_filters('usces_filter_order_edit_page_js', $order_id ); ?>
 });
 
 function toggleVisibility(id) {
@@ -810,7 +811,7 @@ jQuery(document).ready(function($){
 <td><input name="check[nohinprint]" type="checkbox" value="nohinprint"<?php if(isset($ordercheck['nohinprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="nohinprint"><?php _e('print out Delivery Statement', 'usces'); ?></a></td>
 <td><input name="check[billprint]" type="checkbox" value="billprint"<?php if(isset($ordercheck['billprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="billprint"><?php _e('Print Invoice', 'usces'); ?></a></td>
 <td><input name="check[receiptprint]" type="checkbox" value="receiptprint"<?php if(isset($ordercheck['receiptprint'])) echo ' checked="checked"' ; ?> /></td><td><a href="#" id="receiptprint"><?php _e('Print Receipt', 'usces'); ?></a></td>
-<td colspan="2">&nbsp;</td>
+<?php echo apply_filters('usces_filter_admin_ordernavi', '<td colspan="2">&nbsp;</td>', $ordercheck ); ?>
 </tr>
 <tr>
 <td colspan="12"><span style="color:#CC3300"><?php _e("When there is any change, please press the 'change decision' before you send or print.", 'usces'); ?></span></td>

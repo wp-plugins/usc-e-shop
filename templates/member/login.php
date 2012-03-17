@@ -62,6 +62,5 @@ if ( usces_is_login() ) {
 } else {
 	$html .= 'try{document.getElementById(\'loginmail\').focus();}catch(e){}';
 }
-global $usces;
-$html .= '</script>'.$usces->page;
+$html .= '</script>';
 ?>
