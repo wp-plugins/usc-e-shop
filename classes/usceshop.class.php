@@ -6122,6 +6122,7 @@ class usc_e_shop
 			$temp = array();
 			foreach($cart as $key => $row){
 				$deli = $this->getItemDeliveryMethod($row['post_id']);
+				//usces_p($deli);
 				if( empty($deli))
 					continue;
 
@@ -6141,8 +6142,10 @@ class usc_e_shop
 				$temp[$index] = $id;
 			}
 			ksort($temp);
+			$force = array($temp[0]);
+			
 			if( empty($intersect) ){
-				return array();
+				return $force;
 			}else{
 				return $intersect;
 			}
