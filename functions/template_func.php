@@ -1026,14 +1026,17 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	global $usces;
 	$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 	$payments = apply_filters('usces_fiter_the_payment_method', $payments, $value);
-	if( empty($payments) ) return;
+	//if( empty($payments) ) return; 20120328ysk 0000454
 	
 	$cart = $usces->cart->get_cart();
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 	$html = "<dl>\n";
 	$list = '';
 	$payment_ct = count($payments);
-	foreach ($payments as $id => $payment) {
+//20120328ysk start 0000454
+	//foreach ($payments as $id => $payment) {
+	foreach ((array)$payments as $id => $payment) {
+//20120328ysk end
 		if( 'continue' == $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
