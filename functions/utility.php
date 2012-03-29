@@ -1195,7 +1195,7 @@ function usces_download_product_list() {
 					foreach((array)$options as $key => $value) {
 						if(!empty($key))
 							//$optstr .= usces_entity_decode($key, $ext).$sp.usces_entity_decode($value, $ext).$nb;
-							$optstr .= usces_entity_decode($key.$sp.urldecode($value), $ext).$nb;
+							$optstr .= usces_entity_decode(urldecode($key).$sp.urldecode($value), $ext).$nb;
 					}
 				}
 				$line .= $td_h.$optstr.$td_f;

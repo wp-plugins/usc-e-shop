@@ -5629,9 +5629,10 @@ class usc_e_shop
 						}
 					}
 				}
+			}else{
+				$fee = $this->options['cod_end_fee'];
 			}
 		}
-			
 		$fee = apply_filters('usces_filter_getCODFee', $fee, $payment_name, $amount_by_cod);
 		return $fee;
 	}

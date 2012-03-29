@@ -275,6 +275,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 			
 		case 'acting_remise_conv':
+			if( function_exists('mb_strlen') ){
+				$biko = ( 22 < mb_strlen($usces_entries['order']['note'])) ? (mb_substr($usces_entries['order']['note'], 0, 22).'...') : $usces_entries['order']['note'];
+			}else{
+				$biko = ( 44 < mb_strlen($usces_entries['order']['note'])) ? (substr($usces_entries['order']['note'], 0, 44).'...') : $usces_entries['order']['note'];
+			}
 			$datestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 			$acting_opts = $usces->options['acting_settings']['remise'];
 			$usces->save_order_acting_data($rand);
@@ -299,7 +304,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="TAX" value="" />
 				<input type="hidden" name="S_PAYDATE" value="' . date('Ymd', mktime(0,0,0,substr($datestr, 5, 2),substr($datestr, 8, 2)+$acting_opts['S_PAYDATE'],substr($datestr, 0, 4))) . '" />
 				<input type="hidden" name="SEIYAKUDATE" value="' . date('Ymd', mktime(0,0,0,substr($datestr, 5, 2),substr($datestr, 8, 2),substr($datestr, 0, 4))) . '" />
-				<input type="hidden" name="BIKO" value="' . esc_attr($usces_entries['order']['note']) . '" />
+				<input type="hidden" name="BIKO" value="' . esc_html($biko) . '" />
 				
 				';
 			$mname_01 = '商品総額';
