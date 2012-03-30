@@ -1,5 +1,5 @@
 <?php
-class httpRequest {
+class usces_httpRequest {
 	
 	var $host;
 	var $path;

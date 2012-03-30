@@ -3182,7 +3182,13 @@ function usces_get_member_regmode(){
 function uesces_get_error_settlement( $out = '' ) {
 	$res = '';
 	if( isset($_REQUEST['acting']) && ('zeus_conv' == $_REQUEST['acting'] || 'zeus_card' == $_REQUEST['acting'] || 'zeus_bank' == $_REQUEST['acting'] ) ){ //ZEUS
-		$res .= '<div class="support_box">ゼウス・カスタマーサポート(24時間365日)<br />
+		$res .= '<div class="support_box">
+		　<br />
+		カード番号を再入力する場合はこちらをクリックしてください。<br />
+		　<br />
+		<a href="' . USCES_CUSTOMER_URL . '">カード番号の再入力＞＞</a><br />
+		　<br />
+		ゼウス・カスタマーサポート(24時間365日)<br />
 		電話番号：0570-02-3939(つながらないときは 03-4334-0500)<br />
 		E-mail:support@cardservice.co.jp
 		</div>'."\n";
