@@ -405,12 +405,12 @@ function usces_the_lastSku( $out = '' ) {
 	
 	
 	$skus = $usces->get_skus( $post_id );
-	krsort($skus);
-	
+	$sku = end($skus);
+
 	if($out == 'return'){
-		return $skus[0]['code'];
+		return $sku['code'];
 	}else{
-		echo esc_html($skus[0]['code']);
+		echo esc_html($sku['code']);
 	}
 }
 
@@ -420,12 +420,12 @@ function usces_the_lastPrice( $out = '' ) {
 	
 	
 	$skus = $usces->get_skus( $post_id );
-	krsort($skus);
-	
+	$sku = end($skus);
+		
 	if($out == 'return'){
-		return $skus[0]['price'];
+		return $sku['price'];
 	}else{
-		echo number_format($skus[0]['price']);
+		echo number_format($sku['price']);
 	}
 }
 
@@ -435,12 +435,12 @@ function usces_the_lastZaiko( $out = '' ) {
 	
 	
 	$skus = $usces->get_skus( $post_id );
-	krsort($skus);
+	$sku = end($skus);
 	
 	if($out == 'return'){
-		return $skus[0]['stock'];
+		return $sku['stock'];
 	}else{
-		echo esc_html($skus[0]['stock']);
+		echo esc_html($sku['stock']);
 	}
 }
 
