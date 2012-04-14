@@ -2124,12 +2124,12 @@ function usces_check_acting_return() {
 		case 'remise_card':
 			$results = $_POST;
 			if( $_REQUEST['acting_return'] && '   ' == $_REQUEST['X-ERRCODE']){
-				//usces_log('remise card entry data : '.print_r($entry, true), 'acting_transaction.log');
+				usces_log('remise card entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;
 			}
-			$results['reg_order'] = false;
+			$results['reg_order'] = true;
 			break;
 			
 		case 'remise_conv':

@@ -1009,7 +1009,10 @@ class usc_e_shop
 					$options['acting_settings']['zeus']['ipaddrs'] = isset($_POST['ipaddrs']) ? $_POST['ipaddrs'] : '';
 					$options['acting_settings']['zeus']['pay_cvs'] = isset($_POST['pay_cvs']) ? $_POST['pay_cvs'] : '';
 					$options['acting_settings']['zeus']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
-					$options['acting_settings']['zeus']['3dsecure'] = isset($_POST['3dsecure']) ? $_POST['3dsecure'] : '';
+					$options['acting_settings']['zeus']['security'] = isset($_POST['security']) ? $_POST['security'] : '1';
+					if( isset($_POST['authkey']) ){
+						$options['acting_settings']['zeus']['authkey'] = $_POST['authkey'];
+					}
 					$options['acting_settings']['zeus']['quickcharge'] = isset($_POST['quickcharge']) ? $_POST['quickcharge'] : '';
 					$options['acting_settings']['zeus']['clientip'] = isset($_POST['clientip']) ? trim($_POST['clientip']) : '';
 					$options['acting_settings']['zeus']['howpay'] = isset($_POST['howpay']) ? $_POST['howpay'] : '';
@@ -1025,6 +1028,8 @@ class usc_e_shop
 
 					if( '' == trim($_POST['clientip']) && isset($_POST['card_activate']) && 'on' == $_POST['card_activate'])
 						$mes .= '※カード決済IPコードを入力して下さい<br />';
+					if( isset($_POST['authkey']) && '' == trim($_POST['authkey']) && isset($_POST['security']) && '3' == $_POST['security'])
+						$mes .= '※認証キーを入力して下さい<br />';
 					if( '' == trim($_POST['clientip_bank']) && isset($_POST['bank_activate']) && 'on' == $_POST['bank_activate'] )
 						$mes .= '※入金お任せIPコードを入力して下さい<br />';
 					if( '' == trim($_POST['clientip_conv']) && isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] )
@@ -3971,6 +3976,8 @@ class usc_e_shop
 			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["member"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
+		if( trim($_POST['member']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 			
 		$mes = apply_filters('usces_filter_member_check', $mes);
 	
@@ -3997,6 +4004,8 @@ class usc_e_shop
 			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
+		if( trim($_POST['member']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 	
 		$mes = apply_filters('usces_filter_member_check_fromcart', $mes);
 
@@ -4021,7 +4030,9 @@ class usc_e_shop
 //			$mes .= __('enter house numbers', 'usces') . "<br />";
 //		if ( trim($_POST['member']["tel"]) == "" )
 //			$mes .= __('enter phone numbers', 'usces') . "<br />";
-	
+		if( trim($_POST['member']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
+
 		$mes = apply_filters('usces_filter_admin_member_check', $mes);
 
 		return $mes;
@@ -4045,6 +4056,8 @@ class usc_e_shop
 			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
+		if( trim($_POST['customer']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["customer"]["tel"])) )
+			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 	
 		$mes = apply_filters('usces_filter_customer_check', $mes);
 
@@ -5227,29 +5240,33 @@ class usc_e_shop
 			header("location: " . $redirect . $query);
 			exit;
 			
-		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && !isset($_REQUEST['PaRes'])){
+		}else if($acting_flg == 'acting_zeus_card' && '3' == $this->options['acting_settings']['zeus']['security'] && !isset($_REQUEST['PaRes'])){
 	
 			usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 			usces_zeus_3dsecure_enrol();
 			
-		}else if($acting_flg == 'acting_zeus_card' && 'on' == $this->options['acting_settings']['zeus']['3dsecure'] && isset($_REQUEST['PaRes'])){
+		}else if($acting_flg == 'acting_zeus_card' && '3' == $this->options['acting_settings']['zeus']['security'] && isset($_REQUEST['PaRes'])){
 
 			usces_zeus_3dsecure_auth();
 
-		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && !empty($this->options['acting_settings']['zeus']['authkey']) && !isset($_REQUEST['PaRes'])){
+		}else if($acting_flg == 'acting_zeus_card' && '3' != $this->options['acting_settings']['zeus']['security'] && !empty($this->options['acting_settings']['zeus']['authkey']) && !isset($_REQUEST['PaRes'])){
 
 			$res = usces_zeus_secure_payreq();
 			return $res;
 
-		}else if($acting_flg == 'acting_zeus_card' && 'on' != $this->options['acting_settings']['zeus']['3dsecure'] && empty($this->options['acting_settings']['zeus']['authkey']) ){
+		}else if($acting_flg == 'acting_zeus_card' && '3' != $this->options['acting_settings']['zeus']['security']  ){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);
 
+			//usces_log('zeus card ***** : '.print_r($entry, true), 'acting_transaction.log');
 
 			$vars = 'send=mall';
 			$vars .= '&clientip=' . $acting_opts['clientip'];
 			$vars .= '&cardnumber=' . $_POST['cardnumber'];
+			if( '2' == $this->options['acting_settings']['zeus']['security'] ){
+				$vars .= '&seccode=' . $_POST['securecode'];
+			}
 			$vars .= '&expyy=' . substr($_POST['expyy'], 2);
 			$vars .= '&expmm=' . $_POST['expmm'];
 			$vars .= '&telno=' . str_replace('-', '', $_POST['telno']);
@@ -5263,6 +5280,7 @@ class usc_e_shop
 				$vars .= '&div=' . $_POST['div'];
 			}
 
+			//usces_log('zeus card *****vars : '.print_r($vars, true), 'acting_transaction.log');
 
 			$header = "POST " . $interface['path'] . " HTTP/1.1\r\n";
 			$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
@@ -5282,6 +5300,7 @@ class usc_e_shop
 				}
 				fclose($fp);
 
+			//usces_log('zeus card *****2 : '.print_r($page, true), 'acting_transaction.log');
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');

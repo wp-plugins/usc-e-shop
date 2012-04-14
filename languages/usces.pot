@@ -3198,3 +3198,6 @@ msgstr "終了しました。"
 
 msgid "Data have deficiency."
 msgstr "データに不備が有ります。"
+
+msgid "Please input a phone number with a half size number."
+msgstr "電話番号を半角数字で入力して下さい。"

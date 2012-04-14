@@ -39,20 +39,20 @@ function usces_action_acting_transaction(){
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 		}
 		
-		$rand = $_POST['X-S_TORIHIKI_NO'];
-		if( empty($rand) ){
-			usces_log('remise card error1 : '.print_r($data, true), 'acting_transaction.log');
-			die('error1');
-		}else{
-			$res = usces_check_notification_time( $rand, 15 );
-			if( !$res )
-				die('error : time over');
-		}
-		
-		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){
-			usces_log('remise card error2 : '.print_r($data, true), 'acting_transaction.log');
-			die('error2');
-		}
+//		$rand = $_POST['X-S_TORIHIKI_NO'];
+//		if( empty($rand) ){
+//			usces_log('remise card error1 : '.print_r($data, true), 'acting_transaction.log');
+//			die('error1');
+//		}else{
+//			$res = usces_check_notification_time( $rand, 15 );
+//			if( !$res )
+//				die('error : time over');
+//		}
+//		
+//		if( 0 !== (int)$_POST['X-ERRLEVEL'] ){
+//			usces_log('remise card error2 : '.print_r($data, true), 'acting_transaction.log');
+//			die('error2');
+//		}
 		
 		if( '0000000' === substr($rand, 0, 7) ){//card up
 			usces_log('remise card_update : '.print_r($data, true), 'acting_transaction.log');
@@ -67,18 +67,18 @@ function usces_action_acting_transaction(){
 		}
 		
 //20110203ysk start
-		$res = $usces->order_processing();
-		if( 'error' == $res ){
-			usces_log('remise card error3 : '.print_r($data, true), 'acting_transaction.log');
-			die('error3');
-		}else{
+//		$res = $usces->order_processing();
+//		if( 'error' == $res ){
+//			usces_log('remise card error3 : '.print_r($data, true), 'acting_transaction.log');
+//			die('error3');
+//		}else{
 			if( isset($_POST['X-PAYQUICKID']) )
 				$usces->set_member_meta_value('remise_pcid', $_POST['X-PAYQUICKID']);
 			if( isset($_POST['X-AC_MEMBERID']) )
 				$usces->set_member_meta_value('remise_memid', $_POST['X-AC_MEMBERID']);
 			usces_log('remise card transaction : '.$_POST['X-TRANID'], 'acting_transaction.log');
 			die('<SDBKDATA>STATUS=800</SDBKDATA>');
-		}
+//		}
 //20110203ysk end
 		
 	//*** remise_conv ***//
@@ -129,6 +129,7 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ){
 			$data[$key] = $value;
 		}
+usces_log('zeus card : '.print_r($data, true), 'acting_transaction.log');
 
 		$acting_opts = $usces->options['acting_settings']['zeus'];
 

@@ -121,7 +121,7 @@ function usces_zeus_3dsecure_enrol(){
 
 	if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
-		$data['authentication']['key'] = '356a192b7913b04c54574d18c28d46e6395428ab';
+		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['history']['key'] = $_POST['sendid'];
 		$data['card']['history']['action'] = 'send_email';
 		$data['card']['cvv'] = $_POST['securecode'];
@@ -129,7 +129,7 @@ function usces_zeus_3dsecure_enrol(){
 		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
-			$data['payment']['count'] = 1;
+			$data['payment']['count'] = '01';
 		}
 		$data['user']['telno'] = str_replace('-', '', $_POST['telno']);
 		$data['user']['email'] = $_POST['email'];
@@ -138,17 +138,17 @@ function usces_zeus_3dsecure_enrol(){
 	
 	}else{	
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
-		$data['authentication']['key'] = '356a192b7913b04c54574d18c28d46e6395428ab';
+		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['number'] = $_POST['cardnumber'];
-		$data['card']['expires']['year'] = substr($_POST['expyy'], 2);
-		$data['card']['expires']['month'] = $_POST['expmm'];
+		$data['card']['expires']['year'] = (int)$_POST['expyy'];
+		$data['card']['expires']['month'] = (int)$_POST['expmm'];
 		$data['card']['cvv'] = $_POST['securecode'];
 		$data['card']['name'] = $_POST['username'];
 		$data['payment']['amount'] = $_POST['money'];
 		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
-			$data['payment']['count'] = 1;
+			$data['payment']['count'] = '01';
 		}
 		$data['user']['telno'] = str_replace('-', '', $_POST['telno']);
 		$data['user']['email'] = $_POST['email'];
@@ -181,7 +181,7 @@ function usces_zeus_3dsecure_enrol(){
 //usces_log('zeus xml : ' . $xml, 'acting_transaction.log');
 
 	$EnrolRes = usces_xml2assoc($xml); 
-//usces_log('zeus xml : ' . print_r($EnrolRes, true), 'acting_transaction.log');
+//usces_log('EnrolRes : ' . print_r($EnrolRes, true), 'acting_transaction.log');
 	if( 'success' != $EnrolRes['response']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $EnrolRes['response']['result']['status'] . ' code=' . $EnrolRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $EnrolRes['response']['result']['status'] . '&code=' . $EnrolRes['response']['result']['code']);
@@ -189,22 +189,32 @@ function usces_zeus_3dsecure_enrol(){
 	}
 
 	$data = array();
-	$data['MD'] = base64_encode($EnrolRes['xid']);
-	$data['PaReq'] = $EnrolRes['redirection']['PaReq'];
-	$data['TermUrl'] = USCES_CART_URL . $usces->delim . 'purchase=1';
-	$PaReq = '<?xml version="1.0" encoding="utf-8" ?>';
+	$data['MD'] = $EnrolRes['response']['xid'];
+	$data['PaReq'] = $EnrolRes['response']['redirection']['PaReq'];
+	$data['TermUrl'] = USCES_CART_URL . $usces->delim . 'purchase=1&PaRes=1';
+	$PaReq = http_build_query($data);
+	$PaReq = 'MD='.$EnrolRes['response']['xid'].'&PaReq='.$EnrolRes['response']['redirection']['PaReq'].'&TermUrl='.USCES_CART_URL . $usces->delim . 'purchase=1&PaRes=1';
+/*	$PaReq = '<?xml version="1.0" encoding="utf-8" ?>';
 	$PaReq .= '<request service="secure_link_3d" action="enroll">';
 	$PaReq .= usces_assoc2xml($data); 
 	$PaReq .= '</request>';
-
-	$xml = usces_get_xml($EnrolRes['redirection']['acs_url'], $PaReq);
+*/
+?>
+<form name="zeus" action="<?php echo $EnrolRes['response']['redirection']['acs_url']; ?>" method="post">
+<input name="MD" type="hidden" value="<?php echo $EnrolRes['response']['xid']; ?>" />
+<input name="PaReq" type="hidden" value="<?php echo $EnrolRes['response']['redirection']['PaReq']; ?>" />
+<input name="TermUrl" type="hidden" value="<?php echo USCES_CART_URL . $usces->delim . 'purchase=1&PaRes=1'; ?>" />
+</form>
+<script type="text/javascript">document.zeus.submit();</script>
+<?php
+/*	$xml = usces_get_xml($EnrolRes['response']['redirection']['acs_url'], $PaReq);
 	if ( empty($xml) ){
 		usces_log('zeus : PaRes Error', 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=PaRes&code=0');
 		exit;
 	}
-	
-//	$PaRes = usces_xml2assoc($xml); 
+	print($xml);
+*///	$PaRes = usces_xml2assoc($xml); 
 //	if( 'success' != $PaRes['response']['result']['status'] ){
 //		usces_log('zeus bad status : status=' . $PaRes['response']['result']['status'] . ' code=' . $PaRes['response']['result']['code'], 'acting_transaction.log');
 //		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PaRes['response']['result']['status'] . '&code=' . $PaRes['response']['result']['code']);
@@ -219,22 +229,24 @@ function usces_zeus_3dsecure_auth(){
 	$acting_opts = $usces->options['acting_settings']['zeus'];
 
 	$data = array();
-	$data['MD'] = $_REQUEST['xid'];
+	$data['xid'] = $_REQUEST['MD'];
 	$data['PaRes'] = $_REQUEST['PaRes'];
 	$AuthReq = '<?xml version="1.0" encoding="utf-8" ?>';
-	$AuthReq .= '<request service="secure_link_3d" action="enroll">';
+	$AuthReq .= '<request service="secure_link_3d" action="authentication">';
 	$AuthReq .= usces_assoc2xml($data); 
 	$AuthReq .= '</request>';
 
 	$xml = usces_get_xml($acting_opts['card_url'], $AuthReq);
-	if ( empty($xml) ){
-		usces_log('zeus : AuthReq Error', 'acting_transaction.log');
+	if ( strpos($xml, 'Invalid') ){
+		usces_log('zeus : AuthReq Error'.print_r($xml, true), 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=AuthReq&code=0');
 		exit;
 	}
+	//usces_log('xml : '.print_r($xml, true), 'acting_transaction.log');
 	
 	$AuthRes = usces_xml2assoc($xml); 
-	if( 'success' != $AuthRes['response']['result']['status'] ){
+	usces_log('AuthRes : '.print_r($AuthRes, true), 'acting_transaction.log');
+	if( 'success' != $AuthRes['request']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $AuthRes['response']['result']['status'] . ' code=' . $AuthRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $AuthRes['response']['result']['status'] . '&code=' . $AuthRes['response']['result']['code']);
 		exit;
@@ -242,9 +254,9 @@ function usces_zeus_3dsecure_auth(){
 	
 	
 	$data = array();
-	$data['xid'] = $_REQUEST['xid'];
+	$data['xid'] = $_REQUEST['MD'];
 	$PayReq = '<?xml version="1.0" encoding="utf-8" ?>';
-	$PayReq .= '<request service="secure_link_3d" action="enroll">';
+	$PayReq .= '<request service="secure_link_3d" action="payment">';
 	$PayReq .= usces_assoc2xml($data); 
 	$PayReq .= '</request>';
 
@@ -279,7 +291,7 @@ function usces_zeus_secure_payreq(){
 
 	if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
-		$data['authentication']['key'] = '356a192b7913b04c54574d18c28d46e6395428ab';
+		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['history']['key'] = $_POST['sendid'];
 		$data['card']['history']['action'] = 'send_email';
 		$data['card']['cvv'] = $_POST['securecode'];
@@ -287,7 +299,7 @@ function usces_zeus_secure_payreq(){
 		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
-			$data['payment']['count'] = 1;
+			$data['payment']['count'] = '01';
 		}
 		$data['user']['telno'] = str_replace('-', '', $_POST['telno']);
 		$data['user']['email'] = $_POST['email'];
@@ -296,17 +308,17 @@ function usces_zeus_secure_payreq(){
 	
 	}else{	
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
-		$data['authentication']['key'] = '356a192b7913b04c54574d18c28d46e6395428ab';
+		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['number'] = $_POST['cardnumber'];
-		$data['card']['expires']['year'] = substr($_POST['expyy'], 2);
-		$data['card']['expires']['month'] = $_POST['expmm'];
+		$data['card']['expires']['year'] = (int)$_POST['expyy'];
+		$data['card']['expires']['month'] = (int)$_POST['expmm'];
 		$data['card']['cvv'] = $_POST['securecode'];
 		$data['card']['name'] = $_POST['username'];
 		$data['payment']['amount'] = $_POST['money'];
 		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
-			$data['payment']['count'] = 1;
+			$data['payment']['count'] = '01';
 		}
 		$data['user']['telno'] = str_replace('-', '', $_POST['telno']);
 		$data['user']['email'] = $_POST['email'];
@@ -372,6 +384,7 @@ function usces_get_xml($url, $paras){
 	$header .= "Connection: close\r\n\r\n";
 	$header .= $paras;
 	$fp = fsockopen('ssl://'.$interface['host'],443,$errno,$errstr,30);
+	//usces_log('header : '.print_r($header, true), 'acting_transaction.log');
 	
 	$xml = '';
 	if ($fp){
@@ -381,6 +394,7 @@ function usces_get_xml($url, $paras){
 		}
 		fclose($fp);
 	}
+	//usces_log('get_return : '.print_r($xml, true), 'acting_transaction.log');
 	
 	return $xml;
 }
