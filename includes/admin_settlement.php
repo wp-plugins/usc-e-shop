@@ -104,7 +104,7 @@ function toggleVisibility(id) {
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_security_zeus');"><?php _e('セキュリティー', 'usces'); ?></a></th>
 				<td><input name="security" type="radio" id="security_zeus_1" value="1"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '1' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_1">セキュリティコード無</label></td>
 				<td><input name="security" type="radio" id="security_zeus_2" value="2"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '2' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_2">セキュリティコード有</label></td>
-				<td><input name="security" type="radio" id="security_zeus_3" value="3"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '3' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_3">３Ｄセキュア</label></td>
+				<td><!--<input name="security" type="radio" id="security_zeus_3" value="3"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '3' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_3">３Ｄセキュア</label>--></td>
 				<td><div id="ex_security_zeus" class="explanation"><?php _e('セキュリティレベルを指定します。3Dセキュアを選択した場合は認証キーが必須となります。', 'usces'); ?></div></td>
 			</tr>
 			<tr id="authkey_zeus">
