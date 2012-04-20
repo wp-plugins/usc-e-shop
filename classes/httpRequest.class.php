@@ -12,7 +12,7 @@ class usces_httpRequest {
 	var $content;
 	var $parsedHeader;
 	
-	function httpRequest($host, $path, $method = 'POST', $ssl = false, $port = 0) {
+	function usces_httpRequest($host, $path, $method = 'POST', $ssl = false, $port = 0) {
 		$this->host = $host;
 		$this->rawhost = $ssl ? ("ssl://".$host) : $host;
 		$this->path = $path;

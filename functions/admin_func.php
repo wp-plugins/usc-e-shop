@@ -236,7 +236,7 @@ function usces_zeus_3dsecure_auth(){
 	$AuthReq .= usces_assoc2xml($data); 
 	$AuthReq .= '</request>';
 
-	$xml = usces_get_xml($acting_opts['card_url'], $AuthReq);
+	$xml = usces_get_xml($acting_opts['card_secureurl'], $AuthReq);
 	if ( strpos($xml, 'Invalid') ){
 		usces_log('zeus : AuthReq Error'.print_r($xml, true), 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=AuthReq&code=0');
@@ -245,8 +245,8 @@ function usces_zeus_3dsecure_auth(){
 	//usces_log('xml : '.print_r($xml, true), 'acting_transaction.log');
 	
 	$AuthRes = usces_xml2assoc($xml); 
-	usces_log('AuthRes : '.print_r($AuthRes, true), 'acting_transaction.log');
-	if( 'success' != $AuthRes['request']['result']['status'] ){
+usces_log('AuthRes : '.print_r($AuthRes, true), 'acting_transaction.log');
+	if( 'success' != $AuthRes['response']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $AuthRes['response']['result']['status'] . ' code=' . $AuthRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $AuthRes['response']['result']['status'] . '&code=' . $AuthRes['response']['result']['code']);
 		exit;
@@ -260,7 +260,9 @@ function usces_zeus_3dsecure_auth(){
 	$PayReq .= usces_assoc2xml($data); 
 	$PayReq .= '</request>';
 
-	$xml = usces_get_xml($acting_opts['card_url'], $PayReq);
+//usces_log('zeus : PayReq1'.print_r($PayReq, true), 'acting_transaction.log');
+	$xml = usces_get_xml($acting_opts['card_secureurl'], $PayReq);
+//usces_log('zeus : PayReq2'.print_r($xml, true), 'acting_transaction.log');
 	if ( empty($xml) ){
 		usces_log('zeus : PayRes Error', 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=PayRes&code=0');
@@ -268,6 +270,7 @@ function usces_zeus_3dsecure_auth(){
 	}
 	
 	$PayRes = usces_xml2assoc($xml); 
+//usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
 	if( 'success' != $PayRes['response']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
