@@ -2440,19 +2440,16 @@ msgid "Posts Tagged &#8216;%s&#8217;"
 msgstr "タグ &#8216;%s&#8217; に属する投稿;"
 
 # Daily archive page
-#, fuzzy
 msgctxt "Daily archive page"
 msgid "Archive for %s"
 msgstr "%s の記事"
 
 # Daily archive page
-#, fuzzy
 msgctxt "Monthly archive page"
 msgid "Archive for %s"
 msgstr "%s の記事"
 
 # Daily archive page
-#, fuzzy
 msgctxt "Yearly archive page"
 msgid "Archive for %s"
 msgstr "%s の記事"
@@ -3204,6 +3201,9 @@ msgstr "終了しました。"
 
 msgid "Data have deficiency."
 msgstr "データに不備が有ります。"
+
+msgid "Please input a phone number with a half size number."
+msgstr "電話番号を半角数字で入力して下さい。"
 
 #~ msgid "Archive for %s|Daily archive page"
 #~ msgstr "%s の記事"

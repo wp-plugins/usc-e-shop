@@ -75,7 +75,7 @@ class usces_paypal {
 
 		} else {
 			//usces_log(urldecode($this->nvpreq), 'acting_transaction.log');
-			$r = new HTTPRequest($this->options['acting_settings']['paypal']['api_host'], '/nvp', 'POST', true);
+			$r = new usces_httpRequest($this->options['acting_settings']['paypal']['api_host'], '/nvp', 'POST', true);
 			$result = $r->connect($this->nvpreq);
 			if($result >= 400) {
 				usces_log('PayPal : API call failed. result:['.$result.']', 'acting_transaction.log');

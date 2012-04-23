@@ -405,12 +405,12 @@ function usces_the_lastSku( $out = '' ) {
 	
 	
 	$skus = $usces->get_skus( $post_id );
-	krsort($skus);
-	
+	$sku = end($skus);
+
 	if($out == 'return'){
-		return $skus[0]['code'];
+		return $sku['code'];
 	}else{
-		echo esc_html($skus[0]['code']);
+		echo esc_html($sku['code']);
 	}
 }
 
@@ -420,12 +420,12 @@ function usces_the_lastPrice( $out = '' ) {
 	
 	
 	$skus = $usces->get_skus( $post_id );
-	krsort($skus);
-	
+	$sku = end($skus);
+		
 	if($out == 'return'){
-		return $skus[0]['price'];
+		return $sku['price'];
 	}else{
-		echo number_format($skus[0]['price']);
+		echo number_format($sku['price']);
 	}
 }
 
@@ -435,12 +435,12 @@ function usces_the_lastZaiko( $out = '' ) {
 	
 	
 	$skus = $usces->get_skus( $post_id );
-	krsort($skus);
+	$sku = end($skus);
 	
 	if($out == 'return'){
-		return $skus[0]['stock'];
+		return $sku['stock'];
 	}else{
-		echo esc_html($skus[0]['stock']);
+		echo esc_html($sku['stock']);
 	}
 }
 
@@ -640,18 +640,13 @@ function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $optio
 
 function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '', $out = '', $media = 'item' ) {
 	global $usces;
-	if($post == '') global $post;
+	$ptitle = $number;
+	
+	if( $ptitle && 0 == (int)$number ){
 
-	$post_id = $post->ID;
-	
-	$code =  get_post_custom_values('_itemCode', $post_id);
-	if(!$code) return false;
-	
-	$name = get_post_custom_values('_itemName', $post_id);
-	
-	if( 0 == $number ){
-		$pictid = (int)$usces->get_mainpictid($code[0]);
-		$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
+		$picposts = query_posts(array('post_type'=>'attachment','name'=>$ptitle));
+		$pictid = empty($picposts) ? 0 : $picposts[0]->ID;
+		$html = wp_get_attachment_image( $pictid, array($width, $height), false );
 		if( 'item' == $media ){
 			$alt = 'alt="'.esc_attr($code[0]).'"';
 			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
@@ -660,20 +655,45 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 			$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 		}
+
 	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$ind = $number - 1;
-		$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
-		$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
-		if( 'item' == $media ){
-			$alt = 'alt="'.esc_attr($code[0]).'"';
-			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
-			$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-			$title = 'title="'.esc_attr($name[0]).'"';
-			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
-			$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+
+		if($post == '') global $post;
+	
+		$post_id = $post->ID;
+		
+		$code =  get_post_custom_values('_itemCode', $post_id);
+		if(!$code) return false;
+		
+		$name = get_post_custom_values('_itemName', $post_id);
+		
+		if( 0 == $number ){
+			$pictid = (int)$usces->get_mainpictid($code[0]);
+			$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
+			if( 'item' == $media ){
+				$alt = 'alt="'.esc_attr($code[0]).'"';
+				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
+				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
+				$title = 'title="'.esc_attr($name[0]).'"';
+				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
+				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+			}
+		}else{
+			$pictids = $usces->get_pictids($code[0]);
+			$ind = $number - 1;
+			$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
+			$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
+			if( 'item' == $media ){
+				$alt = 'alt="'.esc_attr($code[0]).'"';
+				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
+				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
+				$title = 'title="'.esc_attr($name[0]).'"';
+				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
+				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+			}
 		}
 	}
+	
 	if($out == 'return'){
 		return $html;
 	}else{
@@ -683,21 +703,32 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 
 function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 	global $usces;
-	if($post == '') global $post;
-	$post_id = $post->ID;
+	$ptitle = $number;
 	
-	$code =  get_post_custom_values('_itemCode', $post_id);
-	if(!$code) return false;
-	$name = get_post_custom_values('_itemName', $post_id);
-	if( 0 == $number ){
-		$pictid = (int)$usces->get_mainpictid($code[0]);
+	if( $ptitle && 0 == (int)$number ){
+		$picposts = query_posts(array('post_type'=>'attachment','name'=>$ptitle));
+		$pictid = empty($picposts) ? 0 : $picposts[0]->ID;
+		$pictid = $picposts[0]->ID;
 		$html = wp_get_attachment_url( $pictid );
 	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$ind = $number - 1;
-		$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
-		$html = wp_get_attachment_url( $pictid );
+		
+		if($post == '') global $post;
+		$post_id = $post->ID;
+		
+		$code =  get_post_custom_values('_itemCode', $post_id);
+		if(!$code) return false;
+		$name = get_post_custom_values('_itemName', $post_id);
+		if( 0 == $number ){
+			$pictid = (int)$usces->get_mainpictid($code[0]);
+			$html = wp_get_attachment_url( $pictid );
+		}else{
+			$pictids = $usces->get_pictids($code[0]);
+			$ind = $number - 1;
+			$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
+			$html = wp_get_attachment_url( $pictid );
+		}
 	}
+	
 	if($out == 'return'){
 		return $html;
 	}else{
@@ -707,24 +738,34 @@ function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 
 function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
 	global $usces;
-	if($post == '') global $post;
-
-	$post_id = $post->ID;
+	$ptitle = $number;
 	
-	$code =  get_post_custom_values('_itemCode', $post_id);
-	if(!$code) return false;
-	
-	$name = get_post_custom_values('_itemName', $post_id);
-
-	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
-		$attach_ob = get_post($pictid);
+	if( $ptitle && 0 == (int)$number ){
+		
+		$picposts = query_posts(array('post_type'=>'attachment','name'=>$ptitle));
+		$excerpt = empty($picposts) ? '' : $picposts[0]->post_excerpt;
+		
 	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$ind = $number - 1;
-		$attach_ob = get_post($pictids[$ind]);
+		
+		if($post == '') global $post;
+	
+		$post_id = $post->ID;
+		
+		$code =  get_post_custom_values('_itemCode', $post_id);
+		if(!$code) return false;
+		
+		$name = get_post_custom_values('_itemName', $post_id);
+	
+		if( 0 == $number ){
+			$pictid = $usces->get_mainpictid($code[0]);
+			$attach_ob = get_post($pictid);
+		}else{
+			$pictids = $usces->get_pictids($code[0]);
+			$ind = $number - 1;
+			$attach_ob = get_post($pictids[$ind]);
+		}
+		$excerpt = $attach_ob->post_excerpt;
 	}
-	$excerpt = $attach_ob->post_excerpt;
 
 	if($out == 'return'){
 		return $excerpt;
@@ -735,24 +776,34 @@ function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
 
 function usces_the_itemImageDescription($number = 0, $post = '', $out = '' ) {
 	global $usces;
-	if($post == '') global $post;
-
-	$post_id = $post->ID;
+	$ptitle = $number;
 	
-	$code =  get_post_custom_values('_itemCode', $post_id);
-	if(!$code) return false;
-	
-	$name = get_post_custom_values('_itemName', $post_id);
-	
-	if( 0 == $number ){
-		$pictid = $usces->get_mainpictid($code[0]);
-		$attach_ob = get_post($pictid);
+	if( $ptitle && 0 == (int)$number ){
+		
+		$picposts = query_posts(array('post_type'=>'attachment','name'=>$ptitle));
+		$excerpt = empty($picposts) ? '' : $picposts[0]->post_content;
+		
 	}else{
-		$pictids = $usces->get_pictids($code[0]);
-		$ind = $number - 1;
-		$attach_ob = get_post($pictids[$ind]);
+
+		if($post == '') global $post;
+	
+		$post_id = $post->ID;
+		
+		$code =  get_post_custom_values('_itemCode', $post_id);
+		if(!$code) return false;
+		
+		$name = get_post_custom_values('_itemName', $post_id);
+		
+		if( 0 == $number ){
+			$pictid = $usces->get_mainpictid($code[0]);
+			$attach_ob = get_post($pictid);
+		}else{
+			$pictids = $usces->get_pictids($code[0]);
+			$ind = $number - 1;
+			$attach_ob = get_post($pictids[$ind]);
+		}
+		$excerpt = $attach_ob->post_content;
 	}
-	$excerpt = $attach_ob->post_content;
 
 	if($out == 'return'){
 		return $excerpt;
@@ -1026,14 +1077,17 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	global $usces;
 	$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 	$payments = apply_filters('usces_fiter_the_payment_method', $payments, $value);
-	if( empty($payments) ) return;
+	//if( empty($payments) ) return; 20120328ysk 0000454
 	
 	$cart = $usces->cart->get_cart();
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 	$html = "<dl>\n";
 	$list = '';
 	$payment_ct = count($payments);
-	foreach ($payments as $id => $payment) {
+//20120328ysk start 0000454
+	//foreach ($payments as $id => $payment) {
+	foreach ((array)$payments as $id => $payment) {
+//20120328ysk end
 		if( 'continue' == $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
@@ -2354,7 +2408,10 @@ function usces_member_history( $out = '' ){
 				
 			$history_cart_row = '<tr>
 				<td>' . ($i + 1) . '</td>
-				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a></td>
+				<td>';
+			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
+			$history_cart_row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
+			$history_cart_row .= '</td>
 				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
@@ -2475,7 +2532,7 @@ function usces_get_cart_rows( $out = '' ) {
 			<td>' . ($i + 1) . '</td>
 			<td>';
 			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
-			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
+			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i,$cart_row);
 			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
@@ -2577,7 +2634,7 @@ function usces_get_confirm_rows( $out = '' ) {
 			<td>' . ($i + 1) . '</td>
 			<td>';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-		$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i);
+		$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
 		$res .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';

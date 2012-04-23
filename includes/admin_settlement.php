@@ -26,6 +26,19 @@ jQuery(function($){
 			expires: 1
 		}
 	});
+	var security = $("input[name='security']:checked").val();
+	if( '3' == security ){
+		$("#authkey_zeus").css("display", "");
+	}else{
+		$("#authkey_zeus").css("display", "none");
+	}
+	$("input[name='security']").change(function(){
+		if( '3' == $("input[name='security']:checked").val() ){
+			$("#authkey_zeus").css("display", "");
+		}else{
+			$("#authkey_zeus").css("display", "none");
+		}
+	});
 });
 
 function toggleVisibility(id) {
@@ -80,37 +93,36 @@ function toggleVisibility(id) {
 				<th>クレジットカード決済</th>
 				<td><input name="card_activate" type="radio" id="card_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['card_activate']) && $opts['zeus']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_zeus_1">利用する</label></td>
 				<td><input name="card_activate" type="radio" id="card_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['card_activate']) && $opts['zeus']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_zeus_2">利用しない</label></td>
-				<td></td>
+				<td colspan="2"></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clid_zeus');"><?php _e('カード決済IPコード', 'usces'); ?></a></th>
 				<td colspan="4"><input name="clientip" type="text" id="clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['clientip']) ? $opts['zeus']['clientip'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
-<!-- ZEUS3D
 			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_security_zeus');"><?php _e('セキュリティー', 'usces'); ?></a></th>
+				<td><input name="security" type="radio" id="security_zeus_1" value="1"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '1' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_1">セキュリティコード無</label></td>
+				<td><input name="security" type="radio" id="security_zeus_2" value="2"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '2' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_2">セキュリティコード有</label></td>
+				<td><input name="security" type="radio" id="security_zeus_3" value="3"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '3' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_3">３Ｄセキュア</label></td>
+				<td><div id="ex_security_zeus" class="explanation"><?php _e('セキュリティレベルを指定します。3Dセキュアを選択した場合は認証キーが必須となります。', 'usces'); ?></div></td>
+			</tr>
+			<tr id="authkey_zeus">
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_authkey_zeus');"><?php _e('認証キー', 'usces'); ?></a></th>
 				<td colspan="4"><input name="authkey" type="text" id="clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['authkey']) ? $opts['zeus']['authkey'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_authkey_zeus" class="explanation"><?php _e('契約時にZEUSから発行される認証キー（半角数字）', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_authkey_zeus" class="explanation"><?php _e('契約時にZEUSから発行される認証キー（半角数字）', 'usces'); ?></div></td>
 			</tr>
-			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_3dsecure_zeus');"><?php _e('3Dセキュア', 'usces'); ?></a></th>
-				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_1" value="on"<?php if( isset($opts['zeus']['3dsecure']) && $opts['zeus']['3dsecure'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_1">利用する</label></td>
-				<td><input name="3dsecure" type="radio" id="3dsecure_zeus_2" value="off"<?php if( isset($opts['zeus']['3dsecure']) && $opts['zeus']['3dsecure'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecure_zeus_2">利用しない</label></td>
-				<td><div id="ex_3dsecure_zeus" class="explanation"><?php _e('3Dセキュア(本人認証サービス)に対応しているクレジットカードをご利用される場合は、クレジットカードに記載されている情報に加え、「自分しか知らないパスワード」を合わせて認証することになります。<br />認証キーが必須となります。', 'usces'); ?></div></td>
-			</tr>
-ZEUS3D -->
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_quickcharge_zeus');">クイックチャージ</a></th>
 				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_1" value="on"<?php if( isset($opts['zeus']['quickcharge']) && $opts['zeus']['quickcharge'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_1">利用する</label></td>
 				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_2" value="off"<?php if( isset($opts['zeus']['quickcharge']) && $opts['zeus']['quickcharge'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_2">利用しない</label></td>
-				<td><div id="ex_quickcharge_zeus" class="explanation"><?php _e('ログインして一度購入したメンバーは、次の購入時にはカード番号を入力する必要がなくなります。', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_quickcharge_zeus" class="explanation"><?php _e('ログインして一度購入したメンバーは、次の購入時にはカード番号を入力する必要がなくなります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th>お客様の支払方法</th>
 				<td><input name="howpay" type="radio" id="howpay_zeus_1" value="on"<?php if( isset($opts['zeus']['howpay']) && $opts['zeus']['howpay'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_1">分割払いに対応する</label></td>
 				<td><input name="howpay" type="radio" id="howpay_zeus_2" value="off"<?php if( isset($opts['zeus']['howpay']) && $opts['zeus']['howpay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_2">一括払いのみ</label></td>
-				<td></td>
+				<td colspan="2"></td>
 			</tr>
 		</table>
 		<table class="settle_table">

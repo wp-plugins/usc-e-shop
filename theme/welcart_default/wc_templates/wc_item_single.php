@@ -127,7 +127,7 @@ get_header();
 				<td class="quant"><?php usces_the_itemQuant(); ?></td>
 				<td class="unit"><?php usces_the_itemSkuUnit(); ?></td>
 			<?php if( !usces_have_zaiko() ) : ?>
-				<td class="button"><?php echo apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')); ?></td>
+				<td class="button"><?php echo apply_filters('usces_filters_multi_sku_zaiko_message', __('Sold Out', 'usces')); ?></td>
 			<?php else : ?>
 				<td class="button"><?php usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></td>
 			<?php endif; ?>

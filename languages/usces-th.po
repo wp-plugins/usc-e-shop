@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: usc <nanbu@uscons.co.jp>\n"
+"Last-Translator: Welcart <info@welcart.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -172,7 +172,7 @@ msgid "enter the correct amount"
 msgstr "จำนวนไม่ถูกต้อง"
 
 msgid "'enter the correct amount for the No.' + (i+1) + ' item'"
-msgstr "กรุณาใส่จำนวนถูกต้องในสินค้าเบอร์(i+1)"
+msgstr "'กรุณาใส่จำนวนถูกต้องในสินค้าเบอร์' + (i+1)"
 
 msgid "enter in between 1 to num"
 msgstr "ใสค่า 1 ถึง num"
@@ -545,11 +545,11 @@ msgstr "ไม่ FIX ค่าขนส่ง"
 
 # JavaScript
 msgid "'Are you sure of deleting shipping [' + delname + ']?'"
-msgstr "'ยืนยังจะลบค่าขนส่ง「'+delname+'」'"
+msgstr "'ยืนยังจะลบค่าขนส่ง「' + delname + '」'"
 
 # JavaScript
 msgid "'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'"
-msgstr "'ตั้งค่าค่าขนส่งเป็น%s' + charge + 'สำหรับทุกทุกจังหวัด'"
+msgstr "'ตั้งค่าค่าขนส่งเป็น %s' + charge + 'สำหรับทุกทุกจังหวัด'"
 
 msgid "shipping option"
 msgstr "วิธีการจัดส่งสินค้า"
@@ -1479,7 +1479,7 @@ msgid "no items are selected"
 msgstr "เลือกสินค้าหน่อย"
 
 msgid "'Stock status of items which you have checked will be changed into ' + %s + ' Stock status of each SKU will be all shown as ' + %s + ' Do you agree with this oparation?'"
-msgstr "'ยืนยังว่าแก้ไขข้อมูลสต๊อกเป็น' + %s + '"
+msgstr "'ยืนยังว่าแก้ไขข้อมูลสต๊อกเป็น' + %s"
 
 msgid "'Are you sure of changing all the items you have checked in to ' + %s + ' ?'"
 msgstr "'ยืนยังว่าแก้ไขข้อมูลที่เลือกทั้งหมดเป็น「' + %s + '」'"
@@ -1488,10 +1488,10 @@ msgid "'Are you sure of deleting all the items you have checked in bulk?'"
 msgstr "'ยืนยังว่าลบสินค้าที่เลือกทั้งหมด'"
 
 msgid "'Are you sure of deleting the item, item code ' + item_id + ' ?'"
-msgstr "'ลบสินค้าที่รหัสสินค้า ' + item_id + ''"
+msgstr "'ลบสินค้าที่รหัสสินค้า ' + item_id"
 
 msgid "'Are you sure of deleting the delivery method ' + delname + ' ?'"
-msgstr "'ยืนยังว่าลบวิธีการจัดส่งสินค้า「'+delname+'」'"
+msgstr "'ยืนยังว่าลบวิธีการจัดส่งสินค้า「' + delname + '」'"
 
 msgid "Item list"
 msgstr "รายการสินค้า"
@@ -1938,16 +1938,16 @@ msgid "'AND' search by categories"
 msgstr "'AND' search by categories"
 
 msgid "'This article is limited by '+checknum+' at a time.'"
-msgstr "'สินค้ารายการนี้สามารดสั่งซื้อได้'+checknum+'ชิ้นต่อคน'"
+msgstr "'สินค้ารายการนี้สามารดสั่งซื้อได้' + checknum + 'ชิ้นต่อคน'"
 
 msgid "'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'"
-msgstr "รหัสสินค้า(i+1) + 'สามารถซื้อได้'+checknum+'ชิ้นต่อคน'"
+msgstr "'รหัสสินค้า' + (i+1) + 'สามารถซื้อได้' + checknum + 'ชิ้นต่อคน'"
 
 msgid "'Stock is remainder '+checknum+'.'"
-msgstr "'สินค้าที่อยู่ในสต๊อกเหลือ'+checknum+''"
+msgstr "'สินค้าที่อยู่ในสต๊อกเหลือ' + checknum"
 
 msgid "'Stock of No.' + (i+1) + ' item is remainder '+checknum+'.'"
-msgstr "'สินค้าหมายเลข (i+1) + 'เหลือ'+checknum+'"
+msgstr "'สินค้าหมายเลข' + (i+1) + 'เหลือ' + checknum"
 
 msgid "* A shipment due date is a day to ship an article, and it's not the arrival day."
 msgstr "*วันที่จัดส่งสินค้าหมายความว่าเป็นวันที่ทำการจัดส่งสินค้า ไม่ใช่วันที่ถึงลูกค้านะคะ"
