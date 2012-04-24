@@ -22,7 +22,7 @@ get_header();
 	<div class="usccart_navi">
 		<ol class="ucart">
 		<li class="ucart usccart usccart_cart"><?php _e('1.Cart','usces'); ?></li>
-		<li class="ucart usccustomer"><?php _e('2.Customer Info','usces'); ?></li>
+		<li class="ucart usccustomer"><?php _e('Log-in for members','usces'); ?></li>
 		<li class="ucart uscdelivery"><?php _e('3.Deli. & Pay.','usces'); ?></li>
 		<li class="ucart uscconfirm"><?php _e('4.Confirm','usces'); ?></li>
 		</ol>
@@ -46,7 +46,7 @@ get_header();
 				<th><?php _e('item name','usces'); ?></th>
 				<th class="quantity"><?php _e('Unit price','usces'); ?></th>
 				<th class="quantity"><?php _e('Quantity','usces'); ?></th>
-				<th class="subtotal"><?php _e('Amount','usces'); ?><?php usces_guid_tax(); ?></th>
+				<th class="subtotal"><?php _e('Points','usces'); ?></th>
 				<th class="stock"><?php _e('stock status','usces'); ?></th>
 				<th class="action">&nbsp;</th>
 			</tr>
@@ -56,13 +56,23 @@ get_header();
 			</tbody>
 			<tfoot>
 			<tr>
-				<th colspan="5" scope="row" class="aright"><?php _e('total items','usces'); ?><?php usces_guid_tax(); ?></th>
-				<th class="aright"><?php usces_crform(usces_total_price('return'), true, false); ?></th>
+				<th colspan="5" scope="row" class="aright"><?php _e('Used points','usces'); ?></th>
+				<th class="aright"><?php usces_crform(usces_total_price('return'), false, true); ?></th>
 				<th colspan="2">&nbsp;</th>
 			</tr>
+		<?php if( $this->is_member_logged_in() ) : ?>
+			<tr>
+<?php
+				$point = ( empty($_SESSION['usces_member']['point'])) ? 0 : $_SESSION['usces_member']['point'];
+				$rem_point = $point - (int)usces_total_price('return');
+?>
+				<td colspan="5" scope="row" class="aright"><?php _e('ポイント残高','usces'); ?></td>
+				<td class="aright"><?php usces_crform($rem_point, false, true); ?></td>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+		<?php endif; ?>
 			</tfoot>
 		</table>
-		<div class="currency_code"><?php _e('Currency','usces'); ?> : <?php usces_crcode(); ?></div>
 		<?php if( $usces_gp ) : ?>
 		<img src="<?php bloginfo('template_directory'); ?>/images/gp.gif" alt="<?php _e('Business package discount','usces'); ?>" /><br /><?php _e('The price with this mark applys to Business pack discount.','usces'); ?>
 		<?php endif; ?>

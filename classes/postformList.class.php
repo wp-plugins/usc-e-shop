@@ -1,4 +1,5 @@
 <?php
+//kanpari postform list class
 class dataList
 {
 	var $table;			//テーブル名
@@ -23,14 +24,11 @@ class dataList
 	var $sortSwitchs;	//各フィールド毎の昇順降順スイッチ
 	var $userHeaderNames;	//ユーザー指定のヘッダ名
 	var $action_status, $action_message;
-//20101202ysk start
 	var $pageLimit;		//ページ制限
-//20101202ysk end
-	
+
 	//Constructor
 	function dataList($tableName, $arr_column)
 	{
-
 		$this->table = $tableName;
 		$this->columns = $arr_column;
 		$this->rows = array();
@@ -40,33 +38,26 @@ class dataList
 		$this->firstPage = 1;
 		$this->action_status = 'none';
 		$this->action_message = '';
-//20101202ysk start
 		$this->pageLimit = 'on';
-//20101202ysk end
 
 		$this->SetParamByQuery();
 
 		$this->arr_period = array(__('This month', 'usces'), __('Last month', 'usces'), __('The past one week', 'usces'), __('Last 30 days', 'usces'), __('Last 90days', 'usces'), __('All', 'usces'));
-
-
 	}
 
 	function MakeTable()
 	{
-
 		$this->SetParam();
 		
 		switch ($this->action){
 		
 			case 'searchIn':
 				$this->SearchIn();
-				//$this->SetSelectedRow();
 				$res = $this->GetRows();
 				break;
-				
+			
 			case 'searchOut':
 				$this->SearchOut();
-				//$this->SetSelectedRow();
 				$res = $this->GetRows();
 				break;
 			
@@ -78,22 +69,12 @@ class dataList
 				$res = $this->GetRows();
 				break;
 			
-			case 'collective_order_reciept':
-				usces_all_change_order_reciept($this);
-				$res = $this->GetRows();
-				break;
-				
-			case 'collective_order_status':
-				usces_all_change_order_status($this);
-				$res = $this->GetRows();
-				break;
-				
 			case 'collective_delete':
-				usces_all_delete_order_data($this);
+				usces_all_delete_itemdata($this);
 				$this->SetTotalRow();
 				$res = $this->GetRows();
 				break;
-				
+			
 			case 'refresh':
 			default:
 				$this->SetDefaultParam();
@@ -106,7 +87,6 @@ class dataList
 		$this->SetSESSION();
 		
 		if($res){
-		
 			return TRUE;
 			
 		}else{
@@ -136,10 +116,7 @@ class dataList
 			$this->sortSwitchs[$value] = 'DESC';
 		}
 		
-	
 		$this->SetTotalRow();
-		//$this->SetSelectedRow();
-
 	}
 	
 	function SetParam()
@@ -149,7 +126,6 @@ class dataList
 	
 	function SetParamByQuery()
 	{
-	
 		if(isset($_REQUEST['changePage'])){
 		
 			$this->action = 'changePage';
@@ -185,7 +161,7 @@ class dataList
 			$this->action = 'searchIn';
 			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? $_REQUEST['search']['column'] : '';
 			$this->arr_search['word'] = isset($_REQUEST['search']['word']) ? $_REQUEST['search']['word'] : '';
-			$this->arr_search['period'] = isset($_REQUEST['search']['period']) ? (int)$_REQUEST['search']['period'] : 0;
+			$this->arr_search['period'] = isset($_REQUEST['search']['period']) ? (int)$_REQUEST['search']['period'] : '';
 			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
 			
 			$this->currentPage = 1;
@@ -207,7 +183,8 @@ class dataList
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
-
+			
+			
 		}else if(isset($_REQUEST['refresh'])){
 		
 			$this->action = 'refresh';
@@ -245,73 +222,25 @@ class dataList
 	function GetRows()
 	{
 		global $wpdb;
-		$meta_table = $wpdb->prefix . 'usces_order_meta';
+		$member_table = $wpdb->prefix . 'usces_member';
 		$where = $this->GetWhere();
-		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
-		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
-			
-//kanpari start
-/*		$query = $wpdb->prepare("SELECT ID, meta.meta_value AS deco_id, DATE_FORMAT(order_date, %s) AS date, mem_id, 
-					CONCAT(order_name1, ' ', order_name2) AS name, order_pref AS pref, order_delivery_method AS delivery_method, 
-					(order_item_total_price - order_usedpoint + order_discount + order_shipping_charge + order_cod_fee + order_tax) AS total_price, 
-					order_payment_name AS payment_name, 
-					CASE WHEN LOCATE('noreceipt', order_status) > 0 THEN %s 
-						 WHEN LOCATE('receipted', order_status) > 0 THEN %s 
-						 WHEN LOCATE('pending', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS receipt_status, 
-					CASE WHEN LOCATE('duringorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('cancel', order_status) > 0 THEN %s 
-						 WHEN LOCATE('completion', order_status) > 0 THEN %s
-						 WHEN LOCATE('estimate', order_status) > 0 THEN %s 
-						 WHEN LOCATE('adminorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('continuation', order_status) > 0 THEN %s 
-						 WHEN LOCATE('termination', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS order_status, 
-					order_modified 
-					FROM {$this->table} 
-					LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id' ",
-					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('temporaly out of stock', 'usces'), __('Cancel', 'usces'), __('It has sent it out.', 'usces'), __('An estimate', 'usces'), __('Management of Note', 'usces'), __('Continuation', 'usces'), __('Termination', 'usces'), __('new order', 'usces'));
-*/		$query = $wpdb->prepare("SELECT ID, meta.meta_value AS deco_id, DATE_FORMAT(order_date, %s) AS date, mem_id, 
-					CONCAT(order_name1, ' ', order_name2) AS name, order_pref AS pref, order_delivery_method AS delivery_method, 
-					order_usedpoint AS total_price, 
-					order_payment_name AS payment_name, 
-					CASE WHEN LOCATE('noreceipt', order_status) > 0 THEN %s 
-						 WHEN LOCATE('receipted', order_status) > 0 THEN %s 
-						 WHEN LOCATE('pending', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS receipt_status, 
-					CASE WHEN LOCATE('duringorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('cancel', order_status) > 0 THEN %s 
-						 WHEN LOCATE('completion', order_status) > 0 THEN %s
-						 WHEN LOCATE('estimate', order_status) > 0 THEN %s 
-						 WHEN LOCATE('adminorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('continuation', order_status) > 0 THEN %s 
-						 WHEN LOCATE('termination', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS order_status, 
-					order_modified 
-					FROM {$this->table} 
-					LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id' ",
-					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('temporaly out of stock', 'usces'), __('Cancel', 'usces'), __('It has sent it out.', 'usces'), __('An estimate', 'usces'), __('Management of Note', 'usces'), __('Continuation', 'usces'), __('Termination', 'usces'), __('new order', 'usces'));
-//kanpari end
-		$query .= $where . $order;// . $limit;
-		//var_dump($query);
+		$order = ' ORDER BY ' . $this->sortColumn . ' ' . $this->sortSwitchs[$this->sortColumn];
+		
+		$query = $wpdb->prepare("SELECT kpf.ID, DATE_FORMAT(kpf_date, %s) AS date, mem_id, 
+						CONCAT(member.mem_name1, ' ', member.mem_name2) AS name, 
+						kpf_area AS area, kpf_location AS location, kpf_point AS point, kpf_status AS status 
+					FROM {$this->table} AS kpf 
+					LEFT JOIN {$member_table} AS member ON kpf.mem_id = member.ID ",
+					'%Y-%m-%d %H:%i');
+		$query .= $where . $order;
 		$wpdb->show_errors();
-					
 		$rows = $wpdb->get_results($query, ARRAY_A);
 		$this->selectedRow = count($rows);
-//20101202ysk start
 		if($this->pageLimit == 'off') {
 			$this->rows = (array)$rows;
 		} else {
-//20101202ysk end
-		$this->rows = array_slice((array)$rows, $this->startRow, $this->maxRow);
-//20101202ysk start
+			$this->rows = array_slice((array)$rows, $this->startRow, $this->maxRow);
 		}
-//20101202ysk end
-
 		return $this->rows;
 	}
 	
@@ -323,35 +252,6 @@ class dataList
 		$this->totalRow = $res;
 	}
 	
-/*	function SetSelectedRow()
-	{
-		global $wpdb;
-		$where = $this->GetWhere();
-		$query = $wpdb->prepare("SELECT ID, DATE_FORMAT(order_date, %s) AS date, mem_id, 
-					CONCAT(order_name1, ' ', order_name2) AS name, order_pref AS pref, order_delivery_method AS delivery_method, 
-					(order_item_total_price - order_usedpoint + order_discount + order_shipping_charge + order_cod_fee + order_tax) AS total_price, 
-					order_payment_name AS payment_name, 
-					CASE WHEN LOCATE('noreceipt', order_status) > 0 THEN %s 
-						 WHEN LOCATE('receipted', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS receipt_status, 
-					CASE WHEN LOCATE('estimate', order_status) > 0 THEN %s 
-						 WHEN LOCATE('adminorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('duringorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('cancel', order_status) > 0 THEN %s 
-						 WHEN LOCATE('completion', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS order_status, 
-					order_modified 
-					FROM {$this->table}",
-					'%Y-%m-%d %H:%i', '未', '済', '&nbsp;', '見積り', '管理受注', '取り寄せ中', 'キャンセル', '発送済', '新規受付');
-					
-		$query .= $where;
-		$rows = $wpdb->get_results($query, ARRAY_A);
-		$this->selectedRow = count($rows);
-		
-	}*/
-	
 	function GetWhere()
 	{
 		$str = '';
@@ -362,25 +262,25 @@ class dataList
 		$last90 = date('Y-m-d 00:00:00', mktime(0, 0, 0, date('m'), date('d')-90, date('Y')));
 		switch ( $this->arr_search['period'] ) {
 			case 0:
-				$str = " WHERE order_date >= '{$thismonth}'";
+				$str = " WHERE kpf_date >= '{$thismonth}'";
 				break;
 			case 1:
-				$str = " WHERE order_date >= '{$lastmonth}' AND order_date < '{$thismonth}'";
+				$str = " WHERE kpf_date >= '{$lastmonth}' AND kpf_date < '{$thismonth}'";
 				break;
 			case 2:
-				$str = " WHERE order_date >= '{$lastweek}'";
+				$str = " WHERE kpf_date >= '{$lastweek}'";
 				break;
 			case 3:
-				$str = " WHERE order_date >= '{$last30}'";
+				$str = " WHERE kpf_date >= '{$last30}'";
 				break;
 			case 4:
-				$str = " WHERE order_date >= '{$last90}'";
+				$str = " WHERE kpf_date >= '{$last90}'";
 				break;
 			case 5:
 				$str = "";
 				break;
 		}
-				
+		
 		if($str == '' && $this->searchSql != ''){
 			$str = ' HAVING ' . $this->searchSql;
 		}else if($str != '' && $this->searchSql != ''){
@@ -394,47 +294,35 @@ class dataList
 		switch ($this->arr_search['column']) {
 			case 'ID':
 				$column = 'ID';
-				$this->searchSql = $column . ' = ' . (int)$this->arr_search['word']['ID'];
-				break;
-			case 'deco_id':
-				$column = 'deco_id';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['deco_id']) . "%'";
+				$this->searchSql = $column . ' = ' . (int)$this->arr_search['word'];
 				break;
 			case 'date':
 				$column = 'date';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['date']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']) . "%'";
 				break;
 			case 'mem_id':
 				$column = 'mem_id';
-				$this->searchSql = $column . ' = ' . (int)$this->arr_search['word']['mem_id'];
+				$this->searchSql = $column . ' = ' . (int)$this->arr_search['word'];
 				break;
 			case 'name':
 				$column = 'name';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['name']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']) . "%'";
 				break;
-			case 'order_modified':
-				$column = 'order_modified';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['order_modified']) . "%'";
+			case 'area':
+				$column = 'area';
+				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']) . "%'";
 				break;
-			case 'pref':
-				$column = 'pref';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['pref']) . "'";
+			case 'location':
+				$column = 'location';
+				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']) . "%'";
 				break;
-			case 'delivery_method':
-				$column = 'delivery_method';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['delivery_method']) . "'";
+			case 'points':
+				$column = 'points';
+				$this->searchSql = $column . ' = ' . (int)$this->arr_search['word'];
 				break;
-			case 'payment_name':
-				$column = 'payment_name';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['payment_name']) . "'";
-				break;
-			case 'receipt_status':
-				$column = 'receipt_status';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['receipt_status']) . "'";
-				break;
-			case 'order_status':
-				$column = 'order_status';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['order_status']) . "'";
+			case 'status':
+				$column = 'status';
+				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']) . "'";
 				break;
 		}
 	}
@@ -469,20 +357,20 @@ class dataList
 		
 		$html = '';
 		$html .= '<ul class="clearfix">'."\n";
-		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' ' . __('cases', 'usces') . '</li>' . "\n";
+		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' '.__('cases', 'usces').'' . "\n";
 		if(($this->currentPage == 1) || ($this->selectedRow == 0)){
 			$html .= '<li class="navigationStr">first&lt;&lt;</li>' . "\n";
 			$html .= '<li class="navigationStr">prev&lt;</li>'."\n";
 		}else{
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changePage=1">first&lt;&lt;</a></li>' . "\n";
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changePage=' . $this->previousPage . '">prev&lt;</a></li>'."\n";
+			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&changePage=1">first&lt;&lt;</a></li>' . "\n";
+			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&changePage=' . $this->previousPage . '">prev&lt;</a></li>'."\n";
 		}
 		if($this->selectedRow > 0) {
 			for($i=0; $i<count($box); $i++){
 				if($box[$i] == $this->currentPage){
 					$html .= '<li class="navigationButtonSelected">' . $box[$i] . '</li>'."\n";
 				}else{
-					$html .= '<li class="navigationButton"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changePage=' . $box[$i] . '">' . $box[$i] . '</a></li>'."\n";
+					$html .= '<li class="navigationButton"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&changePage=' . $box[$i] . '">' . $box[$i] . '</a></li>'."\n";
 				}
 			}
 		}
@@ -490,16 +378,16 @@ class dataList
 			$html .= '<li class="navigationStr">&gt;next</li>'."\n";
 			$html .= '<li class="navigationStr">&gt;&gt;last</li>'."\n";
 		}else{
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changePage=' . $this->nextPage . '">&gt;next</a></li>'."\n";
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changePage=' . $this->lastPage . '">&gt;&gt;last</a></li>'."\n";
+			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&changePage=' . $this->nextPage . '">&gt;next</a></li>'."\n";
+			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&changePage=' . $this->lastPage . '">&gt;&gt;last</a></li>'."\n";
 		}
 		if($this->searchSwitchStatus == 'OFF'){
-			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('Show the Operation field', 'usces') . '</a>'."\n";
+			$html .= '<li class="navigationStr"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('Show the Operation field', 'usces') . '</a>'."\n";
 		}else{
-			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('hide the Operation field', 'usces') . '</a>'."\n";
+			$html .= '<li class="navigationStr"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('hide the Operation field', 'usces') . '</a>'."\n";
 		}
 
-		$html .= '<li class="refresh"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&refresh">' . __('updates it to latest information', 'usces') . '</a></li>' . "\n";
+		$html .= '<li class="refresh"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&refresh">' . __('updates it to latest information', 'usces') . '</a></li>' . "\n";
 		$html .= '</ul>'."\n";
 
 		$this->dataTableNavigation = $html;
@@ -507,7 +395,6 @@ class dataList
 	
 	function SetSESSION()
 	{
-	
 		$_SESSION[$this->table]['startRow'] = $this->startRow;		//表示開始行番号
 		$_SESSION[$this->table]['sortColumn'] = $this->sortColumn;	//現在ソート中のフィールド
 		$_SESSION[$this->table]['totalRow'] = $this->totalRow;		//全行数
@@ -520,7 +407,7 @@ class dataList
 		$_SESSION[$this->table]['headers'] = $this->headers;//表示するヘッダ文字列
 		$_SESSION[$this->table]['rows'] = $this->rows;			//表示する行オブジェクト
 		$_SESSION[$this->table]['sortSwitchs'] = $this->sortSwitchs;	//各フィールド毎の昇順降順スイッチ
-		$_SESSION[$this->table]['dataTableNavigation'] = $this->dataTableNavigation;	
+		$_SESSION[$this->table]['dataTableNavigation'] = $this->dataTableNavigation;
 		$_SESSION[$this->table]['searchSql'] = $this->searchSql;
  		$_SESSION[$this->table]['arr_search'] = $this->arr_search;
 		$_SESSION[$this->table]['searchSwitchStatus'] = $this->searchSwitchStatus;
@@ -537,13 +424,12 @@ class dataList
 					$str = __('[DESC]', 'usces');
 					$switch = 'ASC';
 				}
-				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changeSort=' . $value . '&switch=' . $switch . '"><span class="sortcolumn">' . $key . ' ' . $str . '</span></a>';
+				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&changeSort=' . $value . '&switch=' . $switch . '"><span class="sortcolumn">' . $key . ' ' . $str . '</span></a>';
 			}else{
 				$switch = $this->sortSwitchs[$value];
-				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changeSort=' . $value . '&switch=' . $switch . '"><span>' . $key . '</span></a>';
+				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_kpflist&changeSort=' . $value . '&switch=' . $switch . '"><span>' . $key . '</span></a>';
 			}
 		}
-			//$this->headers = array_keys($this->columns);
 	}
 	
 	function GetSearchs()
@@ -575,6 +461,4 @@ class dataList
 		return $this->action_message;
 	}
 }
-
-
 ?>

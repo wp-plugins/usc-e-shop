@@ -32,13 +32,8 @@ get_header();
 		<tr>
 			<th scope="row"><?php _e('Full name', 'usces'); ?></th>
 			<td><?php esc_html_e(sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( usces_memberinfo( 'name1', 'return' ), usces_memberinfo( 'name2', 'return' ), 'return' ))); ?></td>
-			<?php if(usces_is_membersystem_point()) : ?>
 			<th><?php _e('The current point', 'usces'); ?></th>
-			<td class="num"><?php usces_memberinfo( 'point' ); ?></td>
-			<?php else : ?>
-			<th>&nbsp;</th>
-			<td class="num">&nbsp;</td>
-			<?php endif; ?>
+			<td class="num"><?php usces_crform((int)usces_memberinfo( 'point', 'return' ), false, true); ?></td>
 		</tr>
 		<tr>
 			<th scope="row"><?php _e('e-mail adress', 'usces'); ?></th>
@@ -57,7 +52,6 @@ get_header();
 	</div>
 	
 	<h3><?php _e('Purchase history', 'usces'); ?></h3>
-	<div class="currency_code"><?php _e('Currency','usces'); ?> : <?php usces_crcode(); ?></div>
 	<?php usces_member_history(); ?>
 	
 	<h3><a name="edit"></a><?php _e('Member information editing', 'usces'); ?></h3>

@@ -469,6 +469,7 @@ class usc_e_shop
 		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 'level_6', 'usces_ordernew', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 'level_6', 'usces_memberlist', array($this, 'member_list_page'));
 		//add_submenu_page('usces_orderlist', __('New Member','usces'), __('New Member','usces'), 'level_6', 'usces_membernew', array($this, 'member_list_page'));
+		add_submenu_page('usces_orderlist', __('釣果投稿リスト','usces'), __('釣果投稿リスト','usces'), 'level_6', 'usces_kpflist', array($this, 'postform_list_page'));//kanpari
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -628,6 +629,48 @@ class usc_e_shop
 		}
 
 	}
+//kanpari start
+	/* postform list page */
+	function postform_list_page() {
+
+		if(empty($this->action_message) || $this->action_message == '') {
+			$this->action_status = 'none';
+			$this->action_message = '';
+		}
+		$kpf_action = isset($_REQUEST['kpf_action']) ? $_REQUEST['kpf_action'] : '';
+		switch($kpf_action) {
+			case 'editpost':
+				do_action('usces_pre_update_postformdata', $_REQUEST['kpf_id']);
+				$res = usces_update_postformdata();
+				if ( 1 === $res ) {
+					$this->set_action_status('success', __('更新しました','usces').' <a href="'.stripslashes( $_POST['usces_referer'] ).'">'.__('back to the summary','usces').'</a>');
+				} elseif ( 0 === $res ) {
+					$this->set_action_status('none', '');
+				} else {
+					$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
+				}
+				do_action('usces_after_update_postformdata', $_REQUEST['kpf_id'], $res);
+				require_once(USCES_PLUGIN_DIR . '/includes/postform_edit_form.php');
+				break;
+			case 'edit':
+				require_once(USCES_PLUGIN_DIR . '/includes/postform_edit_form.php');
+				break;
+			case 'delete':
+				do_action('usces_pre_delete_postformdata', $_REQUEST['kpf_id']);
+				$res = usces_delete_postformdata();
+				if ( 1 === $res ) {
+					$this->set_action_status('success', __('削除しました','usces'));
+				} elseif ( 0 === $res ) {
+					$this->set_action_status('none', '');
+				} else {
+					$this->set_action_status('error', 'ERROR : '.__('failure in delete','usces'));
+				}
+				do_action('usces_after_delete_postformdata', $_REQUEST['kpf_id'], $res);
+			default:
+				require_once(USCES_PLUGIN_DIR . '/includes/postform_list.php');
+		}
+	}
+//kanpari end
 	
 	/* admin backup page */
 	function admin_backup_page() {
@@ -1515,7 +1558,15 @@ class usc_e_shop
 				$opt_esse = rtrim($opt_esse, ',');
 			}
 			$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
-		
+
+//kanpari start
+			$point = ( empty($_SESSION['usces_member']['point'])) ? 0 : $_SESSION['usces_member']['point'];
+			$cart = $this->cart->get_cart();
+			$cart_point = 0;
+			foreach( $cart as $cart_row ) {
+				$cart_point += ( $cart_row['price'] * $cart_row['quantity'] );
+			}
+//kanpari end
 ?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
@@ -1528,9 +1579,11 @@ class usc_e_shop
 				'opt_esse': new Array( <?php echo $opt_esse; ?> ),
 				'opt_means': new Array( <?php echo $opt_means; ?> ),
 				'mes_opts': new Array( <?php echo $mes_opts_str; ?> ),
-				'key_opts': new Array( <?php echo $key_opts_str; ?> ), 
-				'previous_url': "<?php echo $this->previous_url; ?>", 
-				'itemRestriction': "<?php echo $itemRestriction[0]; ?>"
+				'key_opts': new Array( <?php echo $key_opts_str; ?> ),
+				'previous_url': "<?php echo $this->previous_url; ?>",
+				'itemRestriction': "<?php echo $itemRestriction[0]; ?>",
+				'point': <?php echo $point;//kanpari ?>,
+				'cart_point': <?php echo $cart_point;//kanpari ?>
 			}
 		/* ]]> */
 		</script>
@@ -1542,6 +1595,9 @@ class usc_e_shop
 		(function($) {
 		uscesCart = {
 			intoCart : function (post_id, sku) {
+		<?php if( !$this->is_member_logged_in() ) ://kanpari start ?>
+				alert("ログインしてください。"); return false;
+		<?php endif;//kanpari end ?>
 				
 				var zaikonum = document.getElementById("zaikonum["+post_id+"]["+sku+"]").value;
 				var zaiko = document.getElementById("zaiko["+post_id+"]["+sku+"]").value;
@@ -1549,7 +1605,13 @@ class usc_e_shop
 					alert('<?php _e('temporaly out of stock now', 'usces'); ?>');
 					return false;
 				}
-				
+		<?php if( $this->is_member_logged_in() ) ://kanpari start ?>
+				var price = document.getElementById("skuPrice["+post_id+"]["+sku+"]").value;
+				if( price > ( uscesL10n.point - uscesL10n.cart_point ) ) {
+					alert("保有ポイントを超えるため追加できません。");
+					return false;
+				}
+		<?php endif;//kanpari end ?>
 				var mes = '';
 				if(document.getElementById("quant["+post_id+"]["+sku+"]")){
 					var quant = document.getElementById("quant["+post_id+"]["+sku+"]").value;
@@ -1571,8 +1633,7 @@ class usc_e_shop
 						checknum = uscesL10n.itemRestriction;
 						checkmode ='rest';
 					}
-									
-	
+					
 					if( parseInt(quant) > parseInt(checknum) && checknum != '' ){
 							if(checkmode == 'rest'){
 								mes += <?php _e("'This article is limited by '+checknum+' at a time.'", 'usces'); ?>+"\n";
@@ -1618,6 +1679,7 @@ class usc_e_shop
 				var post_id = '';
 				var sku = '';
 				var itemRestriction = '';
+				var price = 0;//kanpari
 				
 				var ct = zaikoob.length;
 				for(var i=0; i< ct; i++){
@@ -1653,8 +1715,15 @@ class usc_e_shop
 								mes += <?php _e("'Stock of No.' + (i+1) + ' item is remainder '+checknum+'.'", 'usces'); ?>+"\n";
 							}
 						}
+						price += parseInt($("input[name='skuPrice\[" + i + "\]\[" + post_id + "\]\[" + sku + "\]']").val()) * parseInt(quant);//kanpari
 					}
 				}
+		<?php if( $this->is_member_logged_in() ) ://kanpari start ?>
+				if( price > uscesL10n.point ) {
+					alert("保有ポイントを超えるため更新できません。");
+					return false;
+				}
+		<?php endif;//kanpari end ?>
 				
 				<?php apply_filters( 'usces_filter_upCart_js_check', $item->ID ); ?>
 				
@@ -1877,7 +1946,9 @@ class usc_e_shop
 							|| (isset($_GET['order_action']) && 'edit' == $_GET['order_action']) 
 							|| (isset($_GET['order_action']) && 'editpost' == $_GET['order_action']) 
 							|| (isset($_GET['member_action']) && 'edit' == $_GET['member_action']) 
-							|| (isset($_GET['member_action']) && 'editpost' == $_GET['member_action'])) ) :
+							|| (isset($_GET['member_action']) && 'editpost' == $_GET['member_action'])
+							|| (isset($_GET['kpf_action']) && 'edit' == $_GET['kpf_action']) 
+							|| (isset($_GET['kpf_action']) && 'editpost' == $_GET['kpf_action'])) ) :
 			switch( $_GET['page'] ){
 				case 'usces_ordernew':
 				case 'usces_orderlist':
@@ -1886,6 +1957,11 @@ class usc_e_shop
 				case 'usces_memberlist':
 					$admin_page = 'member';
 					break;
+//kanpari start
+				case 'usces_kpflist':
+					$admin_page = 'postform';
+					break;
+//kanpari end
 			}
 ?>
 		<script type='text/javascript'>
@@ -2196,6 +2272,11 @@ class usc_e_shop
 					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20110331ysk end
+//kanpari start
+				case 'usces_kpflist':
+					wp_enqueue_script('jquery-ui-dialog');
+					break;
+//kanpari end
 			}
 		}
 
@@ -2572,12 +2653,28 @@ class usc_e_shop
 		$this->error_message = $this->zaiko_check();
 		if($this->error_message == ''){
 			if($this->is_member_logged_in()){
+//kanpari start
+				$point = (int)usces_memberinfo( 'point', 'return' );
+				$cart = $this->cart->get_cart();
+				$cart_point = 0;
+				foreach( $cart as $cart_row ) {
+					$cart_point += ( $cart_row['price'] * $cart_row['quantity'] );
+				}
+				if( 0 > ($point - $cart_point) ) {
+					$this->error_message = __('保有ポイントを超えています。', 'usces') . "<br />";
+					$this->page = 'cart';
+					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+				} else {
+//kanpari end
 //20100818ysk start
 				//$this->page = 'delivery';
 				$this->error_message = has_custom_customer_field_essential();
 				$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
 //20100818ysk end
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
+//kanpari start
+				}
+//kanpari end
 			}else{
 				$this->page = 'customer';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
@@ -2622,8 +2719,24 @@ class usc_e_shop
 			$this->cart->entry();
 			$this->error_message = has_custom_customer_field_essential();
 			if($this->error_message == ''){
+//kanpari start
+				$point = (int)usces_memberinfo( 'point', 'return' );
+				$cart = $this->cart->get_cart();
+				$cart_point = 0;
+				foreach( $cart as $cart_row ) {
+					$cart_point += ( $cart_row['price'] * $cart_row['quantity'] );
+				}
+				if( 0 > ($point - $cart_point) ) {
+					$this->error_message = __('保有ポイントを超えています。', 'usces') . "<br />";
+					$this->page = 'cart';
+					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+				} else {
+//kanpari end
 				$this->page = 'delivery';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
+//kanpari start
+				}
+//kanpari end
 			}else{
 				$this->page = 'customer';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
@@ -3093,11 +3206,22 @@ class usc_e_shop
 			if($this->options['membersystem_state'] != 'activate') return;
 			
 			if( $this->is_member_logged_in() ) {
-				$member_regmode = 'editmemberform';
-				if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php') ){
-					include(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php');
+//kanpari start
+				if( isset($_GET['ret_page']) && '' != trim($_GET['ret_page']) ) {
+					header('location: ' . get_permalink($_GET['ret_page']));
+				} elseif( isset($_POST['tokoform']) && '' != trim($_POST['tokoform']) ) {
+					include(get_stylesheet_directory().'/'.trim($_POST['tokoform']));
 					exit;
+				} else {
+//kanpari end
+					$member_regmode = 'editmemberform';
+					if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php') ){
+						include(get_stylesheet_directory() . '/wc_templates/member/wc_member_page.php');
+						exit;
+					}
+//kanpari start
 				}
+//kanpari end
 			
 			} else {
 			
@@ -4398,7 +4522,38 @@ class usc_e_shop
 			dbDelta($sql);
 			add_option("usces_db_order_meta", USCES_DB_ORDER_META);
 		}
-
+//kanpari start
+		$postform_table = $wpdb->prefix . "usces_postform";
+		if($wpdb->get_var("show tables like '$postform_table'") != $postform_table) {
+		
+			$sql = "CREATE TABLE " . $postform_table . " (
+				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				mem_id BIGINT( 20 ) UNSIGNED NULL ,
+				kpf_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				kpf_handle VARCHAR( 100 ) NOT NULL ,
+				kpf_area VARCHAR( 100 ) NOT NULL ,
+				kpf_location VARCHAR( 100 ) NOT NULL ,
+				kpf_fishingdate VARCHAR( 100 ) NOT NULL ,
+				kpf_weather VARCHAR( 100 ) NOT NULL ,
+				kpf_temperature VARCHAR( 100 ) NOT NULL ,
+				kpf_tide VARCHAR( 100 ) NOT NULL ,
+				kpf_timezone VARCHAR( 100 ) NOT NULL ,
+				kpf_style VARCHAR( 100 ) NOT NULL ,
+				kpf_fishing VARCHAR( 100 ) NOT NULL ,
+				kpf_usetackle VARCHAR( 100 ) NOT NULL ,
+				kpf_comment TEXT NOT NULL ,
+				kpf_image1 VARCHAR( 100 ) NOT NULL ,
+				kpf_image2 VARCHAR( 100 ) NOT NULL ,
+				kpf_point INT( 10 ) NOT NULL DEFAULT '0',
+				kpf_status VARCHAR( 255 ) NULL ,
+				kpf_note TEXT,
+				KEY kpf_date ( kpf_date ) 
+				) ENGINE = MYISAM AUTO_INCREMENT=1000 $charset_collate;";
+		
+			dbDelta($sql);
+			add_option("usces_db_postform", USCES_DB_POSTFORM);
+		}
+//kanpari end
 	}
 	
 	function update_table()
@@ -6457,13 +6612,15 @@ class usc_e_shop
 		if( !$seperator_flag ){
 			$seperator = '';
 		}
+		if( 0 == $amount ) $price = 0; else //kanpari
 		$price = number_format($amount, $decimal, $point, $seperator);
 
 		if( $symbol_pre )
 			$price = ( usces_is_entity($symbol) ? mb_convert_encoding($symbol, 'UTF-8', 'HTML-ENTITIES') : $symbol ) . $price;
 			
 		if( $symbol_post )
-			$price = $price . __($code, 'usces');
+			$price = $price . 'pt';//kanpari
+			//$price = $price . __($code, 'usces');
 			
 		return $price;
 	}

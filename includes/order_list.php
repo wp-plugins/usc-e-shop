@@ -11,11 +11,11 @@ $arr_column = array(
 			__('name', 'usces') => 'name', 
 			__('Region', 'usces') => 'pref', 
 			__('shipping option', 'usces') => 'delivery_method', 
-			__('Amount', 'usces').'('.__(usces_crcode( 'return' ), 'usces').')' => 'total_price', 
+			__('Used points', 'usces') => 'total_price', 
 			__('payment method', 'usces') => 'payment_name', 
 			__('transfer statement', 'usces') => 'receipt_status', 
 			__('Processing', 'usces') => 'order_status', 
-			apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ) => 'order_modified');
+			apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ) => 'order_modified');//kanpari
 
 $DT = new dataList($tableName, $arr_column);
 $res = $DT->MakeTable();

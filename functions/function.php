@@ -15,18 +15,20 @@ function usces_ajax_send_mail() {
 	
 	$res = usces_send_mail( $order_para );
 	if($res){
-		$tableName = $wpdb->prefix . "usces_order";
-		$order_id = $_POST['order_id'];
-		$checked = $_POST['checked'];
+		if( isset($_POST['order_id']) && $_POST['order_id'] != '' ) {//kanpari
+			$tableName = $wpdb->prefix . "usces_order";
+			$order_id = $_POST['order_id'];
+			$checked = $_POST['checked'];
 
-		$query = $wpdb->prepare("SELECT `order_check` FROM $tableName WHERE ID = %d", $order_id);
-		$res = $wpdb->get_var( $query );
+			$query = $wpdb->prepare("SELECT `order_check` FROM $tableName WHERE ID = %d", $order_id);
+			$res = $wpdb->get_var( $query );
 
-		$checkfield = unserialize($res);
-		if( !isset($checkfield[$checked]) ) $checkfield[$checked] = $checked;
-		//$checkfield = 'OK';
-		$query = $wpdb->prepare("UPDATE $tableName SET `order_check`=%s WHERE ID = %d", serialize($checkfield), $order_id);
-		$wpdb->query( $query );
+			$checkfield = unserialize($res);
+			if( !isset($checkfield[$checked]) ) $checkfield[$checked] = $checked;
+			//$checkfield = 'OK';
+			$query = $wpdb->prepare("UPDATE $tableName SET `order_check`=%s WHERE ID = %d", serialize($checkfield), $order_id);
+			$wpdb->query( $query );
+		}
 
 		$bcc_para = array(
 				'to_name' => 'Shop Admin',
@@ -49,6 +51,8 @@ function usces_ajax_send_mail() {
 function usces_order_confirm_message($order_id) {
 	global $usces, $wpdb;
 	
+if($_POST['mode'] != 'pointConfirmMail'){//kanpari
+
 	$tableName = $wpdb->prefix . "usces_order";
 	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
 	$data = $wpdb->get_row( $query, ARRAY_A );
@@ -133,25 +137,29 @@ function usces_order_confirm_message($order_id) {
 			}
 			$meisai .= apply_filters( 'usces_filter_option_adminmail', $optstr, $options);
 		}
-		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
+//kanpari start
+		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, true, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	
 	$meisai .= usces_mail_line( 3, $data['order_email'] );//====================
-	$meisai .= __('total items','usces') . "    : " . usces_crform( $data['order_item_total_price'], true, false, 'return' ) . "\r\n";
+	$meisai .= __('total items','usces') . "    : " . usces_crform( $data['order_item_total_price'], true, true, 'return' ) . "\r\n";
 
-	if ( $data['order_usedpoint'] != 0 )
-		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
-	if ( $data['order_discount'] != 0 )
-		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
-	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
-	if ( $payment['settlement'] == 'COD' )
-		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
-	if ( !empty($usces->options['tax_rate']) )
-		$meisai .= __('consumption tax','usces') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
-	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
-	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, false, 'return' ) . "\r\n";
-	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
-	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
+//	if ( $data['order_usedpoint'] != 0 )
+//		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
+	$meisai .= __('use of points','usces') . " : " . usces_crform( $data['order_usedpoint'], false, true, 'return' ) . "\r\n";
+//	if ( $data['order_discount'] != 0 )
+//		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
+//	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
+//	if ( $payment['settlement'] == 'COD' )
+//		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
+//	if ( !empty($usces->options['tax_rate']) )
+//		$meisai .= __('consumption tax','usces') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
+//	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
+//	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, true, 'return' ) . "\r\n";
+//	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
+//	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
+	$meisai .= "\r\n\r\n";
+//kanpari end
 	
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data);
 
@@ -238,6 +246,8 @@ function usces_order_confirm_message($order_id) {
 
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_body', NULL, $data);
 
+}//kanpari
+
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
 			$message = do_shortcode($mail_data['header']['completionmail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['completionmail']);
@@ -260,6 +270,12 @@ function usces_order_confirm_message($order_id) {
 		case 'otherConfirmMail':
 			$message = do_shortcode($mail_data['header']['othermail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['othermail']);
 			break;
+//kanpari start
+		case 'pointConfirmMail':
+			$mail_data = $usces->options['mail_data'];
+			$message = do_shortcode($mail_data['header']['othermail']) . do_shortcode($mail_data['footer']['othermail']);
+			break;
+//kanpari end
 	}
 	return $message;
 
@@ -335,28 +351,32 @@ function usces_send_ordermail($order_id) {
 			}
 			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options);
 		}
-		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
+//kanpari start
+		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, true, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
 	$meisai .= usces_mail_line( 3, $entry['customer']['mailaddress1'] );//====================
-	$meisai .= __('total items','usces') . "    : " . usces_crform( $entry['order']['total_items_price'], true, false, 'return' ) . "\r\n";
+	$meisai .= __('total items','usces') . "    : " . usces_crform( $entry['order']['total_items_price'], true, true, 'return' ) . "\r\n";
 
-	if ( $entry['order']['usedpoint'] != 0 )
-		$meisai .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
+//	if ( $entry['order']['usedpoint'] != 0 )
+//		$meisai .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
+	$meisai .= __('use of points','usces') . " : " . usces_crform( $entry['order']['total_items_price'], false, true, 'return' ) . "\r\n";
+	$meisai .= __('ポイント残高','usces') . " : " . usces_crform( $_SESSION['usces_member']['point'], false, true, 'return' ) . "\r\n";
 //20120308ysk start 0000433
 	//if ( $data['order_discount'] != 0 )
-	if ( $entry['order']['discount'] != 0 )
+//	if ( $entry['order']['discount'] != 0 )
 //20120308ysk end
-		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
-	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
-	if ( $payment['settlement'] == 'COD' )
-		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, false, 'return' ) . "\r\n";
-	if ( !empty($usces->options['tax_rate']) )
-		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
-	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
-	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $entry['order']['total_full_price'], true, false, 'return' ) . "\r\n";
-	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
-	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
-
+//		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
+//	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
+//	if ( $payment['settlement'] == 'COD' )
+//		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, false, 'return' ) . "\r\n";
+//	if ( !empty($usces->options['tax_rate']) )
+//		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
+//	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
+//	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $entry['order']['total_full_price'], true, false, 'return' ) . "\r\n";
+//	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
+//	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
+	$meisai .= "\r\n\r\n";
+//kanpari end
 //20120308ysk start 0000433
 	//$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
 	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data, $cart, $entry);
@@ -857,6 +877,7 @@ function usces_reg_orderdata( $results = array() ) {
 	
 	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
 	$status = apply_filters('usces_filter_reg_orderdata_status', $status);
+	$entry['order']['usedpoint'] = $entry['order']['total_items_price'];//kanpari
 	
 //20101208ysk start
 /*
@@ -961,7 +982,8 @@ function usces_reg_orderdata( $results = array() ) {
 		$usces->cart->set_order_entry( array('ID' => $order_id) );
 		$usces->set_order_meta_value('customer_country', $entry['customer']['country'], $order_id);
 	
-		if ( $member['ID'] && 'activate' == $options['membersystem_state'] && 'activate' == $options['membersystem_point'] ) {
+		//if ( $member['ID'] && 'activate' == $options['membersystem_state'] && 'activate' == $options['membersystem_point'] ) {
+		if ( $member['ID'] && 'activate' == $options['membersystem_state'] ) {
 		
 			$mquery = $wpdb->prepare(
 						"UPDATE $member_table_name SET mem_point = (mem_point + %d - %d) WHERE ID = %d", 

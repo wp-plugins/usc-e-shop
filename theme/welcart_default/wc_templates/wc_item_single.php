@@ -4,15 +4,31 @@
  * @package Welcart
  * @subpackage Welcart Default Theme
  */
-get_header();
+
 ?>
+
+
+
+
+<?php get_header(); ?>
+<!-- ヘッダーここまで -->
+
+<div id="content_wrap">
+<div id="contentbox">
+
+<!-- サイドバー -->
+<?php get_sidebar(left); ?>
+<!-- 左サイドバーここまで -->
+
+<!-- コンテンツ -->
 <div id="content" class="two-column">
 <div class="catbox">
+<h2 class="item_page_title"></h2>
 
 <?php if (have_posts()) : the_post(); ?>
 
 <div <?php post_class() ?> id="post-<?php the_ID(); ?>">
-<h1 class="item_page_title"><?php the_title(); ?></h1>
+<h3><?php the_title(); ?></h3>
 <div class="storycontent">
 
 <?php usces_remove_filter(); ?>
@@ -20,28 +36,27 @@ get_header();
 
 <div id="itempage">
 	<div class="itemimg">
-	<a href="<?php usces_the_itemImageURL(0); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage(0, 300, 300, $post); ?></a>
+	<a href="<?php usces_the_itemImageURL(0); ?>" <?php echo apply_filters('usces_itemimg_anchor_rel', NULL); ?>><?php usces_the_itemImage(0, 200, 200, $post); ?></a>
 	</div>
 	
 <?php if(usces_sku_num() === 1) : usces_have_skus(); ?>
 <!--1SKU-->
-	<h2 class="item_name"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h2>
-	<div class="exp clearfix">
+	<h4 class="item_name"><?php usces_the_itemName(); ?></h4>
+            <div class="category"><?php the_category(' , '); ?></div>
+	<div class="exp">
 		<div class="field">
-		<?php if( usces_the_itemCprice('return') > 0 ) : ?>
-			<div class="field_name"><?php _e('List price', 'usces'); ?><?php usces_guid_tax(); ?></div>
-			<div class="field_cprice"><?php usces_the_itemCpriceCr(); ?></div>
-		<?php endif; ?>
-			<div class="field_name"><?php _e('selling price', 'usces'); ?><?php usces_guid_tax(); ?></div>
+			<div class="field_name"><?php _e('必要pt', 'usces'); ?></div>
 			<div class="field_price"><?php usces_the_itemPriceCr(); ?></div>
 		</div>
 		<div class="field"><?php _e('stock status', 'usces'); ?> : <?php usces_the_itemZaiko(); ?></div>
 		<?php if( $item_custom = usces_get_item_custom( $post->ID, 'list', 'return' ) ) : ?>
 		<div class="field"><?php echo $item_custom; ?></div>
 		<?php endif; ?>
-		
+      </div>
+	<div class="product_text">
 		<?php the_content(); ?>
-	</div><!-- end of exp -->
+      </div>
+	<!-- end of exp -->
 
 	<form action="<?php echo USCES_CART_URL; ?>" method="post">
 	<?php usces_the_itemGpExp(); ?>
@@ -68,7 +83,7 @@ get_header();
 <?php elseif(usces_sku_num() > 1) : usces_have_skus(); ?>
 <!--some SKU-->
 	<h2 class="item_name"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</h2>
-	<div class="exp clearfix">
+	<div class="exp">
 		<?php the_content(); ?>
 		<?php if( $item_custom = usces_get_item_custom( $post->ID, 'list', 'return' ) ) : ?>
 		<div class="field">
@@ -85,7 +100,7 @@ get_header();
 				<th rowspan="2" class="thborder"><?php _e('order number', 'usces'); ?></th>
 				<th colspan="2"><?php _e('Title', 'usces'); ?></th>
 	<?php if( usces_the_itemCprice('return') > 0 ) : ?>
-				<th colspan="2">(<?php _e('List price', 'usces'); ?>)<?php _e('selling price', 'usces'); ?><?php usces_guid_tax(); ?></th>
+				<th colspan="2">(<?php _e('List price', 'usces'); ?>)<?php _e('selling price', 'usces'); ?></th>
 	<?php else : ?>
 				<th colspan="2"><?php _e('selling price', 'usces'); ?><?php usces_guid_tax(); ?></th>
 	<?php endif; ?>
@@ -164,7 +179,20 @@ get_header();
 
 </div><!-- end of catbox -->
 </div><!-- end of content -->
+<!-- コンテンツここまで -->
 
-<?php get_sidebar( 'other' ); ?>
 
+<!-- 右サイドバー -->
+<?php get_sidebar(right); ?>
+<!-- 右サイドバーここまで -->
+
+<div class="line"><hr /></div>
+</div>
+</div>
+
+<!-- フッター -->
 <?php get_footer(); ?>
+<!-- フッターここまで -->
+
+</body>
+</html>

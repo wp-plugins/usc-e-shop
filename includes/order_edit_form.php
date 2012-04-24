@@ -465,7 +465,8 @@ jQuery(function($){
 			s.data = "action=order_item_ajax&mode=getmember&email=" + encodeURIComponent(email);
 			s.success = function(data, dataType){
 				var values = data.split('#usces#');
-				if( 'ok' == values[0]){
+				//if( 'ok' == values[0]){
+				if( values[0].indexOf('ok')){
 					for(var i=1; i<values.length; i++){
 						var val = values[i].split('=');
 						if( 'member_id' == val[0] ){
@@ -475,7 +476,8 @@ jQuery(function($){
 							$(":input[name='" + val[0] + "']").val(val[1]);
 						}
 					}
-				}else if( 'none' == values[0]){
+				//}else if( 'none' == values[0]){
+				}else if( values[0].indexOf('none')){
 					alert( '該当する会員情報は存在しません。' );
 				}else{
 					alert( 'ERROR' );
@@ -513,7 +515,8 @@ jQuery(function($){
 			var s = uscesMail.settings;
 			s.data = "action=order_item_ajax&mode=sendmail&mailaddress=" + address + "&message=" + message + "&name=" + name + "&subject=" + subject + "&order_id=" + order_id + "&checked=" + checked;
 			s.success = function(data, dataType){
-				if(data == 'success') {
+				//if(data == 'success') {
+				if(data.indexOf('success')) {
 					if(checked == 'completionmail'){
 						$("input[name='check\[completionmail\]']").attr({checked: true});
 					}else if(checked == 'ordermail'){
@@ -540,7 +543,8 @@ jQuery(function($){
 					$('#mailSendAlert fieldset').html('<p><?php _e('E-mail has been sent.', 'usces'); ?></p>');
 					$('#mailSendAlert').dialog('open');
 					
-				}else if(data == 'error'){
+				//}else if(data == 'error'){
+				}else if(data.indexOf('error')){
 					$('#mailSendAlert').dialog('option', 'buttons', {
 															'OK': function() {
 																	$(this).dialog('close');
@@ -570,9 +574,11 @@ jQuery(function($){
 			p.url = uscesL10n.requestFile;
 			p.data = "action=order_item_ajax&mode=ordercheckpost&order_id=" + order_id + "&checked=" + checked;
 			p.success = function(data, dataType){
-				if(data == 'mitumoriprint'){
+				//if(data == 'mitumoriprint'){
+				if(data.indexOf('mitumoriprint')){
 					$("input[name='check\[mitumoriprint\]']").attr({checked: true});
-				}else if(data == 'nohinprint'){
+				//}else if(data == 'nohinprint'){
+				}else if(data.indexOf('nohinprint')){
 					$("input[name='check\[nohinprint\]']").attr({checked: true});
 				}
 			};

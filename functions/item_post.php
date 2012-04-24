@@ -934,6 +934,7 @@ function order_item_ajax()
 		case 'mitumoriConfirmMail':
 		case 'cancelConfirmMail':
 		case 'otherConfirmMail':
+		case 'pointConfirmMail'://kanpari
 			$res = usces_order_confirm_message( $_POST['order_id'] );
 			break;
 		case 'sendmail':

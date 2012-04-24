@@ -465,17 +465,18 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(__('total items', 'usces')), $border, 'C');
 	$pdf->SetXY(104.3, 204.8);
 	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_point_label', __('Used points', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 210.8);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_label', __('Campaign disnount', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 216.7);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_shipping_label', __('Shipping', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 222.7);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_label', __('COD fee', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 228.6);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_label', __('consumption tax', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 235.8);
-	$pdf->MultiCell(37.77, $lineheight, usces_conv_euc(__('Total Amount', 'usces')), $border, 'C');
-
+//kanpari start
+	//$pdf->SetXY(104.3, 210.8);
+	//$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_label', __('Campaign disnount', 'usces'))), $border, 'C');
+	//$pdf->SetXY(104.3, 216.7);
+	//$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_shipping_label', __('Shipping', 'usces'))), $border, 'C');
+	//$pdf->SetXY(104.3, 222.7);
+	//$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_label', __('COD fee', 'usces'))), $border, 'C');
+	//$pdf->SetXY(104.3, 228.6);
+	//$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_label', __('consumption tax', 'usces'))), $border, 'C');
+	//$pdf->SetXY(104.3, 235.8);
+	//$pdf->MultiCell(37.77, $lineheight, usces_conv_euc(__('Total Amount', 'usces')), $border, 'C');
+//kanpari end
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
 	// Footer value
@@ -487,16 +488,18 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['item_total_price'])), $border, 'R');
 	$pdf->SetXY(142.9, 204.8);
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_point_vlue', $usces->get_currency($data->order['usedpoint']))), $border, 'R');
-	$pdf->SetXY(142.9, 210.8);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_vlue', $usces->get_currency($data->order['discount']))), $border, 'R');
-	$pdf->SetXY(142.9, 216.7);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_shipping_vlue', $usces->get_currency($data->order['shipping_charge']))), $border, 'R');
-	$pdf->SetXY(142.9, 222.7);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_vlue', $usces->get_currency($data->order['cod_fee']))), $border, 'R');
-	$pdf->SetXY(142.9, 228.6);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_vlue', $usces->get_currency($data->order['tax']))), $border, 'R');
-	$pdf->SetXY(142.9, 235.8);
-	$pdf->MultiCell(22.67, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
+//kanpari start
+	//$pdf->SetXY(142.9, 210.8);
+	//$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_vlue', $usces->get_currency($data->order['discount']))), $border, 'R');
+	//$pdf->SetXY(142.9, 216.7);
+	//$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_shipping_vlue', $usces->get_currency($data->order['shipping_charge']))), $border, 'R');
+	//$pdf->SetXY(142.9, 222.7);
+	//$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_vlue', $usces->get_currency($data->order['cod_fee']))), $border, 'R');
+	//$pdf->SetXY(142.9, 228.6);
+	//$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_vlue', $usces->get_currency($data->order['tax']))), $border, 'R');
+	//$pdf->SetXY(142.9, 235.8);
+	//$pdf->MultiCell(22.67, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
+//kanpari end
 
 //	do_action( 'usces_action_order_print_footer', $pdf, $data);
 }

@@ -42,6 +42,7 @@ get_header();
 	<?php usces_login_button(); ?>
 	</p>
 	<?php do_action('usces_action_login_page_inform'); ?>
+	<input type="hidden" name="tokoform" value="<?php echo ( (empty($tokoform)) ? '' : $tokoform ); ?>"/>
 	</form>
 	<p id="nav">
 	<a href="<?php usces_url('lostmemberpassword'); ?>" title="<?php _e('Did you forget your password?', 'usces'); ?>"><?php _e('Did you forget your password?', 'usces'); ?></a>

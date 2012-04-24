@@ -22,7 +22,7 @@ get_header();
 	<div class="usccart_navi">
 		<ol class="ucart">
 		<li class="ucart usccart"><?php _e('1.Cart','usces'); ?></li>
-		<li class="ucart usccustomer"><?php _e('2.Customer Info','usces'); ?></li>
+		<li class="ucart usccustomer"><?php _e('Log-in for members','usces'); ?></li>
 		<li class="ucart uscdelivery"><?php _e('3.Deli. & Pay.','usces'); ?></li>
 		<li class="ucart uscconfirm usccart_confirm"><?php _e('4.Confirm','usces'); ?></li>
 		</ol>
@@ -34,7 +34,6 @@ get_header();
 
 	<div class="error_message"><?php usces_error_message(); ?></div>
 	<div id="cart">
-		<div class="currency_code"><?php _e('Currency','usces'); ?> : <?php usces_crcode(); ?></div>
 		<table cellspacing="0" id="cart_table">
 			<thead>
 			<tr>
@@ -43,7 +42,7 @@ get_header();
 				<th><?php _e('Items','usces'); ?></th>
 				<th class="price"><?php _e('Unit price','usces'); ?></th>
 				<th class="quantity"><?php _e('Quantity', 'usces'); ?></th>
-				<th class="subtotal"><?php _e('Amount', 'usces'); ?></th>
+				<th class="subtotal"><?php _e('Points', 'usces'); ?></th>
 				<th class="action"></th>
 			</tr>
 			</thead>
@@ -51,71 +50,22 @@ get_header();
 		<?php usces_get_confirm_rows(); ?>
 			</tbody>
 			<tfoot>
+<?php
+			$point = ( empty($_SESSION['usces_member']['point'])) ? 0 : $_SESSION['usces_member']['point'];
+			$rem_point = $point - $usces_entries['order']['total_items_price'];
+?>
 			<tr>
-				<th colspan="5" class="aright"><?php _e('total items', 'usces'); ?></th>
-				<th class="aright"><?php usces_crform($usces_entries['order']['total_items_price'], true, false); ?></th>
+				<th colspan="5" class="aright"><?php _e('Used points', 'usces'); ?></th>
+				<th class="aright"><?php usces_crform($usces_entries['order']['total_items_price'], false, true); ?></th>
 				<th>&nbsp;</th>
 			</tr>
-<?php if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) : ?>
 			<tr>
-				<td colspan="5" class="aright"><?php _e('Used points', 'usces'); ?></td>
-				<td class="aright" style="color:#FF0000"><?php echo number_format($usces_entries['order']['usedpoint']); ?></td>
+				<td colspan="5" class="aright"><?php _e('ポイント残高','usces'); ?></td>
+				<td class="aright"><?php usces_crform($rem_point, false, true); ?></td>
 				<td>&nbsp;</td>
-			</tr>
-<?php endif; ?>
-<?php if( !empty($usces_entries['order']['discount']) ) : ?>
-			<tr>
-				<td colspan="5" class="aright"><?php echo apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')); ?></td>
-				<td class="aright" style="color:#FF0000"><?php usces_crform($usces_entries['order']['discount'], true, false); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-<?php endif; ?>
-			<tr>
-				<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
-				<td class="aright"><?php usces_crform($usces_entries['order']['shipping_charge'], true, false); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-<?php if( !empty($usces_entries['order']['cod_fee']) ) : ?>
-			<tr>
-				<td colspan="5" class="aright"><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></td>
-				<td class="aright"><?php usces_crform($usces_entries['order']['cod_fee'], true, false); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-<?php endif; ?>
-<?php if( !empty($usces_entries['order']['tax']) ) : ?>
-			<tr>
-				<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-				<td class="aright"><?php usces_crform($usces_entries['order']['tax'], true, false); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-<?php endif; ?>
-			<tr>
-				<th colspan="5" class="aright"><?php _e('Total Amount', 'usces'); ?></th>
-				<th class="aright"><?php usces_crform($usces_entries['order']['total_full_price'], true, false); ?></th>
-				<th>&nbsp;</th>
 			</tr>
 			</tfoot>
 		</table>
-<?php if( usces_is_member_system() && usces_is_member_system_point() &&  usces_is_login() ) : ?>
-		<form action="<?php usces_url('cart'); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-		<div class="error_message"><?php usces_error_message(); ?></div>
-		<table cellspacing="0" id="point_table">
-			<tr>
-				<td><?php _e('The current point', 'usces'); ?></td>
-				<td><span class="point"><?php echo $usces_members['point']; ?></span>pt</td>
-			</tr>
-			<tr>
-				<td><?php _e('Points you are using here', 'usces'); ?></td>
-				<td><input name="offer[usedpoint]" class="used_point" type="text" value="<?php echo esc_attr($usces_entries['order']['usedpoint']); ?>" />pt</td>
-			</tr>
-				<tr>
-				<td colspan="2"><input name="use_point" type="submit" class="use_point_button" value="<?php _e('Use the points', 'usces'); ?>" /></td>
-			</tr>
-	</table>
-	<?php do_action('usces_action_confirm_page_point_inform'); ?>
-	</form>
-<?php endif; ?>
- 
 	</div>
 	<table id="confirm_table">
 		<tr class="ttl">

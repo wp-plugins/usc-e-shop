@@ -23,7 +23,7 @@ get_header();
 	<div class="usccart_navi">
 		<ol class="ucart">
 		<li class="ucart usccart"><?php _e('1.Cart','usces'); ?></li>
-		<li class="ucart usccustomer"><?php _e('2.Customer Info','usces'); ?></li>
+		<li class="ucart usccustomer"><?php _e('Log-in for members','usces'); ?></li>
 		<li class="ucart uscdelivery usccart_delivery"><?php _e('3.Deli. & Pay.','usces'); ?></li>
 		<li class="ucart uscconfirm"><?php _e('4.Confirm','usces'); ?></li>
 		</ol>
@@ -61,7 +61,7 @@ get_header();
 			<td colspan="2"><?php usces_the_delivery_time( $usces_entries['order']['delivery_time']); ?></td>
 		</tr>
 		<tr>
-			<th scope="row"><em><?php _e('*', 'usces'); ?></em><?php _e('payment method', 'usces'); ?></th>
+			<th scope="row"><?php _e('payment method', 'usces'); ?></th>
 			<td colspan="2"><?php usces_the_payment_method( $usces_entries['order']['payment_name']); ?></td>
 		</tr>
 	</table>
@@ -83,7 +83,7 @@ get_header();
 		</tr>
 	</table>
 
-	<div class="send"><input name="offer[cus_id]" type="hidden" value="" />		
+	<div class="send"><input name="offer[cus_id]" type="hidden" value="" />
 	<input name="backCustomer" type="submit" class="back_to_customer_button" value="<?php _e('Back', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_prebutton', NULL); ?> />&nbsp;&nbsp;
 	<input name="confirm" type="submit" class="to_confirm_button" value="<?php _e(' Next ', 'usces'); ?>"<?php echo apply_filters('usces_filter_deliveryinfo_nextbutton', NULL); ?> /></div>
 	<?php do_action('usces_action_delivery_page_inform'); ?>

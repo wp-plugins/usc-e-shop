@@ -9,7 +9,7 @@ get_header();
 get_sidebar( 'home' );
 ?>
 
-<div id="content" class="three-column">
+<div id="content" class="two-column">
 	<div class="top_image"><img src="<?php bloginfo('template_url'); ?>/images/image_top.jpg" alt="<?php bloginfo('name'); ?>" width="560" height="300" /></div>
 	<div class="title"><?php _e('Items recommended','usces') ?></div>
 	<div class="clearfix">

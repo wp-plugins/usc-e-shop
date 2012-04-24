@@ -2246,7 +2246,6 @@ function usces_member_history( $out = '' ){
 	
 	$usces_members = $usces->get_member();
 	$usces_member_history = $usces->get_member_history($usces_members['ID']);
-	$colspan = usces_is_membersystem_point() ? 9 : 7;
 
 	$html = '<table>';
 	if ( !count($usces_member_history) ) {
@@ -2259,36 +2258,16 @@ function usces_member_history( $out = '' ){
 		$html .= '<tr>
 			<th class="historyrow">' . __('Order number', 'usces') . '</th>
 			<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
-			<th class="historyrow">' . __('Purchase price', 'usces') . '</th>';
-		if( usces_is_membersystem_point() ){
-			$html .= '<th class="historyrow">' . __('Used points', 'usces') . '</th>';
-		}
-		$html .= '<th class="historyrow">' . __('Special Price', 'usces') . '</th>
-			<th class="historyrow">' . __('Shipping', 'usces') . '</th>
-			<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
-			<th class="historyrow">' . __('consumption tax', 'usces') . '</th>';
-		if( usces_is_membersystem_point() ){
-			$html .= '<th class="historyrow">' . __('Acquired points', 'usces') . '</th>';
-		}
+			<th class="historyrow">' . __('Used points', 'usces') . '</th>';//kanpari
 		$html .= '</tr>
 			<tr>
 			<td class="rightnum">' . usces_get_deco_order_id($umhs['ID']) . '</td>
 			<td class="date">' . $umhs['date'] . '</td>
-			<td class="rightnum">' . usces_crform(($usces->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
-		if( usces_is_membersystem_point() ){
-			$html .= '<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>';
-		}
-		$html .= '<td class="rightnum">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
-			<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, false, 'return') . '</td>
-			<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, false, 'return') . '</td>
-			<td class="rightnum">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>';
-		if( usces_is_membersystem_point() ){
-			$html .= '<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>';
-		}
+			<td class="rightnum">' . usces_crform($umhs['usedpoint'], true, true, 'return') . '</td>';//kanpari
 		$html .= '</tr>';
 		$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
 		$html .= '<tr>
-			<td class="retail" colspan="' . $colspan . '">
+			<td class="retail" colspan="4">
 				<table id="retail_table_' . $umhs['ID'] . '" class="retail">';
 		$history_cart_head = '<tr>
 				<th scope="row" class="num">No.</th>
@@ -2296,8 +2275,8 @@ function usces_member_history( $out = '' ){
 				<th>' . __('Items', 'usces') . '</th>
 				<th class="price ">' . __('Unit price', 'usces') . '</th>
 				<th class="quantity">' . __('Quantity', 'usces') . '</th>
-				<th class="subtotal">' . __('Amount', 'usces') . '</th>
-				</tr>';
+				<th class="subtotal">' . __('Points', 'usces') . '</th>
+				</tr>';//kanpari
 		$html .= apply_filters('usces_filter_history_cart_head', $history_cart_head, $umhs);
 				
 		for($i=0; $i<count($cart); $i++) { 
@@ -2337,15 +2316,15 @@ function usces_member_history( $out = '' ){
 				}
 				$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 			}
-				
+			
 			$history_cart_row = '<tr>
 				<td>' . ($i + 1) . '</td>
 				<td><a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a></td>
 				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
-				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
+				<td class="rightnum">' . usces_crform($skuPrice, true, true, 'return') . '</td>
 				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
-				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
-				</tr>';
+				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, true, 'return') . '</td>
+				</tr>';//kanpari
 			$html .= apply_filters('usces_filter_history_cart_row', $history_cart_row, $umhs, $cart_row, $i);
 		}
 		$html .= '</table>
@@ -2494,12 +2473,12 @@ function usces_get_cart_rows( $out = '' ) {
 			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
 			$res .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
 		}
-		$res .= usces_crform($skuPrice, true, false, 'return') . '
+		$res .= usces_crform($skuPrice, true, true, 'return') . '
 			</td>
 			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
-			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
+			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, true, 'return') . '</td>
 			<td ' . $red . '>' . $stock . '</td>
-			<td>';
+			<td>';//kanpari
 		foreach($options as $key => $value){
 //20110629ysk start 0000190
 			//$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
@@ -2590,10 +2569,10 @@ function usces_get_confirm_rows( $out = '' ) {
 			$res .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
 		$res .= '</td>
-			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
+			<td class="aright">' . usces_crform($skuPrice, true, true, 'return') . '</td>
 			<td>' . $cart_row['quantity'] . '</td>
-			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
-			<td>';
+			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, true, 'return') . '</td>
+			<td>';//kanpari
 		$res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $sku_code));
 		$res .= '</td>
 		</tr>';

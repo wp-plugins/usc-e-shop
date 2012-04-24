@@ -31,8 +31,9 @@ $payment_structure = array(
 					'transferAdvance' => __('Transfer (prepayment)', 'usces'),
 					'transferDeferred' => __('Transfer (postpay)', 'usces'),
 					'COD' => __('COD', 'usces'),
-					'installment' => __('Payment in installments', 'usces')
-					);
+					'installment' => __('Payment in installments', 'usces'),
+					'free' => __('Free', 'usces')
+					);//kanpari
 
 $display_mode = array(
 					'Usualsale' => __('Normal business', 'usces'),
@@ -251,7 +252,7 @@ $usces_settings['currency'] = array(
 					'IE' => array('EUR', 2, '.', ',', '&#x20AC;'),
 					'IL' => array('ILS', 2, '.', ',', '&#x20AA;'),
 					'IT' => array('EUR', 2, '.', ',', '&#x20AC;'),
-					'JP' => array('JPY', 0, '.', ',', '&yen;'),
+					'JP' => array('JPY', 0, '.', ',', ''),
 					'MO' => array('MOP', 2, '.', ',', '$'),
 					'MY' => array('MYR', 2, '.', ',', 'RM'),
 					'MX' => array('MXN', 2, '.', ',', '$'),
