@@ -172,7 +172,7 @@ jQuery(function($){
 <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>"><?php _e('Back', 'usces'); ?></a>
 </div>
 <div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
-<div class="info_head">
+<div class="info_head post_form_admin">
 <div class="error_message"><?php echo $this->error_message; ?></div>
 <table class="mem_wrap">
 <tr>

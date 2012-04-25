@@ -1770,7 +1770,7 @@ tr.rowSelection_selected td {
 	font-size: 13px;
 	line-height: 26px;
 	font-weight: bold;
-	color: #ffffff;
+	color: #F47919;
 	background-color: #990000;
 	text-indent: 10px;
 	padding: 0px;
@@ -1972,4 +1972,60 @@ div.optcheck {
 #edit-slug-box {
 	height: auto;
 	line-height: 1.5em;
+}
+
+
+/* =footer
+-------------------------------------------------------------------------------------------------------------------------- */
+.info_head.post_form_admin {
+}
+.info_head.post_form_admin td.mem_col2 {
+	border: none;
+}
+.info_head.post_form_admin td.col1 {
+	vertical-align: top;
+}
+	.info_head.post_form_admin td.col1 a {
+		display: inline-block;
+		line-height: 30px;
+		margin: 10px 0 0 0;
+		padding: 0 20px;
+		background: #318999;
+		color: #FFF;
+		text-align: center;
+	}
+	.info_head.post_form_admin td.col1 a:hover {
+		background: #215963;
+	}
+.usces_admin a {
+	text-decoration: none;
+	line-height: 1.4em;
+}
+.usces_admin a:visited {
+	color: #318999;
+}
+.info_head.post_form_admin .mem_info {
+	width: 100% !important;
+}
+.info_head.post_form_admin .mem_info,
+.info_head.post_form_admin .mem_info td {
+	border-collapse: collapse;
+	border: #999 1px solid;
+}
+.info_head.post_form_admin .mem_info td {
+	vertical-align: top;
+	padding: 5px 10px;
+}
+.info_head.post_form_admin .mem_info td.label {
+	background: #EFEFEF;
+	color: #333;
+	text-align: left;
+}
+.info_head.post_form_admin .mem_info td.col1 {
+	width: 290px;
+	background: #FFF;
+}
+.info_head.post_form_admin .mem_info td.col2 {
+	width: 190px;
+	background: #FFF;
 }
