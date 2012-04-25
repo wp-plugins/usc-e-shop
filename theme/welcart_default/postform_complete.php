@@ -24,10 +24,10 @@ $area_tag = ( !empty($kanpari_area_tag[$area]) ) ? $kanpari_area_tag[$area] : ''
 <?php
 	if( my_is_iphone() ) :
 ?>
-<p><a href="sms:yskysmr@gmail.com">info@fishing.ne.jp</a></p>
+<p style="font-size: 2.0em; padding: 20px 0;"><a href="sms:info@fishing.ne.jp">info@fishing.ne.jp</a></p>
 <p>iPhone（アイフォン）をご使用の方は、上記アドレスまで該当の写真をメールにて2枚お送り下さい。<br />
 写真の送信が無い場合、掲載不可になりますのでご注意下さい。</p>
-<p>画像添付のメールタイトルには必ず会員番号、お名前の記載をお願い致します。</p>
+<p style="color:#F00;">画像添付のメールタイトルには必ず会員番号、お名前の記載をお願い致します。</p>
 <?php
 	else :
 ?>

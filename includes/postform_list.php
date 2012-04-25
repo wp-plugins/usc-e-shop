@@ -50,7 +50,7 @@ function toggleVisibility(id) {
 };
 
 function deleteconfirm(kpf_id){
-	if(confirm(<?php _e("'Are you sure of deleting your membership number ' + kpf_id + ' ?'", 'usces'); ?>)){
+	if(confirm(<?php _e("'ID ' + kpf_id + ' を削除します。よろしいですか？'", 'usces'); ?>)){
 		return true;
 	}else{
 		return false;

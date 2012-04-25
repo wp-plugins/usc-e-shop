@@ -821,11 +821,11 @@ function my_sendmail( $data ){
 
 	$entry_name = $name;
 	$entry_mailaddress = $data['email'];
-	$subject2applicant = "(".$member['ID'].")".$name."様からの釣果投稿完了の確認";
+	$subject2applicant = "(".$member['ID'].")".$name."様からの釣果投稿完了の確認";//会員向け件名
 
 	$admin_name = $usces->options['company_name'];
 	$admin_mailaddress = $usces->options['sender_mail'];
-	$subject2admin = $name."様　釣果投稿通知";
+	$subject2admin = "(".$member['ID'].")".$name."様からの釣果投稿通知";//管理者向け件名
 
 	$para2applicant = array(
 			'to_name' => $entry_name,
