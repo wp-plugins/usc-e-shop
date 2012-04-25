@@ -777,6 +777,35 @@ jQuery(document).ready(function($){
 		} 
 		orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 	});
+<?php if($order_action == 'new') ://20120319ysk start 0000441 ?>
+	$("#costomercopy").click(function() {
+		if( '' != $("input[name='delivery[name1]']").val() || 
+			'' != $("input[name='delivery[name2]']").val() || 
+			'' != $("input[name='delivery[name3]']").val() || 
+			'' != $("input[name='delivery[name4]']").val() || 
+			'' != $("input[name='delivery[zipcode]']").val() || 
+			'' != $("input[name='delivery[address1]']").val() || 
+			'' != $("input[name='delivery[address2]']").val() || 
+			'' != $("input[name='delivery[address3]']").val() || 
+			'' != $("input[name='delivery[tel]']").val() || 
+			'' != $("input[name='delivery[fax]']").val() ) {
+			if( !confirm('顧客住所を発送先住所に上書きします。よろしいですか？') ) 
+				return;
+		}
+		$("input[name='delivery[name1]']").val($("input[name='customer[name1]']").val());
+		$("input[name='delivery[name2]']").val($("input[name='customer[name2]']").val());
+		$("input[name='delivery[name3]']").val($("input[name='customer[name3]']").val());
+		$("input[name='delivery[name4]']").val($("input[name='customer[name4]']").val());
+		$("input[name='delivery[zipcode]']").val($("input[name='customer[zipcode]']").val());
+		$("#delivery_country").val($("#customer_country option:selected").val());
+		$("#delivery_pref").val($("#customer_pref option:selected").val());
+		$("input[name='delivery[address1]']").val($("input[name='customer[address1]']").val());
+		$("input[name='delivery[address2]']").val($("input[name='customer[address2]']").val());
+		$("input[name='delivery[address3]']").val($("input[name='customer[address3]']").val());
+		$("input[name='delivery[tel]']").val($("input[name='customer[tel]']").val());
+		$("input[name='delivery[fax]']").val($("input[name='customer[fax]']").val());
+	});
+<?php endif;//20120319ysk end ?>
 });
 </script>
 <div class="wrap">
@@ -840,7 +869,11 @@ jQuery(document).ready(function($){
 <?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
 	
 </table></td>
+<?php if($order_action == 'new') ://20120319ysk start 0000441 ?>
+<td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?><input type="button" id="costomercopy" value="発送先同じ"></td>
+<?php else : ?>
 <td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
+<?php endif;//20120319ysk end ?>
 </tr>
 <tr>
 <td class="label"><?php _e('payment method', 'usces'); ?></td>

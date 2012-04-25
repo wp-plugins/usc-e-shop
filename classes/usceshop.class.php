@@ -3941,7 +3941,10 @@ class usc_e_shop
 				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $checkstock) . "<br />";
 			}
 		}
-		return $mes;	
+
+		$mes = apply_filters('usces_filter_zaiko_check', $mes, $cart);
+
+		return $mes;
 	}
 	
 	function member_check() {
