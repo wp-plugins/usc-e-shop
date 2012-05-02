@@ -110,11 +110,13 @@ class usc_e_shop
 		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
 		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 0;
 
-		if(!isset($this->options['acting_settings']['zeus'])) $this->options['acting_settings']['zeus'] = array('activate'=>'','card_activate'=>'','clientip'=>'','authkey'=>'','3dsecure'=>'','quickcharge'=>'', 'howpay'=>'','bank_activate'=>'','clientip_bank'=>'','testid_bank'=>'','conv_activate'=>'','clientip_conv'=>'','testid_conv'=>'','test_type_conv'=>'');
+		if(!isset($this->options['acting_settings']['zeus'])) $this->options['acting_settings']['zeus'] = array('activate'=>'','card_activate'=>'','clientip'=>'','authkey'=>'','connection'=>'','3dsecure'=>'','security'=>'','quickcharge'=>'', 'howpay'=>'','bank_activate'=>'','clientip_bank'=>'','testid_bank'=>'','conv_activate'=>'','clientip_conv'=>'','testid_conv'=>'','test_type_conv'=>'');
+		if(!isset($this->options['acting_settings']['zeus']['connection'])) $this->options['acting_settings']['zeus']['connection'] = '1';
+		if(!isset($this->options['acting_settings']['zeus']['3dsecur'])) $this->options['acting_settings']['zeus']['3dsecur'] = '2';
+		if(!isset($this->options['acting_settings']['zeus']['security'])) $this->options['acting_settings']['zeus']['security'] = '2';
 		if(!isset($this->options['acting_settings']['remise'])) $this->options['acting_settings']['remise'] = array('activate'=>'','plan'=>'','SHOPCO'=>'','HOSTID'=>'','card_activate'=>'','card_jb'=>'', 'payquick'=>'','howpay'=>'','continuation'=>'','card_pc_ope'=>'','send_url_pc'=>'','conv_activate'=>'','S_PAYDATE'=>'','conv_pc_ope'=>'','send_url_cvs_pc'=>'');
 		if(!isset($this->options['acting_settings']['jpayment'])) $this->options['acting_settings']['jpayment'] = array('activate'=>'','aid'=>'','card_activate'=>'','card_jb'=>'','conv_activate'=>'','webm_activate'=>'', 'bitc_activate'=>'','suica_activate'=>'','bank_activate'=>'');
 		if(!isset($this->options['acting_settings']['paypal'])) $this->options['acting_settings']['paypal'] = array('activate'=>'','ec_activate'=>'','sandbox'=>'','user'=>'','pwd'=>'','signature'=>'', 'continuation'=>'');
-
 
 //20010420ysk start
 		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
@@ -1009,11 +1011,17 @@ class usc_e_shop
 					$options['acting_settings']['zeus']['ipaddrs'] = isset($_POST['ipaddrs']) ? $_POST['ipaddrs'] : '';
 					$options['acting_settings']['zeus']['pay_cvs'] = isset($_POST['pay_cvs']) ? $_POST['pay_cvs'] : '';
 					$options['acting_settings']['zeus']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
-					$options['acting_settings']['zeus']['security'] = isset($_POST['security']) ? $_POST['security'] : '1';
+					$options['acting_settings']['zeus']['connection'] = isset($_POST['connection']) ? $_POST['connection'] : '1';
+					$options['acting_settings']['zeus']['3dsecur'] = isset($_POST['3dsecur']) ? $_POST['3dsecur'] : '2';
+					$options['acting_settings']['zeus']['security'] = isset($_POST['security']) ? $_POST['security'] : '2';
 					if( isset($_POST['authkey']) ){
 						$options['acting_settings']['zeus']['authkey'] = $_POST['authkey'];
 					}
-					$options['acting_settings']['zeus']['quickcharge'] = isset($_POST['quickcharge']) ? $_POST['quickcharge'] : '';
+					if( '1' == $options['acting_settings']['zeus']['security'] ){
+						$options['acting_settings']['zeus']['quickcharge'] = '2';
+					}else{
+						$options['acting_settings']['zeus']['quickcharge'] = isset($_POST['quickcharge']) ? $_POST['quickcharge'] : '';
+					}
 					$options['acting_settings']['zeus']['clientip'] = isset($_POST['clientip']) ? trim($_POST['clientip']) : '';
 					$options['acting_settings']['zeus']['howpay'] = isset($_POST['howpay']) ? $_POST['howpay'] : '';
 					$options['acting_settings']['zeus']['bank_activate'] = isset($_POST['bank_activate']) ? $_POST['bank_activate'] : '';
@@ -1064,6 +1072,9 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure',$this->payment_structure);
+					if( update_option('usces', $options) ){
+						usces_clear_quickcharge();
+					}
 					break;
 					
 				case 'remise':
@@ -1129,6 +1140,7 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure',$this->payment_structure);
+					update_option('usces', $options);
 					break;
 //20101018ysk start
 				case 'jpayment':
@@ -1196,6 +1208,7 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
+					update_option('usces', $options);
 					break;
 //20101018ysk end
 //20110208ysk start
@@ -1246,12 +1259,12 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
+					update_option('usces', $options);
 					break;
 //20110208ysk end
 			}
 			
 
-			update_option('usces', $options);
 		}
 			
 		
@@ -1519,7 +1532,8 @@ class usc_e_shop
 				$opt_means = rtrim($opt_means, ',');
 				$opt_esse = rtrim($opt_esse, ',');
 			}
-			$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
+			//$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
+			$itemRestriction = get_post_meta($item->ID, '_itemRestriction', true);
 		
 ?>
 		<script type='text/javascript'>
@@ -1535,7 +1549,7 @@ class usc_e_shop
 				'mes_opts': new Array( <?php echo $mes_opts_str; ?> ),
 				'key_opts': new Array( <?php echo $key_opts_str; ?> ), 
 				'previous_url': "<?php echo $this->previous_url; ?>", 
-				'itemRestriction': "<?php echo $itemRestriction[0]; ?>"
+				'itemRestriction': "<?php echo $itemRestriction; ?>"
 			}
 		/* ]]> */
 		</script>
@@ -3850,13 +3864,13 @@ class usc_e_shop
 		$quant = isset($_POST['quant'][$post_id][$sku]) ? (int)$_POST['quant'][$post_id][$sku] : 1;
 		$stock = $this->getItemZaikoNum($post_id, $sku);
 		$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku);
-		$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
+		$itemRestriction = get_post_meta($post_id, '_itemRestriction',true );
 		$mes = array();
 
 		if( 1 > $quant ){
 			$mes[$post_id][$sku] = __('enter the correct amount', 'usces') . "<br />";
-		}else if( $quant > (int)$itemRestriction[0] && '' != $itemRestriction[0] && '0' != $itemRestriction[0] ){
-			$mes[$post_id][$sku] = sprintf(__("This article is limited by %d at a time.", 'usces'), $itemRestriction[0]) . "<br />";
+		}else if( $quant > (int)$itemRestriction && '' != $itemRestriction && '0' != $itemRestriction ){
+			$mes[$post_id][$sku] = sprintf(__("This article is limited by %d at a time.", 'usces'), $itemRestriction) . "<br />";
 		}else if( $quant > (int)$stock && '' != $stock ){
 			$mes[$post_id][$sku] = __('Sorry, stock is insufficient.', 'usces') . ' ' . __('Current stock', 'usces') . $stock . "<br />";
 		}else if( 1 < $zaiko_id ){
@@ -3927,7 +3941,7 @@ class usc_e_shop
 			}
 			$checkstock = $stocks[$post_id][$sku];
 			$stocks[$post_id][$sku] = $stocks[$post_id][$sku] - $quant;
-			$itemRestriction = get_post_custom_values('_itemRestriction', $post_id);
+			$itemRestriction = get_post_meta($post_id, '_itemRestriction', true);
 
 			//$red = (in_array($zaiko_status, array(__('Sold Out', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'red' : '';
 
@@ -3935,8 +3949,8 @@ class usc_e_shop
 				$mes .= sprintf(__("Enter the correct amount for the No.%d item.", 'usces'), ($i+1)) . "<br />";
 			}else if( 1 < $zaiko_id || (0 == $stock && '' != $stock) ){
 				$mes .= sprintf(__('Sorry, No.%d item is sold out.', 'usces'), ($i+1)) . "<br />";
-			}else if( $quant > (int)$itemRestriction[0] && '' != $itemRestriction[0] && '0' != $itemRestriction[0] ){
-				$mes .= sprintf(__('This article is limited by %1$d at a time for the No.%2$d item.', 'usces'), $itemRestriction[0], ($i+1)) . "<br />";
+			}else if( $quant > (int)$itemRestriction && '' != $itemRestriction && '0' != $itemRestriction ){
+				$mes .= sprintf(__('This article is limited by %1$d at a time for the No.%2$d item.', 'usces'), $itemRestriction, ($i+1)) . "<br />";
 			}else if( 0 > $stocks[$post_id][$sku] && '' != $stock ){
 				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $checkstock) . "<br />";
 			}
@@ -4970,13 +4984,13 @@ class usc_e_shop
 	}
 	
 	function getItemFrequency( $post_id ){
-		$frequency = get_post_custom_values('_item_frequency', $post_id);
-		return $frequency[0];
+		$frequency = get_post_meta($post_id, '_item_frequency',true );
+		return $frequency;
 	}
 	
 	function getItemChargingDay( $post_id ){
-		$array = get_post_custom_values('_item_chargingday', $post_id);
-		$day = (int)$array[0];
+		$array = get_post_meta($post_id, '_item_chargingday',true );
+		$day = (int)$array;
 		$chargingday = empty($day) ? 1 : $day;
 		return $chargingday;
 	}
@@ -5240,21 +5254,22 @@ class usc_e_shop
 			header("location: " . $redirect . $query);
 			exit;
 			
-		}else if($acting_flg == 'acting_zeus_card' && '3' == $this->options['acting_settings']['zeus']['security'] && !isset($_REQUEST['PaRes'])){
+		}else if($acting_flg == 'acting_zeus_card' && '2' == $this->options['acting_settings']['zeus']['connection'] ){
+			if( '1' == $this->options['acting_settings']['zeus']['3dsecur'] ){
+				if( !isset($_REQUEST['PaRes'])){
 	
-			usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-			usces_zeus_3dsecure_enrol();
-			
-		}else if($acting_flg == 'acting_zeus_card' && '3' == $this->options['acting_settings']['zeus']['security'] && isset($_REQUEST['PaRes'])){
-
-			usces_zeus_3dsecure_auth();
-
-		}else if($acting_flg == 'acting_zeus_card' && '3' != $this->options['acting_settings']['zeus']['security'] && !empty($this->options['acting_settings']['zeus']['authkey']) && !isset($_REQUEST['PaRes'])){
-
-			$res = usces_zeus_secure_payreq();
-			return $res;
-
-		}else if($acting_flg == 'acting_zeus_card' && '3' != $this->options['acting_settings']['zeus']['security']  ){
+					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+					usces_zeus_3dsecure_enrol();
+					
+				}else if( '1' == $this->options['acting_settings']['zeus']['3dsecur'] && isset($_REQUEST['PaRes'])){
+		
+					usces_zeus_3dsecure_auth();
+				}
+			}else{
+				$res = usces_zeus_secure_payreq();
+				return $res;
+			}
+		}else if($acting_flg == 'acting_zeus_card' && '1' == $this->options['acting_settings']['zeus']['connection']  ){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);
@@ -5264,7 +5279,7 @@ class usc_e_shop
 			$vars = 'send=mall';
 			$vars .= '&clientip=' . $acting_opts['clientip'];
 			$vars .= '&cardnumber=' . $_POST['cardnumber'];
-			if( '2' == $this->options['acting_settings']['zeus']['security'] ){
+			if( '1' == $this->options['acting_settings']['zeus']['security'] ){
 				$vars .= '&seccode=' . $_POST['securecode'];
 			}
 			$vars .= '&expyy=' . substr($_POST['expyy'], 2);
@@ -5509,29 +5524,29 @@ class usc_e_shop
 				foreach ( $cart as $rows ) {
 					$cats = $this->get_post_term_ids($rows['post_id'], 'category');
 					if ( !in_array($this->options['campaign_category'], $cats) ){
-						$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
+						$rate = get_post_meta($rows['post_id'], '_itemPointrate', true);
 						$price = $rows['price'] * $rows['quantity'];
-						$point += $price * $rate[0] / 100;
+						$point += $price * $rate / 100;
 					}
 				}
 			} elseif ( $this->options['campaign_privilege'] == 'point' ) {
 				foreach ( $cart as $rows ) {
-					$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
+					$rate = get_post_meta($rows['post_id'], '_itemPointrate', true);
 					//$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
 					$price = $rows['price'] * $rows['quantity'];
 					$cats = $this->get_post_term_ids($rows['post_id'], 'category');
 					if ( in_array($this->options['campaign_category'], $cats) )
-						$point += $price * $rate[0] / 100 * $this->options['privilege_point'];
+						$point += $price * $rate / 100 * $this->options['privilege_point'];
 					else
-						$point += $price * $rate[0] / 100;
+						$point += $price * $rate / 100;
 				}
 			}
 		} else {
 			foreach ( $cart as $rows ) {
-				$rate = get_post_custom_values('_itemPointrate', $rows['post_id']);
+				$rate = get_post_meta($rows['post_id'], '_itemPointrate', true);
 				//$price = $this->getItemPrice($rows['post_id'], $rows['sku']) * $rows['quantity'];
 				$price = $rows['price'] * $rows['quantity'];
-				$point += $price * $rate[0] / 100;
+				$point += $price * $rate / 100;
 			}
 		}
 	
@@ -6576,27 +6591,29 @@ class usc_e_shop
 			'item' => '',
 			'sku' => '',
 			'value' => __('to the cart', 'usces'),
+			'force' => false,
 		), $atts));
 	
 		$post_id = $this->get_ID_byItemName($item);
-		if( ! $this->is_item_zaiko( $post_id, $sku ) ){
-			return '<div class="button_status">' . __('Sold Out', 'usces') . '</div>';
-		}
-		
 		$datas = $this->get_skus( $post_id, 'code' );
-	
 		$zaikonum = $datas[$sku]['stocknum'];
 		$zaiko = $datas[$sku]['stock'];
 		$gptekiyo = $datas[$sku]['gp'];
 		$skuPrice = $datas[$sku]['price'];
+		$sku_enc = urlencode($sku);
+		if( ! $this->is_item_zaiko( $post_id, $sku ) ){
+			return '<div class="button_status">' . esc_html($this->zaiko_status[$zaiko]) . '</div>';
+		}
 		
 		$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\">\n";
-		$html .= "<input name=\"zaikonum[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$sku}]\" value=\"{$zaikonum}\" />\n";
-		$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$zaiko}\" />\n";
-		$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
-		$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
-		$html .= "<input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
+		$html .= "<input name=\"zaikonum[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$sku_enc}]\" value=\"{$zaikonum}\" />\n";
+		$html .= "<input name=\"zaiko[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku_enc}]\" value=\"{$zaiko}\" />\n";
+		$html .= "<input name=\"gptekiyo[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku_enc}]\" value=\"{$gptekiyo}\" />\n";
+		$html .= "<input name=\"skuPrice[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku_enc}]\" value=\"{$skuPrice}\" />\n";
+		$html .= "<input name=\"inCart[{$post_id}][{$sku_enc}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku_enc}]\" class=\"skubutton\" value=\"{$value}\" " . apply_filters('usces_filter_direct_intocart_button', NULL, $post_id, $sku, $force, $options) . " />";
 		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
+		if( $force )
+			$html .= "<input name=\"usces_force\" type=\"hidden\" value=\"incart\" />\n";
 		$html = apply_filters('usces_filter_single_item_inform', $html);
 		$html .= "</form>";
 		$html .= '<div class="error_message">' . usces_singleitem_error_message($post_id, $sku, 'return') . '</div>'."\n";

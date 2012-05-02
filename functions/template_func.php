@@ -43,12 +43,12 @@ function usces_the_itemCode( $out = '' ) {
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemCode', $post_id);
+	$str = get_post_meta($post_id, '_itemCode', true);
 	
 	if( $out == 'return' ){
-		return $str[0];
+		return $str;
 	}else{
-		echo esc_html($str[0]);
+		echo esc_html($str);
 	}
 }
 
@@ -58,12 +58,12 @@ function usces_the_itemName( $out = '', $post = NULL ) {
 		
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemName', $post_id);
+	$str = get_post_meta($post_id, '_itemName', true);
 	
 	if( $out == 'return' ){
-		return $str[0];
+		return $str;
 	}else{
-		echo esc_html($str[0]);
+		echo esc_html($str);
 	}
 }
 
@@ -71,8 +71,8 @@ function usces_the_point_rate( $out = '' ){
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemPointrate', $post_id);
-	$rate = (int)$str[0];
+	$str = get_post_meta($post_id, '_itemPointrate', true);
+	$rate = (int)$str;
 	
 	if( $out == 'return' ){
 		return $rate;
@@ -85,8 +85,8 @@ function usces_the_shipment_aim( $out = '' ){
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemShipping', $post_id);
-	$no = (int)$str[0];
+	$str = get_post_meta($post_id, '_itemShipping', true);
+	$no = (int)$str;
 	if( 0 === $no ) return;
 	
 	$rules = get_option('usces_shipping_rule');
@@ -133,8 +133,8 @@ function usces_the_item(){
 }
 
 function usces_get_itemMeta($metakey, $post_id, $out = ''){
-	$str = get_post_custom_values($metakey, $post_id);
-	$value = $str[0];
+	$str = get_post_meta($post_id, $metakey, true);
+	$value = $str;
 	
 	if( $out == 'return' ){
 		return $value;
@@ -265,9 +265,24 @@ function usces_the_itemZaiko( $out = '' ) {
 	}
 }
 
-function usces_get_itemZaiko( $field = 'name' ) {
+function usces_the_itemZaikoStatus( $out = '' ) {
 	global $usces;
-	$num = (int)$usces->itemsku['stock'];
+	
+	if( $out == 'return' ){
+		return usces_get_itemZaiko( 'name' );
+	}else{
+		echo esc_html(usces_get_itemZaiko( 'name' ));
+	}
+}
+
+function usces_get_itemZaiko( $field = 'name', $post_id=NULL, $sku=NULL ) {
+	global $usces;
+	if( empty($sku) ){
+		$num = (int)$usces->itemsku['stock'];
+	}else{
+		$skus = $usces->get_skus( $post_id, 'code' );
+		$num = (int)$skus[$sku]['stock'];
+	}
 	
 	if( 'id' == $field ){
 		$res = $num;
@@ -605,7 +620,7 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 		echo $html;
 	}
 }
-
+				
 function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $options=NULL, $out = '') {
 	global $usces;
 	if( empty($value) )
@@ -615,14 +630,14 @@ function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $optio
 	$zaiko = $skus[$sku]['stock'];
 	$gptekiyo = $skus[$sku]['gp'];
 	$skuPrice = $skus[$sku]['price'];
-	$sku = esc_attr($sku);
+	$enc_sku = urlencode($sku);
 
-	$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\" name=\"" . $post_id."-". $sku . "\">\n";
-	$html .= "<input name=\"zaikonum[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$sku}]\" value=\"{$zaikonum}\" />\n";
-	$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$zaiko}\" />\n";
-	$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
-	$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
-	$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
+	$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\" name=\"" . $post_id."-". $enc_sku . "\">\n";
+	$html .= "<input name=\"zaikonum[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$enc_sku}]\" value=\"{$zaikonum}\" />\n";
+	$html .= "<input name=\"zaiko[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$enc_sku}]\" value=\"{$zaiko}\" />\n";
+	$html .= "<input name=\"gptekiyo[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$enc_sku}]\" value=\"{$gptekiyo}\" />\n";
+	$html .= "<input name=\"skuPrice[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$enc_sku}]\" value=\"{$skuPrice}\" />\n";
+	$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$enc_sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$enc_sku}]\" class=\"skubutton\" value=\"{$value}\" " . apply_filters('usces_filter_direct_intocart_button', NULL, $post_id, $sku, $force, $options) . " />";
 	$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
 	if( $force )
 		$html .= "<input name=\"usces_force\" type=\"hidden\" value=\"incart\" />\n";
@@ -662,32 +677,32 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
 		
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 		
 		if( 0 == $number ){
-			$pictid = (int)$usces->get_mainpictid($code[0]);
+			$pictid = (int)$usces->get_mainpictid($code);
 			$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
 			if( 'item' == $media ){
-				$alt = 'alt="'.esc_attr($code[0]).'"';
+				$alt = 'alt="'.esc_attr($code).'"';
 				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
 				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-				$title = 'title="'.esc_attr($name[0]).'"';
+				$title = 'title="'.esc_attr($name).'"';
 				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 			}
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
 			$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
 			if( 'item' == $media ){
-				$alt = 'alt="'.esc_attr($code[0]).'"';
+				$alt = 'alt="'.esc_attr($code).'"';
 				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
 				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-				$title = 'title="'.esc_attr($name[0]).'"';
+				$title = 'title="'.esc_attr($name).'"';
 				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 			}
@@ -715,14 +730,14 @@ function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 		if($post == '') global $post;
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 		if( 0 == $number ){
-			$pictid = (int)$usces->get_mainpictid($code[0]);
+			$pictid = (int)$usces->get_mainpictid($code);
 			$html = wp_get_attachment_url( $pictid );
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
 			$html = wp_get_attachment_url( $pictid );
@@ -751,16 +766,16 @@ function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
 	
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
 		
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 	
 		if( 0 == $number ){
-			$pictid = $usces->get_mainpictid($code[0]);
+			$pictid = $usces->get_mainpictid($code);
 			$attach_ob = get_post($pictid);
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$attach_ob = get_post($pictids[$ind]);
 		}
@@ -789,16 +804,16 @@ function usces_the_itemImageDescription($number = 0, $post = '', $out = '' ) {
 	
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
 		
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 		
 		if( 0 == $number ){
-			$pictid = $usces->get_mainpictid($code[0]);
+			$pictid = $usces->get_mainpictid($code);
 			$attach_ob = get_post($pictid);
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$attach_ob = get_post($pictids[$ind]);
 		}
@@ -817,10 +832,10 @@ function usces_get_itemSubImageNums() {
 	$post_id = $post->ID;
 	$res = array();
 	
-	$code =  get_post_custom_values('_itemCode', $post_id);
+	$code =  get_post_meta($post_id, '_itemCode', true);
 	if(!$code) return false;
-	$name = get_post_custom_values('_itemName', $post_id);
-	$pictids = $usces->get_pictids($code[0]);
+	$name = get_post_meta($post_id, '_itemName', true);
+	$pictids = $usces->get_pictids($code);
 	for($i=1; $i<=count($pictids); $i++){
 		$res[] = $i;
 	}
@@ -1063,8 +1078,8 @@ function usces_point_rate( $post_id = NULL, $out = '' ){
 	if(  $post_id = NULL ){
 		$rate = $usces->options['point_rate'];
 	}else{
-		$str = get_post_custom_values('_itemPointrate', $post_id);
-		$rate = (int)$str[0];
+		$str = get_post_meta($post_id, '_itemPointrate', true);
+		$rate = (int)$str;
 	}
 	if( $out == 'return' ){
 		return $rate;

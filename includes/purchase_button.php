@@ -112,14 +112,16 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$member = $usces->get_member();
 			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 			$securecode = isset($_POST['securecode']) ? $_POST['securecode'] : '';
-			if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+			if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
 				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}else{
-				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . esc_attr($_POST['cnum2']) . esc_attr($_POST['cnum3']) . esc_attr($_POST['cnum4']) . '">';
-				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
+				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . '">';
+				if( '1' == $acting_opts['security'] ){
+					$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
+				}
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}
@@ -141,9 +143,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$html .= '
 				<input type="hidden" name="cnum1" value="' . esc_html($_POST['cnum1']) . '">
-				<input type="hidden" name="cnum2" value="' . esc_html($_POST['cnum2']) . '">
-				<input type="hidden" name="cnum3" value="' . esc_html($_POST['cnum3']) . '">
-				<input type="hidden" name="cnum4" value="' . esc_html($_POST['cnum4']) . '">
 				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />
 				<input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', NULL) . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);

@@ -17,10 +17,10 @@ get_header();
 	<?php the_content(); ?>
 	
 	<?php $paged = $wp_query->query_vars['paged']; ?>
-	<?php $category_name = get_post_custom_values('category_slug', $post->ID); ?>
-	<?php $posts_per_page = get_post_custom_values('posts_per_page', $post->ID); ?>
-	<?php $order = get_post_custom_values('order', $post->ID); ?>
-	<?php query_posts('category_name=' . $category_name[0] . '&status=post&paged=' . $paged . '&posts_per_page=' . $posts_per_page[0] . '&order='. $order[0]); ?>
+	<?php $category_name = get_post_meta($post->ID, 'category_slug', true); ?>
+	<?php $posts_per_page = get_post_meta($post->ID, 'posts_per_page', true); ?>
+	<?php $order = get_post_meta($post->ID, 'order', true); ?>
+	<?php query_posts('category_name=' . $category_name . '&status=post&paged=' . $paged . '&posts_per_page=' . $posts_per_page . '&order='. $order); ?>
 	<div class="pagenavi"><?php posts_nav_link(' &#8212; ', __("&laquo; Previous page", 'usces'), __("next page &raquo;", 'usces')); ?></div>
 	<div class="clearfix">
 	

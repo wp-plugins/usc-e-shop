@@ -34,11 +34,8 @@ foreach ( (array)$payments as $id => $array ) {
 					$member = $usces->get_member();
 					$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 				}
-				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
-					$html .= '<input name="cnum1" type="hidden" value="8888" />
-					<input name="cnum2" type="hidden" value="8888" />
-					<input name="cnum3" type="hidden" value="8888" />
-					<input name="cnum4" type="hidden" value="8888" />
+				if( '2' == $usces->options['acting_settings'][$paymod_id]['security'] && 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
+					$html .= '<input name="cnum1" type="hidden" value="8888888888888888" />
 					<input name="expyy" type="hidden" value="2010" />
 					<input name="expmm" type="hidden" value="01" />
 					<input name="username" type="hidden" value="QUICKCHARGE" />';
@@ -46,12 +43,12 @@ foreach ( (array)$payments as $id => $array ) {
 				}else{
 					$html .= '<tr>
 						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
-						<td colspan="2"><input name="cnum1" type="text" size="6" maxlength="4" value="' . esc_attr($cnum1) . '" />-<input name="cnum2" type="text" size="6" maxlength="4" value="' . esc_attr($cnum2) . '" />-<input name="cnum3" type="text" size="6" maxlength="4" value="' . esc_attr($cnum3) . '" />-<input name="cnum4" type="text" size="6" maxlength="4" value="' . esc_attr($cnum4) . '" /></td>
+						<td colspan="2"><input name="cnum1" type="text" size="16" value="' . esc_attr($cnum1) . '" />(半角数字のみ)</td>
 						</tr>';
-					if( '1' != $usces->options['acting_settings'][$paymod_id]['security'] ){
+					if( '1' == $usces->options['acting_settings'][$paymod_id]['security'] ){
 						$html .= '<tr>
 						<th scope="row">'.__('セキュリティコード', 'usces').'</th>
-						<td colspan="2"><input name="securecode" type="text" size="6" maxlength="4" value="' . esc_attr($securecode) . '" /></td>
+						<td colspan="2"><input name="securecode" type="text" size="6" value="' . esc_attr($securecode) . '" />(半角数字のみ)</td>
 						</tr>';
 					}
 					$html .= '<tr>

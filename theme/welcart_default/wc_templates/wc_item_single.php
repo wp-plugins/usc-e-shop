@@ -35,7 +35,7 @@ get_header();
 			<div class="field_name"><?php _e('selling price', 'usces'); ?><?php usces_guid_tax(); ?></div>
 			<div class="field_price"><?php usces_the_itemPriceCr(); ?></div>
 		</div>
-		<div class="field"><?php _e('stock status', 'usces'); ?> : <?php usces_the_itemZaiko(); ?></div>
+		<div class="field"><?php _e('stock status', 'usces'); ?> : <?php usces_the_itemZaikoStatus(); ?></div>
 		<?php if( $item_custom = usces_get_item_custom( $post->ID, 'list', 'return' ) ) : ?>
 		<div class="field"><?php echo $item_custom; ?></div>
 		<?php endif; ?>
@@ -55,7 +55,7 @@ get_header();
 		</table>
 	<?php endif; ?>
 	<?php if( !usces_have_zaiko() ) : ?>
-		<div class="zaiko_status"><?php echo apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')); ?></div>
+		<div class="zaiko_status"><?php echo apply_filters('usces_filters_single_sku_zaiko_message', esc_html(usces_get_itemZaiko( 'name' ))); ?></div>
 	<?php else : ?>
 		<div style="margin-top:10px"><?php _e('Quantity', 'usces'); ?><?php usces_the_itemQuant(); ?><?php usces_the_itemSkuUnit(); ?><?php usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></div>
 		<div class="error_message"><?php usces_singleitem_error_message($post->ID, usces_the_itemSku('return')); ?></div>
@@ -123,11 +123,11 @@ get_header();
 				</td>
 			</tr>
 			<tr>
-				<td class="zaiko"><?php usces_the_itemZaiko(); ?></td>
+				<td class="zaiko"><?php usces_the_itemZaikoStatus(); ?></td>
 				<td class="quant"><?php usces_the_itemQuant(); ?></td>
 				<td class="unit"><?php usces_the_itemSkuUnit(); ?></td>
 			<?php if( !usces_have_zaiko() ) : ?>
-				<td class="button"><?php echo apply_filters('usces_filters_multi_sku_zaiko_message', __('Sold Out', 'usces')); ?></td>
+				<td class="button"><?php echo apply_filters('usces_filters_multi_sku_zaiko_message', esc_html(usces_get_itemZaiko( 'name' ))); ?></td>
 			<?php else : ?>
 				<td class="button"><?php usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0); ?></td>
 			<?php endif; ?>

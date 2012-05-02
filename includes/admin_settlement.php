@@ -26,17 +26,45 @@ jQuery(function($){
 			expires: 1
 		}
 	});
-	var security = $("input[name='security']:checked").val();
-	if( '3' == security ){
+
+	if( '2' == $("input[name='connection']:checked").val() ){
 		$("#authkey_zeus").css("display", "");
 	}else{
 		$("#authkey_zeus").css("display", "none");
+		$("#3dsecur_zeus_2").attr("checked", "checked");
 	}
-	$("input[name='security']").change(function(){
-		if( '3' == $("input[name='security']:checked").val() ){
+	$("input[name='connection']").click(function(){
+		if( '2' == $("input[name='connection']:checked").val() ){
 			$("#authkey_zeus").css("display", "");
 		}else{
 			$("#authkey_zeus").css("display", "none");
+			$("#3dsecur_zeus_2").attr("checked", "checked");
+		}
+	});
+	
+	if( '1' == $("input[name='3dsecur']:checked").val() ){
+		$("#connection_zeus_2").attr("checked", "checked");
+		$("#authkey_zeus").css("display", "");
+	}
+	$("input[name='3dsecur']").click(function(){
+		if( '1' == $("input[name='3dsecur']:checked").val() ){
+			$("#connection_zeus_2").attr("checked", "checked");
+			$("#authkey_zeus").css("display", "");
+		}
+	});
+	
+	if( '1' == $("input[name='security']:checked").val() ){
+		$("input[name='quickcharge']").attr("disabled", "disabled");
+		$("#quickcharge_zeus_2").attr("checked", "checked");
+	}else{
+		$("input[name='quickcharge']").removeAttr("disabled");
+	}
+	$("input[name='security']").click(function(){
+		if( '1' == $("input[name='security']:checked").val() ){
+			$("input[name='quickcharge']").attr("disabled", "disabled");
+			$("#quickcharge_zeus_2").attr("checked", "checked");
+		}else{
+			$("input[name='quickcharge']").removeAttr("disabled");
 		}
 	});
 });
@@ -101,16 +129,27 @@ function toggleVisibility(id) {
 				<td colspan="2"><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_security_zeus');"><?php _e('セキュリティー', 'usces'); ?></a></th>
-				<td><input name="security" type="radio" id="security_zeus_1" value="1"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '1' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_1">セキュリティコード無</label></td>
-				<td><input name="security" type="radio" id="security_zeus_2" value="2"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '2' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_2">セキュリティコード有</label></td>
-				<td><input name="security" type="radio" id="security_zeus_3" value="3"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '3' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_3">３Ｄセキュア</label></td>
-				<td><div id="ex_security_zeus" class="explanation"><?php _e('セキュリティレベルを指定します。3Dセキュアを選択した場合は認証キーが必須となります。', 'usces'); ?></div></td>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_connection_zeus');"><?php _e('接続方式', 'usces'); ?></a></th>
+				<td><input name="connection" type="radio" id="connection_zeus_1" value="1"<?php if( isset($opts['zeus']['connection']) && $opts['zeus']['connection'] == '1' ) echo ' checked="checked"' ?> /></td><td><label for="connection_zeus_1">Secure Link</label></td>
+				<td><input name="connection" type="radio" id="connection_zeus_2" value="2"<?php if( isset($opts['zeus']['connection']) && $opts['zeus']['connection'] == '2' ) echo ' checked="checked"' ?> /></td><td><label for="connection_zeus_2">Secure API</label></td>
+				<td colspan="2"><div id="ex_connection_zeus" class="explanation"><?php _e('認証接続方法。契約に従って指定する必要があります。', 'usces'); ?></div></td>
 			</tr>
 			<tr id="authkey_zeus">
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_authkey_zeus');"><?php _e('認証キー', 'usces'); ?></a></th>
 				<td colspan="4"><input name="authkey" type="text" id="clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['authkey']) ? $opts['zeus']['authkey'] : ''); ?>" size="40" /></td>
-				<td colspan="2"><div id="ex_authkey_zeus" class="explanation"><?php _e('契約時にZEUSから発行される認証キー（半角数字）', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_authkey_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるSecure API用認証キー（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_3dsecur_zeus');"><?php _e('3Dセキュア', 'usces'); ?></a></th>
+				<td><input name="3dsecur" type="radio" id="3dsecur_zeus_1" value="1"<?php if( isset($opts['zeus']['3dsecur']) && $opts['zeus']['3dsecur'] == '1' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecur_zeus_1">利用する</label></td>
+				<td><input name="3dsecur" type="radio" id="3dsecur_zeus_2" value="2"<?php if( isset($opts['zeus']['3dsecur']) && $opts['zeus']['3dsecur'] == '2' ) echo ' checked="checked"' ?> /></td><td><label for="3dsecur_zeus_2">利用しない</label></td>
+				<td colspan="2"><div id="ex_3dsecur_zeus" class="explanation"><?php _e('3Dセキュアを利用するにはSecure APIを利用した接続が必要です。契約に従って指定する必要があります。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_security_zeus');"><?php _e('セキュリティーコード', 'usces'); ?></a></th>
+				<td><input name="security" type="radio" id="security_zeus_1" value="1"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '1' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_1">利用する</label></td>
+				<td><input name="security" type="radio" id="security_zeus_2" value="2"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == '2' ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_2">利用しない</label></td>
+				<td colspan="2"><div id="ex_security_zeus" class="explanation"><?php _e('セキュリティーコードの入力を必須とするかどうかを指定します。契約に従って指定する必要があります。セキュリティーコードを利用した場合、クイックチャージは利用できません。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_quickcharge_zeus');">クイックチャージ</a></th>
@@ -194,9 +233,9 @@ function toggleVisibility(id) {
 		デザインの統一されたスタイリッシュな決済が可能です。但し、カード番号を扱いますので専用SSLが必須となります。</p>
 		<p>カード番号はZEUS のシステムに送信されるだけで、Welcart に記録は残しません。</p>
 		<p>　</p>
-		<p>* 3Dセキュアとは </p>
-		<p>従来の「クレジットカード番号」と「有効期限」に加え、「自分しか知らないパスワード」を合わせて認証する仕組みで、<br />
-		クレジットカード情報の盗用による「なりすまし」などの不正使用を未然に防止することができます。</p>
+		<p>* 3Dセキュアとセキュリティーコード </p>
+		<p>3Dセキュアとおよびセキュリティーコードの利用は、決済サービス契約時に決定します。契約内容に従って指定しないと正常に動作しませんのでご注意ください。<br />
+		また、セキュリティーコードを利用した場合はクイックチャージが利用できなくなります。詳しくは<a href="http://www.cardservice.co.jp/" target="_blank">株式会社ゼウス</a>（代表：03-3498-9030）にお問い合わせください。</p>
 		<!--<p><strong>テスト稼動について</strong></p>
 		<p>入金お任せ及びコンビニ決済のテスト稼動を行なう際は、”テストカード番号”の項目にゼウスから発行されるテストカード番号を入力して下さい。<br />
 		これを入力することでWelcart は、名前の後ろにテストカード番号を自動的に付けるなどテストモードで動作します。通常の購入方法でテストができます。<br />

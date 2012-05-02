@@ -285,14 +285,15 @@ function usces_filter_delivery_secure_check( $mes ){
 			break;
 		}
 	}	
-
+	$cnum1 = trim($_POST["cnum1"]);
+	$securecode = trim($_POST["securecode"]);
 	switch( $settlement ){
 		case 'acting_zeus_card':
-			if ( strlen(trim($_POST["cnum1"])) != 4 || strlen(trim($_POST["cnum2"])) != 4 || strlen(trim($_POST["cnum3"])) != 4 || strlen(trim($_POST["cnum4"])) < 2 )
+			if ( !is_numeric($cnum1) )
 				$mes .= __('カード番号が不正です', 'usces') . "<br />";
 			
-			if ( isset($_POST["securecode"]) && '' == $_POST["securecode"] && 'on' == $usces->options['acting_settings']['zeus']['3dsecure'] )
-				$mes .= __('カードの暗証番号をしてください', 'usces') . "<br />";
+			if ( isset($_POST["securecode"]) && !is_numeric($securecode) )
+				$mes .= __('セキュリティコードが不正です', 'usces') . "<br />";
 				
 			if ( '' == $_POST["expyy"] )
 				$mes .= __('カードの有効年を選択してください', 'usces') . "<br />";

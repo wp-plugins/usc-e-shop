@@ -119,7 +119,7 @@ function usces_zeus_3dsecure_enrol(){
 
 	$data = array();
 
-	if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+	if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['history']['key'] = $_POST['sendid'];
@@ -142,7 +142,9 @@ function usces_zeus_3dsecure_enrol(){
 		$data['card']['number'] = $_POST['cardnumber'];
 		$data['card']['expires']['year'] = (int)$_POST['expyy'];
 		$data['card']['expires']['month'] = (int)$_POST['expmm'];
-		$data['card']['cvv'] = $_POST['securecode'];
+		if( '1' == $acting_opts['security'] ){
+			$data['card']['cvv'] = $_POST['securecode'];
+		}
 		$data['card']['name'] = $_POST['username'];
 		$data['payment']['amount'] = $_POST['money'];
 		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
@@ -245,7 +247,7 @@ function usces_zeus_3dsecure_auth(){
 	//usces_log('xml : '.print_r($xml, true), 'acting_transaction.log');
 	
 	$AuthRes = usces_xml2assoc($xml); 
-usces_log('AuthRes : '.print_r($AuthRes, true), 'acting_transaction.log');
+//usces_log('AuthRes : '.print_r($AuthRes, true), 'acting_transaction.log');
 	if( 'success' != $AuthRes['response']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $AuthRes['response']['result']['status'] . ' code=' . $AuthRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $AuthRes['response']['result']['status'] . '&code=' . $AuthRes['response']['result']['code']);
@@ -270,13 +272,13 @@ usces_log('AuthRes : '.print_r($AuthRes, true), 'acting_transaction.log');
 	}
 	
 	$PayRes = usces_xml2assoc($xml); 
-//usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
 	if( 'success' != $PayRes['response']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
 		exit;
 	}else{
-		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1');
+		usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
+		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month']);
 		exit;
 	}
 	exit;
@@ -292,12 +294,10 @@ function usces_zeus_secure_payreq(){
 
 	$data = array();
 
-	if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+	if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
-		$data['card']['history']['key'] = $_POST['sendid'];
-		$data['card']['history']['action'] = 'send_email';
-		$data['card']['cvv'] = $_POST['securecode'];
+		$data['card']['history_action_send_email']['key'] = $_POST['sendid'];
 		$data['payment']['amount'] = $_POST['money'];
 		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
 			$data['payment']['count'] = $_POST['div'];
@@ -315,7 +315,9 @@ function usces_zeus_secure_payreq(){
 		$data['card']['number'] = $_POST['cardnumber'];
 		$data['card']['expires']['year'] = (int)$_POST['expyy'];
 		$data['card']['expires']['month'] = (int)$_POST['expmm'];
-		$data['card']['cvv'] = $_POST['securecode'];
+		if( '1' == $acting_opts['security'] ){
+			$data['card']['cvv'] = $_POST['securecode'];
+		}
 		$data['card']['name'] = $_POST['username'];
 		$data['payment']['amount'] = $_POST['money'];
 		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
@@ -329,25 +331,29 @@ function usces_zeus_secure_payreq(){
 		$data['uniq_key']['sendpoint'] = $_POST['sendpoint'];
 	}
 		
-	$PayReq = '<?xml version="1.0" encoding="utf-8"?>';
-	$PayReq .= '<request service="secure_link_3d" action="enroll">';
+	$PayReq = '<?xml version="1.0" encoding="utf-8" ?>';
+	$PayReq .= '<request service="secure_link" action="payment">';
 	$PayReq .= usces_assoc2xml($data); 
 	$PayReq .= '</request>';
+usces_log('zeus data: ' . print_r($data,true), 'acting_transaction.log');
+usces_log('zeus PayReq: ' . print_r($PayReq,true), 'acting_transaction.log');
 
 	$xml = usces_get_xml($acting_opts['card_secureurl'], $PayReq);
 	if ( empty($xml) ){
-		usces_log('zeus : EnrolRes Error', 'acting_transaction.log');
+		usces_log('zeus : PayReq Error', 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=PayReq&code=0');
 		exit;
 	}
 
 	$PayRes = usces_xml2assoc($xml); 
-//usces_log('zeus xml : ' . print_r($EnrolRes, true), 'acting_transaction.log');
 	if( 'success' == $PayRes['response']['result']['status'] ){
-		return 'success';
+		usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
+		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month']);
+		exit;
 	}else{
 		usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');
-		return 'error';
+		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
+		exit;
 	}
 }
 
@@ -366,9 +372,16 @@ function usces_assoc2xml($prm_array){
 	$i=0;
 		foreach ($prm_array as $index => $element){ 
 			if(is_array($element)){ 
-				$xml .= '<' . $index . '>'; 
-				$xml .= usces_assoc2xml($element); 
-				$xml .= '</' . $index . '>'; 
+				$acts = explode('_', $index, 3);
+				if( 2 < count($acts) && 'history' == $acts[0] && 'action' == $acts[1] ){
+					$xml .= '<history action="' . $acts[2] . '">'; 
+					$xml .= usces_assoc2xml($element); 
+					$xml .= '</history>'; 
+				}else{
+					$xml .= '<' . $index . '>'; 
+					$xml .= usces_assoc2xml($element); 
+					$xml .= '</' . $index . '>'; 
+				}
 			}else{ 
 				$xml .= '<' . $index . '>' . $element . '</' . $index . '>'; 
 			}
@@ -402,4 +415,219 @@ function usces_get_xml($url, $paras){
 	return $xml;
 }
 
+//function admin_prodauct_meta_box(){
+//	$wp_version = get_bloginfo('version');
+//	if (version_compare($wp_version, '3.4-beta3', '<'))
+//		return;
+//	
+//	if ( 'usces_itemedit' == $_GET['page'] && !isset($_GET['action']))
+//		return;
+//	
+//
+//}
+
+function admin_prodauct_current_screen(&$current_screen){
+	$wp_version = get_bloginfo('version');
+	if (version_compare($wp_version, '3.4-beta3', '<'))
+		return;
+	
+	if ( 'usces_itemedit' == $_GET['page'] && !isset($_GET['action']))
+		return;
+	
+	require_once(USCES_PLUGIN_DIR.'/includes/meta-boxes.php');
+
+	$post_type = 'post';
+	add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', $post_type, 'side', 'core');
+
+	// all taxonomies
+	foreach ( get_object_taxonomies($post_type) as $tax_name ) {
+		$taxonomy = get_taxonomy($tax_name);
+		if ( ! $taxonomy->show_ui )
+			continue;
+	
+		$label = $taxonomy->labels->name;
+	
+		if ( !is_taxonomy_hierarchical($tax_name) )
+			add_meta_box('tagsdiv-' . $tax_name, $label, 'post_tags_meta_box', $post_type, 'side', 'core');
+		else
+			add_meta_box($tax_name . 'div', $label, 'post_categories_meta_box', $post_type, 'side', 'core', array( 'taxonomy' => $tax_name, 'descendants_and_self' => USCES_ITEM_CAT_PARENT_ID ));
+	}
+	
+	if ( post_type_supports($post_type, 'page-attributes') )
+		add_meta_box('pageparentdiv', 'page' == $post_type ? __('Page Attributes') : __('Attributes'), 'page_attributes_meta_box', $post_type, 'side', 'core');
+	
+	if ( current_theme_supports( 'post-thumbnails', $post_type ) && post_type_supports($post_type, 'thumbnail') )
+		add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', $post_type, 'side', 'low');
+	
+	if ( post_type_supports($post_type, 'excerpt') )
+		add_meta_box('postexcerpt', __('Excerpt'), 'post_excerpt_meta_box', $post_type, 'normal', 'core');
+	
+	if ( post_type_supports($post_type, 'trackbacks') )
+		add_meta_box('trackbacksdiv', __('Send Trackbacks'), 'post_trackback_meta_box', $post_type, 'normal', 'core');
+	
+	if ( post_type_supports($post_type, 'custom-fields') )
+		add_meta_box('postcustom', __('Custom Fields'), 'post_custom_meta_box', $post_type, 'normal', 'core');
+	
+	//do_action('dbx_post_advanced');
+	if ( post_type_supports($post_type, 'comments') )
+		add_meta_box('commentstatusdiv', __('Discussion'), 'post_comment_status_meta_box', $post_type, 'normal', 'core');
+	
+	if ( (isset($post->post_status) && ('publish' == $post->post_status || 'private' == $post->post_status) ) && post_type_supports($post_type, 'comments') )
+		add_meta_box('commentsdiv', __('Comments'), 'post_comment_meta_box', $post_type, 'normal', 'core');
+	
+	if ( !( (isset( $post->post_status ) && 'pending' == $post->post_status) && !current_user_can( $post_type_object->cap->publish_posts ) ) )
+		add_meta_box('slugdiv', __('Slug'), 'post_slug_meta_box', $post_type, 'normal', 'core');
+	
+	if ( post_type_supports($post_type, 'author') ) {
+		if ( version_compare($wp_version, '3.1', '>=') ){
+			if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) )
+				add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
+		}else{
+			$authors = get_editable_user_ids( $current_user->id ); // TODO: ROLE SYSTEM
+			if ( isset($post->post_author) && $post->post_author && !in_array($post->post_author, $authors) )
+				$authors[] = $post->post_author;
+			if ( ( $authors && count( $authors ) > 1 ) || is_super_admin() )
+				add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
+		}
+	}
+	
+	if ( post_type_supports($post_type, 'revisions') && 0 < $post_ID && wp_get_post_revisions( $post_ID ) )
+		add_meta_box('revisionsdiv', __('Revisions'), 'post_revisions_meta_box', $post_type, 'normal', 'core');
+	
+	//add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
+
+
+	$current_screen->base = $post_type;
+	$current_screen->id = $post_type;
+	$current_screen->post_type = $post_type;
+	//usces_p($current_screen);
+
+}
+
+function admin_prodauct_header(){
+
+	$wp_version = get_bloginfo('version');
+	if (version_compare($wp_version, '3.4-beta3', '<'))
+		return;
+	
+	if ( isset($_REQUEST['action'])){
+	
+		$suport_display = '<p>商品登録関連ドキュメント<br /><a href="http://www.welcart.com/documents/manual-2/%E6%96%B0%E8%A6%8F%E5%95%86%E5%93%81%E8%BF%BD%E5%8A%A0" target="_new">商品編集画面</a></p>';
+	
+		get_current_screen()->add_help_tab( array(
+			'id'      => 'suport-display',
+			'title'   => 'Documents',
+			'content' => $suport_display,
+		) );
+//	
+//		$title_and_editor  = '<p>' . __('<strong>Title</strong> - Enter a title for your post. After you enter a title, you&#8217;ll see the permalink below, which you can edit.') . '</p>';
+//		$title_and_editor .= '<p>' . __('<strong>Post editor</strong> - Enter the text for your post. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your post text. You can insert media files by clicking the icons above the post editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular post editor.') . '</p>';
+//	
+//		get_current_screen()->add_help_tab( array(
+//			'id'      => 'title-post-editor',
+//			'title'   => __('Title and Post Editor'),
+//			'content' => $title_and_editor,
+//		) );
+//	
+//		$publish_box = '<p>' . __('<strong>Publish</strong> - You can set the terms of publishing your post in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting a post or making it stay at the top of your blog indefinitely (sticky). Publish (immediately) allows you to set a future or past date and time, so you can schedule a post to be published in the future or backdate a post.') . '</p>';
+//	
+//		if ( current_theme_supports( 'post-formats' ) && post_type_supports( 'post', 'post-formats' ) ) {
+//			$publish_box .= '<p>' . __( '<strong>Post Format</strong> - This designates how your theme will display a specific post. For example, you could have a <em>standard</em> blog post with a title and paragraphs, or a short <em>aside</em> that omits the title and contains a short text blurb. Please refer to the Codex for <a href="http://codex.wordpress.org/Post_Formats#Supported_Formats">descriptions of each post format</a>. Your theme could enable all or some of 10 possible formats.' ) . '</p>';
+//		}
+//	
+//		if ( current_theme_supports( 'post-thumbnails' ) && post_type_supports( 'post', 'thumbnail' ) ) {
+//			$publish_box .= '<p>' . __('<strong>Featured Image</strong> - This allows you to associate an image with your post without inserting it. This is usually useful only if your theme makes use of the featured image as a post thumbnail on the home page, a custom header, etc.') . '</p>';
+//		}
+//	
+//		get_current_screen()->add_help_tab( array(
+//			'id'      => 'publish-box',
+//			'title'   => __('Publish Box'),
+//			'content' => $publish_box,
+//		) );
+//	
+//		$discussion_settings  = '<p>' . __('<strong>Send Trackbacks</strong> - Trackbacks are a way to notify legacy blog systems that you&#8217;ve linked to them. Enter the URL(s) you want to send trackbacks. If you link to other WordPress sites they&#8217;ll be notified automatically using pingbacks, and this field is unnecessary.') . '</p>';
+//		$discussion_settings .= '<p>' . __('<strong>Discussion</strong> - You can turn comments and pings on or off, and if there are comments on the post, you can see them here and moderate them.') . '</p>';
+//	
+//		get_current_screen()->add_help_tab( array(
+//			'id'      => 'discussion-settings',
+//			'title'   => __('Discussion Settings'),
+//			'content' => $discussion_settings,
+//		) );
+//	
+//		get_current_screen()->set_help_sidebar(
+//				'<p>' . sprintf(__('You can also create posts with the <a href="%s">Press This bookmarklet</a>.'), 'options-writing.php') . '</p>' .
+//				'<p><strong>' . __('For more information:') . '</strong></p>' .
+//				'<p>' . __('<a href="http://codex.wordpress.org/Posts_Add_New_Screen" target="_blank">Documentation on Writing and Editing Posts</a>') . '</p>' .
+//				'<p>' . __('<a href="http://wordpress.org/support/" target="_blank">Support Forums</a>') . '</p>'
+//		);
+	}else{
+		
+	}
+}
+
+function admin_new_prodauct_header(){
+
+	$wp_version = get_bloginfo('version');
+	if (version_compare($wp_version, '3.4-beta3', '<'))
+		return;
+	
+	$customize_display = '<p>' . __('The title field and the big Post Editing Area are fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to unhide more boxes (Excerpt, Send Trackbacks, Custom Fields, Discussion, Slug, Author) or to choose a 1- or 2-column layout for this screen.') . '</p>';
+
+	get_current_screen()->add_help_tab( array(
+		'id'      => 'customize-display',
+		'title'   => __('Customizing This Display'),
+		'content' => $customize_display,
+	) );
+//
+//	$title_and_editor  = '<p>' . __('<strong>Title</strong> - Enter a title for your post. After you enter a title, you&#8217;ll see the permalink below, which you can edit.') . '</p>';
+//	$title_and_editor .= '<p>' . __('<strong>Post editor</strong> - Enter the text for your post. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your post text. You can insert media files by clicking the icons above the post editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular post editor.') . '</p>';
+//
+//	get_current_screen()->add_help_tab( array(
+//		'id'      => 'title-post-editor',
+//		'title'   => __('Title and Post Editor'),
+//		'content' => $title_and_editor,
+//	) );
+//
+//	$publish_box = '<p>' . __('<strong>Publish</strong> - You can set the terms of publishing your post in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting a post or making it stay at the top of your blog indefinitely (sticky). Publish (immediately) allows you to set a future or past date and time, so you can schedule a post to be published in the future or backdate a post.') . '</p>';
+//
+//	if ( current_theme_supports( 'post-formats' ) && post_type_supports( 'post', 'post-formats' ) ) {
+//		$publish_box .= '<p>' . __( '<strong>Post Format</strong> - This designates how your theme will display a specific post. For example, you could have a <em>standard</em> blog post with a title and paragraphs, or a short <em>aside</em> that omits the title and contains a short text blurb. Please refer to the Codex for <a href="http://codex.wordpress.org/Post_Formats#Supported_Formats">descriptions of each post format</a>. Your theme could enable all or some of 10 possible formats.' ) . '</p>';
+//	}
+//
+//	if ( current_theme_supports( 'post-thumbnails' ) && post_type_supports( 'post', 'thumbnail' ) ) {
+//		$publish_box .= '<p>' . __('<strong>Featured Image</strong> - This allows you to associate an image with your post without inserting it. This is usually useful only if your theme makes use of the featured image as a post thumbnail on the home page, a custom header, etc.') . '</p>';
+//	}
+//
+//	get_current_screen()->add_help_tab( array(
+//		'id'      => 'publish-box',
+//		'title'   => __('Publish Box'),
+//		'content' => $publish_box,
+//	) );
+//
+//	$discussion_settings  = '<p>' . __('<strong>Send Trackbacks</strong> - Trackbacks are a way to notify legacy blog systems that you&#8217;ve linked to them. Enter the URL(s) you want to send trackbacks. If you link to other WordPress sites they&#8217;ll be notified automatically using pingbacks, and this field is unnecessary.') . '</p>';
+//	$discussion_settings .= '<p>' . __('<strong>Discussion</strong> - You can turn comments and pings on or off, and if there are comments on the post, you can see them here and moderate them.') . '</p>';
+//
+//	get_current_screen()->add_help_tab( array(
+//		'id'      => 'discussion-settings',
+//		'title'   => __('Discussion Settings'),
+//		'content' => $discussion_settings,
+//	) );
+//
+//	get_current_screen()->set_help_sidebar(
+//			'<p>' . sprintf(__('You can also create posts with the <a href="%s">Press This bookmarklet</a>.'), 'options-writing.php') . '</p>' .
+//			'<p><strong>' . __('For more information:') . '</strong></p>' .
+//			'<p>' . __('<a href="http://codex.wordpress.org/Posts_Add_New_Screen" target="_blank">Documentation on Writing and Editing Posts</a>') . '</p>' .
+//			'<p>' . __('<a href="http://wordpress.org/support/" target="_blank">Support Forums</a>') . '</p>'
+//	);
+}
+
+function usces_clear_quickcharge(){
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'usces_member_meta';
+$wpdb->show_errors();
+		$query = $wpdb->prepare("DELETE FROM $table_name WHERE meta_key = %s", 'zeus_pcid');
+		$res = $wpdb->query( $query );
+		
+		return $res;
+}
 ?>
