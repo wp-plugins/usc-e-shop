@@ -392,7 +392,7 @@ function admin_post_footer(){
 //	}
 //}
 
-function usces_item_dupricate($post_id){
+function usces_item_duplicate($post_id){
 	global $wpdb;
 
 	if ( !current_user_can( 'edit_posts' ) )
@@ -445,6 +445,7 @@ function usces_item_dupricate($post_id){
 	foreach($meta_data as $data){
 		
 		$prefix = substr($data->meta_key, 0, 5);
+		$prefix1 = substr($data->meta_key, 0, 1);
 		$prefix2 = substr($data->meta_key, 0, 11);
 		
 		if( $prefix == '_item' ){
@@ -466,6 +467,13 @@ function usces_item_dupricate($post_id){
 			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
 		
 		}
+		if( $prefix1 != '_' ){
+		
+			$value = $data->meta_value;
+			$key = $data->meta_key;
+			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+		
+		}
 
 	}
 	$valstr = rtrim($valstr, ',');
@@ -476,6 +484,9 @@ function usces_item_dupricate($post_id){
 	do_action('usces_action_item_dupricate', $post_id, $newpost_id);
 
 	return $newpost_id;
+}
+function usces_item_dupricate($post_id){
+	return usces_item_duplicate($post_id);
 }
 
 function usces_all_delete_itemdata(&$obj){

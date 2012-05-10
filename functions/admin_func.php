@@ -426,7 +426,9 @@ function usces_get_xml($url, $paras){
 //
 //}
 
-function admin_prodauct_current_screen(&$current_screen){
+function admin_prodauct_current_screen(){
+	global $current_screen;
+	
 	$wp_version = get_bloginfo('version');
 	if (version_compare($wp_version, '3.4-beta3', '<'))
 		return;

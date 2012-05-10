@@ -2648,10 +2648,10 @@ function usces_trackPageview_deletemember($push){
 	return $push;
 }
 
-function usces_get_essential_mark( $type ){
+function usces_get_essential_mark( $fielde, $data = NULL ){
 	global $usces_essential_mark;
-	do_action('usces_action_essential_mark');
-	return $usces_essential_mark[$type];
+	do_action('usces_action_essential_mark', $data, $fielde);
+	return $usces_essential_mark[$fielde];
 }
 
 function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return' ){
