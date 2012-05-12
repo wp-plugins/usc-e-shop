@@ -848,7 +848,10 @@ function usces_reg_orderdata( $results = array() ) {
 	}else{
 //20101018ysk start
 		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' ) ? 'noreceipt' : '';
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' ) ? 'noreceipt' : '';
+//20120413ysk start
+		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' ) ? 'noreceipt' : '';
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' ) ? 'noreceipt' : '';
+//20120413ysk end
 //20101018ysk end
 		$order_modified = NULL;
 	}
@@ -1019,9 +1022,11 @@ function usces_reg_orderdata( $results = array() ) {
 			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
 										VALUES (%d, %s, %s)", $order_id, 'settlement_id', $_REQUEST['X-S_TORIHIKI_NO']);
 			$wpdb->query( $mquery );
-			$limitofcard = substr($_REQUEST['X-EXPIRE'], 0, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 2, 2);
-			$usces->set_member_meta_value('partofcard', $_REQUEST['X-PARTOFCARD']);
-			$usces->set_member_meta_value('limitofcard', $limitofcard);
+//20120511ysk start
+			//$limitofcard = substr($_REQUEST['X-EXPIRE'], 0, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 2, 2);
+			//$usces->set_member_meta_value('partofcard', $_REQUEST['X-PARTOFCARD']);
+			//$usces->set_member_meta_value('limitofcard', $limitofcard);
+//20120511ysk end
 			if ( isset($_REQUEST['X-AC_MEMBERID']) ) {
 				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
 											VALUES (%d, %s, %s)", $order_id, $_REQUEST['X-AC_MEMBERID'], 'continuation');
@@ -1043,6 +1048,15 @@ function usces_reg_orderdata( $results = array() ) {
 		if( isset($_REQUEST['acting']) && isset($_REQUEST['acting_return']) && isset($_REQUEST['trans_code']) && 'epsilon' == $_REQUEST['acting'] ) {
 			$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);
 		}
+//20120413ysk start
+		if( isset($_REQUEST['acting']) && ('sbps_conv' == $_REQUEST['acting']) ) {
+			$usces->set_order_meta_value('tracking_id', $_POST['res_tracking_id'], $order_id);
+			foreach( $_POST as $key => $value ){
+				$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
+			}
+			$usces->set_order_meta_value('acting_sbps_conv', serialize($data), $order_id);
+		}
+//20120413ysk end
 
 		foreach($cart as $cartrow){
 			$sku = urldecode($cartrow['sku']);
@@ -2202,6 +2216,26 @@ function usces_check_acting_return() {
 			$results['reg_order'] = true;
 			break;
 //20110208ysk end
+//20120413ysk start
+		case 'sbps_card':
+		case 'sbps_conv':
+		case 'sbps_wallet':
+		case 'sbps_mobile':
+			if( isset($_REQUEST['cancel']) ) {
+				$results[0] = 0;
+				$results['reg_order'] = false;
+
+			} else {
+				if( 'OK' == $_REQUEST['res_result'] ) {
+					usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
+					$results[0] = 1;
+				}else{
+					$results[0] = 0;
+				}
+				$results['reg_order'] = true;
+			}
+			break;
+//20120413ysk end
 
 		default:
 			$results = $_GET;
@@ -2261,6 +2295,14 @@ function usces_check_acting_return_duplicate( $results = array() ) {
 	case 'jpayment_bank':
 		$trans_id = isset($_REQUEST['gid']) ? $_REQUEST['gid'] : '';
 		break;
+//20120413ysk start
+	case 'sbps_card':
+	case 'sbps_conv':
+	case 'sbps_wallet':
+	case 'sbps_mobile':
+		$trans_id = isset($_REQUEST['order_id']) ? $_REQUEST['order_id'] : '';
+		break;
+//20120413ysk end
 	default:
 		$trans_id = '';
 	}
@@ -3401,6 +3443,14 @@ function usces_post_reg_orderdata($order_id, $results){
 			case 'jpayment_bank':
 				$trans_id = isset($_REQUEST['gid']) ? $_REQUEST['gid'] : '';
 				break;
+//20120413ysk start
+			case 'sbps_card':
+			case 'sbps_conv':
+			case 'sbps_wallet':
+			case 'sbps_mobile':
+				$trans_id = isset($_REQUEST['order_id']) ? $_REQUEST['order_id'] : '';
+				break;
+//20120413ysk end
 			default:
 				$trans_id = '';
 		}
@@ -3833,4 +3883,14 @@ function usces_get_gp_price($post_id, $p, $quant){
 	$realprice = apply_filters('usces_filter_get_gp_price', $realprice, $post_id, $p, $quant);
 	return $realprice;
 }
+//20120413ysk start
+function usces_set_free_csv( $customer ){
+	$free_csv = "";
+	if( "" != $customer['name1'] ) {
+		$free_csv = "LAST_NAME=".mb_convert_encoding($customer['name1'],'SJIS','UTF-8').",FIRST_NAME=".mb_convert_encoding($customer['name2'],'SJIS','UTF-8').",TEL=".str_replace("-","",$customer['tel']).",MAIL=".$customer['mailaddress1'];
+		$free_csv = base64_encode( $free_csv );
+	}
+	return $free_csv;
+}
+//20120413ysk end
 ?>

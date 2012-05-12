@@ -102,6 +102,9 @@ function toggleVisibility(id) {
 <!--20110208ysk start-->
 		<li><a href="#uscestabs_paypal">PayPal</a></li>
 <!--20110208ysk end-->
+<!--20120413ysk start-->
+		<li><a href="#uscestabs_sbps">ソフトバンク・ペイメント【β】</a></li>
+<!--20120413ysk end-->
 	</ul>
 
 
@@ -312,7 +315,7 @@ function toggleVisibility(id) {
 			</tr>
 			<?php endif; ?>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_pc_ope_remise');">稼働環境(PC)</a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_pc_ope_remise');">稼働環境</a></th>
 				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_1" value="test"<?php if( isset($opts['remise']['card_pc_ope']) && $opts['remise']['card_pc_ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="card_pc_ope_remise_1">テスト環境</label></td>
 				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_2" value="public"<?php if( isset($opts['remise']['card_pc_ope']) && $opts['remise']['card_pc_ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="card_pc_ope_remise_2">本番環境</label></td>
 				<td><div id="ex_card_pc_ope_remise" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
@@ -320,8 +323,15 @@ function toggleVisibility(id) {
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_pc_remise');"><?php _e('本番URL(PC)', 'usces'); ?></a></th>
 				<td colspan="4"><input name="send_url_pc" type="text" id="send_url_pc_remise" value="<?php echo esc_html(isset($opts['remise']['send_url_pc']) ? $opts['remise']['send_url_pc'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_send_url_pc_remise" class="explanation"><?php _e('クレジットカード決済の本番環境で接続するURLを設定します。', 'usces'); ?></div></td>
+				<td><div id="ex_send_url_pc_remise" class="explanation"><?php _e('クレジットカード決済の本番環境(PC)で接続するURLを設定します。', 'usces'); ?></div></td>
 			</tr>
+			<?php if( defined('WCEX_MOBILE') ): ?>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_mbl_remise');"><?php _e('本番URL(携帯)', 'usces'); ?></a></th>
+				<td colspan="4"><input name="send_url_mbl" type="text" id="send_url_mbl_remise" value="<?php echo esc_html(isset($opts['remise']['send_url_mbl']) ? $opts['remise']['send_url_mbl'] : ''); ?>" size="40" /></td>
+				<td><div id="ex_send_url_mbl_remise" class="explanation"><?php _e('クレジットカード決済の本番環境(携帯)で接続するURLを設定します。', 'usces'); ?></div></td>
+			</tr>
+			<?php endif; ?>
 		</table>
 		<table class="settle_table">
 			<tr>
@@ -336,7 +346,7 @@ function toggleVisibility(id) {
 				<td><div id="ex_paydate_remise" class="explanation"><?php _e('日数を設定します。（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_pc_ope_remise');">稼働環境(PC)</a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_pc_ope_remise');">稼働環境</a></th>
 				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_1" value="test"<?php if( isset($opts['remise']['conv_pc_ope']) && $opts['remise']['conv_pc_ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="conv_pc_ope_remise_1">テスト環境</label></td>
 				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_2" value="public"<?php if( isset($opts['remise']['conv_pc_ope']) && $opts['remise']['conv_pc_ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="conv_pc_ope_remise_2">本番環境</label></td>
 				<td><div id="ex_conv_pc_ope_remise" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
@@ -344,15 +354,20 @@ function toggleVisibility(id) {
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_cvs_pc_remise');"><?php _e('本番URL(PC)', 'usces'); ?></a></th>
 				<td colspan="4"><input name="send_url_cvs_pc" type="text" id="send_url_cvs_pc_remise" value="<?php echo esc_html(isset($opts['remise']['send_url_cvs_pc']) ? $opts['remise']['send_url_cvs_pc'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_send_url_cvs_pc_remise" class="explanation"><?php _e('コンビニ・電子マネー決済の本番環境で接続するURLを設定します。', 'usces'); ?></div></td>
+				<td><div id="ex_send_url_cvs_pc_remise" class="explanation"><?php _e('コンビニ・電子マネー決済の本番環境(PC)で接続するURLを設定します。', 'usces'); ?></div></td>
 			</tr>
+			<?php if( defined('WCEX_MOBILE') ): ?>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_cvs_mbl_remise');"><?php _e('本番URL(携帯)', 'usces'); ?></a></th>
+				<td colspan="4"><input name="send_url_cvs_mbl" type="text" id="send_url_cvs_mbl_remise" value="<?php echo esc_html(isset($opts['remise']['send_url_cvs_mbl']) ? $opts['remise']['send_url_cvs_mbl'] : ''); ?>" size="40" /></td>
+				<td><div id="ex_send_url_cvs_mbl_remise" class="explanation"><?php _e('コンビニ・電子マネー決済の本番環境(携帯)で接続するURLを設定します。', 'usces'); ?></div></td>
+			</tr>
+			<?php endif; ?>
 		</table>
-		<input name="send_url_cvs_mbl" type="hidden" value="https://test.remise.jp/rpgw2/mbl/cvs/paycvs.aspx" />
-		<input name="send_url_mbl" type="hidden" value="https://test.remise.jp/rpgw2/mbl/card/paycard.aspx" />
-		<input name="send_url_cvs_mbl_test" type="hidden" value="https://test.remise.jp/rpgw2/mbl/cvs/paycvs.aspx" />
-		<input name="send_url_cvs_pc_test" type="hidden" value="https://test.remise.jp/rpgw2/pc/cvs/paycvs.aspx" />
-		<input name="send_url_mbl_test" type="hidden" value="https://test.remise.jp/rpgw2/mbl/card/paycard.aspx" />
 		<input name="send_url_pc_test" type="hidden" value="https://test.remise.jp/rpgw2/pc/card/paycard.aspx" />
+		<input name="send_url_mbl_test" type="hidden" value="https://test.remise.jp/rpgw2/mbl/card/paycard.aspx" />
+		<input name="send_url_cvs_pc_test" type="hidden" value="https://test.remise.jp/rpgw2/pc/cvs/paycvs.aspx" />
+		<input name="send_url_cvs_mbl_test" type="hidden" value="https://test.remise.jp/rpgw2/mbl/cvs/paycvs.aspx" />
 		<input name="REMARKS3" type="hidden" value="A0000875" />
 		<input name="acting" type="hidden" value="remise" />
 		<input name="usces_option_update" type="submit" class="button" value="ルミーズの設定を更新する" />
@@ -520,6 +535,165 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_paypal-->
 <!--20110208ysk end-->
+<!--20120413ysk start-->
+	<div id="uscestabs_sbps">
+	<div class="settlement_service"><span class="service_title">ソフトバンク・ペイメント・サービス【β】</span></div>
+
+	<?php if( isset($_POST['acting']) && 'sbps' == $_POST['acting'] ){ ?>
+		<?php if( isset($opts['sbps']['activate']) && 'on' == $opts['sbps']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php }else if( '' != $mes ){ ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php } ?>
+	<?php } ?>
+	<form action="" method="post" name="sbps_form" id="sbps_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_merchant_id_sbps');">マーチャントID</a></th>
+				<td colspan="6"><input name="merchant_id" type="text" id="merchant_id_sbps" value="<?php echo esc_html(isset($opts['sbps']['merchant_id']) ? $opts['sbps']['merchant_id'] : ''); ?>" size="20" maxlength="5" /></td>
+				<td><div id="ex_merchant_id_sbps" class="explanation"><?php _e('契約時にソフトバンク・ペイメント・サービスから発行されるマーチャントID（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_service_id_sbps');">サービスID</a></th>
+				<td colspan="6"><input name="service_id" type="text" id="service_id_sbps" value="<?php echo esc_html(isset($opts['sbps']['service_id']) ? $opts['sbps']['service_id'] : ''); ?>" size="20" maxlength="3" /></td>
+				<td><div id="ex_service_id_sbps" class="explanation"><?php _e('契約時にソフトバンク・ペイメント・サービスから発行されるサービスID（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_hash_key_sbps');">Hash KEY</a></th>
+				<td colspan="6"><input name="hash_key" type="text" id="hash_key_sbps" value="<?php echo esc_html(isset($opts['sbps']['hash_key']) ? $opts['sbps']['hash_key'] : ''); ?>" size="50" maxlength="40" /></td>
+				<td><div id="ex_hash_key_sbps" class="explanation"><?php _e('契約時にソフトバンク・ペイメント・サービスから発行される Hash KEY（半角英数）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_sbps');"><?php _e('Operation Environment', 'usces'); ?></a></th>
+				<td><input name="ope" type="radio" id="ope_sbps_1" value="check"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'check' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_1">接続支援サイト</label></td>
+				<td><input name="ope" type="radio" id="ope_sbps_2" value="test"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_2">テスト環境</label></td>
+				<td><input name="ope" type="radio" id="ope_sbps_3" value="public"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_3">本番環境</label></td>
+				<td><div id="ex_ope_sbps" class="explanation"><?php _e('動作環境を切り替えます。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_sbps');"><?php _e('本番URL', 'usces'); ?></a></th>
+				<td colspan="6"><input name="send_url" type="text" id="send_url_sbps" value="<?php echo esc_html(isset($opts['sbps']['send_url']) ? $opts['sbps']['send_url'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_send_url_sbps" class="explanation"><?php _e('本番環境で接続するURLを設定します。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>クレジットカード決済</th>
+				<td><input name="card_activate" type="radio" id="card_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_sbps_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>3Dセキュア</th>
+				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_1" value="on"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="3d_secure_sbps_1">利用する</label></td>
+				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_2" value="off"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="3d_secure_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<?php if( defined('WCEX_DLSELLER') ): ?>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_sbps');">簡易継続課金</a></th>
+				<td><input name="continuation" type="radio" id="continuation_sbps_1" value="on"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_sbps_1">利用する</label></td>
+				<td><input name="continuation" type="radio" id="continuation_sbps_2" value="off"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_sbps_2">利用しない</label></td>
+				<td><div id="ex_continuation_sbps" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくはソフトバンク・ペイメント・サービスにお問合せください。', 'usces'); ?></div></td>
+			</tr>
+			<?php endif; ?>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>WEBコンビニ決済</th>
+				<td><input name="conv_activate" type="radio" id="conv_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['conv_activate']) && $opts['sbps']['conv_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_sbps_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['conv_activate']) && $opts['sbps']['conv_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+<!--
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_wallet_sbps');">ウォレット決済</a></th>
+				<td><input name="wallet_activate" type="radio" id="wallet_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_activate']) && $opts['sbps']['wallet_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_activate_sbps_1">利用する</label></td>
+				<td><input name="wallet_activate" type="radio" id="wallet_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_activate']) && $opts['sbps']['wallet_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_activate_sbps_2">利用しない</label></td>
+				<td><div id="ex_wallet_sbps" class="explanation"><?php _e('利用するを選択した場合は、以下の支払方法のいずれかを選択してください。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th>ヤフーウォレット決済</th>
+				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_yahoowallet_sbps_1">利用する</label></td>
+				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_yahoowallet_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>楽天あんしん決済</th>
+				<td><input name="wallet_rakuten" type="radio" id="wallet_rakuten_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_rakuten']) && $opts['sbps']['wallet_rakuten'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_rakuten_sbps_1">利用する</label></td>
+				<td><input name="wallet_rakuten" type="radio" id="wallet_rakuten_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_rakuten']) && $opts['sbps']['wallet_rakuten'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_rakuten_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>ペイパル</th>
+				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_paypal_sbps_1">利用する</label></td>
+				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_paypal_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>ネットマイル</th>
+				<td><input name="wallet_netmile" type="radio" id="wallet_netmile_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_netmile']) && $opts['sbps']['wallet_netmile'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_netmile_sbps_1">利用する</label></td>
+				<td><input name="wallet_netmile" type="radio" id="wallet_netmile_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_netmile']) && $opts['sbps']['wallet_netmile'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_netmile_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>アリペイ国際決済</th>
+				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_alipay_sbps_1">利用する</label></td>
+				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_alipay_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_mobile_sbps');">携帯キャリア決済</a></th>
+				<td><input name="mobile_activate" type="radio" id="mobile_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_activate']) && $opts['sbps']['mobile_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_activate_sbps_1">利用する</label></td>
+				<td><input name="mobile_activate" type="radio" id="mobile_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_activate']) && $opts['sbps']['mobile_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_activate_sbps_2">利用しない</label></td>
+				<td><div id="ex_mobile_sbps" class="explanation"><?php _e('利用するを選択した場合は、以下の支払方法のいずれかを選択してください。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th>DoCoMoケータイ支払い</th>
+				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_docomo_sbps_1">利用する</label></td>
+				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_docomo_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>S!まとめて決済</th>
+				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_softbank_sbps_1">利用する</label></td>
+				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_softbank_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>auかんたん決済</th>
+				<td><input name="mobile_auone" type="radio" id="mobile_auone_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_auone']) && $opts['sbps']['mobile_auone'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_auone_sbps_1">利用する</label></td>
+				<td><input name="mobile_auone" type="radio" id="mobile_auone_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_auone']) && $opts['sbps']['mobile_auone'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_auone_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>ソフトバンクまとめて支払い</th>
+				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_1">利用する</label></td>
+				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+-->
+		<input name="send_url_check" type="hidden" value="https://stbfep.sps-system.com/Extra/BuyRequestAction.do" />
+		<input name="send_url_test" type="hidden" value="https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do" />
+		<input name="acting" type="hidden" value="sbps" />
+		<input name="usces_option_update" type="submit" class="button" value="ソフトバンク・ペイメントの設定を更新する" />
+	</form>
+	<div class="settle_exp">
+		<p><strong>ソフトバンク・ペイメント・サービス</strong></p>
+		<a href="http://www.sbpayment.jp/" target="_blank">ソフトバンク・ペイメント・サービスの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+		<!--<p>「簡易継続課金」を利用するには「DL Seller」拡張プラグインのインストールが必要です。</p>-->
+		<p>尚、本番環境では、正規SSL証明書のみでのSSL通信となりますのでご注意ください。</p>
+	</div>
+	</div><!--uscestabs_sbps-->
+<!--20120413ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

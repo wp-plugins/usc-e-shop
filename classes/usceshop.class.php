@@ -887,6 +887,7 @@ class usc_e_shop
 //20110331ysk start
 		global $usces_states;
 //20110331ysk end
+		$action_status = '';//20120511ysk 0000470
 
 		$this->options = get_option('usces');
 
@@ -942,7 +943,7 @@ class usc_e_shop
 			$this->options['system']['subimage_rule'] = isset($_POST['subimage_rule']) ? (int)$_POST['subimage_rule'] : 0;
 //20110331ysk start
 			unset($this->options['province']);
-			$action_status = '';
+			//$action_status = '';//20120511ysk 0000470
 			foreach((array)$this->options['system']['target_market'] as $target_market) {
 				$province = array();
 				if(!empty($_POST['province_'.$target_market])) {
@@ -984,8 +985,8 @@ class usc_e_shop
 			$this->action_message = '';
 		}
 
+		if($action_status != 'error') //20120511ysk 0000470
 		update_option('usces', $this->options);
-
 		
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_system.php');	
 
@@ -1116,8 +1117,9 @@ class usc_e_shop
 					if( !isset($_POST['REMARKS3']) || empty($_POST['REMARKS3']) )
 						$mes .= '※設定が不正です！<br />';
 
-					if( '' == $mes ){			
-						$this->zaction_status = 'success';
+					if( '' == $mes ){
+						//$this->zaction_status = 'success';
+						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['remise']['activate'] = 'on';
 						if( 'on' == $options['acting_settings']['remise']['card_activate'] ){
@@ -1262,6 +1264,97 @@ class usc_e_shop
 					update_option('usces', $options);
 					break;
 //20110208ysk end
+//20120413ysk start
+				case 'sbps':
+					unset( $options['acting_settings']['sbps'] );
+					$options['acting_settings']['sbps']['merchant_id'] = isset($_POST['merchant_id']) ? $_POST['merchant_id'] : '';
+					$options['acting_settings']['sbps']['service_id'] = isset($_POST['service_id']) ? $_POST['service_id'] : '';
+					$options['acting_settings']['sbps']['hash_key'] = isset($_POST['hash_key']) ? $_POST['hash_key'] : '';
+					$options['acting_settings']['sbps']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
+					$options['acting_settings']['sbps']['send_url_check'] = isset($_POST['send_url_check']) ? $_POST['send_url_check'] : '';
+					$options['acting_settings']['sbps']['send_url_test'] = isset($_POST['send_url_test']) ? $_POST['send_url_test'] : '';
+					$options['acting_settings']['sbps']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
+					$options['acting_settings']['sbps']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['sbps']['3d_secure'] = isset($_POST['3d_secure']) ? $_POST['3d_secure'] : '';
+					$options['acting_settings']['sbps']['continuation'] = isset($_POST['continuation']) ? $_POST['continuation'] : '';
+					$options['acting_settings']['sbps']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
+					$options['acting_settings']['sbps']['wallet_activate'] = isset($_POST['wallet_activate']) ? $_POST['wallet_activate'] : '';
+					$options['acting_settings']['sbps']['wallet_yahoowallet'] = isset($_POST['wallet_yahoowallet']) ? $_POST['wallet_yahoowallet'] : '';
+					$options['acting_settings']['sbps']['wallet_rakuten'] = isset($_POST['wallet_rakuten']) ? $_POST['wallet_rakuten'] : '';
+					$options['acting_settings']['sbps']['wallet_paypal'] = isset($_POST['wallet_paypal']) ? $_POST['wallet_paypal'] : '';
+					$options['acting_settings']['sbps']['wallet_netmile'] = isset($_POST['wallet_netmile']) ? $_POST['wallet_netmile'] : '';
+					$options['acting_settings']['sbps']['wallet_alipay'] = isset($_POST['wallet_alipay']) ? $_POST['wallet_alipay'] : '';
+					$options['acting_settings']['sbps']['mobile_activate'] = isset($_POST['mobile_activate']) ? $_POST['mobile_activate'] : '';
+					$options['acting_settings']['sbps']['mobile_docomo'] = isset($_POST['mobile_docomo']) ? $_POST['mobile_docomo'] : '';
+					$options['acting_settings']['sbps']['mobile_softbank'] = isset($_POST['mobile_softbank']) ? $_POST['mobile_softbank'] : '';
+					$options['acting_settings']['sbps']['mobile_auone'] = isset($_POST['mobile_auone']) ? $_POST['mobile_auone'] : '';
+					$options['acting_settings']['sbps']['mobile_mysoftbank'] = isset($_POST['mobile_mysoftbank']) ? $_POST['mobile_mysoftbank'] : '';
+
+					if( '' == trim($_POST['merchant_id']) )
+						$mes .= '※マーチャントIDを入力して下さい<br />';
+					if( '' == trim($_POST['service_id']) )
+						$mes .= '※サービスIDを入力して下さい<br />';
+					if( '' == trim($_POST['hash_key']) )
+						$mes .= '※Hash KEYを入力して下さい<br />';
+					if( isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url']) )
+						$mes .= '※本番URLを入力して下さい<br />';
+					if( isset($_POST['wallet_activate']) && 'on' == $_POST['wallet_activate'] ) {
+						if( ( empty($_POST['wallet_yahoowallet']) || 'off' == $_POST['wallet_yahoowallet'] ) && 
+							( empty($_POST['wallet_rakuten']) || 'off' == $_POST['wallet_rakuten'] ) && 
+							( empty($_POST['wallet_paypal']) || 'off' == $_POST['wallet_paypal'] ) && 
+							( empty($_POST['wallet_netmile']) || 'off' == $_POST['wallet_netmile'] ) && 
+							( empty($_POST['wallet_alipay']) || 'off' == $_POST['wallet_alipay'] ) ) {
+							$mes .= '※ウォレット決済の支払方法を選択して下さい<br />';
+						}
+					}
+					if( isset($_POST['mobile_activate']) && 'on' == $_POST['mobile_activate'] ) {
+						if( ( empty($_POST['mobile_docomo']) || 'off' == $_POST['mobile_docomo'] ) && 
+							( empty($_POST['mobile_softbank']) || 'off' == $_POST['mobile_softbank'] ) && 
+							( empty($_POST['mobile_auone']) || 'off' == $_POST['mobile_auone'] ) && 
+							( empty($_POST['mobile_mysoftbank']) || 'off' == $_POST['mobile_mysoftbank'] ) ) {
+							$mes .= '※携帯キャリア決済の支払方法を選択して下さい<br />';
+						}
+					}
+
+					if( '' == $mes ){
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['sbps']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['sbps']['card_activate'] ){
+							$this->payment_structure['acting_sbps_card'] = 'カード決済（ソフトバンク・ペイメント）';
+						}else{
+							unset($this->payment_structure['acting_sbps_card']);
+						}
+						if( 'on' == $options['acting_settings']['sbps']['conv_activate'] ){
+							$this->payment_structure['acting_sbps_conv'] = 'コンビニ決済（ソフトバンク・ペイメント）';
+						}else{
+							unset($this->payment_structure['acting_sbps_conv']);
+						}
+						if( 'on' == $options['acting_settings']['sbps']['wallet_activate'] ){
+							$this->payment_structure['acting_sbps_wallet'] = 'ウォレット決済（ソフトバンク・ペイメント）';
+						}else{
+							unset($this->payment_structure['acting_sbps_wallet']);
+						}
+						if( 'on' == $options['acting_settings']['sbps']['mobile_activate'] ){
+							$this->payment_structure['acting_sbps_mobile'] = '携帯キャリア決済（ソフトバンク・ペイメント）';
+						}else{
+							unset($this->payment_structure['acting_sbps_mobile']);
+						}
+
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります','usces');
+						$options['acting_settings']['sbps']['activate'] = 'off';
+						unset($this->payment_structure['acting_sbps_card']);
+						unset($this->payment_structure['acting_sbps_conv']);
+						unset($this->payment_structure['acting_sbps_wallet']);
+						unset($this->payment_structure['acting_sbps_mobile']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					update_option('usces', $options);
+					break;
+//20120413ysk end
 			}
 			
 
