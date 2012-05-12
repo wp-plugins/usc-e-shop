@@ -2525,22 +2525,23 @@ function usces_get_cart_rows( $out = '' ) {
 		$stock = $usces->getItemZaiko($post_id, $sku_code);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
 		$pictid = (int)$usces->get_mainpictid($itemCode);
+		$row = '';
 		if ( empty($options) ) {
 			$optstr =  '';
 			$options =  array();
 		}
-		$res .= '<tr>
+		$row .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
 			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
-			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i,$cart_row);
-			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
+			$row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i,$cart_row);
+			$row .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
-				//	$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				//	$row .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				if( !empty($key) ) {
 					$key = urldecode($key);
 					if(is_array($value)) {
@@ -2557,16 +2558,16 @@ function usces_get_cart_rows( $out = '' ) {
 				}
 //20110629ysk end
 			}
-			$res .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
+			$row .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
-		$res .= '</td>
+		$row .= '</td>
 			<td class="aright">';
 		if( usces_is_gptekiyo($post_id, $sku_code, $quantity) ) {
 			$usces_gp = 1;
 			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
-			$res .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
+			$row .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
 		}
-		$res .= usces_crform($skuPrice, true, false, 'return') . '
+		$row .= usces_crform($skuPrice, true, false, 'return') . '
 			</td>
 			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
 			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
@@ -2574,17 +2575,17 @@ function usces_get_cart_rows( $out = '' ) {
 			<td>';
 		foreach($options as $key => $value){
 //20110629ysk start 0000190
-			//$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+			//$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 			if(is_array($value)) {
 				foreach($value as $v) {
-					$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
+					$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
 				}
 			} else {
-				$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+				$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 			}
 //20110629ysk end
 		}
-		$res .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
+		$row .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
 			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
 			<input name="itempostid[' . $i . ']" type="hidden" value="' . $post_id . '" />
 			<input name="itemsku[' . $i . ']" type="hidden" value="' . $sku . '" />
@@ -2594,6 +2595,10 @@ function usces_get_cart_rows( $out = '' ) {
 			<input name="delButton[' . $i . '][' . $post_id . '][' . $sku . ']" class="delButton" type="submit" value="' . __('Delete','usces') . '" />
 			</td>
 		</tr>';
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
+						'itemCode', 'itemName', 'cartItemName', 'itemRestriction', 'skuPrice', 'skuZaikonum', 
+						'stockid', 'stock', 'red', 'pictid');
+		$res .= apply_filters( 'usces_filter_cart_row', $row, $cart, $materials);
 	}
 	
 	$res = apply_filters( 'usces_filter_cart_rows', $res, $cart);
@@ -2635,14 +2640,14 @@ function usces_get_confirm_rows( $out = '' ) {
 			<td>' . ($i + 1) . '</td>
 			<td>';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-		$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
-		$res .= '</td><td class="aleft">' . $cartItemName . '<br />';
+		$row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
+		$row .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
-				//	 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				//	 $row .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				if( !empty($key) ) {
 					$key = urldecode($key);
 					if(is_array($value)) {
@@ -2659,16 +2664,20 @@ function usces_get_confirm_rows( $out = '' ) {
 				}
 //20110629ysk end
 			}
-			$res .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
+			$row .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
-		$res .= '</td>
+		$row .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td>' . $cart_row['quantity'] . '</td>
 			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 			<td>';
 		$res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $sku_code));
-		$res .= '</td>
+		$row .= '</td>
 		</tr>';
+		
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 
+						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'pictid');
+		$res .= apply_filters( 'usces_filter_confirm_row', $row, $cart, $materials);
 	} 
 	
 	$res = apply_filters( 'usces_filter_confirm_rows', $res, $cart);

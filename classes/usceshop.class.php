@@ -4945,7 +4945,7 @@ class usc_e_shop
 		$array =array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
-			$array[$key] = (float)str_replace(',', '', $sku['price']);
+			$array[$key] = (float)str_replace('.', '', $sku['price']);
 		}
 		if(!$array) return false;
 		if($skukey == ''){
