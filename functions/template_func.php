@@ -2631,12 +2631,13 @@ function usces_get_confirm_rows( $out = '' ) {
 		$cartItemName = $usces->getCartItemName($post_id, $sku_code);
 		$skuPrice = $cart_row['price'];
 		$pictid = $usces->get_mainpictid($itemCode);
+		$row = '';
 		if (empty($options)) {
 			$optstr =  '';
 			$options =  array();
 		}
 	
-		$res .= '<tr>
+		$row .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );

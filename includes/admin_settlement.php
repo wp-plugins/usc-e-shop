@@ -590,13 +590,13 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 			<?php if( defined('WCEX_DLSELLER') ): ?>
-			<tr>
+<!--			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_sbps');">簡易継続課金</a></th>
 				<td><input name="continuation" type="radio" id="continuation_sbps_1" value="on"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_sbps_1">利用する</label></td>
 				<td><input name="continuation" type="radio" id="continuation_sbps_2" value="off"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_sbps_2">利用しない</label></td>
 				<td><div id="ex_continuation_sbps" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくはソフトバンク・ペイメント・サービスにお問合せください。', 'usces'); ?></div></td>
 			</tr>
-			<?php endif; ?>
+-->			<?php endif; ?>
 		</table>
 		<table class="settle_table">
 			<tr>

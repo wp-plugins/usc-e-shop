@@ -2682,6 +2682,7 @@ class usc_e_shop
 		}
 		$this->cart->entry();
 		$this->error_message = $this->zaiko_check();
+		$this->error_message = apply_filters( 'usces_filter_cart_check', $this->error_message );
 		if($this->error_message == ''){
 			if($this->is_member_logged_in()){
 //20100818ysk start
@@ -2900,7 +2901,7 @@ class usc_e_shop
 	function acting_return(){
 		global $wp_query;
 		$entry = $this->cart->get_entry();
-		
+
 //20110208ysk start
 /*		if( 'paypal_ipn' == $_REQUEST['acting_return'] ){
 			usces_log('paypal_ipn in ', 'acting_transaction.log');
@@ -6685,6 +6686,7 @@ class usc_e_shop
 			'sku' => '',
 			'value' => __('to the cart', 'usces'),
 			'force' => false,
+			'quant' => false,
 		), $atts));
 	
 		$post_id = $this->get_ID_byItemName($item);
@@ -6694,6 +6696,7 @@ class usc_e_shop
 		$gptekiyo = $datas[$sku]['gp'];
 		$skuPrice = $datas[$sku]['price'];
 		$sku_enc = urlencode($sku);
+		$mats = compact('item','sku','value','force','quant','post_id','datas','zaikonum','zaiko','gptekiyo','skuPrice','sku_enc');
 		if( ! $this->is_item_zaiko( $post_id, $sku ) ){
 			return '<div class="button_status">' . esc_html($this->zaiko_status[$zaiko]) . '</div>';
 		}
@@ -6703,6 +6706,10 @@ class usc_e_shop
 		$html .= "<input name=\"zaiko[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku_enc}]\" value=\"{$zaiko}\" />\n";
 		$html .= "<input name=\"gptekiyo[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku_enc}]\" value=\"{$gptekiyo}\" />\n";
 		$html .= "<input name=\"skuPrice[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku_enc}]\" value=\"{$skuPrice}\" />\n";
+		if( $quant ){
+			$quant = "<input name=\"quant[{$post_id}][" . $sku_enc . "]\" type=\"text\" id=\"quant[{$post_id}][" . $sku_enc . "]\" class=\"skuquantity\" value=\"\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+			$html .= apply_filters('usces_filter_sc_itemQuant', $quant, $mats);
+		}
 		$html .= "<input name=\"inCart[{$post_id}][{$sku_enc}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku_enc}]\" class=\"skubutton\" value=\"{$value}\" " . apply_filters('usces_filter_direct_intocart_button', NULL, $post_id, $sku, $force, $options) . " />";
 		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
 		if( $force )

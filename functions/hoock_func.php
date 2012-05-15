@@ -38,7 +38,7 @@ function usces_action_acting_transaction(){
 		foreach( $_POST as $key => $value ){
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 		}
-usces_log('remise acting_transaction : '.print_r($data, true), 'acting_transaction.log');
+		usces_log('remise acting_transaction : '.print_r($data, true), 'acting_transaction.log');
 		
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 //		if( empty($rand) ){
@@ -103,7 +103,7 @@ usces_log('remise acting_transaction : '.print_r($data, true), 'acting_transacti
 		foreach( $_POST as $key => $value ){
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 		}
-		
+
 		$table_name = $wpdb->prefix . "usces_order";
 		$table_meta_name = $wpdb->prefix . "usces_order_meta";
 		
@@ -504,6 +504,8 @@ usces_log('remise acting_transaction : '.print_r($data, true), 'acting_transacti
 //20110523ysk end
 //20120413ysk start
 	} elseif( !isset($_GET['acting_return']) && isset($_POST['res_result']) && isset($_POST['res_pay_method']) ) {
+		usces_log('SoftBankPayment _REQUEST : '.print_r($_REQUEST, true), 'acting_transaction.log');
+
 		foreach( $_POST as $key => $value ){
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 		}
