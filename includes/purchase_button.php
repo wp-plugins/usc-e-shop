@@ -112,14 +112,16 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$member = $usces->get_member();
 			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 			$securecode = isset($_POST['securecode']) ? $_POST['securecode'] : '';
-			if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+			if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
 				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}else{
-				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . esc_attr($_POST['cnum2']) . esc_attr($_POST['cnum3']) . esc_attr($_POST['cnum4']) . '">';
-				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
+				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . '">';
+				if( '1' == $acting_opts['security'] ){
+					$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
+				}
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}
@@ -141,9 +143,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$html .= '
 				<input type="hidden" name="cnum1" value="' . esc_html($_POST['cnum1']) . '">
-				<input type="hidden" name="cnum2" value="' . esc_html($_POST['cnum2']) . '">
-				<input type="hidden" name="cnum3" value="' . esc_html($_POST['cnum3']) . '">
-				<input type="hidden" name="cnum4" value="' . esc_html($_POST['cnum4']) . '">
 				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />
 				<input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', NULL) . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
@@ -504,6 +503,127 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			break;
 //20110208ysk end
+//20120413ysk start
+		case 'acting_sbps_card':
+		case 'acting_sbps_conv':
+		case 'acting_sbps_wallet':
+		case 'acting_sbps_mobile':
+			$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
+			$frequency = $usces->getItemFrequency($cart[0]['post_id']);
+			$chargingday = $usces->getItemChargingDay($cart[0]['post_id']);
+			$acting_opts = $usces->options['acting_settings']['sbps'];
+			$usces->save_order_acting_data($rand);
+			$member = $usces->get_member();
+			if( 'public' == $acting_opts['ope'] ) {
+				$send_url = $acting_opts['send_url'];
+			} elseif( 'test' == $acting_opts['ope'] ) {
+				$send_url = $acting_opts['send_url_test'];
+			} else {
+				$send_url = $acting_opts['send_url_check'];
+			}
+			switch( $acting_flag ) {
+			case 'acting_sbps_card':
+				$pay_method = ( 'on' == $acting_opts['3d_secure'] ) ? "credit3d" : "credit";
+				$acting = "sbps_card";
+				$free_csv = "";
+				break;
+			case 'acting_sbps_conv':
+				$pay_method = "webcvs";
+				$acting = "sbps_conv";
+				$free_csv = usces_set_free_csv( $usces_entries['customer'] );
+				break;
+			case 'acting_sbps_wallet':
+				$pay_method = "";
+				if( 'on' == $acting_opts['wallet_yahoowallet'] ) $pay_method .= ",yahoowallet";
+				if( 'on' == $acting_opts['wallet_rakuten'] ) $pay_method .= ",rakuten";
+				if( 'on' == $acting_opts['wallet_paypal'] ) $pay_method .= ",paypal";
+				if( 'on' == $acting_opts['wallet_netmile'] ) $pay_method .= ",netmile";
+				if( 'on' == $acting_opts['wallet_alipay'] ) $pay_method .= ",alipay";
+				$pay_method = ltrim( $pay_method, "," );
+				$acting = "sbps_wallet";
+				$free_csv = "";
+				break;
+			case 'acting_sbps_mobile':
+				$pay_method = "";
+				if( 'on' == $acting_opts['mobile_docomo'] ) $pay_method .= ",docomo";
+				if( 'on' == $acting_opts['mobile_softbank'] ) $pay_method .= ",softbank";
+				if( 'on' == $acting_opts['mobile_auone'] ) $pay_method .= ",auone";
+				if( 'on' == $acting_opts['mobile_mysoftbank'] ) $pay_method .= ",mysoftbank";
+				$pay_method = ltrim( $pay_method, "," );
+				$acting = "sbps_mobile";
+				$free_csv = "";
+				break;
+			}
+			$item_id = $cart[0]['post_id'];
+			$item_name = $usces->getItemName($cart[0]['post_id']);
+			if(1 < count($cart)) $item_name .= ','.__('Others', 'usces');
+			if(40 < mb_strlen($item_name)) $item_name = mb_substr($item_name, 0, 40).'...';
+			$amount = usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false);
+			if( 'continue' == $charging_type ) {
+				$pay_type = "1";
+				$auto_charge_type = "0";
+				$service_type = "0";
+				$div_settle = "0";
+				$first_charging = dlseller_first_charging($cart[0]['post_id'], 'time');
+				$last_charge_month = date('Ym', $first_charging);
+				$camp_type = "1";
+			} else {
+				$pay_type = "0";
+				$auto_charge_type = "";
+				$service_type = "0";
+				$div_settle = "";
+				$last_charge_month = "";
+				$camp_type = "";
+			}
+			$terminal_type = "0";
+			$success_url = USCES_CART_URL.$usces->delim."acting=".$acting."&acting_return=1";
+			$cancel_url = USCES_CART_URL.$usces->delim."acting=".$acting."&acting_return=1&cancel=1";
+			$error_url = USCES_CART_URL.$usces->delim."acting=".$acting."&acting_return=0";
+			$pagecon_url = USCES_CART_URL;
+			$request_date = date('YmdHis', current_time('timestamp'));
+			$limit_second = "600";
+			$sps_hashcode = $pay_method.$acting_opts['merchant_id'].$acting_opts['service_id'].$member['ID'].$rand.$item_id.$item_name.$amount.$pay_type.$auto_charge_type.$service_type.$div_settle.$last_charge_month.$camp_type.$terminal_type.$success_url.$cancel_url.$error_url.$pagecon_url.$free_csv.$request_date.$limit_second.$acting_opts['hash_key'];
+			$sps_hashcode = sha1( $sps_hashcode );
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
+				<input type="hidden" name="pay_method" value="'.$pay_method.'" />
+				<input type="hidden" name="merchant_id" value="'.$acting_opts['merchant_id'].'" />
+				<input type="hidden" name="service_id" value="'.$acting_opts['service_id'].'" />
+				<input type="hidden" name="cust_code" value="'.$member['ID'].'" />
+				<input type="hidden" name="order_id" value="'.$rand.'" />
+				<input type="hidden" name="item_id" value="'.$item_id.'" />
+				<input type="hidden" name="pay_item_id" value="" />
+				<input type="hidden" name="item_name" value="'.$item_name.'" />
+				<input type="hidden" name="tax" value="" />
+				<input type="hidden" name="amount" value="'.$amount.'" />
+				<input type="hidden" name="pay_type" value="'.$pay_type.'" />
+				<input type="hidden" name="auto_charge_type" value="'.$auto_charge_type.'" />
+				<input type="hidden" name="service_type" value="'.$service_type.'" />
+				<input type="hidden" name="div_settle" value="'.$div_settle.'" />
+				<input type="hidden" name="last_charge_month" value="'.$last_charge_month.'" />
+				<input type="hidden" name="camp_type" value="'.$camp_type.'" />
+				<input type="hidden" name="terminal_type" value="'.$terminal_type.'" />
+				<input type="hidden" name="success_url" value="'.$success_url.'" />
+				<input type="hidden" name="cancel_url" value="'.$cancel_url.'" />
+				<input type="hidden" name="error_url" value="'.$error_url.'" />
+				<input type="hidden" name="pagecon_url" value="'.$pagecon_url.'" />
+				<input type="hidden" name="free1" value="" />
+				<input type="hidden" name="free2" value="" />
+				<input type="hidden" name="free3" value="" />
+				<input type="hidden" name="free_csv" value="'.$free_csv.'" />
+				<input type="hidden" name="request_date" value="'.$request_date.'" />
+				<input type="hidden" name="limit_second" value="'.$limit_second.'" />
+				<input type="hidden" name="sps_hashcode" value="'.$sps_hashcode.'" />
+				';
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"') . ' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
+			$html .= '</form>';
+			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
+			$html .= '</form>'."\n";
+			break;
+//20120413ysk end
 
 		default:
 			$html .= '<form id="purchase_form" action="' . apply_filters('usces_filter_acting_url', USCES_CART_URL) . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

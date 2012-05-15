@@ -197,7 +197,11 @@ case 'edit':
 	
 		$post_type = $post->post_type;
 		//$title = sprintf(__('Edit %s'), $post_type_object->singular_label);
-		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+		if ( version_compare($wp_version, '3.4-beta', '>') ){
+			include(USCES_PLUGIN_DIR."/includes/edit-form-advanced34.php");
+		}else{
+			include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+		}
 		
 	}else{
 	
@@ -261,7 +265,11 @@ case 'editpost':
 	$post = get_post_to_edit($post_ID);
 	
 		//redirect_post($post_id); // Send user on their way while we keep working
-		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+		if ( version_compare($wp_version, '3.4-beta', '>') ){
+			include(USCES_PLUGIN_DIR."/includes/edit-form-advanced34.php");
+		}else{
+			include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+		}
 	}else{
 	
 		$post_ID = edit_post();
@@ -316,7 +324,11 @@ case 'new':
 		$post = get_default_post_to_edit( $post_type, true );
 		$post_ID = $post->ID;
 
-		include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+		if ( version_compare($wp_version, '3.4-beta', '>') ){
+			include(USCES_PLUGIN_DIR."/includes/edit-form-advanced34.php");
+		}else{
+			include(USCES_PLUGIN_DIR."/includes/edit-form-advanced30.php");
+		}
 	}else{
 		if ( current_user_can('edit_pages') ) {
 			$action = 'post';

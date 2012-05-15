@@ -10,6 +10,7 @@ if ( !defined('ABSPATH') )
 	die('-1');
 
 global $usces;
+
 //echo $GLOBALS['hook_suffix'];
 //wp_enqueue_script('post');
 //
@@ -105,64 +106,7 @@ if ( $autosave && mysql2date( 'U', $autosave->post_modified_gmt, false ) > mysql
 $post_type_object = get_post_type_object($post_type);
 
 // All meta boxes should be defined and added before the first do_meta_boxes() call (or potentially during the do_meta_boxes action).
-require_once(USCES_PLUGIN_DIR.'/includes/meta-boxes.php');
 
-add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', $post_type, 'side', 'core');
-
-// all taxonomies
-foreach ( get_object_taxonomies($post_type) as $tax_name ) {
-	$taxonomy = get_taxonomy($tax_name);
-	if ( ! $taxonomy->show_ui )
-		continue;
-
-	$label = $taxonomy->labels->name;
-
-	if ( !is_taxonomy_hierarchical($tax_name) )
-		add_meta_box('tagsdiv-' . $tax_name, $label, 'post_tags_meta_box', $post_type, 'side', 'core');
-	else
-		add_meta_box($tax_name . 'div', $label, 'post_categories_meta_box', $post_type, 'side', 'core', array( 'taxonomy' => $tax_name, 'descendants_and_self' => USCES_ITEM_CAT_PARENT_ID ));
-}
-
-if ( post_type_supports($post_type, 'page-attributes') )
-	add_meta_box('pageparentdiv', 'page' == $post_type ? __('Page Attributes') : __('Attributes'), 'page_attributes_meta_box', $post_type, 'side', 'core');
-
-if ( current_theme_supports( 'post-thumbnails', $post_type ) && post_type_supports($post_type, 'thumbnail') )
-	add_meta_box('postimagediv', __('Featured Image'), 'post_thumbnail_meta_box', $post_type, 'side', 'low');
-
-if ( post_type_supports($post_type, 'excerpt') )
-	add_meta_box('postexcerpt', __('Excerpt'), 'post_excerpt_meta_box', $post_type, 'normal', 'core');
-
-if ( post_type_supports($post_type, 'trackbacks') )
-	add_meta_box('trackbacksdiv', __('Send Trackbacks'), 'post_trackback_meta_box', $post_type, 'normal', 'core');
-
-if ( post_type_supports($post_type, 'custom-fields') )
-	add_meta_box('postcustom', __('Custom Fields'), 'post_custom_meta_box', $post_type, 'normal', 'core');
-
-do_action('dbx_post_advanced');
-if ( post_type_supports($post_type, 'comments') )
-	add_meta_box('commentstatusdiv', __('Discussion'), 'post_comment_status_meta_box', $post_type, 'normal', 'core');
-
-if ( (isset($post->post_status) && ('publish' == $post->post_status || 'private' == $post->post_status) ) && post_type_supports($post_type, 'comments') )
-	add_meta_box('commentsdiv', __('Comments'), 'post_comment_meta_box', $post_type, 'normal', 'core');
-
-if ( !( (isset( $post->post_status ) && 'pending' == $post->post_status) && !current_user_can( $post_type_object->cap->publish_posts ) ) )
-	add_meta_box('slugdiv', __('Slug'), 'post_slug_meta_box', $post_type, 'normal', 'core');
-
-if ( post_type_supports($post_type, 'author') ) {
-	if ( version_compare($wp_version, '3.1', '>=') ){
-		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) )
-			add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
-	}else{
-		$authors = get_editable_user_ids( $current_user->id ); // TODO: ROLE SYSTEM
-		if ( isset($post->post_author) && $post->post_author && !in_array($post->post_author, $authors) )
-			$authors[] = $post->post_author;
-		if ( ( $authors && count( $authors ) > 1 ) || is_super_admin() )
-			add_meta_box('authordiv', __('Author'), 'post_author_meta_box', $post_type, 'normal', 'core');
-	}
-}
-
-if ( post_type_supports($post_type, 'revisions') && 0 < $post_ID && wp_get_post_revisions( $post_ID ) )
-	add_meta_box('revisionsdiv', __('Revisions'), 'post_revisions_meta_box', $post_type, 'normal', 'core');
 
 
 /****************************************************************************/
@@ -249,6 +193,8 @@ $status = $this->action_status;
 $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
+global $screen_layout_columns;
+
 ?>
 <script type="text/javascript">
 
@@ -263,8 +209,9 @@ jQuery(function($){
 });
 </script>
 
-<div class="wrap">
+<div class="wrap columns-<?php echo (int) $screen_layout_columns ? (int) $screen_layout_columns : 'auto'; ?>">
 <div class="usces_admin">
+<?php screen_icon(); ?>
 <h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo esc_html( $title ); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
@@ -279,22 +226,21 @@ jQuery(function($){
 //	wp_nonce_field('add-post');
 //else
 //	wp_nonce_field('update-post_' .  $post_ID);
-	
 $itemCode = get_post_meta($post_ID, '_itemCode', true);
-$itemName = get_post_meta($post_ID, '_itemName', true);
-$itemRestriction = get_post_meta($post_ID, '_itemRestriction', true);
-$itemPointrate = get_post_meta($post_ID, '_itemPointrate', true);
-$itemGpNum1 = get_post_meta($post_ID, '_itemGpNum1', true);
-$itemGpNum2 = get_post_meta($post_ID, '_itemGpNum2', true);
-$itemGpNum3 = get_post_meta($post_ID, '_itemGpNum3', true);
-$itemGpDis1 = get_post_meta($post_ID, '_itemGpDis1', true);
-$itemGpDis2 = get_post_meta($post_ID, '_itemGpDis2', true);
-$itemGpDis3 = get_post_meta($post_ID, '_itemGpDis3', true);
+$itemName = get_post_meta($post_ID, '_itemName', $post_ID, true);
+$itemRestriction = get_post_meta($post_ID, '_itemRestriction', $post_ID, true);
+$itemPointrate = get_post_meta($post_ID, '_itemPointrate', $post_ID, true);
+$itemGpNum1 = get_post_meta($post_ID, '_itemGpNum1', $post_ID, true);
+$itemGpNum2 = get_post_meta($post_ID, '_itemGpNum2', $post_ID, true);
+$itemGpNum3 = get_post_meta($post_ID, '_itemGpNum3', $post_ID, true);
+$itemGpDis1 = get_post_meta($post_ID, '_itemGpDis1', $post_ID, true);
+$itemGpDis2 = get_post_meta($post_ID, '_itemGpDis2', $post_ID, true);
+$itemGpDis3 = get_post_meta($post_ID, '_itemGpDis3', $post_ID, true);
 
-$itemShipping = get_post_meta($post_ID, '_itemShipping', true);
-$itemDeliveryMethod = get_post_meta($post_ID, '_itemDeliveryMethod', true);
-$itemShippingCharge = get_post_meta($post_ID, '_itemShippingCharge', true);
-$itemIndividualSCharge = get_post_meta($post_ID, '_itemIndividualSCharge', true);
+$itemShipping = get_post_meta($post_ID, '_itemShipping', $post_ID, true);
+$itemDeliveryMethod = get_post_meta($post_ID, '_itemDeliveryMethod', $post_ID, true);
+$itemShippingCharge = get_post_meta($post_ID, '_itemShippingCharge', $post_ID, true);
+$itemIndividualSCharge = get_post_meta($post_ID, '_itemIndividualSCharge', $post_ID, true);
 /*************************************** 30 */
 ?>
 
@@ -325,17 +271,9 @@ wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 
 <div id="refbutton"><a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID.'&usces_referer='.(isset($_REQUEST['usces_referer']) ? urlencode($_REQUEST['usces_referer']) : ''); ?>">[<?php _e('make a copy', 'usces'); ?>]</a> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('back to item list', 'usces'); ?>]</a></div>
 <div id="poststuff" class="metabox-holder has-right-sidebar">
-<div id="side-info-column" class="inner-sidebar">
-<div id="item-main-pict"></div>
-
-<?php
-('page' == $post_type) ? do_action('submitpage_box') : do_action('submitpost_box');
-$side_meta_boxes = do_meta_boxes($post_type, 'side', $post);
-?>
-</div>
-
-<div id="post-body">
+<div id="post-body" class="metabox-holder columns-<?php echo 1 == $screen_layout_columns ? '1' : '2'; ?>">
 <div id="post-body-content">
+
 
 
 
@@ -548,17 +486,65 @@ wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 ?>
 </div>
 </div>
+
 <?php
-do_meta_boxes($post_type, 'normal', $post);
-
-( 'page' == $post_type ) ? do_action('edit_page_form') : do_action('edit_form_advanced');
-
-do_meta_boxes($post_type, 'advanced', $post);
-
-do_action('dbx_post_sidebar'); ?>
+//do_meta_boxes($post_type, 'normal', $post);
+//
+//( 'page' == $post_type ) ? do_action('edit_page_form') : do_action('edit_form_advanced');
+//
+//do_meta_boxes($post_type, 'advanced', $post);
+//
+//do_action('dbx_post_sidebar'); ?>
 
 </div>
+
+
+
+
+
+
+
+
+
+
+<div id="postbox-container-1" class="postbox-container">
+<div id="side-info-column" class="inner-sidebar">
+<div id="item-main-pict"></div>
 </div>
+
+<?php
+
+if ( 'page' == $post_type )
+	do_action('submitpage_box');
+else
+	do_action('submitpost_box');
+
+do_meta_boxes($post_type, 'side', $post);
+
+?>
+</div>
+<div id="postbox-container-2" class="postbox-container">
+<?php
+
+do_meta_boxes(null, 'normal', $post);
+
+if ( 'page' == $post_type )
+	do_action('edit_page_form');
+else
+	do_action('edit_form_advanced');
+
+do_meta_boxes(null, 'advanced', $post);
+
+?>
+</div>
+<?php
+
+do_action('dbx_post_sidebar');
+
+?>
+
+</div>
+
 <br class="clear" />
 </div><!-- /poststuff -->
 </form>

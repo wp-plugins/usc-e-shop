@@ -848,7 +848,10 @@ function usces_reg_orderdata( $results = array() ) {
 	}else{
 //20101018ysk start
 		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' ) ? 'noreceipt' : '';
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' ) ? 'noreceipt' : '';
+//20120413ysk start
+		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' ) ? 'noreceipt' : '';
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' ) ? 'noreceipt' : '';
+//20120413ysk end
 //20101018ysk end
 		$order_modified = NULL;
 	}
@@ -1021,9 +1024,11 @@ function usces_reg_orderdata( $results = array() ) {
 			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
 										VALUES (%d, %s, %s)", $order_id, 'settlement_id', $_REQUEST['X-S_TORIHIKI_NO']);
 			$wpdb->query( $mquery );
-			$limitofcard = substr($_REQUEST['X-EXPIRE'], 0, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 2, 2);
-			$usces->set_member_meta_value('partofcard', $_REQUEST['X-PARTOFCARD']);
-			$usces->set_member_meta_value('limitofcard', $limitofcard);
+//20120511ysk start
+			//$limitofcard = substr($_REQUEST['X-EXPIRE'], 0, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 2, 2);
+			//$usces->set_member_meta_value('partofcard', $_REQUEST['X-PARTOFCARD']);
+			//$usces->set_member_meta_value('limitofcard', $limitofcard);
+//20120511ysk end
 			if ( isset($_REQUEST['X-AC_MEMBERID']) ) {
 				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
 											VALUES (%d, %s, %s)", $order_id, $_REQUEST['X-AC_MEMBERID'], 'continuation');
@@ -1045,6 +1050,15 @@ function usces_reg_orderdata( $results = array() ) {
 		if( isset($_REQUEST['acting']) && isset($_REQUEST['acting_return']) && isset($_REQUEST['trans_code']) && 'epsilon' == $_REQUEST['acting'] ) {
 			$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);
 		}
+//20120413ysk start
+		if( isset($_REQUEST['acting']) && ('sbps_conv' == $_REQUEST['acting']) ) {
+			$usces->set_order_meta_value('tracking_id', $_POST['res_tracking_id'], $order_id);
+			foreach( $_POST as $key => $value ){
+				$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
+			}
+			$usces->set_order_meta_value('acting_sbps_conv', serialize($data), $order_id);
+		}
+//20120413ysk end
 
 		foreach($cart as $cartrow){
 			$sku = urldecode($cartrow['sku']);
@@ -2237,13 +2251,17 @@ function usces_check_acting_return() {
 			
 		case 'remise_card':
 			$results = $_POST;
-			if( $_REQUEST['acting_return'] && '   ' == $_REQUEST['X-ERRCODE']){
+			if( $_REQUEST['acting_return'] && '   ' == $_REQUEST['X-ERRCODE'] ){
 				usces_log('remise card entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;
 			}
-			$results['reg_order'] = true;
+			if( isset($_REQUEST['dlseller_update']) ){
+				$results['reg_order'] = false;
+			}else{
+				$results['reg_order'] = true;
+			}
 			break;
 			
 		case 'remise_conv':
@@ -2312,6 +2330,26 @@ function usces_check_acting_return() {
 			$results['reg_order'] = true;
 			break;
 //20110208ysk end
+//20120413ysk start
+		case 'sbps_card':
+		case 'sbps_conv':
+		case 'sbps_wallet':
+		case 'sbps_mobile':
+			if( isset($_REQUEST['cancel']) ) {
+				$results[0] = 0;
+				$results['reg_order'] = false;
+
+			} else {
+				if( 'OK' == $_REQUEST['res_result'] ) {
+					usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
+					$results[0] = 1;
+				}else{
+					$results[0] = 0;
+				}
+				$results['reg_order'] = true;
+			}
+			break;
+//20120413ysk end
 
 		default:
 			$results = $_GET;
@@ -2371,6 +2409,14 @@ function usces_check_acting_return_duplicate( $results = array() ) {
 	case 'jpayment_bank':
 		$trans_id = isset($_REQUEST['gid']) ? $_REQUEST['gid'] : '';
 		break;
+//20120413ysk start
+	case 'sbps_card':
+	case 'sbps_conv':
+	case 'sbps_wallet':
+	case 'sbps_mobile':
+		$trans_id = isset($_REQUEST['order_id']) ? $_REQUEST['order_id'] : '';
+		break;
+//20120413ysk end
 	default:
 		$trans_id = '';
 	}
@@ -2758,10 +2804,10 @@ function usces_trackPageview_deletemember($push){
 	return $push;
 }
 
-function usces_get_essential_mark( $type ){
+function usces_get_essential_mark( $fielde, $data = NULL ){
 	global $usces_essential_mark;
-	do_action('usces_action_essential_mark');
-	return $usces_essential_mark[$type];
+	do_action('usces_action_essential_mark', $data, $fielde);
+	return $usces_essential_mark[$fielde];
 }
 
 function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return' ){
@@ -3296,12 +3342,32 @@ function usces_get_member_regmode(){
 function uesces_get_error_settlement( $out = '' ) {
 	$res = '';
 	if( isset($_REQUEST['acting']) && ('zeus_conv' == $_REQUEST['acting'] || 'zeus_card' == $_REQUEST['acting'] || 'zeus_bank' == $_REQUEST['acting'] ) ){ //ZEUS
-		$res .= '<div class="support_box">
-		　<br />
-		カード番号を再入力する場合はこちらをクリックしてください。<br />
-		　<br />
-		<a href="' . USCES_CUSTOMER_URL . '">カード番号の再入力＞＞</a><br />
-		　<br />
+		$res .= '<div class="support_box">';
+		if( isset($_GET['code']) ){
+			$res .= '　<br />エラーコード：' . esc_html($_GET['code']);
+			if( in_array($_GET['code'], array('02130514', '02130517', '02130619', '02130620', '02130621', '02130640')) ){
+				$res .= '<br />カード番号が正しくないようです。';
+			}elseif( in_array($_GET['code'], array('02130714', '02130717', '02130725', '02130814', '02130817', '02130825')) ){
+				$res .= '<br />カードの有効期限が正しくないようです。';
+			}elseif( in_array($_GET['code'], array('02130922')) ){
+				$res .= '<br />カードの有効期限が切れているようです。';
+			}elseif( in_array($_GET['code'], array('02131117', '02131123', '02131124')) ){
+				$res .= '<br />カードの名義が正しくないようです。';
+			}elseif( in_array($_GET['code'], array('02131414', '02131417', '02131437')) ){
+				$res .= '<br />お客様情報の電話番号が正しくないようです。';
+			}elseif( in_array($_GET['code'], array('02131527', '02131528', '02131529', '02131537')) ){
+				$res .= '<br />お客様情報のEメールアドレスが正しくないようです。';
+			}
+			$res .= '　<br />
+			　<br />
+			<a href="' . USCES_CUSTOMER_URL . '">もう一度決済を行う＞＞</a><br />';
+		}else{
+			$res .= '　<br />
+			カード番号を再入力する場合はこちらをクリックしてください。<br />
+			　<br />
+			<a href="' . USCES_CUSTOMER_URL . '">カード番号の再入力＞＞</a><br />';
+		}
+		$res .= '　<br />
 		ゼウス・カスタマーサポート(24時間365日)<br />
 		電話番号：0570-02-3939(つながらないときは 03-4334-0500)<br />
 		E-mail:support@cardservice.co.jp
@@ -3436,14 +3502,31 @@ function usces_post_reg_orderdata($order_id, $results){
 				break;
 //20110208ysk end
 			case 'zeus_card':
-				$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
-				foreach($_GET as $key => $value) {
-					$data[$key] = mysql_real_escape_string($value);
+				if( isset($_GET['zeussuffix']) ){
+					$acting_opts = $usces->options['acting_settings']['zeus'];
+					$data['acting'] = 'zeus_card Secure API';
+					$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
+					if( $usces->is_member_logged_in() ){
+						if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge']){
+							$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
+						}
+						$usces->set_member_meta_value('partofcard', $_GET['zeussuffix']);
+						$usces->set_member_meta_value('limitofcard', ($_GET['zeusyear'].'/'.$_GET['zeusmonth']));
+					}
+				}else{
+					$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
+					foreach($_GET as $key => $value) {
+						$data[$key] = mysql_real_escape_string($value);
+					}
+					$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
+					if( $usces->is_member_logged_in() )
+						$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
 				}
-				$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
-				if( $usces->is_member_logged_in() )
-					$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
-				usces_log('zeus card transaction : '.(isset($_GET['sendpoint']) ? $_GET['sendpoint'] : ''), 'acting_transaction.log');
+				if(empty($usces)){
+					usces_log('zeus card transaction : No Session', 'acting_transaction.log');
+				}else{
+					usces_log('zeus card transaction : OK', 'acting_transaction.log');
+				}
 				break;
 			case 'zeus_conv':
 				$trans_id = isset($_REQUEST['order_no']) ? $_REQUEST['sendpoint'] : '';
@@ -3474,6 +3557,14 @@ function usces_post_reg_orderdata($order_id, $results){
 			case 'jpayment_bank':
 				$trans_id = isset($_REQUEST['gid']) ? $_REQUEST['gid'] : '';
 				break;
+//20120413ysk start
+			case 'sbps_card':
+			case 'sbps_conv':
+			case 'sbps_wallet':
+			case 'sbps_mobile':
+				$trans_id = isset($_REQUEST['order_id']) ? $_REQUEST['order_id'] : '';
+				break;
+//20120413ysk end
 			default:
 				$trans_id = '';
 		}
@@ -3954,4 +4045,14 @@ function usces_restore_point( $mem_id, $point ) {
 	$wpdb->query( $mquery );
 }
 //20120306ysk end
+//20120413ysk start
+function usces_set_free_csv( $customer ){
+	$free_csv = "";
+	if( "" != $customer['name1'] ) {
+		$free_csv = "LAST_NAME=".mb_convert_encoding($customer['name1'],'SJIS','UTF-8').",FIRST_NAME=".mb_convert_encoding($customer['name2'],'SJIS','UTF-8').",TEL=".str_replace("-","",$customer['tel']).",MAIL=".$customer['mailaddress1'];
+		$free_csv = base64_encode( $free_csv );
+	}
+	return $free_csv;
+}
+//20120413ysk end
 ?>

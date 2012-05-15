@@ -43,12 +43,12 @@ function usces_the_itemCode( $out = '' ) {
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemCode', $post_id);
+	$str = get_post_meta($post_id, '_itemCode', true);
 	
 	if( $out == 'return' ){
-		return $str[0];
+		return $str;
 	}else{
-		echo esc_html($str[0]);
+		echo esc_html($str);
 	}
 }
 
@@ -58,12 +58,12 @@ function usces_the_itemName( $out = '', $post = NULL ) {
 		
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemName', $post_id);
+	$str = get_post_meta($post_id, '_itemName', true);
 	
 	if( $out == 'return' ){
-		return $str[0];
+		return $str;
 	}else{
-		echo esc_html($str[0]);
+		echo esc_html($str);
 	}
 }
 
@@ -71,8 +71,8 @@ function usces_the_point_rate( $out = '' ){
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemPointrate', $post_id);
-	$rate = (int)$str[0];
+	$str = get_post_meta($post_id, '_itemPointrate', true);
+	$rate = (int)$str;
 	
 	if( $out == 'return' ){
 		return $rate;
@@ -85,8 +85,8 @@ function usces_the_shipment_aim( $out = '' ){
 	global $post;
 	$post_id = $post->ID;
 
-	$str = get_post_custom_values('_itemShipping', $post_id);
-	$no = (int)$str[0];
+	$str = get_post_meta($post_id, '_itemShipping', true);
+	$no = (int)$str;
 	if( 0 === $no ) return;
 	
 	$rules = get_option('usces_shipping_rule');
@@ -133,8 +133,8 @@ function usces_the_item(){
 }
 
 function usces_get_itemMeta($metakey, $post_id, $out = ''){
-	$str = get_post_custom_values($metakey, $post_id);
-	$value = $str[0];
+	$str = get_post_meta($post_id, $metakey, true);
+	$value = $str;
 	
 	if( $out == 'return' ){
 		return $value;
@@ -265,9 +265,24 @@ function usces_the_itemZaiko( $out = '' ) {
 	}
 }
 
-function usces_get_itemZaiko( $field = 'name' ) {
+function usces_the_itemZaikoStatus( $out = '' ) {
 	global $usces;
-	$num = (int)$usces->itemsku['stock'];
+	
+	if( $out == 'return' ){
+		return usces_get_itemZaiko( 'name' );
+	}else{
+		echo esc_html(usces_get_itemZaiko( 'name' ));
+	}
+}
+
+function usces_get_itemZaiko( $field = 'name', $post_id=NULL, $sku=NULL ) {
+	global $usces;
+	if( empty($sku) ){
+		$num = (int)$usces->itemsku['stock'];
+	}else{
+		$skus = $usces->get_skus( $post_id, 'code' );
+		$num = (int)$skus[$sku]['stock'];
+	}
 	
 	if( 'id' == $field ){
 		$res = $num;
@@ -605,7 +620,7 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 		echo $html;
 	}
 }
-
+				
 function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $options=NULL, $out = '') {
 	global $usces;
 	if( empty($value) )
@@ -615,14 +630,14 @@ function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $optio
 	$zaiko = $skus[$sku]['stock'];
 	$gptekiyo = $skus[$sku]['gp'];
 	$skuPrice = $skus[$sku]['price'];
-	$sku = esc_attr($sku);
+	$enc_sku = urlencode($sku);
 
-	$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\" name=\"" . $post_id."-". $sku . "\">\n";
-	$html .= "<input name=\"zaikonum[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$sku}]\" value=\"{$zaikonum}\" />\n";
-	$html .= "<input name=\"zaiko[{$post_id}][{$sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku}]\" value=\"{$zaiko}\" />\n";
-	$html .= "<input name=\"gptekiyo[{$post_id}][{$sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku}]\" value=\"{$gptekiyo}\" />\n";
-	$html .= "<input name=\"skuPrice[{$post_id}][{$sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku}]\" value=\"{$skuPrice}\" />\n";
-	$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
+	$html = "<form action=\"" . USCES_CART_URL . "\" method=\"post\" name=\"" . $post_id."-". $enc_sku . "\">\n";
+	$html .= "<input name=\"zaikonum[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"zaikonum[{$post_id}][{$enc_sku}]\" value=\"{$zaikonum}\" />\n";
+	$html .= "<input name=\"zaiko[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$enc_sku}]\" value=\"{$zaiko}\" />\n";
+	$html .= "<input name=\"gptekiyo[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$enc_sku}]\" value=\"{$gptekiyo}\" />\n";
+	$html .= "<input name=\"skuPrice[{$post_id}][{$enc_sku}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$enc_sku}]\" value=\"{$skuPrice}\" />\n";
+	$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$enc_sku}]\" type=\"submit\" id=\"inCart[{$post_id}][{$enc_sku}]\" class=\"skubutton\" value=\"{$value}\" " . apply_filters('usces_filter_direct_intocart_button', NULL, $post_id, $sku, $force, $options) . " />";
 	$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
 	if( $force )
 		$html .= "<input name=\"usces_force\" type=\"hidden\" value=\"incart\" />\n";
@@ -662,32 +677,32 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 	
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
 		
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 		
 		if( 0 == $number ){
-			$pictid = (int)$usces->get_mainpictid($code[0]);
+			$pictid = (int)$usces->get_mainpictid($code);
 			$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
 			if( 'item' == $media ){
-				$alt = 'alt="'.esc_attr($code[0]).'"';
+				$alt = 'alt="'.esc_attr($code).'"';
 				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
 				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-				$title = 'title="'.esc_attr($name[0]).'"';
+				$title = 'title="'.esc_attr($name).'"';
 				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 			}
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
 			$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
 			if( 'item' == $media ){
-				$alt = 'alt="'.esc_attr($code[0]).'"';
+				$alt = 'alt="'.esc_attr($code).'"';
 				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
 				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
-				$title = 'title="'.esc_attr($name[0]).'"';
+				$title = 'title="'.esc_attr($name).'"';
 				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
 			}
@@ -705,7 +720,7 @@ function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 	global $usces;
 	$ptitle = $number;
 	
-	if( $ptitle && 0 == (int)$number ){
+	if( $ptitle && is_string($number) ){
 		$picposts = query_posts(array('post_type'=>'attachment','name'=>$ptitle));
 		$pictid = empty($picposts) ? 0 : $picposts[0]->ID;
 		$pictid = $picposts[0]->ID;
@@ -715,14 +730,14 @@ function usces_the_itemImageURL($number = 0, $out = '', $post = '' ) {
 		if($post == '') global $post;
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 		if( 0 == $number ){
-			$pictid = (int)$usces->get_mainpictid($code[0]);
+			$pictid = (int)$usces->get_mainpictid($code);
 			$html = wp_get_attachment_url( $pictid );
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$pictid = ( isset($pictids[$ind]) && (int)$pictids[$ind] ) ? $pictids[$ind] : 0;
 			$html = wp_get_attachment_url( $pictid );
@@ -751,16 +766,16 @@ function usces_the_itemImageCaption($number = 0, $post = '', $out = '' ) {
 	
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
 		
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 	
 		if( 0 == $number ){
-			$pictid = $usces->get_mainpictid($code[0]);
+			$pictid = $usces->get_mainpictid($code);
 			$attach_ob = get_post($pictid);
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$attach_ob = get_post($pictids[$ind]);
 		}
@@ -789,16 +804,16 @@ function usces_the_itemImageDescription($number = 0, $post = '', $out = '' ) {
 	
 		$post_id = $post->ID;
 		
-		$code =  get_post_custom_values('_itemCode', $post_id);
+		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;
 		
-		$name = get_post_custom_values('_itemName', $post_id);
+		$name = get_post_meta($post_id, '_itemName', true);
 		
 		if( 0 == $number ){
-			$pictid = $usces->get_mainpictid($code[0]);
+			$pictid = $usces->get_mainpictid($code);
 			$attach_ob = get_post($pictid);
 		}else{
-			$pictids = $usces->get_pictids($code[0]);
+			$pictids = $usces->get_pictids($code);
 			$ind = $number - 1;
 			$attach_ob = get_post($pictids[$ind]);
 		}
@@ -817,10 +832,10 @@ function usces_get_itemSubImageNums() {
 	$post_id = $post->ID;
 	$res = array();
 	
-	$code =  get_post_custom_values('_itemCode', $post_id);
+	$code =  get_post_meta($post_id, '_itemCode', true);
 	if(!$code) return false;
-	$name = get_post_custom_values('_itemName', $post_id);
-	$pictids = $usces->get_pictids($code[0]);
+	$name = get_post_meta($post_id, '_itemName', true);
+	$pictids = $usces->get_pictids($code);
 	for($i=1; $i<=count($pictids); $i++){
 		$res[] = $i;
 	}
@@ -1063,8 +1078,8 @@ function usces_point_rate( $post_id = NULL, $out = '' ){
 	if(  $post_id = NULL ){
 		$rate = $usces->options['point_rate'];
 	}else{
-		$str = get_post_custom_values('_itemPointrate', $post_id);
-		$rate = (int)$str[0];
+		$str = get_post_meta($post_id, '_itemPointrate', true);
+		$rate = (int)$str;
 	}
 	if( $out == 'return' ){
 		return $rate;
@@ -2524,22 +2539,23 @@ function usces_get_cart_rows( $out = '' ) {
 		$stock = $usces->getItemZaiko($post_id, $sku_code);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
 		$pictid = (int)$usces->get_mainpictid($itemCode);
+		$row = '';
 		if ( empty($options) ) {
 			$optstr =  '';
 			$options =  array();
 		}
-		$res .= '<tr>
+		$row .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
 			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
-			$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i,$cart_row);
-			$res .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
+			$row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i,$cart_row);
+			$row .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
-				//	$res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				//	$row .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				if( !empty($key) ) {
 					$key = urldecode($key);
 					if(is_array($value)) {
@@ -2556,16 +2572,16 @@ function usces_get_cart_rows( $out = '' ) {
 				}
 //20110629ysk end
 			}
-			$res .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
+			$row .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
-		$res .= '</td>
+		$row .= '</td>
 			<td class="aright">';
 		if( usces_is_gptekiyo($post_id, $sku_code, $quantity) ) {
 			$usces_gp = 1;
 			$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
-			$res .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
+			$row .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
 		}
-		$res .= usces_crform($skuPrice, true, false, 'return') . '
+		$row .= usces_crform($skuPrice, true, false, 'return') . '
 			</td>
 			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
 			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
@@ -2573,17 +2589,17 @@ function usces_get_cart_rows( $out = '' ) {
 			<td>';
 		foreach($options as $key => $value){
 //20110629ysk start 0000190
-			//$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+			//$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 			if(is_array($value)) {
 				foreach($value as $v) {
-					$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
+					$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
 				}
 			} else {
-				$res .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+				$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 			}
 //20110629ysk end
 		}
-		$res .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
+		$row .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
 			<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
 			<input name="itempostid[' . $i . ']" type="hidden" value="' . $post_id . '" />
 			<input name="itemsku[' . $i . ']" type="hidden" value="' . $sku . '" />
@@ -2593,6 +2609,10 @@ function usces_get_cart_rows( $out = '' ) {
 			<input name="delButton[' . $i . '][' . $post_id . '][' . $sku . ']" class="delButton" type="submit" value="' . __('Delete','usces') . '" />
 			</td>
 		</tr>';
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
+						'itemCode', 'itemName', 'cartItemName', 'itemRestriction', 'skuPrice', 'skuZaikonum', 
+						'stockid', 'stock', 'red', 'pictid');
+		$res .= apply_filters( 'usces_filter_cart_row', $row, $cart, $materials);
 	}
 	
 	$res = apply_filters( 'usces_filter_cart_rows', $res, $cart);
@@ -2625,23 +2645,24 @@ function usces_get_confirm_rows( $out = '' ) {
 		$cartItemName = $usces->getCartItemName($post_id, $sku_code);
 		$skuPrice = $cart_row['price'];
 		$pictid = $usces->get_mainpictid($itemCode);
+		$row = '';
 		if (empty($options)) {
 			$optstr =  '';
 			$options =  array();
 		}
 	
-		$res .= '<tr>
+		$row .= '<tr>
 			<td>' . ($i + 1) . '</td>
 			<td>';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
-		$res .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
-		$res .= '</td><td class="aleft">' . $cartItemName . '<br />';
+		$row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
+		$row .= '</td><td class="aleft">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
-				//	 $res .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+				//	 $row .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				if( !empty($key) ) {
 					$key = urldecode($key);
 					if(is_array($value)) {
@@ -2658,16 +2679,20 @@ function usces_get_confirm_rows( $out = '' ) {
 				}
 //20110629ysk end
 			}
-			$res .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
+			$row .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
-		$res .= '</td>
+		$row .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td>' . $cart_row['quantity'] . '</td>
 			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 			<td>';
 		$res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $sku_code));
-		$res .= '</td>
+		$row .= '</td>
 		</tr>';
+		
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 
+						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'pictid');
+		$res .= apply_filters( 'usces_filter_confirm_row', $row, $cart, $materials);
 	} 
 	
 	$res = apply_filters( 'usces_filter_confirm_rows', $res, $cart);
@@ -2696,6 +2721,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		$values = $data[$type];
 		break;
 	}
+	$data['type'] = $type;
 	$values['country'] = !empty($values['country']) ? $values['country'] : usces_get_local_addressform();
 	
 	if( 'confirm' == $type ){
@@ -2855,7 +2881,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			//20100818ysk end
 			$formtag .= '<tr class="inp1">
-			<th width="127" scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces').'</th>';
+			<th width="127" scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces').'</th>';
 			if( $nameform ){
 				$formtag .= '<td class="name_td">'.__('Given name', 'usces').'<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 				$formtag .= '<td class="name_td">'.__('Familly name', 'usces').'<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
@@ -2865,7 +2891,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			}
 			$formtag .= '</tr>';
 			$furigana = '<tr class="inp1">
-			<th scope="row">' . usces_get_essential_mark('name3').__('furigana', 'usces').'</th>';
+			<th scope="row">' . usces_get_essential_mark('name3', $data).__('furigana', 'usces').'</th>';
 			if( $nameform ){
 				$furigana .= '<td>'.__('Given name', 'usces').'<input name="' . $type . '[name4]" id="name4" type="text" value="' . esc_attr($values['name4']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 				$furigana .= '<td>'.__('Familly name', 'usces').'<input name="' . $type . '[name3]" id="name3" type="text" value="' . esc_attr($values['name3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
@@ -2879,35 +2905,35 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
 			//20100818ysk end
 			$formtag .= '<tr>
-			<th scope="row">' . usces_get_essential_mark('zipcode').__('Zip/Postal Code', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('zipcode', $data).__('Zip/Postal Code', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />'.apply_filters('usces_filter_addressform_zipcode', NULL, $type) . apply_filters( 'usces_filter_after_zipcode', '100-1000', $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
 			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('states').__('Province', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('states', $data).__('Province', 'usces').'</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
 			</tr>
 			<tr class="inp2">
-			<th scope="row">' . usces_get_essential_mark('address1').__('city', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address1', $data).__('city', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address1', __('Kitakami Yokohama', 'usces'), $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('address2').__('numbers', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address2', $data).__('numbers', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address2', '3-24-555', $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('address3').__('building name', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('address3', $data).__('building name', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address3', __('tuhanbuild 4F', 'usces'), $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('tel').__('Phone number', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('tel', $data).__('Phone number', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_tel', '1000-10-1000', $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('fax').__('FAX number', 'usces').'</th>
+			<th scope="row">' . usces_get_essential_mark('fax', $data).__('FAX number', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_fax', '1000-10-1000', $applyform ) . '</td>
 			</tr>';
 			//20100818ysk start
@@ -2920,7 +2946,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			//20100818ysk end
 			$formtag .= '<tr class="inp1">
-			<th scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces') . '</th>';
+			<th scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces') . '</th>';
 			if( $nameform ){
 				$formtag .= '<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 				$formtag .= '<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
@@ -2934,35 +2960,35 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk end
 			$formtag .= '
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
 			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('states') . __('State', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('states', $data) . __('State', 'usces') . '</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
 			</tr>
 			<tr class="inp2">
-			<th scope="row">' . usces_get_essential_mark('address1') . __('city', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address1', $data) . __('city', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address1', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('address2') . __('Address Line1', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address2', $data) . __('Address Line1', 'usces') . '</th>
 			<td colspan="2">' . __('Street address', 'usces') . '<br /><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address2', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('address3') . __('Address Line2', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address3', $data) . __('Address Line2', 'usces') . '</th>
 			<td colspan="2">' . __('Apartment, building, etc.', 'usces') . '<br /><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address3', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('zipcode') . __('Zip', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('zipcode', $data) . __('Zip', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_zipcode', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('tel') . __('Phone number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('tel', $data) . __('Phone number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_tel', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('fax') . __('FAX number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('fax', $data) . __('FAX number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_fax', NULL, $applyform ) . '</td>
 			</tr>';
 			//20100818ysk start
@@ -2976,7 +3002,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			//20100818ysk end
 			$formtag .= '<tr class="inp1">
-			<th scope="row">' . usces_get_essential_mark('name1') . __('Full name', 'usces') . '</th>';
+			<th scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces') . '</th>';
 			if( $nameform ){
 				$formtag .= '<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 				$formtag .= '<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
@@ -2990,35 +3016,35 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk end
 			$formtag .= '
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('address2') . __('Address Line1', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address2', $data) . __('Address Line1', 'usces') . '</th>
 			<td colspan="2">' . __('Street address', 'usces') . '<br /><input name="' . $type . '[address2]" id="address2" type="text" value="' . esc_attr($values['address2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address2', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('address3') . __('Address Line2', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address3', $data) . __('Address Line2', 'usces') . '</th>
 			<td colspan="2">' . __('Apartment, building, etc.', 'usces') . '<br /><input name="' . $type . '[address3]" id="address3" type="text" value="' . esc_attr($values['address3']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address3', NULL, $applyform ) . '</td>
 			</tr>
 			<tr class="inp2">
-			<th scope="row">' . usces_get_essential_mark('address1') . __('city', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('address1', $data) . __('city', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[address1]" id="address1" type="text" value="' . esc_attr($values['address1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_address1', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('states') . __('State', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('states', $data) . __('State', 'usces') . '</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('country') . __('Country', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
 			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('zipcode') . __('Zip', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('zipcode', $data) . __('Zip', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}"  />' . apply_filters( 'usces_filter_after_zipcode', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('tel') . __('Phone number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('tel', $data) . __('Phone number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[tel]" id="tel" type="text" value="' . esc_attr($values['tel']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_tel', NULL, $applyform ) . '</td>
 			</tr>
 			<tr>
-			<th scope="row">' . usces_get_essential_mark('fax') . __('FAX number', 'usces') . '</th>
+			<th scope="row">' . usces_get_essential_mark('fax', $data) . __('FAX number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_fax', NULL, $applyform ) . '</td>
 			</tr>';
 			//20100818ysk start

@@ -61,7 +61,7 @@ class usces_cart {
 			$_SESSION['usces_cart'][$this->serial]['advance'] = $this->wc_serialize($_POST['advance']);
 		}
 		
-//		ksort($_SESSION['usces_cart'], SORT_STRING);
+		do_action('usces_action_after_inCart', $this->serial);
 	}
 
 	// update Cart ***************************************************************
@@ -95,6 +95,7 @@ class usces_cart {
 		}
 
 		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
+		do_action('usces_action_after_upCart');
 	}
 	
 	// inCart_advance ****************************************************************

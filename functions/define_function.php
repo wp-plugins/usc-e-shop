@@ -1268,7 +1268,8 @@ function usces_download_item_list() {
 				}
 				$value = rtrim($value, $sp);
 			} else {
-				$value = $option_value['value'];
+				$value = trim($option_value['value']);
+				$value = str_replace("\n", ';', $value);
 			}
 
 			$line_options .= $td_h.usces_entity_decode($option_value['name'], $ext).$td_f;

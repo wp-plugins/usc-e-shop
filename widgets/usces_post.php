@@ -17,7 +17,7 @@ class Welcart_post extends WP_Widget {
         $rows_num = $instance['rows_num'] == '' ? 3 : $instance['rows_num'];
         $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/infomation.png" alt="' . $title . '" width="24" height="24" />';
-		$img_path = file_exists(get_template_directory().'/images/post.png') ? get_template_directory_uri().'/images/post.png' : USCES_FRONT_PLUGIN_URL . '/images/post.png';
+		$img_path = file_exists(get_stylesheet_directory().'/images/post.png') ? get_stylesheet_directory_uri().'/images/post.png' : USCES_FRONT_PLUGIN_URL . '/images/post.png';
 		if($icon == 1) $before_title .= '<img src="' . $img_path . '" alt="' . $title . '" />';
 		?>
               <?php echo $before_widget; ?>

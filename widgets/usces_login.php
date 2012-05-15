@@ -15,7 +15,7 @@ class Welcart_login extends WP_Widget {
         $title = $instance['title'] == '' ? 'Welcart '.__('Log-in', 'usces') : $instance['title'];
         $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/find.png" alt="' . $title . '" width="24" height="24" />';
-		$img_path = file_exists(get_template_directory().'/images/login.png') ? get_template_directory_uri().'/images/login.png' : USCES_FRONT_PLUGIN_URL . '/images/login.png';
+		$img_path = file_exists(get_stylesheet_directory().'/images/login.png') ? get_stylesheet_directory_uri().'/images/login.png' : USCES_FRONT_PLUGIN_URL . '/images/login.png';
 		if($icon == 1) $before_title .= '<img src="' . $img_path . '" alt="' . $title . '" />';
         ?>
               <?php echo $before_widget; ?>

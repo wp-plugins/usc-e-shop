@@ -16,7 +16,7 @@ class Welcart_category extends WP_Widget {
         $cat_slug = $instance['cat_slug'] == '' ? 'itemgenre' : $instance['cat_slug'];
         $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/category2.png" alt="' . $title . '" width="24" height="24" />';
-		$img_path = file_exists(get_template_directory().'/images/category.png') ? get_template_directory_uri().'/images/category.png' : USCES_FRONT_PLUGIN_URL . '/images/category.png';
+		$img_path = file_exists(get_stylesheet_directory().'/images/category.png') ? get_stylesheet_directory_uri().'/images/category.png' : USCES_FRONT_PLUGIN_URL . '/images/category.png';
 		if($icon == 1) $before_title .= '<img src="' . $img_path . '" alt="' . $title . '" />';
         ?>
               <?php echo $before_widget; ?>

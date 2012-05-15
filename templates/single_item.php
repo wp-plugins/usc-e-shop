@@ -28,7 +28,7 @@ if(usces_sku_num() === 1) { //1SKU
 	$html .= '<div class="field_name">' . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('selling price', 'usces'), usces_guid_tax('return')) . '</div>'."\n";
 	$html .= '<div class="field_price">' . usces_the_itemPriceCr('return') . '</div>'."\n";
 	$html .= '</div>'."\n";
-	$singlestock = '<div class="field">' . __('stock status', 'usces') . ' : ' . esc_html(usces_the_itemZaiko('return')) . '</div>'."\n";
+	$singlestock = '<div class="field">' . __('stock status', 'usces') . ' : ' . esc_html(usces_get_itemZaiko( 'name' )) . '</div>'."\n";
 	$html .= apply_filters('single_item_stock_field', $singlestock);
 	$item_custom = usces_get_item_custom( $post->ID, 'list', 'return' );
 	if($item_custom){
@@ -50,7 +50,7 @@ if(usces_sku_num() === 1) { //1SKU
 		$html .= "</table>\n";
 	}
 	if( !usces_have_zaiko() ){
-		$html .= '<div class="zaiko_status">' . apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')) . '</div>'."\n";
+		$html .= '<div class="zaiko_status">' . apply_filters('usces_filters_single_sku_zaiko_message', esc_html(usces_get_itemZaiko( 'name' ))) . '</div>'."\n";
 	}else{
 		$html .= '<div style="margin-top:10px">'.__('Quantity', 'usces').usces_the_itemQuant('return') . esc_html(usces_the_itemSkuUnit('return')) . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</div>'."\n";
 		$html .= '<div class="error_message">' . usces_singleitem_error_message($post->ID, usces_the_itemSku('return'), 'return') . '</div>'."\n";
@@ -117,11 +117,11 @@ if(usces_sku_num() === 1) { //1SKU
 		$html .= '<span class="price">' . usces_the_itemPriceCr('return') . '</span><br />' . usces_the_itemGpExp('return') . '</td>'."\n";
 		$html .= '</tr>'."\n";
 		$html .= '<tr>'."\n";
-		$html .= '<td class="zaiko">' . usces_the_itemZaiko('return') . '</td>'."\n";
+		$html .= '<td class="zaiko">' . usces_get_itemZaiko( 'name' ) . '</td>'."\n";
 		$html .= '<td class="quant">' . usces_the_itemQuant('return') . '</td>'."\n";
 		$html .= '<td class="unit">' . usces_the_itemSkuUnit('return') . '</td>'."\n";
 		if( !usces_have_zaiko() ){
-			$html .= '<td class="button">' . apply_filters('usces_filters_single_sku_zaiko_message', __('Sold Out', 'usces')) . '</td>'."\n";
+			$html .= '<td class="button">' . apply_filters('usces_filters_single_sku_zaiko_message', esc_html(usces_get_itemZaiko( 'name' ))) . '</td>'."\n";
 		}else{
 			$html .= '<td class="button">' . usces_the_itemSkuButton(__('Add to Shopping Cart', 'usces'), 0, 'return') . '</td>'."\n";
 		}
