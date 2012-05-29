@@ -884,7 +884,6 @@ function usces_the_itemOptName($out = '') {
 function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	global $post, $usces;
 	$post_id = $post->ID;
-	$session_value = isset( $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['code']][$name] ) ? $_SESSION['usces_singleitem']['itemOption'][$post_id][$usces->itemsku['code']][$name] : NULL;
 	
 	if($label == '#default#')
 		$label = $name;
@@ -902,6 +901,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	$optcode = esc_attr(urlencode($name));
 	$name = esc_attr($name);
 	$label = esc_attr($label);
+	$session_value = isset( $_SESSION['usces_singleitem']['itemOption'][$post_id][$sku][$optcode] ) ? $_SESSION['usces_singleitem']['itemOption'][$post_id][$sku][$optcode] : NULL;
 //20110715ysk start 0000208
 	$html .= "\n<label for='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_label'>{$label}</label>\n";
 //20110715ysk end
@@ -3049,5 +3049,27 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 	}
 }
 
-
+function usces_item_option_fileds( $post_id, $sku, $label=1, $out='echo' ){
+	$options = usces_get_opts($post_id, 'sort');
+	if( 0 == count($options) )
+		return false;
+	
+	$sku_enc = urlencode($sku);
+	$html ='';
+	foreach( $options as $opt ){
+		$name = $opt['name'];
+		$opt_code = urlencode($name);
+		$html .= "\n" . '<div class="opt_field" id="opt_' . $post_id . '_' . $sku_enc . '_' . $opt_code . '">';
+		if( $label ){
+			$html .= '<label for="itemOption[' . $post_id . '][' . $sku_enc . '][' . $opt_code . ']">' . esc_html($name) . '</label>';
+		}
+		$html .= usces_get_itemopt_filed($post_id, $sku, $opt);
+		$html .= '</div>';
+	}
+	if( $out == 'return' ){
+		return $html;
+	}else{
+		echo $html;
+	}
+}
 ?>

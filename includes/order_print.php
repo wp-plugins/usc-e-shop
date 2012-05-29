@@ -146,51 +146,52 @@ function usces_pdf_out(&$pdf, $data){
 			}
 			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $cart_row['options']);
 		}
+		$optstr = apply_filters( 'usces_filter_all_option_pdf', $optstr, $cart_row['options']);
 
-			$line_y[$index] = $next_y;
+		$line_y[$index] = $next_y;
 
-			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->SetXY($x-0.2, $line_y[$index]);
+		$pdf->MultiCell(3.6, $lineheight, '*', $border, 'C');
+		$pdf->SetXY($x+3.0, $line_y[$index]);
+		$pdf->MultiCell(84.6, $lineheight, usces_conv_euc($cartItemName), $border, 'L');
+		if( 'receipt' != $_REQUEST['type'] ){
+			list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
 			$pdf->SetFont(GOTHIC, '', $fontsize);
-			$pdf->SetXY($x-0.2, $line_y[$index]);
-			$pdf->MultiCell(3.6, $lineheight, '*', $border, 'C');
-			$pdf->SetXY($x+3.0, $line_y[$index]);
-			$pdf->MultiCell(84.6, $lineheight, usces_conv_euc($cartItemName), $border, 'L');
-			if( 'receipt' != $_REQUEST['type'] ){
-				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
-				$pdf->SetFont(GOTHIC, '', $fontsize);
-				$pdf->SetXY($x+6.0, $pdf->GetY()+$linetop);
-				$pdf->MultiCell(81.6, $lineheight-0.2, usces_conv_euc($optstr), $border, 'L');
-			}
-						
-			$next_y = $pdf->GetY()+2;
-			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-			$pdf->SetFont(GOTHIC, '', $fontsize);
-			$pdf->SetXY($x+88.0, $line_y[$index]);
-			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($cart_row['quantity']), $border, 'R');
-			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-			$pdf->SetFont(GOTHIC, '', $fontsize);
-			$pdf->SetXY($x+99.6, $line_y[$index]);
-			$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($usces->getItemSkuUnit($post_id, urldecode($cart_row['sku']))), $border, 'C');
-			$pdf->SetXY($x+111.5, $line_y[$index]);
-			list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);
-			$pdf->SetFont(GOTHIC, '', $fontsize);
-			$pdf->MultiCell(15.2, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price'])), $border, 'R');
-			$pdf->SetXY($x+126.9, $line_y[$index]);
-			list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
-			$pdf->SetFont(GOTHIC, '', $fontsize);
-			$pdf->MultiCell(22.8, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price']*$cart_row['quantity'])), $border, 'R');
+			$pdf->SetXY($x+6.0, $pdf->GetY()+$linetop);
+			$pdf->MultiCell(81.6, $lineheight-0.2, usces_conv_euc($optstr), $border, 'L');
+		}
+					
+		$next_y = $pdf->GetY()+2;
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->SetXY($x+88.0, $line_y[$index]);
+		$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($cart_row['quantity']), $border, 'R');
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->SetXY($x+99.6, $line_y[$index]);
+		$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($usces->getItemSkuUnit($post_id, urldecode($cart_row['sku']))), $border, 'C');
+		$pdf->SetXY($x+111.5, $line_y[$index]);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);
+		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->MultiCell(15.2, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price'])), $border, 'R');
+		$pdf->SetXY($x+126.9, $line_y[$index]);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
+		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->MultiCell(22.8, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price']*$cart_row['quantity'])), $border, 'R');
 
-			if( 190 < $next_y && 0 < $index ){
-				$pdf->Rect($x, $line_y[$index]-0.4, 149.5, 197.4-$line_y[$index], 'F');
+		if( 190 < $next_y && 0 < $index ){
+			$pdf->Rect($x, $line_y[$index]-0.4, 149.5, 197.4-$line_y[$index], 'F');
 
-				$pdf->SetXY($x, 193);
-				$pdf->MultiCell(88, $lineheight, usces_conv_euc(__('It continues to next.', 'usces')), $border, 'C');
-				
-				usces_pdfSetLine($pdf);
-				usces_pdfSetFooter($pdf, $data);
-				$index--;
-				$page++;
-			}
+			$pdf->SetXY($x, 193);
+			$pdf->MultiCell(88, $lineheight, usces_conv_euc(__('It continues to next.', 'usces')), $border, 'C');
+			
+			usces_pdfSetLine($pdf);
+			usces_pdfSetFooter($pdf, $data);
+			$index--;
+			$page++;
+		}
 	}
 	
 	usces_pdfSetLine($pdf);

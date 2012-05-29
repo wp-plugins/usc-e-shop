@@ -18,6 +18,9 @@ get_header();
 <div class="entry">
 		
 <div id="info-confirm">
+	<div class="confiem_notice">
+	<?php _e('Please do not change product addition and amount of it with the other window with displaying this page.','usces'); ?>
+	</div>
 	
 	<div class="usccart_navi">
 		<ol class="ucart">

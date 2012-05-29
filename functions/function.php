@@ -87,9 +87,8 @@ function usces_order_confirm_message($order_id) {
 //20110118ysk end
 		$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	}
-	$msg_body .= __('Items','usces') . " : \r\n";
 
-	$meisai = "";
+	$meisai = __('Items','usces') . " : \r\n";
 	foreach ( (array)$cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = urldecode($cart_row['sku']);
@@ -153,7 +152,7 @@ function usces_order_confirm_message($order_id) {
 	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
 	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
 	
-	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data);
+	$msg_body .= apply_filters('usces_filter_order_confirm_mail_meisai', $meisai, $data, $cart);
 
 
 	
@@ -289,9 +288,8 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
 	$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
-	$msg_body .= __('Items','usces') . " : \r\n";
 	
-	$meisai = "";
+	$meisai = __('Items','usces') . " : \r\n";
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = urldecode($cart_row['sku']);
@@ -492,8 +490,8 @@ function usces_send_inquirymail() {
 			$reserve .= $key . " : " . $value . "\r\n";
 		}
 	}
-
-	$subject =  $mail_data['title']['inquiry'];
+	$mats = compact($inq_name,$inq_contents,$inq_mailaddress,$reserve,$mail_data);
+	$subject =  apply_filters( 'usces_filter_inquiry_subject_to_customer', $mail_data['title']['inquiry'],$mats);
 	$message  = apply_filters( 'usces_filter_inquiry_header', $mail_data['header']['inquiry'], $inq_name, $inq_mailaddress ) . "\r\n\r\n";
 	$message .= apply_filters( 'usces_filter_inquiry_reserve', $reserve, $inq_name, $inq_mailaddress );
 	$message .= apply_filters( 'usces_filter_inq_contents', $inq_contents, $inq_name, $inq_mailaddress ) . "\r\n\r\n";
@@ -513,7 +511,7 @@ function usces_send_inquirymail() {
 		$res0 = usces_send_mail( $para1 );
 	if ( $res0 ) {
 	
-		$subject =  __('** An inquiry **','usces').'('.$inq_name.')';
+		$subject =  apply_filters( 'usces_filter_inquiry_subject_to_manager', __('** An inquiry **','usces').'('.$inq_name.')',$mats);
 		$message = $reserve . $_POST['inq_contents'] . "\r\n"
 		 . "\n----------------------------------------------------\n"
 		 . "REMOTE_ADDR : " . $_SERVER['REMOTE_ADDR']
@@ -2230,6 +2228,7 @@ function usces_check_acting_return() {
 					usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 					$results[0] = 1;
 				}else{
+					usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
 					$results[0] = 0;
 				}
 				$results['reg_order'] = true;
@@ -2240,8 +2239,10 @@ function usces_check_acting_return() {
 		default:
 			$results = $_GET;
 			if( $_REQUEST['result'] ){
+				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
+				usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
 				$results[0] = 0;
 			}
 //20110310ysk start
@@ -3076,7 +3077,8 @@ function usces_get_cart_button( $out = '' ) {
 			$res .= '<input name="customerinfo" type="submit" class="to_customerinfo_button" value="' . __(' Next ','usces') . '"' . apply_filters('usces_filter_cart_nextbutton', NULL) . ' />';
 		}
 	}
-	
+	$res = apply_filters('usces_filter_get_cart_button', $res);
+
 	if($out == 'return'){
 		return $res;
 	}else{
@@ -3099,6 +3101,8 @@ function usces_get_customer_button( $out = '' ) {
 		$res .= '<input name="reganddeliveryinfo" type="submit" class="to_reganddeliveryinfo_button" value="'.__('Revise member information, and to next', 'usces').'"' . apply_filters('usces_filter_customerinfo_nextbutton', NULL) . ' />';
 	}
 	
+	$res = apply_filters('usces_filter_get_customer_button', $res);
+
 	if($out == 'return'){
 		return $res;
 	}else{
@@ -3893,4 +3897,53 @@ function usces_set_free_csv( $customer ){
 	return $free_csv;
 }
 //20120413ysk end
+
+function usces_get_itemopt_filed($post_id, $sku, $opt){
+	global $usces;
+	$sku = urlencode($sku);
+	$optcode = urlencode($opt['name']);
+	$name = $opt['name'];
+	$means = (int)$opt['means'];
+	$essential = (int)$opt['essential'];
+	$session_value = isset( $_SESSION['usces_singleitem']['itemOption'][$post_id][$sku][$optcode] ) ? $_SESSION['usces_singleitem']['itemOption'][$post_id][$sku][$optcode] : NULL;
+
+	$html = '';
+	switch($means) {
+	case 0://Single-select
+	case 1://Multi-select
+		$selects = explode("\n", $opt['value']);
+		$multiple = ($means === 0) ? '' : ' multiple';
+		$multiple_array = ($means == 0) ? '' : '[]';
+		$html .= "\n<select name='itemOption[{$post_id}][{$sku}][{$optcode}]{$multiple_array}' id='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_select'{$multiple} onKeyDown=\"if (event.keyCode == 13) {return false;}\">\n";
+		if($essential == 1){
+			if(  '#NONE#' == $session_value || NULL == $session_value ) 
+				$selected = ' selected="selected"';
+			else
+				$selected = '';
+			$html .= "\t<option value='#NONE#'{$selected}>" . __('Choose','usces') . "</option>\n";
+		}
+		$i=0;
+		foreach($selects as $v) {
+			if( ($i == 0 && $essential == 0 && NULL == $session_value) || esc_attr($v) == $session_value ) 
+				$selected = ' selected="selected"';
+			else
+				$selected = '';
+			$html .= "\t<option value='" . esc_attr($v) . "'{$selected}>" . esc_html($v) . "</option>\n";
+			$i++;
+		}
+		$html .= "</select>\n";
+		break;
+	case 2://Text
+		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$optcode}]' type='text' id='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"" . esc_attr($session_value) . "\" />\n";
+		break;
+	case 5://Text-area
+		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$optcode}]' id='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_textarea'>" . esc_attr($session_value) . "</textarea>\n";
+		break;
+	}
+	
+	$html = apply_filters('usces_get_itemopt_filed', $html, $post_id, $sku, $opt);
+	
+	return $html;
+}
+
 ?>

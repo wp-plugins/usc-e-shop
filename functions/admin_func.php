@@ -433,7 +433,7 @@ function admin_prodauct_current_screen(){
 	if (version_compare($wp_version, '3.4-beta3', '<'))
 		return;
 	
-	if ( 'usces_itemedit' == $_GET['page'] && !isset($_GET['action']))
+	if ( !(isset($_GET['page']) && (('usces_itemedit' == $_GET['page'] && isset($_GET['action'])) || 'usces_itemnew' == $_GET['page'])) )
 		return;
 	
 	require_once(USCES_PLUGIN_DIR.'/includes/meta-boxes.php');
