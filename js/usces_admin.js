@@ -1128,8 +1128,12 @@
 				var pict = "<img src='" + $("#newitemform img").attr("src") + "' width='" + $("#newitemform img").attr("width") + "' height='" + $("#newitemform img").attr("height") + "' alt='' />";
 				var itemName = $("input[name='itemNEWName\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='itemNEWCode\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='skuNEWName\["+newid+"\]\["+newsku+"\]']").val();
 				var zaiko = $("input[name='zaiNEWko\["+newid+"\]\["+newsku+"\]']").val();
-				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' onchange='orderfunc.sumPrice()' />";
-				var quant = "<input name='quant[" + cnum + "][" + newid + "][" + newsku + "]' class='text quantity' type='text' value='1' onchange='orderfunc.sumPrice()' />";
+//20120528ysk start 0000485
+				//var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' onchange='orderfunc.sumPrice()' />";
+				//var quant = "<input name='quant[" + cnum + "][" + newid + "][" + newsku + "]' class='text quantity' type='text' value='1' onchange='orderfunc.sumPrice()' />";
+				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' />";
+				var quant = "<input name='quant[" + cnum + "][" + newid + "][" + newsku + "]' class='text quantity' type='text' value='1' />";
+//20120528ysk end
 				var delButton = "<input name='delButton[" + cnum + "][" + newid + "][" + newsku + "]' class='delCartButton' type='submit' value='削除' />\n<input name='advance[" + cnum + "][" + newid + "][" + newsku + "]' type='hidden' value='' />\n";
 				
 				var sucoptob = $("input[name*='optNEWCode\[" + newid + "\]\[" + newsku + "\]']");
@@ -1190,6 +1194,11 @@
 
 				$("#orderitemlist").append( htm );
 				orderfunc.sumPrice();
+//20120528ysk start 0000485
+				$("input[name*='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]']").bind("change", function(){ orderfunc.sumPrice($(this)); });
+				$("input[name*='quant[" + cnum + "][" + newid + "][" + newsku + "]']").bind("change", function(){ orderfunc.sumPrice($(this)); });
+				$("input[name*='delButton[" + cnum + "][" + newid + "][" + newsku + "]']").bind("click", function(){ orderfunc.sumPrice(null); });
+//20120528ysk end
 			};
 			$.ajax( s );
 			return false;

@@ -690,18 +690,23 @@ function pdfWindow( type ) {
 }
 
 jQuery(document).ready(function($){
-	var p = $("input[name*='skuPrice']");
-	var q = $("input[name*='quant']");
-	var t = $("td[id*='sub_total']");
-	var db = $("input[name*='delButton']");
+//20120528ysk start 0000485
+//	var p = $("input[name*='skuPrice']");
+//	var q = $("input[name*='quant']");
+//	var t = $("td[id*='sub_total']");
+//	var db = $("input[name*='delButton']");
 
 	orderfunc.sumPrice(null);
 	
-	for( var i = 0; i < p.length; i++) {
-		$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
-		$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
-		$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
-	}
+//	for( var i = 0; i < p.length; i++) {
+//		$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
+//		$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
+//		$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
+//	}
+	$("input[name*='skuPrice']").bind("change", function(){ orderfunc.sumPrice($(this)); });
+	$("input[name*='quant']").bind("change", function(){ orderfunc.sumPrice($(this)); });
+	$("input[name*='delButton']").bind("click", function(){ orderfunc.sumPrice(null); });
+//20120528ysk end
 	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice($("#order_usedpoint")); });
 	$("#order_discount").bind("change", function(){ orderfunc.sumPrice($("#order_discount")); });
 	$("#order_shipping_charge").bind("change", function(){ orderfunc.sumPrice($("#order_shipping_charge")); });
