@@ -1446,10 +1446,10 @@ class usc_e_shop
 			$sslhome = $parsed['host'] . $parsed['path'];
 
 //usces_log('refer : '.$refer, 'acting_transaction.log');
-//usces_log('sslid : '.$sslid, 'acting_transaction.log');
-//usces_log('rckid : '.$rckid, 'acting_transaction.log');
-//usces_log('usces_cookieid : '.$_SESSION['usces_cookieid'], 'acting_transaction.log');
-//usces_log('request : '.print_r($_SERVER['REQUEST_URI'],true), 'acting_transaction.log');
+//	usces_log('sslid : '.$sslid, 'acting_transaction.log');
+//	usces_log('rckid : '.$rckid, 'acting_transaction.log');
+//	usces_log('usces_cookieid : '.$_SESSION['usces_cookieid'], 'acting_transaction.log');
+//	usces_log('request : '.print_r($_SERVER['REQUEST_URI'],true), 'acting_transaction.log');
 
 			if( empty($refer) || (false === strpos($refer, $home) && false === strpos($refer, $sslhome)) ){
 				if( !empty($sslid) && !empty($rckid) && $sslid === $rckid ){
@@ -2816,6 +2816,15 @@ class usc_e_shop
 		}
 
 		$this->cart->entry();
+		$this->error_message = $this->zaiko_check();
+		if( $this->error_message != '' ){
+			$this->page = 'cart';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+			add_action('the_post', array($this, 'action_cartFilter'));
+			add_action('template_redirect', array($this, 'template_redirect'));
+			return;
+		}
+		
 		$this->set_reserve_pre_order_id();
 		if(isset($_POST['confirm'])){
 			$this->error_message = $this->delivery_check();
@@ -4051,6 +4060,7 @@ class usc_e_shop
 				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $checkstock) . "<br />";
 			}
 		}
+		$mes = apply_filters('usces_filter_zaiko_check', $mes, $cart);
 		return $mes;	
 	}
 	
