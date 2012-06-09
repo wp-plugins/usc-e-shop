@@ -81,7 +81,8 @@ function usces_order_confirm_message($order_id) {
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-		$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
+		//$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
+		$msg_body .= uesces_get_mail_addressform( 'admin_mail_customer', $deli, $order_id );
 //20110118ysk start
 		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -179,7 +180,7 @@ function usces_order_confirm_message($order_id) {
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
 //20101208ysk end
 	$msg_shipping .= "\r\n";
-	$msg_body .= apply_filters('usces_filter_order_confirm_mail_shipping', $msg_shipping, $data);
+	$msg_body .= apply_filters('usces_filter_order_confirm_mail_ship', $msg_shipping, $data);
 
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . " \r\n";
@@ -283,7 +284,8 @@ function usces_send_ordermail($order_id) {
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
-	$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $entry['customer']['name1'], $entry['customer']['name2'], 'return' )) . "\r\n";
+	//$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $entry['customer']['name1'], $entry['customer']['name2'], 'return' )) . "\r\n";
+	$msg_body .= uesces_get_mail_addressform( 'order_mail_customer', $entry, $order_id );
 //20110118ysk start
 	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
@@ -3013,13 +3015,29 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
 	$formtag = '';
 	switch( $type ){
+	case 'admin_mail_customer':
+		$values = $data;
+		$values['country'] = !empty($values['country']) ? $values['country'] : usces_get_local_addressform();
+		$mode = 'customer';
+		$name_label = __('Buyer','usces');
+		break;
 	case 'admin_mail':
 		$values = $data;
 		$values['country'] = !empty($values['country']) ? $values['country'] : usces_get_local_addressform();
+		$mode = 'delivery';
+		$name_label = __('A destination name','usces');
+		break;
+	case 'order_mail_customer':
+		$values = $data['customer'];
+		$values['country'] = !empty($values['country']) ? $values['country'] : usces_get_local_addressform();
+		$mode = 'customer';
+		$name_label = __('Buyer','usces');
 		break;
 	case 'order_mail':
 		$values = $data['delivery'];
 		$values['country'] = !empty($values['country']) ? $values['country'] : usces_get_local_addressform();
+		$mode = 'delivery';
+		$name_label = __('A destination name','usces');
 		break;
 	}
 	
@@ -3027,11 +3045,11 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 	
 	case 'JP': 
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_pre', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
-		$formtag .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
+		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
 		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
@@ -3039,17 +3057,17 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'fax_after', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'fax_after', $order_id );
 		//20110118ysk end
 		break;
 		
 	case 'CN':
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_pre', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
-		$formtag .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
+		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
 		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
@@ -3059,18 +3077,18 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'fax_after', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'fax_after', $order_id );
 		//20110118ysk end
 		break;
 		
 	case 'US':
 	default:
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_pre', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
-		$formtag .= __('A destination name','usces') . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name2'] . ' ' . $values['name1'])) . " \r\n";
+		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name2'] . ' ' . $values['name1'])) . " \r\n";
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'name_after', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
@@ -3080,7 +3098,7 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
 		//20110118ysk start
-		$formtag .= usces_mail_custom_field_info( 'delivery', 'fax_after', $order_id );
+		$formtag .= usces_mail_custom_field_info( $mode, 'fax_after', $order_id );
 		//20110118ysk end
 		break;
 	}
