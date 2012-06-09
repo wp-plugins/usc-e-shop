@@ -538,6 +538,18 @@ function usces_typenow(){
 	global $typenow;
 	if( isset($_GET['page']) && ('usces_itemedit' == $_GET['page'] || 'usces_itemnew' == $_GET['page']) )
 		$typenow = '';
+		
+}
+
+function usces_admin_notices(){
+	global $usces;
+	if( 'on' == $usces->options['acting_settings']['zeus']['activate'] ){
+		$options = get_option('usces');
+		if(!isset($options['acting_settings']['zeus']['vercheck']) || '115' != $options['acting_settings']['zeus']['vercheck'] ){
+			$msg = '<div class="error"><p>決済に「ゼウス」をご利用の場合は、<a href="' . site_url('/wp-admin/admin.php?page=usces_settlement') . '">「セキュリティーコード」の設定内容を確認</a>して更新ボタンを押して下さい。設定を更新するとこのメッセージは表示されなくなります。</p></div>';
+			echo $msg;	
+		}
+	}
 }
 
 ?>

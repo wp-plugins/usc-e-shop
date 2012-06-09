@@ -716,28 +716,23 @@ function delConfirm(){
 //20120307ysk end
 
 jQuery(document).ready(function($){
-	var p = $("input[name*='skuPrice']");
-	var q = $("input[name*='quant']");
-	var t = $("td[id*='sub_total']");
-	var db = $("input[name*='delButton']");
+//20120528ysk start 0000485
+//	var p = $("input[name*='skuPrice']");
+//	var q = $("input[name*='quant']");
+//	var t = $("td[id*='sub_total']");
+//	var db = $("input[name*='delButton']");
 
 	orderfunc.sumPrice(null);
 	
-	for( var i = 0; i < p.length; i++) {
-//20120307ysk start 0000432
-		var name = $(p[i]).attr("name");
-		var strs = name.split('[');
-		var index = strs[1].replace(/[\]]+$/g, '');
-		var post_id = strs[2].replace(/[\]]+$/g, '');
-		var sku = strs[3].replace(/[\]]+$/g, '');
-		//$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
-		//$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
-		//$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
-		$(p[i]).bind("change", {index:index, post_id:post_id, sku:sku}, function(e){ orderfunc.sumPrice($(this)); orderfunc.getPoint( e.data.index, e.data.post_id, e.data.sku ); });
-		$(q[i]).bind("change", {index:index, post_id:post_id, sku:sku}, function(e){ orderfunc.sumPrice($(this)); orderfunc.getPoint( e.data.index, e.data.post_id, e.data.sku ); });
-		$(db[i]).bind("click", {index:index, post_id:post_id, sku:sku}, function(e){ return delConfirm($(this)); });
-//20120307ysk end
-	}
+//	for( var i = 0; i < p.length; i++) {
+//		$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
+//		$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
+//		$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
+//	}
+	$("input[name*='skuPrice']").bind("change", function(){ orderfunc.sumPrice($(this)); });
+	$("input[name*='quant']").bind("change", function(){ orderfunc.sumPrice($(this)); });
+	$("input[name*='delButton']").bind("click", function(){ orderfunc.sumPrice(null); });
+//20120528ysk end
 	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice($("#order_usedpoint")); });
 	$("#order_discount").bind("change", function(){ orderfunc.sumPrice($("#order_discount")); });
 	$("#order_shipping_charge").bind("change", function(){ orderfunc.sumPrice($("#order_shipping_charge")); });

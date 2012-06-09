@@ -305,7 +305,7 @@ msgid "estimate number"
 msgstr "お見積番号"
 
 msgid "** content of ordered items **"
-msgstr "【商品ご注文内容】"
+msgstr "【ご注文内容】"
 
 msgid "Unit price"
 msgstr "単価"
@@ -3201,3 +3201,6 @@ msgstr "データに不備が有ります。"
 
 msgid "Please input a phone number with a half size number."
 msgstr "電話番号を半角数字で入力して下さい。"
+
+msgid "Please do not change product addition and amount of it with the other window with displaying this page."
+msgstr "※このページを表示したまま、別ウィンドウで商品追加や数量変更は行わないでください。"

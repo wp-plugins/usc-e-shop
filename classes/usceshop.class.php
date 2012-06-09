@@ -987,7 +987,7 @@ class usc_e_shop
 
 		if($action_status != 'error') //20120511ysk 0000470
 		update_option('usces', $this->options);
-		
+
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_system.php');	
 
 	}
@@ -1073,6 +1073,7 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure',$this->payment_structure);
+					$options['acting_settings']['zeus']['vercheck'] = '115';
 					if( update_option('usces', $options) ){
 						usces_clear_quickcharge();
 					}
@@ -1362,6 +1363,7 @@ class usc_e_shop
 			
 		
 		$this->options = get_option('usces');
+
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_settlement.php');	
 	}
 	
@@ -1444,10 +1446,10 @@ class usc_e_shop
 			$sslhome = $parsed['host'] . $parsed['path'];
 
 //usces_log('refer : '.$refer, 'acting_transaction.log');
-//usces_log('sslid : '.$sslid, 'acting_transaction.log');
-//usces_log('rckid : '.$rckid, 'acting_transaction.log');
-//usces_log('usces_cookieid : '.$_SESSION['usces_cookieid'], 'acting_transaction.log');
-//usces_log('request : '.print_r($_SERVER['REQUEST_URI'],true), 'acting_transaction.log');
+//	usces_log('sslid : '.$sslid, 'acting_transaction.log');
+//	usces_log('rckid : '.$rckid, 'acting_transaction.log');
+//	usces_log('usces_cookieid : '.$_SESSION['usces_cookieid'], 'acting_transaction.log');
+//	usces_log('request : '.print_r($_SERVER['REQUEST_URI'],true), 'acting_transaction.log');
 
 			if( empty($refer) || (false === strpos($refer, $home) && false === strpos($refer, $sslhome)) ){
 				if( !empty($sslid) && !empty($rckid) && $sslid === $rckid ){
@@ -2814,6 +2816,15 @@ class usc_e_shop
 		}
 
 		$this->cart->entry();
+		$this->error_message = $this->zaiko_check();
+		if( $this->error_message != '' ){
+			$this->page = 'cart';
+			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_cart');
+			add_action('the_post', array($this, 'action_cartFilter'));
+			add_action('template_redirect', array($this, 'template_redirect'));
+			return;
+		}
+		
 		$this->set_reserve_pre_order_id();
 		if(isset($_POST['confirm'])){
 			$this->error_message = $this->delivery_check();
@@ -3959,7 +3970,6 @@ class usc_e_shop
 		$stock = $this->getItemZaikoNum($post_id, $sku);
 		$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku);
 		$itemRestriction = get_post_meta($post_id, '_itemRestriction',true );
-		$mes = array();
 
 		if( 1 > $quant ){
 			$mes[$post_id][$sku] = __('enter the correct amount', 'usces') . "<br />";
@@ -3972,7 +3982,6 @@ class usc_e_shop
 		}
 
 		$ioptkeys = $this->get_itemOptionKey( $post_id, true );
-		//if($ioptkeys && isset($_POST['itemOption'][$post_id][$sku])){
 		if($ioptkeys){
 			foreach($ioptkeys as $key => $value){
 				$optValues = $this->get_itemOptions( urldecode($value), $post_id );
@@ -4014,6 +4023,8 @@ class usc_e_shop
 			header('location: ' . $parse_url['scheme'] . '://' . $parse_url['host'] . $_POST['usces_referer'] . '#cart_button');
 			exit;
 		}
+		
+		do_action('usces_action_incart_checked', $mes, $post_id, $sku);
 	}
 	
 	function zaiko_check() {
@@ -4049,10 +4060,8 @@ class usc_e_shop
 				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $checkstock) . "<br />";
 			}
 		}
-
 		$mes = apply_filters('usces_filter_zaiko_check', $mes, $cart);
-
-		return $mes;
+		return $mes;	
 	}
 	
 	function member_check() {
@@ -6688,8 +6697,9 @@ class usc_e_shop
 			'item' => '',
 			'sku' => '',
 			'value' => __('to the cart', 'usces'),
-			'force' => false,
-			'quant' => false,
+			'force' => 0,
+			'quant' => 0,
+			'opt' => 1,
 		), $atts));
 	
 		$post_id = $this->get_ID_byItemName($item);
@@ -6709,9 +6719,14 @@ class usc_e_shop
 		$html .= "<input name=\"zaiko[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"zaiko[{$post_id}][{$sku_enc}]\" value=\"{$zaiko}\" />\n";
 		$html .= "<input name=\"gptekiyo[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"gptekiyo[{$post_id}][{$sku_enc}]\" value=\"{$gptekiyo}\" />\n";
 		$html .= "<input name=\"skuPrice[{$post_id}][{$sku_enc}]\" type=\"hidden\" id=\"skuPrice[{$post_id}][{$sku_enc}]\" value=\"{$skuPrice}\" />\n";
+		if( 1 == $opt ){
+			$html .= usces_item_option_fileds( $post_id, $sku, 1, 'return' );
+		}elseif( 2 == $opt ){
+			$html .= usces_item_option_fileds( $post_id, $sku, 0, 'return' );
+		}
 		if( $quant ){
-			$quant = "<input name=\"quant[{$post_id}][" . $sku_enc . "]\" type=\"text\" id=\"quant[{$post_id}][" . $sku_enc . "]\" class=\"skuquantity\" value=\"\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
-			$html .= apply_filters('usces_filter_sc_itemQuant', $quant, $mats);
+			$quant_field = "<input name=\"quant[{$post_id}][" . $sku_enc . "]\" type=\"text\" id=\"quant[{$post_id}][" . $sku_enc . "]\" class=\"skuquantity\" value=\"\" onKeyDown=\"if (event.keyCode == 13) {return false;}\" />";
+			$html .= apply_filters('usces_filter_sc_itemQuant', $quant_field, $mats);
 		}
 		$html .= "<input name=\"inCart[{$post_id}][{$sku_enc}]\" type=\"submit\" id=\"inCart[{$post_id}][{$sku_enc}]\" class=\"skubutton\" value=\"{$value}\" " . apply_filters('usces_filter_direct_intocart_button', NULL, $post_id, $sku, $force, $options) . " />";
 		$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";

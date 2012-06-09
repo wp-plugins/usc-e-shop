@@ -100,8 +100,23 @@ unset($non_stoc_skus);
 <td>MySQL</td><td colspan="2"><?php echo mysql_get_server_info(); ?></td>
 </tr>
 <tr>
-<?php $get_ini = ini_get_all(); ?>
-<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "(".__('Safe mode', 'usces').")"; ?> memoly[global]:<?php echo $get_ini['memory_limit']['global_value']; ?> [locale]:<?php echo $get_ini['memory_limit']['local_value']; ?> [usage]:<?php echo (int)(memory_get_peak_usage()/1048576); ?>M</td>
+<?php
+$get_ini = ini_get_all();
+$essential_extentions = array('simplexml', 'curl', 'gd', 'json', 'mbstring', 'mysql', 'openssl');
+?>
+<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "(".__('Safe mode', 'usces').")"; ?> memoly[global]:<?php echo $get_ini['memory_limit']['global_value']; ?> [locale]:<?php echo $get_ini['memory_limit']['local_value']; ?> [usage]:<?php echo (int)(memory_get_peak_usage()/1048576); ?>M<br />
+<?php
+foreach($essential_extentions as $key => $esext){
+	if (extension_loaded($esext)) {
+		if($key){
+			echo  ',&nbsp;'.$esext;
+		}else{
+			echo $esext;
+		}
+    }
+}
+?>
+</td>
 </tr>
 </table>
 </div>
