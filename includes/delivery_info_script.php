@@ -105,14 +105,16 @@ $html .= 'var customer_pref = "'.$usces_entries['customer']['pref'].'";';
 $delivery_pref = (isset($usces_entries['delivery']['pref']) && !empty($usces_entries['delivery']['pref'])) ? $usces_entries['delivery']['pref'] : $usces_entries['customer']['pref'];
 $html .= 'var delivery_pref = "'.$delivery_pref.'";';
 //選択可能な配送方法に設定されている配達日数
-$html .= 'var delivery_days = [];';
+//20120612ysk start 0000501
+$html_days = 'var delivery_days = [];';
 foreach((array)$default_deli as $id) {
 	$index = $usces->get_delivery_method_index($id);
 	if(0 <= $index) {
-		$html .= 'delivery_days['.$id.'] = [];';
-		$html .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
+		$html_days .= 'delivery_days['.$id.'] = [];';
+		$html_days .= 'delivery_days['.$id.'].push("'.$usces->options['delivery_method'][$index]['days'].'");';
 	}
 }
+//20120612ysk end
 //配達日数に設定されている県毎の日数
 //20110317ysk start
 //$prefs = $usces->options['province'];
@@ -128,7 +130,8 @@ foreach((array)$target_market as $tm) {
 }
 //20110317ysk end
 $delivery_days = $usces->options['delivery_days'];
-$html .= 'var delivery_days_value = [];';
+//20120612ysk start 0000501
+$html_days .= 'var delivery_days_value = [];';
 foreach((array)$default_deli as $key => $id) {
 	$index = $usces->get_delivery_method_index($id);
 	if(0 <= $index) {
@@ -136,20 +139,22 @@ foreach((array)$default_deli as $key => $id) {
 		if(0 <= $days) {
 			for($i = 0; $i < count((array)$delivery_days); $i++) {
 				if((int)$delivery_days[$i]['id'] == $days) {
-					$html .= 'delivery_days_value['.$days.'] = [];';
+					$html_days .= 'delivery_days_value['.$days.'] = [];';
 //20110317ysk start
 					$country = $usces->options['delivery_days'][$i]['country'];
 					//foreach((array)$prefs as $pref) {
 					foreach((array)$prefs[$country] as $pref) {
 //20110317ysk end
-						$html .= 'delivery_days_value['.$days.']["'.$pref.'"] = [];';
-						$html .= 'delivery_days_value['.$days.']["'.$pref.'"].push("'.(int)$delivery_days[$i]['value'][$pref].'");';
+						$html_days .= 'delivery_days_value['.$days.']["'.$pref.'"] = [];';
+						$html_days .= 'delivery_days_value['.$days.']["'.$pref.'"].push("'.(int)$delivery_days[$i]['value'][$pref].'");';
 					}
 				}
 			}
 		}
 	}
 }
+$html .= apply_filters('usces_filter_delivery_days_value', $html_days, $cart, $default_deli, $prefs);
+//20120612ysk end
 //20101208ysk end
 //20110131ysk start
 $business_days = 0;

@@ -467,53 +467,67 @@ jQuery(document).ready(function($){
 </div>
 
 <table id="mainDataTable" cellspacing="1">
+<?php
+//20120612ysk start 0000501
+	$list_header = '<th scope="col"><input name="allcheck" type="checkbox" value="" /></th>';
+	foreach( (array)$arr_header as $value ) {
+		$list_header .= '<th scope="col">'.$value.'</th>';
+	}
+	$list_header .= '<th scope="col">&nbsp;</th>';
+//20120612ysk end
+?>
 	<tr>
-		<th scope="col"><input name="allcheck" type="checkbox" value="" /></th>
-<?php foreach ( (array)$arr_header as $value ) : ?>
-		<th scope="col"><?php echo $value ?></th>
-<?php endforeach; ?>
-		<th scope="col">&nbsp;</th>
+		<?php echo apply_filters('usces_filter_order_list_header', $list_header, $arr_header);//20120612ysk 0000501 ?>
 	</tr>
 <?php foreach ( (array)$rows as $array ) : ?>
-	<tr>
-	<td><input name="listcheck[]" type="checkbox" value="<?php echo $array['ID']; ?>" /></td>
-	<?php foreach ( (array)$array as $key => $value ) : ?>
-		<?php if( $value == '' || $value == ' ' ) $value = '&nbsp;'; ?>
-		<?php if( $key == 'ID' || $key == 'deco_id' ): ?>
-		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id=' . $array['ID'] . '&usces_referer=' . $curent_url; ?>"><?php echo esc_html($value); ?></a></td>
-		<?php elseif( $key == 'name' ): ?>
-		<td><?php
+<?php
+//20120612ysk start 0000501
+	$list_detail = '<td><input name="listcheck[]" type="checkbox" value="'.$array['ID'].'" /></td>';
+	foreach( (array)$array as $key => $value ) {
+		if( $value == '' || $value == ' ' ) $value = '&nbsp;';
+		if( $key == 'ID' || $key == 'deco_id' ) {
+			$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.$curent_url.'">'.esc_html($value).'</a></td>';
+		} elseif( $key == 'name' ) {
 			$options = get_option('usces');
 			$applyform = usces_get_apply_addressform($options['system']['addressform']);
 			switch ($applyform){
 			case 'JP': 
-				esc_html_e($value);
+				$list_detail .= '<td>'.esc_html($value).'</td>';
 				break;
 			case 'US':
 			default:
 				$names = explode(' ', $value);
-				esc_html_e($names[1].' '.$names[0]);
+				$list_detail .= '<td>'.esc_html($names[1].' '.$names[0]).'</td>';
 			}
-		?></td>
-		<?php elseif( $key == 'total_price' ): ?>
-		<td class="price"><?php usces_crform( $value, true, false ); ?></td>
-		<?php elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')): ?>
-		<td class="red"><?php esc_html_e($value); ?></td>
-		<?php elseif( $key == 'receipt_status' && $value == 'Pending'): ?>
-		<td class="red"><?php esc_html_e($value); ?></td>
-		<?php elseif( $key == 'receipt_status' && $value == __('payment confirmed', 'usces')): ?>
-		<td class="green"><?php esc_html_e($value); ?></td>
-		<?php elseif( $key == 'order_status' && $value == __('It has sent it out.', 'usces')): ?>
-		<td class="green"><?php esc_html_e($value); ?></td>
-		<?php elseif( $key == 'delivery_method'): ?>
-		<td class="green"><?php if( -1 != $value ){$delivery_method_index = $this->get_delivery_method_index($value); echo esc_html($this->options['delivery_method'][$delivery_method_index]['name']);} ?></td>
-		<?php elseif( $key == 'payment_name' && $value == '#none#'): ?>
-		<td>&nbsp;</td>
-		<?php else: ?>
-		<td><?php esc_html_e($value); ?></td>
-		<?php endif; ?>
-<?php endforeach; ?>
-	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=delete&order_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;"><?php _e('Delete', 'usces'); ?></span></a></td>
+		} elseif( $key == 'total_price' ) {
+			$list_detail .= '<td class="price">'.usces_crform( $value, true, false, 'return' ).'</td>';
+		} elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')) {
+			$list_detail .= '<td class="red">'.esc_html($value).'</td>';
+		} elseif( $key == 'receipt_status' && $value == 'Pending') {
+			$list_detail .= '<td class="red">'.esc_html($value).'</td>';
+		} elseif( $key == 'receipt_status' && $value == __('payment confirmed', 'usces')) {
+			$list_detail .= '<td class="green">'.esc_html($value).'</td>';
+		} elseif( $key == 'order_status' && $value == __('It has sent it out.', 'usces')) {
+			$list_detail .= '<td class="green">'.esc_html($value).'</td>';
+		} elseif( $key == 'delivery_method') {
+			if( -1 != $value ) {
+				$delivery_method_index = $this->get_delivery_method_index($value);
+				$value = $this->options['delivery_method'][$delivery_method_index]['name'];
+			} else {
+				$value = '&nbsp;';
+			}
+			$list_detail .= '<td class="green">'.esc_html($value).'</td>';
+		} elseif( $key == 'payment_name' && $value == '#none#') {
+			$list_detail .= '<td>&nbsp;</td>';
+		} else {
+			$list_detail .= '<td>'.esc_html($value).'</td>';
+		}
+	}
+	$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=delete&order_id='.$array['ID'].'" onclick="return deleteconfirm(\''.$array['ID'].'\');"><span style="color:#FF0000; font-size:9px;">'.__('Delete', 'usces').'</span></a></td>';
+//20120612ysk end
+?>
+	<tr>
+		<?php echo apply_filters('usces_filter_order_list_detail', $list_detail, $array);//20120612ysk 0000501 ?>
 	</tr>
 <?php endforeach; ?>
 </table>

@@ -1403,11 +1403,26 @@ function usces_update_ordercart() {
 	$usces->cart->crear_cart();
 	$usces->cart->upCart();
 	$cart = $usces->cart->get_cart();
+//20120613ysk start 0000500
+	$idx = count($cart)-1;
+	$post_id = $cart[$idx]['post_id'];
+	$sku = $cart[$idx]['sku'];
+	$sku_code = esc_attr(urldecode($sku));
+	$cartItemName = $usces->getCartItemName($post_id, $sku_code);
+	$skuPrice = $cart[$idx]['price'];
+//20120613ysk end
 
 	$query = $wpdb->prepare("UPDATE $order_table_name SET `order_cart`=%s WHERE ID = %d", serialize($cart), $ID);
 	$res = $wpdb->query( $query );
 	
 	$usces->cart->crear_cart();
+//20120613ysk start 0000500
+	if( $res === false ) {
+		$res = "-1#usces#";
+	} else {
+		$res = $skuPrice."#usces#".$cartItemName;
+	}
+//20120613ysk end
 	return $res;
 }
 
@@ -1623,8 +1638,10 @@ function usces_update_orderdata() {
 
 	$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
 	$new_orderdata = $wpdb->get_results( $query );
-
-	do_action('usces_action_update_orderdata', $new_orderdata);
+//20120612ysk start 0000501
+	//do_action('usces_action_update_orderdata', $new_orderdata);
+	do_action('usces_action_update_orderdata', $new_orderdata, $old_status);
+//20120612ysk end
 	$usces->cart->crear_cart();
 	
 return $result;
@@ -1975,6 +1992,7 @@ function usces_all_change_order_status(&$obj){
 	foreach ( (array)$ids as $id ):
 		$query = $wpdb->prepare("SELECT order_status FROM $tableName WHERE ID = %d", $id);
 		$statusstr = $wpdb->get_var( $query );
+		$old_status = $statusstr;//20120612ysk 0000501
 		switch ($_REQUEST['change']['word']['order_status']) {
 			case 'estimate':
 				if(strpos($statusstr, 'adminorder') !== false) {
@@ -2038,6 +2056,11 @@ function usces_all_change_order_status(&$obj){
 		if( $res === false ) {
 			$status = false;
 		}
+//20120612ysk 0000501 start
+		if( $status ) {
+			do_action('usces_action_collective_order_status_each', $id, $statusstr, $old_status);
+		}
+//20120612ysk end
 	endforeach;
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
@@ -2064,6 +2087,9 @@ function usces_all_delete_order_data(&$obj){
 		}else{
 			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $id);//0000427
 			$metares = $wpdb->query( $metaquery );
+//20120612ysk start 0000501
+			do_action('usces_action_collective_order_delete_each', $id);
+//20120612ysk end
 		}
 	endforeach;
 	if ( true === $status ) {

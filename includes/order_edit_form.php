@@ -411,7 +411,10 @@ jQuery(function($){
 	orderfunc = {
 		sumPrice : function(obj) {
 			if(obj != null) {
-				if(!checkNum(obj.val())) {
+//20120606ysk start 0000497
+				//if(!checkNum(obj.val())) {
+				if(!checkNumMinus(obj.val())) {
+//20120606ysk end
 					alert('数値で入力して下さい。');
 					obj.focus();
 					return false;
@@ -665,12 +668,20 @@ function addComma(str)
 	var strs = str.split('.');
 	cnt = 0;
 	n   = "";
+//20120606ysk start 0000497
+	m = "";
+	if( strs[0].substr(0, 1) == "-" ) {
+		m = "-";
+		strs[0] = strs[0].substr(1);
+	}
+//20120606ysk end
 	for (i=strs[0].length-1; i>=0; i--)
 	{
 		n = strs[0].charAt(i) + n;
 		cnt++;
 		if (((cnt % 3) == 0) && (i != 0)) n = ","+n;
 	}
+	n = m + n;//20120606ysk 0000497
 	if(undefined != strs[1]){
 		res = n + '.' + strs[1];
 	}else{
@@ -688,7 +699,14 @@ function pdfWindow( type ) {
 	y = 0;
 	printWin = window.open("<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&order_id='.$order_id; ?>"+"&type="+type,"sub","left="+x+",top="+y+",width="+wx+",height="+wy+",scrollbars=yes");
 }
-
+//20120606ysk start 0000497
+function checkNumMinus( argValue ) {
+	if( argValue.match(/[^0-9|^\-]/g) ) {
+		return false;
+	}
+	return true;
+}
+//20120606ysk end
 jQuery(document).ready(function($){
 //20120528ysk start 0000485
 //	var p = $("input[name*='skuPrice']");
