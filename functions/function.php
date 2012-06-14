@@ -13,6 +13,7 @@ function usces_ajax_send_mail() {
 			'message' => trim(urldecode($_POST['message']))
 			);
 	
+	$order_para = apply_filters( 'usces_ajax_send_mail_para_to_customer', $order_para);
 	$res = usces_send_mail( $order_para );
 	if($res){
 		$tableName = $wpdb->prefix . "usces_order";
@@ -38,6 +39,7 @@ function usces_ajax_send_mail() {
 				'message' => trim(urldecode($_POST['message']))
 				);
 		
+		$bcc_para = apply_filters( 'usces_ajax_send_mail_para_to_manager', $bcc_para);
 		usces_send_mail( $bcc_para );
 
 		return 'success';
@@ -448,6 +450,7 @@ function usces_send_ordermail($order_id) {
 			'subject' => $subject,
 			'message' => $message
 			);
+	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry);
 
 	if ( usces_send_mail( $confirm_para ) ) {
 	
@@ -468,6 +471,7 @@ function usces_send_ordermail($order_id) {
 				'message' => $message
 				);
 		
+		$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry);
 		$res = usces_send_mail( $order_para );
 	
 	}

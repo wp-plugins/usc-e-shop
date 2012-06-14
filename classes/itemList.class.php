@@ -135,8 +135,9 @@ class dataList
 			$this->searchSwitchStatus = 'OFF';
 		}
 		$this->searchSql =  '';
-		$this->sortColumn = 'post.ID';
-		$this->sortSwitchs['post.ID'] = 'DESC';
+		$column = apply_filters( 'usces_filter_item_class_sortColumn', 'post.ID');
+		$this->sortColumn = $column;
+		$this->sortSwitchs[$column] = apply_filters( 'usces_filter_item_class_sortSwitchs', 'DESC');
 		
 		foreach($this->columns as $value ){
 			$this->sortSwitchs[$value] = 'ASC';
