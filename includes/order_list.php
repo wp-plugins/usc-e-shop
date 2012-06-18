@@ -803,6 +803,7 @@ jQuery(document).ready(function($){
 	</fieldset>
 </div>
 <!--20100908ysk end-->
+<?php echo apply_filters('usces_filter_order_list_footer', NULL);//20120612ysk 0000501 ?>
 
 <!--<div class="chui">
 <h3>受注詳細画面（作成中）について</h3>
