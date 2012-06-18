@@ -105,6 +105,9 @@ function toggleVisibility(id) {
 <!--20120413ysk start-->
 		<li><a href="#uscestabs_sbps">ソフトバンク・ペイメント【β】</a></li>
 <!--20120413ysk end-->
+<!--20120618ysk start-->
+		<li><a href="#uscestabs_telecom">テレコムクレジット</a></li>
+<!--20120618ysk end-->
 	</ul>
 
 
@@ -694,6 +697,74 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_sbps-->
 <!--20120413ysk end-->
+<!--20120618ysk start-->
+	<div id="uscestabs_telecom">
+	<div class="settlement_service"><span class="service_title">テレコムクレジット</span></div>
+	<?php if( isset($_POST['acting']) && 'telecom' == $_POST['acting'] ){ ?>
+		<?php if( isset($opts['telecom']['activate']) && 'on' == $opts['telecom']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php }else if( '' != $mes ){ ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php } ?>
+	<?php } ?>
+	<form action="" method="post" name="telecom_form" id="telecom_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clientip_telecom');">クライアントIP</a></th>
+				<td colspan="6"><input name="clientip" type="text" id="clientip_telecom" value="<?php echo esc_html(isset($opts['telecom']['clientip']) ? $opts['telecom']['clientip'] : ''); ?>" size="20" maxlength="5" /></td>
+				<td><div id="ex_clientip_telecom" class="explanation"><?php _e('契約時にテレコムクレジットから発行されるクライアントIP（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_service_id_sbps');">サービスID</a></th>
+				<td colspan="6"><input name="service_id" type="text" id="service_id_sbps" value="<?php echo esc_html(isset($opts['sbps']['service_id']) ? $opts['sbps']['service_id'] : ''); ?>" size="20" maxlength="3" /></td>
+				<td><div id="ex_service_id_sbps" class="explanation"><?php _e('契約時にソフトバンク・ペイメント・サービスから発行されるサービスID（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_hash_key_sbps');">Hash KEY</a></th>
+				<td colspan="6"><input name="hash_key" type="text" id="hash_key_sbps" value="<?php echo esc_html(isset($opts['sbps']['hash_key']) ? $opts['sbps']['hash_key'] : ''); ?>" size="50" maxlength="40" /></td>
+				<td><div id="ex_hash_key_sbps" class="explanation"><?php _e('契約時にソフトバンク・ペイメント・サービスから発行される Hash KEY（半角英数）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_sbps');"><?php _e('Operation Environment', 'usces'); ?></a></th>
+				<td><input name="ope" type="radio" id="ope_sbps_1" value="check"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'check' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_1">接続支援サイト</label></td>
+				<td><input name="ope" type="radio" id="ope_sbps_2" value="test"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_2">テスト環境</label></td>
+				<td><input name="ope" type="radio" id="ope_sbps_3" value="public"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_3">本番環境</label></td>
+				<td><div id="ex_ope_sbps" class="explanation"><?php _e('動作環境を切り替えます。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_sbps');"><?php _e('本番URL', 'usces'); ?></a></th>
+				<td colspan="6"><input name="send_url" type="text" id="send_url_sbps" value="<?php echo esc_html(isset($opts['sbps']['send_url']) ? $opts['sbps']['send_url'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_send_url_sbps" class="explanation"><?php _e('本番環境で接続するURLを設定します。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>クレジットカード決済</th>
+				<td><input name="card_activate" type="radio" id="card_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_sbps_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>3Dセキュア</th>
+				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_1" value="on"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="3d_secure_sbps_1">利用する</label></td>
+				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_2" value="off"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="3d_secure_sbps_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+		<input name="send_url_check" type="hidden" value="https://stbfep.sps-system.com/Extra/BuyRequestAction.do" />
+		<input name="send_url_test" type="hidden" value="https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do" />
+		<input name="acting" type="hidden" value="sbps" />
+		<input name="usces_option_update" type="submit" class="button" value="テレコムクレジットの設定を更新する" />
+	</form>
+	<div class="settle_exp">
+		<p><strong>テレコムクレジット</strong></p>
+		<a href="http://www.telecomcredit.co.jp/" target="_blank">テレコムクレジットの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+	</div>
+	</div><!--uscestabs_telecom-->
+<!--20120618ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

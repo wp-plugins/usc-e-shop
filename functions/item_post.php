@@ -1661,7 +1661,8 @@ function usces_getinfo_ajax(){
 		$wcex_str .= $key . "-" . $values['version'] . ",";
 	}
 	$wcex_str = rtrim($wcex_str, ',');
-	$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );
+	//$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
+	$themedata = wp_get_theme( get_stylesheet_directory().'/style.css' );
 	$v = urlencode(USCES_VERSION);
 	$wcid = urlencode(get_option('usces_wcid'));
 	$locale = urlencode(get_locale());

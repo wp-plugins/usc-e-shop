@@ -1921,7 +1921,8 @@ class usc_e_shop
 			$wcex_str .= "'" . $key . "-" . $values['version'] . "', ";
 		}
 		$wcex_str = rtrim($wcex_str, ', ');
-		$theme = get_theme_data( get_stylesheet_directory().'/style.css' );
+		//$theme = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
+		$theme = wp_get_theme( get_stylesheet_directory().'/style.css' );
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
