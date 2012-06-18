@@ -13,6 +13,7 @@ function usces_ajax_send_mail() {
 			'message' => trim(urldecode($_POST['message']))
 			);
 	
+	$order_para = apply_filters( 'usces_ajax_send_mail_para_to_customer', $order_para);
 	$res = usces_send_mail( $order_para );
 	if($res){
 		$tableName = $wpdb->prefix . "usces_order";
@@ -38,6 +39,7 @@ function usces_ajax_send_mail() {
 				'message' => trim(urldecode($_POST['message']))
 				);
 		
+		$bcc_para = apply_filters( 'usces_ajax_send_mail_para_to_manager', $bcc_para);
 		usces_send_mail( $bcc_para );
 
 		return 'success';
@@ -450,6 +452,7 @@ function usces_send_ordermail($order_id) {
 			'subject' => $subject,
 			'message' => $message
 			);
+	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry);
 
 	if ( usces_send_mail( $confirm_para ) ) {
 	
@@ -470,6 +473,7 @@ function usces_send_ordermail($order_id) {
 				'message' => $message
 				);
 		
+		$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry);
 		$res = usces_send_mail( $order_para );
 	
 	}
@@ -1424,11 +1428,26 @@ function usces_update_ordercart() {
 	$usces->cart->crear_cart();
 	$usces->cart->upCart();
 	$cart = $usces->cart->get_cart();
+//20120613ysk start 0000500
+	$idx = count($cart)-1;
+	$post_id = $cart[$idx]['post_id'];
+	$sku = $cart[$idx]['sku'];
+	$sku_code = esc_attr(urldecode($sku));
+	$cartItemName = $usces->getCartItemName($post_id, $sku_code);
+	$skuPrice = $cart[$idx]['price'];
+//20120613ysk end
 
 	$query = $wpdb->prepare("UPDATE $order_table_name SET `order_cart`=%s WHERE ID = %d", serialize($cart), $ID);
 	$res = $wpdb->query( $query );
 	
 	$usces->cart->crear_cart();
+//20120613ysk start 0000500
+	if( $res === false ) {
+		$res = "-1#usces#";
+	} else {
+		$res = $skuPrice."#usces#".$cartItemName;
+	}
+//20120613ysk end
 	return $res;
 }
 
@@ -1661,8 +1680,10 @@ function usces_update_orderdata() {
 
 	$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
 	$new_orderdata = $wpdb->get_results( $query );
-
-	do_action('usces_action_update_orderdata', $new_orderdata);
+//20120612ysk start 0000501
+	//do_action('usces_action_update_orderdata', $new_orderdata);
+	do_action('usces_action_update_orderdata', $new_orderdata, $old_status);
+//20120612ysk end
 	$usces->cart->crear_cart();
 	
 return $result;
@@ -2048,6 +2069,7 @@ function usces_all_change_order_status(&$obj){
 		$restore_point = false;
 		$getpoint = $order_res['order_getpoint'];
 //20120306ysk end
+		$old_status = $statusstr;//20120612ysk 0000501
 		switch ($_REQUEST['change']['word']['order_status']) {
 			case 'estimate':
 				if(strpos($statusstr, 'adminorder') !== false) {
@@ -2136,6 +2158,11 @@ function usces_all_change_order_status(&$obj){
 			}
 		}
 //20120306ysk end
+//20120612ysk 0000501 start
+		if( $status ) {
+			do_action('usces_action_collective_order_status_each', $id, $statusstr, $old_status);
+		}
+//20120612ysk end
 	endforeach;
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
@@ -2180,6 +2207,9 @@ function usces_all_delete_order_data(&$obj){
 //20120306ysk start 0000324
 			if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
 //20120306ysk end
+//20120612ysk start 0000501
+			do_action('usces_action_collective_order_delete_each', $id);
+//20120612ysk end
 		}
 	endforeach;
 	if ( true === $status ) {

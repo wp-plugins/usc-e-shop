@@ -1124,14 +1124,24 @@
 			var s = orderItem.settings;
 			s.data = query;
 			s.success = function(data, dataType){
-				if(data == 'nodata'){return;}
+//20120613ysk start 0000500
+				//if(data == 'nodata'){return;}
+				strs = data.split('#usces#');
+				if( 0 > parseInt(strs[0]) ) return;
+//20120613ysk end
 				var pict = "<img src='" + $("#newitemform img").attr("src") + "' width='" + $("#newitemform img").attr("width") + "' height='" + $("#newitemform img").attr("height") + "' alt='' />";
-				var itemName = $("input[name='itemNEWName\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='itemNEWCode\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='skuNEWName\["+newid+"\]\["+newsku+"\]']").val();
+//20120613ysk start 0000500
+				//var itemName = $("input[name='itemNEWName\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='itemNEWCode\["+newid+"\]\["+newsku+"\]']").val() + ' ' + $("input[name='skuNEWName\["+newid+"\]\["+newsku+"\]']").val();
+				var itemName = strs[1];
+//20120613ysk end
 				var zaiko = $("input[name='zaiNEWko\["+newid+"\]\["+newsku+"\]']").val();
 //20120528ysk start 0000485
 				//var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' onchange='orderfunc.sumPrice()' />";
 				//var quant = "<input name='quant[" + cnum + "][" + newid + "][" + newsku + "]' class='text quantity' type='text' value='1' onchange='orderfunc.sumPrice()' />";
-				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' />";
+//20120613ysk start 0000500
+				//var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + $("input[name='skuNEWPrice\["+newid+"\]\["+newsku+"\]']").val() + "' />";
+				var price = "<input name='skuPrice[" + cnum + "][" + newid + "][" + newsku + "]' class='text price' type='text' value='" + strs[0] + "' />";
+//20120613ysk end
 				var quant = "<input name='quant[" + cnum + "][" + newid + "][" + newsku + "]' class='text quantity' type='text' value='1' />";
 //20120528ysk end
 				var delButton = "<input name='delButton[" + cnum + "][" + newid + "][" + newsku + "]' class='delCartButton' type='submit' value='削除' />\n<input name='advance[" + cnum + "][" + newid + "][" + newsku + "]' type='hidden' value='' />\n";

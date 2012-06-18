@@ -914,7 +914,7 @@ function order_item2cart_ajax()
 	
 	$res = order_item2cart();
 	
-	if( $res === false )  die(0);
+	//if( $res === false )  die(0);//20120613ysk 0000500
 		
 	//REGEX BUG: but it'll return info
 	// Compose JavaScript for return
@@ -1021,10 +1021,13 @@ function order_item2cart() {
 
 	$res = usces_update_ordercart();
 
-	if( $res === false )  die(0);
-	if( $res === 0 )  die('nodata');
+//20120613ysk start 0000500
+	//if( $res === false )  die(0);
+	//if( $res === 0 )  die('nodata');
 		
-	die( $res );
+	//die( $res );
+	return $res;
+//20120613ysk end
 }
 
 function get_order_item( $item_code ) {
@@ -1663,7 +1666,8 @@ function usces_getinfo_ajax(){
 		$wcex_str .= $key . "-" . $values['version'] . ",";
 	}
 	$wcex_str = rtrim($wcex_str, ',');
-	$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );
+	//$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
+	$themedata = wp_get_theme( get_stylesheet_directory().'/style.css' );
 	$v = urlencode(USCES_VERSION);
 	$wcid = urlencode(get_option('usces_wcid'));
 	$locale = urlencode(get_locale());

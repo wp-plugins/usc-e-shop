@@ -209,10 +209,10 @@ jQuery(function($){
 });
 </script>
 
-<div class="wrap columns-<?php echo (int) $screen_layout_columns ? (int) $screen_layout_columns : 'auto'; ?>">
+<div class="wrap">
 <div class="usces_admin">
 <?php screen_icon(); ?>
-<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo esc_html( $title ); ?></h2>
+<h2>aaa<!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo esc_html( $title ); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
 		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />
@@ -270,8 +270,9 @@ wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 ?>
 
 <div id="refbutton"><a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID.'&usces_referer='.(isset($_REQUEST['usces_referer']) ? urlencode($_REQUEST['usces_referer']) : ''); ?>">[<?php _e('make a copy', 'usces'); ?>]</a> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('back to item list', 'usces'); ?>]</a></div>
-<div id="poststuff" class="metabox-holder has-right-sidebar">
-<div id="post-body" class="metabox-holder columns-<?php echo 1 == $screen_layout_columns ? '1' : '2'; ?>">
+<!--<div id="poststuff" class="metabox-holder has-right-sidebar">-->
+<div id="poststuff">
+<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
 <div id="post-body-content">
 
 
@@ -318,7 +319,7 @@ $gp_row = '<th rowspan="3">' . __('Business package discount', 'usces') . '</th>
 </table>
 </div>
 </div>
-
+<?php do_action('usces_after_item_master_first_section', $post_ID); ?>
 <!--<div id="postitemcustomstuff">-->
 <div id="meta_box_product_second_box" class="postbox " >
 <div class="inside">
@@ -375,7 +376,7 @@ echo $second_section;
 </table>
 </div>
 </div>
-
+<?php do_action('usces_after_item_master_second_section', $post_ID); ?>
 
 <div id="itemsku" class="postbox">
 <h3 class="hndle"><span>SKU <?php _e('Price', 'usces'); ?></span></h3>
@@ -393,7 +394,7 @@ item_sku_meta_form();
 	</div>
 </div>
 </div>
-
+<?php do_action('usces_after_item_master_sku_section', $post_ID); ?>
 <div id="itemoption" class="postbox">
 <h3 class="hndle"><span><?php _e('options for items', 'usces'); ?></span></h3>
 <div class="inside">
@@ -409,7 +410,7 @@ item_option_meta_form();
 </div>
 </div>
 </div>
-
+<?php do_action('usces_after_item_master_option_section', $post_ID); ?>
 
 <div class="postbox">
 <?php if ( post_type_supports($post_type, 'title') ) { ?>

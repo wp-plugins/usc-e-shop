@@ -1950,17 +1950,16 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 
 				$e = ($essential == 1) ? '<em>' . __('*', 'usces') . '</em>' : '';
 				$html .= '
-					<tr>
+					<tr class="customkey_' . $key . '">
 					<th scope="row">'.$e.esc_html($name).apply_filters('usces_filter_custom_field_input_label', NULL, $key, $entry).'</th>';
+				$html .= apply_filters( 'usces_filter_custom_field_input_td', '<td colspan="2">', $key, $entry);
 				switch($means) {
 					case 0://シングルセレクト
 					case 1://マルチセレクト
 						$selects = explode("\n", $value);
 						$multiple = ($means == 0) ? '' : ' multiple';
 						$multiple_array = ($means == 0) ? '' : '[]';
-						$html .= '
-							<td colspan="2">
-							<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+						$html .= '<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
 						if($essential == 1) 
 							$html .= '
 								<option value="#NONE#">'.__('Choose','usces').'</option>';
@@ -1974,13 +1973,10 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						break;
 					case 2://テキスト
 						$text = isset($data[$label][$key]) ? $data[$label][$key] : '';
-						$html .= '
-							<td colspan="2"><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($text).'" />';
+						$html .= '<input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($text).'" />';
 						break;
 					case 3://ラジオボタン
 						$selects = explode("\n", $value);
-						$html .= '
-							<td colspan="2">';
 						foreach($selects as $v) {
 							$checked = ( isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							$html .= '
@@ -1989,8 +1985,6 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						break;
 					case 4://チェックボックス
 						$selects = explode("\n", $value);
-						$html .= '
-							<td colspan="2">';
 						foreach($selects as $v) {
 							if( isset($data[$label][$key]) && is_array($data[$label][$key]) ) {
 								$checked = (isset($data[$label][$key]) && array_key_exists($v, $data[$label][$key])) ? ' checked' : '';

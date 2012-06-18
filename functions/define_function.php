@@ -1079,7 +1079,7 @@ function usces_download_item_list() {
 	require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
 	global $wpdb, $usces;
 
-	$ext = $_REQUEST['ftype'];
+	$ext = 'csv';
 	if($ext == 'csv') {//CSV
 		$table_h = "";
 		$table_f = "";

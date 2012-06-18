@@ -380,6 +380,7 @@ $gp_row = '<th rowspan="3">' . __('Business package discount', 'usces') . '</th>
 </table>
 </div>
 </div>
+<?php do_action('usces_after_item_master_first_section', $post_ID); ?>
 
 <!--<div id="postitemcustomstuff">-->
 <div id="meta_box_product_second_box" class="postbox " >
@@ -437,6 +438,7 @@ echo $second_section;
 </table>
 </div>
 </div>
+<?php do_action('usces_after_item_master_second_section', $post_ID); ?>
 
 
 <div id="itemsku" class="postbox">
@@ -455,6 +457,7 @@ item_sku_meta_form();
 	</div>
 </div>
 </div>
+<?php do_action('usces_after_item_master_sku_section', $post_ID); ?>
 
 <div id="itemoption" class="postbox">
 <h3 class="hndle"><span><?php _e('options for items', 'usces'); ?></span></h3>
@@ -471,6 +474,7 @@ item_option_meta_form();
 </div>
 </div>
 </div>
+<?php do_action('usces_after_item_master_option_section', $post_ID); ?>
 
 
 <div class="postbox">
