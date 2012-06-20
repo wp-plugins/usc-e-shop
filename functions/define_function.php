@@ -1,5 +1,6 @@
 <?php
 function usces_define_functions(){
+	add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
 
 //20101111ysk start
 if( !function_exists('usces_item_uploadcsv') ):

@@ -46,8 +46,6 @@ add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 add_action( 'wp_ajax_target_market_ajax', 'target_market_ajax' );
 //20110331ysk end
 
-add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
-
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));
 add_shortcode('company_name', array(&$usces, 'sc_company_name'));
 add_shortcode('zip_code', array(&$usces, 'sc_zip_code'));
