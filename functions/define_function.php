@@ -1,11 +1,12 @@
 <?php
 function usces_define_functions(){
-	add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
 
 //20101111ysk start
 if( !function_exists('usces_item_uploadcsv') ):
 function usces_item_uploadcsv(){
 	global $wpdb, $usces, $user_ID;
+
+	add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
 	
 	if( !current_user_can( 'import' ) ){
 		$res['status'] = 'error';
@@ -1079,6 +1080,8 @@ if( !function_exists('usces_download_item_list') ):
 function usces_download_item_list() {
 	require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
 	global $wpdb, $usces;
+
+	add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
 
 	$ext = 'csv';
 	if($ext == 'csv') {//CSV

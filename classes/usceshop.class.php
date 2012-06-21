@@ -6088,7 +6088,7 @@ class usc_e_shop
 		}
 		$table_name = $wpdb->prefix . 'usces_order';
 		
-		$query = $wpdb->prepare("SELECT COUNT(ID) AS ct FROM $table_name WHERE order_date >= %s AND order_date <= %s", $date, $today);
+		$query = $wpdb->prepare("SELECT COUNT(ID) AS ct FROM $table_name WHERE order_date >= %s AND order_date <= %s AND 0 = LOCATE(%s, order_status) AND 0 = LOCATE(%s, order_status)", $date, $today, 'cancel', 'estimate');
 		$res = $wpdb->get_var($query);
 		
 		if( $res == NULL )
@@ -6122,7 +6122,7 @@ class usc_e_shop
 									SUM(order_shipping_charge) AS shipping, 
 									SUM(order_cod_fee) AS cod, 
 									SUM(order_tax) AS tax 
-								 FROM $table_name WHERE order_date >= %s AND order_date <= %s", $date, $today);
+								 FROM $table_name WHERE order_date >= %s AND order_date <= %s AND 0 = LOCATE(%s, order_status) AND 0 = LOCATE(%s, order_status)", $date, $today, 'cancel', 'estimate');
 		$res = $wpdb->get_row($query, ARRAY_A);
 		
 		if( $res == NULL )
