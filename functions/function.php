@@ -81,12 +81,12 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= usces_mail_line( 1, $data['order_email'] );//********************
 		$msg_body .= apply_filters('usces_filter_order_confirm_mail_first', NULL, $data);
 //20110118ysk start
-		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
+		//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
 		//$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
 		$msg_body .= uesces_get_mail_addressform( 'admin_mail_customer', $deli, $order_id );
 //20110118ysk start
-		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
+		//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
 		$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	}
@@ -284,12 +284,12 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	$msg_body .= apply_filters('usces_filter_send_order_mail_first', NULL, $data);
 //20110118ysk start
-	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
+	//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
 	//$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $entry['customer']['name1'], $entry['customer']['name2'], 'return' )) . "\r\n";
 	$msg_body .= uesces_get_mail_addressform( 'order_mail_customer', $entry, $order_id );
 //20110118ysk start
-	$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
+	//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
 	$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	
