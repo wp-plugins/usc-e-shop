@@ -39,7 +39,7 @@ get_header();
 	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="customer_form">
 		<tr>
 			<th scope="row"><?php _e('e-mail adress', 'usces'); ?></th>
-			<td><input name="loginmail" id="mailaddress1" type="text" value="<?php echo esc_attr($usces_entries['customer']['mailaddress1']); ?>" /></td>
+			<td><input name="loginmail" id="mailaddress1" type="text" value="<?php echo esc_attr($usces_entries['customer']['mailaddress1']); ?>" style="ime-mode: inactive" /></td>
 		</tr>
 		<tr>
 			<th scope="row"><?php _e('password', 'usces'); ?></th>
@@ -56,11 +56,11 @@ get_header();
 	<table border="0" cellpadding="0" cellspacing="0" class="customer_form">
 		<tr>
 			<th scope="row"><em><?php _e('*', 'usces'); ?></em><?php _e('e-mail adress', 'usces'); ?></th>
-			<td colspan="2"><input name="customer[mailaddress1]" id="mailaddress1" type="text" value="<?php echo esc_attr($usces_entries['customer']['mailaddress1']); ?>" /></td>
+			<td colspan="2"><input name="customer[mailaddress1]" id="mailaddress1" type="text" value="<?php echo esc_attr($usces_entries['customer']['mailaddress1']); ?>" style="ime-mode: inactive" /></td>
 		</tr>
 		<tr>
 			<th scope="row"><em><?php _e('*', 'usces'); ?></em><?php _e('e-mail adress', 'usces'); ?>(<?php _e('Re-input', 'usces'); ?>)</th>
-			<td colspan="2"><input name="customer[mailaddress2]" id="mailaddress2" type="text" value="<?php echo esc_attr($usces_entries['customer']['mailaddress2']); ?>" /></td>
+			<td colspan="2"><input name="customer[mailaddress2]" id="mailaddress2" type="text" value="<?php echo esc_attr($usces_entries['customer']['mailaddress2']); ?>" style="ime-mode: inactive" /></td>
 		</tr>
 <?php if( usces_is_membersystem_state() ) : ?>
 		<tr>
