@@ -2466,15 +2466,15 @@ function usces_assistance_item($post_id, $title ){
 					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php usces_the_itemImage(0, 100, 100, $post); ?></a>
 				</div>
 				<div class="detail">
-					<h4><?php usces_the_itemName(); ?></h4>
+					<div class="assist_excerpt">
+					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><h4><?php usces_the_itemName(); ?></h4></a>
 					<?php the_excerpt(); ?>
-					<p>
+					</div>
+					<div class="assist_price">
 				<?php if (usces_is_skus()) : ?>
 					<?php _e('$', 'usces'); ?><?php usces_the_firstPrice(); ?>
 				<?php endif; ?>
-					<br />
-					&raquo;<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php _e('see the details', 'usces'); ?></a>
-					</p>
+					</div>
 				</div>
 			</div>
 			</li>
