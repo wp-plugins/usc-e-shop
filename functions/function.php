@@ -193,7 +193,8 @@ function usces_order_confirm_message($order_id) {
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
 		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
-		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
+		//$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
+		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee, $payment['name']);//20120628ysk 0000501
 		$msg_body .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
@@ -391,7 +392,8 @@ function usces_send_ordermail($order_id) {
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
 		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
-		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
+		//$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee);
+		$msg_body .= apply_filters('usces_filter_mail_transferee', $transferee, $payment['name']);//20120628ysk 0000501
 		$msg_body .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {

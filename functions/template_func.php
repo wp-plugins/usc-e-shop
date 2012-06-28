@@ -1966,7 +1966,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						foreach($selects as $v) {
 							$checked = ( isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							$html .= '
-							<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+							<input type="radio" name="'.$label.'['.esc_attr($key).']" id="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';//20121627ysk 0000517
 						}
 						break;
 					case 4://チェックボックス
@@ -1978,7 +1978,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 								$checked = (isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							}
 							$html .= '
-							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" id="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';//20121627ysk 0000517
 						}
 						break;
 				}
