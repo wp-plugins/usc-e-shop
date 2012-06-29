@@ -22,7 +22,7 @@ class Welcart_featured extends WP_Widget {
         ?>
               <?php echo $before_widget; ?>
                   <?php echo $before_title
-                      . wp_specialchars($title)
+                      . esc_html($title)
                       . $after_title; ?>
 					  
 		<ul class="ucart_featured_body ucart_widget_body">

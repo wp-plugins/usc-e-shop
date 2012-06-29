@@ -439,7 +439,7 @@ function post_trackback_meta_box($post) {
 		$pings = '<p>'. __('Already pinged:') . '</p><ul>';
 		$already_pinged = explode("\n", trim($post->pinged));
 		foreach ($already_pinged as $pinged_url) {
-			$pings .= "\n\t<li>" . wp_specialchars($pinged_url) . "</li>";
+			$pings .= "\n\t<li>" . esc_html($pinged_url) . "</li>";
 		}
 		$pings .= '</ul>';
 	}
@@ -618,7 +618,7 @@ jQuery(function($){
 
 <div class="wrap">
 <div class="usces_admin">
-<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo wp_specialchars( $title ); ?></h2>
+<h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo esc_html( $title ); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">
 		<img src="<?php echo USCES_PLUGIN_URL; ?>/images/list_message_<?php echo $status; ?>.gif" />

@@ -744,7 +744,7 @@ function usces_item_uploadcsv(){
 
 				//delete all metas of Item
 				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ( meta_key = '_iopt_' OR meta_key = '_isku_' OR ( SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_') ) AND post_id = %d", $post_id);
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE meta_key <> '_thumbnail_id' AND post_id = %d", $post_id);
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;

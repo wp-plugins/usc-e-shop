@@ -763,8 +763,6 @@ dl.itemGpExp li {
 	width: 100px;
 	height: 100px;
 	overflow: hidden;
-	background-image: url('image/no_img.gif');
-	background-repeat: no-repeat;
 	float: left;
 }
 #itempage .assistance_item .detail {

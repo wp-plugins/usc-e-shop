@@ -3650,7 +3650,8 @@ class usc_e_shop
 //20100818ysk end
 					$this->get_current_member();
 					
-					return 'member';
+					do_action( 'usces_action_after_login' );
+					return apply_filters( 'usces_filter_member_login', 'member', $member );
 				}
 			}
 		} else if ( isset($_POST['loginmail']) && $_POST['loginmail'] == '' && isset($_POST['loginpass']) && $_POST['loginpass'] == '' && isset($cookie['rme']) && $cookie['rme'] != 'forever' ) {
@@ -3715,7 +3716,9 @@ class usc_e_shop
 						$cookie['rme'] = '';
 						$this->set_cookie($cookie);
 					}
-					return 'member';
+					
+					do_action( 'usces_action_after_login' );
+					return apply_filters( 'usces_filter_member_login', 'member', $member );
 				}
 			}
 		}
@@ -3768,7 +3771,9 @@ class usc_e_shop
 //				$cookie['pass'] = '';
 //				$this->set_cookie($cookie);
 //			}
-			return 'member';
+
+			do_action( 'usces_action_after_login' );
+			return apply_filters( 'usces_filter_member_login', 'member', $member );
 		}
 	}
 
@@ -4033,7 +4038,8 @@ class usc_e_shop
 	function zaiko_check() {
 		$mes = '';
 		$cart = $this->cart->get_cart();
-
+		$stocks = array();
+		
 		for($i=0; $i<count($cart); $i++) { 
 			$cart_row = $cart[$i];
 			$post_id = $cart_row['post_id'];
@@ -4044,8 +4050,12 @@ class usc_e_shop
 			//$zaiko_status = $this->getItemZaiko($post_id, $sku);
 			$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku_code);
 			$stock = $this->getItemZaikoNum($post_id, $sku_code);
-			if( !isset($stocks[$post_id][$sku]) && '' != $stock ){
-				$stocks[$post_id][$sku] = $stock;
+			if( !isset($stocks[$post_id][$sku]) ){
+				if( '' != $stock ){
+					$stocks[$post_id][$sku] = $stock;
+				}else{
+					$stocks[$post_id][$sku] = NULL;
+				}
 			}
 			$checkstock = $stocks[$post_id][$sku];
 			$stocks[$post_id][$sku] = $stocks[$post_id][$sku] - $quant;
@@ -4127,7 +4137,7 @@ class usc_e_shop
 			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
-		if( trim($_POST['member']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+		if( trim($_POST['customer']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["customer"]["tel"])) )
 			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 	
 		$mes = apply_filters('usces_filter_member_check_fromcart', $mes);
@@ -4136,9 +4146,16 @@ class usc_e_shop
 	}
 
 	function admin_member_check() {
+		global $wpdb;
 		$mes = '';
-		if ( !is_email( trim($_POST['member']["email"]) ) )
+		if ( !is_email( trim($_POST['member']["email"]) ) ){
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
+		}else{
+			$member_table = $wpdb->prefix . "usces_member";
+			$mem_ID = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s LIMIT 1", trim($_POST['member']["email"])) );
+			if( !empty($mem_ID) )
+				$mes .= __('This e-mail address has been already registered.', 'usces') . "<br />";
+		}
 		if ( trim($_POST['member']["name1"]) == "" )
 			$mes .= __('Name is not correct', 'usces') . "<br />";
 //		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )

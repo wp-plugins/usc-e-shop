@@ -1550,11 +1550,11 @@ function usces_list_post( $slug, $rownum, $widget_id=NULL ){
 function usces_categories_checkbox($output=''){
 	global $usces;
 	$htm = '';
-	$retcats = usces_search_categories();
+	$retcats = apply_filters('usces_search_retcats', usces_search_categories());
 	$parent_id = apply_filters('usces_search_categories_checkbox_parent', USCES_ITEM_CAT_PARENT_ID);
 	$categories =  get_categories('child_of='.$parent_id . "&hide_empty=0&orderby=ID"); 
 	foreach ($categories as $cat) {
-		$children =  get_categories('child_of='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
+		$children =  get_categories('parent='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
 		if(!empty($children)){
 			$htm .= "<fieldset class='catfield-" . $cat->term_id . "'><legend>" . $cat->cat_name . "</legend><ul>\n";
 			foreach ($children as $child) {
@@ -1966,7 +1966,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						foreach($selects as $v) {
 							$checked = ( isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							$html .= '
-							<input type="radio" name="'.$label.'['.esc_attr($key).']" id="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';//20121627ysk 0000517
+							<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
 						}
 						break;
 					case 4://チェックボックス
@@ -1978,7 +1978,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 								$checked = (isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							}
 							$html .= '
-							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" id="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';//20121627ysk 0000517
+							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
 						}
 						break;
 				}
