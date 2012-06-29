@@ -427,7 +427,9 @@ function usces_get_xml($url, $paras){
 //}
 
 function admin_prodauct_current_screen(){
-	global $current_screen;
+	global $current_screen, $post;
+
+
 	
 	$wp_version = get_bloginfo('version');
 	if (version_compare($wp_version, '3.4-beta3', '<'))
@@ -436,9 +438,25 @@ function admin_prodauct_current_screen(){
 	if ( !(isset($_GET['page']) && (('usces_itemedit' == $_GET['page'] && isset($_GET['action'])) || 'usces_itemnew' == $_GET['page'])) )
 		return;
 	
-	require_once(USCES_PLUGIN_DIR.'/includes/meta-boxes.php');
+	if ( isset( $_GET['post'] ) )
+		$post_id = $post_ID = (int) $_GET['post'];
+	elseif ( isset( $_POST['post_ID'] ) )
+		$post_id = $post_ID = (int) $_POST['post_ID'];
+	else
+		$post_id = $post_ID = 0;
 
 	$post_type = 'post';
+	$post_type_object = get_post_type_object( $post_type );
+
+	if ( $post_id ){
+		$post = get_post( $post_id );
+	}else{
+		$post = get_default_post_to_edit( $post_type, true );
+		$post_ID = $post->ID;
+	}
+
+	require_once(USCES_PLUGIN_DIR.'/includes/meta-boxes.php');
+
 	add_meta_box('submitdiv', __('Publish'), 'post_submit_meta_box', $post_type, 'side', 'core');
 
 	// all taxonomies

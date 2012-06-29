@@ -1707,7 +1707,8 @@ class usc_e_shop
 					}
 				}
 				
-				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); ?>
+				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); //Unavailable ?>
+				<?php do_action( 'usces_action_inCart_js_check', $item->ID ); ?>
 				
 				if( mes != '' ){
 					alert( mes );
@@ -1770,7 +1771,8 @@ class usc_e_shop
 					}
 				}
 				
-				<?php apply_filters( 'usces_filter_upCart_js_check', $item->ID ); ?>
+				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); //Unavailable ?>
+				<?php do_action( 'usces_action_upCart_js_check', $item->ID ); ?>
 				
 				if( mes != '' ){
 					alert( mes );
