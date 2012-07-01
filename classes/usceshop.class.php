@@ -5088,7 +5088,17 @@ class usc_e_shop
 			return true;
 		}
 	}
-	
+//20120629ysk start 0000520
+	function getItemDivision( $post_id ){
+		if( usces_is_item($post_id) ){
+			$item_division = get_post_meta($post_id, '_item_division', true);
+			$division = empty($item_division) ? 'shipped' : $item_division;
+		}else{
+			$division = NULL;
+		}
+		return $division;
+	}
+//20120629ysk end
 	function getItemChargingType( $post_id ){
 		if( usces_is_item($post_id) ){
 			$chargings = get_post_meta($post_id, '_item_charging_type', true);
