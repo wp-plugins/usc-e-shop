@@ -518,7 +518,7 @@ function usces_action_acting_transaction(){
 
 			} else {
 				usces_log('SoftBankPayment card error1 : '.print_r($data,true), 'acting_transaction.log');
-				die('NG,'.$data['res_err_code']);
+				die('OK,');
 			}
 			break;
 
@@ -597,7 +597,7 @@ function usces_action_acting_transaction(){
 
 			} else {
 				usces_log('SoftBankPayment error : '.print_r($data,true), 'acting_transaction.log');
-				die('NG,'.$data['res_err_code']);
+				die('OK,');
 			}
 		}
 	}
