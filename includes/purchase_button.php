@@ -250,7 +250,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="div" value="0">';
 				$html .= '<input type="hidden" name="METHOD" value="10">';
 			}
-			if( 'continue' == $charging_type ){	
+			if( 'continue' == $charging_type && defined('WCEX_DLSELLER') ){	
 				$nextdate = current_time('mysql');
 				$html .= '<input type="hidden" name="AUTOCHARGE" value="1">';
 				$html .= '<input type="hidden" name="AC_S_KAIIN_NO" value="' . $member['ID'] . '">';
@@ -449,7 +449,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 //20120629ysk end
 			$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 			//$frequency = $usces->getItemFrequency($cart[0]['post_id']);
-			if( 'continue' != $charging_type) {
+			if( 'continue' != $charging_type && defined('WCEX_DLSELLER')) {
 				//通常購入
 //20110606ysk start
 /*				for($i = 0; $i < count($cart); $i++) {
@@ -564,7 +564,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			if(1 < count($cart)) $item_name .= ','.__('Others', 'usces');
 			if(40 < mb_strlen($item_name)) $item_name = mb_substr($item_name, 0, 40).'...';
 			$amount = usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false);
-			if( 'continue' == $charging_type ) {
+			if( 'continue' == $charging_type && defined('WCEX_DLSELLER')) {
 				$pay_type = "1";
 				$auto_charge_type = "0";
 				$service_type = "0";

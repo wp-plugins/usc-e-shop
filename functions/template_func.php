@@ -669,6 +669,7 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 			$title = 'title="'.esc_attr($name[0]).'"';
 			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 			$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+			$html = apply_filters( 'usces_filter_main_img', $html, $post_id, $pictid);
 		}
 
 	}else{
@@ -692,6 +693,7 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 				$title = 'title="'.esc_attr($name).'"';
 				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+				$html = apply_filters( 'usces_filter_main_img', $html, $post_id, $pictid);
 			}
 		}else{
 			$pictids = $usces->get_pictids($code);
@@ -705,6 +707,7 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 				$title = 'title="'.esc_attr($name).'"';
 				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
+				$html = apply_filters( 'usces_filter_sub_img', $html, $post_id, $pictid);
 			}
 		}
 	}
@@ -1103,7 +1106,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	//foreach ($payments as $id => $payment) {
 	foreach ((array)$payments as $id => $payment) {
 //20120328ysk end
-		if( 'continue' == $charging_type ){
+		if( 'continue' == $charging_type && defined('WCEX_DLSELLER') ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
 			if( 'acting_remise_card' != $payment['settlement'] && 'acting_paypal_ec' != $payment['settlement']) {

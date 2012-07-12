@@ -6624,6 +6624,33 @@ class usc_e_shop
 		return $res;
 	}
 	
+	function get_post_user_custom($post_id, $orderby='meta_id', $order='ASC'){
+		global $wpdb;
+		$res = array();
+		$table = $wpdb->prefix . "postmeta";
+		$meta_list = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value FROM $table WHERE post_id = %d ORDER BY $orderby $order",
+			$post_id), ARRAY_A );
+			
+		if ( !empty($meta_list) ) {
+			foreach ( $meta_list as $metarow) {
+				if( 0 === strpos($metarow['meta_key'], '_') )
+					continue;
+					
+				$mkey = $metarow['meta_key'];
+				$mval = $metarow['meta_value'];
+				if( array_key_exists($mkey, $res) ){
+					$cval = $res[$mkey];
+					$cval = (array)$cval;
+					$cval[] = $mval;
+					$res[$mkey] = $cval;		
+				}else{
+					$res[$mkey] = $mval;
+				}
+			}
+		}
+		return $res;
+	}
+	
 	function get_currency($amount, $symbol_pre = false, $symbol_post = false, $seperator_flag = true ){
 		global $usces_settings;
 		$cr = $this->options['system']['currency'];

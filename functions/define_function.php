@@ -6,8 +6,6 @@ if( !function_exists('usces_item_uploadcsv') ):
 function usces_item_uploadcsv(){
 	global $wpdb, $usces, $user_ID;
 
-	add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
-	
 	if( !current_user_can( 'import' ) ){
 		$res['status'] = 'error';
 		$res['message'] = __('You do not have permission to do that.');
@@ -1081,8 +1079,6 @@ function usces_download_item_list() {
 	require_once( USCES_PLUGIN_DIR . "/classes/itemList.class.php" );
 	global $wpdb, $usces;
 
-	add_filter( 'get_post_metadata', 'usces_filter_get_post_metadata', 10, 4);
-
 	$ext = 'csv';
 	if($ext == 'csv') {//CSV
 		$table_h = "";
@@ -1248,11 +1244,13 @@ function usces_download_item_list() {
 
 		//Custom Fields
 		$cfield = '';
-		$custom_fields = get_post_custom($post_id);
+		$custom_fields = $usces->get_post_user_custom($post_id);
 		if( is_array($custom_fields) && 0 < count($custom_fields) ){
 			foreach($custom_fields as $cfkey => $cfvalues ) {
-				if( 0 !== strpos($cfkey, '_') )
+				if( is_array($cfvalues) )
 					$cfield .= usces_entity_decode($cfkey, $ext) . $eq . usces_entity_decode($cfvalues[0], $ext) . $sp;
+				else
+					$cfield .= usces_entity_decode($cfkey, $ext) . $eq . usces_entity_decode($cfvalues, $ext) . $sp;
 			}
 			$cfield = rtrim($cfield, $sp);
 		}
