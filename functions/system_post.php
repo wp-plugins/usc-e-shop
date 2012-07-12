@@ -663,7 +663,7 @@ function add_shipping_charge() {
 	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
-		$options['shipping_charge'][$index]['value'][$pref] = (int)$value[$i];
+		$options['shipping_charge'][$index]['value'][$pref] = (float)$value[$i];
 	}
 	update_option('usces', $options);
 
@@ -707,7 +707,7 @@ function update_shipping_charge() {
 	$options['shipping_charge'][$index]["value"] = array();
 	for($i=0; $i<count($prefs); $i++){
 		$pref = $prefs[$i];
-		$options['shipping_charge'][$index]["value"][$pref] = (int)$value[$i];
+		$options['shipping_charge'][$index]["value"][$pref] = (float)$value[$i];
 	}
 	update_option('usces', $options);
 

@@ -4912,7 +4912,7 @@ class usc_e_shop
 	
 	function getItemShippingCharge($post_id) {
 		$str = get_post_meta($post_id, '_itemShippingCharge', true);
-		return (int)$str;
+		return (float)$str;
 	}
 	
 	function getItemDeliveryMethod($post_id) {

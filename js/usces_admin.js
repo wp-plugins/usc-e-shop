@@ -1319,6 +1319,14 @@ function usces_check_num(obj) {
 	}
 	return true;
 }
+function usces_check_money(obj) {
+	if(!checkMoney(obj.val())) {
+		alert('数値で入力して下さい。');
+		obj.focus();
+		return false;
+	}
+	return true;
+}
 function checkAlp(argValue) {
 	if(argValue.match(/[^a-z|^A-Z]/g)) {
 		return false;
@@ -1333,6 +1341,12 @@ function checkCode(argValue) {
 }
 function checkNum(argValue) {
 	if(argValue.match(/[^0-9]/g)) {
+		return false;
+	}
+	return true;
+}
+function checkMoney(argValue) {
+	if(argValue.match(/[^0-9|^\.]/g)) {
 		return false;
 	}
 	return true;

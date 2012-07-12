@@ -40,7 +40,7 @@ jQuery(function($){
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 
-	$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
+	$(".charge_text").bind("change", function(){ usces_check_money($(this)); });
 	$(".days_text").bind("change", function(){ usces_check_num($(this)); });
 
 //20110317ysk start
@@ -212,7 +212,7 @@ jQuery(function($){
 		$("#shipping_charge_value").html(valuehtml);
 		$("#shipping_charge_button").html('<input name="cancel_shipping_charge" id="cancel_shipping_charge" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_shipping_charge(0);" /><input name="add_shipping_charge" id="add_shipping_charge" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_shipping_charge();" />');
 		$("input[name='shipping_charge_name']").focus().select();
-		$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
+		$(".charge_text").bind("change", function(){ usces_check_money($(this)); });
 	});
 	
 //20101208ysk start
@@ -662,7 +662,7 @@ jQuery(function($){
 				$("#shipping_charge_value").html(valuehtml);
 				$("#shipping_charge_button").html("<input name='delete_shipping_charge' id='delete_shipping_charge' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_shipping_charge();' /><input name='update_shipping_charge' id='update_shipping_charge' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_shipping_charge();' />");
 			}
-			$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
+			$(".charge_text").bind("change", function(){ usces_check_money($(this)); });
 		},
 		
 		add_shipping_charge : function() {
@@ -676,7 +676,7 @@ jQuery(function($){
 			var country = $("#shipping_charge_country").val();
 			for(var i=0; i<pref[country].length; i++){
 				var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
-				if( "" == value || !checkNum(value) ) {
+				if( "" == value || !checkMoney(value) ) {
 					error++;
 					$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
 						$(this).css({'background-color': '#FFF'});
@@ -749,7 +749,7 @@ jQuery(function($){
 			var country = $("#shipping_charge_country").val();
 			for(var i=0; i<pref[country].length; i++){
 				var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
-				if( "" == value || !checkNum(value) ) {
+				if( "" == value || !checkMoney(value) ) {
 					error++;
 					$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
 						$(this).css({'background-color': '#FFF'});
@@ -1140,7 +1140,7 @@ jQuery(function($){
 			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[country][i] + "]' value='" + value + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 		}
 		$("#shipping_charge_value").html(valuehtml);
-		$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
+		$(".charge_text").bind("change", function(){ usces_check_money($(this)); });
 	});
 
 	$("#delivery_days_country").change(function () {
