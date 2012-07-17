@@ -1078,7 +1078,7 @@ function usces_the_start_point(){
 
 function usces_point_rate( $post_id = NULL, $out = '' ){
 	global $usces;
-	if(  $post_id = NULL ){
+	if(  $post_id == NULL ){
 		$rate = $usces->options['point_rate'];
 	}else{
 		$str = get_post_meta($post_id, '_itemPointrate', true);

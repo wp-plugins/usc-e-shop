@@ -951,7 +951,7 @@ for ($i=0; $i<50; $i++) {
 <div class="condition">
 <?php if ( $condition['display_mode'] == 'Promotionsale' ) : ?>
 <span><?php _e('Special Benefits', 'usces'); ?> : </span><?php echo $condition["campaign_privilege"]; ?> (<?php if($condition["campaign_privilege"] == 'discount'){echo esc_html($condition["privilege_discount"]).__('% Discount', 'usces');}elseif($condition["campaign_privilege"] == 'point'){echo esc_html($condition["privilege_point"]).__(" times (limited to members)", 'usces');} ?>) <br />
-<span><?php _e('applied material', 'usces'); ?> : </span><?php if($condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo esc_html(get_cat_name($condition["campaign_category"]));} ?><br />
+<span><?php _e('applied material', 'usces'); ?> : </span><?php if( !isset($condition["campaign_category"]) || $condition["campaign_category"] == 0){echo __('all the items', 'usces');} else {echo esc_html(get_cat_name($condition["campaign_category"]));} ?><br />
 <?php endif; ?>
 </div></td>
 <td class="label"><?php _e('Notes', 'usces'); ?></td>
