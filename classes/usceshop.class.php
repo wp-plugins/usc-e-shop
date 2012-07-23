@@ -4400,7 +4400,7 @@ class usc_e_shop
 		$this->set_default_categories();
 		$this->create_table();
 		$this->update_table();
-
+		$this->update_options();//20120710ysk 0000472
 	}
 	
 	function create_table() {
@@ -4817,7 +4817,46 @@ class usc_e_shop
 			$itemgenre_cat_id = wp_insert_category($itemgenre_cat);	
 		}
 	}
+//20120710ysk start 0000472
+	function update_options() {
+		$target_market = $this->options['system']['target_market'];
 
+		$update_shipping_charge = false;
+		$shipping_charge = isset($this->options['shipping_charge']) ? $this->options['shipping_charge'] : array();
+		foreach( (array)$target_market as $tm ) {
+			for( $i = 0; $i < count($shipping_charge); $i++ ) {
+				if( isset($shipping_charge[$i]['country']) and $shipping_charge[$i]['country'] == $tm ) {
+					foreach( $shipping_charge[$i]['value'] as $pref => $value ) {
+						$shipping_charge[$i][$tm][$pref] = $value;
+					}
+					unset($shipping_charge[$i]['country']);
+					unset($shipping_charge[$i]['value']);
+					$update_shipping_charge = true;
+				}
+			}
+		}
+		if( $update_shipping_charge ) $this->options['shipping_charge'] = $shipping_charge;
+
+		$update_delivery_days = false;
+		$delivery_days = isset($this->options['delivery_days']) ? $this->options['delivery_days'] : array();
+		foreach( (array)$target_market as $tm ) {
+			for( $i = 0; $i < count($delivery_days); $i++ ) {
+				if( isset($delivery_days[$i]['country']) and $delivery_days[$i]['country'] == $tm ) {
+					foreach( $delivery_days[$i]['value'] as $pref => $value ) {
+						$delivery_days[$i][$tm][$pref] = $value;
+					}
+					unset($delivery_days[$i]['country']);
+					unset($delivery_days[$i]['value']);
+					$update_delivery_days = true;
+				}
+			}
+		}
+		if( $update_delivery_days ) $this->options['delivery_days'] = $delivery_days;
+
+		if( $update_shipping_charge or $update_delivery_days ) 
+			update_option('usces', $this->options);
+	}
+//20120710ysk end
 	function get_item_cat_ids(){
 		$args = array('child_of' => USCES_ITEM_CAT_PARENT_ID, 'hide_empty' => 0, 'hierarchical' => 0);
 		$categories = get_categories( $args );
@@ -5735,6 +5774,7 @@ class usc_e_shop
 		$total_quant = 0;
 		$charges = array();
 		$individual_charges = array();
+		$country = (isset($entry['delivery']['country']) && !empty($entry['delivery']['country'])) ? $entry['delivery']['country'] : $entry['customer']['country'];//20120710ysk 0000472
 		
 		foreach ( $cart as $rows ) {
 		
@@ -5743,11 +5783,17 @@ class usc_e_shop
 				$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
 				//商品送料index
 				$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
-				$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+//20120710ysk start 0000472
+				//$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+				$charge = isset($this->options['shipping_charge'][$s_charge_index][$country][$pref]) ? $this->options['shipping_charge'][$s_charge_index][$country][$pref] : 0;
+//20120710ysk end
 			}else{
 			
 				$s_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
-				$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+//20120710ysk start 0000472
+				//$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+				$charge = isset($this->options['shipping_charge'][$s_charge_index][$country][$pref]) ? $this->options['shipping_charge'][$s_charge_index][$country][$pref] : 0;
+//20120710ysk end
 			}
 			
 			if($this->getItemIndividualSCharge($rows['post_id'])){
@@ -6729,9 +6775,16 @@ class usc_e_shop
 		return number_format($this->options['postage_privilege']);
 	}
 	function sc_shipping_charge() {
+//20120710ysk start 0000472
+		$entry = $this->cart->get_entry();
+		$country = (isset($entry['delivery']['country']) && !empty($entry['delivery']['country'])) ? $entry['delivery']['country'] : $entry['customer']['country'];//20120710ysk 0000472
+//20120710ysk end
 		$arr = array();
 		foreach ( (array)$this->options['shipping_charge'] as $charges ) {
-			foreach ( (array)$charges['value'] as $value ) {
+//20120710ysk start 0000472
+			//foreach ( (array)$charges['value'] as $value ) {
+			foreach ( (array)$charges[$country] as $value ) {
+//20120710ysk end
 				$arr[] = $value;
 			}
 		}

@@ -104,6 +104,10 @@ $html .= 'var customer_pref = "'.$usces_entries['customer']['pref'].'";';
 //配送先県(customer/delivery)
 $delivery_pref = (isset($usces_entries['delivery']['pref']) && !empty($usces_entries['delivery']['pref'])) ? $usces_entries['delivery']['pref'] : $usces_entries['customer']['pref'];
 $html .= 'var delivery_pref = "'.$delivery_pref.'";';
+//20120710ysk start 0000472
+$delivery_country = (isset($usces_entries['delivery']['country']) && !empty($usces_entries['delivery']['country'])) ? $usces_entries['delivery']['country'] : $usces_entries['customer']['country'];
+$html .= 'var delivery_country = "'.$delivery_country.'";';
+//20120710ysk end
 //選択可能な配送方法に設定されている配達日数
 //20120612ysk start 0000501
 $html_days = 'var delivery_days = [];';
@@ -141,12 +145,20 @@ foreach((array)$default_deli as $key => $id) {
 				if((int)$delivery_days[$i]['id'] == $days) {
 					$html_days .= 'delivery_days_value['.$days.'] = [];';
 //20110317ysk start
-					$country = $usces->options['delivery_days'][$i]['country'];
+//20120710ysk start 0000472
+					//$country = $usces->options['delivery_days'][$i]['country'];
 					//foreach((array)$prefs as $pref) {
-					foreach((array)$prefs[$country] as $pref) {
+					//foreach((array)$prefs[$country] as $pref) {
 //20110317ysk end
-						$html_days .= 'delivery_days_value['.$days.']["'.$pref.'"] = [];';
-						$html_days .= 'delivery_days_value['.$days.']["'.$pref.'"].push("'.(int)$delivery_days[$i]['value'][$pref].'");';
+						//$html_days .= 'delivery_days_value['.$days.']["'.$pref.'"] = [];';
+						//$html_days .= 'delivery_days_value['.$days.']["'.$pref.'"].push("'.(int)$delivery_days[$i]['value'][$pref].'");';
+					foreach( (array)$target_market as $tm ) {
+						$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"] = [];';
+						foreach( (array)$prefs[$tm] as $pref) {
+							$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"]["'.$pref.'"] = [];';
+							$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"]["'.$pref.'"].push("'.(int)$delivery_days[$i][$tm][$pref].'");';
+						}
+//20120710ysk end
 					}
 				}
 			}
@@ -329,9 +341,14 @@ $html .= "
 						date['day'] = '" . $sendout['sendout_date']['day'] . "';
 						//配達日数加算
 						if(delivery_days_value[delivery_days[selected]] != undefined) {
-							if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
-								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
+//20120710ysk start 0000472
+							//if(delivery_days_value[delivery_days[selected]][delivery_pref] != undefined) {
+							//	date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_pref]);
+							//}
+							if(delivery_days_value[delivery_days[selected]][delivery_country][delivery_pref] != undefined) {
+								date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], delivery_days_value[delivery_days[selected]][delivery_country][delivery_pref]);
 							}
+//20120710ysk end
 						}
 						//最短配送時間帯メッセージ
 						var date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];

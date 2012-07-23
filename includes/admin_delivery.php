@@ -44,13 +44,20 @@ jQuery(function($){
 	$(".days_text").bind("change", function(){ usces_check_num($(this)); });
 
 //20110317ysk start
+//20120710ysk start 0000472
 <?php
-	$target_market_arr = '';
-	foreach((array)$target_market as $tm) $target_market_arr .= "'".$tm."',";
-	$target_market_arr = rtrim($target_market_arr, ",");
+	//$target_market_arr = '';
+	//foreach((array)$target_market as $tm) $target_market_arr .= "'".$tm."',";
+	//$target_market_arr = rtrim($target_market_arr, ",");
 	if(!array_key_exists($base_country, (array)$target_market)) $base_country = $target_market[0];//20110509ysk
+	$i = 0;
 ?>
-	var target_market = new Array(<?php echo $target_market_arr; ?>);
+	var target_market = [];
+<?php foreach( (array)$target_market as $tm ) : ?>
+	target_market[<?php echo $i; ?>] = '<?php echo $tm; ?>';
+<?php $i++; ?>
+<?php endforeach; ?>
+//20120710ysk end
 	var base_country = '<?php echo $base_country; ?>';
 //20110317ysk end
 
@@ -81,7 +88,6 @@ jQuery(function($){
 //20110317ysk start
 	var pref = [];
 <?php //foreach((array)$prefs as $pref){ ?>
-	//pref.push('<?php //echo $pref; ?>');
 <?php //} ?>
 <?php foreach((array)$target_market as $tm){ ?>
 	pref['<?php echo $tm; ?>'] = [];
@@ -94,15 +100,23 @@ jQuery(function($){
 	shipping_charge[<?php echo $i; ?>] = [];
 	shipping_charge[<?php echo $i; ?>]['id'] = <?php echo (int)$shipping_charge[$i]['id']; ?>;
 	shipping_charge[<?php echo $i; ?>]['name'] = "<?php echo $shipping_charge[$i]['name']; ?>";
-	shipping_charge[<?php echo $i; ?>]['value'] = [];
+//20120710ysk start 0000472
+<?php foreach((array)$target_market as $tm) { ?>
+	shipping_charge[<?php echo $i; ?>]['<?php echo $tm; ?>'] = [];
 //20110317ysk start
-<?php $country = (empty($shipping_charge[$i]['country'])) ? $base_country : $shipping_charge[$i]['country']; ?>
-	shipping_charge[<?php echo $i; ?>]['country'] = "<?php echo $country ?>";
+<?php //$country = (empty($shipping_charge[$i]['country'])) ? $base_country : $shipping_charge[$i]['country']; ?>
 	<?php //foreach((array)$prefs as $pref){ ?>
-	<?php foreach((array)$prefs[$country] as $pref){ ?>
+	<?php //foreach((array)$prefs[$country] as $pref){ ?>
+	<?php foreach( (array)$prefs[$tm] as $pref ) { ?>
 //20110317ysk end
-	shipping_charge[<?php echo $i; ?>]['value']['<?php echo $pref; ?>'] = <?php echo (int)$shipping_charge[$i]['value'][$pref]; ?>;
-<?php }} ?>
+		<?php if( isset($shipping_charge[$i][$tm][$pref]) ) : ?>
+	shipping_charge[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '<?php echo (int)$shipping_charge[$i][$tm][$pref]; ?>';
+		<?php else : ?>
+	shipping_charge[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '0';
+		<?php endif; ?>
+<?php //}} ?>
+<?php }}} ?>
+//20120710ysk end
 
 //20101208ysk start
 	var delivery_days = [];
@@ -110,15 +124,23 @@ jQuery(function($){
 	delivery_days[<?php echo $i; ?>] = [];
 	delivery_days[<?php echo $i; ?>]['id'] = <?php echo (int)$delivery_days[$i]['id']; ?>;
 	delivery_days[<?php echo $i; ?>]['name'] = "<?php echo $delivery_days[$i]['name']; ?>";
-	delivery_days[<?php echo $i; ?>]['value'] = [];
+//20120710ysk start 0000472
+<?php foreach((array)$target_market as $tm) { ?>
+	delivery_days[<?php echo $i; ?>]['<?php echo $tm; ?>'] = [];
 //20110317ysk start
-<?php $country = (empty($delivery_days[$i]['country'])) ? $base_country : $delivery_days[$i]['country']; ?>
-	delivery_days[<?php echo $i; ?>]['country'] = "<?php echo $country; ?>";
+<?php //$country = (empty($delivery_days[$i]['country'])) ? $base_country : $delivery_days[$i]['country']; ?>
 	<?php //foreach((array)$prefs as $pref){ ?>
-	<?php foreach((array)$prefs[$country] as $pref){ ?>
+	<?php //foreach((array)$prefs[$country] as $pref){ ?>
+	<?php foreach( (array)$prefs[$tm] as $pref ) { ?>
 //20110317ysk end
-	delivery_days[<?php echo $i; ?>]['value']['<?php echo $pref; ?>'] = <?php echo (int)$delivery_days[$i]['value'][$pref]; ?>;
-<?php }} ?>
+		<?php if( isset($delivery_days[$i][$tm][$pref]) ) : ?>
+	delivery_days[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '<?php echo (int)$delivery_days[$i][$tm][$pref]; ?>';
+		<?php else : ?>
+	delivery_days[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '0';
+		<?php endif; ?>
+<?php //}} ?>
+<?php }}} ?>
+//20120710ysk end
 //20101208ysk end
 
 	var selected_method = 0;
@@ -196,15 +218,26 @@ jQuery(function($){
 	});
 	
 	$("#new_shipping_charge_action").click(function () {
-		if(shipping_charge.length === 0) return false;
+		//if(shipping_charge.length === 0) return false;
 		var valuehtml = '';
 //20110317ysk start
 		//for(var i=0; i<pref.length; i++){
 		//	valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 		//}
-		for(var i=0; i<pref[base_country].length; i++){
-			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[base_country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[base_country][i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+//20120710ysk start 0000472
+		//for(var i=0; i<pref[base_country].length; i++){
+		//	valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[base_country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[base_country][i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+		//}
+		for( var j = 0; j < target_market.length; j++ ) {
+			var tm = target_market[j];
+			valuehtml += "<div id='shipping_charge_"+tm+"'>";
+			for( var i = 0; i < pref[tm].length; i++ ) {
+				var p = pref[tm][i];
+				valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name='shipping_charge_value_"+tm+"["+p+"]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+			}
+			valuehtml += "</div>";
 		}
+//20120710ysk end
 		$("#shipping_charge_country").val(base_country);
 //20110317ysk end
 		$("#shipping_charge_name").html('<input name="shipping_charge_name" type="text" value="" />');
@@ -213,19 +246,39 @@ jQuery(function($){
 		$("#shipping_charge_button").html('<input name="cancel_shipping_charge" id="cancel_shipping_charge" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_shipping_charge(0);" /><input name="add_shipping_charge" id="add_shipping_charge" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_shipping_charge();" />');
 		$("input[name='shipping_charge_name']").focus().select();
 		$(".charge_text").bind("change", function(){ usces_check_money($(this)); });
+//20120710ysk start 0000472
+		for( var i = 0; i < target_market.length; i++ ) {
+			if( base_country == target_market[i] ) {
+				$("#shipping_charge_"+target_market[i]).css("display","");
+			} else {
+				$("#shipping_charge_"+target_market[i]).css("display","none");
+			}
+		}
+//20120710ysk end
 	});
 	
 //20101208ysk start
 	$("#new_delivery_days_action").click(function () {
-		if(delivery_days.length === 0) return false;
+		//if(delivery_days.length === 0) return false;
 		var valuehtml = '';
 //20110317ysk start
 		//for(var i=0; i<pref.length; i++){
 		//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[i] + "</label><input type='text' name='delivery_days_value[" + pref[i] + "]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 		//}
-		for(var i=0; i<pref[base_country].length; i++){
-			valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[base_country][i] + "</label><input type='text' name='delivery_days_value[" + pref[base_country][i] + "]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+//20120710ysk start 0000472
+		//for(var i=0; i<pref[base_country].length; i++){
+		//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[base_country][i] + "</label><input type='text' name='delivery_days_value[" + pref[base_country][i] + "]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+		//}
+		for( var j = 0; j < target_market.length; j++ ) {
+			var tm = target_market[j];
+			valuehtml += "<div id='delivery_days_"+tm+"'>";
+			for( var i = 0; i < pref[tm].length; i++ ) {
+				var p = pref[tm][i];
+				valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name='delivery_days_value_"+tm+"["+p+"]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+			}
+			valuehtml += "</div>";
 		}
+//20120710ysk end
 		$("#delivery_days_country").val(base_country);
 //20110317ysk end
 		$("#delivery_days_name").html('<input name="delivery_days_name" type="text" value="" />');
@@ -234,6 +287,15 @@ jQuery(function($){
 		$("#delivery_days_button").html('<input name="cancel_delivery_days" id="cancel_delivery_days" type="button" value="<?php _e('Cancel', 'usces'); ?>" onclick="operation.disp_delivery_days(0);" /><input name="add_delivery_days" id="add_delivery_days" type="button" value="<?php _e('Add', 'usces'); ?>" onclick="operation.add_delivery_days();" />');
 		$("input[name='delivery_days_name']").focus().select();
 		$(".days_text").bind("change", function(){ usces_check_num($(this)); });
+//20120710ysk start 0000472
+		for( var i = 0; i < target_market.length; i++ ) {
+			if( base_country == target_market[i] ) {
+				$("#delivery_days_"+target_market[i]).css("display","");
+			} else {
+				$("#delivery_days_"+target_market[i]).css("display","none");
+			}
+		}
+//20120710ysk end
 	});
 //20101208ysk end
 	
@@ -612,17 +674,28 @@ jQuery(function($){
 			return false;
 		},
 		
-		disp_shipping_charge :function (id){
+		disp_shipping_charge : function (id){
 			var valuehtml = '';
 			if(shipping_charge.length === 0) {
 //20110317ysk start
 				//for(var i=0; i<pref.length; i++){
 				//	valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 				//}
-				for(var i=0; i<pref[base_country].length; i++){
-					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[base_country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[base_country][i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+//20120710ysk start 0000472
+				//for(var i=0; i<pref[base_country].length; i++){
+				//	valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[base_country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[base_country][i] + "]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+				//}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					valuehtml += "<div id='shipping_charge_"+tm+"'>";
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name='shipping_charge_value_"+tm+"["+p+"]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+					}
+					valuehtml += "</div>";
 				}
-				$("#shipping_charge_country").val(base_country);
+				//$("#shipping_charge_country").val(base_country);
+//20120710ysk end
 //20110317ysk end
 				$("#shipping_charge_name").html('<input name="shipping_charge_name" type="text" value="" />');
 				$("#shipping_charge_name2").html('');
@@ -631,14 +704,14 @@ jQuery(function($){
 			}else{
 				var selected = 0;
 //20110317ysk start
-				var country = base_country;
+				//var country = base_country;//20120710ysk 0000472
 //20110317ysk end
 				var name_select = '<select name="shipping_charge_name_select" id="shipping_charge_name_select" onchange="operation.onchange_shipping_charge(this.selectedIndex);">'+"\n";
 				for(var i=0; i<shipping_charge.length; i++){
 					if(shipping_charge[i]['id'] === id){
 						selected = i;
 //20110317ysk start
-						country = shipping_charge[i]['country'];
+						//country = shipping_charge[i]['country'];//20120710ysk 0000472
 //20110317ysk end
 						name_select += '<option value="'+shipping_charge[i]['id']+'" selected="selected">'+shipping_charge[i]['name']+'</option>'+"\n";
 					}else{
@@ -651,11 +724,23 @@ jQuery(function($){
 				//for(var i=0; i<pref.length; i++){
 				//	valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[i] + "</label><input type='text' name='shipping_charge_value[" + pref[i] + "]' value='" + shipping_charge[selected]['value'][pref[i]] + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 				//}
-				for(var i=0; i<pref[country].length; i++){
-					value = (shipping_charge[selected]['value'][pref[country][i]] == undefined) ? '' : shipping_charge[selected]['value'][pref[country][i]];
-					valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[country][i] + "]' value='" + value + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+//20120710ysk start 0000472
+				//for(var i=0; i<pref[country].length; i++){
+				//	value = (shipping_charge[selected]['value'][pref[country][i]] == undefined) ? '' : shipping_charge[selected]['value'][pref[country][i]];
+				//	valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[country][i] + "]' value='" + value + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+				//}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					valuehtml += "<div id='shipping_charge_"+tm+"'>";
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						value = ( shipping_charge[selected][tm][p] == undefined ) ? '' : shipping_charge[selected][tm][p];
+						valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name='shipping_charge_value_"+tm+"["+p+"]' value='"+value+"' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+					}
+					valuehtml += "</div>";
 				}
-				$("#shipping_charge_country").val(country);
+				//$("#shipping_charge_country").val(country);
+//20120710ysk end
 //20110317ysk end
 				$("#shipping_charge_name").html(name_select);
 				$("#shipping_charge_name2").html('<input name="shipping_charge_name" type="text" value="'+shipping_charge[selected]['name']+'" />');
@@ -663,6 +748,16 @@ jQuery(function($){
 				$("#shipping_charge_button").html("<input name='delete_shipping_charge' id='delete_shipping_charge' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_shipping_charge();' /><input name='update_shipping_charge' id='update_shipping_charge' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_shipping_charge();' />");
 			}
 			$(".charge_text").bind("change", function(){ usces_check_money($(this)); });
+//20120710ysk start 0000472
+			var country = $("#shipping_charge_country option:selected").val();
+			for( var i = 0; i < target_market.length; i++ ) {
+				if( country == target_market[i] ) {
+					$("#shipping_charge_"+target_market[i]).css("display","");
+				} else {
+					$("#shipping_charge_"+target_market[i]).css("display","none");
+				}
+			}
+//20120710ysk end
 		},
 		
 		add_shipping_charge : function() {
@@ -673,16 +768,31 @@ jQuery(function($){
 					$(this).css({'background-color': '#FFF'});
 				});
 			}
-			var country = $("#shipping_charge_country").val();
-			for(var i=0; i<pref[country].length; i++){
-				var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
-				if( "" == value || !checkMoney(value) ) {
-					error++;
-					$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
-						$(this).css({'background-color': '#FFF'});
-					});
+//20120710ysk start 0000472
+			//var country = $("#shipping_charge_country").val();
+			//for(var i=0; i<pref[country].length; i++){
+			//	var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+			//	if( "" == value || !checkNum(value) ) {
+			//		error++;
+			//		$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+			//			$(this).css({'background-color': '#FFF'});
+			//		});
+			//	}
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ) {
+					var p = pref[tm][i];
+					var value = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+					if( "" == value || !checkNum(value) ) {
+						error++;
+						$("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+							$(this).css({'background-color': '#FFF'});
+						});
+					}
 				}
 			}
+//20120710ysk end
 			if( 0 < error ) {
 				alert("データに不備があります。");
 				return false;
@@ -696,38 +806,63 @@ jQuery(function($){
 			//for(var i=0; i<pref.length; i++){
 			//	query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[i] + "\]']").val();
 			//}
-			for(var i=0; i<pref[country].length; i++){
-				query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+//20120710ysk start 0000472
+			//for(var i=0; i<pref[country].length; i++){
+			//	query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ) {
+					query += '&value_'+tm+'[]='+$("input[name='shipping_charge_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+				}
 			}
+//20120710ysk end
 //20110317ysk end
 			
 			var s = operation.settings;
 //20110317ysk start
 			//s.data = "action=shop_options_ajax&mode=add_shipping_charge&name=" + name + query;
-			s.data = "action=shop_options_ajax&mode=add_shipping_charge&name=" + name + "&country=" + country + query;
+//20120710ysk start 0000472
+			//s.data = "action=shop_options_ajax&mode=add_shipping_charge&name=" + name + "&country=" + country + query;
+			s.data = "action=shop_options_ajax&mode=add_shipping_charge&name="+name+query;
+//20120710ysk end
 //20110317ysk end
 			s.success = function(data, dataType){
-				var strs = data.split('#usces#');
-				var id = strs[0] - 0;
-				var name = strs[1];
+//20120710ysk start 0000472
+				//var strs = data.split('#usces#');
+				//var id = strs[0] - 0;
+				var id = data - 0;
+				//var name = strs[1];
 //20110317ysk start
-				var country = strs[2];
+				//var country = strs[2];
 				//var value = strs[2].split(',');
-				var value = strs[3].split(',');
+				//var value = strs[3].split(',');
+//20120710ysk end
 //20110317ysk end
 				var index = shipping_charge.length;
 				shipping_charge[index] = [];
 				shipping_charge[index]['id'] = id;
-				shipping_charge[index]['name'] = name;
-				shipping_charge[index]['value'] = [];
+//20120710ysk start 0000472
+				//shipping_charge[index]['name'] = name;
+				shipping_charge[index]['name'] = $("input[name='shipping_charge_name']").val();
+				//shipping_charge[index]['value'] = [];
 //20110317ysk start
-				shipping_charge[index]['country'] = country;
+				//shipping_charge[index]['country'] = country;
 				//for(var i=0; i<pref.length; i++){
 				//	shipping_charge[index]['value'][pref[i]] = value[i];
 				//}
-				for(var i=0; i<pref[country].length; i++){
-					shipping_charge[index]['value'][pref[country][i]] = value[i];
+				//for(var i=0; i<pref[country].length; i++){
+				//	shipping_charge[index]['value'][pref[country][i]] = value[i];
+				//}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					shipping_charge[index][tm] = [];
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						shipping_charge[index][tm][p] = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+					}
 				}
+//20120710ysk end
 //20110317ysk end
 				operation.disp_shipping_charge(id);
 				operation.make_delivery_method_charge(get_delivery_method_charge(selected_method));
@@ -746,16 +881,31 @@ jQuery(function($){
 					$(this).css({'background-color': '#FFF'});
 				});
 			}
-			var country = $("#shipping_charge_country").val();
-			for(var i=0; i<pref[country].length; i++){
-				var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
-				if( "" == value || !checkMoney(value) ) {
-					error++;
-					$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
-						$(this).css({'background-color': '#FFF'});
-					});
+//20120710ysk start 0000472
+			//var country = $("#shipping_charge_country").val();
+			//for(var i=0; i<pref[country].length; i++){
+			//	var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+			//	if( "" == value || !checkNum(value) ) {
+			//		error++;
+			//		$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+			//			$(this).css({'background-color': '#FFF'});
+			//		});
+			//	}
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ) {
+					var p = pref[tm][i];
+					var value = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+					if( "" == value || !checkNum(value) ) {
+						error++;
+						$("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+							$(this).css({'background-color': '#FFF'});
+						});
+					}
 				}
 			}
+//20120710ysk end
 			if( 0 < error ) {
 				alert("データに不備があります。");
 				return false;
@@ -770,39 +920,63 @@ jQuery(function($){
 			//for(var i=0; i<pref.length; i++){
 			//	query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[i] + "\]']").val();
 			//}
-			for(var i=0; i<pref[country].length; i++){
-				query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+//20120710ysk start 0000472
+			//for(var i=0; i<pref[country].length; i++){
+			//	query += '&value[]=' + $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ){
+					query += '&value_'+tm+'[]='+$("input[name='shipping_charge_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+				}
 			}
+//20120710ysk end
 //20110317ysk end
 			var s = operation.settings;
 //20110317ysk start
 			//s.data = "action=shop_options_ajax&mode=update_shipping_charge&id=" + id + "&name=" + name + query;
-			s.data = "action=shop_options_ajax&mode=update_shipping_charge&id=" + id + "&name=" + name + "&country=" + country + query;
+//20120710ysk start 0000472
+			//s.data = "action=shop_options_ajax&mode=update_shipping_charge&id=" + id + "&name=" + name + "&country=" + country + query;
+			s.data = "action=shop_options_ajax&mode=update_shipping_charge&id="+id+"&name="+name+query;
+//20120710ysk end
 //20110317ysk end
 			s.success = function(data, dataType){
-				var strs = data.split('#usces#');
-				var id = strs[0] - 0;
-				var name = strs[1];
+//20120710ysk start 0000472
+				//var strs = data.split('#usces#');
+				//var id = strs[0] - 0;
+				var id = data - 0;
+				//var name = strs[1];
 //20110317ysk start
-				var country = strs[2];
+				//var country = strs[2];
 				//var value = strs[2].split(',');
-				var value = strs[3].split(',');
+				//var value = strs[3].split(',');
+//20120710ysk end
 //20110317ysk end
 				for(var i=0; i<shipping_charge.length; i++){
 					if(id === shipping_charge[i]['id']){
 						index = i;
 					}
 				}
-				shipping_charge[index]['name'] = name;
+//20120710ysk start 0000472
+//				shipping_charge[index]['name'] = name;
+				shipping_charge[index]['name'] = $("input[name='shipping_charge_name']").val();
 //20110317ysk start
-				shipping_charge[index]['value'] = [];
-				shipping_charge[index]['country'] = country;
-				//for(var i=0; i<pref.length; i++){
-				//	shipping_charge[index]['value'][pref[i]] = value[i];
-				//}
-				for(var i=0; i<pref[country].length; i++){
-					shipping_charge[index]['value'][pref[country][i]] = value[i];
+//				shipping_charge[index]['value'] = [];
+//				shipping_charge[index]['country'] = country;
+//				//for(var i=0; i<pref.length; i++){
+//				//	shipping_charge[index]['value'][pref[i]] = value[i];
+//				//}
+//				for(var i=0; i<pref[country].length; i++){
+//					shipping_charge[index]['value'][pref[country][i]] = value[i];
+//				}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						shipping_charge[index][tm][p] = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+					}
 				}
+//20120710ysk end
 //20110317ysk end
 				operation.disp_shipping_charge(id);
 				operation.make_delivery_method_charge(get_delivery_method_charge(selected_method));
@@ -847,13 +1021,18 @@ jQuery(function($){
 			if( charge == '' ) return;
 			if( confirm(<?php echo sprintf(__("'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'", 'usces'), esc_js(usces_crsymbol('return', 'js'))); ?>) ){
 //20110317ysk start
-				var country = $("#shipping_charge_country").val();
+				var country = $("#shipping_charge_country option:selected").val();
 				//for(var i=0; i<pref.length; i++){
 				//	$("input[name='shipping_charge_value\[" + pref[i] + "\]']").val(charge);
 				//}
-				for(var i=0; i<pref[country].length; i++){
-					$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val(charge);
+//20120710ysk start 0000472
+				//for(var i=0; i<pref[country].length; i++){
+				//	$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val(charge);
+				//}
+				for( var i = 0; i < pref[country].length; i++ ) {
+					$("input[name='shipping_charge_value_"+country+"\["+pref[country][i]+"\]']").val(charge);
 				}
+//20120710ysk end
 //20110317ysk end
 				$("#allcharge").val("");
 			}
@@ -867,10 +1046,20 @@ jQuery(function($){
 				//for(var i=0; i<pref.length; i++){
 				//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[i] + "</label><input type='text' name='delivery_days_value[" + pref[i] + "]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 				//}
-				for(var i=0; i<pref[base_country].length; i++){
-					valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[base_country][i] + "</label><input type='text' name='delivery_days_value[" + pref[base_country][i] + "]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+//20120710ysk start 0000472
+				//for(var i=0; i<pref[base_country].length; i++){
+				//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[base_country][i] + "</label><input type='text' name='delivery_days_value[" + pref[base_country][i] + "]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+				//}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					valuehtml += "<div id='delivery_days_"+tm+"'>";
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name='delivery_days_value_"+tm+"["+p+"]' value='' class='charge_text' /><?php _e('day', 'usces'); ?></div>\n";
+					}
+					valuehtml += "</div>";
 				}
-				$("#delivery_days_country").val(base_country);
+				//$("#delivery_days_country").val(base_country);
 //20110317ysk end
 				$("#delivery_days_name").html('<input name="delivery_days_name" type="text" value="" />');
 				$("#delivery_days_name2").html('');
@@ -879,14 +1068,14 @@ jQuery(function($){
 			}else{
 				var selected = 0;
 //20110317ysk start
-				var country = base_country;
+				//var country = base_country;//20120710ysk 0000472
 //20110317ysk end
 				var name_select = '<select name="delivery_days_name_select" id="delivery_days_name_select" onchange="operation.onchange_delivery_days(this.selectedIndex);">'+"\n";
 				for(var i=0; i<delivery_days.length; i++){
 					if(delivery_days[i]['id'] === id){
 						selected = i;
 //20110317ysk start
-						country = delivery_days[i]['country'];
+						//country = delivery_days[i]['country'];//20120710ysk 0000472
 //20110317ysk end
 						name_select += '<option value="'+delivery_days[i]['id']+'" selected="selected">'+delivery_days[i]['name']+'</option>'+"\n";
 					}else{
@@ -899,12 +1088,24 @@ jQuery(function($){
 				//for(var i=0; i<pref.length; i++){
 				//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[i] + "</label><input type='text' name='delivery_days_value[" + pref[i] + "]' value='" + delivery_days[selected]['value'][pref[i]] + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 				//}
-				for(var i=0; i<pref[country].length; i++){
-					//value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
-					value = (delivery_days[selected] == undefined || delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
-					valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[country][i] + "</label><input type='text' name='delivery_days_value[" + pref[country][i] + "]' value='" + value + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+//20120710ysk start 0000472
+				//for(var i=0; i<pref[country].length; i++){
+				//	//value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+				//	value = (delivery_days[selected] == undefined || delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+				//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[country][i] + "</label><input type='text' name='delivery_days_value[" + pref[country][i] + "]' value='" + value + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+				//}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					valuehtml += "<div id='delivery_days_"+tm+"'>";
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						value = ( delivery_days[selected][tm][p] == undefined ) ? '' : delivery_days[selected][tm][p];
+						valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name='delivery_days_value_"+tm+"["+p+"]' value='"+value+"' class='charge_text' /><?php _e('day', 'usces'); ?></div>\n";
+					}
+					valuehtml += "</div>";
 				}
-				$("#delivery_days_country").val(country);
+				//$("#delivery_days_country").val(country);
+//20120710ysk end
 //20110317ysk end
 				$("#delivery_days_name").html(name_select);
 				$("#delivery_days_name2").html('<input name="delivery_days_name" type="text" value="'+delivery_days[selected]['name']+'" />');
@@ -912,6 +1113,16 @@ jQuery(function($){
 				$("#delivery_days_button").html("<input name='delete_delivery_days' id='delete_delivery_days' type='button' value='<?php _e('Delete', 'usces'); ?>' onclick='operation.delete_delivery_days();' /><input name='update_delivery_days' id='update_delivery_days' type='button' value='<?php _e('update', 'usces'); ?>' onclick='operation.update_delivery_days();' />");
 			}
 			$(".days_text").bind("change", function(){ usces_check_num($(this)); });
+//20120710ysk start 0000472
+			var country = $("#delivery_days_country option:selected").val();
+			for( var i = 0; i < target_market.length; i++ ) {
+				if( country == target_market[i] ) {
+					$("#delivery_days_"+target_market[i]).css("display","");
+				} else {
+					$("#delivery_days_"+target_market[i]).css("display","none");
+				}
+			}
+//20120710ysk end
 		},
 		
 		add_delivery_days : function() {
@@ -922,16 +1133,31 @@ jQuery(function($){
 					$(this).css({'background-color': '#FFF'});
 				});
 			}
-			var country = $("#delivery_days_country").val();
-			for(var i=0; i<pref[country].length; i++){
-				var value = $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
-				if( "" == value || !checkNum(value) ) {
-					error++;
-					$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
-						$(this).css({'background-color': '#FFF'});
-					});
+//20120710ysk start 0000472
+			//var country = $("#delivery_days_country").val();
+			//for(var i=0; i<pref[country].length; i++){
+			//	var value = $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+			//	if( "" == value || !checkNum(value) ) {
+			//		error++;
+			//		$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+			//			$(this).css({'background-color': '#FFF'});
+			//		});
+			//	}
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ) {
+					var p = pref[tm][i];
+					var value = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+					if( "" == value || !checkNum(value) ) {
+						error++;
+						$("input[name='delivery_days_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+							$(this).css({'background-color': '#FFF'});
+						});
+					}
 				}
 			}
+//20120710ysk end
 			if( 0 < error ) {
 				alert("データに不備があります。");
 				return false;
@@ -945,38 +1171,63 @@ jQuery(function($){
 			//for(var i=0; i<pref.length; i++){
 			//	query += '&value[]=' + $("input[name='delivery_days_value\[" + pref[i] + "\]']").val();
 			//}
-			for(var i=0; i<pref[country].length; i++){
-				query += '&value[]=' + $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+//20120710ysk start 0000472
+			//for(var i=0; i<pref[country].length; i++){
+			//	query += '&value[]=' + $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ) {
+					query += '&value_'+tm+'[]='+$("input[name='delivery_days_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+				}
 			}
+//20120710ysk end
 //20110317ysk end
 			
 			var s = operation.settings;
 //20110317ysk start
 			//s.data = "action=shop_options_ajax&mode=add_delivery_days&name=" + name + query;
-			s.data = "action=shop_options_ajax&mode=add_delivery_days&name=" + name + "&country=" + country + query;
+//20120710ysk start 0000472
+			//s.data = "action=shop_options_ajax&mode=add_delivery_days&name=" + name + "&country=" + country + query;
+			s.data = "action=shop_options_ajax&mode=add_delivery_days&name="+name+query;
+//20120710ysk end
 //20110317ysk end
 			s.success = function(data, dataType){
-				var strs = data.split('#usces#');
-				var id = strs[0] - 0;
-				var name = strs[1];
+//20120710ysk start 0000472
+				//var strs = data.split('#usces#');
+				//var id = strs[0] - 0;
+				var id = data - 0;
+				//var name = strs[1];
 //20110317ysk start
-				var country = strs[2];
+				//var country = strs[2];
 				//var value = strs[2].split(',');
-				var value = strs[3].split(',');
+				//var value = strs[3].split(',');
+//20120710ysk end
 //20110317ysk end
 				var index = delivery_days.length;
 				delivery_days[index] = [];
 				delivery_days[index]['id'] = id;
-				delivery_days[index]['name'] = name;
-				delivery_days[index]['value'] = [];
+//20120710ysk start 0000472
+				//delivery_days[index]['name'] = name;
+				delivery_days[index]['name'] = $("input[name='delivery_days_name']").val();
+				//delivery_days[index]['value'] = [];
 //20110317ysk start
-				delivery_days[index]['country'] = country;
+				//delivery_days[index]['country'] = country;
 				//for(var i=0; i<pref.length; i++){
 				//	delivery_days[index]['value'][pref[i]] = value[i];
 				//}
-				for(var i=0; i<pref[country].length; i++){
-					delivery_days[index]['value'][pref[country][i]] = value[i];
+				//for(var i=0; i<pref[country].length; i++){
+				//	delivery_days[index]['value'][pref[country][i]] = value[i];
+				//}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					delivery_days[index][tm] = [];
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						delivery_days[index][tm][p] = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+					}
 				}
+//20120710ysk end
 //20110317ysk end
 				operation.disp_delivery_days(id);
 				operation.make_delivery_method_days(get_delivery_method_days(selected_method));
@@ -995,16 +1246,31 @@ jQuery(function($){
 					$(this).css({'background-color': '#FFF'});
 				});
 			}
-			var country = $("#delivery_days_country").val();
-			for(var i=0; i<pref[country].length; i++){
-				var value = $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
-				if( "" == value || !checkNum(value) ) {
-					error++;
-					$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
-						$(this).css({'background-color': '#FFF'});
-					});
+//20120710ysk start 0000472
+			//var country = $("#delivery_days_country").val();
+			//for(var i=0; i<pref[country].length; i++){
+			//	var value = $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+			//	if( "" == value || !checkNum(value) ) {
+			//		error++;
+			//		$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
+			//			$(this).css({'background-color': '#FFF'});
+			//		});
+			//	}
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ) {
+					var p = pref[tm][i];
+					var value = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+					if( "" == value || !checkNum(value) ) {
+						error++;
+						$("input[name='delivery_days_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+							$(this).css({'background-color': '#FFF'});
+						});
+					}
 				}
 			}
+//20120710ysk end
 			if( 0 < error ) {
 				alert("データに不備があります。");
 				return false;
@@ -1015,43 +1281,67 @@ jQuery(function($){
 			var name = $("input[name='delivery_days_name']").val();
 			var query = '';
 //20110317ysk start
-			var country = $("#delivery_days_country").val();
+//20120710ysk start 0000472
+			//var country = $("#delivery_days_country").val();
 			//for(var i=0; i<pref.length; i++){
 			//	query += '&value[]=' + $("input[name='delivery_days_value\[" + pref[i] + "\]']").val();
 			//}
-			for(var i=0; i<pref[country].length; i++){
-				query += '&value[]=' + $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+			//for(var i=0; i<pref[country].length; i++){
+			//	query += '&value[]=' + $("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val();
+			//}
+			for( var j = 0; j < target_market.length; j++ ) {
+				var tm = target_market[j];
+				for( var i = 0; i < pref[tm].length; i++ ){
+					query += '&value_'+tm+'[]='+$("input[name='delivery_days_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+				}
 			}
+//20120710ysk end
 //20110317ysk end
 			var s = operation.settings;
 //20110317ysk start
 			//s.data = "action=shop_options_ajax&mode=update_delivery_days&id=" + id + "&name=" + name + query;
-			s.data = "action=shop_options_ajax&mode=update_delivery_days&id=" + id + "&name=" + name + "&country=" + country + query;
+//20120710ysk start 0000472
+			//s.data = "action=shop_options_ajax&mode=update_delivery_days&id=" + id + "&name=" + name + "&country=" + country + query;
+			s.data = "action=shop_options_ajax&mode=update_delivery_days&id="+id+"&name="+name+query;
+//20120710ysk end
 //20110317ysk end
 			s.success = function(data, dataType){
-				var strs = data.split('#usces#');
-				var id = strs[0] - 0;
-				var name = strs[1];
+//20120710ysk start 0000472
+				//var strs = data.split('#usces#');
+				//var id = strs[0] - 0;
+				var id = data - 0;
+				//var name = strs[1];
 //20110317ysk start
-				var country = strs[2];
+				//var country = strs[2];
 				//var value = strs[2].split(',');
-				var value = strs[3].split(',');
+				//var value = strs[3].split(',');
+//20120710ysk end
 //20110317ysk end
 				for(var i=0; i<delivery_days.length; i++){
 					if(id === delivery_days[i]['id']){
 						index = i;
 					}
 				}
-				delivery_days[index]['name'] = name;
+//20120710ysk start 0000472
+				//delivery_days[index]['name'] = name;
+				delivery_days[index]['name'] = $("input[name='delivery_days_name']").val();
 //20110317ysk start
-				delivery_days[index]['value'] = [];
-				delivery_days[index]['country'] = country;
+				//delivery_days[index]['value'] = [];
+				//delivery_days[index]['country'] = country;
 				//for(var i=0; i<pref.length; i++){
 				//	delivery_days[index]['value'][pref[i]] = value[i];
 				//}
-				for(var i=0; i<pref[country].length; i++){
-					delivery_days[index]['value'][pref[country][i]] = value[i];
+				//for(var i=0; i<pref[country].length; i++){
+				//	delivery_days[index]['value'][pref[country][i]] = value[i];
+				//}
+				for( var j = 0; j < target_market.length; j++ ) {
+					var tm = target_market[j];
+					for( var i = 0; i < pref[tm].length; i++ ) {
+						var p = pref[tm][i];
+						delivery_days[index][tm][p] = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+					}
 				}
+//20120710ysk end
 //20110317ysk end
 				operation.disp_delivery_days(id);
 				operation.make_delivery_method_days(get_delivery_method_days(selected_method));
@@ -1096,13 +1386,18 @@ jQuery(function($){
 			if( days == '' ) return;
 			if( confirm(<?php _e("'Okay to Change All Delivery Days to ' + days + '?'", 'usces'); ?>) ){
 //20110317ysk start
-				var country = $("#delivery_days_country").val();
+				var country = $("#delivery_days_country option:selected").val();
 				//for(var i=0; i<pref.length; i++){
 				//	$("input[name='delivery_days_value\[" + pref[i] + "\]']").val(days);
 				//}
-				for(var i=0; i<pref[country].length; i++){
-					$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val(days);
+//20120710ysk start 0000472
+				//for(var i=0; i<pref[country].length; i++){
+				//	$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val(days);
+				//}
+				for( var i = 0; i < pref[country].length; i++ ) {
+					$("input[name='delivery_days_value_"+country+"\["+pref[country][i]+"\]']").val(days);
 				}
+//20120710ysk end
 //20110317ysk end
 				$("#all_delivery_days").val("");
 			}
@@ -1125,42 +1420,62 @@ jQuery(function($){
 
 //20110317ysk start
 	$("#shipping_charge_country").change(function () {
-		var id = $("#shipping_charge_name_select").val()-0;
-		var selected = 0;
-		for(var i=0; i<shipping_charge.length; i++){
-			if(shipping_charge[i]['id'] === id){
-				selected = i;
+//20120710ysk start 0000472
+		//var id = $("#shipping_charge_name_select").val()-0;
+		//var selected = 0;
+		//for(var i=0; i<shipping_charge.length; i++){
+		//	if(shipping_charge[i]['id'] === id){
+		//		selected = i;
+		//	}
+		//}
+		//var country = $("#shipping_charge_country").val();
+		//var value = '';
+		//var valuehtml = '';
+		//for(var i=0; i<pref[country].length; i++){
+		//	value = (shipping_charge[selected]['value'][pref[country][i]] == undefined) ? '' : shipping_charge[selected]['value'][pref[country][i]];
+		//	valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[country][i] + "]' value='" + value + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+		//}
+		//$("#shipping_charge_value").html(valuehtml);
+		//$(".charge_text").bind("change", function(){ usces_check_num($(this)); });
+		var country = $("#shipping_charge_country option:selected").val();
+		for( var i = 0; i < target_market.length; i++ ) {
+			if( country == target_market[i] ) {
+				$("#shipping_charge_"+target_market[i]).css("display","");
+			} else {
+				$("#shipping_charge_"+target_market[i]).css("display","none");
 			}
 		}
-		var country = $("#shipping_charge_country").val();
-		var value = '';
-		var valuehtml = '';
-		for(var i=0; i<pref[country].length; i++){
-			value = (shipping_charge[selected]['value'][pref[country][i]] == undefined) ? '' : shipping_charge[selected]['value'][pref[country][i]];
-			valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>" + pref[country][i] + "</label><input type='text' name='shipping_charge_value[" + pref[country][i] + "]' value='" + value + "' class='charge_text' /><?php usces_crcode(); ?></div>\n";
-		}
-		$("#shipping_charge_value").html(valuehtml);
-		$(".charge_text").bind("change", function(){ usces_check_money($(this)); });
+//20120710ysk end
 	});
 
 	$("#delivery_days_country").change(function () {
-		var id = $("#delivery_days_name_select").val()-0;
-		var selected = 0;
-		for(var i=0; i<delivery_days.length; i++){
-			if(delivery_days[i]['id'] === id){
-				selected = i;
+//20120710ysk start 0000472
+		//var id = $("#delivery_days_name_select").val()-0;
+		//var selected = 0;
+		//for(var i=0; i<delivery_days.length; i++){
+		//	if(delivery_days[i]['id'] === id){
+		//		selected = i;
+		//	}
+		//}
+		//var country = $("#delivery_days_country").val();
+		//var value = '';
+		//var valuehtml = '';
+		//for(var i=0; i<pref[country].length; i++){
+		//	//value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+		//	value = (delivery_days[selected] == undefined || delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
+		//	valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[country][i] + "</label><input type='text' name='delivery_days_value[" + pref[country][i] + "]' value='" + value + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+		//}
+		//$("#delivery_days_value").html(valuehtml);
+		//$(".days_text").bind("change", function(){ usces_check_num($(this)); });
+		var country = $("#delivery_days_country option:selected").val();
+		for( var i = 0; i < target_market.length; i++ ) {
+			if( country == target_market[i] ) {
+				$("#delivery_days_"+target_market[i]).css("display","");
+			} else {
+				$("#delivery_days_"+target_market[i]).css("display","none");
 			}
 		}
-		var country = $("#delivery_days_country").val();
-		var value = '';
-		var valuehtml = '';
-		for(var i=0; i<pref[country].length; i++){
-			//value = (delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
-			value = (delivery_days[selected] == undefined || delivery_days[selected]['value'][pref[country][i]] == undefined) ? '' : delivery_days[selected]['value'][pref[country][i]];
-			valuehtml += "<div class='clearfix'><label class='delivery_days_label'>" + pref[country][i] + "</label><input type='text' name='delivery_days_value[" + pref[country][i] + "]' value='" + value + "' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
-		}
-		$("#delivery_days_value").html(valuehtml);
-		$(".days_text").bind("change", function(){ usces_check_num($(this)); });
+//20120710ysk end
 	});
 //20110317ysk end
 });

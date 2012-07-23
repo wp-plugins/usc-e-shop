@@ -1455,7 +1455,12 @@ function usces_shippingchargeTR( $index='' ) {
 	$list = '';
 	if( !isset($usces->options['shipping_charge'][$index]) ) return;
 	$shipping_charge = $usces->options['shipping_charge'][$index];
-	foreach ($shipping_charge['value'] as $pref => $value) {
+//20120710ysk start 0000472
+	$entry = $usces->cart->get_entry();
+	$country = (isset($entry['delivery']['country']) && !empty($entry['delivery']['country'])) ? $entry['delivery']['country'] : $entry['customer']['country'];//20120710ysk 0000472
+	//foreach ($shipping_charge['value'] as $pref => $value) {
+	foreach ($shipping_charge[$country] as $pref => $value) {
+//20120710ysk end
 		$list .= "<tr><th>" . esc_html($pref) . "</th>\n";
 		$list .= "<td class='rightnum'>" . number_format($value) . "</td>\n";
 		$list .= "</tr>\n";

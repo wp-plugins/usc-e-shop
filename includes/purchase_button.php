@@ -428,7 +428,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			//if(usces_get_apply_addressform($country) == 'JP') {
 			//	$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">';
 			//} else {
-				$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
+//20120718ysk start 0000529
+				//$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
+				$name = apply_filters('usces_filter_paypalec_shiptoname', esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']));
+				$html .= '<input type="hidden" name="SHIPTONAME" value="'.$name.'">';
+//20120718ysk end
 			//}
 //20110516ysk end
 			$html .= '<input type="hidden" name="SHIPTOSTREET" value="'.esc_html($usces_entries['customer']['address2']).'">
