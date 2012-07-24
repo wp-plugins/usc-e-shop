@@ -1106,7 +1106,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	//foreach ($payments as $id => $payment) {
 	foreach ((array)$payments as $id => $payment) {
 //20120328ysk end
-		if( 'continue' == $charging_type && defined('WCEX_DLSELLER') ){
+		if( 'continue' == $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
 			if( 'acting_remise_card' != $payment['settlement'] && 'acting_paypal_ec' != $payment['settlement']) {

@@ -864,7 +864,7 @@ function usces_reg_orderdata( $results = array() ) {
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
 	$status = '';
-	if( 'continue' == $charging_type && defined('WCEX_DLSELLER')){
+	if( 'continue' == $charging_type ){
 		//$status = 'continuation';
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
@@ -3525,7 +3525,7 @@ function usces_paypal_doecp( &$results ) {
 
 	$post_id = $cart[0]['post_id'];
 	$charging_type = $usces->getItemChargingType($post_id);
-	if( 'continue' != $charging_type || !defined('WCEX_DLSELLER')) {
+	if( 'continue' != $charging_type ) {
 		//通常購入
 		//Format the other parameters that were stored in the session from the previous calls
 		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);

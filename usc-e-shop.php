@@ -7,7 +7,7 @@ Version: 1.1.8
 Author: USconsort
 Author URI: http://www.uscons.co.jp/
 */
-define('USCES_VERSION', '1.1.8.1207233');
+define('USCES_VERSION', '1.1.8.1207241');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');

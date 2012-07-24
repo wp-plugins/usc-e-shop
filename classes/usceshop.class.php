@@ -5140,8 +5140,9 @@ class usc_e_shop
 //20120629ysk end
 	function getItemChargingType( $post_id ){
 		if( usces_is_item($post_id) ){
-			$chargings = get_post_meta($post_id, '_item_charging_type', true);
-			$charging = empty($chargings[0]) ? 0 : $chargings[0];
+			$charging = get_post_meta($post_id, '_item_charging_type', true);
+			if( !defined('WCEX_DLSELLER') )
+				$charging = NULL;
 		}else{
 			$charging = NULL;
 		}
