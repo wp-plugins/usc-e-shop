@@ -4156,9 +4156,12 @@ class usc_e_shop
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		}else{
 			$member_table = $wpdb->prefix . "usces_member";
-			$mem_ID = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s LIMIT 1", trim($_POST['member']["email"])) );
-			if( !empty($mem_ID) )
-				$mes .= __('This e-mail address has been already registered.', 'usces') . "<br />";
+			$mem_email = $wpdb->get_var( $wpdb->prepare("SELECT mem_email FROM $member_table WHERE ID = %d LIMIT 1", trim($_POST['member_id'])) );
+			if( trim($_POST['member']["email"]) != $mem_email ){
+				$mem_ID = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s LIMIT 1", trim($_POST['member']["email"])) );
+				if( !empty($mem_ID) )
+					$mes .= __('This e-mail address has been already registered.', 'usces') . "<br />";
+			}
 		}
 		if ( trim($_POST['member']["name1"]) == "" )
 			$mes .= __('Name is not correct', 'usces') . "<br />";
