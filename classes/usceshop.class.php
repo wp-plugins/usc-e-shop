@@ -1908,6 +1908,7 @@ class usc_e_shop
 	}
 	
 	function admin_head() {
+		global $wp_version;
 		$payments_str = '';
 		$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 		foreach ( (array)$payments as $id => $array ) {
@@ -1923,8 +1924,11 @@ class usc_e_shop
 			$wcex_str .= "'" . $key . "-" . $values['version'] . "', ";
 		}
 		$wcex_str = rtrim($wcex_str, ', ');
-		//$theme = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
-		$theme = wp_get_theme( get_stylesheet_directory().'/style.css' );
+		if ( version_compare($wp_version, '3.4', '>=') ){
+			$theme = wp_get_theme( get_stylesheet_directory().'/style.css' );
+		}else{
+			$theme = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
+		}
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
