@@ -6394,7 +6394,10 @@ class usc_e_shop
 	function get_shipping_charge_index($id) {
 		$index = false; 
 		for($i=0; $i<count($this->options['shipping_charge']); $i++){
-			if( $this->options['shipping_charge'][$i]['id'] === $id ){
+//20120710ysk start 0000472
+			//if( $this->options['shipping_charge'][$i]['id'] === $id ){
+			if( (int)$this->options['shipping_charge'][$i]['id'] == (int)$id ){
+//20120710ysk end
 				$index = $i;
 			}
 		}
