@@ -952,9 +952,16 @@ class usc_e_shop
 					//$province[] = __('-- Select --', 'usces');
 					$province[] = '-- Select --';
 //20120123ysk end
-					for($i = 0; $i < count($temp_pref); $i++) {
-						$province[] = trim($temp_pref[$i]);
+//20120725ysk start 0000537
+					//for($i = 0; $i < count($temp_pref); $i++) {
+						//$province[] = trim($temp_pref[$i]);
+					foreach( $temp_pref as $pref ) {
+						if( '' != trim($pref) ) 
+							$province[] = trim($pref);
 					}
+					if( 1 == count($province) ) 
+						$action_status = 'error';
+//20120725ysk end
 				} else {
 					if(isset($usces_states[$target_market]) && is_array($usces_states[$target_market])) {
 						$province = $usces_states[$target_market];
