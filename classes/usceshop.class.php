@@ -1932,7 +1932,9 @@ class usc_e_shop
 		}
 		$wcex_str = rtrim($wcex_str, ', ');
 		if ( version_compare($wp_version, '3.4', '>=') ){
-			$theme = wp_get_theme( get_stylesheet_directory().'/style.css' );
+			$theme_ob = wp_get_theme( get_stylesheet_directory().'/style.css' );
+			$theme['Name'] = $theme_ob->stylesheet;
+			$theme['Version'] = 1;
 		}else{
 			$theme = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
 		}

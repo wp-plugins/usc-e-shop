@@ -1663,7 +1663,9 @@ function usces_getinfo_ajax(){
 	}
 	$wcex_str = rtrim($wcex_str, ',');
 	if ( version_compare($wp_version, '3.4', '>=') ){
-		$themedata = wp_get_theme( get_stylesheet_directory().'/style.css' );
+		$theme_ob = wp_get_theme( get_stylesheet_directory().'/style.css' );
+		$themedata['Name'] = $theme_ob->stylesheet;
+		$themedata['Version'] = 1;
 	}else{
 		$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );
 	}
