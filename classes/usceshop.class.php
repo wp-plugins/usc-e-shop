@@ -1941,7 +1941,6 @@ class usc_e_shop
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
-		<?php print_r($theme_ob); ?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
