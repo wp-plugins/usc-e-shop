@@ -158,6 +158,14 @@ msgstr "月別アーカイブ: <span>%s</span>"
 msgid "Yearly Archives: <span>%s</span>"
 msgstr "年別アーカイブ: <span>%s</span>"
 
+#: archive.php:32
+msgid "Older posts"
+msgstr "次のページ"
+
+#: archive.php:33
+msgid "Newer posts"
+msgstr "前のページ"
+
 #: archive.php:40
 msgid "Author Archives: %s"
 msgstr "作成者別アーカイブ: %s"

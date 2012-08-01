@@ -29,8 +29,8 @@ get_header();
 <div class="catbox">
 	<?php if (have_posts()) : ?>
 	<div class="navigation clearfix">
-		<div class="alignright"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'uscestheme' ) ); ?></div>
-		<div class="alignleft"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'uscestheme' ) ); ?></div>
+		<div class="alignright"><?php next_posts_link( __( 'Older posts', 'uscestheme' ) ); ?></div>
+		<div class="alignleft"><?php previous_posts_link( __( 'Newer posts', 'uscestheme' ) ); ?></div>
 	</div>
 	
 	<?php while (have_posts()) : the_post(); ?>
@@ -46,8 +46,8 @@ get_header();
 	<?php endwhile; ?>
 	
 	<div class="navigation clearfix">
-		<div class="alignright"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'uscestheme' ) ); ?></div>
-		<div class="alignleft"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'uscestheme' ) ); ?></div>
+		<div class="alignright"><?php next_posts_link( __( 'Older posts', 'uscestheme' ) ); ?></div>
+		<div class="alignleft"><?php previous_posts_link( __( 'Newer posts', 'uscestheme' ) ); ?></div>
 	</div>
 
 <?php else : ?>

@@ -152,7 +152,7 @@ if ( ! function_exists( 'welcart_auto_excerpt_more' ) ) {
 		return ' &hellip;' . welcart_continue_reading_link();
 	}
 }
-add_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
+//add_filter( 'excerpt_more', 'welcart_auto_excerpt_more' );
 
 if ( ! function_exists( 'welcart_custom_excerpt_more' ) ) {
 	function welcart_custom_excerpt_more( $output ) {
@@ -162,7 +162,7 @@ if ( ! function_exists( 'welcart_custom_excerpt_more' ) ) {
 		return $output;
 	}
 }
-add_filter( 'get_the_excerpt', 'welcart_custom_excerpt_more' );
+//add_filter( 'get_the_excerpt', 'welcart_custom_excerpt_more' );
 
 /***********************************************************
 * SSL

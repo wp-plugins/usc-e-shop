@@ -5,7 +5,7 @@ function usces_define_functions(){
 if( !function_exists('usces_item_uploadcsv') ):
 function usces_item_uploadcsv(){
 	global $wpdb, $usces, $user_ID;
-	
+
 	if( !current_user_can( 'import' ) ){
 		$res['status'] = 'error';
 		$res['message'] = __('You do not have permission to do that.');
@@ -742,7 +742,7 @@ function usces_item_uploadcsv(){
 
 				//delete all metas of Item
 				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ( meta_key = '_iopt_' OR meta_key = '_isku_' OR ( SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_') ) AND post_id = %d", $post_id);
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
+				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE meta_key <> '_thumbnail_id' AND post_id = %d", $post_id);
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
@@ -1244,11 +1244,13 @@ function usces_download_item_list() {
 
 		//Custom Fields
 		$cfield = '';
-		$custom_fields = get_post_custom($post_id);
+		$custom_fields = $usces->get_post_user_custom($post_id);
 		if( is_array($custom_fields) && 0 < count($custom_fields) ){
 			foreach($custom_fields as $cfkey => $cfvalues ) {
-				if( 0 !== strpos($cfkey, '_') )
+				if( is_array($cfvalues) )
 					$cfield .= usces_entity_decode($cfkey, $ext) . $eq . usces_entity_decode($cfvalues[0], $ext) . $sp;
+				else
+					$cfield .= usces_entity_decode($cfkey, $ext) . $eq . usces_entity_decode($cfvalues, $ext) . $sp;
 			}
 			$cfield = rtrim($cfield, $sp);
 		}

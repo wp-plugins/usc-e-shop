@@ -454,29 +454,30 @@ function usces_send_ordermail($order_id) {
 			);
 	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry);
 
-	if ( usces_send_mail( $confirm_para ) ) {
+	//if ( usces_send_mail( $confirm_para ) ) {
+	usces_send_mail( $confirm_para );
 	
-		$subject = apply_filters('usces_filter_send_order_mail_subject_order', $mail_data['title']['order'], $data);
-		$message = do_shortcode($mail_data['header']['order']) . $msg_body
-		 . $mail_data['footer']['order']
-		 . "\n----------------------------------------------------\n"
-		 . "REMOTE_ADDR : " . $_SERVER['REMOTE_ADDR']
-		 . "\n----------------------------------------------------\n";
-		
-		$order_para = array(
-				'to_name' => __('An order email','usces'),
-				'to_address' => $usces->options['order_mail'], 
-				'from_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
-				'from_address' => $entry['customer']['mailaddress1'],
-				'return_path' => $usces->options['error_mail'],
-				'subject' => $subject,
-				'message' => $message
-				);
-		
-		$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry);
-		$res = usces_send_mail( $order_para );
+	$subject = apply_filters('usces_filter_send_order_mail_subject_order', $mail_data['title']['order'], $data);
+	$message = do_shortcode($mail_data['header']['order']) . $msg_body
+	 . $mail_data['footer']['order']
+	 . "\n----------------------------------------------------\n"
+	 . "REMOTE_ADDR : " . $_SERVER['REMOTE_ADDR']
+	 . "\n----------------------------------------------------\n";
 	
-	}
+	$order_para = array(
+			'to_name' => __('An order email','usces'),
+			'to_address' => $usces->options['order_mail'], 
+			'from_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
+			'from_address' => $entry['customer']['mailaddress1'],
+			'return_path' => $usces->options['error_mail'],
+			'subject' => $subject,
+			'message' => $message
+			);
+	
+	$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry);
+	$res = usces_send_mail( $order_para );
+	
+//	}
 	
 	return $res;
 
@@ -737,7 +738,16 @@ function usces_mail_custom_field_info( $custom_field, $position, $id, $mailaddre
 function usces_send_mail( $para ) {
 	global $usces;
 
-	$from = htmlspecialchars(html_entity_decode($para['from_name'], ENT_QUOTES)) . " <{$para['from_address']}>";
+	$from_name = $para['from_name'];
+	$from_address = $para['from_address'];
+	if (strpos($para['from_address'], '..') !== false || strpos($para['from_address'], '.@') !== false) {
+		$fname = str_replace(strstr($para['from_address'], '@'), '', $para['from_address']);
+		if( '"' != substr($fname, 0, 1) && '"' != substr($fname, -1) ){
+			$para['from_address'] = str_replace($fname, '"RFC_violation"', $para['from_address']);
+			$from_name = $para['from_name'] . '(' . $from_address . ')';
+		}
+	}
+	$from = htmlspecialchars(html_entity_decode($from_name, ENT_QUOTES)) . " <{$para['from_address']}>";
 	$header = "From: " . apply_filters('usces_filter_send_mail_from', $from, $para) . "\r\n";
 	$header .= "Return-Path: {$para['return_path']}\r\n";
 
@@ -753,10 +763,20 @@ function usces_send_mail( $para ) {
 	$mails = explode( ',', $para['to_address'] );
 	$to_mailes = array();
 	foreach( $mails as $mail ){
-		if( is_email( trim($mail) ) ){
+		if (strpos($mail, '..') !== false || strpos($mail, '.@') !== false) {
+			$name = str_replace(strstr($mail, '@'), '', $mail);
+			if( '"' != substr($name, 0, 1) && '"' != substr($name, -1) ){
+				$to_mailes[] = str_replace($name, '"'.$name.'"', $mail);
+			}else{
+				$to_mailes[] = $mail;
+			}
+		}elseif( is_email( trim($mail) ) ){
 			$to_mailes[] = $mail;
+		}else{
+			$to_mailes[] = NULL;
 		}
 	}
+				
 	if( !empty( $to_mailes ) ){
 		$res = @wp_mail( $to_mailes , $subject , $message, $header );
 	}else{
@@ -3637,7 +3657,7 @@ function usces_paypal_doecp( &$results ) {
 
 	$post_id = $cart[0]['post_id'];
 	$charging_type = $usces->getItemChargingType($post_id);
-	if( 'continue' != $charging_type) {
+	if( 'continue' != $charging_type ) {
 		//通常購入
 		//Format the other parameters that were stored in the session from the previous calls
 		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);

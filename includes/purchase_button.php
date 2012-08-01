@@ -428,7 +428,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			//if(usces_get_apply_addressform($country) == 'JP') {
 			//	$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">';
 			//} else {
-				$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
+//20120718ysk start 0000529
+				//$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
+				$name = apply_filters('usces_filter_paypalec_shiptoname', esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']));
+				$html .= '<input type="hidden" name="SHIPTONAME" value="'.$name.'">';
+//20120718ysk end
 			//}
 //20110516ysk end
 			$html .= '<input type="hidden" name="SHIPTOSTREET" value="'.esc_html($usces_entries['customer']['address2']).'">
@@ -442,9 +446,14 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="SHIPTOPHONENUM" value="'.$tel.'">
 				<input type="hidden" name="CURRENCYCODE" value="'.$currency_code.'">
 				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
+//20120629ysk start 0000520
+			if( 'shipped' != $usces->getItemDivision( $cart[0]['post_id'] ) ) {
+				$html .= '<input type="hidden" name="NOSHIPPING" value="1">';
+			}
+//20120629ysk end
 			$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 			//$frequency = $usces->getItemFrequency($cart[0]['post_id']);
-			if( 'continue' != $charging_type) {
+			if( 'continue' != $charging_type ) {
 				//通常購入
 //20110606ysk start
 /*				for($i = 0; $i < count($cart); $i++) {
@@ -615,7 +624,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="sps_hashcode" value="'.$sps_hashcode.'" />
 				';
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
-			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"') . ' /></div>';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.apply_filters('usces_filter_confirm_nextbutton_value', __('Checkout', 'usces')).'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"') . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand);
 			$html .= '</form>';
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

@@ -173,7 +173,7 @@ foreach ( (array)$payments as $id => $array ) {
 				if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['howpay'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate']
-					|| 'continue' == $charging_type ){
+					|| ('continue' == $charging_type)){
 					continue;
 				}
 					

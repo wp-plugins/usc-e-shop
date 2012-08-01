@@ -1659,6 +1659,7 @@ function usces_has_custom_field_meta($fieldname) {
 }
 
 function usces_getinfo_ajax(){
+	global $wp_version;
 	$wcex_str = '';
 	$res = '';
 	$wcex = usces_get_wcex();
@@ -1666,8 +1667,15 @@ function usces_getinfo_ajax(){
 		$wcex_str .= $key . "-" . $values['version'] . ",";
 	}
 	$wcex_str = rtrim($wcex_str, ',');
-	//$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
-	$themedata = wp_get_theme( get_stylesheet_directory().'/style.css' );
+	if ( version_compare($wp_version, '3.4', '>=') ){
+		$theme_ob = wp_get_theme();
+		$themedata['Name'] = $theme_ob->get('Name');
+		$themedata['Version'] = $theme_ob->get('Version');
+	}else{
+		$themedata = get_theme_data( get_stylesheet_directory().'/style.css' );
+	}
+
+
 	$v = urlencode(USCES_VERSION);
 	$wcid = urlencode(get_option('usces_wcid'));
 	$locale = urlencode(get_locale());

@@ -23,7 +23,7 @@ class Welcart_bestseller extends WP_Widget {
         ?>
               <?php echo $before_widget; ?>
                   <?php echo $before_title
-                      . wp_specialchars($title)
+                      . esc_html($title)
                       . $after_title; ?>
 			
 		<ul class="ucart_widget_body">
@@ -33,7 +33,7 @@ class Welcart_bestseller extends WP_Widget {
 			<?php  
 					for($i=0; $i<$rows_num; $i++) { 
 						$cname = 'code' . ($i+1);
-						$code = wp_specialchars(trim($instance[$cname]));
+						$code = esc_html(trim($instance[$cname]));
 						if('' == $code) continue;
 						$id = $usces->get_postIDbyCode($code);
 						if('' == $id) continue;
@@ -56,7 +56,36 @@ class Welcart_bestseller extends WP_Widget {
     }
 
     /** @see WP_Widget::form */
-    function form($instance) {				
+    function form($instance) {
+		if( !isset($instance['title']) )
+			$instance['title'] = '';
+		if( !isset($instance['rows_num']) )
+			$instance['rows_num'] = '';
+		if( !isset($instance['icon']) )
+			$instance['icon'] = '';
+		if( !isset($instance['list']) )
+			$instance['list'] = '';
+		if( !isset($instance['code1']) )
+			$instance['code1'] = '';
+		if( !isset($instance['code2']) )
+			$instance['code2'] = '';
+		if( !isset($instance['code3']) )
+			$instance['code3'] = '';
+		if( !isset($instance['code4']) )
+			$instance['code4'] = '';
+		if( !isset($instance['code5']) )
+			$instance['code5'] = '';
+		if( !isset($instance['code6']) )
+			$instance['code6'] = '';
+		if( !isset($instance['code7']) )
+			$instance['code7'] = '';
+		if( !isset($instance['code8']) )
+			$instance['code8'] = '';
+		if( !isset($instance['code9']) )
+			$instance['code9'] = '';
+		if( !isset($instance['code10']) )
+			$instance['code10'] = '';
+			
         $title = $instance['title'] == '' ? 'Welcart '.__('best seller', 'usces') : esc_attr($instance['title']);
         $rows_num = $instance['rows_num'] == '' ? 10 : esc_attr($instance['rows_num']);
 		$icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];

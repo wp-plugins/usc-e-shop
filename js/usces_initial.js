@@ -124,16 +124,16 @@ jQuery(function($) {
 			}else if( 0 < trs.length){
 				prep = ( $(trs).eq(trs.length-1).val() == '' ) ? '' : parseInt( $(trs).eq(trs.length-1).val() )+1;
 			}
-			html = '<tr id="tr_'+trs.length+'"><td class="cod_f"><span id="amount_'+trs.length+'">' + prep + '</span></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts['+trs.length+']" type="text" class="short_str ui-widget-content ui-corner-all" /></td><td class="cod_cod"><input name="cod_fees['+trs.length+']" type="text" class="short_str" /></td></tr>';
+			html = '<tr id="tr_'+trs.length+'"><td class="cod_f"><span id="amount_'+trs.length+'">' + prep + '</span></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_amounts['+trs.length+']" type="text" class="short_str ui-widget-content ui-corner-all num" /></td><td class="cod_cod"><input name="cod_fees['+trs.length+']" type="text" class="short_str num" /></td></tr>';
 			$('#cod_change_field').append(html);
 			trs = $("input[name^='cod_amounts']");
 			$(trs).bind("change", function(){
 				var cnt = $(trs).length;
 				var id = $(trs).index(this);
 				
-				if( id >= cnt-1 ){												
+				if( id >= cnt-1 ){
 					$(end_amount).html( parseInt($(trs).eq(id).val()) + 1 );
-				}else if( id < cnt-1 ){												
+				}else if( id < cnt-1 ){
 					$('#amount_'+(id+1)).html( parseInt($(trs).eq(id).val()) + 1 );
 				}
 				return false;

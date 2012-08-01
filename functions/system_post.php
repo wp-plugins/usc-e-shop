@@ -632,9 +632,11 @@ function add_shipping_charge() {
 	$options = get_option('usces');
 	$name = trim($_POST['name']);
 //20110317ysk start
-	$country = trim($_POST['country']);
+//20120710ysk start 0000472
+	//$country = trim($_POST['country']);
 //20110317ysk end
-	$value = $_POST['value'];
+	//$value = $_POST['value'];
+//20120710ysk end
 	foreach((array)$options['shipping_charge'] as $charge){
 		$ids[] = (int)$charge['id'];
 	}
@@ -650,27 +652,43 @@ function add_shipping_charge() {
 	//$prefs = $usces->options['province'];
 //20110331ysk start
 	//$prefs = $usces_states[$country];
-	$prefs = get_usces_states($country);
+//20120710ysk start 0000472
+	//$prefs = get_usces_states($country);
 //20110331ysk end
 //20110317ysk end
-	array_shift($prefs);
+	//array_shift($prefs);
+	$target_market = ( isset($options['system']['target_market']) && !empty($options['system']['target_market']) ) ? $options['system']['target_market'] : usces_get_local_target_market();
+	foreach( (array)$target_market as $tm ) {
+		$prefs = get_usces_states($tm);
+		array_shift($prefs);
+		$value = $_POST['value_'.$tm];
+//20120710ysk end
 
 	$options['shipping_charge'][$index]['id'] = $newid;
 	$options['shipping_charge'][$index]['name'] = $name;
 //20110317ysk start
-	$options['shipping_charge'][$index]['country'] = $country;
+//20120710ysk start 0000472
+	//$options['shipping_charge'][$index]['country'] = $country;
 //20110317ysk end
-	$options['shipping_charge'][$index]["value"] = array();
-	for($i=0; $i<count($prefs); $i++){
-		$pref = $prefs[$i];
-		$options['shipping_charge'][$index]['value'][$pref] = (int)$value[$i];
+	//$options['shipping_charge'][$index]["value"] = array();
+	//for($i=0; $i<count($prefs); $i++){
+	//	$pref = $prefs[$i];
+	//	$options['shipping_charge'][$index]['value'][$pref] = (int)$value[$i];
+	//}
+		for( $i = 0; $i < count($prefs); $i++ ) {
+			$options['shipping_charge'][$index][$tm][$prefs[$i]] = (float)$value[$i];
+		}
 	}
+//20120710ysk end
 	update_option('usces', $options);
 
-	$valuestr = implode(',', $options['shipping_charge'][$index]['value']);
+//20120710ysk start 0000472
+	//$valuestr = implode(',', $options['shipping_charge'][$index]['value']);
 //20110317ysk start
 	//$res = $newid . '#usces#' . $name . '#usces#' . $valuestr;
-	$res = $newid . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	//$res = $newid . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	$res = (string)$newid;
+//20120710ysk end
 //20110317ysk end
 	return $res;
 }
@@ -681,19 +699,23 @@ function update_shipping_charge() {
 	$options = get_option('usces');
 	$name = trim($_POST['name']);
 //20110317ysk start
-	$country = trim($_POST['country']);
+//20120710ysk start 0000472
+	//$country = trim($_POST['country']);
 //20110317ysk end
-	$value = $_POST['value'];
+	//$value = $_POST['value'];
+//20120710ysk end
 	$id = (int)$_POST['id'];
 //	$prefs = get_option('usces_pref');
 //20110317ysk start
 	//$prefs = $usces->options['province'];
 //20110331ysk start
 	//$prefs = $usces_states[$country];
-	$prefs = get_usces_states($country);
+//20120710ysk start 0000472
+	//$prefs = get_usces_states($country);
 //20110331ysk end
 //20110317ysk end
-	array_shift($prefs);
+	//array_shift($prefs);
+//20120710ysk end
 
 	for($i=0; $i<count($options['shipping_charge']); $i++){
 		if($options['shipping_charge'][$i]['id'] === $id){
@@ -702,19 +724,33 @@ function update_shipping_charge() {
 	}
 	$options['shipping_charge'][$index]["name"] = $name;
 //20110317ysk start
-	$options['shipping_charge'][$index]['country'] = $country;
+//20120710ysk start 0000472
+	//$options['shipping_charge'][$index]['country'] = $country;
+	$target_market = ( isset($options['system']['target_market']) && !empty($options['system']['target_market']) ) ? $options['system']['target_market'] : usces_get_local_target_market();
+	foreach( (array)$target_market as $tm ) {
+		$prefs = get_usces_states($tm);
+		array_shift($prefs);
+		$value = $_POST['value_'.$tm];
 //20110317ysk end
-	$options['shipping_charge'][$index]["value"] = array();
-	for($i=0; $i<count($prefs); $i++){
-		$pref = $prefs[$i];
-		$options['shipping_charge'][$index]["value"][$pref] = (int)$value[$i];
+	//$options['shipping_charge'][$index]["value"] = array();
+	//for($i=0; $i<count($prefs); $i++){
+	//	$pref = $prefs[$i];
+	//	$options['shipping_charge'][$index]["value"][$pref] = (int)$value[$i];
+	//}
+		for( $i = 0; $i < count($prefs); $i++ ) {
+			$options['shipping_charge'][$index][$tm][$prefs[$i]] = (float)$value[$i];
+		}
+//20120710ysk end
 	}
 	update_option('usces', $options);
 
-	$valuestr = implode(',', $options['shipping_charge'][$index]["value"]);
+//20120710ysk start 0000472
+	//$valuestr = implode(',', $options['shipping_charge'][$index]["value"]);
 //20110317ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $valuestr;
-	$res = $id . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	//$res = $id . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	$res = (string)$id;
+//20120710ysk end
 //20110317ysk end
 	return $res;
 }
@@ -740,9 +776,11 @@ function add_delivery_days() {
 	$options = get_option('usces');
 	$name = trim($_POST['name']);
 //20110317ysk start
-	$country = trim($_POST['country']);
+//20120710ysk start 0000472
+	//$country = trim($_POST['country']);
 //20110317ysk end
-	$value = $_POST['value'];
+	//$value = $_POST['value'];
+//20120710ysk end
 	foreach((array)$options['delivery_days'] as $charge){
 		$ids[] = (int)$charge['id'];
 	}
@@ -757,26 +795,42 @@ function add_delivery_days() {
 	//$prefs = $usces->options['province'];
 //20110331ysk start
 	//$prefs = $usces_states[$country];
-	$prefs = get_usces_states($country);
+//20120710ysk start 0000472
+	//$prefs = get_usces_states($country);
 //20110331ysk end
 //20110317ysk end
-	array_shift($prefs);
+	//array_shift($prefs);
+	$target_market = ( isset($options['system']['target_market']) && !empty($options['system']['target_market']) ) ? $options['system']['target_market'] : usces_get_local_target_market();
+	foreach( (array)$target_market as $tm ) {
+		$prefs = get_usces_states($tm);
+		array_shift($prefs);
+		$value = $_POST['value_'.$tm];
+//20120710ysk end
 
 	$options['delivery_days'][$index]['id'] = $newid;
 	$options['delivery_days'][$index]['name'] = $name;
 //20110317ysk start
-	$options['delivery_days'][$index]['country'] = $country;
+//20120710ysk start 0000472
+	//$options['delivery_days'][$index]['country'] = $country;
 //20110317ysk end
-	for($i=0; $i<count($prefs); $i++){
-		$pref = $prefs[$i];
-		$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	//for($i=0; $i<count($prefs); $i++){
+	//	$pref = $prefs[$i];
+	//	$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	//}
+		for( $i = 0; $i < count($prefs); $i++ ) {
+			$options['delivery_days'][$index][$tm][$prefs[$i]] = (int)$value[$i];
+		}
 	}
+//20120710ysk end
 	update_option('usces', $options);
 
-	$valuestr = implode(',', $options['delivery_days'][$index]['value']);
+//20120710ysk start 0000472
+	//$valuestr = implode(',', $options['delivery_days'][$index]['value']);
 //20110317ysk start
 	//$res = $newid . '#usces#' . $name . '#usces#' . $valuestr;
-	$res = $newid . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	//$res = $newid . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	$res = (string)$newid;
+//20120710ysk end
 //20110317ysk end
 	return $res;
 }
@@ -787,18 +841,22 @@ function update_delivery_days() {
 	$options = get_option('usces');
 	$name = trim($_POST['name']);
 //20110317ysk start
-	$country = trim($_POST['country']);
+//20120710ysk start 0000472
+	//$country = trim($_POST['country']);
 //20110317ysk end
-	$value = $_POST['value'];
+	//$value = $_POST['value'];
+//20120710ysk end
 	$id = (int)$_POST['id'];
 //20110317ysk start
 	//$prefs = $usces->options['province'];
 //20110331ysk start
 	//$prefs = $usces_states[$country];
-	$prefs = get_usces_states($country);
+//20120710ysk start 0000472
+	//$prefs = get_usces_states($country);
 //20110331ysk end
 //20110317ysk end
-	array_shift($prefs);
+	//array_shift($prefs);
+//20120710ysk end
 
 	for($i=0; $i<count($options['delivery_days']); $i++){
 		if($options['delivery_days'][$i]['id'] === $id){
@@ -807,18 +865,32 @@ function update_delivery_days() {
 	}
 	$options['delivery_days'][$index]['name'] = $name;
 //20110317ysk start
-	$options['delivery_days'][$index]['country'] = $country;
+//20120710ysk start 0000472
+	//$options['delivery_days'][$index]['country'] = $country;
+	$target_market = ( isset($options['system']['target_market']) && !empty($options['system']['target_market']) ) ? $options['system']['target_market'] : usces_get_local_target_market();
+	foreach( (array)$target_market as $tm ) {
+		$prefs = get_usces_states($tm);
+		array_shift($prefs);
+		$value = $_POST['value_'.$tm];
 //20110317ysk end
-	for($i=0; $i<count($prefs); $i++){
-		$pref = $prefs[$i];
-		$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	//for($i=0; $i<count($prefs); $i++){
+	//	$pref = $prefs[$i];
+	//	$options['delivery_days'][$index]['value'][$pref] = (int)$value[$i];
+	//}
+		for( $i = 0; $i < count($prefs); $i++ ) {
+			$options['delivery_days'][$index][$tm][$prefs[$i]] = (int)$value[$i];
+		}
 	}
+//20120710ysk end
 	update_option('usces', $options);
 
-	$valuestr = implode(',', $options['delivery_days'][$index]['value']);
+//20120710ysk start 0000472
+	//$valuestr = implode(',', $options['delivery_days'][$index]['value']);
 //20110317ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $valuestr;
-	$res = $id . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	//$res = $id . '#usces#' . $name . '#usces#' . $country . '#usces#' . $valuestr;
+	$res = (string)$id;
+//20120710ysk end
 //20110317ysk end
 	return $res;
 }

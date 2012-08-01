@@ -276,6 +276,7 @@ $usces_settings['currency'] = array(
 					'GB' => array('GBP', 2, '.', ',', '£'),
 					'US' => array('USD', 2, '.', ',', '$'),
 					'VN' => array('VND', 2, '.', ',', '₫'),
+					'OO' => array('USD', 2, '.', ',', '$'),
 					);
 $usces_settings['nameform'] = array(
 					'AR' => 1,
@@ -327,6 +328,7 @@ $usces_settings['nameform'] = array(
 					'GB' => 1,
 					'US' => 1,
 					'VN' => 1,
+					'OO' => 1,
 					);
 $usces_settings['addressform'] = array(
 					'AR' => 'US',
@@ -378,6 +380,7 @@ $usces_settings['addressform'] = array(
 					'GB' => 'US',
 					'US' => 'US',
 					'VN' => 'US',
+					'OO' => 'US',
 					);
 $usces_settings['country'] = array(
 					'AR' => __('Argentina', 'usces'),
@@ -429,6 +432,7 @@ $usces_settings['country'] = array(
 					'GB' => __('United Kingdom', 'usces'),
 					'US' => __('United States', 'usces'),
 					'VN' => __('Vietnam', 'usces'),
+					'OO' => __('Other', 'usces'),
 					);
 $usces_settings['country_num'] = array(
 					'AR' => '54',
@@ -480,6 +484,7 @@ $usces_settings['country_num'] = array(
 					'GB' => '44',
 					'US' => '1',
 					'VN' => '84',
+					'OO' => '1',
 					);
 $usces_settings['lungage2country'] = array(
 					'es_AR' => 'AR',

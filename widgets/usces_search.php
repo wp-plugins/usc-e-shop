@@ -21,13 +21,16 @@ class Welcart_search extends WP_Widget {
         ?>
               <?php echo $before_widget; ?>
                   <?php echo $before_title
-                      . wp_specialchars($title)
+                      . esc_html($title)
                       . $after_title; ?>
 					  
 		<ul class="ucart_search_body ucart_widget_body"><li>
 		<form method="get" id="searchform" action="<?php echo home_url(); ?>" >
 		<input type="text" value="" name="s" id="s" class="searchtext" /><input type="submit" id="searchsubmit" value="<?php _e('Search', 'usces'); ?>" />
-		<div><a href="<?php echo (USCES_CART_URL . $usces->delim); ?>page=search_item"><?php _e("'AND' search by categories", 'usces'); ?>&gt;</a></div>
+		<?php
+		$search_form = '<div><a href="' . (USCES_CART_URL . $usces->delim) . 'page=search_item">' . __("'AND' search by categories", 'usces') . '&gt;</a></div>';
+		echo apply_filters( 'usces_filter_search_widget_form', $search_form );
+		?>
 		</form>
 		</li></ul>
 				  

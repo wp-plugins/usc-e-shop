@@ -952,9 +952,16 @@ class usc_e_shop
 					//$province[] = __('-- Select --', 'usces');
 					$province[] = '-- Select --';
 //20120123ysk end
-					for($i = 0; $i < count($temp_pref); $i++) {
-						$province[] = trim($temp_pref[$i]);
+//20120725ysk start 0000537
+					//for($i = 0; $i < count($temp_pref); $i++) {
+						//$province[] = trim($temp_pref[$i]);
+					foreach( $temp_pref as $pref ) {
+						if( '' != trim($pref) ) 
+							$province[] = trim($pref);
 					}
+					if( 1 == count($province) ) 
+						$action_status = 'error';
+//20120725ysk end
 				} else {
 					if(isset($usces_states[$target_market]) && is_array($usces_states[$target_market])) {
 						$province = $usces_states[$target_market];
@@ -1707,7 +1714,8 @@ class usc_e_shop
 					}
 				}
 				
-				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); ?>
+				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); //Unavailable ?>
+				<?php do_action( 'usces_action_inCart_js_check', $item->ID ); ?>
 				
 				if( mes != '' ){
 					alert( mes );
@@ -1770,7 +1778,8 @@ class usc_e_shop
 					}
 				}
 				
-				<?php apply_filters( 'usces_filter_upCart_js_check', $item->ID ); ?>
+				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); //Unavailable ?>
+				<?php do_action( 'usces_action_upCart_js_check', $item->ID ); ?>
 				
 				if( mes != '' ){
 					alert( mes );
@@ -1906,6 +1915,7 @@ class usc_e_shop
 	}
 	
 	function admin_head() {
+		global $wp_version;
 		$payments_str = '';
 		$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 		foreach ( (array)$payments as $id => $array ) {
@@ -1921,8 +1931,13 @@ class usc_e_shop
 			$wcex_str .= "'" . $key . "-" . $values['version'] . "', ";
 		}
 		$wcex_str = rtrim($wcex_str, ', ');
-		//$theme = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
-		$theme = wp_get_theme( get_stylesheet_directory().'/style.css' );
+		if ( version_compare($wp_version, '3.4', '>=') ){
+			$theme_ob = wp_get_theme();
+			$theme['Name'] = $theme_ob->get('Name');
+			$theme['Version'] = $theme_ob->get('Version');
+		}else{
+			$theme = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
+		}
 ?>
 		
 		<link href="<?php echo USCES_PLUGIN_URL; ?>/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
@@ -3648,7 +3663,8 @@ class usc_e_shop
 //20100818ysk end
 					$this->get_current_member();
 					
-					return 'member';
+					do_action( 'usces_action_after_login' );
+					return apply_filters( 'usces_filter_member_login', 'member', $member );
 				}
 			}
 		} else if ( isset($_POST['loginmail']) && $_POST['loginmail'] == '' && isset($_POST['loginpass']) && $_POST['loginpass'] == '' && isset($cookie['rme']) && $cookie['rme'] != 'forever' ) {
@@ -3713,7 +3729,9 @@ class usc_e_shop
 						$cookie['rme'] = '';
 						$this->set_cookie($cookie);
 					}
-					return 'member';
+					
+					do_action( 'usces_action_after_login' );
+					return apply_filters( 'usces_filter_member_login', 'member', $member );
 				}
 			}
 		}
@@ -3766,7 +3784,9 @@ class usc_e_shop
 //				$cookie['pass'] = '';
 //				$this->set_cookie($cookie);
 //			}
-			return 'member';
+
+			do_action( 'usces_action_after_login' );
+			return apply_filters( 'usces_filter_member_login', 'member', $member );
 		}
 	}
 
@@ -4031,7 +4051,8 @@ class usc_e_shop
 	function zaiko_check() {
 		$mes = '';
 		$cart = $this->cart->get_cart();
-
+		$stocks = array();
+		
 		for($i=0; $i<count($cart); $i++) { 
 			$cart_row = $cart[$i];
 			$post_id = $cart_row['post_id'];
@@ -4042,8 +4063,12 @@ class usc_e_shop
 			//$zaiko_status = $this->getItemZaiko($post_id, $sku);
 			$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku_code);
 			$stock = $this->getItemZaikoNum($post_id, $sku_code);
-			if( !isset($stocks[$post_id][$sku]) && '' != $stock ){
-				$stocks[$post_id][$sku] = $stock;
+			if( !isset($stocks[$post_id][$sku]) ){
+				if( '' != $stock ){
+					$stocks[$post_id][$sku] = $stock;
+				}else{
+					$stocks[$post_id][$sku] = NULL;
+				}
 			}
 			$checkstock = $stocks[$post_id][$sku];
 			$stocks[$post_id][$sku] = $stocks[$post_id][$sku] - $quant;
@@ -4125,7 +4150,7 @@ class usc_e_shop
 			$mes .= __('enter house numbers', 'usces') . "<br />";
 		if ( trim($_POST["customer"]["tel"]) == "" )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
-		if( trim($_POST['member']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+		if( trim($_POST['customer']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["customer"]["tel"])) )
 			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 	
 		$mes = apply_filters('usces_filter_member_check_fromcart', $mes);
@@ -4134,9 +4159,19 @@ class usc_e_shop
 	}
 
 	function admin_member_check() {
+		global $wpdb;
 		$mes = '';
-		if ( !is_email( trim($_POST['member']["email"]) ) )
+		if ( !is_email( trim($_POST['member']["email"]) ) ){
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
+		}else{
+			$member_table = $wpdb->prefix . "usces_member";
+			$mem_email = $wpdb->get_var( $wpdb->prepare("SELECT mem_email FROM $member_table WHERE ID = %d LIMIT 1", trim($_POST['member_id'])) );
+			if( trim($_POST['member']["email"]) != $mem_email ){
+				$mem_ID = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s LIMIT 1", trim($_POST['member']["email"])) );
+				if( !empty($mem_ID) )
+					$mes .= __('This e-mail address has been already registered.', 'usces') . "<br />";
+			}
+		}
 		if ( trim($_POST['member']["name1"]) == "" )
 			$mes .= __('Name is not correct', 'usces') . "<br />";
 //		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
@@ -4381,7 +4416,7 @@ class usc_e_shop
 		$this->set_default_categories();
 		$this->create_table();
 		$this->update_table();
-
+		$this->update_options();//20120710ysk 0000472
 	}
 	
 	function create_table() {
@@ -4798,7 +4833,46 @@ class usc_e_shop
 			$itemgenre_cat_id = wp_insert_category($itemgenre_cat);	
 		}
 	}
+//20120710ysk start 0000472
+	function update_options() {
+		$target_market = $this->options['system']['target_market'];
 
+		$update_shipping_charge = false;
+		$shipping_charge = isset($this->options['shipping_charge']) ? $this->options['shipping_charge'] : array();
+		foreach( (array)$target_market as $tm ) {
+			for( $i = 0; $i < count($shipping_charge); $i++ ) {
+				if( isset($shipping_charge[$i]['country']) and $shipping_charge[$i]['country'] == $tm ) {
+					foreach( $shipping_charge[$i]['value'] as $pref => $value ) {
+						$shipping_charge[$i][$tm][$pref] = $value;
+					}
+					unset($shipping_charge[$i]['country']);
+					unset($shipping_charge[$i]['value']);
+					$update_shipping_charge = true;
+				}
+			}
+		}
+		if( $update_shipping_charge ) $this->options['shipping_charge'] = $shipping_charge;
+
+		$update_delivery_days = false;
+		$delivery_days = isset($this->options['delivery_days']) ? $this->options['delivery_days'] : array();
+		foreach( (array)$target_market as $tm ) {
+			for( $i = 0; $i < count($delivery_days); $i++ ) {
+				if( isset($delivery_days[$i]['country']) and $delivery_days[$i]['country'] == $tm ) {
+					foreach( $delivery_days[$i]['value'] as $pref => $value ) {
+						$delivery_days[$i][$tm][$pref] = $value;
+					}
+					unset($delivery_days[$i]['country']);
+					unset($delivery_days[$i]['value']);
+					$update_delivery_days = true;
+				}
+			}
+		}
+		if( $update_delivery_days ) $this->options['delivery_days'] = $delivery_days;
+
+		if( $update_shipping_charge or $update_delivery_days ) 
+			update_option('usces', $this->options);
+	}
+//20120710ysk end
 	function get_item_cat_ids(){
 		$args = array('child_of' => USCES_ITEM_CAT_PARENT_ID, 'hide_empty' => 0, 'hierarchical' => 0);
 		$categories = get_categories( $args );
@@ -4893,7 +4967,7 @@ class usc_e_shop
 	
 	function getItemShippingCharge($post_id) {
 		$str = get_post_meta($post_id, '_itemShippingCharge', true);
-		return (int)$str;
+		return (float)$str;
 	}
 	
 	function getItemDeliveryMethod($post_id) {
@@ -5069,11 +5143,22 @@ class usc_e_shop
 			return true;
 		}
 	}
-	
+//20120629ysk start 0000520
+	function getItemDivision( $post_id ){
+		if( usces_is_item($post_id) ){
+			$item_division = get_post_meta($post_id, '_item_division', true);
+			$division = empty($item_division) ? 'shipped' : $item_division;
+		}else{
+			$division = NULL;
+		}
+		return $division;
+	}
+//20120629ysk end
 	function getItemChargingType( $post_id ){
 		if( usces_is_item($post_id) ){
-			$chargings = get_post_meta($post_id, '_item_charging_type', true);
-			$charging = empty($chargings[0]) ? 0 : $chargings[0];
+			$charging = get_post_meta($post_id, '_item_charging_type', true);
+			if( !defined('WCEX_DLSELLER') )
+				$charging = NULL;
 		}else{
 			$charging = NULL;
 		}
@@ -5706,6 +5791,7 @@ class usc_e_shop
 		$total_quant = 0;
 		$charges = array();
 		$individual_charges = array();
+		$country = (isset($entry['delivery']['country']) && !empty($entry['delivery']['country'])) ? $entry['delivery']['country'] : $entry['customer']['country'];//20120710ysk 0000472
 		
 		foreach ( $cart as $rows ) {
 		
@@ -5714,11 +5800,17 @@ class usc_e_shop
 				$s_charge_id = $this->getItemShippingCharge($rows['post_id']);
 				//商品送料index
 				$s_charge_index = $this->get_shipping_charge_index($s_charge_id);
-				$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+//20120710ysk start 0000472
+				//$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+				$charge = isset($this->options['shipping_charge'][$s_charge_index][$country][$pref]) ? $this->options['shipping_charge'][$s_charge_index][$country][$pref] : 0;
+//20120710ysk end
 			}else{
 			
 				$s_charge_index = $this->get_shipping_charge_index($fixed_charge_id);
-				$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+//20120710ysk start 0000472
+				//$charge = isset($this->options['shipping_charge'][$s_charge_index]['value'][$pref]) ? $this->options['shipping_charge'][$s_charge_index]['value'][$pref] : 0;
+				$charge = isset($this->options['shipping_charge'][$s_charge_index][$country][$pref]) ? $this->options['shipping_charge'][$s_charge_index][$country][$pref] : 0;
+//20120710ysk end
 			}
 			
 			if($this->getItemIndividualSCharge($rows['post_id'])){
@@ -6088,7 +6180,7 @@ class usc_e_shop
 		}
 		$table_name = $wpdb->prefix . 'usces_order';
 		
-		$query = $wpdb->prepare("SELECT COUNT(ID) AS ct FROM $table_name WHERE order_date >= %s AND order_date <= %s", $date, $today);
+		$query = $wpdb->prepare("SELECT COUNT(ID) AS ct FROM $table_name WHERE order_date >= %s AND order_date <= %s AND 0 = LOCATE(%s, order_status) AND 0 = LOCATE(%s, order_status)", $date, $today, 'cancel', 'estimate');
 		$res = $wpdb->get_var($query);
 		
 		if( $res == NULL )
@@ -6122,7 +6214,7 @@ class usc_e_shop
 									SUM(order_shipping_charge) AS shipping, 
 									SUM(order_cod_fee) AS cod, 
 									SUM(order_tax) AS tax 
-								 FROM $table_name WHERE order_date >= %s AND order_date <= %s", $date, $today);
+								 FROM $table_name WHERE order_date >= %s AND order_date <= %s AND 0 = LOCATE(%s, order_status) AND 0 = LOCATE(%s, order_status)", $date, $today, 'cancel', 'estimate');
 		$res = $wpdb->get_row($query, ARRAY_A);
 		
 		if( $res == NULL )
@@ -6311,7 +6403,10 @@ class usc_e_shop
 	function get_shipping_charge_index($id) {
 		$index = false; 
 		for($i=0; $i<count($this->options['shipping_charge']); $i++){
-			if( $this->options['shipping_charge'][$i]['id'] === $id ){
+//20120710ysk start 0000472
+			//if( $this->options['shipping_charge'][$i]['id'] === $id ){
+			if( (int)$this->options['shipping_charge'][$i]['id'] == (int)$id ){
+//20120710ysk end
 				$index = $i;
 			}
 		}
@@ -6595,6 +6690,33 @@ class usc_e_shop
 		return $res;
 	}
 	
+	function get_post_user_custom($post_id, $orderby='meta_id', $order='ASC'){
+		global $wpdb;
+		$res = array();
+		$table = $wpdb->prefix . "postmeta";
+		$meta_list = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value FROM $table WHERE post_id = %d ORDER BY $orderby $order",
+			$post_id), ARRAY_A );
+			
+		if ( !empty($meta_list) ) {
+			foreach ( $meta_list as $metarow) {
+				if( 0 === strpos($metarow['meta_key'], '_') )
+					continue;
+					
+				$mkey = $metarow['meta_key'];
+				$mval = $metarow['meta_value'];
+				if( array_key_exists($mkey, $res) ){
+					$cval = $res[$mkey];
+					$cval = (array)$cval;
+					$cval[] = $mval;
+					$res[$mkey] = $cval;		
+				}else{
+					$res[$mkey] = $mval;
+				}
+			}
+		}
+		return $res;
+	}
+	
 	function get_currency($amount, $symbol_pre = false, $symbol_post = false, $seperator_flag = true ){
 		global $usces_settings;
 		$cr = $this->options['system']['currency'];
@@ -6673,9 +6795,16 @@ class usc_e_shop
 		return number_format($this->options['postage_privilege']);
 	}
 	function sc_shipping_charge() {
+//20120710ysk start 0000472
+		$entry = $this->cart->get_entry();
+		$country = (isset($entry['delivery']['country']) && !empty($entry['delivery']['country'])) ? $entry['delivery']['country'] : $entry['customer']['country'];//20120710ysk 0000472
+//20120710ysk end
 		$arr = array();
 		foreach ( (array)$this->options['shipping_charge'] as $charges ) {
-			foreach ( (array)$charges['value'] as $value ) {
+//20120710ysk start 0000472
+			//foreach ( (array)$charges['value'] as $value ) {
+			foreach ( (array)$charges[$country] as $value ) {
+//20120710ysk end
 				$arr[] = $value;
 			}
 		}

@@ -96,8 +96,12 @@ jQuery(function($){
 		onchange_target_market_province: function(index) {
 			if(pre_target != '') $('#province_'+pre_target).val($("#province").val());
 			var target = $("#select_target_market_province option:selected").val();
-			$("#province").text('');
-			$("#province").text($('#province_'+target).val());
+//20120725ysk start 000057
+			//$("#province").text('');
+			//$("#province").text($('#province_'+target).val());
+			$("#province").val('');
+			$("#province").val($('#province_'+target).val());
+//20120725ysk end
 			pre_target = target;
 		},
 
