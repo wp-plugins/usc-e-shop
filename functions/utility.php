@@ -288,7 +288,7 @@ function usces_filter_delivery_secure_check( $mes ){
 	switch( $settlement ){
 		case 'acting_zeus_card':
 			$cnum1 = trim($_POST["cnum1"]);
-			$securecode = trim($_POST["securecode"]);
+			$securecode = (isset($_POST["securecode"])) ? trim($_POST["securecode"]) : '';
 			if ( !is_numeric($cnum1) )
 				$mes .= __('カード番号が不正です', 'usces') . "<br />";
 			

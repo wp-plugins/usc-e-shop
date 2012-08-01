@@ -126,7 +126,7 @@ foreach ( (array)$payments as $id => $array ) {
 						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
 						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 					</select>
-					<select name="div_2" id="brand3">
+					<select name="div_3" id="brand3">
 						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
 					</select>
 					</td>

@@ -143,7 +143,7 @@ function usces_order_confirm_message($order_id) {
 	if ( $data['order_usedpoint'] != 0 )
 		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
+		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')) . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
@@ -346,7 +346,7 @@ function usces_send_ordermail($order_id) {
 	//if ( $data['order_discount'] != 0 )
 	if ( $entry['order']['discount'] != 0 )
 //20120308ysk end
-		$meisai .= __('Special Price','usces') . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
+		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')) . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, false, 'return' ) . "\r\n";
