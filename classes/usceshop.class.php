@@ -6249,18 +6249,12 @@ class usc_e_shop
 	
 	function get_condition(){
 //20120807ysk start 0000544
-		//$order_conditions = array(
-		//'display_mode' => $this->options['display_mode'],
-		//'campaign_privilege' => $this->options['campaign_privilege'],
-		//'privilege_point' => $this->options['privilege_point'],
-		//'privilege_discount' => $this->options['privilege_discount']);
-		$options = get_option('usces');
 		$order_conditions = array(
-		'display_mode' => $options['display_mode'],
-		'campaign_privilege' => $options['campaign_privilege'],
-		'campaign_category' => $options['campaign_category'],
-		'privilege_point' => $options['privilege_point'],
-		'privilege_discount' => $options['privilege_discount']);
+		'display_mode' => $this->options['display_mode'],
+		'campaign_privilege' => $this->options['campaign_privilege'],
+		'campaign_category' => $this->options['campaign_category'],
+		'privilege_point' => $this->options['privilege_point'],
+		'privilege_discount' => $this->options['privilege_discount']);
 		return $order_conditions;
 //20120807ysk end
 	}
