@@ -6379,7 +6379,10 @@ class usc_e_shop
 				$temp[$index] = $id;
 			}
 			ksort($temp);
-			$force = array($temp[0]);
+//20120820ysk start 0000546
+			//$force = array($temp[0]);
+			$force = array(array_shift($temp));
+//20120820ysk end
 			
 			if( empty($intersect) ){
 				return $force;
