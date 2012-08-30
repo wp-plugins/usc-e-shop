@@ -98,13 +98,14 @@ function usces_pdf_out(&$pdf, $data){
 	$pdf->SetLeftMargin(19.8);
 	$x = 15.8;
 	$y = 101;
+	$onep = apply_filters( 'usces_filter_pdf_page_height', 190 );
 	$pdf->SetXY($x, $y);
 	$next_y = $y;
 	$line_x = array();
 	for ( $index = 0; $index < count($data->cart); $index++ ) {
 		 $cart_row = $data->cart[$index];
 		//if ($cnt > $pageRec-1) {//ページが変わるときの処理
-		if ( 190 < $next_y ) {//ページが変わるときの処理
+		if ( $onep < $next_y ) {//ページが変わるときの処理
 
 			$pdf->addPage();
 			//$pdf->useTemplate($tplidx);
@@ -181,7 +182,7 @@ function usces_pdf_out(&$pdf, $data){
 		$pdf->SetFont(GOTHIC, '', $fontsize);
 		$pdf->MultiCell(22.8, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price']*$cart_row['quantity'])), $border, 'R');
 
-		if( 190 < $next_y && 0 < $index ){
+		if( $onep < $next_y && 0 < $index ){
 			$pdf->Rect($x, $line_y[$index]-0.4, 149.5, 197.4-$line_y[$index], 'F');
 
 			$pdf->SetXY($x, 193);
@@ -499,7 +500,7 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(142.9, 235.8);
 	$pdf->MultiCell(22.67, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
 
-//	do_action( 'usces_action_order_print_footer', $pdf, $data);
+	do_action( 'usces_action_order_print_footer', $pdf, $data);
 }
 //Line
 function usces_pdfSetLine($pdf) {

@@ -54,11 +54,11 @@ jQuery(function($){
 ?>
 	var target_market = [];
 <?php foreach( (array)$target_market as $tm ) : ?>
-	target_market[<?php echo $i; ?>] = '<?php echo $tm; ?>';
+	target_market[<?php echo $i; ?>] = "<?php echo $tm; ?>";
 <?php $i++; ?>
 <?php endforeach; ?>
 //20120710ysk end
-	var base_country = '<?php echo $base_country; ?>';
+	var base_country = "<?php echo $base_country; ?>";
 //20110317ysk end
 
 	var delivery_method = [];
@@ -90,19 +90,19 @@ jQuery(function($){
 <?php //foreach((array)$prefs as $pref){ ?>
 <?php //} ?>
 <?php foreach((array)$target_market as $tm){ ?>
-	pref['<?php echo $tm; ?>'] = [];
+	pref["<?php echo $tm; ?>"] = [];
 <?php foreach((array)$prefs[$tm] as $pref){ ?>
-	pref['<?php echo $tm; ?>'].push('<?php echo $pref; ?>');
+	pref["<?php echo $tm; ?>"].push("<?php echo $pref; ?>");
 <?php }} ?>
 //20110317ysk end
 	var shipping_charge = [];
 <?php for($i=0; $i<count((array)$shipping_charge); $i++){ ?>
 	shipping_charge[<?php echo $i; ?>] = [];
-	shipping_charge[<?php echo $i; ?>]['id'] = <?php echo (int)$shipping_charge[$i]['id']; ?>;
-	shipping_charge[<?php echo $i; ?>]['name'] = "<?php echo $shipping_charge[$i]['name']; ?>";
+	shipping_charge[<?php echo $i; ?>]["id"] = <?php echo (int)$shipping_charge[$i]['id']; ?>;
+	shipping_charge[<?php echo $i; ?>]["name"] = "<?php echo $shipping_charge[$i]['name']; ?>";
 //20120710ysk start 0000472
 <?php foreach((array)$target_market as $tm) { ?>
-	shipping_charge[<?php echo $i; ?>]['<?php echo $tm; ?>'] = [];
+	shipping_charge[<?php echo $i; ?>]["<?php echo $tm; ?>"] = [];
 //20110317ysk start
 <?php //$country = (empty($shipping_charge[$i]['country'])) ? $base_country : $shipping_charge[$i]['country']; ?>
 	<?php //foreach((array)$prefs as $pref){ ?>
@@ -110,9 +110,9 @@ jQuery(function($){
 	<?php foreach( (array)$prefs[$tm] as $pref ) { ?>
 //20110317ysk end
 		<?php if( isset($shipping_charge[$i][$tm][$pref]) ) : ?>
-	shipping_charge[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '<?php echo (int)$shipping_charge[$i][$tm][$pref]; ?>';
+	shipping_charge[<?php echo $i; ?>]["<?php echo $tm; ?>"]["<?php echo $pref; ?>"] = "<?php echo (int)$shipping_charge[$i][$tm][$pref]; ?>";
 		<?php else : ?>
-	shipping_charge[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '0';
+	shipping_charge[<?php echo $i; ?>]["<?php echo $tm; ?>"]["<?php echo $pref; ?>"] = "0";
 		<?php endif; ?>
 <?php //}} ?>
 <?php }}} ?>
@@ -122,11 +122,11 @@ jQuery(function($){
 	var delivery_days = [];
 <?php for($i=0; $i<count((array)$delivery_days); $i++){ ?>
 	delivery_days[<?php echo $i; ?>] = [];
-	delivery_days[<?php echo $i; ?>]['id'] = <?php echo (int)$delivery_days[$i]['id']; ?>;
-	delivery_days[<?php echo $i; ?>]['name'] = "<?php echo $delivery_days[$i]['name']; ?>";
+	delivery_days[<?php echo $i; ?>]["id"] = <?php echo (int)$delivery_days[$i]['id']; ?>;
+	delivery_days[<?php echo $i; ?>]["name"] = "<?php echo $delivery_days[$i]['name']; ?>";
 //20120710ysk start 0000472
 <?php foreach((array)$target_market as $tm) { ?>
-	delivery_days[<?php echo $i; ?>]['<?php echo $tm; ?>'] = [];
+	delivery_days[<?php echo $i; ?>]["<?php echo $tm; ?>"] = [];
 //20110317ysk start
 <?php //$country = (empty($delivery_days[$i]['country'])) ? $base_country : $delivery_days[$i]['country']; ?>
 	<?php //foreach((array)$prefs as $pref){ ?>
@@ -134,9 +134,9 @@ jQuery(function($){
 	<?php foreach( (array)$prefs[$tm] as $pref ) { ?>
 //20110317ysk end
 		<?php if( isset($delivery_days[$i][$tm][$pref]) ) : ?>
-	delivery_days[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '<?php echo (int)$delivery_days[$i][$tm][$pref]; ?>';
+	delivery_days[<?php echo $i; ?>]["<?php echo $tm; ?>"]["<?php echo $pref; ?>"] = "<?php echo (int)$delivery_days[$i][$tm][$pref]; ?>";
 		<?php else : ?>
-	delivery_days[<?php echo $i; ?>]['<?php echo $tm; ?>']['<?php echo $pref; ?>'] = '0';
+	delivery_days[<?php echo $i; ?>]["<?php echo $tm; ?>"]["<?php echo $pref; ?>"] = "0";
 		<?php endif; ?>
 <?php //}} ?>
 <?php }}} ?>
@@ -233,7 +233,7 @@ jQuery(function($){
 			valuehtml += "<div id='shipping_charge_"+tm+"'>";
 			for( var i = 0; i < pref[tm].length; i++ ) {
 				var p = pref[tm][i];
-				valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name='shipping_charge_value_"+tm+"["+p+"]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+				valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name=\"shipping_charge_value_"+tm+"["+p+"]\" value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 			}
 			valuehtml += "</div>";
 		}
@@ -274,7 +274,7 @@ jQuery(function($){
 			valuehtml += "<div id='delivery_days_"+tm+"'>";
 			for( var i = 0; i < pref[tm].length; i++ ) {
 				var p = pref[tm][i];
-				valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name='delivery_days_value_"+tm+"["+p+"]' value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
+				valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name=\"delivery_days_value_"+tm+"["+p+"]\" value='' class='days_text' /><?php _e('day', 'usces'); ?></div>\n";
 			}
 			valuehtml += "</div>";
 		}
@@ -690,7 +690,7 @@ jQuery(function($){
 					valuehtml += "<div id='shipping_charge_"+tm+"'>";
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
-						valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name='shipping_charge_value_"+tm+"["+p+"]' value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+						valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name=\"shipping_charge_value_"+tm+"["+p+"]\" value='' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 					}
 					valuehtml += "</div>";
 				}
@@ -735,7 +735,7 @@ jQuery(function($){
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
 						value = ( shipping_charge[selected][tm][p] == undefined ) ? '' : shipping_charge[selected][tm][p];
-						valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name='shipping_charge_value_"+tm+"["+p+"]' value='"+value+"' class='charge_text' /><?php usces_crcode(); ?></div>\n";
+						valuehtml += "<div class='clearfix'><label class='shipping_charge_label'>"+p+"</label><input type='text' name=\"shipping_charge_value_"+tm+"["+p+"]\" value='"+value+"' class='charge_text' /><?php usces_crcode(); ?></div>\n";
 					}
 					valuehtml += "</div>";
 				}
@@ -783,10 +783,10 @@ jQuery(function($){
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ) {
 					var p = pref[tm][i];
-					var value = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+					var value = $("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").val();
 					if( "" == value || !checkNum(value) ) {
 						error++;
-						$("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+						$("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").css({'background-color': '#FFA'}).click(function() {
 							$(this).css({'background-color': '#FFF'});
 						});
 					}
@@ -813,7 +813,7 @@ jQuery(function($){
 			for( var j = 0; j < target_market.length; j++ ) {
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ) {
-					query += '&value_'+tm+'[]='+$("input[name='shipping_charge_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+					query += '&value_'+tm+'[]='+$("input[name=\"shipping_charge_value_"+tm+"\["+pref[tm][i]+"\]\"]").val();
 				}
 			}
 //20120710ysk end
@@ -859,7 +859,7 @@ jQuery(function($){
 					shipping_charge[index][tm] = [];
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
-						shipping_charge[index][tm][p] = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+						shipping_charge[index][tm][p] = $("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").val();
 					}
 				}
 //20120710ysk end
@@ -896,10 +896,10 @@ jQuery(function($){
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ) {
 					var p = pref[tm][i];
-					var value = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+					var value = $("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").val();
 					if( "" == value || !checkNum(value) ) {
 						error++;
-						$("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+						$("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").css({'background-color': '#FFA'}).click(function() {
 							$(this).css({'background-color': '#FFF'});
 						});
 					}
@@ -927,7 +927,7 @@ jQuery(function($){
 			for( var j = 0; j < target_market.length; j++ ) {
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ){
-					query += '&value_'+tm+'[]='+$("input[name='shipping_charge_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+					query += '&value_'+tm+'[]='+$("input[name=\"shipping_charge_value_"+tm+"\["+pref[tm][i]+"\]\"]").val();
 				}
 			}
 //20120710ysk end
@@ -973,7 +973,7 @@ jQuery(function($){
 					var tm = target_market[j];
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
-						shipping_charge[index][tm][p] = $("input[name='shipping_charge_value_"+tm+"\["+p+"\]']").val();
+						shipping_charge[index][tm][p] = $("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").val();
 					}
 				}
 //20120710ysk end
@@ -1030,7 +1030,7 @@ jQuery(function($){
 				//	$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val(charge);
 				//}
 				for( var i = 0; i < pref[country].length; i++ ) {
-					$("input[name='shipping_charge_value_"+country+"\["+pref[country][i]+"\]']").val(charge);
+					$("input[name=\"shipping_charge_value_"+country+"\["+pref[country][i]+"\]\"]").val(charge);
 				}
 //20120710ysk end
 //20110317ysk end
@@ -1055,7 +1055,7 @@ jQuery(function($){
 					valuehtml += "<div id='delivery_days_"+tm+"'>";
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
-						valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name='delivery_days_value_"+tm+"["+p+"]' value='' class='charge_text' /><?php _e('day', 'usces'); ?></div>\n";
+						valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name=\"delivery_days_value_"+tm+"["+p+"]\" value='' class='charge_text' /><?php _e('day', 'usces'); ?></div>\n";
 					}
 					valuehtml += "</div>";
 				}
@@ -1100,7 +1100,7 @@ jQuery(function($){
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
 						value = ( delivery_days[selected][tm][p] == undefined ) ? '' : delivery_days[selected][tm][p];
-						valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name='delivery_days_value_"+tm+"["+p+"]' value='"+value+"' class='charge_text' /><?php _e('day', 'usces'); ?></div>\n";
+						valuehtml += "<div class='clearfix'><label class='delivery_days_label'>"+p+"</label><input type='text' name=\"delivery_days_value_"+tm+"["+p+"]\" value='"+value+"' class='charge_text' /><?php _e('day', 'usces'); ?></div>\n";
 					}
 					valuehtml += "</div>";
 				}
@@ -1148,10 +1148,10 @@ jQuery(function($){
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ) {
 					var p = pref[tm][i];
-					var value = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+					var value = $("input[name=\"delivery_days_value_"+tm+"\["+p+"\]\"]").val();
 					if( "" == value || !checkNum(value) ) {
 						error++;
-						$("input[name='delivery_days_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+						$("input[name=\"delivery_days_value_"+tm+"\["+p+"\]\"]").css({'background-color': '#FFA'}).click(function() {
 							$(this).css({'background-color': '#FFF'});
 						});
 					}
@@ -1178,7 +1178,7 @@ jQuery(function($){
 			for( var j = 0; j < target_market.length; j++ ) {
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ) {
-					query += '&value_'+tm+'[]='+$("input[name='delivery_days_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+					query += '&value_'+tm+'[]='+$("input[name=\"delivery_days_value_"+tm+"\["+pref[tm][i]+"\]\"]").val();
 				}
 			}
 //20120710ysk end
@@ -1224,7 +1224,7 @@ jQuery(function($){
 					delivery_days[index][tm] = [];
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
-						delivery_days[index][tm][p] = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+						delivery_days[index][tm][p] = $("input[name=\"delivery_days_value_"+tm+"\["+p+"\]\"]").val();
 					}
 				}
 //20120710ysk end
@@ -1261,10 +1261,10 @@ jQuery(function($){
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ) {
 					var p = pref[tm][i];
-					var value = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+					var value = $("input[name=\"delivery_days_value_"+tm+"\["+p+"\]\"]").val();
 					if( "" == value || !checkNum(value) ) {
 						error++;
-						$("input[name='delivery_days_value_"+tm+"\["+p+"\]']").css({'background-color': '#FFA'}).click(function() {
+						$("input[name=\"delivery_days_value_"+tm+"\["+p+"\]\"]").css({'background-color': '#FFA'}).click(function() {
 							$(this).css({'background-color': '#FFF'});
 						});
 					}
@@ -1292,7 +1292,7 @@ jQuery(function($){
 			for( var j = 0; j < target_market.length; j++ ) {
 				var tm = target_market[j];
 				for( var i = 0; i < pref[tm].length; i++ ){
-					query += '&value_'+tm+'[]='+$("input[name='delivery_days_value_"+tm+"\["+pref[tm][i]+"\]']").val();
+					query += '&value_'+tm+'[]='+$("input[name=\"delivery_days_value_"+tm+"\["+pref[tm][i]+"\]\"]").val();
 				}
 			}
 //20120710ysk end
@@ -1338,7 +1338,7 @@ jQuery(function($){
 					var tm = target_market[j];
 					for( var i = 0; i < pref[tm].length; i++ ) {
 						var p = pref[tm][i];
-						delivery_days[index][tm][p] = $("input[name='delivery_days_value_"+tm+"\["+p+"\]']").val();
+						delivery_days[index][tm][p] = $("input[name=\"delivery_days_value_"+tm+"\["+p+"\]\"]").val();
 					}
 				}
 //20120710ysk end
@@ -1395,7 +1395,7 @@ jQuery(function($){
 				//	$("input[name='delivery_days_value\[" + pref[country][i] + "\]']").val(days);
 				//}
 				for( var i = 0; i < pref[country].length; i++ ) {
-					$("input[name='delivery_days_value_"+country+"\["+pref[country][i]+"\]']").val(days);
+					$("input[name=\"delivery_days_value_"+country+"\["+pref[country][i]+"\]\"]").val(days);
 				}
 //20120710ysk end
 //20110317ysk end

@@ -3462,7 +3462,7 @@ class usc_e_shop
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
 					
-					do_action('usces_action_member_registered', $_POST['member']);
+					do_action('usces_action_member_registered', $user);
 				}
 				
 				return 'newcompletion';
@@ -3520,9 +3520,9 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
-					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
 					$user['ID'] = $member_id;
+					do_action('usces_action_member_registered', $user);
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
 					$_POST['loginpass'] = trim($_POST['customer']['password1']);
@@ -6248,12 +6248,15 @@ class usc_e_shop
 	}
 	
 	function get_condition(){
+//20120807ysk start 0000544
 		$order_conditions = array(
 		'display_mode' => $this->options['display_mode'],
 		'campaign_privilege' => $this->options['campaign_privilege'],
+		'campaign_category' => $this->options['campaign_category'],
 		'privilege_point' => $this->options['privilege_point'],
 		'privilege_discount' => $this->options['privilege_discount']);
 		return $order_conditions;
+//20120807ysk end
 	}
 	
 	function get_bestseller_ids( $days = "" ){
@@ -6376,7 +6379,10 @@ class usc_e_shop
 				$temp[$index] = $id;
 			}
 			ksort($temp);
-			$force = array($temp[0]);
+//20120820ysk start 0000546
+			//$force = array($temp[0]);
+			$force = array(array_shift($temp));
+//20120820ysk end
 			
 			if( empty($intersect) ){
 				return $force;

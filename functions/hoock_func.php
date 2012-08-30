@@ -172,6 +172,7 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ){
 			$data[$key] = $value;
 		}
+		usces_log('zeus construct_data : '.print_r($data,true), 'acting_transaction.log');
 
 		$acting_opts = $usces->options['acting_settings']['zeus'];
 
@@ -179,62 +180,65 @@ function usces_action_acting_transaction(){
 		$table_meta_name = $wpdb->prefix . "usces_order_meta";
 		$mquery = $wpdb->prepare("SELECT order_id, meta_value FROM $table_meta_name WHERE meta_key = %s", 'acting_'.$_REQUEST['tracking_no']);
 		$values = $wpdb->get_row( $mquery, ARRAY_A );
+		//usces_log('zeus construct_values1 : '.print_r($values,true), 'acting_transaction.log');
 		if( $values == NULL ){
 			
 //20110203ysk start
-		$res = $usces->order_processing();
-		if( 'error' == $res ){
-			usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
-			die('error1');
-		}else{
-			$order_id = $usces->cart->get_order_entry('ID');
-			$value = serialize($_GET);
-			$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
-			$res = $wpdb->query( $query );
-			$usces->cart->crear_cart();
-		}
+			$res = $usces->order_processing();
+			if( 'error' == $res ){
+				usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
+				die('error1');
+			}else{
+				$order_id = $usces->cart->get_order_entry('ID');
+				$value = serialize($_GET);
+				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
+				$res = $wpdb->query( $query );
+
+				$mquery = $wpdb->prepare("SELECT order_id, meta_value FROM $table_meta_name WHERE meta_key = %s", 'acting_'.$_REQUEST['tracking_no']);
+				$values = $wpdb->get_row( $mquery, ARRAY_A );
+				$usces->cart->crear_cart();
+			}
 //20110203ysk end
 
-		}else{
+		}
 		
-			$value = unserialize($values['meta_value']);
-			$status = ( '03' == $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
-			$order_id = $values['order_id'];
-			$add_point = true;//20120306ysk 0000324
-			if( 'receipted,' == $status ){
-				$mquery = $wpdb->prepare("
-				UPDATE $table_name SET order_status = 
-				CASE 
-					WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
-					WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
-					ELSE CONCAT('receipted,', order_status ) 
-				END 
-				WHERE ID = %d", $order_id);
-			}else{
-				$mquery = $wpdb->prepare("
-				UPDATE $table_name SET order_status = 
-				CASE 
-					WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
-					WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
-					ELSE CONCAT('noreceipt,', order_status ) 
-				END 
-				WHERE ID = %d", $order_id);
-				$add_point = false;//20120306ysk 0000324
-			}
-			$res = $wpdb->query( $mquery );
-			if(!$res){
-				usces_log('zeus bank error2 : '.print_r($data, true), 'acting_transaction.log');
-				die('error2');
-			}
-			
-			$value = serialize($_GET);
-			$mquery = $wpdb->prepare("UPDATE $table_meta_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", $value, $order_id, 'acting_'.$_REQUEST['tracking_no']);
-			$res = $wpdb->query( $mquery );
-			if(!$res){
-				usces_log('zeus bank error3 : '.print_r($data, true), 'acting_transaction.log');
-				die('error3');
-			}
+		//usces_log('zeus construct_values2 : '.print_r($values,true), 'acting_transaction.log');
+		$value = unserialize($values['meta_value']);
+		$status = ( '03' == $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
+		$order_id = $values['order_id'];
+		if( 'receipted,' == $status ){
+			$mquery = $wpdb->prepare("
+			UPDATE $table_name SET order_status = 
+			CASE 
+				WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+				WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+				ELSE CONCAT('receipted,', order_status ) 
+			END 
+			WHERE ID = %d", $order_id);
+		}else{
+			$mquery = $wpdb->prepare("
+			UPDATE $table_name SET order_status = 
+			CASE 
+				WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
+				WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
+				ELSE CONCAT('noreceipt,', order_status ) 
+			END 
+			WHERE ID = %d", $order_id);
 			usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
+		}
+		$res = $wpdb->query( $mquery );
+		if( false === $res ){
+			usces_log('zeus bank error2 : '.print_r($data, true), 'acting_transaction.log');
+			die('error2');
+		}
+
+		$upvalue = array( 'acting' => $_GET['acting'], 'order_no' => $_GET['order_no'], 'tracking_no' => $_GET['tracking_no'], 'status' => $_GET['status'], 'error_message' => $_GET['error_message'], 'money' => $_GET['money'] );
+		$mquery = $wpdb->prepare("UPDATE $table_meta_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", serialize($upvalue), $order_id, 'acting_'.$_REQUEST['tracking_no']);
+	//usces_log('mquery2 : '.print_r($mquery, true), 'acting_transaction.log');
+		$res = $wpdb->query( $mquery );
+		if(!$res){
+			usces_log('zeus bank error3 : '.print_r($data, true), 'acting_transaction.log');
+			die('error3');
 		}
 
 		usces_log('zeus bank transaction : '.$_REQUEST['tracking_no'], 'acting_transaction.log');

@@ -25,8 +25,9 @@ class Welcart_login extends WP_Widget {
 					  
 		<ul class="ucart_login_body ucart_widget_body"><li>
 		
+		<?php ob_start(); ?>
+
 		<div class="loginbox">
-		
 		<?php if ( ! usces_is_login() ) { ?>
 		<form name="loginwidget" id="loginformw" action="<?php echo USCES_MEMBER_URL; ?>" method="post">
 		<p>
@@ -47,8 +48,13 @@ class Welcart_login extends WP_Widget {
 		<?php echo usces_loginout(); ?><br />
 		<a href="<?php echo USCES_MEMBER_URL; ?>" class="login_widget_mem_info_a"><?php _e('Membership information','usces') ?></a>
 		<?php } ?>
-		</div>		
+		</div>
 		
+		<?php
+		$loginbox = ob_get_contents();
+		ob_end_clean();
+		echo apply_filters('usces_filter_login_widget', $loginbox, $args, $instance);
+		?>
 
 		</li></ul>
 				  

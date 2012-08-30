@@ -40,14 +40,23 @@
 				var essential = '0';
 			}
 			
-			var check = true;
-			$("input[name*='\[name\]']").each(function(){ if( name == $(this).val() ){ check = false; }});
-			if( !check ){
-				$("#itemopt_ajax-response").html('<div class="error"><p>同じ名前のオプションが存在します。</p></div>');
-				return false;
+			var mes = '';
+			if( '' == name ){
+				mes += '<p>オプション名を入力してください。</p>';
+			} else {
+				var check = true;
+				$("input[name*='\[name\]']").each(function(){ if( name == $(this).val() ){ check = false; }});
+				if( !check ){
+					mes += '<p>同じ名前のオプションが存在します。</p>';
+				}
+			}
+			if( '' == value && (0 == means || 1 == means || 3 == means || 4 == means) ){
+				mes += '<p>セレクト値を入力してください。</p>';
 			}else if( '' != value && (2 == means || 5 == means) ){
-				value = '';
-				$("#itemopt_ajax-response").html('<div class="error"><p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p></div>');
+				mes += '<p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p>';
+			}
+			if( '' != mes ){
+				$("#itemopt_ajax-response").html('<div class="error">' + mes + '</div>');
 				return false;
 			}
 			
@@ -87,21 +96,27 @@
 			}else{
 				var essential = '0';
 			}
-			if( '' == name || (2 > means && '' == value) ){
-				$mes = '<div class="error">';
-				if( '' == name )
-					$mes += '<p>オプション名の値を入力してください。</p>';
-				if( 2 > means && '' == value )
-					$mes += '<p>セレクト値を入力してください。</p>';
-				$mes += '</div>';
-				$("#itemopt_ajax-response").html($mes);
-				return false;
+
+			var mes = '';
+			if( '' == name ){
+				mes += '<p>オプション名を入力してください。</p>';
+			} else {
+				var check = true;
+				$("input[name*='\[name\]']").each(function(){ if( name == $(this).val() ){ check = false; }});
+				if( !check ){
+					mes += '<p>同じ名前のオプションが存在します。</p>';
+				}
+			}
+			if( '' == value && (0 == means || 1 == means || 3 == means || 4 == means) ){
+				mes += '<p>セレクト値を入力してください。</p>';
 			}else if( '' != value && (2 == means || 5 == means) ){
-				value = '';
-				$("#itemopt_ajax-response").html('<div class="error"><p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p></div>');
+				mes += '<p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p>';
+			}
+			if( '' != mes ){
+				$("#itemopt_ajax-response").html('<div class="error">' + mes + '</div>');
 				return false;
 			}
-				
+			
 			$("#newcomopt_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = itemOpt.settings;
@@ -148,18 +163,18 @@
 			}else{
 				var essential = '0';
 			}
-			if( '' == name || (2 > means && '' == value) ){
-				$mes = '<div class="error">';
-				if( '' == name )
-					$mes += '<p>オプション名を入力してください。</p>';
-				if( 2 > means && '' == value )
-					$mes += '<p>セレクト値を入力してください。</p>';
-				$mes += '</div>';
-				$("#itemopt_ajax-response").html($mes);
-				return false;
+
+			var mes = '';
+			if( '' == name ){
+				mes += '<p>オプション名を入力してください。</p>';
+			}
+			if( '' == value && (0 == means || 1 == means || 3 == means || 4 == means) ){
+				mes += '<p>セレクト値を入力してください。</p>';
 			}else if( '' != value && (2 == means || 5 == means) ){
-				value = '';
-				$("#itemopt_ajax-response").html('<div class="error"><p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p></div>');
+				mes += '<p>テキスト、テキストエリアの場合はセレクト値を空白にしてください。</p>';
+			}
+			if( '' != mes ){
+				$("#itemopt_ajax-response").html('<div class="error">' + mes + '</div>');
 				return false;
 			}
 
@@ -445,23 +460,25 @@
 			var skudisp = $("#newskudisp").val();
 			var skuunit = $("#newskuunit").val();
 			var skugptekiyo = $("#newskugptekiyo").val();
-			var mes = '';
 
+			var mes = '';
 			if( '' == name )
 				mes += '<p>SKUコードの値を入力してください。</p>';
 			if( '' == price )
 				mes += '<p>売価の値を入力してください。</p>';
-//			if ( ! checkCode( name ) )
+//			if( ! checkCode( name ) )
 //				mes += '<p>SKUコードは半角英数（-_を含む）で入力して下さい。</p>';
-			if ( ! checkNum( price ) )
+			if( ! checkNum( cprice ) )
+				mes += '<p>通常価は数値で入力して下さい。</p>';
+			if( ! checkNum( price ) )
 				mes += '<p>売価は数値で入力して下さい。</p>';
-			
+			if( ! checkNum( zaikonum ) )
+				mes += '<p>在庫数は数値で入力して下さい。</p>';
 			if( '' != mes ){
-				mes = '<div class="error">' + mes;
-				mes += '</div>';
-				$("#sku_ajax-response").html(mes);
+				$("#sku_ajax-response").html('<div class="error">' + mes + '</div>');
 				return false;
 			}
+			
 			if( undefined != $("#newskuadvance").val() ){
 				var skuadvance = '&newskuadvance=' + encodeURIComponent($("#newskuadvance").val());
 			}else{
@@ -532,14 +549,19 @@
 			var skugptekiyo = $(gs).val();
 			var sortnum = $(so).val();
 
-			if( '' == name || '' == price ){
-				$mes = '<div class="error">';
-				if( '' == name )
-					$mes += '<p>SKUコードの値を入力してください。</p>';
-				if( '' == price )
-					$mes += '<p>売価の値を入力してください。</p>';
-				$mes += '</div>';
-				$("#sku_ajax-response").html($mes);
+			var mes = '';
+			if( '' == name )
+				mes += '<p>SKUコードの値を入力してください。</p>';
+			if( '' == price )
+				mes += '<p>売価の値を入力してください。</p>';
+			if( ! checkNum( cprice ) )
+				mes += '<p>通常価は数値で入力して下さい。</p>';
+			if( ! checkNum( price ) )
+				mes += '<p>売価は数値で入力して下さい。</p>';
+			if( ! checkNum( zaikonum ) )
+				mes += '<p>在庫数は数値で入力して下さい。</p>';
+			if( '' != mes ){
+				$("#sku_ajax-response").html('<div class="error">' + mes + '</div>');
 				return false;
 			}
 
@@ -798,21 +820,18 @@
 			var settlement = $("#newsettlement").val();
 			var module = $("#newmodule").val();
 			
+			var mes = '';
 			if( '' == name ){
-				$mes = '<div class="error">';
-				$mes += '<p>支払方法名の値を入力してください。</p>';
-				$mes += '</div>';
-				$("#payment_ajax-response").html($mes);
-				return false;
+				mes += '<p>支払方法名の値を入力してください。</p>';
 			}
 			if( 'acting' == settlement ) {//代行業者決済のとき
 				if( '' == module ) {
-					$mes = '<div class="error">';
-					$mes += '<p>決済モジュールの値を入力してください。</p>';
-					$mes += '</div>';
-					$("#payment_ajax-response").html($mes);
-					return false;
+					mes += '<p>決済モジュールの値を入力してください。</p>';
 				}
+			}
+			if( '' != mes ){
+				$("#payment_ajax-response").html('<div class="error">' + mes + '</div>');
+				return false;
 			}
 			
 			$("#newpayment_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
@@ -856,22 +875,19 @@
 			var module = $(vm).val();
 			var sortid = $(so).val();
 			var s = payment.settings;
-				
+			
+			var mes = '';
 			if( '' == name ){
-				$mes = '<div class="error">';
-				$mes += '<p>支払方法名の値を入力してください。</p>';
-				$mes += '</div>';
-				$("#payment_ajax-response").html($mes);
-				return false;
+				mes += '<p>支払方法名の値を入力してください。</p>';
 			}
 			if( 'acting' == settlement ) {//代行業者決済のとき
 				if( '' == module ) {
-					$mes = '<div class="error">';
-					$mes += '<p>決済モジュールの値を入力してください。</p>';
-					$mes += '</div>';
-					$("#payment_ajax-response").html($mes);
-					return false;
+					mes += '<p>決済モジュールの値を入力してください。</p>';
 				}
+			}
+			if( '' != mes ){
+				$("#payment_ajax-response").html('<div class="error">' + mes + '</div>');
+				return false;
 			}
 			
 			$("#payment_loading-" + id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');

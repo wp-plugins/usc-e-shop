@@ -523,6 +523,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$acting_opts = $usces->options['acting_settings']['sbps'];
 			$usces->save_order_acting_data($rand);
 			$member = $usces->get_member();
+			$cust_code = ( empty($member['ID']) ) ? str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')) : $member['ID'];
 			if( 'public' == $acting_opts['ope'] ) {
 				$send_url = $acting_opts['send_url'];
 			} elseif( 'test' == $acting_opts['ope'] ) {
@@ -591,13 +592,13 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$pagecon_url = USCES_CART_URL;
 			$request_date = date('YmdHis', current_time('timestamp'));
 			$limit_second = "600";
-			$sps_hashcode = $pay_method.$acting_opts['merchant_id'].$acting_opts['service_id'].$member['ID'].$rand.$item_id.$item_name.$amount.$pay_type.$auto_charge_type.$service_type.$div_settle.$last_charge_month.$camp_type.$terminal_type.$success_url.$cancel_url.$error_url.$pagecon_url.$free_csv.$request_date.$limit_second.$acting_opts['hash_key'];
+			$sps_hashcode = $pay_method.$acting_opts['merchant_id'].$acting_opts['service_id'].$cust_code.$rand.$item_id.$item_name.$amount.$pay_type.$auto_charge_type.$service_type.$div_settle.$last_charge_month.$camp_type.$terminal_type.$success_url.$cancel_url.$error_url.$pagecon_url.$free_csv.$request_date.$limit_second.$acting_opts['hash_key'];
 			$sps_hashcode = sha1( $sps_hashcode );
 			$html .= '<form id="purchase_form" name="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="pay_method" value="'.$pay_method.'" />
 				<input type="hidden" name="merchant_id" value="'.$acting_opts['merchant_id'].'" />
 				<input type="hidden" name="service_id" value="'.$acting_opts['service_id'].'" />
-				<input type="hidden" name="cust_code" value="'.$member['ID'].'" />
+				<input type="hidden" name="cust_code" value="'.$cust_code.'" />
 				<input type="hidden" name="order_id" value="'.$rand.'" />
 				<input type="hidden" name="item_id" value="'.$item_id.'" />
 				<input type="hidden" name="pay_item_id" value="" />

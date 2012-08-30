@@ -2829,7 +2829,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
 			//20100818ysk end
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name3']) . '</td></tr>';
+			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name1']) . '</td></tr>';
 			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
 			//20100818ysk end
