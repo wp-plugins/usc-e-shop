@@ -3462,7 +3462,7 @@ class usc_e_shop
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
 					
-					do_action('usces_action_member_registered', $_POST['member']);
+					do_action('usces_action_member_registered', $user);
 				}
 				
 				return 'newcompletion';
@@ -3520,9 +3520,9 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
-					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
 					$user['ID'] = $member_id;
+					do_action('usces_action_member_registered', $user);
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
 					$_POST['loginpass'] = trim($_POST['customer']['password1']);

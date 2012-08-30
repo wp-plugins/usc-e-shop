@@ -23,7 +23,11 @@ $items_num = $this->get_items_num();
 <?php endif; ?>
 </div>
 
+<?php if( !(defined('USCES_ADMIN_INFO') && !USCES_ADMIN_INFO) ) : ?>
 <div id= "wc_information" class="chui"></div>
+<?php endif; ?>
+<?php do_action( 'usces_action_admin_top_sidebar' ); ?>
+
 </div><!--usces_admin_right-->
 
 <div class="usces_admin_left">
