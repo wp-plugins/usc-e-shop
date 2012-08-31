@@ -230,39 +230,42 @@ function addComma(str)
 	</tr>
 	<?php
 	for($i=0; $i<count($cart); $i++) { 
-	$cart_row = $cart[$i];
-	$post_id = $cart_row['post_id'];
-	$sku = urldecode($cart_row['sku']);
-	$quantity = $cart_row['quantity'];
-	$options = $cart_row['options'];
-	$itemCode = $this->getItemCode($post_id);
-	$itemName = $this->getItemName($post_id);
-	$cartItemName = $this->getCartItemName($post_id, $sku);
-	//$skuPrice = $this->getItemPrice($post_id, $sku);
-	$skuPrice = $cart_row['price'];
-	$pictid = (int)$this->get_mainpictid($itemCode);
-	$optstr =  '';
-	foreach((array)$options as $key => $value){
+		$cart_row = $cart[$i];
+		$post_id = $cart_row['post_id'];
+		$sku = urldecode($cart_row['sku']);
+		$quantity = $cart_row['quantity'];
+		$options = $cart_row['options'];
+		$advance = $this->cart->wc_serialize($cart_row['advance']);
+		$itemCode = $this->getItemCode($post_id);
+		$itemName = $this->getItemName($post_id);
+		$cartItemName = $this->getCartItemName($post_id, $sku);
+		//$skuPrice = $this->getItemPrice($post_id, $sku);
+		$skuPrice = $cart_row['price'];
+		$pictid = (int)$this->get_mainpictid($itemCode);
+		$optstr =  '';
+		foreach((array)$options as $key => $value){
 //20110629ysk start 0000190
-		//if( !empty($key) )
-		//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-		if( !empty($key) ) {
-			$key = urldecode($key);
-			if(is_array($value)) {
-				$c = '';
-				$optstr .= esc_html($key) . ' : '; 
-				foreach($value as $v) {
-					$optstr .= $c.nl2br(esc_html(urldecode($v)));
-					$c = ', ';
+			//if( !empty($key) )
+			//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+			if( !empty($key) ) {
+				$key = urldecode($key);
+				if(is_array($value)) {
+					$c = '';
+					$optstr .= esc_html($key) . ' : '; 
+					foreach($value as $v) {
+						$optstr .= $c.nl2br(esc_html(urldecode($v)));
+						$c = ', ';
+					}
+					$optstr .= "<br />\n"; 
+				} else {
+					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 				}
-				$optstr .= "<br />\n"; 
-			} else {
-				$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			}
-		}
 //20110629ysk end
-	}
-	
+		}
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'quantity', 'options', 'advance', 
+						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'pictid');
+		$optstr = apply_filters( 'usces_filter_member_edit_form_row', $optstr, $cart, $materials );
 	?>
 	<tr>
 	<td><?php echo $i + 1; ?></td>

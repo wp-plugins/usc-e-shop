@@ -114,7 +114,7 @@ if($order_action == 'new'){
 	 );
 	$condition = $this->get_condition();
 	$cart = array();
-	 
+
 
 }else{
 
@@ -445,23 +445,6 @@ jQuery(function($){
 			$("#total_full").html(addComma(total_full+''));
 			$("#total_full_top").html(addComma(total_full+''));
 		},
-//20120306ysk start 0000324
-		getPoint : function( index, post_id, sku ) {
-			var price = ( 0 > index ) ? 0 : $("input[name='skuPrice["+index+"]["+post_id+"]["+sku+"]']").val();
-			var quantity = ( 0 > index ) ? 0 : $("input[name='quant["+index+"]["+post_id+"]["+sku+"]']").val();
-			var s = orderfunc.settings;
-			s.url = uscesL10n.requestFile;
-			s.data = "action=order_item_ajax&mode=getpoint&member_id=<?php echo (isset($data['mem_id']) ? $data['mem_id'] : ''); ?>&display_mode=<?php echo (isset($condition['display_mode']) ? $condition['display_mode'] : ''); ?>&order_id=<?php echo $order_id; ?>&index="+index+"&price="+price+"&quantity="+quantity;
-			s.success = function(data, dataType){
-				$("#order_getpoint").val(data);
-			};
-			s.error = function(data, dataType){
-				//alert( 'ERROR' );
-			};
-			$.ajax( s );
-			return false;
-		},
-//20120306ysk end		
 		make_delivery_time : function(selected) {
 			var option = '';
 			if(selected == -1 || delivery_time[selected] == undefined || 0 == delivery_time[selected].length){
@@ -501,6 +484,45 @@ jQuery(function($){
 				}
 			};
 			s.error = function(data, dataType){
+				alert( 'ERROR' );
+			};
+			$.ajax( s );
+			return false;
+		},
+		recalculation : function() {
+			var p = $("input[name*='skuPrice']");
+			var q = $("input[name*='quant']");
+			var post_ids = '';
+			var skus = '';
+			var prices = '';
+			var quants = '';
+			for( var i = 0; i < p.length; i++) {
+				name = $(p[i]).attr("name");
+				strs = name.split('[');
+				post_ids += strs[2].replace(/[\]]+$/g, '')+'_';
+				skus += strs[3].replace(/[\]]+$/g, '')+'_';
+				prices += parseFloat($(p[i]).val())+'_';
+				quants += $(q[i]).val()+'_';
+			}
+			var order_usedpoint = $("#order_usedpoint").val()*1;
+			var order_shipping_charge = parseFloat($("#order_shipping_charge").val());
+			var order_cod_fee = parseFloat($("#order_cod_fee").val());
+			var s = orderfunc.settings;
+			s.url = uscesL10n.requestFile;
+			s.data = "action=order_item_ajax&mode=recalculation&order_id=<?php echo $order_id; ?>&mem_id="+$('#member_id_label').html()+"&post_ids="+post_ids+"&skus="+skus+"&prices="+prices+"&quants="+quants+"&use_point="+order_usedpoint+"&shipping_charge="+order_shipping_charge+"&cod_fee="+order_cod_fee;
+			s.success = function(data, dataType) {
+				var values = data.split('#usces#');
+				if( 'ok' == values[0]) {
+					$("#order_discount").val(values[1]);
+					$("#order_tax").val(values[2]);
+					$("#order_getpoint").val(values[3]);
+					$("#total_full").html(addComma(values[4]+''));
+					$("#total_full_top").html(addComma(values[4]+''));
+				} else {
+					alert( 'ERROR' );
+				}
+			};
+			s.error = function(data, dataType) {
 				alert( 'ERROR' );
 			};
 			$.ajax( s );
@@ -819,6 +841,8 @@ jQuery(document).ready(function($){
 		$("input[name='delivery[fax]']").val($("input[name='customer[fax]']").val());
 	});
 <?php endif;//20120319ysk end ?>
+
+	$("#recalc").click(function(){ orderfunc.recalculation(); });
 });
 </script>
 <div class="wrap">
@@ -1114,6 +1138,9 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 //20110629ysk end
 			}
 		}
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
+						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'stock', 'red', 'pictid');
+		$optstr = apply_filters( 'usces_filter_order_edit_form_row', $optstr, $cart, $materials );
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
@@ -1178,7 +1205,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<tr>
 			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th id="total_full" class="aright">&nbsp;</th>
-			<th colspan="2">&nbsp;</th>
+			<th colspan="2"><input name="recalc" id="recalc" class="addCartButton" type="button" value="<?php _e('再計算', 'usces'); ?>" /></th>
 		</tr>
 		</tfoot>
 </table>

@@ -121,7 +121,8 @@ function usces_pdf_out(&$pdf, $data){
 
 		//---------------------------------------------------------
 		$post_id = $cart_row['post_id'];
-		$cartItemName = $usces->getCartItemName($post_id, urldecode($cart_row['sku']));
+		$sku = urldecode($cart_row['sku']);
+		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
 			$optstr = '';
@@ -147,7 +148,7 @@ function usces_pdf_out(&$pdf, $data){
 			}
 			$optstr = apply_filters( 'usces_filter_option_pdf', $optstr, $cart_row['options']);
 		}
-		$optstr = apply_filters( 'usces_filter_all_option_pdf', $optstr, $cart_row['options']);
+		$optstr = apply_filters( 'usces_filter_all_option_pdf', $optstr, $cart_row['options'], $post_id, $sku, $cart_row['advance']);
 
 		$line_y[$index] = $next_y;
 
@@ -163,7 +164,7 @@ function usces_pdf_out(&$pdf, $data){
 			$pdf->SetXY($x+6.0, $pdf->GetY()+$linetop);
 			$pdf->MultiCell(81.6, $lineheight-0.2, usces_conv_euc($optstr), $border, 'L');
 		}
-					
+
 		$next_y = $pdf->GetY()+2;
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
@@ -232,14 +233,19 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('M j, Y', 'usces'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : ' . apply_filters('usces_filter_pdf_payment_name', $data->order['payment_name'], $data);
 			$sign_image = apply_filters('usces_filter_pdf_invoice_sign', NULL);
-			if( empty($data->order['delidue_date']) ){
-				$effective_date = ' ';
+//20120801ysk 0000510 start
+			//if( empty($data->order['delidue_date']) ){
+			//	$effective_date = ' ';
+			if( !empty($data->order['delidue_date']) && '#none#' != $data->order['delidue_date'] ){
+				$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['delidue_date']));
 			}else{
 				if( empty($data->order['modified']) )
 					$effective_date = date(__('M j, Y', 'usces'), current_time('timestamp', 0));
 				else
 					$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['modified']));
 			}
+			$effective_date = apply_filters('usces_filter_pdf_effective_date', $effective_date);
+//20120801ysk end
 			break;
 		
 		case 'receipt':

@@ -861,7 +861,8 @@ function usces_reg_orderdata( $results = array() ) {
 		return 0;
 	}
 	
-	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
+	//$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
+	$charging_type = $usces->getItemChargingType($cart[0]['post_id'], $cart);
 
 	$item_total_price = $usces->get_total_price( $cart );
 	$member = $usces->get_member();
@@ -870,7 +871,8 @@ function usces_reg_orderdata( $results = array() ) {
 	$member_table_name = $wpdb->prefix . "usces_member";
 	$set = $usces->getPayments( $entry['order']['payment_name'] );
 	$status = '';
-	if( 'continue' == $charging_type ){
+	//if( 'continue' == $charging_type ){
+	if( 'continue' == $charging_type || 'regular' == $charging_type ){
 		//$status = 'continuation';
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
@@ -878,7 +880,7 @@ function usces_reg_orderdata( $results = array() ) {
 		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' ) ? 'noreceipt' : '';
 //20120413ysk start
 		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' ) ? 'noreceipt' : '';
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' ) ? 'noreceipt' : '';
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' ) ? 'noreceipt' : '';
 //20120413ysk end
 //20101018ysk end
 		$order_modified = NULL;
@@ -890,47 +892,6 @@ function usces_reg_orderdata( $results = array() ) {
 	$status = apply_filters('usces_filter_reg_orderdata_status', $status);
 	
 //20101208ysk start
-/*
-	$query = $wpdb->prepare(
-				"INSERT INTO $order_table_name (
-					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
-					`order_zip`, `order_pref`, `order_address1`, `order_address2`, `order_address3`, 
-					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
-					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
-					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
-					$member['ID'], 
-					$entry['customer']['mailaddress1'], 
-					$entry['customer']['name1'], 
-					$entry['customer']['name2'], 
-					$entry['customer']['name3'], 
-					$entry['customer']['name4'], 
-					$entry['customer']['zipcode'], 
-					$entry['customer']['pref'], 
-					$entry['customer']['address1'], 
-					$entry['customer']['address2'], 
-					$entry['customer']['address3'], 
-					$entry['customer']['tel'], 
-					$entry['customer']['fax'], 
-					serialize($entry['delivery']), 
-					serialize($cart), 
-					$entry['order']['note'], 
-					$entry['order']['delivery_method'], 
-					$entry['order']['delivery_time'], 
-					$entry['order']['payment_name'], 
-					serialize($entry['condition']), 
-					$item_total_price, 
-					$entry['order']['getpoint'], 
-					$entry['order']['usedpoint'], 
-					$entry['order']['discount'], 
-					$entry['order']['shipping_charge'], 
-					$entry['order']['cod_fee'], 
-					$entry['order']['tax'], 
-					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
-					$order_modified, 
-					$status
-				);
-*/
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
 					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
@@ -1010,9 +971,10 @@ function usces_reg_orderdata( $results = array() ) {
 			foreach ( $entry['reserve'] as $key => $value ) {
 				if ( is_array($value) )
 					 $value = serialize($value);
-				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
-											VALUES (%d, %s, %s)", $order_id, $key, $value);
-				$wpdb->query( $mquery );
+				//$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
+				//							VALUES (%d, %s, %s)", $order_id, $key, $value);
+				//$wpdb->query( $mquery );
+				$usces->set_order_meta_value($key, $value, $order_id);
 			}
 		}
 	
@@ -1049,24 +1011,30 @@ function usces_reg_orderdata( $results = array() ) {
 //20100818ysk end
 
 		if ( isset($_REQUEST['X-S_TORIHIKI_NO']) ) {
-			$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
-										VALUES (%d, %s, %s)", $order_id, 'settlement_id', $_REQUEST['X-S_TORIHIKI_NO']);
-			$wpdb->query( $mquery );
+			//$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
+			//							VALUES (%d, %s, %s)", $order_id, 'settlement_id', $_REQUEST['X-S_TORIHIKI_NO']);
+			//$wpdb->query( $mquery );
+			$usces->set_order_meta_value('settlement_id', $_REQUEST['X-S_TORIHIKI_NO'], $order_id);
 //20120511ysk start
 			//$limitofcard = substr($_REQUEST['X-EXPIRE'], 0, 2) . '/' . substr($_REQUEST['X-EXPIRE'], 2, 2);
 			//$usces->set_member_meta_value('partofcard', $_REQUEST['X-PARTOFCARD']);
 			//$usces->set_member_meta_value('limitofcard', $limitofcard);
 //20120511ysk end
 			if ( isset($_REQUEST['X-AC_MEMBERID']) ) {
-				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
-											VALUES (%d, %s, %s)", $order_id, $_REQUEST['X-AC_MEMBERID'], 'continuation');
-				$wpdb->query( $mquery );
-				$usces->set_member_meta_value('continue_memberid', $_REQUEST['X-AC_MEMBERID']);
+				//$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
+				//							VALUES (%d, %s, %s)", $order_id, $_REQUEST['X-AC_MEMBERID'], 'continuation');
+				//$wpdb->query( $mquery );
+				$usces->set_order_meta_value($_REQUEST['X-AC_MEMBERID'], 'continuation', $order_id);
+				//$usces->set_member_meta_value('continue_memberid', $_REQUEST['X-AC_MEMBERID']);
+				$usces->set_member_meta_value('continue_memberid_'.$order_id, $_REQUEST['X-AC_MEMBERID']);
 			}
 		}
 	
 //20101018ysk start
-		if(isset($_REQUEST['acting']) && ('jpayment_conv' == $_REQUEST['acting'] || 'jpayment_bank' == $_REQUEST['acting'])) {
+//20120823ysk start 0000547
+		//if(isset($_REQUEST['acting']) && ('jpayment_conv' == $_REQUEST['acting'] || 'jpayment_bank' == $_REQUEST['acting'])) {
+		if(isset($_REQUEST['acting']) && ('jpayment_card' == $_REQUEST['acting'] || 'jpayment_conv' == $_REQUEST['acting'] || 'jpayment_bank' == $_REQUEST['acting'])) {
+//20120823ysk end
 			$usces->set_order_meta_value('settlement_id', $_GET['cod'], $order_id);
 			foreach($_GET as $key => $value) {
 				if( 'purchase_jpayment' != $key)
@@ -1079,12 +1047,12 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);
 		}
 //20120413ysk start
-		if( isset($_REQUEST['acting']) && ('sbps_conv' == $_REQUEST['acting']) ) {
+		if( isset($_REQUEST['acting']) && ('sbps_conv' == $_REQUEST['acting'] || 'sbps_payeasy' == $_REQUEST['acting']) ) {
 			$usces->set_order_meta_value('tracking_id', $_POST['res_tracking_id'], $order_id);
 			foreach( $_POST as $key => $value ){
 				$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 			}
-			$usces->set_order_meta_value('acting_sbps_conv', serialize($data), $order_id);
+			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 		}
 //20120413ysk end
 
@@ -1134,47 +1102,6 @@ function usces_new_orderdata() {
 	$order_conditions = $usces->get_condition();
 
 //20101208ysk start
-/*
-	$query = $wpdb->prepare(
-				"INSERT INTO $order_table_name (
-					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
-					`order_zip`, `order_pref`, `order_address1`, `order_address2`, `order_address3`, 
-					`order_tel`, `order_fax`, `order_delivery`, `order_cart`, `order_note`, `order_delivery_method`, `order_delivery_time`, 
-					`order_payment_name`, `order_condition`, `order_item_total_price`, `order_getpoint`, `order_usedpoint`, `order_discount`, 
-					`order_shipping_charge`, `order_cod_fee`, `order_tax`, `order_date`, `order_modified`, `order_status`) 
-				VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s)", 
-					$member['ID'], 
-					$_POST['customer']['mailaddress'], 
-					$_POST['customer']['name1'], 
-					$_POST['customer']['name2'], 
-					$_POST['customer']['name3'], 
-					$_POST['customer']['name4'], 
-					$_POST['customer']['zipcode'], 
-					$_POST['customer']['pref'], 
-					$_POST['customer']['address1'], 
-					$_POST['customer']['address2'], 
-					$_POST['customer']['address3'], 
-					$_POST['customer']['tel'], 
-					$_POST['customer']['fax'], 
-					serialize($_POST['delivery']), 
-					serialize($cart), 
-					$_POST['offer']['note'], 
-					$_POST['offer']['delivery_method'], 
-					$_POST['offer']['delivery_time'], 
-					$_POST['offer']['payment_name'], 
-					serialize($order_conditions), 
-					$item_total_price, 
-					$_POST['offer']['getpoint'], 
-					$_POST['offer']['usedpoint'], 
-					$_POST['offer']['discount'], 
-					$_POST['offer']['shipping_charge'], 
-					$_POST['offer']['cod_fee'], 
-					$_POST['offer']['tax'], 
-					get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 
-					null, 
-					$status
-				);
-*/
 	$query = $wpdb->prepare(
 				"INSERT INTO $order_table_name (
 					`mem_id`, `order_email`, `order_name1`, `order_name2`, `order_name3`, `order_name4`, 
@@ -1410,7 +1337,10 @@ function usces_delete_orderdata() {
 	$order_table = $wpdb->prefix . "usces_order";
 	$order_meta_table = $wpdb->prefix . "usces_order_meta";
 	$ID = $_REQUEST['order_id'];
-	
+
+	$del = usces_delete_order_check( $ID );
+	if( $del ) {
+
 	$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $ID);
 	$order_data = $wpdb->get_results( $query );
 //20120306ysk start 0000324
@@ -1440,7 +1370,11 @@ function usces_delete_orderdata() {
 		if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
 //20120306ysk end
 	}
-	
+
+	} else {
+		$res = true;
+	}
+
 	return $res;
 }
 
@@ -1540,48 +1474,6 @@ function usces_update_orderdata() {
 	
 //$wpdb->show_errors();
 //20101208ysk start
-/*
-	$query = $wpdb->prepare(
-				"UPDATE $order_table_name SET 
-					`order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
-					`order_zip`=%s, `order_pref`=%s, `order_address1`=%s, `order_address2`=%s, `order_address3`=%s, 
-					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
-					`order_delivery_method`=%d, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%d, `order_getpoint`=%d, `order_usedpoint`=%d, 
-					`order_discount`=%d, `order_shipping_charge`=%d, `order_cod_fee`=%d, `order_tax`=%d, `order_modified`=%s, 
-					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
-				WHERE ID = %d", 
-					$_POST['customer']['mailaddress'], 
-					$_POST['customer']['name1'], 
-					$_POST['customer']['name2'], 
-					$_POST['customer']['name3'], 
-					$_POST['customer']['name4'], 
-					$_POST['customer']['zipcode'], 
-					$_POST['customer']['pref'], 
-					$_POST['customer']['address1'], 
-					$_POST['customer']['address2'], 
-					$_POST['customer']['address3'], 
-					$_POST['customer']['tel'], 
-					$_POST['customer']['fax'], 
-					serialize($_POST['delivery']), 
-					serialize($cart), 
-					$_POST['offer']['note'], 
-					$_POST['offer']['delivery_method'], 
-					$_POST['offer']['delivery_time'], 
-					$_POST['offer']['payment_name'], 
-					$item_total_price, 
-					$_POST['offer']['getpoint'], 
-					$_POST['offer']['usedpoint'], 
-					$_POST['offer']['discount'], 
-					$_POST['offer']['shipping_charge'], 
-					$_POST['offer']['cod_fee'], 
-					$_POST['offer']['tax'], 
-					$order_modified, 
-					$status,
-					$_POST['offer']['delidue_date'], 
-					$ordercheck,
-					$ID
-				);
-*/
 	$query = $wpdb->prepare(
 				"UPDATE $order_table_name SET 
 					`mem_id`=%d, `order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
@@ -1770,206 +1662,6 @@ function usces_export_xml() {
 
 <?php
 }
-
-//function usces_import_xml() {
-//	global $usces, $wpdb;
-//	
-//	if($_FILES['data']['error'] != 0) return false;
-//	if (!is_uploaded_file($_FILES['data']['tmp_name'])) return false;
-//	if(!ereg("^usces.+\.xml$",$_FILES['data']['name'])) return false;
-//	
-//	$fp = fopen ($_FILES['data']['tmp_name'], "r");
-//	$xml = '';
-//	while (!feof($fp)) {
-//		$xml .= fgets($fp, 1024);
-//	}
-//	fclose ($fp);
-//	
-//	$parts = explode('<usces>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces>', $parts[1]);
-//		$opt_usces = $parts[0];
-//		$usces->options = unserialize($opt_usces);
-//		update_option('usces', $usces->options);	
-//	}
-//	///////////////////////////////////////////////////////////////
-//
-//	$parts = explode('<usces_management_status>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces_management_status>', $parts[1]);
-//		$opt = $parts[0];
-//		$option = unserialize($opt);
-//		update_option('usces_management_status', $option);	
-//	}
-//
-//	$parts = explode('<usces_customer_status>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces_customer_status>', $parts[1]);
-//		$opt = $parts[0];
-//		$option = unserialize($opt);
-//		update_option('usces_customer_status', $option);	
-//	}
-////20110331ysk start
-///*	$parts = explode('<usces_pref>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces_pref>', $parts[1]);
-//		$opt = $parts[0];
-//		$option = unserialize($opt);
-//		update_option('usces_pref', $option);	
-//	}*/
-////20110331ysk start
-//	///////////////////////////////////////////////////////////////
-//	
-//	$parts = explode('<usces_zaiko_status>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces_zaiko_status>', $parts[1]);
-//		$opt = $parts[0];
-//		$usces->zaiko_status = unserialize($opt);
-//		update_option('usces_zaiko_status', $usces->zaiko_status);	
-//	}
-//
-//	$parts = explode('<usces_payment_structure>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces_payment_structure>', $parts[1]);
-//		$opt = $parts[0];
-//		$usces->payment_structure = unserialize($opt);
-//		update_option('usces_payment_structure', $usces->payment_structure);	
-//	}
-//
-//	$parts = explode('<usces_display_mode>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces_display_mode>', $parts[1]);
-//		$opt = $parts[0];
-//		$usces->display_mode = unserialize($opt);
-//		update_option('usces_display_mode', $usces->display_mode);	
-//	}
-//
-//	$parts = explode('<usces_shipping_rule>', $xml);
-//	if(count($parts) > 1){
-//		$parts = explode('</usces_shipping_rule>', $parts[1]);
-//		$opt = $parts[0];
-//		$usces->shipping_rule = unserialize($opt);
-//		update_option('usces_shipping_rule', $usces->shipping_rule);	
-//	}
-//
-//	//category item post
-//	$slug = urlencode(__('Items','usces'));
-//	$query = $wpdb->prepare("SELECT tr.object_id FROM $wpdb->terms AS t 
-//								INNER JOIN $wpdb->term_relationships AS tr ON tr.term_taxonomy_id = t.term_id 
-//								WHERE t.slug = %s", $slug);
-//	$term_id = $wpdb->get_col( $query );
-//	$id_str = implode(',', $term_id);
-//
-//	$query = "UPDATE $wpdb->posts SET post_mime_type = 'item' WHERE ID IN ({$id_str}) AND post_type = 'post'";
-//	$wpdb->query( $query );
-//
-//	$query = "SELECT ID FROM $wpdb->posts WHERE post_mime_type = 'item'";
-//	$item_id = $wpdb->get_col( $query );
-//
-//	foreach ( $item_id as $id ) {
-//	
-//		$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
-//									WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", $id);
-//		$metas = $wpdb->get_results( $query, ARRAY_A );
-//
-//		if(!empty($metas)) {
-//			foreach ( $metas as $meta ) {
-//				$new_valu = unserialize($meta['meta_value']);
-//				$meta_id = $meta['meta_id'];
-//				$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d AND SUBSTRING(meta_value,1,2) = 's:'", 
-//										$new_valu, $meta_id);
-//				$wpdb->query( $query );
-//			
-//			}
-//		}
-//	}
-//
-//	$query = $wpdb->prepare("SELECT meta_id, meta_value FROM $wpdb->postmeta 
-//								WHERE (SUBSTRING(meta_key,1,6) = '_iopt_' OR SUBSTRING(meta_key,1,6) = '_isku_') AND post_id = %d", USCES_CART_NUMBER);
-//	$metas = $wpdb->get_results( $query, ARRAY_A );
-//
-//	if(!empty($metas)) {
-//		foreach ( $metas as $meta ) {
-//			$new_valu = unserialize($meta['meta_value']);
-//			$meta_id = $meta['meta_id'];
-//			$query = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d AND SUBSTRING(meta_value,1,2) = 's:'", 
-//									$new_valu, $meta_id);
-//			$wpdb->query( $query );
-//		
-//		}
-//	}
-//		
-//	$query = "SELECT name, term_id FROM $wpdb->terms WHERE slug = 'item'";
-//	$item_parent = $wpdb->get_row( $query, ARRAY_A );
-//	if(empty($item_parent) && $item_parent !== 0) return false;
-//
-//	$query = $wpdb->prepare("SELECT term_id FROM $wpdb->terms WHERE name = %s AND term_id <> %d", $item_parent['name'], $item_parent['term_id']);
-//	$mis_id = $wpdb->get_var( $query );
-//	if($mis_id > 0){
-//		$query = $wpdb->prepare("SELECT object_id FROM $wpdb->term_relationships AS tr 
-//						INNER JOIN $wpdb->posts AS p ON p.ID = tr.object_id
-//						WHERE tr.term_taxonomy_id = %d AND p.post_mime_type = 'item'", $mis_id);
-//		$post_ids = $wpdb->get_col( $query );
-//		if(count($post_ids) > 0){
-//			foreach ( $post_ids as $id ) {
-//				$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
-//							WHERE object_id = %d AND term_taxonomy_id = %d", $id, $item_parent['term_id']);
-//				$ct = $wpdb->get_var( $query );
-//				if($ct > 0) continue;
-//				
-//				$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
-//							(object_id, term_taxonomy_id, term_order) VALUES (%d, %d, %d)", $id, $item_parent['term_id'], 0);
-//				$wpdb->query( $query );
-//			}
-//			$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d WHERE term_id = %d", 
-//										count($post_ids), $item_parent['term_id']);
-//			$wpdb->query( $query );
-//		}
-//	}
-//	
-//	$query = $wpdb->prepare("SELECT term_id FROM $wpdb->term_taxonomy WHERE parent = %d", $item_parent['term_id']);
-//	$item_childlen = $wpdb->get_col( $query );
-//	if(empty($item_childlen)) return false;
-//
-//	foreach ( $item_childlen as $child_id ) {
-//		$query = $wpdb->prepare("SELECT name FROM $wpdb->terms WHERE term_id = %d", $child_id);
-//		$child_name = $wpdb->get_var( $query );
-//	
-//		$query = $wpdb->prepare("SELECT term_id FROM $wpdb->terms WHERE name = %s AND term_id <> %d", $child_name, $child_id);
-//		$mis_id = $wpdb->get_var( $query );
-//		if($mis_id > 0){
-//			$query = $wpdb->prepare("SELECT object_id FROM $wpdb->term_relationships AS tr 
-//							INNER JOIN $wpdb->posts AS p ON p.ID = tr.object_id
-//							WHERE tr.term_taxonomy_id = %d AND p.post_mime_type = 'item'", $mis_id);
-//			$post_ids = $wpdb->get_col( $query );
-//			if(count($post_ids) > 0){
-//				foreach ( $post_ids as $id ) {
-//					$query = $wpdb->prepare("SELECT count(object_id) AS ct FROM $wpdb->term_relationships 
-//								WHERE object_id = %d AND term_taxonomy_id = %d", $id, $child_id);
-//					$ct = $wpdb->get_var( $query );
-//					if($ct > 0) continue;
-//					
-//					$query = $wpdb->prepare("INSERT INTO $wpdb->term_relationships 
-//								(object_id, term_taxonomy_id, term_order) VALUES (%d, %d, %d)", $id, $child_id, 0);
-//					$wpdb->query( $query );
-//				}
-//				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d WHERE term_id = %d", 
-//											count($post_ids), $child_id);
-//				$wpdb->query( $query );
-//			}
-//			
-//		} else {
-//			$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = 0 WHERE term_id = %d", $child_id);
-//			$wpdb->query( $query );
-//		}
-//	
-//	}
-//	
-//
-//	$usces->action_message = count($post_ids);
-//	return false;
-//	
-//}
 
 function usces_all_change_zaiko(&$obj) {
 	global $wpdb, $usces;
@@ -2206,6 +1898,8 @@ function usces_all_delete_order_data(&$obj){
 	$ids = $_POST['listcheck'];
 	$status = true;
 	foreach ( (array)$ids as $id ):
+		$del = usces_delete_order_check( $id );
+		if( $del === false ) continue;
 //20120306ysk start 0000324
 		$restore_point = false;
 		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] ) {
@@ -2387,6 +2081,7 @@ function usces_check_acting_return() {
 //20120413ysk start
 		case 'sbps_card':
 		case 'sbps_conv':
+		case 'sbps_payeasy':
 		case 'sbps_wallet':
 		case 'sbps_mobile':
 			if( isset($_REQUEST['cancel']) ) {
@@ -2405,6 +2100,19 @@ function usces_check_acting_return() {
 			}
 			break;
 //20120413ysk end
+//20120618ysk start
+		case 'telecom_card':
+			$results = $_GET;
+			if( $_REQUEST['result'] ){
+				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
+				$results[0] = 1;
+			}else{
+				usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+				$results[0] = 0;
+			}
+			$results['reg_order'] = true;
+			break;
+//20120618ysk end
 
 		default:
 			$results = $_GET;
@@ -2469,11 +2177,17 @@ function usces_check_acting_return_duplicate( $results = array() ) {
 //20120413ysk start
 	case 'sbps_card':
 	case 'sbps_conv':
+	case 'sbps_payeasy':
 	case 'sbps_wallet':
 	case 'sbps_mobile':
 		$trans_id = isset($_REQUEST['order_id']) ? $_REQUEST['order_id'] : '';
 		break;
 //20120413ysk end
+//20120618ysk start
+	case 'telecom_card':
+		$trans_id = isset($_REQUEST['sendid']) ? $_REQUEST['sendid'] : '';
+		break;
+//20120618ysk end
 	default:
 		$trans_id = '';
 	}
@@ -3500,76 +3214,6 @@ function usces_post_reg_orderdata($order_id, $results){
 			case 'paypal_ec':
 				$trans_id = isset($_REQUEST['token']) ? $_REQUEST['token'] : '';
 //20110621ysk start 0000184
-/*
-//20110412ysk start
-				$cart = $usces->cart->get_cart();
-				$post_id = $cart[0]['post_id'];
-				$charging_type = $usces->getItemChargingType($post_id);
-				if( 'continue' != $charging_type) {
-					//通常購入
-//20110412ysk end
-					//Format the other parameters that were stored in the session from the previous calls
-					$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);
-					$token = urlencode($_REQUEST['token']);
-					$paymentType = urlencode("Sale");
-					$currencyCodeType = urlencode($usces->get_currency_code());
-					$payerID = urlencode($_REQUEST['PayerID']);
-					$serverName = urlencode($_SERVER['SERVER_NAME']);
-
-					$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
-
-					$usces->paypal->setMethod('DoExpressCheckoutPayment');
-					$usces->paypal->setData($nvpstr);
-					$res = $usces->paypal->doExpressCheckout();
-					$resArray = $usces->paypal->getResponse();
-					$ack = strtoupper($resArray["ACK"]);
-					if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-						$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
-						$usces->set_order_meta_value('settlement_id', $transactionId, $order_id);
-
-					} else {
-						//Display a user friendly Error on the page using any of the following error information returned by PayPal
-						$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
-						$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
-						$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
-						$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
-						usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
-					}
-//20110412ysk start
-				} else {
-					//定期支払い
-					$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
-					$token = urlencode($_REQUEST['token']);
-					$currencyCodeType = urlencode($usces->get_currency_code());
-					$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
-					$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
-					$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
-					$billingFreq = urlencode($usces->getItemFrequency($post_id));
-					//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
-					$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
-
-					$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
-
-					$usces->paypal->setMethod('CreateRecurringPaymentsProfile');
-					$usces->paypal->setData($nvpstr);
-					$res = $usces->paypal->doExpressCheckout();
-					$resArray = $usces->paypal->getResponse();
-					$ack = strtoupper($resArray["ACK"]);
-					if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-						$profileid = $resArray["PROFILEID"];
-						$usces->set_order_meta_value('profile_id', $profileid, $order_id);
-
-					} else {
-						//Display a user friendly Error on the page using any of the following error information returned by PayPal
-						$ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
-						$ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
-						$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
-						$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
-						usces_log('PayPal : CreateRecurringPaymentsProfile API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
-					}
-				}
-//20110412ysk end
-*/
 				if(isset($results['settlement_id'])) 
 					$usces->set_order_meta_value('settlement_id', $results['settlement_id'], $order_id);
 				if(isset($results['profile_id'])) 
@@ -3636,11 +3280,17 @@ function usces_post_reg_orderdata($order_id, $results){
 //20120413ysk start
 			case 'sbps_card':
 			case 'sbps_conv':
+			case 'sbps_payeasy':
 			case 'sbps_wallet':
 			case 'sbps_mobile':
 				$trans_id = isset($_REQUEST['order_id']) ? $_REQUEST['order_id'] : '';
 				break;
 //20120413ysk end
+//20120618ysk start
+			case 'telecom_card':
+				$trans_id = isset($_REQUEST['sendid']) ? $_REQUEST['sendid'] : '';
+				break;
+//20120618ysk end
 			default:
 				$trans_id = '';
 		}
@@ -3660,8 +3310,9 @@ function usces_paypal_doecp( &$results ) {
 	$cart = $usces->cart->get_cart();
 
 	$post_id = $cart[0]['post_id'];
-	$charging_type = $usces->getItemChargingType($post_id);
-	if( 'continue' != $charging_type ) {
+	$charging_type = $usces->getItemChargingType( $post_id, $cart );
+	//if( 'continue' != $charging_type ) {
+	if( 'continue' != $charging_type && 'regular' != $charging_type ) {
 		//通常購入
 		//Format the other parameters that were stored in the session from the previous calls
 		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);
@@ -3701,14 +3352,35 @@ function usces_paypal_doecp( &$results ) {
 		$currencyCodeType = urlencode($usces->get_currency_code());
 		//$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 		//$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
-		$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
-		$billingPeriod = urlencode("Month");// or "Day", "Week", "SemiMonth", "Year"
-		$billingFreq = urlencode($usces->getItemFrequency($post_id));
+		if( 'regular' == $charging_type ) {//定期購入
+			$profileStartDate = date('Y-m-d', current_time('timestamp')).'T01:01:01Z';
+			$sku = urldecode( $cart[0]['sku'] );
+			$advance = unserialize( $cart[0]['advance'] );
+			$regular = $advance[$post_id][$sku]['regular'];
+			$unit = $regular['unit'];
+			$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
+			$frequency = isset( $regular['frequency'] ) ? (int)$regular['frequency'] : 0;
+			if( 'day' == $unit ) {
+				$billingPeriod = "Day";
+			} elseif( 'month' == $unit ) {
+				$billingPeriod = "Month";
+			}
+			$billingFreq = $frequency;
+			$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.$interval : '';
+
+		} else {//継続課金
+			$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
+			$billingPeriod = "Month";// or "Day", "Week", "SemiMonth", "Year"
+			$billingFreq = $usces->getItemFrequency($post_id);
+			$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.dlseller_cycles( $post_id ) : '';
+		}
 		//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
 		//$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
 		$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_full_price']));//20111125ysk 0000320
+		//$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.dlseller_cycles( $post_id ) : '';
 
-		$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
+		//$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
+		$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc.$totalBillingCycles;
 
 		$usces->paypal->setMethod('CreateRecurringPaymentsProfile');
 		$usces->paypal->setData($nvpstr);
@@ -3718,6 +3390,7 @@ function usces_paypal_doecp( &$results ) {
 		if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 			$profileid = $resArray["PROFILEID"];
 			//$usces->set_order_meta_value('profile_id', $profileid, $order_id);
+			$results['settlement_id'] = $profileid;
 			$results['profile_id'] = $profileid;
 
 		} else {
@@ -4180,4 +3853,8 @@ function usces_get_itemopt_filed($post_id, $sku, $opt){
 	return $html;
 }
 
+function usces_delete_order_check( $order_id ) {
+	$res = apply_filters( 'usces_filter_delete_order_check', true, $order_id );
+	return $res;
+}
 ?>

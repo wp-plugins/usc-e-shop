@@ -1279,20 +1279,20 @@ class usc_e_shop
 					$options['acting_settings']['sbps']['service_id'] = isset($_POST['service_id']) ? $_POST['service_id'] : '';
 					$options['acting_settings']['sbps']['hash_key'] = isset($_POST['hash_key']) ? $_POST['hash_key'] : '';
 					$options['acting_settings']['sbps']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
+					$options['acting_settings']['sbps']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
 					$options['acting_settings']['sbps']['send_url_check'] = isset($_POST['send_url_check']) ? $_POST['send_url_check'] : '';
 					$options['acting_settings']['sbps']['send_url_test'] = isset($_POST['send_url_test']) ? $_POST['send_url_test'] : '';
-					$options['acting_settings']['sbps']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
 					$options['acting_settings']['sbps']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 					$options['acting_settings']['sbps']['3d_secure'] = isset($_POST['3d_secure']) ? $_POST['3d_secure'] : '';
+					$options['acting_settings']['sbps']['cust'] = isset($_POST['cust']) ? $_POST['cust'] : '';
 					$options['acting_settings']['sbps']['continuation'] = isset($_POST['continuation']) ? $_POST['continuation'] : '';
 					$options['acting_settings']['sbps']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
-					$options['acting_settings']['sbps']['wallet_activate'] = isset($_POST['wallet_activate']) ? $_POST['wallet_activate'] : '';
+					$options['acting_settings']['sbps']['payeasy_activate'] = isset($_POST['payeasy_activate']) ? $_POST['payeasy_activate'] : '';
 					$options['acting_settings']['sbps']['wallet_yahoowallet'] = isset($_POST['wallet_yahoowallet']) ? $_POST['wallet_yahoowallet'] : '';
 					$options['acting_settings']['sbps']['wallet_rakuten'] = isset($_POST['wallet_rakuten']) ? $_POST['wallet_rakuten'] : '';
 					$options['acting_settings']['sbps']['wallet_paypal'] = isset($_POST['wallet_paypal']) ? $_POST['wallet_paypal'] : '';
 					$options['acting_settings']['sbps']['wallet_netmile'] = isset($_POST['wallet_netmile']) ? $_POST['wallet_netmile'] : '';
 					$options['acting_settings']['sbps']['wallet_alipay'] = isset($_POST['wallet_alipay']) ? $_POST['wallet_alipay'] : '';
-					$options['acting_settings']['sbps']['mobile_activate'] = isset($_POST['mobile_activate']) ? $_POST['mobile_activate'] : '';
 					$options['acting_settings']['sbps']['mobile_docomo'] = isset($_POST['mobile_docomo']) ? $_POST['mobile_docomo'] : '';
 					$options['acting_settings']['sbps']['mobile_softbank'] = isset($_POST['mobile_softbank']) ? $_POST['mobile_softbank'] : '';
 					$options['acting_settings']['sbps']['mobile_auone'] = isset($_POST['mobile_auone']) ? $_POST['mobile_auone'] : '';
@@ -1306,23 +1306,6 @@ class usc_e_shop
 						$mes .= '※Hash KEYを入力して下さい<br />';
 					if( isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url']) )
 						$mes .= '※本番URLを入力して下さい<br />';
-					if( isset($_POST['wallet_activate']) && 'on' == $_POST['wallet_activate'] ) {
-						if( ( empty($_POST['wallet_yahoowallet']) || 'off' == $_POST['wallet_yahoowallet'] ) && 
-							( empty($_POST['wallet_rakuten']) || 'off' == $_POST['wallet_rakuten'] ) && 
-							( empty($_POST['wallet_paypal']) || 'off' == $_POST['wallet_paypal'] ) && 
-							( empty($_POST['wallet_netmile']) || 'off' == $_POST['wallet_netmile'] ) && 
-							( empty($_POST['wallet_alipay']) || 'off' == $_POST['wallet_alipay'] ) ) {
-							$mes .= '※ウォレット決済の支払方法を選択して下さい<br />';
-						}
-					}
-					if( isset($_POST['mobile_activate']) && 'on' == $_POST['mobile_activate'] ) {
-						if( ( empty($_POST['mobile_docomo']) || 'off' == $_POST['mobile_docomo'] ) && 
-							( empty($_POST['mobile_softbank']) || 'off' == $_POST['mobile_softbank'] ) && 
-							( empty($_POST['mobile_auone']) || 'off' == $_POST['mobile_auone'] ) && 
-							( empty($_POST['mobile_mysoftbank']) || 'off' == $_POST['mobile_mysoftbank'] ) ) {
-							$mes .= '※携帯キャリア決済の支払方法を選択して下さい<br />';
-						}
-					}
 
 					if( '' == $mes ){
 						$this->action_status = 'success';
@@ -1338,10 +1321,32 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_sbps_conv']);
 						}
+						if( 'on' == $options['acting_settings']['sbps']['payeasy_activate'] ){
+							$this->payment_structure['acting_sbps_payeasy'] = 'ペイジー決済（ソフトバンク・ペイメント）';
+						}else{
+							unset($this->payment_structure['acting_sbps_payeasy']);
+						}
+						if( ( 'on' == $options['acting_settings']['sbps']['wallet_yahoowallet'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['wallet_rakuten'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['wallet_paypal'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['wallet_netmile'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['wallet_alipay'] ) ) {
+							$options['acting_settings']['sbps']['wallet_activate'] = 'on';
+						} else {
+							$options['acting_settings']['sbps']['wallet_activate'] = 'off';
+						}
 						if( 'on' == $options['acting_settings']['sbps']['wallet_activate'] ){
 							$this->payment_structure['acting_sbps_wallet'] = 'ウォレット決済（ソフトバンク・ペイメント）';
 						}else{
 							unset($this->payment_structure['acting_sbps_wallet']);
+						}
+						if( ( 'on' == $options['acting_settings']['sbps']['mobile_docomo'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['mobile_softbank'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['mobile_auone'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['mobile_mysoftbank'] ) ) {
+							$options['acting_settings']['sbps']['mobile_activate'] = 'on';
+						} else {
+							$options['acting_settings']['sbps']['mobile_activate'] = 'off';
 						}
 						if( 'on' == $options['acting_settings']['sbps']['mobile_activate'] ){
 							$this->payment_structure['acting_sbps_mobile'] = '携帯キャリア決済（ソフトバンク・ペイメント）';
@@ -1355,6 +1360,7 @@ class usc_e_shop
 						$options['acting_settings']['sbps']['activate'] = 'off';
 						unset($this->payment_structure['acting_sbps_card']);
 						unset($this->payment_structure['acting_sbps_conv']);
+						unset($this->payment_structure['acting_sbps_payeasy']);
 						unset($this->payment_structure['acting_sbps_wallet']);
 						unset($this->payment_structure['acting_sbps_mobile']);
 					}
@@ -1363,6 +1369,43 @@ class usc_e_shop
 					update_option('usces', $options);
 					break;
 //20120413ysk end
+//20120618ysk start
+				case 'telecom':
+					unset( $options['acting_settings']['telecom'] );
+					$options['acting_settings']['telecom']['clientip'] = isset($_POST['clientip']) ? $_POST['clientip'] : '';
+					$options['acting_settings']['telecom']['stype'] = isset($_POST['stype']) ? $_POST['stype'] : '';
+					$options['acting_settings']['telecom']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+
+					if( '' == trim($_POST['clientip']) )
+						$mes .= '※クライアントIPを入力して下さい<br />';
+					if( '' == trim($_POST['stype']) )
+						$mes .= '※決済タイプを入力して下さい<br />';
+
+					if( '' == $mes ){
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['telecom']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['telecom']['card_activate'] ){
+							if( 'E' === $options['acting_settings']['telecom']['stype'][0] ) {
+								$options['acting_settings']['telecom']['send_url'] = "https://www.credit-cgiserver.com/inetcredit/secure/order.pl";
+							} else {
+								$options['acting_settings']['telecom']['send_url'] = "https://secure.telecomcredit.co.jp/inetcredit/secure/order.pl";
+							}
+							$this->payment_structure['acting_telecom_card'] = 'カード決済（テレコムクレジット）';
+						}else{
+							unset($this->payment_structure['acting_telecom_card']);
+						}
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります','usces');
+						$options['acting_settings']['telecom']['activate'] = 'off';
+						unset($this->payment_structure['acting_telecom_card']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					update_option('usces', $options);
+					break;
+//20120618ysk end
 			}
 			
 
@@ -3944,7 +3987,7 @@ class usc_e_shop
 					'shipping_charge' => $value->order_shipping_charge,
 					'cod_fee' => $value->order_cod_fee,
 					'tax' => $value->order_tax,
-					'end_price' => $value->order_item_total_price - ($value->order_getpoint*$usces->options['system']['pointreduction']) - $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
+					'end_price' => $value->order_item_total_price - ($value->order_getpoint*$usces->options['system']['pointreduction']) + $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
 					'status' => $value->order_status,
 					'date' => mysql2date(__('Y/m/d'), $value->order_date),
 					'modified' => mysql2date(__('Y/m/d'), $value->order_modified)
@@ -5154,7 +5197,7 @@ class usc_e_shop
 		return $division;
 	}
 //20120629ysk end
-	function getItemChargingType( $post_id ){
+	function getItemChargingType( $post_id, $cart = array() ){
 		if( usces_is_item($post_id) ){
 			$charging = get_post_meta($post_id, '_item_charging_type', true);
 			if( !defined('WCEX_DLSELLER') )
@@ -5168,6 +5211,22 @@ class usc_e_shop
 				break;
 			case 1:
 				$type = 'continue';
+				break;
+			case 2:
+				$type = 'regular';
+				if( 0 < count($cart) ) {
+					if( empty($cart[0]['advance']) ) {
+						$type = 'once';
+					} else {
+						$advance = $this->cart->wc_unserialize( $cart[0]['advance'] );
+						$sku = urldecode( $cart[0]['sku'] );
+						$regular = $advance[$post_id][$sku]['regular'];
+						$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
+						$frequency = isset( $regular['frequency'] ) ? (int)$regular['frequency'] : 0;
+						if( 1 == $interval && 1 == $frequency ) //通常課金扱い
+							$type = 'once';
+					}
+				}
 				break;
 			default:
 				$type = NULL;
