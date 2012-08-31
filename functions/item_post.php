@@ -1994,7 +1994,10 @@ function usces_admin_ajax() {
 		$options = get_option('usces');
 		$res = true;
 		if( is_array($options) ) {
+			$usces_backup_date = current_time('mysql');
 			update_option('usces_backup', $options);
+			update_option('usces_backup_date', $usces_backup_date);
+			$res = $usces_backup_date;
 		} else {
 			$res = false;
 		}

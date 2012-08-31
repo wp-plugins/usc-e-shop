@@ -804,13 +804,13 @@ jQuery(document).ready(function($){
 	$("#get_member").click(function(){ 
 		if( '' == $("input[name='customer[mailaddress]']").val() ){
 			alert('e-mail を入力して下さい。');
-		} 
+			return;
+		}
 		if( '' != $("input[name='customer[name1]']").val() || '' != $("input[name='delivery[name1]']").val() ){
 			if( confirm('顧客情報、発送先情報を上書きします。よろしいですか？') ){
 				orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 			}
-		} 
-		orderfunc.getMember($("input[name='customer[mailaddress]']").val());
+		}
 	});
 <?php if($order_action == 'new') ://20120319ysk start 0000441 ?>
 	$("#costomercopy").click(function() {

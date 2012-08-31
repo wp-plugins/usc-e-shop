@@ -124,6 +124,7 @@ jQuery(function($){
 				if(data) {
 					alert("保存しました。");
 					$("#options_restore").removeAttr("disabled");
+					$("#options_backup_date").html(data);
 				} else {
 					alert("保存に失敗しました。");
 				}
@@ -233,7 +234,8 @@ jQuery(document).ready(function($) {
 	});
 //20120309ysk start 0000430
 <?php
-	$options_backup = $this->options = get_option('usces_backup');
+	$options_backup = get_option('usces_backup');
+	$options_backup_date = get_option('usces_backup_date');
 	if( empty($options_backup) ) {
 ?>
 	$("#options_restore").attr("disabled", "disabled");
@@ -405,6 +407,7 @@ jQuery(document).ready(function($) {
 		<th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_options_backup');"><?php _e('Backup options','usces'); ?></a></th>
 		<td><input name="options_backup" id="options_backup" type="button" value="<?php _e('Backup options','usces'); ?>" ></td>
 		<td><input name="options_restore" id="options_restore" type="button" value="<?php _e('Restoring a Backup', 'usces'); ?>" ></td>
+		<td><div id="options_backup_date"><?php if( !empty( $options_backup_date ) ) echo $options_backup_date; ?></div></td>
 		<td><div id="ex_options_backup" class="explanation"><?php _e('Take a backup of the System Options.', 'usces'); ?></div></td>
 	</tr>
 </table>
