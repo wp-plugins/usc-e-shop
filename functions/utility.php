@@ -445,11 +445,11 @@ function usces_payment_detail($usces_entries){
 			break;
 		
 		case 'acting_zeus_card':
-			if( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ){
+			if( !isset($_REQUEST['cbrand']) || (isset($_REQUEST['howpay']) && '1' === $_REQUEST['howpay']) ){
 				$str = '　一括払い';
 			}else{
-				$div_name = 'div_' . $_POST['cbrand'];
-				switch($_POST[$div_name]){
+				$div_name = 'div_' . $_REQUEST['cbrand'];
+				switch($_REQUEST[$div_name]){
 					case '01':
 						$str = '　一括払い';
 						break;

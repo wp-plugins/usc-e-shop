@@ -203,7 +203,7 @@ function usces_order_confirm_message($order_id) {
 		$msg_payment .= __('お支払先', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
 		$msg_payment .= __('コンビニ受付番号','usces').' : '.$args['no']."\r\n";
 		if($args['cv'] != '030') {//ファミリーマート以外
-			$msg_body .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
+			$msg_payment .= __('コンビニ受付番号情報URL', 'usces').' : '.$args['cu']."\r\n";
 		}
 		$msg_payment .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {

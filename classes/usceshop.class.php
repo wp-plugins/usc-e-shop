@@ -3462,7 +3462,7 @@ class usc_e_shop
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
 					
-					do_action('usces_action_member_registered', $user);
+					do_action('usces_action_member_registered', $_POST['member']);
 				}
 				
 				return 'newcompletion';
@@ -3520,9 +3520,9 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
+					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
 					$user['ID'] = $member_id;
-					do_action('usces_action_member_registered', $user);
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
 					$_POST['loginpass'] = trim($_POST['customer']['password1']);
@@ -5510,7 +5510,15 @@ class usc_e_shop
 			//usces_log('zeus card *****2 : '.print_r($page, true), 'acting_transaction.log');
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
+//20120904ysk start 0000541
+					if ( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ) {
+						$args = '';
+					} else {
+						$div = 'div_'.$_POST['cbrand'];
+						$args = '&cbrand='.$_POST['cbrand'].'&howpay='.$_POST['howpay'].'&'.$div.'='.$_POST[$div];
+					}
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1'.$args);
+//20120904ysk end
 					exit;
 				}else{
 					usces_log('zeus card : Certification Error', 'acting_transaction.log');
