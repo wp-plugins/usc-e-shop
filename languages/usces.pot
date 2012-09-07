@@ -3234,3 +3234,15 @@ msgstr "商品合計金額が、代引きでご購入いただける上限額（
 
 msgid "The upper limit of the C.O.D."
 msgstr "上限額"
+
+msgid "Setup data backup"
+msgstr "設定データのバックアップ"
+
+msgid "Backup options"
+msgstr "バックアップする"
+
+msgid "Restoring a Backup"
+msgstr "設定データの復元"
+
+msgid "You can take the backup of the Welcart setup data."
+msgstr "Welcartの設定データのバックアップを取ることができます。"

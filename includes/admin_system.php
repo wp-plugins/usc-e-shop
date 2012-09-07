@@ -404,11 +404,11 @@ jQuery(document).ready(function($) {
 <!--20120309ysk start 0000430-->
 <table class="form_table">
 	<tr height="35">
-		<th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_options_backup');"><?php _e('Backup options','usces'); ?></a></th>
+		<th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_options_backup');"><?php _e('Setup data backup','usces'); ?></a></th>
 		<td><input name="options_backup" id="options_backup" type="button" value="<?php _e('Backup options','usces'); ?>" ></td>
 		<td><input name="options_restore" id="options_restore" type="button" value="<?php _e('Restoring a Backup', 'usces'); ?>" ></td>
 		<td><div id="options_backup_date"><?php if( !empty( $options_backup_date ) ) echo $options_backup_date; ?></div></td>
-		<td><div id="ex_options_backup" class="explanation"><?php _e('Take a backup of the System Options.', 'usces'); ?></div></td>
+		<td><div id="ex_options_backup" class="explanation"><?php _e('You can take the backup of the Welcart setup data.', 'usces'); ?></div></td>
 	</tr>
 </table>
 <!--20120309ysk end-->
