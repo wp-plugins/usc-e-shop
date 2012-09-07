@@ -74,8 +74,6 @@ function setProgress(i ,all) {
 <div id="reg_work">
 <?php usces_item_uploadcsv(); ?>
 </div>
-<form action="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit'; ?>" method="post" name="tablesearch">
-</form>
 </div><!--usces_admin-->
 </div><!--wrap-->
 [memory peak usage] <?php echo round(memory_get_peak_usage()/1048576, 1); ?>Mb

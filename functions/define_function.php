@@ -30,7 +30,7 @@ function usces_item_uploadcsv(){
 		$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=' . $res['status'] . '&usces_message=' . urlencode($res['message']);
 		wp_redirect($url);
 		exit;
-	}	
+	}
 
 
 	$path = WP_CONTENT_DIR . '/uploads/';
@@ -67,7 +67,7 @@ function usces_item_uploadcsv(){
 			exit;
 		}
 		return $new_filename;
-  	}
+	}
 
 
 	$yn = "\r\n";
@@ -81,8 +81,9 @@ function usces_item_uploadcsv(){
 		if( ! file_exists($path.$file_name) ){
 			$res['status'] = 'error';
 			$res['message'] =  __('CSV file does not exist.', 'usces').esc_html($decode_filename);
-			echo $res['status'] . ' : ' . $res['message'];
-			return;
+			//echo $res['status'] . ' : ' . $res['message'];
+			//return;
+			return( $res );
 		}
 	}
 	/*////////////////////////////////////////*/
@@ -91,7 +92,7 @@ function usces_item_uploadcsv(){
 	$start = microtime(true);
 	
 	//$wpdb->show_errors();
-	$res = $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
+	$wpdb->query( 'SET SQL_BIG_SELECTS=1' );
 	set_time_limit(3600);
 
 	define('USCES_COL_POST_ID', 0);	//new

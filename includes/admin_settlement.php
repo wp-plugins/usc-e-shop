@@ -669,7 +669,7 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 			<tr>
-				<th>ソフトバンクまとめて支払い</th>
+				<th>ソフトバンク<br />まとめて支払い</th>
 				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_1">利用する</label></td>
 				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_2">利用しない</label></td>
 				<td></td>
@@ -682,7 +682,7 @@ function toggleVisibility(id) {
 	</form>
 	<div class="settle_exp">
 		<p><strong>ソフトバンク・ペイメント・サービス</strong></p>
-		<a href="http://www.sbpayment.jp/" target="_blank">ソフトバンク・ペイメント・サービスの詳細はこちら 》</a>
+		<a href="http://www.welcart.com/wc-settlement/sbps_guide/" target="_blank">ソフトバンク・ペイメント・サービスの詳細はこちら 》</a>
 		<p>　</p>
 		<p>この決済は「外部リンク型」の決済システムです。</p>
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
