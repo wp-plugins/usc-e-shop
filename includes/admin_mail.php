@@ -5,6 +5,7 @@ $this->action_status = 'none';
 $this->action_message = '';
 $mail_datas = $this->options['mail_data'];
 $smtp_hostname = $this->options['smtp_hostname'];
+$newmem_admin_mail = $this->options['newmem_admin_mail'];
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -54,6 +55,23 @@ function toggleVisibility(id) {
 </table>
 <hr size="1" color="#CCCCCC" />
 <div id="ex_smtp_host" class="explanation"><?php _e('This is a field setting the host name of a server for email transmission of a message. When the transmission of a message is not possible in localhost, a SMTP server is necessary.','usces'); ?></div>
+</div>
+</div><!--postbox-->
+
+<div class="postbox">
+<h3 class="hndle"><span><?php _e('Options','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_mail_options');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
+<div class="inside">
+<table class="form_table">
+	<tr>
+	    <th width="150"><?php _e('New sign-in completion email','usces'); ?></th>
+		<td width="10"><input name="newmem_admin_mail" type="radio" id="newmem_admin_mail_0" value="0"<?php if(0 == $newmem_admin_mail) echo ' checked="checked"'; ?> /></td>
+		<td width="100"><label for="newmem_admin_mail_0">送信しない</label></td>
+		<td width="10"><input name="newmem_admin_mail" type="radio" id="newmem_admin_mail_1" value="1"<?php if(1 == $newmem_admin_mail) echo ' checked="checked"'; ?> /></td>
+		<td width="100"><label for="newmem_admin_mail_1">送信する</label></td>
+	</tr>
+</table>
+<hr size="1" color="#CCCCCC" />
+<div id="ex_mail_options" class="explanation"><?php _e('When there is a new sign-in, I transmit a report email to a manager.','usces'); ?></div>
 </div>
 </div><!--postbox-->
 

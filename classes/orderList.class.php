@@ -26,7 +26,8 @@ class dataList
 //20101202ysk start
 	var $pageLimit;		//ページ制限
 //20101202ysk end
-	
+	var $management_status;	//処理ステータス
+		
 	//Constructor
 	function dataList($tableName, $arr_column)
 	{
@@ -48,6 +49,16 @@ class dataList
 
 		$this->arr_period = array(__('This month', 'usces'), __('Last month', 'usces'), __('The past one week', 'usces'), __('Last 30 days', 'usces'), __('Last 90days', 'usces'), __('All', 'usces'));
 
+		$management_status = array(
+			'duringorder' => __('temporaly out of stock', 'usces'),
+			'cancel' => __('Cancel', 'usces'),
+			'completion' => __('It has sent it out.', 'usces'),
+			'estimate' => __('An estimate', 'usces'),
+			'adminorder' => __('Management of Note', 'usces'),
+			'continuation' => __('Continuation', 'usces'),
+			'termination' => __('Termination', 'usces')
+			);
+		$this->management_status = apply_filters( 'usces_filter_management_status', $management_status );
 
 	}
 
@@ -249,7 +260,12 @@ class dataList
 		$where = $this->GetWhere();
 		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
-			
+		
+		$status_sql = '';
+		foreach ($this->management_status as $status_key => $status_name){
+			$status_sql .= " WHEN LOCATE('" . $status_key . "', order_status) > 0 THEN '" . $status_name . "'";
+		}
+
 		$query = $wpdb->prepare("SELECT ID, meta.meta_value AS deco_id, DATE_FORMAT(order_date, %s) AS date, mem_id, 
 					CONCAT(order_name1, ' ', order_name2) AS name, order_pref AS pref, order_delivery_method AS delivery_method, 
 					(order_item_total_price - order_usedpoint + order_discount + order_shipping_charge + order_cod_fee + order_tax) AS total_price, 
@@ -259,19 +275,13 @@ class dataList
 						 WHEN LOCATE('pending', order_status) > 0 THEN %s 
 						 ELSE %s 
 					END AS receipt_status, 
-					CASE WHEN LOCATE('duringorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('cancel', order_status) > 0 THEN %s 
-						 WHEN LOCATE('completion', order_status) > 0 THEN %s
-						 WHEN LOCATE('estimate', order_status) > 0 THEN %s 
-						 WHEN LOCATE('adminorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('continuation', order_status) > 0 THEN %s 
-						 WHEN LOCATE('termination', order_status) > 0 THEN %s 
+					CASE {$status_sql} 
 						 ELSE %s 
 					END AS order_status, 
 					order_modified 
 					FROM {$this->table} 
 					LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id' ",
-					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('temporaly out of stock', 'usces'), __('Cancel', 'usces'), __('It has sent it out.', 'usces'), __('An estimate', 'usces'), __('Management of Note', 'usces'), __('Continuation', 'usces'), __('Termination', 'usces'), __('new order', 'usces'));
+					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('new order', 'usces'));
 					
 		$query .= $where . $order;// . $limit;
 		//var_dump($query);

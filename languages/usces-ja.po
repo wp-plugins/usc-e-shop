@@ -3208,6 +3208,44 @@ msgstr "電話番号を半角数字で入力して下さい。"
 msgid "Please do not change product addition and amount of it with the other window with displaying this page."
 msgstr "※このページを表示したまま、別ウィンドウで商品追加や数量変更は行わないでください。"
 
+msgid "Send"
+msgstr "送信する"
+
+msgid "Don't send"
+msgstr "送信しない"
+
+msgid "New sign-in completion email"
+msgstr "新規会員登録管理者メール"
+
+msgid "When there is a new sign-in, I transmit a report email to a manager."
+msgstr "新規会員登録が有った場合、管理者にも報告メールを送信します。"
+
+msgid "New sign-in processing was completed."
+msgstr "新規会員登録がありました。"
+
+msgid "Registration contents"
+msgstr "【登録情報】"
+
+msgid "Notice of new sign-in"
+msgstr "新規会員登録通知"
+
+msgid "A value of the amount of upper limit is dirty."
+msgstr "上限金額の値が不正です。"
+
+msgid "A total products amount of money surpasses the upper limit(%s) that I can purchase in C.O.D."
+msgstr "商品合計金額が、代引きでご購入いただける上限額（%s）を超えています。"
+
+msgid "The upper limit of the C.O.D."
+msgstr "上限額"
+
+#, fuzzy
+#~ msgid "Transmit"
+#~ msgstr "お振込先"
+
+#, fuzzy
+#~ msgid "Don't transmit"
+#~ msgstr "付与しない"
+
 #~ msgid "Archive for %s|Daily archive page"
 #~ msgstr "%s の記事"
 

@@ -8,7 +8,7 @@ function usces_ajax_send_mail() {
 			'to_address' => trim($_POST['mailaddress']), 
 			'from_name' => get_option('blogname'), 
 			'from_address' => $usces->options['sender_mail'], 
-			'return_path' => $usces->options['error_mail'],
+			'return_path' => $usces->options['sender_mail'],
 			'subject' => trim(urldecode($_POST['subject'])),
 			'message' => trim(urldecode($_POST['message']))
 			);
@@ -34,7 +34,7 @@ function usces_ajax_send_mail() {
 				'to_address' => $usces->options['order_mail'], 
 				'from_name' => 'Welcart Auto BCC', 
 				'from_address' => $usces->options['sender_mail'], 
-				'return_path' => $usces->options['error_mail'],
+				'return_path' => $usces->options['sender_mail'],
 				'subject' => trim(urldecode($_POST['subject'])) . ' to ' . sprintf(__('Mr/Mrs %s', 'usces'), trim(urldecode($_POST['name']))),
 				'message' => trim(urldecode($_POST['message']))
 				);
@@ -450,7 +450,7 @@ function usces_send_ordermail($order_id) {
 			'to_address' => $entry['customer']['mailaddress1'], 
 			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
-			'return_path' => $usces->options['error_mail'],
+			'return_path' => $usces->options['sender_mail'],
 			'subject' => $subject,
 			'message' => $message
 			);
@@ -512,7 +512,7 @@ function usces_send_inquirymail() {
 			'to_address' => $inq_mailaddress, 
 			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
-			'return_path' => $usces->options['error_mail'],
+			'return_path' => $usces->options['sender_mail'],
 			'subject' => $subject,
 			'message' => do_shortcode($message),
 			);
@@ -548,25 +548,59 @@ function usces_send_regmembermail($user) {
 	global $usces;
 	$res = false;
 	$mail_data = $usces->options['mail_data'];
-
-	$subject =  $mail_data['title']['membercomp'];
-	$message = $mail_data['header']['membercomp'] . $mail_data['footer']['membercomp'];
-	$message = apply_filters('usces_filter_send_regmembermail_message', $message, $user);
-	
+	$newmem_admin_mail = $usces->options['newmem_admin_mail'];
 	$name = trim($user['name1']) . trim($user['name2']);
 	$mailaddress1 = trim($user['mailaddress1']);
+
+	$subject =  $mail_data['title']['membercomp'];
+	$message = $mail_data['header']['membercomp'];
+	$message .= __('Registration contents', 'usces')."\r\n";
+	$message .= '--------------------------------'."\r\n";
+	$message .= __('Member ID', 'usces') . ' : ' . $user['ID'] . "\r\n";
+	$message .= __('Name', 'usces') . ' : ' . sprintf(__('Mr/Mrs %s', 'usces'), $name) . "\r\n";
+	$message .= __('e-mail adress', 'usces') . ' : ' . $mailaddress1."\r\n";
+	$message .= '--------------------------------'."\r\n\r\n";
+	$message .= $mail_data['footer']['membercomp'];
+	$message = apply_filters('usces_filter_send_regmembermail_message', $message, $user);
 
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $name),
 			'to_address' => $mailaddress1, 
 			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
-			'return_path' => $usces->options['error_mail'],
+			'return_path' => $usces->options['sender_mail'],
 			'subject' => $subject,
 			'message' => do_shortcode($message),
 			);
 
+	$para1 = apply_filters( 'usces_filter_send_regmembermail_para1', $para1);
 	$res = usces_send_mail( $para1 );
+	
+	if($newmem_admin_mail){
+		
+		$subject =  __('New sign-in processing was completed.', 'usces');
+		$message = __('New sign-in processing was completed.', 'usces') . "\r\n\r\n";
+		$message .= __('Registration contents', 'usces')."\r\n";
+		$message .= '--------------------------------'."\r\n";
+		$message .= __('Member ID', 'usces') . ' : ' . $user['ID'] . "\r\n";
+		$message .= __('Name', 'usces') . ' : ' . sprintf(__('Mr/Mrs %s', 'usces'), $name) . "\r\n";
+		$message .= __('e-mail adress', 'usces') . ' : ' . $mailaddress1."\r\n";
+		$message .= '--------------------------------'."\r\n\r\n";
+		$message = apply_filters('usces_filter_send_regmembermail_notice', $message, $user);
+		
+		$para2 = array(
+				'to_name' => __('Notice of new sign-in', 'usces'),
+				'to_address' => $usces->options['order_mail'], 
+				'from_name' => get_option('blogname'),
+				'from_address' => $usces->options['sender_mail'],
+				'return_path' => $usces->options['sender_mail'],
+				'subject' => $subject,
+				'message' => do_shortcode($message),
+				);
+		$para1 = apply_filters( 'usces_filter_send_regmembermail_para2', $para2);
+	
+		usces_send_mail( $para2 );
+	}
 	
 	return $res;
 
@@ -590,7 +624,7 @@ function usces_lostmail($url) {
 			'to_address' => $_SESSION["usces_lostmail"], 
 			'from_name' => get_option('blogname'),
 			'from_address' => $usces->options['sender_mail'],
-			'return_path' => $usces->options['error_mail'],
+			'return_path' => $usces->options['sender_mail'],
 			'subject' => $subject,
 			'message' => do_shortcode($message),
 			);
@@ -2420,11 +2454,23 @@ function usces_setup_cod_ajax(){
 	$usces->options['cod_type'] = isset($_POST['cod_type']) ? $_POST['cod_type'] : 'fix';
 	if( isset($_POST['cod_fee']) )
 		$usces->options['cod_fee'] = (int)$_POST['cod_fee'];
+			
+	if( 'fix' == $usces->options['cod_type'] ){
+		if( isset($_POST['cod_limit_amount']) ){
+			$usces->options['cod_limit_amount'] = (int)$_POST['cod_limit_amount'];
+			if( '' != trim($_POST['cod_limit_amount']) && 0 === (int)$_POST['cod_limit_amount'] )
+				$message = __('There is the item where a value is dirty.', 'usces');
+		}
 		
-	if( 'change' == $usces->options['cod_type'] ){
+	}elseif( 'change' == $usces->options['cod_type'] ){
 		if( isset($_POST['cod_first_amount']) ){
 			$usces->options['cod_first_amount'] = (int)$_POST['cod_first_amount'];
 			if( 0 === (int)$_POST['cod_first_amount'] )
+				$message = __('There is the item where a value is dirty.', 'usces');
+		}
+		if( isset($_POST['cod_limit_amount']) ){
+			$usces->options['cod_limit_amount'] = (int)$_POST['cod_limit_amount'];
+			if( '' != trim($_POST['cod_limit_amount']) && 0 === (int)$_POST['cod_limit_amount'] )
 				$message = __('There is the item where a value is dirty.', 'usces');
 		}
 		if( isset($_POST['cod_first_fee']) ){

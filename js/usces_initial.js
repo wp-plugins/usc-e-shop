@@ -26,12 +26,14 @@ jQuery(function($) {
 			
 			if( 'fix' == cod_type ){
 				var cod_fee = $("input[name='cod_fee']").val();
-				query += '&cod_type=' + cod_type + '&cod_fee=' + cod_fee;
+				var cod_limit_amount = $("#cod_limit_amount_fix").val();
+				query += '&cod_type=' + cod_type + '&cod_fee=' + cod_fee + '&cod_limit_amount=' + cod_limit_amount;
 			}else{
 				var cod_first_amount = $("input[name='cod_first_amount']").val();
+				var cod_limit_amount = $("#cod_limit_amount_change").val();
 				var cod_first_fee = $("input[name='cod_first_fee']").val();
 				var cod_end_fee = $("input[name='cod_end_fee']").val();
-				query += '&cod_type=' + cod_type + '&cod_first_amount=' + cod_first_amount + '&cod_first_fee=' + cod_first_fee + '&cod_end_fee=' + cod_end_fee;
+				query += '&cod_type=' + cod_type + '&cod_first_amount=' + cod_first_amount + '&cod_limit_amount=' + cod_limit_amount + '&cod_first_fee=' + cod_first_fee + '&cod_end_fee=' + cod_end_fee;
 				var amounts = $("input[name^='cod_amounts']");
 				for(var i=0; i<amounts.length; i++){
 					query += '&cod_amounts[]=' + $("input[name='cod_amounts\[" + i + "\]']").val() + '&cod_fees[]=' + $("input[name='cod_fees\[" + i + "\]']").val();
@@ -95,6 +97,17 @@ jQuery(function($) {
 				$('#amount_0').html(parseInt($(first_amount).val())+1);
 			}
 
+	});
+		
+	$("#cod_limit_amount_change")
+		.change(function() {
+		if( 'change' == $("input[name='cod_type']:checked").val() ){
+			var pre = parseInt($("#end_amount").html());
+			var limit = parseInt($("#cod_limit_amount_change").val());
+			if( pre >= limit ){
+				alert(usces_ini.cod_limit + pre + ':' + limit);
+			}
+		}
 	});
 		
 	$("input[name^='cod_amounts']")

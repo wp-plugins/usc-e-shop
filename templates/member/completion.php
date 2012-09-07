@@ -27,14 +27,12 @@ $html .= '<div class="footer_explanation">';
 $footer = '';
 $html .= apply_filters('usces_filter_membercompletion_page_footer', $footer);
 $html .= '</div>';
+
+$html .= '<p><a href="' . USCES_MEMBER_URL . '">' . __('to vist membership information page', 'usces') . '</a></p>'."\n";
+$html .= '<div class="send"><a href="' . home_url() . '" class="back_to_top_button">' . __('Back to the top page.', 'usces') . '</a></div>'."\n";
+
 	
-
-
-$html .= '<p><a href="' . USCES_MEMBER_URL . '">' . __('to vist membership information page', 'usces') . '</a></p>
-	<form action="' . get_option('home') . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
-	<div class="send"><input name="top" type="submit" value="' . __('Back to the top page.', 'usces') . '" /></div>
-	</form>
-	</div>
+$html .= '</div>
 
 	</div>';
 ?>

@@ -20,7 +20,7 @@ $arr_column = array(
 $DT = new dataList($tableName, $arr_column);
 $res = $DT->MakeTable();
 $arr_search = $DT->GetSearchs();
-$arr_status = get_option('usces_management_status');
+$arr_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );
 $arr_header = $DT->GetListheaders();
 $dataTableNavigation = $DT->GetDataTableNavigation();
 $rows = $DT->rows;
@@ -47,8 +47,7 @@ $payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 foreach ( (array)$payments as $id => $array ) {
 	$payment_name[$id] = $array['name'];
 }
-$ums = get_option('usces_management_status');
-foreach((array)$ums as $key => $value){
+foreach((array)$arr_status as $key => $value){
 	if($key == 'noreceipt' || $key == 'receipted' || $key == 'pending'){
 		$receipt_status[$key] = $value;
 	}else{

@@ -32,10 +32,12 @@ get_header();
 	<?php do_action('usces_action_cartcompletion_page_footer', $usces_entries, $usces_carts); ?>
 	</div><!-- footer_explanation -->
 
-	<form action="<?php echo home_url(); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+	<div class="send"><a href="<?php echo home_url(); ?>" class="back_to_top_button"><?php _e('Back to the top page.', 'usces'); ?></a></div>
+<!--	<form action="<?php echo home_url(); ?>" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 	<div class="send"><input name="top" class="back_to_top_button" type="submit" value="<?php _e('Back to the top page.', 'usces'); ?>" /></div>
-	<?php do_action('usces_action_cartcompletion_page_inform'); ?>
+	<?php //do_action('usces_action_cartcompletion_page_inform'); ?>
 	</form>
+-->
 <?php echo apply_filters('usces_filter_conversion_tracking', NULL, $usces_entries, $usces_carts); ?>
 
 </div><!-- end of cart_completion -->
