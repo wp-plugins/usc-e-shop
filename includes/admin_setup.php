@@ -302,6 +302,7 @@ if( 'change' == $this->options['cod_type'] ) {
 	</table>
 	<table id="cod_fix_table">
 		<tr><th><?php _e('Fee', 'usces'); ?></th><td><input name="cod_fee" type="text" class="short_str ui-widget-content ui-corner-all num" value="<?php echo (isset($this->options['cod_fee']) ? $this->options['cod_fee'] : ''); ?>" /><?php usces_crcode(); ?></td></tr>
+		<tr><th><?php _e('The upper limit of the C.O.D.', 'usces'); ?></th><td><input name="cod_limit_amount" id="cod_limit_amount_fix" type="text" class="short_str ui-widget-content ui-corner-all num" value="<?php echo (isset($this->options['cod_limit_amount']) ? $this->options['cod_limit_amount'] : ''); ?>" /><?php usces_crcode(); ?></td></tr>
 	</table>
 	<div id="cod_change_table">
 	<input name="addrow" id="add_row" type="button" value="<?php _e('Add row', 'usces'); ?>" /><input name="delrow" type="button" id="del_row" value="<?php _e('Delete row', 'usces'); ?>" />
@@ -328,7 +329,7 @@ if( 'change' == $this->options['cod_type'] ) {
 ?>
 		</tbody>
 		<tfoot>
-			<tr><td class="cod_f"><span id="end_amount"><?php echo esc_attr($end_amount); ?></span></td><td class="cod_m">～</td><td>&nbsp;</td><td class="cod_cod"><input name="cod_end_fee" type="text" class="short_str num" value="<?php echo esc_attr((isset($this->options['cod_end_fee']) ? $this->options['cod_end_fee'] : '')); ?>" /></td></tr>
+			<tr><td class="cod_f"><span id="end_amount"><?php echo esc_attr($end_amount); ?></span></td><td class="cod_m">～</td><td class="cod_e"><input name="cod_limit_amount" id="cod_limit_amount_change" type="text" class="short_str ui-widget-content ui-corner-all num" value="<?php echo esc_attr((isset($this->options['cod_limit_amount']) ? $this->options['cod_limit_amount'] : '')); ?>" /></td><td class="cod_cod"><input name="cod_end_fee" type="text" class="short_str num" value="<?php echo esc_attr((isset($this->options['cod_end_fee']) ? $this->options['cod_end_fee'] : '')); ?>" /></td></tr>
 		</tfoot>
 	</table>
 	</div>

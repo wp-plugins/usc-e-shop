@@ -75,6 +75,7 @@ class usc_e_shop
 		if(!isset($this->options['start_point'])) $this->options['start_point'] = '';
 		if(!isset($this->options['point_coverage'])) $this->options['point_coverage'] = 1;
 		if(!isset($this->options['cod_type'])) $this->options['cod_type'] = 'fix';
+		if(!isset($this->options['newmem_admin_mail'])) $this->options['newmem_admin_mail'] = 0;
 		if(!isset($this->options['mail_data']['title'])) $this->options['mail_data']['title'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
 		if(!isset($this->options['mail_data']['header'])) $this->options['mail_data']['header'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
 		if(!isset($this->options['mail_data']['footer'])) $this->options['mail_data']['footer'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
@@ -759,6 +760,7 @@ class usc_e_shop
 		if(isset($_POST['usces_option_update'])) {
 		
 			$this->options['smtp_hostname'] = trim($_POST['smtp_hostname']);
+			$this->options['newmem_admin_mail'] = (int)$_POST['newmem_admin_mail'];
 		
 			foreach ( $_POST['title'] as $key => $value ) {
 				if( trim($value) == '' ) {
@@ -2022,7 +2024,8 @@ class usc_e_shop
 							'cod_type_change': "<?php _e('Variable C.O.D.', 'usces'); ?>",
 							'cod_unit': "<?php _e('dollars', 'usces'); ?>",
 							'cod_failure': "<?php _e('failure in update', 'usces'); ?>",
-							'cod_updated': "<?php _e('options are updated', 'usces'); ?>"
+							'cod_updated': "<?php _e('options are updated', 'usces'); ?>",
+							'cod_limit': "<?php _e('A value of the amount of upper limit is dirty.', 'usces'); ?>"
 						};
 /* ]]> */
 					</script>
@@ -3505,7 +3508,7 @@ class usc_e_shop
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
 					
-					do_action('usces_action_member_registered', $user);
+					do_action('usces_action_member_registered', $_POST['member']);
 				}
 				
 				return 'newcompletion';
@@ -3563,9 +3566,9 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
+					do_action('usces_action_member_registered', $_POST['customer']);
 					$user = $_POST['customer'];
 					$user['ID'] = $member_id;
-					do_action('usces_action_member_registered', $user);
 					$mser = usces_send_regmembermail($user);
 					$_POST['loginmail'] = trim($_POST['customer']['mailaddress1']);
 					$_POST['loginpass'] = trim($_POST['customer']['password1']);
@@ -4283,8 +4286,20 @@ class usc_e_shop
 		}
 		if ( !isset($_POST['offer']['delivery_method']) || (empty($_POST['offer']['delivery_method']) && $_POST['offer']['delivery_method'] != 0) )
 			$mes .= __('chose one from delivery method.', 'usces') . "<br />";
-		if ( !isset($_POST['offer']['payment_name']) )
+		if ( !isset($_POST['offer']['payment_name']) ){
 			$mes .= __('chose one from payment options.', 'usces') . "<br />";
+		}else{
+			$payments = $this->getPayments($_POST['offer']['payment_name']);
+			if('COD' == $payments['settlement']){
+				$total_items_price = $this->get_total_price();
+				$tax = $this->getTax( $total_items_price );
+				$total_items_price = $total_items_price + $tax;
+				$cod_limit_amount = ( isset($this->options['cod_limit_amount']) && 0 < (int)$this->options['cod_limit_amount'] ) ? $this->options['cod_limit_amount'] : 0;
+				if( 0 < $cod_limit_amount && $total_items_price > $cod_limit_amount )
+					$mes .= sprintf(__('A total products amount of money surpasses the upper limit(%s) that I can purchase in C.O.D.', 'usces'), usces_crform($this->options['cod_limit_amount'], true, false, 'return')) . "<br />";
+			}
+			
+		}
 //20101119ysk start
 		if(isset($_POST['offer']['delivery_method']) and isset($_POST['offer']['payment_name'])) {
 			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
@@ -5571,7 +5586,15 @@ class usc_e_shop
 			//usces_log('zeus card *****2 : '.print_r($page, true), 'acting_transaction.log');
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1');
+//20120904ysk start 0000541
+					if ( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ) {
+						$args = '';
+					} else {
+						$div = 'div_'.$_POST['cbrand'];
+						$args = '&cbrand='.$_POST['cbrand'].'&howpay='.$_POST['howpay'].'&'.$div.'='.$_POST[$div];
+					}
+					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1'.$args);
+//20120904ysk end
 					exit;
 				}else{
 					usces_log('zeus card : Certification Error', 'acting_transaction.log');
