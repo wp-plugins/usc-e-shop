@@ -98,32 +98,6 @@ function usces_add_opt( $post_id, $newvalue, $check = true ) {
 /**
  * item sku
  */
-//function has_item_sku_meta( $post_id ) {
-//function usces_get_skus( $post_id ) {
-//	$skus = array();
-//	$metas = usces_get_post_meta($post_id, '_isku_');
-//	if( empty($metas) ) return $skus;
-//	
-//	foreach( $metas as $rows ){
-//		$values = unserialize($rows['meta_value']);
-//		$skus[$values['sort']] = array(
-//							'meta_id' => $rows['meta_id'],
-//							'code' => $values['code'],
-//							'name' => $values['name'],
-//							'cprice' => $values['cprice'],
-//							'price' => $values['price'],
-//							'unit' => $values['unit'],
-//							'stocknum' => $values['stocknum'],
-//							'stock' => $values['stock'],
-//							'gp' => $values['gp'],
-//							'sort' => $values['sort']
-//						);
-//	}
-//	ksort($skus);
-//
-//	return $skus;
-//}
-
 function usces_add_sku( $post_id, $newvalue, $check = true ) {
 	global $wpdb;
 	if( $check ){
@@ -948,6 +922,9 @@ function order_item_ajax()
 		case 'getmember':
 			$res = usces_get_member_neworder();
 			break;
+		case 'recalculation':
+			$res = usces_order_recalculation( $_POST['order_id'], $_POST['mem_id'], $_POST['post_ids'], $_POST['skus'], $_POST['prices'], $_POST['quants'], $_POST['use_point'], $_POST['shipping_charge'], $_POST['cod_fee'] );
+			break;
 	}
 	
 	if( $res === false )  die(0);
@@ -1083,7 +1060,7 @@ function get_order_item( $item_code ) {
 		$r .= "<tr>\n";
 		$r .= "<td rowspan='2'>" . $key . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
-		$r .= "<td><span class='cprice'>" . usces_crform( $cprice, true, false, 'return' ) . "</span></td>\n";
+		$r .= "<td><span class='cprice'>" . ( ( !empty($cprice) ) ? usces_crform( $cprice, true, false, 'return' ) : '' ) . "</span></td>\n";
 		$r .= "<td><span class='price'>" . usces_crform( $price, true, false, 'return' ) . "</span></td>\n";
 		$r .= "<td>" . $zaiko . "</td>\n";
 		$r .= "<td>" . $zaikonum . "</td>\n";
@@ -1487,49 +1464,6 @@ function item_save_metadata( $post_id, $post ) {
 		$usces->set_action_status('success', '商品の登録が完了しました。 ');
 	}
 
-
-//	if(isset($_POST['newskuname'])){
-//		$value = array();
-//	
-//		$newskuname = isset($_POST['newskuname']) ? trim( $_POST['newskuname'] ) : '';
-//		$newskucprice = isset($_POST['newskucprice']) ? $_POST['newskucprice']: '';
-//		$newskuprice = isset($_POST['newskuprice']) ? $_POST['newskuprice']: '';
-//		$newskuzaikonum = isset($_POST['newskuzaikonum']) ? $_POST['newskuzaikonum']: '';
-//		$newskuzaikoselect = isset($_POST['newskuzaikoselect']) ? $_POST['newskuzaikoselect'] : '';
-//		$newskudisp = isset($_POST['newskudisp']) ? trim( $_POST['newskudisp'] ) : '';
-//		$newskuunit = isset($_POST['newskuunit']) ? trim( $_POST['newskuunit'] ) : '';
-//		$newskugptekiyo = isset($_POST['newskugptekiyo']) ? $_POST['newskugptekiyo'] : '';
-//
-//		if ( $newskuname != '' && $newskuprice != '' && $newskuzaikoselect != '') {
-//	
-//			wp_cache_delete($post_id, 'post_meta');
-//			
-//			$metakey = '_isku_';
-//			$value['code'] = $newskuname;
-//			$value['name'] = $newskudisp;
-//			$value['cprice'] = $newskucprice;
-//			$value['price'] = $newskuprice;
-//			$value['unit'] = $newskuunit;
-//			$value['stocknum'] = $newskuzaikonum;
-//			$value['stock'] = $newskuzaikoselect;
-//			$value['gp'] = $newskugptekiyo;
-//			$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
-//			//$value = serialize($value);
-//
-//			$skus = $usces->get_skus($post_id);
-//			$samesku = 0;
-//			foreach( $skus as $sku ){
-//				if( $sku['code'] == $newskuname ){
-//					$samesku = 1;
-//					break;
-//				}
-//			}
-//			if( !$samesku )
-//				add_post_meta($post_id, $metakey, $value, false);
-//		}
-//	}
-//		
-//   return ;
 }
 
 function usces_link_replace($para) {
@@ -2053,4 +1987,119 @@ function target_market_ajax() {
 	die($res);
 }
 //20110331ysk end
+//20120309ysk start 0000430
+function usces_admin_ajax() {
+	switch($_POST['mode']) {
+	case 'options_backup':
+		$options = get_option('usces');
+		$res = true;
+		if( is_array($options) ) {
+			$usces_backup_date = current_time('mysql');
+			update_option('usces_backup', $options);
+			update_option('usces_backup_date', $usces_backup_date);
+			$res = $usces_backup_date;
+		} else {
+			$res = false;
+		}
+		die($res);
+		break;
+	case 'options_restore':
+		$options = get_option('usces_backup');
+		$res = true;
+		if( is_array($options) ) {
+			update_option('usces', $options);
+		} else {
+			$res = false;
+		}
+		die($res);
+		break;
+	}
+	do_action('usces_action_admin_ajax');
+}
+//20120309ysk end
+function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $prices, $quants, $use_point, $shipping_charge, $cod_fee ) {
+	global $usces;
+
+	$res = 'ok';
+	if( !empty($order_id) ) {
+		$data = $usces->get_order_data( $order_id, 'direct' );
+		$condition = unserialize( $data['order_condition'] );
+	} else {
+		$condition = $usces->get_condition();
+	}
+//usces_log('condition : '.print_r($condition,true), 'acting_transaction.log');
+
+	$post_id = explode("_", $post_ids);
+	$sku = explode("_", $skus);
+	$price = explode("_", $prices);
+	$quant = explode("_", $quants);
+	$cart = array();
+	for( $i = 0; $i < count($post_id); $i++ ) {
+		if( $post_id[$i] ) 
+			$cart[] = array( "post_id"=>$post_id[$i], "sku"=>$sku[$i], "price"=>$price[$i], "quantity"=>$quant[$i] );
+	}
+
+	$total_items_price = 0;
+	foreach( $cart as $cart_row ) {
+		$total_items_price += $cart_row['price'] * $cart_row['quantity'];
+	}
+	$meminfo = $usces->get_member_info( $mem_id );
+
+	$discount = 0;
+	if( $condition['display_mode'] == 'Promotionsale' ) {
+		if( $condition['campaign_privilege'] == 'discount' ) {
+			if ( 0 === (int)$condition['campaign_category'] ) {
+				$discount = $total_items_price * $condition['privilege_discount'] / 100;
+			} else {
+				foreach( $cart as $cart_row ) {
+					if( in_category( (int)$condition['campaign_category'], $cart_row['post_id']) ) {
+						$discount += $cart_row['price'] * $cart_row['quantity'] * $condition['privilege_discount'] / 100;
+					}
+				}
+			}
+		}
+	}
+	if( 0 < $discount ) $discount = ceil($discount * -1);
+
+	$point = 0;
+	if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($meminfo['ID']) ) {
+		if( $condition['display_mode'] == 'Promotionsale' ) {
+			if( $condition['campaign_privilege'] == 'discount' ) {
+				foreach( $cart as $cart_row ) {
+					$cats = $usces->get_post_term_ids( $cart_row['post_id'], 'category' );
+					if( !in_array( $condition['campaign_category'], $cats ) ) {
+						$rate = get_post_meta( $cart_row['post_id'], '_itemPointrate', true );
+						$price = $cart_row['price'] * $cart_row['quantity'];
+						$point += $price * $rate / 100;
+					}
+				}
+			} elseif( $condition['campaign_privilege'] == 'point' ) {
+				foreach( $cart as $cart_row ) {
+					$rate = get_post_meta( $cart_row['post_id'], '_itemPointrate', true );
+					$price = $cart_row['price'] * $cart_row['quantity'];
+					$cats = $usces->get_post_term_ids( $cart_row['post_id'], 'category' );
+					if( in_array( $condition['campaign_category'], $cats ) ) {
+						$point += $price * $rate / 100 * $condition['privilege_point'];
+					} else {
+						$point += $price * $rate / 100;
+					}
+				}
+			}
+		} else {
+			foreach( $cart as $rows ) {
+				$rate = get_post_meta( $cart_row['post_id'], '_itemPointrate', true );
+				$price = $cart_row['price'] * $rows['quantity'];
+				$point += $price * $rate / 100;
+			}
+		}
+	}
+
+	$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
+	$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
+	$tax = $usces->getTax( $total_price );
+	$total_full_price = $total_price + $tax;
+	$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
+
+	return $res."#usces#".$discount."#usces#".$tax."#usces#".$point."#usces#".($total_price+$tax);
+}
 ?>

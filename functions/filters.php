@@ -43,4 +43,27 @@ function usces_action_reg_orderdata( $args ){
 	/***********************************************************************************/
 }
 
+function usces_action_ogp_meta(){
+	global $usces, $post;
+	if( !$usces->is_item($post) || !is_single() )
+		return;
+		
+	$item = $usces->get_item( $post->ID );
+	$pictid = $usces->get_mainpictid($item['itemCode']);
+	$image_info = wp_get_attachment_image_src( $pictid, 'thumbnail' );
+
+	$ogs['title'] = $item['itemName'];
+	$ogs['type'] = 'produnct';
+	$ogs['description'] = get_the_title($post->ID);
+	$ogs['url'] = get_permalink($post->ID);
+	$ogs['image'] = $image_info[0];
+	$ogs['site_name'] = get_option('blogname');
+	$ogs = apply_filters( 'usces_filter_ogp_meta', $ogs, $post->ID );
+	
+	foreach( $ogs as $key => $value ){
+		echo "\n" . '<meta property="og:' . $key . '" content="' . $value . '">';
+	}
+
+}
+
 ?>

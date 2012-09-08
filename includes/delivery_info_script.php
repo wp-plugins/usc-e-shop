@@ -279,7 +279,7 @@ $html .= "
 $html .= "
 			var chk_pay = $(\"input[name='offer\\[payment_name\\]']:checked\").val();
 			if( uscesPaymod[chk_pay] != '' ){
-				$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"\"});
+				$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"table\"});
 			}
 		});
 		

@@ -168,12 +168,12 @@ foreach ( (array)$payments as $id => $array ) {
 				
 			case 'acting_remise_card':
 				$paymod_id = 'remise';
-				$charging_type = $usces->getItemChargingType($usces_carts[0]['post_id']);
+				$charging_type = $usces->getItemChargingType($usces_carts[0]['post_id'], $usces_carts);
 
 				if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['howpay'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate']
-					|| ('continue' == $charging_type)){
+					|| ('continue' == $charging_type || 'regular' == $charging_type) ){
 					continue;
 				}
 					

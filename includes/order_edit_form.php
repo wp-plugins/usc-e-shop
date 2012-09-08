@@ -114,7 +114,7 @@ if($order_action == 'new'){
 	 );
 	$condition = $this->get_condition();
 	$cart = array();
-	 
+
 
 }else{
 
@@ -445,7 +445,6 @@ jQuery(function($){
 			$("#total_full").html(addComma(total_full+''));
 			$("#total_full_top").html(addComma(total_full+''));
 		},
-		
 		make_delivery_time : function(selected) {
 			var option = '';
 			if(selected == -1 || delivery_time[selected] == undefined || 0 == delivery_time[selected].length){
@@ -485,6 +484,45 @@ jQuery(function($){
 				}
 			};
 			s.error = function(data, dataType){
+				alert( 'ERROR' );
+			};
+			$.ajax( s );
+			return false;
+		},
+		recalculation : function() {
+			var p = $("input[name*='skuPrice']");
+			var q = $("input[name*='quant']");
+			var post_ids = '';
+			var skus = '';
+			var prices = '';
+			var quants = '';
+			for( var i = 0; i < p.length; i++) {
+				name = $(p[i]).attr("name");
+				strs = name.split('[');
+				post_ids += strs[2].replace(/[\]]+$/g, '')+'_';
+				skus += strs[3].replace(/[\]]+$/g, '')+'_';
+				prices += parseFloat($(p[i]).val())+'_';
+				quants += $(q[i]).val()+'_';
+			}
+			var order_usedpoint = $("#order_usedpoint").val()*1;
+			var order_shipping_charge = parseFloat($("#order_shipping_charge").val());
+			var order_cod_fee = parseFloat($("#order_cod_fee").val());
+			var s = orderfunc.settings;
+			s.url = uscesL10n.requestFile;
+			s.data = "action=order_item_ajax&mode=recalculation&order_id=<?php echo $order_id; ?>&mem_id="+$('#member_id_label').html()+"&post_ids="+post_ids+"&skus="+skus+"&prices="+prices+"&quants="+quants+"&use_point="+order_usedpoint+"&shipping_charge="+order_shipping_charge+"&cod_fee="+order_cod_fee;
+			s.success = function(data, dataType) {
+				var values = data.split('#usces#');
+				if( 'ok' == values[0]) {
+					$("#order_discount").val(values[1]);
+					$("#order_tax").val(values[2]);
+					$("#order_getpoint").val(values[3]);
+					$("#total_full").html(addComma(values[4]+''));
+					$("#total_full_top").html(addComma(values[4]+''));
+				} else {
+					alert( 'ERROR' );
+				}
+			};
+			s.error = function(data, dataType) {
 				alert( 'ERROR' );
 			};
 			$.ajax( s );
@@ -707,6 +745,16 @@ function checkNumMinus( argValue ) {
 	return true;
 }
 //20120606ysk end
+//20120307ysk start 0000432
+function delConfirm(){
+	if(confirm('<?php _e('Are you sure of deleting items?', 'usces'); ?>')){
+		return true;
+	}else{
+		return false;
+	}
+}
+//20120307ysk end
+
 jQuery(document).ready(function($){
 //20120528ysk start 0000485
 //	var p = $("input[name*='skuPrice']");
@@ -741,27 +789,60 @@ jQuery(document).ready(function($){
 		return true;
 	});
 	
-	function delConfirm(){
-		if(confirm('<?php _e('Are you sure of deleting items?', 'usces'); ?>')){
-			return true;
-		}else{
-			return false;
-		}
-	}
+//20120307ysk start 0000432
+	//function delConfirm(){
+	//	if(confirm('<?php _e('Are you sure of deleting items?', 'usces'); ?>')){
+	//		return true;
+	//	}else{
+	//		return false;
+	//	}
+	//}
+//20120307ysk end
 	
 	orderfunc.make_delivery_time(<?php echo $order_delivery_method; ?>);
 
 	$("#get_member").click(function(){ 
 		if( '' == $("input[name='customer[mailaddress]']").val() ){
 			alert('e-mail を入力して下さい。');
-		} 
+			return;
+		}
 		if( '' != $("input[name='customer[name1]']").val() || '' != $("input[name='delivery[name1]']").val() ){
 			if( confirm('顧客情報、発送先情報を上書きします。よろしいですか？') ){
 				orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 			}
-		} 
-		orderfunc.getMember($("input[name='customer[mailaddress]']").val());
+		}
 	});
+<?php if($order_action == 'new') ://20120319ysk start 0000441 ?>
+	$("#costomercopy").click(function() {
+		if( '' != $("input[name='delivery[name1]']").val() || 
+			'' != $("input[name='delivery[name2]']").val() || 
+			'' != $("input[name='delivery[name3]']").val() || 
+			'' != $("input[name='delivery[name4]']").val() || 
+			'' != $("input[name='delivery[zipcode]']").val() || 
+			'' != $("input[name='delivery[address1]']").val() || 
+			'' != $("input[name='delivery[address2]']").val() || 
+			'' != $("input[name='delivery[address3]']").val() || 
+			'' != $("input[name='delivery[tel]']").val() || 
+			'' != $("input[name='delivery[fax]']").val() ) {
+			if( !confirm('顧客住所を発送先住所に上書きします。よろしいですか？') ) 
+				return;
+		}
+		$("input[name='delivery[name1]']").val($("input[name='customer[name1]']").val());
+		$("input[name='delivery[name2]']").val($("input[name='customer[name2]']").val());
+		$("input[name='delivery[name3]']").val($("input[name='customer[name3]']").val());
+		$("input[name='delivery[name4]']").val($("input[name='customer[name4]']").val());
+		$("input[name='delivery[zipcode]']").val($("input[name='customer[zipcode]']").val());
+		$("#delivery_country").val($("#customer_country option:selected").val());
+		$("#delivery_pref").val($("#customer_pref option:selected").val());
+		$("input[name='delivery[address1]']").val($("input[name='customer[address1]']").val());
+		$("input[name='delivery[address2]']").val($("input[name='customer[address2]']").val());
+		$("input[name='delivery[address3]']").val($("input[name='customer[address3]']").val());
+		$("input[name='delivery[tel]']").val($("input[name='customer[tel]']").val());
+		$("input[name='delivery[fax]']").val($("input[name='customer[fax]']").val());
+	});
+<?php endif;//20120319ysk end ?>
+
+	$("#recalc").click(function(){ orderfunc.recalculation(); });
 });
 </script>
 <div class="wrap">
@@ -825,7 +906,11 @@ jQuery(document).ready(function($){
 <?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
 	
 </table></td>
+<?php if($order_action == 'new') ://20120319ysk start 0000441 ?>
+<td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?><input type="button" id="costomercopy" value="発送先同じ"></td>
+<?php else : ?>
 <td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
+<?php endif;//20120319ysk end ?>
 </tr>
 <tr>
 <td class="label"><?php _e('payment method', 'usces'); ?></td>
@@ -1053,6 +1138,9 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 //20110629ysk end
 			}
 		}
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
+						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'stock', 'red', 'pictid');
+		$optstr = apply_filters( 'usces_filter_order_edit_form_row', $optstr, $cart, $materials );
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
@@ -1117,7 +1205,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<tr>
 			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th id="total_full" class="aright">&nbsp;</th>
-			<th colspan="2">&nbsp;</th>
+			<th colspan="2"><input name="recalc" id="recalc" class="addCartButton" type="button" value="<?php _e('再計算', 'usces'); ?>" /></th>
 		</tr>
 		</tfoot>
 </table>

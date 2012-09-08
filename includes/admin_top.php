@@ -91,6 +91,7 @@ unset($non_stoc_skus);
 ?>
 </table>
 </div>
+<?php echo apply_filters('usces_filter_admin_top_information', NULL); ?>
 <h4><?php _e('Your environment', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">

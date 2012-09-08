@@ -100,35 +100,10 @@ function usces_the_shipment_aim( $out = '' ){
 
 function usces_the_item(){
 	global $usces, $post;
-//	$usces->itemskus = array();
-//	$usces->itemopts = array();
-//	$post_id = $post->ID;
 	
 	$usces->itemskus = $usces->get_skus($post->ID, 'sort');
 	$usces->itemopts = usces_get_opts($post->ID, 'sort');
 	
-//	$skuorderby = $usces->options['system']['orderby_itemsku'] ? 'meta_id' : 'meta_key';
-//	$skufields = $usces->get_post_custom($post_id, $skuorderby);
-//	$optorderby = $usces->options['system']['orderby_itemopt'] ? 'meta_id' : 'meta_key';
-//	$optfields = $usces->get_post_custom($post_id, $optorderby);
-//	foreach((array)$skufields as $key => $value){
-//		if( preg_match('/^_isku_/', $key, $match) ){
-//			$key = substr($key, 6);
-//			$values = maybe_unserialize($value[0]);
-//			$usces->itemskus[$key] = $values;
-//		}
-//	}
-//	foreach((array)$optfields as $key => $value){
-//		if( preg_match('/^_iopt_/', $key, $match) ){
-//			$key = substr($key, 6);
-//			$values = maybe_unserialize($value[0]);
-//			$usces->itemopts[$key] = $values;
-//		}
-//	}
-	//var_dump($fields);
-	//natcasesort($usces->itemskus);
-	//ksort($usces->itemskus, SORT_STRING);
-	//ksort($usces->itemopts, SORT_STRING);
 	return;
 }
 
@@ -1098,7 +1073,8 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	//if( empty($payments) ) return; 20120328ysk 0000454
 	
 	$cart = $usces->cart->get_cart();
-	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
+	//$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
+	$charging_type = $usces->getItemChargingType($cart[0]['post_id'], $cart);
 	$html = "<dl>\n";
 	$list = '';
 	$payment_ct = count($payments);
@@ -1106,7 +1082,8 @@ function usces_the_payment_method( $value = '', $out = '' ){
 	//foreach ($payments as $id => $payment) {
 	foreach ((array)$payments as $id => $payment) {
 //20120328ysk end
-		if( 'continue' == $charging_type ){
+		//if( 'continue' == $charging_type ){
+		if( 'continue' == $charging_type || 'regular' == $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
 			if( 'acting_remise_card' != $payment['settlement'] && 'acting_paypal_ec' != $payment['settlement']) {
@@ -1557,27 +1534,41 @@ function usces_list_post( $slug, $rownum, $widget_id=NULL ){
 
 function usces_categories_checkbox($output=''){
 	global $usces;
-	$htm = '';
 	$retcats = apply_filters('usces_search_retcats', usces_search_categories());
 	$parent_id = apply_filters('usces_search_categories_checkbox_parent', USCES_ITEM_CAT_PARENT_ID);
-	$categories =  get_categories('child_of='.$parent_id . "&hide_empty=0&orderby=ID"); 
-	foreach ($categories as $cat) {
-		$children =  get_categories('parent='.$cat->term_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']);
-		if(!empty($children)){
-			$htm .= "<fieldset class='catfield-" . $cat->term_id . "'><legend>" . $cat->cat_name . "</legend><ul>\n";
-			foreach ($children as $child) {
-				$checked = in_array($child->term_id, $retcats) ? " checked='checked'" : "";
-				$htm .= "<li><input name='category[".$child->term_id."]' type='checkbox' id='category[".$child->term_id."]' value='".$child->term_id."'".$checked." /><label for='category[".$child->term_id."]' class='catlabel-" . $child->term_id . "'>".esc_html($child->cat_name)."</label></li>\n";
-			}
-			$htm .= "</ul></fieldset>\n";
-		}
-	}
+	$htm = usces_get_categories_checkbox($parent_id);
 	$htm = apply_filters('usces_filter_categories_checkbox', $htm, $categories);
 	
 	if($output == '' || $output == 'echo')
 		echo $htm;
 	else
 		return $htm;
+}
+
+function usces_get_categories_checkbox($parent_id){
+	global $usces;
+	$htm = '';
+	$retcats = usces_search_categories();
+	$parent_cat = get_category($parent_id);
+	$categories =  get_categories('parent='.$parent_id . "&hide_empty=0&orderby=" . $usces->options['fukugo_category_orderby'] . "&order=" . $usces->options['fukugo_category_order']); 
+	$htm .= "<fieldset class='catfield-" . $parent_cat->term_id . "'><legend>" . $parent_cat->cat_name . "</legend><ul>\n";
+	foreach ($categories as $cat) {
+		$children =  get_categories('parent='.$cat->term_id . "&hide_empty=0");
+		if( 0 === count($children) ){
+			$checked = in_array($cat->term_id, $retcats) ? " checked='checked'" : "";
+			$htm .= "<li><input name='category[".$cat->term_id."]' type='checkbox' id='category[".$cat->term_id."]' value='".$cat->term_id."'".$checked." /><label for='category[".$cat->term_id."]' class='catlabel-" . $cat->term_id . "'>".esc_html($cat->cat_name)."</label></li>\n";
+		}
+	}
+	$htm .= "</ul>\n";
+	foreach ($categories as $cat) {
+		$children =  get_categories('parent='.$cat->term_id . "&hide_empty=0");
+		if( 0 < count($children) ){
+			$htm .= usces_get_categories_checkbox($cat->term_id);
+		}
+	}
+	$htm .= "</fieldset>\n";
+
+	return $htm;
 }
 
 function usces_search_categories(){
@@ -1728,19 +1719,14 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 //20101018ysk start
 	$acting = isset($fields['acting']) ? $fields['acting'] : '';
 	foreach($fields as $key => $value){
-		//if( 'acting' == $key )
-		//	$acting = $value;
-			
-		//if( !in_array($key, array(
-		//						'order_no','tracking_no','status','error_message','money',
-		//						'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
-		//						'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE')) ){
-		if( !in_array($key, array(
-								'acting','order_no','tracking_no','status','error_message','money',
-								'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
-								'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE',
-								'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp')) ){
 //20101018ysk end
+		$keys = array(
+			'acting','order_no','tracking_no','status','error_message','money',
+			'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
+			'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE',
+			'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp');
+		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
+		if( !in_array($key, $keys) ) {
 			continue;
 		}
 
@@ -1880,6 +1866,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 				break;
 //20101018ysk end
 		}
+		$value = apply_filters( 'usces_filter_settle_info_field_value', $value, $key, $acting );
 		switch($type){
 			case 'nl':
 				$str .= $key . ' : ' . $value . "<br />\n";
@@ -2628,6 +2615,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		$sku_code = esc_attr(urldecode($cart_row['sku']));
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
+		$advance = $usces->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $usces->getItemCode($post_id);
 		$itemName = $usces->getItemName($post_id);
 		$cartItemName = $usces->getCartItemName($post_id, $sku_code);
@@ -2678,7 +2666,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		$row .= '</td>
 		</tr>';
 		
-		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 
+		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
 						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'pictid');
 		$res .= apply_filters( 'usces_filter_confirm_row', $row, $cart, $materials);
 	} 
@@ -2717,15 +2705,11 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		switch ($applyform){
 		
 		case 'JP':
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			//20100818ysk end
 			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name1']) . ' ' . esc_html($values['customer']['name2']) . '</td></tr>';
 			$furigana_customer = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['customer']['name3']) . ' ' . esc_html($values['customer']['name4']) . '</td></tr>';
 			$formtag .= apply_filters( 'usces_filter_furigana_confirm_customer', $furigana_customer, $type, $values );
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
-			//20100818ysk end
 			$customer_country = (!empty($usces_settings['country'][$values['customer']['country']])) ? $usces_settings['country'][$values['customer']['country']] : '';
 			$formtag .= '
 			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
@@ -2736,20 +2720,14 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('building name', 'usces').'</th><td>' . esc_html($values['customer']['address3']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
-			//20100818ysk end
 			
 			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			//20100818ysk end
 			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
 			$furigana_delivery = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
 			$shipping_address_info .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
-			//20100818ysk end
 			$shipping_country = (!empty($usces_settings['country'][$values['delivery']['country']])) ? $usces_settings['country'][$values['delivery']['country']] : '';
 			$shipping_address_info .= '
 			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
@@ -2760,20 +2738,14 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('building name', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
-			//20100818ysk end
 			$formtag .= apply_filters('usces_filter_shipping_address_info', $shipping_address_info);
 			break;
 			
 		case 'CN':
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			//20100818ysk end
 			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['customer']['name1'], $values['customer']['name2'], 'return' )) . '</td></tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
-			//20100818ysk end
 			$formtag .= '
 			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
 			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
@@ -2783,18 +2755,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
-			//20100818ysk end
 			
 			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			//20100818ysk end
 			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['delivery']['name1'], $values['delivery']['name2'], 'return' )) . '</td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
-			//20100818ysk end
 			$shipping_address_info .= '
 			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
 			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
@@ -2804,21 +2770,15 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
-			//20100818ysk end
 			$formtag .= apply_filters('usces_filter_shipping_address_info', $shipping_address_info);
 			break;
 			
 		case 'US':
 		default :
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			//20100818ysk end
 			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name1']) . '</td></tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
-			//20100818ysk end
 			$customer_country = (!empty($usces_settings['country'][$values['customer']['country']])) ? $usces_settings['country'][$values['customer']['country']] : '';
 			$formtag .= '
 			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
@@ -2829,18 +2789,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_info($data, 'customer', 'fax_after', 'return');
-			//20100818ysk end
 			
 			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			//20100818ysk end
 			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
-			//20100818ysk end
 			$shipping_country = (!empty($usces_settings['country'][$values['delivery']['country']])) ? $usces_settings['country'][$values['delivery']['country']] : '';
 			$shipping_address_info .= '
 			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
@@ -2851,9 +2805,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
-			//20100818ysk start
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'fax_after', 'return');
-			//20100818ysk end
 			$formtag .= apply_filters('usces_filter_shipping_address_info', $shipping_address_info);
 			break;
 			
@@ -2865,9 +2817,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		switch ($applyform){
 		
 		case 'JP':
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
-			//20100818ysk end
 			$formtag .= '<tr class="inp1">
 			<th width="127" scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces').'</th>';
 			if( $nameform ){
@@ -2889,9 +2839,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			}
 			$furigana .= '</tr>';
 			$formtag .= apply_filters( 'usces_filter_furigana_form', $furigana, $type, $values );
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			//20100818ysk end
 			$formtag .= '<tr>
 			<th scope="row">' . usces_get_essential_mark('zipcode', $data).__('Zip/Postal Code', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" style="ime-mode: inactive" />'.apply_filters('usces_filter_addressform_zipcode', NULL, $type) . apply_filters( 'usces_filter_after_zipcode', '100-1000', $applyform ) . '</td>
@@ -2924,15 +2872,11 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<th scope="row">' . usces_get_essential_mark('fax', $data).__('FAX number', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" style="ime-mode: inactive" />' . apply_filters( 'usces_filter_after_fax', '1000-10-1000', $applyform ) . '</td>
 			</tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'fax_after', 'return');
-			//20100818ysk end
 			break;
 			
 		case 'CN':
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
-			//20100818ysk end
 			$formtag .= '<tr class="inp1">
 			<th scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces') . '</th>';
 			if( $nameform ){
@@ -2943,9 +2887,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 				$formtag .= '<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 			}
 			$formtag .= '</tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			//20100818ysk end
 			$formtag .= '
 			<tr>
 			<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
@@ -2979,16 +2921,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<th scope="row">' . usces_get_essential_mark('fax', $data) . __('FAX number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_fax', NULL, $applyform ) . '</td>
 			</tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'fax_after', 'return');
-			//20100818ysk end
 			break;
 			
 		case 'US':
 		default :
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
-			//20100818ysk end
 			$formtag .= '<tr class="inp1">
 			<th scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces') . '</th>';
 			if( $nameform ){
@@ -2999,9 +2937,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 				$formtag .= '<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 			}
 			$formtag .= '</tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			//20100818ysk end
 			$formtag .= '
 			<tr>
 			<th scope="row">' . usces_get_essential_mark('address2', $data) . __('Address Line1', 'usces') . '</th>
@@ -3035,9 +2971,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<th scope="row">' . usces_get_essential_mark('fax', $data) . __('FAX number', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[fax]" id="fax" type="text" value="' . esc_attr($values['fax']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" />' . apply_filters( 'usces_filter_after_fax', NULL, $applyform ) . '</td>
 			</tr>';
-			//20100818ysk start
 			$formtag .= usces_custom_field_input($data, $type, 'fax_after', 'return');
-			//20100818ysk end
 			break;
 		}
 		$res = apply_filters('usces_filter_apply_addressform', $formtag, $type, $data);
@@ -3073,5 +3007,22 @@ function usces_item_option_fileds( $post_id, $sku, $label=1, $out='echo' ){
 	}else{
 		echo $html;
 	}
+}
+
+function usces_facebook_like(){
+	global $post, $usces;
+	$like = array(
+			'url' => urlencode(get_permalink($post->ID)),
+			'send' => 'false',
+			'layout' => 'button_count', //standard, button_count, box_count
+			'width' => '450',
+			'height' => '35',
+			'show_faces' => 'false',
+			'action' => 'like', //like, recommend
+	);
+	$like = apply_filters( 'usces_filter_facebook_like', $like, $post->ID );
+?>
+<iframe src="//www.facebook.com/plugins/like.php?href=<?php echo $like['url']; ?>&amp;send=<?php echo $like['send']; ?>&amp;layout=<?php echo $like['layout']; ?>&amp;width=<?php echo $like['width']; ?>&amp;show_faces=<?php echo $like['show_faces']; ?>&amp;action=<?php echo $like['action']; ?>&amp;colorscheme=light&amp;font=arial&amp;height=<?php echo $like['height']; ?>" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:<?php echo $like['width']; ?>px; height:<?php echo $like['height']; ?>px;" allowTransparency="true"></iframe>
+<?php
 }
 ?>

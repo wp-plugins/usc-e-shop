@@ -103,8 +103,11 @@ function toggleVisibility(id) {
 		<li><a href="#uscestabs_paypal">PayPal</a></li>
 <!--20110208ysk end-->
 <!--20120413ysk start-->
-		<li><a href="#uscestabs_sbps">ソフトバンク・ペイメント【β】</a></li>
+		<li><a href="#uscestabs_sbps">ソフトバンク・ペイメント</a></li>
 <!--20120413ysk end-->
+<!--20120618ysk start-->
+		<li><a href="#uscestabs_telecom">テレコムクレジット</a></li>
+<!--20120618ysk end-->
 	</ul>
 
 
@@ -537,7 +540,7 @@ function toggleVisibility(id) {
 <!--20110208ysk end-->
 <!--20120413ysk start-->
 	<div id="uscestabs_sbps">
-	<div class="settlement_service"><span class="service_title">ソフトバンク・ペイメント・サービス【β】</span></div>
+	<div class="settlement_service"><span class="service_title">ソフトバンク・ペイメント・サービス</span></div>
 
 	<?php if( isset($_POST['acting']) && 'sbps' == $_POST['acting'] ){ ?>
 		<?php if( isset($opts['sbps']['activate']) && 'on' == $opts['sbps']['activate'] ){ ?>
@@ -573,7 +576,7 @@ function toggleVisibility(id) {
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_sbps');"><?php _e('本番URL', 'usces'); ?></a></th>
 				<td colspan="6"><input name="send_url" type="text" id="send_url_sbps" value="<?php echo esc_html(isset($opts['sbps']['send_url']) ? $opts['sbps']['send_url'] : ''); ?>" size="50" /></td>
-				<td><div id="ex_send_url_sbps" class="explanation"><?php _e('本番環境で接続するURLを設定します。', 'usces'); ?></div></td>
+				<td><div id="ex_send_url_sbps" class="explanation"><?php _e('本番環境で接続するURLを設定します。「購入要求（画面遷移要求）」に示されるURLを入力してください。', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<table class="settle_table">
@@ -606,14 +609,15 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 		</table>
-<!--
 		<table class="settle_table">
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_wallet_sbps');">ウォレット決済</a></th>
-				<td><input name="wallet_activate" type="radio" id="wallet_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_activate']) && $opts['sbps']['wallet_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_activate_sbps_1">利用する</label></td>
-				<td><input name="wallet_activate" type="radio" id="wallet_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_activate']) && $opts['sbps']['wallet_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_activate_sbps_2">利用しない</label></td>
-				<td><div id="ex_wallet_sbps" class="explanation"><?php _e('利用するを選択した場合は、以下の支払方法のいずれかを選択してください。', 'usces'); ?></div></td>
+				<th>ペイジー決済</th>
+				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="payeasy_activate_sbps_1">利用する</label></td>
+				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="payeasy_activate_sbps_2">利用しない</label></td>
+				<td></td>
 			</tr>
+		</table>
+		<table class="settle_table">
 			<tr>
 				<th>ヤフーウォレット決済</th>
 				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_yahoowallet_sbps_1">利用する</label></td>
@@ -647,12 +651,6 @@ function toggleVisibility(id) {
 		</table>
 		<table class="settle_table">
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_mobile_sbps');">携帯キャリア決済</a></th>
-				<td><input name="mobile_activate" type="radio" id="mobile_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_activate']) && $opts['sbps']['mobile_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_activate_sbps_1">利用する</label></td>
-				<td><input name="mobile_activate" type="radio" id="mobile_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_activate']) && $opts['sbps']['mobile_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_activate_sbps_2">利用しない</label></td>
-				<td><div id="ex_mobile_sbps" class="explanation"><?php _e('利用するを選択した場合は、以下の支払方法のいずれかを選択してください。', 'usces'); ?></div></td>
-			</tr>
-			<tr>
 				<th>DoCoMoケータイ支払い</th>
 				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_docomo_sbps_1">利用する</label></td>
 				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_docomo_sbps_2">利用しない</label></td>
@@ -671,13 +669,12 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 			<tr>
-				<th>ソフトバンクまとめて支払い</th>
+				<th>ソフトバンク<br />まとめて支払い</th>
 				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_1">利用する</label></td>
 				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 		</table>
--->
 		<input name="send_url_check" type="hidden" value="https://stbfep.sps-system.com/Extra/BuyRequestAction.do" />
 		<input name="send_url_test" type="hidden" value="https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do" />
 		<input name="acting" type="hidden" value="sbps" />
@@ -685,7 +682,7 @@ function toggleVisibility(id) {
 	</form>
 	<div class="settle_exp">
 		<p><strong>ソフトバンク・ペイメント・サービス</strong></p>
-		<a href="http://www.sbpayment.jp/" target="_blank">ソフトバンク・ペイメント・サービスの詳細はこちら 》</a>
+		<a href="http://www.welcart.com/wc-settlement/sbps_guide/" target="_blank">ソフトバンク・ペイメント・サービスの詳細はこちら 》</a>
 		<p>　</p>
 		<p>この決済は「外部リンク型」の決済システムです。</p>
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
@@ -694,6 +691,49 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_sbps-->
 <!--20120413ysk end-->
+<!--20120618ysk start-->
+	<div id="uscestabs_telecom">
+	<div class="settlement_service"><span class="service_title">テレコムクレジット</span></div>
+	<?php if( isset($_POST['acting']) && 'telecom' == $_POST['acting'] ){ ?>
+		<?php if( isset($opts['telecom']['activate']) && 'on' == $opts['telecom']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php }else if( '' != $mes ){ ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php } ?>
+	<?php } ?>
+	<form action="" method="post" name="telecom_form" id="telecom_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clientip_telecom');">クライアントIP</a></th>
+				<td colspan="6"><input name="clientip" type="text" id="clientip_telecom" value="<?php echo esc_html(isset($opts['telecom']['clientip']) ? $opts['telecom']['clientip'] : ''); ?>" size="20" maxlength="5" /></td>
+				<td><div id="ex_clientip_telecom" class="explanation"><?php _e('契約時にテレコムクレジットから発行されるクライアントIP（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_stype_telecom');">決済タイプ</a></th>
+				<td colspan="6"><input name="stype" type="text" id="stype_telecom" value="<?php echo esc_html(isset($opts['telecom']['stype']) ? $opts['telecom']['stype'] : ''); ?>" size="20" /></td>
+				<td><div id="ex_stype_telecom" class="explanation"><?php _e('設定依頼書に記載されている決済タイプ。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>クレジットカード決済</th>
+				<td><input name="card_activate" type="radio" id="card_activate_telecom_1" value="on"<?php if( isset($opts['telecom']['card_activate']) && $opts['telecom']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_telecom_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_telecom_2" value="off"<?php if( isset($opts['telecom']['card_activate']) && $opts['telecom']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_telecom_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+		<input name="acting" type="hidden" value="telecom" />
+		<input name="usces_option_update" type="submit" class="button" value="テレコムクレジットの設定を更新する" />
+	</form>
+	<div class="settle_exp">
+		<p><strong>テレコムクレジット</strong></p>
+		<a href="http://www.telecomcredit.co.jp/" target="_blank">テレコムクレジットの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+	</div>
+	</div><!--uscestabs_telecom-->
+<!--20120618ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

@@ -19,7 +19,7 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '<p>「お支払いのご案内」は、' . esc_html($usces_entries['customer']['mailaddress1']) . '　宛にメールさせて頂いております。</p>'."\n";
 	$html .= "</div>\n";
 		
-}elseif( isset($_REQUEST['acting']) && 'zeus_conv' == $_REQUEST['acting'] ){ //remise_conv
+}elseif( isset($_REQUEST['acting']) && 'zeus_conv' == $_REQUEST['acting'] ){ //zeus_conv
 
 	$html .= '<div id="status_table"><h5>ゼウス・コンビニ決済</h5>'."\n";
 	$html .= '<table>'."\n";
@@ -83,9 +83,9 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= "</div>\n";
 //20101018ysk end
 //20120413ysk start
-}elseif( isset($_REQUEST['acting']) && 'sbps_conv' == $_REQUEST['acting'] ){ //SoftBank Payment
-
-	$html .= '<div id="status_table"><h5>ソフトバンク・ペイメント・コンビニ決済</h5>'."\n";
+}elseif( isset($_REQUEST['acting']) && ( 'sbps_conv' == $_REQUEST['acting'] || 'sbps_payeasy' == $_REQUEST['acting'] ) ){ //SoftBank Payment
+	$title = ( 'sbps_conv' == $_REQUEST['acting'] ) ? 'コンビニ決済' : 'ペイジー決済';
+	$html .= '<div id="status_table"><h5>ソフトバンク・ペイメント・'.$title.'</h5>'."\n";
 	$html .= '<p>「お支払いのご案内」は、' . esc_html($usces_entries['customer']['mailaddress1']) . '　宛にメールさせて頂いております。</p>'."\n";
 	$html .= "</div>\n";
 //20120413ysk end

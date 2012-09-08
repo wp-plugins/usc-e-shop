@@ -1,0 +1,2172 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Welcart eCommerce\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-5 00:00+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Welcart <info@welcart.com>\n"
+"Language-Team: Nimbus Works, LLC.\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "This month"
+msgstr "This Month"
+
+msgid "Last month"
+msgstr "Last Month"
+
+msgid "The past one week"
+msgstr "Past week"
+
+msgid "Last 90days"
+msgstr "Last 90 days"
+
+msgid "hide the Operation field"
+msgstr "Hide the Operation field"
+
+msgid "updates it to latest information"
+msgstr "update to the latest information"
+
+msgid "Pattern List"
+msgstr "List Pattern"
+
+msgid "CSV format is invalid!"
+msgstr "Invalid CSV format"
+
+msgid "Closed"
+msgstr "Unpublished"
+
+msgid "temporaly out of stock"
+msgstr "temporarily out of stock"
+
+msgid "It has sent it out."
+msgstr "Shipped"
+
+msgid "An estimate"
+msgstr "Estimate"
+
+msgid "Management of Note"
+msgstr "Order Management"
+
+msgid "new order"
+msgstr "New Order"
+
+msgid "Welcart shop"
+msgstr "Welcart Shop"
+
+msgid "General Setting"
+msgstr "Basic Setting"
+
+msgid "Business Days Setting"
+msgstr "Business Day Setting"
+
+msgid "Shipping Setting"
+msgstr "Shipment Setting"
+
+# New Order and Estimate
+msgid "New Order or Estimate"
+msgstr "Estimate for New Order"
+
+msgid "List of Members"
+msgstr "Member List"
+
+msgid "order date is updated"
+msgstr "Order Updated"
+
+msgid "back to the summary"
+msgstr "Back to Summary"
+
+msgid "failure in update"
+msgstr "Failed to Update"
+
+msgid "New date is add"
+msgstr "New Data Added"
+
+msgid "failure in addition"
+msgstr "Fail to Add"
+
+msgid "the order date is deleted"
+msgstr "Order Data Deleted"
+
+msgid "failure in delete"
+msgstr "Failed to Delete"
+
+msgid "Membership information is updated"
+msgstr "Membership Information Updated"
+
+msgid "options are updated"
+msgstr "Options Updated"
+
+msgid "Chose the %s"
+msgstr "Choose %s"
+
+msgid "Input the %s"
+msgstr "Input %s"
+
+msgid "temporaly out of stock now"
+msgstr "Temporarily Out of Stock"
+
+msgid "enter the correct amount"
+msgstr "Enter the Correct Amount"
+
+# (JavaScript)
+# "(i+1)" is row number in the cart.
+msgid "'enter the correct amount for the No.' + (i+1) + ' item'"
+msgstr "'Enter the Correct Merchandise Number No.' + (i+1) + ' item'"
+
+msgid "enter in between 1 to num"
+msgstr "Enter a Number More Than 1"
+
+msgid "Import is cmpleted"
+msgstr "Import Completed"
+
+msgid "Import was not completed."
+msgstr "Import Not Completed"
+
+msgid "Failed in update due to time-out"
+msgstr "Time Out: Update Failed"
+
+msgid "Error: failure in updating password"
+msgstr "Error: Failed to Update Password"
+
+msgid "Error:failure in update"
+msgstr "Error: Failed to Update"
+
+msgid "This e-mail address has been already registered."
+msgstr "This E-mail Address is Already Registered"
+
+msgid "<b>Error:</b> Enter the password."
+msgstr "<b>Error: </b> Enter Password"
+
+msgid "<b>Error:</b> E-mail address is not correct."
+msgstr "<b>Error: </b>  Wrong E-mail Address"
+
+msgid "<b>Error:</b> Password is not correct."
+msgstr "<b>Error:</b>  Wrong Password"
+
+msgid "Item genre"
+msgstr "Item Category"
+
+msgid "guest"
+msgstr "Guest"
+
+msgid "Out Of Stock"
+msgstr "Out of Stock"
+
+msgid "Out of print"
+msgstr "Discontinued"
+
+msgid "Sorry, stock is insufficient."
+msgstr "Sorry, this item is out of stock."
+
+msgid "Password is not correct."
+msgstr "Incorrect Password"
+
+msgid "e-mail address is not correct"
+msgstr "Incorrect E-mail Address"
+
+msgid "E-mail address is not correct"
+msgstr "Incorrect E-mail Address"
+
+msgid "Name is not correct"
+msgstr "Incorrect Name"
+
+msgid "Invalid CANNAT pretend."
+msgstr "Invaid furigana"
+
+msgid "postal code is not correct"
+msgstr "Incorrect Postal Code"
+
+msgid "enter the prefecture"
+msgstr "Enter the Prefecture"
+
+msgid "enter the city name"
+msgstr "Enter the City Name"
+
+msgid "enter house numbers"
+msgstr "Enter Street Address"
+
+msgid "enter phone numbers"
+msgstr "Enter Phone Number"
+
+msgid "chose one from delivery method."
+msgstr "Choose Delivery Method"
+
+msgid "chose one from payment options."
+msgstr "Choose Payment Option"
+
+msgid "Invalid value. Please enter in the numbers."
+msgstr "Invalid Number. Please Enter the Correct Numbers."
+
+msgid "You have exceeded the maximum available."
+msgstr "You have exceeded the maximum purchase price."
+
+msgid "There is no items in your cart."
+msgstr "Your Cart is Empty."
+
+msgid "It is the e-mail address that there is not."
+msgstr "Incorrect E-mail Address"
+
+msgid "Dummy page for fotter nabigation"
+msgstr "Dummy Page for Footer Navigation"
+
+msgid "Dummy page for maine nabigation"
+msgstr "Dummy Page for Main Navigation"
+
+msgid "Items recommended"
+msgstr "Recommended Items"
+
+msgid "items recommended"
+msgstr "Recommended Items"
+
+msgid "(Excl. Tax)"
+msgstr "（Excluding Tax）"
+
+msgid "(Incl. Tax)"
+msgstr "（Including Tax）"
+
+# "%s" is a name of customer.
+msgid "Mr/Mrs %s"
+msgstr "Mr./Ms. %s"
+
+msgid "Request of"
+msgstr "Requested by"
+
+msgid "estimate number"
+msgstr "Estimate Number"
+
+# An entry in the email.
+msgid "** content of ordered items **"
+msgstr "** Ordered Items **"
+
+msgid "total items"
+msgstr "Items Total"
+
+msgid "use of points"
+msgstr "Service Points Accumulated"
+
+msgid "consumption tax"
+msgstr "Sales tax"
+
+msgid "Payment amount"
+msgstr "Payment Amount"
+
+# An entry in the email.
+msgid "** A shipping address **"
+msgstr "** Shipping Address **"
+
+msgid "A destination name"
+msgstr "Recipient Name"
+
+msgid "Zip/Postal Code"
+msgstr "Postcode"
+
+msgid "Zip"
+msgstr "Postcode"
+
+msgid "Address"
+msgstr "Address"
+
+msgid "Street address"
+msgstr "Address1"
+
+msgid "Apartment, building, etc."
+msgstr "Address2"
+
+msgid "Phone number"
+msgstr "Phone Number"
+
+msgid "Delivery Time"
+msgstr "Preferred Delivery Time"
+
+msgid "** WE may not always be able to deliver the items on time which you desire."
+msgstr "** Morning Delivery not Available in Some Areas."
+
+msgid "** For some region, to deliver the items in the morning is not possible."
+msgstr "** You may not specify the time of delivery."
+
+msgid "Failure in deleting in bulk"
+msgstr "Failed to Delete All"
+
+msgid "option name"
+msgstr "Optional Name"
+
+msgid "selected amount"
+msgstr "Selected Amount"
+
+msgid "normal price"
+msgstr "Regular Price"
+
+msgid "Sale price"
+msgstr "Sale Price"
+
+msgid "SKU display name "
+msgstr "SKU Display Name"
+
+msgid "Apply business package"
+msgstr "Apply Business Package"
+
+msgid "A payment method name"
+msgstr "Payment Method"
+
+msgid "explanation"
+msgstr "Description"
+
+msgid "Type of payment"
+msgstr "Type of Payment"
+
+msgid "Payment module"
+msgstr "Payment Module"
+
+msgid "Single-select"
+msgstr "Single-Select"
+
+msgid "Multi-select"
+msgstr "Multi-Select"
+
+msgid "Add a new option"
+msgstr "Add a New Option"
+
+msgid "Add common options"
+msgstr "Add General Options"
+
+msgid "Applicable product options"
+msgstr "Applicable Product Options"
+
+msgid "Please create a common option."
+msgstr "Please Create a General Option"
+
+msgid "Apply an option"
+msgstr "Apply an Option"
+
+msgid "Add new SKU"
+msgstr "Add New SKU"
+
+msgid "Not apply"
+msgstr "Do Not Apply"
+
+msgid "Add a new method forpayment "
+msgstr "Add a New Payment Option"
+
+msgid "Add method for shipping"
+msgstr "Add a New Shipment Option"
+
+msgid "order number"
+msgstr "Order Number"
+
+msgid "List price"
+msgstr "List Price"
+
+msgid "Add to Whish List"
+msgstr "Add to List"
+
+msgid "Choose"
+msgstr "Please Choose"
+
+msgid "Business package discount"
+msgstr "Business Package Discount"
+
+msgid "size"
+msgstr "Size"
+
+msgid "No preference"
+msgstr "No Preference"
+
+msgid "Non-request"
+msgstr "No Preference"
+
+msgid "sending completed"
+msgstr "Sent"
+
+msgid "Failure in sending"
+msgstr "Failed to Send"
+
+msgid "All the personal information which you are sending with this form will be treated with maximum care. Your information is entrusted to us for the purpose of providing information and respond to your requests, but to be used for any other purpose. More information, please visit our Privacy  Notice. All the items are required to be filled. Please use Alphanumeric characters for numbers."
+msgstr "We do our best to protect all personal information sent through this form. <br> The personal information provided will be used only for the purpose of responding to customer's requests and inquiries. For further details regarding personal information, please look under our provacy policy. <br> All required items must be submitted. <br>Use alphanumeric characters for numbers."
+
+msgid "Please use Alphanumeric characters for numbers."
+msgstr "Please use alphanumeric characters for numbers."
+
+msgid "Full name"
+msgstr "Full Name"
+
+msgid "e-mail adress"
+msgstr "E-mail Address"
+
+msgid "contents"
+msgstr "Descriptions"
+
+msgid "Admit to send it with this information."
+msgstr "Submit"
+
+msgid "Log-in"
+msgstr "Sign In"
+
+msgid "Log out"
+msgstr "Log Out"
+
+msgid "Start Exporting"
+msgstr "Begin Export"
+
+msgid "Start importing"
+msgstr "Begin Import"
+
+msgid "Back-up functions is now under testing."
+msgstr "Testing Backup Function"
+
+msgid "Please set the shipping price"
+msgstr "Please set the shipping price."
+
+msgid "update"
+msgstr "Update"
+
+msgid "Not fixing shipping."
+msgstr "Do not fix shipping price."
+
+# (JavaScript)
+# "delname" is a delivery method name.
+msgid "'Are you sure of deleting shipping [' + delname + ']?'"
+msgstr "'Are you sure of deleting shipping ' + delname + '?'"
+
+# (JavaScript)
+# "charge" is a shipping charge.
+# （Currency correspondence is necessary.）
+msgid "'Are you sure of setting shiping to %s' + charge + ' for all the prefecture?'"
+msgstr "'Are you sure to set all prefectural shipping at %s' + charge + '?'"
+
+msgid "shipping option"
+msgstr "Shipping Option"
+
+msgid "(Explain)"
+msgstr "(Explanation)"
+
+msgid "New item"
+msgstr "New Item"
+
+msgid "New addition"
+msgstr "New Addition"
+
+msgid "Shipping charge name"
+msgstr "Shipping Charge Name"
+
+msgid "You can choose the shipping every item."
+msgstr "You can choose the shipping for each item."
+
+msgid "Deliverly time"
+msgstr "Request specific delivery time"
+
+msgid "Raise the priority"
+msgstr "Raise Priority"
+
+msgid "Lower the priority"
+msgstr "Lower Priority"
+
+msgid "Postage fixation"
+msgstr "Fixed Postage"
+
+msgid "Please make entry of appointment time to a party by one."
+msgstr "Enter requested delivery time for each line."
+
+msgid "It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'."
+msgstr "Choosing fixed postage applies to all of above rate. If not chosen, postage for each item applies."
+
+msgid "This is an e-mail which will be sent aytomatically to your customers at the contact from customer."
+msgstr "This is the e-mail sent automatically to customers who contact."
+
+msgid "Conformation e-mail of membership registeration."
+msgstr "Confirmation e-mail for membership registration. (auto sent)"
+
+msgid "This is an e-mail which will be snnt automatically to your customers when their membership registration is completed."
+msgstr "Auto sent e-mail upon completion of membership registration."
+
+msgid "Shipping complete email (sent from the admin)"
+msgstr "E-mail confirming shipment. (sent from administration site)"
+
+msgid "Order confirmation email (sent from the admin)"
+msgstr "E-mail confirming order (sent from administration site)"
+
+msgid "Confirmation mail for change of orders. (sent by admin.)"
+msgstr "Confirmation mail for change in order. (sent from administration site)"
+
+msgid "This is an e-mail which will be sent manually from admin screen, when there is changes of order."
+msgstr "E-mail sent manually from administration site when there is change in order."
+
+msgid "Mail for Confirmation of payment. ( sent from admin)"
+msgstr "Mail Confirming Payment. (sent from administration site)"
+
+msgid "This is an e-mail which will be sent to customers when their transfer payment is confirmed."
+msgstr "E-mail sent manually to customers when payment deposit is confirmed."
+
+msgid "Estimate email (sent from the admin)"
+msgstr "Estimate mail (sent from administration site)"
+
+msgid "E-mail for confirmation of cancellation. (sent from admin)"
+msgstr "E-mail confirming order cancellation. (sent from administration site)"
+
+msgid "This is an e-mail which will be sent when order has been canselled."
+msgstr "E-mail sent manually when order is cancelled."
+
+msgid "Other e-mails(sent from admin)"
+msgstr "Other e-mails (sent from administration site)"
+
+msgid "e-mail which will be sent on temporaly basis"
+msgstr "E-mail sent on temporary basis"
+
+msgid "change decision"
+msgstr "Change Setting"
+
+msgid "starting time"
+msgstr "Starting Time"
+
+msgid "min"
+msgstr "minute"
+
+msgid "%2$s/%1$s"
+msgstr "%2$s/%1$s"
+
+msgid "%2$s %3$s, %1$s"
+msgstr "%2$s/%3$s/%1$s"
+
+msgid "date and time of termination"
+msgstr "Date and Time of Termination"
+
+msgid "reserve the period of campaign."
+msgstr "Reserve the period of campaign"
+
+msgid "Working day"
+msgstr "Business Day"
+
+msgid "Next month"
+msgstr "Next Month"
+
+msgid "Business settings"
+msgstr "Business Settings"
+
+msgid "Display Modes"
+msgstr "Display Mode"
+
+msgid "<strong>Normal operating</strong> -Normal display"
+msgstr "<strong>Regular Operation</strong> ---Regular Display"
+
+msgid "<strong>Campaign</strong>--Showing the campaige mode"
+msgstr "<strong>Campaign</strong> --- Show Campaign Mode"
+
+msgid "<strong>Maintenance</strong> ---Showing  maintenance page. Administrater is able to see the page with normal display."
+msgstr "<strong>Maintenance</strong> ---Show maintenance page. Administrator can log on and check the page with regular display."
+
+msgid "Campaign target items"
+msgstr "Campaign Items"
+
+msgid "This is a category of the objects to add a privilege to in the case of a campaign mode. You can choose a campaign object article freely by installing a 'campaign' category for an article."
+msgstr "Categories of items on campaign mode. You can freely choose campaign items by setting up \"campaign\" category as opposed to regular merchandise."
+
+msgid "all the items"
+msgstr "All Items"
+
+msgid "Campaign Award"
+msgstr "Campaign Benefits"
+
+msgid "'Points' award applies only for monmbers. You specify the ratio of rate points. <br />'Discount'is specified in the discount rate applies to all buyers."
+msgstr "'Points' are awarded only for members by nominating the added ratio of points.<br />'Discount' apply to all customers with specified discount rates."
+
+msgid "Configuration of management and display mode of shop."
+msgstr "Configuration of the shop's display mode and/or management method."
+
+msgid "Shop setting"
+msgstr "Shop Setting"
+
+msgid "The company name"
+msgstr "Company Name"
+
+msgid "Fill out this if you are a corporation."
+msgstr "Corporations must fill in here."
+
+msgid "FAX number"
+msgstr "Fax Number"
+
+msgid "E-mail address for ordering"
+msgstr "E-mail Address for Ordering"
+
+msgid "<em>[Required]</em> the administrator's e-mail address to receive the order"
+msgstr "<em>[Required]</em>Administerer's e-mail address to receive the order."
+
+msgid "Contact e-mail address"
+msgstr "Contact E-mail Address"
+
+msgid "<em>[Required]</em> the administrator's e-mail address to receive the contact meils."
+msgstr "<em>[Required]</em>Administerer's e-mail address to receive contacts."
+
+msgid "Sender's e-mail address"
+msgstr "Sender's E-mail Address"
+
+msgid "<em>[Required]</em> the sender's e-mail address to send 'thank you e-mail' to cuscomers."
+msgstr "<em>[Required]</em>E-mail address to send thank-you mail to customers."
+
+msgid "<em>[Required]</em>The transmission of a message ahead of the error email."
+msgstr "<em>[Required]</em>Receiving address of error mail."
+
+msgid "Address for Error mail"
+msgstr "Address for Error Mail"
+
+msgid "copy rights"
+msgstr "Copyrights"
+
+msgid "Conditions for free shipping"
+msgstr "Conditions for Free Shipping"
+
+msgid "Above"
+msgstr "And Above"
+
+msgid "Total purchase prise to have free shipping. Leave it blank if it is not necessary."
+msgstr "Total purchase price eligible for free shipping. Leave it blank if not necessary."
+
+msgid "default limitation number of purchase"
+msgstr "Default limit for multiple purchase"
+
+msgid "maximum amount"
+msgstr "Maximum Amount"
+
+msgid "initial value at registration of items. Leave it blank if it is not necessary."
+msgstr "Value of items at the initial registration. Leave it blank if not necessary."
+
+msgid "initial value of date of sending out."
+msgstr "Initial value of shipment date"
+
+msgid "initial value at registration of items. Do not chose this if it does not apply to you."
+msgstr "Initial value when registering items. Do not choose if not applicable."
+
+msgid "Percentage of Consumption tax"
+msgstr "Sales Tax"
+
+msgid "method of Calculation of the tax"
+msgstr "Calculation of the Tax"
+
+msgid "drop fractions"
+msgstr "Drop Fractions"
+
+msgid "raise to a unit"
+msgstr "Raise to the next unit"
+
+msgid "round up numbers of five and above and round down anything under"
+msgstr "Round the last digit"
+
+msgid "Leave it as blank if tax is included"
+msgstr "Leave it blank if tax is included."
+
+msgid "Cost for C.O.D. leave it blank if it in not necessary."
+msgstr "C.O.D. Price. Leave it blank if not applicable."
+
+msgid "Account information for transfer"
+msgstr "Deposit Account Information"
+
+msgid "The acount number for bank transfer. You can enter the information as you wish.  The contents will apear in the mail."
+msgstr "Account information for direct deposit. You can hit return for multiple lines. It will show on the mail as is."
+
+msgid "membership syetem"
+msgstr "Membership System"
+
+msgid "to use"
+msgstr "use"
+
+msgid "not to use"
+msgstr "do not use"
+
+msgid "Would you like to use membership system or not?"
+msgstr "Use Membership System or not?"
+
+msgid "membership points"
+msgstr "Membership Points"
+
+msgid "to grant"
+msgstr "grant"
+
+msgid "not to grant"
+msgstr "do not grant"
+
+msgid "Would you like to use 'points granting syetem' when you choose to use membership system?"
+msgstr "Utilize point system when using membership system or not."
+
+msgid "The initial value of point rate"
+msgstr "Initial point rate value"
+
+msgid "Point at the registration of membership"
+msgstr "Points at the time of membership registration"
+
+msgid "Points granted  at the first membersip registration."
+msgstr "Points granted at the initial membership registration"
+
+msgid "the initial rate of the shop"
+msgstr "Initial setting of the shop"
+
+msgid "payment method"
+msgstr "payment method"
+
+msgid "** Payment method **"
+msgstr "** payment method **"
+
+msgid "Conditions which will be selected at the purchase. You can use the options which you hve registered here, as an option in the master items."
+msgstr "Condition selected for purchase. Options registered here can be used as master option."
+
+msgid " times (limited to members)"
+msgstr "times (members only)"
+
+msgid "applied material"
+msgstr "Applied Material"
+
+msgid "Cart page"
+msgstr "Cart Page"
+
+msgid "Membership page"
+msgstr "Member Page"
+
+msgid "Membership"
+msgstr "Member"
+
+msgid "There is no news for this moment."
+msgstr "No Current Message"
+
+msgid "number & amount of order"
+msgstr "Number and Price of order"
+
+msgid "number of order"
+msgstr "Number of Order"
+
+msgid "amount of order"
+msgstr "Price of Order"
+
+msgid "Same date in last year"
+msgstr "Same Month Last Year"
+
+msgid "information for registration of items"
+msgstr "Registered Item Imformation"
+
+msgid "number of item"
+msgstr "Number of Items"
+
+msgid "SKU total number"
+msgstr "Total SKU"
+
+msgid "List of items without stock"
+msgstr "List of Items without Stock"
+
+msgid "Your environment"
+msgstr "Your Environment"
+
+msgid "Safe mode"
+msgstr "Safe Mode"
+
+msgid "Used points"
+msgstr "Used Points"
+
+msgid "Campaign disnount"
+msgstr "Campaign Discount"
+
+msgid "The current point"
+msgstr "Current Points"
+
+msgid "Points you are using here"
+msgstr "Points Using"
+
+msgid "Use the points"
+msgstr "Use Points"
+
+msgid "Re-input"
+msgstr "Re-Input"
+
+msgid "Familly name"
+msgstr "last name"
+
+msgid "Given name"
+msgstr "first name"
+
+msgid "Province"
+msgstr "Prefecture"
+
+msgid "city"
+msgstr "suburb/city"
+
+msgid "numbers"
+msgstr "Street Number"
+
+msgid "building name"
+msgstr "Building Name"
+
+msgid "This mark shows the required items."
+msgstr "This mark shows required items."
+
+msgid "Please make sure that your e-mail address is correct."
+msgstr "Please make sure your e-mail address is correct."
+
+msgid "Press the `update` button when you change the amount of items."
+msgstr "Press the \"update\" button if you changed the number of items."
+
+msgid "The price with this mark applys to Business pack discount."
+msgstr "Marks items with business package discount."
+
+msgid "Save the data"
+msgstr "Save the Data"
+
+msgid "Item image"
+msgstr "Item Image"
+
+msgid "This excerpt is a summary of the product description."
+msgstr "This excerpt is a summary of product description."
+
+msgid "item code"
+msgstr "Item Code"
+
+msgid "item name"
+msgstr "Item Name"
+
+msgid "SKU code"
+msgstr "SKU Code"
+
+msgid "Limited amount for purchase"
+msgstr "Limit for Purchase"
+
+msgid "Percentage of points"
+msgstr "Ratio of Points Earned"
+
+# %s is a entry field
+msgid "limit by%s%s%s"
+msgstr "Upper Limit %s%s%s"
+
+# %s is a entry field
+msgid "in more than%s%s%s%s%s %s%s%s,"
+msgstr "in more than%s%s%s%s%s %s%s%s,"
+
+msgid "%discount"
+msgstr "%Off"
+
+msgid "estimated shipping date"
+msgstr "Estimated Shipping Date"
+
+msgid "SKU price"
+msgstr "SKU Price"
+
+msgid "options for items"
+msgstr "Options for Items"
+
+msgid "Title of detail page"
+msgstr "Page Title for Details"
+
+msgid "A Few Stock"
+msgstr "Limited Stock"
+
+msgid "notmal member"
+msgstr "Regular Member"
+
+msgid "good member"
+msgstr "Outstanding Member"
+
+msgid "bad member"
+msgstr "Delinquent Member"
+
+msgid "VIP member"
+msgstr "VIP Member"
+
+msgid "Transfer (prepayment)"
+msgstr "Direct Deposit (Pre-Payment)"
+
+msgid "Transfer (postpay)"
+msgstr "Direct Deposit (Post-Payment)"
+
+msgid "COD fee"
+msgstr "COD Charge"
+
+msgid "During the campaign"
+msgstr "Campaign Underway"
+
+msgid "-- Select --"
+msgstr "--Select--"
+
+msgid "immediately"
+msgstr "Same Day"
+
+msgid "1-2 days"
+msgstr "1~2 Days"
+
+msgid "2-3days"
+msgstr "2~3 Days"
+
+msgid "3-5days"
+msgstr "3~5 Days"
+
+msgid "4-6days"
+msgstr "4~6 Days"
+
+msgid "about 1 week later"
+msgstr "About 1 Week Later"
+
+msgid "about 2 weeks later"
+msgstr "About  Weeks Later"
+
+msgid "about 3 weeks later"
+msgstr "About 3 Weeks Later"
+
+msgid "after we get new items"
+msgstr "When Re-stocked"
+
+msgid "Confirmation of order details"
+msgstr "[Order Confirmation]"
+
+msgid "An order report"
+msgstr "[Order Report}"
+
+msgid "Your question is sent"
+msgstr "[We Received Your Inquiry]"
+
+msgid "About your question"
+msgstr "[Regarding Your Inquiry]"
+
+msgid "Comfirmation of your registration for membership"
+msgstr "[Confirmation of Your Membership Registration]"
+
+msgid "Information for shipping of your ordered items"
+msgstr "[Information on Your Order Shipment]"
+
+msgid "Confirmation of change for your order details"
+msgstr "[Confirmation of Your Order Change]"
+
+msgid "Confirmation mail for your transfer"
+msgstr "[Confirmation of Your Payment]"
+
+msgid "Confirmatin of your cancellation"
+msgstr "[Confirmation of Order Cancellation]"
+
+msgid "Thank you for choosing %s."
+msgstr "Thank You For Shopping With Us."
+
+msgid "We have received your order. Please check following information."
+msgstr "Please check your order."
+
+msgid "We will inform you by e-mail when we are ready to ship ordered items to you."
+msgstr "We will let you know when your order is ready to ship."
+
+msgid "There is new order by %s."
+msgstr "You received order from %s."
+
+msgid "We have received following e-mail."
+msgstr "We have received the following e-mail."
+
+msgid "We will contact you by e-mail soon."
+msgstr "We will contact you by e-mail as soon as we're ready."
+
+msgid "Than you for registrating as %s membership."
+msgstr "Thank you for becoming a member."
+
+msgid "You can chek your purchase status at section 'membership information'."
+msgstr "You can check your past order at \"membership information.\""
+
+msgid "Your ordered items have been sent today."
+msgstr "We have shipped your order today."
+
+msgid "It will be delivered by company xxx in couple of days."
+msgstr "Delivery will be handled by xxx."
+
+msgid "Please contact us in case you have any problems with receiving your items."
+msgstr "Please contact us if there is no delivery in a few days."
+
+msgid "You have changed your order as following."
+msgstr "Please check the change in your order as follows."
+
+msgid "We will inform you by e-mail when we are ready to send your items."
+msgstr "We will let you know of the shipment as soon as the items are ready."
+
+msgid "Your transfer have been made successfully."
+msgstr "We received your payment."
+
+msgid "We will send you following estimate for your items."
+msgstr "Please check your estimate as follows."
+
+msgid "We have received your cancellationfor your order."
+msgstr "We received the cancellation of your order."
+
+msgid "zip code"
+msgstr "Zip Code"
+
+msgid "contact"
+msgstr "Contact"
+
+msgid "Registration date"
+msgstr "Registration Date"
+
+msgid "Edit membership data"
+msgstr "Edit Membership Data"
+
+msgid "When you change amount, please click 'Edit' before you finish your process."
+msgstr "Make sure to \"update\" your order when you make a change."
+
+msgid "membership number"
+msgstr "Membership Number"
+
+msgid "name"
+msgstr "Name"
+
+msgid "current point"
+msgstr "Current Points"
+
+msgid "Strated date"
+msgstr "Registration Date"
+
+msgid "There is no purchase history for this moment."
+msgstr "There is no purchase history at this moment."
+
+msgid "Purchase history"
+msgstr "Purchase History"
+
+msgid "Purchase date"
+msgstr "Purchase Date"
+
+msgid "Purchase price"
+msgstr "Purchase Price"
+
+msgid "Acquired points"
+msgstr "Acquired Points"
+
+msgid "e-mail"
+msgstr "E-mail"
+
+# (JavaScript)
+# "member_id" is ID of a member.
+msgid "'Are you sure of deleting your membership number ' + member_id + ' ?'"
+msgstr "'Are you sure to delete membership number ' + member_id + ' ?'"
+
+msgid "search fields"
+msgstr "Search Fields"
+
+msgid "key words"
+msgstr "Key Words"
+
+msgid "Transfer"
+msgstr "Direct Deposit"
+
+msgid "transfer statement"
+msgstr "Deposit Statement"
+
+msgid "close"
+msgstr "Close"
+
+msgid "Mail for Shipping"
+msgstr "Shipment Notification Mail"
+
+msgid "Mail for confirmation of order"
+msgstr "Order Confirmation Mail"
+
+msgid "Mail for confiemation of change"
+msgstr "Order Change Confirmation Mail"
+
+msgid "Mail for confirmation of transter"
+msgstr "Payment Confirmation Mail"
+
+msgid "estimate mail"
+msgstr "Estimate Mail"
+
+msgid "Cancelling mail"
+msgstr "Cancellation Mail"
+
+msgid "Other mail"
+msgstr "Other Mail"
+
+msgid "Failure in sending e-mails."
+msgstr "Fail to send mail."
+
+msgid "Are you sure of deleting items?"
+msgstr "Are you sure to delete items?"
+
+msgid "Edit order data"
+msgstr "Edit Order Information"
+
+msgid "show the mail/print field"
+msgstr "Show Mail/Print Field"
+
+msgid "print out the estimate"
+msgstr "Print Out Estimate"
+
+msgid "print the invoice"
+msgstr "Print Invoice"
+
+msgid "When there is any change, please press the 'change decision' before you send or print."
+msgstr "When making change, press \"Update Settings\" before sending/printing."
+
+msgid "order details"
+msgstr "Order Details"
+
+msgid "order date"
+msgstr "Order Date"
+
+msgid "shpping date"
+msgstr "Shipping Date"
+
+msgid "Date Modified"
+msgstr "Date Processed"
+
+msgid "shipping address"
+msgstr "Shipping Address"
+
+msgid "delivery time"
+msgstr "Delivery Time"
+
+msgid "Shipping date"
+msgstr "Scheduled Shipping Date"
+
+msgid "Not notified"
+msgstr "Do Not Notify"
+
+msgid "The correspondence situation"
+msgstr "Correspondence"
+
+msgid "normal sale"
+msgstr "Regular Sale"
+
+msgid "Sale Campaign"
+msgstr "Campaign Sales"
+
+msgid "Current stock"
+msgstr "Current Stock"
+
+msgid "Add item"
+msgstr "Add Item"
+
+msgid "granted points"
+msgstr "Acquired Points"
+
+msgid "Discounted amount should be shown by -(Minus)"
+msgstr "Discounted amout input by - (negative)"
+
+msgid "It will be not caluculated automatically."
+msgstr "*Will not be calculated automatically."
+
+msgid "Enter the item code, then press 'Obtain'"
+msgstr "Enter Item Code then Press \"Obtain.\""
+
+msgid "Check the mail and click 'send'"
+msgstr "Check the mail and click \"send.\""
+
+msgid "Client name"
+msgstr "Customer Name"
+
+msgid "subject"
+msgstr "Subject"
+
+msgid "send"
+msgstr "Send"
+
+msgid "date"
+msgstr "Date"
+
+msgid "Processing"
+msgstr "Processing Situation"
+
+msgid "Choose the data."
+msgstr "Date not Chosen"
+
+# （JavaScript）
+msgid "'Transfer status of the items which you have checked will be changed in to ' + %s + '. %sDo you agree?'"
+msgstr "'Okay to change Payment Status of Checked Items to ' + %s + ' ?'"
+
+# （JavaScript）
+msgid "'Data status which you have cheked will be changed in to ' + %s + '. %sDo you agree?'"
+msgstr "'Okay to change all checked data status to ' + %s + ' ?'"
+
+msgid "Are you sure of deleting all the checked data in bulk?"
+msgstr "Okay to delete all checked data?"
+
+# （JavaScript）
+# "order_id" is order number.
+msgid "'Are you sure of deleting an order number ' + order_id + ' ?'"
+msgstr "'Okay to delete order number ' + order_id + ' ?'"
+
+msgid "Oparation in bulk"
+msgstr "Change All"
+
+msgid "Edit the receiving money status"
+msgstr "Change Payment Status"
+
+msgid "Edit of status process"
+msgstr "Change Process Status"
+
+msgid "Delete in bulk"
+msgstr "Delete All"
+
+msgid "start"
+msgstr "Start"
+
+msgid "Thank you for choosing '%s' we send you following estimate. "
+msgstr "Thank you for shopping with us. Here is your estimated as follows."
+
+msgid "Valid:7days"
+msgstr "Valid: 7 days"
+
+msgid "Invoices"
+msgstr "Invoice"
+
+msgid "Thak you for choosing '%s'. We deliver your items as following."
+msgstr "Thank you for shopping with us. We deliver your items as follows."
+
+msgid "date of receiving the order"
+msgstr "Date of Order Received"
+
+msgid "payment division"
+msgstr "Payment Division="
+
+msgid "Edit item"
+msgstr "Edit Item Information"
+
+msgid "display status"
+msgstr "Display Status"
+
+msgid "no items are selected"
+msgstr "No Items Selected"
+
+# (JavaScript)
+msgid "'Stock status of items which you have checked will be changed into ' + %s + ' Stock status of each SKU will be all shown as ' + %s + ' Do you agree with this oparation?'"
+msgstr "'Changing stock status for checked items to ' + %s + '. Okay to change all SKU stock status to ' + %s + ' ?'"
+
+# (JavaScript)
+msgid "'Are you sure of changing all the items you have checked in to ' + %s + ' ?'"
+msgstr "'Okay to change display status of all checked items to ' + %s + ' ?'"
+
+msgid "Are you sure of deleting all the items you have checked in bulk?"
+msgstr "Okay to delete all checked items?"
+
+# (JavaScript)
+# "item_id" is Item code.
+msgid "'Are you sure of deleting the item, item code ' + item_id + ' ?'"
+msgstr "'Okay to delete items with item code ' + item_id + ' ?'"
+
+# (JavaScript)
+# "delname" is delivery method.
+msgid "'Are you sure of deleting the delivery method ' + delname + ' ?'"
+msgstr "'Okay to delete delivery method ' + delname + ' ?'"
+
+msgid "Item list"
+msgstr "Item List"
+
+msgid "items without stock"
+msgstr "Items with No Stock"
+
+msgid "Changes in stock status"
+msgstr "Change in Stock Status"
+
+msgid "Edit the display status"
+msgstr "Change Display Status"
+
+msgid "edit"
+msgstr "Edit"
+
+msgid "now loading"
+msgstr "Now Loading"
+
+msgid "top page"
+msgstr "Top Page"
+
+msgid "New items"
+msgstr "New Items"
+
+msgid "Special price"
+msgstr "Special Price"
+
+msgid "Membership information"
+msgstr "Membership Information"
+
+msgid "Proceed to checkout"
+msgstr "Proceed to Checkout"
+
+msgid "Product Details"
+msgstr "Go to Product Details"
+
+msgid "Visit/Contact Us"
+msgstr "Contact Us"
+
+msgid "artist"
+msgstr "Artist"
+
+msgid "keyword search"
+msgstr "Keyword Search"
+
+msgid "best seller"
+msgstr "Bestseller"
+
+msgid "diary"
+msgstr "Diary"
+
+msgid "Product Search"
+msgstr "Product Details Search"
+
+msgid "Search"
+msgstr "Start Search"
+
+msgid "Search results"
+msgstr "Search Results"
+
+msgid "&laquo; Previous page"
+msgstr "&laquo; Previous Page"
+
+msgid "next page &raquo;"
+msgstr "Next Page &raquo;"
+
+msgid "Next article &raquo;"
+msgstr "Next Article &raquo;"
+
+msgid "&laquo; Previous article"
+msgstr "&laquo; Previous Article"
+
+msgid "Shipping / Payment options"
+msgstr "Shipping/Payment Options"
+
+msgid "continue shopping"
+msgstr "Continue Shopping"
+
+msgid "Enter customer information as mentioned above."
+msgstr "Enter above customer information."
+
+msgid "It has been sent succesfully."
+msgstr "Sent Successfully"
+
+msgid "If you have any questions, please contact us by 'Contact'."
+msgstr "If you have any questions, please contace by \"Contact.\""
+
+msgid "Back to the top page."
+msgstr "Back to Top Page"
+
+msgid "Back to payment method page."
+msgstr "Back to Payment Method Page"
+
+msgid "Shipping address information"
+msgstr "Shipping Address Information"
+
+msgid "Sipping/Payment Option"
+msgstr "Shipping/Payment Option"
+
+msgid "same as customer information"
+msgstr "Same as Customer Information"
+
+msgid "Chose another shipping address."
+msgstr "Choose another shipping address."
+
+msgid "Confirm your order."
+msgstr "Confirm Your Order"
+
+msgid "Thank you for contacting us. Please wait for our answer to your questions."
+msgstr "Thank you for contacting us. Please give us time to answer your question."
+
+msgid "password"
+msgstr "Password"
+
+msgid "Password (confirm)"
+msgstr "Password (for confirmation)"
+
+msgid "Thank you in new membership."
+msgstr "Thank you for becoming a member."
+
+msgid "Membership information has been updated."
+msgstr "Membership information is updated."
+
+msgid "I transmitted an email."
+msgstr "We sent an e-mail."
+
+msgid "Chenge th epassword according to the e-mail."
+msgstr "Change your password by following the instruction in this mail."
+
+msgid "Password has been changed."
+msgstr "Password has been changed."
+
+msgid "to vist membership information page"
+msgstr "Visit Membership Information Here"
+
+msgid "Log-in for members"
+msgstr "Member Log-in"
+
+msgid "New enrollment for membership."
+msgstr "Enroll as New Member Here"
+
+msgid "Obtain new password"
+msgstr "Create New Password"
+
+msgid "Registered membership information"
+msgstr "Registerd Membership Information"
+
+msgid "member number"
+msgstr "Membership Number"
+
+msgid "Leave it blank in case of no change."
+msgstr "Leave it blank if there is no change."
+
+msgid "update it"
+msgstr "Update"
+
+msgid "New enrollment form"
+msgstr "New Enrollment Form"
+
+msgid "All your personal information  will be protected and handled with carefull attention."
+msgstr "Personal information sent from this new enrollment form will be carefully protected."
+
+msgid "Your information is entrusted to us for the purpose of providing information and respond to your requests, but to be used for any other purpose. More information, please visit our Privacy  Notice."
+msgstr "Customer information will be used only to provide better service to our customers, and for no other purpose. For more details, please see under \"Privacy Policy.\""
+
+msgid "The items marked with *, are mandatory. Please complete."
+msgstr "*Denotes required items. Please fill in completely."
+
+msgid "E-mail address (for verification)"
+msgstr "E-mail Address (for verification)"
+
+msgid "transmit a message"
+msgstr "Send Message"
+
+msgid "list"
+msgstr "List"
+
+msgid "tag"
+msgstr "Tag"
+
+msgid "Next item"
+msgstr "Next Item"
+
+msgid "previous item"
+msgstr "Previous Item"
+
+# 20110212
+msgid "in not yet registered"
+msgstr " has not been registered."
+
+msgid "Data for this date is not yet registered."
+msgstr "Data for this date has not been registered."
+
+msgid "next article"
+msgstr "Next Article"
+
+msgid "Previous aorticle"
+msgstr "Previous Article"
+
+msgid "selling price"
+msgstr "Retail Price"
+
+msgid "stock"
+msgstr "Stock Count"
+
+msgid "stock status"
+msgstr "Stock Status"
+
+msgid "Add to a cart"
+msgstr "Add to Cart"
+
+msgid "to the cart"
+msgstr "To Cart"
+
+msgid "In the cart"
+msgstr "In Your Cart"
+
+msgid "see the details"
+msgstr "See Details"
+
+msgid "page title"
+msgstr "Page Title"
+
+msgid "Explanation in a Cart page"
+msgstr "Description attached to Cart Page."
+
+msgid "You can set additional explanation to insert in a cart page."
+msgstr "You can set additional description to the cart page."
+
+msgid "Explanation in a Customer Info page"
+msgstr "Description to be inserted to Customer Information page."
+
+msgid "You can set additional explanation to insert in a customer information page."
+msgstr "You can set additional description to Customer Information page."
+
+msgid "Explanation in Delivery and Payment method page"
+msgstr "Description to be inserted to shipping/payment method page."
+
+msgid "You can set additional explanation to insert in a delivery and a payment method page."
+msgstr "You can set additional description to be inserted to delivery/payment method page."
+
+msgid "Explanation in a Confirm page"
+msgstr "Description to be inserted to Item Confirmation page."
+
+msgid "You can set additional explanation to insert in a confirm page."
+msgstr "You can set additional description to be inserted to the Item Confirmation page."
+
+msgid "Explanation in a Completion page"
+msgstr "Description for Completed page."
+
+msgid "You can set additional explanation to insert in a completion page."
+msgstr "You can set additional description to be inserted to Completion page."
+
+msgid "Explanation in Member page"
+msgstr "Description to be inserted to Membership-related page."
+
+msgid "header"
+msgstr "Header"
+
+msgid "footer"
+msgstr "Footer"
+
+msgid "1.Cart"
+msgstr "1. In Your Cart"
+
+msgid "2.Customer Info"
+msgstr "2. Customer Information"
+
+msgid "3.Deli. & Pay."
+msgstr "3. Shipping and Payment"
+
+msgid "4.Confirm"
+msgstr "4. Confirmation"
+
+msgid " Next "
+msgstr "Next"
+
+msgid "Quantity renewal"
+msgstr "Update"
+
+msgid "** Article order contents **"
+msgstr "** Ordered Items **"
+
+msgid "Buyer"
+msgstr "Purchaser"
+
+msgid "** Others / a demand **"
+msgstr "** Requests and Others **"
+
+msgid "I will inform it of shipment completion by an email."
+msgstr "We will notify you by e-mail when your order is shipped."
+
+msgid "Please inform it of any questions from [an inquiry]."
+msgstr "If you have any questions, let us know from \"Contact Us.\""
+
+msgid "** An inquiry **"
+msgstr "** Inquiry **"
+
+msgid "An inquiry email"
+msgstr "Inquiry E-mail"
+
+msgid "Change password"
+msgstr "Change Password"
+
+msgid "The new password acquisition"
+msgstr "Obtain New Password"
+
+msgid "Please, click the following URL, and please change a password."
+msgstr "Change your password by clicking the URL below."
+
+msgid "Error: I was not able to transmit an email."
+msgstr "Error: E-mail Not Sent"
+
+msgid "Explanation in a Login page"
+msgstr "Description to be inserted to Login Page"
+
+msgid "You can set additional explanation to insert in a login page."
+msgstr "You can set additional description to be inserted to the Login Confirmation page."
+
+msgid "Explanation in a New Member page"
+msgstr "Description to be inserted to New Member page."
+
+msgid "You can set additional explanation to insert in a new member page."
+msgstr "You can set additional description to be inserted to the New Member page."
+
+msgid "Explanation in New Password page"
+msgstr "Description to be inserted to New Password page."
+
+msgid "You can set additional explanation to insert in a new password page."
+msgstr "You can set additional description to be inserted to the New Password page."
+
+msgid "Explanation in a Change Password page"
+msgstr "Description to be inserted to Change Password page."
+
+msgid "You can set additional explanation to insert in a change password page."
+msgstr "You can set additional description to be inserted to the Change Password page."
+
+msgid "Explanation in a Member Information page"
+msgstr "Description to be inserted to the Member Information page."
+
+msgid "You can set additional explanation to insert in a member information page."
+msgstr "You can set additional description to be inserted to the Member Information page."
+
+msgid "memorize login information"
+msgstr "Retain Login Information"
+
+msgid "To member information editing"
+msgstr "Edit Member Information Here>>"
+
+msgid "Member information editing"
+msgstr "Edit Member Information"
+
+msgid "An article category keyword search"
+msgstr "Item Category Multiple Search"
+
+msgid "The representation supplier settlement"
+msgstr "Payment by Sales Representative"
+
+msgid "Payment in installments"
+msgstr "Payment in Installments"
+
+msgid "Normal business"
+msgstr "Regular Business"
+
+msgid "I send a reply email to a visitor. I ask in a few minutes to be able to have you refer in there being the fear that e-mail address is different again when the email from this shop does not arrive."
+msgstr "Sending reply e-mail to the customer. If you don't hear from the store for a while, please contact us again, since we might have the wrong e-mail address."
+
+msgid "<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s"
+msgstr "At %4$s~%5$s%3$s, <span class=%7$s>%6$s%1$s</span>%2$s per1%3$s"
+
+msgid "cases"
+msgstr "Casese"
+
+msgid "'AND' search by categories"
+msgstr "AND search by categories"
+
+# (JavaScript)
+# "checknum" is a purchase limit number.
+msgid "'This article is limited by '+checknum+' at a time.'"
+msgstr "'This Item is limited to '+checknum+' at a time.'"
+
+# (JavaScript)
+# "checknum" is a purchase limit number.
+# "(i+1)" is row number of the cart.
+msgid "'This article is limited by '+checknum+' at a time for the No.' + (i+1) + ' item.'"
+msgstr "'The No.' +  (i+1) + ' Item is limited to ' + checknum+' at a time.'"
+
+# (JavaScript)
+# "checknum" is the number of the stock.
+msgid "'Stock is remainder '+checknum+'.'"
+msgstr "'Remaining Stock at '+checknum+'.'"
+
+# (JavaScript)
+# "checknum" is the number of the stock.
+# "(i+1)" is row number of the cart.
+msgid "'Stock of No.' + (i+1) + ' item is remainder '+checknum+'.'"
+msgstr "'Stock for Item Number ' + (i+1) + ' is '+checknum+'.'"
+
+msgid "* A shipment due date is a day to ship an article, and it's not the arrival day."
+msgstr "*Shipmend due date is the day items are shipped, now when they arrive."
+
+msgid "The file was not uploaded."
+msgstr "The file was not uploaded."
+
+msgid "The file is not supported."
+msgstr "Uploded file is not supported."
+
+msgid "The log file was not prepared for."
+msgstr "Could not prepare log file."
+
+msgid "A file does not open."
+msgstr "Cannot open the file."
+
+msgid "The number of the columns is abnormal."
+msgstr "Wrong number of columns."
+
+msgid "An item cord is non-input."
+msgstr "No item code."
+
+msgid "An item name is non-input."
+msgstr "No item name."
+
+msgid "A value of the purchase limit number is abnormal."
+msgstr "Wrong number for the purchase limit."
+
+msgid "A value of the point rate is abnormal."
+msgstr "Wrong point rate value."
+
+msgid "umerical value is abnormality."
+msgstr "Wrong numerical value."
+
+msgid "rate is abnormal."
+msgstr "Wrong rate."
+
+msgid "A value of the shipment day is abnormal."
+msgstr "Wrong shipment date."
+
+msgid "A value of the postage individual charging is abnormal."
+msgstr "Wrong postage charge."
+
+msgid "A value of the display status is abnormal."
+msgstr "Wrong display status."
+
+msgid "A value of the schedule is abnormal."
+msgstr "Wrong schedule."
+
+msgid "A category is non-input."
+msgstr "Category is empty."
+
+msgid "A SKU cord is non-input."
+msgstr "SKU code is empty."
+
+msgid "A SKU cord repeats."
+msgstr "Duplicate SKU code."
+
+msgid "A value of the sale price is abnormal."
+msgstr "Wrong sales price."
+
+msgid "A value of the stock status is abnormal."
+msgstr "Srong stock status."
+
+msgid "The value of the duties pack application is abnormal."
+msgstr "Wrong business package value."
+
+msgid "Option name of No.%s option is non-input."
+msgstr "Option for No.%s is empty."
+
+msgid "Option-entry-field of No.%s option is abnormal."
+msgstr "Wrong value at option %s input field."
+
+msgid "Option-required-item of No.%s option is abnormal."
+msgstr "Wrong value at required option %s."
+
+msgid "Option-select of No.%s option is non-input."
+msgstr "Wrong value at selection of option %s."
+
+msgid "The data were not registered with a database."
+msgstr "Could not register to database."
+
+msgid "%2$s of %1$s lines registration completion, %3$s lines error."
+msgstr "Of %1$s lines,  %2$s registered、%3$s not."
+
+msgid "SMTP server host"
+msgstr "SMTP Server Host"
+
+msgid "Host name"
+msgstr "Host Name"
+
+msgid "This is a field setting the host name of a server for email transmission of a message. When the transmission of a message is not possible in localhost, a SMTP server is necessary."
+msgstr "Setting host name of mail server. When it cannot be sent by localhost, SMTP server is needed."
+
+msgid "Thanks email(automatic transmission)"
+msgstr "Thank You E-mail (auto send)"
+
+msgid "Order email(automatic transmission)"
+msgstr "Order E-mail (auto send)"
+
+msgid "Inquiry receptionist email(automatic transmission)"
+msgstr "Inquiry Acknowledgement E-mail (auto send)"
+
+msgid "This is an email transmitting a message for a visitor at the time of an order."
+msgstr "E-mail sent to customers at the time of an order."
+
+msgid "This is an email transmitting a message for owner of shop(%s)."
+msgstr "E-mail sent to order address (%s) at the time of an order."
+
+msgid "This is an email transmitted manual operation to than a management screen, when the shipment of the article was completed."
+msgstr "Manual e-mail to be sent from administrater screen when the shipment is completed."
+
+msgid "This is an email transmitted manual operation to than a management screen, when you registered a new order."
+msgstr "Manual e-mail to be sent from administrator screen when a new order is received."
+
+msgid "This is an email transmitted manual operation to than a management screen, when you  registered an estimate."
+msgstr "Manual e-mail sent from administrater screen when an estimate is registered."
+
+msgid "The district where sale is possible"
+msgstr "Sales Region"
+
+msgid "One line one by one."
+msgstr "Hit return to separate lines. <br />Initial value is set with all prefectures."
+
+msgid "Not display an article in blog"
+msgstr "In case of loop display, show items separately."
+
+msgid "In the case of the loop indication that plural contributions are displayed in a shop, you can be decided display or non-display the item."
+msgstr "When loop display at the shop shows multiple articles, set if you let the item information show."
+
+msgid "In item details page, you can appoint a rel attribute for anchor tag to display an image, sach as Lightbox plugin."
+msgstr "In item details page, you can set rel attributes to show images with plug-ins such as Lightbox."
+
+msgid "compound category sort item"
+msgstr "Multiple catetory sort item"
+
+msgid "category ID"
+msgstr "Category ID"
+
+msgid "category name"
+msgstr "Category Name"
+
+msgid "In a category to display in a compound category search page, you can choose an object to sort."
+msgstr "Choosing which catogory to sort in multiple-search page."
+
+msgid "compound category sort order"
+msgstr "Multiple category sort order"
+
+msgid "Descendin"
+msgstr "Descending"
+
+msgid "In a category to display in a compound category search page, you can choose sort order."
+msgstr "Choosing which category in multiple-search page."
+
+msgid "settlement module path"
+msgstr "Settlement Module Path"
+
+msgid "This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder."
+msgstr "Choosing placement of settlement modulle. Initial value will be in the same place as the sample, but will be deleted when updated automatically. To avoid this, set the module outside of plug-in folder."
+
+msgid "The hierarchy category of the item"
+msgstr "Hierarchy category of the item"
+
+msgid "Postage individual charging"
+msgstr "Individual postage charge"
+
+msgid "Push 'change decision' button, to be settled with an order number."
+msgstr "Settle order number by pressing 'change setting'."
+
+msgid "Order number"
+msgstr "Order Number"
+
+msgid "estimate order"
+msgstr "Estimate Order"
+
+msgid "Collective registration item"
+msgstr "Register All Items"
+
+msgid "Upload prescribed CSV and perform the collective registration of the article.<br />Please choose a file, and push the registration start."
+msgstr "Register all items by uploading prescribed CSV. <br />Choose file and press start registration."
+
+msgid "Indication is updated after upload completion."
+msgstr "Display will be updated after the upload is completed."
+
+msgid "Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload."
+msgstr "See（usc-e-shop/logs/itemcsv_log.txt）for registration progress. <br /> Log will be updated for each upload."
+
+msgid "PayPal gives back 'FAIL'. Please confirm setting."
+msgstr "PayPal returned \"FAIL.\" Please check the setting."
+
+msgid "<p>The settlement is not completed.<br />Please remit the price from the PayPal Maia count page.After receipt of money confirmation, I will prepare for the article shipment.</p>"
+msgstr "<p>The payment is not completed. <br />Send payment from PayPal account page. We will ship the items after the payment is confirmed.</p>"
+
+msgid "Checkout"
+msgstr "Check out with above."
+
+msgid "The member please enter at here."
+msgstr "Members enter here."
+
+msgid "The nonmember please enter at here."
+msgstr "Non-members enter here."
+
+msgid "When you enroll newly, please fill it out."
+msgstr "Fill out when you enroll as a member."
+
+msgid "To the next while enrolling"
+msgstr "Go to next as you enroll"
+
+msgid "Revise member information, and to next"
+msgstr "Revise member information and proceed."
+
+msgid "Maintaining now"
+msgstr "Under Maintenance"
+
+msgid "Please wait for a while."
+msgstr "Please wait."
+
+msgid "Please appoint an option."
+msgstr "Choose an option."
+
+msgid "An article concerned"
+msgstr "Related Items"
+
+msgid "display of icon"
+msgstr "Display Icon"
+
+msgid "number of indication"
+msgstr "Number Indicated"
+
+msgid "automatic count"
+msgstr "Automatic Count"
+
+msgid "Indication"
+msgstr "Display"
+
+msgid "Non-indication"
+msgstr "No display"
+
+msgid "automatic list"
+msgstr "Display Automatic List"
+
+msgid "handwriting list"
+msgstr "Display Hand-written List"
+
+msgid "Please input an article cord."
+msgstr "Please input Item Code."
+
+msgid "The setting of the business day, In a 'business day setting' page of the admin screen."
+msgstr "You can set business days in 'Business Day Setting' page in Welcart Shop."
+
+msgid "parent category(slug)"
+msgstr "Parent Category (slug)"
+
+msgid "category slug"
+msgstr "Category (slug)"
+
+msgid "Pssword Lost and Found"
+msgstr "Handling of Lost Password"
+
+msgid "Lost your password?"
+msgstr "Did you forget your password?"
+
+msgid "Page ID(comma separate)"
+msgstr "Page ID (separate multiple pages with comma)"
+
+msgid "The article was not found."
+msgstr "Item Not Found"
+
+msgid "No posts found."
+msgstr "Post Not Found"
+
+msgid "make a copy"
+msgstr "Copy and Renew"
+
+msgid "back to item list"
+msgstr "Back to Item List"
+
+msgid "same as"
+msgstr "Same As"
+
+msgid "Rule of the column for a item name"
+msgstr "Display rule for Item Name"
+
+msgid "You can appoint indication, non-indication, sort of the item name to show the cart.<br />This rule is applied as brand names such as a cart page, contents confirmation page, a member information purchase history, an email, a written estimate, the statement of delivery."
+msgstr "Choose Item Display/No Display and Display Order in the Cart.<br />This rule is adopted to the Item Names in Cart Page, Item Check Page, Membership Information Purchase History Page, E-mail, Estimate, Invoice, etc."
+
+msgid "Indication of item name"
+msgstr "Display Item Name"
+
+msgid "Position of item name"
+msgstr "Position of Item Name"
+
+msgid "Indication of item code"
+msgstr "Display Item Code"
+
+msgid "Position of item code"
+msgstr "Position of Item Code"
+
+msgid "Indication of SKU name"
+msgstr "Display SKU Name"
+
+msgid "Position of SKU name"
+msgstr "Position of SKU Name"
+
+msgid "Indication of SKU code"
+msgstr "Display SKU Code"
+
+msgid "Position of SKU code"
+msgstr "Position of SKU Code"
+
+msgid "WordPress address (SSL)"
+msgstr "WordPress Address (SSL)"
+
+msgid "Blog address (SSL)"
+msgstr "Blog Address (SSL)"
+
+msgid "https://*WordPress address*<br />You can use common use SSL."
+msgstr "Set regular WordPress Address (URL) to begin with https://. Common domain can be used."
+
+msgid "https://*Blog address*<br />You can use common use SSL."
+msgstr "Set regular WordPress Blog Address (URL) to begin with https://. Common domain can be used."
+
+msgid "Please decide whether you use SSL"
+msgstr "Please check to use SSL."
+
+msgid "Shipping name"
+msgstr "Shipping Name"
+
+msgid "There is not a choice."
+msgstr "Cannot choose."
+
+msgid "Please input your name."
+msgstr "*Input your name."
+
+msgid "Please input your e-mail address."
+msgstr "*Input your e-mail address."
+
+msgid "E-mail address is not correct."
+msgstr "*Incorrect e-mail address."
+
+msgid "Please input contents."
+msgstr "*Please fill."
+
+msgid " - "
+msgstr "-"
+
+msgid "* It is necessary to perform the delivery setting before than the item registration."
+msgstr "*You need to set shipment before registering items."
+
+msgid "* When you performed the addition and deletion of the delivery method after item registration, please be careful because the update of all items is necessary."
+msgstr "*Please note if you change/delete shipment method after item registration, you need to update all items."
+
+msgid "* Please register an item, after you finished delivery setting!"
+msgstr "*Please register items after you set the shipment setting!"
+
+msgid "[DESC]"
+msgstr "[DES]"
+
+msgid " * "
+msgstr "*"
+
+msgid "ERROR: I was not able to complete collective operation"
+msgstr "Error: Could not finish command."
+
+msgid "Kitakami Yokohama"
+msgstr "Kitakami-cho, Yokohama"
+
+msgid "tuhanbuild 4F"
+msgstr "Tsuhan Bldg. 4 Fl"
+
+msgid "numeric"
+msgstr "Numeric"
+
+msgid "Please be settled for a fee in spite of Update."
+msgstr "Please set handling fee by pressing 'renew.'"
+
+msgid "Type of the fee"
+msgstr "Type of Fee"
+
+msgid "A purchase amount"
+msgstr "Purchase Amount"
+
+msgid "Fixation C.O.D."
+msgstr "Fixed C.O.D."
+
+msgid "Add row"
+msgstr "Add Row"
+
+msgid "Delete row"
+msgstr "Delete Row"
+
+msgid "C.O.D. Detailed setting"
+msgstr "Detailed Setting of C.O.D. Fee"
+
+msgid "Detailed setting"
+msgstr "Detailed Setting"
+
+msgid "There is the item where a value is dirty."
+msgstr "There is an item with wrong value."
+
+msgid "The page_id of the inquiry-form"
+msgstr "Page ID of Contact Form"
+
+msgid "When you want to use the inquiry-form through SSL, please input the page_id.<br />When you use a permanent link, you have need to set the permanent link of this page in usces-inquiry."
+msgstr "If you want to use Welcart contact form through SSL, choose that page_id. Above SSl must be set. <br />Leave it blank if SS> is not necessary.<br />If using permaline, the page must bu usces-inquiry."
+
+msgid "Comments Closed"
+msgstr "Comments Closed."
+
+msgid "Posted in %s"
+msgstr "Category: %s"
+
+msgid "Posts Tagged &#8216;%s&#8217;"
+msgstr "Posts Tagged to &#8216;%s&#8217;"
+
+msgid "Archive for %s|Daily archive page"
+msgstr "Article for %s"
+
+msgid "Settlement Setting"
+msgstr "Setting for Credit Settlement"
+
+msgid "Custom order field"
+msgstr "Custom Order Field"
+
+msgid "Custom customer field"
+msgstr "Custom Customer Field"
+
+msgid "Custom delivery field"
+msgstr "Custom Delivery Field"
+
+msgid "Custom member field"
+msgstr "Custom Member Field"
+
+msgid "key name"
+msgstr "Field Key"
+
+msgid "field name"
+msgstr "Field Name"
+
+msgid "Add a new custom order field"
+msgstr "Add New Custom Customer Field"
+
+msgid "Add a new custom customer field"
+msgstr "Add New Custom Customer Field"
+
+msgid "Add a new custom delivery field"
+msgstr "Add New Custom Delivery Field"
+
+msgid "Add a new custom member field"
+msgstr "Add New Custom Member Field"
+
+msgid "Add custom order field"
+msgstr "Add Customer Order Field"
+
+msgid "Add custom customer field"
+msgstr "Add Custom Customer Field"
+
+msgid "Add custom delivery field"
+msgstr "Add Custom Delivery Field"
+
+msgid "Add custom member field"
+msgstr "Add Custom Member Field"
+
+msgid "Radio-button"
+msgstr "Radio-Button"
+
+msgid "Check-box"
+msgstr "Check-Box"
+
+msgid "Previous the name"
+msgstr "Insert Before Name"
+
+msgid "After the name"
+msgstr "Insert After Name"
+
+msgid "After the fax"
+msgstr "Insert After Fax Number"
+
+msgid "You can add an arbitrary field to customer information."
+msgstr "Add arbitrary field to customer information."
+
+msgid "You can add an arbitrary field to the page of the payment method."
+msgstr "Add arbitrary field to payment method page."
+
+msgid "You can add an arbitrary field to delivery information."
+msgstr "Add arbitrary field to shipping address information."
+
+msgid "You can add an arbitrary field to the member information page."
+msgstr "Add arbitrary field to member information page."
+
+msgid "cannot use this payment method now"
+msgstr "Cannot use this payment method at the moment."
+
+msgid "Charging type"
+msgstr "Charge Type"
+
+msgid "Continuation"
+msgstr "Continuing Charge"
+
+msgid "Termination"
+msgstr "Stop Charging"
+
+msgid "Text-area"
+msgstr "Text-Area"
+
+msgid "Period(months)"
+msgstr "Contract Period (Months)"
+
+msgid "Sellout"
+msgstr "Sold Out"
+
+# 20110212
+msgid "Data by"
+msgstr "Data by "
+
+# 20110212
+msgid "is not yet registered."
+msgstr " is not yet registered."
+
+msgid "par"
+msgstr "per"
+
+msgid "An order email"
+msgstr "Order Detail"
+
+msgid "I completed collective operation."
+msgstr "Completed All Operation"
+
+#~ msgid ""
+#~ "I seem to have you cancel it when the body does not have memorizing to "
+#~ "this email."
+#~ msgstr "If you received this e-mail by mistake, please disregard."

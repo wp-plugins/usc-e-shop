@@ -115,6 +115,42 @@ jQuery(function($){
 			error: function(msg) {
 				$("#target_market_loading").html('');
 			}
+//20120309ysk start 0000430
+		},
+		backup : function() {
+			var s = operation.settings;
+			s.data = "action=usces_admin_ajax&mode=options_backup";
+			s.success = function(data, dataType) {
+				if(data) {
+					alert("保存しました。");
+					$("#options_restore").removeAttr("disabled");
+					$("#options_backup_date").html(data);
+				} else {
+					alert("保存に失敗しました。");
+				}
+			};
+			s.error = function(msg) {
+				alert("保存に失敗しました。");
+			};
+			$.ajax( s );
+			return false;
+		},
+		restore : function() {
+			var s = operation.settings;
+			s.data = "action=usces_admin_ajax&mode=options_restore";
+			s.success = function(data, dataType) {
+				if(data) {
+					location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_system";
+				} else {
+					alert("復元に失敗しました。");
+				}
+			};
+			s.error = function(msg) {
+				alert("復元に失敗しました。");
+			};
+			$.ajax( s );
+			return false;
+//20120309ysk end
 		}
 	};
 
@@ -196,6 +232,25 @@ jQuery(document).ready(function($) {
 			expires: 1
 		}
 	});
+//20120309ysk start 0000430
+<?php
+	$options_backup = get_option('usces_backup');
+	$options_backup_date = get_option('usces_backup_date');
+	if( empty($options_backup) ) {
+?>
+	$("#options_restore").attr("disabled", "disabled");
+<?php
+	}
+?>
+	$('#options_backup').click(function() {
+		operation.backup();
+	});
+	$('#options_restore').click(function() {
+		//$('#backup_dialog').dialog('open');
+		if( !confirm("オプション値を復元します。よろしいですか？") ) return;
+		operation.restore();
+	});
+//20120309ysk end
 });
 //20110331ysk end
 </script>
@@ -346,6 +401,17 @@ jQuery(document).ready(function($) {
 	</tr>
 </table>
 <hr />
+<!--20120309ysk start 0000430-->
+<table class="form_table">
+	<tr height="35">
+		<th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_options_backup');"><?php _e('Setup data backup','usces'); ?></a></th>
+		<td><input name="options_backup" id="options_backup" type="button" value="<?php _e('Backup options','usces'); ?>" ></td>
+		<td><input name="options_restore" id="options_restore" type="button" value="<?php _e('Restoring a Backup', 'usces'); ?>" ></td>
+		<td><div id="options_backup_date"><?php if( !empty( $options_backup_date ) ) echo $options_backup_date; ?></div></td>
+		<td><div id="ex_options_backup" class="explanation"><?php _e('You can take the backup of the Welcart setup data.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<!--20120309ysk end-->
 </div>
 <!--20110331ysk start-->
 </div><!--postbox-->

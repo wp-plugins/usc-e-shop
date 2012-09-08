@@ -1194,9 +1194,19 @@ function usces_download_product_list() {
 				$optstr = '';
 				if(is_array($options) && count($options) > 0) {
 					foreach((array)$options as $key => $value) {
-						if(!empty($key))
-							//$optstr .= usces_entity_decode($key, $ext).$sp.usces_entity_decode($value, $ext).$nb;
-							$optstr .= usces_entity_decode(urldecode($key).$sp.urldecode($value), $ext).$nb;
+						if(!empty($key)) {
+							if(is_array($value)) {
+								foreach($value as $v) {
+									$optstr .= usces_entity_decode(urldecode($key), $ext).$sp;
+									foreach($value as $v) {
+										$optstr .= usces_entity_decode(urldecode($v), $ext).$nb;
+									}
+								}
+							} else {
+								//$optstr .= usces_entity_decode($key, $ext).$sp.usces_entity_decode($value, $ext).$nb;
+								$optstr .= usces_entity_decode(urldecode($key).$sp.urldecode($value), $ext).$nb;
+							}
+						}
 					}
 				}
 				$line .= $td_h.$optstr.$td_f;
@@ -1909,8 +1919,9 @@ function usces_download_order_list() {
 		if(isset($_REQUEST['check']['status'])) {
 			$order_status = explode(',', $data['order_status']);
 			$status = '';
-			foreach($order_status as $os) {
-				$status .= $usces_management_status[$os].$sp;
+			foreach( (array)$order_status as $os) {
+				if( isset($usces_management_status[$os]) ) 
+					$status .= $usces_management_status[$os].$sp;
 			}
 			$line .= $td_h.trim($status, $sp).$td_f;
 		}

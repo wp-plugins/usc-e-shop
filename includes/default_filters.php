@@ -13,6 +13,7 @@ add_action( 'admin_head-welcart-shop_page_usces_itemnew', 'admin_new_prodauct_he
 add_action( 'admin_head-welcart-shop_page_usces_itemedit', 'admin_prodauct_header');
 add_action( 'current_screen', 'admin_prodauct_current_screen' );
 add_action( 'wp_head', array(&$usces, 'shop_head'));
+add_action( 'wp_head', 'usces_action_ogp_meta');
 add_action( 'wp_footer', array(&$usces, 'shop_foot'));
 add_action( 'wp_footer', array(&$usces, 'lastprocessing'));
 add_action( 'wp_footer', 'usces_action_footer_comment');
@@ -45,6 +46,9 @@ add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
 //20110331ysk start
 add_action( 'wp_ajax_target_market_ajax', 'target_market_ajax' );
 //20110331ysk end
+//20120309ysk start 0000430
+add_action( 'wp_ajax_usces_admin_ajax', 'usces_admin_ajax' );
+//20120309ysk end
 
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));
 add_shortcode('company_name', array(&$usces, 'sc_company_name'));

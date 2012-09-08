@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.1.10
+Stable tag: 1.2
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -55,6 +55,15 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 3. An attached default theme
 
 == Changelog ==
+
+= V1.2 =
+8 Sep 2012
+-----------
+* It functions and adds a product details page to OGP correspondence
+* It functions to set the amount of purchase upper limit in case of the C.O.D. and adds it
+* I add the recomputation functions such as a consumption tax or the point of the order data editing
+* In the case of a new sign-in, I add the option which I e-mail a manager, and is transmitted
+* I add backup & reset possible function with an option level (basic setting, others)
 
 = V1.1 =
 25 Jan 2012
