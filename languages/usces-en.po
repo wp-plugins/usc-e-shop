@@ -869,9 +869,6 @@ msgstr "COD Charge"
 msgid "During the campaign"
 msgstr "Campaign Underway"
 
-msgid "-- Select --"
-msgstr "--Select--"
-
 msgid "immediately"
 msgstr "Same Day"
 
