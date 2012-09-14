@@ -807,10 +807,15 @@ jQuery(document).ready(function($){
 			return;
 		}
 		if( '' != $("input[name='customer[name1]']").val() || '' != $("input[name='delivery[name1]']").val() ){
-			if( confirm('顧客情報、発送先情報を上書きします。よろしいですか？') ){
-				orderfunc.getMember($("input[name='customer[mailaddress]']").val());
+//20120914ysk start 0000567
+			//if( confirm('顧客情報、発送先情報を上書きします。よろしいですか？') ){
+			if( !confirm('顧客情報、発送先情報を上書きします。よろしいですか？') ){
+				//orderfunc.getMember($("input[name='customer[mailaddress]']").val());
+				return;
 			}
 		}
+		orderfunc.getMember($("input[name='customer[mailaddress]']").val());
+//20120914ysk end
 	});
 <?php if($order_action == 'new') ://20120319ysk start 0000441 ?>
 	$("#costomercopy").click(function() {

@@ -2893,6 +2893,7 @@ class usc_e_shop
 		}
 		$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
 		if( $this->error_message == '' ){
+			unset( $_SESSION['usces_entry']['order']['usedpoint'] );//20120914ysk 0000566
 			$this->page = 'confirm';
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		}else{
