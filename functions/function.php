@@ -2862,6 +2862,9 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
 		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
+		if( !empty($values['name3']) || !empty($values['name4']) ) {
+			$formtag .= __('furigana','usces') . "    : " . $values['name3'] . ' ' . $values['name4'] . " \r\n";
+		}
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
