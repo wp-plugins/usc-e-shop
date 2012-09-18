@@ -2094,12 +2094,13 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 		}
 	}
 
+	if( 0 < $point ) $point = ceil($point);
 	$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 	$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 	$tax = $usces->getTax( $total_price );
 	$total_full_price = $total_price + $tax;
 	$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 
-	return $res."#usces#".$discount."#usces#".$tax."#usces#".$point."#usces#".($total_price+$tax);
+	return $res."#usces#".$discount."#usces#".usces_crform( $tax, false, false, 'return', false )."#usces#".$point."#usces#".usces_crform( $total_full_price, false, false, 'return', false );
 }
 ?>

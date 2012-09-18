@@ -739,7 +739,7 @@ function pdfWindow( type ) {
 }
 //20120606ysk start 0000497
 function checkNumMinus( argValue ) {
-	if( argValue.match(/[^0-9|^\-]/g) ) {
+	if( argValue.match(/[^0-9|^\-|^\.]/g) ) {
 		return false;
 	}
 	return true;
