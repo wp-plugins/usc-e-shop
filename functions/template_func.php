@@ -2261,7 +2261,7 @@ function usces_crform( $float, $symbol_pre = true, $symbol_post = true, $out = '
 }
 
 function usces_memberinfo( $key, $out = '' ){
-	global $usces;
+	global $usces, $wpdb;
 	$info = $usces->get_member();
 
 	if( empty($key) ) return $info;
@@ -2270,6 +2270,13 @@ function usces_memberinfo( $key, $out = '' ){
 		case 'registered':
 			$res = mysql2date(__('Mj, Y', 'usces'), $info['registered']);
 			break;
+//20120919ysk start 0000573
+		case 'point':
+			$member_table = $wpdb->prefix."usces_member";
+			$query = $wpdb->prepare("SELECT mem_point FROM $member_table WHERE ID = %d", $info['ID']);
+			$res = $wpdb->get_var( $query );
+			break;
+//20120919ysk end
 		default:
 			$res = isset($info[$key]) ? $info[$key] : '';
 	}

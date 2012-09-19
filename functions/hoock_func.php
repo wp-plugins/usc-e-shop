@@ -582,6 +582,8 @@ function usces_action_acting_transaction(){
 					die('NG,usces_order_meta update error');
 				}
 
+				usces_action_acting_getpoint( $order_id );//20120919ysk 0000324
+
 				usces_log('SoftBankPayment conv transaction : '.$order_id, 'acting_transaction.log');
 				die('OK,');
 
@@ -615,6 +617,8 @@ function usces_action_acting_transaction(){
 					usces_log('SoftBankPayment conv error3 : '.print_r($data, true), 'acting_transaction.log');
 					die('NG,usces_order_meta update error');
 				}
+
+				usces_action_acting_getpoint( $order_id, false );//20120919ysk 0000324
 
 				usces_log('SoftBankPayment conv transaction : '.$order_id, 'acting_transaction.log');
 				die('OK,');
@@ -661,6 +665,8 @@ function usces_action_acting_transaction(){
 					die('NG,usces_order_meta update error');
 				}
 
+				usces_action_acting_getpoint( $order_id );//20120919ysk 0000324
+
 				usces_log('SoftBankPayment payeasy transaction : '.$order_id, 'acting_transaction.log');
 				die('OK,');
 
@@ -694,6 +700,8 @@ function usces_action_acting_transaction(){
 					usces_log('SoftBankPayment payeasy error3 : '.print_r($data, true), 'acting_transaction.log');
 					die('NG,usces_order_meta update error');
 				}
+
+				usces_action_acting_getpoint( $order_id, false );//20120919ysk 0000324
 
 				usces_log('SoftBankPayment payeasy transaction : '.$order_id, 'acting_transaction.log');
 				die('OK,');

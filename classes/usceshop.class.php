@@ -74,6 +74,7 @@ class usc_e_shop
 		if(!isset($this->options['point_rate'])) $this->options['point_rate'] = '';
 		if(!isset($this->options['start_point'])) $this->options['start_point'] = '';
 		if(!isset($this->options['point_coverage'])) $this->options['point_coverage'] = 1;
+		if(!isset($this->options['point_assign'])) $this->options['point_assign'] = 1;//20120919ysk 0000573
 		if(!isset($this->options['cod_type'])) $this->options['cod_type'] = 'fix';
 		if(!isset($this->options['newmem_admin_mail'])) $this->options['newmem_admin_mail'] = 0;
 		if(!isset($this->options['mail_data']['title'])) $this->options['mail_data']['title'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
@@ -686,6 +687,7 @@ class usc_e_shop
 			$this->options['membersystem_state'] = isset($_POST['membersystem_state']) ? trim($_POST['membersystem_state']) : '';
 			$this->options['membersystem_point'] = isset($_POST['membersystem_point']) ? trim($_POST['membersystem_point']) : '';
 			$this->options['point_coverage'] = isset($_POST['point_coverage']) ? (int)$_POST['point_coverage'] : 0;
+			$this->options['point_assign'] = isset($_POST['point_assign']) ? (int)$_POST['point_assign'] : 1;//20120919ysk 0000573
 
 			update_option('usces', $this->options);
 			
@@ -722,7 +724,7 @@ class usc_e_shop
 			$this->action_message = '';
 		}
 		
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_schedule.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_schedule.php');
 
 	}
 	
@@ -748,7 +750,7 @@ class usc_e_shop
 			$this->action_message = '';
 		}
 		
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_delivery.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_delivery.php');
 
 	}
 	
@@ -813,7 +815,7 @@ class usc_e_shop
 	
 		update_option('usces', $this->options);
 		
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_mail.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_mail.php');
 
 	}
 	
@@ -849,7 +851,7 @@ class usc_e_shop
 
 
 		
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_cart.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_cart.php');
 
 	}
 	
@@ -879,7 +881,7 @@ class usc_e_shop
 
 
 		
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_member.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_member.php');
 
 	}
 	
@@ -997,7 +999,7 @@ class usc_e_shop
 		if($action_status != 'error') //20120511ysk 0000470
 		update_option('usces', $this->options);
 
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_system.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_system.php');
 
 	}
 	
@@ -1055,7 +1057,7 @@ class usc_e_shop
 					if( !isset($_POST['card_url']) || empty($_POST['card_url']) || !isset($_POST['ipaddrs']) || empty($_POST['ipaddrs']) || !isset($_POST['bank_url']) || empty($_POST['bank_url']) || !isset($_POST['conv_url']) || empty($_POST['conv_url']) )
 						$mes .= '※設定が不正です！<br />';
 
-					if( '' == $mes ){			
+					if( '' == $mes ){
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['zeus']['activate'] = 'on';
@@ -1416,7 +1418,7 @@ class usc_e_shop
 		
 		$this->options = get_option('usces');
 
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_settlement.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_settlement.php');
 	}
 	
 	/********************************************************************************/
@@ -2871,7 +2873,7 @@ class usc_e_shop
 	}
 	
 	function confirm(){
-		global $wp_query;
+		global $wpdb, $wp_query;
 		if( false === $this->cart->num_row() ){
 			header('location: ' . get_option('home'));
 			exit;
@@ -2893,7 +2895,15 @@ class usc_e_shop
 		}
 		$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
 		if( $this->error_message == '' ){
-			unset( $_SESSION['usces_entry']['order']['usedpoint'] );//20120914ysk 0000566
+//20120919ysk start 0000573
+			if( usces_is_member_system() && usces_is_member_system_point() && $this->is_member_logged_in() ) {
+				unset( $_SESSION['usces_entry']['order']['usedpoint'] );//20120914ysk 0000566
+				$member_table = $wpdb->prefix."usces_member";
+				$query = $wpdb->prepare("SELECT mem_point FROM $member_table WHERE ID = %d", $_SESSION['usces_member']['ID']);
+				$mem_point = $wpdb->get_var( $query );
+				$_SESSION['usces_member']['point'] = $mem_point;
+			}
+//20120919ysk end
 			$this->page = 'confirm';
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		}else{
@@ -3033,7 +3043,7 @@ class usc_e_shop
 	
 	function settlement_epsilon(){
 		global $wp_query;
-		require_once($this->options['settlement_path'] . 'epsilon.php');	
+		require_once($this->options['settlement_path'] . 'epsilon.php');
 	}
 	
 	function inquiry_button(){

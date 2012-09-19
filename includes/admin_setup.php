@@ -243,6 +243,14 @@ function toggleVisibility(id) {
 	    <td><input name="point_coverage" type="radio" id="point_coverage1" value="1"<?php if( $this->options['point_coverage'] ) echo 'checked="checked"'; ?> /></td><td width="220"><label for="point_coverage1"><?php _e('Applicable to Total Merchandise Price and Handling Fee', 'usces'); ?></label></td>
 	</tr>
 </table>
+<table class="form_table">
+	<tr>
+		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_assign');"><?php _e('ポイント付与のタイミング', 'usces'); ?></a></th>
+		<td width="10"><input name="point_assign" id="point_assign_receipt" type="radio" value="1"<?php if($this->options['point_assign'] == '1') echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_receipt"><?php _e('入金時', 'usces'); ?></label></td>
+		<td width="10"><input name="point_assign" id="point_assign_immediately" type="radio" value="0"<?php if($this->options['point_assign'] == '0') echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_immediately"><?php _e('即時', 'usces'); ?></label></td>
+		<td><div id="ex_point_assign" class="explanation"><?php _e('「即時」では、ポイントはお買い物完了時に付与されます。「入金時」では、銀行振込、コンビニ決済などで、お買い物完了時にはポイントは付与されず、入金済になったときにポイントを付与します。', 'usces'); ?></div></td>
+	</tr>
+</table>
 <hr size="1" color="#CCCCCC" />
 <div id="shop_setting" class="explanation"><?php _e('the initial rate of the shop', 'usces'); ?></div>
 </div>
