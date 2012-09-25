@@ -889,7 +889,7 @@ function usces_item_uploadcsv(){
 				if( empty($term_id) ){
 					$query = $wpdb->prepare("INSERT INTO $wpdb->terms (name, slug, term_group) VALUES 
 											(%s, %s, 0)", $tag, urlencode($tag));
-					$dbres = $wpdb->get_var( $query );
+					$dbres = $wpdb->query( $query );
 					if( !$dbres )
 						continue;
 					$term_id = $wpdb->insert_id;
@@ -901,7 +901,7 @@ function usces_item_uploadcsv(){
 					$query = $wpdb->prepare("INSERT INTO $wpdb->term_taxonomy 
 											(term_id, taxonomy, description, parent, count) VALUES 
 											(%d, %s, %s, 0, 0)", $term_id, 'post_tag', '');
-					$dbres = $wpdb->get_var( $query );
+					$dbres = $wpdb->query( $query );
 					if( !$dbres )
 						continue;
 					$term_taxonomy_id = $wpdb->insert_id;
