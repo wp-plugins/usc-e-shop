@@ -185,7 +185,7 @@ function usces_order_confirm_message($order_id) {
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
 //20101208ysk end
 	$msg_shipping .= "\r\n";
-	$msg_body .= apply_filters('usces_filter_order_confirm_mail_ship', $msg_shipping, $data);
+	$msg_body .= apply_filters('usces_filter_order_confirm_mail_shipping', $msg_shipping, $data);
 
 //	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
 //	$msg_body .= __('** WE may not always be able to deliver the items on time which you desire.','usces') . " \r\n";
