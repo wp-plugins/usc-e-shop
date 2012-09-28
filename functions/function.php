@@ -83,26 +83,14 @@ function usces_order_confirm_message($order_id) {
 	if($_POST['mode'] == 'mitumoriConfirmMail'){
 		$msg_body = "\r\n\r\n\r\n" . __('Estimate','usces') . "\r\n";
 		$msg_body .= usces_mail_line( 1, $data['order_email'] );//********************
-//20110118ysk start
-		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
-//20110118ysk end
-		$msg_body .= __('Request of','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
-//20110118ysk start
-		$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
-//20110118ysk end
+		$msg_body .= apply_filters('usces_filter_order_confirm_mail_first', NULL, $data);
+		$msg_body .= uesces_get_mail_addressform( 'admin_mail_customer', $customer, $order_id );
 		$msg_body .= __('estimate number','usces') . " : " . $order_id . "\r\n";
 	}else{
 		$msg_body = "\r\n\r\n\r\n" . __('** Article order contents **','usces') . "\r\n";
 		$msg_body .= usces_mail_line( 1, $data['order_email'] );//********************
 		$msg_body .= apply_filters('usces_filter_order_confirm_mail_first', NULL, $data);
-//20110118ysk start
-		//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
-//20110118ysk end
-		//$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
 		$msg_body .= uesces_get_mail_addressform( 'admin_mail_customer', $customer, $order_id );
-//20110118ysk start
-		//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
-//20110118ysk end
 		$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	}
 
