@@ -49,13 +49,28 @@ function usces_ajax_send_mail() {
 }
 
 function usces_order_confirm_message($order_id) {
-	global $usces, $wpdb;
+	global $usces, $wpdb, $usces_settings;
 	
 	$tableName = $wpdb->prefix . "usces_order";
 	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
 	$data = $wpdb->get_row( $query, ARRAY_A );
 	$deli = unserialize($data['order_delivery']);
 	$cart = unserialize($data['order_cart']);
+	$country = $usces->get_order_meta_value('country', $order_id);
+	$customer = array(
+					'name1' => $data['order_name1'],
+					'name2' => $data['order_name2'],
+					'name3' => $data['order_name3'],
+					'name4' => $data['order_name4'],
+					'zipcode' => $data['order_zip'],
+					'country' => $usces_settings['country'][$country],
+					'pref' => $data['order_pref'],
+					'address1' => $data['order_address1'],
+					'address2' => $data['order_address2'],
+					'address3' => $data['order_address3'],
+					'tel' => $data['order_tel'],
+					'fax' => $data['order_fax'],
+				);
 	$condition = unserialize($data['order_condition']);
 
 	$total_full_price = $data['order_item_total_price'] - $data['order_usedpoint'] + $data['order_discount'] + $data['order_shipping_charge'] + $data['order_cod_fee'] + $data['order_tax'];
@@ -84,7 +99,7 @@ function usces_order_confirm_message($order_id) {
 		//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
 //20110118ysk end
 		//$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $data['order_name1'], $data['order_name2'], 'return' )) . "\r\n";
-		$msg_body .= uesces_get_mail_addressform( 'admin_mail_customer', $deli, $order_id );
+		$msg_body .= uesces_get_mail_addressform( 'admin_mail_customer', $customer, $order_id );
 //20110118ysk start
 		//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
 //20110118ysk end
