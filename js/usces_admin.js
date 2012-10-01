@@ -333,9 +333,9 @@
 				mes += '<p>売価の値を入力してください。</p>';
 //			if( ! checkCode( name ) )
 //				mes += '<p>SKUコードは半角英数（-_を含む）で入力して下さい。</p>';
-			if( ! checkNum( cprice ) )
+			if( ! checkMoney( cprice ) )
 				mes += '<p>通常価は数値で入力して下さい。</p>';
-			if( ! checkNum( price ) )
+			if( ! checkMoney( price ) )
 				mes += '<p>売価は数値で入力して下さい。</p>';
 			if( ! checkNum( zaikonum ) )
 				mes += '<p>在庫数は数値で入力して下さい。</p>';
@@ -419,9 +419,9 @@
 				mes += '<p>SKUコードの値を入力してください。</p>';
 			if( '' == price )
 				mes += '<p>売価の値を入力してください。</p>';
-			if( ! checkNum( cprice ) )
+			if( ! checkMoney( cprice ) )
 				mes += '<p>通常価は数値で入力して下さい。</p>';
-			if( ! checkNum( price ) )
+			if( ! checkMoney( price ) )
 				mes += '<p>売価は数値で入力して下さい。</p>';
 			if( ! checkNum( zaikonum ) )
 				mes += '<p>在庫数は数値で入力して下さい。</p>';
