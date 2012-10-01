@@ -1446,7 +1446,8 @@ function usces_download_order_list() {
 	//==========================================================================
 
 	if(isset($_REQUEST['check']['status'])) {
-		$usces_management_status = get_option('usces_management_status');
+		//$usces_management_status = get_option('usces_management_status');
+		$usces_management_status = apply_filters( 'usces_filter_management_status', get_option('usces_management_status') );//0000530
 		$usces_management_status['new'] = __('new order', 'usces');
 	}
 
