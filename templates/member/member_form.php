@@ -1,4 +1,5 @@
 <?php
+global $usces;
 $usces_members = $this->get_member();
 
 $html = '<div id="memberpages">

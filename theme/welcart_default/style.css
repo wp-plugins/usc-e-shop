@@ -514,6 +514,12 @@ ul.subnavi a {
 	padding-top: 10px;
 	font-size: 1.17em;
 }
+/* img */
+#content img {
+	margin: 0;
+	max-width: 100%;
+	height: auto;
+}
 /* catbox */
 #content .catbox {
 	width: auto;

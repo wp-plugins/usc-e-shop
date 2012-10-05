@@ -366,7 +366,8 @@ $html .= "
 //20110126ysk start
 						//option += '<option value=\"0\">".__('No preference', 'usces')."</option>';
 						option += '<option value=\"".__('No preference', 'usces')."\">".__('No preference', 'usces')."</option>';
-//20110126ysk end
+//20110126ysk end";
+$delivery_after_days_script = "
 						for(var i = 0; i < delivery_after_days; i++) {
 							date_str = date[\"year\"]+\"-\"+date[\"month\"]+\"-\"+date[\"day\"];
 							if(date_str == selected_delivery_date) {
@@ -375,7 +376,9 @@ $html .= "
 								option += '<option value=\"' + date_str + '\">' + date_str + '</option>';
 							}
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
-						}
+						}";
+$html .= apply_filters( 'usces_delivery_after_days_script', $delivery_after_days_script );
+$html .= "
 						break;
 					}
 				}
