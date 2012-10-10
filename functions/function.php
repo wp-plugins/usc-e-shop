@@ -2144,7 +2144,14 @@ function usces_check_acting_return() {
 			$resArray = $usces->paypal->getResponse();
 			$ack = strtoupper($resArray["ACK"]);
 			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-				$results[0] = 1;
+//20121009ysk start 0000587
+				if( (float)$resArray["AMT"] != (float)$entry['order']['total_full_price'] ) {
+					usces_log('PayPal : AMT Error. AMT='.$resArray["AMT"].', total_full_price='.$entry['order']['total_full_price'], 'acting_transaction.log');
+					$results[0] = 0;
+				} else {
+					$results[0] = 1;
+				}
+//20121009ysk end
 
 			} else {
 				//Display a user friendly Error on the page using any of the following error information returned by PayPal
@@ -3406,8 +3413,7 @@ function usces_paypal_doecp( &$results ) {
 
 	$post_id = $cart[0]['post_id'];
 	$charging_type = $usces->getItemChargingType( $post_id, $cart );
-	//if( 'continue' != $charging_type ) {
-	if( 'continue' != $charging_type && 'regular' != $charging_type ) {
+	if( 'continue' != $charging_type ) {
 		//通常購入
 		//Format the other parameters that were stored in the session from the previous calls
 		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);
