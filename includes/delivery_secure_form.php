@@ -42,27 +42,18 @@ foreach ( (array)$payments as $id => $array ) {
 					
 				}else{
 					$html .= '<tr>
-						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
-						<td colspan="2"><input name="cnum1" type="text" size="16" value="' . esc_attr($cnum1) . '" />(半角数字のみ)</td>
+						<th scope="row">'.__('Card number', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
+						<td colspan="2"><input name="cnum1" type="text" size="16" value="' . esc_attr($cnum1) . '" />'.__('(Numeric characters)', 'usces').'</td>
 						</tr>';
 					if( '1' == $usces->options['acting_settings'][$paymod_id]['security'] ){
 						$html .= '<tr>
-						<th scope="row">'.__('セキュリティコード', 'usces').'</th>
-						<td colspan="2"><input name="securecode" type="text" size="6" value="' . esc_attr($securecode) . '" />(半角数字のみ)</td>
+						<th scope="row">'.__('Card security code', 'usces').'</th>
+						<td colspan="2"><input name="securecode" type="text" size="6" value="' . esc_attr($securecode) . '" />'.__('(Numeric characters)', 'usces').'</td>
 						</tr>';
 					}
 					$html .= '<tr>
-						<th scope="row">'.__('カード有効期限', 'usces').'</th>
+						<th scope="row">'.__('Expiration date', 'usces').'</th>
 						<td colspan="2">
-						<select name="expyy">
-							<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
-						';
-					for($i=0; $i<10; $i++){
-						$year = date('Y') - 1 + $i;
-						$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
-					}
-					$html .= '
-						</select>年 
 						<select name="expmm">
 							<option value=""' . (empty($expmm) ? ' selected="selected"' : '') . '>----</option>
 							<option value="01"' . (('01' == $expmm) ? ' selected="selected"' : '') . '> 1</option>
@@ -77,11 +68,20 @@ foreach ( (array)$payments as $id => $array ) {
 							<option value="10"' . (('10' == $expmm) ? ' selected="selected"' : '') . '>10</option>
 							<option value="11"' . (('11' == $expmm) ? ' selected="selected"' : '') . '>11</option>
 							<option value="12"' . (('12' == $expmm) ? ' selected="selected"' : '') . '>12</option>
-						</select>月</td>
+						</select>'.__('month', 'usces').' 
+						<select name="expyy">
+							<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
+						';
+					for($i=0; $i<10; $i++){
+						$year = date('Y') - 1 + $i;
+						$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
+					}
+					$html .= '
+						</select>'.__('year', 'usces').'</td>
 						</tr>
 						<tr>
-						<th scope="row">'.__('カード名義', 'usces').'</th>
-						<td colspan="2"><input name="username" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
+						<th scope="row">'.__('Name on card', 'usces').'</th>
+						<td colspan="2"><input name="username" type="text" size="30" value="' . esc_attr($username) . '" />'.__('(Alphabetical characters)', 'usces').'</td>
 						</tr>';
 				}	
 					
@@ -89,12 +89,12 @@ foreach ( (array)$payments as $id => $array ) {
 				
 				$html .= '
 					<tr>
-					<th scope="row">'.__('支払方法', 'usces').'</th>
-					<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' == $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
-					<td><input name="howpay" type="radio" value="0" id="howdiv2"' . (('0' == $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
+					<th scope="row">'.__('Methods of payment', 'usces').'</th>
+					<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' == $howpay) ? ' checked' : '') . ' /><label for="howdiv1">'.__('Lump sum payment', 'usces').'</label></td>
+					<td><input name="howpay" type="radio" value="0" id="howdiv2"' . (('0' == $howpay) ? ' checked' : '') . ' /><label for="howdiv2">'.__('Payment in installments', 'usces').'</label></td>
 					</tr>
 					<tr id="cbrand_zeus">
-					<th scope="row">'.__('カードブランド', 'usces').'</th>
+					<th scope="row">'.__('Payment Types', 'usces').'</th>
 					<td colspan="2">
 					<select name="cbrand">
 						<option value=""' . (('' == $cbrand) ? ' selected="selected"' : '') . '>--------</option>
@@ -107,27 +107,27 @@ foreach ( (array)$payments as $id => $array ) {
 					</td>
 					</tr>
 					<tr id="div_zeus">
-					<th scope="row">'.__('分割回数', 'usces').'</th>
+					<th scope="row">'.__('Number of installments', 'usces').'</th>
 					<td colspan="2">
 					<select name="div_1" id="brand1">
-						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
-						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
-						<option value="03"' . (('03' == $cbrand) ? ' selected="selected"' : '') . '>3回</option>
-						<option value="05"' . (('05' == $cbrand) ? ' selected="selected"' : '') . '>5回</option>
-						<option value="06"' . (('06' == $cbrand) ? ' selected="selected"' : '') . '>6回</option>
-						<option value="10"' . (('10' == $cbrand) ? ' selected="selected"' : '') . '>10回</option>
-						<option value="12"' . (('12' == $cbrand) ? ' selected="selected"' : '') . '>12回</option>
-						<option value="15"' . (('15' == $cbrand) ? ' selected="selected"' : '') . '>15回</option>
-						<option value="18"' . (('18' == $cbrand) ? ' selected="selected"' : '') . '>18回</option>
-						<option value="20"' . (('20' == $cbrand) ? ' selected="selected"' : '') . '>20回</option>
-						<option value="24"' . (('24' == $cbrand) ? ' selected="selected"' : '') . '>24回</option>
+						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>'.__('Lump sum payment', 'usces').'</option>
+						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>'.__('Revolving payment', 'usces').'</option>
+						<option value="03"' . (('03' == $cbrand) ? ' selected="selected"' : '') . '>'.__('3 installments', 'usces').'</option>
+						<option value="05"' . (('05' == $cbrand) ? ' selected="selected"' : '') . '>'.__('5 installments', 'usces').'</option>
+						<option value="06"' . (('06' == $cbrand) ? ' selected="selected"' : '') . '>'.__('6 installments', 'usces').'</option>
+						<option value="10"' . (('10' == $cbrand) ? ' selected="selected"' : '') . '>'.__('10 installments', 'usces').'</option>
+						<option value="12"' . (('12' == $cbrand) ? ' selected="selected"' : '') . '>'.__('12 installments', 'usces').'</option>
+						<option value="15"' . (('15' == $cbrand) ? ' selected="selected"' : '') . '>'.__('15 installments', 'usces').'</option>
+						<option value="18"' . (('18' == $cbrand) ? ' selected="selected"' : '') . '>'.__('18 installments', 'usces').'</option>
+						<option value="20"' . (('20' == $cbrand) ? ' selected="selected"' : '') . '>'.__('20 installments', 'usces').'</option>
+						<option value="24"' . (('24' == $cbrand) ? ' selected="selected"' : '') . '>'.__('24 installments', 'usces').'</option>
 					</select>
 					<select name="div_2" id="brand2">
-						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
-						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
+						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>'.__('Lump sum payment', 'usces').'</option>
+						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>'.__('Revolving payment', 'usces').'</option>
 					</select>
 					<select name="div_3" id="brand3">
-						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
+						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>'.__('Lump sum payment', 'usces').'</option>
 					</select>
 					</td>
 					</tr>
@@ -173,7 +173,7 @@ foreach ( (array)$payments as $id => $array ) {
 				if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['howpay'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate']
-					|| ('continue' == $charging_type || 'regular' == $charging_type) ){
+					|| 'continue' == $charging_type ){
 					continue;
 				}
 					
