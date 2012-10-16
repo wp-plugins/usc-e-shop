@@ -2352,7 +2352,7 @@ class usc_e_shop
 					break;
 				case 'usces_itemedit':
 					if( isset($_REQUEST['action']) && 'upload_register' == $_REQUEST['action'] ){
-						ob_end_flush();
+						ob_end_clean();
 						ob_start();
 					}else{
 						wp_enqueue_script('jquery-ui-sortable');
