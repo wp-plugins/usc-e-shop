@@ -163,6 +163,6 @@ add_filter('usces_filter_member_check', 'usces_filter_member_check_custom_member
 add_filter('usces_filter_member_check_fromcart', 'usces_filter_customer_check_custom_customer', 10);
 //20100818ysk end
 
-
+add_action('usces_action_confirm_page_point_inform', 'usces_action_confirm_page_point_inform_zeus', 9);
 
 ?>
