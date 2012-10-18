@@ -6454,6 +6454,7 @@ class usc_e_shop
 			$intersect = array();
 			$integration = array();
 			$temp = array();
+			$in = 0;
 			foreach($cart as $key => $row){
 				$deli = $this->getItemDeliveryMethod($row['post_id']);
 				//usces_p($deli);
@@ -6461,7 +6462,7 @@ class usc_e_shop
 					continue;
 
 			//usces_log('deli : '.print_r($deli, true), 'acting_transaction.log');
-				if( empty($intersect) ){
+				if( 0 === $in ){
 					$intersect = $deli;
 				}
 				$intersect = array_intersect($deli, $intersect);
@@ -6469,6 +6470,7 @@ class usc_e_shop
 				foreach($deli as $value){
 					$integration[] = $value;
 				}
+				$in++;
 			}
 			$integration = array_unique($integration);
 			foreach($integration as $id){

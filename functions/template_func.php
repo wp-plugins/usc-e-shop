@@ -228,6 +228,8 @@ function usces_the_itemZaiko( $out = '' ) {
 	$num = (int)$usces->itemsku['stock'];
 	
 	if( 1 < $num || ( 0 === (int)$usces->itemsku['stocknum'] && '' != $usces->itemsku['stocknum'] ) ){
+		$res = $usces->zaiko_status[$num];
+	}elseif( 1 >= $num || ( 0 === (int)$usces->itemsku['stocknum'] && '' != $usces->itemsku['stocknum'] ) ){
 		$res = $usces->zaiko_status[2];
 	}else{
 		$res = $usces->zaiko_status[$num];

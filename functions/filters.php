@@ -66,4 +66,73 @@ function usces_action_ogp_meta(){
 
 }
 
+//function usces_cart_row_of_each_device( $row, $cart, $materials ){
+//	extract($materials);
+//	
+//	$row = '';
+//	if ( empty($options) ) {
+//		$optstr =  '';
+//		$options =  array();
+//	}
+//	$row .= '<tr>
+//		<td>' . ($i + 1) . '</td>
+//		<td>';
+//		$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
+//		$row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i,$cart_row);
+//		$row .= '</td><td class="aleft">' . esc_html($cartItemName) . '<br />';
+//	if( is_array($options) && count($options) > 0 ){
+//		$optstr = '';
+//		foreach($options as $key => $value){
+//			if( !empty($key) ) {
+//				$key = urldecode($key);
+//				if(is_array($value)) {
+//					$c = '';
+//					$optstr .= esc_html($key) . ' : '; 
+//					foreach($value as $v) {
+//						$optstr .= $c.nl2br(esc_html(urldecode($v)));
+//						$c = ', ';
+//					}
+//					$optstr .= "<br />\n"; 
+//				} else {
+//					$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
+//				}
+//			}
+//		}
+//		$row .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
+//	}
+//	$row .= '</td>
+//		<td class="aright">';
+//	if( usces_is_gptekiyo($post_id, $sku_code, $quantity) ) {
+//		$usces_gp = 1;
+//		$Business_pack_mark = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />';
+//		$row .= apply_filters('usces_filter_itemGpExp_cart_mark', $Business_pack_mark);
+//	}
+//	$row .= usces_crform($skuPrice, true, false, 'return') . '
+//		</td>
+//		<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
+//		<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
+//		<td ' . $red . '>' . $stock . '</td>
+//		<td>';
+//	foreach($options as $key => $value){
+//		if(is_array($value)) {
+//			foreach($value as $v) {
+//				$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
+//			}
+//		} else {
+//			$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+//		}
+//	}
+//	$row .= '<input name="itemRestriction[' . $i . ']" type="hidden" value="' . $itemRestriction . '" />
+//		<input name="stockid[' . $i . ']" type="hidden" value="' . $stockid . '" />
+//		<input name="itempostid[' . $i . ']" type="hidden" value="' . $post_id . '" />
+//		<input name="itemsku[' . $i . ']" type="hidden" value="' . $sku . '" />
+//		<input name="zaikonum[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuZaikonum) . '" />
+//		<input name="skuPrice[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($skuPrice) . '" />
+//		<input name="advance[' . $i . '][' . $post_id . '][' . $sku . ']" type="hidden" value="' . esc_attr($advance) . '" />
+//		<input name="delButton[' . $i . '][' . $post_id . '][' . $sku . ']" class="delButton" type="submit" value="' . __('Delete','usces') . '" />
+//		</td>
+//	</tr>';
+//}
+
+
 ?>
