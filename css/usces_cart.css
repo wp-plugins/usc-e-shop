@@ -695,6 +695,14 @@ div.usccart_navi li.usccart_confirm {
 	width: 50%;
 	margin-right: 3px;
 }
+#customer-info .customer_form input[type="checkbox"], 
+#customer-info .customer_form input[type="radio"] {
+	width: auto;
+	margin-right: 3px;
+}
+#customer-info .customer_form label.iopt_label {
+	display: block;
+}
 #customer-info .customer_form tr.inp1 input {
 	width: 82%;
 	margin-left: 3px;
@@ -1282,7 +1290,7 @@ table.retail td,
 	margin-right: 0px;
 	margin-bottom: 10px;
 	margin-left: 0px;
-	
+	clear: both;
 }
 
 #searchbox legend {

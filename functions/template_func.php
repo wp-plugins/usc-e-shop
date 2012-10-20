@@ -229,7 +229,7 @@ function usces_the_itemZaiko( $out = '' ) {
 	
 	if( 1 < $num || ( 0 === (int)$usces->itemsku['stocknum'] && '' != $usces->itemsku['stocknum'] ) ){
 		$res = $usces->zaiko_status[$num];
-	}elseif( 1 >= $num || ( 0 === (int)$usces->itemsku['stocknum'] && '' != $usces->itemsku['stocknum'] ) ){
+	}elseif( 1 >= $num && ( 0 === (int)$usces->itemsku['stocknum'] && '' != $usces->itemsku['stocknum'] ) ){
 		$res = $usces->zaiko_status[2];
 	}else{
 		$res = $usces->zaiko_status[$num];
@@ -1962,7 +1962,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						foreach($selects as $v) {
 							$checked = ( isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							$html .= '
-							<input type="radio" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+							<label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label"><input type="radio" name="'.$label.'['.esc_attr($key).']" id="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'>'.esc_html($v).'</label>';
 						}
 						break;
 					case 4://チェックボックス
@@ -1974,7 +1974,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 								$checked = (isset($data[$label][$key]) && $data[$label][$key] == $v) ? ' checked' : '';
 							}
 							$html .= '
-							<input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'><label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label">'.esc_html($v).'</label>';
+							<label for="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" class="iopt_label"><input type="checkbox" name="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" id="'.$label.'['.esc_attr($key).']['.esc_attr($v).']" value="'.esc_attr($v).'"'.$checked.'>'.esc_html($v).'</label>';
 						}
 						break;
 				}
