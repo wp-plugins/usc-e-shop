@@ -1503,9 +1503,9 @@ class usc_e_shop
 			$sslid = isset($cookie['sslid']) ? $cookie['sslid'] : NULL;
 			$option = get_option('usces');
 			$parsed = parse_url(get_option('home'));
-			$home = $parsed['host'] . $parsed['path'];
+			$home = $parsed['host'] . (isset($parsed['path']) ? $parsed['path'] : '');
 			$parsed = parse_url($option['ssl_url']);
-			$sslhome = $parsed['host'] . $parsed['path'];
+			$sslhome = $parsed['host'] . (isset($parsed['path']) ? $parsed['path'] : '');
 
 //usces_log('refer : '.$refer, 'acting_transaction.log');
 //	usces_log('sslid : '.$sslid, 'acting_transaction.log');
@@ -2418,10 +2418,12 @@ class usc_e_shop
 			if( $permalink_structure ){
 				$this->delim = '&';
 				$home_perse = parse_url(get_option('home'));
-				$home_path = $home_perse['host'].$home_perse['path'];
+				$home_perse_path = isset($home_perse['path']) ? $home_perse['path'] : '';
+				$home_path = $home_perse['host'].$home_perse_path;
 				$ssl_perse = parse_url($this->options['ssl_url']);
-				$ssl_path = $ssl_perse['host'].$ssl_perse['path'];
-				if( $home_perse['path'] != $ssl_perse['path'] ){
+				$ssl_perse_path = isset($ssl_perse['path']) ? $ssl_perse['path'] : '';
+				$ssl_path = $ssl_perse['host'].$ssl_perse_path;
+				if( $home_perse_path != $ssl_perse_path ){
 					if( ! defined('USCES_CUSTOMER_URL') )
 						define('USCES_CUSTOMER_URL', $this->options['ssl_url'] . '/index.php?page_id=' . USCES_CART_NUMBER . '&customerinfo=1&uscesid=' . $this->get_uscesid());
 					if( ! defined('USCES_CART_URL') )
