@@ -22,7 +22,8 @@
 	line-height: 18px;
 }
 #itempage .itemimg {
-	width: auto;
+	width: 300px;
+	text-align: center;
 }
 #itempage .field {
 	margin-left: 310px;

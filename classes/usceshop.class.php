@@ -5788,7 +5788,7 @@ class usc_e_shop
 				$total_price += ($skuPrice * $quantity);
 			}
 		}
-		return $total_price;
+		return apply_filters( 'usces_filter_get_total_price', $total_price, $cart);
 	}
 	
 	function get_total_quantity( $cart = array() ) {

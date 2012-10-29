@@ -181,7 +181,7 @@ function usces_pdf_out(&$pdf, $data){
 		$pdf->SetXY($x+126.9, $line_y[$index]);
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 		$pdf->SetFont(GOTHIC, '', $fontsize);
-		$pdf->MultiCell(22.8, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price']*$cart_row['quantity'])), $border, 'R');
+		$pdf->MultiCell(22.8, $lineheight, apply_filters( 'usces_filter_cart_row_price_pdf', usces_conv_euc($usces->get_currency($cart_row['price']*$cart_row['quantity'])), $cart_row), $border, 'R');
 
 		if( $onep < $next_y && 0 < $index ){
 			$pdf->Rect($x, $line_y[$index]-0.4, 149.5, 197.4-$line_y[$index], 'F');

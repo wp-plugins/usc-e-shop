@@ -266,9 +266,14 @@ function usces_log($log, $file){
 		
 	$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
 	$file_path = USCES_PLUGIN_DIR . '/logs/' . $file;
+	if( is_dir($file_path) )
+		return;
+		
 	$fp = fopen($file_path, 'a');
-	fwrite($fp, $log);
-	fclose($fp);
+	if( false !== $fp ){
+		fwrite($fp, $log);
+		fclose($fp);
+	}
 }
 
 

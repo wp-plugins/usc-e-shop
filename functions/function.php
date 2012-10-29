@@ -136,7 +136,7 @@ function usces_order_confirm_message($order_id) {
 				}
 //20110629ysk end
 			}
-			$meisai .= apply_filters( 'usces_filter_option_adminmail', $optstr, $options);
+			$meisai .= apply_filters( 'usces_filter_option_adminmail', $optstr, $options, $cart_row);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
@@ -340,7 +340,7 @@ function usces_send_ordermail($order_id) {
 				}
 //20110629ysk end
 			}
-			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options);
+			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options, $cart_row);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}

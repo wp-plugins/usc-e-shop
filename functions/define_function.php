@@ -646,10 +646,8 @@ function usces_item_uploadcsv(){
 			
 			$data = $datas[USCES_COL_POST_MODIFIED];
 			if( $data == '' || $data == '0000-00-00 00:00:00' ){
-				if( 'add' == $mode ){
-					$cdatas['post_date'] = current_time( 'mysql' );
-					$cdatas['post_date_gmt'] = current_time( 'mysql', 1 );
-				}
+				$cdatas['post_date'] = current_time( 'mysql' );
+				$cdatas['post_date_gmt'] = current_time( 'mysql', 1 );
 				$cdatas['post_modified'] = current_time( 'mysql' );
 				$cdatas['post_modified_gmt'] = current_time( 'mysql', 1 );
 			}else{
@@ -660,10 +658,8 @@ function usces_item_uploadcsv(){
 					$date_str = usces_dates_interconv( $datetime[0] ).' '.$datetime[1];
 					$time_data =strtotime($date_str);
 				}
-				if( 'add' == $mode ){
-					$cdatas['post_date'] = date('Y-m-d H:i:s', $time_data);
-					$cdatas['post_date_gmt'] = gmdate('Y-m-d H:i:s', $time_data);
-				}
+				$cdatas['post_date'] = date('Y-m-d H:i:s', $time_data);
+				$cdatas['post_date_gmt'] = gmdate('Y-m-d H:i:s', $time_data);
 				$cdatas['post_modified'] = date('Y-m-d H:i:s', $time_data);
 				$cdatas['post_modified_gmt'] = gmdate('Y-m-d H:i:s', $time_data);
 			}
@@ -1202,7 +1198,7 @@ function usces_download_item_list() {
 		$line_item .= $td_h.$post->comment_status.$td_f;
 		$line_item .= $td_h.$post->post_password.$td_f;
 		$line_item .= $td_h.urldecode($post->post_name).$td_f;
-		$line_item .= $td_h.$post->post_modified.$td_f;
+		$line_item .= $td_h.$post->post_date.$td_f;
 		
 		//Item Meta
 		$line_item .= $td_h.$usces->getItemCode($post_id).$td_f;
