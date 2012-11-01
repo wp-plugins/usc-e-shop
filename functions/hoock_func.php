@@ -713,6 +713,39 @@ function usces_action_acting_transaction(){
 			break;
 		}
 //20120413ysk end
+//20121030ysk start
+	//*** telecom credit ***//
+	} elseif( isset($_REQUEST['clientip']) && isset($_REQUEST['sendid']) && (isset($_REQUEST['acting']) && 'telecom_edy' == $_REQUEST['acting']) ) {
+		foreach( $_REQUEST as $key => $value ) {
+			$data[$key] = $value;
+		}
+		usces_log('telecom edy : '.print_r($data, true), 'acting_transaction.log');
+		//die('SuccessOK');
+	} elseif( isset($_REQUEST['clientip']) && isset($_REQUEST['sendid']) && isset($_REQUEST['edy']) ) {
+		foreach( $_REQUEST as $key => $value ) {
+			$data[$key] = $value;
+		}
+		if( $_REQUEST['rel'] === 'yes' && isset($_REQUEST['option']) ) {
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$mquery = $wpdb->prepare( "SELECT order_id, meta_value FROM $table_meta_name WHERE meta_key = %s", $_REQUEST['option'] );
+			$mvalue = $wpdb->get_row( $mquery, ARRAY_A );
+			$value = unserialize( $mvalue['meta_value'] );
+			$_SESSION['usces_cart'] = $value['usces_cart'];
+			$_SESSION['usces_entry'] = $value['usces_entry'];
+			$_SESSION['usces_member'] = $value['usces_member'];
+			$res = $usces->order_processing();
+			if( 'ordercompletion' == $res ) {
+				$query = $wpdb->prepare( "DELETE FROM $table_meta_name WHERE meta_key = %s", $_REQUEST['option'] );
+				$res = $wpdb->query( $query );
+				usces_log('telecom edy - Payment confirmation : '.print_r($data, true), 'acting_transaction.log');
+			} else {
+				usces_log('telecom edy - Error 1 : '.print_r($data, true), 'acting_transaction.log');
+			}
+		} else {
+			usces_log('telecom edy - Error 2 : '.print_r($data, true), 'acting_transaction.log');
+		}
+		die('SuccessOK');
+//20121030ysk end
 //20120618ysk start
 	//*** telecom credit ***//
 	}elseif( isset($_REQUEST['clientip']) && isset($_REQUEST['sendid']) && isset($_REQUEST['rel']) ){

@@ -211,7 +211,7 @@ jQuery(function($){
 
 <div class="wrap">
 <div class="usces_admin">
-<?php screen_icon(); ?>
+<?php //screen_icon(); ?>
 <h2><!--<img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/usc-e-shop/images/easymoblog1.png" /> --><?php echo esc_html( $title ); ?></h2>
 <div id="aniboxStatus" class="<?php echo $status; ?>">
 	<div id="anibox" class="clearfix">

@@ -49,8 +49,8 @@ function usces_pdf_out(&$pdf, $data){
 	$pdf->AddMBFont(MINCHO, 'EUC-JP');
 
 	// 文書情報設定
-	$pdf->SetCreator('USCe-Shop');
-	$pdf->SetAuthor('USconsort');
+	$pdf->SetCreator('Welcart');
+	$pdf->SetAuthor('Collne Inc.');
 	switch ($_REQUEST['type'] ){
 		case  'mitumori':
 			$pdf->SetTitle('estimate');

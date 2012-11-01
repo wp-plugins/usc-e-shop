@@ -822,6 +822,7 @@ class usc_e_shop
 		}
 	
 		update_option('usces', $this->options);
+		do_action( 'usces_action_admin_mail_page' );
 		
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_mail.php');
 
@@ -1387,6 +1388,7 @@ class usc_e_shop
 					$options['acting_settings']['telecom']['clientip'] = isset($_POST['clientip']) ? $_POST['clientip'] : '';
 					$options['acting_settings']['telecom']['stype'] = isset($_POST['stype']) ? $_POST['stype'] : '';
 					$options['acting_settings']['telecom']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['telecom']['edy_activate'] = isset($_POST['edy_activate']) ? $_POST['edy_activate'] : '';
 
 					if( '' == trim($_POST['clientip']) )
 						$mes .= '※クライアントIPを入力して下さい<br />';
@@ -1407,11 +1409,18 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_telecom_card']);
 						}
+						if( 'on' == $options['acting_settings']['telecom']['edy_activate'] ){
+							$options['acting_settings']['telecom']['send_url_edy'] = "https://secure.telecomcredit.co.jp/payment/edy/order.pl";
+							$this->payment_structure['acting_telecom_edy'] = 'Edy決済（テレコムクレジット）';
+						}else{
+							unset($this->payment_structure['acting_telecom_edy']);
+						}
 					}else{
 						$this->action_status = 'error';
 						$this->action_message = __('データに不備が有ります','usces');
 						$options['acting_settings']['telecom']['activate'] = 'off';
 						unset($this->payment_structure['acting_telecom_card']);
+						unset($this->payment_structure['acting_telecom_edy']);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
@@ -1713,7 +1722,7 @@ class usc_e_shop
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
 		<?php endif; ?>
 		<?php //if( !is_home() && !is_front_page() && $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $item->post_mime_type)) ) : ?>
-		<?php if( $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || 'item' == $item->post_mime_type) ) : ?>
+		<?php if( $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || (is_singular() && 'item' == $item->post_mime_type)) ) : ?>
 		<script type='text/javascript'>
 		(function($) {
 		uscesCart = {
@@ -1833,7 +1842,7 @@ class usc_e_shop
 					}
 				}
 				
-				<?php apply_filters( 'usces_filter_inCart_js_check', $item->ID ); //Unavailable ?>
+				<?php apply_filters( 'usces_filter_upCart_js_check', $item->ID ); //Unavailable ?>
 				<?php do_action( 'usces_action_upCart_js_check', $item->ID ); ?>
 				
 				if( mes != '' ){
@@ -3408,10 +3417,11 @@ class usc_e_shop
 	}
 	
 	function lostmail() {
+		$delim = apply_filters( 'usces_filter_delim', $this->delim );
 	
 		$_SESSION['usces_lostmail'] = trim($_POST['loginmail']);
 		$id = session_id();
-		$uri = USCES_MEMBER_URL . $this->delim . 'uscesmode=changepassword';
+		$uri = USCES_MEMBER_URL . $delim . 'uscesmode=changepassword';
 		$res = usces_lostmail($uri);
 		return $res;
 	
@@ -5095,7 +5105,7 @@ class usc_e_shop
 	}
 	
 	function getItemSku($post_id, $index = '') {
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'sort');
 		foreach((array)$skus as $sku){
 			$array[] = $sku['code'];
@@ -5111,7 +5121,7 @@ class usc_e_shop
 	}
 	
 	function getItemPrice($post_id, $skukey = '') {
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
 			$array[$key] = (float)str_replace('.', '', $sku['price']);
@@ -5128,7 +5138,7 @@ class usc_e_shop
 	
 	function getItemDiscount($post_id, $skukey = '') {
 		$display_mode = $this->options['display_mode'];
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
 			$price = (float)str_replace(',', '', $sku['price']);
@@ -5158,7 +5168,7 @@ class usc_e_shop
 	}
 	
 	function getItemZaiko($post_id, $skukey = '') {
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
 			$num = $sku['stock'];
@@ -5175,7 +5185,7 @@ class usc_e_shop
 	}
 	
 	function getItemZaikoStatusId($post_id, $skukey = '') {
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
 			$num = $sku['stock'];
@@ -5201,7 +5211,7 @@ class usc_e_shop
 	}
 	
 	function getItemZaikoNum($post_id, $skukey = '') {
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
 			$array[$key] = $sku['stocknum'];
@@ -5238,7 +5248,8 @@ class usc_e_shop
 	function getItemChargingType( $post_id, $cart = array() ){
 		if( usces_is_item($post_id) ){
 			$charging = get_post_meta($post_id, '_item_charging_type', true);
-			if( !defined('WCEX_DLSELLER') )
+			//if( !defined('WCEX_DLSELLER') )
+			if( !defined('WCEX_DLSELLER') and !defined('WCEX_AUTO_DELIVERY') )
 				$charging = NULL;
 		}else{
 			$charging = NULL;
@@ -5252,16 +5263,16 @@ class usc_e_shop
 				break;
 			case 2:
 				$type = 'regular';
-				if( 0 < count($cart) ) {
-					if( empty($cart[0]['advance']) ) {
+				if( !empty($cart) ) {
+					if( empty($cart['advance']) ) {
 						$type = 'once';
 					} else {
-						$advance = $this->cart->wc_unserialize( $cart[0]['advance'] );
-						$sku = urldecode( $cart[0]['sku'] );
+						$advance = $this->cart->wc_unserialize( $cart['advance'] );
+						$sku = urldecode( $cart['sku'] );
 						$regular = $advance[$post_id][$sku]['regular'];
 						$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
 						$frequency = isset( $regular['frequency'] ) ? (int)$regular['frequency'] : 0;
-						if( 1 == $interval && 1 == $frequency ) //通常課金扱い
+						if( 1 == $interval and 1 == $frequency ) //通常課金扱い
 							$type = 'once';
 					}
 				}
@@ -5285,7 +5296,7 @@ class usc_e_shop
 	}
 	
 	function getItemSkuDisp($post_id, $skukey = '') {
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
 			$array[$key] = $sku['name'];
@@ -5325,7 +5336,7 @@ class usc_e_shop
 //	}
 	
 	function getItemSkuUnit($post_id, $skukey = '') {
-		$array =array();
+		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
 			$array[$key] = $sku['unit'];
@@ -5512,8 +5523,9 @@ class usc_e_shop
 	}
 
 	function acting_processing($acting_flg, $query) {
+		global $wpdb;
 		$entry = $this->cart->get_entry();
-		
+		$delim = apply_filters( 'usces_filter_delim', $this->delim );
 		$acting_flg = trim($acting_flg);
 		//$usces_entries = $this->cart->get_entry();
 
@@ -5539,7 +5551,7 @@ class usc_e_shop
 			}
 			usces_log('epsilon card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 			$query .= '&settlement=epsilon&redirect_url=' . urlencode($redirect);
-			$query = $this->delim . ltrim($query, '&');
+			$query = $delim . ltrim($query, '&');
 			header("location: " . $redirect . $query);
 			exit;
 			
@@ -5547,7 +5559,7 @@ class usc_e_shop
 			if( '1' == $this->options['acting_settings']['zeus']['3dsecur'] ){
 				if( !isset($_REQUEST['PaRes'])){
 	
-					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+					usces_log('zeus card entry data2 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					usces_zeus_3dsecure_enrol();
 					
 				}else if( '1' == $this->options['acting_settings']['zeus']['3dsecur'] && isset($_REQUEST['PaRes'])){
@@ -5558,7 +5570,7 @@ class usc_e_shop
 				$res = usces_zeus_secure_payreq();
 				return $res;
 			}
-		}else if($acting_flg == 'acting_zeus_card' && '1' == $this->options['acting_settings']['zeus']['connection']  ){
+		}else if($acting_flg == 'acting_zeus_card' && '1' == $this->options['acting_settings']['zeus']['connection'] ){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);
@@ -5606,7 +5618,7 @@ class usc_e_shop
 
 			//usces_log('zeus card *****2 : '.print_r($page, true), 'acting_transaction.log');
 				if( false !== strpos( $page, 'Success_order') ){
-					usces_log('zeus card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+					usces_log('zeus card entry data1 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 //20120904ysk start 0000541
 					if ( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ) {
 						$args = '';
@@ -5614,17 +5626,17 @@ class usc_e_shop
 						$div = 'div_'.$_POST['cbrand'];
 						$args = '&cbrand='.$_POST['cbrand'].'&howpay='.$_POST['howpay'].'&'.$div.'='.$_POST[$div];
 					}
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=1'.$args);
+					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=1'.$args);
 //20120904ysk end
 					exit;
 				}else{
 					usces_log('zeus card : Certification Error', 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
+					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=0');
 					exit;
 				}
 			}else{
 				usces_log('zeus card : Socket Error', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_card&acting_return=0');
+				header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=0');
 			}
 			exit;
 
@@ -5684,16 +5696,16 @@ class usc_e_shop
 
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus conv entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
+					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_conv&acting_return=1&' . $qstr);
 					exit;
 				}else{
 					usces_log('zeus data NG : '.$page, 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
+					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_conv&acting_return=0');
 					exit;
 				}
 			}else{
 				usces_log('zeus : sockopen NG', 'acting_transaction.log');
-				header("Location: " . USCES_CART_URL . $this->delim . 'acting=zeus_conv&acting_return=0');
+				header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_conv&acting_return=0');
 			}
 			exit;
 
@@ -5707,10 +5719,10 @@ class usc_e_shop
 			$nvpstr .= '&PAYMENTACTION=' . apply_filters('usces_filter_paypal_ec_paymentaction', 'Sale');
 
 			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.
-			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=1');
+			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$delim.'acting=paypal_ec&acting_return=1');
 
 			//The cancelURL is the location buyers are sent to when they hit the cancel button during authorization of payment during the PayPal flow
-			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$this->delim.'confirm=1');
+			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$delim.'confirm=1');
 
 			$nvpstr .= '&NOTIFYURL='.urlencode(USCES_PAYPAL_NOTIFY_URL);
 
@@ -5731,10 +5743,28 @@ class usc_e_shop
 				$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
 				$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
 				usces_log('PayPal : SetExpressCheckout API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
-				header("Location: ".USCES_CART_URL.$this->delim.'acting=paypal_ec&acting_return=0');
+				header("Location: ".USCES_CART_URL.$delim.'acting=paypal_ec&acting_return=0');
 			}
 			exit;
 //20110208ysk end
+//20121030ysk start
+		} elseif( $acting_flg == 'acting_telecom_edy' ) {
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$value = array();
+			$value['usces_cart'] = $_SESSION['usces_cart'];
+			$value['usces_entry'] = $_SESSION['usces_entry'];
+			$value['usces_member'] = $_SESSION['usces_member'];
+			$mvalue = serialize( $value );
+			$mquery = $wpdb->prepare( "INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $_POST['option'], $_POST['option'], $mvalue );
+			$res = $wpdb->query( $mquery );
+
+			unset( $_SESSION['usces_cart'] );
+			unset( $_SESSION['usces_entry'] );
+
+			$acting_opts = $this->options['acting_settings']['telecom'];
+			header( "location: ".$acting_opts['send_url_edy'].'?acting=telecom_edy'.$query );
+			exit;
+//20121030ysk end
 		}
 		do_action('usces_action_acting_processing', $acting_flg, $query);
 	}
@@ -6688,7 +6718,7 @@ class usc_e_shop
 								'acting_data', 
 								$this->get_uscesid(false), 
 								$rand, 
-								$data								
+								$data
 								);
 		$res = $wpdb->query($query);
 		return $res;
@@ -6823,7 +6853,7 @@ class usc_e_shop
 					$cval = $res[$mkey];
 					$cval = (array)$cval;
 					$cval[] = $mval;
-					$res[$mkey] = $cval;		
+					$res[$mkey] = $cval;
 				}else{
 					$res[$mkey] = $mval;
 				}

@@ -27,7 +27,9 @@ class dataList
 	var $pageLimit;		//ページ制限
 //20101202ysk end
 	var $management_status;	//処理ステータス
-		
+	var $selectSql;
+	var $joinTableSql;
+
 	//Constructor
 	function dataList($tableName, $arr_column)
 	{
@@ -44,6 +46,8 @@ class dataList
 //20101202ysk start
 		$this->pageLimit = 'on';
 //20101202ysk end
+		$this->selectSql = '';
+		$this->joinTableSql = '';
 
 		$this->SetParamByQuery();
 
@@ -60,6 +64,48 @@ class dataList
 			);
 		$this->management_status = apply_filters( 'usces_filter_management_status', $management_status );
 
+		$this->SetSelects();
+		$this->SetJoinTables();
+	}
+
+	function SetSelects()
+	{
+		$status_sql = '';
+		foreach( $this->management_status as $status_key => $status_name ) {
+			$status_sql .= " WHEN LOCATE('".$status_key."', order_status) > 0 THEN '".$status_name."'";
+		}
+
+		$select = array(
+			"ID", 
+			"meta.meta_value AS deco_id", 
+			"DATE_FORMAT(order_date, '%Y-%m-%d %H:%i') AS date", 
+			"mem_id", 
+			"CONCAT(order_name1, ' ', order_name2) AS name", 
+			"order_pref AS pref", 
+			"order_delivery_method AS delivery_method", 
+			"(order_item_total_price - order_usedpoint + order_discount + order_shipping_charge + order_cod_fee + order_tax) AS total_price", 
+			"order_payment_name AS payment_name", 
+			"CASE WHEN LOCATE('noreceipt', order_status) > 0 THEN '".__('unpaid', 'usces')."' 
+				 WHEN LOCATE('receipted', order_status) > 0 THEN '".__('payment confirmed', 'usces')."' 
+				 WHEN LOCATE('pending', order_status) > 0 THEN '".__('Pending', 'usces')."' 
+				 ELSE '&nbsp;' 
+			END AS receipt_status", 
+			"CASE {$status_sql} 
+				 ELSE '".__('new order', 'usces')."' 
+			END AS order_status", 
+			"order_modified"
+		);
+		$this->selectSql = apply_filters( 'usces_filter_order_list_sql_select', $select );
+	}
+
+	function SetJoinTables()
+	{
+		global $wpdb;
+		$meta_table = $wpdb->prefix.'usces_order_meta';
+		$join_table = array(
+			"LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id'"
+		);
+		$this->joinTableSql = apply_filters( 'usces_filter_order_list_sql_jointable', $join_table );
 	}
 
 	function MakeTable()
@@ -256,12 +302,12 @@ class dataList
 	function GetRows()
 	{
 		global $wpdb;
-		$meta_table = $wpdb->prefix . 'usces_order_meta';
+		//$meta_table = $wpdb->prefix . 'usces_order_meta';
 		$where = $this->GetWhere();
 		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
 		
-		$status_sql = '';
+/*		$status_sql = '';
 		foreach ($this->management_status as $status_key => $status_name){
 			$status_sql .= " WHEN LOCATE('" . $status_key . "', order_status) > 0 THEN '" . $status_name . "'";
 		}
@@ -284,9 +330,20 @@ class dataList
 					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('new order', 'usces'));
 					
 		$query .= $where . $order;// . $limit;
+*/
+		$select = '';
+		foreach( $this->selectSql as $value ) {
+			$select .= $value.", ";
+		}
+		$select = rtrim( $select, ", " );
+		$join_table = '';
+		foreach( $this->joinTableSql as $value ) {
+			$join_table .= $value." ";
+		}
+		$query = "SELECT ".$select." FROM {$this->table} ".$join_table.$where.$order;
 		//var_dump($query);
 		$wpdb->show_errors();
-					
+
 		$rows = $wpdb->get_results($query, ARRAY_A);
 		$this->selectedRow = count($rows);
 //20101202ysk start
@@ -305,7 +362,7 @@ class dataList
 	function SetTotalRow()
 	{
 		global $wpdb;
-		$query = "SELECT COUNT(ID) AS ct FROM {$this->table}";
+		$query = "SELECT COUNT(ID) AS ct FROM {$this->table}".apply_filters( 'usces_filter_order_list_sql_where', '' );
 		$res = $wpdb->get_var($query);
 		$this->totalRow = $res;
 	}
@@ -367,7 +424,7 @@ class dataList
 				$str = "";
 				break;
 		}
-				
+		$str = apply_filters( 'usces_filter_order_list_sql_where', $str );
 		if($str == '' && $this->searchSql != ''){
 			$str = ' HAVING ' . $this->searchSql;
 		}else if($str != '' && $this->searchSql != ''){

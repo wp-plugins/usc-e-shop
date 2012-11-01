@@ -722,6 +722,16 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 		</table>
+<!--
+		<table class="settle_table">
+			<tr>
+				<th>Edy決済</th>
+				<td><input name="edy_activate" type="radio" id="edy_activate_telecom_1" value="on"<?php if( isset($opts['telecom']['edy_activate']) && $opts['telecom']['edy_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="edy_activate_telecom_1">利用する</label></td>
+				<td><input name="edy_activate" type="radio" id="edy_activate_telecom_2" value="off"<?php if( isset($opts['telecom']['edy_activate']) && $opts['telecom']['edy_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="edy_activate_telecom_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+-->
 		<input name="acting" type="hidden" value="telecom" />
 		<input name="usces_option_update" type="submit" class="button" value="テレコムクレジットの設定を更新する" />
 	</form>

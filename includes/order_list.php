@@ -16,6 +16,7 @@ $arr_column = array(
 			__('transfer statement', 'usces') => 'receipt_status', 
 			__('Processing', 'usces') => 'order_status', 
 			apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ) => 'order_modified');
+$arr_column = apply_filters( 'usces_filter_order_list_column', $arr_column );
 
 $DT = new dataList($tableName, $arr_column);
 $res = $DT->MakeTable();
@@ -256,7 +257,7 @@ jQuery(function($){
 		
 		}
 	};
-<?php apply_filters('usces_filter_order_list_page_js', NULL); ?>
+<?php echo apply_filters('usces_filter_order_list_page_js', ''); ?>
 });
 
 function toggleVisibility(id) {
@@ -456,7 +457,7 @@ jQuery(document).ready(function($){
 <!--20100908ysk start-->
 		<table id="dl_list_table">
 		<tr>
-		<?php apply_filters('usces_filter_dl_list_table', NULL); ?>
+		<?php echo apply_filters('usces_filter_dl_list_table', ''); ?>
 		<td><input type="button" id="dl_productlist" class="searchbutton" value="<?php _e('Download Product List', 'usces'); ?>" /></td>
 		<td><input type="button" id="dl_orderlist" class="searchbutton" value="<?php _e('Download Order List', 'usces'); ?>" /></td>
 		</tr>
@@ -481,14 +482,15 @@ jQuery(document).ready(function($){
 <?php foreach ( (array)$rows as $array ) : ?>
 <?php
 //20120612ysk start 0000501
-	$list_detail = '<td><input name="listcheck[]" type="checkbox" value="'.$array['ID'].'" /></td>';
+	$list_detail = '<td align="center"><input name="listcheck[]" type="checkbox" value="'.$array['ID'].'" /></td>';
 	foreach( (array)$array as $key => $value ) {
 		if( $value == '' || $value == ' ' ) $value = '&nbsp;';
 		if( $key == 'ID' || $key == 'deco_id' ) {
 			$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.$curent_url.'">'.esc_html($value).'</a></td>';
+		} elseif( $key == 'mem_id' ) {
+			if( $value == '0' ) $value = '&nbsp;';
+			$list_detail .= '<td>'.esc_html($value).'</td>';
 		} elseif( $key == 'name' ) {
-			$options = get_option('usces');
-			$applyform = usces_get_apply_addressform($options['system']['addressform']);
 			switch ($applyform){
 			case 'JP': 
 				$list_detail .= '<td>'.esc_html($value).'</td>';
@@ -498,17 +500,7 @@ jQuery(document).ready(function($){
 				$names = explode(' ', $value);
 				$list_detail .= '<td>'.esc_html($names[1].' '.$names[0]).'</td>';
 			}
-		} elseif( $key == 'total_price' ) {
-			$list_detail .= '<td class="price">'.usces_crform( $value, true, false, 'return' ).'</td>';
-		} elseif( $key == 'receipt_status' && $value == __('unpaid', 'usces')) {
-			$list_detail .= '<td class="red">'.esc_html($value).'</td>';
-		} elseif( $key == 'receipt_status' && $value == 'Pending') {
-			$list_detail .= '<td class="red">'.esc_html($value).'</td>';
-		} elseif( $key == 'receipt_status' && $value == __('payment confirmed', 'usces')) {
-			$list_detail .= '<td class="green">'.esc_html($value).'</td>';
-		} elseif( $key == 'order_status' && $value == __('It has sent it out.', 'usces')) {
-			$list_detail .= '<td class="green">'.esc_html($value).'</td>';
-		} elseif( $key == 'delivery_method') {
+		} elseif( $key == 'delivery_method' ) {
 			if( -1 != $value ) {
 				$delivery_method_index = $this->get_delivery_method_index($value);
 				$value = $this->options['delivery_method'][$delivery_method_index]['name'];
@@ -516,9 +508,31 @@ jQuery(document).ready(function($){
 				$value = '&nbsp;';
 			}
 			$list_detail .= '<td class="green">'.esc_html($value).'</td>';
-		} elseif( $key == 'payment_name' && $value == '#none#') {
-			$list_detail .= '<td>&nbsp;</td>';
-		} else {
+		} elseif( $key == 'total_price' ) {
+			$list_detail .= '<td class="price">'.usces_crform( $value, true, false, 'return' ).'</td>';
+		} elseif( $key == 'payment_name' ) {
+			if( $value == '#none#' ) {
+				$list_detail .= '<td>&nbsp;</td>';
+			} else {
+				$list_detail .= '<td>'.esc_html($value).'</td>';
+			}
+		} elseif( $key == 'receipt_status' ) {
+			if( $value == __('unpaid', 'usces') ) {
+				$list_detail .= '<td class="red">'.esc_html($value).'</td>';
+			} elseif( $value == 'Pending' ) {
+				$list_detail .= '<td class="red">'.esc_html($value).'</td>';
+			} elseif( $value == __('payment confirmed', 'usces') ) {
+				$list_detail .= '<td class="green">'.esc_html($value).'</td>';
+			} else {
+				$list_detail .= '<td>'.esc_html($value).'</td>';
+			}
+		} elseif( $key == 'order_status' ) {
+			if( $value == __('It has sent it out.', 'usces') ) {
+				$list_detail .= '<td class="green">'.esc_html($value).'</td>';
+			} else {
+				$list_detail .= '<td>'.esc_html($value).'</td>';
+			}
+		} elseif( $key == 'date' || $key == 'pref' || $key == 'order_modified' ) {
 			$list_detail .= '<td>'.esc_html($value).'</td>';
 		}
 	}
@@ -784,7 +798,7 @@ jQuery(document).ready(function($){
 	</fieldset>
 </div>
 <!--20100908ysk end-->
-<?php echo apply_filters('usces_filter_order_list_footer', NULL);//20120612ysk 0000501 ?>
+<?php echo apply_filters('usces_filter_order_list_footer', '');//20120612ysk 0000501 ?>
 
 <!--<div class="chui">
 <h3>受注詳細画面（作成中）について</h3>

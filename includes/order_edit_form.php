@@ -575,6 +575,7 @@ jQuery(function($){
 					}else if(checked == 'othermail'){
 						$("input[name='check\[othermail\]']").attr({checked: true});
 					}
+				<?php echo apply_filters('usces_filter_order_check_mail_js', '' ); ?>
 					
 					$('#mailSendAlert').dialog('option', 'buttons', {
 															'OK': function() {
@@ -621,6 +622,7 @@ jQuery(function($){
 				}else if(data == 'nohinprint'){
 					$("input[name='check\[nohinprint\]']").attr({checked: true});
 				}
+				<?php echo apply_filters('usces_filter_order_check_print_js', '' ); ?>
 			};
 			p.error = function(data, dataType){
 				//$("#ajax-response").html(msg);
@@ -691,8 +693,8 @@ jQuery(function($){
 			return true;
 		}
 	});
-	<?php apply_filters('usces_filter_order_edit_page_js', $order_id ); //Deprecated ?>
 	<?php do_action('usces_action_order_edit_page_js', $order_id, $data ); ?>
+<?php echo apply_filters('usces_filter_order_edit_page_js', '', $order_id ); ?>
 });
 
 function toggleVisibility(id) {

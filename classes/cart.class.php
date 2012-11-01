@@ -482,7 +482,8 @@ class usces_cart {
 							'total_full_price' => '',
 							'note' => '',
 							'tax' => '',
-							'payment_name' => ''
+							'payment_name' => '',
+							'delidue_date' => ''
 						 );
 		if(isset($_SESSION['usces_entry']['order'])){
 			foreach((array)$_SESSION['usces_entry']['order'] as $key => $val){

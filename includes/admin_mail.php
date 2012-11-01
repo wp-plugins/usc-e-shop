@@ -351,6 +351,7 @@ function toggleVisibility(id) {
 </div>
 </div><!--postbox-->
 
+<?php echo apply_filters( 'usces_filter_admin_mailform', NULL ); ?>
 
 
 </div><!--poststuff-->

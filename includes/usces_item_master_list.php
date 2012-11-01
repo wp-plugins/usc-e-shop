@@ -257,7 +257,7 @@ jQuery(function($){
 		$('#dlItemListDialog').dialog('open');
 	});
 //20101111ysk end
-
+<?php echo apply_filters( 'usces_filter_item_list_page_js', '' ); ?>
 });
 
 function toggleVisibility(id) {
@@ -366,6 +366,7 @@ jQuery(document).ready(function($){
 		</table>
 		<table id="dl_list_table">
 		<tr>
+		<?php echo apply_filters( 'usces_filter_dl_item_list_table', '' ); ?>
 		<td><input type="button" id="up_itemlist" class="searchbutton" value="<?php _e('Collective registration item', 'usces'); ?>" /></td>
 		<td><input type="button" id="dl_itemlist" class="searchbutton" value="<?php _e('Download Item List', 'usces'); ?>" /></td>
 		</tr>
@@ -402,7 +403,7 @@ jQuery(document).ready(function($){
 		$array['post_status'] = $post->post_status;
 ?>
 	<tr>
-	<td width="20px"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
+	<td width="20px" align="center"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
 	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $key == 'item_code') : ?>
@@ -519,6 +520,7 @@ jQuery(document).ready(function($){
 </table>
 
 </div>
+<?php echo apply_filters( 'usces_filter_item_list_footer', '' ); ?>
 </form>
 <div id="upload_dialog">
 	<p id="dialogExp"></p>
