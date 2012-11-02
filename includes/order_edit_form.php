@@ -1029,7 +1029,8 @@ for ($i=0; $i<50; $i++) {
 </select>
 <?php else : ?>
 &nbsp
-<?php endif; ?></td>
+<?php endif; ?>
+</td>
 </tr>
 <tr>
 <td class="label status"><?php if($admin != ''){echo __('estimate order', 'usces');}else{echo '&nbsp';} ?></td>
@@ -1068,6 +1069,7 @@ for ($i=0; $i<50; $i++) {
 <td class="wrap_td">
 <table class="order_custom_wrap">
 <tr>
+<?php do_action( 'usces_action_order_edit_form_custom', $data ); ?>
 <?php
 //20100818ysk start
 usces_admin_custom_field_input($csod_meta, 'order', '');

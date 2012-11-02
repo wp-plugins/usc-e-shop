@@ -1109,7 +1109,7 @@ function usces_download_product_list() {
 	$chk_pro['quantity'] = 1;
 	$chk_pro['price'] = 1;
 	$chk_pro['unit'] = (isset($_REQUEST['check']['unit'])) ? 1 : 0;
-	$usces_opt_order['chk_pro'] = $chk_pro;
+	$usces_opt_order['chk_pro'] = apply_filters( 'usces_filter_chk_pro', $chk_pro );
 	update_option('usces_opt_order', $usces_opt_order);
 	//==========================================================================
 
@@ -1145,6 +1145,7 @@ function usces_download_product_list() {
 	if(isset($_REQUEST['check']['name'])) $line .= $th_h.__('name', 'usces').$th_f;
 	if(isset($_REQUEST['check']['delivery_method'])) $line .= $th_h.__('shipping option', 'usces').$th_f;
 	if(isset($_REQUEST['check']['shipping_date'])) $line .= $th_h.__('shpping date', 'usces').$th_f;
+	$line .= apply_filters( 'usces_filter_chk_pro_label_head', NULL, $usces_opt_order, $rows);
 	$line .= $th_h.__('item code', 'usces').$th_f;
 	$line .= $th_h.__('SKU code', 'usces').$th_f;
 	if(isset($_REQUEST['check']['item_name'])) $line .= $th_h.__('item name', 'usces').$th_f;
@@ -1153,6 +1154,7 @@ function usces_download_product_list() {
 	$line .= $th_h.__('Quantity', 'usces').$th_f;
 	$line .= $th_h.__('Unit price', 'usces').$th_f;
 	if(isset($_REQUEST['check']['unit'])) $line .= $th_h.__('unit', 'usces').$th_f;
+	$line .= apply_filters( 'usces_filter_chk_pro_label_detail', NULL, $usces_opt_order, $rows);
 	$line .= $tr_f.$lf;
 	//==========================================================================
 	foreach((array)$rows as $array) {
@@ -1190,6 +1192,8 @@ function usces_download_product_list() {
 				$line .= $td_h.$delivery_method.$td_f;
 			}
 			if(isset($_REQUEST['check']['shipping_date'])) $line .= $td_h.$data['order_modified'].$td_f;
+			$line .= apply_filters( 'usces_filter_chk_pro_data_head', NULL, $usces_opt_order, $data, $cart_row);
+
 			$line .= $td_h.$usces->getItemCode($post_id).$td_f;
 			$line .= $td_h.$sku.$td_f;
 			if(isset($_REQUEST['check']['item_name'])) $line .= $td_h.usces_entity_decode($usces->getItemName($post_id), $ext).$td_f;
@@ -1219,6 +1223,7 @@ function usces_download_product_list() {
 			$line .= $td_h.$cart_row['quantity'].$td_f;
 			$line .= $td_h.$cart_row['price'].$td_f;
 			if(isset($_REQUEST['check']['unit'])) $line .= $td_h.usces_entity_decode($usces->getItemSkuUnit($post_id, $sku), $ext).$td_f;
+			$line .= apply_filters( 'usces_filter_chk_pro_data_detail', NULL, $usces_opt_order, $data, $cart_row);
 			$line .= $tr_f.$lf;
 		}
 	}
@@ -1446,7 +1451,7 @@ function usces_download_order_list() {
 //20110208ysk end
 		}
 	}
-	$usces_opt_order['chk_ord'] = $chk_ord;
+	$usces_opt_order['chk_ord'] = apply_filters( 'usces_filter_chk_ord', $chk_ord );
 	update_option('usces_opt_order', $usces_opt_order);
 	//==========================================================================
 
@@ -1553,6 +1558,8 @@ function usces_download_order_list() {
 			}
 		}
 	}
+	$line .= apply_filters( 'usces_filter_chk_ord_label_customer', NULL, $usces_opt_order, $rows );
+
 	//--------------------------------------------------------------------------
 	if(!empty($csde_meta)) {
 		foreach($csde_meta as $key => $entry) {
@@ -1621,6 +1628,7 @@ function usces_download_order_list() {
 			}
 		}
 	}
+	$line .= apply_filters( 'usces_filter_chk_ord_label_delivery', NULL, $usces_opt_order, $rows );
 	//--------------------------------------------------------------------------
 	if(isset($_REQUEST['check']['shipping_date'])) $line .= $th_h.__('shpping date', 'usces').$th_f;
 	if(isset($_REQUEST['check']['peyment_method'])) $line .= $th_h.__('payment method', 'usces').$th_f;
@@ -1648,6 +1656,7 @@ function usces_download_order_list() {
 //20110208ysk end
 		}
 	}
+	$line .= apply_filters( 'usces_filter_chk_ord_label_order', NULL, $usces_opt_order, $rows );
 	$line .= $tr_f.$lf;
 	//==========================================================================
 	foreach((array)$rows as $array) {
@@ -1781,6 +1790,7 @@ function usces_download_order_list() {
 				}
 			}
 		}
+		$line .= apply_filters( 'usces_filter_chk_ord_data_customer', NULL, $usces_opt_order, $order_id, $entry );
 		//----------------------------------------------------------------------
 		if(!empty($csde_meta)) {
 			foreach($csde_meta as $key => $entry) {
@@ -1897,6 +1907,7 @@ function usces_download_order_list() {
 				}
 			}
 		}
+		$line .= apply_filters( 'usces_filter_chk_ord_data_delivery', NULL, $usces_opt_order, $order_id, $deli );
 		//----------------------------------------------------------------------
 		if(isset($_REQUEST['check']['shipping_date'])) $line .= $td_h.$data['order_modified'].$td_f;
 		if(isset($_REQUEST['check']['peyment_method'])) $line .= $td_h.$data['order_payment_name'].$td_f;
@@ -1962,6 +1973,7 @@ function usces_download_order_list() {
 				}
 			}
 		}
+		$line .= apply_filters( 'usces_filter_chk_ord_data_order', NULL, $usces_opt_order, $order_id, $data );
 		$line .= $tr_f.$lf;
 	}
 	$line .= $table_f.$lf;

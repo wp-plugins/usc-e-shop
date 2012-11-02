@@ -3965,18 +3965,18 @@ class usc_e_shop
 				$cart_row = $cart[$i];
 				$sku_code = urldecode($cart_row['sku']);
 				if( empty($sku) ){
-					if( $cart_row['post_id'] == $post_id && ('noreceipt' != $status && 'pending' != $status) ){
+					if( $cart_row['post_id'] == $post_id && (false === strpos($status, 'noreceipt') && false === strpos($status, 'pending')) ){
 						$res = true;
 						break 2;
-					}elseif( $cart_row['post_id'] == $post_id && ('noreceipt' == $status || 'pending' == $status) ){
+					}elseif( $cart_row['post_id'] == $post_id && (false !== strpos($status, 'noreceipt') || false !== strpos($status, 'pending')) ){
 						$res = 'noreceipt';
 						break 2;
 					}
 				}else{
-					if( $cart_row['post_id'] == $post_id && $sku_code == $sku && ('noreceipt' != $status && 'pending' != $status) ){
+					if( $cart_row['post_id'] == $post_id && $sku_code == $sku && (false === strpos($status, 'noreceipt') && false === strpos($status, 'pending')) ){
 						$res = true;
 						break 2;
-					}elseif( $cart_row['post_id'] == $post_id && $sku_code == $sku && ('noreceipt' == $status || 'pending' == $status) ){
+					}elseif( $cart_row['post_id'] == $post_id && $sku_code == $sku && (false !== strpos($status, 'noreceipt') || false !== strpos($status, 'pending')) ){
 						$res = 'noreceipt';
 						break 2;
 					}

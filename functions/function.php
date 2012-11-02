@@ -3534,7 +3534,9 @@ function usces_get_send_out_date(){
 }
 
 function usces_action_footer_comment(){
-	echo "<!-- Welcart version : v".USCES_VERSION." -->\n";
+	//$theme = get_theme_data( get_template() );
+	echo "\n<!-- Welcart version : v".USCES_VERSION." -->\n";
+	echo "<!-- Template : ".get_template()." -->\n";
 }
 
 function usces_set_acting_notification_time( $key ){

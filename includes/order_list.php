@@ -562,6 +562,7 @@ jQuery(document).ready(function($){
 		<label for="chk_pro[name]"><input type="checkbox" class="check_product" id="chk_pro[name]" value="name"<?php if($chk_pro['name'] == 1) echo ' checked'; ?> /><?php _e('name', 'usces'); ?></label>
 		<label for="chk_pro[delivery_method]"><input type="checkbox" class="check_product" id="chk_pro[delivery_method]" value="delivery_method"<?php if($chk_pro['delivery_method'] == 1) echo ' checked'; ?> /><?php _e('shipping option','usces'); ?></label>
 		<label for="chk_pro[shipping_date]"><input type="checkbox" class="check_product" id="chk_pro[shipping_date]" value="shipping_date"<?php if($chk_pro['shipping_date'] == 1) echo ' checked'; ?> /><?php _e('shpping date', 'usces'); ?></label>
+		<?php do_action( 'usces_action_chk_pro_head', $chk_pro ); ?>
 	</fieldset>
 	<fieldset><legend><?php _e('Product Information', 'usces'); ?></legend>
 		<label for="chk_pro[item_code]"><input type="checkbox" class="check_product" id="chk_pro[item_code]" value="item_code" checked disabled /><?php _e('item code', 'usces'); ?></label>
@@ -572,6 +573,7 @@ jQuery(document).ready(function($){
 		<label for="chk_pro[quantity]"><input type="checkbox" class="check_product" id="chk_pro[quantity]" value="quantity" checked disabled /><?php _e('Quantity','usces'); ?></label>
 		<label for="chk_pro[price]"><input type="checkbox" class="check_product" id="chk_pro[price]" value="price" checked disabled /><?php _e('Unit price','usces'); ?></label>
 		<label for="chk_pro[unit]"><input type="checkbox" class="check_product" id="chk_pro[unit]" value="unit"<?php if($chk_pro['unit'] == 1) echo ' checked'; ?> /><?php _e('unit', 'usces'); ?></label>
+		<?php do_action( 'usces_action_chk_pro_detail', $chk_pro ); ?>
 	</fieldset>
 </div>
 <div id="dlOrderListDialog" title="<?php _e('Download Order List', 'usces'); ?>">
@@ -673,6 +675,7 @@ jQuery(document).ready(function($){
 		}
 	}
 ?>
+		<?php do_action( 'usces_action_chk_ord_customer', $chk_ord ); ?>
 	</fieldset>
 	<fieldset><legend><?php _e('Shipping address information', 'usces'); ?></legend>
 <?php 
@@ -763,6 +766,7 @@ jQuery(document).ready(function($){
 		}
 	}
 ?>
+		<?php do_action( 'usces_action_chk_ord_delivery', $chk_ord ); ?>
 	</fieldset>
 	<fieldset><legend><?php _e('Order Infomation', 'usces'); ?></legend>
 		<label for="chk_ord[shipping_date]"><input type="checkbox" class="check_order" id="chk_ord[shipping_date]" value="shipping_date"<?php if($chk_ord['shipping_date'] == 1) echo ' checked'; ?> /><?php _e('shpping date', 'usces'); ?></label>
@@ -795,6 +799,7 @@ jQuery(document).ready(function($){
 		}
 	}
 ?>
+		<?php do_action( 'usces_action_chk_ord_order', $chk_ord ); ?>
 	</fieldset>
 </div>
 <!--20100908ysk end-->
