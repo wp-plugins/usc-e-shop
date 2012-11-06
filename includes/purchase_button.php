@@ -651,7 +651,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$redirect_back_url = USCES_CART_URL.$usces->delim.'confirm=1';
 			$html .= '<form id="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="clientip" value="'.$acting_opts['clientip'].'">
-				<input type="hidden" name="money" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
+				<input type="hidden" name="money" value="'.apply_filters( 'usces_filter_acting_amount', usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag ).'">
 				<input type="hidden" name="sendid" value="'.$memid.'">
 				<input type="hidden" name="usrtel" value="'.$tel.'">
 				<input type="hidden" name="usrmail" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">
@@ -677,7 +677,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '<form id="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="clientip" value="'.$acting_opts['clientip'].'">
 				<input type="hidden" name="sendid" value="'.$memid.'">
-				<input type="hidden" name="money" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
+				<input type="hidden" name="money" value="'.apply_filters( 'usces_filter_acting_amount', usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag ).'">
 				<input type="hidden" name="redirect_back_url" value="'.$redirect_back_url.'">
 				<input type="hidden" name="option" value="'.$rand.'">
 				';
