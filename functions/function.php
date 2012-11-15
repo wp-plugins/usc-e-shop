@@ -136,7 +136,7 @@ function usces_order_confirm_message($order_id) {
 				}
 //20110629ysk end
 			}
-			$meisai .= apply_filters( 'usces_filter_option_adminmail', $optstr, $options, $cart_row);
+			$meisai .= apply_filters( 'usces_filter_option_adminmail', $optstr, $options);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
@@ -340,7 +340,7 @@ function usces_send_ordermail($order_id) {
 				}
 //20110629ysk end
 			}
-			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options, $cart_row);
+			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options);
 		}
 		$meisai .= __('Unit price','usces') . " ".usces_crform( $skuPrice, true, false, 'return' ) . __(' * ','usces') . $cart_row['quantity'] . "\r\n";
 	}
@@ -2130,12 +2130,6 @@ function usces_check_acting_return() {
 			$results['reg_order'] = true;
 			break;
 //20120618ysk end
-//20121030ysk start
-		case 'telecom_edy':
-			$results[0] = 1;
-			$results['reg_order'] = false;
-			break;
-//20121030ysk end
 
 		default:
 			$results = $_GET;
@@ -2850,18 +2844,18 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
-		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
+		$formtag .= $name_label . "\t\t: " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
 		if( !empty($values['name3']) || !empty($values['name4']) ) {
-			$formtag .= __('furigana','usces') . "    : " . $values['name3'] . ' ' . $values['name4'] . " \r\n";
+			$formtag .= __('furigana','usces') . "\t\t: " . $values['name3'] . ' ' . $values['name4'] . " \r\n";
 		}
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
-		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
-		$formtag .= __('Address','usces') . "    : " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
-		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
-		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
+		$formtag .= __('Country','usces') . "\t\t\t: " . $usces_settings['country'][$values['country']] . "\r\n";
+		$formtag .= __('Zip/Postal Code','usces') . "\t\t: " . $values['zipcode'] . "\r\n";
+		$formtag .= __('Address','usces') . "\t\t\t: " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
+		$formtag .= __('Phone number','usces') . "\t\t: " . $values['tel'] . "\r\n";
+		$formtag .= __('FAX number','usces') . "\t\t: " . $values['fax'] . "\r\n";
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'fax_after', $order_id );
 		//20110118ysk end
@@ -2871,7 +2865,7 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
-		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
+		$formtag .= $name_label . "\t\t: " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
@@ -3406,15 +3400,18 @@ function usces_paypal_doecp( &$results ) {
 			$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.$interval : '';
 
 		} else {//継続課金
-*/
+
 			$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
 			$billingPeriod = "Month";// or "Day", "Week", "SemiMonth", "Year"
 			$billingFreq = $usces->getItemFrequency($post_id);
 			$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.dlseller_cycles( $post_id ) : '';
-/*		}*/
-		//$totalbillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
+		}*/
+		$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
+		$billingPeriod = "Month";// or "Day", "Week", "SemiMonth", "Year"
+		$billingFreq = $usces->getItemFrequency($post_id);
 		//$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
 		$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_full_price']));//20111125ysk 0000320
+		$totalBillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
 		//$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.dlseller_cycles( $post_id ) : '';
 
 		//$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
@@ -3534,9 +3531,7 @@ function usces_get_send_out_date(){
 }
 
 function usces_action_footer_comment(){
-	//$theme = get_theme_data( get_template() );
-	echo "\n<!-- Welcart version : v".USCES_VERSION." -->\n";
-	echo "<!-- Template : ".get_template()." -->\n";
+	echo "<!-- Welcart version : v".USCES_VERSION." -->\n";
 }
 
 function usces_set_acting_notification_time( $key ){
