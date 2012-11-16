@@ -114,8 +114,8 @@ function toggleVisibility(id) {
 	<div id="uscestabs_zeus">
 	<div class="settlement_service"><span class="service_title"><?php _e('ZEUS Japanese Settlement', 'usces'); ?></span></a></div>
 
-	<?php if( isset($_POST['acting']) && 'zeus' == $_POST['acting'] ){ ?>	
-		<?php if( isset($opts['zeus']['activate']) && 'on' == $opts['zeus']['activate'] ){ ?>	
+	<?php if( isset($_POST['acting']) && 'zeus' == $_POST['acting'] ){ ?>
+		<?php if( isset($opts['zeus']['activate']) && 'on' == $opts['zeus']['activate'] ){ ?>
 		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php }else if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
@@ -163,6 +163,14 @@ function toggleVisibility(id) {
 				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_2" value="off"<?php if( isset($opts['zeus']['quickcharge']) && $opts['zeus']['quickcharge'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_2">利用しない</label></td>
 				<td colspan="2"><div id="ex_quickcharge_zeus" class="explanation"><?php _e('ログインして一度購入したメンバーは、次の購入時にはカード番号を入力する必要がなくなります。', 'usces'); ?></div></td>
 			</tr>
+			<?php if( defined('WCEX_AUTO_DELIVERY') ): ?>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_batch_zeus');">バッチ処理</a></th>
+				<td><input name="batch" type="radio" id="batch_zeus_1" value="on"<?php if( isset($opts['zeus']['batch']) && $opts['zeus']['batch'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="batch_zeus_1">利用する</label></td>
+				<td><input name="batch" type="radio" id="batch_zeus_2" value="off"<?php if( isset($opts['zeus']['batch']) && $opts['zeus']['batch'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="batch_zeus_2">利用しない</label></td>
+				<td colspan="2"><div id="ex_batch_zeus" class="explanation"><?php _e('ゼウス決済を定期購入でご利用の場合は、「利用する」にしてください。また、クイックチャージも「利用する」にしてください。', 'usces'); ?></div></td>
+			</tr>
+			<?php endif; ?>
 			<tr>
 				<th>お客様の支払方法</th>
 				<td><input name="howpay" type="radio" id="howpay_zeus_1" value="on"<?php if( isset($opts['zeus']['howpay']) && $opts['zeus']['howpay'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_1">分割払いに対応する</label></td>
@@ -252,8 +260,8 @@ function toggleVisibility(id) {
 	<div id="uscestabs_remise">
 	<div class="settlement_service"><span class="service_title"><?php _e('Remise Japanese Settlement', 'usces'); ?></span></div>
 
-	<?php if( isset($_POST['acting']) && 'remise' == $_POST['acting'] ){ ?>	
-		<?php if( isset($opts['remise']['activate']) && 'on' == $opts['remise']['activate'] ){ ?>	
+	<?php if( isset($_POST['acting']) && 'remise' == $_POST['acting'] ){ ?>
+		<?php if( isset($opts['remise']['activate']) && 'on' == $opts['remise']['activate'] ){ ?>
 		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php }else if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>

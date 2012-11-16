@@ -3050,7 +3050,9 @@ function usces_action_confirm_page_point_inform_zeus() {
 		$html .= '<input type="hidden" name="expyy" value="'.$_POST['expyy'].'">';
 		$html .= '<input type="hidden" name="expmm" value="'.$_POST['expmm'].'">';
 		$html .= '<input type="hidden" name="username" value="'.$_POST['username'].'">';
-		$html .= '<input type="hidden" name="howpay" value="'.$_POST['howpay'].'">';
+		if( isset($_POST['howpay']) ) {
+			$html .= '<input type="hidden" name="howpay" value="'.$_POST['howpay'].'">';
+		}
 		if( isset($_POST['cbrand']) ) {
 			$html .= '<input type="hidden" name="cbrand" value="'.$_POST['cbrand'].'">';
 			$html .= '<input type="hidden" name="div_1" value="'.$_POST['div_1'].'">';

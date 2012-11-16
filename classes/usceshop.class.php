@@ -1043,6 +1043,7 @@ class usc_e_shop
 					}else{
 						$options['acting_settings']['zeus']['quickcharge'] = isset($_POST['quickcharge']) ? $_POST['quickcharge'] : '';
 					}
+					$options['acting_settings']['zeus']['batch'] = isset($_POST['batch']) ? $_POST['batch'] : '';
 					$options['acting_settings']['zeus']['clientip'] = isset($_POST['clientip']) ? trim($_POST['clientip']) : '';
 					$options['acting_settings']['zeus']['howpay'] = isset($_POST['howpay']) ? $_POST['howpay'] : '';
 					$options['acting_settings']['zeus']['bank_activate'] = isset($_POST['bank_activate']) ? $_POST['bank_activate'] : '';
@@ -1063,6 +1064,12 @@ class usc_e_shop
 						$mes .= '※入金お任せIPコードを入力して下さい<br />';
 					if( '' == trim($_POST['clientip_conv']) && isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] )
 						$mes .= '※コンビニ決済IPコードを入力して下さい<br />';
+					if( isset($_POST['batch']) && 'on' == $_POST['batch'] ) {
+						if( isset($_POST['quickcharge']) && 'on' == $_POST['quickcharge'] ) {
+						} else {
+							$mes .= '※バッチ処理を利用する場合は、クイックチャージを利用するにして下さい<br />';
+						}
+					}
 					if( !isset($_POST['card_url']) || empty($_POST['card_url']) || !isset($_POST['ipaddrs']) || empty($_POST['ipaddrs']) || !isset($_POST['bank_url']) || empty($_POST['bank_url']) || !isset($_POST['conv_url']) || empty($_POST['conv_url']) )
 						$mes .= '※設定が不正です！<br />';
 
@@ -3922,20 +3929,23 @@ class usc_e_shop
 
 	function get_member_info( $mid ) {
 		global $wpdb;
+		$infos = array();
 		
 		//if( !current_user_can('activate_plugins') ) return array();
 		
 		$table = $wpdb->prefix . "usces_member";
 		$query = $wpdb->prepare("SELECT * FROM $table WHERE ID = %d", $mid);
 		$datas = $wpdb->get_results( $query, ARRAY_A );
-		$infos = $datas[0];
-		
-		$table = $wpdb->prefix . "usces_member_meta";
-		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table WHERE member_id = %d", $mid);
-		$metas = $wpdb->get_results( $query, ARRAY_A );
-		
-		foreach( $metas as $meta ){
-			$infos[$meta['meta_key']] = maybe_unserialize($meta['meta_value']);
+		if( $datas ) {
+			$infos = $datas[0];
+			
+			$table = $wpdb->prefix . "usces_member_meta";
+			$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table WHERE member_id = %d", $mid);
+			$metas = $wpdb->get_results( $query, ARRAY_A );
+			
+			foreach( $metas as $meta ){
+				$infos[$meta['meta_key']] = maybe_unserialize($meta['meta_value']);
+			}
 		}
 		return $infos;
 	}
