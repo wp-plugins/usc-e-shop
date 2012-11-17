@@ -2805,7 +2805,7 @@ class usc_e_shop
 			header('location: ' . get_option('home'));
 			exit;
 		}
-		$this->page = 'customer';
+		$this->page = apply_filters( 'usces_filter_backCustomer_page', 'customer' );
 		add_action('the_post', array($this, 'action_cartFilter'));
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_customer');
 		add_action('template_redirect', array($this, 'template_redirect'));
@@ -3885,7 +3885,7 @@ class usc_e_shop
 		
 		if ( isset($_SESSION['usces_member']['ID']) ) {
 			$this->current_member['id'] = $_SESSION['usces_member']['ID'];
-			$this->current_member['name'] = $_SESSION['usces_member']['name1'] . ' ' . $_SESSION['usces_member']['name2'];
+			$this->current_member['name'] = usces_localized_name( $_SESSION['usces_member']['name1'], $_SESSION['usces_member']['name2'], 'return');
 		} else {
 			$this->current_member['id'] = 0;
 			$this->current_member['name'] = __('guest', 'usces');

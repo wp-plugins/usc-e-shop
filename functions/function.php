@@ -554,7 +554,7 @@ function usces_send_regmembermail($user) {
 	$res = false;
 	$mail_data = $usces->options['mail_data'];
 	$newmem_admin_mail = $usces->options['newmem_admin_mail'];
-	$name = trim($user['name1']) . trim($user['name2']);
+	$name = usces_localized_name(trim($user['name1']), trim($user['name2']), 'return');
 	$mailaddress1 = trim($user['mailaddress1']);
 
 	$subject =  $mail_data['title']['membercomp'];
@@ -1316,7 +1316,7 @@ function usces_delete_orderdata() {
 	if( $del ) {
 
 	$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $ID);
-	$order_data = $wpdb->get_results( $query );
+	$order_data = $wpdb->get_row( $query, OBJECT );
 //20120306ysk start 0000324
 	$order_res = $wpdb->get_row( $query, ARRAY_A );
 	$restore_point = false;
@@ -1413,8 +1413,9 @@ function usces_update_orderdata() {
 
 	$ID = $_REQUEST['order_id'];
 	
-	$query = $wpdb->prepare("SELECT `order_status` FROM $order_table_name WHERE ID = %d", $ID);
-	$old_status = $wpdb->get_var( $query );
+	$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
+	$old_orderdata = $wpdb->get_row( $query );
+	$old_status = $old_orderdata->order_status;
 	
 	$usces->cart->crear_cart();
 	$usces->cart->upCart();
@@ -1445,6 +1446,23 @@ function usces_update_orderdata() {
 	}
 	$ordercheck = isset($_POST['check']) ? serialize($_POST['check']) : '';
 	$member_id = $usces->get_memberid_by_email($_POST['customer']['mailaddress']);
+
+	if( 'cancel' == $taio ){
+		$query = $wpdb->prepare(
+				"UPDATE $order_table_name SET `order_modified`=%s, `order_status`=%s WHERE ID = %d", 
+					$order_modified, $status, $ID
+				);
+		$res[0] = $wpdb->query( $query );
+
+		$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
+		$new_orderdata = $wpdb->get_row( $query );
+		
+		do_action('usces_action_update_orderdata', $new_orderdata, $old_status, $old_orderdata);
+		$usces->cart->crear_cart();
+		
+		return 1;
+	}
+
 	
 //$wpdb->show_errors();
 //20101208ysk start
@@ -1571,10 +1589,10 @@ function usces_update_orderdata() {
 //20100818ysk end
 
 	$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
-	$new_orderdata = $wpdb->get_results( $query );
+	$new_orderdata = $wpdb->get_row( $query );
 //20120612ysk start 0000501
 	//do_action('usces_action_update_orderdata', $new_orderdata);
-	do_action('usces_action_update_orderdata', $new_orderdata, $old_status);
+	do_action('usces_action_update_orderdata', $new_orderdata, $old_status, $old_orderdata);
 //20120612ysk end
 	$usces->cart->crear_cart();
 	
@@ -1750,8 +1768,8 @@ function usces_all_change_order_status(&$obj){
 
 	$tableName = $wpdb->prefix . "usces_order";
 	$ids = $_POST['listcheck'];
-	$status = true;
 	foreach ( (array)$ids as $id ):
+		$status = true;
 //20120306ysk start 0000324
 		//$query = $wpdb->prepare("SELECT order_status FROM $tableName WHERE ID = %d", $id);
 		//$statusstr = $wpdb->get_var( $query );

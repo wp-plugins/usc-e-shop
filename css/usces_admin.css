@@ -255,6 +255,7 @@ div.error_message {
 	display: block;
 	margin-bottom: 10px;
 	padding: 0px;
+	margin-left: 10px;
 }
 .usces_admin .success .mes, 
 .usces_admin .caution .mes, 

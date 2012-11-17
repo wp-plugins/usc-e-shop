@@ -180,11 +180,41 @@ function usces_zeus_3dsecure_enrol(){
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=EnrolReq&code=0');
 		exit;
 	}
-//usces_log('zeus xml : ' . $xml, 'acting_transaction.log');
+//usces_log('data : ' . print_r($data, true), 'acting_transaction.log');
 
 	$EnrolRes = usces_xml2assoc($xml); 
 //usces_log('EnrolRes : ' . print_r($EnrolRes, true), 'acting_transaction.log');
-	if( 'success' != $EnrolRes['response']['result']['status'] ){
+	if( 'outside' == $EnrolRes['response']['result']['status'] ){
+		
+		$data = array();
+		$data['xid'] = $EnrolRes['response']['xid'];//$_REQUEST['MD'];
+		$PayReq = '<?xml version="1.0" encoding="utf-8" ?>';
+		$PayReq .= '<request service="secure_link_3d" action="payment">';
+		$PayReq .= usces_assoc2xml($data); 
+		$PayReq .= '</request>';
+	
+	//usces_log('zeus : PayReq1'.print_r($PayReq, true), 'acting_transaction.log');
+		$xml = usces_get_xml($acting_opts['card_secureurl'], $PayReq);
+	//usces_log('zeus : PayReq2'.print_r($xml, true), 'acting_transaction.log');
+		if ( empty($xml) ){
+			usces_log('zeus : PayRes Error', 'acting_transaction.log');
+			header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=PayRes&code=0');
+			exit;
+		}
+		
+		$PayRes = usces_xml2assoc($xml); 
+		if( 'success' != $PayRes['response']['result']['status'] ){
+			usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');
+			header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
+			exit;
+		}else{
+			usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
+			header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month']);
+			exit;
+		}
+		exit;
+			
+	}elseif( 'success' != $EnrolRes['response']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $EnrolRes['response']['result']['status'] . ' code=' . $EnrolRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $EnrolRes['response']['result']['status'] . '&code=' . $EnrolRes['response']['result']['code']);
 		exit;

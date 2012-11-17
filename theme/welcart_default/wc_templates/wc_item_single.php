@@ -64,6 +64,7 @@ get_header();
 	<?php echo apply_filters('single_item_single_sku_after_field', NULL); ?>
 	<?php do_action('usces_action_single_item_inform'); ?>
 	</form>
+	<?php do_action('usces_action_single_item_outform'); ?>
 	
 <?php elseif(usces_sku_num() > 1) : usces_have_skus(); ?>
 <!--some SKU-->
@@ -143,6 +144,7 @@ get_header();
 	<?php echo apply_filters('single_item_multi_sku_after_field', NULL); ?>
 	<?php do_action('usces_action_single_item_inform'); ?>
 	</form>
+	<?php do_action('usces_action_single_item_outform'); ?>
 <?php endif; ?>
 	
 	<div class="itemsubimg">
