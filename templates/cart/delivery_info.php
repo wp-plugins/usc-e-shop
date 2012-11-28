@@ -53,18 +53,7 @@ $html .= uesces_addressform( 'delivery', $usces_entries );
 
 $html .= '</table>';
 $html .= '<table class="customer_form" id="time">';
-//20101208ysk start
-/*
-$html .= '<tr>
-		<th scope="row">'.__('shipping option', 'usces').'</th>
-		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
-		</tr>
-		<tr>
-		<th scope="row">'.__('Delivery Time', 'usces').'</th>
-		<td colspan="2">' . usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ) . '</td>
-		</tr>';
-*/
-$html .= '<tr>
+$cart_delivery_field = '<tr>
 		<th scope="row">'.__('shipping option', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_method( $usces_entries['order']['delivery_method'], 'return' ) . '</td>
 		</tr>
@@ -76,12 +65,12 @@ $html .= '<tr>
 		<th scope="row">'.__('Delivery Time', 'usces').'</th>
 		<td colspan="2">' . usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ) . '</td>
 		</tr>';
-//20101208ysk end
-$html .= '<tr>
+$cart_delivery_field .= '<tr>
 	<th scope="row"><em>' . __('*', 'usces') . '</em>'.__('payment method', 'usces').'</th>
 	<td colspan="2">' . usces_the_payment_method( $usces_entries['order']['payment_name'], 'return' ) . '</td>
-	</tr>
-	</table>';
+	</tr>';
+$html .= apply_filters( 'usces_filter_cart_delivery_field', $cart_delivery_field, $usces_entries );
+$html .= '</table>';
 	
 require( USCES_PLUGIN_DIR . "/includes/delivery_secure_form.php");
 //20100818ysk start

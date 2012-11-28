@@ -633,6 +633,9 @@ function usces_direct_intoCart($post_id, $sku, $force=false, $value=NULL, $optio
 function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '', $out = '', $media = 'item' ) {
 	global $usces;
 	$ptitle = $number;
+	if($post == '') global $post;
+
+	$post_id = $post->ID;
 	
 	if( $ptitle && 0 == (int)$number ){
 
@@ -651,9 +654,6 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 
 	}else{
 
-		if($post == '') global $post;
-	
-		$post_id = $post->ID;
 		
 		$code =  get_post_meta($post_id, '_itemCode', true);
 		if(!$code) return false;

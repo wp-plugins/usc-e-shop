@@ -276,7 +276,7 @@ $html .= "
 		};
 	";
 */
-$html .= "
+$cart_delivery_script = "
 			var chk_pay = $(\"input[name='offer\\[payment_name\\]']:checked\").val();
 			if( uscesPaymod[chk_pay] != '' ){
 				$(\"#\" + uscesPaymod[chk_pay]).css({\"display\": \"table\"});
@@ -377,8 +377,8 @@ $delivery_after_days_script = "
 							}
 							date = addDate(date[\"year\"], date[\"month\"], date[\"day\"], 1);
 						}";
-$html .= apply_filters( 'usces_delivery_after_days_script', $delivery_after_days_script );
-$html .= "
+$cart_delivery_script .= apply_filters( 'usces_delivery_after_days_script', $delivery_after_days_script );
+$cart_delivery_script .= "
 						break;
 					}
 				}
@@ -409,17 +409,19 @@ $html .= "
 //20101208ysk end
 
 if($usces_entries['delivery']['delivery_flag'] == 0) {
-	$html .= "
+	$cart_delivery_script .= "
 		$(\"#delivery_table\").css({display: \"none\"});\n";
 }
 
 //20101208ysk start
-$html .= "
+$cart_delivery_script .= "
 		orderfunc.make_delivery_date(selected_delivery_method);\n";
 //20101208ysk end
 
-$html .= "
+$cart_delivery_script .= "
 		orderfunc.make_delivery_time(selected_delivery_method);\n";
+
+$html .= apply_filters( 'usces_filter_cart_delivery_script', $cart_delivery_script, $usces_entries, $sendout );
 
 foreach($payments_arr as $pn => $pm ){
 	$html .= "

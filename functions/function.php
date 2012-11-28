@@ -736,7 +736,7 @@ function usces_mail_custom_field_info( $custom_field, $position, $id, $mailaddre
 			break;
 		}
 	}
-
+	$msg_body = apply_filters('usces_filter_mail_custom_field_info', $msg_body, $custom_field, $position, $id, $mailaddress);
 	return $msg_body;
 }
 //20100818ysk end

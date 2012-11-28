@@ -262,7 +262,11 @@ case 'editpost':
 		$post_id = edit_post();
 		$post_ID = $post_id;
 
-	$post = get_post_to_edit($post_ID);
+		if ( version_compare($wp_version, '3.5-beta', '>') ){
+			$post = get_post($post_id, OBJECT, 'edit');
+		}else{
+			$post = get_post_to_edit($post_ID);
+		}
 	
 		//redirect_post($post_id); // Send user on their way while we keep working
 		if ( version_compare($wp_version, '3.4-beta', '>') ){

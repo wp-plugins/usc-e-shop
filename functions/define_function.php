@@ -1015,7 +1015,9 @@ function usces_item_uploadcsv(){
 		$comp_num++;
 		$pre_code = $datas[USCES_COL_ITEM_CODE];
 		clean_post_cache($post_id);
-
+		wp_cache_delete($post_id, 'posts');
+		wp_cache_delete($post_id, 'post_meta');
+		clean_object_term_cache($post_id, 'post');
 		/******************/
 		$addsku = microtime(true);
 		$AddSKUtime += $addsku-$optionmeta;
