@@ -1725,7 +1725,8 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 			'acting','order_no','tracking_no','status','error_message','money',
 			'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
 			'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE',
-			'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp');
+			'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp', 
+			'order_number');
 		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
 		if( !in_array($key, $keys) ) {
 			continue;
@@ -2403,7 +2404,8 @@ function usces_member_history( $out = '' ){
 				}
 				$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 			}
-				
+			$optstr = apply_filters( 'usces_filter_option_info_history', $optstr, $umhs, $cart_row, $i );
+			
 			$history_cart_row = '<tr>
 				<td>' . ($i + 1) . '</td>
 				<td>';
@@ -2557,6 +2559,7 @@ function usces_get_cart_rows( $out = '' ) {
 			}
 			$row .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
+		$row .= apply_filters( 'usces_filter_option_info_cart', '', $cart_row );
 		$row .= '</td>
 			<td class="aright">';
 		if( usces_is_gptekiyo($post_id, $sku_code, $quantity) ) {
@@ -2665,6 +2668,7 @@ function usces_get_confirm_rows( $out = '' ) {
 			}
 			$row .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
+		$row .= apply_filters( 'usces_filter_option_info_confirm', '', $cart_row );
 		$row .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td>' . $cart_row['quantity'] . '</td>

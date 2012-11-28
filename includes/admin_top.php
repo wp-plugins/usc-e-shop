@@ -49,6 +49,8 @@ $items_num = $this->get_items_num();
 </table>
 </div>
 
+<?php do_action( 'usces_action_admintop_box1' ); ?>
+
 <h4><?php _e('information for registration of items', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">
@@ -91,7 +93,9 @@ unset($non_stoc_skus);
 ?>
 </table>
 </div>
-<?php echo apply_filters('usces_filter_admin_top_information', NULL); ?>
+
+<?php do_action( 'usces_action_admintop_box2' ); ?>
+
 <h4><?php _e('Your environment', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">

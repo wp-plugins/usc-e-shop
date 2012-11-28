@@ -5629,6 +5629,7 @@ class usc_e_shop
 			//usces_log('zeus card *****2 : '.print_r($page, true), 'acting_transaction.log');
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_log('zeus card entry data1 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+					$ordd = usces_get_order_number( $page );
 //20120904ysk start 0000541
 					if ( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ) {
 						$args = '';
@@ -5636,6 +5637,7 @@ class usc_e_shop
 						$div = 'div_'.$_POST['cbrand'];
 						$args = '&cbrand='.$_POST['cbrand'].'&howpay='.$_POST['howpay'].'&'.$div.'='.$_POST[$div];
 					}
+					$args .= '&order_number='.$ordd;
 					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=1'.$args);
 //20120904ysk end
 					exit;
@@ -5986,9 +5988,10 @@ class usc_e_shop
 			$fee = 0;
 		
 		}else if( 'change' != $this->options['cod_type'] ){
-			$fee = isset($this->options['cod_fee']) ? $this->options['cod_fee'] : '';
+			//$fee = isset($this->options['cod_fee']) ? $this->options['cod_fee'] : '';
+			$fee = isset($this->options['cod_fee']) ? $this->options['cod_fee'] : 0;
 		
-		}else{	
+		}else{
 			$price = $amount_by_cod + $this->getTax( $amount_by_cod );
 			if( $price <= $this->options['cod_first_amount'] ){
 				$fee = $this->options['cod_first_fee'];
@@ -6801,8 +6804,8 @@ class usc_e_shop
 		global $wpdb;
 		$fields = array();
 		$table_name = $wpdb->prefix . "usces_order_meta";
-		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s)", 
-								$order_id, 'acting_%', 'settlement_id');
+		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s OR meta_key = %s)", 
+								$order_id, 'acting_%', 'settlement_id', 'order_number');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		if( !$res )
 			return $fields;
@@ -6817,6 +6820,8 @@ class usc_e_shop
 				}else{
 					$fields['settlement_id'] = $meta_values;
 				}
+			}elseif( 'order_number' == $value['meta_key'] ){
+				$fields['order_number'] = $value['meta_value'];
 			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){
 				$meta_values = unserialize($value['meta_value']);
 				if(is_array($meta_values)){

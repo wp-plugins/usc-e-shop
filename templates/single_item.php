@@ -183,6 +183,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 
 $html = apply_filters('usces_filter_single_item_inform', $html);
 $html .= '</form>'."\n";
+$html .= apply_filters('usces_filter_single_item_outform', NULL);
 
 $html .= '</div><!-- end of itemspage -->'."\n";
 ?>

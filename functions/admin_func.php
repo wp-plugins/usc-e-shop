@@ -202,14 +202,15 @@ function usces_zeus_3dsecure_enrol(){
 			exit;
 		}
 		
-		$PayRes = usces_xml2assoc($xml); 
+		$PayRes = usces_xml2assoc($xml);
+usces_log('usces_zeus_3dsecure_enrol : PayReq'.print_r($PayReq, true), 'acting_transaction.log');
 		if( 'success' != $PayRes['response']['result']['status'] ){
 			usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');
 			header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
 			exit;
 		}else{
 			usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
-			header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month']);
+			header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month'] . '&zeusordd=' . $PayRes['response']['order_number']);
 			exit;
 		}
 		exit;
@@ -301,14 +302,15 @@ function usces_zeus_3dsecure_auth(){
 		exit;
 	}
 	
-	$PayRes = usces_xml2assoc($xml); 
+	$PayRes = usces_xml2assoc($xml);
+usces_log('usces_zeus_3dsecure_auth : PayReq'.print_r($PayReq, true), 'acting_transaction.log');
 	if( 'success' != $PayRes['response']['result']['status'] ){
 		usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
 		exit;
 	}else{
 		usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
-		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month']);
+		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month'] . '&zeusordd=' . $PayRes['response']['order_number']);
 		exit;
 	}
 	exit;
@@ -360,7 +362,7 @@ function usces_zeus_secure_payreq(){
 		$data['uniq_key']['sendid'] = $_POST['sendid'];
 		$data['uniq_key']['sendpoint'] = $_POST['sendpoint'];
 	}
-		
+
 	$PayReq = '<?xml version="1.0" encoding="utf-8" ?>';
 	$PayReq .= '<request service="secure_link" action="payment">';
 	$PayReq .= usces_assoc2xml($data); 
@@ -375,7 +377,8 @@ usces_log('zeus PayReq: ' . print_r($PayReq,true), 'acting_transaction.log');
 		exit;
 	}
 
-	$PayRes = usces_xml2assoc($xml); 
+	$PayRes = usces_xml2assoc($xml);
+usces_log('usces_zeus_secure_payreq : PayReq'.print_r($PayReq, true), 'acting_transaction.log');
 	if( 'success' == $PayRes['response']['result']['status'] ){
 		usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month']);
@@ -679,5 +682,26 @@ $wpdb->show_errors();
 		$res = $wpdb->query( $query );
 		
 		return $res;
+}
+
+function usces_get_order_number( $page ) {
+	if( empty($page) ) return '';
+
+	$log = explode( "\r\n", $page );
+	$ordd = '';
+	//$flg = false;
+	foreach( (array)$log as $line ) {
+//usces_log('line='.$line, 'wcad.log');
+		//if( $flg ) {
+		//	$ordd = $line;
+		//	$flg = false;
+		//}
+		//if( 'Success_order' == $line ) $flg = true;
+		if( false !== strpos( $line, 'Success_order') ) {
+			list( $status, $ordd ) = explode( "\n", $line );
+		}
+	}
+//usces_log('ordd='.$ordd, 'wcad.log');
+	return $ordd;
 }
 ?>

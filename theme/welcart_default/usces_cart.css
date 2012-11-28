@@ -69,6 +69,10 @@ div.usccart_navi li.ucart {
 #cart table {
 	width: 100%;
 }
+#content #wc_cart img,
+#content #wc_confirm img {
+	max-width: none;
+}
 /* cart End */
 /*********************************************************************/
 /* member Start */

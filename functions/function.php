@@ -3285,13 +3285,17 @@ function usces_post_reg_orderdata($order_id, $results){
 					}
 				}else{
 					$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
-					foreach($_GET as $key => $value) {
-						$data[$key] = mysql_real_escape_string($value);
+					//foreach($_GET as $key => $value) {
+					//	$data[$key] = mysql_real_escape_string($value);
+					//}
+					//$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
+					if( !empty($_REQUEST['order_number']) ) {
+						$usces->set_order_meta_value( 'order_number', $_REQUEST['order_number'], $order_id );
 					}
-					$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
 					if( $usces->is_member_logged_in() )
 						$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
 				}
+usces_log(print_r($_REQUEST,true), 'acting_transaction.log');
 				if(empty($usces)){
 					usces_log('zeus card transaction : No Session', 'acting_transaction.log');
 				}else{
