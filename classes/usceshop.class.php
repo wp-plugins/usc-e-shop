@@ -5280,9 +5280,9 @@ class usc_e_shop
 						$advance = $this->cart->wc_unserialize( $cart['advance'] );
 						$sku = urldecode( $cart['sku'] );
 						$regular = $advance[$post_id][$sku]['regular'];
+						$unit = isset( $regular['unit'] ) ? $regular['unit'] : '';
 						$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
-						$frequency = isset( $regular['frequency'] ) ? (int)$regular['frequency'] : 0;
-						if( 1 == $interval and 1 == $frequency ) //通常課金扱い
+						if( empty($unit) or 1 > $interval ) //通常課金扱い
 							$type = 'once';
 					}
 				}
