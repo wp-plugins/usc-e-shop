@@ -1364,6 +1364,7 @@ function item_save_metadata( $post_id, $post ) {
 			$skus['stock'] = $skustock;
 			$skus['gp'] = $skugp;
 			$skus['sort'] = $skusort;
+			$skus = apply_filters( 'usces_filter_item_save_sku_metadata', $skus, $meta_id );
 			
 			$valueserialized = serialize($skus);
 			$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $meta_id) );
