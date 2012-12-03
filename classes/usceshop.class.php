@@ -5452,7 +5452,8 @@ class usc_e_shop
 								'stocknum' => $values['stocknum'],
 								'stock' => $values['stock'],
 								'gp' => $values['gp'],
-								'sort' => $values['sort']
+								'sort' => $values['sort'],
+								'advance' => isset($values['advance']) ? $values['advance'] : ''
 							);
 		}
 		ksort($skus);
