@@ -3248,7 +3248,8 @@ class usc_e_shop
 	function template_redirect () {
 		global $post, $usces_entries, $usces_carts, $usces_members, $usces_gp, $member_regmode;
 		
-		if( apply_filters('usces_action_template_redirect', false) ) return;
+		if( apply_filters('usces_action_template_redirect', false) ) return;//Deprecated
+		if( apply_filters('usces_filter_template_redirect', false) ) return;
 
 		if( is_single() && 'item' == $post->post_mime_type ) {
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){
@@ -3672,12 +3673,12 @@ class usc_e_shop
 
 	function is_member_logged_in( $id = false ) {
 		if( $id === false ){
-			if( isset($_SESSION['usces_member']['ID']) )
+			if( !empty($_SESSION['usces_member']['ID']) )
 				return true;
 			else
 				return false;
 		}else{
-			if( isset($_SESSION['usces_member']['ID']) && $_SESSION['usces_member']['ID'] == $id )
+			if( !empty($_SESSION['usces_member']['ID']) && $_SESSION['usces_member']['ID'] == $id )
 				return true;
 			else
 				return false;
