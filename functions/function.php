@@ -3929,4 +3929,18 @@ function usces_delete_order_check( $order_id ) {
 	$res = apply_filters( 'usces_filter_delete_order_check', true, $order_id );
 	return $res;
 }
+
+function usces_itempage_admin_bar() {
+    global $wp_admin_bar, $post;
+	if( is_single() && usces_is_item() ){
+		$wp_admin_bar->remove_menu('edit');
+		$ref = urlencode(site_url() . '/wp-admin/admin.php?page=usces_itemedit');
+		$wp_admin_bar->add_menu( array(
+			'id' => 'edit',
+			'title' => __('Edit item', 'usces'),
+			'href' => site_url() . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $post->ID . '&usces_referer=' . $ref
+		) );
+	}
+}
+
 ?>

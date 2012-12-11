@@ -122,7 +122,7 @@ function usces_zeus_3dsecure_enrol(){
 	if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
-		$data['card']['history']['key'] = $_POST['sendid'];
+		$data['card']['history']['key'] = 'sendid';
 		$data['card']['history']['action'] = 'send_email';
 		$data['card']['cvv'] = $_POST['securecode'];
 		$data['payment']['amount'] = $_POST['money'];
