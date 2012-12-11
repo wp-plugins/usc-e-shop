@@ -63,7 +63,7 @@ function usces_order_confirm_message($order_id) {
 					'name3' => $data['order_name3'],
 					'name4' => $data['order_name4'],
 					'zipcode' => $data['order_zip'],
-					'country' => $usces_settings['country'][$country],
+					'country' => isset($usces_settings['country'][$country]) ? $usces_settings['country'][$country] : '',
 					'pref' => $data['order_pref'],
 					'address1' => $data['order_address1'],
 					'address2' => $data['order_address2'],
