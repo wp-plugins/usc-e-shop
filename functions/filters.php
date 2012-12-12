@@ -45,7 +45,7 @@ function usces_action_reg_orderdata( $args ){
 
 function usces_action_ogp_meta(){
 	global $usces, $post;
-	if( !$usces->is_item($post) || !is_single() )
+	if( empty($post) || !$usces->is_item($post) || !is_single() )
 		return;
 		
 	$item = $usces->get_item( $post->ID );

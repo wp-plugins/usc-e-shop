@@ -1538,7 +1538,7 @@ function usces_categories_checkbox($output=''){
 	$retcats = apply_filters('usces_search_retcats', usces_search_categories());
 	$parent_id = apply_filters('usces_search_categories_checkbox_parent', USCES_ITEM_CAT_PARENT_ID);
 	$htm = usces_get_categories_checkbox($parent_id);
-	$htm = apply_filters('usces_filter_categories_checkbox', $htm, $categories);
+	$htm = apply_filters('usces_filter_categories_checkbox', $htm, $parent_id);
 	
 	if($output == '' || $output == 'echo')
 		echo $htm;

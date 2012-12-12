@@ -154,6 +154,10 @@ div.footer_explanation {
 	padding-right: 5px;
 }
 
+#content #wc_cart img,
+#content #wc_confirm img {
+	max-width: none;
+}
 /*********************************************************************/
 /* USCES Item single page style */
 span.price {
