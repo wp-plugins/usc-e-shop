@@ -6464,7 +6464,8 @@ class usc_e_shop
 	
 	function is_gptekiyo( $post_id, $sku, $quant ) {
 		$skus = $this->get_skus( $post_id, 'code' );
-		if( !$skus[$sku]['gp'] ) return false;
+		//if( !$skus[$sku]['gp'] ) return false;
+		if( empty($skus[$sku]['gp']) ) return false;
 
 		$GpN1 = $this->getItemGpNum1($post_id);
 		$GpN2 = $this->getItemGpNum2($post_id);
@@ -6885,6 +6886,7 @@ class usc_e_shop
 	
 	function get_currency($amount, $symbol_pre = false, $symbol_post = false, $seperator_flag = true ){
 		global $usces_settings;
+		if( !is_numeric($amount) ) return '';
 		$cr = $this->options['system']['currency'];
 		list($code, $decimal, $point, $seperator, $symbol) = $usces_settings['currency'][$cr];
 		if( !$seperator_flag ){

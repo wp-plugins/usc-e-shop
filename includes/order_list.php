@@ -376,6 +376,7 @@ jQuery(document).ready(function($){
 	$('#dl_orderlist').click(function() {
 		$('#dlOrderListDialog').dialog('open');
 	});
+<?php do_action('usces_action_order_list_document_ready_js'); ?>
 //20100908ysk end
 });
 </script>
