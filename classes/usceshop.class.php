@@ -1496,7 +1496,6 @@ class usc_e_shop
 		if(is_admin()) return;
 
 		$actionflag = false;
-		$rckid = NULL;
 		$sess = NULL;
 		$addr = NULL;
 		$rckid = NULL;

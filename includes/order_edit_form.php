@@ -583,7 +583,7 @@ jQuery(function($){
 																	$('#mailSendDialog').dialog('close');
 																}
 															});
-					$('#mailSendAlert fieldset').dialog('option', 'title', 'SUCCESS');
+					$('#mailSendAlert').dialog('option', 'title', 'SUCCESS');
 					$('#mailSendAlert fieldset').html('<p><?php _e('E-mail has been sent.', 'usces'); ?></p>');
 					$('#mailSendAlert').dialog('open');
 					
@@ -593,7 +593,7 @@ jQuery(function($){
 																	$(this).dialog('close');
 																}
 															});
-					$('#mailSendAlert fieldset').dialog('option', 'title', 'ERROR');
+					$('#mailSendAlert').dialog('option', 'title', 'ERROR');
 					$('#mailSendAlert fieldset').html('<p><?php _e('Failure in sending e-mails.', 'usces'); ?></p>');
 					$('#mailSendAlert').dialog('open');
 				}
@@ -604,7 +604,7 @@ jQuery(function($){
 																$(this).dialog('close');
 															}
 														});
-				$('#mailSendAlert fieldset').dialog('option', 'title', 'ERROR');
+				$('#mailSendAlert').dialog('option', 'title', 'ERROR');
 				$('#mailSendAlert fieldset').html('<p><?php _e('Failure in sending e-mails.', 'usces'); ?></p>');
 				$('#mailSendAlert').dialog('open');
 			};
