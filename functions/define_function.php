@@ -998,7 +998,7 @@ function usces_item_uploadcsv(){
 		/*////////////////////////////////////////*/
 		// addSku 
 		/*////////////////////////////////////////*/
-		//	Add Item SKU	
+		// Add Item SKU
 		$sku_code = trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
 		$skuvalue['code'] = $sku_code;
 		$skuvalue['name'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
@@ -1286,8 +1286,8 @@ function usces_download_item_list() {
 
 			$line_sku = $td_h.$sku_value['code'].$td_f;
 			$line_sku .= $td_h.usces_entity_decode($sku_value['name'], $ext).$td_f;
-			$line_sku .= $td_h.$sku_value['cprice'].$td_f;
-			$line_sku .= $td_h.$sku_value['price'].$td_f;
+			$line_sku .= $td_h.usces_crform($sku_value['cprice'], false, false, 'return', false).$td_f;
+			$line_sku .= $td_h.usces_crform($sku_value['price'], false, false, 'return', false).$td_f;
 			$line_sku .= $td_h.$sku_value['stocknum'].$td_f;
 			$line_sku .= $td_h.$sku_value['stock'].$td_f;
 			$line_sku .= $td_h.usces_entity_decode($sku_value['unit'], $ext).$td_f;

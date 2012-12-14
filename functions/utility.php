@@ -1221,7 +1221,7 @@ function usces_download_product_list() {
 				$line .= $td_h.$optstr.$td_f;
 			}
 			$line .= $td_h.$cart_row['quantity'].$td_f;
-			$line .= $td_h.$cart_row['price'].$td_f;
+			$line .= $td_h.usces_crform($cart_row['price'], false, false, 'return', false).$td_f;
 			if(isset($_REQUEST['check']['unit'])) $line .= $td_h.usces_entity_decode($usces->getItemSkuUnit($post_id, $sku), $ext).$td_f;
 			$line .= apply_filters( 'usces_filter_chk_pro_data_detail', NULL, $usces_opt_order, $data, $cart_row);
 			$line .= $tr_f.$lf;
@@ -1942,7 +1942,7 @@ function usces_download_order_list() {
 			}
 			$line .= $td_h.trim($status, $sp).$td_f;
 		}
-		$line .= $td_h.$array['total_price'].$td_f;
+		$line .= $td_h.usces_crform($array['total_price'], false, false, 'return', false).$td_f;
 		if(isset($_REQUEST['check']['usedpoint'])) $line .= $td_h.$data['order_usedpoint'].$td_f;
 		$line .= $td_h.$data['order_discount'].$td_f;
 		$line .= $td_h.$data['order_shipping_charge'].$td_f;
