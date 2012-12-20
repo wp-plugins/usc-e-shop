@@ -95,7 +95,7 @@ class dataList
 			END AS order_status", 
 			"order_modified"
 		);
-		$this->selectSql = apply_filters( 'usces_filter_order_list_sql_select', $select );
+		$this->selectSql = apply_filters( 'usces_filter_order_list_sql_select', $select, $status_sql );
 	}
 
 	function SetJoinTables()
@@ -105,7 +105,7 @@ class dataList
 		$join_table = array(
 			"LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id'"
 		);
-		$this->joinTableSql = apply_filters( 'usces_filter_order_list_sql_jointable', $join_table );
+		$this->joinTableSql = apply_filters( 'usces_filter_order_list_sql_jointable', $join_table, $meta_table );
 	}
 
 	function MakeTable()
