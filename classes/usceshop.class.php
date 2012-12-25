@@ -777,21 +777,21 @@ class usc_e_shop
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['title'][$key] = $this->options['mail_default']['title'][$key];
 				}else{
-					$this->options['mail_data']['title'][$key] = wp_kses(trim($value), $allowedposttags);
+					$this->options['mail_data']['title'][$key] = trim($value);
 				}
 			}
 			foreach ( $_POST['header'] as $key => $value ) {
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['header'][$key] = $this->options['mail_default']['header'][$key];
 				}else{
-					$this->options['mail_data']['header'][$key] = wp_kses($value, $allowedposttags);
+					$this->options['mail_data']['header'][$key] = $value;
 				}
 			}
 			foreach ( $_POST['footer'] as $key => $value ) {
 				if( trim($value) == '' ) {
 					$this->options['mail_data']['footer'][$key] = $this->options['mail_default']['footer'][$key];
 				}else{
-					$this->options['mail_data']['footer'][$key] = wp_kses($value, $allowedposttags);
+					$this->options['mail_data']['footer'][$key] = $value;
 				}
 			}
 
