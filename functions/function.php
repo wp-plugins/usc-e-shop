@@ -459,7 +459,7 @@ function usces_send_ordermail($order_id) {
 			'subject' => $subject,
 			'message' => $message
 			);
-	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry);
+	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry, $data);
 
 	//if ( usces_send_mail( $confirm_para ) ) {
 	usces_send_mail( $confirm_para );
@@ -481,7 +481,7 @@ function usces_send_ordermail($order_id) {
 			'message' => $message
 			);
 	
-	$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry);
+	$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry, $data);
 	$res = usces_send_mail( $order_para );
 	
 //	}
