@@ -275,7 +275,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			if( function_exists('mb_strlen') ){
 				$biko = ( 22 < mb_strlen($usces_entries['order']['note'])) ? (mb_substr($usces_entries['order']['note'], 0, 22).'...') : $usces_entries['order']['note'];
 			}else{
-				$biko = ( 44 < mb_strlen($usces_entries['order']['note'])) ? (substr($usces_entries['order']['note'], 0, 44).'...') : $usces_entries['order']['note'];
+				$biko = ( 44 < strlen($usces_entries['order']['note'])) ? (substr($usces_entries['order']['note'], 0, 44).'...') : $usces_entries['order']['note'];
 			}
 			$datestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 			$acting_opts = $usces->options['acting_settings']['remise'];

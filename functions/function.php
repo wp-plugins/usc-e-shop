@@ -2055,7 +2055,7 @@ function usces_check_acting_return() {
 		case 'jpayment_card':
 			$results = $_GET;
 			if($_GET['rst'] == 2) {
-				usces_log('jpayment card entry error : '.print_r($entry, true), 'acting_transaction.log');
+				usces_log('jpayment card error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
 			$results['reg_order'] = true;
@@ -2064,7 +2064,7 @@ function usces_check_acting_return() {
 		case 'jpayment_conv':
 			$results = $_GET;
 			if($_GET['rst'] == 2) {
-				usces_log('jpayment conv entry error : '.print_r($entry, true), 'acting_transaction.log');
+				usces_log('jpayment conv error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1 and $_GET['ap'] == 'CPL_PRE') ? 1 : 0;
 			$results['reg_order'] = true;
@@ -2073,7 +2073,7 @@ function usces_check_acting_return() {
 		case 'jpayment_bank':
 			$results = $_GET;
 			if($_GET['rst'] == 2) {
-				usces_log('jpayment bank entry error : '.print_r($entry, true), 'acting_transaction.log');
+				usces_log('jpayment bank error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
 			$results['reg_order'] = true;
@@ -2093,11 +2093,19 @@ function usces_check_acting_return() {
 			$ack = strtoupper($resArray["ACK"]);
 			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 //20121009ysk start 0000587
-				if( (float)$resArray["AMT"] != (float)$entry['order']['total_full_price'] ) {
-					usces_log('PayPal : AMT Error. AMT='.$resArray["AMT"].', total_full_price='.$entry['order']['total_full_price'], 'acting_transaction.log');
-					$results[0] = 0;
-				} else {
+//20121225ysk start 000634
+				$cart = $usces->cart->get_cart();
+				$charging_type = $usces->getItemChargingType($cart[0]['post_id'], $cart);
+				if( 'continue' == $charging_type ) {
 					$results[0] = 1;
+				} else {
+//20121225ysk end
+					if( (float)$resArray["AMT"] != (float)$entry['order']['total_full_price'] ) {
+						usces_log('PayPal : AMT Error. AMT='.$resArray["AMT"].', total_full_price='.$entry['order']['total_full_price'], 'acting_transaction.log');
+						$results[0] = 0;
+					} else {
+						$results[0] = 1;
+					}
 				}
 //20121009ysk end
 
@@ -2115,8 +2123,6 @@ function usces_check_acting_return() {
 //20110208ysk end
 //20120413ysk start
 		case 'sbps_card':
-		case 'sbps_conv':
-		case 'sbps_payeasy':
 		case 'sbps_wallet':
 		case 'sbps_mobile':
 			if( isset($_REQUEST['cancel']) ) {
@@ -2124,14 +2130,30 @@ function usces_check_acting_return() {
 				$results['reg_order'] = false;
 
 			} else {
-				if( 'OK' == $_REQUEST['res_result'] ) {
+				if( isset($_REQUEST['res_result']) and 'OK' == $_REQUEST['res_result'] ) {
 					usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 					$results[0] = 1;
-				}else{
-					usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+				} else {
+					usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
 					$results[0] = 0;
 				}
 				$results['reg_order'] = true;
+			}
+			break;
+		case 'sbps_conv':
+		case 'sbps_payeasy':
+			if( isset($_REQUEST['cancel']) ) {
+				$results[0] = 0;
+				$results['reg_order'] = false;
+
+			} else {
+				if( isset($_REQUEST['res_result']) and 'OK' == $_REQUEST['res_result'] ) {
+					$results[0] = 1;
+				} else {
+					usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
+					$results[0] = 0;
+				}
+				$results['reg_order'] = false;
 			}
 			break;
 //20120413ysk end
@@ -2142,7 +2164,7 @@ function usces_check_acting_return() {
 				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
-				usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+				usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
 				$results[0] = 0;
 			}
 			$results['reg_order'] = true;
@@ -2155,7 +2177,7 @@ function usces_check_acting_return() {
 				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
-				usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+				usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
 				$results[0] = 0;
 			}
 //20110310ysk start

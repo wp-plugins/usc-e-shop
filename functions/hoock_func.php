@@ -6,7 +6,7 @@ add_action('usces_after_cart_instant', 'usces_action_acting_transaction', 10);
 function usces_action_acting_construct(){
 
 	if(isset($_POST['X-TRANID']) && !isset($_POST['OPT'])){//remise
-		
+
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		$datas = usces_get_order_acting_data($rand);
 		$_GET['uscesid'] = $datas['sesid'];
@@ -16,9 +16,9 @@ function usces_action_acting_construct(){
 			usces_log('remise construct : '.$_POST['X-TRANID'], 'acting_transaction.log');
 			usces_set_acting_notification_time( $rand );
 		}
-			
+
 	}elseif( in_array($_SERVER['REMOTE_ADDR'], array('210.164.6.67', '202.221.139.50')) ){//zeus
-		
+
 		$rand = $_REQUEST['sendpoint'];
 		$datas = usces_get_order_acting_data($rand);
 		$_GET['uscesid'] = $datas['sesid'];
@@ -26,6 +26,17 @@ function usces_action_acting_construct(){
 			usces_log('zeus construct : error1', 'acting_transaction.log');
 		}else{
 			usces_log('zeus construct : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
+		}
+
+	}elseif( isset($_REQUEST['res_pay_method']) && ( 'webcvs' == $_REQUEST['res_pay_method'] || 'payeasy' == $_REQUEST['res_pay_method'] ) ) {//SoftBankPayment
+
+		$rand = $_REQUEST['order_id'];
+		$datas = usces_get_order_acting_data($rand);
+		$_GET['uscesid'] = $datas['sesid'];
+		if( empty($datas['sesid']) ) {
+			usces_log('SoftBankPayment construct : error1', 'acting_transaction.log');
+		} else {
+			usces_log('SoftBankPayment construct : '.$_REQUEST['order_id'], 'acting_transaction.log');
 		}
 	}
 }
@@ -523,12 +534,12 @@ function usces_action_acting_transaction(){
 //20110523ysk end
 //20120413ysk start
 	} elseif( !isset($_GET['acting_return']) && isset($_POST['res_result']) && isset($_POST['res_pay_method']) ) {
-		usces_log('SoftBankPayment _REQUEST : '.print_r($_REQUEST, true), 'acting_transaction.log');
+		//usces_log('SoftBankPayment : '.print_r($_REQUEST, true), 'acting_transaction.log');
 
 		foreach( $_POST as $key => $value ){
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 		}
-		switch( $_POST['res_pay_method'] ) {
+		switch( $data['res_pay_method'] ) {
 		//*** sbps_card ***//
 		case 'credit':
 		case 'credit3d':
@@ -549,6 +560,19 @@ function usces_action_acting_transaction(){
 		//*** sbps_conv ***//
 		case 'webcvs':
 			if( 'OK' == $data['res_result'] ) {//購入結果通知
+				$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
+				$order_id = $wpdb->get_var($query);
+				if( !$order_id ) {
+
+					$res = $usces->order_processing();
+					if( 'error' == $res ) {
+						usces_log('SoftBankPayment conv error1 : '.print_r($data, true), 'acting_transaction.log');
+						die('NG,order processing error');
+					}
+				}
+
 				die('OK,');
 
 			} elseif( 'PY' == $data['res_result'] ) {//入金結果通知
@@ -632,6 +656,18 @@ function usces_action_acting_transaction(){
 		//*** sbps_payeasy ***//
 		case 'payeasy':
 			if( 'OK' == $data['res_result'] ) {//購入結果通知
+				$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
+				$order_id = $wpdb->get_var($query);
+				if( !$order_id ) {
+					$res = $usces->order_processing();
+					if( 'error' == $res ) {
+						usces_log('SoftBankPayment payeasy error1 : '.print_r($data, true), 'acting_transaction.log');
+						die('NG,order processing error');
+					}
+				}
+
 				die('OK,');
 
 			} elseif( 'PY' == $data['res_result'] ) {//入金結果通知
