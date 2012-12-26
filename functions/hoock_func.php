@@ -28,7 +28,7 @@ function usces_action_acting_construct(){
 			usces_log('zeus construct : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
 		}
 
-	}elseif( isset($_REQUEST['res_pay_method']) && ( 'webcvs' == $_REQUEST['res_pay_method'] || 'payeasy' == $_REQUEST['res_pay_method'] ) ) {//SoftBankPayment
+	} elseif( isset($_POST['res_result']) && isset($_POST['res_pay_method']) ) {//SoftBankPayment
 
 		$rand = $_REQUEST['order_id'];
 		$datas = usces_get_order_acting_data($rand);
@@ -535,218 +535,109 @@ function usces_action_acting_transaction(){
 //20120413ysk start
 	} elseif( !isset($_GET['acting_return']) && isset($_POST['res_result']) && isset($_POST['res_pay_method']) ) {
 		//usces_log('SoftBankPayment : '.print_r($_REQUEST, true), 'acting_transaction.log');
-
-		foreach( $_POST as $key => $value ){
+		foreach( $_POST as $key => $value ) {
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 		}
-		switch( $data['res_pay_method'] ) {
-		//*** sbps_card ***//
-		case 'credit':
-		case 'credit3d':
-			if( 'OK' == $data['res_result'] ) {
-				$acting_opts = $usces->options['acting_settings']['sbps'];
-				if( 'on' == $acting_opts['cust'] ) {
-					$usces->set_member_meta_value( 'sbps_cust_no', $data['res_sps_cust_no'], $data['cust_code'] );
-					$usces->set_member_meta_value( 'sbps_payment_no', $data['res_sps_payment_no'], $data['cust_code'] );
-				}
-				die('OK,');
+		$acting = $data['free1'];
 
-			} else {
-				usces_log('SoftBankPayment card error1 : '.print_r($data,true), 'acting_transaction.log');
-				die('OK,');
+		switch( $data['res_result'] ) {
+		case 'OK'://決済処理OK
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'res_tracking_id', $data['res_tracking_id']);
+			$order_id = $wpdb->get_var($query);
+			if( !$order_id ) {
+
+				$res = $usces->order_processing();
+				if( 'ordercompletion' == $res ){
+					$usces->cart->crear_cart();
+				} else {
+					usces_log('SoftBankPayment '.$data['res_pay_method'].' order processing error : '.print_r($data, true), 'acting_transaction.log');
+					die('NG,order processing error');
+				}
 			}
+
+			//$acting_opts = $usces->options['acting_settings']['sbps'];
+			//if( 'on' == $acting_opts['cust'] ) {
+			//	$usces->set_member_meta_value( 'sbps_cust_no', $data['res_sps_cust_no'], $data['cust_code'] );
+			//	$usces->set_member_meta_value( 'sbps_payment_no', $data['res_sps_payment_no'], $data['cust_code'] );
+			//}
+			usces_log('SoftBankPayment '.$data['res_pay_method'].' [OK] transaction : '.$data['res_tracking_id'], 'acting_transaction.log');
+			die('OK,');
 			break;
 
-		//*** sbps_conv ***//
-		case 'webcvs':
-			if( 'OK' == $data['res_result'] ) {//購入結果通知
-				$table_meta_name = $wpdb->prefix."usces_order_meta";
-
-				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
-				$order_id = $wpdb->get_var($query);
-				if( !$order_id ) {
-
-					$res = $usces->order_processing();
-					if( 'error' == $res ) {
-						usces_log('SoftBankPayment conv error1 : '.print_r($data, true), 'acting_transaction.log');
-						die('NG,order processing error');
-					}
-				}
-
-				die('OK,');
-
-			} elseif( 'PY' == $data['res_result'] ) {//入金結果通知
-				$table_name = $wpdb->prefix."usces_order";
-				$table_meta_name = $wpdb->prefix."usces_order_meta";
-
-				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
-				$order_id = $wpdb->get_var($query);
-				if( $order_id == NULL ) {
-					usces_log('SoftBankPayment conv error1 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,order_id error');
-				}
-
-				$query = $wpdb->prepare("
-					UPDATE $table_name SET order_status = 
-					CASE 
-						WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
-						WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
-						ELSE CONCAT('receipted,', order_status ) 
-					END 
-					WHERE ID = %d", $order_id);
-				$res = $wpdb->query($query);
-				if( $res === false ) {
-					usces_log('SoftBankPayment conv error2 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order update error');
-				}
-
-				$res = $usces->set_order_meta_value('acting_sbps_conv', serialize($data), $order_id);
-				if($res === false) {
-					usces_log('SoftBankPayment conv error3 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order_meta update error');
-				}
-
-				usces_action_acting_getpoint( $order_id );//20120919ysk 0000324
-
-				usces_log('SoftBankPayment conv transaction : '.$order_id, 'acting_transaction.log');
-				die('OK,');
-
-			} elseif( 'CN' == $data['res_result'] ) {//期限切通知
-				$table_name = $wpdb->prefix."usces_order";
-				$table_meta_name = $wpdb->prefix."usces_order_meta";
-
-				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
-				$order_id = $wpdb->get_var($query);
-				if($order_id == NULL) {
-					usces_log('SoftBankPayment conv error1 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,order_id error');
-				}
-
-				$query = $wpdb->prepare("
-					UPDATE $table_name SET order_status = 
-					CASE 
-						WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
-						WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
-						ELSE CONCAT('noreceipt,', order_status ) 
-					END 
-					WHERE ID = %d", $order_id);
-				$res = $wpdb->query($query);
-				if($res === false) {
-					usces_log('SoftBankPayment conv error2 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order update error');
-				}
-
-				$res = $usces->set_order_meta_value('acting_sbps_conv', serialize($data), $order_id);
-				if($res === false) {
-					usces_log('SoftBankPayment conv error3 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order_meta update error');
-				}
-
-				usces_action_acting_getpoint( $order_id, false );//20120919ysk 0000324
-
-				usces_log('SoftBankPayment conv transaction : '.$order_id, 'acting_transaction.log');
-				die('OK,');
-
-			} else {
-				usces_log('SoftBankPayment error : '.print_r($data,true), 'acting_transaction.log');
-				die('OK,');
+		case 'PY'://入金結果通知
+			$table_name = $wpdb->prefix."usces_order";
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'res_tracking_id', $data['res_tracking_id']);
+			$order_id = $wpdb->get_var($query);
+			if( $order_id == NULL ) {
+				usces_log('SoftBankPayment '.$data['res_pay_method'].' [PY] error1 : '.print_r($data, true), 'acting_transaction.log');
+				die('NG,order_id error');
 			}
-			break;
 
-		//*** sbps_payeasy ***//
-		case 'payeasy':
-			if( 'OK' == $data['res_result'] ) {//購入結果通知
-				$table_meta_name = $wpdb->prefix."usces_order_meta";
-
-				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
-				$order_id = $wpdb->get_var($query);
-				if( !$order_id ) {
-					$res = $usces->order_processing();
-					if( 'error' == $res ) {
-						usces_log('SoftBankPayment payeasy error1 : '.print_r($data, true), 'acting_transaction.log');
-						die('NG,order processing error');
-					}
-				}
-
-				die('OK,');
-
-			} elseif( 'PY' == $data['res_result'] ) {//入金結果通知
-				$table_name = $wpdb->prefix."usces_order";
-				$table_meta_name = $wpdb->prefix."usces_order_meta";
-
-				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
-				$order_id = $wpdb->get_var($query);
-				if( $order_id == NULL ) {
-					usces_log('SoftBankPayment payeasy error1 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,order_id error');
-				}
-
-				$query = $wpdb->prepare("
-					UPDATE $table_name SET order_status = 
-					CASE 
-						WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
-						WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
-						ELSE CONCAT('receipted,', order_status ) 
-					END 
-					WHERE ID = %d", $order_id);
-				$res = $wpdb->query($query);
-				if( $res === false ) {
-					usces_log('SoftBankPayment payeasy error2 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order update error');
-				}
-
-				$res = $usces->set_order_meta_value('acting_sbps_conv', serialize($data), $order_id);
-				if($res === false) {
-					usces_log('SoftBankPayment payeasy error3 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order_meta update error');
-				}
-
-				usces_action_acting_getpoint( $order_id );//20120919ysk 0000324
-
-				usces_log('SoftBankPayment payeasy transaction : '.$order_id, 'acting_transaction.log');
-				die('OK,');
-
-			} elseif( 'CN' == $data['res_result'] ) {//期限切通知
-				$table_name = $wpdb->prefix."usces_order";
-				$table_meta_name = $wpdb->prefix."usces_order_meta";
-
-				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'tracking_id', $data['res_tracking_id']);
-				$order_id = $wpdb->get_var($query);
-				if($order_id == NULL) {
-					usces_log('SoftBankPayment payeasy error1 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,order_id error');
-				}
-
-				$query = $wpdb->prepare("
-					UPDATE $table_name SET order_status = 
-					CASE 
-						WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
-						WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
-						ELSE CONCAT('noreceipt,', order_status ) 
-					END 
-					WHERE ID = %d", $order_id);
-				$res = $wpdb->query($query);
-				if($res === false) {
-					usces_log('SoftBankPayment payeasy error2 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order update error');
-				}
-
-				$res = $usces->set_order_meta_value('acting_sbps_conv', serialize($data), $order_id);
-				if($res === false) {
-					usces_log('SoftBankPayment payeasy error3 : '.print_r($data, true), 'acting_transaction.log');
-					die('NG,usces_order_meta update error');
-				}
-
-				usces_action_acting_getpoint( $order_id, false );//20120919ysk 0000324
-
-				usces_log('SoftBankPayment payeasy transaction : '.$order_id, 'acting_transaction.log');
-				die('OK,');
-
-			} else {
-				usces_log('SoftBankPayment payeasy error1 : '.print_r($data,true), 'acting_transaction.log');
-				die('OK,');
+			$query = $wpdb->prepare("
+				UPDATE $table_name SET order_status = 
+				CASE 
+					WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+					WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+					ELSE CONCAT('receipted,', order_status ) 
+				END 
+				WHERE ID = %d", $order_id);
+			$res = $wpdb->query($query);
+			if( $res === false ) {
+				usces_log('SoftBankPayment '.$data['res_pay_method'].' [PY] error2 : '.print_r($data, true), 'acting_transaction.log');
+				die('NG,usces_order update error');
 			}
-			break;
+
+			$res = $usces->set_order_meta_value($acting, serialize($data), $order_id);
+			if( $res === false ) {
+				usces_log('SoftBankPayment '.$data['res_pay_method'].' [PY] error3 : '.print_r($data, true), 'acting_transaction.log');
+				die('NG,usces_order_meta update error');
+			}
+
+			usces_action_acting_getpoint( $order_id );
+
+			usces_log('SoftBankPayment '.$data['res_pay_method'].' [PY] transaction : '.$order_id, 'acting_transaction.log');
+			die('OK,');
+
+		case 'CN'://期限切通知
+			$table_name = $wpdb->prefix."usces_order";
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'res_tracking_id', $data['res_tracking_id']);
+			$order_id = $wpdb->get_var($query);
+			if( $order_id == NULL ) {
+				usces_log('SoftBankPayment '.$data['res_pay_method'].' [CN] error1 : '.print_r($data, true), 'acting_transaction.log');
+				die('NG,order_id error');
+			}
+
+			$query = $wpdb->prepare("
+				UPDATE $table_name SET order_status = 
+				CASE 
+					WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
+					WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
+					ELSE CONCAT('noreceipt,', order_status ) 
+				END 
+				WHERE ID = %d", $order_id);
+			$res = $wpdb->query($query);
+			if( $res === false ) {
+				usces_log('SoftBankPayment '.$data['res_pay_method'].' [CN] error2 : '.print_r($data, true), 'acting_transaction.log');
+				die('NG,usces_order update error');
+			}
+
+			$res = $usces->set_order_meta_value($acting, serialize($data), $order_id);
+			if( $res === false ) {
+				usces_log('SoftBankPayment '.$data['res_pay_method'].' [CN] error3 : '.print_r($data, true), 'acting_transaction.log');
+				die('NG,usces_order_meta update error');
+			}
+
+			usces_action_acting_getpoint( $order_id, false );
+
+			usces_log('SoftBankPayment '.$data['res_pay_method'].' [CN] transaction : '.$order_id, 'acting_transaction.log');
+			die('OK,');
+
+		default:
+			usces_log('SoftBankPayment '.$data['res_pay_method'].' ['.$data['res_result'].'] : '.print_r($data,true), 'acting_transaction.log');
+			die('OK,');
 		}
 //20120413ysk end
 //20121030ysk start

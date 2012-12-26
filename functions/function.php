@@ -1063,12 +1063,8 @@ function usces_reg_orderdata( $results = array() ) {
 		if( isset($_REQUEST['acting']) && isset($_REQUEST['acting_return']) && isset($_REQUEST['trans_code']) && 'epsilon' == $_REQUEST['acting'] ) {
 			$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);
 		}
-		if( isset($_REQUEST['acting']) && ('sbps_conv' == $_REQUEST['acting'] || 'sbps_payeasy' == $_REQUEST['acting']) ) {
-			$usces->set_order_meta_value('tracking_id', $_POST['res_tracking_id'], $order_id);
-			foreach( $_POST as $key => $value ){
-				$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
-			}
-			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
+		if( isset($_REQUEST['res_tracking_id']) ) {
+			$usces->set_order_meta_value('res_tracking_id', $_REQUEST['res_tracking_id'], $order_id);
 		}
 
 		foreach($cart as $cartrow){
@@ -2125,7 +2121,7 @@ function usces_check_acting_return() {
 		case 'sbps_card':
 		case 'sbps_wallet':
 		case 'sbps_mobile':
-			if( isset($_REQUEST['cancel']) ) {
+/*			if( isset($_REQUEST['cancel']) ) {
 				$results[0] = 0;
 				$results['reg_order'] = false;
 
@@ -2139,7 +2135,7 @@ function usces_check_acting_return() {
 				}
 				$results['reg_order'] = true;
 			}
-			break;
+			break;*/
 		case 'sbps_conv':
 		case 'sbps_payeasy':
 			if( isset($_REQUEST['cancel']) ) {
@@ -2150,7 +2146,7 @@ function usces_check_acting_return() {
 				if( isset($_REQUEST['res_result']) and 'OK' == $_REQUEST['res_result'] ) {
 					$results[0] = 1;
 				} else {
-					usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
+					//usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
 					$results[0] = 0;
 				}
 				$results['reg_order'] = false;

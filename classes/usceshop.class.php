@@ -6812,7 +6812,7 @@ class usc_e_shop
 		$fields = array();
 		$table_name = $wpdb->prefix . "usces_order_meta";
 		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s OR meta_key = %s OR meta_key = %s)", 
-								$order_id, 'acting_%', 'settlement_id', 'order_number', 'tracking_id');
+								$order_id, 'acting_%', 'settlement_id', 'order_number', 'res_tracking_id');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		if( !$res )
 			return $fields;
@@ -6829,8 +6829,8 @@ class usc_e_shop
 				}
 			}elseif( 'order_number' == $value['meta_key'] ){
 				$fields['order_number'] = $value['meta_value'];
-			}elseif( 'tracking_id' == $value['meta_key'] ){
-				$fields['tracking_id'] = $value['meta_value'];
+			}elseif( 'res_tracking_id' == $value['meta_key'] ){
+				$fields['res_tracking_id'] = $value['meta_value'];
 			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){
 				$meta_values = unserialize($value['meta_value']);
 				if(is_array($meta_values)){
