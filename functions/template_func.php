@@ -1726,7 +1726,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 			'pay_cvs', 'pay_no1', 'pay_no2', 'pay_limit', 'error_code',
 			'settlement_id','RECDATE','JOB_ID','S_TORIHIKI_NO','TOTAL','CENDATE',
 			'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp', 
-			'order_number');
+			'order_number', 'SID', 'DATE', 'TIME', 'CVS', 'SHNO', 'FURL', 'settltment_status', 'settltment_errmsg');
 		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
 		if( !in_array($key, $keys) ) {
 			continue;

@@ -6,7 +6,7 @@ add_action('usces_after_cart_instant', 'usces_action_acting_transaction', 10);
 function usces_action_acting_construct(){
 
 	if(isset($_POST['X-TRANID']) && !isset($_POST['OPT'])){//remise
-		
+
 		$rand = $_POST['X-S_TORIHIKI_NO'];
 		$datas = usces_get_order_acting_data($rand);
 		$_GET['uscesid'] = $datas['sesid'];
@@ -16,9 +16,9 @@ function usces_action_acting_construct(){
 			usces_log('remise construct : '.$_POST['X-TRANID'], 'acting_transaction.log');
 			usces_set_acting_notification_time( $rand );
 		}
-			
+
 	}elseif( in_array($_SERVER['REMOTE_ADDR'], array('210.164.6.67', '202.221.139.50')) ){//zeus
-		
+
 		$rand = $_REQUEST['sendpoint'];
 		$datas = usces_get_order_acting_data($rand);
 		$_GET['uscesid'] = $datas['sesid'];
@@ -522,8 +522,9 @@ function usces_action_acting_transaction(){
 		die('PayPal');
 //20110523ysk end
 //20120413ysk start
+	//*** SoftBankPayment ***//
 	} elseif( !isset($_GET['acting_return']) && isset($_POST['res_result']) && isset($_POST['res_pay_method']) ) {
-		usces_log('SoftBankPayment _REQUEST : '.print_r($_REQUEST, true), 'acting_transaction.log');
+		usces_log('SoftBankPayment : '.print_r($_REQUEST, true), 'acting_transaction.log');
 
 		foreach( $_POST as $key => $value ){
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
@@ -755,6 +756,109 @@ function usces_action_acting_transaction(){
 		usces_log('telecom card : '.print_r($data, true), 'acting_transaction.log');
 		die('SuccessOK');
 //20120618ysk end
+//20121206ysk start
+	//*** digitalcheck card ***//
+	} elseif( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) && substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_card' ) {
+		foreach( $_REQUEST as $key => $value ) {
+			$data[$key] = $value;
+		}
+//usces_log('digitalcheck card : '.print_r($data, true), 'acting_transaction.log');
+
+		if( isset($data['SEQ']) ) {
+			$acting_opts = $usces->options['acting_settings']['digitalcheck'];
+			$ip_user_id = substr($data['FUKA'], 24);
+//usces_log('ip_user_id : '.$ip_user_id, 'acting_transaction.log');
+			if( 'on' == $acting_opts['card_user_id'] and !empty($ip_user_id) ) {
+				$usces->set_member_meta_value('digitalcheck_ip_user_id', $ip_user_id, $ip_user_id);
+			}
+
+			header('content-type : text/plain;charset=Shift_JIS');
+			die("0");
+		}
+
+	//*** digitalcheck conv ***//
+	} elseif( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) && substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_conv' ) {
+		foreach( $_REQUEST as $key => $value ) {
+			$data[$key] = $value;
+		}
+		$sid = ( isset($data['SID']) ) ? $data['SID'] : '';
+
+		if( isset($data['SEQ']) ) {
+			$table_name = $wpdb->prefix."usces_order";
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+			$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'SID', $sid );
+			$order_id = $wpdb->get_var( $query );
+			if( $order_id == NULL ) {
+				usces_log( 'digitalcheck conv error1 : '.print_r($data, true), 'acting_transaction.log' );
+				header('content-type : text/plain;charset=Shift_JIS');
+				die('9');
+			}
+
+			if( isset($data['CVS']) ) {//入金
+				$mquery = $wpdb->prepare("
+					UPDATE $table_name SET order_status = 
+					CASE 
+						WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+						WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+						ELSE CONCAT('receipted,', order_status ) 
+					END 
+					WHERE ID = %d", $order_id );
+				$res = $wpdb->query( $mquery );
+				if( $res === false ) {
+					usces_log('digitalcheck conv error2 : '.print_r($data, true), 'acting_transaction.log');
+					header('content-type : text/plain;charset=Shift_JIS');
+					die('9');
+				}
+
+				usces_action_acting_getpoint( $order_id );
+
+			} else {//取消
+				$mquery = $wpdb->prepare("
+					UPDATE $table_name SET order_status = 
+					CASE 
+						WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
+						WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
+						ELSE CONCAT('noreceipt,', order_status ) 
+					END 
+					WHERE ID = %d", $order_id );
+				$res = $wpdb->query( $mquery );
+				if( $res === false ) {
+					usces_log('digitalcheck conv error3 : '.print_r($data, true), 'acting_transaction.log');
+					header('content-type : text/plain;charset=Shift_JIS');
+					die('9');
+				}
+
+				usces_action_acting_getpoint( $order_id, false );
+			}
+
+			$usces->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
+
+			$dquery = $wpdb->prepare( "DELETE FROM $table_meta_name WHERE meta_key = %s", $sid );
+			$res = $wpdb->query( $dquery );
+
+			header('content-type : text/plain;charset=Shift_JIS');
+			die("0");
+
+		} else {
+			if( isset($data['CVS']) and isset($data['SHNO']) ) {//決済
+				$table_meta_name = $wpdb->prefix."usces_order_meta";
+				$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'SID', $sid );
+				$order_id = $wpdb->get_var($query);
+				if( $order_id ) {
+					$usces->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
+				}
+				header('content-type : text/plain;charset=Shift_JIS');
+				die("0");
+			} elseif( isset($data['purchase']) ) {
+			} else {
+				$permalink_structure = get_option('permalink_structure');
+				$delim = ( !$usces->use_ssl && $permalink_structure ) ? '?' : '&';
+				header('location: '.USCES_CART_URL.$delim.'acting=digitalcheck_conv&acting_return=1&SID='.$sid );
+				exit;
+			}
+		}
+//20121206ysk end
 	}
 }
 ?>
