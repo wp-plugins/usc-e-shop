@@ -191,18 +191,18 @@ jQuery(document).ready(function($){
 	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $value == '' || $value == ' ' ) $value = '&nbsp;'; ?>
 		<?php if( $key == 'ID' ): ?>
-		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=edit&member_id=' . $value; ?>"><?php echo $value; ?></a></td>
+		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=edit&member_id=' . esc_attr($value); ?>"><?php esc_html_e($value); ?></a></td>
 		<?php elseif( $key == 'name' ): ?>
 		<td>
 		<?php
 			$names = explode(' ', $value);
-			usces_localized_name( $names[0], $names[1]);
+			usces_localized_name( esc_html($names[0]), esc_html($names[1]));
 		?>
 		</td>
 		<?php elseif( $key == 'point' ): ?>
-		<td class="right"><?php echo $value; ?></td>
+		<td class="right"><?php esc_html_e($value); ?></td>
 		<?php else: ?>
-		<td><?php echo $value; ?></td>
+		<td><?php esc_html_e($value); ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
 	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=delete&member_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;"><?php _e('Delete', 'usces'); ?></span></a></td>
@@ -228,9 +228,9 @@ jQuery(document).ready(function($){
 				$csmb_key = 'csmb_'.$key;
 				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
 				$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
-				$name = esc_attr($entry['name']);
+				$name = $entry['name'];
 				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
+				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.esc_attr($csmb_key).']" value="'.esc_attr($csmb_key).'"'.$checked.' />'.esc_html($name).'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -255,9 +255,9 @@ jQuery(document).ready(function($){
 				$csmb_key = 'csmb_'.$key;
 				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
 				$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
-				$name = esc_attr($entry['name']);
+				$name = $entry['name'];
 				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
+				echo '<label for="chk_mem['.esc_attr($csmb_key).']"><input type="checkbox" class="check_member" id="chk_mem['.esc_attr($csmb_key).']" value="'.esc_attr($csmb_key).'"'.$checked.' />'.esc_html($name).'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}
@@ -300,9 +300,9 @@ jQuery(document).ready(function($){
 				$csmb_key = 'csmb_'.$key;
 				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
 				$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
-				$name = esc_attr($entry['name']);
+				$name = $entry['name'];
 				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
-				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.$csmb_key.']" value="'.$csmb_key.'"'.$checked.' />'.$name.'</label>'."\n";//20111116ysk 0000302
+				echo '<label for="chk_mem['.esc_attr($csmb_key).']"><input type="checkbox" class="check_member" id="chk_mem['.esc_attr($csmb_key).']" value="'.esc_attr($csmb_key).'"'.$checked.' />'.esc_html($name).'</label>'."\n";//20111116ysk 0000302
 //20110208ysk end
 			}
 		}

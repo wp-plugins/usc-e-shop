@@ -275,7 +275,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			if( function_exists('mb_strlen') ){
 				$biko = ( 22 < mb_strlen($usces_entries['order']['note'])) ? (mb_substr($usces_entries['order']['note'], 0, 22).'...') : $usces_entries['order']['note'];
 			}else{
-				$biko = ( 44 < mb_strlen($usces_entries['order']['note'])) ? (substr($usces_entries['order']['note'], 0, 44).'...') : $usces_entries['order']['note'];
+				$biko = ( 44 < strlen($usces_entries['order']['note'])) ? (substr($usces_entries['order']['note'], 0, 44).'...') : $usces_entries['order']['note'];
 			}
 			$datestr = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 			$acting_opts = $usces->options['acting_settings']['remise'];
@@ -595,9 +595,10 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$cancel_url = USCES_CART_URL.$usces->delim."acting=".$acting."&confirm=1";
 			$error_url = USCES_CART_URL.$usces->delim."acting=".$acting."&acting_return=0";
 			$pagecon_url = USCES_CART_URL;
+			$free1 = $acting_flag;
 			$request_date = date('YmdHis', current_time('timestamp'));
 			$limit_second = "600";
-			$sps_hashcode = $pay_method.$acting_opts['merchant_id'].$acting_opts['service_id'].$cust_code.$sbps_cust_no.$sbps_payment_no.$rand.$item_id.$item_name.$amount.$pay_type.$auto_charge_type.$service_type.$div_settle.$last_charge_month.$camp_type.$terminal_type.$success_url.$cancel_url.$error_url.$pagecon_url.$free_csv.$request_date.$limit_second.$acting_opts['hash_key'];
+			$sps_hashcode = $pay_method.$acting_opts['merchant_id'].$acting_opts['service_id'].$cust_code.$sbps_cust_no.$sbps_payment_no.$rand.$item_id.$item_name.$amount.$pay_type.$auto_charge_type.$service_type.$div_settle.$last_charge_month.$camp_type.$terminal_type.$success_url.$cancel_url.$error_url.$pagecon_url.$free1.$free_csv.$request_date.$limit_second.$acting_opts['hash_key'];
 			$sps_hashcode = sha1( $sps_hashcode );
 			$html .= '<form id="purchase_form" name="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="pay_method" value="'.$pay_method.'" />
@@ -623,7 +624,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="cancel_url" value="'.$cancel_url.'" />
 				<input type="hidden" name="error_url" value="'.$error_url.'" />
 				<input type="hidden" name="pagecon_url" value="'.$pagecon_url.'" />
-				<input type="hidden" name="free1" value="" />
+				<input type="hidden" name="free1" value="'.$free1.'" />
 				<input type="hidden" name="free2" value="" />
 				<input type="hidden" name="free3" value="" />
 				<input type="hidden" name="free_csv" value="'.$free_csv.'" />

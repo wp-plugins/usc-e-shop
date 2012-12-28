@@ -45,7 +45,7 @@ function usces_action_reg_orderdata( $args ){
 
 function usces_action_ogp_meta(){
 	global $usces, $post;
-	if( !$usces->is_item($post) || !is_single() )
+	if( empty($post) || !$usces->is_item($post) || !is_single() )
 		return;
 		
 	$item = $usces->get_item( $post->ID );
@@ -66,5 +66,32 @@ function usces_action_ogp_meta(){
 
 }
 
+function wc_purchase_nonce($html, $payments, $acting_flag, $rand, $purchase_disabled){
+	if( strpos($html, 'wc_nonce') || !in_array( $payments['settlement'], array('COD', 'installment', 'transferAdvance', 'transferDeferred', 'acting_zeus_card')) )
+		return $html;
+	$wc_nonce = wp_create_nonce('wc_purchase_nonce');
+	$html .= wp_nonce_field( 'wc_purchase_nonce', 'wc_nonce', false, false )."\n";
+	return $html;
+}
+
+function wc_purchase_nonce_check(){
+	global $usces;
+	$entry = $usces->cart->get_entry();
+	if( !isset($entry['order']['payment_name']) || empty($entry['order']['payment_name']) ){
+		wp_redirect( home_url() );
+		exit;	
+	}
+	
+	$payments = usces_get_payments_by_name($entry['order']['payment_name']);
+	if( !in_array( $payments['settlement'], array('COD', 'installment', 'transferAdvance', 'transferDeferred', 'acting_zeus_card')) )
+		return true;
+	
+	$nonce = isset($_REQUEST['wc_nonce']) ? $_REQUEST['wc_nonce'] : '';
+	if( wp_verify_nonce($nonce, 'wc_purchase_nonce') )
+		return true;
+		
+	wp_redirect( home_url() );
+	exit;	
+}
 
 ?>

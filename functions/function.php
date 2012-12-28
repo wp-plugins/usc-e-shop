@@ -63,7 +63,7 @@ function usces_order_confirm_message($order_id) {
 					'name3' => $data['order_name3'],
 					'name4' => $data['order_name4'],
 					'zipcode' => $data['order_zip'],
-					'country' => $usces_settings['country'][$country],
+					'country' => isset($usces_settings['country'][$country]) ? $usces_settings['country'][$country] : '',
 					'pref' => $data['order_pref'],
 					'address1' => $data['order_address1'],
 					'address2' => $data['order_address2'],
@@ -459,7 +459,7 @@ function usces_send_ordermail($order_id) {
 			'subject' => $subject,
 			'message' => $message
 			);
-	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry);
+	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry, $data);
 
 	//if ( usces_send_mail( $confirm_para ) ) {
 	usces_send_mail( $confirm_para );
@@ -481,7 +481,7 @@ function usces_send_ordermail($order_id) {
 			'message' => $message
 			);
 	
-	$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry);
+	$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry, $data);
 	$res = usces_send_mail( $order_para );
 	
 //	}
@@ -1063,12 +1063,8 @@ function usces_reg_orderdata( $results = array() ) {
 		if( isset($_REQUEST['acting']) && isset($_REQUEST['acting_return']) && isset($_REQUEST['trans_code']) && 'epsilon' == $_REQUEST['acting'] ) {
 			$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);
 		}
-		if( isset($_REQUEST['acting']) && ('sbps_conv' == $_REQUEST['acting'] || 'sbps_payeasy' == $_REQUEST['acting']) ) {
-			$usces->set_order_meta_value('tracking_id', $_POST['res_tracking_id'], $order_id);
-			foreach( $_POST as $key => $value ){
-				$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
-			}
-			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
+		if( isset($_REQUEST['res_tracking_id']) ) {
+			$usces->set_order_meta_value('res_tracking_id', $_REQUEST['res_tracking_id'], $order_id);
 		}
 		if( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) && substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_conv' ) {
 			$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
@@ -2058,7 +2054,7 @@ function usces_check_acting_return() {
 		case 'jpayment_card':
 			$results = $_GET;
 			if($_GET['rst'] == 2) {
-				usces_log('jpayment card entry error : '.print_r($entry, true), 'acting_transaction.log');
+				usces_log('jpayment card error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
 			$results['reg_order'] = true;
@@ -2067,7 +2063,7 @@ function usces_check_acting_return() {
 		case 'jpayment_conv':
 			$results = $_GET;
 			if($_GET['rst'] == 2) {
-				usces_log('jpayment conv entry error : '.print_r($entry, true), 'acting_transaction.log');
+				usces_log('jpayment conv error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1 and $_GET['ap'] == 'CPL_PRE') ? 1 : 0;
 			$results['reg_order'] = true;
@@ -2076,7 +2072,7 @@ function usces_check_acting_return() {
 		case 'jpayment_bank':
 			$results = $_GET;
 			if($_GET['rst'] == 2) {
-				usces_log('jpayment bank entry error : '.print_r($entry, true), 'acting_transaction.log');
+				usces_log('jpayment bank error : '.print_r($entry, true), 'acting_transaction.log');
 			}
 			$results[0] = ($_GET['rst'] == 1) ? 1 : 0;
 			$results['reg_order'] = true;
@@ -2096,11 +2092,19 @@ function usces_check_acting_return() {
 			$ack = strtoupper($resArray["ACK"]);
 			if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 //20121009ysk start 0000587
-				if( (float)$resArray["AMT"] != (float)$entry['order']['total_full_price'] ) {
-					usces_log('PayPal : AMT Error. AMT='.$resArray["AMT"].', total_full_price='.$entry['order']['total_full_price'], 'acting_transaction.log');
-					$results[0] = 0;
-				} else {
+//20121225ysk start 000634
+				$cart = $usces->cart->get_cart();
+				$charging_type = $usces->getItemChargingType($cart[0]['post_id'], $cart);
+				if( 'continue' == $charging_type ) {
 					$results[0] = 1;
+				} else {
+//20121225ysk end
+					if( (float)$resArray["AMT"] != (float)$entry['order']['total_full_price'] ) {
+						usces_log('PayPal : AMT Error. AMT='.$resArray["AMT"].', total_full_price='.$entry['order']['total_full_price'], 'acting_transaction.log');
+						$results[0] = 0;
+					} else {
+						$results[0] = 1;
+					}
 				}
 //20121009ysk end
 
@@ -2118,23 +2122,37 @@ function usces_check_acting_return() {
 //20110208ysk end
 //20120413ysk start
 		case 'sbps_card':
-		case 'sbps_conv':
-		case 'sbps_payeasy':
 		case 'sbps_wallet':
 		case 'sbps_mobile':
+/*			if( isset($_REQUEST['cancel']) ) {
+				$results[0] = 0;
+				$results['reg_order'] = false;
+
+			} else {
+				if( isset($_REQUEST['res_result']) and 'OK' == $_REQUEST['res_result'] ) {
+					usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
+					$results[0] = 1;
+				} else {
+					usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
+					$results[0] = 0;
+				}
+				$results['reg_order'] = true;
+			}
+			break;*/
+		case 'sbps_conv':
+		case 'sbps_payeasy':
 			if( isset($_REQUEST['cancel']) ) {
 				$results[0] = 0;
 				$results['reg_order'] = false;
 
 			} else {
-				if( 'OK' == $_REQUEST['res_result'] ) {
-					usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
+				if( isset($_REQUEST['res_result']) and 'OK' == $_REQUEST['res_result'] ) {
 					$results[0] = 1;
-				}else{
-					//usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+				} else {
+					//usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
 					$results[0] = 0;
 				}
-				$results['reg_order'] = true;
+				$results['reg_order'] = false;
 			}
 			break;
 //20120413ysk end
@@ -2145,7 +2163,7 @@ function usces_check_acting_return() {
 				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
-				//usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+				usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
 				$results[0] = 0;
 			}
 			$results['reg_order'] = true;
@@ -2178,7 +2196,7 @@ function usces_check_acting_return() {
 				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
-				usces_log($acting.'_REQUEST : '.print_r($_REQUEST,true), 'acting_transaction.log');
+				usces_log($acting.' error : '.print_r($_REQUEST,true), 'acting_transaction.log');
 				$results[0] = 0;
 			}
 //20110310ysk start
@@ -3964,4 +3982,18 @@ function usces_delete_order_check( $order_id ) {
 	$res = apply_filters( 'usces_filter_delete_order_check', true, $order_id );
 	return $res;
 }
+
+function usces_itempage_admin_bar() {
+    global $wp_admin_bar, $post;
+	if( is_single() && usces_is_item() ){
+		$wp_admin_bar->remove_menu('edit');
+		$ref = urlencode(site_url() . '/wp-admin/admin.php?page=usces_itemedit');
+		$wp_admin_bar->add_menu( array(
+			'id' => 'edit',
+			'title' => __('Edit item', 'usces'),
+			'href' => site_url() . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $post->ID . '&usces_referer=' . $ref
+		) );
+	}
+}
+
 ?>

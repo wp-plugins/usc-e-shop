@@ -63,7 +63,6 @@ class usc_e_shop
 		if(!isset($this->options['sender_mail'])) $this->options['sender_mail'] = '';
 		if(!isset($this->options['error_mail'])) $this->options['error_mail'] = '';
 		if(!isset($this->options['copyright'])) $this->options['copyright'] = '';
-		//if(!isset($this->options['purchase_limit'])) $this->options['purchase_limit'] = '';
 		if(!isset($this->options['postage_privilege'])) $this->options['postage_privilege'] = '';
 		if(!isset($this->options['shipping_rule'])) $this->options['shipping_rule'] = '';
 		if(!isset($this->options['tax_rate'])) $this->options['tax_rate'] = '';
@@ -500,7 +499,7 @@ class usc_e_shop
 		}else{
 			$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 		}
-
+		do_action( 'usces_action_item_master_page', $action );
 		switch ( $action ) {
 			case 'dlitemlist':
 				usces_download_item_list();
@@ -764,6 +763,7 @@ class usc_e_shop
 	
 	/* Shop Mail Page */
 	function admin_mail_page() {
+		global $allowedposttags;
 	
 		$this->options = get_option('usces');
 
@@ -830,7 +830,7 @@ class usc_e_shop
 	
 	/* Admin Cart Page */
 	function admin_cart_page() {
-
+		global $allowedposttags;
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
@@ -842,10 +842,10 @@ class usc_e_shop
 				$this->options['pos_item_name'][$key] = $value;
 			}
 			foreach ( $_POST['header'] as $key => $value ) {
-				$this->options['cart_page_data']['header'][$key] = addslashes($value);
+				$this->options['cart_page_data']['header'][$key] = addslashes(wp_kses($value, $allowedposttags));
 			}
 			foreach ( $_POST['footer'] as $key => $value ) {
-				$this->options['cart_page_data']['footer'][$key] = addslashes($value);
+				$this->options['cart_page_data']['footer'][$key] = addslashes(wp_kses($value, $allowedposttags));
 			}
 
 			update_option('usces', $this->options);
@@ -1557,7 +1557,6 @@ class usc_e_shop
 		if(is_admin()) return;
 
 		$actionflag = false;
-		$rckid = NULL;
 		$sess = NULL;
 		$addr = NULL;
 		$rckid = NULL;
@@ -1644,7 +1643,7 @@ class usc_e_shop
 	function set_cookie($values){
 		$value = serialize($values);
 		$timeout = time()+7*86400;
-		$domain = $_SERVER['HTTP_HOST'];
+		$domain = $_SERVER['SERVER_NAME'];
 		$res = setcookie('usces_cookie', $value, $timeout, USCES_COOKIEPATH, $domain);
 	}
 	
@@ -1737,7 +1736,7 @@ class usc_e_shop
 		}else{
 			$javascript_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER . '/js/usces_cart.js';
 		}
-		$this->member_name = ( is_user_logged_in() ) ? get_user_meta($current_user->ID,'first_name').get_user_meta($current_user->ID,'last_name') : '';
+		$this->member_name = ( is_user_logged_in() ) ? esc_js(get_user_meta($current_user->ID,'first_name').get_user_meta($current_user->ID,'last_name')) : '';
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : get_home_url();
 
 //		usces_log('post_type : '.$item->post_mime_type, 'test.log');
@@ -1754,13 +1753,13 @@ class usc_e_shop
 				foreach($ioptkeys as $key => $value){
 					$optValues = $this->get_itemOptions( $value, $item->ID );
 					if($optValues['means'] < 2){
-						$mes_opts_str .= "'" . sprintf(__("Chose the %s", 'usces'), $value) . "',";
+						$mes_opts_str .= "'" . sprintf(__("Chose the %s", 'usces'), esc_js($value)) . "',";
 					}else{
-						$mes_opts_str .= "'" . sprintf(__("Input the %s", 'usces'), $value) . "',";
+						$mes_opts_str .= "'" . sprintf(__("Input the %s", 'usces'), esc_js($value)) . "',";
 					}
-					$key_opts_str .= "'" . urlencode($value) . "',";
-					$opt_means .= "'{$optValues['means']}',";
-					$opt_esse .= "'{$optValues['essential']}',";
+					$key_opts_str .= "'" . urlencode(esc_js($value)) . "',";
+					$opt_means .= "'" . esc_js($optValues['means']) . "',";
+					$opt_esse .= "'" . esc_js($optValues['essential']) . "',";
 				}
 				$mes_opts_str = rtrim($mes_opts_str, ',');
 				$key_opts_str = rtrim($key_opts_str, ',');
@@ -2052,7 +2051,7 @@ class usc_e_shop
 		$payments_str = '';
 		$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
 		foreach ( (array)$payments as $id => $array ) {
-			$payments_str .= "'" . $array['name'] . "': '" . $array['settlement'] . "', ";
+			$payments_str .= "'" . esc_js($array['name']) . "': '" . esc_js($array['settlement']) . "', ";
 		}
 		$payments_str .= "'" . __('Transfer (prepayment)', 'usces') . "': 'transferAdvance', ";
 		$payments_str .= "'" . __('Transfer (postpay)', 'usces') . "': 'transferDeferred', ";
@@ -2061,13 +2060,13 @@ class usc_e_shop
 		$wcex_str = '';
 		$wcex = usces_get_wcex();
 		foreach ( (array)$wcex as $key => $values ) {
-			$wcex_str .= "'" . $key . "-" . $values['version'] . "', ";
+			$wcex_str .= "'" . esc_js($key) . "-" . esc_js($values['version']) . "', ";
 		}
 		$wcex_str = rtrim($wcex_str, ', ');
 		if ( version_compare($wp_version, '3.4', '>=') ){
 			$theme_ob = wp_get_theme();
-			$theme['Name'] = $theme_ob->get('Name');
-			$theme['Version'] = $theme_ob->get('Version');
+			$theme['Name'] = esc_js($theme_ob->get('Name'));
+			$theme['Version'] = esc_js($theme_ob->get('Version'));
 		}else{
 			$theme = get_theme_data( get_stylesheet_directory().'/style.css' );//20120618ysk
 		}
@@ -2108,12 +2107,12 @@ class usc_e_shop
 					/* <![CDATA[ */
 						usces_ini = {
 							'cod_type': "<?php if( 'change' == $this->options['cod_type'] ) {echo 'change';}else{echo 'fix';} ?>",
-							'cod_type_fix': "<?php _e('Fixation C.O.D.', 'usces'); ?>",
-							'cod_type_change': "<?php _e('Variable C.O.D.', 'usces'); ?>",
-							'cod_unit': "<?php _e('dollars', 'usces'); ?>",
-							'cod_failure': "<?php _e('failure in update', 'usces'); ?>",
-							'cod_updated': "<?php _e('options are updated', 'usces'); ?>",
-							'cod_limit': "<?php _e('A value of the amount of upper limit is dirty.', 'usces'); ?>"
+							'cod_type_fix': "<?php echo esc_js(__('Fixation C.O.D.', 'usces')); ?>",
+							'cod_type_change': "<?php echo esc_js(__('Variable C.O.D.', 'usces')); ?>",
+							'cod_unit': "<?php echo esc_js(__('dollars', 'usces')); ?>",
+							'cod_failure': "<?php echo esc_js(__('failure in update', 'usces')); ?>",
+							'cod_updated': "<?php echo esc_js(__('options are updated', 'usces')); ?>",
+							'cod_limit': "<?php echo esc_js(__('A value of the amount of upper limit is dirty.', 'usces')); ?>"
 						};
 /* ]]> */
 					</script>
@@ -2472,6 +2471,7 @@ class usc_e_shop
 			require_once( apply_filters('usces_filter_orderpdf_path', USCES_PLUGIN_DIR . '/includes/order_print.php') );
 		}
 		
+		do_action( 'usces_after_main' );
 	}
 	
 	function stripslashes_deep_post( $array ){
@@ -3309,8 +3309,9 @@ class usc_e_shop
 	
 	function template_redirect () {
 		global $post, $usces_entries, $usces_carts, $usces_members, $usces_gp, $member_regmode;
-		
-		if( apply_filters('usces_action_template_redirect', false) ) return;
+
+		if( apply_filters('usces_action_template_redirect', false) ) return;//Deprecated
+		if( apply_filters('usces_filter_template_redirect', false) ) return;
 
 		if( is_single() && 'item' == $post->post_mime_type ) {
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){
@@ -3734,12 +3735,12 @@ class usc_e_shop
 
 	function is_member_logged_in( $id = false ) {
 		if( $id === false ){
-			if( isset($_SESSION['usces_member']['ID']) )
+			if( !empty($_SESSION['usces_member']['ID']) )
 				return true;
 			else
 				return false;
 		}else{
-			if( isset($_SESSION['usces_member']['ID']) && $_SESSION['usces_member']['ID'] == $id )
+			if( !empty($_SESSION['usces_member']['ID']) && $_SESSION['usces_member']['ID'] == $id )
 				return true;
 			else
 				return false;
@@ -5342,9 +5343,9 @@ class usc_e_shop
 						$advance = $this->cart->wc_unserialize( $cart['advance'] );
 						$sku = urldecode( $cart['sku'] );
 						$regular = $advance[$post_id][$sku]['regular'];
+						$unit = isset( $regular['unit'] ) ? $regular['unit'] : '';
 						$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
-						$frequency = isset( $regular['frequency'] ) ? (int)$regular['frequency'] : 0;
-						if( 1 == $interval and 1 == $frequency ) //通常課金扱い
+						if( empty($unit) or 1 > $interval ) //通常課金扱い
 							$type = 'once';
 					}
 				}
@@ -5514,7 +5515,8 @@ class usc_e_shop
 								'stocknum' => $values['stocknum'],
 								'stock' => $values['stock'],
 								'gp' => $values['gp'],
-								'sort' => $values['sort']
+								'sort' => $values['sort'],
+								'advance' => isset($values['advance']) ? $values['advance'] : ''
 							);
 		}
 		ksort($skus);
@@ -6032,7 +6034,8 @@ class usc_e_shop
 			}
 		}
 	
-		return ceil($point);
+		
+		return apply_filters( 'usces_filter_get_order_point', ceil($point));
 	}
 	
 	function get_order_discount( $display_mode = '', $cart = array() ) {
@@ -6948,7 +6951,7 @@ class usc_e_shop
 		$fields = array();
 		$table_name = $wpdb->prefix . "usces_order_meta";
 		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s OR meta_key = %s OR meta_key = %s)", 
-								$order_id, 'acting_%', 'settlement_id', 'order_number', 'SID');
+								$order_id, 'acting_%', 'settlement_id', 'order_number', 'res_tracking_id', 'SID');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		if( !$res )
 			return $fields;
@@ -6965,6 +6968,8 @@ class usc_e_shop
 				}
 			}elseif( 'order_number' == $value['meta_key'] ){
 				$fields['order_number'] = $value['meta_value'];
+			}elseif( 'res_tracking_id' == $value['meta_key'] ){
+				$fields['res_tracking_id'] = $value['meta_value'];
 			}elseif( 'SID' == $value['meta_key'] ){
 				$fields['SID'] = $value['meta_value'];
 			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){

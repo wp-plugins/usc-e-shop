@@ -376,6 +376,7 @@ jQuery(document).ready(function($){
 	$('#dl_orderlist').click(function() {
 		$('#dlOrderListDialog').dialog('open');
 	});
+<?php do_action('usces_action_order_list_document_ready_js'); ?>
 //20100908ysk end
 });
 </script>
@@ -485,12 +486,12 @@ jQuery(document).ready(function($){
 		$list_detail = '<td align="center"><input name="listcheck[]" type="checkbox" value="'.$array['ID'].'" /></td>';
 		foreach( (array)$array as $key => $value ) {
 			if( $value == '' || $value == ' ' ) $value = '&nbsp;';
-			if( $key == 'ID' || $key == 'deco_id' ) {
+			if( $key === 'ID' || $key === 'deco_id' ) {
 				$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.$curent_url.'">'.esc_html($value).'</a></td>';
-			} elseif( $key == 'mem_id' ) {
+			} elseif( $key === 'mem_id' ) {
 				if( $value == '0' ) $value = '&nbsp;';
 				$list_detail .= '<td>'.esc_html($value).'</td>';
-			} elseif( $key == 'name' ) {
+			} elseif( $key === 'name' ) {
 				switch ($applyform){
 				case 'JP': 
 					$list_detail .= '<td>'.esc_html($value).'</td>';
@@ -500,7 +501,7 @@ jQuery(document).ready(function($){
 					$names = explode(' ', $value);
 					$list_detail .= '<td>'.esc_html($names[1].' '.$names[0]).'</td>';
 				}
-			} elseif( $key == 'delivery_method' ) {
+			} elseif( $key === 'delivery_method' ) {
 				if( -1 != $value ) {
 					$delivery_method_index = $this->get_delivery_method_index($value);
 					$value = $this->options['delivery_method'][$delivery_method_index]['name'];
@@ -508,15 +509,15 @@ jQuery(document).ready(function($){
 					$value = '&nbsp;';
 				}
 				$list_detail .= '<td class="green">'.esc_html($value).'</td>';
-			} elseif( $key == 'total_price' ) {
+			} elseif( $key === 'total_price' ) {
 				$list_detail .= '<td class="price">'.usces_crform( $value, true, false, 'return' ).'</td>';
-			} elseif( $key == 'payment_name' ) {
+			} elseif( $key === 'payment_name' ) {
 				if( $value == '#none#' ) {
 					$list_detail .= '<td>&nbsp;</td>';
 				} else {
 					$list_detail .= '<td>'.esc_html($value).'</td>';
 				}
-			} elseif( $key == 'receipt_status' ) {
+			} elseif( $key === 'receipt_status' ) {
 				if( $value == __('unpaid', 'usces') ) {
 					$list_detail .= '<td class="red">'.esc_html($value).'</td>';
 				} elseif( $value == 'Pending' ) {
@@ -526,13 +527,13 @@ jQuery(document).ready(function($){
 				} else {
 					$list_detail .= '<td>'.esc_html($value).'</td>';
 				}
-			} elseif( $key == 'order_status' ) {
+			} elseif( $key === 'order_status' ) {
 				if( $value == __('It has sent it out.', 'usces') ) {
 					$list_detail .= '<td class="green">'.esc_html($value).'</td>';
 				} else {
 					$list_detail .= '<td>'.esc_html($value).'</td>';
 				}
-			} elseif( $key == 'date' || $key == 'pref' || $key == 'order_modified' ) {
+			} elseif( $key === 'date' || $key === 'pref' || $key === 'order_modified' ) {
 				$list_detail .= '<td>'.esc_html($value).'</td>';
 			}
 		}
