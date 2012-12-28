@@ -740,9 +740,16 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					<input type="hidden" name="IP_USER_ID" value="'.$ip_user_id.'">
 					';
 			}
-			$html .= '<input type="hidden" name="OKURL" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_card&acting_return=1" />
-				<input type="hidden" name="RT" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_card&confirm=1" />
-				';
+			if( $usces->use_ssl ) {
+				$ssl_url = $usces->options['ssl_url'].'/?page_id='.USCES_CART_NUMBER;
+				$html .= '<input type="hidden" name="OKURL" value="'.$ssl_url.$usces->delim.'acting=digitalcheck_card&acting_return=1" />
+					<input type="hidden" name="RT" value="'.$ssl_url.$usces->delim.'acting=digitalcheck_card&confirm=1" />
+					';
+			} else {
+				$html .= '<input type="hidden" name="OKURL" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_card&acting_return=1" />
+					<input type="hidden" name="RT" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_card&confirm=1" />
+					';
+			}
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
 			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
