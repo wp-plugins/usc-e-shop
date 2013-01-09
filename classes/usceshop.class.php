@@ -1681,7 +1681,17 @@ class usc_e_shop
 //		usces_log('post_type : '.$item->post_mime_type, 'test.log');
 //		usces_log('is_single : '.(is_single() ? 'true' : 'false'), 'test.log');
 
-		if( $this->use_js && !empty($this->item)) : 
+		if( $this->use_js && empty($this->item) && (is_home() || is_front_page()) ) : 
+		?>
+		<script type='text/javascript'>
+		/* <![CDATA[ */
+			uscesL10n = {
+				<?php echo apply_filters('usces_filter_uscesL10n', NULL, $item->ID); ?>
+				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php"
+			}
+		/* ]]> */
+		</script>
+		<?php elseif( $this->use_js && !empty($this->item) ) : 
 
 			$ioptkeys = $this->get_itemOptionKey( $item->ID );
 			$mes_opts_str = "";
@@ -1708,7 +1718,7 @@ class usc_e_shop
 			//$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
 			$itemRestriction = get_post_meta($item->ID, '_itemRestriction', true);
 		
-?>
+		?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
@@ -1727,15 +1737,6 @@ class usc_e_shop
 		/* ]]> */
 		</script>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
-		<?php elseif( is_home() || is_front_page() ) : ?>
-		<script type='text/javascript'>
-		/* <![CDATA[ */
-			uscesL10n = {
-				<?php echo apply_filters('usces_filter_uscesL10n', NULL, $item->ID); ?>
-				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php"
-			}
-		/* ]]> */
-		</script>
 		<?php endif; ?>
 		<?php //if( !is_home() && !is_front_page() && $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $item->post_mime_type)) ) : ?>
 		<?php if( $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || (is_singular() && 'item' == $item->post_mime_type)) ) : ?>
