@@ -697,6 +697,8 @@ class usc_e_shop
 			$this->options['point_coverage'] = isset($_POST['point_coverage']) ? (int)$_POST['point_coverage'] : 0;
 			$this->options['point_assign'] = isset($_POST['point_assign']) ? (int)$_POST['point_assign'] : 1;//20120919ysk 0000573
 
+			$this->options = apply_filters( 'usces_filter_admin_setup_options', $this->options );
+
 			update_option('usces', $this->options);
 			
 			$this->action_status = 'success';
@@ -707,7 +709,7 @@ class usc_e_shop
 			$this->action_message = '';
 		}
 		
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_setup.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_setup.php');
 
 	}
 	
