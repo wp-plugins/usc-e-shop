@@ -5470,6 +5470,7 @@ class usc_e_shop
 								'advance' => isset($values['advance']) ? $values['advance'] : ''
 							);
 		}
+		$skus = apply_filters( 'usces_filter_get_skus', $skus, $post_id, $keyflag );
 		ksort($skus);
 	
 		return $skus;
