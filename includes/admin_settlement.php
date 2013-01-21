@@ -809,21 +809,18 @@ function toggleVisibility(id) {
 				<td><div id="ex_conv_ip_digitalcheck" class="explanation"><?php _e('契約時にデジタルチェックから発行される加盟店コード（半角英数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th rowspan="5"><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_store');">利用コンビニ</a></th>
+				<th rowspan="4"><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_store');">利用コンビニ</a></th>
 				<td><input name="conv_store[]" type="checkbox" id="conv_store_1" value="1"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '1', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_1">Loppi決済（ローソン・セイコーマート）</label></td>
-				<td rowspan="5"><div id="ex_conv_store" class="explanation"><?php _e('収納先のコンビニを選択します。コンビニ毎の審査が必要となり、審査通過後にご利用可能となります。', 'usces'); ?></div></td>
+				<td rowspan="4"><div id="ex_conv_store" class="explanation"><?php _e('収納先のコンビニを選択します。コンビニ毎の審査が必要となり、審査通過後にご利用可能となります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<td><input name="conv_store[]" type="checkbox" id="conv_store_2" value="2"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '2', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_2">Seven決済（セブンイレブン）</label></td>
 			</tr>
 			<tr>
-				<td><input name="conv_store[]" type="checkbox" id="conv_store_3" value="3"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '3', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_3">FAMIMA決済(ファミリーマート)</label></td>
+				<td><input name="conv_store[]" type="checkbox" id="conv_store_3" value="3"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '3', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_3">FAMIMA決済（ファミリーマート）</label></td>
 			</tr>
 			<tr>
-				<td><input name="conv_store[]" type="checkbox" id="conv_store_71" value="71"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '71', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_71">ACD決済（am/pm・デイリーヤマザキ・ヤマザキデイリー）</label></td>
-			</tr>
-			<tr>
-				<td><input name="conv_store[]" type="checkbox" id="conv_store_73" value="73"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '73', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_73">オンライン決済（サークルKサンクス・ミニストップ・デイリーヤマザキ・ヤマザキデイリー）</label></td>
+				<td><input name="conv_store[]" type="checkbox" id="conv_store_73" value="73"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '73', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_73">オンライン決済（サークルKサンクス・ミニストップ・デイリーヤマザキ・ヤマザキデイリー・スリーエフ）</label></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_kigen');">支払期限</a></th>

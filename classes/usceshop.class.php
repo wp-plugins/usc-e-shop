@@ -3546,7 +3546,7 @@ class usc_e_shop
 //20100818ysk start
 				$res = $this->reg_custom_member($_POST['member_id']);
 //20100818ysk end
-				$meta_keys = "'zeus_pcid', 'remise_pcid'";
+				$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
 				$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
 						$_POST['member_id'] 
 						);
@@ -5852,20 +5852,10 @@ class usc_e_shop
 			$vars .= '&IP_USER_ID='.$_POST['IP_USER_ID'];
 			$vars .= '&SID='.$_POST['SID'];
 			$vars .= '&STORE=51';
-			$vars .= '&N1='.mb_convert_encoding($_POST['N1'], 'SJIS', 'UTF-8');
+			$vars .= '&N1='.$_POST['N1'];
 			$vars .= '&K1='.$_POST['K1'];
 			$vars .= '&KAKUTEI='.$kakutei;
 			$vars .= '&FUKA='.$acting_flg;
-			$vars .= '&NANE1='.mb_convert_encoding($_POST['NANE1'], 'SJIS', 'UTF-8');
-			$vars .= '&NAME2='.mb_convert_encoding($_POST['NAME2'], 'SJIS', 'UTF-8');
-			$vars .= '&KANA1='.mb_convert_encoding($_POST['KANA1'], 'SJIS', 'UTF-8');
-			$vars .= '&KANA2='.mb_convert_encoding($_POST['KANA2'], 'SJIS', 'UTF-8');
-			$vars .= '&YUBIN1='.$_POST['YUBIN1'];
-			$vars .= '&YUBIN2='.$_POST['YUBIN2'];
-			$vars .= '&TEL='.$_POST['TEL'];
-			$vars .= '&ADR1='.mb_convert_encoding($_POST['ADR1'], 'SJIS', 'UTF-8');
-			$vars .= '&ADR2='.mb_convert_encoding($_POST['ADR2'], 'SJIS', 'UTF-8');
-			$vars .= '&MAIL='.$_POST['MAIL'];
 
 			$header  = "POST ".$interface['path']." HTTP/1.1\r\n";
 			$header .= "Host: ".$_SERVER['HTTP_HOST']."\r\n";
@@ -5888,38 +5878,44 @@ class usc_e_shop
 					}
 				}
 				fclose($fp);
-//usces_log('digitalcheck card page : '.$page, 'acting_transaction.log');
 				$lines = explode("\n", $page);
 				if( false !== strpos( $lines[0], 'OK') ) {
 					usces_log('digitalcheck card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
-					$args .= '&SID='.$lines[1];
-					header("Location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=1'.$args);
+					//$args = '&SID='.$lines[1];
+					$args = '&SID='.$_POST['SID'].'&FUKA='.$acting_flg;
+					header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=1'.$args );
 				} else {
 					usces_log('digitalcheck card : Certification Error : '.$page, 'acting_transaction.log');
-					header("Location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=0');
+					header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=0' );
 				}
 			} else {
 				usces_log('digitalcheck card : Socket Error', 'acting_transaction.log');
-				header("Location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=0');
+				header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=0' );
 			}
 			exit;
 		} else if( $acting_flg == 'acting_digitalcheck_conv' ) {
-			$res = $this->order_processing();
-			if( 'ordercompletion' == $res ) {
-				$table_meta_name = $wpdb->prefix."usces_order_meta";
-				$mquery = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'SID', $_REQUEST['SID'] );
-				$order_id = $wpdb->get_var($mquery);
-				if( $order_id ) {
-					$data = array( "settltment_status" => "未決済", "settltment_errmsg" => "決済が完了していません" );
-					$this->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
+			if( isset($_REQUEST['STORE']) and '99' != $_REQUEST['STORE'] ) {
+				$res = $this->order_processing();
+				if( 'ordercompletion' == $res ) {
+					$table_meta_name = $wpdb->prefix."usces_order_meta";
+					$mquery = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'SID', $_REQUEST['SID'] );
+					$order_id = $wpdb->get_var($mquery);
+					if( $order_id ) {
+						$data = array( "settltment_status" => "未決済", "settltment_errmsg" => "決済が完了していません" );
+						$this->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
+					}
+					$this->cart->crear_cart();
+					$acting_opts = $this->options['acting_settings']['digitalcheck'];
+					header( "location: ".$acting_opts['send_url_conv'].'?acting=digitalcheck_conv'.$query );
+					exit;
+				} else {
+					usces_log('digitalcheck conv : order processing error', 'acting_transaction.log');
+					header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_conv&acting_return=0' );
 				}
-				$this->cart->crear_cart();
+			} else {
 				$acting_opts = $this->options['acting_settings']['digitalcheck'];
 				header( "location: ".$acting_opts['send_url_conv'].'?acting=digitalcheck_conv'.$query );
 				exit;
-			} else {
-				usces_log('digitalcheck conv : order processing error', 'acting_transaction.log');
-				header("Location: ".USCES_CART_URL.$delim.'acting=digitalcheck_conv&acting_return=0');
 			}
 //20121206ysk end
 		}

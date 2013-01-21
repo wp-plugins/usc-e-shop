@@ -38,6 +38,17 @@ function usces_action_acting_construct(){
 		} else {
 			usces_log('SoftBankPayment construct : '.$_REQUEST['order_id'], 'acting_transaction.log');
 		}
+
+	} elseif( isset($_POST['SID']) && isset($_POST['FUKA']) && isset($_POST['CVS']) ) {//digitalcheck_conv
+
+		$rand = $_REQUEST['SID'];
+		$datas = usces_get_order_acting_data($rand);
+		$_GET['uscesid'] = $datas['sesid'];
+		if( empty($datas['sesid']) ) {
+			usces_log('digitalcheck construct : error1', 'acting_transaction.log');
+		} else {
+			usces_log('digitalcheck construct : '.$_REQUEST['SID'], 'acting_transaction.log');
+		}
 	}
 }
 
@@ -689,12 +700,12 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ) {
 			$data[$key] = $value;
 		}
-//usces_log('digitalcheck card : '.print_r($data, true), 'acting_transaction.log');
+//usces_log('digitalcheck card : '.print_r($data, true), 'digitalcheck.log');
 
 		if( isset($data['SEQ']) ) {
 			$acting_opts = $usces->options['acting_settings']['digitalcheck'];
 			$ip_user_id = substr($data['FUKA'], 24);
-//usces_log('ip_user_id : '.$ip_user_id, 'acting_transaction.log');
+//usces_log('ip_user_id : '.$ip_user_id, 'digitalcheck.log');
 			if( 'on' == $acting_opts['card_user_id'] and !empty($ip_user_id) ) {
 				$usces->set_member_meta_value('digitalcheck_ip_user_id', $ip_user_id, $ip_user_id);
 			}
@@ -709,6 +720,7 @@ function usces_action_acting_transaction(){
 			$data[$key] = $value;
 		}
 		$sid = ( isset($data['SID']) ) ? $data['SID'] : '';
+//usces_log("digitalcheck conv : ".print_r($_REQUEST,true), 'digitalcheck.log');
 
 		if( isset($data['SEQ']) ) {
 			$table_name = $wpdb->prefix."usces_order";
@@ -774,14 +786,25 @@ function usces_action_acting_transaction(){
 				$order_id = $wpdb->get_var($query);
 				if( $order_id ) {
 					$usces->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
+
+				} else {
+					$res = $usces->order_processing();
+					if( 'ordercompletion' == $res ) {
+						$order_id = $usces->cart->get_order_entry('ID');
+						$usces->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
+					} else {
+						usces_log('digitalcheck conv : order processing error', 'acting_transaction.log');
+					}
 				}
 				header('content-type : text/plain;charset=Shift_JIS');
 				die("0");
+
 			} elseif( isset($data['purchase']) ) {
+
 			} else {
 				$permalink_structure = get_option('permalink_structure');
 				$delim = ( !$usces->use_ssl && $permalink_structure ) ? '?' : '&';
-				header('location: '.USCES_CART_URL.$delim.'acting=digitalcheck_conv&acting_return=1&SID='.$sid );
+				header( 'location: '.USCES_CART_URL.$delim.'acting=digitalcheck_conv&acting_return=1&SID='.$sid );
 				exit;
 			}
 		}

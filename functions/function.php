@@ -1066,8 +1066,13 @@ function usces_reg_orderdata( $results = array() ) {
 		if( isset($_REQUEST['res_tracking_id']) ) {
 			$usces->set_order_meta_value('res_tracking_id', $_REQUEST['res_tracking_id'], $order_id);
 		}
-		if( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) && substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_conv' ) {
-			$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
+		if( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) ) {
+			if( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_card' ) {
+				$data['SID'] = mysql_real_escape_string($_REQUEST['SID']);
+				$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
+			} elseif( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_conv' ) {
+				$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
+			}
 		}
 
 		foreach($cart as $cartrow){

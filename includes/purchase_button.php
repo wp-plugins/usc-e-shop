@@ -696,6 +696,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_digitalcheck_card'://カード決済(デジタルチェック)
 			$acting_opts = $usces->options['acting_settings']['digitalcheck'];
 			//$usces->save_order_acting_data($rand);
+			$sid = uniqid();
 			$member = $usces->get_member();
 			if( 'on' == $acting_opts['card_user_id'] && $usces->is_member_logged_in() ) {
 				$ip_user_id = $usces->get_member_meta_value('digitalcheck_ip_user_id', $member['ID']);
@@ -714,25 +715,24 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$item_name = $usces->getItemName($cart[0]['post_id']);
 			if( 1 < count($cart) ) $item_name .= ','.__('Others', 'usces');
-			if( 40 < mb_strlen($item_name) ) $item_name = mb_substr($item_name, 0, 40).'...';
+			if( 46 < strlen($item_name) ) $item_name = mb_strimwidth( $item_name, 0, 50, '...' );
 			$kakutei = ( empty($acting_opts['card_kakutei']) ) ? '0' : $acting_opts['card_kakutei'];
 			$html .= '<form id="purchase_form" name="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="IP" value="'.$acting_opts['card_ip'].'" />
-				<input type="hidden" name="SID" value="'.$rand.'" />
-				<input type="hidden" name="N1" value="'.esc_attr($item_name).'">
+				<input type="hidden" name="SID" value="'.$sid.'" />
+				<input type="hidden" name="N1" value="'.$item_name.'">
 				<input type="hidden" name="K1" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
 				<input type="hidden" name="STORE" value="51" />
 				<input type="hidden" name="KAKUTEI" value="'.$kakutei.'" />
 				<input type="hidden" name="FUKA" value="'.$fuka.'" />
-				<input type="hidden" name="NAME1" value="'.esc_attr($usces_entries['customer']['name1']).'" />
-				<input type="hidden" name="NAME2" value="'.esc_attr($usces_entries['customer']['name2']).'" />
-				<input type="hidden" name="KANA1" value="'.esc_attr($usces_entries['customer']['name3']).'" />
-				<input type="hidden" name="KANA2" value="'.esc_attr($usces_entries['customer']['name4']).'" />
-				<input type="hidden" name="YUBIN1" value="'.esc_attr(substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 0, 3)).'" />
-				<input type="hidden" name="YUBIN2" value="'.esc_attr(substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 3, 4)).'" />
+				<input type="hidden" name="NAME1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name1'], 0, 20)).'" />
+				<input type="hidden" name="NAME2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name2'], 0, 20)).'" />
+				<input type="hidden" name="KANA1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name3'], 0, 20)).'" />
+				<input type="hidden" name="KANA2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name4'], 0, 20)).'" />
+				<input type="hidden" name="YUBIN1" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8'))).'" />
 				<input type="hidden" name="TEL" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
-				<input type="hidden" name="ADR1" value="'.esc_attr($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2']).'" />
-				<input type="hidden" name="ADR2" value="'.esc_attr($usces_entries['customer']['address3']).'" />
+				<input type="hidden" name="ADR1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2'], 0, 50)).'" />
+				<input type="hidden" name="ADR2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['address3'], 0, 50)).'" />
 				<input type="hidden" name="MAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				';
 			if( $ip_user_id ) {
@@ -752,7 +752,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
 			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
+			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $sid, $purchase_disabled);
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
@@ -761,10 +761,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			break;
 		case 'acting_digitalcheck_conv'://コンビニ決済(デジタルチェック)
 			$acting_opts = $usces->options['acting_settings']['digitalcheck'];
-			//$usces->save_order_acting_data($rand);
+			$sid = uniqid();
+			$usces->save_order_acting_data($sid);
 			$item_name = $usces->getItemName($cart[0]['post_id']);
 			if( 1 < count($cart) ) $item_name .= ','.__('Others', 'usces');
-			if( 40 < mb_strlen($item_name) ) $item_name = mb_substr($item_name, 0, 40).'...';
+			if( 46 < strlen($item_name) ) $item_name = mb_strimwidth( $item_name, 0, 50, '...' );
 			$today = date( 'Y-m-d', current_time('timestamp') );
 			list( $year, $month, $day ) = explode( '-', $today );
 			$kigen = date( 'Ymd', mktime(0, 0, 0, (int)$month, (int)$day + (int)$acting_opts['conv_kigen'], (int)$year) );
@@ -772,21 +773,20 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			//$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url_conv'].'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 			$html .= '<form id="purchase_form" name="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="IP" value="'.$acting_opts['conv_ip'].'" />
-				<input type="hidden" name="SID" value="'.$rand.'" />
+				<input type="hidden" name="SID" value="'.$sid.'" />
 				<input type="hidden" name="N1" value="'.esc_attr($item_name).'">
 				<input type="hidden" name="K1" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
 				<input type="hidden" name="STORE" value="'.$store.'" />
 				<input type="hidden" name="FUKA" value="'.$acting_flag.'" />
 				<input type="hidden" name="KIGEN" value="'.$kigen.'" />
-				<input type="hidden" name="NAME1" value="'.esc_attr($usces_entries['customer']['name1']).'" />
-				<input type="hidden" name="NAME2" value="'.esc_attr($usces_entries['customer']['name2']).'" />
-				<input type="hidden" name="KANA1" value="'.esc_attr($usces_entries['customer']['name3']).'" />
-				<input type="hidden" name="KANA2" value="'.esc_attr($usces_entries['customer']['name4']).'" />
-				<input type="hidden" name="YUBIN1" value="'.esc_attr(substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 0, 3)).'" />
-				<input type="hidden" name="YUBIN2" value="'.esc_attr(substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 3, 4)).'" />
+				<input type="hidden" name="NAME1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name1'], 0, 20)).'" />
+				<input type="hidden" name="NAME2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name2'], 0, 20)).'" />
+				<input type="hidden" name="KANA1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name3'], 0, 20)).'" />
+				<input type="hidden" name="KANA2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name4'], 0, 20)).'" />
+				<input type="hidden" name="YUBIN1" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8'))).'" />
 				<input type="hidden" name="TEL" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
-				<input type="hidden" name="ADR1" value="'.esc_attr($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2']).'" />
-				<input type="hidden" name="ADR2" value="'.esc_attr($usces_entries['customer']['address3']).'" />
+				<input type="hidden" name="ADR1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2'], 0, 50)).'" />
+				<input type="hidden" name="ADR2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['address3'], 0, 50)).'" />
 				<input type="hidden" name="MAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				';
 			if( $usces->use_ssl ) {
@@ -801,7 +801,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
 			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
+			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $sid, $purchase_disabled);
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
