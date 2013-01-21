@@ -411,6 +411,17 @@ class usc_e_shop
 		return $link;
 	}
 
+	function ssl_admin_ajax_url(){
+		$path = '/wp-admin/admin-ajax.php';
+		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI'])) ){
+			$link = USCES_SSL_URL_ADMIN . '/wp-admin/admin-ajax.php';
+		}else{
+			$link = site_url( $path );
+		}
+		$link = apply_filters('ssl_admin_ajax_url', $link);
+		return $link;
+	}
+
 	function usces_ssl_attachment_link($link)
 	{
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
@@ -1682,14 +1693,14 @@ class usc_e_shop
 
 //		usces_log('post_type : '.$item->post_mime_type, 'test.log');
 //		usces_log('is_single : '.(is_single() ? 'true' : 'false'), 'test.log');
-
-		if( $this->use_js && empty($this->item) && (is_home() || is_front_page()) ) : 
+		
+		if( $this->use_js && empty($this->item) && !is_admin() ) : 
 		?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
 				<?php echo apply_filters('usces_filter_uscesL10n', NULL, $item->ID); ?>
-				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php"
+				'ajaxurl': "<?php echo $this->ssl_admin_ajax_url(); ?>"
 			}
 		/* ]]> */
 		</script>
@@ -1725,7 +1736,7 @@ class usc_e_shop
 		/* <![CDATA[ */
 			uscesL10n = {
 				<?php echo apply_filters('usces_filter_uscesL10n', NULL, $item->ID); ?>
-				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php",
+				'ajaxurl': "<?php echo $this->ssl_admin_ajax_url(); ?>",
 				'post_id': "<?php echo $item->ID; ?>",
 				'cart_number': "<?php echo get_option('usces_cart_number'); ?>",
 				'is_cart_row': <?php echo ( (0 < $this->cart->num_row()) ? 'true' : 'false'); ?>,
@@ -2344,6 +2355,9 @@ class usc_e_shop
 
 		
 		if( is_admin() && isset($_REQUEST['page']) ){
+		
+			wp_enqueue_script('jquery-color');
+			
 			switch( $_REQUEST['page'] ){
 			
 				case 'usces_initial':

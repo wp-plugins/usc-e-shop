@@ -73,9 +73,11 @@ function paypal_check($usces_paypal_url) {
 	$req .= '&tx=' . $tx_token . '&at=' . $auth_token;
 	
 	// post back to PayPal system to validate
-	$header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+	$header .= "POST /cgi-bin/webscr HTTP/1.1\r\n";
 	$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-	$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
+	$header .= "Host: " . $usces_paypal_url . "\r\n";
+	$header .= "Content-Length: " . strlen($req) . "\r\n";
+	$header .= "Connection: close\r\n\r\n";
 	$fp = fsockopen ('ssl://'.$usces_paypal_url,  443, $errno, $errstr, 30);
 	$results = array();
 	if (!$fp) {
@@ -128,9 +130,11 @@ function paypal_ipn_check($usces_paypal_url) {
 		$req .= '&' . $key . '=' . $value;
 	}
 	// post back to PayPal system to validate
-	$header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+	$header .= "POST /cgi-bin/webscr HTTP/1.1\r\n";
 	$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-	$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
+	$header .= "Host: " . $usces_paypal_url . "\r\n";
+	$header .= "Content-Length: " . strlen($req) . "\r\n";
+	$header .= "Connection: close\r\n\r\n";
 	$fp = fsockopen ('ssl://'.$usces_paypal_url, 443, $errno, $errstr, 30);
 
 	$item_name = $_POST['item_name'];
