@@ -54,7 +54,7 @@ function usces_action_ogp_meta(){
 
 	$ogs['title'] = $item['itemName'];
 	$ogs['type'] = 'produnct';
-	$ogs['description'] = get_the_title($post->ID);
+	$ogs['description'] = strip_tags( get_the_title($post->ID) );
 	$ogs['url'] = get_permalink($post->ID);
 	$ogs['image'] = $image_info[0];
 	$ogs['site_name'] = get_option('blogname');

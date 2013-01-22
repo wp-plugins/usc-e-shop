@@ -410,6 +410,17 @@ class usc_e_shop
 		return $link;
 	}
 
+	function ssl_admin_ajax_url(){
+		$path = '/wp-admin/admin-ajax.php';
+		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI'])) ){
+			$link = USCES_SSL_URL_ADMIN . '/wp-admin/admin-ajax.php';
+		}else{
+			$link = site_url( $path );
+		}
+		$link = apply_filters('ssl_admin_ajax_url', $link);
+		return $link;
+	}
+
 	function usces_ssl_attachment_link($link)
 	{
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
@@ -696,6 +707,8 @@ class usc_e_shop
 			$this->options['point_coverage'] = isset($_POST['point_coverage']) ? (int)$_POST['point_coverage'] : 0;
 			$this->options['point_assign'] = isset($_POST['point_assign']) ? (int)$_POST['point_assign'] : 1;//20120919ysk 0000573
 
+			$this->options = apply_filters( 'usces_filter_admin_setup_options', $this->options );
+
 			update_option('usces', $this->options);
 			
 			$this->action_status = 'success';
@@ -706,7 +719,7 @@ class usc_e_shop
 			$this->action_message = '';
 		}
 		
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_setup.php');	
+		require_once(USCES_PLUGIN_DIR . '/includes/admin_setup.php');
 
 	}
 	
@@ -1741,8 +1754,18 @@ class usc_e_shop
 
 //		usces_log('post_type : '.$item->post_mime_type, 'test.log');
 //		usces_log('is_single : '.(is_single() ? 'true' : 'false'), 'test.log');
-
-		if( $this->use_js && !empty($this->item)) : 
+		
+		if( $this->use_js && empty($this->item) && !is_admin() ) : 
+		?>
+		<script type='text/javascript'>
+		/* <![CDATA[ */
+			uscesL10n = {
+				<?php echo apply_filters('usces_filter_uscesL10n', NULL, $item->ID); ?>
+				'ajaxurl': "<?php echo $this->ssl_admin_ajax_url(); ?>"
+			}
+		/* ]]> */
+		</script>
+		<?php elseif( $this->use_js && !empty($this->item) ) : 
 
 			$ioptkeys = $this->get_itemOptionKey( $item->ID );
 			$mes_opts_str = "";
@@ -1769,12 +1792,12 @@ class usc_e_shop
 			//$itemRestriction = get_post_custom_values('_itemRestriction', $item->ID);
 			$itemRestriction = get_post_meta($item->ID, '_itemRestriction', true);
 		
-?>
+		?>
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
 				<?php echo apply_filters('usces_filter_uscesL10n', NULL, $item->ID); ?>
-				'ajaxurl': "<?php echo USCES_SSL_URL_ADMIN; ?>/wp-admin/admin-ajax.php",
+				'ajaxurl': "<?php echo $this->ssl_admin_ajax_url(); ?>",
 				'post_id': "<?php echo $item->ID; ?>",
 				'cart_number': "<?php echo get_option('usces_cart_number'); ?>",
 				'is_cart_row': <?php echo ( (0 < $this->cart->num_row()) ? 'true' : 'false'); ?>,
@@ -2393,6 +2416,9 @@ class usc_e_shop
 
 		
 		if( is_admin() && isset($_REQUEST['page']) ){
+		
+			wp_enqueue_script('jquery-color');
+			
 			switch( $_REQUEST['page'] ){
 			
 				case 'usces_initial':
@@ -3496,25 +3522,25 @@ class usc_e_shop
 		return $res;
 	
 	}
-	
+
 	function regist_member() {
 		global $wpdb;
-		
+
 		$member = $this->get_member();
 		$mode = $_POST['member_regmode'];
 		$member_table = $wpdb->prefix . "usces_member";
 		$member_meta_table = $wpdb->prefix . "usces_member_meta";
-			
+
 //20110715ysk start 0000203
 		//$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
 		$error_mes = ( $_POST['member_regmode'] == 'newmemberfromcart' or $_POST['member_regmode'] == 'editmemberfromcart' ) ? $this->member_check_fromcart() : $this->member_check();
 //20110715ysk end
-		
+
 		if ( $error_mes != '' ) {
-		
+
 			$this->error_message = $error_mes;
 			return $mode;
-			
+
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
 
 			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
@@ -3541,6 +3567,7 @@ class usc_e_shop
 					$_POST['member_id'] 
 					);
 			$res = $wpdb->query( $query );
+
 			if( $res !== false ){
 				$this->set_member_meta_value('customer_country', $_POST['member']['country'], $_POST['member_id']);
 //20100818ysk start
@@ -3551,11 +3578,15 @@ class usc_e_shop
 						$_POST['member_id'] 
 						);
 				$res = $wpdb->query( $query );
+
+				$this->get_current_member();
+				return 'editmemberform';
+
+			} else {
+				$this->error_message = __('Error:failure in update', 'usces');
+				return $mode;
 			}
-			
-			$this->get_current_member();
-			return 'editmemberform';
-			
+
 		} elseif ( $_POST['member_regmode'] == 'newmemberform' ) {
 
 			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s", trim($_POST['member']['mailaddress1']));
@@ -3564,7 +3595,7 @@ class usc_e_shop
 				$this->error_message = __('This e-mail address has been already registered.', 'usces');
 				return $mode;
 			} else {
-			
+
 				$point = $this->options['start_point'];
 				$pass = md5(trim($_POST['member']['password1']));
 		    	$query = $wpdb->prepare("INSERT INTO $member_table 
@@ -3594,7 +3625,7 @@ class usc_e_shop
 						get_date_from_gmt(gmdate('Y-m-d H:i:s', time())),
 						'');
 				$res = $wpdb->query( $query );
-			
+
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
@@ -3608,13 +3639,17 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
-					
+
 					do_action('usces_action_member_registered', $_POST['member']);
+
+					return 'newcompletion';
+
+				} else {
+					$this->error_message = __('Error:failure in update', 'usces');
+					return $mode;
 				}
-				
-				return 'newcompletion';
 			}
-			
+
 		} elseif ( $_POST['member_regmode'] == 'newmemberfromcart' ) {
 
 			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s", trim($_POST['customer']['mailaddress1']));
@@ -3623,7 +3658,7 @@ class usc_e_shop
 				$this->error_message = __('This e-mail address has been already registered.', 'usces');
 				return $mode;
 			} else {
-			
+
 				$point = $this->options['start_point'];
 				$pass = md5(trim($_POST['customer']['password1']));
 		    	$query = $wpdb->prepare("INSERT INTO $member_table 
@@ -3653,7 +3688,7 @@ class usc_e_shop
 						get_date_from_gmt(gmdate('Y-m-d H:i:s', time())),
 						'');
 				$res = $wpdb->query( $query );
-				
+
 				//$_SESSION['usces_member']['ID'] = $wpdb->insert_id;
 				//$this->get_current_member();
 				if($res !== false) {
@@ -3663,7 +3698,7 @@ class usc_e_shop
 					$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $member_id);
 //20100818ysk start
 					//$res = $this->reg_custom_member($wpdb->insert_id);
-				$res = $this->reg_custom_member($member_id);
+					$res = $this->reg_custom_member($member_id);
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
@@ -3677,9 +3712,11 @@ class usc_e_shop
 						$_SESSION['usces_entry']['member_regmode'] = 'editmemberfromcart';
 						return 'newcompletion';
 					}
+
+				} else {
+					$this->error_message = __('Error:failure in update', 'usces');
+					return $mode;
 				}
-				
-				return false;
 			}
 
 //20110715ysk start 0000203
@@ -3714,9 +3751,12 @@ class usc_e_shop
 				$res = $this->reg_custom_member($_POST['member_id']);
 				unset($_SESSION['usces_member']);
 				$this->member_just_login(trim($_POST['customer']['mailaddress1']), trim($_POST['customer']['password1']));
+				return 'newcompletion';
+
+			} else {
+				$this->error_message = __('Error:failure in update', 'usces');
+				return $mode;
 			}
-			
-			return 'newcompletion';
 //20110715ysk end
 		}
 	}
@@ -5519,6 +5559,7 @@ class usc_e_shop
 								'advance' => isset($values['advance']) ? $values['advance'] : ''
 							);
 		}
+		$skus = apply_filters( 'usces_filter_get_skus', $skus, $post_id, $keyflag );
 		ksort($skus);
 	
 		return $skus;

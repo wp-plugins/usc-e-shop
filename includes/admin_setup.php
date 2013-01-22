@@ -251,6 +251,7 @@ function toggleVisibility(id) {
 		<td><div id="ex_point_assign" class="explanation"><?php _e('「即時」では、ポイントはお買い物完了時に付与されます。「入金時」では、銀行振込、コンビニ決済などで、お買い物完了時にはポイントは付与されず、入金済になったときにポイントを付与します。', 'usces'); ?></div></td>
 	</tr>
 </table>
+<?php do_action( 'usces_action_amdin_setup' ); ?>
 <hr size="1" color="#CCCCCC" />
 <div id="shop_setting" class="explanation"><?php _e('the initial rate of the shop', 'usces'); ?></div>
 </div>

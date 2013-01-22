@@ -458,26 +458,26 @@ function usces_item_duplicate($post_id){
 					$value = $data->meta_value;
 			}
 			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+			$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
 		
 		}else if( $prefix == '_isku' || $prefix == '_iopt' ){
 		
 			$value = $data->meta_value;
 			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+			$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
 		
 		}
 		if( $prefix1 != '_' ){
 		
 			$value = $data->meta_value;
 			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $key . "','" . $value . "'),";
+			$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
 		
 		}
 
 	}
 	$valstr = rtrim($valstr, ',');
-	$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
+	$query = $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr", $post_id);
 	$res = mysql_query($query);
 	if(!$res ) return;
 	

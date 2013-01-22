@@ -34,13 +34,13 @@ class Welcart_Recent_Posts extends WP_Widget {
 		else if ( $number > 15 )
 			$number = 15;
 
-		$r = new WP_Query(array('showposts' => $number, 'nopaging' => 0, 'post_status' => 'publish', 'caller_get_posts' => 1, 'cat'=>-(USCES_ITEM_CAT_PARENT_ID)));
-		if ($r->have_posts()) :
+		$r = query_posts(array('showposts' => $number, 'nopaging' => 0, 'post_status' => 'publish', 'ignore_sticky_posts' => 1, 'cat'=>-(USCES_ITEM_CAT_PARENT_ID), 'order'=>'DESC',  'orderby'=>'date' ));
+		if (have_posts()) :
 ?>
 		<?php echo $before_widget; ?>
 		<?php if ( $title ) echo $before_title . $title . $after_title; ?>
 		<ul>
-		<?php  while ($r->have_posts()) : $r->the_post(); ?>
+		<?php  while (have_posts()) : the_post(); ?>
 		<li><a href="<?php the_permalink() ?>" title="<?php echo esc_attr(get_the_title() ? get_the_title() : get_the_ID()); ?>"><?php if ( get_the_title() ) the_title(); else the_ID(); ?></a></li>
 		<?php endwhile; ?>
 		</ul>
