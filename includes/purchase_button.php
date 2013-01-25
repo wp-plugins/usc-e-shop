@@ -695,11 +695,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 //20121206ysk start
 		case 'acting_digitalcheck_card'://カード決済(デジタルチェック)
 			$acting_opts = $usces->options['acting_settings']['digitalcheck'];
-			//$usces->save_order_acting_data($rand);
 			$sid = uniqid();
+			$usces->save_order_acting_data($sid);
 			$member = $usces->get_member();
 			if( 'on' == $acting_opts['card_user_id'] && $usces->is_member_logged_in() ) {
-				$ip_user_id = $usces->get_member_meta_value('digitalcheck_ip_user_id', $member['ID']);
+				$ip_user_id = $usces->get_member_meta_value( 'digitalcheck_ip_user_id', $member['ID'] );
 				if( empty($ip_user_id) ) {
 					$ip_user_id = $member['ID'];
 					$send_url = $acting_opts['send_url_card'];
@@ -729,8 +729,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="NAME2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name2'], 0, 20)).'" />
 				<input type="hidden" name="KANA1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name3'], 0, 20)).'" />
 				<input type="hidden" name="KANA2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name4'], 0, 20)).'" />
-				<input type="hidden" name="YUBIN1" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8'))).'" />
-				<input type="hidden" name="TEL" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
+				<input type="hidden" name="YUBIN1" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8')), 0, 7)).'" />
+				<input type="hidden" name="TEL" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')), 0, 11)).'" />
 				<input type="hidden" name="ADR1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2'], 0, 50)).'" />
 				<input type="hidden" name="ADR2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['address3'], 0, 50)).'" />
 				<input type="hidden" name="MAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
@@ -783,8 +783,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="NAME2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name2'], 0, 20)).'" />
 				<input type="hidden" name="KANA1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name3'], 0, 20)).'" />
 				<input type="hidden" name="KANA2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name4'], 0, 20)).'" />
-				<input type="hidden" name="YUBIN1" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8'))).'" />
-				<input type="hidden" name="TEL" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
+				<input type="hidden" name="YUBIN1" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8')), 0, 7)).'" />
+				<input type="hidden" name="TEL" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')), 0, 11)).'" />
 				<input type="hidden" name="ADR1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2'], 0, 50)).'" />
 				<input type="hidden" name="ADR2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['address3'], 0, 50)).'" />
 				<input type="hidden" name="MAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />

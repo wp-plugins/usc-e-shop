@@ -1069,10 +1069,11 @@ function usces_reg_orderdata( $results = array() ) {
 		if( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) ) {
 			if( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_card' ) {
 				$data['SID'] = mysql_real_escape_string($_REQUEST['SID']);
-				$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
-			} elseif( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_conv' ) {
-				$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
+				$usces->set_order_meta_value( $_REQUEST['FUKA'], serialize($data), $order_id );
+			//} elseif( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_conv' ) {
+			//	$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
 			}
+			$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
 		}
 
 		foreach($cart as $cartrow){
@@ -3404,7 +3405,11 @@ function usces_post_reg_orderdata($order_id, $results){
 				break;
 //20121206ysk end
 			default:
-				$trans_id = '';
+				if( isset($_REQUEST['FUKA']) && strstr($_REQUEST['FUKA'], "digitalcheck_card") ) {
+					$trans_id = isset($_REQUEST['SID']) ? $_REQUEST['SID'] : '';
+				} else {
+					$trans_id = '';
+				}
 		}
 	
 		if(!empty($trans_id)) {

@@ -700,6 +700,7 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ) {
 			$data[$key] = $value;
 		}
+		$sid = ( isset($data['SID']) ) ? $data['SID'] : '';
 //usces_log('digitalcheck card : '.print_r($data, true), 'digitalcheck.log');
 
 		if( isset($data['SEQ']) ) {
@@ -708,6 +709,14 @@ function usces_action_acting_transaction(){
 //usces_log('ip_user_id : '.$ip_user_id, 'digitalcheck.log');
 			if( 'on' == $acting_opts['card_user_id'] and !empty($ip_user_id) ) {
 				$usces->set_member_meta_value('digitalcheck_ip_user_id', $ip_user_id, $ip_user_id);
+			}
+
+			$res = $usces->order_processing();
+			if( 'ordercompletion' == $res ) {
+				$order_id = $usces->cart->get_order_entry('ID');
+				$usces->set_order_meta_value( 'acting_digitalcheck_card', serialize( $data ), $order_id );
+			} else {
+				usces_log('digitalcheck card : order processing error', 'acting_transaction.log');
 			}
 
 			header('content-type : text/plain;charset=Shift_JIS');
