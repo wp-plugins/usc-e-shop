@@ -2330,7 +2330,7 @@ function usces_member_history( $out = '' ){
 		if( usces_is_membersystem_point() ){
 			$html .= '<th class="historyrow">' . __('Used points', 'usces') . '</th>';
 		}
-		$html .= '<th class="historyrow">' . __('Special Price', 'usces') . '</th>
+		$html .= '<th class="historyrow">' . apply_filters( 'usces_member_discount_label', __('Special Price', 'usces'), $umhs['ID'] ) . '</th>
 			<th class="historyrow">' . __('Shipping', 'usces') . '</th>
 			<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
 			<th class="historyrow">' . __('consumption tax', 'usces') . '</th>';

@@ -201,7 +201,7 @@ function addComma(str)
 <th class="historyrow"><?php _e('Purchase date', 'usces'); ?></th>
 <th class="historyrow"><?php _e('Purchase price', 'usces'); ?></th>
 <th class="historyrow"><?php _e('Used points','usces'); ?></th>
-<th class="historyrow"><?php _e('Special Price', 'usces'); ?></th>
+<th class="historyrow"><?php echo apply_filters( 'usces_member_discount_label', __('Special Price', 'usces'), $umhs['ID'] ); ?></th>
 <th class="historyrow"><?php _e('Shipping', 'usces'); ?></th>
 <th class="historyrow"><?php _e('C.O.D', 'usces'); ?></th>
 <th class="historyrow"><?php _e('consumption tax', 'usces'); ?></th>
