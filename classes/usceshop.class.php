@@ -2657,7 +2657,8 @@ class usc_e_shop
 	function ad_controller(){
 		global $usces_action;
 		ksort($usces_action);
-		if($this->is_maintenance()){
+		//if($this->is_maintenance()){
+		if($this->is_maintenance() and !is_user_logged_in()){//0000651
 			$this->maintenance();
 		}else{
 			$action_array = array('inCart', 'upButton', 'delButton', 'backCart', 'customerinfo', 'backCustomer', 
@@ -6934,7 +6935,7 @@ class usc_e_shop
 		if( !$seperator_flag ){
 			$seperator = '';
 		}
-		$price = number_format($amount, $decimal, $point, $seperator);
+		$price = number_format((double)$amount, $decimal, $point, $seperator);//0000652
 
 		if( $symbol_pre )
 			$price = ( usces_is_entity($symbol) ? mb_convert_encoding($symbol, 'UTF-8', 'HTML-ENTITIES') : $symbol ) . $price;
