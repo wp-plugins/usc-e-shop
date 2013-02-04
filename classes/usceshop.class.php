@@ -3483,6 +3483,8 @@ class usc_e_shop
 
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
 
+			do_action('usces_action_pre_edit_memberdata', $_POST['member'], $_POST['member_id']);
+
 			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
 			$pass = $wpdb->get_var( $query );
 
@@ -3513,6 +3515,7 @@ class usc_e_shop
 //20100818ysk start
 				$res = $this->reg_custom_member($_POST['member_id']);
 //20100818ysk end
+				do_action('usces_action_edit_memberdata', $_POST['member'], $_POST['member_id']);
 				$meta_keys = "'zeus_pcid', 'remise_pcid'";
 				$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
 						$_POST['member_id'] 
@@ -3580,7 +3583,7 @@ class usc_e_shop
 //20110714ysk end
 					$mser = usces_send_regmembermail($user);
 
-					do_action('usces_action_member_registered', $_POST['member']);
+					do_action('usces_action_member_registered', $_POST['member'], $user['ID']);
 
 					return 'newcompletion';
 
@@ -3642,7 +3645,7 @@ class usc_e_shop
 //20100818ysk end
 //20110714ysk end
 					//usces_send_regmembermail();
-					do_action('usces_action_member_registered', $_POST['customer']);
+					do_action('usces_action_member_registered', $_POST['customer'], $member_id);
 					$user = $_POST['customer'];
 					$user['ID'] = $member_id;
 					$mser = usces_send_regmembermail($user);
@@ -3661,6 +3664,8 @@ class usc_e_shop
 
 //20110715ysk start 0000203
 		} elseif ( $_POST['member_regmode'] == 'editmemberfromcart' ) {
+
+			do_action('usces_action_pre_edit_memberdata', $_POST['customer'], $_POST['member_id']);
 
 			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
 			$pass = $wpdb->get_var( $query );
@@ -3689,6 +3694,7 @@ class usc_e_shop
 			if( $res !== false ){
 				$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $_POST['member_id']);
 				$res = $this->reg_custom_member($_POST['member_id']);
+				do_action('usces_action_edit_memberdata', $_POST['customer'], $_POST['member_id']);
 				unset($_SESSION['usces_member']);
 				$this->member_just_login(trim($_POST['customer']['mailaddress1']), trim($_POST['customer']['password1']));
 				return 'newcompletion';
