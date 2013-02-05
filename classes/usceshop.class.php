@@ -2162,31 +2162,35 @@ class usc_e_shop
 <?php
 		if( 'order' == $admin_page ){
 ?>
-		var customerstate = $("#customer_pref").get(0).selectedIndex;
-		var customercountry = $("#customer_country").val();
-		var deliverystate = $("#delivery_pref").get(0).selectedIndex;
-		var deliverycountry = $("#delivery_country").val();
-		
-		$("#customer_country").change(function () {
-			var country = $("#customer_country option:selected").val();
-			uscesForm.changeStates( country, 'customer' ); 
-		});
-		$("#delivery_country").change(function () {
-			var country = $("#delivery_country option:selected").val();
-			uscesForm.changeStates( country, 'delivery' ); 
-		});
+		if( undefined != $("#customer_pref").get(0) && undefined != $("#delivery_country").get(0) ) {
+			var customerstate = $("#customer_pref").get(0).selectedIndex;
+			var customercountry = $("#customer_country").val();
+			var deliverystate = $("#delivery_pref").get(0).selectedIndex;
+			var deliverycountry = $("#delivery_country").val();
+			
+			$("#customer_country").change(function () {
+				var country = $("#customer_country option:selected").val();
+				uscesForm.changeStates( country, 'customer' ); 
+			});
+			$("#delivery_country").change(function () {
+				var country = $("#delivery_country option:selected").val();
+				uscesForm.changeStates( country, 'delivery' ); 
+			});
+		}
 <?php
 		}else if( 'member' == $admin_page ){
 ?>
-		var customerstate = $("#member_pref").get(0).selectedIndex;
-		var customercountry = $("#member_country").val();
-		var deliverystate = '';
-		var deliverycountry = '';
-		
-		$("#member_country").change(function () {
-			var country = $("#member_country option:selected").val();
-			uscesForm.changeStates( country, 'member' ); 
-		});
+		if( undefined != $("#member_pref").get(0) ) {
+			var customerstate = $("#member_pref").get(0).selectedIndex;
+			var customercountry = $("#member_country").val();
+			var deliverystate = '';
+			var deliverycountry = '';
+			
+			$("#member_country").change(function () {
+				var country = $("#member_country option:selected").val();
+				uscesForm.changeStates( country, 'member' ); 
+			});
+		}
 <?php
 		}
 ?>

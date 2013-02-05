@@ -300,7 +300,7 @@ $cart_delivery_script = "
 			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
 //20110722ysk start 0000210
 			//if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').get(0).selectedIndex) {
+			if($('#delivery_flag2').attr('checked') && undefined != $('#delivery_pref').get(0) && 0 < $('#delivery_pref').get(0).selectedIndex) {
 //20110722ysk end
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
@@ -313,7 +313,7 @@ $cart_delivery_script = "
 			//if($('#delivery_flag2').attr('checked') && 0 < $('#pref').attr('selectedIndex')) {
 //20110722ysk start 0000210
 			//if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').attr('selectedIndex')) {
-			if($('#delivery_flag2').attr('checked') && 0 < $('#delivery_pref').get(0).selectedIndex) {
+			if($('#delivery_flag2').attr('checked') && undefined != $('#delivery_pref').get(0) && 0 < $('#delivery_pref').get(0).selectedIndex) {
 //20110722ysk end
 				//delivery_pref = $('#pref').val();
 				delivery_pref = $('#delivery_pref').val();
