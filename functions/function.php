@@ -2168,6 +2168,7 @@ function usces_check_acting_return() {
 //20120618ysk end
 
 		default:
+			do_action( 'usces_action_check_acting_return_default' );
 			$results = $_GET;
 			if( $_REQUEST['result'] ){
 				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
