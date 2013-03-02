@@ -154,17 +154,26 @@ function paypal_ipn_check($usces_paypal_url) {
 		}
 	
 		// parse the data
-		$lines = explode("\n", $res);
-		$keyarray = array();
-		if (strcmp ($lines[0], "VERIFIED") == 0) {
+		if (preg_match("/VERIFIED/mi", $res) == 1){
 			$results[0] = true;
 			$results['payment_status'] = $payment_status;
 			$ret = true;
 			settlement_log('IPN[SUCCESS]');
-		}else if (strcmp ($lines[0], "FAIL") == 0) {
+		}else{
 			$results[0] = false;
 			settlement_log(__('IPN Refusal', 'usces') . "\n\t\t\t" . __("PayPal gives back 'FAIL'. Please confirm setting.", 'usces'));
 		}
+//		$lines = explode("\n", $res);
+//		$keyarray = array();
+//		if (strcmp ($lines[0], "VERIFIED") == 0) {
+//			$results[0] = true;
+//			$results['payment_status'] = $payment_status;
+//			$ret = true;
+//			settlement_log('IPN[SUCCESS]');
+//		}else if (strcmp ($lines[0], "FAIL") == 0) {
+//			$results[0] = false;
+//			settlement_log(__('IPN Refusal', 'usces') . "\n\t\t\t" . __("PayPal gives back 'FAIL'. Please confirm setting.", 'usces'));
+//		}
 	
 		fclose ($fp);
 	}

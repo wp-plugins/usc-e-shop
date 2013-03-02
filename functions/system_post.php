@@ -4,6 +4,7 @@
  */
 function usces_add_system_option( $option_name, $newvalue ){
 	global $usces;
+	$newvalue = $usces->stripslashes_deep_post($newvalue);
 	$option_value = get_option($option_name);
 
 	if( !empty($option_value) ){
@@ -44,6 +45,7 @@ function usces_add_system_option( $option_name, $newvalue ){
 
 function usces_update_system_option( $option_name, $index, $newvalue ){
 	global $usces;
+	$newvalue = $usces->stripslashes_deep_post($newvalue);
 	$option_value = get_option($option_name);
 
 	if( !empty($option_value) ){
@@ -342,7 +344,7 @@ function up_payment_method() {
 	$value['module'] = isset($_POST['module']) ? trim( $_POST['module'] ) : '';
 	$value['sort'] = isset($_POST['sort']) ?(int)$_POST['sort'] : 0;
 
-	if ( !empty( $value['name'] ) && $id != '') {
+	if ( !empty( $value['name'] ) && !WCUtils::is_blank($id) ) {
 
 		$id = usces_update_system_option( 'usces_payment_method', $id, $value );
 		
@@ -359,7 +361,7 @@ function del_payment_method() {
 	
 	$id = $_POST['id'];
 
-	if ( $id != '' ) {
+	if ( !WCUtils::is_blank($id) ) {
 
 		usces_del_system_option( 'usces_payment_method', $id );
 		
@@ -409,7 +411,7 @@ function add_delivery_method() {
 //20101119ysk end
 //20110317ysk start
 	//$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
-	$res = $newid . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'] . '#usces#' . $options['delivery_method'][$index]['intl'];
+	$res = $newid . '#usces#' . stripslashes($name) . '#usces#' . stripslashes($options['delivery_method'][$index]['time']) . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'] . '#usces#' . $options['delivery_method'][$index]['intl'];
 //20110317ysk end
 //20101208ysk end
 	return $res;
@@ -447,7 +449,7 @@ function update_delivery_method() {
 //20101119ysk end
 //20110317ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'];
-	$res = $id . '#usces#' . $name . '#usces#' . $options['delivery_method'][$index]['time'] . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'] . '#usces#' . $options['delivery_method'][$index]['intl'];
+	$res = $id . '#usces#' . stripslashes($name) . '#usces#' . stripslashes($options['delivery_method'][$index]['time']) . '#usces#' . $options['delivery_method'][$index]['charge'] . '#usces#' . $options['delivery_method'][$index]['days'] . '#usces#' . $options['delivery_method'][$index]['nocod'] . '#usces#' . $options['delivery_method'][$index]['intl'];
 //20110317ysk end
 //20101208ysk end
 	return $res;
@@ -541,7 +543,7 @@ function moveup_delivery_method() {
 //20101119ysk end
 //20110317ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $selected_id;
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $intl . '#usces#' . $selected_id;
+	$res = $id . '#usces#' . stripslashes($name) . '#usces#' . stripslashes($time) . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $intl . '#usces#' . $selected_id;
 //20110317ysk end
 //20101208ysk end
 	return $res;
@@ -620,7 +622,7 @@ function movedown_delivery_method() {
 //20101119ysk end
 //20110317ysk start
 	//$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $selected_id;
-	$res = $id . '#usces#' . $name . '#usces#' . $time . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $intl . '#usces#' . $selected_id;
+	$res = $id . '#usces#' . stripslashes($name) . '#usces#' . stripslashes($time) . '#usces#' . $charge . '#usces#' . $days . '#usces#' . $nocod . '#usces#' . $intl . '#usces#' . $selected_id;
 //20110317ysk end
 //20101208ysk end
 	return $res;

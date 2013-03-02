@@ -189,7 +189,7 @@ jQuery(document).ready(function($){
 <?php foreach ( (array)$rows as $array ) : ?>
 	<tr>
 	<?php foreach ( (array)$array as $key => $value ) : ?>
-		<?php if( $value == '' || $value == ' ' ) $value = '&nbsp;'; ?>
+		<?php if( WCUtils::is_blank($value) ) $value = '&nbsp;'; ?>
 		<?php if( $key == 'ID' ): ?>
 		<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=edit&member_id=' . esc_attr($value); ?>"><?php esc_html_e($value); ?></a></td>
 		<?php elseif( $key == 'name' ): ?>

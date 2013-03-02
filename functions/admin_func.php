@@ -4,7 +4,7 @@ function usces_states_form_js(){
 	
 	$js = '';
 	if( $usces->use_js 
-			&& ((  (is_page(USCES_MEMBER_NUMBER) || $usces->is_member_page($_SERVER['REQUEST_URI'])) && ((true === $usces->is_member_logged_in() && '' == $usces->page) || 'member' == $usces->page || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page)  )
+			&& ((  (is_page(USCES_MEMBER_NUMBER) || $usces->is_member_page($_SERVER['REQUEST_URI'])) && ((true === $usces->is_member_logged_in() && WCUtils::is_blank($usces->page)) || 'member' == $usces->page || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page)  )
 			|| (  (is_page(USCES_CART_NUMBER) || $usces->is_cart_page($_SERVER['REQUEST_URI'])) && ('customer' == $usces->page || 'delivery' == $usces->page)  ) 
 			)) {
 			
@@ -76,7 +76,7 @@ function usces_states_form_js(){
 				uscesForm.changeStates( country, "delivery" ); 
 			});';
 			
-		}elseif( (true === $usces->is_member_logged_in() && '' == $usces->page) || (true === $usces->is_member_logged_in() && 'member' == $usces->page) || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page ){
+		}elseif( (true === $usces->is_member_logged_in() && WCUtils::is_blank($usces->page)) || (true === $usces->is_member_logged_in() && 'member' == $usces->page) || 'editmemberform' == $usces->page || 'newmemberform' == $usces->page ){
 			
 			$js .= 'var customerstate = "";
 			var customercountry = "";
@@ -119,14 +119,14 @@ function usces_zeus_3dsecure_enrol(){
 
 	$data = array();
 
-	if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+	if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['history']['key'] = 'sendid';
 		$data['card']['history']['action'] = 'send_email';
 		$data['card']['cvv'] = $_POST['securecode'];
 		$data['payment']['amount'] = $_POST['money'];
-		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
+		if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
 			$data['payment']['count'] = '01';
@@ -142,12 +142,12 @@ function usces_zeus_3dsecure_enrol(){
 		$data['card']['number'] = $_POST['cardnumber'];
 		$data['card']['expires']['year'] = (int)$_POST['expyy'];
 		$data['card']['expires']['month'] = (int)$_POST['expmm'];
-		if( '1' == $acting_opts['security'] ){
+		if( 1 == $acting_opts['security'] ){
 			$data['card']['cvv'] = $_POST['securecode'];
 		}
 		$data['card']['name'] = $_POST['username'];
 		$data['payment']['amount'] = $_POST['money'];
-		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
+		if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
 			$data['payment']['count'] = '01';
@@ -326,12 +326,12 @@ function usces_zeus_secure_payreq(){
 
 	$data = array();
 
-	if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+	if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['history_action_send_email']['key'] = $_POST['sendid'];
 		$data['payment']['amount'] = $_POST['money'];
-		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
+		if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
 			$data['payment']['count'] = '01';
@@ -347,12 +347,12 @@ function usces_zeus_secure_payreq(){
 		$data['card']['number'] = $_POST['cardnumber'];
 		$data['card']['expires']['year'] = (int)$_POST['expyy'];
 		$data['card']['expires']['month'] = (int)$_POST['expmm'];
-		if( '1' == $acting_opts['security'] ){
+		if( 1 == $acting_opts['security'] ){
 			$data['card']['cvv'] = $_POST['securecode'];
 		}
 		$data['card']['name'] = $_POST['username'];
 		$data['payment']['amount'] = $_POST['money'];
-		if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
+		if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){	
 			$data['payment']['count'] = $_POST['div'];
 		}else{
 			$data['payment']['count'] = '01';
@@ -381,7 +381,7 @@ usces_log('zeus PayReq: ' . print_r($PayReq,true), 'acting_transaction.log');
 usces_log('usces_zeus_secure_payreq : PayReq'.print_r($PayReq, true), 'acting_transaction.log');
 	if( 'success' == $PayRes['response']['result']['status'] ){
 		usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
-		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month']);
+		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month'] . '&zeusordd=' . $PayRes['response']['order_number']);
 		exit;
 	}else{
 		usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');

@@ -485,11 +485,11 @@ jQuery(document).ready(function($){
 //20120612ysk start 0000501
 		$list_detail = '<td align="center"><input name="listcheck[]" type="checkbox" value="'.$array['ID'].'" /></td>';
 		foreach( (array)$array as $key => $value ) {
-			if( $value == '' || $value == ' ' ) $value = '&nbsp;';
+			if( WCUtils::is_blank($value) ) $value = '&nbsp;';
 			if( $key === 'ID' || $key === 'deco_id' ) {
 				$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.$curent_url.'">'.esc_html($value).'</a></td>';
 			} elseif( $key === 'mem_id' ) {
-				if( $value == '0' ) $value = '&nbsp;';
+				if( WCUtils::is_zero($value) ) $value = '&nbsp;';
 				$list_detail .= '<td>'.esc_html($value).'</td>';
 			} elseif( $key === 'name' ) {
 				switch ($applyform){

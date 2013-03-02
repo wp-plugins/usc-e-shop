@@ -202,7 +202,7 @@ function usces_upgrade_11(){
 					if( is_array($v) ){
 						$nov = '';
 						foreach((array)$v as $vs){
-							if(trim( $vs ) != '') 
+							if( !WCUtils::is_blank($vs) ) 
 								//$nov .= str_replace('\\', '&yen;', trim( $vs )) . "\n";
 								$nov .= $vs . "\n";
 						}
@@ -300,16 +300,16 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( isset($_POST["securecode"]) && !is_numeric($securecode) )
 				$mes .= __('セキュリティコードが不正です', 'usces') . "<br />";
 				
-			if ( '' == $_POST["expyy"] )
+			if ( WCUtils::is_blank($_POST["expyy"]) )
 				$mes .= __('カードの有効年を選択してください', 'usces') . "<br />";
 				
-			if ( '' == $_POST["expmm"] )
+			if ( WCUtils::is_blank($_POST["expmm"]) )
 				$mes .= __('カードの有効月を選択してください', 'usces') . "<br />";
 				
-			if ( '' == trim($_POST["username"]) )
+			if ( WCUtils::is_blank($_POST["username"]) )
 				$mes .= __('カード名義を入力してください', 'usces') . "<br />";
 				
-			if ( isset($_POST["howpay"]) && '0' == $_POST["howpay"] && '' == $_POST["cbrand"] )
+			if ( isset($_POST["howpay"]) && 0 == $_POST["howpay"] && WCUtils::is_blank($_POST["cbrand"]) )
 				$mes .= __('カードブランドを選択してください', 'usces') . "<br />";
 				
 			if ( 'zeus' != $_POST['acting'] )
@@ -530,7 +530,7 @@ function usces_filter_delivery_check_custom_order( $mes ) {
 			$name = $entry['name'];
 			$means = $entry['means'];
 			if($means == 2) {//Text
-				if(trim($_POST['custom_order'][$key]) == "")
+				if( WCUtils::is_blank($_POST['custom_order'][$key]) )
 					$mes .= __($name.'を入力してください。', 'usces')."<br />";
 			} else {
 				if(!isset($_POST['custom_order'][$key]) or $_POST['custom_order'][$key] == "#NONE#")
@@ -552,7 +552,7 @@ function usces_filter_customer_check_custom_customer( $mes ) {
 			$name = $entry['name'];
 			$means = $entry['means'];
 			if($means == 2) {//Text
-				if(trim($_POST['custom_customer'][$key]) == "")
+				if( WCUtils::is_blank($_POST['custom_customer'][$key]) )
 					$mes .= __($name.'を入力してください。', 'usces')."<br />";
 			} else {
 				if(!isset($_POST['custom_customer'][$key]) or $_POST['custom_customer'][$key] == "#NONE#")
@@ -575,7 +575,7 @@ function usces_filter_delivery_check_custom_delivery( $mes ) {
 				$name = $entry['name'];
 				$means = $entry['means'];
 				if($means == 2) {//Text
-					if(trim($_POST['custom_delivery'][$key]) == "")
+					if( WCUtils::is_blank($_POST['custom_delivery'][$key]) )
 						$mes .= __($name.'を入力してください。', 'usces')."<br />";
 				} else {
 					if(!isset($_POST['custom_delivery'][$key]) or $_POST['custom_delivery'][$key] == "#NONE#")
@@ -609,7 +609,7 @@ function usces_filter_member_check_custom_member( $mes ) {
 			$name = $entry['name'];
 			$means = $entry['means'];
 			if($means == 2) {//Text
-				if(trim($_POST['custom_member'][$key]) == "")
+				if( WCUtils::is_blank($_POST['custom_member'][$key]) )
 					$mes .= __($name.'を入力してください。', 'usces')."<br />";
 			} else {
 				if(!isset($_POST['custom_member'][$key]) or $_POST['custom_member'][$key] == "#NONE#")

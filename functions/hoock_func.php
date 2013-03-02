@@ -214,7 +214,7 @@ function usces_action_acting_transaction(){
 		
 		//usces_log('zeus construct_values2 : '.print_r($values,true), 'acting_transaction.log');
 		$value = unserialize($values['meta_value']);
-		$status = ( '03' == $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
+		$status = ( '03' === $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
 		$order_id = $values['order_id'];
 		$add_point = true;//20120306ysk 0000324
 		if( 'receipted,' == $status ){
@@ -287,7 +287,7 @@ function usces_action_acting_transaction(){
 		}else{
 		
 			$value = unserialize($values['meta_value']);
-			$status = ( '04' == $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
+			$status = ( '04' === $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
 			$order_id = $values['order_id'];
 			$add_point = true;//20120306ysk 0000324
 			if( 'receipted,' == $status ){

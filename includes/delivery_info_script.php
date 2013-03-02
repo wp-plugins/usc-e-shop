@@ -100,13 +100,13 @@ $html .= 'var shortest_delivery_time = '.(int)$usces->options['shortest_delivery
 $delivery_after_days = (!empty($usces->options['delivery_after_days'])) ? (int)$usces->options['delivery_after_days'] : 15;
 $html .= 'var delivery_after_days = '.$delivery_after_days.';';
 //配送先県(customer)
-$html .= 'var customer_pref = "'.$usces_entries['customer']['pref'].'";';
+$html .= 'var customer_pref = "'.esc_js($usces_entries['customer']['pref']).'";';
 //配送先県(customer/delivery)
 $delivery_pref = (isset($usces_entries['delivery']['pref']) && !empty($usces_entries['delivery']['pref'])) ? $usces_entries['delivery']['pref'] : $usces_entries['customer']['pref'];
-$html .= 'var delivery_pref = "'.$delivery_pref.'";';
+$html .= 'var delivery_pref = "'.esc_js($delivery_pref).'";';
 //20120710ysk start 0000472
 $delivery_country = (isset($usces_entries['delivery']['country']) && !empty($usces_entries['delivery']['country'])) ? $usces_entries['delivery']['country'] : $usces_entries['customer']['country'];
-$html .= 'var delivery_country = "'.$delivery_country.'";';
+$html .= 'var delivery_country = "'.esc_js($delivery_country).'";';
 //20120710ysk end
 //選択可能な配送方法に設定されている配達日数
 //20120612ysk start 0000501
@@ -155,6 +155,7 @@ foreach((array)$default_deli as $key => $id) {
 					foreach( (array)$target_market as $tm ) {
 						$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"] = [];';
 						foreach( (array)$prefs[$tm] as $pref) {
+							$pref = esc_js($pref);
 							$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"]["'.$pref.'"] = [];';
 							$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"]["'.$pref.'"].push("'.(int)$delivery_days[$i][$tm][$pref].'");';
 						}
@@ -183,7 +184,7 @@ while($business != 1) {
 $html .= 'var business_days = '.$business_days.';';
 //20110131ysk end
 
-$html .= 'selected_delivery_time = \'' . $usces_entries['order']['delivery_time'] . '\';
+$html .= 'selected_delivery_time = \'' . esc_js($usces_entries['order']['delivery_time']) . '\';
 		var delivery_time = [];delivery_time[0] = [];';
 
 foreach((array)$usces->options['delivery_method'] as $dmid => $dm){

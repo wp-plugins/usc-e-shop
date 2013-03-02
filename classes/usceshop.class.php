@@ -202,7 +202,7 @@ class usc_e_shop
 		$this->payment_structure = get_option('usces_payment_structure');
 		$this->display_mode = get_option('usces_display_mode');
 		define('USCES_MYSQL_VERSION', (int)substr(mysql_get_server_info(), 0, 1));
-		define('USCES_JP', ('ja' == get_locale() ? true : false));
+		define('USCES_JP', ('ja' === get_locale() ? true : false));
 		
 	}
 	
@@ -501,7 +501,7 @@ class usc_e_shop
 		global $wpdb, $wp_locale;
 		global $wp_query;
 		
-		if(empty($this->action_message) || $this->action_message == '') {
+		if(empty($this->action_message) || WCUtils::is_blank($this->action_message) ) {
 			$this->action_status = 'none';
 			$this->action_message = '';
 		}
@@ -535,7 +535,7 @@ class usc_e_shop
 	/* order list page */
 	function order_list_page() {
 
-		if(empty($this->action_message) || $this->action_message == '') {
+		if(empty($this->action_message) || WCUtils::is_blank($this->action_message) ) {
 			$this->action_status = 'none';
 			$this->action_message = '';
 		}
@@ -608,7 +608,7 @@ class usc_e_shop
 	/* member list page */
 	function member_list_page() {
 
-		if(empty($this->action_message) || $this->action_message == '') {
+		if(empty($this->action_message) || WCUtils::is_blank($this->action_message) ) {
 			$this->action_status = 'none';
 			$this->action_message = '';
 		}
@@ -621,7 +621,7 @@ class usc_e_shop
 //20100908ysk end
 			case 'editpost':
 				$this->error_message = $this->admin_member_check();
-				if($this->error_message == ''){
+				if( WCUtils::is_blank($this->error_message) ){
 					$res = usces_update_memberdata();
 					if ( 1 === $res ) {
 						$this->set_action_status('success', __('Membership information is updated','usces'));
@@ -655,7 +655,7 @@ class usc_e_shop
 	/* admin backup page */
 	function admin_backup_page() {
 
-		if(empty($this->action_message) || $this->action_message == '') {
+		if(empty($this->action_message) || WCUtils::is_blank($this->action_message) ) {
 			$this->action_status = 'none';
 			$this->action_message = '';
 		}
@@ -678,6 +678,7 @@ class usc_e_shop
 
 		if(isset($_POST['usces_option_update'])) {
 
+			$_POST = $this->stripslashes_deep_post($_POST);
 			$this->options['display_mode'] = isset($_POST['display_mode']) ? trim($_POST['display_mode']) : '';
 			$this->options['campaign_category'] = empty($_POST['cat']) ? USCES_ITEM_CAT_PARENT_ID : $_POST['cat'];
 			$this->options['campaign_privilege'] = isset($_POST['cat_privilege']) ? trim($_POST['cat_privilege']) : '';
@@ -730,6 +731,7 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+			$_POST = $this->stripslashes_deep_post($_POST);
 
 			$this->options['campaign_schedule'] = isset($_POST['campaign_schedule']) ? $_POST['campaign_schedule'] : '0';
 			if(isset($_POST['business_days'])) $this->options['business_days'] = $_POST['business_days'];
@@ -755,6 +757,7 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+			$_POST = $this->stripslashes_deep_post($_POST);
 
 //20101208ysk start
 			if(isset($_POST['delivery_time_limit'])) $this->options['delivery_time_limit'] = $_POST['delivery_time_limit'];
@@ -782,26 +785,27 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+			$_POST = $this->stripslashes_deep_post($_POST);
 		
 			$this->options['smtp_hostname'] = trim($_POST['smtp_hostname']);
 			$this->options['newmem_admin_mail'] = (int)$_POST['newmem_admin_mail'];
 		
 			foreach ( $_POST['title'] as $key => $value ) {
-				if( trim($value) == '' ) {
+				if( WCUtils::is_blank($value) ) {
 					$this->options['mail_data']['title'][$key] = $this->options['mail_default']['title'][$key];
 				}else{
 					$this->options['mail_data']['title'][$key] = trim($value);
 				}
 			}
 			foreach ( $_POST['header'] as $key => $value ) {
-				if( trim($value) == '' ) {
+				if( WCUtils::is_blank($value) ) {
 					$this->options['mail_data']['header'][$key] = $this->options['mail_default']['header'][$key];
 				}else{
 					$this->options['mail_data']['header'][$key] = $value;
 				}
 			}
 			foreach ( $_POST['footer'] as $key => $value ) {
-				if( trim($value) == '' ) {
+				if( WCUtils::is_blank($value) ) {
 					$this->options['mail_data']['footer'][$key] = $this->options['mail_default']['footer'][$key];
 				}else{
 					$this->options['mail_data']['footer'][$key] = $value;
@@ -815,17 +819,17 @@ class usc_e_shop
 		} else {
 		
 			foreach ( (array)$this->options['mail_data']['title'] as $key => $value ) {
-				if( trim($value) == '' ) {
+				if( WCUtils::is_blank($value) ) {
 					$this->options['mail_data']['title'][$key] = $this->options['mail_default']['title'][$key];
 				}
 			}
 			foreach ( (array)$this->options['mail_data']['header'] as $key => $value ) {
-				if( trim($value) == '' ) {
+				if( WCUtils::is_blank($value) ) {
 					$this->options['mail_data']['header'][$key] = $this->options['mail_default']['header'][$key];
 				}
 			}
 			foreach ( (array)$this->options['mail_data']['footer'] as $key => $value ) {
-				if( trim($value) == '' ) {
+				if( WCUtils::is_blank($value) ) {
 					$this->options['mail_data']['footer'][$key] = $this->options['mail_default']['footer'][$key];
 				}
 			}
@@ -848,6 +852,7 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+			$_POST = $this->stripslashes_deep_post($_POST);
 
 			foreach ( $this->options['indi_item_name'] as $key => $value ) {
 				$this->options['indi_item_name'][$key] = isset($_POST['indication'][$key]) ? 1 : 0;
@@ -884,6 +889,7 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+			$_POST = $this->stripslashes_deep_post($_POST);
 
 			foreach ( $_POST['header'] as $key => $value ) {
 				$this->options['member_page_data']['header'][$key] = $value;
@@ -919,6 +925,7 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+			$_POST = $this->stripslashes_deep_post($_POST);
 		
 //20110331ysk start
 /*			if($_POST['province'] != ''){
@@ -940,14 +947,14 @@ class usc_e_shop
 			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? trim($_POST['itemimg_anchor_rel']) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
 			$this->options['fukugo_category_order'] = isset($_POST['fukugo_category_order']) ? $_POST['fukugo_category_order'] : '';
-			$this->options['settlement_path'] = isset($_POST['settlement_path']) ? stripslashes($_POST['settlement_path']) : '';
-			if($this->options['settlement_path'] == '') $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
+			$this->options['settlement_path'] = isset($_POST['settlement_path']) ? $_POST['settlement_path'] : '';
+			if( WCUtils::is_blank($this->options['settlement_path']) ) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
 			$sl = substr($this->options['settlement_path'], -1);
 			if($sl != '/' && $sl != '\\') $this->options['settlement_path'] .= '/';
 			$this->options['use_ssl'] = isset($_POST['use_ssl']) ? 1 : 0;
-			$this->options['ssl_url'] = isset($_POST['ssl_url']) ? stripslashes(rtrim($_POST['ssl_url'], '/')) : '';
-			$this->options['ssl_url_admin'] = isset($_POST['ssl_url_admin']) ? stripslashes(rtrim($_POST['ssl_url_admin'], '/')) : '';
-			if( $this->options['ssl_url'] == '' || $this->options['ssl_url_admin'] == '' ) $this->options['use_ssl'] = 0;
+			$this->options['ssl_url'] = isset($_POST['ssl_url']) ? rtrim($_POST['ssl_url'], '/') : '';
+			$this->options['ssl_url_admin'] = isset($_POST['ssl_url_admin']) ? rtrim($_POST['ssl_url_admin'], '/') : '';
+			if( WCUtils::is_blank($this->options['ssl_url']) || WCUtils::is_blank($this->options['ssl_url_admin']) ) $this->options['use_ssl'] = 0;
 			$this->options['inquiry_id'] = isset($_POST['inquiry_id']) ? esc_html(rtrim($_POST['inquiry_id'])) : '';
 			$this->options['use_javascript'] = isset($_POST['use_javascript']) ? (int)$_POST['use_javascript'] : 1;
 			$this->options['system']['front_lang'] = (isset($_POST['front_lang']) && 'others' != $_POST['front_lang']) ? $_POST['front_lang'] : usces_get_local_language();
@@ -983,7 +990,7 @@ class usc_e_shop
 					//for($i = 0; $i < count($temp_pref); $i++) {
 						//$province[] = trim($temp_pref[$i]);
 					foreach( $temp_pref as $pref ) {
-						if( '' != trim($pref) ) 
+						if( !WCUtils::is_blank($pref) ) 
 							$province[] = trim($pref);
 					}
 					if( 1 == count($province) ) 
@@ -1009,7 +1016,7 @@ class usc_e_shop
 //20110331ysk end
 		} else {
 
-			if( !isset($this->options['province']) || $this->options['province'] == '' ){
+			if( !isset($this->options['province']) || !empty($this->options['province']) ){
 //20110331ysk start
 				//$this->options['province'] = get_option('usces_pref');
 				$this->options['province'][$this->options['system']['base_country']] = $usces_states[$this->options['system']['base_country']];
@@ -1036,6 +1043,7 @@ class usc_e_shop
 
 	
 		if( isset($_POST['usces_option_update']) ) {
+			$_POST = $this->stripslashes_deep_post($_POST);
 			$mes = '';
 		
 			switch( $_POST['acting'] ){
@@ -1046,13 +1054,13 @@ class usc_e_shop
 					$options['acting_settings']['zeus']['ipaddrs'] = isset($_POST['ipaddrs']) ? $_POST['ipaddrs'] : '';
 					$options['acting_settings']['zeus']['pay_cvs'] = isset($_POST['pay_cvs']) ? $_POST['pay_cvs'] : '';
 					$options['acting_settings']['zeus']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
-					$options['acting_settings']['zeus']['connection'] = isset($_POST['connection']) ? $_POST['connection'] : '1';
-					$options['acting_settings']['zeus']['3dsecur'] = isset($_POST['3dsecur']) ? $_POST['3dsecur'] : '2';
-					$options['acting_settings']['zeus']['security'] = isset($_POST['security']) ? $_POST['security'] : '2';
+					$options['acting_settings']['zeus']['connection'] = isset($_POST['connection']) ? $_POST['connection'] : 1;
+					$options['acting_settings']['zeus']['3dsecur'] = isset($_POST['3dsecur']) ? $_POST['3dsecur'] : 2;
+					$options['acting_settings']['zeus']['security'] = isset($_POST['security']) ? $_POST['security'] : 2;
 					if( isset($_POST['authkey']) ){
 						$options['acting_settings']['zeus']['authkey'] = $_POST['authkey'];
 					}
-					if( '1' == $options['acting_settings']['zeus']['security'] ){
+					if( 1 == $options['acting_settings']['zeus']['security'] ){
 						$options['acting_settings']['zeus']['quickcharge'] = '2';
 					}else{
 						$options['acting_settings']['zeus']['quickcharge'] = isset($_POST['quickcharge']) ? $_POST['quickcharge'] : '';
@@ -1067,16 +1075,16 @@ class usc_e_shop
 					$options['acting_settings']['zeus']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
 					$options['acting_settings']['zeus']['clientip_conv'] = isset($_POST['clientip_conv']) ? trim($_POST['clientip_conv']) : '';
 					$options['acting_settings']['zeus']['testid_conv'] = isset($_POST['testid_conv']) ? trim($_POST['testid_conv']) : '';
-					$options['acting_settings']['zeus']['test_type_conv'] = ( (isset($_POST['testid_conv']) && '' == $_POST['testid_conv']) || !isset($_POST['test_type']) ) ? '0' : $_POST['test_type'];
+					$options['acting_settings']['zeus']['test_type_conv'] = ( (isset($_POST['testid_conv']) && WCUtils::is_blank($_POST['testid_conv'])) || !isset($_POST['test_type']) ) ? 0 : $_POST['test_type'];
 					$options['acting_settings']['zeus']['conv_url'] = isset($_POST['conv_url']) ? $_POST['conv_url'] : '';
 
-					if( '' == trim($_POST['clientip']) && isset($_POST['card_activate']) && 'on' == $_POST['card_activate'])
+					if( WCUtils::is_blank($_POST['clientip']) && isset($_POST['card_activate']) && 'on' == $_POST['card_activate'])
 						$mes .= '※カード決済IPコードを入力して下さい<br />';
-					if( isset($_POST['authkey']) && '' == trim($_POST['authkey']) && isset($_POST['security']) && '3' == $_POST['security'])
+					if( isset($_POST['authkey']) && WCUtils::is_blank($_POST['authkey']) && isset($_POST['security']) && 3 == $_POST['security'])
 						$mes .= '※認証キーを入力して下さい<br />';
-					if( '' == trim($_POST['clientip_bank']) && isset($_POST['bank_activate']) && 'on' == $_POST['bank_activate'] )
+					if( WCUtils::is_blank($_POST['clientip_bank']) && isset($_POST['bank_activate']) && 'on' == $_POST['bank_activate'] )
 						$mes .= '※入金お任せIPコードを入力して下さい<br />';
-					if( '' == trim($_POST['clientip_conv']) && isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] )
+					if( WCUtils::is_blank($_POST['clientip_conv']) && isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] )
 						$mes .= '※コンビニ決済IPコードを入力して下さい<br />';
 					if( isset($_POST['batch']) && 'on' == $_POST['batch'] ) {
 						if( isset($_POST['quickcharge']) && 'on' == $_POST['quickcharge'] ) {
@@ -1087,7 +1095,7 @@ class usc_e_shop
 					if( !isset($_POST['card_url']) || empty($_POST['card_url']) || !isset($_POST['ipaddrs']) || empty($_POST['ipaddrs']) || !isset($_POST['bank_url']) || empty($_POST['bank_url']) || !isset($_POST['conv_url']) || empty($_POST['conv_url']) )
 						$mes .= '※設定が不正です！<br />';
 
-					if( '' == $mes ){
+					if( WCUtils::is_blank($mes) ){
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['zeus']['activate'] = 'on';
@@ -1144,11 +1152,11 @@ class usc_e_shop
 					$options['acting_settings']['remise']['send_url_cvs_pc_test'] = isset($_POST['send_url_cvs_pc_test']) ? $_POST['send_url_cvs_pc_test'] : '';
 					$options['acting_settings']['remise']['REMARKS3'] = isset($_POST['REMARKS3']) ? $_POST['REMARKS3'] : '';
 
-					if( isset($_POST['plan_remise']) && '0' === $_POST['plan_remise'] )
+					if( isset($_POST['plan_remise']) && WCUtils::is_zero($_POST['plan_remise']) )
 						$mes .= '※サービスプランを選択してください<br />';
-					if( '' == trim($_POST['SHOPCO']) )
+					if( WCUtils::is_blank($_POST['SHOPCO']) )
 						$mes .= '※加盟店コードを入力して下さい<br />';
-					if( '' == trim($_POST['HOSTID']) )
+					if( WCUtils::is_blank($_POST['HOSTID']) )
 						$mes .= '※ホスト番号を入力して下さい<br />';
 					if( isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] && empty($_POST['S_PAYDATE']) )
 						$mes .= '※支払期限を入力して下さい<br />';
@@ -1159,7 +1167,7 @@ class usc_e_shop
 					if( !isset($_POST['REMARKS3']) || empty($_POST['REMARKS3']) )
 						$mes .= '※設定が不正です！<br />';
 
-					if( '' == $mes ){
+					if( WCUtils::is_blank($mes) ){
 						//$this->zaction_status = 'success';
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
@@ -1199,12 +1207,12 @@ class usc_e_shop
 					$options['acting_settings']['jpayment']['bank_activate'] = isset($_POST['bank_activate']) ? $_POST['bank_activate'] : '';
 					$options['acting_settings']['jpayment']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
 
-					if( '' == trim($_POST['aid']) )
+					if( WCUtils::is_blank($_POST['aid']) )
 						$mes .= '※店舗IDコードを入力して下さい<br />';
 					if( isset($_POST['card_activate']) && 'on' == $_POST['card_activate'] && empty($_POST['card_jb']) )
 						$mes .= '※ジョブタイプを指定して下さい<br />';
 
-					if( '' == $mes ){
+					if( WCUtils::is_blank($mes) ){
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['jpayment']['activate'] = 'on';
@@ -1269,14 +1277,14 @@ class usc_e_shop
 
 					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
 						$mes .= '※PayPalサーバーが不正です<br />';
-					if( '' == trim($_POST['user']) )
+					if( WCUtils::is_blank($_POST['user']) )
 						$mes .= '※APIユーザー名を入力して下さい<br />';
-					if( '' == trim($_POST['pwd']) )
+					if( WCUtils::is_blank($_POST['pwd']) )
 						$mes .= '※APIパスワードを入力して下さい<br />';
-					if( '' == trim($_POST['signature']) )
+					if( WCUtils::is_blank($_POST['signature']) )
 						$mes .= '※署名を入力して下さい<br />';
 
-					if( '' == $mes ){
+					if( WCUtils::is_blank($mes) ){
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						if($options['acting_settings']['paypal']['sandbox'] == 1) {
@@ -1332,16 +1340,16 @@ class usc_e_shop
 					$options['acting_settings']['sbps']['mobile_auone'] = isset($_POST['mobile_auone']) ? $_POST['mobile_auone'] : '';
 					$options['acting_settings']['sbps']['mobile_mysoftbank'] = isset($_POST['mobile_mysoftbank']) ? $_POST['mobile_mysoftbank'] : '';
 
-					if( '' == trim($_POST['merchant_id']) )
+					if( WCUtils::is_blank($_POST['merchant_id']) )
 						$mes .= '※マーチャントIDを入力して下さい<br />';
-					if( '' == trim($_POST['service_id']) )
+					if( WCUtils::is_blank($_POST['service_id']) )
 						$mes .= '※サービスIDを入力して下さい<br />';
-					if( '' == trim($_POST['hash_key']) )
+					if( WCUtils::is_blank($_POST['hash_key']) )
 						$mes .= '※Hash KEYを入力して下さい<br />';
 					if( isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url']) )
 						$mes .= '※本番URLを入力して下さい<br />';
 
-					if( '' == $mes ){
+					if( WCUtils::is_blank($mes) ){
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['sbps']['activate'] = 'on';
@@ -1411,17 +1419,17 @@ class usc_e_shop
 					$options['acting_settings']['telecom']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 					$options['acting_settings']['telecom']['edy_activate'] = isset($_POST['edy_activate']) ? $_POST['edy_activate'] : '';
 
-					if( '' == trim($_POST['clientip']) )
+					if( WCUtils::is_blank($_POST['clientip']) )
 						$mes .= '※クライアントIPを入力して下さい<br />';
-					if( '' == trim($_POST['stype']) )
+					if( WCUtils::is_blank($_POST['stype']) )
 						$mes .= '※決済タイプを入力して下さい<br />';
 
-					if( '' == $mes ){
+					if( WCUtils::is_blank($mes) ){
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['telecom']['activate'] = 'on';
 						if( 'on' == $options['acting_settings']['telecom']['card_activate'] ){
-							if( 'E' === $options['acting_settings']['telecom']['stype'][0] ) {
+							if( 'E' == $options['acting_settings']['telecom']['stype'][0] ) {
 								$options['acting_settings']['telecom']['send_url'] = "https://www.credit-cgiserver.com/inetcredit/secure/order.pl";
 							} else {
 								$options['acting_settings']['telecom']['send_url'] = "https://secure.telecomcredit.co.jp/inetcredit/secure/order.pl";
@@ -1486,7 +1494,7 @@ class usc_e_shop
 				session_name( $options['usces_key'] );
 			}
 		}
-		if(isset($_GET['uscesid']) && ($_GET['uscesid'] != '')) {
+		if(isset($_GET['uscesid']) && !WCUtils::is_blank($_GET['uscesid'])) {
 			$sessid = $_GET['uscesid'];
 			$sessid = $this->uscesdc($sessid);
 			session_id($sessid);
@@ -1515,7 +1523,7 @@ class usc_e_shop
 		$none = NULL;
 		$cookie = $this->get_cookie();
 		
-		if( isset($_GET['uscesid']) && $_GET['uscesid'] != '' ){
+		if( isset($_GET['uscesid']) && !WCUtils::is_blank($_GET['uscesid']) ){
 			$sessid = base64_decode(urldecode($_GET['uscesid']));
 			list($sess, $addr, $rckid, $none) = explode('_', $sessid, 4);
 		}
@@ -1574,7 +1582,7 @@ class usc_e_shop
 				}
 			}
 		}else{
-			if( !isset($cookie['id']) || $cookie['id'] == '' ) {
+			if( !isset($cookie['id']) || WCUtils::is_blank($cookie['id']) ) {
 				$values = array(
 							'id' => md5(uniqid(rand(), true)),
 							'name' => '',
@@ -2207,10 +2215,10 @@ class usc_e_shop
 		update_option('usces_shipping_rule', apply_filters('usces_filter_shipping_rule', get_option('usces_shipping_rule')));
 		$this->shipping_rule = get_option('usces_shipping_rule');
 
-		$_wp_http_referer = isset($_POST['_wp_http_referer']) ? $_POST['_wp_http_referer'] : 'a';
-		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_wp_http_referer) ){
-			$_POST = $this->stripslashes_deep_post($_POST);
-		}
+//		$_wp_http_referer = isset($_POST['_wp_http_referer']) ? $_POST['_wp_http_referer'] : 'a';
+//		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_wp_http_referer) ){
+//			$_POST = $this->stripslashes_deep_post($_POST);
+//		}
 		
 		if( !is_admin() ){
 			$this->usces_cookie();
@@ -2807,12 +2815,12 @@ class usc_e_shop
 		$this->cart->entry();
 		$this->error_message = $this->zaiko_check();
 		$this->error_message = apply_filters( 'usces_filter_cart_check', $this->error_message );
-		if($this->error_message == ''){
+		if( WCUtils::is_blank($this->error_message) ){
 			if($this->is_member_logged_in()){
 //20100818ysk start
 				//$this->page = 'delivery';
 				$this->error_message = has_custom_customer_field_essential();
-				$this->page = ($this->error_message == '') ? 'delivery' : 'customer';
+				$this->page = ( WCUtils::is_blank($this->error_message) ) ? 'delivery' : 'customer';
 //20100818ysk end
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 			}else{
@@ -2858,7 +2866,7 @@ class usc_e_shop
 		if($this->member_login() == 'member') {
 			$this->cart->entry();
 			$this->error_message = has_custom_customer_field_essential();
-			if($this->error_message == ''){
+			if( WCUtils::is_blank($this->error_message) ){
 				$this->page = 'delivery';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 			}else{
@@ -2907,7 +2915,7 @@ class usc_e_shop
 		$this->cart->entry();
 		$this->error_message = $this->customer_check();
 
-		if( $this->error_message == '' ){
+		if( WCUtils::is_blank($this->error_message) ){
 			$this->page = 'delivery';
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_delivery');
 		}else{
@@ -2951,8 +2959,8 @@ class usc_e_shop
 		if(isset($_POST['confirm'])){
 			$this->error_message = $this->delivery_check();
 		}
-		$this->page = ($this->error_message == '') ? 'confirm' : 'delivery';
-		if( $this->error_message == '' ){
+		$this->page = ( WCUtils::is_blank($this->error_message) ) ? 'confirm' : 'delivery';
+		if( WCUtils::is_blank($this->error_message) ){
 //20120919ysk start 0000573
 			if( usces_is_member_system() && usces_is_member_system_point() && $this->is_member_logged_in() ) {
 				unset( $_SESSION['usces_entry']['order']['usedpoint'] );//20120914ysk 0000566
@@ -3006,7 +3014,7 @@ class usc_e_shop
 		do_action('usces_purchase_validate');
 		$entry = $this->cart->get_entry();
 		$this->error_message = $this->zaiko_check();
-		if($this->error_message == '' && 0 < $this->cart->num_row()){
+		if( WCUtils::is_blank($this->error_message) && 0 < $this->cart->num_row()){
 			$actinc_status = '';
 			$payments = $this->getPayments( $entry['order']['payment_name'] );
 			if( substr($payments['settlement'], 0, 6) == 'acting' && $entry['order']['total_full_price'] > 0 ){
@@ -3105,7 +3113,7 @@ class usc_e_shop
 	}
 	
 	function inquiry_button(){
-		if( isset($_POST['inq_name']) && '' != trim($_POST['inq_name']) && isset($_POST['inq_mailaddress']) && is_email( trim($_POST['inq_mailaddress']) ) && '' != trim($_POST['inq_contents']) ){
+		if( isset($_POST['inq_name']) && !WCUtils::is_blank($_POST['inq_name']) && isset($_POST['inq_mailaddress']) && is_email( trim($_POST['inq_mailaddress']) ) && !WCUtils::is_blank($_POST['inq_contents']) ){
 			$res = $this->inquiry_processing();
 		}else{
 			$res = 'deficiency';
@@ -3469,6 +3477,7 @@ class usc_e_shop
 
 	function regist_member() {
 		global $wpdb;
+		$_POST = $this->stripslashes_deep_post($_POST);
 
 		$member = $this->get_member();
 		$mode = $_POST['member_regmode'];
@@ -3752,6 +3761,7 @@ class usc_e_shop
 
 	function member_login() {
 		global $wpdb;
+		$_POST = $this->stripslashes_deep_post($_POST);
 		
 		$cookie = $this->get_cookie();
 
@@ -3795,6 +3805,7 @@ class usc_e_shop
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
 					$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
+					$_SESSION['usces_member']['status'] = $member['mem_status'];
 //20100818ysk start
 					$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -3804,9 +3815,9 @@ class usc_e_shop
 					return apply_filters( 'usces_filter_member_login', 'member', $member );
 				}
 			}
-		} else if ( isset($_POST['loginmail']) && $_POST['loginmail'] == '' && isset($_POST['loginpass']) && $_POST['loginpass'] == '' && isset($cookie['rme']) && $cookie['rme'] != 'forever' ) {
+		} else if ( isset($_POST['loginmail']) && WCUtils::is_blank($_POST['loginmail']) && isset($_POST['loginpass']) && WCUtils::is_blank($_POST['loginpass']) && isset($cookie['rme']) && $cookie['rme'] != 'forever' ) {
 			return 'login';
-		} else if ( isset($_POST['loginmail']) && $_POST['loginpass'] == '' && isset($cookie['rme']) && $cookie['rme'] != 'forever' ) {
+		} else if ( isset($_POST['loginmail']) && WCUtils::is_blank($_POST['loginpass']) && isset($cookie['rme']) && $cookie['rme'] != 'forever' ) {
 			$this->current_member['email'] = trim($_POST['loginmail']);
 			$this->error_message = __('<b>Error:</b> Enter the password.', 'usces');
 			return 'login';
@@ -3852,6 +3863,7 @@ class usc_e_shop
 					$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 					$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
 					$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
+					$_SESSION['usces_member']['status'] = $member['mem_status'];
 //20100818ysk start
 					$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -3906,6 +3918,7 @@ class usc_e_shop
 			$_SESSION['usces_member']['registered'] = $member['mem_registered'];
 			$_SESSION['usces_member']['nicename'] = $member['mem_nicename'];
 			$_SESSION['usces_member']['country'] = $this->get_member_meta_value('customer_country', $member['ID']);
+			$_SESSION['usces_member']['status'] = $member['mem_status'];
 //20100818ysk start
 			$this->set_session_custom_member($member['ID']);
 //20100818ysk end
@@ -3965,7 +3978,8 @@ class usc_e_shop
 					'tel' => '',
 					'fax' => '',
 					'country' => '',
-					'pref' => ''
+					'pref' => '',
+					'status' => ''
 				 );
 		if(!empty($_SESSION['usces_member'])) {
 			foreach ( $_SESSION['usces_member'] as $key => $value ) {
@@ -4121,6 +4135,7 @@ class usc_e_shop
 	}
 
 	function incart_check() {
+		//$_POST = $this->stripslashes_deep_post($_POST);
 		$mes = array();
 
 		$ids = array_keys($_POST['inCart']);
@@ -4134,9 +4149,9 @@ class usc_e_shop
 
 		if( 1 > $quant ){
 			$mes[$post_id][$sku] = __('enter the correct amount', 'usces') . "<br />";
-		}else if( $quant > (int)$itemRestriction && '' != $itemRestriction && '0' != $itemRestriction ){
+		}else if( $quant > (int)$itemRestriction && !WCUtils::is_blank($itemRestriction) && !WCUtils::is_zero($itemRestriction) ){
 			$mes[$post_id][$sku] = sprintf(__("This article is limited by %d at a time.", 'usces'), $itemRestriction) . "<br />";
-		}else if( $quant > (int)$stock && '' != $stock ){
+		}else if( $quant > (int)$stock && !WCUtils::is_blank($stock) ){
 			$mes[$post_id][$sku] = __('Sorry, stock is insufficient.', 'usces') . ' ' . __('Current stock', 'usces') . $stock . "<br />";
 		}else if( 1 < $zaiko_id ){
 			$mes[$post_id][$sku] = __('Sorry, this item is sold out.', 'usces') . "<br />";
@@ -4161,7 +4176,7 @@ class usc_e_shop
 						}
 					}
 				}else{ //case of text
-					if( $optValues['essential'] && '' == trim($_POST['itemOption'][$post_id][$sku][$value]) ){
+					if( $optValues['essential'] && WCUtils::is_blank($_POST['itemOption'][$post_id][$sku][$value]) ){
 						$mes[$post_id][$sku] .= sprintf(__("Input the %s", 'usces'), urldecode($value)) . "<br />";
 					}
 				}
@@ -4204,7 +4219,7 @@ class usc_e_shop
 			$zaiko_id = (int)$this->getItemZaikoStatusId($post_id, $sku_code);
 			$stock = $this->getItemZaikoNum($post_id, $sku_code);
 			if( !isset($stocks[$post_id][$sku]) ){
-				if( '' != $stock ){
+				if( !WCUtils::is_blank($stock) ){
 					$stocks[$post_id][$sku] = $stock;
 				}else{
 					$stocks[$post_id][$sku] = NULL;
@@ -4218,11 +4233,11 @@ class usc_e_shop
 
 			if( 1 > (int)$quant ){
 				$mes .= sprintf(__("Enter the correct amount for the No.%d item.", 'usces'), ($i+1)) . "<br />";
-			}else if( 1 < $zaiko_id || (0 == $stock && '' != $stock) ){
+			}else if( 1 < $zaiko_id || WCUtils::is_zero($stock) ){
 				$mes .= sprintf(__('Sorry, No.%d item is sold out.', 'usces'), ($i+1)) . "<br />";
-			}else if( $quant > (int)$itemRestriction && '' != $itemRestriction && '0' != $itemRestriction ){
+			}else if( $quant > (int)$itemRestriction && !WCUtils::is_blank($itemRestriction) && !WCUtils::is_zero($itemRestriction) ){
 				$mes .= sprintf(__('This article is limited by %1$d at a time for the No.%2$d item.', 'usces'), $itemRestriction, ($i+1)) . "<br />";
-			}else if( 0 > $stocks[$post_id][$sku] && '' != $stock ){
+			}else if( 0 > $stocks[$post_id][$sku] && !WCUtils::is_blank($stock) ){
 				$mes .= sprintf(__('Stock of No.%1$d item is remainder %2$d.', 'usces'), ($i+1), $checkstock) . "<br />";
 			}
 		}
@@ -4236,33 +4251,33 @@ class usc_e_shop
 			$_SESSION['usces_member'][$key] = trim($vlue);
 		}
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
-			if ( (trim($_POST['member']['password1']) != '' || trim($_POST['member']['password2']) != '') && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
+			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
-			if ( !is_email($_POST['member']['mailaddress1']) || trim($_POST['member']['mailaddress1']) == '' )
+			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 				
 		} else {
-			if ( trim($_POST['member']['password1']) == '' || trim($_POST['member']['password2']) == '' || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
+			if ( WCUtils::is_blank($_POST['member']['password1']) || WCUtils::is_blank($_POST['member']['password2']) || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
-			if ( !is_email($_POST['member']['mailaddress1']) || trim($_POST['member']['mailaddress1']) == '' || trim($_POST['member']['mailaddress2']) == '' || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
+			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress2']) || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 			
 		}
-		if ( trim($_POST["member"]["name1"]) == "" )
+		if ( WCUtils::is_blank($_POST["member"]["name1"]) )
 			$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //		if ( trim($_POST["member"]["name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( trim($_POST["member"]["zipcode"]) == "" )
+		if ( WCUtils::is_blank($_POST["member"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
 		if ( $_POST["member"]["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
-		if ( trim($_POST["member"]["address1"]) == "" )
+		if ( WCUtils::is_blank($_POST["member"]["address1"]) )
 			$mes .= __('enter the city name', 'usces') . "<br />";
-		if ( trim($_POST["member"]["address2"]) == "" )
+		if ( WCUtils::is_blank($_POST["member"]["address2"]) )
 			$mes .= __('enter house numbers', 'usces') . "<br />";
-		if ( trim($_POST["member"]["tel"]) == "" )
+		if ( WCUtils::is_blank($_POST["member"]["tel"]) )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
-		if( trim($_POST['member']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+		if( !WCUtils::is_blank($_POST['member']["tel"]) && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
 			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 			
 		$mes = apply_filters('usces_filter_member_check', $mes);
@@ -4272,25 +4287,25 @@ class usc_e_shop
 
 	function member_check_fromcart() {
 		$mes = '';
-		if ( trim($_POST['customer']['password1']) == '' || trim($_POST['customer']['password2']) == '' || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
+		if ( WCUtils::is_blank($_POST['customer']['password1']) || WCUtils::is_blank($_POST['customer']['password2']) || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
 			$mes .= __('Password is not correct.', 'usces') . "<br />";
-		if ( !is_email($_POST['customer']['mailaddress1']) || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
+		if ( !is_email($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress2']) || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["name1"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["name1"]) )
 			$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //		if ( trim($_POST["customer"]["name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["zipcode"]) == "" )
+		if ( tWCUtils::is_blank($_POST["customer"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
 		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["address1"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["address1"]) )
 			$mes .= __('enter the city name', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["address2"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["address2"]) )
 			$mes .= __('enter house numbers', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["tel"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["tel"]) )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
-		if( trim($_POST['customer']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["customer"]["tel"])) )
+		if( !WCUtils::is_blank($_POST['customer']["tel"]) && preg_match("/[^\d-]/", trim($_POST["customer"]["tel"])) )
 			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 	
 		$mes = apply_filters('usces_filter_member_check_fromcart', $mes);
@@ -4312,7 +4327,7 @@ class usc_e_shop
 					$mes .= __('This e-mail address has been already registered.', 'usces') . "<br />";
 			}
 		}
-		if ( trim($_POST['member']["name1"]) == "" )
+		if ( WCUtils::is_blank($_POST['member']["name1"]) )
 			$mes .= __('Name is not correct', 'usces') . "<br />";
 //		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
@@ -4326,7 +4341,7 @@ class usc_e_shop
 //			$mes .= __('enter house numbers', 'usces') . "<br />";
 //		if ( trim($_POST['member']["tel"]) == "" )
 //			$mes .= __('enter phone numbers', 'usces') . "<br />";
-		if( trim($_POST['member']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+		if( !WCUtils::is_blank($_POST['member']["tel"]) && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
 			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 
 		$mes = apply_filters('usces_filter_admin_member_check', $mes);
@@ -4336,23 +4351,23 @@ class usc_e_shop
 
 	function customer_check() {
 		$mes = '';
-		if ( !is_email($_POST['customer']['mailaddress1']) || trim($_POST['customer']['mailaddress1']) == '' || trim($_POST['customer']['mailaddress2']) == '' || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
+		if ( !is_email($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress2']) || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["name1"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["name1"]) )
 			$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //		if ( trim($_POST["customer"]["name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["zipcode"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
 		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["address1"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["address1"]) )
 			$mes .= __('enter the city name', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["address2"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["address2"]) )
 			$mes .= __('enter house numbers', 'usces') . "<br />";
-		if ( trim($_POST["customer"]["tel"]) == "" )
+		if ( WCUtils::is_blank($_POST["customer"]["tel"]) )
 			$mes .= __('enter phone numbers', 'usces') . "<br />";
-		if( trim($_POST['customer']["tel"]) != "" && preg_match("/[^\d-]/", trim($_POST["customer"]["tel"])) )
+		if( !WCUtils::is_blank($_POST['customer']["tel"]) && preg_match("/[^\d-]/", trim($_POST["customer"]["tel"])) )
 			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 	
 		$mes = apply_filters('usces_filter_customer_check', $mes);
@@ -4362,23 +4377,23 @@ class usc_e_shop
 
 	function delivery_check() {
 		$mes = '';
-		if ( isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == '1' ) {
-			if ( trim($_POST["delivery"]["name1"]) == "" )
+		if ( isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 1 ) {
+			if ( WCUtils::is_blank($_POST["delivery"]["name1"]) )
 				$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //			if ( trim($_POST["delivery"]["name3"]) == "" && USCES_JP )
 //				$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-			if ( trim($_POST["delivery"]["zipcode"]) == "" )
+			if ( WCUtils::is_blank($_POST["delivery"]["zipcode"]) )
 				$mes .= __('postal code is not correct', 'usces') . "<br />";
 			if ( $_POST["delivery"]["pref"] == __('-- Select --', 'usces') )
 				$mes .= __('enter the prefecture', 'usces') . "<br />";
-			if ( trim($_POST["delivery"]["address1"]) == "" )
+			if ( WCUtils::is_blank($_POST["delivery"]["address1"]) )
 				$mes .= __('enter the city name', 'usces') . "<br />";
-			if ( trim($_POST["delivery"]["address2"]) == "" )
+			if ( WCUtils::is_blank($_POST["delivery"]["address2"]) )
 				$mes .= __('enter house numbers', 'usces') . "<br />";
-			if ( trim($_POST["delivery"]["tel"]) == "" )
+			if ( WCUtils::is_blank($_POST["delivery"]["tel"]) )
 				$mes .= __('enter phone numbers', 'usces') . "<br />";
 		}
-		if ( !isset($_POST['offer']['delivery_method']) || (empty($_POST['offer']['delivery_method']) && $_POST['offer']['delivery_method'] != 0) )
+		if ( !isset($_POST['offer']['delivery_method']) || (empty($_POST['offer']['delivery_method']) && !WCUtils::is_zero($_POST['offer']['delivery_method'])) )
 			$mes .= __('chose one from delivery method.', 'usces') . "<br />";
 		if ( !isset($_POST['offer']['payment_name']) ){
 			$mes .= __('chose one from payment options.', 'usces') . "<br />";
@@ -4397,7 +4412,7 @@ class usc_e_shop
 //20101119ysk start
 		if(isset($_POST['offer']['delivery_method']) and isset($_POST['offer']['payment_name'])) {
 			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
-			if($this->options['delivery_method'][$d_method_index]['nocod'] == '1') {
+			if($this->options['delivery_method'][$d_method_index]['nocod'] == 1) {
 				$payments = $this->getPayments($_POST['offer']['payment_name']);
 				if('COD' == $payments['settlement'])
 					$mes .= __('COD is not available.', 'usces') . "<br />";
@@ -4410,11 +4425,11 @@ class usc_e_shop
 			$country = $_POST["delivery"]["country"];
 			$local_country = usces_get_base_country();
 			if($country == $local_country) {
-				if($this->options['delivery_method'][$d_method_index]['intl'] == '1') {
+				if($this->options['delivery_method'][$d_method_index]['intl'] == 1) {
 					$mes .= __('配送方法が誤っています。国際便は指定できません。', 'usces') . "<br />";
 				}
 			} else {
-				if($this->options['delivery_method'][$d_method_index]['intl'] == '0') {
+				if( WCUtils::is_zero($this->options['delivery_method'][$d_method_index]['intl']) ) {
 					$mes .= __('配送方法が誤っています。国際便を指定してください。', 'usces') . "<br />";
 				}
 			}
@@ -4431,7 +4446,7 @@ class usc_e_shop
 		$this->set_cart_fees( $member, $entries );
 		$mes = '';
 		if( isset($_POST['offer']["usedpoint"]) ) {
-			if ( trim($_POST['offer']["usedpoint"]) == "" || !preg_match("/^[0-9]+$/", $_POST['offer']["usedpoint"]) || (int)$_POST['offer']["usedpoint"] < 0 ) {
+			if ( WCUtils::is_blank($_POST['offer']["usedpoint"]) || !preg_match("/^[0-9]+$/", $_POST['offer']["usedpoint"]) || (int)$_POST['offer']["usedpoint"] < 0 ) {
 				$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 			} else {
 				if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
@@ -4463,7 +4478,7 @@ class usc_e_shop
 
 	function lostpass_mailaddcheck() {
 		$mes = '';
-		if ( !is_email($_POST['loginmail']) || trim($_POST['loginmail']) == '' ) {
+		if ( !is_email($_POST['loginmail']) || WCUtils::is_blank($_POST['loginmail']) ) {
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		}elseif( !$this->is_member($_POST['loginmail']) ){
 			$mes .= __('It is the e-mail address that there is not.', 'usces') . "<br />";
@@ -4474,7 +4489,7 @@ class usc_e_shop
 
 	function changepass_check() {
 		$mes = '';
-		if ( trim($_POST['loginpass1']) == '' || trim($_POST['loginpass2']) == '' || (trim($_POST['loginpass1']) != trim($_POST['loginpass2'])))
+		if ( WCUtils::is_blank($_POST['loginpass1']) || WCUtils::is_blank($_POST['loginpass2']) || (trim($_POST['loginpass1']) != trim($_POST['loginpass2'])))
 			$mes .= __('Password is not correct.', 'usces') . "<br />";
 
 		return $mes;
@@ -5067,7 +5082,7 @@ class usc_e_shop
 	function set_item_mime($post_id, $str)
 	{
 		global $wpdb;
-		if($str == '') return;
+		if( WCUtils::is_blank($str) ) return;
 		
 		$query = $wpdb->prepare("UPDATE $wpdb->posts SET post_mime_type = %s WHERE ID = %s", $str, $post_id);
 		$results = $wpdb->query( $query );
@@ -5481,6 +5496,7 @@ class usc_e_shop
 		global $wpdb;
 		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'attachment' LIMIT 1", $item_code);
 		$id = $wpdb->get_var( $query );
+		$id = apply_filters( 'usces_filter_get_mainpictid', $id, $item_code );
 		return $id;
 	}
 	
@@ -5620,14 +5636,14 @@ class usc_e_shop
 			header("location: " . $redirect . $query);
 			exit;
 			
-		}else if($acting_flg == 'acting_zeus_card' && '2' == $this->options['acting_settings']['zeus']['connection'] ){
-			if( '1' == $this->options['acting_settings']['zeus']['3dsecur'] ){
+		}else if($acting_flg == 'acting_zeus_card' && 2 == $this->options['acting_settings']['zeus']['connection'] ){
+			if( 1 == $this->options['acting_settings']['zeus']['3dsecur'] ){
 				if( !isset($_REQUEST['PaRes'])){
 	
 					usces_log('zeus card entry data2 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					usces_zeus_3dsecure_enrol();
 					
-				}else if( '1' == $this->options['acting_settings']['zeus']['3dsecur'] && isset($_REQUEST['PaRes'])){
+				}else if( 1 == $this->options['acting_settings']['zeus']['3dsecur'] && isset($_REQUEST['PaRes'])){
 		
 					usces_zeus_3dsecure_auth();
 				}
@@ -5635,7 +5651,7 @@ class usc_e_shop
 				$res = usces_zeus_secure_payreq();
 				return $res;
 			}
-		}else if($acting_flg == 'acting_zeus_card' && '1' == $this->options['acting_settings']['zeus']['connection'] ){
+		}else if($acting_flg == 'acting_zeus_card' && 1 == $this->options['acting_settings']['zeus']['connection'] ){
 		
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);
@@ -5645,7 +5661,7 @@ class usc_e_shop
 			$vars = 'send=mall';
 			$vars .= '&clientip=' . $acting_opts['clientip'];
 			$vars .= '&cardnumber=' . $_POST['cardnumber'];
-			if( '1' == $this->options['acting_settings']['zeus']['security'] ){
+			if( 1 == $this->options['acting_settings']['zeus']['security'] ){
 				$vars .= '&seccode=' . $_POST['securecode'];
 			}
 			$vars .= '&expyy=' . substr($_POST['expyy'], 2);
@@ -5657,7 +5673,7 @@ class usc_e_shop
 			$vars .= '&money=' . $_POST['money'];
 			$vars .= '&sendpoint=' . $_POST['sendpoint'];
 			$vars .= '&printord=' . $_POST['printord'];
-			if( isset($_POST['howpay']) && '0' === $_POST['howpay'] ){	
+			if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){	
 				$vars .= '&div=' . $_POST['div'];
 			}
 
@@ -5686,7 +5702,7 @@ class usc_e_shop
 					usces_log('zeus card entry data1 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					$ordd = usces_get_order_number( $page );
 //20120904ysk start 0000541
-					if ( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && '1' === $_POST['howpay']) ) {
+					if ( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && 1 == $_POST['howpay']) ) {
 						$args = '';
 					} else {
 						$div = 'div_'.$_POST['cbrand'];
@@ -5722,7 +5738,7 @@ class usc_e_shop
 			$vars .= '&pay_cvs=' . $_POST['pay_cvs'];
 			$vars .= '&sendid=' . $_POST['sendid'];
 			$vars .= '&sendpoint=' . $_POST['sendpoint'];
-			if( '' != $acting_opts['testid_conv'] ){	
+			if( !WCUtils::is_blank($acting_opts['testid_conv']) ){	
 				$vars .= '&testid=' . $acting_opts['testid_conv'];
 				$vars .= '&test_type=' . $acting_opts['test_type_conv'];
 			}
@@ -5860,7 +5876,7 @@ class usc_e_shop
 		$zaiko_num = trim($this->getItemZaikoNum($post_id, $sku));
 
 		if( false !== $zaiko_num 
-			&& ( 0 < (int)$zaiko_num || '' == $zaiko_num ) 
+			&& ( 0 < (int)$zaiko_num || WCUtils::is_blank($zaiko_num) ) 
 			&& false !== $status_num 
 			&& 2 > $status_num 
 		){
@@ -6517,7 +6533,7 @@ class usc_e_shop
 	
 	function is_gptekiyo( $post_id, $sku, $quant ) {
 		$skus = $this->get_skus( $post_id, 'code' );
-		if( !$skus[$sku]['gp'] ) return false;
+		if( !isset($skus[$sku]['gp']) || !$skus[$sku]['gp'] ) return false;
 
 		$GpN1 = $this->getItemGpNum1($post_id);
 		$GpN2 = $this->getItemGpNum2($post_id);
@@ -6801,7 +6817,7 @@ class usc_e_shop
 		global $wpdb;
 
 		//if( empty($meta_value) ) return;
-		if('' === $member_id) {
+		if( WCUtils::is_blank($member_id) ) {
 			if( !$this->is_member_logged_in() ) return;
 			$member = $this->get_member();
 			$member_id = $member['ID'];
@@ -7367,307 +7383,307 @@ class usc_e_shop
 		if( !empty($this->options['cart_page_data']['header']['cart']) ){
 			$html = $this->options['cart_page_data']['header']['cart'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_cart_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
 			$html = $this->options['cart_page_data']['footer']['cart'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_customer_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['customer']) ){
 			$html = $this->options['cart_page_data']['header']['customer'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_customer_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
 			$html = $this->options['cart_page_data']['footer']['customer'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_delivery_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
 			$html = $this->options['cart_page_data']['header']['delivery'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_delivery_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
 			$html = $this->options['cart_page_data']['footer']['delivery'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_confirm_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
 			$html = $this->options['cart_page_data']['header']['confirm'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_confirm_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
 			$html = $this->options['cart_page_data']['footer']['confirm'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_cartcompletion_page_header($html){
 		if( !empty($this->options['cart_page_data']['header']['completion']) ){
 			$html = $this->options['cart_page_data']['header']['completion'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_cartcompletion_page_footer($html){
 		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
 			$html = $this->options['cart_page_data']['footer']['completion'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_login_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['login']) ){
 			$html = $this->options['member_page_data']['header']['login'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_login_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['login']) ){
 			$html = $this->options['member_page_data']['footer']['login'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_newmember_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newmember']) ){
 			$html = $this->options['member_page_data']['header']['newmember'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_newmember_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
 			$html = $this->options['member_page_data']['footer']['newmember'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_newpass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['newpass']) ){
 			$html = $this->options['member_page_data']['header']['newpass'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_newpass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
 			$html = $this->options['member_page_data']['footer']['newpass'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_changepass_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['changepass']) ){
 			$html = $this->options['member_page_data']['header']['changepass'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_changepass_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
 			$html = $this->options['member_page_data']['footer']['changepass'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_memberinfo_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
 			$html = $this->options['member_page_data']['header']['memberinfo'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_memberinfo_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
 			$html = $this->options['member_page_data']['footer']['memberinfo'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_membercompletion_page_header($html){
 		if( !empty($this->options['member_page_data']['header']['completion']) ){
 			$html = $this->options['member_page_data']['header']['completion'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function filter_membercompletion_page_footer($html){
 		if( !empty($this->options['member_page_data']['footer']['completion']) ){
 			$html = $this->options['member_page_data']['footer']['completion'];
 		}
-		return do_shortcode( stripslashes($html) );
+		return do_shortcode( stripslashes(nl2br($html)) );
 	}
 	
 	function action_cart_page_header(){
 		if( !empty($this->options['cart_page_data']['header']['cart']) ){
 			$html = $this->options['cart_page_data']['header']['cart'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_cart_page_footer(){
 		if( !empty($this->options['cart_page_data']['footer']['cart']) ){
 			$html = $this->options['cart_page_data']['footer']['cart'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_customer_page_header(){
 		if( !empty($this->options['cart_page_data']['header']['customer']) ){
 			$html = $this->options['cart_page_data']['header']['customer'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_customer_page_footer(){
 		if( !empty($this->options['cart_page_data']['footer']['customer']) ){
 			$html = $this->options['cart_page_data']['footer']['customer'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_delivery_page_header(){
 		if( !empty($this->options['cart_page_data']['header']['delivery']) ){
 			$html = $this->options['cart_page_data']['header']['delivery'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_delivery_page_footer(){
 		if( !empty($this->options['cart_page_data']['footer']['delivery']) ){
 			$html = $this->options['cart_page_data']['footer']['delivery'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_confirm_page_header(){
 		if( !empty($this->options['cart_page_data']['header']['confirm']) ){
 			$html = $this->options['cart_page_data']['header']['confirm'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_confirm_page_footer(){
 		if( !empty($this->options['cart_page_data']['footer']['confirm']) ){
 			$html = $this->options['cart_page_data']['footer']['confirm'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_cartcompletion_page_header(){
 		if( !empty($this->options['cart_page_data']['header']['completion']) ){
 			$html = $this->options['cart_page_data']['header']['completion'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_cartcompletion_page_footer(){
 		if( !empty($this->options['cart_page_data']['footer']['completion']) ){
 			$html = $this->options['cart_page_data']['footer']['completion'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_login_page_header(){
 		if( !empty($this->options['member_page_data']['header']['login']) ){
 			$html = $this->options['member_page_data']['header']['login'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_login_page_footer(){
 		if( !empty($this->options['member_page_data']['footer']['login']) ){
 			$html = $this->options['member_page_data']['footer']['login'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_newmember_page_header(){
 		if( !empty($this->options['member_page_data']['header']['newmember']) ){
 			$html = $this->options['member_page_data']['header']['newmember'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_newmember_page_footer(){
 		if( !empty($this->options['member_page_data']['footer']['newmember']) ){
 			$html = $this->options['member_page_data']['footer']['newmember'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_newpass_page_header(){
 		if( !empty($this->options['member_page_data']['header']['newpass']) ){
 			$html = $this->options['member_page_data']['header']['newpass'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_newpass_page_footer(){
 		if( !empty($this->options['member_page_data']['footer']['newpass']) ){
 			$html = $this->options['member_page_data']['footer']['newpass'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_changepass_page_header(){
 		if( !empty($this->options['member_page_data']['header']['changepass']) ){
 			$html = $this->options['member_page_data']['header']['changepass'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_changepass_page_footer(){
 		if( !empty($this->options['member_page_data']['footer']['changepass']) ){
 			$html = $this->options['member_page_data']['footer']['changepass'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_memberinfo_page_header(){
 		if( !empty($this->options['member_page_data']['header']['memberinfo']) ){
 			$html = $this->options['member_page_data']['header']['memberinfo'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_memberinfo_page_footer(){
 		if( !empty($this->options['member_page_data']['footer']['memberinfo']) ){
 			$html = $this->options['member_page_data']['footer']['memberinfo'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_membercompletion_page_header(){
 		if( !empty($this->options['member_page_data']['header']['completion']) ){
 			$html = $this->options['member_page_data']['header']['completion'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	
 	function action_membercompletion_page_footer(){
 		if( !empty($this->options['member_page_data']['footer']['completion']) ){
 			$html = $this->options['member_page_data']['footer']['completion'];
-			echo do_shortcode( stripslashes($html) );
+			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
 	}
 	

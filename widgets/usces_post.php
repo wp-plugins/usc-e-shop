@@ -13,9 +13,9 @@ class Welcart_post extends WP_Widget {
     function widget($args, $instance) {		
         extract( $args );
 		$wid = str_replace('-', '_', $this->id);
-        $title = $instance['title'] == '' ? 'Welcart '.__('Post', 'usces') : $instance['title'];
-        $rows_num = $instance['rows_num'] == '' ? 3 : $instance['rows_num'];
-        $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
+        $title = WCUtils::is_blank($instance['title']) ? 'Welcart '.__('Post', 'usces') : $instance['title'];
+        $rows_num = WCUtils::is_blank($instance['rows_num']) ? 3 : $instance['rows_num'];
+        $icon = WCUtils::is_blank($instance['icon']) ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/infomation.png" alt="' . $title . '" width="24" height="24" />';
 		$img_path = file_exists(get_stylesheet_directory().'/images/post.png') ? get_stylesheet_directory_uri().'/images/post.png' : USCES_FRONT_PLUGIN_URL . '/images/post.png';
 		if($icon == 1) $before_title .= '<img src="' . $img_path . '" alt="' . $title . '" />';
@@ -41,9 +41,9 @@ class Welcart_post extends WP_Widget {
     /** @see WP_Widget::form */
     function form($instance) {				
 		$wid = ('welcart_post-__i__' != $this->id) ? str_replace('-', '_', $this->id) : '';
-        $title = $instance['title'] == '' ? 'Welcart '.__('Post', 'usces') : esc_attr($instance['title']);
-        $rows_num = $instance['rows_num'] == '' ? 3 : esc_attr($instance['rows_num']);
-		$icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
+        $title = WCUtils::is_blank($instance['title']) ? 'Welcart '.__('Post', 'usces') : esc_attr($instance['title']);
+        $rows_num = WCUtils::is_blank($instance['rows_num']) ? 3 : esc_attr($instance['rows_num']);
+		$icon = WCUtils::is_blank($instance['icon']) ? 1 : (int)$instance['icon'];
         ?>
             <p>ID : <?php echo $wid; ?></p>
             <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>

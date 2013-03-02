@@ -1,1 +1,146 @@
-﻿1
+﻿1[2013-02-06 18:33:37]	zeus card entry data2 (acting_processing) : Array
+(
+    [customer] => Array
+        (
+            [mailaddress1] => nanbu@collne.com
+            [mailaddress2] => nanbu@collne.com
+            [password1] => 
+            [password2] => 
+            [name1] => 南部
+            [name2] => 正光
+            [name3] => 
+            [name4] => 
+            [zipcode] => 910-0845
+            [address1] => 福井市志比口
+            [address2] => 3-2-14
+            [address3] => 
+            [tel] => 0776-67-2677
+            [fax] => 
+            [country] => JP
+            [pref] => 秋田県
+            [ID] => 1024
+            [point] => 0
+            [delivery_flag] => 0
+            [delivery] => 
+            [registered] => 2013-01-28 14:26:58
+            [nicename] => 
+        )
+
+    [delivery] => Array
+        (
+            [name1] => 南部
+            [name2] => 正光
+            [name3] => 
+            [name4] => 
+            [zipcode] => 910-0845
+            [address1] => 福井市志比口
+            [address2] => 3-2-14
+            [address3] => 
+            [tel] => 0776-67-2677
+            [fax] => 
+            [country] => JP
+            [pref] => 秋田県
+            [delivery_flag] => 0
+            [ID] => 1024
+            [mailaddress1] => nanbu@collne.com
+            [mailaddress2] => nanbu@collne.com
+            [point] => 0
+            [delivery] => 
+            [registered] => 2013-01-28 14:26:58
+            [nicename] => 
+        )
+
+    [order] => Array
+        (
+            [usedpoint] => 
+            [total_items_price] => 140.56
+            [discount] => 0
+            [shipping_charge] => 10
+            [cod_fee] => 0
+            [payment_name] => ゼウスカード
+            [delivery_method] => 1
+            [delivery_date] => 指定できません
+            [delivery_time] => ｄｈｇ
+            [total_full_price] => 157.56
+            [note] => 
+            [tax] => 7
+            [delidue_date] => 
+            [cus_id] => 
+            [total_price] => 150.56
+            [getpoint] => 8
+        )
+
+    [reserve] => Array
+        (
+            [pre_order_id] => 5112236e1b7d7
+        )
+
+    [condition] => Array
+        (
+            [display_mode] => Usualsale
+            [campaign_privilege] => discount
+            [campaign_category] => 3
+            [privilege_point] => 10
+            [privilege_discount] => 10
+        )
+
+    [custom_order] => Array
+        (
+            [rarar] => ｄ
+        )
+
+    [custom_customer] => Array
+        (
+            [aaaa] => 
+            [born_year] => 1930
+            [born_month] => 1
+            [born_day] => 1
+        )
+
+    [custom_delivery] => 
+)
+
+[2013-02-06 18:33:43]	usces_zeus_3dsecure_enrol : PayReq<?xml version="1.0" encoding="utf-8" ?><request service="secure_link_3d" action="payment"><xid>BQ17/+UWeE7ZQmLk9oOwQybCzzaKKyJuYNo/IPq27LM+34hW0JgaXAkskzh6ThgJLjhhEyM54tvwFQDIoV2ngA</xid></request>
+[2013-02-06 18:33:43]	zeus : PayResArray
+(
+    [response] => Array
+        (
+            [result] => Array
+                (
+                    [status] => success
+                    [code] => 000
+                )
+
+            [order_number] => TEST-183341-133193220
+            [card] => Array
+                (
+                    [number] => Array
+                        (
+                            [prefix] => 55
+                            [suffix] => 8825
+                        )
+
+                    [expires] => Array
+                        (
+                            [year] => 2017
+                            [month] => 4
+                        )
+
+                )
+
+        )
+
+)
+
+[2013-02-06 18:33:44]	Array
+(
+    [uscesid] => MDEwM2QyNjBhOWU2MjI1NWY2ODc4MTdlNDFlNzc1MGRhMzQ4NjNhOTVmMjMyNTYyXzIwMi4yMzguNjAuMTQ0XzBfQQ==
+    [acting] => zeus_card
+    [acting_return] => 1
+    [zeussuffix] => 8825
+    [zeusyear] => 2017
+    [zeusmonth] => 4
+    [zeusordd] => TEST-183341-133193220
+)
+
+[2013-02-06 18:33:44]	zeus card transaction : OK

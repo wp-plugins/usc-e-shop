@@ -62,7 +62,7 @@ class dataList
 			'continuation' => __('Continuation', 'usces'),
 			'termination' => __('Termination', 'usces')
 			);
-		$this->management_status = apply_filters( 'usces_filter_management_status', $management_status );
+		$this->management_status = apply_filters( 'usces_filter_management_status', $management_status, $this );
 
 		$this->SetSelects();
 		$this->SetJoinTables();
@@ -95,7 +95,7 @@ class dataList
 			END AS order_status", 
 			"order_modified"
 		);
-		$this->selectSql = apply_filters( 'usces_filter_order_list_sql_select', $select, $status_sql );
+		$this->selectSql = apply_filters( 'usces_filter_order_list_sql_select', $select, $status_sql, $this );
 	}
 
 	function SetJoinTables()
@@ -105,7 +105,7 @@ class dataList
 		$join_table = array(
 			"LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id'"
 		);
-		$this->joinTableSql = apply_filters( 'usces_filter_order_list_sql_jointable', $join_table, $meta_table );
+		$this->joinTableSql = apply_filters( 'usces_filter_order_list_sql_jointable', $join_table, $meta_table, $this );
 	}
 
 	function MakeTable()
@@ -341,6 +341,7 @@ class dataList
 			$join_table .= $value." ";
 		}
 		$query = "SELECT ".$select." FROM {$this->table} ".$join_table.$where.$order;
+		$query = apply_filters( 'usces_filter_order_list_get_rows', $query, $this);
 		//var_dump($query);
 		$wpdb->show_errors();
 
@@ -363,6 +364,7 @@ class dataList
 	{
 		global $wpdb;
 		$query = "SELECT COUNT(ID) AS ct FROM {$this->table}".apply_filters( 'usces_filter_order_list_sql_where', '' );
+		$query = apply_filters( 'usces_filter_order_list_set_total_row', $query, $this);
 		$res = $wpdb->get_var($query);
 		$this->totalRow = $res;
 	}
@@ -425,12 +427,12 @@ class dataList
 				break;
 		}
 		$str = apply_filters( 'usces_filter_order_list_sql_where', $str );
-		if($str == '' && $this->searchSql != ''){
+		if( WCUtils::is_blank($str) && !WCUtils::is_blank($this->searchSql) ){
 			$str = ' HAVING ' . $this->searchSql;
 		}else if($str != '' && $this->searchSql != ''){
 			$str .= ' HAVING ' . $this->searchSql;
 		}
-		return $str;
+		return apply_filters( 'usces_filter_order_list_get_where', $str, $this );
 	}
 	
 	function SearchIn()

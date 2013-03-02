@@ -8,7 +8,7 @@ function sc_direct_intoCart($atts) {
 		'options' => NULL,
 	), $atts));
 
-	if( '' == $item ||'' == $sku ) return '';
+	if( WCUtils::is_blank($item) || WCUtils::is_blank($sku) ) return '';
 	
 	$post_id = $usces->get_ID_byItemName($item);
 	
