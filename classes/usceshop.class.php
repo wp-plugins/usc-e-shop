@@ -4295,7 +4295,7 @@ class usc_e_shop
 			$mes .= __('Name is not correct', 'usces') . "<br />";//20111116ysk 0000299
 //		if ( trim($_POST["customer"]["name3"]) == "" && USCES_JP )
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
-		if ( tWCUtils::is_blank($_POST["customer"]["zipcode"]) )
+		if ( WCUtils::is_blank($_POST["customer"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
 		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
