@@ -57,14 +57,14 @@ function usces_order_confirm_message($order_id) {
 	$data = $wpdb->get_row( $query, ARRAY_A );
 	$deli = unserialize($data['order_delivery']);
 	$cart = unserialize($data['order_cart']);
-	$country = $usces->get_order_meta_value('country', $order_id);
+	$country = $usces->get_order_meta_value('customer_country', $order_id);
 	$customer = array(
 					'name1' => $data['order_name1'],
 					'name2' => $data['order_name2'],
 					'name3' => $data['order_name3'],
 					'name4' => $data['order_name4'],
 					'zipcode' => $data['order_zip'],
-					'country' => isset($usces_settings['country'][$country]) ? $usces_settings['country'][$country] : '',
+					'country' => $country,
 					'pref' => $data['order_pref'],
 					'address1' => $data['order_address1'],
 					'address2' => $data['order_address2'],
