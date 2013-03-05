@@ -1966,14 +1966,14 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 	}
 //usces_log('condition : '.print_r($condition,true), 'acting_transaction.log');
 
-	$post_id = explode("_", $post_ids);
-	$sku = explode("_", $skus);
-	$price = explode("_", $prices);
-	$quant = explode("_", $quants);
+	$post_id = explode("#usces#", $post_ids);
+	$sku = explode("#usces#", $skus);
+	$price = explode("#usces#", $prices);
+	$quant = explode("#usces#", $quants);
 	$cart = array();
 	for( $i = 0; $i < count($post_id); $i++ ) {
 		if( $post_id[$i] ) 
-			$cart[] = array( "post_id"=>$post_id[$i], "sku"=>$sku[$i], "price"=>$price[$i], "quantity"=>$quant[$i] );
+			$cart[] = array( "post_id"=>$post_id[$i], "sku"=>$sku[$i], "price"=>(int)$price[$i], "quantity"=>(int)$quant[$i] );
 	}
 
 	$total_items_price = 0;
@@ -2023,9 +2023,9 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 				}
 			}
 		} else {
-			foreach( $cart as $rows ) {
+			foreach( $cart as $cart_row ) {
 				$rate = get_post_meta( $cart_row['post_id'], '_itemPointrate', true );
-				$price = $cart_row['price'] * $rows['quantity'];
+				$price = $cart_row['price'] * $cart_row['quantity'];
 				$point += $price * $rate / 100;
 			}
 		}

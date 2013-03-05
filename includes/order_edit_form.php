@@ -501,20 +501,20 @@ jQuery(function($){
 			for( var i = 0; i < p.length; i++) {
 				name = $(p[i]).attr(\"name\");
 				strs = name.split('[');
-				post_ids += strs[2].replace(/[\]]+$/g, '')+'_';
-				skus += strs[3].replace(/[\]]+$/g, '')+'_';
-				prices += parseFloat($(p[i]).val())+'_';
-				quants += $(q[i]).val()+'_';
+				post_ids += strs[2].replace(/[\]]+$/g, '')+'#usces#';
+				skus += strs[3].replace(/[\]]+$/g, '')+'#usces#';
+				prices += parseFloat($(p[i]).val())+'#usces#';
+				quants += $(q[i]).val()+'#usces#';
 			}
 			var order_usedpoint = $(\"#order_usedpoint\").val()*1;
 			var order_shipping_charge = parseFloat($(\"#order_shipping_charge\").val());
 			var order_cod_fee = parseFloat($(\"#order_cod_fee\").val());
 			var s = orderfunc.settings;
 			s.url = uscesL10n.requestFile;
-			s.data = 'action=order_item_ajax&mode=recalculation&order_id=<?php echo $order_id; ?>&mem_id='+$('#member_id_label').html()+'&post_ids='+post_ids+'&skus='+skus+'&prices='+prices+'&quants='+quants+'&use_point='+order_usedpoint+'&shipping_charge='+order_shipping_charge+'&cod_fee='+order_cod_fee;
+			s.data = 'action=order_item_ajax&mode=recalculation&order_id='+$('#order_id').val()+'&mem_id='+$('#member_id_label').html()+'&post_ids='+post_ids+'&skus='+skus+'&prices='+prices+'&quants='+quants+'&use_point='+order_usedpoint+'&shipping_charge='+order_shipping_charge+'&cod_fee='+order_cod_fee;
 			s.success = function(data, dataType) {
 				var values = data.split('#usces#');
-				if( 'ok' == values[0]) {
+				if( 'ok' == values[0] ) {
 					$(\"#order_discount\").val(values[1]);
 					$(\"#order_tax\").val(values[2]);
 					$(\"#order_getpoint\").val(values[3]);
