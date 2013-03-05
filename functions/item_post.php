@@ -1973,7 +1973,7 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 	$cart = array();
 	for( $i = 0; $i < count($post_id); $i++ ) {
 		if( $post_id[$i] ) 
-			$cart[] = array( "post_id"=>$post_id[$i], "sku"=>$sku[$i], "price"=>(int)$price[$i], "quantity"=>(int)$quant[$i] );
+			$cart[] = array( "post_id"=>$post_id[$i], "sku"=>$sku[$i], "price"=>$price[$i], "quantity"=>$quant[$i] );
 	}
 
 	$total_items_price = 0;
