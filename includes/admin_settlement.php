@@ -217,7 +217,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_testtype_zeus');">テストタイプ</a></th>
-				<td><input name="test_type" type="radio" id="conv_testtype_zeus_1" value="0"<?php if( isset($opts['zeus']['test_type_conv']) && WCUtils::is_zero($opts['zeus']['test_type_conv') ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_1">入金テスト無し</label></td>
+				<td><input name="test_type" type="radio" id="conv_testtype_zeus_1" value="0"<?php if( isset($opts['zeus']['test_type_conv']) && WCUtils::is_zero($opts['zeus']['test_type_conv']) ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_1">入金テスト無し</label></td>
 				<td><input name="test_type" type="radio" id="conv_testtype_zeus_2" value="1"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 1 ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_2">売上確定テスト</label></td>
 				<td><input name="test_type" type="radio" id="conv_testtype_zeus_3" value="2"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 2 ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_3">売上取消テスト</label></td>
 				<td><div id="ex_conv_testtype_zeus" class="explanation"><?php _e('テスト環境でのテストタイプを指定します。テストカード番号が空白のときはこの項目は無効になります。', 'usces'); ?></div></td>
