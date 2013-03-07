@@ -125,8 +125,8 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th>クレジットカード決済</th>
-				<td><input name="card_activate" type="radio" id="card_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['card_activate']) && $opts['zeus']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_zeus_1">利用する</label></td>
-				<td><input name="card_activate" type="radio" id="card_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['card_activate']) && $opts['zeus']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_zeus_2">利用しない</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['card_activate']) && $opts['zeus']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_zeus_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['card_activate']) && $opts['zeus']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_zeus_2">利用しない</label></td>
 				<td colspan="2"></td>
 			</tr>
 			<tr>
@@ -136,8 +136,8 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_connection_zeus');"><?php _e('接続方式', 'usces'); ?></a></th>
-				<td><input name="connection" type="radio" id="connection_zeus_1" value="1"<?php if( isset($opts['zeus']['connection']) && $opts['zeus']['connection'] == 1 ) echo ' checked="checked"' ?> /></td><td><label for="connection_zeus_1">Secure Link</label></td>
-				<td><input name="connection" type="radio" id="connection_zeus_2" value="2"<?php if( isset($opts['zeus']['connection']) && $opts['zeus']['connection'] == 2 ) echo ' checked="checked"' ?> /></td><td><label for="connection_zeus_2">Secure API</label></td>
+				<td><input name="connection" type="radio" id="connection_zeus_1" value="1"<?php if( isset($opts['zeus']['connection']) && $opts['zeus']['connection'] == 1 ) echo ' checked="checked"'; ?> /></td><td><label for="connection_zeus_1">Secure Link</label></td>
+				<td><input name="connection" type="radio" id="connection_zeus_2" value="2"<?php if( isset($opts['zeus']['connection']) && $opts['zeus']['connection'] == 2 ) echo ' checked="checked"'; ?> /></td><td><label for="connection_zeus_2">Secure API</label></td>
 				<td colspan="2"><div id="ex_connection_zeus" class="explanation"><?php _e('認証接続方法。契約に従って指定する必要があります。', 'usces'); ?></div></td>
 			</tr>
 			<tr id="authkey_zeus">
@@ -147,42 +147,42 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_3dsecur_zeus');"><?php _e('3Dセキュア（※）', 'usces'); ?></a></th>
-				<td><input name="3dsecur" type="radio" id="3dsecur_zeus_1" value="1"<?php if( isset($opts['zeus']['3dsecur']) && $opts['zeus']['3dsecur'] == 1 ) echo ' checked="checked"' ?> /></td><td><label for="3dsecur_zeus_1">利用する</label></td>
-				<td><input name="3dsecur" type="radio" id="3dsecur_zeus_2" value="2"<?php if( isset($opts['zeus']['3dsecur']) && $opts['zeus']['3dsecur'] == 2 ) echo ' checked="checked"' ?> /></td><td><label for="3dsecur_zeus_2">利用しない</label></td>
+				<td><input name="3dsecur" type="radio" id="3dsecur_zeus_1" value="1"<?php if( isset($opts['zeus']['3dsecur']) && $opts['zeus']['3dsecur'] == 1 ) echo ' checked="checked"'; ?> /></td><td><label for="3dsecur_zeus_1">利用する</label></td>
+				<td><input name="3dsecur" type="radio" id="3dsecur_zeus_2" value="2"<?php if( isset($opts['zeus']['3dsecur']) && $opts['zeus']['3dsecur'] == 2 ) echo ' checked="checked"'; ?> /></td><td><label for="3dsecur_zeus_2">利用しない</label></td>
 				<td colspan="2"><div id="ex_3dsecur_zeus" class="explanation"><?php _e('3Dセキュアを利用するにはSecure APIを利用した接続が必要です。契約に従って指定する必要があります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_security_zeus');"><?php _e('セキュリティーコード（※）', 'usces'); ?></a></th>
-				<td><input name="security" type="radio" id="security_zeus_1" value="1"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == 1 ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_1">利用する</label></td>
-				<td><input name="security" type="radio" id="security_zeus_2" value="2"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == 2 ) echo ' checked="checked"' ?> /></td><td><label for="security_zeus_2">利用しない</label></td>
+				<td><input name="security" type="radio" id="security_zeus_1" value="1"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == 1 ) echo ' checked="checked"'; ?> /></td><td><label for="security_zeus_1">利用する</label></td>
+				<td><input name="security" type="radio" id="security_zeus_2" value="2"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == 2 ) echo ' checked="checked"'; ?> /></td><td><label for="security_zeus_2">利用しない</label></td>
 				<td colspan="2"><div id="ex_security_zeus" class="explanation"><?php _e('セキュリティーコードの入力を必須とするかどうかを指定します。契約に従って指定する必要があります。セキュリティーコードを利用した場合、クイックチャージは利用できません。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_quickcharge_zeus');">クイックチャージ</a></th>
-				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_1" value="on"<?php if( isset($opts['zeus']['quickcharge']) && $opts['zeus']['quickcharge'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_1">利用する</label></td>
-				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_2" value="off"<?php if( isset($opts['zeus']['quickcharge']) && $opts['zeus']['quickcharge'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="quickcharge_zeus_2">利用しない</label></td>
+				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_1" value="on"<?php if( isset($opts['zeus']['quickcharge']) && $opts['zeus']['quickcharge'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="quickcharge_zeus_1">利用する</label></td>
+				<td><input name="quickcharge" type="radio" id="quickcharge_zeus_2" value="off"<?php if( isset($opts['zeus']['quickcharge']) && $opts['zeus']['quickcharge'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="quickcharge_zeus_2">利用しない</label></td>
 				<td colspan="2"><div id="ex_quickcharge_zeus" class="explanation"><?php _e('ログインして一度購入したメンバーは、次の購入時にはカード番号を入力する必要がなくなります。', 'usces'); ?></div></td>
 			</tr>
 			<?php if( defined('WCEX_AUTO_DELIVERY') ): ?>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_batch_zeus');">バッチ処理</a></th>
-				<td><input name="batch" type="radio" id="batch_zeus_1" value="on"<?php if( isset($opts['zeus']['batch']) && $opts['zeus']['batch'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="batch_zeus_1">利用する</label></td>
-				<td><input name="batch" type="radio" id="batch_zeus_2" value="off"<?php if( isset($opts['zeus']['batch']) && $opts['zeus']['batch'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="batch_zeus_2">利用しない</label></td>
+				<td><input name="batch" type="radio" id="batch_zeus_1" value="on"<?php if( isset($opts['zeus']['batch']) && $opts['zeus']['batch'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="batch_zeus_1">利用する</label></td>
+				<td><input name="batch" type="radio" id="batch_zeus_2" value="off"<?php if( isset($opts['zeus']['batch']) && $opts['zeus']['batch'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="batch_zeus_2">利用しない</label></td>
 				<td colspan="2"><div id="ex_batch_zeus" class="explanation"><?php _e('ゼウス決済を定期購入でご利用の場合は、「利用する」にしてください。また、クイックチャージも「利用する」にしてください。', 'usces'); ?></div></td>
 			</tr>
 			<?php endif; ?>
 			<tr>
 				<th>お客様の支払方法</th>
-				<td><input name="howpay" type="radio" id="howpay_zeus_1" value="on"<?php if( isset($opts['zeus']['howpay']) && $opts['zeus']['howpay'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_1">分割払いに対応する</label></td>
-				<td><input name="howpay" type="radio" id="howpay_zeus_2" value="off"<?php if( isset($opts['zeus']['howpay']) && $opts['zeus']['howpay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_zeus_2">一括払いのみ</label></td>
+				<td><input name="howpay" type="radio" id="howpay_zeus_1" value="on"<?php if( isset($opts['zeus']['howpay']) && $opts['zeus']['howpay'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="howpay_zeus_1">分割払いに対応する</label></td>
+				<td><input name="howpay" type="radio" id="howpay_zeus_2" value="off"<?php if( isset($opts['zeus']['howpay']) && $opts['zeus']['howpay'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="howpay_zeus_2">一括払いのみ</label></td>
 				<td colspan="2"></td>
 			</tr>
 		</table>
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_zeus');">入金お任せサービス</a></th>
-				<td><input name="bank_activate" type="radio" id="bank_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['bank_activate']) && $opts['zeus']['bank_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="bank_activate_zeus_1">利用する</label></td>
-				<td><input name="bank_activate" type="radio" id="bank_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['bank_activate']) && $opts['zeus']['bank_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="bank_activate_zeus_2">利用しない</label></td>
+				<td><input name="bank_activate" type="radio" id="bank_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['bank_activate']) && $opts['zeus']['bank_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="bank_activate_zeus_1">利用する</label></td>
+				<td><input name="bank_activate" type="radio" id="bank_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['bank_activate']) && $opts['zeus']['bank_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="bank_activate_zeus_2">利用しない</label></td>
 				<td><div id="ex_bank_zeus" class="explanation"><?php _e('銀行振り込み支払いの自動照会機能です。振込みが有った場合、自動的に入金済みになり、入金確認メールが自動送信されます。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -200,8 +200,8 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_zeus');">コンビニ決済サービス</a></th>
-				<td><input name="conv_activate" type="radio" id="conv_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['conv_activate']) && $opts['zeus']['conv_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_zeus_1">利用する</label></td>
-				<td><input name="conv_activate" type="radio" id="conv_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['conv_activate']) && $opts['zeus']['conv_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_zeus_2">利用しない</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['conv_activate']) && $opts['zeus']['conv_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_zeus_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['conv_activate']) && $opts['zeus']['conv_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_zeus_2">利用しない</label></td>
 				<td colspan="2"></td>
 				<td><div id="ex_conv_zeus" class="explanation"><?php _e('コンビニ支払いができる決済サービスです。払い込みが有った場合、自動的に入金済みになります。', 'usces'); ?></div></td>
 			</tr>
@@ -217,9 +217,9 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_testtype_zeus');">テストタイプ</a></th>
-				<td><input name="test_type" type="radio" id="conv_testtype_zeus_1" value="0"<?php if( isset($opts['zeus']['test_type_conv']) && WCUtils::is_zero($opts['zeus']['test_type_conv']) ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_1">入金テスト無し</label></td>
-				<td><input name="test_type" type="radio" id="conv_testtype_zeus_2" value="1"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 1 ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_2">売上確定テスト</label></td>
-				<td><input name="test_type" type="radio" id="conv_testtype_zeus_3" value="2"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 2 ) echo ' checked="checked"' ?> /></td><td><label for="conv_testtype_zeus_3">売上取消テスト</label></td>
+				<td><input name="test_type" type="radio" id="conv_testtype_zeus_1" value="0"<?php if( isset($opts['zeus']['test_type_conv']) && WCUtils::is_zero($opts['zeus']['test_type_conv']) ) echo ' checked="checked"'; ?> /></td><td><label for="conv_testtype_zeus_1">入金テスト無し</label></td>
+				<td><input name="test_type" type="radio" id="conv_testtype_zeus_2" value="1"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 1 ) echo ' checked="checked"'; ?> /></td><td><label for="conv_testtype_zeus_2">売上確定テスト</label></td>
+				<td><input name="test_type" type="radio" id="conv_testtype_zeus_3" value="2"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 2 ) echo ' checked="checked"'; ?> /></td><td><label for="conv_testtype_zeus_3">売上取消テスト</label></td>
 				<td><div id="ex_conv_testtype_zeus" class="explanation"><?php _e('テスト環境でのテストタイプを指定します。テストカード番号が空白のときはこの項目は無効になります。', 'usces'); ?></div></td>
 			</tr>
 -->
@@ -294,41 +294,41 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th>クレジットカード決済</th>
-				<td><input name="card_activate" type="radio" id="card_activate_remise_1" value="on"<?php if( isset($opts['remise']['card_activate']) && $opts['remise']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_remise_1">利用する</label></td>
-				<td><input name="card_activate" type="radio" id="card_activate_remise_2" value="off"<?php if( isset($opts['remise']['card_activate']) && $opts['remise']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_remise_2">利用しない</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_remise_1" value="on"<?php if( isset($opts['remise']['card_activate']) && $opts['remise']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_remise_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_remise_2" value="off"<?php if( isset($opts['remise']['card_activate']) && $opts['remise']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_remise_2">利用しない</label></td>
 				<td><div></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_jb_remise');">ジョブコード</a></th>
-<!--			<td><input name="card_jb" type="radio" id="card_jb_remise_1" value="CHECK"<?php if( isset($opts['remise']['card_jb']) && $opts['remise']['card_jb'] == 'CHECK' ) echo ' checked' ?> /></td><td><label for="card_jb_remise_1">有効性チェック</label></td>
--->				<td><input name="card_jb" type="radio" id="card_jb_remise_2" value="AUTH"<?php if( isset($opts['remise']['card_jb']) && $opts['remise']['card_jb'] == 'AUTH' ) echo ' checked' ?> /></td><td><label for="card_jb_remise_2">仮売上処理</label></td>
-				<td><input name="card_jb" type="radio" id="card_jb_remise_3" value="CAPTURE"<?php if( isset($opts['remise']['card_jb']) && $opts['remise']['card_jb'] == 'CAPTURE' ) echo ' checked' ?> /></td><td><label for="card_jb_remise_3">売上処理</label></td>
+<!--			<td><input name="card_jb" type="radio" id="card_jb_remise_1" value="CHECK"<?php if( isset($opts['remise']['card_jb']) && $opts['remise']['card_jb'] == 'CHECK' ) echo ' checked'; ?> /></td><td><label for="card_jb_remise_1">有効性チェック</label></td>
+-->				<td><input name="card_jb" type="radio" id="card_jb_remise_2" value="AUTH"<?php if( isset($opts['remise']['card_jb']) && $opts['remise']['card_jb'] == 'AUTH' ) echo ' checked'; ?> /></td><td><label for="card_jb_remise_2">仮売上処理</label></td>
+				<td><input name="card_jb" type="radio" id="card_jb_remise_3" value="CAPTURE"<?php if( isset($opts['remise']['card_jb']) && $opts['remise']['card_jb'] == 'CAPTURE' ) echo ' checked'; ?> /></td><td><label for="card_jb_remise_3">売上処理</label></td>
 				<td><div id="ex_card_jb_remise" class="explanation"><?php _e('決済の種類を指定します', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_payquick_remise');">ペイクイック機能</a></th>
-				<td><input name="payquick" type="radio" id="payquick_remise_1" value="on"<?php if( isset($opts['remise']['payquick']) && $opts['remise']['payquick'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="payquick_remise_1">利用する</label></td>
-				<td><input name="payquick" type="radio" id="payquick_remise_2" value="off"<?php if( isset($opts['remise']['payquick']) && $opts['remise']['payquick'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="payquick_remise_2">利用しない</label></td>
+				<td><input name="payquick" type="radio" id="payquick_remise_1" value="on"<?php if( isset($opts['remise']['payquick']) && $opts['remise']['payquick'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="payquick_remise_1">利用する</label></td>
+				<td><input name="payquick" type="radio" id="payquick_remise_2" value="off"<?php if( isset($opts['remise']['payquick']) && $opts['remise']['payquick'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="payquick_remise_2">利用しない</label></td>
 				<td><div id="ex_payquick_remise" class="explanation"><?php _e('Welcart の会員システムを利用している場合、会員に対して2回目以降の決済の際、クレジットカード番号、有効期限、名義人の入力が不要となります。<br />クレジットカード情報はWelcart では保存せず、「ルミーズ」のデータベースにて安全に保管されます。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_howpay_remise');">お客様の支払方法</a></th>
-				<td><input name="howpay" type="radio" id="howpay_remise_1" value="on"<?php if( isset($opts['remise']['howpay']) && $opts['remise']['howpay'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_remise_1">分割払いに対応する</label></td>
-				<td><input name="howpay" type="radio" id="howpay_remise_2" value="off"<?php if( isset($opts['remise']['howpay']) && $opts['remise']['howpay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="howpay_remise_2">一括払いのみ</label></td>
+				<td><input name="howpay" type="radio" id="howpay_remise_1" value="on"<?php if( isset($opts['remise']['howpay']) && $opts['remise']['howpay'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="howpay_remise_1">分割払いに対応する</label></td>
+				<td><input name="howpay" type="radio" id="howpay_remise_2" value="off"<?php if( isset($opts['remise']['howpay']) && $opts['remise']['howpay'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="howpay_remise_2">一括払いのみ</label></td>
 				<td><div id="ex_howpay_remise" class="explanation"><?php _e('「一括払い」以外をご利用の場合はルミーズ側の設定が必要となります。前もってルミーズにお問合せください。<br >「スーパーバリュープラン」の場合は「一括払いのみ」を選択してください。', 'usces'); ?></div></td>
 			</tr>
 			<?php if( defined('WCEX_DLSELLER') ): ?>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_remise');">自動継続課金</a></th>
-				<td><input name="continuation" type="radio" id="continuation_remise_1" value="on"<?php if( isset($opts['remise']['continuation']) && $opts['remise']['continuation'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_remise_1">利用する</label></td>
-				<td><input name="continuation" type="radio" id="continuation_remise_2" value="off"<?php if( isset($opts['remise']['continuation']) && $opts['remise']['continuation'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_remise_2">利用しない</label></td>
+				<td><input name="continuation" type="radio" id="continuation_remise_1" value="on"<?php if( isset($opts['remise']['continuation']) && $opts['remise']['continuation'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="continuation_remise_1">利用する</label></td>
+				<td><input name="continuation" type="radio" id="continuation_remise_2" value="off"<?php if( isset($opts['remise']['continuation']) && $opts['remise']['continuation'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="continuation_remise_2">利用しない</label></td>
 				<td><div id="ex_continuation_remise" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくは「ルミーズ」にお問合せください。', 'usces'); ?></div></td>
 			</tr>
 			<?php endif; ?>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_pc_ope_remise');">稼働環境</a></th>
-				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_1" value="test"<?php if( isset($opts['remise']['card_pc_ope']) && $opts['remise']['card_pc_ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="card_pc_ope_remise_1">テスト環境</label></td>
-				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_2" value="public"<?php if( isset($opts['remise']['card_pc_ope']) && $opts['remise']['card_pc_ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="card_pc_ope_remise_2">本番環境</label></td>
+				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_1" value="test"<?php if( isset($opts['remise']['card_pc_ope']) && $opts['remise']['card_pc_ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="card_pc_ope_remise_1">テスト環境</label></td>
+				<td><input name="card_pc_ope" type="radio" id="card_pc_ope_remise_2" value="public"<?php if( isset($opts['remise']['card_pc_ope']) && $opts['remise']['card_pc_ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="card_pc_ope_remise_2">本番環境</label></td>
 				<td><div id="ex_card_pc_ope_remise" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -347,8 +347,8 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_remise');">コンビニ・電子マネー決済</a></th>
-				<td><input name="conv_activate" type="radio" id="conv_activate_remise_1" value="on"<?php if( isset($opts['remise']['conv_activate']) && $opts['remise']['conv_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_remise_1">利用する</label></td>
-				<td><input name="conv_activate" type="radio" id="conv_activate_remise_2" value="off"<?php if( isset($opts['remise']['conv_activate']) && $opts['remise']['conv_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_remise_2">利用しない</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_remise_1" value="on"<?php if( isset($opts['remise']['conv_activate']) && $opts['remise']['conv_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_remise_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_remise_2" value="off"<?php if( isset($opts['remise']['conv_activate']) && $opts['remise']['conv_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_remise_2">利用しない</label></td>
 				<td><div id="ex_conv_remise" class="explanation"><?php _e('コンビニ・電子マネー決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -358,8 +358,8 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_pc_ope_remise');">稼働環境</a></th>
-				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_1" value="test"<?php if( isset($opts['remise']['conv_pc_ope']) && $opts['remise']['conv_pc_ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="conv_pc_ope_remise_1">テスト環境</label></td>
-				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_2" value="public"<?php if( isset($opts['remise']['conv_pc_ope']) && $opts['remise']['conv_pc_ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="conv_pc_ope_remise_2">本番環境</label></td>
+				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_1" value="test"<?php if( isset($opts['remise']['conv_pc_ope']) && $opts['remise']['conv_pc_ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_pc_ope_remise_1">テスト環境</label></td>
+				<td><input name="conv_pc_ope" type="radio" id="conv_pc_ope_remise_2" value="public"<?php if( isset($opts['remise']['conv_pc_ope']) && $opts['remise']['conv_pc_ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_pc_ope_remise_2">本番環境</label></td>
 				<td><div id="ex_conv_pc_ope_remise" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -415,23 +415,23 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_jpayment');">クレジットカード決済</a></th>
-				<td><input name="card_activate" type="radio" id="card_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['card_activate']) && $opts['jpayment']['card_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="card_activate_jpayment_1">利用する</label></td>
-				<td><input name="card_activate" type="radio" id="card_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['card_activate']) && $opts['jpayment']['card_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="card_activate_jpayment_2">利用しない</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['card_activate']) && $opts['jpayment']['card_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="card_activate_jpayment_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['card_activate']) && $opts['jpayment']['card_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="card_activate_jpayment_2">利用しない</label></td>
 				<td><div id="ex_card_jpayment" class="explanation"><?php _e('クレジットカード決済を利用するかどうか<br />※自動継続課金には対応していません。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_jb_jpayment');">ジョブタイプ</a></th>
-<!--			<td><input name="card_jb" type="radio" id="card_jb_jpayment_1" value="CHECK"<?php if( isset($opts['jpayment']['card_jb']) && $opts['jpayment']['card_jb'] == 'CHECK' ) echo ' checked' ?> /></td><td><label for="card_jb_jpayment_1">有効性チェック</label></td>
--->				<td><input name="card_jb" type="radio" id="card_jb_jpayment_2" value="AUTH"<?php if( isset($opts['jpayment']['card_jb']) && $opts['jpayment']['card_jb'] == 'AUTH' ) echo ' checked' ?> /></td><td><label for="card_jb_jpayment_2">仮売上処理</label></td>
-				<td><input name="card_jb" type="radio" id="card_jb_jpayment_3" value="CAPTURE"<?php if( isset($opts['jpayment']['card_jb']) && $opts['jpayment']['card_jb'] == 'CAPTURE' ) echo ' checked' ?> /></td><td><label for="card_jb_jpayment_3">仮実同時売上処理</label></td>
+<!--			<td><input name="card_jb" type="radio" id="card_jb_jpayment_1" value="CHECK"<?php if( isset($opts['jpayment']['card_jb']) && $opts['jpayment']['card_jb'] == 'CHECK' ) echo ' checked'; ?> /></td><td><label for="card_jb_jpayment_1">有効性チェック</label></td>
+-->				<td><input name="card_jb" type="radio" id="card_jb_jpayment_2" value="AUTH"<?php if( isset($opts['jpayment']['card_jb']) && $opts['jpayment']['card_jb'] == 'AUTH' ) echo ' checked'; ?> /></td><td><label for="card_jb_jpayment_2">仮売上処理</label></td>
+				<td><input name="card_jb" type="radio" id="card_jb_jpayment_3" value="CAPTURE"<?php if( isset($opts['jpayment']['card_jb']) && $opts['jpayment']['card_jb'] == 'CAPTURE' ) echo ' checked'; ?> /></td><td><label for="card_jb_jpayment_3">仮実同時売上処理</label></td>
 				<td><div id="ex_card_jb_jpayment" class="explanation"><?php _e('決済の種類を指定します', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_jpayment');">コンビニ決済</a></th>
-				<td><input name="conv_activate" type="radio" id="conv_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['conv_activate']) && $opts['jpayment']['conv_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="conv_activate_jpayment_1">利用する</label></td>
-				<td><input name="conv_activate" type="radio" id="conv_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['conv_activate']) && $opts['jpayment']['conv_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="conv_activate_jpayment_2">利用しない</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['conv_activate']) && $opts['jpayment']['conv_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="conv_activate_jpayment_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['conv_activate']) && $opts['jpayment']['conv_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="conv_activate_jpayment_2">利用しない</label></td>
 				<td><div id="ex_conv_jpayment" class="explanation"><?php _e('コンビニ（ペーパーレス）決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
 		</table>
@@ -439,8 +439,8 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_webm_jpayment');">WebMoney決済</a></th>
-				<td><input name="webm_activate" type="radio" id="webm_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['webm_activate']) && $opts['jpayment']['webm_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="webm_activate_jpayment_1">利用する</label></td>
-				<td><input name="webm_activate" type="radio" id="webm_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['webm_activate']) && $opts['jpayment']['webm_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="webm_activate_jpayment_2">利用しない</label></td>
+				<td><input name="webm_activate" type="radio" id="webm_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['webm_activate']) && $opts['jpayment']['webm_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="webm_activate_jpayment_1">利用する</label></td>
+				<td><input name="webm_activate" type="radio" id="webm_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['webm_activate']) && $opts['jpayment']['webm_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="webm_activate_jpayment_2">利用しない</label></td>
 				<td><div></div></td><td><div></div></td>
 				<td><div id="ex_webm_jpayment" class="explanation"><?php _e('電子マネー（WebMoney）決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
@@ -448,16 +448,16 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bitc_jpayment');">BitCash決済</a></th>
-				<td><input name="bitc_activate" type="radio" id="bitc_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['bitc_activate']) && $opts['jpayment']['bitc_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="bitc_activate_jpayment_1">利用する</label></td>
-				<td><input name="bitc_activate" type="radio" id="bitc_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['bitc_activate']) && $opts['jpayment']['bitc_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="bitc_activate_jpayment_2">利用しない</label></td>
+				<td><input name="bitc_activate" type="radio" id="bitc_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['bitc_activate']) && $opts['jpayment']['bitc_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="bitc_activate_jpayment_1">利用する</label></td>
+				<td><input name="bitc_activate" type="radio" id="bitc_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['bitc_activate']) && $opts['jpayment']['bitc_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="bitc_activate_jpayment_2">利用しない</label></td>
 				<td><div id="ex_bitc_jpayment" class="explanation"><?php _e('電子マネー（BitCash）決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_suica_jpayment');">モバイルSuica決済</a></th>
-				<td><input name="suica_activate" type="radio" id="suica_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['suica_activate']) && $opts['jpayment']['suica_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="suica_activate_jpayment_1">利用する</label></td>
-				<td><input name="suica_activate" type="radio" id="suica_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['suica_activate']) && $opts['jpayment']['suica_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="suica_activate_jpayment_2">利用しない</label></td>
+				<td><input name="suica_activate" type="radio" id="suica_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['suica_activate']) && $opts['jpayment']['suica_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="suica_activate_jpayment_1">利用する</label></td>
+				<td><input name="suica_activate" type="radio" id="suica_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['suica_activate']) && $opts['jpayment']['suica_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="suica_activate_jpayment_2">利用しない</label></td>
 				<td><div id="ex_suica_jpayment" class="explanation"><?php _e('電子マネー（モバイルSuica）決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
 		</table>
@@ -465,8 +465,8 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_jpayment');">バンクチェック決済</a></th>
-				<td><input name="bank_activate" type="radio" id="bank_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['bank_activate']) && $opts['jpayment']['bank_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="bank_activate_jpayment_1">利用する</label></td>
-				<td><input name="bank_activate" type="radio" id="bank_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['bank_activate']) && $opts['jpayment']['bank_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="bank_activate_jpayment_2">利用しない</label></td>
+				<td><input name="bank_activate" type="radio" id="bank_activate_jpayment_1" value="on"<?php if( isset($opts['jpayment']['bank_activate']) && $opts['jpayment']['bank_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="bank_activate_jpayment_1">利用する</label></td>
+				<td><input name="bank_activate" type="radio" id="bank_activate_jpayment_2" value="off"<?php if( isset($opts['jpayment']['bank_activate']) && $opts['jpayment']['bank_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="bank_activate_jpayment_2">利用しない</label></td>
 				<td><div id="ex_bank_jpayment" class="explanation"><?php _e('バンクチェック決済を利用するかどうか', 'usces'); ?></div></td>
 			</tr>
 		</table>
@@ -498,14 +498,14 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ec_activate_paypal');"><?php _e('PayPal Settlement', 'usces'); ?></a></th>
-				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_1" value="on"<?php if( isset($opts['paypal']['ec_activate']) && $opts['paypal']['ec_activate'] == 'on' ) echo ' checked' ?> /></td><td><label for="ec_activate_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
-				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_2" value="off"<?php if( isset($opts['paypal']['ec_activate']) && $opts['paypal']['ec_activate'] == 'off' ) echo ' checked' ?> /></td><td><label for="ec_activate_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
+				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_1" value="on"<?php if( isset($opts['paypal']['ec_activate']) && $opts['paypal']['ec_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="ec_activate_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
+				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_2" value="off"<?php if( isset($opts['paypal']['ec_activate']) && $opts['paypal']['ec_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="ec_activate_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
 				<td><div id="ex_ec_activate_paypal" class="explanation"><?php _e('Choose if to use PayPal settlement.', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sandbox_paypal');"><?php _e('Operation Environment', 'usces'); ?></a></th>
-				<td><input name="sandbox" type="radio" id="sandbox_paypal_1" value="1"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 1 ) echo ' checked' ?> /></td><td><label for="sandbox_paypal_1"><?php _e('Test (Sandbox)', 'usces'); ?></label></td>
-				<td><input name="sandbox" type="radio" id="sandbox_paypal_2" value="2"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 2 ) echo ' checked' ?> /></td><td><label for="sandbox_paypal_2"><?php _e('Formal Installment', 'usces'); ?></label></td>
+				<td><input name="sandbox" type="radio" id="sandbox_paypal_1" value="1"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 1 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_1"><?php _e('Test (Sandbox)', 'usces'); ?></label></td>
+				<td><input name="sandbox" type="radio" id="sandbox_paypal_2" value="2"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 2 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_2"><?php _e('Formal Installment', 'usces'); ?></label></td>
 				<td><div id="ex_sandbox_paypal" class="explanation"><?php _e("Choose 'Test (Sandbox)' when testing payment settlement by Sandbox.", 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -527,8 +527,8 @@ function toggleVisibility(id) {
 			<?php if( defined('WCEX_DLSELLER') ): ?>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_paypal');"><?php _e('Recurring Payment', 'usces'); ?></a></th>
-				<td><input name="continuation" type="radio" id="continuation_paypal_1" value="on"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'on' ) echo ' checked' ?> /></td><td><label for="continuation_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
-				<td><input name="continuation" type="radio" id="continuation_paypal_2" value="off"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'off' ) echo ' checked' ?> /></td><td><label for="continuation_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
+				<td><input name="continuation" type="radio" id="continuation_paypal_1" value="on"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'on' ) echo ' checked'; ?> /></td><td><label for="continuation_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
+				<td><input name="continuation" type="radio" id="continuation_paypal_2" value="off"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'off' ) echo ' checked'; ?> /></td><td><label for="continuation_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
 				<td><div id="ex_continuation_paypal" class="explanation"><?php _e('It is a function that enables the automation of tedious payment settlement such as monthly membership fee that occurs regularly. <br /> For details, contact PayPal.', 'usces'); ?></div></td>
 			</tr>
 			<?php endif; ?>
@@ -576,9 +576,9 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_sbps');"><?php _e('Operation Environment', 'usces'); ?></a></th>
-				<td><input name="ope" type="radio" id="ope_sbps_1" value="check"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'check' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_1">接続支援サイト</label></td>
-				<td><input name="ope" type="radio" id="ope_sbps_2" value="test"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'test' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_2">テスト環境</label></td>
-				<td><input name="ope" type="radio" id="ope_sbps_3" value="public"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'public' ) echo ' checked="checked"' ?> /></td><td><label for="ope_sbps_3">本番環境</label></td>
+				<td><input name="ope" type="radio" id="ope_sbps_1" value="check"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'check' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_sbps_1">接続支援サイト</label></td>
+				<td><input name="ope" type="radio" id="ope_sbps_2" value="test"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_sbps_2">テスト環境</label></td>
+				<td><input name="ope" type="radio" id="ope_sbps_3" value="public"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_sbps_3">本番環境</label></td>
 				<td><div id="ex_ope_sbps" class="explanation"><?php _e('動作環境を切り替えます。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -590,21 +590,21 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th>クレジットカード決済</th>
-				<td><input name="card_activate" type="radio" id="card_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_sbps_1">利用する</label></td>
-				<td><input name="card_activate" type="radio" id="card_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_sbps_2">利用しない</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_sbps_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['card_activate']) && $opts['sbps']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>3Dセキュア</th>
-				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_1" value="on"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="3d_secure_sbps_1">利用する</label></td>
-				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_2" value="off"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="3d_secure_sbps_2">利用しない</label></td>
+				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_1" value="on"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="3d_secure_sbps_1">利用する</label></td>
+				<td><input name="3d_secure" type="radio" id="3d_secure_sbps_2" value="off"<?php if( isset($opts['sbps']['3d_secure']) && $opts['sbps']['3d_secure'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="3d_secure_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<?php if( defined('WCEX_DLSELLER') ): ?>
 <!--			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_sbps');">簡易継続課金</a></th>
-				<td><input name="continuation" type="radio" id="continuation_sbps_1" value="on"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_sbps_1">利用する</label></td>
-				<td><input name="continuation" type="radio" id="continuation_sbps_2" value="off"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="continuation_sbps_2">利用しない</label></td>
+				<td><input name="continuation" type="radio" id="continuation_sbps_1" value="on"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="continuation_sbps_1">利用する</label></td>
+				<td><input name="continuation" type="radio" id="continuation_sbps_2" value="off"<?php if( isset($opts['sbps']['continuation']) && $opts['sbps']['continuation'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="continuation_sbps_2">利用しない</label></td>
 				<td><div id="ex_continuation_sbps" class="explanation"><?php _e('定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくはソフトバンク・ペイメント・サービスにお問合せください。', 'usces'); ?></div></td>
 			</tr>
 -->			<?php endif; ?>
@@ -612,74 +612,74 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th>WEBコンビニ決済</th>
-				<td><input name="conv_activate" type="radio" id="conv_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['conv_activate']) && $opts['sbps']['conv_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_sbps_1">利用する</label></td>
-				<td><input name="conv_activate" type="radio" id="conv_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['conv_activate']) && $opts['sbps']['conv_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="conv_activate_sbps_2">利用しない</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['conv_activate']) && $opts['sbps']['conv_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_sbps_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['conv_activate']) && $opts['sbps']['conv_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 		</table>
 		<table class="settle_table">
 			<tr>
 				<th>ペイジー決済</th>
-				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="payeasy_activate_sbps_1">利用する</label></td>
-				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="payeasy_activate_sbps_2">利用しない</label></td>
+				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="payeasy_activate_sbps_1">利用する</label></td>
+				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="payeasy_activate_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 		</table>
 		<table class="settle_table">
 			<tr>
 				<th>ヤフーウォレット決済</th>
-				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_yahoowallet_sbps_1">利用する</label></td>
-				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_yahoowallet_sbps_2">利用しない</label></td>
+				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_yahoowallet_sbps_1">利用する</label></td>
+				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_yahoowallet_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>楽天あんしん決済</th>
-				<td><input name="wallet_rakuten" type="radio" id="wallet_rakuten_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_rakuten']) && $opts['sbps']['wallet_rakuten'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_rakuten_sbps_1">利用する</label></td>
-				<td><input name="wallet_rakuten" type="radio" id="wallet_rakuten_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_rakuten']) && $opts['sbps']['wallet_rakuten'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_rakuten_sbps_2">利用しない</label></td>
+				<td><input name="wallet_rakuten" type="radio" id="wallet_rakuten_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_rakuten']) && $opts['sbps']['wallet_rakuten'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_rakuten_sbps_1">利用する</label></td>
+				<td><input name="wallet_rakuten" type="radio" id="wallet_rakuten_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_rakuten']) && $opts['sbps']['wallet_rakuten'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_rakuten_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>ペイパル</th>
-				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_paypal_sbps_1">利用する</label></td>
-				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_paypal_sbps_2">利用しない</label></td>
+				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_paypal_sbps_1">利用する</label></td>
+				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_paypal_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>ネットマイル</th>
-				<td><input name="wallet_netmile" type="radio" id="wallet_netmile_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_netmile']) && $opts['sbps']['wallet_netmile'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_netmile_sbps_1">利用する</label></td>
-				<td><input name="wallet_netmile" type="radio" id="wallet_netmile_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_netmile']) && $opts['sbps']['wallet_netmile'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_netmile_sbps_2">利用しない</label></td>
+				<td><input name="wallet_netmile" type="radio" id="wallet_netmile_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_netmile']) && $opts['sbps']['wallet_netmile'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_netmile_sbps_1">利用する</label></td>
+				<td><input name="wallet_netmile" type="radio" id="wallet_netmile_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_netmile']) && $opts['sbps']['wallet_netmile'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_netmile_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>アリペイ国際決済</th>
-				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_alipay_sbps_1">利用する</label></td>
-				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="wallet_alipay_sbps_2">利用しない</label></td>
+				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_alipay_sbps_1">利用する</label></td>
+				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_alipay_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 		</table>
 		<table class="settle_table">
 			<tr>
 				<th>DoCoMoケータイ支払い</th>
-				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_docomo_sbps_1">利用する</label></td>
-				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_docomo_sbps_2">利用しない</label></td>
+				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_docomo_sbps_1">利用する</label></td>
+				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_docomo_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>S!まとめて決済</th>
-				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_softbank_sbps_1">利用する</label></td>
-				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_softbank_sbps_2">利用しない</label></td>
+				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank_sbps_1">利用する</label></td>
+				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>auかんたん決済</th>
-				<td><input name="mobile_auone" type="radio" id="mobile_auone_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_auone']) && $opts['sbps']['mobile_auone'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_auone_sbps_1">利用する</label></td>
-				<td><input name="mobile_auone" type="radio" id="mobile_auone_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_auone']) && $opts['sbps']['mobile_auone'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_auone_sbps_2">利用しない</label></td>
+				<td><input name="mobile_auone" type="radio" id="mobile_auone_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_auone']) && $opts['sbps']['mobile_auone'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_auone_sbps_1">利用する</label></td>
+				<td><input name="mobile_auone" type="radio" id="mobile_auone_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_auone']) && $opts['sbps']['mobile_auone'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_auone_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
 				<th>ソフトバンク<br />まとめて支払い</th>
-				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_1">利用する</label></td>
-				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="mobile_mysoftbank_sbps_2">利用しない</label></td>
+				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_mysoftbank_sbps_1">利用する</label></td>
+				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_mysoftbank_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 		</table>
@@ -725,8 +725,8 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th>クレジットカード決済</th>
-				<td><input name="card_activate" type="radio" id="card_activate_telecom_1" value="on"<?php if( isset($opts['telecom']['card_activate']) && $opts['telecom']['card_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_telecom_1">利用する</label></td>
-				<td><input name="card_activate" type="radio" id="card_activate_telecom_2" value="off"<?php if( isset($opts['telecom']['card_activate']) && $opts['telecom']['card_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="card_activate_telecom_2">利用しない</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_telecom_1" value="on"<?php if( isset($opts['telecom']['card_activate']) && $opts['telecom']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_telecom_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_telecom_2" value="off"<?php if( isset($opts['telecom']['card_activate']) && $opts['telecom']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_telecom_2">利用しない</label></td>
 				<td></td>
 			</tr>
 		</table>
@@ -734,8 +734,8 @@ function toggleVisibility(id) {
 		<table class="settle_table">
 			<tr>
 				<th>Edy決済</th>
-				<td><input name="edy_activate" type="radio" id="edy_activate_telecom_1" value="on"<?php if( isset($opts['telecom']['edy_activate']) && $opts['telecom']['edy_activate'] == 'on' ) echo ' checked="checked"' ?> /></td><td><label for="edy_activate_telecom_1">利用する</label></td>
-				<td><input name="edy_activate" type="radio" id="edy_activate_telecom_2" value="off"<?php if( isset($opts['telecom']['edy_activate']) && $opts['telecom']['edy_activate'] == 'off' ) echo ' checked="checked"' ?> /></td><td><label for="edy_activate_telecom_2">利用しない</label></td>
+				<td><input name="edy_activate" type="radio" id="edy_activate_telecom_1" value="on"<?php if( isset($opts['telecom']['edy_activate']) && $opts['telecom']['edy_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="edy_activate_telecom_1">利用する</label></td>
+				<td><input name="edy_activate" type="radio" id="edy_activate_telecom_2" value="off"<?php if( isset($opts['telecom']['edy_activate']) && $opts['telecom']['edy_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="edy_activate_telecom_2">利用しない</label></td>
 				<td></td>
 			</tr>
 		</table>
