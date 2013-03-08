@@ -582,6 +582,7 @@ $usces_settings['lungage2country'] = array(
 					'en_US' => 'US',
 					'vi' => 'VN',
 					'vi_VN' => 'VN',
+					'zh_TW' => 'NT'
 					);
 $usces_states['JP'] = array(__('-- Select --', 'usces'),"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県",
 				"栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県",
