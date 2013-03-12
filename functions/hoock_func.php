@@ -818,6 +818,84 @@ function usces_action_acting_transaction(){
 			}
 		}
 //20121206ysk end
+//20130225ysk start
+	//*** mizuho card ***//
+	} elseif( ( isset($_GET['p_ver']) && $_GET['p_ver'] == '0200' ) && ( isset($_GET['bkcode']) && $_GET['bkcode'] == 'bg01' ) ) {
+		//usces_log('mizuho card : '.print_r($_GET,true),'mizuho.log');
+		$stran = ( array_key_exists('stran', $_REQUEST) ) ? $_REQUEST['stran'] : '';
+		$mbtran = ( array_key_exists('mbtran', $_REQUEST) ) ? $_REQUEST['mbtran'] : '';
+		$rsltcd = ( array_key_exists('rsltcd', $_REQUEST) ) ? $_REQUEST['rsltcd'] : '';
+		$permalink_structure = get_option( 'permalink_structure' );
+		$delim = ( !$usces->use_ssl && $permalink_structure ) ? '?' : '&';
+		if( '108' == substr($rsltcd, 0, 3) or '208' == substr($rsltcd, 0, 3) or '308' == substr($rsltcd, 0, 3 ) ) {//キャンセル
+			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+		} elseif( '109' == substr($rsltcd, 0, 3) or '209' == substr($rsltcd, 0, 3) or '309' == substr($rsltcd, 0, 3) ) {//エラー
+			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+		} else {
+			header( 'location: '.USCES_CART_URL.$delim.'acting=mizuho_card&acting_return=1&stran='.$stran.'&mbtran='.$mbtran.'&rsltcd='.$rsltcd );
+		}
+		die();
+
+	//*** mizuho conv ***//
+	} elseif( ( isset($_GET['p_ver']) && $_GET['p_ver'] == '0200' ) && ( isset($_GET['bkcode']) && ( $_GET['bkcode'] == 'cv01' or $_GET['bkcode'] == 'cv02' ) ) ) {
+		usces_log('mizuho conv : '.print_r($_GET,true),'mizuho.log');
+		$stran = ( array_key_exists('stran', $_REQUEST) ) ? $_REQUEST['stran'] : '';
+		$mbtran = ( array_key_exists('mbtran', $_REQUEST) ) ? $_REQUEST['mbtran'] : '';
+		$bktrans = ( array_key_exists('bktrans', $_REQUEST) ) ? $_REQUEST['bktrans'] : '';
+		$tranid = ( array_key_exists('tranid', $_REQUEST) ) ? $_REQUEST['tranid'] : '';
+		$tdate = ( array_key_exists('tdate', $_REQUEST) ) ? $_REQUEST['tdate'] : '';
+		$rsltcd = ( array_key_exists('rsltcd', $_REQUEST) ) ? $_REQUEST['rsltcd'] : '';
+		$permalink_structure = get_option( 'permalink_structure' );
+		$delim = ( !$usces->use_ssl && $permalink_structure ) ? '?' : '&';
+		if( '' != $tdate ) {//入金通知
+			foreach( $_REQUEST as $key => $value ) {
+				$data[$key] = $value;
+			}
+			if( $rsltcd == "0000000000000" ) {
+				$table_name = $wpdb->prefix."usces_order";
+				$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+				$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'stran', $stran );
+				$order_id = $wpdb->get_var( $query );
+				if( $order_id == NULL ) {
+					usces_log( 'mizuho conv error1 : '.print_r($data, true), 'acting_transaction.log' );
+
+				} else {
+					$mquery = $wpdb->prepare("
+						UPDATE $table_name SET order_status = 
+						CASE 
+							WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+							WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+							ELSE CONCAT('receipted,', order_status ) 
+						END 
+						WHERE ID = %d", $order_id );
+					$res = $wpdb->query( $mquery );
+					if( $res === false ) {
+						usces_log( 'mizuho conv error2 : '.print_r($data, true), 'acting_transaction.log' );
+
+					} else {
+						usces_action_acting_getpoint( $order_id );
+
+						$usces->set_order_meta_value( 'acting_mizuho_conv', serialize($data), $order_id );
+
+						$dquery = $wpdb->prepare( "DELETE FROM $table_meta_name WHERE meta_key = %s", $stran );
+						$res = $wpdb->query( $dquery );
+					}
+				}
+
+			} else {
+				header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+			}
+
+		} elseif( '108' == substr($rsltcd, 0, 3) or '208' == substr($rsltcd, 0, 3) or '308' == substr($rsltcd, 0, 3) ) {//キャンセル
+			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+		} elseif( '109' == substr($rsltcd, 0, 3) or '209' == substr($rsltcd, 0, 3) or '309' == substr($rsltcd, 0, 3) ) {//エラー
+			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+		} else {
+			header( 'location: '.USCES_CART_URL.$delim.'acting=mizuho_conv&acting_return=1&stran='.$stran.'&mbtran='.$mbtran.'&bktrans='.$_GET['bktrans'].'&tranid='.$tranid.'&rsltcd='.$rsltcd );
+		}
+		die();
+//20130225ysk end
 	}
 }
 ?>

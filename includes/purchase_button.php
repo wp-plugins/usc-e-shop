@@ -262,7 +262,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
-			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"') . $purchase_disabled . ' /></div>';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"') . $purchase_disabled . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
 			$html .= '</form>';
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -751,7 +751,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					';
 			}
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
-			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $sid, $purchase_disabled);
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -800,7 +800,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					';
 			}
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
-			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $sid, $purchase_disabled);
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -809,6 +809,73 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>'."\n";
 			break;
 //20121206ysk end
+//20130225ysk start
+		case 'acting_mizuho_card'://カード決済(みずほファクター)
+			$acting_opts = $usces->options['acting_settings']['mizuho'];
+			$send_url = $acting_opts['send_url'];
+			$p_ver = '0200';
+			$stdate = date( 'Ymd' );
+			$stran = sprintf( '%06d', mt_rand(1, 999999) );
+			$bkcode = 'bg01';
+			$amount = apply_filters( 'usces_filter_acting_amount', usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag );
+			$schksum = $p_ver.$stdate.$stran.$bkcode.$acting_opts['shopid'].$acting_opts['cshopid'].$amount.$acting_opts['hash_pass'];
+			$schksum = htmlspecialchars( md5( $schksum ) );
+			$html .= '<form id="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="p_ver" value="'.$p_ver.'">
+				<input type="hidden" name="stdate" value="'.$stdate.'">
+				<input type="hidden" name="stran" value="'.$stran.'">
+				<input type="hidden" name="bkcode" value="'.$bkcode.'">
+				<input type="hidden" name="shopid" value="'.$acting_opts['shopid'].'">
+				<input type="hidden" name="cshopid" value="'.$acting_opts['cshopid'].'">
+				<input type="hidden" name="amount" value="'.$amount.'">
+				<input type="hidden" name="schksum" value="'.$schksum.'">
+				';
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled );
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform_back', $html );
+			$html .= '</form>';
+			break;
+		case 'acting_mizuho_conv1'://コンビニ・ウェルネット決済(みずほファクター)
+		case 'acting_mizuho_conv2'://コンビニ・セブンイレブン決済(みずほファクター)
+			$acting_opts = $usces->options['acting_settings']['mizuho'];
+			$send_url = $acting_opts['send_url'];
+			$p_ver = '0200';
+			$stdate = date( 'Ymd' );
+			$stran = sprintf( '%06d', mt_rand(1, 999999) );
+			$bkcode = 'cv0'.substr( $acting_flag, -1 );
+			$amount = apply_filters( 'usces_filter_acting_amount', usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag );
+			$custmKanji = mb_strimwidth( $usces_entries['customer']['name1'].$usces_entries['customer']['name2'], 0, 40 );
+			$mailaddr = esc_attr( $usces_entries['customer']['mailaddress1'] );
+			$tel = str_replace( '-', '', $usces_entries['customer']['tel'] );
+			$schksum = $p_ver.$stdate.$stran.$bkcode.$acting_opts['shopid'].$acting_opts['cshopid'].$amount.mb_convert_encoding($custmKanji, 'SJIS', 'UTF-8').$mailaddr.$tel.$acting_opts['hash_pass'];
+			$schksum = htmlspecialchars( md5( $schksum ) );
+			$html .= '<form id="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="p_ver" value="'.$p_ver.'">
+				<input type="hidden" name="stdate" value="'.$stdate.'">
+				<input type="hidden" name="stran" value="'.$stran.'">
+				<input type="hidden" name="bkcode" value="'.$bkcode.'">
+				<input type="hidden" name="shopid" value="'.$acting_opts['shopid'].'">
+				<input type="hidden" name="cshopid" value="'.$acting_opts['cshopid'].'">
+				<input type="hidden" name="amount" value="'.$amount.'">
+				<input type="hidden" name="custmKanji" value="'.$custmKanji.'">
+				<input type="hidden" name="mailaddr" value="'.$mailaddr.'">
+				<input type="hidden" name="tel" value="'.$tel.'">
+				<input type="hidden" name="schksum" value="'.$schksum.'">
+				';
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled );
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform_back', $html );
+			$html .= '</form>';
+			break;
+//20130225ysk end
 
 		default:
 			$html .= '<form id="purchase_form" action="' . apply_filters('usces_filter_acting_url', USCES_CART_URL) . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

@@ -910,7 +910,7 @@ function usces_reg_orderdata( $results = array() ) {
 	if( 'continue' == $charging_type ){
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' ) ? 'noreceipt' : '';
+		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' || $set['settlement'] == 'acting_mizuho_conv1' || $set['settlement'] == 'acting_mizuho_conv2' ) ? 'noreceipt' : '';
 		$order_modified = NULL;
 	}
 	$payments = $usces->getPayments($entry['order']['payment_name']);
@@ -1066,15 +1066,29 @@ function usces_reg_orderdata( $results = array() ) {
 		if( isset($_REQUEST['res_tracking_id']) ) {
 			$usces->set_order_meta_value('res_tracking_id', $_REQUEST['res_tracking_id'], $order_id);
 		}
+//20121206ysk start
 		if( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) ) {
 			if( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_card' ) {
 				$data['SID'] = mysql_real_escape_string($_REQUEST['SID']);
 				$usces->set_order_meta_value( $_REQUEST['FUKA'], serialize($data), $order_id );
-			//} elseif( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_conv' ) {
-			//	$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
 			}
 			$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
 		}
+//20121206ysk end
+//20130225ysk start
+		if( isset($_REQUEST['acting']) && 'mizuho_card' == $_REQUEST['acting'] ) {
+			$data['stran'] = mysql_real_escape_string($_REQUEST['stran']);
+			$data['mbtran'] = mysql_real_escape_string($_REQUEST['mbtran']);
+			$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
+		} elseif( isset($_REQUEST['acting']) && 'mizuho_conv' == $_REQUEST['acting'] ) {
+			$data['stran'] = mysql_real_escape_string($_REQUEST['stran']);
+			$data['mbtran'] = mysql_real_escape_string($_REQUEST['mbtran']);
+			$data['bktrans'] = mysql_real_escape_string($_REQUEST['bktrans']);
+			$data['tranid'] = mysql_real_escape_string($_REQUEST['tranid']);
+			$usces->set_order_meta_value( 'stran', $data['stran'], $order_id );
+			$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
+		}
+//20130225ysk end
 
 		foreach($cart as $cartrow){
 			$sku = urldecode($cartrow['sku']);
@@ -2195,6 +2209,24 @@ function usces_check_acting_return() {
 			$results['reg_order'] = false;
 			break;
 //20121206ysk end
+//20130225ysk start
+		case 'mizuho_card':
+		case 'mizuho_conv':
+			$results = $_GET;
+			if( isset($_GET['rsltcd']) ) {
+				if( '000' == substr($_GET['rsltcd'], 0, 3) ) {
+					$results[0] = 1;
+					$results['reg_order'] = true;
+				} else {
+					$results[0] = 0;
+					$results['reg_order'] = false;
+				}
+			} else {
+				$results[0] = 0;
+				$results['reg_order'] = false;
+			}
+			break;
+//20130225ysk end
 
 		default:
 			$results = $_GET;
@@ -2276,6 +2308,12 @@ function usces_check_acting_return_duplicate( $results = array() ) {
 		$trans_id = isset($_REQUEST['SID']) ? $_REQUEST['SID'] : '';
 		break;
 //20121206ysk end
+//20130225ysk start
+	case 'mizuho_card':
+	case 'mizuho_conv':
+		$trans_id = isset($_REQUEST['stran']) ? $_REQUEST['stran'] : '';
+		break;
+//20130225ysk end
 	default:
 		$trans_id = '';
 	}
@@ -3404,6 +3442,12 @@ function usces_post_reg_orderdata($order_id, $results){
 				$trans_id = isset($_REQUEST['SID']) ? $_REQUEST['SID'] : '';
 				break;
 //20121206ysk end
+//20130225ysk start
+			case 'mizuho_card':
+			case 'mizuho_conv':
+				$trans_id = isset($_REQUEST['stran']) ? $_REQUEST['stran'] : '';
+				break;
+//20130225ysk end
 			default:
 				if( isset($_REQUEST['FUKA']) && strstr($_REQUEST['FUKA'], "digitalcheck_card") ) {
 					$trans_id = isset($_REQUEST['SID']) ? $_REQUEST['SID'] : '';

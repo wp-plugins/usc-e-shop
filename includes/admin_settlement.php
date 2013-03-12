@@ -111,6 +111,9 @@ function toggleVisibility(id) {
 <!--20121206ysk start-->
 		<li><a href="#uscestabs_digitalcheck">デジタルチェック</a></li>
 <!--20121206ysk end-->
+<!--20130225ysk start-->
+		<li><a href="#uscestabs_mizuho">みずほファクター</a></li>
+<!--20130225ysk end-->
 	</ul>
 
 	<div id="uscestabs_zeus">
@@ -809,9 +812,9 @@ function toggleVisibility(id) {
 				<td><div id="ex_conv_ip_digitalcheck" class="explanation"><?php _e('契約時にデジタルチェックから発行される加盟店コード（半角英数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th rowspan="4"><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_store');">利用コンビニ</a></th>
+				<th rowspan="4"><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_store_digitalcheck');">利用コンビニ</a></th>
 				<td><input name="conv_store[]" type="checkbox" id="conv_store_1" value="1"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '1', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_1">Loppi決済（ローソン・セイコーマート）</label></td>
-				<td rowspan="4"><div id="ex_conv_store" class="explanation"><?php _e('収納先のコンビニを選択します。コンビニ毎の審査が必要となり、審査通過後にご利用可能となります。', 'usces'); ?></div></td>
+				<td rowspan="4"><div id="ex_conv_store_digitalcheck" class="explanation"><?php _e('収納先のコンビニを選択します。コンビニ毎の審査が必要となり、審査通過後にご利用可能となります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<td><input name="conv_store[]" type="checkbox" id="conv_store_2" value="2"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '2', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_2">Seven決済（セブンイレブン）</label></td>
@@ -823,7 +826,7 @@ function toggleVisibility(id) {
 				<td><input name="conv_store[]" type="checkbox" id="conv_store_73" value="73"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '73', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_73">オンライン決済（サークルKサンクス・ミニストップ・デイリーヤマザキ・ヤマザキデイリー・スリーエフ）</label></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_kigen');">支払期限</a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_kigen_digitalcheck');">支払期限</a></th>
 				<td colspan="4">
 <?php
 	$selected = array_fill( 1, 30, '' );
@@ -838,7 +841,7 @@ function toggleVisibility(id) {
 					<option value="<?php echo esc_html($i); ?>"<?php echo esc_html($selected[$i]); ?>><?php echo esc_html($i); ?></option>
 				<?php endfor; ?>
 				</select>（日数）</td>
-				<td><div id="ex_conv_kigen" class="explanation"><?php _e('コンビニ店頭でお支払いいただける期限となります。', 'usces'); ?></div></td>
+				<td><div id="ex_conv_kigen_digitalcheck" class="explanation"><?php _e('コンビニ店頭でお支払いいただける期限となります。', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="digitalcheck" />
@@ -853,6 +856,69 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_digitalcheck-->
 <!--20121206ysk end-->
+
+<!--20130225ysk start-->
+	<div id="uscestabs_mizuho">
+	<div class="settlement_service"><span class="service_title">みずほファクター</span></div>
+	<?php if( isset($_POST['acting']) && 'mizuho' == $_POST['acting'] ) : ?>
+		<?php if( isset($opts['mizuho']['activate']) && 'on' == $opts['mizuho']['activate'] ) : ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php elseif( '' != $mes ) : ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php endif; ?>
+	<?php endif; ?>
+	<form action="" method="post" name="mizuho_form" id="mizuho_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_shopid_mizuho');">加盟店コード</a></th>
+				<td colspan="4"><input name="shopid" type="text" id="shopid" value="<?php echo esc_html(isset($opts['mizuho']['shopid']) ? $opts['mizuho']['shopid'] : ''); ?>" size="20" maxlength="6" /></td>
+				<td><div id="ex_shopid_mizuho" class="explanation"><?php _e('契約時にみずほファクターから発行される加盟店コード（半角数字6桁）。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_cshopid_mizuho');">加盟店サブコード</a></th>
+				<td colspan="4"><input name="cshopid" type="text" id="cshopid" value="<?php echo esc_html(isset($opts['mizuho']['cshopid']) ? $opts['mizuho']['cshopid'] : ''); ?>" size="20" maxlength="5" /></td>
+				<td><div id="ex_cshopid_mizuho" class="explanation"><?php _e('契約時にみずほファクターから発行される加盟店サブコード（半角数字5桁）。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_hash_pass_mizuho');">ハッシュ用パスワード</a></th>
+				<td colspan="4"><input name="hash_pass" type="text" id="hash_pass" value="<?php echo esc_html(isset($opts['mizuho']['hash_pass']) ? $opts['mizuho']['hash_pass'] : ''); ?>" size="20" maxlength="20" /></td>
+				<td><div id="ex_hash_pass_mizuho" class="explanation"><?php _e('契約時にみずほファクターから発行されるハッシュ用パスワード（半角英数字）。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>クレジットカード決済</th>
+				<td><input name="card_activate" type="radio" id="card_activate_mizuho_1" value="on"<?php if( isset($opts['mizuho']['card_activate']) && $opts['mizuho']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_mizuho_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_mizuho_2" value="off"<?php if( isset($opts['mizuho']['card_activate']) && $opts['mizuho']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_mizuho_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>コンビニ決済<br><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv1_activate');">ウェルネット決済</a></th>
+				<td><input name="conv1_activate" type="radio" id="conv1_activate_mizuho_1" value="on"<?php if( isset($opts['mizuho']['conv1_activate']) && $opts['mizuho']['conv1_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv1_activate_mizuho_1">利用する</label></td>
+				<td><input name="conv1_activate" type="radio" id="conv1_activate_mizuho_2" value="off"<?php if( isset($opts['mizuho']['conv1_activate']) && $opts['mizuho']['conv1_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv1_activate_mizuho_2">利用しない</label></td>
+				<td><div id="ex_conv1_activate" class="explanation">ローソン、ファミリーマート、サークルK サンクス、ミニストップ、デイリーヤマザキ、スリーエフでのご利用が可能です。</div></td>
+			</tr>
+			<tr>
+				<th>コンビニ決済<br><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv2_activate');">セブンイレブン決済</a></th>
+				<td><input name="conv2_activate" type="radio" id="conv2_activate_mizuho_1" value="on"<?php if( isset($opts['mizuho']['conv2_activate']) && $opts['mizuho']['conv2_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv2_activate_mizuho_1">利用する</label></td>
+				<td><input name="conv2_activate" type="radio" id="conv2_activate_mizuho_2" value="off"<?php if( isset($opts['mizuho']['conv2_activate']) && $opts['mizuho']['conv2_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv2_activate_mizuho_2">利用しない</label></td>
+				<td><div id="ex_conv2_activate" class="explanation">セブンイレブンでのご利用が可能です。</div></td>
+			</tr>
+		</table>
+		<input name="acting" type="hidden" value="mizuho" />
+		<input name="usces_option_update" type="submit" class="button" value="みずほファクターの設定を更新する" />
+	</form>
+	<div class="settle_exp">
+		<p><strong>みずほファクター</strong></p>
+		<a href="http://www.mizuho-factor.co.jp/" target="_blank">みずほファクターの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+	</div>
+	</div><!--uscestabs_mizuho-->
+<!--20130225ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

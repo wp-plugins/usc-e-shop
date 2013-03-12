@@ -1509,6 +1509,58 @@ class usc_e_shop
 					update_option('usces', $options);
 					break;
 //20121206ysk end
+//20130225ysk start
+				case 'mizuho':
+					unset( $options['acting_settings']['mizuho'] );
+					$options['acting_settings']['mizuho']['shopid'] = isset($_POST['shopid']) ? $_POST['shopid'] : '';
+					$options['acting_settings']['mizuho']['cshopid'] = isset($_POST['cshopid']) ? $_POST['cshopid'] : '';
+					$options['acting_settings']['mizuho']['hash_pass'] = isset($_POST['hash_pass']) ? $_POST['hash_pass'] : '';
+					$options['acting_settings']['mizuho']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['mizuho']['conv1_activate'] = isset($_POST['conv1_activate']) ? $_POST['conv1_activate'] : '';
+					$options['acting_settings']['mizuho']['conv2_activate'] = isset($_POST['conv2_activate']) ? $_POST['conv2_activate'] : '';
+
+					//if( 'on' == $options['acting_settings']['mizuho']['card_activate'] or 'on' == $options['acting_settings']['mizuho']['conv_activate'] ) {
+						if( '' == trim($_POST['shopid']) )
+							$mes .= '※加盟店コードを入力して下さい<br />';
+						if( '' == trim($_POST['cshopid']) )
+							$mes .= '※加盟店サブコードを入力して下さい<br />';
+						if( '' == trim($_POST['hash_pass']) )
+							$mes .= '※ハッシュ用パスワードを入力して下さい<br />';
+					//}
+
+					if( '' == $mes ) {
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['mizuho']['activate'] = 'on';
+						$options['acting_settings']['mizuho']['send_url'] = "https://210.161.141.207/mltbank/MBWebFrontPayment";
+						if( 'on' == $options['acting_settings']['mizuho']['card_activate'] ) {
+							$this->payment_structure['acting_mizuho_card'] = 'カード決済（みずほファクター）';
+						} else {
+							unset($this->payment_structure['acting_mizuho_card']);
+						}
+						if( 'on' == $options['acting_settings']['mizuho']['conv1_activate'] ) {
+							$this->payment_structure['acting_mizuho_conv1'] = 'コンビニ・ウェルネット決済（みずほファクター）';
+						} else {
+							unset($this->payment_structure['acting_mizuho_conv1']);
+						}
+						if( 'on' == $options['acting_settings']['mizuho']['conv2_activate'] ) {
+							$this->payment_structure['acting_mizuho_conv2'] = 'コンビニ・セブンイレブン決済（みずほファクター）';
+						} else {
+							unset($this->payment_structure['acting_mizuho_conv2']);
+						}
+					} else {
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります','usces');
+						$options['acting_settings']['mizuho']['activate'] = 'off';
+						unset($this->payment_structure['acting_mizuho_card']);
+						unset($this->payment_structure['acting_mizuho_conv1']);
+						unset($this->payment_structure['acting_mizuho_conv2']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					update_option('usces', $options);
+					break;
+//20130225ysk end
 			}
 			
 

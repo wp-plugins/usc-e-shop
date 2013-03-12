@@ -1728,7 +1728,9 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 			'gid', 'rst', 'ap', 'ec', 'god', 'ta', 'cv', 'no', 'cu', 'mf', 'nk', 'nkd', 'bank', 'exp', 
 			'order_number',
 			'res_tracking_id', 'res_payment_date', 'res_payinfo_key',
-			'SID', 'DATE', 'TIME', 'CVS', 'SHNO', 'FURL', 'settltment_status', 'settltment_errmsg');
+			'SID', 'DATE', 'TIME', 'CVS', 'SHNO', 'FURL', 'settltment_status', 'settltment_errmsg', 
+			'stran', 'mbtran', 'bktrans', 'tranid'
+		);
 		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
 		if( !in_array($key, $keys) ) {
 			continue;
