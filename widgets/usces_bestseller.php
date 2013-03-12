@@ -13,13 +13,13 @@ class Welcart_bestseller extends WP_Widget {
     function widget($args, $instance) {
 		global $usces;
         extract( $args );
-        $title = $instance['title'] == '' ? 'Welcart '.__('best seller', 'usces') : $instance['title'];
-        $rows_num = $instance['rows_num'] == '' ? 10 : $instance['rows_num'];
-        $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
+        $title = WCUtils::is_blank($instance['title']) ? 'Welcart '.__('best seller', 'usces') : $instance['title'];
+        $rows_num = WCUtils::is_blank($instance['rows_num']) ? 10 : $instance['rows_num'];
+        $icon = WCUtils::is_blank($instance['icon']) ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/best-seller.png" alt="' . $title . '" width="24" height="24" />';
 		$img_path = file_exists(get_stylesheet_directory().'/images/bestseller.png') ? get_stylesheet_directory_uri().'/images/bestseller.png' : USCES_FRONT_PLUGIN_URL . '/images/bestseller.png';
 		if($icon == 1) $before_title .= '<img src="' . $img_path . '" alt="' . $title . '" />';
-		$list = $instance['list'] == '' ? 1 : (int)$instance['list'];
+		$list = WCUtils::is_blank($instance['list']) ? 1 : (int)$instance['list'];
         ?>
               <?php echo $before_widget; ?>
                   <?php echo $before_title
@@ -34,9 +34,9 @@ class Welcart_bestseller extends WP_Widget {
 					for($i=0; $i<$rows_num; $i++) { 
 						$cname = 'code' . ($i+1);
 						$code = esc_html(trim($instance[$cname]));
-						if('' == $code) continue;
+						if(WCUtils::is_blank($code)) continue;
 						$id = $usces->get_postIDbyCode($code);
-						if('' == $id) continue;
+						if(WCUtils::is_blank($id)) continue;
 						$post = get_post($id);
 						$disp_text = apply_filters('usces_widget_bestseller_manual_text', esc_html($post->post_title), $id);
 						$list = '<li><a href="' . get_permalink($id) . '">' . $disp_text . '</a></li>' . "\n";
@@ -86,10 +86,10 @@ class Welcart_bestseller extends WP_Widget {
 		if( !isset($instance['code10']) )
 			$instance['code10'] = '';
 			
-        $title = $instance['title'] == '' ? 'Welcart '.__('best seller', 'usces') : esc_attr($instance['title']);
-        $rows_num = $instance['rows_num'] == '' ? 10 : esc_attr($instance['rows_num']);
-		$icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
-		$list = $instance['list'] == '' ? 1 : (int)$instance['list'];
+        $title = WCUtils::is_blank($instance['title']) ? 'Welcart '.__('best seller', 'usces') : esc_attr($instance['title']);
+        $rows_num = WCUtils::is_blank($instance['rows_num']) ? 10 : esc_attr($instance['rows_num']);
+		$icon = WCUtils::is_blank($instance['icon']) ? 1 : (int)$instance['icon'];
+		$list = WCUtils::is_blank($instance['list']) ? 1 : (int)$instance['list'];
 		$code1 = esc_attr($instance['code1']);
 		$code2 = esc_attr($instance['code2']);
 		$code3 = esc_attr($instance['code3']);

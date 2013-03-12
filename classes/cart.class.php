@@ -16,7 +16,9 @@ class usces_cart {
 	}
 	// into Cart ***************************************************************
 	function inCart() {
-	
+		global $usces;
+		$_POST = $usces->stripslashes_deep_post($_POST);
+		
 		if( $_SERVER['HTTP_REFERER'] ){
 			$_SESSION['usces_previous_url'] = $_SERVER['HTTP_REFERER'];
 		}else{
@@ -34,7 +36,7 @@ class usces_cart {
 			$_SESSION['usces_cart'][$this->serial]['quant'] = 0;
 		}
 		
-		if ( isset($_POST['quant'][$post_id][$sku]) && $_POST['quant'][$post_id][$sku] != '') {
+		if ( isset($_POST['quant'][$post_id][$sku]) && !WCUtils::is_blank($_POST['quant'][$post_id][$sku]) ) {
 		
 			$post_quant = (int)$_POST['quant'][$post_id][$sku];
 			$_SESSION['usces_cart'][$this->serial]['quant'] = apply_filters('usces_filter_post_quant', $post_quant, $_SESSION['usces_cart'][$this->serial]['quant']);
@@ -51,7 +53,7 @@ class usces_cart {
 		}
 		
 		
-		if ( isset($_POST['skuPrice']) && $_POST['skuPrice'][$post_id][$sku] != '') {
+		if ( isset($_POST['skuPrice']) && !WCUtils::is_blank($_POST['skuPrice'][$post_id][$sku]) ) {
 			$price = $this->get_realprice($post_id, $sku, $_SESSION['usces_cart'][$this->serial]['quant']);
 			$price = apply_filters('usces_filter_inCart_price', $price, $this->serial);
 			$_SESSION['usces_cart'][$this->serial]['price'] = $price;
@@ -69,6 +71,9 @@ class usces_cart {
 	
 		if(!isset($_POST['quant'])) return false;
 		
+		global $usces;
+		$_POST = $usces->stripslashes_deep_post($_POST);
+
 		foreach($_POST['quant'] as $index => $vs){
 
 			$ids = array_keys($vs);
@@ -79,7 +84,7 @@ class usces_cart {
 			
 			$this->up_serialize($index, $post_id, $sku);
 		
-			if ( $_POST['quant'][$index][$post_id][$sku] != '') {
+			if ( !WCUtils::is_blank($_POST['quant'][$index][$post_id][$sku]) ) {
 		
 				$_SESSION['usces_cart'][$this->serial]['quant'] = (int)$_POST['quant'][$index][$post_id][$sku];
 				$_SESSION['usces_cart'][$this->serial]['advance'] = isset($_POST['advance'][$index][$post_id][$sku]) ? $this->wc_unserialize($_POST['advance'][$index][$post_id][$sku]) : array();
@@ -197,6 +202,9 @@ class usces_cart {
 	// insert serialize **************************************************************
 	function in_serialize($id, $sku){
 	
+		global $usces;
+		$_POST = $usces->stripslashes_deep_post($_POST);
+
 		if(isset($_POST['itemOption'])){
 			foreach( $_POST['itemOption'][$id][$sku] as $key => $value ){
 //20110629ysk start 0000190
@@ -221,6 +229,9 @@ class usces_cart {
 	// update serialize **************************************************************
 	function up_serialize($index, $id, $sku){
 	
+		global $usces;
+		$_POST = $usces->stripslashes_deep_post($_POST);
+
 		if(isset($_POST['itemOption'][$index])){
 			foreach( $_POST['itemOption'][$index][$id][$sku] as $key => $value ){
 //20110629ysk start 0000190
@@ -296,6 +307,8 @@ class usces_cart {
 	// entry information ***************************************************************
 	function entry() {
 		global $usces;
+		$_POST = $usces->stripslashes_deep_post($_POST);
+
 		if(isset($_SESSION['usces_member']['ID']) && !empty($_SESSION['usces_member']['ID'])) {
 //20110126ysk start
 			if($usces->page !== 'confirm') {

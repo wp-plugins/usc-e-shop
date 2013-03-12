@@ -3,6 +3,7 @@
 function usces_ajax_send_mail() {
 	global $wpdb, $usces;
 	
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	$order_para = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), trim(urldecode($_POST['name']))),
 			'to_address' => trim($_POST['mailaddress']), 
@@ -56,14 +57,14 @@ function usces_order_confirm_message($order_id) {
 	$data = $wpdb->get_row( $query, ARRAY_A );
 	$deli = unserialize($data['order_delivery']);
 	$cart = unserialize($data['order_cart']);
-	$country = $usces->get_order_meta_value('country', $order_id);
+	$country = $usces->get_order_meta_value('customer_country', $order_id);
 	$customer = array(
 					'name1' => $data['order_name1'],
 					'name2' => $data['order_name2'],
 					'name3' => $data['order_name3'],
 					'name4' => $data['order_name4'],
 					'zipcode' => $data['order_zip'],
-					'country' => isset($usces_settings['country'][$country]) ? $usces_settings['country'][$country] : '',
+					'country' => $country,
 					'pref' => $data['order_pref'],
 					'address1' => $data['order_address1'],
 					'address2' => $data['order_address2'],
@@ -147,7 +148,7 @@ function usces_order_confirm_message($order_id) {
 	if ( $data['order_usedpoint'] != 0 )
 		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
-		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')) . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
+		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
@@ -353,7 +354,7 @@ function usces_send_ordermail($order_id) {
 	//if ( $data['order_discount'] != 0 )
 	if ( $entry['order']['discount'] != 0 )
 //20120308ysk end
-		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')) . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
+		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, false, 'return' ) . "\r\n";
@@ -493,6 +494,7 @@ function usces_send_ordermail($order_id) {
 
 function usces_send_inquirymail() {
 	global $usces;
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	$res = false;
 	$mail_data = $usces->options['mail_data'];
 	$inq_name = trim($_POST["inq_name"]);
@@ -1110,6 +1112,7 @@ function usces_reg_orderdata( $results = array() ) {
 
 function usces_new_orderdata() {
 	global $wpdb, $usces;
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	
 	$usces->cart->crear_cart();
 	$cart = $usces->cart->get_cart();
@@ -1125,7 +1128,7 @@ function usces_new_orderdata() {
 	} else {
 		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' ) ? 'noreceipt' : '';
 	}
-	$status .= ( $_POST['offer']['taio'] != '' && $_POST['offer']['taio'] != '#none#' ) ? $_POST['offer']['taio'].',' : '';
+	$status .= ( !WCUtils::is_blank($_POST['offer']['taio']) && $_POST['offer']['taio'] != '#none#' ) ? $_POST['offer']['taio'].',' : '';
 	$status .= $_POST['offer']['admin'];
 	$status = apply_filters('usces_filter_new_orderdata_status', $status);
 	$order_conditions = $usces->get_condition();
@@ -1233,7 +1236,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 	global $wpdb, $usces;
 	
 	if( 0 === $ID ){
-		if(!isset($_REQUEST['member_id']) || $_REQUEST['member_id'] == '')
+		if(!isset($_REQUEST['member_id']) || WCUtils::is_blank($_REQUEST['member_id']) )
 			return 0;
 		$ID = $_REQUEST['member_id'];
 	}
@@ -1259,6 +1262,7 @@ function usces_delete_memberdata( $ID = 0 ) {
 
 function usces_update_memberdata() {
 	global $wpdb, $usces;
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	
 	$member_table_name = $wpdb->prefix . "usces_member";
 //20100818ysk start
@@ -1291,9 +1295,13 @@ function usces_update_memberdata() {
 					$ID
 				);
 
+	do_action('usces_action_pre_update_memberdata', $ID);
 //20100818ysk start
 	//$res = $wpdb->query( $query );
 	$res[0] = $wpdb->query( $query );
+	
+	do_action( 'usces_action_post_update_memberdata', $ID, $res[0]);
+	
 	if(false === $res[0]) 
 		return false;
 		
@@ -1326,7 +1334,7 @@ function usces_update_memberdata() {
 
 function usces_delete_orderdata() {
 	global $wpdb, $usces;
-	if(!isset($_REQUEST['order_id']) || $_REQUEST['order_id'] == '') return 0;
+	if(!isset($_REQUEST['order_id']) || WCUtils::is_blank($_REQUEST['order_id']) ) return 0;
 	$order_table = $wpdb->prefix . "usces_order";
 	$order_meta_table = $wpdb->prefix . "usces_order_meta";
 	$ID = $_REQUEST['order_id'];
@@ -1373,7 +1381,7 @@ function usces_delete_orderdata() {
 
 function usces_update_ordercart() {
 	global $wpdb, $usces;
-	if(!isset($_REQUEST['order_id']) || $_REQUEST['order_id'] == '') return 0;
+	if(!isset($_REQUEST['order_id']) || WCUtils::is_blank($_REQUEST['order_id']) ) return 0;
 	$order_table_name = $wpdb->prefix . "usces_order";
 	$ID = $_REQUEST['order_id'];
 	$usces->cart->crear_cart();
@@ -1425,6 +1433,7 @@ function usces_update_ordercheck() {
 }
 function usces_update_orderdata() {
 	global $wpdb, $usces;
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	
 	$order_table_name = $wpdb->prefix . "usces_order";
 	$order_table_meta_name = $wpdb->prefix . "usces_order_meta";
@@ -1706,9 +1715,12 @@ function usces_all_change_itemdisplay(&$obj){
 	$post_status = $_POST['change']['word']['display_status'];
 	$status = true;
 	foreach ( (array)$ids as $post_id ):
-		$query = $wpdb->prepare("UPDATE $wpdb->posts SET post_status = %s WHERE ID = %d", $post_status, $post_id);
-		$res = $wpdb->query( $query );
-		if( $res === false ) {
+//		$query = $wpdb->prepare("UPDATE $wpdb->posts SET post_status = %s WHERE ID = %d", $post_status, $post_id);
+//		$res = $wpdb->query( $query );
+		$post_data = array('ID'=>$post_id, 'post_status'=>$post_status);
+		$res = wp_update_post( $post_data );
+
+		if( $res == 0 ) {
 			$status = false;
 		}
 	endforeach;
@@ -2046,7 +2058,7 @@ function usces_check_acting_return() {
 			
 		case 'remise_card':
 			$results = $_POST;
-			if( $_REQUEST['acting_return'] && '   ' == $_REQUEST['X-ERRCODE'] ){
+			if( $_REQUEST['acting_return'] && '   ' === $_REQUEST['X-ERRCODE'] ){
 				usces_log('remise card entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
@@ -2061,7 +2073,7 @@ function usces_check_acting_return() {
 			
 		case 'remise_conv':
 			$results = $_GET;
-			if( $_REQUEST['acting_return'] && isset($_REQUEST['X-JOB_ID']) && '0:0000' == $_REQUEST['X-R_CODE']){
+			if( $_REQUEST['acting_return'] && isset($_REQUEST['X-JOB_ID']) && '0:0000' === $_REQUEST['X-R_CODE']){
 				//usces_log('remise conv entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
@@ -2229,6 +2241,7 @@ function usces_check_acting_return() {
 //20130225ysk end
 
 		default:
+			do_action( 'usces_action_check_acting_return_default' );
 			$results = $_GET;
 			if( $_REQUEST['result'] ){
 				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
@@ -2372,6 +2385,7 @@ function usces_setup_cod_ajax(){
 	global $usces;
 	$usces->options = get_option('usces');
 	$message = '';
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	
 	$usces->options['cod_type'] = isset($_POST['cod_type']) ? $_POST['cod_type'] : 'fix';
 	if( isset($_POST['cod_fee']) )
@@ -2380,7 +2394,7 @@ function usces_setup_cod_ajax(){
 	if( 'fix' == $usces->options['cod_type'] ){
 		if( isset($_POST['cod_limit_amount']) ){
 			$usces->options['cod_limit_amount'] = (int)$_POST['cod_limit_amount'];
-			if( '' != trim($_POST['cod_limit_amount']) && 0 === (int)$_POST['cod_limit_amount'] )
+			if( !WCUtils::is_blank($_POST['cod_limit_amount']) && 0 === (int)$_POST['cod_limit_amount'] )
 				$message = __('There is the item where a value is dirty.', 'usces');
 		}
 		
@@ -2392,7 +2406,7 @@ function usces_setup_cod_ajax(){
 		}
 		if( isset($_POST['cod_limit_amount']) ){
 			$usces->options['cod_limit_amount'] = (int)$_POST['cod_limit_amount'];
-			if( '' != trim($_POST['cod_limit_amount']) && 0 === (int)$_POST['cod_limit_amount'] )
+			if( !WCUtils::is_blank($_POST['cod_limit_amount']) && 0 === (int)$_POST['cod_limit_amount'] )
 				$message = __('There is the item where a value is dirty.', 'usces');
 		}
 		if( isset($_POST['cod_first_fee']) ){
@@ -3366,9 +3380,11 @@ function usces_post_reg_orderdata($order_id, $results){
 				if( isset($_GET['zeussuffix']) ){
 					$acting_opts = $usces->options['acting_settings']['zeus'];
 					$data['acting'] = 'zeus_card Secure API';
+					$data['order_number'] = $_GET['zeusordd'];
+					
 					$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
 					if( $usces->is_member_logged_in() ){
-						if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge']){
+						if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge']){
 							$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
 						}
 						$usces->set_member_meta_value('partofcard', $_GET['zeussuffix']);
@@ -3964,6 +3980,7 @@ function usces_action_acting_getpoint( $order_id, $add = true ) {
 			}
 		}
 	}
+	do_action( 'usces_action_acting_getpoint', $order_id, $add );
 }
 
 function usces_restore_point( $mem_id, $point ) {
@@ -3976,7 +3993,7 @@ function usces_restore_point( $mem_id, $point ) {
 //20120413ysk start
 function usces_set_free_csv( $customer ){
 	$free_csv = "";
-	if( "" != $customer['name1'] ) {
+	if( !WCUtils::is_blank($customer['name1']) ) {
 		$free_csv = "LAST_NAME=".mb_convert_encoding($customer['name1'],'SJIS','UTF-8').",FIRST_NAME=".mb_convert_encoding($customer['name2'],'SJIS','UTF-8').",TEL=".str_replace("-","",$customer['tel']).",MAIL=".$customer['mailaddress1'];
 		$free_csv = base64_encode( $free_csv );
 	}

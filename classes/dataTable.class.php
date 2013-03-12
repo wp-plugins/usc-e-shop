@@ -338,7 +338,7 @@ class dataTable
 			$this->SetDefaultColumns();
 			for($i=0; $i< count($this->defaultColumns); $i++){
 				$headerKey = $this->defaultColumns[$i];
-				if($getnames[$i] == ''){
+				if( WCUtils::is_blank($getnames[$i]) ){
 					$this->userHeaderNames[$headerKey] = $this->defaultColumns[$i];
 				}else{
 					$this->userHeaderNames[$headerKey] = htmlspecialchars($getnames[$i]);
@@ -347,7 +347,7 @@ class dataTable
 			$this->SetOptions($this->table, 'userHeaderNames', $this->userHeaderNames);
 			for($i=1; $i< count($this->defaultColumns); $i++){
 				$headerKey = $this->defaultColumns[$i];
-				if(($coltypes[$i-1] == 1 || $coltypes[$i-1] == 2) && $vallabels[$i-1] == ''){
+				if(($coltypes[$i-1] == 1 || $coltypes[$i-1] == 2) && WCUtils::is_blank($vallabels[$i-1]) ){
 					$valstr = $this->GetSelectData($headerKey);
 					$this->valueLabels[$headerKey] = $valstr;
 				}else{
@@ -635,7 +635,7 @@ class dataTable
 	
 	function SetListPatternNavi()
 	{
-		if($this->listPatternTableName == ''){
+		if( WCUtils::is_blank($this->listPatternTableName) ){
 			$this->listPatternNavigation = '';
 			$this->listPatternSelect = '';
 			return;
@@ -814,7 +814,7 @@ class dataTable
 		if($res){
 			while($rows = mysql_fetch_assoc($res)){
 				foreach($rows as $key=>$value){
-					if($value == ''){
+					if( WCUtils::is_blank($value) ){
 						$rows[$key] = '&nbsp;';
 					}
 				}
@@ -881,7 +881,7 @@ class dataTable
 		$fieldNames = $_POST['fieldNames'];
 		$str = '';
 		for($i=1; $i<count($fieldNames); $i++){
-			if($fieldDatas[$i] == '' || $fieldDatas[$i] == '&nbsp;'){
+			if( WCUtils::is_blank($fieldDatas[$i]) || $fieldDatas[$i] == '&nbsp;'){
 				$str .= $fieldNames[$i] . " = DEFAULT, ";
 			}else{
 				$str .= $fieldNames[$i] . " = '" . mysql_real_escape_string($fieldDatas[$i]) . "', ";
@@ -915,7 +915,7 @@ class dataTable
 		$fieldNames = $_POST['fieldNames'];
 		$str = '';
 		for($i=1; $i<count($fieldNames); $i++){
-			if($fieldDatas[$i] == '' || $fieldDatas[$i] == '&nbsp;'){
+			if( WCUtils::is_blank($fieldDatas[$i]) || $fieldDatas[$i] == '&nbsp;'){
 				$str .= "DEFAULT, ";
 			}else{
 				$str .= "'" . mysql_real_escape_string($fieldDatas[$i]) . "', ";
@@ -955,7 +955,7 @@ class dataTable
 		$values = "";
 		while(!feof($fp)){
 			$line = fgets($fp);
-			if(trim($line) == '') break;
+			if( WCUtils::is_blank($line) ) break;
 			$rows = explode(',', $line);
 			if(count($rows) != 15){
 				break;
@@ -964,7 +964,7 @@ class dataTable
 			}
 			$values .= "(NULL,";
 			foreach($rows as $data){
-				if(trim($data) == ''){
+				if( WCUtils::is_blank($data) ){
 					$values .= "DEFAULT,";
 				}else{
 					$values .= "'" . mysql_real_escape_string(mb_convert_encoding($data,'EUC-JP', 'auto')) . "',";
@@ -1050,7 +1050,7 @@ class dataTable
 					$_SESSION[$this->table]['listPatternId'] = $this->listPatternId;
 					setcookie($this->table.'listPatternId', $this->listPatternId, $this->expiration);
 					$str = '';
-				}else if($rows['pattern'] == ''){
+				}else if( WCUtils::is_blank($rows['pattern']) ){
 					$str = '';
 				}else{
 					$str = ' WHERE ' . $rows['pattern'];
@@ -1058,7 +1058,7 @@ class dataTable
 			}
 		}
 	
-		if($str == '' && $this->searchSql != ''){
+		if( WCUtils::is_blank($str) && !WCUtils::is_blank($this->searchSql) ){
 			$str = ' WHERE ' . $this->searchSql;
 		}else if($str != '' && $this->searchSql != ''){
 			$str .= ' AND ' . $this->searchSql;
@@ -1144,7 +1144,7 @@ class dataTable
 	//ListPatternOBJ
 	function GetListPatternRows($table)
 	{
-		if($table == ''){
+		if( WCUtils::is_blank($table) ){
 			$this->listPatternId = '';
 			$this->listPatternRows = '';	
 			return;
@@ -1364,7 +1364,7 @@ class dataTable
 		}else{
 			$rows = mysql_fetch_assoc($res);
 			$str_value = $rows['value'];
-			if($str_value == ''){
+			if( WCUtils::is_blank($str_value) ){
 				return FALSE;
 			}else{
 				
@@ -1465,7 +1465,7 @@ class dataTable
 			$data .= '<Count>'.count($rows).'</Count>';
 			$data .= '<Item>';
 			foreach($rows as $value){
-				if($value == ''){
+				if( WCUtils::is_blank($value) ){
 					$data .= '<info>undefineinfodata</info>';
 				}else{
 					$data .= '<info>'.$value.'</info>';

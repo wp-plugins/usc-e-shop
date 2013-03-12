@@ -185,7 +185,7 @@ function addComma(str)
 <td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo esc_html(sprintf(__('%2$s %3$s, %1$s', 'usces'),substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2))); ?></div></td>
 </tr>
 <tr>
-<td colspan="2">&nbsp;</td>
+<td colspan="2"><?php do_action( 'usces_action_member_edit_form_left_blank', $ID ); ?></td>
 </tr>
 </table>
 </div>
@@ -201,7 +201,7 @@ function addComma(str)
 <th class="historyrow"><?php _e('Purchase date', 'usces'); ?></th>
 <th class="historyrow"><?php _e('Purchase price', 'usces'); ?></th>
 <th class="historyrow"><?php _e('Used points','usces'); ?></th>
-<th class="historyrow"><?php _e('Special Price', 'usces'); ?></th>
+<th class="historyrow"><?php echo apply_filters( 'usces_member_discount_label', __('Special Price', 'usces'), $umhs['ID'] ); ?></th>
 <th class="historyrow"><?php _e('Shipping', 'usces'); ?></th>
 <th class="historyrow"><?php _e('C.O.D', 'usces'); ?></th>
 <th class="historyrow"><?php _e('consumption tax', 'usces'); ?></th>

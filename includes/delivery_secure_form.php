@@ -34,7 +34,7 @@ foreach ( (array)$payments as $id => $array ) {
 					$member = $usces->get_member();
 					$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 				}
-				if( '2' == $usces->options['acting_settings'][$paymod_id]['security'] && 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
+				if( 2 == $usces->options['acting_settings'][$paymod_id]['security'] && 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
 					$html .= '<input name="cnum1" type="hidden" value="8888888888888888" />
 					<input name="expyy" type="hidden" value="2010" />
 					<input name="expmm" type="hidden" value="01" />
@@ -45,7 +45,7 @@ foreach ( (array)$payments as $id => $array ) {
 						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
 						<td colspan="2"><input name="cnum1" type="text" size="16" value="' . esc_attr($cnum1) . '" />(半角数字のみ)</td>
 						</tr>';
-					if( '1' == $usces->options['acting_settings'][$paymod_id]['security'] ){
+					if( 1 == $usces->options['acting_settings'][$paymod_id]['security'] ){
 						$html .= '<tr>
 						<th scope="row">'.__('セキュリティコード', 'usces').'</th>
 						<td colspan="2"><input name="securecode" type="text" size="6" value="' . esc_attr($securecode) . '" />(半角数字のみ)</td>
@@ -65,18 +65,18 @@ foreach ( (array)$payments as $id => $array ) {
 						</select>年 
 						<select name="expmm">
 							<option value=""' . (empty($expmm) ? ' selected="selected"' : '') . '>----</option>
-							<option value="01"' . (('01' == $expmm) ? ' selected="selected"' : '') . '> 1</option>
-							<option value="02"' . (('02' == $expmm) ? ' selected="selected"' : '') . '> 2</option>
-							<option value="03"' . (('03' == $expmm) ? ' selected="selected"' : '') . '> 3</option>
-							<option value="04"' . (('04' == $expmm) ? ' selected="selected"' : '') . '> 4</option>
-							<option value="05"' . (('05' == $expmm) ? ' selected="selected"' : '') . '> 5</option>
-							<option value="06"' . (('06' == $expmm) ? ' selected="selected"' : '') . '> 6</option>
-							<option value="07"' . (('07' == $expmm) ? ' selected="selected"' : '') . '> 7</option>
-							<option value="08"' . (('08' == $expmm) ? ' selected="selected"' : '') . '> 8</option>
-							<option value="09"' . (('09' == $expmm) ? ' selected="selected"' : '') . '> 9</option>
-							<option value="10"' . (('10' == $expmm) ? ' selected="selected"' : '') . '>10</option>
-							<option value="11"' . (('11' == $expmm) ? ' selected="selected"' : '') . '>11</option>
-							<option value="12"' . (('12' == $expmm) ? ' selected="selected"' : '') . '>12</option>
+							<option value="01"' . (('01' === $expmm) ? ' selected="selected"' : '') . '> 1</option>
+							<option value="02"' . (('02' === $expmm) ? ' selected="selected"' : '') . '> 2</option>
+							<option value="03"' . (('03' === $expmm) ? ' selected="selected"' : '') . '> 3</option>
+							<option value="04"' . (('04' === $expmm) ? ' selected="selected"' : '') . '> 4</option>
+							<option value="05"' . (('05' === $expmm) ? ' selected="selected"' : '') . '> 5</option>
+							<option value="06"' . (('06' === $expmm) ? ' selected="selected"' : '') . '> 6</option>
+							<option value="07"' . (('07' === $expmm) ? ' selected="selected"' : '') . '> 7</option>
+							<option value="08"' . (('08' === $expmm) ? ' selected="selected"' : '') . '> 8</option>
+							<option value="09"' . (('09' === $expmm) ? ' selected="selected"' : '') . '> 9</option>
+							<option value="10"' . (('10' === $expmm) ? ' selected="selected"' : '') . '>10</option>
+							<option value="11"' . (('11' === $expmm) ? ' selected="selected"' : '') . '>11</option>
+							<option value="12"' . (('12' === $expmm) ? ' selected="selected"' : '') . '>12</option>
 						</select>月</td>
 						</tr>
 						<tr>
@@ -90,19 +90,19 @@ foreach ( (array)$payments as $id => $array ) {
 				$html .= '
 					<tr>
 					<th scope="row">'.__('支払方法', 'usces').'</th>
-					<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' == $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
-					<td><input name="howpay" type="radio" value="0" id="howdiv2"' . (('0' == $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
+					<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' === $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
+					<td><input name="howpay" type="radio" value="0" id="howdiv2"' . (('0' === $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
 					</tr>
 					<tr id="cbrand_zeus">
 					<th scope="row">'.__('カードブランド', 'usces').'</th>
 					<td colspan="2">
 					<select name="cbrand">
-						<option value=""' . (('' == $cbrand) ? ' selected="selected"' : '') . '>--------</option>
-						<option value="1"' . (('1' == $cbrand) ? ' selected="selected"' : '') . '>JCB</option>
-						<option value="1"' . (('1' == $cbrand) ? ' selected="selected"' : '') . '>VISA</option>
-						<option value="1"' . (('1' == $cbrand) ? ' selected="selected"' : '') . '>MASTER</option>
-						<option value="2"' . (('2' == $cbrand) ? ' selected="selected"' : '') . '>DINERS</option>
-						<option value="3"' . (('3' == $cbrand) ? ' selected="selected"' : '') . '>AMEX</option>
+						<option value=""' . ((WCUtils::is_blank($cbrand)) ? ' selected="selected"' : '') . '>--------</option>
+						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>JCB</option>
+						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>VISA</option>
+						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>MASTER</option>
+						<option value="2"' . (('2' === $cbrand) ? ' selected="selected"' : '') . '>DINERS</option>
+						<option value="3"' . (('3' === $cbrand) ? ' selected="selected"' : '') . '>AMEX</option>
 					</select>
 					</td>
 					</tr>
@@ -110,24 +110,24 @@ foreach ( (array)$payments as $id => $array ) {
 					<th scope="row">'.__('分割回数', 'usces').'</th>
 					<td colspan="2">
 					<select name="div_1" id="brand1">
-						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
-						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
-						<option value="03"' . (('03' == $cbrand) ? ' selected="selected"' : '') . '>3回</option>
-						<option value="05"' . (('05' == $cbrand) ? ' selected="selected"' : '') . '>5回</option>
-						<option value="06"' . (('06' == $cbrand) ? ' selected="selected"' : '') . '>6回</option>
-						<option value="10"' . (('10' == $cbrand) ? ' selected="selected"' : '') . '>10回</option>
-						<option value="12"' . (('12' == $cbrand) ? ' selected="selected"' : '') . '>12回</option>
-						<option value="15"' . (('15' == $cbrand) ? ' selected="selected"' : '') . '>15回</option>
-						<option value="18"' . (('18' == $cbrand) ? ' selected="selected"' : '') . '>18回</option>
-						<option value="20"' . (('20' == $cbrand) ? ' selected="selected"' : '') . '>20回</option>
-						<option value="24"' . (('24' == $cbrand) ? ' selected="selected"' : '') . '>24回</option>
+						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
+						<option value="99"' . (('99' === $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
+						<option value="03"' . (('03' === $cbrand) ? ' selected="selected"' : '') . '>3回</option>
+						<option value="05"' . (('05' === $cbrand) ? ' selected="selected"' : '') . '>5回</option>
+						<option value="06"' . (('06' === $cbrand) ? ' selected="selected"' : '') . '>6回</option>
+						<option value="10"' . (('10' === $cbrand) ? ' selected="selected"' : '') . '>10回</option>
+						<option value="12"' . (('12' === $cbrand) ? ' selected="selected"' : '') . '>12回</option>
+						<option value="15"' . (('15' === $cbrand) ? ' selected="selected"' : '') . '>15回</option>
+						<option value="18"' . (('18' === $cbrand) ? ' selected="selected"' : '') . '>18回</option>
+						<option value="20"' . (('20' === $cbrand) ? ' selected="selected"' : '') . '>20回</option>
+						<option value="24"' . (('24' === $cbrand) ? ' selected="selected"' : '') . '>24回</option>
 					</select>
 					<select name="div_2" id="brand2">
-						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
-						<option value="99"' . (('99' == $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
+						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
+						<option value="99"' . (('99' === $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 					</select>
 					<select name="div_3" id="brand3">
-						<option value="01"' . (('01' == $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
+						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
 					</select>
 					</td>
 					</tr>
@@ -186,9 +186,9 @@ foreach ( (array)$payments as $id => $array ) {
 					<th scope="row">'.__('支払方法', 'usces').'</th>
 					<td colspan="2">
 					<select name="div" id="div_remise">
-						<option value="0"' . (('0' == $div) ? ' selected="selected"' : '') . '>　一括払い</option>
-						<option value="1"' . (('1' == $div) ? ' selected="selected"' : '') . '>　2回払い</option>
-						<option value="2"' . (('2' == $div) ? ' selected="selected"' : '') . '>　リボ払い</option>
+						<option value="0"' . (('0' === $div) ? ' selected="selected"' : '') . '>　一括払い</option>
+						<option value="1"' . (('1' === $div) ? ' selected="selected"' : '') . '>　2回払い</option>
+						<option value="2"' . (('2' === $div) ? ' selected="selected"' : '') . '>　リボ払い</option>
 					</select>
 					</td>
 					</tr>

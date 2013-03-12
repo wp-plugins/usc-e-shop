@@ -109,7 +109,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$member = $usces->get_member();
 			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 			$securecode = isset($_POST['securecode']) ? $_POST['securecode'] : '';
-			if( '2' == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+			if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
 				//$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';//20121119ysk 0000620
 				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
@@ -117,7 +117,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			}else{
 				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . '">';
-				if( '1' == $acting_opts['security'] ){
+				if( 1 == $acting_opts['security'] ){
 					$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
 				}
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
@@ -130,7 +130,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
 				<input type="hidden" name="printord" value="yes">';
-			if( isset($_POST['cbrand']) && isset($_POST['howpay']) && '0' === $_POST['howpay'] ){
+			if( isset($_POST['cbrand']) && isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){
 				$html .= '<input type="hidden" name="howpay" value="' . $_POST['howpay'] . '">';
 				$html .= '<input type="hidden" name="cbrand" value="' . $_POST['cbrand'] . '">';
 				$div_name = 'div_' . $_POST['cbrand'];

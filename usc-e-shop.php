@@ -36,6 +36,7 @@ require_once(USCES_PLUGIN_DIR."/functions/included_first.php");
 add_filter( 'locale', 'usces_filter_locale' );
 load_plugin_textdomain('usces', USCES_PLUGIN_DIR.'/languages', USCES_PLUGIN_FOLDER.'/languages');
 
+require_once(USCES_PLUGIN_DIR."/classes/utilities.class.php");
 require_once(USCES_PLUGIN_DIR."/functions/filters.php");
 require_once(USCES_PLUGIN_DIR."/functions/redirect.php");
 require_once(USCES_PLUGIN_DIR."/includes/initial.php");

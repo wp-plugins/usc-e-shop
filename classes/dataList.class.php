@@ -568,7 +568,7 @@ class dataList
 //				break;
 //		}
 				
-		if($str == '' && $this->searchSql != ''){
+		if( WCUtils::is_blank($str) && !WCUtils::is_blank($this->searchSql) ){
 			$str = ' HAVING ' . $this->searchSql;
 		}else if($str != '' && $this->searchSql != ''){
 			$str .= ' HAVING ' . $this->searchSql;
@@ -578,7 +578,7 @@ class dataList
 	
 	function SearchIn()
 	{
-		if($this->arr_search['column'] == 'none' || $this->arr_search['column'] == '' || $this->arr_search['word'] == '')
+		if($this->arr_search['column'] == 'none' || WCUtils::is_blank($this->arr_search['column']) || WCUtils::is_blank($this->arr_search['word']) )
 			return;//$this->searchSql = $sql;
 		else
 			$this->searchSql = '`' .  $this->arr_search['column'] . '` LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']) . "%'";

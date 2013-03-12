@@ -75,7 +75,7 @@ function usces_item_uploadcsv(){
 /*********************************************************************/
 //	Register
 /**********************************************************************/
-	if( isset($_REQUEST['regfile']) && '' != $_REQUEST['regfile'] && isset($_REQUEST['action']) && 'upload_register' == $_REQUEST['action'] ){
+	if( isset($_REQUEST['regfile']) && !WCUtils::is_blank($_REQUEST['regfile']) && isset($_REQUEST['action']) && 'upload_register' == $_REQUEST['action'] ){
 		$file_name = $_REQUEST['regfile'];
 		$decode_filename = base64_decode($file_name);
 		if( ! file_exists($path.$file_name) ){
@@ -270,11 +270,11 @@ function usces_item_uploadcsv(){
 			continue;
 		}
 
-		if( $pre_code == $datas[USCES_COL_ITEM_CODE] && '' == $datas[USCES_COL_POST_ID] ){
+		if( $pre_code == $datas[USCES_COL_ITEM_CODE] && WCUtils::is_blank($datas[USCES_COL_POST_ID]) ){
 			$mode = 'add';
 
 		}else{
-			$post_id = ( '' != $datas[USCES_COL_POST_ID] ) ? (int)$datas[USCES_COL_POST_ID] : NULL;
+			$post_id = ( !WCUtils::is_blank($datas[USCES_COL_POST_ID]) ) ? (int)$datas[USCES_COL_POST_ID] : NULL;
 			if( $post_id ){
 				$db_res = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID = %d", $post_id) );
 				if( !$db_res ){
@@ -466,14 +466,14 @@ function usces_item_uploadcsv(){
 					break;
 				case USCES_COL_POST_STATUS:
 					$array17 = array('publish', 'future', 'draft', 'pending', 'private');
-					if( !in_array($data, $array17) || '' == $data ){
+					if( !in_array($data, $array17) || WCUtils::is_blank($data) ){
 						$mes = "No." . ($rows_num+1) . "\t".__('A value of the display status is abnormal.', 'usces');
 						$logtemp .= $mes.$yn;
 						$mestemp .= $mes.$br.$yn;
 					}
 					break;
 				case USCES_COL_POST_MODIFIED:
-					if( 'future' == $datas[USCES_COL_POST_STATUS] && ('' == $data || '0000-00-00 00:00:00' == $data) ){
+					if( 'future' == $datas[USCES_COL_POST_STATUS] && (WCUtils::is_blank($data) || '0000-00-00 00:00:00' === $data) ){
 						if( preg_match($date_pattern, $data, $match) ){
 							if( checkdate($match[2], $match[3], $match[1]) && 
 										(0 < $match[4] && 24 > $match[4]) && 
@@ -491,7 +491,7 @@ function usces_item_uploadcsv(){
 							$logtemp .= $mes.$yn;
 							$mestemp .= $mes.$br.$yn;
 						}
-					}else if( '' != $data && '0000-00-00 00:00:00' != $data ){
+					}else if( !WCUtils::is_blank($data) && '0000-00-00 00:00:00' !== $data ){
 						if(preg_match("/^[0-9]+$/", substr($data,0,4))) {//先頭4桁が数値のみ
 							if(strtotime($data) === false){
 								$mes = "No." . ($rows_num+1) . "\t".__('A value of the schedule is abnormal.', 'usces');
@@ -611,7 +611,7 @@ function usces_item_uploadcsv(){
 						break;
 				}
 			}
-			if( '' != $val['name'] || '' != $val['mean'] || '' != $val['essential'] || '' != $val['value'] ){
+			if( !WCUtils::is_blank($val['name']) || !WCUtils::is_blank($val['mean']) || !WCUtils::is_blank($val['essential']) || !WCUtils::is_blank($val['value']) ){
 				$logtemp .= $oplogtemp;
 				$mestemp .= $opmestemp;
 			}
@@ -675,12 +675,12 @@ function usces_item_uploadcsv(){
 			}
 
 			$cdatas['ID'] = $post_id;
-			$cdatas['post_author'] = ( '' != $datas[USCES_COL_POST_AUTHOR] ) ? $datas[USCES_COL_POST_AUTHOR] : 1;
+			$cdatas['post_author'] = ( !WCUtils::is_blank($datas[USCES_COL_POST_AUTHOR]) ) ? $datas[USCES_COL_POST_AUTHOR] : 1;
 			$cdatas['post_content'] = trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS'));
 			$cdatas['post_title'] = trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS'));
 			$cdatas['post_excerpt'] = trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS'));
 			$cdatas['post_status'] = $datas[USCES_COL_POST_STATUS];
-			$cdatas['comment_status'] = ( '' != $datas[USCES_COL_POST_COMMENT_STATUS] ) ? $datas[USCES_COL_POST_COMMENT_STATUS] : 'close';
+			$cdatas['comment_status'] = ( !WCUtils::is_blank($datas[USCES_COL_POST_COMMENT_STATUS]) ) ? $datas[USCES_COL_POST_COMMENT_STATUS] : 'close';
 			$cdatas['ping_status'] = 'close';
 			$cdatas['post_password'] = ( 'private' == $cdatas['post_status'] ) ? '' : $datas[USCES_COL_POST_PASSWORD];
 			$cdatas['post_type'] = 'post';
@@ -933,10 +933,10 @@ function usces_item_uploadcsv(){
 				$valstr = '';
 				foreach( $cfrows as $row ){
 					list($meta_key, $meta_value) = explode( '=', $row, 2 );
-					if( '' != trim($meta_key) )
+					if( !WCUtils::is_blank($meta_key) )
 						$valstr .=  $wpdb->prepare("( %d, %s, %s),", $post_id, trim($meta_key), trim($meta_value));
 				}
-				if( '' != $valstr ){
+				if( !WCUtils::is_blank($valstr) ){
 					$valstr = rtrim($valstr, ',');
 					$dbres = $wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr");
 				}

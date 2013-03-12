@@ -227,20 +227,20 @@ jQuery(function($){
 //else
 //	wp_nonce_field('update-post_' .  $post_ID);
 $itemCode = get_post_meta($post_ID, '_itemCode', true);
-$itemName = get_post_meta($post_ID, '_itemName', $post_ID, true);
-$itemRestriction = get_post_meta($post_ID, '_itemRestriction', $post_ID, true);
-$itemPointrate = get_post_meta($post_ID, '_itemPointrate', $post_ID, true);
-$itemGpNum1 = get_post_meta($post_ID, '_itemGpNum1', $post_ID, true);
-$itemGpNum2 = get_post_meta($post_ID, '_itemGpNum2', $post_ID, true);
-$itemGpNum3 = get_post_meta($post_ID, '_itemGpNum3', $post_ID, true);
-$itemGpDis1 = get_post_meta($post_ID, '_itemGpDis1', $post_ID, true);
-$itemGpDis2 = get_post_meta($post_ID, '_itemGpDis2', $post_ID, true);
-$itemGpDis3 = get_post_meta($post_ID, '_itemGpDis3', $post_ID, true);
+$itemName = get_post_meta($post_ID, '_itemName', true);
+$itemRestriction = get_post_meta($post_ID, '_itemRestriction', true);
+$itemPointrate = get_post_meta($post_ID, '_itemPointrate', true);
+$itemGpNum1 = get_post_meta($post_ID, '_itemGpNum1', true);
+$itemGpNum2 = get_post_meta($post_ID, '_itemGpNum2', true);
+$itemGpNum3 = get_post_meta($post_ID, '_itemGpNum3', true);
+$itemGpDis1 = get_post_meta($post_ID, '_itemGpDis1', true);
+$itemGpDis2 = get_post_meta($post_ID, '_itemGpDis2', true);
+$itemGpDis3 = get_post_meta($post_ID, '_itemGpDis3', true);
 
-$itemShipping = get_post_meta($post_ID, '_itemShipping', $post_ID, true);
-$itemDeliveryMethod = get_post_meta($post_ID, '_itemDeliveryMethod', $post_ID, true);
-$itemShippingCharge = get_post_meta($post_ID, '_itemShippingCharge', $post_ID, true);
-$itemIndividualSCharge = get_post_meta($post_ID, '_itemIndividualSCharge', $post_ID, true);
+$itemShipping = get_post_meta($post_ID, '_itemShipping', true);
+$itemDeliveryMethod = get_post_meta($post_ID, '_itemDeliveryMethod', true);
+$itemShippingCharge = get_post_meta($post_ID, '_itemShippingCharge', true);
+$itemIndividualSCharge = get_post_meta($post_ID, '_itemIndividualSCharge', true);
 /*************************************** 30 */
 ?>
 

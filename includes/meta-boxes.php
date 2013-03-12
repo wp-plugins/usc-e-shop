@@ -162,7 +162,7 @@ if ( 0 != $post->ID ) {
 		$stamp = __('Scheduled for: <b>%1$s</b>');
 	} else if ( 'publish' == $post->post_status || 'private' == $post->post_status ) { // already published
 		$stamp = __('Published on: <b>%1$s</b>');
-	} else if ( '0000-00-00 00:00:00' == $post->post_date_gmt ) { // draft, 1 or more saves, no date specified
+	} else if ( '0000-00-00 00:00:00' === $post->post_date_gmt ) { // draft, 1 or more saves, no date specified
 		$stamp = __('Publish <b>immediately</b>');
 	} else if ( time() < strtotime( $post->post_date_gmt . ' +0000' ) ) { // draft, 1 or more saves, future date specified
 		$stamp = __('Schedule for: <b>%1$s</b>');

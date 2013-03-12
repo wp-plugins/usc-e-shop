@@ -54,7 +54,7 @@ function usces_get_opts( $post_id, $keyflag = 'sort' ) {
 	return $opts;
 }
 function usces_add_opt( $post_id, $newvalue, $check = true ) {
-	global $wpdb;
+	global $wpdb, $usces;
 	if( $check ){
 		$metas = usces_get_post_meta($post_id, '_iopt_');
 		if( !empty($metas) ){
@@ -99,7 +99,7 @@ function usces_add_opt( $post_id, $newvalue, $check = true ) {
  * item sku
  */
 function usces_add_sku( $post_id, $newvalue, $check = true ) {
-	global $wpdb;
+	global $wpdb, $usces;
 	if( $check ){
 		$metas = usces_get_post_meta($post_id, '_isku_');
 		if( !empty($metas) ){
@@ -134,6 +134,7 @@ function usces_add_sku( $post_id, $newvalue, $check = true ) {
 		}
 		$newvalue['sort'] = !empty($meta_num) ? $meta_num : 0;
 	}
+	$newvalue = $usces->stripslashes_deep_post($newvalue);
 	$serialized_newvalue = serialize($newvalue);
 	$wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value ) VALUES (%d, '_isku_', %s)", $post_id, $serialized_newvalue) );
 	$id = $wpdb->insert_id;
@@ -574,30 +575,19 @@ function item_sku_meta_form() {
  * add_item_option_meta
  */
 function add_item_option_meta( $post_ID ) {
-//	global $wpdb;
+	global $usces;
 	
 	$post_ID = (int) $post_ID;
 	$value = array();
 	$opts = array();
-	$nov = '';
 	$protected = array( '#NONE#', '_wp_attached_file', '_wp_attachment_metadata', '_wp_old_slug', '_wp_page_template' );
 
 	$newoptname = isset($_POST['newoptname']) ? trim( $_POST['newoptname'] ) : '';
 	$newoptmeans = isset($_POST['newoptmeans']) ? (int)$_POST['newoptmeans']: 0;
 	$newoptessential = isset($_POST['newoptessential']) ? $_POST['newoptessential']: 0;
-
-	if($newoptmeans === 0 || $newoptmeans === 1){
-		$newoptvalue = isset($_POST['newoptvalue']) ? explode("\n", $_POST['newoptvalue'] ) : '';
-		foreach((array)$newoptvalue as $v){
-			if(trim( $v ) != '') 
-				$nov .= str_replace('\\', '&yen;', trim( $v )) . "\n";
-		}
-	}else{
-		$newoptvalue = isset($_POST['newoptvalue']) ? $_POST['newoptvalue'] : '';
-		$nov = str_replace('\\', '&yen;', $newoptvalue);
-	}
-
-	if ( ($newoptmeans >= 2 || '0' === $newoptvalue || !empty ( $newoptvalue )) && !empty ( $newoptname) ) {
+	$newoptvalue = isset($_POST['newoptvalue']) ? trim($_POST['newoptvalue']) : '';
+	
+	if ( ($newoptmeans >= 2 || WCUtils::is_zero($newoptvalue) || !empty ( $newoptvalue )) && !empty ( $newoptname) ) {
 
 		if ( $newoptname )
 			$metakey = $newoptname; // default
@@ -607,26 +597,14 @@ function add_item_option_meta( $post_ID ) {
 
 		wp_cache_delete($post_ID, 'post_meta');
 		
-//		$opts = usces_get_opts($post_ID);
-//		foreach( $opts as $opt ){
-//			if( $opt['code'] == $newoptname ){
-//				return -1;
-//				break;
-//			}
-//		}
-//		$sort = count($opts);
-		$value['name'] = $newoptname;
+		$value['name'] = str_replace("\\",'',$newoptname);
 		$value['means'] = $newoptmeans;
 		$value['essential'] = $newoptessential;
-		$value['value'] = trim($nov);
-//		$value['sort'] = $sort;
-//		$valuestr = serialize($value);
+		$value['value'] = str_replace("\\",'',$newoptvalue);
+	$value = $usces->stripslashes_deep_post($value);
 
 		$id = usces_add_opt($post_ID, $value);
 
-//		$wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id,meta_key,meta_value ) VALUES (%d, %s, %s)", $post_ID, $metakey, $valuestr) );
-//		$id = $wpdb->insert_id;
-		
 		return $id;
 	}
 	return false;
@@ -636,7 +614,7 @@ function add_item_option_meta( $post_ID ) {
  * add_item_sku_meta
  */
 function add_item_sku_meta( $post_ID ) {
-//	global $wpdb;
+	global $usces;
 	
 	$post_ID = (int) $post_ID;
 	$value = array();
@@ -651,25 +629,14 @@ function add_item_sku_meta( $post_ID ) {
 	$newskudisp = isset($_POST['newskudisp']) ? trim( $_POST['newskudisp'] ) : '';
 	$newskuunit = isset($_POST['newskuunit']) ? trim( $_POST['newskuunit'] ) : '';
 	$newskugptekiyo = isset($_POST['newskugptekiyo']) ? $_POST['newskugptekiyo'] : '';
-	//$newcharging_type = isset($_POST['newcharging_type']) ? $_POST['newcharging_type'] : 0;
 
-
-	if ( $newskuname != '' && $newskuprice != '' && $newskuzaikoselect != '') {
+	if ( !WCUtils::is_blank($newskuname) && !WCUtils::is_blank($newskuprice) && !WCUtils::is_blank($newskuzaikoselect) ) {
 
 		if ( in_array($newskuname, $protected) )
 			return false;
 
 		wp_cache_delete($post_ID, 'post_meta');
 		
-		//$id = add_post_meta($post_ID, $metakey, $value, $unique);
-//		$skus = usces_get_skus($post_ID);
-//		foreach( $skus as $sku ){
-//			if( $sku['code'] == $newskuname ){
-//				return -1;
-//				break;
-//			}
-//		}
-//		$sort = count($skus);
 		$value['code'] = $newskuname;
 		$value['name'] = $newskudisp;
 		$value['cprice'] = $newskucprice;
@@ -678,13 +645,9 @@ function add_item_sku_meta( $post_ID ) {
 		$value['stocknum'] = $newskuzaikonum;
 		$value['stock'] = $newskuzaikoselect;
 		$value['gp'] = $newskugptekiyo;
-//		$value['sort'] = $sort;
 		$value = apply_filters('usces_filter_add_item_sku_meta_value', $value);
-//		$value = serialize($value);
 
 		$id = usces_add_sku($post_ID, $value);
-//		$wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id,meta_key,meta_value ) VALUES (%d, %s, %s)", $post_ID, $metakey, $value) );
-//		$id = $wpdb->insert_id;
 		return $id;
 	}
 	return false;
@@ -696,7 +659,7 @@ function add_item_sku_meta( $post_ID ) {
  * up_item_option_meta
  */
 function up_item_option_meta( $post_ID ) {
-	global $wpdb;
+	global $wpdb, $usces;
 	
 	$post_ID = (int) $post_ID;
 	$value = array();
@@ -706,39 +669,21 @@ function up_item_option_meta( $post_ID ) {
 	$optmeans = isset($_POST['optmeans']) ? (int)$_POST['optmeans']: 0;
 	$optessential = isset($_POST['optessential']) ? $_POST['optessential']: 0;
 	$optsort = isset($_POST['sort']) ? $_POST['sort']: 0;
-
-	$nov = '';
-	if($optmeans === 0 || $optmeans === 1){
-		$optvalue = isset($_POST['optvalue']) ? explode("\n", $_POST['optvalue']) : '';
-		foreach((array)$optvalue as $v){
-			if(trim( $v ) != '') 
-				$nov .= str_replace('\\', '&yen;', trim( $v )) . "\n";
-		}
-	}else{
-		$optvalue = isset($_POST['optvalue']) ? trim( $_POST['optvalue'] ) : '';
-		$nov = str_replace('\\', '&yen;', $optvalue);
-	}
+	$optvalue = isset($_POST['optvalue']) ? trim($_POST['optvalue']) : '';
 
 	$metakey = '_iopt_';
-	$value['name'] = $optname;
+	$value['name'] = str_replace("\\",'',$optname);
 	$value['means'] = $optmeans;
 	$value['essential'] = $optessential;
-	$value['value'] = trim($nov);
+	$value['value'] = str_replace("\\",'',$optvalue);
 	$value['sort'] = $optsort;
+	$value = $usces->stripslashes_deep_post($value);
 	$valueserialized = serialize($value);
 
-	//if ( $optmeans >= 2 ) {
-		// We have a key/value pair. If both the select and the
-		// input for the key have data, the input takes precedence:
-
-
-		wp_cache_delete($post_ID, 'post_meta');
+	wp_cache_delete($post_ID, 'post_meta');
 		
-		
-		$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $optmetaid) );
-		return $res;
-	//}
-	return false;
+	$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $optmetaid) );
+	return $res;
 } // update_meta
 
 /**
@@ -759,7 +704,6 @@ function up_item_sku_meta( $post_ID ) {
 	$skudisp = isset($_POST['skudisp']) ? trim( $_POST['skudisp'] ): '';
 	$skuunit = isset($_POST['skuunit']) ? trim( $_POST['skuunit'] ): '';
 	$skugptekiyo = isset($_POST['skugptekiyo']) ? (int)$_POST['skugptekiyo'] : 0;
-	//$charging_type = isset($_POST['charging_type']) ? $_POST['charging_type'] : 0;
 	$skusort = isset($_POST['sort']) ? $_POST['sort']: 0;
 
 	$value['code'] = $skuname;
@@ -771,7 +715,7 @@ function up_item_sku_meta( $post_ID ) {
 	$value['stock'] = $skuzaiko;
 	$value['gp'] = $skugptekiyo;
 	$value['sort'] = $skusort;
-	//$value['charging_type'] = (int)$charging_type;
+	$value = $usces->stripslashes_deep_post($value);
 	
 	$skus = $usces->get_skus($post_ID);
 	foreach( $skus as $sku ){
@@ -785,7 +729,7 @@ function up_item_sku_meta( $post_ID ) {
 	
 	$valueserialized = serialize($value);
 
-	if ( $skumetaid != '' && $skuname != '' && $skuprice != '' ) {
+	if ( !WCUtils::is_blank($skumetaid) && !WCUtils::is_blank($skuname) && !WCUtils::is_blank($skuprice) ) {
 
 		wp_cache_delete($post_ID, 'post_meta');
 		
@@ -866,14 +810,7 @@ function select_common_option( $post_ID ) {
 	
 	$means = $array_val['means'];
 	$essential = $array_val['essential'];
-	$value = '';
-//	if($means < 2){
-//		foreach($array_val['value'] as $k => $v){
-//			$value .= trim($v) . "\n";
-//		}
-//	}else{
-			$value .= $array_val['value'];
-//	}
+	$value = $array_val['value'];
 	$res = $means . '#usces#' . $essential . '#usces#' . $value;
 	return $res;
 } // select_common_option
@@ -881,11 +818,12 @@ function select_common_option( $post_ID ) {
 
 
 
-function order_item2cart_ajax()
-{
+function order_item2cart_ajax(){
+	global $usces;
 
 	if( $_POST['action'] != 'order_item2cart_ajax' ) die(0);
 	
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	$res = order_item2cart();
 	
 	//if( $res === false )  die(0);//20120613ysk 0000500
@@ -895,11 +833,13 @@ function order_item2cart_ajax()
 	die( $res );
 } 
 
-function order_item_ajax()
-{
+function order_item_ajax(){
+	global $usces;
 
 	if( $_POST['action'] != 'order_item_ajax' ) die(0);
 	
+	$_POST = $usces->stripslashes_deep_post($_POST);
+
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
 		case 'orderConfirmMail':
@@ -1364,6 +1304,8 @@ function item_save_metadata( $post_id, $post ) {
 			$skus['stock'] = $skustock;
 			$skus['gp'] = $skugp;
 			$skus['sort'] = $skusort;
+			$skus = $usces->stripslashes_deep_post($skus);
+			$skus = apply_filters( 'usces_filter_item_save_sku_metadata', $skus, $meta_id );
 			
 			$valueserialized = serialize($skus);
 			$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $meta_id) );
@@ -1371,10 +1313,10 @@ function item_save_metadata( $post_id, $post ) {
 			if( in_array( $skucode, $codes ) )
 				$uniq_code = true;
 				
-			if( '' == $skucode )
+			if( WCUtils::is_blank($skucode) )
 				$irreg_code = true;
 					
-			if( '' == $skuprice || preg_match('/[^0-9.]/', $skuprice) || 1 < substr_count($skuprice, '.' ) )
+			if( WCUtils::is_blank($skuprice) || preg_match('/[^0-9.]/', $skuprice) || 1 < substr_count($skuprice, '.' ) )
 				$irreg_price = true;
 				
 			$codes[] = $skucode;
@@ -1408,25 +1350,14 @@ function item_save_metadata( $post_id, $post ) {
 			$optmeans = isset($_POST['itemopt'][$meta_id]['means']) ? (int)$_POST['itemopt'][$meta_id]['means']: 0;
 			$optessential = isset($_POST['itemopt'][$meta_id]['essential']) ? (int)$_POST['itemopt'][$meta_id]['essential']: 0;
 			$optsort = isset($_POST['itemopt'][$meta_id]['sort']) ? $_POST['itemopt'][$meta_id]['sort']: 0;
+			$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? $_POST['itemopt'][$meta_id]['value']: '';
 			
-			$nov = '';
-			if($optmeans === 0 || $optmeans === 1){
-				$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? explode("\n", $_POST['itemopt'][$meta_id]['value'] ) : '';
-				foreach((array)$optvalue as $v){
-					if(trim( $v ) != '') 
-						$nov .= str_replace('\\', '&yen;', trim( $v )) . "\n";
-				}
-				//$nov = trim($nov, '\n');
-			}else{
-				$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? $_POST['itemopt'][$meta_id]['value'] : '';
-				$nov = str_replace('\\', '&yen;', $optvalue);
-			}
-
 			$opts['name'] = $optname;
-			$opts['value'] = trim($nov);
+			$opts['value'] = $optvalue;
 			$opts['means'] = $optmeans;
 			$opts['essential'] = $optessential;
 			$opts['sort'] = $optsort;
+			$opts = $usces->stripslashes_deep_post($opts);
 			
 			$valueserialized = serialize($opts);
 			$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $meta_id) );
@@ -1434,10 +1365,10 @@ function item_save_metadata( $post_id, $post ) {
 			if( in_array( $optname, $names ) )
 				$uniq_name = true;
 				
-			if( '' == $optname )
+			if( WCUtils::is_blank($optname) )
 				$irreg_name = true;
 					
-			if( '' == $optvalue && 1 >= $optmeans )
+			if( WCUtils::is_blank($optvalue) && 1 >= $optmeans )
 				$irreg_value = true;
 				
 			$names[] = $optname;
@@ -1455,6 +1386,7 @@ function item_save_metadata( $post_id, $post ) {
 	}
 	
 	do_action('usces_action_save_product', $post_id, $post);
+	$message = apply_filters( 'usces_filter_save_product_message', $message, $post_id );
 	
 //	$usces->action_status = 'none';
 //	$usces->action_message = '';
@@ -1660,6 +1592,8 @@ function usces_getinfo_ajax(){
  * custom field ajax
  */
 function custom_field_ajax() {
+	global $usces;
+	$_POST = $usces->stripslashes_deep_post($_POST);
 
 	if($_POST['action'] != 'custom_field_ajax') die(0);
 	switch($_POST['field']) {
@@ -1696,18 +1630,18 @@ function custom_field_ajax() {
 		} else {
 			$newvalue = isset($_POST['newvalue']) ? explode('\n', trim($_POST['newvalue'])) : '';
 			foreach((array)$newvalue as $v) {
-				if(trim($v) != '') 
+				if( !WCUtils::is_blank($v) ) 
 					$nv[] = trim($v);
 			}
 		}
 
 		if(!array_key_exists($newkey, $meta)) {
-			if(($newmeans >= 2 || '0' === $newvalue || !empty($newvalue)) && !empty($newkey) && !empty($newname)) {
+			if(($newmeans >= 2 || WCUtils::is_zer($newvalue) || !empty($newvalue)) && !empty($newkey) && !empty($newname)) {
 				$meta[$newkey]['name'] = $newname;
 				$meta[$newkey]['means'] = $newmeans;
 				$meta[$newkey]['essential'] = $newessential;
 				$meta[$newkey]['value'] = $nv;
-				if($newposition != '') $meta[$newkey]['position'] = $newposition;
+				if( !WCUtils::is_blank($newposition) ) $meta[$newkey]['position'] = $newposition;
 				update_option($field, $meta);
 			}
 		} else {
@@ -1728,17 +1662,17 @@ function custom_field_ajax() {
 		} else {
 			$value = isset($_POST['value']) ? explode('\n', trim($_POST['value'])) : '';
 			foreach((array)$value as $v) {
-				if(trim($v) != '') 
+				if( !WCUtils::is_blank($v) ) 
 					$nv[] = trim($v);
 			}
 		}
 
-		if($means >= 2 || '0' === $value || !empty($value)) {
+		if($means >= 2 || WCUtils::is_zero($value) || !empty($value)) {
 			$meta[$key]['name'] = $name;
 			$meta[$key]['means'] = $means;
 			$meta[$key]['essential'] = $essential;
 			$meta[$key]['value'] = $nv;
-			if($position != '') $meta[$key]['position'] = $position;
+			if( !WCUtils::is_blank($position) ) $meta[$key]['position'] = $position;
 			update_option($field, $meta);
 		}
 
@@ -1908,6 +1842,7 @@ function _list_custom_member_meta_row($key, $entry) {
 
 function change_states_ajax(){
 	global $usces, $usces_states;
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	
 	$c = $_POST['country'];
 	$res = '';
@@ -1965,6 +1900,8 @@ function get_usces_states($country) {
 }
 
 function target_market_ajax() {
+	global $usces;
+	$_POST = $usces->stripslashes_deep_post($_POST);
 	$res = "";
 	$target = explode(",", $_POST['target']);
 	foreach((array)$target as $country) {
@@ -2029,10 +1966,10 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 	}
 //usces_log('condition : '.print_r($condition,true), 'acting_transaction.log');
 
-	$post_id = explode("_", $post_ids);
-	$sku = explode("_", $skus);
-	$price = explode("_", $prices);
-	$quant = explode("_", $quants);
+	$post_id = explode("#usces#", $post_ids);
+	$sku = explode("#usces#", $skus);
+	$price = explode("#usces#", $prices);
+	$quant = explode("#usces#", $quants);
 	$cart = array();
 	for( $i = 0; $i < count($post_id); $i++ ) {
 		if( $post_id[$i] ) 
@@ -2086,9 +2023,9 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 				}
 			}
 		} else {
-			foreach( $cart as $rows ) {
+			foreach( $cart as $cart_row ) {
 				$rate = get_post_meta( $cart_row['post_id'], '_itemPointrate', true );
-				$price = $cart_row['price'] * $rows['quantity'];
+				$price = $cart_row['price'] * $cart_row['quantity'];
 				$point += $price * $rate / 100;
 			}
 		}

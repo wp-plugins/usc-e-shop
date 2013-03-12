@@ -501,20 +501,20 @@ jQuery(function($){
 			for( var i = 0; i < p.length; i++) {
 				name = $(p[i]).attr(\"name\");
 				strs = name.split('[');
-				post_ids += strs[2].replace(/[\]]+$/g, '')+'_';
-				skus += strs[3].replace(/[\]]+$/g, '')+'_';
-				prices += parseFloat($(p[i]).val())+'_';
-				quants += $(q[i]).val()+'_';
+				post_ids += strs[2].replace(/[\]]+$/g, '')+'#usces#';
+				skus += strs[3].replace(/[\]]+$/g, '')+'#usces#';
+				prices += parseFloat($(p[i]).val())+'#usces#';
+				quants += $(q[i]).val()+'#usces#';
 			}
 			var order_usedpoint = $(\"#order_usedpoint\").val()*1;
 			var order_shipping_charge = parseFloat($(\"#order_shipping_charge\").val());
 			var order_cod_fee = parseFloat($(\"#order_cod_fee\").val());
 			var s = orderfunc.settings;
 			s.url = uscesL10n.requestFile;
-			s.data = 'action=order_item_ajax&mode=recalculation&order_id=<?php echo $order_id; ?>&mem_id='+$('#member_id_label').html()+'&post_ids='+post_ids+'&skus='+skus+'&prices='+prices+'&quants='+quants+'&use_point='+order_usedpoint+'&shipping_charge='+order_shipping_charge+'&cod_fee='+order_cod_fee;
+			s.data = 'action=order_item_ajax&mode=recalculation&order_id='+$('#order_id').val()+'&mem_id='+$('#member_id_label').html()+'&post_ids='+post_ids+'&skus='+skus+'&prices='+prices+'&quants='+quants+'&use_point='+order_usedpoint+'&shipping_charge='+order_shipping_charge+'&cod_fee='+order_cod_fee;
 			s.success = function(data, dataType) {
 				var values = data.split('#usces#');
-				if( 'ok' == values[0]) {
+				if( 'ok' == values[0] ) {
 					$(\"#order_discount\").val(values[1]);
 					$(\"#order_tax\").val(values[2]);
 					$(\"#order_getpoint\").val(values[3]);
@@ -1198,7 +1198,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( isset($data['order_getpoint']) && !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright"><?php echo apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')); ?></td>
+			<td colspan="5" class="aright"><?php echo apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id); ?></td>
 			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( isset($data['order_discount']) && !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
 		</tr>

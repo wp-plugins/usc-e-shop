@@ -502,8 +502,14 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_shipping_vlue', $usces->get_currency($data->order['shipping_charge']))), $border, 'R');
 	$pdf->SetXY(142.9, 222.7);
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_vlue', $usces->get_currency($data->order['cod_fee']))), $border, 'R');
+	
+	if( empty($usces->options['tax_rate']) ){
+		$tax = '('.__('In tax', 'usces').')'.$usces->get_currency($data->order['tax']);
+	}else{
+		$tax = $usces->get_currency($data->order['tax']);
+	}
 	$pdf->SetXY(142.9, 228.6);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_vlue', $usces->get_currency($data->order['tax']))), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_vlue', $tax, $data)), $border, 'R');
 	$pdf->SetXY(142.9, 235.8);
 	$pdf->MultiCell(22.67, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
 

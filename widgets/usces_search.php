@@ -13,8 +13,8 @@ class Welcart_search extends WP_Widget {
     function widget($args, $instance) {	
 		global $usces;	
         extract( $args );
-        $title = $instance['title'] == '' ? 'Welcart '.__('keyword search', 'usces') : $instance['title'];
-        $icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
+        $title = WCUtils::is_blank($instance['title']) ? 'Welcart '.__('keyword search', 'usces') : $instance['title'];
+        $icon = WCUtils::is_blank($instance['icon']) ? 1 : (int)$instance['icon'];
 		//if($icon == 1) $before_title = '<div class="widget_title"><img src="' . USCES_PLUGIN_URL . '/images/find.png" alt="' . $title . '" width="24" height="24" />';
 		$img_path = file_exists(get_stylesheet_directory().'/images/search.png') ? get_stylesheet_directory_uri().'/images/search.png' : USCES_FRONT_PLUGIN_URL . '/images/search.png';
 		if($icon == 1) $before_title .= '<img src="' . $img_path . '" alt="' . $title . '" />';
@@ -45,8 +45,8 @@ class Welcart_search extends WP_Widget {
 
     /** @see WP_Widget::form */
     function form($instance) {				
-        $title = $instance['title'] == '' ? 'Welcart '.__('keyword search', 'usces') : esc_attr($instance['title']);
-		$icon = $instance['icon'] == '' ? 1 : (int)$instance['icon'];
+        $title = WCUtils::is_blank($instance['title']) ? 'Welcart '.__('keyword search', 'usces') : esc_attr($instance['title']);
+		$icon = WCUtils::is_blank($instance['icon']) ? 1 : (int)$instance['icon'];
         ?>
             <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
 			<p><label for="<?php echo $this->get_field_id('icon'); ?>"><?php _e('display of icon', 'usces'); ?>: <select class="widefat" id="<?php echo $this->get_field_id('icon'); ?>" name="<?php echo $this->get_field_name('icon'); ?>"><option value="1"<?php if($icon == 1){echo ' selected="selected"';} ?>><?php _e('Indication', 'usces'); ?></option><option value="2"<?php if($icon == 2){echo ' selected="selected"';} ?>><?php _e('Non-indication', 'usces'); ?></option></select></label></p>

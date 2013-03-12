@@ -212,7 +212,7 @@ function usces_crcode( $out = '' ) {
 function usces_crsymbol( $out = '', $js = NULL ) {
 	global $usces;
 	$res = $usces->getCurrencySymbol();
-	if( 'js' == $js && '&yen;' == $res ){
+	if( 'js' === $js && '&yen;' == $res ){
 		$res = mb_convert_encoding($res, 'UTF-8', 'HTML-ENTITIES');
 	}
 	
@@ -227,9 +227,9 @@ function usces_the_itemZaiko( $out = '' ) {
 	global $usces;
 	$num = (int)$usces->itemsku['stock'];
 	
-	if( 1 < $num || ( 0 === (int)$usces->itemsku['stocknum'] && '' != $usces->itemsku['stocknum'] ) ){
+	if( 1 < $num || ( 0 === (int)$usces->itemsku['stocknum'] && !WCUtils::is_blank($usces->itemsku['stocknum']) ) ){
 		$res = $usces->zaiko_status[$num];
-	}elseif( 1 >= $num && ( 0 === (int)$usces->itemsku['stocknum'] && '' != $usces->itemsku['stocknum'] ) ){
+	}elseif( 1 >= $num && ( 0 === (int)$usces->itemsku['stocknum'] && !WCUtils::is_blank($usces->itemsku['stocknum']) ) ){
 		$res = $usces->zaiko_status[2];
 	}else{
 		$res = $usces->zaiko_status[$num];
@@ -448,7 +448,7 @@ function usces_have_zaiko_anyone( $post_id = NULL ){
 	$skus = $usces->get_skus($post_id);
 	$status = false;
 	foreach($skus as $sku){
-		if( ('' == $sku['stocknum'] || 0 < (int)$sku['stocknum']) && 2 > (int)$sku['stock']) {
+		if( (WCUtils::is_blank($sku['stocknum']) || 0 < (int)$sku['stocknum']) && 2 > (int)$sku['stock']) {
 			$status = true;
 			break;
 		}
@@ -912,7 +912,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 				$selected = ' selected="selected"';
 			else
 				$selected = '';
-			$html .= "\t<option value='" . esc_attr($v) . "'{$selected}>" . esc_html($v) . "</option>\n";
+			$html .= "\t<option value='" . esc_attr($v) . "'{$selected}>" . esc_attr($v) . "</option>\n";
 			$i++;
 		}
 		$html .= "</select>\n";
@@ -1068,6 +1068,21 @@ function usces_point_rate( $post_id = NULL, $out = '' ){
 	}
 }
 
+function usces_get_point( $post_id, $sku_code ){
+	global $usces;
+	if(  $post_id == NULL ){
+		$rate = $usces->options['point_rate'];
+	}else{
+		$str = get_post_meta($post_id, '_itemPointrate', true);
+		$rate = (int)$str;
+	}
+	
+	$skus = $usces->get_skus($post_id, 'code');
+	$point = ceil($skus[$sku_code]['price'] * $rate / 100);
+	
+	return $point;
+}
+
 function usces_the_payment_method( $value = '', $out = '' ){
 	global $usces;
 	$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
@@ -1104,7 +1119,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 		}
 		if( $payment['name'] != '' ) {
 			$module = trim($payment['module']);
-			if( '' != $value ){
+			if( !WCUtils::is_blank($value) ){
 				$checked = ($payment['name'] == $value) ? ' checked' : '';
 			}else if( 1 == $payment_ct ){//0000428
 				$checked = ' checked';
@@ -1236,7 +1251,7 @@ function usces_inquiry_condition() {
 function usces_the_inquiry_form() {
 	global $usces;
 	$error_message = '';
-	if( isset($_POST['inq_name']) && '' != trim($_POST['inq_name']) ) {
+	if( isset($_POST['inq_name']) && !WCUtils::is_blank($_POST['inq_name']) ) {
 		$inq_name = trim($_POST['inq_name']);
 	}else{
 		$inq_name = '';
@@ -1254,7 +1269,7 @@ function usces_the_inquiry_form() {
 		if($usces->page == 'deficiency')
 			$error_message .= __('Please input your e-mail address.', 'usces') . "<br />";
 	}
-	if( isset($_POST['inq_contents']) && '' != trim($_POST['inq_contents']) ) {
+	if( isset($_POST['inq_contents']) && !WCUtils::is_blank($_POST['inq_contents']) ) {
 		$inq_contents = trim($_POST['inq_contents']);
 	}else{
 		$inq_contents = '';
@@ -1357,6 +1372,22 @@ function usces_the_member_point( $out = '' ) {
 		echo number_format($member['point']);
 	}
 }
+
+function usces_the_member_status( $out = '' ) {
+	global $usces;
+	if( !$usces->is_member_logged_in() ) return;
+	
+	$usces->get_current_member();
+	$member = $usces->get_member_info($usces->current_member['id']);
+	$status_name = $usces->member_status[$member['mem_status']];
+
+	if( $out == 'return' ){
+		return $status_name;
+	}else{
+		echo esc_html($status_name);
+	}
+}
+
 function usces_get_assistance_id_list($post_id) {
 	global $usces;
 	$names = $usces->get_tag_names($post_id);
@@ -1739,56 +1770,56 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 		switch($acting){
 			case 'zeus_bank':
 				if( 'status' == $key){
-					if( '01' == $value ){
+					if( '01' === $value ){
 						$value = '受付中';
-					}elseif( '02' == $value ){
+					}elseif( '02' === $value ){
 						$value = '未入金';
-					}elseif( '03' == $value ){
+					}elseif( '03' === $value ){
 						$value = '入金済';
-					}elseif( '04' == $value ){
+					}elseif( '04' === $value ){
 						$value = 'エラー';
-					}elseif( '05' == $value ){
+					}elseif( '05' === $value ){
 						$value = '入金失敗';
 					}
 				}elseif( 'error_message' == $key){
-					if( '0002' == $value ){
+					if( '0002' === $value ){
 						$value = '入金不足';
-					}elseif( '0003' == $value ){
+					}elseif( '0003' === $value ){
 						$value = '過剰入金';
 					}
 				}
 				break;
 			case 'zeus_conv':
 				if( 'pay_cvs' == $key){
-					if( 'D001' == $value ){
+					if( 'D001' === $value ){
 						$value = 'セブンイレブン';
-					}elseif( 'D002' == $value ){
+					}elseif( 'D002' === $value ){
 						$value = 'ローソン';
-					}elseif( 'D030' == $value ){
+					}elseif( 'D030' === $value ){
 						$value = 'ファミリーマート';
-					}elseif( 'D040' == $value ){
+					}elseif( 'D040' === $value ){
 						$value = 'サークルKサンクス';
-					}elseif( 'D015' == $value ){
+					}elseif( 'D015' === $value ){
 						$value = 'セイコーマート';
 					}
 				}elseif( 'status' == $key){
-					if( '01' == $value ){
+					if( '01' === $value ){
 						$value = '未入金';
-					}elseif( '02' == $value ){
+					}elseif( '02' === $value ){
 						$value = '申込エラー';
-					}elseif( '03' == $value ){
+					}elseif( '03' === $value ){
 						$value = '期日切';
-					}elseif( '04' == $value ){
+					}elseif( '04' === $value ){
 						$value = '入金済';
-					}elseif( '05' == $value ){
+					}elseif( '05' === $value ){
 						$value = '売上確定';
-					}elseif( '06' == $value ){
+					}elseif( '06' === $value ){
 						$value = '入金取消';
-					}elseif( '11' == $value ){
+					}elseif( '11' === $value ){
 						$value = 'キャンセル後入金';
-					}elseif( '12' == $value ){
+					}elseif( '12' === $value ){
 						$value = 'キャンセル後売上';
-					}elseif( '13' == $value ){
+					}elseif( '13' === $value ){
 						$value = 'キャンセル後取消';
 					}
 				}elseif( 'pay_limit' == $key){
@@ -1993,9 +2024,9 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 	$html = apply_filters('usces_filter_custom_field_input', $html, $data, $custom_field, $position);
 
 	if($out == 'return') {
-		return $html;
+		return stripslashes($html);
 	} else {
-		echo $html;
+		echo stripslashes($html);
 	}
 }
 
@@ -2065,9 +2096,9 @@ function usces_custom_field_info( $data, $custom_field, $position, $out = '' ) {
 	$html = apply_filters('usces_filter_custom_field_info', $html, $data, $custom_field, $position);
 
 	if($out == 'return') {
-		return $html;
+		return stripslashes($html);
 	} else {
-		echo $html;
+		echo stripslashes($html);
 	}
 }
 
@@ -2174,9 +2205,9 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 	}
 
 	if($out == 'return') {
-		return $html;
+		return stripslashes($html);
 	} else {
-		echo $html;
+		echo stripslashes($html);
 	}
 }
 
@@ -2334,7 +2365,7 @@ function usces_member_history( $out = '' ){
 		if( usces_is_membersystem_point() ){
 			$html .= '<th class="historyrow">' . __('Used points', 'usces') . '</th>';
 		}
-		$html .= '<th class="historyrow">' . __('Special Price', 'usces') . '</th>
+		$html .= '<th class="historyrow">' . apply_filters( 'usces_member_discount_label', __('Special Price', 'usces'), $umhs['ID'] ) . '</th>
 			<th class="historyrow">' . __('Shipping', 'usces') . '</th>
 			<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
 			<th class="historyrow">' . __('consumption tax', 'usces') . '</th>';
@@ -2452,8 +2483,9 @@ function usces_login_button(){
 
 function usces_assistance_item($post_id, $title ){
 	if (usces_get_assistance_id_list($post_id)) :
-		$assistanceposts = new wp_query( array('post__in'=>usces_get_assistance_ids($post_id)) );
-		if($assistanceposts->have_posts()) :
+		global $post;
+		$r = new WP_Query( array('post__in'=>usces_get_assistance_ids($post_id), 'ignore_sticky_posts'=>1) );
+		if($r->have_posts()) :
 		add_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
 		add_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
 ?>
@@ -2461,22 +2493,20 @@ function usces_assistance_item($post_id, $title ){
 		<h3><?php echo $title; ?></h3>
 		<ul class="clearfix">
 <?php
-		while ($assistanceposts->have_posts()) :
-			$assistanceposts->the_post();
-			//update_post_caches($posts); 
+		while ($r->have_posts()) :
+			$r->the_post();
 			usces_remove_filter();
 			usces_the_item();
-			$post = get_post(get_the_ID());
 			ob_start();
 ?>
 			<li>
 			<div class="listbox clearfix">
 				<div class="slit">
-					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php usces_the_itemImage(0, 100, 100, $post); ?></a>
+					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php echo wp_filter_nohtml_kses(get_the_title()); ?>"><?php usces_the_itemImage(0, 100, 100, $post); ?></a>
 				</div>
 				<div class="detail">
 					<div class="assist_excerpt">
-					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php the_title(); ?>"><h4><?php usces_the_itemName(); ?></h4></a>
+					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php echo wp_filter_nohtml_kses(get_the_title()); ?>"><h4><?php usces_the_itemName(); ?></h4></a>
 					<?php the_excerpt(); ?>
 					</div>
 					<div class="assist_price">
@@ -2496,7 +2526,7 @@ function usces_assistance_item($post_id, $title ){
 		</ul>
 	</div><!-- end of assistance_item -->
 <?php 
-		wp_reset_query();
+		wp_reset_postdata();
 		usces_reset_filter();
 		remove_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
 		remove_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
@@ -2715,7 +2745,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 	}
 	$data['type'] = $type;
 	$values['country'] = !empty($values['country']) ? $values['country'] : usces_get_local_addressform();
-	
+	$values = $usces->stripslashes_deep_post($values);
 	if( 'confirm' == $type ){
 	
 		switch ($applyform){

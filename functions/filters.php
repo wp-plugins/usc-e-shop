@@ -53,7 +53,7 @@ function usces_action_ogp_meta(){
 	$image_info = wp_get_attachment_image_src( $pictid, 'thumbnail' );
 
 	$ogs['title'] = $item['itemName'];
-	$ogs['type'] = 'produnct';
+	$ogs['type'] = 'product';
 	$ogs['description'] = strip_tags( get_the_title($post->ID) );
 	$ogs['url'] = get_permalink($post->ID);
 	$ogs['image'] = $image_info[0];
