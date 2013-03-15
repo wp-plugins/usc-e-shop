@@ -63,7 +63,6 @@ class usc_e_shop
 		if(!isset($this->options['sender_mail'])) $this->options['sender_mail'] = '';
 		if(!isset($this->options['error_mail'])) $this->options['error_mail'] = '';
 		if(!isset($this->options['copyright'])) $this->options['copyright'] = '';
-		if(!isset($this->options['purchase_limit'])) $this->options['purchase_limit'] = '';
 		if(!isset($this->options['postage_privilege'])) $this->options['postage_privilege'] = '';
 		if(!isset($this->options['shipping_rule'])) $this->options['shipping_rule'] = '';
 		if(!isset($this->options['tax_rate'])) $this->options['tax_rate'] = '';
@@ -1456,6 +1455,128 @@ class usc_e_shop
 					update_option('usces', $options);
 					break;
 //20120618ysk end
+//20121206ysk start
+				case 'digitalcheck':
+					unset( $options['acting_settings']['digitalcheck'] );
+					$options['acting_settings']['digitalcheck']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['digitalcheck']['card_ip'] = isset($_POST['card_ip']) ? $_POST['card_ip'] : '';
+					$options['acting_settings']['digitalcheck']['card_pass'] = isset($_POST['card_pass']) ? $_POST['card_pass'] : '';
+					$options['acting_settings']['digitalcheck']['card_kakutei'] = isset($_POST['card_kakutei']) ? $_POST['card_kakutei'] : '';
+					$options['acting_settings']['digitalcheck']['card_user_id'] = isset($_POST['card_user_id']) ? $_POST['card_user_id'] : '';
+					$options['acting_settings']['digitalcheck']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
+					$options['acting_settings']['digitalcheck']['conv_ip'] = isset($_POST['conv_ip']) ? $_POST['conv_ip'] : '';
+					$options['acting_settings']['digitalcheck']['conv_store'] = isset($_POST['conv_store']) ? $_POST['conv_store'] : array();
+					$options['acting_settings']['digitalcheck']['conv_kigen'] = isset($_POST['conv_kigen']) ? $_POST['conv_kigen'] : '14';
+
+					if( 'on' == $options['acting_settings']['digitalcheck']['card_activate'] ) {
+						if( '' == trim($_POST['card_ip']) )
+							$mes .= '※加盟店コードを入力して下さい<br />';
+						if( 'on' == $options['acting_settings']['digitalcheck']['card_user_id'] ) {
+							if( '' == trim($_POST['card_pass']) )
+								$mes .= '※加盟店パスワードを入力して下さい<br />';
+						}
+					}
+					if( 'on' == $options['acting_settings']['digitalcheck']['conv_activate'] ) {
+						if( '' == trim($_POST['conv_ip']) )
+							$mes .= '※加盟店コードを入力して下さい<br />';
+						if( empty($_POST['conv_store']) )
+							$mes .= '※利用コンビニを選択して下さい<br />';
+					}
+
+					if( '' == $mes ){
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['digitalcheck']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['digitalcheck']['card_activate'] ){
+							$options['acting_settings']['digitalcheck']['send_url_card'] = "https://www.digitalcheck.jp/settle/settle3/bp3.dll";
+							if( 'on' == $options['acting_settings']['digitalcheck']['card_user_id'] ) {
+								$options['acting_settings']['digitalcheck']['send_url_user_id'] = "https://www.digitalcheck.jp/settle/settlex/credit2.dll";
+							} else {
+								$options['acting_settings']['digitalcheck']['send_url_user_id'] = "";
+							}
+							$this->payment_structure['acting_digitalcheck_card'] = 'カード決済（デジタルチェック）';
+						}else{
+							unset($this->payment_structure['acting_digitalcheck_card']);
+						}
+						if( 'on' == $options['acting_settings']['digitalcheck']['conv_activate'] ){
+							//$options['acting_settings']['digitalcheck']['send_url_conv'] = "https://www.digitalcheck.jp/settle/settle2/ubp3.dll";
+							$options['acting_settings']['digitalcheck']['send_url_conv'] = "https://www.digitalcheck.jp/settle/settle3/bp3.dll";
+							$this->payment_structure['acting_digitalcheck_conv'] = 'コンビニ決済（デジタルチェック）';
+						}else{
+							unset($this->payment_structure['acting_digitalcheck_conv']);
+						}
+					}else{
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります','usces');
+						$options['acting_settings']['digitalcheck']['activate'] = 'off';
+						unset($this->payment_structure['acting_digitalcheck_card']);
+						unset($this->payment_structure['acting_digitalcheck_conv']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					update_option('usces', $options);
+					break;
+//20121206ysk end
+//20130225ysk start
+				case 'mizuho':
+					unset( $options['acting_settings']['mizuho'] );
+					$options['acting_settings']['mizuho']['shopid'] = isset($_POST['shopid']) ? $_POST['shopid'] : '';
+					$options['acting_settings']['mizuho']['cshopid'] = isset($_POST['cshopid']) ? $_POST['cshopid'] : '';
+					$options['acting_settings']['mizuho']['hash_pass'] = isset($_POST['hash_pass']) ? $_POST['hash_pass'] : '';
+					$options['acting_settings']['mizuho']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
+					$options['acting_settings']['mizuho']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
+					$options['acting_settings']['mizuho']['send_url_mbl'] = isset($_POST['send_url_mbl']) ? $_POST['send_url_mbl'] : '';
+					$options['acting_settings']['mizuho']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['mizuho']['conv1_activate'] = isset($_POST['conv1_activate']) ? $_POST['conv1_activate'] : '';
+					$options['acting_settings']['mizuho']['conv2_activate'] = isset($_POST['conv2_activate']) ? $_POST['conv2_activate'] : '';
+
+					//if( 'on' == $options['acting_settings']['mizuho']['card_activate'] or 'on' == $options['acting_settings']['mizuho']['conv_activate'] ) {
+						if( '' == trim($_POST['shopid']) )
+							$mes .= '※加盟店コードを入力して下さい<br />';
+						if( '' == trim($_POST['cshopid']) )
+							$mes .= '※加盟店サブコードを入力して下さい<br />';
+						if( '' == trim($_POST['hash_pass']) )
+							$mes .= '※ハッシュ用パスワードを入力して下さい<br />';
+					//}
+					if( isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url']) )
+						$mes .= '※本番URLを入力して下さい<br />';
+					if( defined('WCEX_MOBILE') and isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url_mbl']) )
+						$mes .= '※本番URL(携帯)を入力して下さい<br />';
+
+					if( '' == $mes ) {
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['mizuho']['activate'] = 'on';
+						$options['acting_settings']['mizuho']['send_url_test'] = "https://210.161.141.207/mltbank/MBWebFrontPayment";
+						if( defined('WCEX_MOBILE') ) $options['acting_settings']['mizuho']['send_url_mbl_test'] = "https://210.161.141.207/mltbank/iMBWebFrontPayment";
+						if( 'on' == $options['acting_settings']['mizuho']['card_activate'] ) {
+							$this->payment_structure['acting_mizuho_card'] = 'カード決済（みずほファクター）';
+						} else {
+							unset($this->payment_structure['acting_mizuho_card']);
+						}
+						if( 'on' == $options['acting_settings']['mizuho']['conv1_activate'] ) {
+							$this->payment_structure['acting_mizuho_conv1'] = 'コンビニ・ウェルネット決済（みずほファクター）';
+						} else {
+							unset($this->payment_structure['acting_mizuho_conv1']);
+						}
+						if( 'on' == $options['acting_settings']['mizuho']['conv2_activate'] ) {
+							$this->payment_structure['acting_mizuho_conv2'] = 'コンビニ・セブンイレブン決済（みずほファクター）';
+						} else {
+							unset($this->payment_structure['acting_mizuho_conv2']);
+						}
+					} else {
+						$this->action_status = 'error';
+						$this->action_message = __('データに不備が有ります','usces');
+						$options['acting_settings']['mizuho']['activate'] = 'off';
+						unset($this->payment_structure['acting_mizuho_card']);
+						unset($this->payment_structure['acting_mizuho_conv1']);
+						unset($this->payment_structure['acting_mizuho_conv2']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					update_option('usces', $options);
+					break;
+//20130225ysk end
 			}
 			
 
@@ -3529,7 +3650,7 @@ class usc_e_shop
 				$res = $this->reg_custom_member($_POST['member_id']);
 //20100818ysk end
 				do_action('usces_action_edit_memberdata', $_POST['member'], $_POST['member_id']);
-				$meta_keys = "'zeus_pcid', 'remise_pcid'";
+				$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
 				$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
 						$_POST['member_id'] 
 						);
@@ -5848,6 +5969,83 @@ class usc_e_shop
 			header( "location: ".$acting_opts['send_url_edy'].'?acting=telecom_edy'.$query );
 			exit;
 //20121030ysk end
+//20121206ysk start
+		} else if( $acting_flg == 'acting_digitalcheck_card' ) {
+			$acting_opts = $this->options['acting_settings']['digitalcheck'];
+			$interface = parse_url($acting_opts['send_url_user_id']);
+			$kakutei = ( empty($acting_opts['card_kakutei']) ) ? '0' : $acting_opts['card_kakutei'];
+
+			$vars  = 'IP='.$acting_opts['card_ip'];
+			$vars .= '&PASS='.$acting_opts['card_pass'];
+			$vars .= '&IP_USER_ID='.$_POST['IP_USER_ID'];
+			$vars .= '&SID='.$_POST['SID'];
+			$vars .= '&STORE=51';
+			$vars .= '&N1='.$_POST['N1'];
+			$vars .= '&K1='.$_POST['K1'];
+			$vars .= '&KAKUTEI='.$kakutei;
+			$vars .= '&FUKA='.$acting_flg;
+
+			$header  = "POST ".$interface['path']." HTTP/1.1\r\n";
+			$header .= "Host: ".$_SERVER['HTTP_HOST']."\r\n";
+			$header .= "User-Agent: PHP Script\r\n";
+			$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+			$header .= "Content-Length: ".strlen($vars)."\r\n";
+			$header .= "Connection: close\r\n\r\n";
+			$header .= $vars;
+			$fp = fsockopen('ssl://'.$interface['host'],443,$errno,$errstr,30);
+
+			if( $fp ) {
+				fwrite( $fp, $header );
+				$page = '';
+				while( !feof($fp) ) {
+					$line = fgets( $fp, 1024 );
+					if( strcmp($line, "\r\n") == 0 ) {
+						$headerdone = true;
+					} elseif( $headerdone ) {
+						$page .= $line;
+					}
+				}
+				fclose($fp);
+				$lines = explode("\n", $page);
+				if( false !== strpos( $lines[0], 'OK') ) {
+					usces_log('digitalcheck card entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+					//$args = '&SID='.$lines[1];
+					$args = '&SID='.$_POST['SID'].'&FUKA='.$acting_flg;
+					header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=1'.$args );
+				} else {
+					usces_log('digitalcheck card : Certification Error : '.$page, 'acting_transaction.log');
+					header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=0' );
+				}
+			} else {
+				usces_log('digitalcheck card : Socket Error', 'acting_transaction.log');
+				header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_card&acting_return=0' );
+			}
+			exit;
+		} else if( $acting_flg == 'acting_digitalcheck_conv' ) {
+			if( isset($_REQUEST['STORE']) and '99' != $_REQUEST['STORE'] ) {
+				$res = $this->order_processing();
+				if( 'ordercompletion' == $res ) {
+					$table_meta_name = $wpdb->prefix."usces_order_meta";
+					$mquery = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'SID', $_REQUEST['SID'] );
+					$order_id = $wpdb->get_var($mquery);
+					if( $order_id ) {
+						$data = array( "settltment_status" => "未決済", "settltment_errmsg" => "決済が完了していません" );
+						$this->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
+					}
+					$this->cart->crear_cart();
+					$acting_opts = $this->options['acting_settings']['digitalcheck'];
+					header( "location: ".$acting_opts['send_url_conv'].'?acting=digitalcheck_conv'.$query );
+					exit;
+				} else {
+					usces_log('digitalcheck conv : order processing error', 'acting_transaction.log');
+					header( "location: ".USCES_CART_URL.$delim.'acting=digitalcheck_conv&acting_return=0' );
+				}
+			} else {
+				$acting_opts = $this->options['acting_settings']['digitalcheck'];
+				header( "location: ".$acting_opts['send_url_conv'].'?acting=digitalcheck_conv'.$query );
+				exit;
+			}
+//20121206ysk end
 		}
 		do_action('usces_action_acting_processing', $acting_flg, $query);
 	}
@@ -6312,9 +6510,6 @@ class usc_e_shop
 //usces_log('cookieid : '.$cookieid, 'acting_transaction.log');
 //usces_log('postfix : '.$postfix, 'acting_transaction.log');
 //usces_log('addr : '.$addr, 'acting_transaction.log');
-
-
-
 		if( 'acting' !== $addr && 'mobile' !== $addr && $postfix !== $addr ) {
 			$sessid = '';
 			return NULL;
@@ -6880,7 +7075,7 @@ class usc_e_shop
 		$fields = array();
 		$table_name = $wpdb->prefix . "usces_order_meta";
 		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s OR meta_key = %s OR meta_key = %s)", 
-								$order_id, 'acting_%', 'settlement_id', 'order_number', 'res_tracking_id');
+								$order_id, 'acting_%', 'settlement_id', 'order_number', 'res_tracking_id', 'SID');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		if( !$res )
 			return $fields;
@@ -6899,6 +7094,8 @@ class usc_e_shop
 				$fields['order_number'] = $value['meta_value'];
 			}elseif( 'res_tracking_id' == $value['meta_key'] ){
 				$fields['res_tracking_id'] = $value['meta_value'];
+			}elseif( 'SID' == $value['meta_key'] ){
+				$fields['SID'] = $value['meta_value'];
 			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){
 				$meta_values = unserialize($value['meta_value']);
 				if(is_array($meta_values)){

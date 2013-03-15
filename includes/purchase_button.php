@@ -262,7 +262,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 
 			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
-			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"') . $purchase_disabled . ' /></div>';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"') . $purchase_disabled . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
 			$html .= '</form>';
 			$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -592,7 +592,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$camp_type = "";
 			$terminal_type = "0";
 			$success_url = USCES_CART_URL.$usces->delim."acting=".$acting."&acting_return=1";
-			$cancel_url = USCES_CART_URL.$usces->delim."acting=".$acting."&acting_return=1&cancel=1";
+			$cancel_url = USCES_CART_URL.$usces->delim."acting=".$acting."&confirm=1";
 			$error_url = USCES_CART_URL.$usces->delim."acting=".$acting."&acting_return=0";
 			$pagecon_url = USCES_CART_URL;
 			$free1 = $acting_flag;
@@ -692,6 +692,190 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			break;
 //20121030ysk end
+//20121206ysk start
+		case 'acting_digitalcheck_card'://カード決済(デジタルチェック)
+			$acting_opts = $usces->options['acting_settings']['digitalcheck'];
+			$sid = uniqid();
+			$usces->save_order_acting_data($sid);
+			$member = $usces->get_member();
+			if( 'on' == $acting_opts['card_user_id'] && $usces->is_member_logged_in() ) {
+				$ip_user_id = $usces->get_member_meta_value( 'digitalcheck_ip_user_id', $member['ID'] );
+				if( empty($ip_user_id) ) {
+					$ip_user_id = $member['ID'];
+					$send_url = $acting_opts['send_url_card'];
+					$fuka = $acting_flag.$ip_user_id;
+				} else {
+					$send_url = USCES_CART_URL;
+					$fuka = $acting_flag;
+				}
+			} else {
+				$ip_user_id = false;
+				$send_url = $acting_opts['send_url_card'];
+				$fuka = $acting_flag;
+			}
+			$item_name = $usces->getItemName($cart[0]['post_id']);
+			if( 1 < count($cart) ) $item_name .= ','.__('Others', 'usces');
+			if( 46 < strlen($item_name) ) $item_name = mb_strimwidth( $item_name, 0, 50, '...' );
+			$kakutei = ( empty($acting_opts['card_kakutei']) ) ? '0' : $acting_opts['card_kakutei'];
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
+				<input type="hidden" name="IP" value="'.$acting_opts['card_ip'].'" />
+				<input type="hidden" name="SID" value="'.$sid.'" />
+				<input type="hidden" name="N1" value="'.$item_name.'">
+				<input type="hidden" name="K1" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
+				<input type="hidden" name="STORE" value="51" />
+				<input type="hidden" name="KAKUTEI" value="'.$kakutei.'" />
+				<input type="hidden" name="FUKA" value="'.$fuka.'" />
+				<input type="hidden" name="NAME1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name1'], 0, 20)).'" />
+				<input type="hidden" name="NAME2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name2'], 0, 20)).'" />
+				<input type="hidden" name="KANA1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name3'], 0, 20)).'" />
+				<input type="hidden" name="KANA2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name4'], 0, 20)).'" />
+				<input type="hidden" name="YUBIN1" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8')), 0, 7)).'" />
+				<input type="hidden" name="TEL" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')), 0, 11)).'" />
+				<input type="hidden" name="ADR1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2'], 0, 50)).'" />
+				<input type="hidden" name="ADR2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['address3'], 0, 50)).'" />
+				<input type="hidden" name="MAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
+				';
+			if( $ip_user_id ) {
+				$html .= '<input type="hidden" name="PASS" value="'.$acting_opts['card_pass'].'">
+					<input type="hidden" name="IP_USER_ID" value="'.$ip_user_id.'">
+					';
+			}
+			if( $usces->use_ssl ) {
+				$ssl_url = $usces->options['ssl_url'].'/?page_id='.USCES_CART_NUMBER;
+				$html .= '<input type="hidden" name="OKURL" value="'.$ssl_url.$usces->delim.'acting=digitalcheck_card&acting_return=1" />
+					<input type="hidden" name="RT" value="'.$ssl_url.$usces->delim.'acting=digitalcheck_card&confirm=1" />
+					';
+			} else {
+				$html .= '<input type="hidden" name="OKURL" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_card&acting_return=1" />
+					<input type="hidden" name="RT" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_card&confirm=1" />
+					';
+			}
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $sid, $purchase_disabled);
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
+			$html .= '</form>'."\n";
+			break;
+		case 'acting_digitalcheck_conv'://コンビニ決済(デジタルチェック)
+			$acting_opts = $usces->options['acting_settings']['digitalcheck'];
+			$sid = uniqid();
+			$usces->save_order_acting_data($sid);
+			$item_name = $usces->getItemName($cart[0]['post_id']);
+			if( 1 < count($cart) ) $item_name .= ','.__('Others', 'usces');
+			if( 46 < strlen($item_name) ) $item_name = mb_strimwidth( $item_name, 0, 50, '...' );
+			$today = date( 'Y-m-d', current_time('timestamp') );
+			list( $year, $month, $day ) = explode( '-', $today );
+			$kigen = date( 'Ymd', mktime(0, 0, 0, (int)$month, (int)$day + (int)$acting_opts['conv_kigen'], (int)$year) );
+			$store = ( 1 < count($acting_opts['conv_store']) ) ? '99' : $acting_opts['conv_store'][0];
+			//$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url_conv'].'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
+				<input type="hidden" name="IP" value="'.$acting_opts['conv_ip'].'" />
+				<input type="hidden" name="SID" value="'.$sid.'" />
+				<input type="hidden" name="N1" value="'.esc_attr($item_name).'">
+				<input type="hidden" name="K1" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">
+				<input type="hidden" name="STORE" value="'.$store.'" />
+				<input type="hidden" name="FUKA" value="'.$acting_flag.'" />
+				<input type="hidden" name="KIGEN" value="'.$kigen.'" />
+				<input type="hidden" name="NAME1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name1'], 0, 20)).'" />
+				<input type="hidden" name="NAME2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name2'], 0, 20)).'" />
+				<input type="hidden" name="KANA1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name3'], 0, 20)).'" />
+				<input type="hidden" name="KANA2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['name4'], 0, 20)).'" />
+				<input type="hidden" name="YUBIN1" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['zipcode'], 'a', 'UTF-8')), 0, 7)).'" />
+				<input type="hidden" name="TEL" value="'.esc_attr(substr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8')), 0, 11)).'" />
+				<input type="hidden" name="ADR1" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['pref'].$usces_entries['customer']['address1'].$usces_entries['customer']['address2'], 0, 50)).'" />
+				<input type="hidden" name="ADR2" value="'.esc_attr(mb_strimwidth($usces_entries['customer']['address3'], 0, 50)).'" />
+				<input type="hidden" name="MAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
+				';
+			if( $usces->use_ssl ) {
+				$ssl_url = $usces->options['ssl_url'].'/?page_id='.USCES_CART_NUMBER;
+				$html .= '<input type="hidden" name="OKURL" value="'.$ssl_url.$usces->delim.'acting=digitalcheck_conv&acting_return=1" />
+					<input type="hidden" name="RT" value="'.$ssl_url.$usces->delim.'acting=digitalcheck_conv&confirm=1" />
+					';
+			} else {
+				$html .= '<input type="hidden" name="OKURL" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_conv&acting_return=1" />
+					<input type="hidden" name="RT" value="'.USCES_CART_URL.$usces->delim.'acting=digitalcheck_conv&confirm=1" />
+					';
+			}
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $sid, $purchase_disabled);
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters('usces_filter_confirm_inform_back', $html);
+			$html .= '</form>'."\n";
+			break;
+//20121206ysk end
+//20130225ysk start
+		case 'acting_mizuho_card'://カード決済(みずほファクター)
+			$acting_opts = $usces->options['acting_settings']['mizuho'];
+			$send_url = ( 'public' == $acting_opts['ope'] ) ? $acting_opts['send_url'] : $acting_opts['send_url_test'];
+			$p_ver = '0200';
+			$stdate = date( 'Ymd' );
+			$stran = sprintf( '%06d', mt_rand(1, 999999) );
+			$bkcode = 'bg01';
+			$amount = apply_filters( 'usces_filter_acting_amount', usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag );
+			$schksum = $p_ver.$stdate.$stran.$bkcode.$acting_opts['shopid'].$acting_opts['cshopid'].$amount.$acting_opts['hash_pass'];
+			$schksum = htmlspecialchars( md5( $schksum ) );
+			$html .= '<form id="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="p_ver" value="'.$p_ver.'">
+				<input type="hidden" name="stdate" value="'.$stdate.'">
+				<input type="hidden" name="stran" value="'.$stran.'">
+				<input type="hidden" name="bkcode" value="'.$bkcode.'">
+				<input type="hidden" name="shopid" value="'.$acting_opts['shopid'].'">
+				<input type="hidden" name="cshopid" value="'.$acting_opts['cshopid'].'">
+				<input type="hidden" name="amount" value="'.$amount.'">
+				<input type="hidden" name="schksum" value="'.$schksum.'">
+				';
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled );
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform_back', $html );
+			$html .= '</form>';
+			break;
+		case 'acting_mizuho_conv1'://コンビニ・ウェルネット決済(みずほファクター)
+		case 'acting_mizuho_conv2'://コンビニ・セブンイレブン決済(みずほファクター)
+			$acting_opts = $usces->options['acting_settings']['mizuho'];
+			$send_url = ( 'public' == $acting_opts['ope'] ) ? $acting_opts['send_url'] : $acting_opts['send_url_test'];
+			$p_ver = '0200';
+			$stdate = date( 'Ymd' );
+			$stran = sprintf( '%06d', mt_rand(1, 999999) );
+			$bkcode = 'cv0'.substr( $acting_flag, -1 );
+			$amount = apply_filters( 'usces_filter_acting_amount', usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag );
+			$custmKanji = mb_strimwidth( $usces_entries['customer']['name1'].$usces_entries['customer']['name2'], 0, 40 );
+			$mailaddr = esc_attr( $usces_entries['customer']['mailaddress1'] );
+			$tel = str_replace( '-', '', $usces_entries['customer']['tel'] );
+			$schksum = $p_ver.$stdate.$stran.$bkcode.$acting_opts['shopid'].$acting_opts['cshopid'].$amount.mb_convert_encoding($custmKanji, 'SJIS', 'UTF-8').$mailaddr.$tel.$acting_opts['hash_pass'];
+			$schksum = htmlspecialchars( md5( $schksum ) );
+			$html .= '<form id="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="p_ver" value="'.$p_ver.'">
+				<input type="hidden" name="stdate" value="'.$stdate.'">
+				<input type="hidden" name="stran" value="'.$stran.'">
+				<input type="hidden" name="bkcode" value="'.$bkcode.'">
+				<input type="hidden" name="shopid" value="'.$acting_opts['shopid'].'">
+				<input type="hidden" name="cshopid" value="'.$acting_opts['cshopid'].'">
+				<input type="hidden" name="amount" value="'.$amount.'">
+				<input type="hidden" name="custmKanji" value="'.$custmKanji.'">
+				<input type="hidden" name="mailaddr" value="'.$mailaddr.'">
+				<input type="hidden" name="tel" value="'.$tel.'">
+				<input type="hidden" name="schksum" value="'.$schksum.'">
+				';
+			$html .= '<input type="hidden" name="dummy" value="&#65533;" />';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', ' onClick="document.charset=\'Shift_JIS\';"').$purchase_disabled.' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled );
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform_back', $html );
+			$html .= '</form>';
+			break;
+//20130225ysk end
 
 		default:
 			$html .= '<form id="purchase_form" action="' . apply_filters('usces_filter_acting_url', USCES_CART_URL) . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
