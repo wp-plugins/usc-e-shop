@@ -884,6 +884,24 @@ function toggleVisibility(id) {
 				<td colspan="4"><input name="hash_pass" type="text" id="hash_pass" value="<?php echo esc_html(isset($opts['mizuho']['hash_pass']) ? $opts['mizuho']['hash_pass'] : ''); ?>" size="20" maxlength="20" /></td>
 				<td><div id="ex_hash_pass_mizuho" class="explanation"><?php _e('契約時にみずほファクターから発行されるハッシュ用パスワード（半角英数字）。', 'usces'); ?></div></td>
 			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_mizuho');"><?php _e('Operation Environment', 'usces'); ?></a></th>
+				<td><input name="ope" type="radio" id="ope_mizuho_1" value="test"<?php if( isset($opts['mizuho']['ope']) && $opts['mizuho']['ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_mizuho_1">テスト環境</label></td>
+				<td><input name="ope" type="radio" id="ope_mizuho_2" value="public"<?php if( isset($opts['mizuho']['ope']) && $opts['mizuho']['ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_mizuho_2">本番環境</label></td>
+				<td><div id="ex_ope_mizuho" class="explanation"><?php _e('動作環境を切り替えます。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_mizuho');"><?php _e('本番URL', 'usces'); ?></a></th>
+				<td colspan="4"><input name="send_url" type="text" id="send_url_mizuho" value="<?php echo esc_html(isset($opts['mizuho']['send_url']) ? $opts['mizuho']['send_url'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_send_url_mizuho" class="explanation"><?php _e('本番環境で接続するURLを設定します。決済インタフェース「接続先URL(画面連携型)PC」に示されるURLを入力してください。', 'usces'); ?></div></td>
+			</tr>
+			<?php if( defined('WCEX_MOBILE') ): ?>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_mbl_mizuho');"><?php _e('本番URL(携帯)', 'usces'); ?></a></th>
+				<td colspan="4"><input name="send_url_mbl" type="text" id="send_url_mbl_mizuho" value="<?php echo esc_html(isset( $opts['mizuho']['send_url_mbl'] ) ? $opts['mizuho']['send_url_mbl'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_send_url_mbl_mizuho" class="explanation"><?php _e('本番環境で接続するURLを設定します。決済インタフェース「接続先URL(画面連携型)MB」に示されるURLを入力してください。', 'usces'); ?></div></td>
+			</tr>
+			<?php endif; ?>
 		</table>
 		<table class="settle_table">
 			<tr>
@@ -893,6 +911,7 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 		</table>
+<!--
 		<table class="settle_table">
 			<tr>
 				<th>コンビニ決済<br><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv1_activate');">ウェルネット決済</a></th>
@@ -907,6 +926,7 @@ function toggleVisibility(id) {
 				<td><div id="ex_conv2_activate" class="explanation">セブンイレブンでのご利用が可能です。</div></td>
 			</tr>
 		</table>
+-->
 		<input name="acting" type="hidden" value="mizuho" />
 		<input name="usces_option_update" type="submit" class="button" value="みずほファクターの設定を更新する" />
 	</form>

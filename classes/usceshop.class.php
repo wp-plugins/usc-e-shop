@@ -1523,6 +1523,9 @@ class usc_e_shop
 					$options['acting_settings']['mizuho']['shopid'] = isset($_POST['shopid']) ? $_POST['shopid'] : '';
 					$options['acting_settings']['mizuho']['cshopid'] = isset($_POST['cshopid']) ? $_POST['cshopid'] : '';
 					$options['acting_settings']['mizuho']['hash_pass'] = isset($_POST['hash_pass']) ? $_POST['hash_pass'] : '';
+					$options['acting_settings']['mizuho']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
+					$options['acting_settings']['mizuho']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
+					$options['acting_settings']['mizuho']['send_url_mbl'] = isset($_POST['send_url_mbl']) ? $_POST['send_url_mbl'] : '';
 					$options['acting_settings']['mizuho']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 					$options['acting_settings']['mizuho']['conv1_activate'] = isset($_POST['conv1_activate']) ? $_POST['conv1_activate'] : '';
 					$options['acting_settings']['mizuho']['conv2_activate'] = isset($_POST['conv2_activate']) ? $_POST['conv2_activate'] : '';
@@ -1535,12 +1538,17 @@ class usc_e_shop
 						if( '' == trim($_POST['hash_pass']) )
 							$mes .= '※ハッシュ用パスワードを入力して下さい<br />';
 					//}
+					if( isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url']) )
+						$mes .= '※本番URLを入力して下さい<br />';
+					if( defined('WCEX_MOBILE') and isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url_mbl']) )
+						$mes .= '※本番URL(携帯)を入力して下さい<br />';
 
 					if( '' == $mes ) {
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['mizuho']['activate'] = 'on';
-						$options['acting_settings']['mizuho']['send_url'] = "https://210.161.141.207/mltbank/MBWebFrontPayment";
+						$options['acting_settings']['mizuho']['send_url_test'] = "https://210.161.141.207/mltbank/MBWebFrontPayment";
+						if( defined('WCEX_MOBILE') ) $options['acting_settings']['mizuho']['send_url_mbl_test'] = "https://210.161.141.207/mltbank/iMBWebFrontPayment";
 						if( 'on' == $options['acting_settings']['mizuho']['card_activate'] ) {
 							$this->payment_structure['acting_mizuho_card'] = 'カード決済（みずほファクター）';
 						} else {

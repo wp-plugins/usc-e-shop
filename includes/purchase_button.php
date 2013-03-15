@@ -812,7 +812,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 //20130225ysk start
 		case 'acting_mizuho_card'://カード決済(みずほファクター)
 			$acting_opts = $usces->options['acting_settings']['mizuho'];
-			$send_url = $acting_opts['send_url'];
+			$send_url = ( 'public' == $acting_opts['ope'] ) ? $acting_opts['send_url'] : $acting_opts['send_url_test'];
 			$p_ver = '0200';
 			$stdate = date( 'Ymd' );
 			$stran = sprintf( '%06d', mt_rand(1, 999999) );
@@ -842,7 +842,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_mizuho_conv1'://コンビニ・ウェルネット決済(みずほファクター)
 		case 'acting_mizuho_conv2'://コンビニ・セブンイレブン決済(みずほファクター)
 			$acting_opts = $usces->options['acting_settings']['mizuho'];
-			$send_url = $acting_opts['send_url'];
+			$send_url = ( 'public' == $acting_opts['ope'] ) ? $acting_opts['send_url'] : $acting_opts['send_url_test'];
 			$p_ver = '0200';
 			$stdate = date( 'Ymd' );
 			$stran = sprintf( '%06d', mt_rand(1, 999999) );
