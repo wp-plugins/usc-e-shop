@@ -13,6 +13,35 @@ class Welcart_bestseller extends WP_Widget {
     function widget($args, $instance) {
 		global $usces;
         extract( $args );
+		if( !isset($instance['title']) )
+			$instance['title'] = '';
+		if( !isset($instance['rows_num']) )
+			$instance['rows_num'] = '';
+		if( !isset($instance['icon']) )
+			$instance['icon'] = '';
+		if( !isset($instance['list']) )
+			$instance['list'] = '';
+		if( !isset($instance['code1']) )
+			$instance['code1'] = '';
+		if( !isset($instance['code2']) )
+			$instance['code2'] = '';
+		if( !isset($instance['code3']) )
+			$instance['code3'] = '';
+		if( !isset($instance['code4']) )
+			$instance['code4'] = '';
+		if( !isset($instance['code5']) )
+			$instance['code5'] = '';
+		if( !isset($instance['code6']) )
+			$instance['code6'] = '';
+		if( !isset($instance['code7']) )
+			$instance['code7'] = '';
+		if( !isset($instance['code8']) )
+			$instance['code8'] = '';
+		if( !isset($instance['code9']) )
+			$instance['code9'] = '';
+		if( !isset($instance['code10']) )
+			$instance['code10'] = '';
+			
         $title = WCUtils::is_blank($instance['title']) ? 'Welcart '.__('best seller', 'usces') : $instance['title'];
         $rows_num = WCUtils::is_blank($instance['rows_num']) ? 10 : $instance['rows_num'];
         $icon = WCUtils::is_blank($instance['icon']) ? 1 : (int)$instance['icon'];

@@ -908,6 +908,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		}
 		$i=0;
 		foreach($selects as $v) {
+			$v = trim($v);
 			if( ($i == 0 && $essential == 0 && NULL == $session_value) || esc_attr($v) == $session_value ) 
 				$selected = ' selected="selected"';
 			else
@@ -1526,6 +1527,7 @@ function usces_list_bestseller($num, $days = ''){
 			$htm .= apply_filters('usces_filter_bestseller', $list, $ids[$i], $i);
 		}
 	}
+	wp_reset_postdata();
 	echo $htm;
 }
 

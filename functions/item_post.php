@@ -1346,19 +1346,19 @@ function item_save_metadata( $post_id, $post ) {
 		$meta_ids = array_unique($meta_ids);
 		foreach( $meta_ids as $meta_id ){
 		
-			$optname = isset($_POST['itemopt'][$meta_id]['name']) ? trim( $_POST['itemopt'][$meta_id]['name'] ) : '';
+			$optname = isset($_POST['itemopt'][$meta_id]['name']) ? $_POST['itemopt'][$meta_id]['name'] : '';
 			$optmeans = isset($_POST['itemopt'][$meta_id]['means']) ? (int)$_POST['itemopt'][$meta_id]['means']: 0;
-			$optessential = isset($_POST['itemopt'][$meta_id]['essential']) ? (int)$_POST['itemopt'][$meta_id]['essential']: 0;
+			$optessential = isset($_POST['itemopt'][$meta_id]['essential']) ? $_POST['itemopt'][$meta_id]['essential']: 0;
 			$optsort = isset($_POST['itemopt'][$meta_id]['sort']) ? $_POST['itemopt'][$meta_id]['sort']: 0;
-			$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? $_POST['itemopt'][$meta_id]['value']: '';
+			$optvalue = isset($_POST['itemopt'][$meta_id]['value']) ? trim($_POST['itemopt'][$meta_id]['value']) : '';
 			
-			$opts['name'] = $optname;
-			$opts['value'] = $optvalue;
+			$opts['name'] = str_replace("\\",'',$optname);
+			$opts['value'] = str_replace("\\",'',$optvalue);
 			$opts['means'] = $optmeans;
 			$opts['essential'] = $optessential;
 			$opts['sort'] = $optsort;
 			$opts = $usces->stripslashes_deep_post($opts);
-			
+
 			$valueserialized = serialize($opts);
 			$res = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d", $valueserialized, $meta_id) );
 			
@@ -1373,6 +1373,7 @@ function item_save_metadata( $post_id, $post ) {
 				
 			$names[] = $optname;
 		}
+		
 		
 		if( $uniq_name ){
 			$message .= 'オプション名が重複している商品オプションが存在します。' . "<br />";
@@ -1396,6 +1397,7 @@ function item_save_metadata( $post_id, $post ) {
 		$usces->set_action_status('success', '商品の登録が完了しました。 ');
 	}
 
+	wp_cache_delete($post_id, 'post_meta');
 }
 
 function usces_link_replace($para) {
