@@ -3,7 +3,7 @@ Contributors: USconsort
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
 Requires at least: 3.2
 Tested up to: 3.5
-Stable tag: 1.3
+Stable tag: 1.3.1
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
