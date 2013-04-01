@@ -359,6 +359,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="1" />
 				<input type="hidden" name="inm" value="'.$desc.'" />
+				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
+				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				<input type="hidden" name="acting" value="jpayment_card" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
@@ -394,6 +396,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="2" />
 				<input type="hidden" name="inm" value="'.$desc.'" />
+				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
+				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				<input type="hidden" name="acting" value="jpayment_conv" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
@@ -429,6 +433,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="7" />
 				<input type="hidden" name="inm" value="'.$desc.'" />
+				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
+				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				<input type="hidden" name="acting" value="jpayment_bank" />
 				<input type="hidden" name="acting_return" value="1" />
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />

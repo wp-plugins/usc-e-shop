@@ -202,7 +202,7 @@ function usces_order_confirm_message($order_id) {
 		$msg_payment .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
-		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$args = maybe_unserialize($usces->get_order_meta_value($payment['settlement'], $order_id));
 		$msg_payment .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
 		$msg_payment .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$msg_payment .= __('お支払先', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
@@ -212,7 +212,7 @@ function usces_order_confirm_message($order_id) {
 		}
 		$msg_payment .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
-		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$args = maybe_unserialize($usces->get_order_meta_value($payment['settlement'], $order_id));
 		$msg_payment .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
 		$msg_payment .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
@@ -403,7 +403,7 @@ function usces_send_ordermail($order_id) {
 		$msg_payment .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 //20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
-		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$args = maybe_unserialize($usces->get_order_meta_value($payment['settlement'], $order_id));
 		$msg_payment .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
 		$msg_payment .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$msg_payment .= __('お支払先', 'usces').' : '.usces_get_conv_name($args['cv'])."\r\n";
@@ -413,7 +413,7 @@ function usces_send_ordermail($order_id) {
 		}
 		$msg_payment .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 	} elseif($payment['settlement'] == 'acting_jpayment_bank') {
-		$args = maybe_unserialize($usces->get_order_meta_value('settlement_args', $order_id));
+		$args = maybe_unserialize($usces->get_order_meta_value($payment['settlement'], $order_id));
 		$msg_payment .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
 		$msg_payment .= __('決済金額', 'usces').' : '.number_format($args['ta']).__('dollars','usces')."\r\n";
 		$bank = explode('.', $args['bank']);
