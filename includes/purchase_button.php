@@ -826,7 +826,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$amount = apply_filters( 'usces_filter_acting_amount', usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag );
 			$schksum = $p_ver.$stdate.$stran.$bkcode.$acting_opts['shopid'].$acting_opts['cshopid'].$amount.$acting_opts['hash_pass'];
 			$schksum = htmlspecialchars( md5( $schksum ) );
-			$html .= '<form id="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+			$html .= '<form id="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="p_ver" value="'.$p_ver.'">
 				<input type="hidden" name="stdate" value="'.$stdate.'">
 				<input type="hidden" name="stran" value="'.$stran.'">
