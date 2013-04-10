@@ -1638,7 +1638,7 @@ function custom_field_ajax() {
 		}
 
 		if(!array_key_exists($newkey, $meta)) {
-			if(($newmeans >= 2 || WCUtils::is_zer($newvalue) || !empty($newvalue)) && !empty($newkey) && !empty($newname)) {
+			if(($newmeans >= 2 || WCUtils::is_zero($newvalue) || !empty($newvalue)) && !empty($newkey) && !empty($newname)) {
 				$meta[$newkey]['name'] = $newname;
 				$meta[$newkey]['means'] = $newmeans;
 				$meta[$newkey]['essential'] = $newessential;
