@@ -343,13 +343,18 @@
 				$("#sku_ajax-response").html('<div class="error">' + mes + '</div>');
 				return false;
 			}
-			
-			if( undefined != $("#newskuadvance").val() ){
-				var skuadvance = '&newskuadvance=' + encodeURIComponent($("#newskuadvance").val());
-			}else{
-				var skuadvance = '';
+
+			var skuadvance = '';
+			if( undefined != $("input[name*='newskuadvance']") ) {
+				if( 1 == ("input[name*='newskuadvance']").length ) {
+					skuadvance = '&newskuadvance='+encodeURIComponent(("input[name*='newskuadvance']").val());
+				} else {
+					$("input[name*='newskuadvance']").each(function() {
+						skuadvance += '&newskuadvance['+$(this).attr("id")+']='+encodeURIComponent($(this).val());
+					});
+				}
 			}
-			
+
 			$("#newitemsku_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = itemSku.settings;
@@ -402,7 +407,8 @@
 			ds = document.getElementById('itemsku\['+meta_id+'\]\[skudisp\]');
 			us = document.getElementById('itemsku\['+meta_id+'\]\[skuunit\]');
 			gs = document.getElementById('itemsku\['+meta_id+'\]\[skugptekiyo\]');
-			ad = document.getElementById('itemsku\['+meta_id+'\]\[skuadvance\]');
+			//ad = document.getElementById('itemsku\['+meta_id+'\]\[skuadvance\]');
+			ad = $("input[name*='itemsku\["+meta_id+"\]\[skuadvance\]']");
 			so = document.getElementById('itemsku\['+meta_id+'\]\[sort\]');
 			var name = $(ks).val();
 			var cprice = $(cs).val();
@@ -430,12 +436,17 @@
 				return false;
 			}
 
-			if( undefined != $(ad).val() ){
-				var skuadvance = '&skuadvance=' + encodeURIComponent($(ad).val());
-			}else{
-				var skuadvance = '';
+			var skuadvance = '';
+			if( undefined != $(ad) ) {
+				if( 1 == $(ad).length ) {
+					skuadvance = '&skuadvance='+encodeURIComponent($(ad).val());
+				} else {
+					$(ad).each(function() {
+						skuadvance += '&skuadvance['+$(this).attr("id")+']='+encodeURIComponent($(this).val());
+					});
+				}
 			}
-			
+
 			$("#itemsku_loading-" + meta_id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 			var s = itemSku.settings;
 			s.data = "action=item_sku_ajax&ID=" + id + "&update=1&skuprice=" + price + "&skucprice=" + cprice + "&skuzaikonum=" + zaikonum + "&skuzaiko=" + encodeURIComponent(zaiko) + "&skuname=" + encodeURIComponent(name) + "&skudisp=" + encodeURIComponent(skudisp) + "&skuunit=" + encodeURIComponent(skuunit) + "&skugptekiyo=" + skugptekiyo + "&sort=" + sortnum + "&skumetaid=" + meta_id + skuadvance;

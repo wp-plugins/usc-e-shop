@@ -337,7 +337,7 @@ function _list_item_sku_meta_row( $sku ) {
 	<tr class='metastuffrow'><td colspan='6'>
 		<table id='itemsku-<?php echo $id; ?>' class='metastufftable'>
 			<tr>
-				<th class='handlb' rowspan='3'>　</th>
+				<th class='handlb' rowspan='<?php echo apply_filters( 'usces_filter_sku_meta_rowspan', '3' ); ?>'>　</th>
 				<td class='item-sku-key'><input name='itemsku[<?php echo $id; ?>][key]' id='itemsku[<?php echo $id; ?>][key]' class='skuname metaboxfield' type='text' value='<?php echo $key; ?>'{$readonly} /></td>
 				<td class='item-sku-cprice'><input name='itemsku[<?php echo $id; ?>][cprice]' id='itemsku[<?php echo $id; ?>][cprice]' class='skuprice metaboxfield' type='text' value='<?php echo $cprice; ?>' /></td>
 				<td class='item-sku-price'><input name='itemsku[<?php echo $id; ?>][price]' id='itemsku[<?php echo $id; ?>][price]' class='skuprice metaboxfield' type='text' value='<?php echo $price; ?>' /></td>
@@ -370,6 +370,7 @@ function _list_item_sku_meta_row( $sku ) {
 					</select>
 				</td>
 			</tr>
+			<?php echo apply_filters( 'usces_filter_sku_meta_row', '', $sku ); ?>
 			<tr>
 				<td colspan='5' class='submittd'>
 					<div id='skusubmit-<?php echo $id; ?>' class='submit'>
@@ -554,7 +555,7 @@ function item_sku_meta_form() {
 				</select>
 			</td>
 		</tr>
-		
+		<?php echo apply_filters( 'usces_filter_newsku_meta_row', '' ); ?>
 		<tr>
 			<td colspan="5" class="submittd">
 				<div id='newskusubmit' class='submit'><input name="add_itemsku" type="button" id="add_itemsku" tabindex="9" value="<?php _e('Add SKU','usces') ?>" onclick="if( jQuery('#post_ID').val() < 0 ) return; itemSku.post('additemsku', 0);" /></div>
@@ -2034,6 +2035,7 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 	}
 
 	if( 0 < $point ) $point = ceil($point);
+	$point = apply_filters( 'usces_filter_set_point_recalculation', $point, $condition, $cart, $meminfo );
 	$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 	$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 	$tax = $usces->getTax( $total_price );

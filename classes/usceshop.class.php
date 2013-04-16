@@ -4543,7 +4543,7 @@ class usc_e_shop
 //20110317ysk start
 		if(isset($_POST['offer']['delivery_method'])) {
 			$d_method_index = $this->get_delivery_method_index((int)$_POST['offer']['delivery_method']);
-			$country = $_POST["delivery"]["country"];
+			$country = $_SESSION['usces_entry']["delivery"]["country"];
 			$local_country = usces_get_base_country();
 			if($country == $local_country) {
 				if($this->options['delivery_method'][$d_method_index]['intl'] == 1) {
