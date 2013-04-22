@@ -4570,7 +4570,7 @@ class usc_e_shop
 			if ( WCUtils::is_blank($_POST['offer']["usedpoint"]) || !preg_match("/^[0-9]+$/", $_POST['offer']["usedpoint"]) || (int)$_POST['offer']["usedpoint"] < 0 ) {
 				$mes .= __('Invalid value. Please enter in the numbers.', 'usces') . "<br />";
 			} else {
-				if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
+/*				if ( trim($_POST['offer']["usedpoint"]) > $member['point'] ){
 					$mes .= __('You have exceeded the maximum available.', 'usces') . "max".$member['point']."pt<br />";
 					$_POST['offer']["usedpoint"] = 0;
 					$array = array(
@@ -4590,6 +4590,21 @@ class usc_e_shop
 					$array = array(
 							'usedpoint' => 0
 							);
+					$this->cart->set_order_entry( $array );
+				}
+*/				if( trim($_POST['offer']["usedpoint"]) > $member['point'] ) {
+					$mes .= __('You have exceeded the maximum available.', 'usces')."max".$member['point']."pt<br />";
+				} elseif( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee']) ) {
+					$mes .= __('You have exceeded the maximum available.', 'usces')."max".($entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'])."pt<br />";
+				} elseif( !$this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount']) ) {
+					$mes .= __('You have exceeded the maximum available.', 'usces')."max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
+				}
+				$mes = apply_filters( 'usces_filter_point_check', $mes );
+				if( '' != $mes ) {
+					$_POST['offer']["usedpoint"] = 0;
+					$array = array(
+						'usedpoint' => 0
+					);
 					$this->cart->set_order_entry( $array );
 				}
 			}

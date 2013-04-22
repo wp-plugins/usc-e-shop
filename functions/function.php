@@ -1985,7 +1985,8 @@ function usces_all_delete_order_data(&$obj){
 			if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
 //20120306ysk end
 //20120612ysk start 0000501
-			do_action('usces_action_collective_order_delete_each', $id);
+//20130419ysk
+			do_action('usces_action_collective_order_delete_each', $id, $order_res);
 //20120612ysk end
 		}
 	endforeach;
