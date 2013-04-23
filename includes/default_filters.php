@@ -167,5 +167,6 @@ add_filter('usces_filter_member_check_fromcart', 'usces_filter_customer_check_cu
 //20100818ysk end
 
 add_action('usces_action_confirm_page_point_inform', 'usces_action_confirm_page_point_inform_zeus', 9);
+add_filter('usces_filter_confirm_point_inform', 'usces_filter_confirm_point_inform_zeus', 9);
 
 ?>

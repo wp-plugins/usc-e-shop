@@ -3075,6 +3075,16 @@ function usces_facebook_like(){
 }
 
 function usces_action_confirm_page_point_inform_zeus() {
+	$html = usces_point_inform_zeus();
+	echo $html;
+}
+
+function usces_filter_confirm_point_inform_zeus( $html ) {
+	$html .= usces_point_inform_zeus();
+	return $html;
+}
+
+function usces_point_inform_zeus() {
 	global $usces, $usces_entries;
 	$html = '';
 
@@ -3107,6 +3117,7 @@ function usces_action_confirm_page_point_inform_zeus() {
 		}
 		break;
 	}
-	echo $html;
+	return $html;
 }
+
 ?>
