@@ -2035,7 +2035,14 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 	}
 
 	if( 0 < $point ) $point = ceil($point);
-	$point = apply_filters( 'usces_filter_set_point_recalculation', $point, $condition, $cart, $meminfo );
+//20130425ysk start 0000699
+	if( 0 < $use_point ) {
+		$point = ceil( $point - ( $point * $use_point / $total_items_price ) );
+		if( 0 > $point )
+			$point = 0;
+	}
+//20130425ysk end
+	$point = apply_filters( 'usces_filter_set_point_recalculation', $point, $condition, $cart, $meminfo, $use_point );
 	$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 	$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 	$tax = $usces->getTax( $total_price );

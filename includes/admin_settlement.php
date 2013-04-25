@@ -813,7 +813,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th rowspan="4"><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_store_digitalcheck');">利用コンビニ</a></th>
-				<td><input name="conv_store[]" type="checkbox" id="conv_store_1" value="1"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '1', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_1">Loppi決済（ローソン・セイコーマート）</label></td>
+				<td><input name="conv_store[]" type="checkbox" id="conv_store_1" value="1"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '1', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_1">Loppi決済（ローソン・セイコーマート・ミニストップ）</label></td>
 				<td rowspan="4"><div id="ex_conv_store_digitalcheck" class="explanation"><?php _e('収納先のコンビニを選択します。コンビニ毎の審査が必要となり、審査通過後にご利用可能となります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -823,7 +823,7 @@ function toggleVisibility(id) {
 				<td><input name="conv_store[]" type="checkbox" id="conv_store_3" value="3"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '3', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_3">FAMIMA決済（ファミリーマート）</label></td>
 			</tr>
 			<tr>
-				<td><input name="conv_store[]" type="checkbox" id="conv_store_73" value="73"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '73', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_73">オンライン決済（サークルKサンクス・ミニストップ・デイリーヤマザキ・ヤマザキデイリー・スリーエフ）</label></td>
+				<td><input name="conv_store[]" type="checkbox" id="conv_store_73" value="73"<?php if( isset($opts['digitalcheck']['conv_store']) && in_array( '73', $opts['digitalcheck']['conv_store'] ) ) echo ' checked'; ?> /></td><td colspan="3"><label for="conv_store_73">オンライン決済（サークルKサンクス・デイリーヤマザキ・ヤマザキデイリー・スリーエフ）</label></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_kigen_digitalcheck');">支払期限</a></th>

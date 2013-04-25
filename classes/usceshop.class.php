@@ -6172,9 +6172,20 @@ class usc_e_shop
 				$point += $price * $rate / 100;
 			}
 		}
-	
-		
-		return apply_filters( 'usces_filter_get_order_point', ceil($point));
+
+//20130425ysk start 0000699
+		if( 0 < $point ) ceil( $point );
+
+		$entry = $this->cart->get_entry();
+		$use_point = isset( $entry['order']['usedpoint'] ) ? (int)$entry['order']['usedpoint'] : 0;
+		if( 0 < $use_point ) {
+			$point = ceil( $point - ( $point * $use_point / $total ) );
+			if( 0 > $point )
+				$point = 0;
+		}
+
+		return apply_filters( 'usces_filter_get_order_point', $point );
+//20130425ysk end
 	}
 	
 	function get_order_discount( $display_mode = '', $cart = array() ) {
@@ -6339,11 +6350,13 @@ class usc_e_shop
 		$total_full_price = $total_price + $tax;
 		$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
 		$get_point = $this->get_order_point( $member['ID'] );
-		if(0 < (int)$use_point){
-			$get_point = ceil( $get_point - ($get_point * $use_point / $total_items_price) );
-			if(0 > $get_point)
-				$get_point = 0;
-		}
+//20130425ysk start 0000699
+		//if(0 < (int)$use_point){
+		//	$get_point = ceil( $get_point - ($get_point * $use_point / $total_items_price) );
+		//	if(0 > $get_point)
+		//		$get_point = 0;
+		//}
+//20130425ysk end
 
 		$array = array(
 				'total_items_price' => $total_items_price,
