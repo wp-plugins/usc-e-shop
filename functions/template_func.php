@@ -1993,7 +1993,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						break;
 					case 2://テキスト
 						$text = isset($data[$label][$key]) ? $data[$label][$key] : '';
-						$html .= '<input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($text).'" />';
+						$html .= '<input type="text" name="'.$label.'['.esc_attr($key).']" value="'.esc_attr($text).'" />';
 						break;
 					case 3://ラジオボタン
 						$selects = explode("\n", $value);
@@ -2560,6 +2560,7 @@ function usces_get_cart_rows( $out = '' ) {
 		$stock = $usces->getItemZaiko($post_id, $sku_code);
 		$red = (in_array($stock, array(__('sellout','usces'), __('Out Of Stock','usces'), __('Out of print','usces')))) ? 'class="signal_red"' : '';
 		$pictid = (int)$usces->get_mainpictid($itemCode);
+		$args = compact('cart', 'i', 'cart_row', 'post_id', 'sku' );
 		$row = '';
 		if ( empty($options) ) {
 			$optstr =  '';
@@ -2605,7 +2606,10 @@ function usces_get_cart_rows( $out = '' ) {
 		}
 		$row .= usces_crform($skuPrice, true, false, 'return') . '
 			</td>
-			<td><input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" /></td>
+			<td>';
+		$row_quant = '<input name="quant[' . $i . '][' . $post_id . '][' . $sku . ']" class="quantity" type="text" value="' . esc_attr($cart_row['quantity']) . '" />';
+		$row .= apply_filters( 'usces_filter_cart_rows_quant', $row_quant, $args );
+		$row .= '</td>
 			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 			<td ' . $red . '>' . $stock . '</td>
 			<td>';

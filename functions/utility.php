@@ -1740,29 +1740,32 @@ function usces_download_order_list() {
 			}
 		}
 //20110411ysk start
+		$address_info = '';
 		switch($applyform) {
 		case 'JP':
-			if(isset($_REQUEST['check']['zip'])) $line .= $td_h.usces_entity_decode($data['order_zip'], $ext).$td_f;
-			if(isset($_REQUEST['check']['country'])) $line .= $td_h.$usces_settings['country'][$usces->get_order_meta_value('customer_country', $order_id)].$td_f;
-			if(isset($_REQUEST['check']['pref'])) $line .= $td_h.usces_entity_decode($data['order_pref'], $ext).$td_f;
-			if(isset($_REQUEST['check']['address1'])) $line .= $td_h.usces_entity_decode($data['order_address1'], $ext).$td_f;
-			if(isset($_REQUEST['check']['address2'])) $line .= $td_h.usces_entity_decode($data['order_address2'], $ext).$td_f;
-			if(isset($_REQUEST['check']['address3'])) $line .= $td_h.usces_entity_decode($data['order_address3'], $ext).$td_f;
-			if(isset($_REQUEST['check']['tel'])) $line .= $td_h.usces_entity_decode($data['order_tel'], $ext).$td_f;
-			if(isset($_REQUEST['check']['fax'])) $line .= $td_h.usces_entity_decode($data['order_fax'], $ext).$td_f;
+			if(isset($_REQUEST['check']['zip'])) $address_info .= $td_h.usces_entity_decode($data['order_zip'], $ext).$td_f;
+			if(isset($_REQUEST['check']['country'])) $address_info .= $td_h.$usces_settings['country'][$usces->get_order_meta_value('customer_country', $order_id)].$td_f;
+			if(isset($_REQUEST['check']['pref'])) $address_info .= $td_h.usces_entity_decode($data['order_pref'], $ext).$td_f;
+			if(isset($_REQUEST['check']['address1'])) $address_info .= $td_h.usces_entity_decode($data['order_address1'], $ext).$td_f;
+			if(isset($_REQUEST['check']['address2'])) $address_info .= $td_h.usces_entity_decode($data['order_address2'], $ext).$td_f;
+			if(isset($_REQUEST['check']['address3'])) $address_info .= $td_h.usces_entity_decode($data['order_address3'], $ext).$td_f;
+			if(isset($_REQUEST['check']['tel'])) $address_info .= $td_h.usces_entity_decode($data['order_tel'], $ext).$td_f;
+			if(isset($_REQUEST['check']['fax'])) $address_info .= $td_h.usces_entity_decode($data['order_fax'], $ext).$td_f;
 			break;
 		case 'US':
 		default:
-			if(isset($_REQUEST['check']['address2'])) $line .= $td_h.usces_entity_decode($data['order_address2'], $ext).$td_f;
-			if(isset($_REQUEST['check']['address3'])) $line .= $td_h.usces_entity_decode($data['order_address3'], $ext).$td_f;
-			if(isset($_REQUEST['check']['address1'])) $line .= $td_h.usces_entity_decode($data['order_address1'], $ext).$td_f;
-			if(isset($_REQUEST['check']['pref'])) $line .= $td_h.usces_entity_decode($data['order_pref'], $ext).$td_f;
+			if(isset($_REQUEST['check']['address2'])) $address_info .= $td_h.usces_entity_decode($data['order_address2'], $ext).$td_f;
+			if(isset($_REQUEST['check']['address3'])) $address_info .= $td_h.usces_entity_decode($data['order_address3'], $ext).$td_f;
+			if(isset($_REQUEST['check']['address1'])) $address_info .= $td_h.usces_entity_decode($data['order_address1'], $ext).$td_f;
+			if(isset($_REQUEST['check']['pref'])) $address_info .= $td_h.usces_entity_decode($data['order_pref'], $ext).$td_f;
 			if(isset($_REQUEST['check']['country'])) $line .= $td_h.$usces_settings['country'][$usces->get_order_meta_value('customer_country', $order_id)].$td_f;
-			if(isset($_REQUEST['check']['zip'])) $line .= $td_h.usces_entity_decode($data['order_zip'], $ext).$td_f;
-			if(isset($_REQUEST['check']['tel'])) $line .= $td_h.usces_entity_decode($data['order_tel'], $ext).$td_f;
-			if(isset($_REQUEST['check']['fax'])) $line .= $td_h.usces_entity_decode($data['order_fax'], $ext).$td_f;
+			if(isset($_REQUEST['check']['zip'])) $address_info .= $td_h.usces_entity_decode($data['order_zip'], $ext).$td_f;
+			if(isset($_REQUEST['check']['tel'])) $address_info .= $td_h.usces_entity_decode($data['order_tel'], $ext).$td_f;
+			if(isset($_REQUEST['check']['fax'])) $address_info .= $td_h.usces_entity_decode($data['order_fax'], $ext).$td_f;
 			break;
 		}
+		$address_info_args = compact('td_h', 'td_f', 'ext', 'order_id', 'applyform' );
+		$line .= apply_filters( 'usces_filter_ord_csv_address_info', $address_info, $data, $address_info_args);
 //20110411ysk end
 		if(!empty($cscs_meta)) {
 			foreach($cscs_meta as $key => $entry) {
