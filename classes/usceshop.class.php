@@ -6229,7 +6229,7 @@ class usc_e_shop
 		//配送方法index
 		$d_method_index = $this->get_delivery_method_index($d_method_id);
 		//送料ID
-		$fixed_charge_id = $this->options['delivery_method'][$d_method_index]['charge'];
+		$fixed_charge_id = ( isset($this->options['delivery_method'][$d_method_index]['charge']) ) ? $this->options['delivery_method'][$d_method_index]['charge'] : -1;
 		$individual_quant = 0;
 		$total_quant = 0;
 		$charges = array();
