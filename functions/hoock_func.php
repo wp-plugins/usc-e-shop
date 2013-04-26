@@ -196,6 +196,13 @@ function usces_action_acting_transaction(){
 		}
 		usces_log('zeus construct_data : '.print_r($data,true), 'acting_transaction.log');
 
+//20130426ysk start 0000701
+		if( '04' === $_REQUEST['status'] or '05' === $_REQUEST['status'] ) {
+			usces_log( 'zeus bank error0 : status='.$_REQUEST['status'], 'acting_transaction.log' );
+			die('error0');
+		}
+//20130426ysk end
+
 		$acting_opts = $usces->options['acting_settings']['zeus'];
 
 		$table_name = $wpdb->prefix . "usces_order";
@@ -208,7 +215,8 @@ function usces_action_acting_transaction(){
 //20110203ysk start
 			$res = $usces->order_processing();
 			if( 'error' == $res ){
-				usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
+				//usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
+				usces_log('zeus bank error1 : order_processing', 'acting_transaction.log');
 				die('error1');
 			}else{
 				$order_id = $usces->cart->get_order_entry('ID');
@@ -250,7 +258,8 @@ function usces_action_acting_transaction(){
 		}
 		$res = $wpdb->query( $mquery );
 		if( false === $res ){
-			usces_log('zeus bank error2 : '.print_r($data, true), 'acting_transaction.log');
+			//usces_log('zeus bank error2 : '.print_r($data, true), 'acting_transaction.log');
+			usces_log('zeus bank error2 : update usces_order', 'acting_transaction.log');
 			die('error2');
 		}
 		usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
@@ -260,7 +269,8 @@ function usces_action_acting_transaction(){
 	//usces_log('mquery2 : '.print_r($mquery, true), 'acting_transaction.log');
 		$res = $wpdb->query( $mquery );
 		if(!$res){
-			usces_log('zeus bank error3 : '.print_r($data, true), 'acting_transaction.log');
+			//usces_log('zeus bank error3 : '.print_r($data, true), 'acting_transaction.log');
+			usces_log('zeus bank error3 : update usces_order_meta', 'acting_transaction.log');
 			die('error3');
 		}
 

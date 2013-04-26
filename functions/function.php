@@ -180,7 +180,7 @@ function usces_order_confirm_message($order_id) {
 	$deli_meth = (int)$data['order_delivery_method'];
 	if( 0 <= $deli_meth ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
-		$msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+		if( 0 <= $deli_index ) $msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
 	$msg_shipping .= __('Delivery date','usces') . " : " . $data['order_delivery_date'] . "\r\n";
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $data['order_delivery_time'] . "\r\n";
@@ -381,7 +381,7 @@ function usces_send_ordermail($order_id) {
 	$deli_meth = (int)$entry['order']['delivery_method'];
 	if( 0 <= $deli_meth ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
-		$msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
+		if( 0 <= $deli_index ) $msg_shipping .= __('Delivery Method','usces') . " : " . $usces->options['delivery_method'][$deli_index]['name'] . "\r\n";
 	}
 	$msg_shipping .= __('Delivery date','usces') . " : " . $entry['order']['delivery_date'] . "\r\n";
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";

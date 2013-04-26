@@ -504,7 +504,7 @@ jQuery(document).ready(function($){
 			} elseif( $key === 'delivery_method' ) {
 				if( -1 != $value ) {
 					$delivery_method_index = $this->get_delivery_method_index($value);
-					$value = $this->options['delivery_method'][$delivery_method_index]['name'];
+					$value = ( isset( $this->options['delivery_method'][$delivery_method_index]['name'] ) ) ? $this->options['delivery_method'][$delivery_method_index]['name'] : '&nbsp;';
 				} else {
 					$value = '&nbsp;';
 				}
