@@ -195,6 +195,7 @@ function usces_order_confirm_message($order_id) {
 	$msg_payment = __('** Payment method **','usces') . "\r\n";
 	$msg_payment .= usces_mail_line( 1, $data['order_email'] );//********************
 	$msg_payment .= $payment['name']. "\r\n\r\n";
+	if( 'orderConfirmMail' == $_POST['mode'] || 'changeConfirmMail' == $_POST['mode'] || 'mitumoriConfirmMail' == $_POST['mode'] || 'otherConfirmMail' == $_POST['mode'] ) {//20130514ysk start 0000524
 	if ( $payment['settlement'] == 'transferAdvance' || $payment['settlement'] == 'transferDeferred' ) {
 		$transferee = __('Transfer','usces') . " : \r\n";
 		$transferee .= $usces->options['transferee'] . "\r\n";
@@ -227,6 +228,7 @@ function usces_order_confirm_message($order_id) {
 		$msg_payment .= "\r\n".usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 //20101018ysk end
 	}
+	}//20130514ysk end
 	
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_payment', $msg_payment, $order_id, $payment, $cart, $data);
 	
@@ -1063,7 +1065,8 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 		}
 		if( isset($_REQUEST['acting']) && isset($_REQUEST['acting_return']) && isset($_REQUEST['trans_code']) && 'epsilon' == $_REQUEST['acting'] ) {
-			$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);
+			//$usces->set_order_meta_value('settlement_id', $_GET['trans_code'], $order_id);//20130523ysk 0000711
+			$usces->set_order_meta_value('settlement_id', $_GET['order_number'], $order_id);
 		}
 		if( isset($_REQUEST['res_tracking_id']) ) {
 			$usces->set_order_meta_value('res_tracking_id', $_REQUEST['res_tracking_id'], $order_id);
@@ -1750,6 +1753,7 @@ function usces_all_change_order_reciept(&$obj){
 		$getpoint = $order_res['order_getpoint'];
 //20120306ysk end
 		if(strpos($statusstr, 'noreceipt') === false && strpos($statusstr, 'receipted') === false) continue;
+		$old_status = $statusstr;//20120612ysk 0000501
 		if($_REQUEST['change']['word']['order_reciept'] == 'receipted') {
 //20120306ysk start 0000324
 			//if(strpos($statusstr, 'noreceipt') !== false)
@@ -1783,6 +1787,9 @@ function usces_all_change_order_reciept(&$obj){
 			}
 		}
 //20120306ysk end
+		if( $status ) {
+			do_action( 'usces_action_collective_order_reciept_each', $id, $statusstr, $old_status );
+		}
 	endforeach;
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));
@@ -3484,7 +3491,6 @@ function usces_post_reg_orderdata($order_id, $results){
 function usces_paypal_doecp( &$results ) {
 	global $usces;
 	$entry = $usces->cart->get_entry();
-
 	$cart = $usces->cart->get_cart();
 
 	$post_id = $cart[0]['post_id'];
@@ -3500,6 +3506,7 @@ function usces_paypal_doecp( &$results ) {
 		$serverName = urlencode($_SERVER['SERVER_NAME']);
 
 		$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
+		$nvpstr = apply_filters( 'usces_filter_usces_paypal_doecp', $nvpstr, $charging_type );
 
 		$usces->paypal->setMethod('DoExpressCheckoutPayment');
 		$usces->paypal->setData($nvpstr);
@@ -3529,29 +3536,6 @@ function usces_paypal_doecp( &$results ) {
 		$currencyCodeType = urlencode($usces->get_currency_code());
 		//$nextdate = get_date_from_gmt(gmdate('Y-m-d H:i:s', time()));
 		//$profileStartDate = date('Y-m-d', mktime(0,0,0,substr($nextdate, 5, 2)+1,$usces->getItemChargingDay($post_id),substr($nextdate, 0, 4))).'T01:01:01Z';
-/*		if( 'regular' == $charging_type ) {//定期購入
-			$profileStartDate = date('Y-m-d', current_time('timestamp')).'T01:01:01Z';
-			$sku = urldecode( $cart[0]['sku'] );
-			$advance = unserialize( $cart[0]['advance'] );
-			$regular = $advance[$post_id][$sku]['regular'];
-			$unit = $regular['unit'];
-			$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
-			$frequency = isset( $regular['frequency'] ) ? (int)$regular['frequency'] : 0;
-			if( 'day' == $unit ) {
-				$billingPeriod = "Day";
-			} elseif( 'month' == $unit ) {
-				$billingPeriod = "Month";
-			}
-			$billingFreq = $frequency;
-			$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.$interval : '';
-
-		} else {//継続課金
-
-			$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
-			$billingPeriod = "Month";// or "Day", "Week", "SemiMonth", "Year"
-			$billingFreq = $usces->getItemFrequency($post_id);
-			$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.dlseller_cycles( $post_id ) : '';
-		}*/
 		$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
 		$billingPeriod = "Month";// or "Day", "Week", "SemiMonth", "Year"
 		$billingFreq = $usces->getItemFrequency($post_id);
@@ -3562,6 +3546,7 @@ function usces_paypal_doecp( &$results ) {
 
 		//$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc;
 		$nvpstr = '&TOKEN='.$token.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&PROFILESTARTDATE='.$profileStartDate.'&BILLINGPERIOD='.$billingPeriod.'&BILLINGFREQUENCY='.$billingFreq.'&DESC='.$desc.$totalBillingCycles;
+		$nvpstr = apply_filters( 'usces_filter_usces_paypal_doecp', $nvpstr, $charging_type );
 
 		$usces->paypal->setMethod('CreateRecurringPaymentsProfile');
 		$usces->paypal->setData($nvpstr);

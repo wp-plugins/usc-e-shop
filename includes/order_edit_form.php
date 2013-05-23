@@ -1153,8 +1153,8 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 //20110629ysk end
 			}
 		}
-		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
-						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'stock', 'red', 'pictid');
+		$materials = compact( 'i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
+						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'stock', 'red', 'pictid', 'order_id' );
 		$optstr = apply_filters( 'usces_filter_order_edit_form_row', $optstr, $cart, $materials );
 ?>
 	<tr>

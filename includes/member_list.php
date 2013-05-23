@@ -199,6 +199,11 @@ jQuery(document).ready(function($){
 			usces_localized_name( esc_html($names[0]), esc_html($names[1]));
 		?>
 		</td>
+		<?php elseif( $key == 'address' ): 
+			$pos = strpos( $value, __('-- Select --','usces') );
+			if( $pos !== false ) $value = '&nbsp;';
+		?>
+		<td><?php esc_html_e($value); ?></td>
 		<?php elseif( $key == 'point' ): ?>
 		<td class="right"><?php esc_html_e($value); ?></td>
 		<?php else: ?>

@@ -197,6 +197,7 @@ function addComma(str)
 </tr>
 <?php endif; ?>
 <?php foreach ( (array)$usces_member_history as $umhs ) :	$cart = $umhs['cart']; ?>
+<?php $order_id = $umhs['ID']; ?>
 <tr>
 <th class="historyrow"><?php _e('Purchase date', 'usces'); ?></th>
 <th class="historyrow"><?php _e('Purchase price', 'usces'); ?></th>
@@ -263,8 +264,8 @@ function addComma(str)
 			}
 //20110629ysk end
 		}
-		$materials = compact('i', 'cart_row', 'post_id', 'sku', 'quantity', 'options', 'advance', 
-						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'pictid');
+		$materials = compact( 'i', 'cart_row', 'post_id', 'sku', 'quantity', 'options', 'advance', 
+						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'pictid', 'order_id' );
 		$optstr = apply_filters( 'usces_filter_member_edit_form_row', $optstr, $cart, $materials );
 	?>
 	<tr>

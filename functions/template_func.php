@@ -1103,7 +1103,9 @@ function usces_the_payment_method( $value = '', $out = '' ){
 		if( 'continue' == $charging_type ){
 			//if( 'acting' != substr($payments['settlement'], 0, 6) )
 //20110412ysk start
-			if( 'acting_remise_card' != $payment['settlement'] && 'acting_paypal_ec' != $payment['settlement']) {
+			//if( 'acting_remise_card' != $payment['settlement'] && 'acting_paypal_ec' != $payment['settlement']) {
+			$continue_payment_method = apply_filters( 'usces_filter_the_continue_payment_method', array( 'acting_remise_card', 'acting_paypal_ec' ) );
+			if( !in_array( $payment['settlement'], $continue_payment_method ) ) {
 				$payment_ct--;
 				continue;
 			}

@@ -501,6 +501,12 @@ jQuery(document).ready(function($){
 					$names = explode(' ', $value);
 					$list_detail .= '<td>'.esc_html($names[1].' '.$names[0]).'</td>';
 				}
+			} elseif( $key === 'pref' ) {
+				if( $value == __('-- Select --','usces') ) {
+					$list_detail .= '<td>&nbsp;</td>';
+				} else {
+					$list_detail .= '<td>'.esc_html($value).'</td>';
+				}
 			} elseif( $key === 'delivery_method' ) {
 				if( -1 != $value ) {
 					$delivery_method_index = $this->get_delivery_method_index($value);
@@ -533,7 +539,7 @@ jQuery(document).ready(function($){
 				} else {
 					$list_detail .= '<td>'.esc_html($value).'</td>';
 				}
-			} elseif( $key === 'date' || $key === 'pref' || $key === 'order_modified' ) {
+			} elseif( $key === 'date' || $key === 'order_modified' ) {
 				$list_detail .= '<td>'.esc_html($value).'</td>';
 			}
 		}
@@ -814,6 +820,7 @@ jQuery(document).ready(function($){
 </div>
 -->
 </form>
+<?php do_action( 'usces_action_order_list_footer' ); ?>
 </div><!--usces_admin-->
 </div><!--wrap-->
 <script type="text/javascript">
