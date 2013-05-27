@@ -63,8 +63,8 @@ $csod_meta = usces_has_custom_field_meta('order');
 $cscs_meta = usces_has_custom_field_meta('customer');
 $csde_meta = usces_has_custom_field_meta('delivery');
 $usces_opt_order = get_option('usces_opt_order');
-$chk_pro = $usces_opt_order['chk_pro'];
-$chk_ord = $usces_opt_order['chk_ord'];
+$chk_pro = ( isset($usces_opt_order['chk_pro']) ) ? $usces_opt_order['chk_pro'] : array();
+$chk_ord = ( isset($usces_opt_order['chk_ord']) ) ? $usces_opt_order['chk_ord'] : array();
 //20100908ysk end
 //20110411ysk start
 $applyform = usces_get_apply_addressform($this->options['system']['addressform']);

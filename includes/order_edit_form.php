@@ -193,7 +193,7 @@ if($order_action == 'new'){
 	}
 //20100818ysk end
 }
-
+$delivery_after_days = apply_filters( 'usces_filter_delivery_after_days', ( !empty($usces->options['delivery_after_days']) ? (int)$usces->options['delivery_after_days'] : 100 ) );//20130527ysk 0000710
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -967,7 +967,8 @@ foreach ((array)$this->options['delivery_method'] as $dkey => $delivery) {
 <?php
 $data_order_date = explode(" ", $data['order_date']);
 $order_date = explode("-", $data_order_date[0]);
-for($i = 0; $i < 50; $i++) {
+//for($i = 0; $i < 50; $i++) {
+for($i = 0; $i < $delivery_after_days; $i++) {//20130527ysk 0000710
 	$value = date('Y-m-d', mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
 	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,$order_date[1],$order_date[2]+$i,$order_date[0]));
 	$selected = (isset($data['order_delivery_date']) && $data['order_delivery_date'] == $value) ? ' selected="selected"' : '';
@@ -990,7 +991,8 @@ for($i = 0; $i < 50; $i++) {
 <td class="col1"><select name="offer[delidue_date]">
     <option value="#none#"><?php _e('Not notified', 'usces'); ?></option>
 <?php
-for ($i=0; $i<50; $i++) {
+//for ($i=0; $i<50; $i++) {
+for($i = 0; $i < $delivery_after_days; $i++) {//20130527ysk 0000710
 	$value = date('Y-m-d', mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
 	$date = date(__( 'M j, Y', 'usces' ), mktime(0,0,0,date('m'),date('d')+$i,date('Y')));
 	$selected = (isset($data['order_delidue_date']) && $data['order_delidue_date'] == $value) ? ' selected="selected"' : '';
