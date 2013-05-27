@@ -1309,6 +1309,16 @@ function usces_update_memberdata() {
 		return false;
 		
 	$usces->set_member_meta_value('customer_country', $_POST['member']['country'], $ID);
+//20130524ysk start 0000712
+	$csmb_meta = usces_has_custom_field_meta( 'member' );
+	if( is_array($csmb_meta) ) {
+		foreach( $csmb_meta as $key => $entry ) {
+			if( '4' == $entry['means'] ) {
+				$usces->del_member_meta( 'csmb_'.$key, $ID );
+			}
+		}
+	}
+//20130524ysk end
 	$i = 1;
 	if( !empty($_POST['custom_member']) ) {
 		foreach( $_POST['custom_member'] as $key => $value ) {
@@ -1548,7 +1558,32 @@ function usces_update_orderdata() {
 		return false;
 		
 	$usces->set_order_meta_value('customer_country', $_POST['customer']['country'], $ID);
-
+//20130524ysk start 0000712
+	$csod_meta = usces_has_custom_field_meta( 'order' );
+	if( is_array($csod_meta) ) {
+		foreach( $csod_meta as $key => $entry ) {
+			if( '4' == $entry['means'] ) {
+				$usces->del_order_meta( 'csod_'.$key, $ID );
+			}
+		}
+	}
+	$cscs_meta = usces_has_custom_field_meta( 'customer' );
+	if( is_array($cscs_meta) ) {
+		foreach( $cscs_meta as $key => $entry ) {
+			if( '4' == $entry['means'] ) {
+				$usces->del_order_meta( 'cscs_'.$key, $ID );
+			}
+		}
+	}
+	$csde_meta = usces_has_custom_field_meta( 'delivery' );
+	if( is_array($csde_meta) ) {
+		foreach( $csde_meta as $key => $entry ) {
+			if( '4' == $entry['means'] ) {
+				$usces->del_order_meta( 'csde_'.$key, $ID );
+			}
+		}
+	}
+//20130524ysk end
 	$i = 1;
 	if( !empty($_POST['custom_order']) ) {
 		foreach( $_POST['custom_order'] as $key => $value ) {

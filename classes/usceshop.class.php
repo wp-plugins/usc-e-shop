@@ -6984,7 +6984,15 @@ class usc_e_shop
 		}
 		return $res2;
 	}
-
+//20130524ysk start
+	function del_order_meta( $key, $order_id ) {
+		global $wpdb;
+		$table_name = $wpdb->prefix."usces_order_meta";
+		$query = $wpdb->prepare( "DELETE FROM $table_name WHERE order_id = %d AND meta_key = %s", $order_id, $key );
+		$res = $wpdb->query( $query );
+		return $res;
+	}
+//20130524ysk end
 	function set_session_custom_member($member_id) {
 		unset($_SESSION['usces_member']['custom_member']);
 		$meta = usces_has_custom_field_meta('member');
@@ -6998,6 +7006,16 @@ class usc_e_shop
 	}
 
 	function reg_custom_member($member_id) {
+//20130524ysk start 0000712
+		$csmb_meta = usces_has_custom_field_meta( 'member' );
+		if( is_array($csmb_meta) ) {
+			foreach( $csmb_meta as $key => $entry ) {
+				if( '4' == $entry['means'] ) {
+					$this->del_member_meta( 'csmb_'.$key, $member_id );
+				}
+			}
+		}
+//20130524ysk end
 		if( !empty($_POST['custom_member']) ) {
 			foreach( $_POST['custom_member'] as $key => $value ) {
 				$csmb_key = 'csmb_'.$key;
