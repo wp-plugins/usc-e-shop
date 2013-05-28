@@ -1059,11 +1059,11 @@ class usc_e_shop
 					if( isset($_POST['authkey']) ){
 						$options['acting_settings']['zeus']['authkey'] = $_POST['authkey'];
 					}
-					if( 1 == $options['acting_settings']['zeus']['security'] ){
-						$options['acting_settings']['zeus']['quickcharge'] = '2';
-					}else{
+//					if( 1 == $options['acting_settings']['zeus']['security'] ){
+//						$options['acting_settings']['zeus']['quickcharge'] = '2';
+//					}else{
 						$options['acting_settings']['zeus']['quickcharge'] = isset($_POST['quickcharge']) ? $_POST['quickcharge'] : '';
-					}
+//					}
 					$options['acting_settings']['zeus']['batch'] = isset($_POST['batch']) ? $_POST['batch'] : '';
 					$options['acting_settings']['zeus']['clientip'] = isset($_POST['clientip']) ? trim($_POST['clientip']) : '';
 					$options['acting_settings']['zeus']['howpay'] = isset($_POST['howpay']) ? $_POST['howpay'] : '';
@@ -3414,8 +3414,10 @@ class usc_e_shop
 
 		if( is_single() && 'item' == $post->post_mime_type ) {
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_item_single.php') ){
-				include(get_stylesheet_directory() . '/wc_templates/wc_item_single.php');
-				exit;
+				if( !post_password_required($post) ){
+					include(get_stylesheet_directory() . '/wc_templates/wc_item_single.php');
+					exit;
+				}
 			}
 		}elseif( isset($_REQUEST['page']) && ('search_item' == $_REQUEST['page'] || 'usces_search' == $_REQUEST['page']) && $this->is_cart_page($_SERVER['REQUEST_URI']) ){
 			if( file_exists(get_stylesheet_directory() . '/wc_templates/wc_search_page.php') ){
@@ -4316,8 +4318,12 @@ class usc_e_shop
 			$_SESSION['usces_singleitem']['itemOption'] = $_POST['itemOption'];
 			$_SESSION['usces_singleitem']['quant'] = $_POST['quant'];
 			$_SESSION['usces_singleitem']['error_message'] = $mes;
-			$parse_url = parse_url(get_home_url());
-			header('location: ' . $parse_url['scheme'] . '://' . $parse_url['host'] . $_POST['usces_referer'] . '#cart_button');
+			if( false === strpos($_POST['usces_referer'], 'http') ){
+				$parse_url = parse_url(get_home_url());
+				header('location: ' . $parse_url['scheme'] . '://' . $parse_url['host'] . $_POST['usces_referer'] . '#cart_button');
+			}else{
+				header('location: ' . $_POST['usces_referer'] . '#cart_button');
+			}
 			exit;
 		}
 		

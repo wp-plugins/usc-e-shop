@@ -53,20 +53,20 @@ jQuery(function($){
 		}
 	});
 	
-	if( '1' == $("input[name='security']:checked").val() ){
-		$("input[name='quickcharge']").attr("disabled", "disabled");
-		$("#quickcharge_zeus_2").attr("checked", "checked");
-	}else{
-		$("input[name='quickcharge']").removeAttr("disabled");
-	}
-	$("input[name='security']").click(function(){
-		if( '1' == $("input[name='security']:checked").val() ){
-			$("input[name='quickcharge']").attr("disabled", "disabled");
-			$("#quickcharge_zeus_2").attr("checked", "checked");
-		}else{
-			$("input[name='quickcharge']").removeAttr("disabled");
-		}
-	});
+//	if( '1' == $("input[name='security']:checked").val() ){
+//		$("input[name='quickcharge']").attr("disabled", "disabled");
+//		$("#quickcharge_zeus_2").attr("checked", "checked");
+//	}else{
+//		$("input[name='quickcharge']").removeAttr("disabled");
+//	}
+//	$("input[name='security']").click(function(){
+//		if( '1' == $("input[name='security']:checked").val() ){
+//			$("input[name='quickcharge']").attr("disabled", "disabled");
+//			$("#quickcharge_zeus_2").attr("checked", "checked");
+//		}else{
+//			$("input[name='quickcharge']").removeAttr("disabled");
+//		}
+//	});
 });
 
 function toggleVisibility(id) {
