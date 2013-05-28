@@ -2457,7 +2457,8 @@ function usces_member_history( $out = '' ){
 				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
 				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
 				</tr>';
-			$html .= apply_filters('usces_filter_history_cart_row', $history_cart_row, $umhs, $cart_row, $i);
+			$materials = compact( 'cart_thumbnail', 'post_id', 'pictid', 'cartItemName', 'optstr' );
+			$html .= apply_filters( 'usces_filter_history_cart_row', $history_cart_row, $umhs, $cart_row, $i, $materials );
 		}
 		$html .= '</table>
 			</td>
