@@ -581,8 +581,7 @@ function usces_send_regmembermail($user) {
 			'subject' => $subject,
 			'message' => do_shortcode($message),
 			);
-
-	$para1 = apply_filters( 'usces_filter_send_regmembermail_para1', $para1);
+	$para1 = apply_filters( 'usces_filter_send_regmembermail_para1', $para1 );
 	$res = usces_send_mail( $para1 );
 	
 	if($newmem_admin_mail){
@@ -606,13 +605,72 @@ function usces_send_regmembermail($user) {
 				'subject' => $subject,
 				'message' => do_shortcode($message),
 				);
-		$para1 = apply_filters( 'usces_filter_send_regmembermail_para2', $para2);
-	
+		$para2 = apply_filters( 'usces_filter_send_regmembermail_para2', $para2 );
 		usces_send_mail( $para2 );
 	}
 	
 	return $res;
 
+}
+
+function usces_send_delmembermail( $user ) {
+	global $usces;
+	$res = true;
+	$mail_data = $usces->options['mail_data'];
+	$delmem_admin_mail = $usces->options['delmem_admin_mail'];
+	$delmem_customer_mail = $usces->options['delmem_customer_mail'];
+	$name = usces_localized_name(trim($user['name1']), trim($user['name2']), 'return');
+	$mailaddress1 = trim($user['mailaddress1']);
+
+	if( $delmem_customer_mail ) {
+		$subject = __('Member removal processing was completed.', 'usces');
+		$message = __('Member removal processing was completed.', 'usces')."\r\n\r\n";
+		$message .= __('Registration contents', 'usces')."\r\n";
+		$message .= '--------------------------------'."\r\n";
+		$message .= __('Member ID', 'usces').' : '.$user['ID']."\r\n";
+		$message .= __('Name', 'usces').' : '.sprintf(__('Mr/Mrs %s', 'usces'), $name)."\r\n";
+		$message .= __('e-mail adress', 'usces').' : '.$mailaddress1."\r\n";
+		$message .= '--------------------------------'."\r\n\r\n";
+		$message .= $mail_data['footer']['membercomp'];
+		$message = apply_filters( 'usces_filter_send_delmembermail_message', $message, $user );
+
+		$para1 = array(
+				'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $name),
+				'to_address' => $mailaddress1,
+				'from_name' => get_option('blogname'),
+				'from_address' => $usces->options['sender_mail'],
+				'return_path' => $usces->options['sender_mail'],
+				'subject' => $subject,
+				'message' => do_shortcode($message),
+				);
+		$para1 = apply_filters( 'usces_filter_send_delmembermail_para1', $para1);
+		$res = usces_send_mail( $para1 );
+	}
+
+	if( $delmem_admin_mail ) {
+		$subject = __('Member removal processing was completed.', 'usces');
+		$message = __('Member removal processing was completed.', 'usces')."\r\n\r\n";
+		$message .= __('Registration contents', 'usces')."\r\n";
+		$message .= '--------------------------------'."\r\n";
+		$message .= __('Member ID', 'usces').' : '.$user['ID']."\r\n";
+		$message .= __('Name', 'usces').' : '.sprintf(__('Mr/Mrs %s', 'usces'), $name)."\r\n";
+		$message .= __('e-mail adress', 'usces') . ' : '.$mailaddress1."\r\n";
+		$message .= '--------------------------------'."\r\n\r\n";
+		$message = apply_filters( 'usces_filter_send_delmembermail_notice', $message, $user );
+
+		$para2 = array(
+				'to_name' => __('Notice of new sign-in', 'usces'),
+				'to_address' => $usces->options['order_mail'],
+				'from_name' => get_option('blogname'),
+				'from_address' => $usces->options['sender_mail'],
+				'return_path' => $usces->options['sender_mail'],
+				'subject' => $subject,
+				'message' => do_shortcode($message),
+				);
+		$para2 = apply_filters( 'usces_filter_send_delmembermail_para2', $para2 );
+		$res = usces_send_mail( $para2 );
+	}
+	return $res;
 }
 
 function usces_lostmail($url) {

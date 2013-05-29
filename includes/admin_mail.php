@@ -6,6 +6,8 @@ $this->action_message = '';
 $mail_datas = $this->options['mail_data'];
 $smtp_hostname = $this->options['smtp_hostname'];
 $newmem_admin_mail = $this->options['newmem_admin_mail'];
+$delmem_admin_mail = $this->options['delmem_admin_mail'];
+$delmem_customer_mail = $this->options['delmem_customer_mail'];
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -63,11 +65,25 @@ function toggleVisibility(id) {
 <div class="inside">
 <table class="form_table">
 	<tr>
-	    <th width="150"><?php _e('New sign-in completion email','usces'); ?></th>
+		<th width="150"><?php _e('New sign-in completion email','usces'); ?></th>
 		<td width="10"><input name="newmem_admin_mail" type="radio" id="newmem_admin_mail_0" value="0"<?php if(0 == $newmem_admin_mail) echo ' checked="checked"'; ?> /></td>
-		<td width="100"><label for="newmem_admin_mail_0">送信しない</label></td>
+		<td width="100"><label for="newmem_admin_mail_0"><?php _e("Don't send",'usces'); ?></label></td>
 		<td width="10"><input name="newmem_admin_mail" type="radio" id="newmem_admin_mail_1" value="1"<?php if(1 == $newmem_admin_mail) echo ' checked="checked"'; ?> /></td>
-		<td width="100"><label for="newmem_admin_mail_1">送信する</label></td>
+		<td width="100"><label for="newmem_admin_mail_1"><?php _e("Send",'usces'); ?></label></td>
+	</tr>
+	<tr>
+		<th width="150"><?php _e('Member removal completion email to admin','usces'); ?></th>
+		<td width="10"><input name="delmem_admin_mail" type="radio" id="delmem_admin_mail_0" value="0"<?php if(0 == $delmem_admin_mail) echo ' checked="checked"'; ?> /></td>
+		<td width="100"><label for="delmem_admin_mail_0"><?php _e("Don't send",'usces'); ?></label></td>
+		<td width="10"><input name="delmem_admin_mail" type="radio" id="delmem_admin_mail_1" value="1"<?php if(1 == $delmem_admin_mail) echo ' checked="checked"'; ?> /></td>
+		<td width="100"><label for="delmem_admin_mail_1"><?php _e("Send",'usces'); ?></label></td>
+	</tr>
+	<tr>
+		<th width="150"><?php _e('Member removal completion email to customer','usces'); ?></th>
+		<td width="10"><input name="delmem_customer_mail" type="radio" id="delmem_customer_mail_0" value="0"<?php if(0 == $delmem_customer_mail) echo ' checked="checked"'; ?> /></td>
+		<td width="100"><label for="delmem_customer_mail_0"><?php _e("Don't send",'usces'); ?></label></td>
+		<td width="10"><input name="delmem_customer_mail" type="radio" id="delmem_customer_mail_1" value="1"<?php if(1 == $delmem_customer_mail) echo ' checked="checked"'; ?> /></td>
+		<td width="100"><label for="delmem_customer_mail_1"><?php _e("Send",'usces'); ?></label></td>
 	</tr>
 </table>
 <hr size="1" color="#CCCCCC" />

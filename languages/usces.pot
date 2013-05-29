@@ -3249,3 +3249,13 @@ msgstr "Welcartの設定データのバックアップを取ることができ�
 
 msgid "In tax"
 msgstr "内税額"
+
+msgid "Member removal completion email to admin"
+msgstr "会員削除管理者メール"
+
+msgid "Member removal completion email to customer"
+msgstr "会員削除お客様メール"
+
+msgid "Member removal processing was completed."
+msgstr "退会処理が完了しました"
+

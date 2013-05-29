@@ -76,6 +76,8 @@ class usc_e_shop
 		if(!isset($this->options['point_assign'])) $this->options['point_assign'] = 1;//20120919ysk 0000573
 		if(!isset($this->options['cod_type'])) $this->options['cod_type'] = 'fix';
 		if(!isset($this->options['newmem_admin_mail'])) $this->options['newmem_admin_mail'] = 0;
+		if(!isset($this->options['delmem_admin_mail'])) $this->options['delmem_admin_mail'] = 1;
+		if(!isset($this->options['delmem_customer_mail'])) $this->options['delmem_customer_mail'] = 1;
 		if(!isset($this->options['mail_data']['title'])) $this->options['mail_data']['title'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
 		if(!isset($this->options['mail_data']['header'])) $this->options['mail_data']['header'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
 		if(!isset($this->options['mail_data']['footer'])) $this->options['mail_data']['footer'] = array('thankyou'=>'','order'=>'','inquiry'=>'','returninq'=>'','membercomp'=>'','completionmail'=>'', 'ordermail'=>'','changemail'=>'','receiptmail'=>'','mitumorimail'=>'','cancelmail'=>'','othermail'=>'');
@@ -788,6 +790,8 @@ class usc_e_shop
 		
 			$this->options['smtp_hostname'] = trim($_POST['smtp_hostname']);
 			$this->options['newmem_admin_mail'] = (int)$_POST['newmem_admin_mail'];
+			$this->options['delmem_admin_mail'] = (int)$_POST['delmem_admin_mail'];
+			$this->options['delmem_customer_mail'] = (int)$_POST['delmem_customer_mail'];
 		
 			foreach ( $_POST['title'] as $key => $value ) {
 				if( WCUtils::is_blank($value) ) {
@@ -3851,6 +3855,9 @@ class usc_e_shop
 				return false;
 
 		$res = usces_delete_memberdata( $mem['ID'] );
+		if( $res ) {
+			usces_send_delmembermail( $mem );
+		}
 
 		return $res;
 	}
