@@ -838,7 +838,8 @@ function order_item_ajax(){
 	global $usces;
 
 	if( $_POST['action'] != 'order_item_ajax' ) die(0);
-	
+
+	$res = false;
 	$_POST = $usces->stripslashes_deep_post($_POST);
 
 	switch ( $_POST['mode'] ) {
@@ -867,7 +868,9 @@ function order_item_ajax(){
 			$res = usces_order_recalculation( $_POST['order_id'], $_POST['mem_id'], $_POST['post_ids'], $_POST['skus'], $_POST['prices'], $_POST['quants'], $_POST['use_point'], $_POST['shipping_charge'], $_POST['cod_fee'] );
 			break;
 	}
-	
+
+	$res = apply_filters( 'usces_filter_order_item_ajax', $res );
+
 	if( $res === false )  die(0);
 		
 	//REGEX BUG: but it'll return info
