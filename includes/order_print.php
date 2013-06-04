@@ -217,7 +217,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	
 	switch ( $_REQUEST['type'] ){
 		case  'mitumori':
-			$title = __('Estimate', 'usces');
+			$title = apply_filters( 'usces_filter_pdf_estimate_title', __('Estimate', 'usces'), $data );
 			$message = sprintf(__("Thank you for choosing '%s' we send you following estimate. ", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
 			$message = apply_filters('usces_filter_pdf_estimate_message', $message, $data);
@@ -228,7 +228,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			break;
 		
 		case 'nohin':
-			$title = __('Delivery Statement', 'usces');
+			$title = apply_filters( 'usces_filter_pdf_invoice_title', __('Delivery Statement', 'usces'), $data );
 			$message = sprintf(__("Thak you for choosing '%s'. We deliver your items as following.", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
 			$message = apply_filters('usces_filter_pdf_invoice_message', $message, $data);
@@ -251,7 +251,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			break;
 		
 		case 'receipt':
-			$title = __('Receipt', 'usces');
+			$title = apply_filters( 'usces_filter_pdf_receipt_title', __('Receipt', 'usces'), $data );
 			$message = apply_filters('usces_filter_pdf_receipt_message', __("Your payment has been received.", 'usces'), $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('M j, Y', 'usces'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : ' . apply_filters('usces_filter_pdf_payment_name', $data->order['payment_name'], $data);
@@ -265,7 +265,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			break;
 		
 		case 'bill':
-			$title = __('Invoice', 'usces');
+			$title = apply_filters( 'usces_filter_pdf_bill_title', __('Invoice', 'usces'), $data );
 			$message = apply_filters('usces_filter_pdf_bill_message', __("Please remit payment at your earliest convenience.", 'usces'), $data);
 			$juchubi = __('date of receiving the order', 'usces').' : '.date(__('M j, Y', 'usces'), strtotime($data->order['date']));
 			$siharai = __('payment division', 'usces').' : ' . apply_filters('usces_filter_pdf_payment_name', $data->order['payment_name'], $data);
