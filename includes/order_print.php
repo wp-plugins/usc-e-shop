@@ -199,7 +199,7 @@ function usces_pdf_out(&$pdf, $data){
 	usces_pdfSetLine($pdf);
 	usces_pdfSetFooter($pdf, $data);
 
-	ob_end_clean();
+	@ob_end_clean();
 
 	// Output
 	//*****************************************************************
