@@ -735,11 +735,12 @@ class usc_e_shop
 			$_POST = $this->stripslashes_deep_post($_POST);
 
 			$this->options['campaign_schedule'] = isset($_POST['campaign_schedule']) ? $_POST['campaign_schedule'] : '0';
-			if(isset($_POST['business_days'])) $this->options['business_days'] = $_POST['business_days'];
-
-
+			if(isset($_POST['business_days']))
+				$this->options['business_days'] = $_POST['business_days'];
 
 			update_option('usces', $this->options);
+			
+			do_action( 'usces_action_admin_schedule_update' );
 			
 			$this->action_status = 'success';
 			$this->action_message = __('options are updated','usces');

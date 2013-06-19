@@ -381,10 +381,16 @@
 					$("#newskuunit").val("");
 					$("#newskugptekiyo").val(0);
 					//$("#newcharging_type").attr({selectedIndex:0});
-					if( undefined != $("input[name='newskuadvance']").val() )
-						$("#newskuadvance").val("");
-					if( undefined != $("select[name='newskuadvance']").val() )
-						$("#newskuadvance").val(0);
+					if( 0 < $("input[name*='newskuadvance']").length ){
+						$("input[name*='newskuadvance']").each(function(index, element) {
+							$(this).val("");
+						});
+					}
+					if( 0 < $("select[name*='newskuadvance']").length ){
+						$("select[name*='newskuadvance']").each(function(index, element) {
+							$(this).val("");
+						});
+					}
 				}
 				//$("#itemsku-" + meta_id).css({'background-color': '#FF4'});
 				//$("#itemsku-" + meta_id).animate({ 'background-color': '#FFFFEE' }, 2000 );

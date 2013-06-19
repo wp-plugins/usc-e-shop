@@ -147,7 +147,7 @@ function cangeWday3(id, c) {
 <form action="" method="post" name="option_form" id="option_form">
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
-
+<?php do_action( 'usces_action_admin_schedule1' ); ?>
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('Campaign Schedule','usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_campaign_schedule');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
@@ -227,7 +227,7 @@ function cangeWday3(id, c) {
 <div id="ex_campaign_schedule" class="explanation"><?php _e('reserve the period of campaign.', 'usces'); ?></div>
 </div>
 </div><!--postbox-->
-
+<?php do_action( 'usces_action_admin_schedule2' ); ?>
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('Business Calendar', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_charge');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
@@ -337,6 +337,7 @@ function cangeWday3(id, c) {
 <div id="ex_shipping_charge" class="explanation"></div>
 </div>
 </div><!--postbox-->
+<?php do_action( 'usces_action_admin_schedule3' ); ?>
 
 
 </div><!--poststuff-->
