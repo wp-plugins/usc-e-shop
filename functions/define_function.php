@@ -685,7 +685,8 @@ function usces_item_uploadcsv(){
 			$cdatas['post_password'] = ( 'private' == $cdatas['post_status'] ) ? '' : $datas[USCES_COL_POST_PASSWORD];
 			$cdatas['post_type'] = 'post';
 			$cdatas['post_parent'] = 0;
-			$cdatas['post_name'] = 	urlencode(wp_unique_post_slug(trim(mb_convert_encoding($datas[USCES_COL_POST_NAME], 'UTF-8', 'SJIS')), $cdatas['ID'], $cdatas['post_status'], $cdatas['post_type'], $cdatas['post_parent']));
+			$spname = sanitize_title(trim(mb_convert_encoding($datas[USCES_COL_POST_NAME], 'UTF-8', 'SJIS')));
+			$cdatas['post_name'] = 	urlencode(wp_unique_post_slug($spname, $cdatas['ID'], $cdatas['post_status'], $cdatas['post_type'], $cdatas['post_parent']));
 			$cdatas['to_ping'] = '';
 			$cdatas['pinged'] = '';
 			$cdatas['menu_order'] = 0;
