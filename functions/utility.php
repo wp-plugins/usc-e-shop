@@ -1758,7 +1758,7 @@ function usces_download_order_list() {
 			if(isset($_REQUEST['check']['address3'])) $address_info .= $td_h.usces_entity_decode($data['order_address3'], $ext).$td_f;
 			if(isset($_REQUEST['check']['address1'])) $address_info .= $td_h.usces_entity_decode($data['order_address1'], $ext).$td_f;
 			if(isset($_REQUEST['check']['pref'])) $address_info .= $td_h.usces_entity_decode($data['order_pref'], $ext).$td_f;
-			if(isset($_REQUEST['check']['country'])) $line .= $td_h.$usces_settings['country'][$usces->get_order_meta_value('customer_country', $order_id)].$td_f;
+			if(isset($_REQUEST['check']['country'])) $address_info .= $td_h.$usces_settings['country'][$usces->get_order_meta_value('customer_country', $order_id)].$td_f;
 			if(isset($_REQUEST['check']['zip'])) $address_info .= $td_h.usces_entity_decode($data['order_zip'], $ext).$td_f;
 			if(isset($_REQUEST['check']['tel'])) $address_info .= $td_h.usces_entity_decode($data['order_tel'], $ext).$td_f;
 			if(isset($_REQUEST['check']['fax'])) $address_info .= $td_h.usces_entity_decode($data['order_fax'], $ext).$td_f;

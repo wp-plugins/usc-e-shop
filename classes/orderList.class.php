@@ -33,7 +33,6 @@ class dataList
 	//Constructor
 	function dataList($tableName, $arr_column)
 	{
-
 		$this->table = $tableName;
 		$this->columns = $arr_column;
 		$this->rows = array();
@@ -51,7 +50,8 @@ class dataList
 
 		$this->SetParamByQuery();
 
-		$this->arr_period = array(__('This month', 'usces'), __('Last month', 'usces'), __('The past one week', 'usces'), __('Last 30 days', 'usces'), __('Last 90days', 'usces'), __('All', 'usces'));
+		$arr_period = array(__('This month', 'usces'), __('Last month', 'usces'), __('The past one week', 'usces'), __('Last 30 days', 'usces'), __('Last 90days', 'usces'), __('All', 'usces'));
+		$this->arr_period = apply_filters( 'usces_filter_order_list_arr_period', $arr_period, $this );
 
 		$management_status = array(
 			'duringorder' => __('temporaly out of stock', 'usces'),
@@ -110,62 +110,61 @@ class dataList
 
 	function MakeTable()
 	{
-
 		$this->SetParam();
-		
+
 		switch ($this->action){
-		
+
 			case 'searchIn':
 				$this->SearchIn();
 				//$this->SetSelectedRow();
 				$res = $this->GetRows();
 				break;
-				
+
 			case 'searchOut':
 				$this->SearchOut();
 				//$this->SetSelectedRow();
 				$res = $this->GetRows();
 				break;
-			
+
 			case 'changeSort':
 				$res = $this->GetRows();
 				break;
-			
+
 			case 'changePage':
 				$res = $this->GetRows();
 				break;
-			
+
 			case 'collective_order_reciept':
 				usces_all_change_order_reciept($this);
 				$res = $this->GetRows();
 				break;
-				
+
 			case 'collective_order_status':
 				usces_all_change_order_status($this);
 				$res = $this->GetRows();
 				break;
-				
+
 			case 'collective_delete':
 				usces_all_delete_order_data($this);
 				$this->SetTotalRow();
 				$res = $this->GetRows();
 				break;
-				
+
 			case 'refresh':
 			default:
 				$this->SetDefaultParam();
 				$res = $this->GetRows();
 				break;
 		}
-		
+
 		$this->SetNavi();
 		$this->SetHeaders();
 		$this->SetSESSION();
-		
+
 		if($res){
-		
+
 			return TRUE;
-			
+
 		}else{
 			return FALSE;
 		}
@@ -180,38 +179,35 @@ class dataList
 		if(isset($_SESSION[$this->table]['arr_search'])){
 			$this->arr_search = $_SESSION[$this->table]['arr_search'];
 		}else{
-			$this->arr_search = array('period'=>'3', 'column'=>'', 'word'=>'');
+			$arr_search = array( 'period'=>'3', 'column'=>'', 'word'=>'' );
+			$this->arr_search = apply_filters( 'usces_filter_order_list_arr_search', $arr_search, $this );
 		}
 		if(isset($_SESSION[$this->table]['searchSwitchStatus'])){
 			$this->searchSwitchStatus = $_SESSION[$this->table]['searchSwitchStatus'];
 		}else{
 			$this->searchSwitchStatus = 'OFF';
 		}
-		$this->searchSql =  '';
+		$this->searchSql = '';
 		$this->sortColumn = 'ID';
 		foreach($this->columns as $value ){
 			$this->sortSwitchs[$value] = 'DESC';
 		}
-		
-	
+
 		$this->SetTotalRow();
 		//$this->SetSelectedRow();
-
 	}
-	
+
 	function SetParam()
 	{
 		$this->startRow = ($this->currentPage-1) * $this->maxRow;
 	}
-	
+
 	function SetParamByQuery()
 	{
-	
 		if(isset($_REQUEST['changePage'])){
-		
+
 			$this->action = 'changePage';
 			$this->currentPage = $_REQUEST['changePage'];
-			
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
@@ -220,15 +216,14 @@ class dataList
 			$this->arr_search = $_SESSION[$this->table]['arr_search'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
 			$this->selectedRow = $_SESSION[$this->table]['selectedRow'];
-			
+
 		}else if(isset($_REQUEST['changeSort'])){
-		
+
 			$this->action = 'changeSort';
 			$this->sortOldColumn = $this->sortColumn;
 			$this->sortColumn = $_REQUEST['changeSort'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
 			$this->sortSwitchs[$this->sortColumn] = $_REQUEST['switch'];
-			
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
 			$this->searchSql = $_SESSION[$this->table]['searchSql'];
@@ -236,15 +231,14 @@ class dataList
 			$this->searchSwitchStatus = $_SESSION[$this->table]['searchSwitchStatus'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
 			$this->selectedRow = $_SESSION[$this->table]['selectedRow'];
-			
+
 		} else if(isset($_REQUEST['searchIn'])){
-		
+
 			$this->action = 'searchIn';
 			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? $_REQUEST['search']['column'] : '';
 			$this->arr_search['word'] = isset($_REQUEST['search']['word']) ? $_REQUEST['search']['word'] : '';
 			$this->arr_search['period'] = isset($_REQUEST['search']['period']) ? (int)$_REQUEST['search']['period'] : 0;
 			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
-			
 			$this->currentPage = 1;
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
@@ -252,13 +246,12 @@ class dataList
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
 
 		}else if(isset($_REQUEST['searchOut'])){
-		
+
 			$this->action = 'searchOut';
 			$this->arr_search['column'] = '';
 			$this->arr_search['word'] = '';
 			$this->arr_search['period'] = $_SESSION[$this->table]['arr_search']['period'];
 			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
-			
 			$this->currentPage = 1;
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
@@ -266,9 +259,8 @@ class dataList
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
 
 		}else if(isset($_REQUEST['refresh'])){
-		
-			$this->action = 'refresh';
 
+			$this->action = 'refresh';
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
@@ -280,7 +272,7 @@ class dataList
 			$this->selectedRow = $_SESSION[$this->table]['selectedRow'];
 
 		}else if(isset($_REQUEST['collective'])){
-		
+
 			$this->action = 'collective_' . $_POST['allchange']['column'];
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
@@ -293,11 +285,11 @@ class dataList
 			$this->selectedRow = $_SESSION[$this->table]['selectedRow'];
 
 		}else{
-		
+
 			$this->action = 'default';
 		}
 	}
-	
+
 	//GetRows
 	function GetRows()
 	{
@@ -306,7 +298,7 @@ class dataList
 		$where = $this->GetWhere();
 		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
-		
+
 /*		$status_sql = '';
 		foreach ($this->management_status as $status_key => $status_name){
 			$status_sql .= " WHEN LOCATE('" . $status_key . "', order_status) > 0 THEN '" . $status_name . "'";
@@ -359,16 +351,16 @@ class dataList
 
 		return $this->rows;
 	}
-	
+
 	function SetTotalRow()
 	{
 		global $wpdb;
-		$query = "SELECT COUNT(ID) AS ct FROM {$this->table}".apply_filters( 'usces_filter_order_list_sql_where', '' );
+		$query = "SELECT COUNT(ID) AS ct FROM {$this->table}".apply_filters( 'usces_filter_order_list_sql_where', '', $this );
 		$query = apply_filters( 'usces_filter_order_list_set_total_row', $query, $this);
 		$res = $wpdb->get_var($query);
 		$this->totalRow = $res;
 	}
-	
+
 /*	function SetSelectedRow()
 	{
 		global $wpdb;
@@ -397,7 +389,7 @@ class dataList
 		$this->selectedRow = count($rows);
 		
 	}*/
-	
+
 	function GetWhere()
 	{
 		$str = '';
@@ -426,7 +418,7 @@ class dataList
 				$str = "";
 				break;
 		}
-		$str = apply_filters( 'usces_filter_order_list_sql_where', $str );
+		$str = apply_filters( 'usces_filter_order_list_sql_where', $str, $this );
 		if( WCUtils::is_blank($str) && !WCUtils::is_blank($this->searchSql) ){
 			$str = ' HAVING ' . $this->searchSql;
 		}else if($str != '' && $this->searchSql != ''){
@@ -434,7 +426,7 @@ class dataList
 		}
 		return apply_filters( 'usces_filter_order_list_get_where', $str, $this );
 	}
-	
+
 	function SearchIn()
 	{
 		switch ($this->arr_search['column']) {
@@ -492,11 +484,10 @@ class dataList
 
 	function SetNavi()
 	{
-		
 		$this->lastPage = ceil($this->selectedRow / $this->maxRow);
 		$this->previousPage = ($this->currentPage - 1 == 0) ? 1 : $this->currentPage - 1;
 		$this->nextPage = ($this->currentPage + 1 > $this->lastPage) ? $this->lastPage : $this->currentPage + 1;
-		
+
 		for($i=0; $i<$this->naviMaxButton; $i++){
 			if($i > $this->lastPage-1) break;
 			if($this->lastPage <= $this->naviMaxButton) {
@@ -512,7 +503,7 @@ class dataList
 				}
 			}
 		}
-		
+
 		$html = '';
 		$html .= '<ul class="clearfix">'."\n";
 		$html .= '<li class="rowsnum">' . $this->selectedRow . ' / ' . $this->totalRow . ' ' . __('cases', 'usces') . '</li>' . "\n";
@@ -550,10 +541,9 @@ class dataList
 
 		$this->dataTableNavigation = $html;
 	}
-	
+
 	function SetSESSION()
 	{
-	
 		$_SESSION[$this->table]['startRow'] = $this->startRow;		//表示開始行番号
 		$_SESSION[$this->table]['sortColumn'] = $this->sortColumn;	//現在ソート中のフィールド
 		$_SESSION[$this->table]['totalRow'] = $this->totalRow;		//全行数
@@ -566,12 +556,13 @@ class dataList
 		$_SESSION[$this->table]['headers'] = $this->headers;//表示するヘッダ文字列
 		$_SESSION[$this->table]['rows'] = $this->rows;			//表示する行オブジェクト
 		$_SESSION[$this->table]['sortSwitchs'] = $this->sortSwitchs;	//各フィールド毎の昇順降順スイッチ
-		$_SESSION[$this->table]['dataTableNavigation'] = $this->dataTableNavigation;	
+		$_SESSION[$this->table]['dataTableNavigation'] = $this->dataTableNavigation;
 		$_SESSION[$this->table]['searchSql'] = $this->searchSql;
  		$_SESSION[$this->table]['arr_search'] = $this->arr_search;
 		$_SESSION[$this->table]['searchSwitchStatus'] = $this->searchSwitchStatus;
+		do_action( 'usces_action_order_list_set_session', $this );
 	}
-	
+
 	function SetHeaders()
 	{
 		foreach ($this->columns as $key => $value){
@@ -589,33 +580,35 @@ class dataList
 				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_orderlist&changeSort=' . $value . '&switch=' . $switch . '"><span>' . $key . '</span></a>';
 			}
 		}
-			//$this->headers = array_keys($this->columns);
+		//$this->headers = array_keys($this->columns);
 	}
-	
+
 	function GetSearchs()
 	{
 		return $this->arr_search;
 	}
-	
+
 	function GetListheaders()
 	{
 		return $this->headers;
 	}
-	
+
 	function GetDataTableNavigation()
 	{
 		return $this->dataTableNavigation;
 	}
-	
+
 	function set_action_status($status, $message)
 	{
 		$this->action_status = $status;
 		$this->action_message = $message;
 	}
+
 	function get_action_status()
 	{
 		return $this->action_status;
 	}
+
 	function get_action_message()
 	{
 		return $this->action_message;
