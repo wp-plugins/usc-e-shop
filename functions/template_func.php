@@ -2494,6 +2494,8 @@ function usces_assistance_item($post_id, $title ){
 		if($r->have_posts()) :
 		add_filter( 'excerpt_length', 'welcart_assistance_excerpt_length' );
 		add_filter( 'excerpt_mblength', 'welcart_assistance_excerpt_mblength' );
+		$width = apply_filters( 'usces_filter_assistance_item_width', 100 );
+		$height = apply_filters( 'usces_filter_assistance_item_height', 100 );
 ?>
 	<div class="assistance_item">
 		<h3><?php echo $title; ?></h3>
@@ -2508,7 +2510,7 @@ function usces_assistance_item($post_id, $title ){
 			<li>
 			<div class="listbox clearfix">
 				<div class="slit">
-					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php echo wp_filter_nohtml_kses(get_the_title()); ?>"><?php usces_the_itemImage(0, 100, 100, $post); ?></a>
+					<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php echo wp_filter_nohtml_kses(get_the_title()); ?>"><?php usces_the_itemImage(0, $width, $height, $post); ?></a>
 				</div>
 				<div class="detail">
 					<div class="assist_excerpt">

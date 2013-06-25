@@ -1415,17 +1415,25 @@ function usces_delete_orderdata() {
 
 	$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $ID);
 	$order_data = $wpdb->get_row( $query, OBJECT );
+//20130625ysk start 0000721
 //20120306ysk start 0000324
-	$order_res = $wpdb->get_row( $query, ARRAY_A );
-	$restore_point = false;
+	//$order_res = $wpdb->get_row( $query, ARRAY_A );
+	//$restore_point = false;
+	$point = 0;
 	if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] ) {
-		if( !empty($order_res['mem_id']) && 0 < $order_res['order_getpoint'] ) {
-			if( $usces->is_status('completion', $order_res['order_status']) ) {
-				$restore_point = true;
+		if( !empty($order_data->mem_id) && 0 < $order_data->order_getpoint ) {
+			if( $usces->is_status('completion', $order_data->order_status) ) {
+				//$restore_point = true;
+				$point += $order_data->order_getpoint;
 			} else {
-				if( usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) || $usces->is_status('receipted', $order_res['order_status']) ) 
-					$restore_point = true;
+				if( usces_is_complete_settlement( $order_data->order_payment_name, $order_data->order_status ) || $usces->is_status('receipted', $order_data->order_status) ) {
+					//$restore_point = true;
+					$point += $order_data->order_getpoint;
+				}
 			}
+		}
+		if( !empty($order_data->mem_id) && 0 < $order_data->order_usedpoint ) {
+			$point -= $order_data->order_usedpoint;
 		}
 	}
 //20120306ysk end
@@ -1439,8 +1447,10 @@ function usces_delete_orderdata() {
 		
 		do_action('usces_action_del_orderdata', $order_data);
 //20120306ysk start 0000324
-		if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
+		//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
+		if( 0 != $point ) usces_restore_point( $order_data->mem_id, $point );
 //20120306ysk end
+//20130625ysk end
 	}
 
 	} else {
@@ -2059,8 +2069,10 @@ function usces_all_delete_order_data(&$obj){
 	foreach ( (array)$ids as $id ):
 		$del = usces_delete_order_check( $id );
 		if( $del === false ) continue;
+//20130625ysk start 0000721
 //20120306ysk start 0000324
-		$restore_point = false;
+		//$restore_point = false;
+		$point = 0;
 		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] ) {
 			$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
 			$order_res = $wpdb->get_row( $query, ARRAY_A );
@@ -2069,8 +2081,12 @@ function usces_all_delete_order_data(&$obj){
 				//	$restore_point = true;
 				//} else {
 					if( usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) || $usces->is_status('receipted', $order_res['order_status']) ) 
-						$restore_point = true;
+						//$restore_point = true;
+						$point += $order_res['order_getpoint'];
 				//}
+			}
+			if( !empty($order_res['mem_id']) && 0 < $order_res['order_usedpoint'] ) {
+				$point -= $order_res['order_usedpoint'];
 			}
 		}
 //20120306ysk end
@@ -2082,7 +2098,8 @@ function usces_all_delete_order_data(&$obj){
 			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $id);//0000427
 			$metares = $wpdb->query( $metaquery );
 //20120306ysk start 0000324
-			if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
+			//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
+			if( 0 != $point ) usces_restore_point( $order_res['mem_id'], $point );
 //20120306ysk end
 //20120612ysk start 0000501
 //20130419ysk
