@@ -621,10 +621,10 @@ function usces_send_delmembermail( $user ) {
 	$delmem_customer_mail = $usces->options['delmem_customer_mail'];
 	$name = usces_localized_name(trim($user['name1']), trim($user['name2']), 'return');
 	$mailaddress1 = trim($user['mailaddress1']);
+	$subject = apply_filters( 'usces_filter_send_delmembermail_subject', __('Member removal processing was completed.', 'usces'), $user );
 
 	if( $delmem_customer_mail ) {
-		$subject = __('Member removal processing was completed.', 'usces');
-		$message = __('Member removal processing was completed.', 'usces')."\r\n\r\n";
+		$message = $subject."\r\n\r\n";
 		$message .= __('Registration contents', 'usces')."\r\n";
 		$message .= '--------------------------------'."\r\n";
 		$message .= __('Member ID', 'usces').' : '.$user['ID']."\r\n";
@@ -643,13 +643,12 @@ function usces_send_delmembermail( $user ) {
 				'subject' => $subject,
 				'message' => do_shortcode($message),
 				);
-		$para1 = apply_filters( 'usces_filter_send_delmembermail_para1', $para1);
+		$para1 = apply_filters( 'usces_filter_send_delmembermail_para1', $para1 );
 		$res = usces_send_mail( $para1 );
 	}
 
 	if( $delmem_admin_mail ) {
-		$subject = __('Member removal processing was completed.', 'usces');
-		$message = __('Member removal processing was completed.', 'usces')."\r\n\r\n";
+		$message = $subject."\r\n\r\n";
 		$message .= __('Registration contents', 'usces')."\r\n";
 		$message .= '--------------------------------'."\r\n";
 		$message .= __('Member ID', 'usces').' : '.$user['ID']."\r\n";

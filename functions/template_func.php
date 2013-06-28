@@ -3139,4 +3139,30 @@ function usces_checked( $chk, $out = '' ) {
 	}
 }
 
+function usces_get_custom_field_value( $field, $key, $id, $out = '' ) {
+	global $usces;
+
+	$value = '';
+	switch( $field ) {
+	case 'order':
+		$value = $usces->get_order_meta_value( 'csod_'.$key, $id );
+		break;
+	case 'customer':
+		$value = $usces->get_order_meta_value( 'cscs_'.$key, $id );
+		break;
+	case 'delivery':
+		$value = $usces->get_order_meta_value( 'csde_'.$key, $id );
+		break;
+	case 'member':
+		$value = $usces->get_member_meta_value( 'csmb_'.$key, $id );
+		break;
+	}
+
+	if( $out == 'return' ) {
+		return $value;
+	} else {
+		echo $value;
+	}
+}
+
 ?>
