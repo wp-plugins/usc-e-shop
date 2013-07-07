@@ -338,7 +338,7 @@ function post_categories_meta_box( $post, $box ) {
             echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
             ?>
 			<ul id="<?php echo $taxonomy; ?>checklist" class="list:<?php echo $taxonomy?> categorychecklist form-no-clear">
-				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids ) ) ?>
+				<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy ) ) ?>
 			</ul>
 		</div>
 		<div id="<?php echo $taxonomy; ?>-pop" class="tabs-panel" style="display: none;">
