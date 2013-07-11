@@ -224,7 +224,7 @@ jQuery(document).ready(function($){
 	</fieldset>
 	<fieldset><legend><?php _e('Membership information', 'usces'); ?></legend>
 		<label for="chk_mem[ID]"><input type="checkbox" class="check_member" id="chk_mem[ID]" value="ID" checked disabled /><?php _e('membership number', 'usces'); ?></label>
-		<label for="chk_mem[email]"><input type="checkbox" class="check_member" id="chk_mem[email]" value="email"<?php usces_checked($chk_mem['email']); ?> /><?php _e('e-mail', 'usces'); ?></label>
+		<label for="chk_mem[email]"><input type="checkbox" class="check_member" id="chk_mem[email]" value="email"<?php usces_checked($chk_mem, 'email'); ?> /><?php _e('e-mail', 'usces'); ?></label>
 <?php 
 	if(!empty($csmb_meta)) {
 		foreach($csmb_meta as $key => $entry) {
@@ -233,7 +233,7 @@ jQuery(document).ready(function($){
 				$csmb_key = 'csmb_'.$key;
 				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
 				//$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
-				$checked = usces_checked( $chk_mem[$csmb_key], 'return' );
+				$checked = usces_checked( $chk_mem, $csmb_key, 'return' );
 				$name = $entry['name'];
 				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
 				echo '<label for="chk_mem['.$csmb_key.']"><input type="checkbox" class="check_member" id="chk_mem['.esc_attr($csmb_key).']" value="'.esc_attr($csmb_key).'"'.$checked.' />'.esc_html($name).'</label>'."\n";//20111116ysk 0000302
@@ -248,7 +248,7 @@ jQuery(document).ready(function($){
 	switch($applyform) {
 	case 'JP':
 ?>
-		<label for="chk_mem[kana]"><input type="checkbox" class="check_member" id="chk_mem[kana]" value="kana"<?php usces_checked($chk_mem['kana']); ?> /><?php _e('furigana','usces'); ?></label>
+		<label for="chk_mem[kana]"><input type="checkbox" class="check_member" id="chk_mem[kana]" value="kana"<?php usces_checked($chk_mem, 'kana'); ?> /><?php _e('furigana','usces'); ?></label>
 <?php 
 		break;
 	}
@@ -261,7 +261,7 @@ jQuery(document).ready(function($){
 				$csmb_key = 'csmb_'.$key;
 				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
 				//$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
-				$checked = usces_checked( $chk_mem[$csmb_key], 'return' );
+				$checked = usces_checked( $chk_mem, $csmb_key, 'return' );
 				$name = $entry['name'];
 				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
 				echo '<label for="chk_mem['.esc_attr($csmb_key).']"><input type="checkbox" class="check_member" id="chk_mem['.esc_attr($csmb_key).']" value="'.esc_attr($csmb_key).'"'.$checked.' />'.esc_html($name).'</label>'."\n";//20111116ysk 0000302
@@ -274,14 +274,14 @@ jQuery(document).ready(function($){
 	switch($applyform) {
 	case 'JP':
 ?>
-		<label for="chk_mem[zip]"><input type="checkbox" class="check_member" id="chk_mem[zip]" value="zip"<?php usces_checked($chk_mem['zip']); ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
+		<label for="chk_mem[zip]"><input type="checkbox" class="check_member" id="chk_mem[zip]" value="zip"<?php usces_checked($chk_mem, 'zip'); ?> /><?php _e('Zip/Postal Code', 'usces'); ?></label>
 		<label for="chk_mem[country]"><input type="checkbox" class="check_member" id="chk_mem[country]" value="country" checked disabled /><?php _e('Country', 'usces'); ?></label>
 		<label for="chk_mem[pref]"><input type="checkbox" class="check_member" id="chk_mem[pref]" value="pref" checked disabled /><?php _e('Province', 'usces'); ?></label>
 		<label for="chk_mem[address1]"><input type="checkbox" class="check_member" id="chk_mem[address1]" value="address1" checked disabled /><?php _e('city', 'usces'); ?></label>
 		<label for="chk_mem[address2]"><input type="checkbox" class="check_member" id="chk_mem[address2]" value="address2" checked disabled /><?php _e('numbers', 'usces'); ?></label>
 		<label for="chk_mem[address3]"><input type="checkbox" class="check_member" id="chk_mem[address3]" value="address3" checked disabled /><?php _e('building name', 'usces'); ?></label>
-		<label for="chk_mem[tel]"><input type="checkbox" class="check_member" id="chk_mem[tel]" value="tel"<?php usces_checked($chk_mem['tel']); ?> /><?php _e('Phone number', 'usces'); ?></label>
-		<label for="chk_mem[fax]"><input type="checkbox" class="check_member" id="chk_mem[fax]" value="fax"<?php usces_checked($chk_mem['fax']); ?> /><?php _e('FAX number', 'usces'); ?></label>
+		<label for="chk_mem[tel]"><input type="checkbox" class="check_member" id="chk_mem[tel]" value="tel"<?php usces_checked($chk_mem, 'tel'); ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_mem[fax]"><input type="checkbox" class="check_member" id="chk_mem[fax]" value="fax"<?php usces_checked($chk_mem, 'fax'); ?> /><?php _e('FAX number', 'usces'); ?></label>
 <?php 
 		break;
 	case 'US':
@@ -292,9 +292,9 @@ jQuery(document).ready(function($){
 		<label for="chk_mem[address1]"><input type="checkbox" class="check_member" id="chk_mem[address1]" value="address1" checked disabled /><?php _e('city', 'usces'); ?></label>
 		<label for="chk_mem[pref]"><input type="checkbox" class="check_member" id="chk_mem[pref]" value="pref" checked disabled /><?php _e('State', 'usces'); ?></label>
 		<label for="chk_mem[country]"><input type="checkbox" class="check_member" id="chk_mem[country]" value="country" checked disabled /><?php _e('Country', 'usces'); ?></label>
-		<label for="chk_mem[zip]"><input type="checkbox" class="check_member" id="chk_mem[zip]" value="zip"<?php usces_checked($chk_mem['zip']); ?> /><?php _e('Zip', 'usces'); ?></label>
-		<label for="chk_mem[tel]"><input type="checkbox" class="check_member" id="chk_mem[tel]" value="tel"<?php usces_checked($chk_mem['tel']); ?> /><?php _e('Phone number', 'usces'); ?></label>
-		<label for="chk_mem[fax]"><input type="checkbox" class="check_member" id="chk_mem[fax]" value="fax"<?php usces_checked($chk_mem['fax']); ?> /><?php _e('FAX number', 'usces'); ?></label>
+		<label for="chk_mem[zip]"><input type="checkbox" class="check_member" id="chk_mem[zip]" value="zip"<?php usces_checked($chk_mem, 'zip'); ?> /><?php _e('Zip', 'usces'); ?></label>
+		<label for="chk_mem[tel]"><input type="checkbox" class="check_member" id="chk_mem[tel]" value="tel"<?php usces_checked($chk_mem, 'tel'); ?> /><?php _e('Phone number', 'usces'); ?></label>
+		<label for="chk_mem[fax]"><input type="checkbox" class="check_member" id="chk_mem[fax]" value="fax"<?php usces_checked($chk_mem, 'fax'); ?> /><?php _e('FAX number', 'usces'); ?></label>
 <?php 
 		break;
 	}
@@ -307,7 +307,7 @@ jQuery(document).ready(function($){
 				$csmb_key = 'csmb_'.$key;
 				//$checked = ($chk_mem[$entry['name']] == 1) ? ' checked' : '';
 				//$checked = ($chk_mem[$csmb_key] == 1) ? ' checked' : '';
-				$checked = usces_checked( $chk_mem[$csmb_key], 'return' );
+				$checked = usces_checked( $chk_mem, $csmb_key, 'return' );
 				$name = $entry['name'];
 				//echo '<label for="chk_mem['.$name.']"><input type="checkbox" class="check_member" id="chk_mem['.$name.']" value="'.$name.'"'.$checked.' />'.$name.'</label>';
 				echo '<label for="chk_mem['.esc_attr($csmb_key).']"><input type="checkbox" class="check_member" id="chk_mem['.esc_attr($csmb_key).']" value="'.esc_attr($csmb_key).'"'.$checked.' />'.esc_html($name).'</label>'."\n";//20111116ysk 0000302
@@ -316,9 +316,9 @@ jQuery(document).ready(function($){
 		}
 	}
 ?>
-		<label for="chk_mem[date]"><input type="checkbox" class="check_member" id="chk_mem[date]" value="date"<?php usces_checked($chk_mem['date']); ?> /><?php _e('Strated date','usces'); ?></label>
-		<label for="chk_mem[point]"><input type="checkbox" class="check_member" id="chk_mem[point]" value="point"<?php usces_checked($chk_mem['point']); ?> /><?php _e('current point','usces'); ?></label>
-		<label for="chk_mem[rank]"><input type="checkbox" class="check_member" id="chk_mem[rank]" value="rank"<?php usces_checked($chk_mem['rank']); ?> /><?php _e('Rank', 'usces'); ?></label>
+		<label for="chk_mem[date]"><input type="checkbox" class="check_member" id="chk_mem[date]" value="date"<?php usces_checked($chk_mem, 'date'); ?> /><?php _e('Strated date','usces'); ?></label>
+		<label for="chk_mem[point]"><input type="checkbox" class="check_member" id="chk_mem[point]" value="point"<?php usces_checked($chk_mem, 'point'); ?> /><?php _e('current point','usces'); ?></label>
+		<label for="chk_mem[rank]"><input type="checkbox" class="check_member" id="chk_mem[rank]" value="rank"<?php usces_checked($chk_mem, 'rank'); ?> /><?php _e('Rank', 'usces'); ?></label>
 	</fieldset>
 </div>
 <!--20100908ysk end-->

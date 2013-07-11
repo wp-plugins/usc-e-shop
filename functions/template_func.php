@@ -3130,8 +3130,8 @@ function usces_point_inform_zeus() {
 	return $html;
 }
 
-function usces_checked( $chk, $out = '' ) {
-	$checked = ( isset($chk) and $chk == 1 ) ? ' checked' : '';
+function usces_checked( $chk, $key, $out = '' ) {
+	$checked = ( isset($chk[$key]) and $chk[$key] == 1 ) ? ' checked' : '';
 	if( $out == 'return' ) {
 		return $checked;
 	} else {

@@ -526,19 +526,20 @@ jQuery(document).ready(function($){
 	<p id="dialogExp"></p>
 	<form action="<?php echo USCES_ADMIN_URL; ?>" method="post" enctype="multipart/form-data" name="upform" id="upform">
 	<input name="usces_upcsv" type="file" id="usces_upcsv" style="width:100%" />
+<?php echo apply_filters( 'usces_filter_item_list_upload_dialog', '' ); ?>
 	<input name="itemcsv" type="submit" id="upcsv" value="<?php _e('Registration start', 'usces'); ?>" />
 	<input name="page" type="hidden" value="usces_itemedit" />
 	<input name="action" type="hidden" value="itemcsv" />
 	</form>
 	<p><?php _e('Indication is updated after upload completion.', 'usces'); ?></p>
 	<p><?php _e('Look at log to know the registration situation.(usc-e-shop/logs/itemcsv_log.txt)<br />The log is updated, overwrite, every upload.', 'usces'); ?></p>
-
 </div>
 <!--20101111ysk start-->
 <div id="dlItemListDialog" title="<?php _e('Download Item List', 'usces'); ?>">
 	<p><?php _e('Choose the file format, and push the download.', 'usces'); ?></p>
 	<fieldset>
 		<label for="chk_header"><input type="checkbox" class="check_item" id="chk_header" value="date"<?php if($usces_opt_item['chk_header'] == 1) echo ' checked'; ?> /><?php _e('To add a subject title at the first line','usces'); ?></label>
+<?php echo apply_filters( 'usces_filter_item_list_download_dialog', '' ); ?>
 <!--20120123ysk start 0000385-->
 		<input type="button" id="dl_item" value="<?php _e('Download', 'usces'); ?>" />
 <!--20120123ysk end-->
