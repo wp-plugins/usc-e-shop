@@ -13,8 +13,8 @@ function usces_item_uploadcsv(){
 		wp_redirect($url);
 		exit;
 	}
-	
-	//check dataSELECT id,title FROM table GROUP BY id HAVING COUNT(id) > 1;
+
+	//check data SELECT id, title FROM table GROUP BY id HAVING COUNT(id) > 1
 	$query = $wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} 
 								LEFT JOIN {$wpdb->posts} ON ID = post_id
 								WHERE meta_key = %s AND (post_status = 'pending' OR post_status = 'publish' OR post_status = 'draft' OR post_status = 'private' OR post_status = 'future') 
@@ -39,7 +39,7 @@ function usces_item_uploadcsv(){
 /**********************************************************************/
 	if( isset($_REQUEST['action']) && 'itemcsv' == $_REQUEST['action'] ){
 		$workfile = $_FILES["usces_upcsv"]["tmp_name"];
-	
+
 		if ( !is_uploaded_file($workfile) ) {
 			$res['status'] = 'error';
 			$res['message'] = __('The file was not uploaded.', 'usces');
@@ -47,7 +47,7 @@ function usces_item_uploadcsv(){
 			wp_redirect($url);
 			exit;
 		}
-	
+
 		//check ext
 		list($fname, $fext) = explode('.', $_FILES["usces_upcsv"]["name"], 2);
 		if( $fext != 'csv' ) {
@@ -57,7 +57,7 @@ function usces_item_uploadcsv(){
 			wp_redirect($url);
 			exit;
 		}
-		
+
 		$new_filename = base64_encode($fname . '_' . time() . '.' .$fext);
 		if ( ! move_uploaded_file($_FILES['usces_upcsv']['tmp_name'], $path.$new_filename) ) {
 			$res['status'] = 'error';
@@ -90,51 +90,50 @@ function usces_item_uploadcsv(){
 	// ready 
 	/*////////////////////////////////////////*/
 	$start = microtime(true);
-	
+
 	//$wpdb->show_errors();
 	$wpdb->query( 'SET SQL_BIG_SELECTS=1' );
 	set_time_limit(3600);
 
-	define('USCES_COL_POST_ID', 0);	//new
-	define('USCES_COL_POST_AUTHOR', 1);	//new
-	define('USCES_COL_POST_CONTENT', 2);	//15
-	define('USCES_COL_POST_TITLE', 3);	//14
-	define('USCES_COL_POST_EXCERPT', 4);	//16
-	define('USCES_COL_POST_STATUS', 5);	//17
-	define('USCES_COL_POST_COMMENT_STATUS', 6);	//new
-	define('USCES_COL_POST_PASSWORD', 7);	//new
-	define('USCES_COL_POST_NAME', 8);	//new
-	define('USCES_COL_POST_MODIFIED', 9);	//18
+	define('USCES_COL_POST_ID', 0);
+	define('USCES_COL_POST_AUTHOR', 1);
+	define('USCES_COL_POST_CONTENT', 2);
+	define('USCES_COL_POST_TITLE', 3);
+	define('USCES_COL_POST_EXCERPT', 4);
+	define('USCES_COL_POST_STATUS', 5);
+	define('USCES_COL_POST_COMMENT_STATUS', 6);
+	define('USCES_COL_POST_PASSWORD', 7);
+	define('USCES_COL_POST_NAME', 8);
+	define('USCES_COL_POST_MODIFIED', 9);
 
-	define('USCES_COL_ITEM_CODE', 10);	//0
-	define('USCES_COL_ITEM_NAME', 11);	//1
-	define('USCES_COL_ITEM_RESTRICTION', 12);	//2
-	define('USCES_COL_ITEM_POINTRATE', 13);	//3
-	define('USCES_COL_ITEM_GPNUM1', 14);	//4
-	define('USCES_COL_ITEM_GPDIS1', 15);	//5
-	define('USCES_COL_ITEM_GPNUM2', 16);	//6
-	define('USCES_COL_ITEM_GPDIS2', 17);	//7
-	define('USCES_COL_ITEM_GPNUM3', 18);	//8
-	define('USCES_COL_ITEM_GPDIS3', 19);	//9
-	define('USCES_COL_ITEM_SHIPPING', 20);	//10
-	define('USCES_COL_ITEM_DELIVERYMETHOD', 21);	//11
-	define('USCES_COL_ITEM_SHIPPINGCHARGE', 22);	//12
-	define('USCES_COL_ITEM_INDIVIDUALSCHARGE', 23);	//13
-	
-	define('USCES_COL_CATEGORY', 24);	//19
-	define('USCES_COL_POST_TAG', 25);	//20
-	define('USCES_COL_CUSTOM_FIELD', 26);	//new
-	
-	define('USCES_COL_SKU_CODE', 27);	//21
-	define('USCES_COL_SKU_NAME', 28);	//22
-	define('USCES_COL_SKU_CPRICE', 29);	//23
-	define('USCES_COL_SKU_PRICE', 30);	//24
-	define('USCES_COL_SKU_ZAIKONUM', 31);	//25
-	define('USCES_COL_SKU_ZAIKO', 32);	//26
-	define('USCES_COL_SKU_UNIT', 33);	//27
-	define('USCES_COL_SKU_GPTEKIYO', 34);	//28
+	define('USCES_COL_ITEM_CODE', 10);
+	define('USCES_COL_ITEM_NAME', 11);
+	define('USCES_COL_ITEM_RESTRICTION', 12);
+	define('USCES_COL_ITEM_POINTRATE', 13);
+	define('USCES_COL_ITEM_GPNUM1', 14);
+	define('USCES_COL_ITEM_GPDIS1', 15);
+	define('USCES_COL_ITEM_GPNUM2', 16);
+	define('USCES_COL_ITEM_GPDIS2', 17);
+	define('USCES_COL_ITEM_GPNUM3', 18);
+	define('USCES_COL_ITEM_GPDIS3', 19);
+	define('USCES_COL_ITEM_SHIPPING', 20);
+	define('USCES_COL_ITEM_DELIVERYMETHOD', 21);
+	define('USCES_COL_ITEM_SHIPPINGCHARGE', 22);
+	define('USCES_COL_ITEM_INDIVIDUALSCHARGE', 23);
+
+	define('USCES_COL_CATEGORY', 24);
+	define('USCES_COL_POST_TAG', 25);
+	define('USCES_COL_CUSTOM_FIELD', 26);
+
+	define('USCES_COL_SKU_CODE', 27);
+	define('USCES_COL_SKU_NAME', 28);
+	define('USCES_COL_SKU_CPRICE', 29);
+	define('USCES_COL_SKU_PRICE', 30);
+	define('USCES_COL_SKU_ZAIKONUM', 31);
+	define('USCES_COL_SKU_ZAIKO', 32);
+	define('USCES_COL_SKU_UNIT', 33);
+	define('USCES_COL_SKU_GPTEKIYO', 34);
 //	define('IDENTIFIER_OLE', pack("CCCCCCCC",0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1));
-
 
 	$lines = array();
 	$total_num = 0;
@@ -154,7 +153,7 @@ function usces_item_uploadcsv(){
 	$AddOptiontime = 0;
 	$AddSKUtime = 0;
 	$onelinetime = 0;
-	
+
 	//log
 	if ( ! ($fpi = fopen (USCES_PLUGIN_DIR.'/logs/itemcsv_log.txt', "w"))) {
 		$res['status'] = 'error';
@@ -185,7 +184,7 @@ function usces_item_uploadcsv(){
 		while (! feof ($fpo)) {
 			$temp = fgets ($fpo, 10240);
 			if( 0 == strlen($temp) ) continue;
-			
+
 			$num = substr_count($temp, '"');
 			if( 0 == $num % 2 && '' == $buf ){
 				$orglines[] = $temp;
@@ -201,7 +200,7 @@ function usces_item_uploadcsv(){
 		}
 	}
 	fclose($fpo);
-	
+
 	echo '<script type="text/javascript">changeMsg("' . __('Processing...', 'usces') . '");</script>'.$yn;
 	echo '<div class="error_log">'.$yn;
 	ob_flush();
@@ -217,8 +216,7 @@ function usces_item_uploadcsv(){
 	$readytime = microtime(true);
 	//reg loop
 	foreach($lines as $rows_num => $line){
-	
-	
+
 		/*////////////////////////////////////////*/
 		// lineReady 
 		/*////////////////////////////////////////*/
@@ -229,7 +227,7 @@ function usces_item_uploadcsv(){
 		$mestemp = '';
 		$line = trim($line);
 		if( empty($line) ) continue;
-		
+
 		$d = explode($sp, $line);
 		$buf = '';
 		foreach($d as $data) {
@@ -622,9 +620,8 @@ function usces_item_uploadcsv(){
 			echo $mestemp;
 			continue;
 		}
-		
-		
-		
+
+
 		/******************/
 		$checkend = microtime(true);
 		$checktime += $checkend-$lineready;
@@ -638,12 +635,11 @@ function usces_item_uploadcsv(){
 		$opt = array();
 		$valstr = '';
 
-		
 		if( $pre_code != $datas[USCES_COL_ITEM_CODE] ){
 			$sku_index = 0;
 
 			$cdatas['ID'] = $post_id;
-			
+
 			$data = $datas[USCES_COL_POST_MODIFIED];
 			if( $data == '' || $data == '0000-00-00 00:00:00' ){
 				$cdatas['post_date'] = current_time( 'mysql' );
@@ -692,14 +688,14 @@ function usces_item_uploadcsv(){
 			$cdatas['menu_order'] = 0;
 			$cdatas['post_mime_type'] = 'item';
 			$cdatas['post_content_filtered'] = '';
-			
-			
+
+
 			if ( empty($cdatas['post_name']) && !in_array( $cdatas['post_status'], array( 'draft', 'pending', 'auto-draft' ) ) ) {
 				$cdatas['post_name'] = sanitize_title($cdatas['post_title'], $post_id);
 			}
 
 			if($mode == 'add') {
-			
+
 				$cdatas['guid'] = '';
 				if ( false === $wpdb->insert( $wpdb->posts, $cdatas ) ) {
 					$err_num++;
@@ -712,13 +708,13 @@ function usces_item_uploadcsv(){
 				$post_id = $wpdb->insert_id;
 				$where = array( 'ID' => $post_id );
 				$wpdb->update( $wpdb->posts, array( 'guid' => get_permalink( $post_id ) ), $where );
-				
+
 				/******************/
 				$insert_post = microtime(true);
 				$insertposttime += $insert_post-$checkend;
 
 			}elseif($mode == 'upd') {
-			
+
 				$where = array( 'ID' => $post_id );
 				if ( false === $wpdb->update( $wpdb->posts, $cdatas, $where ) ) {
 					$err_num++;
@@ -739,8 +735,21 @@ function usces_item_uploadcsv(){
 				/*////////////////////////////////////////*/
 
 				//delete all metas of Item
-				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE ( meta_key = '_iopt_' OR meta_key = '_isku_' OR ( SUBSTRING(meta_key,1,5) = '_item' AND SUBSTRING(meta_key,1,6) <> '_item_') ) AND post_id = %d", $post_id);
-				$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE meta_key <> '_thumbnail_id' AND post_id = %d", $post_id);
+//20130723ysk start 0000734
+				$meta_key_table = array( '_itemCode', '_itemName', '_itemRestriction', '_itemPointrate', '_itemGpNum1', '_itemGpDis1', '_itemGpNum2', '_itemGpDis2', '_itemGpNum3', '_itemGpDis3', '_itemShipping', '_itemDeliveryMethod', '_itemShippingCharge', '_itemIndividualSCharge', '_iopt_', '_isku_' );
+				$cfrows = explode( ';', trim(mb_convert_encoding($datas[USCES_COL_CUSTOM_FIELD], 'UTF-8', 'SJIS')) );
+				if( !(1 === count($cfrows) && '' == reset($cfrows)) ) {
+					foreach( $cfrows as $row ) {
+						list( $meta_key, $meta_value ) = explode( '=', $row, 2 );
+						if( !WCUtils::is_blank($meta_key) )
+							array_push( $meta_key_table, trim($meta_key) );
+					}
+				}
+				$meta_key_table = apply_filters( 'usces_filter_uploadcsv_delete_postmeta', $meta_key_table );
+				$query = $wpdb->prepare( "DELETE FROM $wpdb->postmeta WHERE meta_key IN ( %s ) AND post_id = %d", implode( "','", $meta_key_table ), $post_id );
+				$query = stripslashes( $query );
+				//$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE meta_key <> '_thumbnail_id' AND post_id = %d", $post_id);
+//20130723ysk end
 				$dbres = $wpdb->query( $query );
 				if( $dbres === false ) {
 					$err_num++;
@@ -797,7 +806,7 @@ function usces_item_uploadcsv(){
 			// addMeta 
 			/*////////////////////////////////////////*/
 			//add postmeta
-			$itemDeliveryMethod = explode(';',  $datas[USCES_COL_ITEM_DELIVERYMETHOD]);
+			$itemDeliveryMethod = explode(';', $datas[USCES_COL_ITEM_DELIVERYMETHOD]);
 			$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS'))) . "'),";
 			$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_NAME], 'UTF-8', 'SJIS'))) . "'),";
 			$valstr .= '(' . $post_id . ", '_itemRestriction','" . $datas[USCES_COL_ITEM_RESTRICTION] . "'),";
@@ -812,39 +821,13 @@ function usces_item_uploadcsv(){
 			$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
 			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . $datas[USCES_COL_ITEM_SHIPPINGCHARGE] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemIndividualSCharge','" . $datas[USCES_COL_ITEM_INDIVIDUALSCHARGE] . "'),";
-		
+
 			//$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
-			
+
 //			print_r($valstr);
 			$valstr = rtrim($valstr, ',');
 			$dbres = $wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr");
 //			$dbres = mysql_query($query) or die(mysql_error());
-
-			/*////////////////////////////////////////*/
-			// Set Taxonomy 
-			/*////////////////////////////////////////*/
-//			$post_categories = explode(';', $datas[USCES_COL_CATEGORY]);
-//			if ( is_object_in_taxonomy($cdatas['post_type'], 'category') )
-//				wp_set_post_categories( $post_id, $post_category );
-//
-//			$tags_input = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
-//			if ( isset( $tags_input ) && is_object_in_taxonomy($cdatas['post_type'], 'post_tag') )
-//				wp_set_post_tags( $post_id, $tags_input );
-//		
-//			// new-style support for all custom taxonomies
-//			if ( !empty($datas[USCES_COL_POST_TAX]) ) {
-//				foreach ( $datas[USCES_COL_POST_TAX] as $taxonomy => $tags ) {
-//					$taxonomy_obj = get_taxonomy($taxonomy);
-//					if ( is_array($tags) ) // array = hierarchical, string = non-hierarchical.
-//						$tags = array_filter($tags);
-//					if ( current_user_can($taxonomy_obj->cap->assign_terms) )
-//						wp_set_post_terms( $post_id, $tags, $taxonomy );
-//				}
-//			}
-
-
-
-
 
 			//add term_relationships, edit term_taxonomy
 			//category
@@ -862,11 +845,11 @@ function usces_item_uploadcsv(){
 						);
 				$dbres = $wpdb->query($query);
 				if( !$dbres ) continue;
-				
+
 				$query = $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships 
 										WHERE term_taxonomy_id = %d", $term_taxonomy_id);
 				$tct = $wpdb->get_var( $query );
-				
+
 				$query = $wpdb->prepare("UPDATE $wpdb->term_taxonomy SET count = %d 
 								WHERE term_taxonomy_id = %d", 
 								$tct, $term_taxonomy_id
@@ -922,10 +905,6 @@ function usces_item_uploadcsv(){
 				$dbres = $wpdb->query($query);
 			}
 
-
-
-
-
 			/*////////////////////////////////////////*/
 			// Add Custom Field 
 			/*////////////////////////////////////////*/
@@ -942,7 +921,7 @@ function usces_item_uploadcsv(){
 					$dbres = $wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr");
 				}
 			}
-			
+
 			/******************/
 			$add_postmeta = microtime(true);
 			$addmetatime += $add_postmeta-$metadelete;
@@ -1011,7 +990,7 @@ function usces_item_uploadcsv(){
 		$skuvalue['gp'] = $datas[USCES_COL_SKU_GPTEKIYO];
 		$skuvalue['sort'] = $sku_index;
 		usces_add_sku( $post_id, $skuvalue, false );
-		
+
 //		usces_log('skuvalue : '.$post_id.print_r($skuvalue,true), 'acting_transaction.log');
 		$comp_num++;
 		$pre_code = $datas[USCES_COL_ITEM_CODE];
@@ -1151,7 +1130,7 @@ function usces_download_item_list() {
 		$line .= $th_h.__('Post PAssword', 'usces').$th_f;
 		$line .= $th_h.__('Post Name', 'usces').$th_f;
 		$line .= $th_h.__('Publish on:').$th_f;
-		
+
 		$line .= $th_h.__('item code', 'usces').$th_f;
 		$line .= $th_h.__('item name', 'usces').$th_f;
 		$line .= $th_h.__('Limited amount for purchase', 'usces').$th_f;
@@ -1163,7 +1142,7 @@ function usces_download_item_list() {
 		$line .= $th_h.__('shipping option', 'usces').$th_f;
 		$line .= $th_h.__('Shipping', 'usces').$th_f;
 		$line .= $th_h.__('Postage individual charging', 'usces').$th_f;
-		
+
 		$line .= $th_h.__('Categories', 'usces').$th_f;
 		$line .= $th_h.__('tag', 'usces').$th_f;
 		$line .= $th_h.__('Custom Field', 'usces').$th_f;
@@ -1190,7 +1169,7 @@ function usces_download_item_list() {
 	foreach((array)$rows as $array) {
 		$post_id = $array['ID'];
 		$post = get_post($post_id);
-		
+
 		//Post Data
 		$line_item = $td_h1.$post->ID.$td_f;
 		$line_item .= $td_h.$post->post_author.$td_f;
@@ -1202,7 +1181,7 @@ function usces_download_item_list() {
 		$line_item .= $td_h.$post->post_password.$td_f;
 		$line_item .= $td_h.urldecode($post->post_name).$td_f;
 		$line_item .= $td_h.$post->post_date.$td_f;
-		
+
 		//Item Meta
 		$line_item .= $td_h.$usces->getItemCode($post_id).$td_f;
 		$line_item .= $td_h.usces_entity_decode($usces->getItemName($post_id), $ext).$td_f;
@@ -1221,7 +1200,7 @@ function usces_download_item_list() {
 		$line_item .= $td_h.$delivery_method.$td_f;
 		$line_item .= $td_h.$usces->getItemShippingCharge($post_id).$td_f;
 		$line_item .= $td_h.$usces->getItemIndividualSCharge($post_id).$td_f;
-		
+
 		//Categories
 		$category = '';
 		$cat_ids = wp_get_post_categories($post_id);
@@ -1232,7 +1211,7 @@ function usces_download_item_list() {
 			$category = rtrim($category, $sp);
 		}
 		$line_item .= $td_h.$category.$td_f;
-		
+
 		//Tags
 		$tag = '';
 		$tags_ob = wp_get_object_terms($post_id, 'post_tag');
@@ -1255,7 +1234,7 @@ function usces_download_item_list() {
 			$cfield = rtrim($cfield, $sp);
 		}
 		$line_item .= $td_h.$cfield.$td_f;
-		
+
 		//Item Options
 		$line_options = '';
 		$option_meta = usces_get_opts( $post_id, 'sort' );

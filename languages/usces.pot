@@ -2665,6 +2665,9 @@ msgstr "配送先フリガナ"
 msgid "Shipping Zip"
 msgstr "配送先郵便番号"
 
+msgid "Shipping Country"
+msgstr "配送先国"
+
 msgid "Shipping State"
 msgstr "配送先都道府県"
 

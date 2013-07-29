@@ -587,8 +587,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$item_id = $cart[0]['post_id'];
 			$item_name = $usces->getItemName($cart[0]['post_id']);
-			if(1 < count($cart)) $item_name .= ','.__('Others', 'usces');
-			if(40 < mb_strlen($item_name)) $item_name = mb_substr($item_name, 0, 40).'...';
+			if(1 < count($cart)) $item_name .= ' '.__('Others', 'usces');
+			if(36 < mb_strlen($item_name)) $item_name = mb_substr($item_name, 0, 36).'...';
 			$amount = usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false);
 			$pay_type = "0";
 			$auto_charge_type = "";

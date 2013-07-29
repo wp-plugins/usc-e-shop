@@ -508,7 +508,7 @@ function usces_send_inquirymail() {
 			$reserve .= $key . " : " . $value . "\r\n";
 		}
 	}
-	$mats = compact($inq_name,$inq_contents,$inq_mailaddress,$reserve,$mail_data);
+	$mats = compact('inq_name','inq_contents','inq_mailaddress','reserve','mail_data');
 	$subject =  apply_filters( 'usces_filter_inquiry_subject_to_customer', $mail_data['title']['inquiry'],$mats);
 	$message  = apply_filters( 'usces_filter_inquiry_header', $mail_data['header']['inquiry'], $inq_name, $inq_mailaddress ) . "\r\n\r\n";
 	$message .= apply_filters( 'usces_filter_inquiry_reserve', $reserve, $inq_name, $inq_mailaddress );

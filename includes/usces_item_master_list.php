@@ -251,7 +251,7 @@ jQuery(function($){
 		if($('#chk_header').attr('checked')) {
 			args += '&chk_header=on';
 		}
-		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_itemedit&action=dlitemlist&noheader=true"+args;
+		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_itemedit&action=dlitemlist&noheader=true"+args<?php echo apply_filters( 'usces_filter_item_list_dlargs', '' ); ?>;
 	});
 	$('#dl_itemlist').click(function() {
 		$('#dlItemListDialog').dialog('open');

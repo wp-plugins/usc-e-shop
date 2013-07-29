@@ -1641,7 +1641,7 @@ jQuery(document).ready(function($){
 	<tr style="height:40px;">
 	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting13');"><?php _e('Postage fixation', 'usces'); ?></a></th>
 	    <td id="delivery_method_charge_td"></td>
-		<td><div id="ex_shipping_setting13" class="explanation"><?php _e("It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'", 'usces'); ?></div></td>
+		<td><div id="ex_shipping_setting13" class="explanation"><?php _e("It is fixed for above rate setting when I choose postage fixation. The postage set by an article is applied in the case of 'non-fixation'.", 'usces'); ?></div></td>
 	</tr>
 <!--	<tr style="height:40px;">
 	    <th class="sec"><a style="cursor:pointer;" onclick="toggleVisibility('ex_shipping_setting14');"><?php _e('Weight Added', 'usces'); ?></th>
