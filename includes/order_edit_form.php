@@ -208,7 +208,7 @@ jQuery(function($){
 	var delivery_time = [];
 <?php
 	foreach((array)$this->options['delivery_method'] as $dmid => $dm){
-		$lines = split("\n", $dm['time']);
+		$lines = explode("\n", $dm['time']);
 ?>
 		delivery_time[<?php echo $dm['id']; ?>] = [];
 <?php

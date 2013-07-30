@@ -21,7 +21,6 @@ class usc_e_shop
 		global $post, $usces_settings, $usces_states;
 //20110331ysk end
 		do_action('usces_construct');
-		//add_action('plugins_loaded', array(&$this, 'usces_session_start'));
 		add_action('after_setup_theme', array(&$this, 'usces_session_start'));
 
 		if ( is_admin() ){

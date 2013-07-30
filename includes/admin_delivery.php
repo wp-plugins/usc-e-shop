@@ -62,7 +62,7 @@ jQuery(function($){
 //20110317ysk end
 
 	var delivery_method = [];
-<?php for($i=0; $i<count((array)$delivery_method); $i++){ $lines = split("\n", $delivery_method[$i]['time']); ?>
+<?php for($i=0; $i<count((array)$delivery_method); $i++){ $lines = explode("\n", $delivery_method[$i]['time']); ?>
 	delivery_method[<?php echo $i; ?>] = [];
 	delivery_method[<?php echo $i; ?>]['id'] = <?php echo (int)$delivery_method[$i]['id']; ?>;
 	delivery_method[<?php echo $i; ?>]['name'] = "<?php echo $delivery_method[$i]['name']; ?>";

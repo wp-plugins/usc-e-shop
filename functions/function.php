@@ -2456,8 +2456,8 @@ function usces_check_acting_return_duplicate( $results = array() ) {
 
 //20111111ysk start
 function usces_dates_interconv( $date_str ) {
-	$base_struc = split('[/.-]', 'd/m/Y' );
-	$date_str_parts = split('[/.-]', $date_str );
+	$base_struc = preg_split('[/.-]', 'd/m/Y' );
+	$date_str_parts = preg_split('[/.-]', $date_str );
 	$date_elements = array();
 
 	$p_keys = array_keys( $base_struc );
@@ -3701,7 +3701,7 @@ function usces_get_send_out_date(){
 	global $usces;
 
 	$bus_day_arr = (isset($usces->options['business_days'])) ? $usces->options['business_days'] : false;
-	list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = split( '([^0-9])', current_time('mysql') );
+	list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = preg_split( '([^0-9])', current_time('mysql') );
 	if( !is_array($bus_day_arr) ){
 		$today_bus_flag = 1;
 	}else{
