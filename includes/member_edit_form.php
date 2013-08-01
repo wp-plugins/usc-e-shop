@@ -65,7 +65,7 @@ if( usces_is_member_system() ){
 //	$receipt = 'receipted';
 //else
 //	$receipt = '';
-
+$curent_url = urlencode( USCES_ADMIN_URL.'?'.$_SERVER['QUERY_STRING'] );
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -200,6 +200,7 @@ function addComma(str)
 <?php $order_id = $umhs['ID']; ?>
 <tr>
 <th class="historyrow"><?php _e('Purchase date', 'usces'); ?></th>
+<th class="historyrow"><?php _e('Order number', 'usces'); ?></th>
 <th class="historyrow"><?php _e('Purchase price', 'usces'); ?></th>
 <th class="historyrow"><?php _e('Used points','usces'); ?></th>
 <th class="historyrow"><?php echo apply_filters( 'usces_member_discount_label', __('Special Price', 'usces'), $umhs['ID'] ); ?></th>
@@ -210,6 +211,7 @@ function addComma(str)
 </tr>
 <tr>
 <td><?php echo $umhs['date']; ?></td>
+<td><a href="<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=edit&order_id=<?php echo $order_id; ?>&usces_referer=<?php echo $curent_url; ?>"><?php echo usces_get_deco_order_id( $order_id ); ?></a></td>
 <td class="rightnum"><?php usces_crform( $this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax'], true, false ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['usedpoint']); ?></td>
 <td class="rightnum"><?php usces_crform( $umhs['discount'], true, false ); ?></td>
@@ -219,7 +221,7 @@ function addComma(str)
 <td class="rightnum"><?php echo number_format($umhs['getpoint']); ?></td>
 </tr>
 <tr>
-<td class="retail" colspan="8">
+<td class="retail" colspan="9">
 	<table id="retail_table">
 	<tr>
 	<th scope="row" class="num"><?php echo __('No.','usces'); ?></th>

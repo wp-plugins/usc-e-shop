@@ -1020,7 +1020,7 @@ class usc_e_shop
 //20110331ysk end
 		} else {
 
-			if( !isset($this->options['province']) || !empty($this->options['province']) ){
+			if( !isset($this->options['province']) || empty($this->options['province']) ){
 //20110331ysk start
 				//$this->options['province'] = get_option('usces_pref');
 				$this->options['province'][$this->options['system']['base_country']] = $usces_states[$this->options['system']['base_country']];

@@ -624,7 +624,7 @@ function toggleVisibility(id) {
 		</table>
 		<table class="settle_table">
 			<tr>
-				<th>ペイジー決済</th>
+				<th>Pay-easy（ペイジー）決済</th>
 				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_1" value="on"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="payeasy_activate_sbps_1">利用する</label></td>
 				<td><input name="payeasy_activate" type="radio" id="payeasy_activate_sbps_2" value="off"<?php if( isset($opts['sbps']['payeasy_activate']) && $opts['sbps']['payeasy_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="payeasy_activate_sbps_2">利用しない</label></td>
 				<td></td>
@@ -632,7 +632,7 @@ function toggleVisibility(id) {
 		</table>
 		<table class="settle_table">
 			<tr>
-				<th>ヤフーウォレット決済</th>
+				<th>Yahoo!ウォレット決済</th>
 				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_yahoowallet_sbps_1">利用する</label></td>
 				<td><input name="wallet_yahoowallet" type="radio" id="wallet_yahoowallet_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_yahoowallet']) && $opts['sbps']['wallet_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_yahoowallet_sbps_2">利用しない</label></td>
 				<td></td>
@@ -644,7 +644,7 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 			<tr>
-				<th>ペイパル</th>
+				<th>PayPal</th>
 				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_paypal_sbps_1">利用する</label></td>
 				<td><input name="wallet_paypal" type="radio" id="wallet_paypal_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_paypal']) && $opts['sbps']['wallet_paypal'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_paypal_sbps_2">利用しない</label></td>
 				<td></td>
@@ -656,7 +656,7 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 			<tr>
-				<th>アリペイ国際決済</th>
+				<th>Alipay国際決済</th>
 				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_1" value="on"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_alipay_sbps_1">利用する</label></td>
 				<td><input name="wallet_alipay" type="radio" id="wallet_alipay_sbps_2" value="off"<?php if( isset($opts['sbps']['wallet_alipay']) && $opts['sbps']['wallet_alipay'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="wallet_alipay_sbps_2">利用しない</label></td>
 				<td></td>
@@ -664,13 +664,13 @@ function toggleVisibility(id) {
 		</table>
 		<table class="settle_table">
 			<tr>
-				<th>DoCoMoケータイ支払い</th>
+				<th>ドコモ ケータイ払い</th>
 				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_docomo_sbps_1">利用する</label></td>
 				<td><input name="mobile_docomo" type="radio" id="mobile_docomo_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_docomo']) && $opts['sbps']['mobile_docomo'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_docomo_sbps_2">利用しない</label></td>
 				<td></td>
 			</tr>
 			<tr>
-				<th>S!まとめて決済</th>
+				<th>S!まとめて支払い</th>
 				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank_sbps_1">利用する</label></td>
 				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank_sbps_2">利用しない</label></td>
 				<td></td>
