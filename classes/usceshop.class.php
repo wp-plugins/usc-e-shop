@@ -3626,6 +3626,15 @@ class usc_e_shop
 
 			do_action('usces_action_pre_edit_memberdata', $_POST['member'], $_POST['member_id']);
 
+//20130802ysk start 0000741
+			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s", trim($_POST['member']['mailaddress1']));
+			$id = $wpdb->get_var( $query );
+			if ( !empty($id) and $id != $_POST['member_id'] ) {
+				$this->error_message = __('This e-mail address has been already registered.', 'usces');
+				return $mode;
+			}
+//20130802ysk end
+
 			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
 			$pass = $wpdb->get_var( $query );
 
