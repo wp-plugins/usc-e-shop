@@ -535,6 +535,8 @@ class usc_e_shop
 	
 	/* order list page */
 	function order_list_page() {
+		$order_edit_form = apply_filters( 'usces_admin_order_edit_form', USCES_PLUGIN_DIR . '/includes/order_edit_form.php' );
+		$order_list = apply_filters( 'usces_admin_order_list', USCES_PLUGIN_DIR . '/includes/order_list.php' );
 
 		if(empty($this->action_message) || WCUtils::is_blank($this->action_message) ) {
 			$this->action_status = 'none';
@@ -569,7 +571,7 @@ class usc_e_shop
 					$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 				}
 				do_action('usces_after_update_orderdata', $_REQUEST['order_id'], $res);
-				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
+				require_once($order_edit_form);	
 				break;
 			case 'newpost':
 				do_action('usces_pre_new_orderdata');
@@ -584,11 +586,11 @@ class usc_e_shop
 				do_action('usces_after_new_orderdata', $res);
 				$_REQUEST['order_action'] = 'edit';
 				$order_action = $_REQUEST['order_action'];
-				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
+				require_once($order_edit_form);	
 				break;
 			case 'new':
 			case 'edit':
-				require_once(USCES_PLUGIN_DIR . '/includes/order_edit_form.php');	
+				require_once($order_edit_form);	
 				break;
 			case 'delete':
 				do_action('usces_pre_delete_orderdata', $_REQUEST['order_id']);
@@ -602,7 +604,7 @@ class usc_e_shop
 				}
 				do_action('usces_after_delete_orderdata', $_REQUEST['order_id'], $res);
 			default:
-				require_once(USCES_PLUGIN_DIR . '/includes/order_list.php');	
+				require_once($order_list);	
 		}
 	}
 	
