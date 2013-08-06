@@ -6199,7 +6199,7 @@ class usc_e_shop
 		}
 
 //20130425ysk start 0000699
-		if( 0 < $point ) ceil( $point );
+		if( 0 < $point ) $point = ceil( $point );
 
 		$entry = $this->cart->get_entry();
 		$use_point = isset( $entry['order']['usedpoint'] ) ? (int)$entry['order']['usedpoint'] : 0;
@@ -6209,7 +6209,7 @@ class usc_e_shop
 				$point = 0;
 		}
 
-		return apply_filters( 'usces_filter_get_order_point', $point );
+		return apply_filters( 'usces_filter_get_order_point', $point, $mem_id, $display_mode, $cart );
 //20130425ysk end
 	}
 	
