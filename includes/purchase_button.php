@@ -453,10 +453,10 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_paypal_ec'://PayPal(エクスプレス・チェックアウト)
 			$acting_opts = $usces->options['acting_settings']['paypal'];
 			$currency_code = $usces->get_currency_code();
-			$country = (!empty($usces_entries['customer']['country'])) ? $usces_entries['customer']['country'] : usces_get_base_country();
+			$country = (!empty($usces_entries['delivery']['country'])) ? $usces_entries['delivery']['country'] : usces_get_base_country();
 			//$zip = str_replace('-', '', $usces_entries['customer']['zipcode']);//20110502ysk
-			$zip = $usces_entries['customer']['zipcode'];
-			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
+			$zip = $usces_entries['delivery']['zipcode'];
+			$tel = ltrim(str_replace('-', '', $usces_entries['delivery']['tel']), '0');
 			$html .= '<form id="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
 //20110412ysk start
 //20110516ysk start 0000166
@@ -465,21 +465,21 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			//} else {
 //20120718ysk start 0000529
 				//$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
-				$name = apply_filters('usces_filter_paypalec_shiptoname', esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']));
+				$name = apply_filters('usces_filter_paypalec_shiptoname', esc_attr($usces_entries['delivery']['name2'].' '.$usces_entries['delivery']['name1']));
 				$html .= '<input type="hidden" name="SHIPTONAME" value="'.$name.'">';
 //20120718ysk end
 			//}
 //20110516ysk end
 			$html .= '
-				<input type="hidden" name="SHIPTOSTREET" value="'.esc_attr($usces_entries['customer']['address2']).'">
-				<input type="hidden" name="SHIPTOSTREET2" value="'.esc_attr($usces_entries['customer']['address3']).'">
-				<input type="hidden" name="SHIPTOCITY" value="'.esc_attr($usces_entries['customer']['address1']).'">
-				<input type="hidden" name="SHIPTOSTATE" value="'.esc_attr($usces_entries['customer']['pref']).'">
+				<input type="hidden" name="SHIPTOSTREET" value="'.esc_attr($usces_entries['delivery']['address2']).'">
+				<input type="hidden" name="SHIPTOSTREET2" value="'.esc_attr($usces_entries['delivery']['address3']).'">
+				<input type="hidden" name="SHIPTOCITY" value="'.esc_attr($usces_entries['delivery']['address1']).'">
+				<input type="hidden" name="SHIPTOSTATE" value="'.esc_attr($usces_entries['delivery']['pref']).'">
 				<input type="hidden" name="SHIPTOCOUNTRYCODE" value="'.$country.'">
 				<input type="hidden" name="SHIPTOZIP" value="'.$zip.'">
+				<input type="hidden" name="SHIPTOPHONENUM" value="'.$tel.'">
 				<input type="hidden" name="SOLUTIONTYPE" value="Sole">
 				<input type="hidden" name="LANDINGPAGE" value="Billing">
-				<input type="hidden" name="SHIPTOPHONENUM" value="'.$tel.'">
 				<input type="hidden" name="CURRENCYCODE" value="'.$currency_code.'">
 				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
 //20120629ysk start 0000520
