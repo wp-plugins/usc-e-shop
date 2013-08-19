@@ -453,35 +453,28 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 		case 'acting_paypal_ec'://PayPal(エクスプレス・チェックアウト)
 			$acting_opts = $usces->options['acting_settings']['paypal'];
 			$currency_code = $usces->get_currency_code();
-			$country = (!empty($usces_entries['delivery']['country'])) ? $usces_entries['delivery']['country'] : usces_get_base_country();
-			//$zip = str_replace('-', '', $usces_entries['customer']['zipcode']);//20110502ysk
-			$zip = $usces_entries['delivery']['zipcode'];
-			$tel = ltrim(str_replace('-', '', $usces_entries['delivery']['tel']), '0');
-			$html .= '<form id="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
-//20110412ysk start
-//20110516ysk start 0000166
-			//if(usces_get_apply_addressform($country) == 'JP') {
-			//	$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name1'].' '.$usces_entries['customer']['name2']).'">';
-			//} else {
-//20120718ysk start 0000529
-				//$html .= '<input type="hidden" name="SHIPTONAME" value="'.esc_attr($usces_entries['customer']['name2'].' '.$usces_entries['customer']['name1']).'">';
-				$name = apply_filters('usces_filter_paypalec_shiptoname', esc_attr($usces_entries['delivery']['name2'].' '.$usces_entries['delivery']['name1']));
-				$html .= '<input type="hidden" name="SHIPTONAME" value="'.$name.'">';
-//20120718ysk end
-			//}
-//20110516ysk end
-			$html .= '
-				<input type="hidden" name="SHIPTOSTREET" value="'.esc_attr($usces_entries['delivery']['address2']).'">
-				<input type="hidden" name="SHIPTOSTREET2" value="'.esc_attr($usces_entries['delivery']['address3']).'">
-				<input type="hidden" name="SHIPTOCITY" value="'.esc_attr($usces_entries['delivery']['address1']).'">
-				<input type="hidden" name="SHIPTOSTATE" value="'.esc_attr($usces_entries['delivery']['pref']).'">
-				<input type="hidden" name="SHIPTOCOUNTRYCODE" value="'.$country.'">
+			$name = apply_filters( 'usces_filter_paypalec_shiptoname', esc_attr($usces_entries['delivery']['name2'].' '.$usces_entries['delivery']['name1']) );
+			$address2 = apply_filters( 'usces_filter_paypalec_shiptostreet', esc_attr($usces_entries['delivery']['address2']) );
+			$address3 = apply_filters( 'usces_filter_paypalec_shiptostreet2', esc_attr($usces_entries['delivery']['address3']) );
+			$address1 = apply_filters( 'usces_filter_paypalec_shiptocity', esc_attr($usces_entries['delivery']['address1']) );
+			$pref = apply_filters( 'usces_filter_paypalec_shiptostate', esc_attr($usces_entries['delivery']['pref']) );
+			$country = ( !empty($usces_entries['delivery']['country']) ) ? $usces_entries['delivery']['country'] : usces_get_base_country();
+			$country_code = apply_filters( 'usces_filter_paypalec_shiptocountrycode', $country );
+			$zip = apply_filters( 'usces_filter_paypalec_shiptozip', str_replace('-', '', $usces_entries['delivery']['zipcode']) );
+			$tel = apply_filters( 'usces_filter_paypalec_shiptophonenum', ltrim(str_replace('-', '', $usces_entries['delivery']['tel']), '0') );
+			$html .= '<form id="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="SHIPTONAME" value="'.$name.'">
+				<input type="hidden" name="SHIPTOSTREET" value="'.$address2.'">
+				<input type="hidden" name="SHIPTOSTREET2" value="'.$address3.'">
+				<input type="hidden" name="SHIPTOCITY" value="'.$address1.'">
+				<input type="hidden" name="SHIPTOSTATE" value="'.$pref.'">
+				<input type="hidden" name="SHIPTOCOUNTRYCODE" value="'.$country_code.'">
 				<input type="hidden" name="SHIPTOZIP" value="'.$zip.'">
 				<input type="hidden" name="SHIPTOPHONENUM" value="'.$tel.'">
 				<input type="hidden" name="SOLUTIONTYPE" value="Sole">
 				<input type="hidden" name="LANDINGPAGE" value="Billing">
 				<input type="hidden" name="CURRENCYCODE" value="'.$currency_code.'">
-				<input type="hidden" name="EMAIL" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'">';
+				<input type="hidden" name="EMAIL" value="'.esc_attr( $usces_entries['customer']['mailaddress1'] ).'">';
 //20120629ysk start 0000520
 			if( 'shipped' != $usces->getItemDivision( $cart[0]['post_id'] ) ) {
 				$html .= '<input type="hidden" name="NOSHIPPING" value="1">';
@@ -513,7 +506,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			}
 			$html .= '<input type="hidden" name="purchase" value="acting_paypal_ec">';//20110502ysk
 			$html .= '<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" value="submit" alt="PayPal"'.apply_filters('usces_filter_confirm_nextbutton', NULL).$purchase_disabled.' /></div>';
-//20110412ysk end
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
 			$html .= '</form>';
 			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
