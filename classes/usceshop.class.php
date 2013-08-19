@@ -97,6 +97,7 @@ class usc_e_shop
 		if(!isset($this->options['fukugo_category_orderby'])) $this->options['fukugo_category_orderby'] = 'ID';
 		if(!isset($this->options['fukugo_category_order'])) $this->options['fukugo_category_order'] = 'ASC';
 		if(!isset($this->options['settlement_path'])) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
+		if(!isset($this->options['logs_path'])) $this->options['logs_path'] = '';
 		if(!isset($this->options['use_ssl'])) $this->options['use_ssl'] = 0;
 		if(!isset($this->options['ssl_url'])) $this->options['ssl_url'] = '';
 		if(!isset($this->options['ssl_url_admin'])) $this->options['ssl_url_admin'] = '';
@@ -933,22 +934,6 @@ class usc_e_shop
 		if(isset($_POST['usces_option_update'])) {
 			$_POST = $this->stripslashes_deep_post($_POST);
 		
-//20110331ysk start
-/*			if($_POST['province'] != ''){
-				$temp_pref = explode("\n", $_POST['province']);
-				for($i=-1; $i<count($temp_pref); $i++){
-					if($i == -1){
-						$usces_pref[] = __('-- Select --','usces');
-					}else{
-						$usces_pref[] = trim($temp_pref[$i]);
-					}
-				}
-			}else{
-				$usces_pref = get_option('usces_pref');
-			}
-
-			$this->options['province'] = $usces_pref;*/
-//20110331ysk end
 			$this->options['divide_item'] = isset($_POST['divide_item']) ? 1 : 0;
 			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? trim($_POST['itemimg_anchor_rel']) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
@@ -957,6 +942,11 @@ class usc_e_shop
 			if( WCUtils::is_blank($this->options['settlement_path']) ) $this->options['settlement_path'] = USCES_PLUGIN_DIR . '/settlement/';
 			$sl = substr($this->options['settlement_path'], -1);
 			if($sl != '/' && $sl != '\\') $this->options['settlement_path'] .= '/';
+			$this->options['logs_path'] = isset($_POST['logs_path']) ? $_POST['logs_path'] : '';
+			if( !WCUtils::is_blank($this->options['logs_path']) ){
+				$sl = substr($this->options['logs_path'], -1);
+				if($sl == '/' || $sl == '\\') $this->options['logs_path'] = substr($this->options['logs_path'], 0, -1);
+			}
 			$this->options['use_ssl'] = isset($_POST['use_ssl']) ? 1 : 0;
 			$this->options['ssl_url'] = isset($_POST['ssl_url']) ? rtrim($_POST['ssl_url'], '/') : '';
 			$this->options['ssl_url_admin'] = isset($_POST['ssl_url_admin']) ? rtrim($_POST['ssl_url_admin'], '/') : '';
@@ -3625,19 +3615,21 @@ class usc_e_shop
 			return $mode;
 
 		} elseif ( $_POST['member_regmode'] == 'editmemberform' ) {
-
-			do_action('usces_action_pre_edit_memberdata', $_POST['member'], $_POST['member_id']);
+			
+			$this->get_current_member();
+			$mem_id = $this->current_member['id'];
+			do_action('usces_action_pre_edit_memberdata', $_POST['member'], $mem_id);
 
 //20130802ysk start 0000741
 			$query = $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s", trim($_POST['member']['mailaddress1']));
 			$id = $wpdb->get_var( $query );
-			if ( !empty($id) and $id != $_POST['member_id'] ) {
+			if ( !empty($id) and $id != $mem_id ) {
 				$this->error_message = __('This e-mail address has been already registered.', 'usces');
 				return $mode;
 			}
 //20130802ysk end
 
-			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
+			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $mem_id);
 			$pass = $wpdb->get_var( $query );
 
 			$password = ( !empty($_POST['member']['password1']) && trim($_POST['member']['password1']) == trim($_POST['member']['password2']) ) ? md5(trim($_POST['member']['password1'])) : $pass;
@@ -3658,19 +3650,19 @@ class usc_e_shop
 					trim($_POST['member']['tel']), 
 					trim($_POST['member']['fax']), 
 					trim($_POST['member']['mailaddress1']), 
-					$_POST['member_id'] 
+					$mem_id 
 					);
 			$res = $wpdb->query( $query );
 
 			if( $res !== false ){
-				$this->set_member_meta_value('customer_country', $_POST['member']['country'], $_POST['member_id']);
+				$this->set_member_meta_value('customer_country', $_POST['member']['country'], $mem_id);
 //20100818ysk start
-				$res = $this->reg_custom_member($_POST['member_id']);
+				$res = $this->reg_custom_member($mem_id);
 //20100818ysk end
-				do_action('usces_action_edit_memberdata', $_POST['member'], $_POST['member_id']);
+				do_action('usces_action_edit_memberdata', $_POST['member'], $mem_id);
 				$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
 				$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
-						$_POST['member_id'] 
+						$mem_id 
 						);
 				$res = $wpdb->query( $query );
 
@@ -3817,9 +3809,11 @@ class usc_e_shop
 //20110715ysk start 0000203
 		} elseif ( $_POST['member_regmode'] == 'editmemberfromcart' ) {
 
-			do_action('usces_action_pre_edit_memberdata', $_POST['customer'], $_POST['member_id']);
+			$this->get_current_member();
+			$mem_id = $this->current_member['id'];
+			do_action('usces_action_pre_edit_memberdata', $_POST['customer'], $mem_id);
 
-			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $_POST['member_id']);
+			$query = $wpdb->prepare("SELECT mem_pass FROM $member_table WHERE ID = %d", $mem_id);
 			$pass = $wpdb->get_var( $query );
 
 			$password = ( !empty($_POST['customer']['password1']) && trim($_POST['customer']['password1']) == trim($_POST['customer']['password2']) ) ? md5(trim($_POST['customer']['password1'])) : $pass;
@@ -3840,13 +3834,13 @@ class usc_e_shop
 					trim($_POST['customer']['tel']), 
 					trim($_POST['customer']['fax']), 
 					trim($_POST['customer']['mailaddress1']), 
-					$_POST['member_id'] 
+					$mem_id 
 					);
 			$res = $wpdb->query( $query );
 			if( $res !== false ){
-				$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $_POST['member_id']);
-				$res = $this->reg_custom_member($_POST['member_id']);
-				do_action('usces_action_edit_memberdata', $_POST['customer'], $_POST['member_id']);
+				$this->set_member_meta_value('customer_country', $_POST['customer']['country'], $mem_id);
+				$res = $this->reg_custom_member($mem_id);
+				do_action('usces_action_edit_memberdata', $_POST['customer'], $mem_id);
 				unset($_SESSION['usces_member']);
 				$this->member_just_login(trim($_POST['customer']['mailaddress1']), trim($_POST['customer']['password1']));
 				return 'newcompletion';
@@ -4157,6 +4151,14 @@ class usc_e_shop
 			}
 		}
 		return $infos;
+	}
+
+	function set_member_info( $data=array(), $mid ) {
+		global $wpdb;
+		
+		$table = $wpdb->prefix . "usces_member";
+		$res = $wpdb->update( $table, $data, array('ID'=>$mid), NULL, array('%d'));
+		return $res;
 	}
 
 	function is_order($mid, $oid) {

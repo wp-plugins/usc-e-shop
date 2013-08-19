@@ -146,6 +146,7 @@ foreach((array)$usces->options['delivery_method'] as $dmid => $dm){
 $payments_str = '';
 $payments_arr = array();
 $payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+$payments = apply_filters( 'usces_filter_available_payment_method', $payments );
 foreach ( (array)$payments as $array ) {
 	switch( $array['settlement'] ){
 		case 'acting_zeus_card':

@@ -9,15 +9,8 @@ $divide_item = $this->options['divide_item'];
 $itemimg_anchor_rel = $this->options['itemimg_anchor_rel'];
 $fukugo_category_orderby = $this->options['fukugo_category_orderby'];
 $fukugo_category_order = $this->options['fukugo_category_order'];
-//20110331ysk start
-//$usces_pref = empty($this->options['province']) ? array() : $this->options['province'];
 $settlement_path = $this->options['settlement_path'];
-//$province = '';
-//for($i=1; $i<count($usces_pref); $i++){
-//	$province .= $usces_pref[$i] . "\n";
-//}
-//$province = trim($province);
-//20110331ysk end
+$logs_path = isset($this->options['logs_path']) ? $this->options['logs_path'] : '';
 $use_ssl = $this->options['use_ssl'];
 $ssl_url = $this->options['ssl_url'];
 $ssl_url_admin = $this->options['ssl_url_admin'];
@@ -323,7 +316,12 @@ jQuery(document).ready(function($) {
 		<td><input name="settlement_path" type="text" id="settlement_path" value="<?php echo esc_attr($settlement_path); ?>" size="60" /></td>
 	    <td><div id="ex_settlement_path" class="explanation"><?php _e('This is Field appointing the setting path of the settlement module. The initial value is a place same as a sample, but it is deleted at the time of automatic upgrading. Therefore you must arrange a module outside a plugin folder.', 'usces'); ?></div></td>
 	</tr>
-</table>
+<!--	<tr height="35">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_logs_path');"><?php _e('Logs path', 'usces'); ?></a></th>
+		<td><input name="logs_path" type="text" id="logs_path" value="<?php echo esc_attr($logs_path); ?>" size="60" />/welcart/logs/</td>
+	    <td><div id="ex_logs_path" class="explanation"><?php _e('Specify the path to save the log file. Please specify the directory that can not be viewed in a browser. Log is not saved if you do not specify.', 'usces'); ?></div></td>
+	</tr>
+--></table>
 <hr />
 <table class="form_table">
 	<tr height="35">

@@ -24,6 +24,10 @@ add_action( 'admin_footer-welcart-shop_page_usces_cart', 'admin_prodauct_footer'
 add_action( 'admin_footer-post.php', 'admin_post_footer');
 add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 add_action( 'wp_before_admin_bar_render', 'usces_itempage_admin_bar' );
+
+//add_action( 'admin_head', 'wc_mkdir');
+
+
 //add_action( 'transition_post_status', 'usces_action_transition_post_status', 10, 3);
 //add_filter( 'redirect_post_location', 'usces_filter_redirect_post_location', 10, 2);
 //add_action( 'dbx_post_advanced', 'usces_action_updated_messages');

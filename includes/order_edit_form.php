@@ -1072,7 +1072,7 @@ for($i = 0; $i < $delivery_after_days; $i++) {//20130527ysk 0000710
 <td class="wrap_td">
 <table class="order_custom_wrap">
 <tr>
-<?php do_action( 'usces_action_order_edit_form_custom', $data ); ?>
+<?php do_action( 'usces_action_order_edit_form_custom', $data, $csod_meta ); ?>
 <?php
 //20100818ysk start
 usces_admin_custom_field_input($csod_meta, 'order', '');

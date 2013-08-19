@@ -3,6 +3,7 @@ if(isset($this))
 	$usces = &$this;
 
 $payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+$payments = apply_filters( 'usces_filter_available_payment_method', $payments );
 foreach ( (array)$payments as $id => $array ) {
 	if( !empty( $array['settlement'] ) ){
 

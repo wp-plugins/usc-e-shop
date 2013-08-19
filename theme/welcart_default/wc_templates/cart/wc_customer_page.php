@@ -76,7 +76,6 @@ get_header();
 <?php uesces_addressform( 'customer', $usces_entries, 'echo' ); ?>
 	</table>
 	<input name="member_regmode" type="hidden" value="<?php echo $member_regmode; ?>" />
-	<input name="member_id" type="hidden" value="<?php echo usces_memberinfo('ID'); ?>" />
 	<div class="send">
 	<?php usces_get_customer_button(); ?>
 	</div>

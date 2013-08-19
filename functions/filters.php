@@ -94,4 +94,29 @@ function wc_purchase_nonce_check(){
 	exit;	
 }
 
+function wc_mkdir(){
+	global $usces;
+	if( is_admin() && !WCUtils::is_blank($usces->options['logs_path']) && false !== strpos($_SERVER['SERVER_SOFTWARE'],'Apache')){
+		$welcart_file_dir = $usces->options['logs_path'] . '/welcart';
+		$logs_dir = $welcart_file_dir . '/logs';
+		if( !file_exists($welcart_file_dir) ){
+			$res = @mkdir($welcart_file_dir, 0700);
+			if(!$res){
+				$msg = '<div class="error"><p>下記のディレクトリーを、所有者：' . get_current_user() . '、パーミッション：700 で作成してください。 <br />' . $welcart_file_dir . '</p></div>';
+				add_action('admin_notices', $c = create_function('', 'echo "' . addcslashes($msg,'"') . '";')); 
+			}
+		}
+				$stat = stat($welcart_file_dir);
+print_r($stat);
+die();
+		if( is_writable($welcart_file_dir) ){
+			$res = @mkdir($logs_dir, 0700);
+			if(!$res){
+				$msg = '<div class="error"><p>下記のディレクトリーを、所有者：' . get_current_user() . '、パーミッション：700 で作成してください。 <br />' . $welcart_file_dir . '</p></div>';
+				add_action('admin_notices', $c = create_function('', 'echo "' . addcslashes($msg,'"') . '";')); 
+			}
+		}
+	}
+}
+
 ?>
