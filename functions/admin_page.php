@@ -328,7 +328,11 @@ function admin_prodauct_footer(){
 			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
 			$("#info_massage").html("データに不備があります");
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
-			$('#uscestabs_cart').tabs("select", 0);
+			if( $.fn.jquery < "1.10" ) {
+				$('#uscestabs_cart').tabs("select", 0);
+			} else {
+				$('#uscestabs_cart').tabs("option", "active", 0);
+			}
 			return false;
 		} else {
 			return true;

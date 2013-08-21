@@ -199,7 +199,11 @@ jQuery(function($){
 			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
 			$("#info_massage").html("データに不備があります");
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
-			$('#uscestabs_system').tabs("select", tabs);
+			if( $.fn.jquery < "1.10" ) {
+				$('#uscestabs_system').tabs("select", tabs);
+			} else {
+				$('#uscestabs_system').tabs("option", "active", tabs);
+			}
 			return false;
 		} else {
 			return true;
