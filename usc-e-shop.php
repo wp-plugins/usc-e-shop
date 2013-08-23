@@ -7,7 +7,7 @@ Version: 1.3.5
 Author: Collne inc.
 Author URI: http://www.welcart.com/
 */
-define('USCES_VERSION', '1.3.5.1308211');
+define('USCES_VERSION', '1.3.5.1308231');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');

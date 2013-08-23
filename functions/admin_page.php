@@ -405,7 +405,8 @@ function usces_item_duplicate($post_id){
 	if( empty($post_id) )
 		wp_die( __( 'データが存在しません。', 'usces' ) );
 	
-	if ( !$post_data = wp_get_single_post($post_id, ARRAY_A) )
+	//if ( !$post_data = wp_get_single_post($post_id, ARRAY_A) )
+	if ( !$post_data = get_post($post_id, ARRAY_A) )
 		wp_die( __( 'データが存在しません。', 'usces' ) );
 
 	$datas = array();
@@ -462,20 +463,23 @@ function usces_item_duplicate($post_id){
 					$value = $data->meta_value;
 			}
 			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
+			//$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
+			$valstr .= '(' . $newpost_id . ", '" . esc_sql($key) . "','" . esc_sql($value) . "'),";
 		
 		}else if( $prefix == '_isku' || $prefix == '_iopt' ){
 		
 			$value = $data->meta_value;
 			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
+			//$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
+			$valstr .= '(' . $newpost_id . ", '" . esc_sql($key) . "','" . esc_sql($value) . "'),";
 		
 		}
 		if( $prefix1 != '_' ){
 		
 			$value = $data->meta_value;
 			$key = $data->meta_key;
-			$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
+			//$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
+			$valstr .= '(' . $newpost_id . ", '" . esc_sql($key) . "','" . esc_sql($value) . "'),";
 		
 		}
 
