@@ -1844,7 +1844,7 @@ msgid "Please, click the following URL, and please change a password."
 msgstr "下記のURLをクリックしてパスワードの変更を行ってください。"
 
 msgid "If you have not requested this email please kindly ignore and delete it."
-msgstr "このメールに見に覚えが無い場合は破棄していただきますようお願いいたします。"
+msgstr "このメールに身に覚えが無い場合は破棄していただきますようお願いいたします。"
 
 msgid "Error: I was not able to transmit an email."
 msgstr "エラー：　メールを送信できませんでした"

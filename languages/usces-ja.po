@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2013-05-29 16:08+0900\n"
+"PO-Revision-Date: 2013-08-27 15:10+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1960,7 +1960,7 @@ msgstr "下記のURLをクリックしてパスワードの変更を行ってく
 msgid ""
 "If you have not requested this email please kindly ignore and delete it."
 msgstr ""
-"このメールに見に覚えが無い場合は破棄していただきますようお願いいたします。"
+"このメールに身に覚えが無い場合は破棄していただきますようお願いいたします。"
 
 msgid "Error: I was not able to transmit an email."
 msgstr "エラー：　メールを送信できませんでした"
@@ -2888,6 +2888,9 @@ msgstr "配送先フリガナ"
 
 msgid "Shipping Zip"
 msgstr "配送先郵便番号"
+
+msgid "Shipping Country"
+msgstr "配送先国"
 
 msgid "Shipping State"
 msgstr "配送先都道府県"
