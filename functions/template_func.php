@@ -2602,7 +2602,7 @@ function usces_get_cart_rows( $out = '' ) {
 			}
 			$row .= apply_filters( 'usces_filter_option_cart', $optstr, $options);
 		}
-		$row .= apply_filters( 'usces_filter_option_info_cart', '', $cart_row );
+		$row .= apply_filters( 'usces_filter_option_info_cart', '', $cart_row, $args );
 		$row .= '</td>
 			<td class="aright">';
 		if( usces_is_gptekiyo($post_id, $sku_code, $quantity) ) {
@@ -2678,6 +2678,7 @@ function usces_get_confirm_rows( $out = '' ) {
 		$cartItemName = $usces->getCartItemName($post_id, $sku_code);
 		$skuPrice = $cart_row['price'];
 		$pictid = $usces->get_mainpictid($itemCode);
+		$args = compact('cart', 'i', 'cart_row', 'post_id', 'sku' );
 		$row = '';
 		if (empty($options)) {
 			$optstr =  '';
@@ -2714,7 +2715,7 @@ function usces_get_confirm_rows( $out = '' ) {
 			}
 			$row .= apply_filters( 'usces_filter_option_confirm', $optstr, $options);
 		}
-		$row .= apply_filters( 'usces_filter_option_info_confirm', '', $cart_row );
+		$row .= apply_filters( 'usces_filter_option_info_confirm', '', $cart_row, $args );
 		$row .= '</td>
 			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td>' . $cart_row['quantity'] . '</td>
