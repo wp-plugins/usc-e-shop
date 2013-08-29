@@ -226,7 +226,7 @@ class dataList
 //			$this->listPatternId = $_SESSION[$this->table]['listPatternId'];
 //			$this->displayColumns = $_SESSION[$this->table]['displayColumns'];
 			$this->searchSql = $_SESSION[$this->table]['searchSql'];
-			$this->arr_search = $_SESSION[$this->table]['searchs'];
+//			$this->arr_search = $_SESSION[$this->table]['searchs'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
 			$this->selectedRow = $_SESSION[$this->table]['selectedRow'];
 //			$this->columnTypes = $_SESSION[$this->table]['columnTypes'];

@@ -35,19 +35,19 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$tel = ltrim(str_replace('-', '', $usces_entries['customer']['tel']), '0');
 			$html .= '<form id="purchase_form" action="https://' . $usces_paypal_url . '/cgi-bin/webscr" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="cmd" value="_xclick">
-				<input type="hidden" name="business" value="' . $usces_paypal_business . '">
+				<input type="hidden" name="business" value="' . esc_attr($usces_paypal_business) . '">
 				<input type="hidden" name="custom" value="' . $usces->get_uscesid(false) . '">
 				<input type="hidden" name="lc" value="'.$lc.'">
 				<input type="hidden" name="charset" value="UTF-8">
-				<input type="hidden" name="first_name" value="'.esc_html($usces_entries['customer']['name2']).'">
-				<input type="hidden" name="last_name" value="'.esc_html($usces_entries['customer']['name1']).'">
-				<input type="hidden" name="address1" value="'.esc_html($usces_entries['customer']['address2']).'">
-				<input type="hidden" name="address2" value="'.esc_html($usces_entries['customer']['address3']).'">
-				<input type="hidden" name="city" value="'.esc_html($usces_entries['customer']['address1']).'">
-				<input type="hidden" name="state" value="'.esc_html($usces_entries['customer']['pref']).'">
-				<input type="hidden" name="zip" value="'.esc_html($usces_entries['customer']['zipcode']).'">
-				<input type="hidden" name="night_phone_a" value="'.$country_num.'">
-				<input type="hidden" name="night_phone_b" value="'.$tel.'">
+				<input type="hidden" name="first_name" value="'.esc_attr($usces_entries['customer']['name2']).'">
+				<input type="hidden" name="last_name" value="'.esc_attr($usces_entries['customer']['name1']).'">
+				<input type="hidden" name="address1" value="'.esc_attr($usces_entries['customer']['address2']).'">
+				<input type="hidden" name="address2" value="'.esc_attr($usces_entries['customer']['address3']).'">
+				<input type="hidden" name="city" value="'.esc_attr($usces_entries['customer']['address1']).'">
+				<input type="hidden" name="state" value="'.esc_attr($usces_entries['customer']['pref']).'">
+				<input type="hidden" name="zip" value="'.esc_attr($usces_entries['customer']['zipcode']).'">
+				<input type="hidden" name="night_phone_a" value="'.esc_attr($country_num).'">
+				<input type="hidden" name="night_phone_b" value="'.esc_attr($tel).'">
 				<input type="hidden" name="night_phone_c" value="">';
 //20110208ysk end
 			if( 1 < count($cart) ) {
@@ -140,7 +140,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				$html .= '<input type="hidden" name="div_3" value="' . $_POST['div_3'] . '">';
 			}
 			$html .= '
-				<input type="hidden" name="cnum1" value="' . esc_html($_POST['cnum1']) . '">
+				<input type="hidden" name="cnum1" value="' . esc_attr($_POST['cnum1']) . '">
 				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />
 				<input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"' . apply_filters('usces_filter_confirm_nextbutton', NULL) . $purchase_disabled . ' /></div>';
 			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
@@ -301,7 +301,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="TAX" value="" />
 				<input type="hidden" name="S_PAYDATE" value="' . date('Ymd', mktime(0,0,0,substr($datestr, 5, 2),substr($datestr, 8, 2)+$acting_opts['S_PAYDATE'],substr($datestr, 0, 4))) . '" />
 				<input type="hidden" name="SEIYAKUDATE" value="' . date('Ymd', mktime(0,0,0,substr($datestr, 5, 2),substr($datestr, 8, 2),substr($datestr, 0, 4))) . '" />
-				<input type="hidden" name="BIKO" value="' . esc_html($biko) . '" />
+				<input type="hidden" name="BIKO" value="' . esc_attr($biko) . '" />
 				';
 			$mname_01 = '商品総額';
 			$html .= '<input type="hidden" name="MNAME_01" value="' . $mname_01 . '" />
@@ -358,7 +358,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="tx" value="0" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="1" />
-				<input type="hidden" name="inm" value="'.$desc.'" />
+				<input type="hidden" name="inm" value="'.esc_attr($desc).'" />
 				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
 				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				<input type="hidden" name="acting" value="jpayment_card" />
@@ -395,7 +395,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="tx" value="0" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="2" />
-				<input type="hidden" name="inm" value="'.$desc.'" />
+				<input type="hidden" name="inm" value="'.esc_attr($desc).'" />
 				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
 				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				<input type="hidden" name="acting" value="jpayment_conv" />
@@ -432,7 +432,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="tx" value="0" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="7" />
-				<input type="hidden" name="inm" value="'.$desc.'" />
+				<input type="hidden" name="inm" value="'.esc_attr($desc).'" />
 				<input type="hidden" name="pn" value="'.esc_attr(str_replace('-', '', mb_convert_kana($usces_entries['customer']['tel'], 'a', 'UTF-8'))).'" />
 				<input type="hidden" name="em" value="'.esc_attr($usces_entries['customer']['mailaddress1']).'" />
 				<input type="hidden" name="acting" value="jpayment_bank" />
@@ -493,7 +493,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 					$quantity += $cart_row['quantity'];
 				}
 				$desc = $itemName.' '.__('Quantity','usces').':'.$quantity;
-				$html .= '<input type="hidden" name="DESC" value="'.$desc.'">';
+				$html .= '<input type="hidden" name="DESC" value="'.esc_attr($desc).'">';
 //20110606ysk end
 				$html .= '<input type="hidden" name="AMT" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'">';
 			} else {
@@ -582,6 +582,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$item_name = $usces->getItemName($cart[0]['post_id']);
 			if(1 < count($cart)) $item_name .= ' '.__('Others', 'usces');
 			if(36 < mb_strlen($item_name)) $item_name = mb_substr($item_name, 0, 36).'...';
+			$item_name = esc_attr( $item_name );
 			$amount = usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false);
 			$pay_type = "0";
 			$auto_charge_type = "";
