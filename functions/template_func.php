@@ -2157,7 +2157,7 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 					$multiple_array = ($means == 0) ? '' : '[]';
 					$html .= '
 						<td'.$class.'>
-						<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" class="iopt_select"'.$multiple.'>';
+						<select name="'.$label.'['.esc_attr($key).']'.$multiple_array.'" id="'.$label.'['.esc_attr($key).']" class="iopt_select"'.$multiple.'>';
 					if($essential == 1) 
 						$html .= '
 							<option value="#NONE#">'.__('Choose','usces').'</option>';
@@ -2171,7 +2171,7 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 					break;
 				case 2://テキスト
 					$html .= '
-						<td'.$class.'><input type="text" name="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data).'" /></td>';
+						<td'.$class.'><input type="text" name="'.$label.'['.esc_attr($key).']" id="'.$label.'['.esc_attr($key).']" size="30" value="'.esc_attr($data).'" /></td>';
 					break;
 				case 3://ラジオボタン
 					$selects = explode("\n", $value);
@@ -2205,8 +2205,10 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 				$html .= '
 					</tr>';
 			}
+			
 		}
 	}
+	$html = apply_filters( 'usces_filter_admin_custom_field_input', $html,  $meta, $custom_field, $position, $out );
 
 	if($out == 'return') {
 		return stripslashes($html);

@@ -6743,10 +6743,11 @@ class usc_e_shop
 		$res = array();
 		$order_table_name = $wpdb->prefix . "usces_order";
 		$where = "";
-		if($days != ''){
-			$order_date = date('Y-m-d H:i:s', mktime(0, 0, 0, (int)$monthstr, ((int)$daystr-$days), (int)$yearstr));
-			$where = " WHERE order_date >= '{$order_date}'";
+		if( empty($days) ){
+			$days = 30;
 		}
+		$order_date = date('Y-m-d H:i:s', mktime(0, 0, 0, (int)$monthstr, ((int)$daystr-$days), (int)$yearstr));
+		$where = " WHERE order_date >= '{$order_date}'";
 		$query = "SELECT order_cart FROM {$order_table_name}" . $where;
 		$dbres = $wpdb->get_col($query);
 		if(!$dbres) return false;

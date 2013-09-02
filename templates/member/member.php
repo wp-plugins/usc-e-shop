@@ -29,10 +29,11 @@ if(usces_is_membersystem_point()){
 $html .= '</tr>
 	<tr>
 	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
-	<td>' . esc_html($usces_members['mailaddress1']) . '</td>
-	<th>&nbsp;</th>
-	<td>&nbsp;</td>
-	</tr>
+	<td>' . esc_html($usces_members['mailaddress1']) . '</td>';
+$html_reserve = '<th>&nbsp;</th>
+	<td>&nbsp;</td>';
+$html .= apply_filters( 'usces_filter_memberinfo_page_reserve', $html_reserve, $usces_members['ID'] );
+$html .= '</tr>
 	</table>
 	 <br /> 
 	<a href="#edit">' . __('To member information editing', 'usces') . '</a>

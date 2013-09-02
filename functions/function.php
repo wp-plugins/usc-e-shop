@@ -247,6 +247,7 @@ function usces_order_confirm_message($order_id) {
 //	$msg_body .= usces_mail_line( 2, $data['order_email'] )."\r\n";//--------------------
 
 	$msg_body .= apply_filters('usces_filter_order_confirm_mail_body', NULL, $data);
+	$msg_body = apply_filters('usces_filter_order_confirm_mail_bodyall', $msg_body, $data);
 
 	switch ( $_POST['mode'] ) {
 		case 'completionMail':
@@ -449,6 +450,7 @@ function usces_send_ordermail($order_id) {
 //	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_body', NULL, $data);
+	$msg_body = apply_filters('usces_filter_send_order_mail_bodyall', $msg_body, $data);
 
 	$subject = apply_filters('usces_filter_send_order_mail_subject_thankyou', $mail_data['title']['thankyou'], $data);
 	$message = do_shortcode($mail_data['header']['thankyou']) . $msg_body . do_shortcode($mail_data['footer']['thankyou']);
@@ -685,6 +687,7 @@ function usces_lostmail($url) {
 			. "-----------------------------------------------------\n\r\n\r\n\r";
 	$message = apply_filters( 'usces_filter_lostmail_message', $message, $url );
 	$message .= apply_filters( 'usces_filter_lostmail_footer', $mail_data['footer']['othermail'] );
+			
 
 	$para1 = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_SESSION["usces_lostmail"]),
