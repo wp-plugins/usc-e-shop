@@ -1796,7 +1796,7 @@ function usces_download_order_list() {
 				}
 			}
 		}
-		$line .= apply_filters( 'usces_filter_chk_ord_data_customer', NULL, $usces_opt_order, $order_id, $entry );
+		$line .= apply_filters( 'usces_filter_chk_ord_data_customer', NULL, $usces_opt_order, $order_id, $data );
 		//----------------------------------------------------------------------
 		if(!empty($csde_meta)) {
 			foreach($csde_meta as $key => $entry) {

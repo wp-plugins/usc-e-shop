@@ -4636,6 +4636,7 @@ class usc_e_shop
 				}
 			}
 		}
+		$mes = apply_filters('usces_filter_point_check', $mes);
 		return $mes;
 	}
 
