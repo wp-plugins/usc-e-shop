@@ -1450,11 +1450,13 @@ function usces_delete_orderdata() {
 	$query = $wpdb->prepare("DELETE FROM $order_table WHERE ID = %d", $ID);
 	$res = $wpdb->query( $query );
 	
+	$args = compact( 'ID', 'point', 'res' );
+	
 	if($res){
 		$query = $wpdb->prepare("DELETE FROM $order_meta_table WHERE order_id = %d", $ID);
 		$wpdb->query( $query );
 		
-		do_action('usces_action_del_orderdata', $order_data);
+		do_action('usces_action_del_orderdata', $order_data, $args);
 //20120306ysk start 0000324
 		//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
 		if( 0 != $point ) usces_restore_point( $order_data->mem_id, $point );
