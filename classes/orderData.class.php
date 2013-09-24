@@ -1,9 +1,8 @@
 <?php
-/* order data claa */
+/* order data class */
 
 class orderDataObject
 {
-
 	var $customer;
 	var $deliveri;
 	var $cart;
@@ -12,12 +11,17 @@ class orderDataObject
 	var $reserve;
 
 	function orderDataObject($order_id) {
-		global $wpdb;
-	
-		$tableName = $wpdb->prefix . "usces_order";
-		$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
+		global $wpdb, $usces_settings;
+
+		$order_table = $wpdb->prefix . "usces_order";
+		$meta_table = $wpdb->prefix . "usces_order_meta";
+		$query = $wpdb->prepare("SELECT o.*, om.meta_value AS order_country 
+			FROM {$order_table} AS o 
+			LEFT JOIN {$meta_table} AS om ON o.ID = om.order_id AND om.meta_key = 'customer_country' 
+			WHERE o.ID = %d", $order_id);
+
 		$data = $wpdb->get_row( $query, ARRAY_A );
-		
+
 		$this->customer['mem_id'] = $data['mem_id'];
 		$this->customer['email'] = $data['order_email'];
 		$this->customer['name1'] = $data['order_name1'];
@@ -31,6 +35,8 @@ class orderDataObject
 		$this->customer['address3'] = $data['order_address3'];
 		$this->customer['tel'] = $data['order_tel'];
 		$this->customer['fax'] = $data['order_fax'];
+		$this->customer['country_code'] = $data['order_country'];
+		$this->customer['country'] = $usces_settings['country'][$data['order_country']];
 
 		$this->deliveri = (array)unserialize($data['order_delivery']);
 

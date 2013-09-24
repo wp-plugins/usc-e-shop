@@ -101,9 +101,13 @@ jQuery(function($){
 	});
 
 	$("#collective_change").click(function () {
+		if( $("#changeselect option:selected").val() == 'none' ) {
+			$("#orderlistaction").val('');
+			return false;
+		}
 		if( $("input[name*='listcheck']:checked").length == 0 ) {
 			alert("<?php _e('Choose the data.', 'usces'); ?>");
-			$("#oederlistaction").val('');
+			$("#orderlistaction").val('');
 			return false;
 		}
 		var coll = $("#changeselect").val();
@@ -118,16 +122,20 @@ jQuery(function($){
 							'\n\n'); ?>;
 		}else if(coll == 'delete'){
 			mes = '<?php _e('Are you sure of deleting all the checked data in bulk?', 'usces'); ?>';
-		}else{
-			$("#oederlistaction").val('');
-			return false;
+		//}else{
+		//	$("#orderlistaction").val('');
+		//	return false;
 		}
-		if( !confirm(mes) ){
-			$("#oederlistaction").val('');
-			return false;
+		if( mes != '' ) {
+			if( !confirm(mes) ){
+				$("#orderlistaction").val('');
+				return false;
+			}
 		}
-		$("#oederlistaction").val('collective');
-		return true;
+		<?php do_action( 'usces_action_order_list_collective_change_js' ); ?>
+		$("#orderlistaction").val('collective');
+		//return true;
+		$('#form_tablesearch').submit();
 	});
 
 	operation = {
@@ -383,7 +391,7 @@ jQuery(document).ready(function($){
 
 <div class="wrap">
 <div class="usces_admin">
-<form action="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist'; ?>" method="post" name="tablesearch">
+<form action="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist'; ?>" method="post" name="tablesearch" id="form_tablesearch">
 
 <h2>Welcart Management <?php _e('Order List','usces'); ?></h2>
 <p class="version_info">Version <?php echo USCES_VERSION; ?></p>
@@ -448,14 +456,15 @@ jQuery(document).ready(function($){
 		    <option value="order_reciept"><?php _e('Edit the receiving money status', 'usces'); ?></option>
 		    <option value="order_status"><?php _e('Edit of status process', 'usces'); ?></option>
 		    <option value="delete"><?php _e('Delete in bulk', 'usces'); ?></option>
+			<?php echo apply_filters( 'usces_filter_allchange_column', '' ); ?>
     	</select></td>
 		<td id="changelabel"></td>
 		<td id="changefield"></td>
-		<td><input name="collective" type="submit" class="searchbutton" id="collective_change" value="<?php _e('start', 'usces'); ?>" />
+		<td><input name="collective_change" type="button" class="searchbutton" id="collective_change" value="<?php _e('start', 'usces'); ?>" />
 		</td>
 		</tr>
 		</table>
-		<input name="action" id="oederlistaction" type="hidden" />
+		<input name="collective" id="orderlistaction" type="hidden" />
 <!--20100908ysk start-->
 		<table id="dl_list_table">
 		<tr>

@@ -44,7 +44,7 @@ get_header();
 			<th scope="row"><?php _e('e-mail adress', 'usces'); ?></th>
 			<td><?php usces_memberinfo('mailaddress1'); ?></td>
 			<?php $html_reserve = '<th>&nbsp;</th><td>&nbsp;</td>'; ?>
-			<?php echo apply_filters( 'usces_filter_memberinfo_page_reserve', $html_reserve, usces_memberinfo( 'ID' ) ); ?>
+			<?php echo apply_filters( 'usces_filter_memberinfo_page_reserve', $html_reserve, usces_memberinfo( 'ID', 'return' ) ); ?>
 		</tr>
 	</table>
 	<br /> 

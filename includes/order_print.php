@@ -600,7 +600,7 @@ function usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $l
 
 		$y = $pdf->GetY() + $linetop;
 		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->customer['address1'] . $pref . $data->customer['country']), $border, 'L');
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->customer['address1'] . ' ' . $pref . ' ' . $data->customer['country']), $border, 'L');
 
 		$y = $pdf->GetY() + $linetop;
 		$pdf->SetXY($leftside, $y);
