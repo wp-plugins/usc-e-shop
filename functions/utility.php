@@ -1598,7 +1598,7 @@ function usces_download_order_list() {
 	switch($applyform) {
 	case 'JP':
 		if(isset($_REQUEST['check']['delivery_zip'])) $line .= $th_h.__('Shipping Zip', 'usces').$th_f;
-		if(isset($_REQUEST['check']['delivery_country'])) $line .= $th_h.__('配送先国', 'usces').$th_f;
+		if(isset($_REQUEST['check']['delivery_country'])) $line .= $th_h.__('Shipping Country', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_pref'])) $line .= $th_h.__('Shipping State', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_address1'])) $line .= $th_h.__('Shipping City', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_address2'])) $line .= $th_h.__('Shipping Address1', 'usces').$th_f;
@@ -1612,7 +1612,7 @@ function usces_download_order_list() {
 		if(isset($_REQUEST['check']['delivery_address3'])) $line .= $th_h.__('Shipping Address2', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_address1'])) $line .= $th_h.__('Shipping City', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_pref'])) $line .= $th_h.__('Shipping State', 'usces').$th_f;
-		if(isset($_REQUEST['check']['delivery_country'])) $line .= $th_h.__('配送先国', 'usces').$th_f;
+		if(isset($_REQUEST['check']['delivery_country'])) $line .= $th_h.__('Shipping Country', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_zip'])) $line .= $th_h.__('Shipping Zip', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_tel'])) $line .= $th_h.__('Shipping Phone', 'usces').$th_f;
 		if(isset($_REQUEST['check']['delivery_fax'])) $line .= $th_h.__('Shipping FAX', 'usces').$th_f;

@@ -4,7 +4,7 @@ $message = $this->action_message;
 $this->action_status = 'none';
 $this->action_message = '';
 
-$management_status = get_option('usces_management_status');
+//$management_status = get_option('usces_management_status');
 
 
 $oa = 'editpost';

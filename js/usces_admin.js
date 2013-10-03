@@ -344,12 +344,13 @@
 				return false;
 			}
 
+			ad = $("input[name*='newskuadvance']");
 			var skuadvance = '';
-			if( undefined != $("input[name*='newskuadvance']") ) {
-				if( 1 == ("input[name*='newskuadvance']").length ) {
-					skuadvance = '&newskuadvance='+encodeURIComponent(("input[name*='newskuadvance']").val());
+			if( undefined != $(ad) ) {
+				if( 1 == $(ad).length ) {
+					skuadvance = '&newskuadvance='+encodeURIComponent($(ad).val());
 				} else {
-					$("input[name*='newskuadvance']").each(function() {
+					$(ad).each(function() {
 						skuadvance += '&newskuadvance['+$(this).attr("id")+']='+encodeURIComponent($(this).val());
 					});
 				}
@@ -381,12 +382,13 @@
 					$("#newskuunit").val("");
 					$("#newskugptekiyo").val(0);
 					//$("#newcharging_type").attr({selectedIndex:0});
-					if( 0 < $("input[name*='newskuadvance']").length ){
-						$("input[name*='newskuadvance']").each(function(index, element) {
+					//if( 0 < $("input[name*='newskuadvance']").length ) {
+					if( 0 < $(ad).length ) {
+						$(ad).each(function(index, element) {
 							$(this).val("");
 						});
 					}
-					if( 0 < $("select[name*='newskuadvance']").length ){
+					if( 0 < $("select[name*='newskuadvance']").length ) {
 						$("select[name*='newskuadvance']").each(function(index, element) {
 							$(this).val("");
 						});

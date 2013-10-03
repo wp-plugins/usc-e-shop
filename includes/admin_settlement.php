@@ -160,7 +160,7 @@ function toggleVisibility(id) {
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_security_zeus');"><?php _e('セキュリティーコード（※）', 'usces'); ?></a></th>
 				<td><input name="security" type="radio" id="security_zeus_1" value="1"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == 1 ) echo ' checked="checked"'; ?> /></td><td><label for="security_zeus_1">利用する</label></td>
 				<td><input name="security" type="radio" id="security_zeus_2" value="2"<?php if( isset($opts['zeus']['security']) && $opts['zeus']['security'] == 2 ) echo ' checked="checked"'; ?> /></td><td><label for="security_zeus_2">利用しない</label></td>
-				<td colspan="2"><div id="ex_security_zeus" class="explanation"><?php _e('セキュリティーコードの入力を必須とするかどうかを指定します。契約に従って指定する必要があります。セキュリティーコードを利用した場合、クイックチャージは利用できません。', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_security_zeus" class="explanation"><?php _e('セキュリティーコードの入力を必須とするかどうかを指定します。契約に従って指定する必要があります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_quickcharge_zeus');">クイックチャージ</a></th>
