@@ -2166,7 +2166,7 @@ function usces_check_acting_return() {
 			
 		case 'zeus_conv':
 			$results = $_GET;
-			if( $_REQUEST['acting_return'] && isset($_REQUEST['wctid']) && usces_is_trusted_acting_data($_REQUEST['wctid']) ){
+			if( $_REQUEST['acting_return'] ){
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;

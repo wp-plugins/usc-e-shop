@@ -295,6 +295,8 @@ function usces_action_acting_transaction(){
 			
 //20110203ysk start
 		$res = $usces->order_processing();
+
+		
 		if( 'error' == $res ){
 			usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
 			die('error1');
@@ -303,6 +305,7 @@ function usces_action_acting_transaction(){
 			$value = serialize($_GET);
 			$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
 			$res = $wpdb->query( $query );
+			usces_log('zeus conv ordered : OK', 'acting_transaction.log');
 		}
 //20110203ysk end
 
@@ -338,6 +341,9 @@ function usces_action_acting_transaction(){
 				usces_log('zeus conv error2 : '.print_r($data, true), 'acting_transaction.log');
 				die('error2');
 			}
+			
+			usces_log('zeus conv cgi : ' . $status, 'acting_transaction.log');
+			
 			foreach( $_GET as $key => $v ){
 				$newvalue[$key] = mb_convert_encoding($v, 'UTF-8', 'SJIS');
 			}

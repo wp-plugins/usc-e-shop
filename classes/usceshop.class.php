@@ -5910,7 +5910,7 @@ class usc_e_shop
 			$vars .= '&pay_cvs=' . $_POST['pay_cvs'];
 			$vars .= '&sendid=' . $_POST['sendid'];
 			$vars .= '&sendpoint=' . $_POST['sendpoint'];
-			if( !WCUtils::is_blank($acting_opts['testid_conv']) ){	
+			if( !WCUtils::is_blank($acting_opts['testid_conv']) ){
 				$vars .= '&testid=' . $acting_opts['testid_conv'];
 				$vars .= '&test_type=' . $acting_opts['test_type_conv'];
 			}
@@ -5923,6 +5923,7 @@ class usc_e_shop
 			$header .= "Content-Length: " . strlen($vars) . "\r\n";
 			$header .= "Connection: close\r\n\r\n";
 			$header .= $vars;
+//usces_log('zeus conv header : '.print_r($header, true), 'acting_transaction.log');
 			$fp = fsockopen('ssl://'.$interface['host'],443,$errno,$errstr,30);
 			
 			if ($fp){
