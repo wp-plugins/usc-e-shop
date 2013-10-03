@@ -109,7 +109,8 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$member = $usces->get_member();
 			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 			$securecode = isset($_POST['securecode']) ? $_POST['securecode'] : '';
-			if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+			//if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+			if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
 				//$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';//20121119ysk 0000620
 				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';

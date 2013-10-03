@@ -35,7 +35,8 @@ foreach ( (array)$payments as $id => $array ) {
 					$member = $usces->get_member();
 					$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 				}
-				if( 2 == $usces->options['acting_settings'][$paymod_id]['security'] && 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
+				//if( 2 == $usces->options['acting_settings'][$paymod_id]['security'] && 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
+				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
 					$html .= '<input name="cnum1" type="hidden" value="8888888888888888" />
 					<input name="expyy" type="hidden" value="2010" />
 					<input name="expmm" type="hidden" value="01" />

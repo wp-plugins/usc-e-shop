@@ -2156,7 +2156,7 @@ function usces_check_acting_return() {
 			
 		case 'zeus_card':
 			$results = $_REQUEST;
-			if( $_REQUEST['acting_return'] ){
+			if( $_REQUEST['acting_return'] && isset($_REQUEST['wctid']) && usces_is_trusted_acting_data($_REQUEST['wctid']) ){
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;
@@ -2166,7 +2166,7 @@ function usces_check_acting_return() {
 			
 		case 'zeus_conv':
 			$results = $_GET;
-			if( $_REQUEST['acting_return'] ){
+			if( $_REQUEST['acting_return'] && isset($_REQUEST['wctid']) && usces_is_trusted_acting_data($_REQUEST['wctid']) ){
 				$results[0] = 1;
 			}else{
 				$results[0] = 0;
@@ -2570,6 +2570,51 @@ function usces_get_order_acting_data($rand){
 	}else{
 		return $res;
 	}
+}
+
+function usces_auth_order_acting_data($rand){
+	global $usces, $wpdb;
+	$datas = usces_get_order_acting_data($rand);
+	$data = unserialize($datas['order_data']);
+	usces_log('usces_auth_order_acting_data', 'acting_transaction.log');
+	$data['propriety'] = 1;
+
+	$data = serialize($data);
+	$table_name = $wpdb->prefix . "usces_access";
+	$query = $wpdb->prepare("UPDATE $table_name SET acc_value = %s WHERE acc_type = %s AND acc_key = %s", 
+							$data, 
+							'acting_data', 
+							$rand
+							);
+	$res = $wpdb->query($query);
+}
+
+function usces_ordered_acting_data($rand){
+	global $usces, $wpdb;
+	$datas = usces_get_order_acting_data($rand);
+	$data = unserialize($datas['order_data']);
+	usces_log('usces_ordered_acting_data', 'acting_transaction.log');
+	$data['order_received'] = 1;
+
+	$data = serialize($data);
+	$table_name = $wpdb->prefix . "usces_access";
+	$query = $wpdb->prepare("UPDATE $table_name SET acc_value = %s WHERE acc_type = %s AND acc_key = %s", 
+							$data, 
+							'acting_data', 
+							$rand
+							);
+	$res = $wpdb->query($query);
+}
+
+function usces_is_trusted_acting_data($rand){
+	global $usces, $wpdb;
+	$datas = usces_get_order_acting_data($rand);
+	$data = unserialize($datas['order_data']);
+	usces_log('usces_is_trusted_acting_data', 'acting_transaction.log');
+	if( isset($data['propriety']) && $data['propriety'] && !isset($data['order_received']) )
+		return true;
+	else
+		return false;
 }
 
 function usces_get_filename( $path ){
@@ -3502,7 +3547,8 @@ function usces_post_reg_orderdata($order_id, $results){
 					
 					$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
 					if( $usces->is_member_logged_in() ){
-						if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge']){
+						//if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge']){
+						if( 'on' == $acting_opts['quickcharge']){
 							$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
 						}
 						$usces->set_member_meta_value('partofcard', $_GET['zeussuffix']);

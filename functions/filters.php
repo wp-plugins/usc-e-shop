@@ -83,7 +83,7 @@ function wc_purchase_nonce_check(){
 	}
 	
 	$payments = usces_get_payments_by_name($entry['order']['payment_name']);
-	if( !in_array( $payments['settlement'], array('COD', 'installment', 'transferAdvance', 'transferDeferred', 'acting_zeus_card')) )
+	if( !in_array( $payments['settlement'], array('COD', 'installment', 'transferAdvance', 'transferDeferred' )) )
 		return true;
 	
 	$nonce = isset($_REQUEST['wc_nonce']) ? $_REQUEST['wc_nonce'] : '';

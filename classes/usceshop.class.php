@@ -611,6 +611,8 @@ class usc_e_shop
 	
 	/* member list page */
 	function member_list_page() {
+		$member_edit_form = apply_filters( 'usces_admin_member_edit_form', USCES_PLUGIN_DIR . '/includes/member_edit_form.php' );
+		$member_list = apply_filters( 'usces_admin_member_list', USCES_PLUGIN_DIR . '/includes/member_list.php' );
 
 		if(empty($this->action_message) || WCUtils::is_blank($this->action_message) ) {
 			$this->action_status = 'none';
@@ -635,11 +637,11 @@ class usc_e_shop
 						$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 					}
 				}
-				require_once(USCES_PLUGIN_DIR . '/includes/member_edit_form.php');	
+				require_once($member_edit_form);	
 				break;
 			case 'new':
 			case 'edit':
-				require_once(USCES_PLUGIN_DIR . '/includes/member_edit_form.php');	
+				require_once($member_edit_form);	
 				break;
 			case 'delete':
 				$res = usces_delete_memberdata();
@@ -651,7 +653,7 @@ class usc_e_shop
 					$this->set_action_status('error', 'ERROR : '.__('failure in delete','usces'));
 				}
 			default:
-				require_once(USCES_PLUGIN_DIR . '/includes/member_list.php');	
+				require_once($member_list);	
 		}
 
 	}
@@ -2930,6 +2932,7 @@ class usc_e_shop
 			header('location: ' . get_option('home'));
 			exit;
 		}
+		do_action( 'usces_action_customerinfo' );
 		$this->cart->entry();
 		$this->error_message = $this->zaiko_check();
 		$this->error_message = apply_filters( 'usces_filter_cart_check', $this->error_message );
@@ -3208,6 +3211,9 @@ class usc_e_shop
 				$res = $this->order_processing( $this->payment_results );
 				
 				if( 'ordercompletion' == $res ){
+					if( isset($_REQUEST['wctid']) ){
+						usces_ordered_acting_data($_REQUEST['wctid']);
+					}
 					$this->page = 'ordercompletion';
 					add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_ordercompletion');
 				}else{
@@ -5807,11 +5813,13 @@ class usc_e_shop
 					usces_log('zeus card entry data2 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					usces_zeus_3dsecure_enrol();
 					
-				}else if( 1 == $this->options['acting_settings']['zeus']['3dsecur'] && isset($_REQUEST['PaRes'])){
+				}else{
 		
+					usces_log('zeus card  : auth', 'acting_transaction.log');
 					usces_zeus_3dsecure_auth();
 				}
 			}else{
+				usces_log('zeus card no3d : payreq', 'acting_transaction.log');
 				$res = usces_zeus_secure_payreq();
 				return $res;
 			}
@@ -5872,7 +5880,7 @@ class usc_e_shop
 						$div = 'div_'.$_POST['cbrand'];
 						$args = '&cbrand='.$_POST['cbrand'].'&howpay='.$_POST['howpay'].'&'.$div.'='.$_POST[$div];
 					}
-					$args .= '&order_number='.$ordd;
+					$args .= '&order_number=' . $ordd . '&wctid='.$_POST['sendpoint'];
 					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=1'.$args);
 //20120904ysk end
 					exit;
@@ -5937,7 +5945,7 @@ class usc_e_shop
 					if( false !== strpos( $scr, 'sendpoint') )
 						$qstr .= trim($scr) . '&';
 				}
-				$qstr .= 'pay_cvs=' . $_POST['pay_cvs'];
+				$qstr .= 'pay_cvs=' . $_POST['pay_cvs'].'&wctid='.$_POST['sendpoint'];
 				fclose($fp);
 				//usces_log('zeus page : '.$page, 'acting_transaction.log');
 
@@ -6433,8 +6441,9 @@ class usc_e_shop
 	function get_member_history($mem_id) {
 		global $wpdb;
 		$order_table = $wpdb->prefix . "usces_order";
-	
+		
 		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);
+		$query = apply_filters( 'usces_filter_member_history_query', $query, $mem_id );
 //		$query = $wpdb->prepare("SELECT ID, order_cart, order_condition, order_date, order_usedpoint, order_getpoint, 
 //								order_discount, order_shipping_charge, order_cod_fee, order_tax, order_status 
 //							FROM $order_table WHERE mem_id = %d ORDER BY order_date DESC", $mem_id);

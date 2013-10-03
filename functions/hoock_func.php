@@ -13,6 +13,7 @@ function usces_action_acting_construct(){
 		if( empty($datas['sesid']) ){
 			usces_log('remise construct : error1', 'acting_transaction.log');
 		}else{
+			//usces_auth_order_acting_data($rand);
 			usces_log('remise construct : '.$_POST['X-TRANID'], 'acting_transaction.log');
 			usces_set_acting_notification_time( $rand );
 		}
@@ -181,6 +182,7 @@ function usces_action_acting_transaction(){
 		}
 		
 		if( 'OK' == $_REQUEST['result'] ){
+			usces_auth_order_acting_data($rand);
 			header("HTTP/1.0 200 OK");
 			die('zeus');
 		}else{
