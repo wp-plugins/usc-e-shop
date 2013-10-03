@@ -6123,7 +6123,7 @@ class usc_e_shop
 	
 	function is_item_zaiko( $post_id, $sku ){
 		$status_num = (int)$this->getItemZaikoStatusId($post_id, $sku);
-		$zaiko_num = trim($this->getItemZaikoNum($post_id, $sku));
+		$zaiko_num = $this->getItemZaikoNum($post_id, $sku);
 
 		if( false !== $zaiko_num 
 			&& ( 0 < (int)$zaiko_num || WCUtils::is_blank($zaiko_num) ) 
