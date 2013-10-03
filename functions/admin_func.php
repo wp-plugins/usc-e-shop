@@ -203,7 +203,6 @@ function usces_zeus_3dsecure_enrol(){
 			exit;
 		}
 
-		usces_auth_order_acting_data($_POST['sendpoint']);
 
 		$PayRes = usces_xml2assoc($xml);
 //usces_log('usces_zeus_3dsecure_enrol : PayReq'.print_r($PayReq, true), 'acting_transaction.log');
@@ -224,6 +223,8 @@ function usces_zeus_3dsecure_enrol(){
 		exit;
 	}
 
+	usces_auth_order_acting_data($_POST['sendpoint']);
+	
 	$data = array();
 	$data['MD'] = $EnrolRes['response']['xid'];
 	$data['PaReq'] = $EnrolRes['response']['redirection']['PaReq'];
@@ -313,7 +314,7 @@ function usces_zeus_3dsecure_auth(){
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
 		exit;
 	}else{
-		usces_log('zeus : PayRes'.print_r($PayRes, true), 'acting_transaction.log');
+		usces_log('zeus : PayRes '.print_r($PayRes, true), 'acting_transaction.log');
 		header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=1&zeussuffix=' . $PayRes['response']['card']['number']['suffix'] . '&zeusyear=' . $PayRes['response']['card']['expires']['year'] . '&zeusmonth=' . $PayRes['response']['card']['expires']['month'] . '&zeusordd=' . $PayRes['response']['order_number'] . '&wctid=' . $_REQUEST['sendpoint']);
 		exit;
 	}
