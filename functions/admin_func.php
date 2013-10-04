@@ -187,6 +187,8 @@ function usces_zeus_3dsecure_enrol(){
 //usces_log('EnrolRes : ' . print_r($EnrolRes, true), 'acting_transaction.log');
 	if( 'outside' == $EnrolRes['response']['result']['status'] ){
 		
+		usces_auth_order_acting_data($_POST['sendpoint']);
+		
 		$data = array();
 		$data['xid'] = $EnrolRes['response']['xid'];//$_REQUEST['MD'];
 		$PayReq = '<?xml version="1.0" encoding="utf-8" ?>';
@@ -205,7 +207,7 @@ function usces_zeus_3dsecure_enrol(){
 
 
 		$PayRes = usces_xml2assoc($xml);
-//usces_log('usces_zeus_3dsecure_enrol : PayReq'.print_r($PayReq, true), 'acting_transaction.log');
+//usces_log('usces_zeus_3dsecure_enrol : PayRes '.print_r($PayRes, true), 'acting_transaction.log');
 		if( 'success' != $PayRes['response']['result']['status'] ){
 			usces_log('zeus bad status : status=' . $PayRes['response']['result']['status'] . ' code=' . $PayRes['response']['result']['code'], 'acting_transaction.log');
 			header("Location: " . USCES_CART_URL . $usces->delim . 'acting=zeus_card&acting_return=0&status=' . $PayRes['response']['result']['status'] . '&code=' . $PayRes['response']['result']['code']);
