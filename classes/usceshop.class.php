@@ -5871,6 +5871,7 @@ class usc_e_shop
 
 			//usces_log('zeus card *****2 : '.print_r($page, true), 'acting_transaction.log');
 				if( false !== strpos( $page, 'Success_order') ){
+					usces_auth_order_acting_data($_POST['sendpoint']);
 					usces_log('zeus card entry data1 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					$ordd = usces_get_order_number( $page );
 //20120904ysk start 0000541

@@ -182,7 +182,6 @@ function usces_action_acting_transaction(){
 		}
 		
 		if( 'OK' == $_REQUEST['result'] ){
-			usces_auth_order_acting_data($rand);
 			header("HTTP/1.0 200 OK");
 			die('zeus');
 		}else{
