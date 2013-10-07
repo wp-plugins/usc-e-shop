@@ -85,7 +85,7 @@ unset($stocs);
 $zerostoc_items = usces_get_non_zerostoc_items();
 foreach((array)$zerostoc_items as $item): ?>
 <tr>
-<td colspan="6"><a href="<?php echo get_option('siteurl') . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $item['ID']; ?>"><?php echo esc_html($item['name']), ' ', esc_html($item['code']); ?></a></td>
+<td colspan="6"><a href="<?php echo site_url() . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $item['ID']; ?>"><?php echo esc_html($item['name']), ' ', esc_html($item['code']); ?></a></td>
 </tr>
 <?php
 endforeach;

@@ -179,7 +179,7 @@ class usc_e_shop
 		}else{
 			define('USCES_FRONT_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER);
 			define('USCES_SSL_URL', get_option('home'));
-			define('USCES_SSL_URL_ADMIN', get_option('siteurl'));
+			define('USCES_SSL_URL_ADMIN', site_url());
 			define('USCES_COOKIEPATH', COOKIEPATH);
 		}
 //		if($this->use_ssl) {
@@ -427,7 +427,7 @@ class usc_e_shop
 	function usces_ssl_attachment_link($link)
 	{
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
-			$link = str_replace(get_option('siteurl'), USCES_SSL_URL_ADMIN, $link);
+			$link = str_replace(site_url(), USCES_SSL_URL_ADMIN, $link);
 		}else{
 			$link = apply_filters('usces_ssl_attachment_link', $link);
 		}
@@ -2186,7 +2186,7 @@ class usc_e_shop
 <?php
 		if($this->action_status == 'edit' || $this->action_status == 'editpost'){
 ?>
-			<link rel='stylesheet' href='<?php echo get_option('siteurl'); ?>/wp-includes/js/thickbox/thickbox.css' type='text/css' media='all' />
+			<link rel='stylesheet' href='<?php echo site_url(); ?>/wp-includes/js/thickbox/thickbox.css' type='text/css' media='all' />
 <?php
 		}
 		if( isset($_REQUEST['page']) ){
@@ -7453,7 +7453,7 @@ class usc_e_shop
 		}
 		
 		if( $this->use_ssl && ($this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI'])) )
-			$html = str_replace('src="'.get_option('siteurl'), 'src="'.USCES_SSL_URL_ADMIN, $html);
+			$html = str_replace('src="'.site_url(), 'src="'.USCES_SSL_URL_ADMIN, $html);
 
 		$html = apply_filters('usces_filter_cartContent', $html);
 

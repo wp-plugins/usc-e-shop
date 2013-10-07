@@ -7,7 +7,7 @@ Version: 1.3.7
 Author: Collne inc.
 Author URI: http://www.welcart.com/
 */
-define('USCES_VERSION', '1.3.7.1310041');
+define('USCES_VERSION', '1.3.7.1310072');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -18,7 +18,7 @@ define('USCES_UP07', 1);
 define('USCES_UP11', 2);
 
 define('USCES_WP_CONTENT_DIR', ABSPATH . 'wp-content');
-define('USCES_WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
+define('USCES_WP_CONTENT_URL', site_url() . '/wp-content');
 define('USCES_WP_PLUGIN_DIR', USCES_WP_CONTENT_DIR . '/plugins');
 define('USCES_WP_PLUGIN_URL', USCES_WP_CONTENT_URL . '/plugins');
 
@@ -29,7 +29,7 @@ define('USCES_PLUGIN_BASENAME', plugin_basename(__FILE__));
 define('USCES_CART_FOLDER', 'usces-cart');
 define('USCES_MEMBER_FOLDER', 'usces-member');
 define('USCES_ADMIN_SSL_BASE_NAME', 'admin-ssl.php');
-define('USCES_ADMIN_URL', get_option('siteurl') . '/wp-admin/admin.php');
+define('USCES_ADMIN_URL', site_url() . '/wp-admin/admin.php');
 
 global $usces_settings, $usces_states, $usces_p;
 require_once(USCES_PLUGIN_DIR."/functions/included_first.php");

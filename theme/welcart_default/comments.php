@@ -43,14 +43,14 @@ if ( post_password_required() ) : ?>
 <h2 id="postcomment"><?php _e('Leave a comment'); ?></h2>
 
 <?php if ( get_option('comment_registration') && !$user_ID ) : ?>
-<p><?php printf(__('You must be <a href="%s">logged in</a> to post a comment.'), get_option('siteurl')."/wp-login.php?redirect_to=".urlencode(get_permalink()));?></p>
+<p><?php printf(__('You must be <a href="%s">logged in</a> to post a comment.'), site_url()."/wp-login.php?redirect_to=".urlencode(get_permalink()));?></p>
 <?php else : ?>
 
-<form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
+<form action="<?php echo site_url(); ?>/wp-comments-post.php" method="post" id="commentform">
 
 <?php if ( $user_ID ) : ?>
 
-<p><?php printf(__('Logged in as %s.'), '<a href="'.get_option('siteurl').'/wp-admin/profile.php">'.$user_identity.'</a>'); ?> <a href="<?php echo wp_logout_url(get_permalink()); ?>" title="<?php _e('Log out of this account') ?>"><?php _e('Log out &raquo;'); ?></a></p>
+<p><?php printf(__('Logged in as %s.'), '<a href="'.site_url().'/wp-admin/profile.php">'.$user_identity.'</a>'); ?> <a href="<?php echo wp_logout_url(get_permalink()); ?>" title="<?php _e('Log out of this account') ?>"><?php _e('Log out &raquo;'); ?></a></p>
 
 <?php else : ?>
 

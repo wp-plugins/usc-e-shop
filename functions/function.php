@@ -3421,7 +3421,9 @@ function usces_total_price( $out = ''){
 function usces_completion_settlement( $out ='' ){
 	global $usces, $usces_entries;
 	$html = '';
-	require( USCES_PLUGIN_DIR . "/includes/completion_settlement.php");
+	
+	$template = apply_filters( 'usces_filter_completion_settlement', USCES_PLUGIN_DIR . "/includes/completion_settlement.php", $usces_entries );
+	require( $template );
 	
 	if($out == 'return'){
 		return $html;

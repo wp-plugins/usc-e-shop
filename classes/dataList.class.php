@@ -619,15 +619,15 @@ class dataList
 			$html .= '<li class="navigationStr">first&lt;&lt;</li>' . "\n";
 			$html .= '<li class="navigationStr">prev&lt;</li>'."\n";
 		}else{
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changePage=1">first&lt;&lt;</a></li>' . "\n";
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $this->previousPage . '">prev&lt;</a></li>'."\n";
+			$html .= '<li class="navigationStr"><a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&changePage=1">first&lt;&lt;</a></li>' . "\n";
+			$html .= '<li class="navigationStr"><a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $this->previousPage . '">prev&lt;</a></li>'."\n";
 		}
 		if($this->selectedRow > 0) {
 			for($i=0; $i<count($box); $i++){
 				if($box[$i] == $this->currentPage){
 					$html .= '<li class="navigationButtonSelected">' . $box[$i] . '</li>'."\n";
 				}else{
-					$html .= '<li class="navigationButton"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $box[$i] . '">' . $box[$i] . '</a></li>'."\n";
+					$html .= '<li class="navigationButton"><a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $box[$i] . '">' . $box[$i] . '</a></li>'."\n";
 				}
 			}
 		}
@@ -635,8 +635,8 @@ class dataList
 			$html .= '<li class="navigationStr">&gt;next</li>'."\n";
 			$html .= '<li class="navigationStr">&gt;&gt;last</li>'."\n";
 		}else{
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $this->nextPage . '">&gt;next</a></li>'."\n";
-			$html .= '<li class="navigationStr"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $this->lastPage . '">&gt;&gt;last</a></li>'."\n";
+			$html .= '<li class="navigationStr"><a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $this->nextPage . '">&gt;next</a></li>'."\n";
+			$html .= '<li class="navigationStr"><a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&changePage=' . $this->lastPage . '">&gt;&gt;last</a></li>'."\n";
 		}
 		if($this->searchSwitchStatus == 'OFF'){
 			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('Show the Operation field', 'usces') . '</a>'."\n";
@@ -644,7 +644,7 @@ class dataList
 			$html .= '<li class="rowsnum"><a style="cursor:pointer;" id="searchVisiLink" onclick="toggleVisibility(\'searchBox\');">' . __('hide the Operation field', 'usces') . '</a>'."\n";
 		}
 
-		$html .= '<li class="refresh"><a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&refresh">' . __('updates it to latest information', 'usces') . '</a></li>' . "\n";
+		$html .= '<li class="refresh"><a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&refresh">' . __('updates it to latest information', 'usces') . '</a></li>' . "\n";
 		$html .= '</ul>'."\n";
 
 		$this->dataTableNavigation = $html;
@@ -698,10 +698,10 @@ class dataList
 					$str = __('[DESC]', 'usces');
 					$switch = 'ASC';
 				}
-				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changeSort=' . $value . '&switch=' . $switch . '"><span class="sortcolumn">' . $key . ' ' . $str . '</span></a>';
+				$this->headers[$value] = '<a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&changeSort=' . $value . '&switch=' . $switch . '"><span class="sortcolumn">' . $key . ' ' . $str . '</span></a>';
 			}else{
 				$switch = $this->sortSwitchs[$value];
-				$this->headers[$value] = '<a href="' . get_option('siteurl') . '/wp-admin/admin.php?page=usces_memberlist&changeSort=' . $value . '&switch=' . $switch . '"><span>' . $key . '</span></a>';
+				$this->headers[$value] = '<a href="' . site_url() . '/wp-admin/admin.php?page=usces_memberlist&changeSort=' . $value . '&switch=' . $switch . '"><span>' . $key . '</span></a>';
 			}
 		}
 			//$this->headers = array_keys($this->columns);
