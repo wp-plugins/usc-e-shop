@@ -908,7 +908,7 @@ jQuery(document).ready(function($){
 <td class="label border"><?php echo apply_filters('usces_filter_admin_modified_label', __('shpping date', 'usces') ); ?></td><td class="border"><div id="order_modified" class="rod long"><?php esc_html_e(isset($data['order_modified']) ? $data['order_modified'] : ''); ?></div></td>
 </tr>
 <tr>
-<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div id="member_id_label" class="rod large short"><?php esc_html_e(isset($data['mem_id']) ? $data['mem_id'] : ''); ?></div><?php if($order_action == 'new'){ ?><input name="member_id" id="member_id" type="hidden" /><?php } ?></td>
+<td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div id="member_id_label" class="rod large short"><?php esc_html_e(isset($data['mem_id']) ? $data['mem_id'] : ''); ?></div><?php if($order_action == 'new'){ ?><input name="member_id" id="member_id" type="hidden" /><?php }else{ ?><input name="member_id" id="member_id" type="hidden" value="<?php esc_attr_e(isset($data['mem_id']) ? $data['mem_id'] : ''); ?>" /><?php } ?></td>
 <td colspan="2" rowspan="10" class="wrap_td">
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>

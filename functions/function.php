@@ -1565,7 +1565,8 @@ function usces_update_orderdata() {
 		$order_modified = '';
 	}
 	$ordercheck = isset($_POST['check']) ? serialize($_POST['check']) : '';
-	$member_id = $usces->get_memberid_by_email($_POST['customer']['mailaddress']);
+	$member_id = isset($_POST['member_id']) ? $_POST['member_id'] : 0;
+	//$member_id = $usces->get_memberid_by_email($_POST['customer']['mailaddress']);
 
 	if( 'cancel' == $taio ){
 		$query = $wpdb->prepare(
