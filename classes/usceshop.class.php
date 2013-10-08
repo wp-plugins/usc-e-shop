@@ -5810,16 +5810,16 @@ class usc_e_shop
 			if( 1 == $this->options['acting_settings']['zeus']['3dsecur'] ){
 				if( !isset($_REQUEST['PaRes'])){
 	
-					usces_log('zeus card entry data2 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+					usces_log('zeus card 3dsecure entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 					usces_zeus_3dsecure_enrol();
 					
 				}else{
 		
-					usces_log('zeus card  : auth', 'acting_transaction.log');
+					usces_log('zeus card 3dsecure : auth', 'acting_transaction.log');
 					usces_zeus_3dsecure_auth();
 				}
 			}else{
-				usces_log('zeus card no3d : payreq', 'acting_transaction.log');
+				usces_log('zeus card no3d entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 				$res = usces_zeus_secure_payreq();
 				return $res;
 			}
@@ -5828,7 +5828,7 @@ class usc_e_shop
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['card_url']);
 
-			//usces_log('zeus card ***** : '.print_r($entry, true), 'acting_transaction.log');
+			usces_log('zeus card securelink entry data (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
 
 			$vars = 'send=mall';
 			$vars .= '&clientip=' . $acting_opts['clientip'];
@@ -5872,7 +5872,7 @@ class usc_e_shop
 			//usces_log('zeus card *****2 : '.print_r($page, true), 'acting_transaction.log');
 				if( false !== strpos( $page, 'Success_order') ){
 					usces_auth_order_acting_data($_POST['sendpoint']);
-					usces_log('zeus card entry data1 (acting_processing) : '.print_r($entry, true), 'acting_transaction.log');
+					usces_log('zeus card : Success_order ', 'acting_transaction.log');
 					$ordd = usces_get_order_number( $page );
 //20120904ysk start 0000541
 					if ( !isset($_POST['cbrand']) || (isset($_POST['howpay']) && 1 == $_POST['howpay']) ) {

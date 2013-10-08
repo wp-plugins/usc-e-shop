@@ -171,7 +171,7 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ){
 			$data[$key] = $value;
 		}
-//usces_log('zeus card : '.print_r($data, true), 'acting_transaction.log');
+		usces_log('zeus card cgi : '.print_r($data, true), 'acting_transaction.log');
 
 		$acting_opts = $usces->options['acting_settings']['zeus'];
 
@@ -185,7 +185,6 @@ function usces_action_acting_transaction(){
 			header("HTTP/1.0 200 OK");
 			die('zeus');
 		}else{
-			usces_log('zeus card error3 : '.print_r($data, true), 'acting_transaction.log');
 			header("HTTP/1.0 200 OK");
 			die('error3');
 		}
@@ -195,7 +194,7 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ){
 			$data[$key] = $value;
 		}
-		usces_log('zeus construct_data : '.print_r($data,true), 'acting_transaction.log');
+		usces_log('zeus bank cgi data : '.print_r($data,true), 'acting_transaction.log');
 
 //20130426ysk start 0000701
 		if( '04' === $_REQUEST['status'] or '05' === $_REQUEST['status'] ) {
@@ -210,16 +209,16 @@ function usces_action_acting_transaction(){
 		$table_meta_name = $wpdb->prefix . "usces_order_meta";
 		$mquery = $wpdb->prepare("SELECT order_id, meta_value FROM $table_meta_name WHERE meta_key = %s", 'acting_'.$_REQUEST['tracking_no']);
 		$values = $wpdb->get_row( $mquery, ARRAY_A );
-		//usces_log('zeus construct_values1 : '.print_r($values,true), 'acting_transaction.log');
+
 		if( $values == NULL ){
 			
 //20110203ysk start
 			$res = $usces->order_processing();
 			if( 'error' == $res ){
-				//usces_log('zeus bank error1 : '.print_r($data, true), 'acting_transaction.log');
 				usces_log('zeus bank error1 : order_processing', 'acting_transaction.log');
 				die('error1');
 			}else{
+				usces_log('zeus bank order : OK', 'acting_transaction.log');
 				$order_id = $usces->cart->get_order_entry('ID');
 				$value = serialize($_GET);
 				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['tracking_no'], $value);
@@ -283,6 +282,7 @@ function usces_action_acting_transaction(){
 		foreach( $_REQUEST as $key => $value ){
 			$data[$key] = $value;
 		}
+		usces_log('zeus conv cgi data : '.print_r($data,true), 'acting_transaction.log');
 
 		$acting_opts = $usces->options['acting_settings']['zeus'];
 
@@ -293,19 +293,19 @@ function usces_action_acting_transaction(){
 		if( $values == NULL ){
 			
 //20110203ysk start
-		$res = $usces->order_processing();
-
-		
-		if( 'error' == $res ){
-			usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
-			die('error1');
-		}else{
-			$order_id = $usces->cart->get_order_entry('ID');
-			$value = serialize($_GET);
-			$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
-			$res = $wpdb->query( $query );
-			usces_log('zeus conv ordered : OK', 'acting_transaction.log');
-		}
+			$res = $usces->order_processing();
+	
+			
+			if( 'error' == $res ){
+				usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
+				die('error1');
+			}else{
+				$order_id = $usces->cart->get_order_entry('ID');
+				$value = serialize($_GET);
+				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
+				$res = $wpdb->query( $query );
+				usces_log('zeus conv ordered : OK', 'acting_transaction.log');
+			}
 //20110203ysk end
 
 
@@ -340,8 +340,6 @@ function usces_action_acting_transaction(){
 				usces_log('zeus conv error2 : '.print_r($data, true), 'acting_transaction.log');
 				die('error2');
 			}
-			
-			usces_log('zeus conv cgi : ' . $status, 'acting_transaction.log');
 			
 			foreach( $_GET as $key => $v ){
 				$newvalue[$key] = mb_convert_encoding($v, 'UTF-8', 'SJIS');
