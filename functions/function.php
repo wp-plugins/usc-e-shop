@@ -272,7 +272,7 @@ function usces_order_confirm_message($order_id) {
 			$message = do_shortcode($mail_data['header']['othermail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['othermail']);
 			break;
 	}
-	return $message;
+	return apply_filters('usces_filter_order_confirm_mail_message', $message, $data);
 
 }
 
@@ -1161,15 +1161,6 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
 		}
 //20130225ysk end
-
-		foreach($cart as $cartrow){
-			$sku = urldecode($cartrow['sku']);
-			$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $sku );
-			if($zaikonum == '') continue;
-			$zaikonum = $zaikonum - $cartrow['quantity'];
-			$usces->updateItemZaikoNum( $cartrow['post_id'], $sku, $zaikonum );
-			if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $sku, 2 );
-		}
 		
 		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
 		do_action('usces_action_reg_orderdata', $args);

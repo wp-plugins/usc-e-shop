@@ -1816,7 +1816,7 @@ class usc_e_shop
 		}else{
 			$javascript_url = USCES_WP_CONTENT_URL . '/plugins/' . USCES_PLUGIN_FOLDER . '/js/usces_cart.js';
 		}
-		$this->member_name = ( is_user_logged_in() ) ? esc_js(get_user_meta($current_user->ID,'first_name').get_user_meta($current_user->ID,'last_name')) : '';
+//		$this->member_name = ( is_user_logged_in() ) ? esc_js(get_user_meta($current_user->ID,'first_name').get_user_meta($current_user->ID,'last_name')) : '';
 		$this->previous_url = isset($_SESSION['usces_previous_url']) ? $_SESSION['usces_previous_url'] : get_home_url();
 
 //		usces_log('post_type : '.$item->post_mime_type, 'test.log');

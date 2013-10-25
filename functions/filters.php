@@ -43,6 +43,20 @@ function usces_action_reg_orderdata( $args ){
 	/***********************************************************************************/
 }
 
+function usces_action_reg_orderdata_stocks($args){
+	global $usces;
+	extract($args);
+	
+	foreach($cart as $cartrow){
+		$sku = urldecode($cartrow['sku']);
+		$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $sku );
+		if($zaikonum == '') continue;
+		$zaikonum = $zaikonum - $cartrow['quantity'];
+		$usces->updateItemZaikoNum( $cartrow['post_id'], $sku, $zaikonum );
+		if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $sku, 2 );
+	}
+}
+
 function usces_action_ogp_meta(){
 	global $usces, $post;
 	if( empty($post) || !$usces->is_item($post) || !is_single() )

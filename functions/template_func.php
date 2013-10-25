@@ -1524,6 +1524,9 @@ function usces_list_bestseller($num, $days = ''){
 	for($i=0; $i<$num; $i++){
 		if(isset($ids[$i])){
 			$post = get_post($ids[$i]);
+			if( !is_object($post) )
+				continue;
+				
 			$disp_text = apply_filters('usces_widget_bestseller_auto_text', esc_html($post->post_title), $ids[$i]);
 			$list = "<li><a href='" . get_permalink($ids[$i]) . "'>" . $disp_text . "</a></li>\n";
 			$htm .= apply_filters('usces_filter_bestseller', $list, $ids[$i], $i);
