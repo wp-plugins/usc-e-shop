@@ -6963,7 +6963,7 @@ class usc_e_shop
 			}
 		}
 		
-		$name_str = apply_filters('usces_admin_order_item_name_filter', $name_str);
+		$name_str = apply_filters('usces_admin_order_item_name_filter', $name_str, $post_id, $sku);
 		
 		return trim($name_str);
 	}
