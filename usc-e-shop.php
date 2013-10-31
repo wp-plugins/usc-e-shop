@@ -7,7 +7,7 @@ Version: 1.3.7
 Author: Collne inc.
 Author URI: http://www.welcart.com/
 */
-define('USCES_VERSION', '1.3.7.1310251');
+define('USCES_VERSION', '1.3.7.1310311');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -54,6 +54,7 @@ require_once(USCES_PLUGIN_DIR."/functions/system_post.php");
 if( is_admin() ){
 	require_once(USCES_PLUGIN_DIR."/functions/admin_page.php");
 }
+require_once(USCES_PLUGIN_DIR."/functions/settlement_func.php");
 
 global $usces;
 $usces = new usc_e_shop();

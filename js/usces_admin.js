@@ -562,6 +562,9 @@
 			if( '' == name ){
 				mes += '<p>支払方法名の値を入力してください。</p>';
 			}
+			if( '#NONE#' == settlement ) {
+				mes += '<p>決済種別を選択してください。</p>';
+			}
 			if( 'acting' == settlement ) {//代行業者決済のとき
 				if( '' == module ) {
 					mes += '<p>決済モジュールの値を入力してください。</p>';
@@ -617,6 +620,9 @@
 			var mes = '';
 			if( '' == name ){
 				mes += '<p>支払方法名の値を入力してください。</p>';
+			}
+			if( '#NONE#' == settlement ) {
+				mes += '<p>決済種別を選択してください。</p>';
 			}
 			if( 'acting' == settlement ) {//代行業者決済のとき
 				if( '' == module ) {

@@ -397,7 +397,9 @@ class usces_cart {
 		}
 //20100809ysk end
 //20110106ysk start
-		$this->set_custom_customer_delivery();
+		if( isset($_SESSION['usces_entry']['delivery']['delivery_flag']) && $_SESSION['usces_entry']['delivery']['delivery_flag'] == 0 ) {//20131009ysk
+			$this->set_custom_customer_delivery();
+		}
 //20110106ysk end
 //20100818ysk start
 		if(isset($_POST['custom_customer'])) {

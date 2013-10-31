@@ -208,6 +208,7 @@ function _payment_list_row( $value ) {
 				<td class='paymentexplanation'><textarea name='payment[<?php echo $id; ?>][explanation]' id='payment[<?php echo $id; ?>][explanation]' class='metaboxfield'><?php echo $explanation; ?></textarea></td>
 				<td class='paymentsettlement'>
 					<select name='payment[<?php echo $id; ?>][settlement]' id='payment[<?php echo $id; ?>][settlement]' class='metaboxfield'>
+						<option value='#NONE#'><?php _e('-- Select --','usces'); ?></option>
 					<?php
 					foreach ($usces->payment_structure as $psk => $psv){
 						$selected = ($psk == $settlement) ? ' selected="selected"' : '';
@@ -260,6 +261,7 @@ function payment_form() {
 			<td class='paymentexplanation'><textarea id="newexplanation" name="newexplanation" class='metaboxfield'></textarea></td>
 			<td class='paymentsettlement'>
 				<select name="newsettlement" id="newsettlement" class='metaboxfield'>
+					<option value='#NONE#'><?php _e('-- Select --','usces'); ?></option>
 			<?php foreach ($usces->payment_structure as $psk => $psv) { ?>
 					<option value="<?php echo esc_attr($psk); ?>"><?php echo esc_html($psv); ?></option>
 			<?php } ?>

@@ -1327,13 +1327,13 @@ function item_save_metadata( $post_id, $post ) {
 		}
 		
 		if( $uniq_code ){
-			$message .= 'SKUコードが重複しています。' . "<br />";
+			$message .= __('SKU code is duplicated.','usces') . "<br />";
 		}
 		if( $irreg_code ){
-			$message .= 'SKUコードの値が不正です。' . "<br />";
+			$message .= __('SKU code is invalid.','usces') . "<br />";
 		}
 		if( $irreg_price ){
-			$message .= '売価の値が不正なSKUが存在します。' . "<br />";
+			$message .= __('SKU of invalid selling price exists.','usces') . "<br />";
 		}
 	}
 	//OPT
@@ -1398,7 +1398,7 @@ function item_save_metadata( $post_id, $post ) {
 	if( $message ){
 		$usces->set_action_status('error', 'ERROR : '.$message);
 	}else{
-		$usces->set_action_status('success', '商品の登録が完了しました。 ');
+		$usces->set_action_status('success', __('Registration of the product is complete.','usces'));
 	}
 
 	wp_cache_delete($post_id, 'post_meta');

@@ -10,11 +10,11 @@ foreach ( (array)$payments as $id => $array ) {
 		switch( $array['settlement'] ){
 			case 'acting_zeus_card':
 				$paymod_id = 'zeus';
-				
+
 				if( 'on' != $usces->options['acting_settings'][$paymod_id]['card_activate'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] )
 					continue;
-					
+
 				$cnum1 = isset( $_POST['cnum1'] ) ? esc_html($_POST['cnum1']) : '';
 				$cnum2 = isset( $_POST['cnum2'] ) ? esc_html($_POST['cnum2']) : '';
 				$cnum3 = isset( $_POST['cnum3'] ) ? esc_html($_POST['cnum3']) : '';
@@ -26,14 +26,16 @@ foreach ( (array)$payments as $id => $array ) {
 				$howpay = isset( $_POST['howpay'] ) ? esc_html($_POST['howpay']) : '1';
 				$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
-				
+
 				$html .= '<input type="hidden" name="acting" value="zeus">'."\n";
 				$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
-				
+
 				$pcid = NULL;
 				if( $usces->is_member_logged_in() ){
 					$member = $usces->get_member();
-					$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
+					if( !isset($_GET['re-enter']) ) {
+						$pcid = $usces->get_member_meta_value( 'zeus_pcid', $member['ID'] );
+					}
 				}
 				//if( 2 == $usces->options['acting_settings'][$paymod_id]['security'] && 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
 				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
@@ -41,7 +43,7 @@ foreach ( (array)$payments as $id => $array ) {
 					<input name="expyy" type="hidden" value="2010" />
 					<input name="expmm" type="hidden" value="01" />
 					<input name="username" type="hidden" value="QUICKCHARGE" />';
-					
+
 				}else{
 					$html .= '<tr>
 						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
@@ -56,15 +58,6 @@ foreach ( (array)$payments as $id => $array ) {
 					$html .= '<tr>
 						<th scope="row">'.__('カード有効期限', 'usces').'</th>
 						<td colspan="2">
-						<select name="expyy">
-							<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
-						';
-					for($i=0; $i<10; $i++){
-						$year = date('Y') - 1 + $i;
-						$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
-					}
-					$html .= '
-						</select>年 
 						<select name="expmm">
 							<option value=""' . (empty($expmm) ? ' selected="selected"' : '') . '>----</option>
 							<option value="01"' . (('01' === $expmm) ? ' selected="selected"' : '') . '> 1</option>
@@ -79,17 +72,26 @@ foreach ( (array)$payments as $id => $array ) {
 							<option value="10"' . (('10' === $expmm) ? ' selected="selected"' : '') . '>10</option>
 							<option value="11"' . (('11' === $expmm) ? ' selected="selected"' : '') . '>11</option>
 							<option value="12"' . (('12' === $expmm) ? ' selected="selected"' : '') . '>12</option>
-						</select>月</td>
+						</select>月&nbsp;<select name="expyy">
+							<option value=""' . (empty($expyy) ? ' selected="selected"' : '') . '>------</option>
+						';
+					for($i=0; $i<10; $i++){
+						$year = date('Y') - 1 + $i;
+						$html .= '<option value="' . $year . '"' . (($year == $expyy) ? ' selected="selected"' : '') . '>' . $year . '</option>';
+					}
+					$html .= '
+						</select>年</td>
 						</tr>
 						<tr>
 						<th scope="row">'.__('カード名義', 'usces').'</th>
 						<td colspan="2"><input name="username" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
 						</tr>';
-				}	
-					
+				}
+
+				$html_howpay = '';
 				if( 'on' == $usces->options['acting_settings'][$paymod_id]['howpay'] ){
-				
-				$html .= '
+
+				$html_howpay .= '
 					<tr>
 					<th scope="row">'.__('支払方法', 'usces').'</th>
 					<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' === $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
@@ -134,23 +136,21 @@ foreach ( (array)$payments as $id => $array ) {
 					</td>
 					</tr>
 					';
-					
 				}
-					
+				$html .= apply_filters( 'usces_filter_delivery_secure_form_howpay', $html_howpay );
 				$html .= '
 				</table>';
 				break;
-				
+
 			case 'acting_zeus_conv':
 				$paymod_id = 'zeus';
-				
+
 				if( 'on' != $usces->options['acting_settings'][$paymod_id]['conv_activate'] 
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] )
 					continue;
-					
-					
+
 				$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : 'D001';
-				
+
 				$html .= '
 				<table class="customer_form" id="' . $paymod_id . '_conv">
 					<tr>
@@ -167,7 +167,7 @@ foreach ( (array)$payments as $id => $array ) {
 					</tr>
 				</table>';
 				break;
-				
+
 			case 'acting_remise_card':
 				$paymod_id = 'remise';
 				$charging_type = $usces->getItemChargingType($usces_carts[0]['post_id'], $usces_carts);
@@ -178,10 +178,9 @@ foreach ( (array)$payments as $id => $array ) {
 					|| ('continue' == $charging_type || 'regular' == $charging_type) ){
 					continue;
 				}
-					
-					
+
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '0';
-				
+
 				$html .= '
 				<table class="customer_form" id="' . $paymod_id . '">
 					<tr>

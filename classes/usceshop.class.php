@@ -1033,17 +1033,16 @@ class usc_e_shop
 	
 	/* Settlement Setting Page */
 	function admin_settlement_page() {
-	
+
 		$this->action_status = 'none';
 		$this->action_message = '';
 
 		$options = get_option('usces');
 
-	
 		if( isset($_POST['usces_option_update']) ) {
 			$_POST = $this->stripslashes_deep_post($_POST);
 			$mes = '';
-		
+
 			switch( $_POST['acting'] ){
 				case 'zeus':
 					unset( $options['acting_settings']['zeus'] );
@@ -1088,6 +1087,7 @@ class usc_e_shop
 						if( isset($_POST['quickcharge']) && 'on' == $_POST['quickcharge'] ) {
 						} else {
 							$mes .= '※バッチ処理を利用する場合は、クイックチャージを利用するにして下さい<br />';
+							$options['acting_settings']['zeus']['quickcharge'] = 'on';
 						}
 					}
 					if( !isset($_POST['card_url']) || empty($_POST['card_url']) || !isset($_POST['ipaddrs']) || empty($_POST['ipaddrs']) || !isset($_POST['bank_url']) || empty($_POST['bank_url']) || !isset($_POST['conv_url']) || empty($_POST['conv_url']) )
@@ -1112,20 +1112,21 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_zeus_conv']);
 						}
+						$options['acting_settings']['zeus']['vercheck'] = '115';
+						update_option( 'usces', $options );
+						if( 'on' != $options['acting_settings']['zeus']['quickcharge'] ) {
+							usces_clear_quickcharge( 'zeus_pcid' );
+						}
 					}else{
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります','usces');
+						$this->action_message = __('Data have deficiency.','usces');
 						$options['acting_settings']['zeus']['activate'] = 'off';
 						unset($this->payment_structure['acting_zeus_card'], $this->payment_structure['acting_zeus_bank'], $this->payment_structure['acting_zeus_conv']);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure',$this->payment_structure);
-					$options['acting_settings']['zeus']['vercheck'] = '115';
-					if( update_option('usces', $options) ){
-						usces_clear_quickcharge();
-					}
 					break;
-					
+
 				case 'remise':
 					unset( $options['acting_settings']['remise'] );
 					$options['acting_settings']['remise']['plan'] = isset($_POST['plan']) ? $_POST['plan'] : '';
@@ -1180,17 +1181,20 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_remise_conv']);
 						}
+						update_option('usces', $options);
+						if( 'on' != $options['acting_settings']['remise']['payquick'] ) {
+							usces_clear_quickcharge( 'remise_pcid' );
+						}
 
 					}else{
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります','usces');
+						$this->action_message = __('Data have deficiency.','usces');
 						$options['acting_settings']['remise']['activate'] = 'off';
 						unset($this->payment_structure['acting_remise_card']);
 						unset($this->payment_structure['acting_remise_conv']);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure',$this->payment_structure);
-					update_option('usces', $options);
 					break;
 //20101018ysk start
 				case 'jpayment':
@@ -1244,10 +1248,10 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_jpayment_bank']);
 						}
-
+						update_option('usces', $options);
 					}else{
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります', 'usces');
+						$this->action_message = __('Data have deficiency.', 'usces');
 						$options['acting_settings']['jpayment']['activate'] = 'off';
 						unset($this->payment_structure['acting_jpayment_card']);
 						unset($this->payment_structure['acting_jpayment_conv']);
@@ -1258,7 +1262,6 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
-					update_option('usces', $options);
 					break;
 //20101018ysk end
 //20110208ysk start
@@ -1300,16 +1303,15 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_paypal_ec']);
 						}
-
+						update_option('usces', $options);
 					}else{
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります', 'usces');
+						$this->action_message = __('Data have deficiency.', 'usces');
 						$options['acting_settings']['paypal']['activate'] = 'off';
 						unset($this->payment_structure['acting_paypal_ec']);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
-					update_option('usces', $options);
 					break;
 //20110208ysk end
 //20120413ysk start
@@ -1393,10 +1395,10 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_sbps_mobile']);
 						}
-
+						update_option('usces', $options);
 					}else{
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります','usces');
+						$this->action_message = __('Data have deficiency.','usces');
 						$options['acting_settings']['sbps']['activate'] = 'off';
 						unset($this->payment_structure['acting_sbps_card']);
 						unset($this->payment_structure['acting_sbps_conv']);
@@ -1406,7 +1408,6 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
-					update_option('usces', $options);
 					break;
 //20120413ysk end
 //20120618ysk start
@@ -1442,16 +1443,16 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_telecom_edy']);
 						}
+						update_option('usces', $options);
 					}else{
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります','usces');
+						$this->action_message = __('Data have deficiency.','usces');
 						$options['acting_settings']['telecom']['activate'] = 'off';
 						unset($this->payment_structure['acting_telecom_card']);
 						unset($this->payment_structure['acting_telecom_edy']);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
-					update_option('usces', $options);
 					break;
 //20120618ysk end
 //20121206ysk start
@@ -1504,16 +1505,19 @@ class usc_e_shop
 						}else{
 							unset($this->payment_structure['acting_digitalcheck_conv']);
 						}
+						update_option('usces', $options);
+						if( 'on' != $options['acting_settings']['digitalcheck']['card_user_id'] ) {
+							usces_clear_quickcharge( 'digitalcheck_ip_user_id' );
+						}
 					}else{
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります','usces');
+						$this->action_message = __('Data have deficiency.','usces');
 						$options['acting_settings']['digitalcheck']['activate'] = 'off';
 						unset($this->payment_structure['acting_digitalcheck_card']);
 						unset($this->payment_structure['acting_digitalcheck_conv']);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
-					update_option('usces', $options);
 					break;
 //20121206ysk end
 //20130225ysk start
@@ -1563,9 +1567,10 @@ class usc_e_shop
 						} else {
 							unset($this->payment_structure['acting_mizuho_conv2']);
 						}
+						update_option('usces', $options);
 					} else {
 						$this->action_status = 'error';
-						$this->action_message = __('データに不備が有ります','usces');
+						$this->action_message = __('Data have deficiency.','usces');
 						$options['acting_settings']['mizuho']['activate'] = 'off';
 						unset($this->payment_structure['acting_mizuho_card']);
 						unset($this->payment_structure['acting_mizuho_conv1']);
@@ -1573,20 +1578,17 @@ class usc_e_shop
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
-					update_option('usces', $options);
 					break;
 //20130225ysk end
 			}
-			
 
 		}
-			
-		
+
 		$this->options = get_option('usces');
 
 		require_once(USCES_PLUGIN_DIR . '/includes/admin_settlement.php');
 	}
-	
+
 	/********************************************************************************/
 	function selected( $selected, $current) {
 		if ( $selected == $current)
@@ -3666,7 +3668,8 @@ class usc_e_shop
 				$res = $this->reg_custom_member($mem_id);
 //20100818ysk end
 				do_action('usces_action_edit_memberdata', $_POST['member'], $mem_id);
-				$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
+				//$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
+				$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'remise_pcid', 'digitalcheck_ip_user_id'" );
 				$query = $wpdb->prepare("DELETE FROM $member_meta_table WHERE member_id = %d AND meta_key IN( $meta_keys )", 
 						$mem_id 
 						);
@@ -4580,11 +4583,11 @@ class usc_e_shop
 			$local_country = usces_get_base_country();
 			if($country == $local_country) {
 				if($this->options['delivery_method'][$d_method_index]['intl'] == 1) {
-					$mes .= __('配送方法が誤っています。国際便は指定できません。', 'usces') . "<br />";
+					$mes .= __('Delivery method is incorrect. Can not specify an international flight.', 'usces') . "<br />";
 				}
 			} else {
 				if( WCUtils::is_zero($this->options['delivery_method'][$d_method_index]['intl']) ) {
-					$mes .= __('配送方法が誤っています。国際便を指定してください。', 'usces') . "<br />";
+					$mes .= __('Delivery method is incorrect. Specify the international flights.', 'usces') . "<br />";
 				}
 			}
 		}
@@ -5845,7 +5848,8 @@ class usc_e_shop
 			$vars .= '&money=' . $_POST['money'];
 			$vars .= '&sendpoint=' . $_POST['sendpoint'];
 			$vars .= '&printord=' . $_POST['printord'];
-			if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){	
+			$vars .= '&return_value=yes';
+			if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){
 				$vars .= '&div=' . $_POST['div'];
 			}
 
@@ -5881,13 +5885,14 @@ class usc_e_shop
 						$div = 'div_'.$_POST['cbrand'];
 						$args = '&cbrand='.$_POST['cbrand'].'&howpay='.$_POST['howpay'].'&'.$div.'='.$_POST[$div];
 					}
-					$args .= '&order_number=' . $ordd . '&wctid='.$_POST['sendpoint'];
+					$args .= '&order_number='.$ordd.'&wctid='.$_POST['sendpoint'];
 					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=1'.$args);
 //20120904ysk end
 					exit;
 				}else{
-					usces_log('zeus card : Certification Error', 'acting_transaction.log');
-					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=0');
+					$err_code = usces_get_err_code( $page );
+					usces_log('zeus card : Certification Error : '.$err_code, 'acting_transaction.log');
+					header("Location: " . USCES_CART_URL . $delim . 'acting=zeus_card&acting_return=0&err_code='.substr( $err_code, -3 ) );
 					exit;
 				}
 			}else{
@@ -6082,7 +6087,7 @@ class usc_e_shop
 					$mquery = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'SID', $_REQUEST['SID'] );
 					$order_id = $wpdb->get_var($mquery);
 					if( $order_id ) {
-						$data = array( "settltment_status" => "未決済", "settltment_errmsg" => "決済が完了していません" );
+						$data = array( "settltment_status" => __("Failure",'usces'), "settltment_errmsg" => __("Settlement was not completed.",'usces') );
 						$this->set_order_meta_value( 'acting_digitalcheck_conv', serialize( $data ), $order_id );
 					}
 					$this->cart->crear_cart();
@@ -7564,7 +7569,7 @@ class usc_e_shop
 			
 			}
 		}else{
-			$html .= "<p>只今会員サービスは提供いたしておりません。</p>";
+			$html .= "<p>".__('Member Services is not running currently.','usces')."</p>";
 		}
 		
 		$content = $html;

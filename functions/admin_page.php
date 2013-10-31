@@ -204,7 +204,7 @@ function admin_prodauct_footer(){
 			$("#aniboxStatus").removeClass("none");
 			$("#aniboxStatus").addClass("error");
 			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
-			$("#info_massage").html("データに不備があります");
+			$("#info_massage").html("<?php _e('Data have deficiency.','usces'); ?>");
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 			return false;
 		} else {
@@ -326,7 +326,7 @@ function admin_prodauct_footer(){
 			$("#aniboxStatus").removeClass("none");
 			$("#aniboxStatus").addClass("error");
 			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
-			$("#info_massage").html("データに不備があります");
+			$("#info_massage").html("<?php _e('Data have deficiency.','usces'); ?>");
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 			if( $.fn.jquery < "1.10" ) {
 				$('#uscestabs_cart').tabs("select", 0);
@@ -403,11 +403,11 @@ function usces_item_duplicate($post_id){
 		wp_die( __( 'Sorry, you do not have the right to access this site.' ) );
 
 	if( empty($post_id) )
-		wp_die( __( 'データが存在しません。', 'usces' ) );
+		wp_die( __( 'Data does not exist.', 'usces' ) );
 	
 	//if ( !$post_data = wp_get_single_post($post_id, ARRAY_A) )
 	if ( !$post_data = get_post($post_id, ARRAY_A) )
-		wp_die( __( 'データが存在しません。', 'usces' ) );
+		wp_die( __( 'Data does not exist.', 'usces' ) );
 
 	$datas = array();
 	foreach($post_data as $key => $value){

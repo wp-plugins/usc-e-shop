@@ -1390,7 +1390,9 @@ function usces_update_memberdata() {
 		}
 	}
 	
-	$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
+
+	//$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
+	$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'remise_pcid', 'digitalcheck_ip_user_id'" );
 	$query = $wpdb->prepare("DELETE FROM $member_table_meta_name WHERE member_id = %d AND meta_key IN( $meta_keys )", 
 			$_POST['member_id'] 
 			);
@@ -1400,7 +1402,6 @@ function usces_update_memberdata() {
 	//return $res;
 	return $result;
 //20100818ysk end
-		
 }
 
 function usces_delete_orderdata() {
@@ -2168,7 +2169,7 @@ function usces_check_acting_return() {
 			
 		case 'remise_card':
 			$results = $_POST;
-			if( $_REQUEST['acting_return'] && '   ' === $_REQUEST['X-ERRCODE'] ){
+			if( $_REQUEST['acting_return'] && ( isset($_REQUEST['X-ERRCODE']) && '   ' === $_REQUEST['X-ERRCODE'] ) ){
 				usces_log('remise card entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
 			}else{
@@ -3464,10 +3465,11 @@ function uesces_get_error_settlement( $out = '' ) {
 			　<br />
 			<a href="' . USCES_CUSTOMER_URL . '">もう一度決済を行う＞＞</a><br />';
 		}else{
+			$res .= '　<br />エラーコード：' . esc_html($_GET['err_code']);
 			$res .= '　<br />
 			カード番号を再入力する場合はこちらをクリックしてください。<br />
 			　<br />
-			<a href="' . USCES_CUSTOMER_URL . '">カード番号の再入力＞＞</a><br />';
+			<a href="' . USCES_CUSTOMER_URL . '&re-enter=1">カード番号の再入力＞＞</a><br />';
 		}
 		$res .= '　<br />
 		ゼウス・カスタマーサポート(24時間365日)<br />
@@ -3475,6 +3477,7 @@ function uesces_get_error_settlement( $out = '' ) {
 		E-mail:support@cardservice.co.jp
 		</div>'."\n";
 	}
+	$res = apply_filters( 'usces_filter_get_error_settlement', $res );
 	
 	if($out == 'return'){
 		return $res;
@@ -3534,8 +3537,8 @@ function usces_post_reg_orderdata($order_id, $results){
 				break;
 //20110208ysk end
 			case 'zeus_card':
+				$acting_opts = $usces->options['acting_settings']['zeus'];
 				if( isset($_GET['zeussuffix']) ){
-					$acting_opts = $usces->options['acting_settings']['zeus'];
 					$data['acting'] = 'zeus_card Secure API';
 					$data['order_number'] = $_GET['zeusordd'];
 					
@@ -3545,8 +3548,8 @@ function usces_post_reg_orderdata($order_id, $results){
 						if( 'on' == $acting_opts['quickcharge']){
 							$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
 						}
-						$usces->set_member_meta_value('partofcard', $_GET['zeussuffix']);
-						$usces->set_member_meta_value('limitofcard', ($_GET['zeusyear'].'/'.$_GET['zeusmonth']));
+						$usces->set_member_meta_value('zeus_partofcard', $_GET['zeussuffix']);
+						$usces->set_member_meta_value('zeus_limitofcard', ($_GET['zeusyear'].'/'.$_GET['zeusmonth']));
 					}
 				}else{
 					$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
@@ -3557,10 +3560,12 @@ function usces_post_reg_orderdata($order_id, $results){
 					if( !empty($_REQUEST['order_number']) ) {
 						$usces->set_order_meta_value( 'order_number', $_REQUEST['order_number'], $order_id );
 					}
-					if( $usces->is_member_logged_in() )
-						$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
+					if( $usces->is_member_logged_in() ) {
+						if( 'on' == $acting_opts['quickcharge'] ) {
+							$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
+						}
+					}
 				}
-//usces_log(print_r($_REQUEST,true), 'acting_transaction.log');
 				if(empty($usces)){
 					usces_log('zeus card transaction : No Session', 'acting_transaction.log');
 				}else{

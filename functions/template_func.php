@@ -1069,6 +1069,25 @@ function usces_point_rate( $post_id = NULL, $out = '' ){
 	}
 }
 
+function usces_point_rate_discount( $post_id = NULL, $out = '' ) {
+	global $post, $usces;
+	if( $post_id == NULL )
+		$post_id = $post->ID;
+
+	$str = get_post_meta( $post_id, '_itemPointrate', true );
+	$rate = (int)$str;
+	if( $usces->options['campaign_privilege'] == 'discount' ) {
+		if( in_category((int)$usces->options['campaign_category'], $post_id) ) {
+			$rate = $usces->options['privilege_discount'];
+		}
+	}
+	if( $out == 'return' ) {
+		return $rate;
+	} else {
+		echo $rate;
+	}
+}
+
 function usces_get_point( $post_id, $sku_code ){
 	global $usces;
 	if(  $post_id == NULL ){
@@ -2240,9 +2259,9 @@ function has_custom_customer_field_essential() {
 				if($entry['essential'] == 1) {
 					if(!array_key_exists($key, $essential)) {
 						if($entry['means'] == 2) {//Text
-							$mes .= __(esc_html($entry['name']).'を入力してください。', 'usces')."<br />";
+							$mes .= sprintf(__("Input the %s", 'usces'), esc_html($entry['name']))."<br />";
 						} else {
-							$mes .= __(esc_html($entry['name']).'を選択してください。', 'usces')."<br />";
+							$mes .= sprintf(__("Chose the %s", 'usces'), esc_html($entry['name']))."<br />";
 						}
 					}
 				}

@@ -548,7 +548,7 @@ function admin_prodauct_header(){
 	
 	if ( isset($_REQUEST['action'])){
 	
-		$suport_display = '<p>商品登録関連ドキュメント<br /><a href="http://www.welcart.com/documents/manual-2/%E6%96%B0%E8%A6%8F%E5%95%86%E5%93%81%E8%BF%BD%E5%8A%A0" target="_new">商品編集画面</a></p>';
+		$suport_display = '<p>'.__('Product registration documentation','usces').'<br /><a href="http://www.welcart.com/documents/manual-2/%E6%96%B0%E8%A6%8F%E5%95%86%E5%93%81%E8%BF%BD%E5%8A%A0" target="_new">'.__('Product editing screen','usces').'</a></p>';
 	
 		get_current_screen()->add_help_tab( array(
 			'id'      => 'suport-display',
@@ -657,14 +657,15 @@ function admin_new_prodauct_header(){
 //	);
 }
 
-function usces_clear_quickcharge(){
-		global $wpdb;
-		$table_name = $wpdb->prefix . 'usces_member_meta';
-$wpdb->show_errors();
-		$query = $wpdb->prepare("DELETE FROM $table_name WHERE meta_key = %s", 'zeus_pcid');
-		$res = $wpdb->query( $query );
-		
-		return $res;
+function usces_clear_quickcharge( $id ) {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'usces_member_meta';
+//$wpdb->show_errors();
+	$query = $wpdb->prepare( "DELETE FROM $table_name WHERE meta_key = %s", $id );
+usces_log($query,"clear.log");
+	$res = $wpdb->query( $query );
+
+	return $res;
 }
 
 function usces_get_order_number( $page ) {
@@ -672,19 +673,25 @@ function usces_get_order_number( $page ) {
 
 	$log = explode( "\r\n", $page );
 	$ordd = '';
-	//$flg = false;
 	foreach( (array)$log as $line ) {
-//usces_log('line='.$line, 'wcad.log');
-		//if( $flg ) {
-		//	$ordd = $line;
-		//	$flg = false;
-		//}
-		//if( 'Success_order' == $line ) $flg = true;
 		if( false !== strpos( $line, 'Success_order') ) {
 			list( $status, $ordd ) = explode( "\n", $line );
 		}
 	}
-//usces_log('ordd='.$ordd, 'wcad.log');
 	return $ordd;
 }
+
+function usces_get_err_code( $page ) {
+	if( empty($page) ) return '';
+
+	$log = explode( "\r\n", $page );
+	$err_code = '';
+	foreach( (array)$log as $line ) {
+		if( false !== strpos( $line, 'err_code') ) {
+			list( $name, $err_code ) = explode( "=", $line );
+		}
+	}
+	return $err_code;
+}
+
 ?>

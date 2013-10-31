@@ -173,15 +173,21 @@ function usces_action_acting_transaction(){
 		}
 		usces_log('zeus card cgi : '.print_r($data, true), 'acting_transaction.log');
 
-		$acting_opts = $usces->options['acting_settings']['zeus'];
-
 		$rand = $_GET['sendpoint'];
 		if( empty($rand) ){
 			usces_log('zeus card error1 : '.print_r($data, true), 'acting_transaction.log');
 			die('error1');
 		}
-		
+
 		if( 'OK' == $_REQUEST['result'] ){
+			$acting_opts = $usces->options['acting_settings']['zeus'];
+			if( $usces->is_member_logged_in() ) {
+				if( 'on' == $acting_opts['quickcharge'] ) {
+					$usces->set_member_meta_value( 'zeus_pcid', '8888888888888888' );
+				}
+				if( isset($_GET['cardnumber']) ) $usces->set_member_meta_value( 'zeus_partofcard', $_GET['cardnumber'] );
+			}
+
 			header("HTTP/1.0 200 OK");
 			die('zeus');
 		}else{
@@ -840,12 +846,14 @@ function usces_action_acting_transaction(){
 		$stran = ( array_key_exists('stran', $_REQUEST) ) ? $_REQUEST['stran'] : '';
 		$mbtran = ( array_key_exists('mbtran', $_REQUEST) ) ? $_REQUEST['mbtran'] : '';
 		$rsltcd = ( array_key_exists('rsltcd', $_REQUEST) ) ? $_REQUEST['rsltcd'] : '';
+		$rsltdcd = ( array_key_exists('rsltdcd', $_REQUEST) ) ? $_REQUEST['rsltdcd'] : '';
 		$permalink_structure = get_option( 'permalink_structure' );
 		$delim = ( !$usces->use_ssl && $permalink_structure ) ? '?' : '&';
 		if( '108' == substr($rsltcd, 0, 3) or '208' == substr($rsltcd, 0, 3) or '308' == substr($rsltcd, 0, 3 ) ) {//キャンセル
 			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
 		} elseif( '109' == substr($rsltcd, 0, 3) or '209' == substr($rsltcd, 0, 3) or '309' == substr($rsltcd, 0, 3) ) {//エラー
-			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+			usces_log( 'mizuho card : '.print_r( $_GET, true ), 'acting_transaction.log' );
+			header( 'location: '.USCES_CART_URL.$delim.'acting=mizuho_card&acting_return=0&rsltdcd='.$rsltdcd );
 		} else {
 			header( 'location: '.USCES_CART_URL.$delim.'acting=mizuho_card&acting_return=1&stran='.$stran.'&mbtran='.$mbtran.'&rsltcd='.$rsltcd );
 		}
@@ -853,7 +861,7 @@ function usces_action_acting_transaction(){
 
 	//*** mizuho conv ***//
 	} elseif( ( isset($_GET['p_ver']) && $_GET['p_ver'] == '0200' ) && ( isset($_GET['bkcode']) && ( $_GET['bkcode'] == 'cv01' or $_GET['bkcode'] == 'cv02' ) ) ) {
-		usces_log('mizuho conv : '.print_r($_GET,true),'mizuho.log');
+		//usces_log('mizuho conv : '.print_r($_GET,true),'mizuho.log');
 		$stran = ( array_key_exists('stran', $_REQUEST) ) ? $_REQUEST['stran'] : '';
 		$mbtran = ( array_key_exists('mbtran', $_REQUEST) ) ? $_REQUEST['mbtran'] : '';
 		$bktrans = ( array_key_exists('bktrans', $_REQUEST) ) ? $_REQUEST['bktrans'] : '';
@@ -899,13 +907,15 @@ function usces_action_acting_transaction(){
 				}
 
 			} else {
-				header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+				//header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+				usces_log( 'mizuho conv : '.print_r( $_GET, true ), 'acting_transaction.log' );
 			}
 
 		} elseif( '108' == substr($rsltcd, 0, 3) or '208' == substr($rsltcd, 0, 3) or '308' == substr($rsltcd, 0, 3) ) {//キャンセル
 			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
 		} elseif( '109' == substr($rsltcd, 0, 3) or '209' == substr($rsltcd, 0, 3) or '309' == substr($rsltcd, 0, 3) ) {//エラー
-			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+			usces_log( 'mizuho conv : '.print_r( $_GET, true ), 'acting_transaction.log' );
+			header( 'location: '.USCES_CART_URL.$delim.'acting=mizuho_card&acting_return=0' );
 		} else {
 			header( 'location: '.USCES_CART_URL.$delim.'acting=mizuho_conv&acting_return=1&stran='.$stran.'&mbtran='.$mbtran.'&bktrans='.$_GET['bktrans'].'&tranid='.$tranid.'&rsltcd='.$rsltcd );
 		}

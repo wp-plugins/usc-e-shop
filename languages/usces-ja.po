@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2013-08-27 15:10+0900\n"
+"PO-Revision-Date: 2013-10-30 13:18+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -3569,3 +3569,54 @@ msgstr "会員削除お客様メール"
 
 msgid "Member removal processing was completed."
 msgstr "退会処理が完了しました"
+
+msgid "Change the credit card is here >>"
+msgstr "クレジットカード変更はこちら≫"
+
+msgid "Credit card information"
+msgstr "クレジットカード情報"
+
+msgid "Credit card update"
+msgstr "クレジットカード更新"
+
+msgid "Back to the member page."
+msgstr "会員情報ページヘ戻る"
+
+msgid "Delivery method is incorrect. Can not specify an international flight."
+msgstr "配送方法が誤っています。国際便は指定できません。"
+
+msgid "Delivery method is incorrect. Specify the international flights."
+msgstr "配送方法が誤っています。国際便を指定してください。"
+
+msgid "Failure"
+msgstr "不履行"
+
+msgid "Settlement was not completed."
+msgstr "決済が完了しませんでした。"
+
+msgid "Member Services is not running currently."
+msgstr "只今会員サービスは提供いたしておりません。"
+
+msgid "Product registration documentation"
+msgstr "商品登録関連ドキュメント"
+
+msgid "Product editing screen"
+msgstr "商品編集画面"
+
+msgid "Data does not exist."
+msgstr "データが存在しません。"
+
+msgid "SKU code is duplicated."
+msgstr "SKUコードが重複しています。"
+
+msgid "SKU code is invalid."
+msgstr "SKUコードの値が不正です。"
+
+msgid "SKU of invalid selling price exists."
+msgstr "売価の値が不正なSKUが存在します。"
+
+msgid "Registration of the product is complete."
+msgstr "商品の登録が完了しました。"
+
+msgid "The update was completed."
+msgstr "更新しました。"

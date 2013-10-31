@@ -282,15 +282,27 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$acting_opts = $usces->options['acting_settings']['remise'];
 			$usces->save_order_acting_data($rand);
 			$send_url = ('public' == $acting_opts['conv_pc_ope']) ? $acting_opts['send_url_cvs_pc'] : $acting_opts['send_url_cvs_pc_test'];
+			$kana1 = ( !empty($usces_entries['customer']['name3']) ) ? $usces_entries['customer']['name3'] : '';
+			if( !empty($kana1) ) {
+				$kana1 = str_replace( "・", "", str_replace( "　", "", mb_convert_kana( $kana1, "KVC" ) ) );
+				$kana1 = mb_substr( $kana1, 0, 20 );
+				if( !mb_ereg( "^[ァ-ヶー]+$", $kana1 ) ) $kana1 = '';
+			}
+			$kana2 = ( !empty($usces_entries['customer']['name4']) ) ? $usces_entries['customer']['name4'] : '';
+			if( !empty($kana2) ) {
+				$kana2 = str_replace( "・", "", str_replace( "　", "", mb_convert_kana( $kana2, "KVC" ) ) );
+				$kana2 = mb_substr( $kana2, 0, 20 );
+				if( !mb_ereg( "^[ァ-ヶー]+$", $kana2 ) ) $kana2 = '';
+			}
 			$html .= '<form id="purchase_form" name="purchase_form" action="' . $send_url . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
 				<input type="hidden" name="SHOPCO" value="' . esc_attr($acting_opts['SHOPCO']) . '" />
 				<input type="hidden" name="HOSTID" value="' . esc_attr($acting_opts['HOSTID']) . '" />
 				<input type="hidden" name="REMARKS3" value="' . $acting_opts['REMARKS3'] . '" />
 				<input type="hidden" name="S_TORIHIKI_NO" value="' . $rand . '" />
-				<input type="hidden" name="NAME1" value="' . esc_attr($usces_entries['customer']['name1']) . '" />
-				<input type="hidden" name="NAME2" value="' . esc_attr($usces_entries['customer']['name2']) . '" />
-				<input type="hidden" name="KANA1" value="' . esc_attr($usces_entries['customer']['name3']) . '" />
-				<input type="hidden" name="KANA2" value="' . esc_attr($usces_entries['customer']['name4']) . '" />
+				<input type="hidden" name="NAME1" value="' . esc_attr(mb_substr($usces_entries['customer']['name1'], 0, 20)) . '" />
+				<input type="hidden" name="NAME2" value="' . esc_attr(mb_substr($usces_entries['customer']['name2'], 0, 20)) . '" />
+				<input type="hidden" name="KANA1" value="' . esc_attr($kana1) . '" />
+				<input type="hidden" name="KANA2" value="' . esc_attr($kana2) . '" />
 				<input type="hidden" name="YUBIN1" value="' . esc_attr(substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 0, 3)) . '" />
 				<input type="hidden" name="YUBIN2" value="' . esc_attr(substr(str_replace('-', '', $usces_entries['customer']['zipcode']), 3, 4)) . '" />
 				<input type="hidden" name="ADD1" value="' . esc_attr($usces_entries['customer']['pref'] . $usces_entries['customer']['address1']) . '" />
@@ -461,7 +473,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$pref = apply_filters( 'usces_filter_paypalec_shiptostate', esc_attr($usces_entries['delivery']['pref']) );
 			$country = ( !empty($usces_entries['delivery']['country']) ) ? $usces_entries['delivery']['country'] : usces_get_base_country();
 			$country_code = apply_filters( 'usces_filter_paypalec_shiptocountrycode', $country );
-			$zip = apply_filters( 'usces_filter_paypalec_shiptozip', str_replace('-', '', $usces_entries['delivery']['zipcode']) );
+			$zip = apply_filters( 'usces_filter_paypalec_shiptozip', $usces_entries['delivery']['zipcode'] );
 			$tel = apply_filters( 'usces_filter_paypalec_shiptophonenum', ltrim(str_replace('-', '', $usces_entries['delivery']['tel']), '0') );
 			$html .= '<form id="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="SHIPTONAME" value="'.$name.'">

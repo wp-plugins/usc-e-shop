@@ -1,4 +1,4 @@
-<?PHP
+<?php
 global $usces;
 require_once(USCES_PLUGIN_DIR.'/classes/fpdf/mbfpdi.php');
 require_once(USCES_PLUGIN_DIR.'/classes/orderData.class.php');
@@ -6,7 +6,7 @@ require_once(USCES_PLUGIN_DIR.'/classes/orderData.class.php');
 //用紙サイズ(B5)
 // MBfpdiクラスのインスタンス生成
 if(isset($usces->options['print_size']) && $usces->options['print_size'] == 'A4')
-	$pdf = new MBfpdi('P', 'mm', array(201, 297));
+	$pdf = new MBfpdi('P', 'mm', array(210, 297));
 else
 	$pdf = new MBfpdi('P', 'mm', array(182, 257));
 
@@ -123,7 +123,6 @@ function usces_pdf_out(&$pdf, $data){
 		$cartItemName = $usces->getCartItemName($post_id, $sku);
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
-			$optstr = '';
 			foreach($cart_row['options'] as $key => $value){
 //20110629ysk start 0000190
 				//if( !empty($key) )
@@ -247,7 +246,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 				else
 					$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['modified']));
 			}
-			$effective_date = apply_filters('usces_filter_pdf_effective_date', $effective_date);
+			//$effective_date = apply_filters('usces_filter_pdf_effective_date', $effective_date);
 //20120801ysk end
 			break;
 
@@ -463,7 +462,7 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(127.2, 94.9);
 	$pdf->MultiCell(15.0, $lineheight, usces_conv_euc(__('Price','usces')), $border, 'C');
 	$pdf->SetXY(142.9, 94.9);
-	$pdf->MultiCell(22.4, $lineheight, usces_conv_euc(__('Amount','usces').'('.usces_crcode('return').')'), $border, 'C');
+	$pdf->MultiCell(22.4, $lineheight, usces_conv_euc(__('Amount','usces').'('.__(usces_crcode( 'return' ), 'usces').')'), $border, 'C');
 
 	// Footer label
 	$pdf->SetXY(104.3, 198.8);
