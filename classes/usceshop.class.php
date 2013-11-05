@@ -473,7 +473,6 @@ class usc_e_shop
 
 	/******************************************************************************/
 	function add_pages() {
-
 	
 		add_object_page('Welcart Shop', 'Welcart Shop', 'level_6', USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
 		add_submenu_page(USCES_PLUGIN_BASENAME, __('Home','usces'), __('Home','usces'), 'level_6', USCES_PLUGIN_BASENAME, array($this, 'admin_top_page'));
@@ -4252,7 +4251,7 @@ class usc_e_shop
 					'shipping_charge' => $value->order_shipping_charge,
 					'cod_fee' => $value->order_cod_fee,
 					'tax' => $value->order_tax,
-					'end_price' => $value->order_item_total_price - ($value->order_getpoint*$usces->options['system']['pointreduction']) + $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
+					'end_price' => $value->order_item_total_price - $value->order_usedpoint + $value->order_discount + $value->order_shipping_charge + $value->order_cod_fee + $value->order_tax,
 					'status' => $value->order_status,
 					'date' => mysql2date(__('Y/m/d'), $value->order_date),
 					'modified' => mysql2date(__('Y/m/d'), $value->order_modified)

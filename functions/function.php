@@ -699,6 +699,7 @@ function usces_lostmail($url) {
 			'message' => do_shortcode($message),
 			);
 
+	$para1 = apply_filters( 'usces_filter_send_lostmail_para1', $para1 );
 	$res = usces_send_mail( $para1 );
 	
 	if($res === false) {
