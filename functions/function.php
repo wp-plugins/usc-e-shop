@@ -1421,19 +1421,19 @@ function usces_delete_orderdata() {
 	//$order_res = $wpdb->get_row( $query, ARRAY_A );
 	//$restore_point = false;
 	$point = 0;
-	if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] ) {
-		if( !empty($order_data->mem_id) && 0 < $order_data->order_getpoint ) {
-			if( $usces->is_status('completion', $order_data->order_status) ) {
-				//$restore_point = true;
-				$point += $order_data->order_getpoint;
-			} else {
+	if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($order_data->mem_id) && !$usces->is_status('cancel', $order_data->order_status) ) {
+		if( 0 < $order_data->order_getpoint ) {
+			//if( $usces->is_status('completion', $order_data->order_status) ) {
+			//	//$restore_point = true;
+			//	$point += $order_data->order_getpoint;
+			//} else {
 				if( usces_is_complete_settlement( $order_data->order_payment_name, $order_data->order_status ) || $usces->is_status('receipted', $order_data->order_status) ) {
 					//$restore_point = true;
 					$point += $order_data->order_getpoint;
 				}
-			}
+			//}
 		}
-		if( !empty($order_data->mem_id) && 0 < $order_data->order_usedpoint ) {
+		if( 0 < $order_data->order_usedpoint ) {
 			$point -= $order_data->order_usedpoint;
 		}
 	}
@@ -1569,14 +1569,28 @@ function usces_update_orderdata() {
 
 		$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
 		$new_orderdata = $wpdb->get_row( $query );
-		
+
 		do_action('usces_action_update_orderdata', $new_orderdata, $old_status, $old_orderdata);
 		$usces->cart->crear_cart();
-		
+
+//20131101ysk start 0000751
+		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($member_id) && !$usces->is_status('cancel', $old_status) ) {
+			$point = 0;
+			if( 0 < $old_orderdata->order_getpoint ) {
+				if( usces_is_complete_settlement( $old_orderdata->order_payment_name, $old_orderdata->order_status ) || $usces->is_status('receipted', $old_orderdata->order_status) ) {
+					$point += $old_orderdata->order_getpoint;
+				}
+			}
+			if( 0 < $old_orderdata->order_usedpoint ) {
+				$point -= $old_orderdata->order_usedpoint;
+			}
+			if( 0 != $point ) usces_restore_point( $member_id, $point );
+		}
+//20131101ysk end
+
 		return 1;
 	}
 
-	
 //$wpdb->show_errors();
 //20101208ysk start
 	$query = $wpdb->prepare(
@@ -1703,14 +1717,51 @@ function usces_update_orderdata() {
 	}else if ( preg_match('/pending|noreceipt/', $old_status) && !preg_match('/pending|noreceipt/', $status) ) {
 		$usces->set_order_meta_value('receipted_date', $value, $ID);
 	}
-	
-	if( !usces_is_complete_settlement( $_POST['offer']['payment_name'] ) ) {
-		if( !preg_match('/pending|noreceipt/', $old_status) && preg_match('/pending|noreceipt/', $status) ) {//入金→未入金
-			usces_action_acting_getpoint( $ID, false );//ポイント取消
-		} else if( preg_match('/pending|noreceipt/', $old_status) && !preg_match('/pending|noreceipt/', $status) ) {//未入金→入金
-			usces_action_acting_getpoint( $ID );//ポイント追加
+
+//20131101ysk start 0000751
+	//if( !usces_is_complete_settlement( $_POST['offer']['payment_name'] ) ) {
+	//	if( !preg_match('/pending|noreceipt/', $old_status) && preg_match('/pending|noreceipt/', $status) ) {//入金→未入金
+	//		usces_action_acting_getpoint( $ID, false );//ポイント取消
+	//	} else if( preg_match('/pending|noreceipt/', $old_status) && !preg_match('/pending|noreceipt/', $status) ) {//未入金→入金
+	//		usces_action_acting_getpoint( $ID );//ポイント追加
+	//	}
+	//}
+	if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($member_id) ) {
+		$point = 0;
+		$getpoint = $_POST['offer']['getpoint'];
+		$usedpoint = $_POST['offer']['usedpoint'];
+		if( $usces->is_status('cancel', $old_status) && !$usces->is_status('cancel', $status) ) {//キャンセル→新規受付・取り寄せ中・発送済み
+			if( 0 < $getpoint ) {
+				if( usces_is_complete_settlement( $_POST['offer']['payment_name'], $status ) || $usces->is_status('receipted', $status) ) {
+					$point -= $getpoint;
+				}
+			}
+			if( 0 < $usedpoint ) {
+				$point += $usedpoint;
+			}
+		} else {
+			if( !usces_is_complete_settlement( $_POST['offer']['payment_name'] ) ) {
+				if( !preg_match('/pending|noreceipt/', $old_status) && preg_match('/pending|noreceipt/', $status) ) {//入金→未入金
+					$point += $getpoint;//ポイント取消
+				} else if( preg_match('/pending|noreceipt/', $old_status) && !preg_match('/pending|noreceipt/', $status) ) {//未入金→入金
+					$point -= $getpoint;//ポイント追加
+				} else {
+					if( $old_orderdata->order_getpoint != $getpoint ) {
+						$point += $old_orderdata->order_getpoint - $getpoint;
+					}
+				}
+			} else {
+				if( $old_orderdata->order_getpoint != $getpoint ) {
+					$point += $old_orderdata->order_getpoint - $getpoint;
+				}
+			}
+			if( $old_orderdata->order_usedpoint != $usedpoint ) {
+				$point -= $old_orderdata->order_usedpoint - $usedpoint;
+			}
 		}
+		if( 0 != $point ) usces_restore_point( $member_id, $point );
 	}
+//20131101ysk end
 
 	$result = ( 0 < array_sum($res) ) ? 1 : 0;
 //20100818ysk end
@@ -1847,6 +1898,7 @@ function usces_all_change_order_reciept(&$obj){
 		$statusstr = $order_res['order_status'];
 		$restore_point = false;
 		$getpoint = $order_res['order_getpoint'];
+		if( strpos($statusstr, 'cancel') !== false ) continue;//20131101ysk 0000751
 //20120306ysk end
 		if(strpos($statusstr, 'noreceipt') === false && strpos($statusstr, 'receipted') === false) continue;
 		$old_status = $statusstr;//20120612ysk 0000501
@@ -1907,11 +1959,12 @@ function usces_all_change_order_status(&$obj){
 //20120306ysk start 0000324
 		//$query = $wpdb->prepare("SELECT order_status FROM $tableName WHERE ID = %d", $id);
 		//$statusstr = $wpdb->get_var( $query );
-		$query = $wpdb->prepare("SELECT order_status, mem_id, order_getpoint, order_payment_name FROM $tableName WHERE ID = %d", $id);
+		$query = $wpdb->prepare("SELECT order_status, mem_id, order_getpoint, order_usedpoint, order_payment_name FROM $tableName WHERE ID = %d", $id);
 		$order_res = $wpdb->get_row( $query, ARRAY_A );
 		$statusstr = $order_res['order_status'];
 		$restore_point = false;
 		$getpoint = $order_res['order_getpoint'];
+		$usedpoint = $order_res['order_usedpoint'];
 //20120306ysk end
 		$old_status = $statusstr;//20120612ysk 0000501
 		switch ($_REQUEST['change']['word']['order_status']) {
@@ -1970,8 +2023,10 @@ function usces_all_change_order_status(&$obj){
 //20120919ysk start 0000573
 				if( usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) ) {
 					$restore_point = true;
+					$usedpoint = $usedpoint * -1;//add point
 				} elseif( $usces->is_status('receipted', $order_res['order_status']) ) {
 					$restore_point = true;
+					$usedpoint = $usedpoint * -1;//add point
 				}
 //20120919ysk end
 				break;
@@ -2031,8 +2086,8 @@ function usces_all_change_order_status(&$obj){
 		}
 //20120306ysk start 0000324
 		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] ) {
-			if( !empty($order_res['mem_id']) && 0 < $order_res['order_getpoint'] ) {
-				if( $res && $restore_point ) usces_restore_point( $order_res['mem_id'], $getpoint );
+			if( !empty($order_res['mem_id']) && ( 0 < $order_res['order_getpoint'] || 0 < $order_res['order_usedpoint'] ) ) {
+				if( $res && $restore_point ) usces_restore_point( $order_res['mem_id'], $getpoint + $usedpoint );
 			}
 		}
 //20120306ysk end
@@ -2066,10 +2121,10 @@ function usces_all_delete_order_data(&$obj){
 //20120306ysk start 0000324
 		//$restore_point = false;
 		$point = 0;
-		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] ) {
+		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($order_res['mem_id']) && !$usces->is_status('cancel', $order_res['order_status']) ) {
 			$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
 			$order_res = $wpdb->get_row( $query, ARRAY_A );
-			if( !empty($order_res['mem_id']) && 0 < $order_res['order_getpoint'] ) {
+			if( 0 < $order_res['order_getpoint'] ) {
 				//if( $usces->is_status('completion', $order_res['order_status']) ) {
 				//	$restore_point = true;
 				//} else {
@@ -2078,7 +2133,7 @@ function usces_all_delete_order_data(&$obj){
 						$point += $order_res['order_getpoint'];
 				//}
 			}
-			if( !empty($order_res['mem_id']) && 0 < $order_res['order_usedpoint'] ) {
+			if( 0 < $order_res['order_usedpoint'] ) {
 				$point -= $order_res['order_usedpoint'];
 			}
 		}
@@ -4069,29 +4124,33 @@ function usces_get_gp_price($post_id, $p, $quant){
 }
 //20120306ysk start 0000324
 function usces_is_complete_settlement( $payment_name, $status = '' ) {
+	$complete = false;
 //20120919ysk start 0000573
 	$options = get_option('usces');
 	if( $options['point_assign'] == 0 ) {
-		return true;
+		$complete = true;
 //20120919ysk end
 	} else {
 		$payments = usces_get_system_option( 'usces_payment_method', 'name' );
 		if( isset($payments[$payment_name]['settlement']) ) {
 			switch( $payments[$payment_name]['settlement'] ) {
 			case 'acting':
-				if( $status == 'pending' ) break;
+				if( false !== strpos( $status, 'pending' ) ) break;
 			case 'acting_zeus_card':
 			case 'acting_remise_card':
 			case 'acting_jpayment_card':
 			case 'acting_paypal_ec':
 			case 'acting_sbps_card':
 			case 'acting_telecom_card':
+			case 'acting_digitalcheck_card':
+			case 'acting_mizuho_card':
 			case 'COD':
-				return true;
+				$complete = true;
 			}
 		}
-		return false;
 	}
+	$complete = apply_filters( 'usces_filter_is_complete_settlement', $complete, $payment_name, $status );
+	return $complete;
 }
 
 function usces_action_acting_getpoint( $order_id, $add = true ) {
@@ -4135,8 +4194,8 @@ function usces_restore_point( $mem_id, $point ) {
 		return;
 
 	$member_table_name = $wpdb->prefix . "usces_member";
-	$mquery = $wpdb->prepare("UPDATE $member_table_name SET mem_point = (mem_point - %d) WHERE ID = %d", $point, $mem_id);
-	$wpdb->query( $mquery );
+	$query = $wpdb->prepare( "UPDATE $member_table_name SET mem_point = (mem_point - %d) WHERE ID = %d", $point, $mem_id );
+	$wpdb->query( $query );
 }
 //20120306ysk end
 //20120413ysk start

@@ -1076,9 +1076,9 @@ function usces_point_rate_discount( $post_id = NULL, $out = '' ) {
 
 	$str = get_post_meta( $post_id, '_itemPointrate', true );
 	$rate = (int)$str;
-	if( $usces->options['campaign_privilege'] == 'discount' ) {
+	if( $usces->options['campaign_privilege'] == 'point' ) {
 		if( in_category((int)$usces->options['campaign_category'], $post_id) ) {
-			$rate = $usces->options['privilege_discount'];
+			$rate *= $usces->options['privilege_point'];
 		}
 	}
 	if( $out == 'return' ) {

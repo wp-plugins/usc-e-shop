@@ -121,6 +121,7 @@ class usc_e_shop
 		if(!isset($this->options['acting_settings']['remise'])) $this->options['acting_settings']['remise'] = array('activate'=>'','plan'=>'','SHOPCO'=>'','HOSTID'=>'','card_activate'=>'','card_jb'=>'', 'payquick'=>'','howpay'=>'','continuation'=>'','card_pc_ope'=>'','send_url_pc'=>'','conv_activate'=>'','S_PAYDATE'=>'','conv_pc_ope'=>'','send_url_cvs_pc'=>'');
 		if(!isset($this->options['acting_settings']['jpayment'])) $this->options['acting_settings']['jpayment'] = array('activate'=>'','aid'=>'','card_activate'=>'','card_jb'=>'','conv_activate'=>'','webm_activate'=>'', 'bitc_activate'=>'','suica_activate'=>'','bank_activate'=>'');
 		if(!isset($this->options['acting_settings']['paypal'])) $this->options['acting_settings']['paypal'] = array('activate'=>'','ec_activate'=>'','sandbox'=>'','user'=>'','pwd'=>'','signature'=>'', 'continuation'=>'');
+		$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
 
 //20010420ysk start
 		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
@@ -1321,7 +1322,7 @@ class usc_e_shop
 					$options['acting_settings']['sbps']['service_id'] = isset($_POST['service_id']) ? $_POST['service_id'] : '';
 					$options['acting_settings']['sbps']['hash_key'] = isset($_POST['hash_key']) ? $_POST['hash_key'] : '';
 					$options['acting_settings']['sbps']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
-					$options['acting_settings']['sbps']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
+					//$options['acting_settings']['sbps']['send_url'] = isset($_POST['send_url']) ? $_POST['send_url'] : '';
 					$options['acting_settings']['sbps']['send_url_check'] = isset($_POST['send_url_check']) ? $_POST['send_url_check'] : '';
 					$options['acting_settings']['sbps']['send_url_test'] = isset($_POST['send_url_test']) ? $_POST['send_url_test'] : '';
 					$options['acting_settings']['sbps']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
@@ -1346,8 +1347,8 @@ class usc_e_shop
 						$mes .= '※サービスIDを入力して下さい<br />';
 					if( WCUtils::is_blank($_POST['hash_key']) )
 						$mes .= '※Hash KEYを入力して下さい<br />';
-					if( isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url']) )
-						$mes .= '※本番URLを入力して下さい<br />';
+					//if( isset($_POST['ope']) && 'public' == $_POST['ope'] && empty($_POST['send_url']) )
+					//	$mes .= '※本番URLを入力して下さい<br />';
 
 					if( WCUtils::is_blank($mes) ){
 						$this->action_status = 'success';

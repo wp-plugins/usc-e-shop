@@ -586,12 +586,13 @@ function toggleVisibility(id) {
 				<td><input name="ope" type="radio" id="ope_sbps_3" value="public"<?php if( isset($opts['sbps']['ope']) && $opts['sbps']['ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_sbps_3">本番環境</label></td>
 				<td><div id="ex_ope_sbps" class="explanation"><?php _e('動作環境を切り替えます。', 'usces'); ?></div></td>
 			</tr>
+<!--
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_send_url_sbps');"><?php _e('本番URL', 'usces'); ?></a></th>
 				<td colspan="6"><input name="send_url" type="text" id="send_url_sbps" value="<?php echo esc_html(isset($opts['sbps']['send_url']) ? $opts['sbps']['send_url'] : ''); ?>" size="50" /></td>
 				<td><div id="ex_send_url_sbps" class="explanation"><?php _e('本番環境で接続するURLを設定します。「購入要求（画面遷移要求）」に示されるURLを入力してください。', 'usces'); ?></div></td>
 			</tr>
-		</table>
+-->		</table>
 		<table class="settle_table">
 			<tr>
 				<th>クレジットカード決済</th>

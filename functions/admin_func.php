@@ -662,7 +662,6 @@ function usces_clear_quickcharge( $id ) {
 	$table_name = $wpdb->prefix . 'usces_member_meta';
 //$wpdb->show_errors();
 	$query = $wpdb->prepare( "DELETE FROM $table_name WHERE meta_key = %s", $id );
-usces_log($query,"clear.log");
 	$res = $wpdb->query( $query );
 
 	return $res;
