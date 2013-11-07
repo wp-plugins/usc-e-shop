@@ -271,6 +271,8 @@ function usces_order_confirm_message($order_id) {
 		case 'otherConfirmMail':
 			$message = do_shortcode($mail_data['header']['othermail']) . apply_filters('usces_filter_order_confirm_mail_body_after', $msg_body, $data) . do_shortcode($mail_data['footer']['othermail']);
 			break;
+		default:
+			$message = apply_filters( 'usces_filter_order_confirm_mail_body_after', $msg_body, $data );
 	}
 	return apply_filters('usces_filter_order_confirm_mail_message', $message, $data);
 

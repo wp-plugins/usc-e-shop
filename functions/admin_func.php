@@ -673,8 +673,10 @@ function usces_get_order_number( $page ) {
 	$log = explode( "\r\n", $page );
 	$ordd = '';
 	foreach( (array)$log as $line ) {
-		if( false !== strpos( $line, 'Success_order') ) {
-			list( $status, $ordd ) = explode( "\n", $line );
+		//if( false !== strpos( $line, 'Success_order' ) ) {
+		if( false !== strpos( $line, 'ordd' ) ) {
+			//list( $status, $ordd ) = explode( "\n", $line );
+			list( $status, $ordd ) = explode( "=", $line );
 		}
 	}
 	return $ordd;
@@ -686,7 +688,7 @@ function usces_get_err_code( $page ) {
 	$log = explode( "\r\n", $page );
 	$err_code = '';
 	foreach( (array)$log as $line ) {
-		if( false !== strpos( $line, 'err_code') ) {
+		if( false !== strpos( $line, 'err_code' ) ) {
 			list( $name, $err_code ) = explode( "=", $line );
 		}
 	}
