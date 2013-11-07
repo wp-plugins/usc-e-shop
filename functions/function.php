@@ -1573,9 +1573,6 @@ function usces_update_orderdata() {
 		$query = $wpdb->prepare("SELECT * FROM $order_table_name WHERE ID = %d", $ID);
 		$new_orderdata = $wpdb->get_row( $query );
 
-		do_action('usces_action_update_orderdata', $new_orderdata, $old_status, $old_orderdata);
-		$usces->cart->crear_cart();
-
 //20131101ysk start 0000751
 		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($member_id) && !$usces->is_status('cancel', $old_status) ) {
 			$point = 0;
@@ -1590,6 +1587,9 @@ function usces_update_orderdata() {
 			if( 0 != $point ) usces_restore_point( $member_id, $point );
 		}
 //20131101ysk end
+
+		do_action('usces_action_update_orderdata', $new_orderdata, $old_status, $old_orderdata);
+		$usces->cart->crear_cart();
 
 		return 1;
 	}
