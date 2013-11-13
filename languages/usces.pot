@@ -1170,7 +1170,6 @@ msgstr "下記の通りご注文をお受けいたしましたのでご確認を
 msgid "We will inform you by e-mail when we are ready to ship ordered items to you."
 msgstr "商品の準備ができ次第、メールにて発送のご案内をさせていただきます。よろしくお願いいたします。"
 
-
 msgid "There is new order by %s."
 msgstr "%s の注文が入りました。"
 
@@ -3312,4 +3311,13 @@ msgstr "商品の登録が完了しました。"
 
 msgid "The update was completed."
 msgstr "更新しました。"
+
+msgid "Confirmation of credit card update"
+msgstr "【クレジットカード更新の確認】"
+
+msgid "Your credit card information has been updated."
+msgstr "クレジットカード情報が更新されました。"
+
+msgid "If you have not requested this email, sorry to trouble you, but please contact us."
+msgstr "このメールにお心当たりが無い場合は、お手数ですがご連絡いただきますようお願いいたします。"
 

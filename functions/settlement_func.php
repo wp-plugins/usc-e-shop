@@ -101,7 +101,10 @@ function usces_member_update_settlement_form() {
 				$usces->error_message = '';
 				$message = __( 'The update was completed.', 'usces' );
 				$partofcard = substr( $_POST['cnum1'], -4 );
+				$limitofcard = $_POST['expmm'].'/'.substr( $_POST['expyy'], -2 );
 				$usces->set_member_meta_value( 'zeus_partofcard', $partofcard );
+				$usces->set_member_meta_value( 'zeus_limitofcard', $limitofcard );
+				usces_send_update_settlement_mail();
 			} else {
 				$err_code = usces_get_err_code( $page );
 				usces_log( 'zeus card : Certification Error : '.$err_code, 'acting_transaction.log' );
@@ -249,6 +252,49 @@ function usces_member_update_settlement_form() {
 	ob_end_clean();
 
 	echo $r;
+}
+
+function usces_send_update_settlement_mail() {
+	global $usces;
+
+	$member = $usces->get_member();
+	$mail_data = $usces->options['mail_data'];
+
+	$subject = apply_filters( 'usces_filter_send_update_settlement_mail_subject', __('Confirmation of credit card update', 'usces'), $member );
+	$mail_header = __('Your credit card information has been updated.','usces')."\r\n\r\n";
+	$mail_footer = $mail_data['footer']['thankyou'];
+	$name = usces_localized_name( $member['name1'], $member['name2'], 'return' );
+
+	$message = '--------------------------------'."\r\n";
+	$message .= __('Member ID', 'usces').' : '.$member['ID']."\r\n";
+	$message .= __('Name', 'usces').' : '.sprintf( __('Mr/Mrs %s', 'usces'), $name )."\r\n";
+	$message .= __('e-mail adress', 'usces').' : '.$member['mailaddress1']."\r\n";
+	$message .= '--------------------------------'."\r\n\r\n";
+	$message .= __('If you have not requested this email, sorry to trouble you, but please contact us.', 'usces')."\r\n\r\n";
+	$message = apply_filters( 'usces_filter_send_update_settlement_mail_message', $message, $member );
+	$message = apply_filters( 'usces_filter_send_update_settlement_mail_message_head', $mail_header, $member ).$message.apply_filters( 'usces_filter_send_update_settlement_mail_message_foot', $mail_footer, $member )."\n";
+
+	$send_para = array(
+		'to_name' => sprintf( __('Mr/Mrs %s', 'usces'), $name ),
+		'to_address' => $member['mailaddress1'],
+		'from_name' => get_option('blogname'),
+		'from_address' => $usces->options['sender_mail'],
+		'return_path' => $usces->options['sender_mail'],
+		'subject' => $subject,
+		'message' => $message
+	);
+	usces_send_mail( $send_para );
+
+	$admin_para = array(
+		'to_name' => 'Shop Admin',
+		'to_address' => $usces->options['order_mail'],
+		'from_name' => 'Welcart Auto BCC',
+		'from_address' => $usces->options['sender_mail'],
+		'return_path' => $usces->options['sender_mail'],
+		'subject' => $subject,
+		'message' => $message
+	);
+	usces_send_mail( $admin_para );
 }
 
 ?>
