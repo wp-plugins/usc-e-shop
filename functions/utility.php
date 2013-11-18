@@ -1438,6 +1438,7 @@ function usces_download_order_list() {
 	$chk_ord['delidue_date'] = (isset($_REQUEST['check']['delidue_date'])) ? 1 : 0;
 	$chk_ord['status'] = (isset($_REQUEST['check']['status'])) ? 1 : 0;
 	$chk_ord['total_amount'] = 1;
+	$chk_ord['getpoint'] = (isset($_REQUEST['check']['getpoint'])) ? 1 : 0;
 	$chk_ord['usedpoint'] = (isset($_REQUEST['check']['usedpoint'])) ? 1 : 0;
 	$chk_ord['discount'] = 1;
 	$chk_ord['shipping_charge'] = 1;
@@ -1643,6 +1644,7 @@ function usces_download_order_list() {
 	if(isset($_REQUEST['check']['delidue_date'])) $line .= $th_h.__('Shipping date', 'usces').$th_f;
 	if(isset($_REQUEST['check']['status'])) $line .= $th_h.__('Status', 'usces').$th_f;
 	$line .= $th_h.__('Total Amount', 'usces').$th_f;
+	if(isset($_REQUEST['check']['getpoint'])) $line .= $th_h.__('granted points', 'usces').$th_f;
 	if(isset($_REQUEST['check']['usedpoint'])) $line .= $th_h.__('Used points', 'usces').$th_f;
 	$line .= $th_h.__('Disnount', 'usces').$th_f;
 	$line .= $th_h.__('Shipping', 'usces').$th_f;
@@ -1951,6 +1953,7 @@ function usces_download_order_list() {
 			$line .= $td_h.trim($status, $sp).$td_f;
 		}
 		$line .= $td_h.usces_crform($array['total_price'], false, false, 'return', false).$td_f;
+		if(isset($_REQUEST['check']['getpoint'])) $line .= $td_h.$data['order_getpoint'].$td_f;
 		if(isset($_REQUEST['check']['usedpoint'])) $line .= $td_h.$data['order_usedpoint'].$td_f;
 		$line .= $td_h.$data['order_discount'].$td_f;
 		$line .= $td_h.$data['order_shipping_charge'].$td_f;

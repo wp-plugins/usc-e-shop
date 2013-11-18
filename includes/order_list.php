@@ -805,6 +805,7 @@ jQuery(document).ready(function($){
 		<label for="chk_ord[delidue_date]"><input type="checkbox" class="check_order" id="chk_ord[delidue_date]" value="delidue_date"<?php usces_checked($chk_ord, 'delidue_date'); ?> /><?php _e('Shipping date', 'usces'); ?></label>
 		<label for="chk_ord[status]"><input type="checkbox" class="check_order" id="chk_ord[status]" value="status"<?php usces_checked($chk_ord, 'status'); ?> /><?php _e('Status', 'usces'); ?></label>
 		<label for="chk_ord[total_amount]"><input type="checkbox" class="check_order" id="chk_ord[total_amount]" value="total_amount" checked disabled /><?php _e('Total Amount', 'usces'); ?></label>
+		<label for="chk_ord[getpoint]"><input type="checkbox" class="check_order" id="chk_ord[getpoint]" value="getpoint"<?php usces_checked($chk_ord, 'getpoint'); ?> /><?php _e('granted points', 'usces'); ?></label>
 		<label for="chk_ord[usedpoint]"><input type="checkbox" class="check_order" id="chk_ord[usedpoint]" value="usedpoint"<?php usces_checked($chk_ord, 'usedpoint'); ?> /><?php _e('Used points', 'usces'); ?></label>
 		<label for="chk_ord[discount]"><input type="checkbox" class="check_order" id="chk_ord[discount]" value="discount" checked disabled /><?php _e('Disnount', 'usces'); ?></label>
 		<label for="chk_ord[shipping_charge]"><input type="checkbox" class="check_order" id="chk_ord[shipping_charge]" value="shipping_charge" checked disabled /><?php _e('Shipping', 'usces'); ?></label>
