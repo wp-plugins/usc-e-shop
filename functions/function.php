@@ -965,6 +965,7 @@ function usces_reg_orderdata( $results = array() ) {
 		usces_log('reg_orderdata : Session is empty.', 'database_error.log');
 		return 0;
 	}
+	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';//20131121ysk
 	
 	$charging_type = $usces->getItemChargingType($cart[0]['post_id']);
 
@@ -978,14 +979,22 @@ function usces_reg_orderdata( $results = array() ) {
 	if( 'continue' == $charging_type ){
 		$order_modified = substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10);
 	}else{
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' || $set['settlement'] == 'acting_mizuho_conv1' || $set['settlement'] == 'acting_mizuho_conv2' ) ? 'noreceipt' : '';
+//20131121ysk start
+		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' || $set['settlement'] == 'acting_mizuho_conv1' || $set['settlement'] == 'acting_mizuho_conv2' ) ? 'noreceipt' : '';
+		$noreceipt_status_table = apply_filters( 'usces_filter_noreceipt_status', array( 'transferAdvance', 'transferDeferred', 'acting_remise_conv', 'acting_zeus_bank', 'acting_zeus_conv', 'acting_jpayment_conv', 'acting_jpayment_bank', 'acting_sbps_conv', 'acting_sbps_payeasy', 'acting_digitalcheck_conv', 'acting_mizuho_conv1', 'acting_mizuho_conv2' ) );
+		$status = ( in_array( $set['settlement'], $noreceipt_status_table ) ) ? 'noreceipt' : '';
 		$order_modified = NULL;
 	}
-	$payments = $usces->getPayments($entry['order']['payment_name']);
-	if( isset($results['payment_status']) && $results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
-	
-	if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
-	$status = apply_filters('usces_filter_reg_orderdata_status', $status);
+	//$payments = $usces->getPayments($entry['order']['payment_name']);
+	//if( isset($results['payment_status']) && $results['payment_status'] != 'Completed' && $payments['module'] == 'paypal.php') $status = 'pending';
+	if( $set['module'] == 'paypal.php' || $set['settlement'] == 'acting_paypal_ec' ) {
+		if( ( isset($results['payment_status']) && $results['payment_status'] != 'Completed' ) || ( isset($results['profile_status']) && $results['profile_status'] != 'ActiveProfile' ) ) {
+			$status = 'pending';
+		}
+	}
+	//if( (empty($entry['customer']['name1']) && empty($entry['customer']['name2'])) || empty($entry['customer']['mailaddress1']) || empty($entry) || empty($cart) ) return '1';
+	$status = apply_filters( 'usces_filter_reg_orderdata_status', $status, $entry );
+//20131121ysk end
 	$delidue_date = ( isset($entry['order']['delidue_date']) ) ? $entry['order']['delidue_date'] : NULL;
 //20101208ysk start
 	$query = $wpdb->prepare(
@@ -1165,7 +1174,8 @@ function usces_reg_orderdata( $results = array() ) {
 		}
 //20130225ysk end
 		
-		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
+		//$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$set, 'charging_type'=>$charging_type);//20131121ysk
 		do_action('usces_action_reg_orderdata', $args);
 	
 	endif;
@@ -1190,11 +1200,15 @@ function usces_new_orderdata() {
 	if( isset($_POST['offer']['receipt']) ) {
 		$status = $_POST['offer']['receipt'].',';
 	} else {
-		$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' ) ? 'noreceipt' : '';
+//20131121ysk start
+		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' ) ? 'noreceipt' : '';
+		$noreceipt_status_table = apply_filters( 'usces_filter_noreceipt_status', array( 'transferAdvance', 'transferDeferred', 'acting_remise_conv', 'acting_zeus_bank', 'acting_zeus_conv', 'acting_jpayment_conv', 'acting_jpayment_bank', 'acting_sbps_conv', 'acting_sbps_payeasy', 'acting_digitalcheck_conv', 'acting_mizuho_conv1', 'acting_mizuho_conv2' ) );
+		$status = ( in_array( $set['settlement'], $noreceipt_status_table ) ) ? 'noreceipt' : '';
+//20131121ysk end
 	}
 	$status .= ( !WCUtils::is_blank($_POST['offer']['taio']) && $_POST['offer']['taio'] != '#none#' ) ? $_POST['offer']['taio'].',' : '';
 	$status .= $_POST['offer']['admin'];
-	$status = apply_filters('usces_filter_new_orderdata_status', $status);
+	$status = apply_filters( 'usces_filter_new_orderdata_status', $status, $entry );
 	$order_conditions = $usces->get_condition();
 
 //20101208ysk start
@@ -1285,7 +1299,10 @@ function usces_new_orderdata() {
 			$usces->set_order_meta_value('receipted_date', $value, $order_id);
 		}
 //20120314ysk start 0000435
-		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member_id);
+//20131121ysk start
+		//$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member_id);
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member_id, 'payments'=>$set);
+//20131121ysk end
 		do_action('usces_action_reg_orderdata', $args);
 //20120314ysk end
 	endif;
@@ -1545,7 +1562,7 @@ function usces_update_orderdata() {
 	$entry = $usces->cart->get_entry();
 
 	$item_total_price = $usces->get_total_price( $cart );
-	$set = $usces->getPayments( $entry['order']['payment_name'] );
+	//$set = $usces->getPayments( $entry['order']['payment_name'] );
 	$taio = isset($entry['order']['taio']) ? $entry['order']['taio'] : '';
 	$receipt = isset($entry['order']['receipt']) ? $entry['order']['receipt'] : '';
 	$admin = isset($entry['order']['admin']) ? $entry['order']['admin'] : '';
@@ -3720,16 +3737,30 @@ function usces_paypal_doecp( &$results ) {
 
 		$nvpstr = '&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTACTION='.$paymentType.'&AMT='.$paymentAmount.'&CURRENCYCODE='.$currencyCodeType.'&IPADDRESS='.$serverName;
 		$nvpstr = apply_filters( 'usces_filter_usces_paypal_doecp', $nvpstr, $charging_type );
-
+//20131121ysk start 0000771
+		if( 'shipped' == $usces->getItemDivision( $post_id ) ) {
+			$country = ( !empty($entry['delivery']['country']) ) ? $entry['delivery']['country'] : usces_get_base_country();
+			$nvpstr .= '&SHIPTONAME='.$entry['delivery']['name2'].' '.$entry['delivery']['name1'].
+			'&SHIPTOSTREET='.$entry['delivery']['address2'].
+			'&SHIPTOSTREET2='.$entry['delivery']['address3'].
+			'&SHIPTOCITY='.$entry['delivery']['address1'].
+			'&SHIPTOSTATE='.$entry['delivery']['pref'].
+			'&SHIPTOZIP='.$entry['delivery']['zipcode'].
+			'&SHIPTOCOUNTRYCODE='.$country.
+			'&SHIPTOPHONENUM='.ltrim( str_replace( '-', '', $entry['delivery']['tel'] ), '0' );
+		}
+//20131121ysk end
 		$usces->paypal->setMethod('DoExpressCheckoutPayment');
 		$usces->paypal->setData($nvpstr);
 		$res = $usces->paypal->doExpressCheckout();
 		$resArray = $usces->paypal->getResponse();
 		$ack = strtoupper($resArray["ACK"]);
-		if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+		if( $ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING" ) {
 			$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
 			//$usces->set_order_meta_value('settlement_id', $transactionId, $order_id);
 			$results['settlement_id'] = $transactionId;
+			$results['payment_status'] = isset( $resArray["PAYMENTSTATUS"] ) ? $resArray["PAYMENTSTATUS"] : '';
+			$results['pending_reason'] = isset( $resArray["PENDINGREASON"] ) ? $resArray["PENDINGREASON"] : '';
 
 		} else {
 			//Display a user friendly Error on the page using any of the following error information returned by PayPal
@@ -3742,8 +3773,9 @@ function usces_paypal_doecp( &$results ) {
 		}
 
 	} else {
+		if( !apply_filters( 'usces_pre_create_recurring_payments_profile', true ) ) return false;
+
 		//定期支払い
-		//$paymentAmount = usces_crform($entry['order']['total_items_price'], false, false, 'return', false);
 		$paymentAmount = usces_crform($entry['order']['total_full_price'], false, false, 'return', false);//20111129ysk 0000320
 		$token = urlencode($_REQUEST['token']);
 		$currencyCodeType = urlencode($usces->get_currency_code());
@@ -3752,7 +3784,6 @@ function usces_paypal_doecp( &$results ) {
 		$profileStartDate = date('Y-m-d', dlseller_first_charging($post_id, 'time')).'T01:01:01Z';
 		$billingPeriod = "Month";// or "Day", "Week", "SemiMonth", "Year"
 		$billingFreq = $usces->getItemFrequency($post_id);
-		//$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_items_price']));
 		$desc = urlencode(usces_make_agreement_description($cart, $entry['order']['total_full_price']));//20111125ysk 0000320
 		$totalBillingCycles = (empty($dlitem['dlseller_interval'])) ? '' : '&TOTALBILLINGCYCLES='.urlencode($dlitem['dlseller_interval']);
 		//$totalBillingCycles = ( dlseller_auto_stop() ) ? '&TOTALBILLINGCYCLES='.dlseller_cycles( $post_id ) : '';
@@ -3766,11 +3797,12 @@ function usces_paypal_doecp( &$results ) {
 		$res = $usces->paypal->doExpressCheckout();
 		$resArray = $usces->paypal->getResponse();
 		$ack = strtoupper($resArray["ACK"]);
-		if($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+		if( $ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING" ) {
 			$profileid = $resArray["PROFILEID"];
 			//$usces->set_order_meta_value('profile_id', $profileid, $order_id);
 			$results['settlement_id'] = $profileid;
 			$results['profile_id'] = $profileid;
+			$results['profile_status'] = isset( $resArray["PROFILESTATUS"] ) ? $resArray["PROFILESTATUS"] : '';
 
 		} else {
 			//Display a user friendly Error on the page using any of the following error information returned by PayPal
@@ -3903,7 +3935,7 @@ function usces_check_notification_time( $key, $time ){
 	if( $time > $past )
 		return true;
 	else
-		return false;		
+		return false;
 }
 
 function usces_is_same_itemcode( $post_id, $item_code ){

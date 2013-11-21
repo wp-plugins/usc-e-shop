@@ -1150,11 +1150,11 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			}
 			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payment['settlement'] == 'acting' ) {
 				$checked = '';
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payment['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payment['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
+				$list .= "\t".'<dt class="payment_'.$id.'"><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payment['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payment['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
 			}else{
-				$list .= "\t".'<dt><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payment['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payment['name'])."</label></dt>\n";
+				$list .= "\t".'<dt class="payment_'.$id.'"><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payment['name']).'"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payment['name'])."</label></dt>\n";
 			}
-			$list .= "\t<dd>{$payment['explanation']}</dd>\n";
+			$list .= "\t".'<dd class="payment_'.$id.'">'.esc_html( $payment['explanation'] ).'</dd>'."\n";
 		}
 	}
 
