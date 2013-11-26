@@ -671,8 +671,8 @@ class usc_e_shop
 	
 	/* Shop Top Page */
 	function admin_top_page() {
-
-		require_once(USCES_PLUGIN_DIR . '/includes/admin_top.php');	
+		$path = apply_filters( 'usces_filter_admin_top_page', USCES_PLUGIN_DIR . '/includes/admin_top.php');
+		require_once($path);	
 
 	}
 	
