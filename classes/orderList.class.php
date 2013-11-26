@@ -297,6 +297,7 @@ class dataList
 		//$meta_table = $wpdb->prefix . 'usces_order_meta';
 		$where = $this->GetWhere();
 		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
+		$order = apply_filters( 'usces_filter_order_list_get_orderby', $order, $this );
 		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
 
 /*		$status_sql = '';
