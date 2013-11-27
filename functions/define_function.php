@@ -139,7 +139,7 @@ function usces_item_uploadcsv(){
 	$total_num = 0;
 	$comp_num = 0;
 	$err_num = 0;
-	$min_field_num = 35;//29
+	$min_field_num = apply_filters( 'usces_filter_uploadcsv_min_field_num', 35 );
 	$log = '';
 	$pre_code = '';
 	$sku_index = 0;
@@ -989,6 +989,7 @@ function usces_item_uploadcsv(){
 		$skuvalue['stock'] = $datas[USCES_COL_SKU_ZAIKO];
 		$skuvalue['gp'] = $datas[USCES_COL_SKU_GPTEKIYO];
 		$skuvalue['sort'] = $sku_index;
+		$skuvalue = apply_filters( 'usces_filter_uploadcsv_skuvalue', $skuvalue, $datas );
 		usces_add_sku( $post_id, $skuvalue, false );
 
 //		usces_log('skuvalue : '.$post_id.print_r($skuvalue,true), 'acting_transaction.log');
@@ -1155,6 +1156,7 @@ function usces_download_item_list() {
 		$line .= $th_h.__('stock status', 'usces').$th_f;
 		$line .= $th_h.__('unit', 'usces').$th_f;
 		$line .= $th_h.__('Apply business package', 'usces').$th_f;
+		$line .= apply_filters( 'usces_filter_downloadcsv_header', '' );
 		$line .= $th_h.__('option name', 'usces').$th_f.$th_h.__('Field type', 'usces').$th_f.$th_h.__('Required', 'usces').$th_f.$th_h.__('selected amount', 'usces').$th_f;
 		$line .= $tr_f.$lf;
 	}
@@ -1272,6 +1274,7 @@ function usces_download_item_list() {
 			$line_sku .= $td_h.$sku_value['stock'].$td_f;
 			$line_sku .= $td_h.usces_entity_decode($sku_value['unit'], $ext).$td_f;
 			$line_sku .= $td_h.$sku_value['gp'].$td_f;
+			$line_sku .= apply_filters( 'usces_filter_downloadcsv_skuvalue', '', $sku_value );
 
 			$line .= $tr_h.$line_item.$line_sku.$line_options.$tr_f.$lf;
 		}
