@@ -316,7 +316,7 @@ function usces_action_acting_transaction(){
 
 
 		}else{
-		
+		if( '05' !== $_REQUEST['status'] ) {//20131128ysk 0000794
 			$value = unserialize($values['meta_value']);
 			$status = ( '04' === $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
 			$order_id = $values['order_id'];
@@ -358,6 +358,7 @@ function usces_action_acting_transaction(){
 				die('error3');
 			}
 			usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
+		}
 		}
 
 		usces_log('zeus conv transaction : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
@@ -574,6 +575,7 @@ function usces_action_acting_transaction(){
 						$order_status = str_replace( 'pending', '', $order_data['order_status'] );
 						$query = $wpdb->prepare( "UPDATE $table_name SET order_status = %s WHERE ID = %d", $order_status, $order_data['ID'] );
 						$res = $wpdb->query( $query );
+						do_action( 'usces_action_paypal_ipn_status_completed', $order_data );
 					}
 				}
 			}
@@ -587,6 +589,7 @@ function usces_action_acting_transaction(){
 						$order_status = str_replace( 'pending', '', $order_data['order_status'] );
 						$query = $wpdb->prepare( "UPDATE $table_name SET order_status = %s WHERE ID = %d", $order_status, $order_data['ID'] );
 						$res = $wpdb->query( $query );
+						do_action( 'usces_action_paypal_ipn_status_completed', $order_data );
 					}
 				}
 			}
