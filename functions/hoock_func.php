@@ -566,31 +566,19 @@ function usces_action_acting_transaction(){
 //20131121ysk start
 		$table_name = $wpdb->prefix."usces_order";
 		$table_meta_name = $wpdb->prefix."usces_order_meta";
-		if( isset($_REQUEST['txn_id']) ) {//通常
-			if( isset($_REQUEST['payment_status']) and 'Completed' == $_REQUEST['payment_status'] ) {
-				$query = $wpdb->prepare( "SELECT ID, order_status FROM $table_name INNER JOIN $table_meta_name ON ID = order_id WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_REQUEST['txn_id'] );
+		if( isset($_REQUEST['txn_id']) or isset($_REQUEST['recurring_payment_id']) ) {
+			if( ( isset($_REQUEST['payment_status']) and 'Completed' == $_REQUEST['payment_status'] ) or 
+				( isset($_REQUEST['profile_status']) and 'Active' == $_REQUEST['profile_status'] ) ) {
+				$settlement_id = ( isset($_REQUEST['recurring_payment_id']) ) ? $_REQUEST['recurring_payment_id'] : $_REQUEST['txn_id'];
+				$query = $wpdb->prepare( "SELECT ID, order_status FROM $table_name INNER JOIN $table_meta_name ON ID = order_id WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $settlement_id );
 				$order_data = $wpdb->get_row( $query, ARRAY_A );
 				if( $order_data ) {
 					if( $usces->is_status( 'pending', $order_data['order_status'] ) ) {
-						$order_status = str_replace( 'pending', '', $order_data['order_status'] );
+						$order_status = str_replace( 'pending', 'receipted', $order_data['order_status'] );
 						$query = $wpdb->prepare( "UPDATE $table_name SET order_status = %s WHERE ID = %d", $order_status, $order_data['ID'] );
 						$res = $wpdb->query( $query );
-						do_action( 'usces_action_paypal_ipn_status_completed', $order_data );
 					}
-				}
-			}
-
-		} elseif( isset($_REQUEST['recurring_payment_id']) ) {//定期支払い
-			if( isset($_REQUEST['profile_status']) and 'Active' == $_REQUEST['profile_status'] ) {
-				$query = $wpdb->prepare( "SELECT ID, order_status FROM $table_name INNER JOIN $table_meta_name ON ID = order_id WHERE meta_key = %s AND meta_value = %s", 'settlement_id', $_REQUEST['recurring_payment_id'] );
-				$order_data = $wpdb->get_row( $query, ARRAY_A );
-				if( $order_data ) {
-					if( $usces->is_status( 'pending', $order_data['order_status'] ) ) {
-						$order_status = str_replace( 'pending', '', $order_data['order_status'] );
-						$query = $wpdb->prepare( "UPDATE $table_name SET order_status = %s WHERE ID = %d", $order_status, $order_data['ID'] );
-						$res = $wpdb->query( $query );
-						do_action( 'usces_action_paypal_ipn_status_completed', $order_data );
-					}
+					do_action( 'usces_action_paypal_ipn_status_completed', $order_data );
 				}
 			}
 		}
