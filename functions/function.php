@@ -59,6 +59,10 @@ function usces_order_confirm_message($order_id) {
 	$cart = unserialize($data['order_cart']);
 	$country = $usces->get_order_meta_value('customer_country', $order_id);
 	$customer = array(
+//20131203_kitamu_start
+					'mem_id' => $data['mem_id'],
+					'email' => $data['order_email'],
+//20131203_kitamu_end
 					'name1' => $data['order_name1'],
 					'name2' => $data['order_name2'],
 					'name3' => $data['order_name3'],
@@ -93,6 +97,9 @@ function usces_order_confirm_message($order_id) {
 		$msg_body .= apply_filters('usces_filter_order_confirm_mail_first', NULL, $data);
 		$msg_body .= uesces_get_mail_addressform( 'admin_mail_customer', $customer, $order_id );
 		$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
+//20131129_kitamu_start
+		$msg_body .= __( 'order date','usces' ) . " : " . $data['order_date'] . "\r\n";
+//20131129_kitamu_end
 	}
 
 	$meisai = __('Items','usces') . " : \r\n";
@@ -305,6 +312,9 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	
 	$meisai = __('Items','usces') . " : \r\n";
+//20131129_kitamu start
+	$msg_body .= __( 'order date','usces' ) . " : " . $data['order_date'] . "\r\n";
+//20131129_kitamu end
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = urldecode($cart_row['sku']);
@@ -377,8 +387,7 @@ function usces_send_ordermail($order_id) {
 
 
 	$msg_shipping = __('** A shipping address **','usces') . "\r\n";
-	$msg_shipping .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
-	
+	$msg_shipping .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************	
 	$msg_shipping .= uesces_get_mail_addressform( 'order_mail', $entry, $order_id );
 
 //20101208ysk start
@@ -3161,7 +3170,7 @@ function uesces_get_admin_addressform( $type, $data, $customdata, $out = 'return
 }
 
 function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' ){
-	global $usces, $usces_settings;
+	global $wpdb,$usces, $usces_settings;
 	$options = get_option('usces');
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
 	$formtag = '';
@@ -3198,6 +3207,19 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
+		//20131129_kitamu_start
+		if( $type == 'order_mail_customer' ){
+			$mem_id = ( isset( $data['customer']['ID'] ) ) ? $data['customer']['ID'] : '';
+			$order_email = $data['customer']['mailaddress1'];
+			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+		}elseif( $type == 'admin_mail_customer' ){
+			$mem_id = $data['mem_id'];
+			$order_email = $data['email'];
+			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+		}
+		//20131129_kitamu_end
 		$formtag .= $name_label . "\t\t: " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
 		if( !empty($values['name3']) || !empty($values['name4']) ) {
 			$formtag .= __('furigana','usces') . "\t\t: " . $values['name3'] . ' ' . $values['name4'] . " \r\n";
@@ -3219,6 +3241,19 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
+			//20131129_kitamu_start
+		if( $type == 'order_mail_customer' ){
+			$mem_id = ( isset( $data['customer']['ID'] ) ) ? $data['customer']['ID'] : '';
+			$order_email = $data['customer']['mailaddress1'];
+			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+		}elseif( $type == 'admin_mail_customer' ){
+			$mem_id = $data['mem_id'];
+			$order_email = $data['email'];
+			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+		}
+		//20131129_kitamu_end
 		$formtag .= $name_label . "\t\t: " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
@@ -3240,6 +3275,19 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_pre', $order_id );
 		//20110118ysk end
+			//20131129_kitamu_start
+		if( $type == 'order_mail_customer' ){
+			$mem_id = ( isset( $data['customer']['ID'] ) ) ? $data['customer']['ID'] : '';
+			$order_email = $data['customer']['mailaddress1'];
+			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+		}elseif( $type == 'admin_mail_customer' ){
+			$mem_id = $data['mem_id'];
+			$order_email = $data['email'];
+			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+		}
+		//20131129_kitamu_end
 		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name2'] . ' ' . $values['name1'])) . " \r\n";
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
