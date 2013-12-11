@@ -1,8 +1,10 @@
 <?php
 
 add_action( 'usces_action_memberinfo_page_header', 'usces_action_settlement_memberinfo_page_header' );
+add_filter( 'usces_filter_memberinfo_page_header', 'usces_filter_settlement_memberinfo_page_header' );
 add_filter( 'usces_filter_template_redirect', 'usces_filter_settlement_template_redirect' );
 add_filter( 'usces_filter_delivery_secure_form_howpay', 'usces_filter_update_settlement_form_howpay' );
+add_filter( 'usces_filter_available_payment_method', 'usces_filter_settlement_template_available_payment_method' );
 
 function usces_filter_update_settlement_form_howpay( $html ) {
 	if( isset($_GET['page'] ) and 'member_update_settlement' == $_GET['page'] ) {
@@ -11,7 +13,36 @@ function usces_filter_update_settlement_form_howpay( $html ) {
 	return $html;
 }
 
+function usces_filter_settlement_template_available_payment_method( $payments ) {
+	if( isset($_GET['page'] ) and 'member_update_settlement' == $_GET['page'] ) {
+		$payments = array();
+		$payment_method = get_option( 'usces_payment_method' );
+		foreach( $payment_method as $id => $value ) {
+			switch( $value['settlement'] ) {
+			case 'acting_zeus_card':
+				$payments[] = array(
+					'id' => $id,
+					'name' => $value['name'],
+					'explanation' => $value['explanation'],
+					'settlement' => $value['settlement'],
+					'module' => $value['module'],
+					'sort' => $value['sort']
+				);
+				break;
+			}
+		}
+	}
+	return $payments;
+}
+
 function usces_action_settlement_memberinfo_page_header() {
+	usces_settlement_memberinfo_page_header();
+}
+function usces_filter_settlement_memberinfo_page_header( $header ) {
+	$header .= usces_settlement_memberinfo_page_header( 'return' );
+	return $header;
+}
+function usces_settlement_memberinfo_page_header( $out = '' ) {
 	global $usces;
 
 	$html = '';
@@ -24,7 +55,11 @@ function usces_action_settlement_memberinfo_page_header() {
 		<a href="'.$update_settlement_url.'">'.__("Change the credit card is here >>", 'usces').'</a>
 		</div>';
 	}
-	echo $html;
+	if( $out == 'return' ) {
+		return $html;
+	} else {
+		echo $html;
+	}
 }
 
 function usces_filter_settlement_template_redirect() {
@@ -35,14 +70,16 @@ function usces_filter_settlement_template_redirect() {
 
 		if( $usces->is_member_logged_in() and ( isset($_REQUEST['page']) and 'member_update_settlement' == $_REQUEST['page'] ) ) {
 			$usces->page = 'member_update_settlement';
-			usces_member_update_settlement_form();
+			$sidebar = apply_filters( 'usces_filter_member_update_settlement_form_sidebar', true );
+			$content_class = apply_filters( 'usces_filter_member_update_settlement_form_content_class', 'two-column' );
+			usces_member_update_settlement_form( $sidebar, $content_class );
 			exit;
 		}
 	}
 	return;
 }
 
-function usces_member_update_settlement_form() {
+function usces_member_update_settlement_form( $sidebar, $content_class, $out = '' ) {
 	global $usces;
 
 	$member = $usces->get_member();
@@ -120,71 +157,7 @@ function usces_member_update_settlement_form() {
 	if( 4 == strlen($partofcard) ) $_POST['cnum1'] = '************'.$partofcard;
 
 	$update_settlement_url = add_query_arg( array( 'page' => 'member_update_settlement', 'settlement' => 1, 're-enter' => 1 ), USCES_MEMBER_URL );
-/*
-	$script .= "
-	<script type=\"text/javascript\">
-		jQuery( function($) {
-			$(\"input[name='howpay']\").change(function() {
-				if( '' != $(\"select[name='cbrand'] option:selected\").val() ){
-					$(\"#div_zeus\").css({\"display\": \"\"});
-				}
-				if( '1' == $(\"input[name='howpay']:checked\").val() ){
-					$(\"#cbrand_zeus\").css({\"display\": \"none\"});
-					$(\"#div_zeus\").css({\"display\": \"none\"});
-				}else{
-					$(\"#cbrand_zeus\").css({\"display\": \"\"});
-				}
-			});
 
-			$(\"select[name='cbrand']\").change(function() {
-				$(\"#div_zeus\").css({\"display\": \"\"});
-				if( '1' == $(\"select[name='cbrand'] option:selected\").val() ){
-					$(\"#brand1\").css({\"display\": \"\"});
-					$(\"#brand2\").css({\"display\": \"none\"});
-					$(\"#brand3\").css({\"display\": \"none\"});
-				}else if( '2' == $(\"select[name='cbrand'] option:selected\").val() ){
-					$(\"#brand1\").css({\"display\": \"none\"});
-					$(\"#brand2\").css({\"display\": \"\"});
-					$(\"#brand3\").css({\"display\": \"none\"});
-				}else if( '3' == $(\"select[name='cbrand'] option:selected\").val() ){
-					$(\"#brand1\").css({\"display\": \"none\"});
-					$(\"#brand2\").css({\"display\": \"none\"});
-					$(\"#brand3\").css({\"display\": \"\"});
-				}else{
-					$(\"#brand1\").css({\"display\": \"none\"});
-					$(\"#brand2\").css({\"display\": \"none\"});
-					$(\"#brand3\").css({\"display\": \"none\"});
-				}
-			});
-
-			if( '1' == $(\"input[name='howpay']:checked\").val() ){
-				$(\"#cbrand_zeus\").css({\"display\": \"none\"});
-				$(\"#div_zeus\").css({\"display\": \"none\"});
-			}else{
-				$(\"#cbrand_zeus\").css({\"display\": \"\"});
-				$(\"#div_zeus\").css({\"display\": \"\"});
-			}
-
-			if( '1' == $(\"select[name='cbrand'] option:selected\").val() ){
-				$(\"#brand1\").css({\"display\": \"\"});
-				$(\"#brand2\").css({\"display\": \"none\"});
-				$(\"#brand3\").css({\"display\": \"none\"});
-			}else if( '2' == $(\"select[name='cbrand'] option:selected\").val() ){
-				$(\"#brand1\").css({\"display\": \"none\"});
-				$(\"#brand2\").css({\"display\": \"\"});
-				$(\"#brand3\").css({\"display\": \"none\"});
-			}else if( '3' == $(\"select[name='cbrand'] option:selected\").val() ){
-				$(\"#brand1\").css({\"display\": \"none\"});
-				$(\"#brand2\").css({\"display\": \"none\"});
-				$(\"#brand3\").css({\"display\": \"\"});
-			}else{
-				$(\"#brand1\").css({\"display\": \"none\"});
-				$(\"#brand2\").css({\"display\": \"none\"});
-				$(\"#brand3\").css({\"display\": \"none\"});
-			}
-		});
-	</script>";
-*/
 	if( '' != $message ) {
 	$script .= "
 	<script type=\"text/javascript\">
@@ -198,7 +171,7 @@ function usces_member_update_settlement_form() {
 	get_header();
 ?>
 <?php if( '' != $script ) echo $script; ?>
-<div id="content" class="two-column">
+<div id="content" class="<?php echo $content_class; ?>">
 <div class="catbox">
 
 <?php if( have_posts() ) : usces_remove_filter(); ?>
@@ -245,13 +218,17 @@ function usces_member_update_settlement_form() {
 </div><!-- end of catbox -->
 </div><!-- end of content -->
 <?php
-	get_sidebar( 'cartmember' );
+	if( $sidebar ) get_sidebar( 'cartmember' );
 
 	get_footer();
-	$r = ob_get_contents();
+	$html = ob_get_contents();
 	ob_end_clean();
 
-	echo $r;
+	if( $out == 'return' ) {
+		return $html;
+	} else {
+		echo $html;
+	}
 }
 
 function usces_send_update_settlement_mail() {
