@@ -20,7 +20,7 @@ get_sidebar( 'home' );
 	<?php while (have_posts()) : the_post(); usces_the_item(); ?>
 	<div class="thumbnail_box">
 		<div class="thumimg"><a href="<?php the_permalink() ?>"><?php usces_the_itemImage(0, 108, 108); ?></a></div>
-		<div class="thumtitle"><a href="<?php the_permalink() ?>" rel="bookmark"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</a></div>
+		<div class="thumtitle"><a href="<?php the_permalink() ?>" rel="bookmark"><?php usces_the_itemName(); ?> (<?php usces_the_itemCode(); ?>)</a></div>
 		<div class="price"><?php usces_crform( usces_the_firstPrice('return'), true, false ); ?><?php usces_guid_tax(); ?></div>
 	</div>
 	<?php endwhile; ?>
