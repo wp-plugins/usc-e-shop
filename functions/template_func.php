@@ -1301,9 +1301,10 @@ function usces_the_inquiry_form() {
 	
 
 	if($usces->page == 'inquiry_comp') :
+		$inq_message = apply_filters( 'usces_filter_inquiry_message_completion', __('I send a reply email to a visitor. I ask in a few minutes to be able to have you refer in there being the fear that e-mail address is different again when the email from this shop does not arrive.', 'usces') );
 ?>
 	<div class="inquiry_comp"><?php _e('sending completed','usces') ?></div>
-	<div class="compbox"><?php _e('I send a reply email to a visitor. I ask in a few minutes to be able to have you refer in there being the fear that e-mail address is different again when the email from this shop does not arrive.','usces') ?></div>
+	<div class="compbox"><?php echo $inq_message; ?></div>
 <?php
 	elseif($usces->page == 'inquiry_error') :
 ?>
