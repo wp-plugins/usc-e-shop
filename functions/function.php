@@ -2147,9 +2147,11 @@ function usces_all_delete_order_data(&$obj){
 //20120306ysk start 0000324
 		//$restore_point = false;
 		$point = 0;
+		$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
+		$order_res = $wpdb->get_row( $query, ARRAY_A );
 		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($order_res['mem_id']) && !$usces->is_status('cancel', $order_res['order_status']) ) {
-			$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
-			$order_res = $wpdb->get_row( $query, ARRAY_A );
+			//$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
+			//$order_res = $wpdb->get_row( $query, ARRAY_A );
 			if( 0 < $order_res['order_getpoint'] ) {
 				//if( $usces->is_status('completion', $order_res['order_status']) ) {
 				//	$restore_point = true;
