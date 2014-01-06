@@ -772,7 +772,7 @@ jQuery(function($){
 			//var country = $("#shipping_charge_country").val();
 			//for(var i=0; i<pref[country].length; i++){
 			//	var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
-			//	if( "" == value || !checkNum(value) ) {
+			//	if( "" == value || !checkMoney(value) ) {
 			//		error++;
 			//		$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
 			//			$(this).css({'background-color': '#FFF'});
@@ -784,7 +784,7 @@ jQuery(function($){
 				for( var i = 0; i < pref[tm].length; i++ ) {
 					var p = pref[tm][i];
 					var value = $("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").val();
-					if( "" == value || !checkNum(value) ) {
+					if( "" == value || !checkMoney(value) ) {
 						error++;
 						$("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").css({'background-color': '#FFA'}).click(function() {
 							$(this).css({'background-color': '#FFF'});
@@ -885,7 +885,7 @@ jQuery(function($){
 			//var country = $("#shipping_charge_country").val();
 			//for(var i=0; i<pref[country].length; i++){
 			//	var value = $("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").val();
-			//	if( "" == value || !checkNum(value) ) {
+			//	if( "" == value || !checkMoney(value) ) {
 			//		error++;
 			//		$("input[name='shipping_charge_value\[" + pref[country][i] + "\]']").css({'background-color': '#FFA'}).click(function() {
 			//			$(this).css({'background-color': '#FFF'});
@@ -897,7 +897,7 @@ jQuery(function($){
 				for( var i = 0; i < pref[tm].length; i++ ) {
 					var p = pref[tm][i];
 					var value = $("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").val();
-					if( "" == value || !checkNum(value) ) {
+					if( "" == value || !checkMoney(value) ) {
 						error++;
 						$("input[name=\"shipping_charge_value_"+tm+"\["+p+"\]\"]").css({'background-color': '#FFA'}).click(function() {
 							$(this).css({'background-color': '#FFF'});

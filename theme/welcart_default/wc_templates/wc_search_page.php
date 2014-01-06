@@ -41,7 +41,7 @@ if (isset($_REQUEST['usces_search'])) :
 	$my_query = new WP_Query( $search_query );
 ?>
 
-	<div class="title"><?php _e('Search results', 'usces'); ?>&nbsp;&nbsp;<?php echo number_format($my_query->found_posts); ?><?php _e('cases', 'usces'); ?></div>
+	<div class="title"><?php _e('Search results', 'usces'); ?>  <?php echo number_format($my_query->found_posts); ?><?php _e('cases', 'usces'); ?></div>
 
 <?php if ($my_query->have_posts()) : ?>	
 	<div class="navigation clearfix">

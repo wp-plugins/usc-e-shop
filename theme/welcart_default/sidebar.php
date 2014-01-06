@@ -90,7 +90,7 @@ global $usces;
 			foreach($myposts as $post) : usces_the_item();
 			?>
 				<div class="thumimg"><a href="<?php the_permalink() ?>"><?php usces_the_itemImage($number = 0, $width = 150, $height = 150 ); ?></a></div>
-				<div class="thumtitle"><a href="<?php the_permalink() ?>" rel="bookmark"><?php usces_the_itemName(); ?>&nbsp;(<?php usces_the_itemCode(); ?>)</a></div>
+				<div class="thumtitle"><a href="<?php the_permalink() ?>" rel="bookmark"><?php usces_the_itemName(); ?> (<?php usces_the_itemCode(); ?>)</a></div>
 			<?php endforeach; ?>
 			</li>
 		</ul>
