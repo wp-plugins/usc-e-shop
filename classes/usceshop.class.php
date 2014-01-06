@@ -1275,6 +1275,9 @@ class usc_e_shop
 //20110412ysk start
 					$options['acting_settings']['paypal']['continuation'] = isset($_POST['continuation']) ? $_POST['continuation'] : '';
 //20110412ysk end
+					$options['acting_settings']['paypal']['logoimg'] = isset($_POST['logoimg']) ? $_POST['logoimg'] : '';
+					$options['acting_settings']['paypal']['set_cartbordercolor'] = isset($_POST['set_cartbordercolor']) ? $_POST['set_cartbordercolor'] : 'off';
+					$options['acting_settings']['paypal']['cartbordercolor'] = ( 'on' == $options['acting_settings']['paypal']['set_cartbordercolor'] ) ? $_POST['cartbordercolor'] : '';
 
 					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
 						$mes .= '※PayPalサーバーが不正です<br />';
@@ -2504,8 +2507,8 @@ class usc_e_shop
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
 					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
 					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
-//					$item_list_layoutUrl = USCES_FRONT_PLUGIN_URL.'/js/usces_dumy.js';
-//					wp_enqueue_script('usces_dumy', $item_list_layoutUrl, array('jquery-ui-tabs'), '1.0' );
+					$jquery_colorUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/color/jscolor.js';
+					wp_enqueue_script( 'jquery-jscolor', $jquery_colorUrl, array('jquery-color') );
 					break;
 //20100809ysk start
 				case 'usces_cart':

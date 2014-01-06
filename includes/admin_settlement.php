@@ -67,14 +67,26 @@ jQuery(function($){
 //			$("input[name='quickcharge']").removeAttr("disabled");
 //		}
 //	});
-});
 
+	if( 'on' == $("input[name='set_cartbordercolor']:checked").val() ) {
+		$("#cartbordercolor").css("display", "");
+	} else {
+		$("#cartbordercolor").css("display", "none");
+	}
+	$("input[name='set_cartbordercolor']").click(function() {
+		if( 'on' == $("input[name='set_cartbordercolor']:checked").val() ) {
+			$("#cartbordercolor").css("display", "");
+		} else {
+			$("#cartbordercolor").css("display", "none");
+		}
+	});
+});
 function toggleVisibility(id) {
-   var e = document.getElementById(id);
-   if(e.style.display == 'block')
-	  e.style.display = 'none';
-   else
-	  e.style.display = 'block';
+	var e = document.getElementById(id);
+	if(e.style.display == 'block')
+		e.style.display = 'none';
+	else
+		e.style.display = 'block';
 }
 </script>
 <div class="wrap">
@@ -525,7 +537,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_signature_paypal');"><?php _e('Signature', 'usces'); ?></a></th>
-				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="50" /></td>
+				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="80" /></td>
 				<td><div id="ex_signature_paypal" class="explanation"><?php _e('Type in the signature from API credential. Signature will be different in the formal installment of Sandbox.', 'usces'); ?></div></td>
 			</tr>
 <!--20110412ysk start-->
@@ -538,6 +550,24 @@ function toggleVisibility(id) {
 			</tr>
 			<?php endif; ?>
 <!--20110412ysk end-->
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_logoimg');"><?php _e('URL for the image of the payment page', 'usces'); ?></a></th>
+				<td colspan="4"><input name="logoimg" type="text" id="logoimg" value="<?php echo esc_html(isset($opts['paypal']['logoimg']) ? $opts['paypal']['logoimg'] : ''); ?>" size="80" /></td>
+				<td><div id="ex_logoimg" class="explanation"><?php _e('a URL to an image of your logo. The image has a maximum size of 190 pixels wide by 60 pixels high. The available file format is jpg, png, gif. PayPal recommends that you provide an image that is stored on a secure (https) server. If you do not specify an image, the business name displays.', 'usces'); ?><br /><?php _e('127 single-byte alphanumeric characters', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_cartbordercolor');"><?php _e('The background color for the payment page', 'usces'); ?></a></th>
+				<td><input name="set_cartbordercolor" type="radio" id="set_cartbordercolor_1" value="on"<?php if( isset($opts['paypal']['set_cartbordercolor']) && $opts['paypal']['set_cartbordercolor'] == 'on' ) echo ' checked'; ?> /></td><td><label for="set_cartbordercolor_1"><?php _e('Set', 'usces'); ?></label></td>
+				<td><input name="set_cartbordercolor" type="radio" id="set_cartbordercolor_2" value="off"<?php if( isset($opts['paypal']['set_cartbordercolor']) && $opts['paypal']['set_cartbordercolor'] == 'off' ) echo ' checked'; ?> /></td><td><label for="set_cartbordercolor_2"><?php _e('Not set', 'usces'); ?></label></td>
+				<td><div id="ex_cartbordercolor" class="explanation"><?php _e('Your principal identifying color. PayPal blends your color to white in a gradient fill that borders the cart review area.', 'usces'); ?><br /><?php _e('6-character HTML hexadecimal ASCII color code', 'usces'); ?></div></td>
+			</tr>
+			<tr id="cartbordercolor">
+				<th><?php _e('The background color for the payment page', 'usces'); ?></th>
+				<td colspan="4">#<input name="cartbordercolor" type="text" value="<?php echo esc_html(isset($opts['paypal']['cartbordercolor']) ? $opts['paypal']['cartbordercolor'] : ''); ?>" size="8" class="color" /></td>
+				<td></td>
+			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paypal" />
 		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Settings', 'usces'); ?>" />
