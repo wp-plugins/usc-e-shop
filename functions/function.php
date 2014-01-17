@@ -1471,10 +1471,12 @@ function usces_delete_orderdata() {
 	$args = compact( 'ID', 'point', 'res' );
 	
 	if($res){
+		
+		do_action('usces_action_del_orderdata', $order_data, $args);
+
 		$query = $wpdb->prepare("DELETE FROM $order_meta_table WHERE order_id = %d", $ID);
 		$wpdb->query( $query );
 		
-		do_action('usces_action_del_orderdata', $order_data, $args);
 //20120306ysk start 0000324
 		//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
 		if( 0 != $point ) usces_restore_point( $order_data->mem_id, $point );
@@ -2171,16 +2173,13 @@ function usces_all_delete_order_data(&$obj){
 		if( $res === false ) {
 			$status = false;
 		}else{
+
+			if( 0 != $point ) usces_restore_point( $order_res['mem_id'], $point );
+
+			do_action('usces_action_collective_order_delete_each', $id, $order_res);
+			
 			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $id);//0000427
 			$metares = $wpdb->query( $metaquery );
-//20120306ysk start 0000324
-			//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
-			if( 0 != $point ) usces_restore_point( $order_res['mem_id'], $point );
-//20120306ysk end
-//20120612ysk start 0000501
-//20130419ysk
-			do_action('usces_action_collective_order_delete_each', $id, $order_res);
-//20120612ysk end
 		}
 	endforeach;
 	if ( true === $status ) {
