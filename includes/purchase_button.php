@@ -529,6 +529,14 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 						<input type="hidden" name="L_PAYMENTREQUEST_0_NAME'.$i.'" value="'.esc_attr(__('Campaign disnount', 'usces')).'">
 						<input type="hidden" name="L_PAYMENTREQUEST_0_AMT'.$i.'" value="'.usces_crform($usces_entries['order']['discount'], false, false, 'return', false).'">';
 					$item_total_price += $usces_entries['order']['discount'];
+					$i++;
+				}
+				if( !empty($usces_entries['order']['usedpoint']) ) {
+					$html .= '
+						<input type="hidden" name="L_PAYMENTREQUEST_0_NAME'.$i.'" value="'.esc_attr(__('Used points', 'usces')).'">
+						<input type="hidden" name="L_PAYMENTREQUEST_0_AMT'.$i.'" value="'.usces_crform($usces_entries['order']['usedpoint']*(-1), false, false, 'return', false).'">';
+					$item_total_price -= $usces_entries['order']['usedpoint'];
+					$i++;
 				}
 				$html .= '
 					<input type="hidden" name="PAYMENTREQUEST_0_ITEMAMT" value="'.usces_crform($item_total_price, false, false, 'return', false).'">
