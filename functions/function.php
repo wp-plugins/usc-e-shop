@@ -4351,4 +4351,10 @@ function usces_itempage_admin_bar() {
 	}
 }
 
+function usces_rand( $digit = 10 ) {
+	$num = str_repeat( "9", $digit );
+	$rand = sprintf( '%0'.$digit.'d', mt_rand( 1, (int)$num ) );
+	return $rand;
+}
+
 ?>

@@ -3141,19 +3141,21 @@ class usc_e_shop
 		$entry = $this->cart->get_entry();
 		$this->error_message = $this->zaiko_check();
 		if( WCUtils::is_blank($this->error_message) && 0 < $this->cart->num_row()){
-			$actinc_status = '';
+			$acting_status = '';
 			$payments = $this->getPayments( $entry['order']['payment_name'] );
 			if( substr($payments['settlement'], 0, 6) == 'acting' && $entry['order']['total_full_price'] > 0 ){
 				$acting_flg = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
-				$query = '';
-				foreach($_POST as $key => $value){
-					if($key != 'purchase')
-						$query .= '&' . $key . '=' . urlencode(maybe_serialize($value));
-				}
-				$actinc_status = $this->acting_processing($acting_flg, $query);
+				//$query = '';
+				//foreach($_POST as $key => $value){
+				//	if($key != 'purchase')
+				//		$query .= '&' . $key . '=' . urlencode(maybe_serialize($value));
+				//}
+				unset( $_POST['purchase'] );
+				$query = '&'.http_build_query( $_POST );
+				$acting_status = $this->acting_processing($acting_flg, $query);
 			}
 			
-			if($actinc_status == 'error'){
+			if($acting_status == 'error'){
 				$this->page = 'error';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 			}else{
@@ -4648,7 +4650,7 @@ class usc_e_shop
 				}
 			}
 		}
-		$mes = apply_filters('usces_filter_point_check', $mes);
+		$mes = apply_filters('usces_filter_point_check_last', $mes);
 		return $mes;
 	}
 
@@ -5987,7 +5989,7 @@ class usc_e_shop
 			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$delim.'acting=paypal_ec&acting_return=1');
 
 			//The cancelURL is the location buyers are sent to when they hit the cancel button during authorization of payment during the PayPal flow
-			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$delim.'confirm=1');
+			$nvpstr .= '&CANCELURL='.apply_filters( 'usces_filter_paypal_ec_cancelurl', urlencode(USCES_CART_URL.$delim.'confirm=1'), $query );
 
 			$nvpstr .= '&NOTIFYURL='.urlencode(USCES_PAYPAL_NOTIFY_URL);
 
