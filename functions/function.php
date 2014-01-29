@@ -3223,7 +3223,11 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "\t\t\t: " . $usces_settings['country'][$values['country']] . "\r\n";
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "\t\t\t: " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('Zip/Postal Code','usces') . "\t\t: " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Address','usces') . "\t\t\t: " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "\t\t: " . $values['tel'] . "\r\n";
@@ -3252,7 +3256,11 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
@@ -3287,7 +3295,12 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
-		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";

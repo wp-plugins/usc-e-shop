@@ -4719,7 +4719,7 @@ class usc_e_shop
 		if(isset($options['business_days'][$year][$mon][1]))
 			unset($options['business_days'][$year][$mon]);
 		
-		for($i=0; $i<3; $i++){
+		for($i=0; $i<12; $i++){
 			//list($year, $mon, $mday) = getAfterMonth($datenow['year'], $datenow['mon'], $datenow['mday'], $i);
 			list($year, $mon, $mday) = getAfterMonth($datenow['year'], $datenow['mon'], 1, $i);
 			$last = getLastDay($year, $mon);
@@ -4728,9 +4728,10 @@ class usc_e_shop
 					$options['business_days'][$year][$mon][$j] = 1;
 			}
 		}
-
 		update_option('usces', $options);
-
+//20131206_kitamu_start
+		$this->options = get_option('usces');
+//20131206_kitamu_end
 		$_SESSION['usces_checked_business_days'] = '';
 	}
 	 
@@ -7976,7 +7977,9 @@ class usc_e_shop
 			$html = $this->options['member_page_data']['footer']['completion'];
 			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
-	}
-	
+	}	
 }
+
+
+
 ?>
