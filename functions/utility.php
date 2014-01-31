@@ -524,6 +524,23 @@ function usces_filter_delivery_check_custom_order( $mes ) {
 	global $usces;
 
 	$meta = usces_has_custom_field_meta('order');
+//20140131ysk start 0000819
+	if( is_array($meta) ) {
+		unset( $_SESSION['usces_entry']['custom_order'] );
+		if( isset($_POST['custom_order']) ) {
+			foreach( $_POST['custom_order'] as $key => $value ) {
+				if( is_array($value) ) {
+					foreach( $value as $k => $v ) {
+						$_SESSION['usces_entry']['custom_order'][$key][trim($v)] = trim($v);
+					}
+				} else {
+					$_SESSION['usces_entry']['custom_order'][$key] = trim($value);
+				}
+			}
+		}
+	}
+//20140131ysk end
+
 	foreach($meta as $key => $entry) {
 		$essential = $entry['essential'];
 		if($essential == 1) {
