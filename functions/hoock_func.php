@@ -50,6 +50,17 @@ function usces_action_acting_construct(){
 		} else {
 			usces_log('digitalcheck construct : '.$_REQUEST['SID'], 'acting_transaction.log');
 		}
+
+	} elseif( isset($_REQUEST['SiteId']) && isset($_REQUEST['rand']) ) {//AnotherLane
+
+		$rand = $_REQUEST['rand'];
+		$datas = usces_get_order_acting_data( $rand );
+		$_GET['uscesid'] = $datas['sesid'];
+		if( empty($datas['sesid']) ) {
+			usces_log('anotherlane construct : error1', 'acting_transaction.log');
+		} else {
+			usces_log('anotherlane construct : '.$_REQUEST['rand'], 'acting_transaction.log');
+		}
 	}
 }
 
@@ -241,7 +252,7 @@ function usces_action_acting_transaction(){
 		$value = unserialize($values['meta_value']);
 		$status = ( '03' === $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
 		$order_id = $values['order_id'];
-		$add_point = true;//20120306ysk 0000324
+		//$add_point = true;//20120306ysk 0000324
 		if( 'receipted,' == $status ){
 			$mquery = $wpdb->prepare("
 			UPDATE $table_name SET order_status = 
@@ -260,7 +271,7 @@ function usces_action_acting_transaction(){
 				ELSE CONCAT('noreceipt,', order_status ) 
 			END 
 			WHERE ID = %d", $order_id);
-			$add_point = false;//20120306ysk 0000324
+			//$add_point = false;//20120306ysk 0000324
 		}
 		$res = $wpdb->query( $mquery );
 		if( false === $res ){
@@ -268,7 +279,8 @@ function usces_action_acting_transaction(){
 			usces_log('zeus bank error2 : update usces_order', 'acting_transaction.log');
 			die('error2');
 		}
-		usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
+		//usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
+		if( '03' === $_REQUEST['status'] ) usces_action_acting_getpoint( $order_id );//20140130ysk
 
 		$upvalue = array( 'acting' => $_GET['acting'], 'order_no' => $_GET['order_no'], 'tracking_no' => $_GET['tracking_no'], 'status' => $_GET['status'], 'error_message' => $_GET['error_message'], 'money' => $_GET['money'] );
 		$mquery = $wpdb->prepare("UPDATE $table_meta_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", serialize($upvalue), $order_id, 'acting_'.$_REQUEST['tracking_no']);
@@ -300,7 +312,6 @@ function usces_action_acting_transaction(){
 			
 //20110203ysk start
 			$res = $usces->order_processing();
-	
 			
 			if( 'error' == $res ){
 				usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
@@ -314,51 +325,51 @@ function usces_action_acting_transaction(){
 			}
 //20110203ysk end
 
-
 		}else{
-		if( '05' !== $_REQUEST['status'] ) {//20131128ysk 0000794
-			$value = unserialize($values['meta_value']);
-			$status = ( '04' === $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
-			$order_id = $values['order_id'];
-			$add_point = true;//20120306ysk 0000324
-			if( 'receipted,' == $status ){
-				$mquery = $wpdb->prepare("
-				UPDATE $table_name SET order_status = 
-				CASE 
-					WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
-					WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
-					ELSE CONCAT('receipted,', order_status ) 
-				END 
-				WHERE ID = %d", $order_id);
-			}else{
-				$mquery = $wpdb->prepare("
-				UPDATE $table_name SET order_status = 
-				CASE 
-					WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
-					WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
-					ELSE CONCAT('noreceipt,', order_status ) 
-				END 
-				WHERE ID = %d", $order_id);
-				$add_point = false;//20120306ysk 0000324
+			if( '05' !== $_REQUEST['status'] ) {//20131128ysk 0000794
+				$value = unserialize($values['meta_value']);
+				$status = ( '04' === $_REQUEST['status'] ) ? 'receipted,' : 'noreceipt,';
+				$order_id = $values['order_id'];
+				//$add_point = true;//20120306ysk 0000324
+				if( 'receipted,' == $status ){
+					$mquery = $wpdb->prepare("
+					UPDATE $table_name SET order_status = 
+					CASE 
+						WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+						WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+						ELSE CONCAT('receipted,', order_status ) 
+					END 
+					WHERE ID = %d", $order_id);
+				}else{
+					$mquery = $wpdb->prepare("
+					UPDATE $table_name SET order_status = 
+					CASE 
+						WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
+						WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
+						ELSE CONCAT('noreceipt,', order_status ) 
+					END 
+					WHERE ID = %d", $order_id);
+					//$add_point = false;//20120306ysk 0000324
+				}
+				$res = $wpdb->query( $mquery );
+				if(!$res){
+					usces_log('zeus conv error2 : '.print_r($data, true), 'acting_transaction.log');
+					die('error2');
+				}
+				
+				foreach( $_GET as $key => $v ){
+					$newvalue[$key] = mb_convert_encoding($v, 'UTF-8', 'SJIS');
+				}
+				$value = serialize($newvalue);
+				$mquery = $wpdb->prepare("UPDATE $table_meta_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", $value, $order_id, 'acting_'.$_REQUEST['sendpoint']);
+				$res = $wpdb->query( $mquery );
+				if(!$res){
+					usces_log('zeus conv error3 : '.print_r($data, true), 'acting_transaction.log');
+					die('error3');
+				}
+				//usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
+				if( '04' === $_REQUEST['status'] ) usces_action_acting_getpoint( $order_id );//20140130ysk
 			}
-			$res = $wpdb->query( $mquery );
-			if(!$res){
-				usces_log('zeus conv error2 : '.print_r($data, true), 'acting_transaction.log');
-				die('error2');
-			}
-			
-			foreach( $_GET as $key => $v ){
-				$newvalue[$key] = mb_convert_encoding($v, 'UTF-8', 'SJIS');
-			}
-			$value = serialize($newvalue);
-			$mquery = $wpdb->prepare("UPDATE $table_meta_name SET meta_value = %s WHERE order_id = %d AND meta_key = %s", $value, $order_id, 'acting_'.$_REQUEST['sendpoint']);
-			$res = $wpdb->query( $mquery );
-			if(!$res){
-				usces_log('zeus conv error3 : '.print_r($data, true), 'acting_transaction.log');
-				die('error3');
-			}
-			usces_action_acting_getpoint( $order_id, $add_point );//20120306ysk 0000324
-		}
 		}
 
 		usces_log('zeus conv transaction : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
@@ -684,7 +695,7 @@ function usces_action_acting_transaction(){
 				die('NG,usces_order_meta update error');
 			}
 
-			usces_action_acting_getpoint( $order_id, false );
+			//usces_action_acting_getpoint( $order_id, false );
 
 			usces_log('SoftBankPayment '.$data['res_pay_method'].' [CN] transaction : '.$order_id, 'acting_transaction.log');
 			die('OK,');
@@ -942,6 +953,43 @@ function usces_action_acting_transaction(){
 		}
 		die();
 //20130225ysk end
+//20131220ysk start
+	//*** AnotherLane credit ***//
+	} elseif( isset($_GET['SiteId']) && isset($_GET['TransactionId']) && isset($_GET['Result']) ) {
+		$acting_opts = $usces->options['acting_settings']['anotherlane'];
+		foreach( $_GET as $key => $value ) {
+			$data[$key] = $value;
+		}
+		if( $acting_opts['siteid'] == $_GET['SiteId'] && 'OK' == $_GET['Result'] ) {
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'TransactionId', $data['TransactionId'] );
+			$order_id = $wpdb->get_var( $query );
+			if( !$order_id ) {
+				$res = $usces->order_processing();
+				if( 'ordercompletion' == $res ) {
+					$usces->cart->crear_cart();
+					usces_log( 'AnotherLane [OK] transaction : '.$data['TransactionId'], 'acting_transaction.log' );
+				} else {
+					usces_log( 'AnotherLane order processing error : '.print_r($data, true), 'acting_transaction.log' );
+				}
+			}
+		}
+		exit;
+
+	} elseif( isset($_GET['ali_back']) && isset($_POST['SiteId']) && isset($_POST['Result']) ) {
+		$acting_opts = $usces->options['acting_settings']['anotherlane'];
+		if( $acting_opts['siteid'] == $_POST['SiteId'] && 'NG' == $_POST['Result'] ) {
+			$permalink_structure = get_option( 'permalink_structure' );
+			$delim = ( !$usces->use_ssl && $permalink_structure ) ? '?' : '&';
+			header( 'location: '.USCES_CART_URL.$delim.'confirm=1' );
+			exit;
+		} elseif( $acting_opts['siteid'] == $_POST['SiteId'] && 'OK' == $_POST['Result'] ) {
+			$permalink_structure = get_option( 'permalink_structure' );
+			$delim = ( !$usces->use_ssl && $permalink_structure ) ? '?' : '&';
+			header( 'location: '.USCES_CART_URL.$delim.'acting=anotherlane_card&acting_return=1' );
+			exit;
+		}
+//20131220ysk end
 	}
 }
 ?>

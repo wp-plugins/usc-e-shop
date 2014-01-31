@@ -1787,7 +1787,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 			'order_number',
 			'res_tracking_id', 'res_payment_date', 'res_payinfo_key',
 			'SID', 'DATE', 'TIME', 'CVS', 'SHNO', 'FURL', 'settltment_status', 'settltment_errmsg', 
-			'stran', 'mbtran', 'bktrans', 'tranid'
+			'stran', 'mbtran', 'bktrans', 'tranid', 'TransactionId'
 		);
 		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
 		if( !in_array($key, $keys) ) {
@@ -3193,7 +3193,8 @@ function usces_point_inform_zeus() {
 
 	case 'acting_zeus_conv':
 		if( isset($_POST['pay_cvs']) ) {
-			$html = '<input type="hidden" name="pay_cvs" value="'.$_POST['pay_cvs'].'">';
+			$html .= '<input type="hidden" name="pay_cvs" value="'.$_POST['pay_cvs'].'">';
+			$html .= '<input type="hidden" name="username" value="'.$_POST['username'].'">';
 		}
 		break;
 	}
