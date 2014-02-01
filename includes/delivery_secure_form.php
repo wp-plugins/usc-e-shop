@@ -150,6 +150,8 @@ foreach ( (array)$payments as $id => $array ) {
 					continue;
 
 				$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : 'D001';
+				$entry = $usces->cart->get_entry();
+				$username = isset( $_POST['username'] ) ? esc_html($_POST['username']) : $entry['customer']['name3'].$entry['customer']['name4'];
 
 				$html .= '
 				<table class="customer_form" id="' . $paymod_id . '_conv">
@@ -164,6 +166,10 @@ foreach ( (array)$payments as $id => $array ) {
 						<option value="D015"' . (('D015' == $pay_cvs) ? ' selected="selected"' : '') . '>セイコーマート</option>
 					</select>
 					</td>
+					</tr>
+					<tr>
+					<th scope="row"><em>＊</em>'.__('お名前', 'usces').'</th>
+					<td colspan="2"><input name="username" type="text" size="30" value="'.esc_attr($username).'" />(全角カナ)</td>
 					</tr>
 				</table>';
 				break;

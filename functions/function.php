@@ -1266,6 +1266,11 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
 		}
 //20130225ysk end
+//20131220ysk start
+		if( isset($_REQUEST['SiteId']) and $usces->options['acting_settings']['anotherlane']['siteid'] == $_REQUEST['SiteId'] and isset($_REQUEST['TransactionId']) ) {
+			$usces->set_order_meta_value( 'TransactionId', $_REQUEST['TransactionId'], $order_id );
+		}
+//20131220ysk end
 		
 		//$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
 		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$set, 'charging_type'=>$charging_type);//20131121ysk
@@ -1558,10 +1563,12 @@ function usces_delete_orderdata() {
 	$args = compact( 'ID', 'point', 'res' );
 	
 	if($res){
+		
+		do_action('usces_action_del_orderdata', $order_data, $args);
+
 		$query = $wpdb->prepare("DELETE FROM $order_meta_table WHERE order_id = %d", $ID);
 		$wpdb->query( $query );
 		
-		do_action('usces_action_del_orderdata', $order_data, $args);
 //20120306ysk start 0000324
 		//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
 		if( 0 != $point ) usces_restore_point( $order_data->mem_id, $point );
@@ -2234,9 +2241,11 @@ function usces_all_delete_order_data(&$obj){
 //20120306ysk start 0000324
 		//$restore_point = false;
 		$point = 0;
+		$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
+		$order_res = $wpdb->get_row( $query, ARRAY_A );
 		if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($order_res['mem_id']) && !$usces->is_status('cancel', $order_res['order_status']) ) {
-			$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
-			$order_res = $wpdb->get_row( $query, ARRAY_A );
+			//$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $id);
+			//$order_res = $wpdb->get_row( $query, ARRAY_A );
 			if( 0 < $order_res['order_getpoint'] ) {
 				//if( $usces->is_status('completion', $order_res['order_status']) ) {
 				//	$restore_point = true;
@@ -2256,16 +2265,13 @@ function usces_all_delete_order_data(&$obj){
 		if( $res === false ) {
 			$status = false;
 		}else{
+
+			if( 0 != $point ) usces_restore_point( $order_res['mem_id'], $point );
+
+			do_action('usces_action_collective_order_delete_each', $id, $order_res);
+			
 			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $id);//0000427
 			$metares = $wpdb->query( $metaquery );
-//20120306ysk start 0000324
-			//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
-			if( 0 != $point ) usces_restore_point( $order_res['mem_id'], $point );
-//20120306ysk end
-//20120612ysk start 0000501
-//20130419ysk
-			do_action('usces_action_collective_order_delete_each', $id, $order_res);
-//20120612ysk end
 		}
 	endforeach;
 	if ( true === $status ) {
@@ -2518,6 +2524,12 @@ function usces_check_acting_return() {
 			}
 			break;
 //20130225ysk end
+//20131220ysk start
+		case 'anotherlane_card':
+			$results[0] = 1;
+			$results['reg_order'] = false;
+			break;
+//20131220ysk end
 
 		default:
 			do_action( 'usces_action_check_acting_return_default' );
@@ -3309,7 +3321,11 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "\t\t\t: " . $usces_settings['country'][$values['country']] . "\r\n";
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "\t\t\t: " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('Zip/Postal Code','usces') . "\t\t: " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Address','usces') . "\t\t\t: " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "\t\t: " . $values['tel'] . "\r\n";
@@ -3331,14 +3347,18 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 			$order_email = $order_data[0]->order_email;
 
 			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
-			$formtag .= ( iempty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
 		}
 		//20131129_kitamu_end
 		$formtag .= $name_label . "\t\t: " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name1'] . ' ' . $values['name2'])) . " \r\n";
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
@@ -3363,7 +3383,7 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 			$order_email = $order_data[0]->order_email;
 
 			$formtag .= ( !empty( $mem_id ) ) ? __( 'membership number', 'usces' ) . "\t\t: " . $mem_id . "\r\n" : '';
-			$formtag .= ( iempty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
+			$formtag .= ( !empty( $order_email ) ) ? __( 'e-mail adress', 'usces' ) . "\t\t: " . $order_email . "\r\n" : '';
 		}
 		//20131129_kitamu_end
 		$formtag .= $name_label . "    : " . sprintf(__('Mr/Mrs %s', 'usces'), ($values['name2'] . ' ' . $values['name1'])) . " \r\n";
@@ -3373,7 +3393,12 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
-		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
@@ -4305,6 +4330,7 @@ function usces_is_complete_settlement( $payment_name, $status = '' ) {
 			case 'acting_telecom_card':
 			case 'acting_digitalcheck_card':
 			case 'acting_mizuho_card':
+			case 'acting_anotherlane_card':
 			case 'COD':
 				$complete = true;
 			}
@@ -4434,6 +4460,13 @@ function usces_itempage_admin_bar() {
 			'href' => site_url() . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $post->ID . '&usces_referer=' . $ref
 		) );
 	}
+}
+
+function usces_get_cr_symbol() {
+	global $usces, $usces_settings;
+	$cr = $usces->options['system']['currency'];
+	list( $code, $decimal, $point, $seperator, $symbol ) = $usces_settings['currency'][$cr];
+	return $symbol;
 }
 
 ?>

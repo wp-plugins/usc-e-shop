@@ -83,7 +83,7 @@ $html .= '<form name="searchindetail" action="' . USCES_CART_URL . $this->delim 
 $usces_search_button = '<input name="usces_search_button" class="usces_search_button" type="submit" value="'.__('Search', 'usces').'" onclick="newsubmit()" />';
 $html .= apply_filters('usces_filter_search_button', $usces_search_button);
 
-$html .= '<input name="paged" id="usces_paged" type="hidden" value="' . $uscpaged . '" />
+$html .= '<input name="paged" id="usces_paged" type="hidden" value="' . esc_attr( $uscpaged ) . '" />
 <input name="usces_search" type="hidden" />
 </form>';
 $html .= '</div><!-- searchbox -->';

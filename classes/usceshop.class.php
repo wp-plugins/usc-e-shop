@@ -123,7 +123,6 @@ class usc_e_shop
 		if(!isset($this->options['acting_settings']['remise'])) $this->options['acting_settings']['remise'] = array('activate'=>'','plan'=>'','SHOPCO'=>'','HOSTID'=>'','card_activate'=>'','card_jb'=>'', 'payquick'=>'','howpay'=>'','continuation'=>'','card_pc_ope'=>'','send_url_pc'=>'','conv_activate'=>'','S_PAYDATE'=>'','conv_pc_ope'=>'','send_url_cvs_pc'=>'');
 		if(!isset($this->options['acting_settings']['jpayment'])) $this->options['acting_settings']['jpayment'] = array('activate'=>'','aid'=>'','card_activate'=>'','card_jb'=>'','conv_activate'=>'','webm_activate'=>'', 'bitc_activate'=>'','suica_activate'=>'','bank_activate'=>'');
 		if(!isset($this->options['acting_settings']['paypal'])) $this->options['acting_settings']['paypal'] = array('activate'=>'','ec_activate'=>'','sandbox'=>'','user'=>'','pwd'=>'','signature'=>'', 'continuation'=>'');
-		$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
 
 //20010420ysk start
 		//if(!isset($this->options['system']['base_country'])) $this->options['system']['base_country'] = usces_get_base_country();
@@ -1072,10 +1071,12 @@ class usc_e_shop
 					$options['acting_settings']['zeus']['clientip'] = isset($_POST['clientip']) ? trim($_POST['clientip']) : '';
 					$options['acting_settings']['zeus']['howpay'] = isset($_POST['howpay']) ? $_POST['howpay'] : '';
 					$options['acting_settings']['zeus']['bank_activate'] = isset($_POST['bank_activate']) ? $_POST['bank_activate'] : '';
+					$options['acting_settings']['zeus']['bank_ope'] = isset($_POST['bank_ope']) ? $_POST['bank_ope'] : '';
 					$options['acting_settings']['zeus']['clientip_bank'] = isset($_POST['clientip_bank']) ? trim($_POST['clientip_bank']) : '';
 					$options['acting_settings']['zeus']['testid_bank'] = isset($_POST['testid_bank']) ? trim($_POST['testid_bank']) : '';
 					$options['acting_settings']['zeus']['bank_url'] = isset($_POST['bank_url']) ? $_POST['bank_url'] : '';
 					$options['acting_settings']['zeus']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
+					$options['acting_settings']['zeus']['conv_ope'] = isset($_POST['conv_ope']) ? $_POST['conv_ope'] : '';
 					$options['acting_settings']['zeus']['clientip_conv'] = isset($_POST['clientip_conv']) ? trim($_POST['clientip_conv']) : '';
 					$options['acting_settings']['zeus']['testid_conv'] = isset($_POST['testid_conv']) ? trim($_POST['testid_conv']) : '';
 					$options['acting_settings']['zeus']['test_type_conv'] = ( (isset($_POST['testid_conv']) && WCUtils::is_blank($_POST['testid_conv'])) || !isset($_POST['test_type']) ) ? 0 : $_POST['test_type'];
@@ -1087,8 +1088,12 @@ class usc_e_shop
 						$mes .= '※認証キーを入力して下さい<br />';
 					if( WCUtils::is_blank($_POST['clientip_bank']) && isset($_POST['bank_activate']) && 'on' == $_POST['bank_activate'] )
 						$mes .= '※入金お任せIPコードを入力して下さい<br />';
+					if( WCUtils::is_blank($_POST['testid_bank']) && isset($_POST['bank_ope']) && 'test' == $_POST['bank_ope'] )
+						$mes .= '※入金お任せテストIDを入力して下さい<br />';
 					if( WCUtils::is_blank($_POST['clientip_conv']) && isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] )
 						$mes .= '※コンビニ決済IPコードを入力して下さい<br />';
+					if( WCUtils::is_blank($_POST['testid_conv']) && isset($_POST['conv_ope']) && 'test' == $_POST['conv_ope'] )
+						$mes .= '※コンビニ決済テストIDを入力して下さい<br />';
 					if( isset($_POST['batch']) && 'on' == $_POST['batch'] ) {
 						if( isset($_POST['quickcharge']) && 'on' == $_POST['quickcharge'] ) {
 						} else {
@@ -1281,9 +1286,12 @@ class usc_e_shop
 //20110412ysk start
 					$options['acting_settings']['paypal']['continuation'] = isset($_POST['continuation']) ? $_POST['continuation'] : '';
 //20110412ysk end
+					$options['acting_settings']['paypal']['logoimg'] = isset($_POST['logoimg']) ? $_POST['logoimg'] : '';
+					$options['acting_settings']['paypal']['set_cartbordercolor'] = isset($_POST['set_cartbordercolor']) ? $_POST['set_cartbordercolor'] : 'off';
+					$options['acting_settings']['paypal']['cartbordercolor'] = ( 'on' == $options['acting_settings']['paypal']['set_cartbordercolor'] ) ? $_POST['cartbordercolor'] : '';
 
 					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
-						$mes .= '※PayPalサーバーが不正です<br />';
+						$mes .= '※動作環境が不正です<br />';
 					if( WCUtils::is_blank($_POST['user']) )
 						$mes .= '※APIユーザー名を入力して下さい<br />';
 					if( WCUtils::is_blank($_POST['pwd']) )
@@ -1359,6 +1367,9 @@ class usc_e_shop
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['sbps']['activate'] = 'on';
+						if( isset($_POST['ope']) && 'public' == $_POST['ope'] ) {
+							$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
+						}
 						if( 'on' == $options['acting_settings']['sbps']['card_activate'] ){
 							$this->payment_structure['acting_sbps_card'] = 'カード決済（ソフトバンク・ペイメント）';
 						}else{
@@ -1494,20 +1505,19 @@ class usc_e_shop
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['digitalcheck']['activate'] = 'on';
 						if( 'on' == $options['acting_settings']['digitalcheck']['card_activate'] ){
-							$options['acting_settings']['digitalcheck']['send_url_card'] = "https://www.digitalcheck.jp/settle/settle3/bp3.dll";
+							$options['acting_settings']['digitalcheck']['send_url_card'] = "https://www.paydesign.jp/settle/settle3/bp3.dll";
 							if( 'on' == $options['acting_settings']['digitalcheck']['card_user_id'] ) {
-								$options['acting_settings']['digitalcheck']['send_url_user_id'] = "https://www.digitalcheck.jp/settle/settlex/credit2.dll";
+								$options['acting_settings']['digitalcheck']['send_url_user_id'] = "https://www.paydesign.jp/settle/settlex/credit2.dll";
 							} else {
 								$options['acting_settings']['digitalcheck']['send_url_user_id'] = "";
 							}
-							$this->payment_structure['acting_digitalcheck_card'] = 'カード決済（デジタルチェック）';
+							$this->payment_structure['acting_digitalcheck_card'] = 'カード決済（ペイデザイン）';
 						}else{
 							unset($this->payment_structure['acting_digitalcheck_card']);
 						}
 						if( 'on' == $options['acting_settings']['digitalcheck']['conv_activate'] ){
-							//$options['acting_settings']['digitalcheck']['send_url_conv'] = "https://www.digitalcheck.jp/settle/settle2/ubp3.dll";
-							$options['acting_settings']['digitalcheck']['send_url_conv'] = "https://www.digitalcheck.jp/settle/settle3/bp3.dll";
-							$this->payment_structure['acting_digitalcheck_conv'] = 'コンビニ決済（デジタルチェック）';
+							$options['acting_settings']['digitalcheck']['send_url_conv'] = "https://www.paydesign.jp/settle/settle3/bp3.dll";
+							$this->payment_structure['acting_digitalcheck_conv'] = 'コンビニ決済（ペイデザイン）';
 						}else{
 							unset($this->payment_structure['acting_digitalcheck_conv']);
 						}
@@ -1586,6 +1596,40 @@ class usc_e_shop
 					update_option('usces_payment_structure', $this->payment_structure);
 					break;
 //20130225ysk end
+//20131220ysk start
+				case 'anotherlane':
+					unset( $options['acting_settings']['anotherlane'] );
+					$options['acting_settings']['anotherlane']['siteid'] = isset($_POST['siteid']) ? $_POST['siteid'] : '';
+					$options['acting_settings']['anotherlane']['sitepass'] = isset($_POST['sitepass']) ? $_POST['sitepass'] : '';
+					$options['acting_settings']['anotherlane']['quickcharge'] = isset($_POST['quickcharge']) ? $_POST['quickcharge'] : '';
+					$options['acting_settings']['anotherlane']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+
+					if( WCUtils::is_blank($_POST['siteid']) )
+						$mes .= '※サイトIDを入力して下さい<br />';
+					if( WCUtils::is_blank($_POST['sitepass']) )
+						$mes .= '※サイトパスワードを入力して下さい<br />';
+
+					if( WCUtils::is_blank($mes) ) {
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['anotherlane']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['anotherlane']['card_activate'] ) {
+							$options['acting_settings']['anotherlane']['send_url'] = "https://credit.alij.ne.jp/service/credit/input.html";
+							$this->payment_structure['acting_anotherlane_card'] = 'カード決済（アナザーレーン）';
+						} else {
+							unset( $this->payment_structure['acting_anotherlane_card'] );
+						}
+						update_option( 'usces', $options );
+					} else {
+						$this->action_status = 'error';
+						$this->action_message = __('Data have deficiency.','usces');
+						$options['acting_settings']['anotherlane']['activate'] = 'off';
+						unset( $this->payment_structure['acting_anotherlane_card'] );
+					}
+					ksort( $this->payment_structure );
+					update_option( 'usces_payment_structure', $this->payment_structure );
+					break;
+//20131220ysk end
 			}
 
 		}
@@ -2360,14 +2404,11 @@ class usc_e_shop
 		$this->update_table();
 	
 		
-//		if( 'customer' == $this->page ){
-//			header("Pragma: private");
-//			header("Cache-Control: private");
-//		}else{
-//			header("Pragma: no-cache");
-//			header("Cache-Control: no-cache");
+//		if( ( !isset( $_POST['confirm'] ) && $this->is_cart_page( $_SERVER['REQUEST_URI'] ) ) && !is_admin() ){
+//			header('Expires:-1');
+//			header('Cache-Control:');
+//			header('Pragma:');
 //		}
-		
 		
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
@@ -2508,23 +2549,23 @@ class usc_e_shop
 					
 				case 'usces_settlement':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
-//					$item_list_layoutUrl = USCES_FRONT_PLUGIN_URL.'/js/usces_dumy.js';
-//					wp_enqueue_script('usces_dumy', $item_list_layoutUrl, array('jquery-ui-tabs'), '1.0' );
+					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					$jquery_colorUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/color/jscolor.js';
+					wp_enqueue_script( 'jquery-jscolor', $jquery_colorUrl, array('jquery-color') );
 					break;
 //20100809ysk start
 				case 'usces_cart':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20100809ysk end
 //20100818ysk start
 				case 'usces_member':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20100818ysk end
 //20100908ysk start
@@ -2553,15 +2594,15 @@ class usc_e_shop
 //20101208ysk start
 				case 'usces_delivery':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20101208ysk end
 //20110331ysk start
 				case 'usces_system':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
+					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
 					break;
 //20110331ysk end
 			}
@@ -3083,7 +3124,7 @@ class usc_e_shop
 			add_action('template_redirect', array($this, 'template_redirect'));
 			return;
 		}
-		
+
 		$this->set_reserve_pre_order_id();
 		if(isset($_POST['confirm'])){
 			$this->error_message = $this->delivery_check();
@@ -3197,10 +3238,12 @@ class usc_e_shop
 			exit;
 		}*/
 //20110208ysk end
+		if( isset($_GET['acting']) and 'anotherlane_card' != $_GET['acting'] ) {//20131220ysk
 		if( false === $this->cart->num_row() && ('paypal' != $_GET['acting'] && 1 !== (int)$_GET['acting_return']) ){
 			header('location: ' . get_option('home'));
 			exit;
 		}
+		}//20131220ysk
 		
 		$this->payment_results = usces_check_acting_return();
 
@@ -4576,8 +4619,14 @@ class usc_e_shop
 				$cod_limit_amount = ( isset($this->options['cod_limit_amount']) && 0 < (int)$this->options['cod_limit_amount'] ) ? $this->options['cod_limit_amount'] : 0;
 				if( 0 < $cod_limit_amount && $total_items_price > $cod_limit_amount )
 					$mes .= sprintf(__('A total products amount of money surpasses the upper limit(%s) that I can purchase in C.O.D.', 'usces'), usces_crform($this->options['cod_limit_amount'], true, false, 'return')) . "<br />";
+
+			} elseif( 'acting_zeus_conv' == $payments['settlement'] ) {
+				if( WCUtils::is_blank($_POST['username']) ) {
+					$mes .= "お名前を入力してください。<br />";
+				} elseif( !preg_match( "/^[ァ-ヶー]+$/u", $_POST['username'] ) ) {
+					$mes .= "お名前は全角カタカナで入力してください。<br />";
+				}
 			}
-			
 		}
 //20101119ysk start
 		if(isset($_POST['offer']['delivery_method']) and isset($_POST['offer']['payment_name'])) {
@@ -4729,7 +4778,7 @@ class usc_e_shop
 		if(isset($options['business_days'][$year][$mon][1]))
 			unset($options['business_days'][$year][$mon]);
 		
-		for($i=0; $i<3; $i++){
+		for($i=0; $i<12; $i++){
 			//list($year, $mon, $mday) = getAfterMonth($datenow['year'], $datenow['mon'], $datenow['mday'], $i);
 			list($year, $mon, $mday) = getAfterMonth($datenow['year'], $datenow['mon'], 1, $i);
 			$last = getLastDay($year, $mon);
@@ -4738,9 +4787,10 @@ class usc_e_shop
 					$options['business_days'][$year][$mon][$j] = 1;
 			}
 		}
-
 		update_option('usces', $options);
-
+//20131206_kitamu_start
+		$this->options = get_option('usces');
+//20131206_kitamu_end
 		$_SESSION['usces_checked_business_days'] = '';
 	}
 	 
@@ -5223,8 +5273,46 @@ class usc_e_shop
 		}
 		if( $update_delivery_days ) $this->options['delivery_days'] = $delivery_days;
 
-		if( $update_shipping_charge or $update_delivery_days ) 
-			update_option('usces', $this->options);
+//20140131ysk start
+		$update_acting_settings_sbps = false;
+		if( isset($this->options['acting_settings']['sbps']['card_activate']) and 'on' == $this->options['acting_settings']['sbps']['card_activate'] ) {
+			if( empty($this->options['acting_settings']['sbps']['send_url']) ) {
+				$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
+				$update_acting_settings_sbps = true;
+			}
+		}
+
+		$update_acting_settings_paydesign = false;
+		if( isset($this->options['acting_settings']['digitalcheck']['card_activate']) and 'on' == $this->options['acting_settings']['digitalcheck']['card_activate'] ) {
+			$pos = strpos( $this->options['acting_settings']['digitalcheck']['send_url_card'], 'paydesign' );
+			if( $pos === false ) {
+				$this->options['acting_settings']['digitalcheck']['send_url_card'] = "https://www.paydesign.jp/settle/settle3/bp3.dll";
+				$this->payment_structure['acting_digitalcheck_card'] = 'カード決済（ペイデザイン）';
+				$update_acting_settings_paydesign = true;
+			}
+			if( isset($this->options['acting_settings']['digitalcheck']['card_user_id']) and 'on' == $this->options['acting_settings']['digitalcheck']['card_user_id'] ) {
+				$pos = strpos( $this->options['acting_settings']['digitalcheck']['send_url_user_id'], 'paydesign' );
+				if( $pos === false ) {
+					$this->options['acting_settings']['digitalcheck']['send_url_user_id'] = "https://www.paydesign.jp/settle/settlex/credit2.dll";
+					$update_acting_settings_paydesign = true;
+				}
+			}
+		}
+		if( isset($this->options['acting_settings']['digitalcheck']['conv_activate']) and 'on' == $this->options['acting_settings']['digitalcheck']['conv_activate'] ) {
+			$pos = strpos( $this->options['acting_settings']['digitalcheck']['send_url_conv'], 'paydesign' );
+			if( $pos === false ) {
+				$this->options['acting_settings']['digitalcheck']['send_url_conv'] = "https://www.paydesign.jp/settle/settle3/bp3.dll";
+				$this->payment_structure['acting_digitalcheck_conv'] = 'コンビニ決済（ペイデザイン）';
+				$update_acting_settings_paydesign = true;
+			}
+		}
+
+		if( $update_shipping_charge or $update_delivery_days or $update_acting_settings_sbps or $update_acting_settings_paydesign ) 
+			update_option( 'usces', $this->options );
+
+		if( $update_acting_settings_paydesign ) 
+			update_option( 'usces_payment_structure', $this->payment_structure );
+//20140131ysk end
 	}
 //20120710ysk end
 	function get_item_cat_ids(){
@@ -6286,6 +6374,11 @@ class usc_e_shop
 			$cart = $this->cart->get_cart();
 		if( empty($entry) )
 			$entry = $this->cart->get_entry();
+		if( function_exists('dlseller_have_shipped') && !dlseller_have_shipped() ){
+			$charge = 0;
+			$charge = apply_filters('usces_filter_getShippingCharge', $charge, $cart, $entry);
+			return $charge;
+		}
 		
 		//配送方法ID
 		$d_method_id = $entry['order']['delivery_method'];
@@ -7266,8 +7359,8 @@ class usc_e_shop
 		global $wpdb;
 		$fields = array();
 		$table_name = $wpdb->prefix . "usces_order_meta";
-		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s OR meta_key = %s OR meta_key = %s)", 
-								$order_id, 'acting_%', 'settlement_id', 'order_number', 'res_tracking_id', 'SID');
+		$query = $wpdb->prepare("SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND (meta_key LIKE %s OR meta_key = %s OR meta_key = %s OR meta_key = %s OR meta_key = %s OR meta_key = %s)", 
+								$order_id, 'acting_%', 'settlement_id', 'order_number', 'res_tracking_id', 'SID', 'TransactionId');
 		$res = $wpdb->get_results($query, ARRAY_A);
 		if( !$res )
 			return $fields;
@@ -7288,6 +7381,8 @@ class usc_e_shop
 				$fields['res_tracking_id'] = $value['meta_value'];
 			}elseif( 'SID' == $value['meta_key'] ){
 				$fields['SID'] = $value['meta_value'];
+			}elseif( 'TransactionId' == $value['meta_key'] ){
+				$fields['TransactionId'] = $value['meta_value'];
 			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){
 				$meta_values = unserialize($value['meta_value']);
 				if(is_array($meta_values)){
@@ -8074,7 +8169,9 @@ class usc_e_shop
 			$html = $this->options['member_page_data']['footer']['completion'];
 			echo do_shortcode( stripslashes(nl2br($html)) );
 		}
-	}
-	
+	}	
 }
+
+
+
 ?>
