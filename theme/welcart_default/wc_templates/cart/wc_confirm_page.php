@@ -46,7 +46,7 @@ get_header();
 				<th><?php _e('Items','usces'); ?></th>
 				<th class="price"><?php _e('Unit price','usces'); ?></th>
 				<th class="quantity"><?php _e('Quantity', 'usces'); ?></th>
-				<th class="subtotal"><?php _e('Amount', 'usces'); ?></th>
+				<th class="subtotal"><?php _e('Amount', 'usces'); ?><?php usces_guid_tax(); ?></th>
 				<th class="action"></th>
 			</tr>
 			</thead>
@@ -59,13 +59,6 @@ get_header();
 				<th class="aright"><?php usces_crform($usces_entries['order']['total_items_price'], true, false); ?></th>
 				<th>&nbsp;</th>
 			</tr>
-<?php if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) : ?>
-			<tr>
-				<td colspan="5" class="aright"><?php _e('Used points', 'usces'); ?></td>
-				<td class="aright" style="color:#FF0000"><?php echo number_format($usces_entries['order']['usedpoint']); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-<?php endif; ?>
 <?php if( !empty($usces_entries['order']['discount']) ) : ?>
 			<tr>
 				<td colspan="5" class="aright"><?php echo apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')); ?></td>
@@ -73,6 +66,11 @@ get_header();
 				<td>&nbsp;</td>
 			</tr>
 <?php endif; ?>
+			<tr>
+				<td colspan="5" class="aright"><?php usces_tax_label(); ?></td>
+				<td class="aright"><?php usces_tax($usces_entries) ?></td>
+				<td>&nbsp;</td>
+			</tr>
 			<tr>
 				<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
 				<td class="aright"><?php usces_crform($usces_entries['order']['shipping_charge'], true, false); ?></td>
@@ -85,10 +83,10 @@ get_header();
 				<td>&nbsp;</td>
 			</tr>
 <?php endif; ?>
-<?php if( !empty($usces_entries['order']['tax']) ) : ?>
+<?php if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) : ?>
 			<tr>
-				<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-				<td class="aright"><?php usces_crform($usces_entries['order']['tax'], true, false); ?></td>
+				<td colspan="5" class="aright"><?php _e('Used points', 'usces'); ?></td>
+				<td class="aright" style="color:#FF0000"><?php echo number_format($usces_entries['order']['usedpoint']); ?></td>
 				<td>&nbsp;</td>
 			</tr>
 <?php endif; ?>

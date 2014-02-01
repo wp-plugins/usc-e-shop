@@ -180,6 +180,22 @@ function toggleVisibility(id) {
 </select></td>
 		<td><div id="ex_shipping_rule" class="explanation"><?php _e('initial value at registration of items. Do not chose this if it does not apply to you.', 'usces'); ?></div></td>
 	</tr>
+</table>
+<table class="form_table">
+	<tr>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_mode');"><?php _e('Tax treatment', 'usces'); ?></a></th>
+	    <td width="10"><input name="tax_mode" id="tax_mode_include" type="radio" value="include"<?php if($this->options['tax_mode'] == 'include') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_include"><?php _e('Included', 'usces'); ?></label></td>
+	    <td width="10"><input name="tax_mode" id="tax_mode_exclude" type="radio" value="exclude"<?php if($this->options['tax_mode'] == 'exclude') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_exclude"><?php _e('Excluded', 'usces'); ?></label></td>
+		<td><div id="ex_tax_mode" class="explanation"><?php _e('商品価格に消費税が含まれているかどうかを選択します。', 'usces'); ?></div></td>
+	</tr>
+	<tr>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_target');"><?php _e('Tax target', 'usces'); ?></a></th>
+	    <td width="10"><input name="tax_target" id="tax_mode_products" type="radio" value="products"<?php if($this->options['tax_target'] == 'products') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_include"><?php _e('Only Products', 'usces'); ?></label></td>
+	    <td width="10"><input name="tax_target" id="tax_mode_all" type="radio" value="all"<?php if($this->options['tax_target'] == 'all') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_exclude"><?php _e('All Amount', 'usces'); ?></label></td>
+		<td><div id="ex_tax_target" class="explanation"><?php _e('消費税の対象を、商品代金のみにするか手数料等もすべて含めるかを選択します。', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_rate');"><?php _e('Percentage of Consumption tax', 'usces'); ?></a></th>
 	    <td><input name="tax_rate" type="text" class="short_str num" value="<?php echo esc_attr($this->options['tax_rate']); ?>" />%</td>
@@ -245,10 +261,10 @@ function toggleVisibility(id) {
 </table>
 <table class="form_table">
 	<tr>
-		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_assign');"><?php _e('ポイント付与のタイミング', 'usces'); ?></a></th>
+		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_assign');"><?php _e('Timing point of grant', 'usces'); ?></a></th>
 		<td width="10"><input name="point_assign" id="point_assign_receipt" type="radio" value="1"<?php if($this->options['point_assign'] == 1) echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_receipt"><?php _e('入金時', 'usces'); ?></label></td>
 		<td width="10"><input name="point_assign" id="point_assign_immediately" type="radio" value="0"<?php if( WCUtils::is_zero($this->options['point_assign']) ) echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_immediately"><?php _e('即時', 'usces'); ?></label></td>
-		<td><div id="ex_point_assign" class="explanation"><?php _e('「即時」では、ポイントはお買い物完了時に付与されます。「入金時」では、銀行振込、コンビニ決済などで、お買い物完了時にはポイントは付与されず、入金済になったときにポイントを付与します。', 'usces'); ?></div></td>
+		<td><div id="ex_point_assign" class="explanation"><?php _e("The 'immediate', points are given to the shopping upon completion. In the 'payment at the time', bank transfer, or convenience store settlement, points will not be given to the shopping upon completion, grant the point when it becomes a pre-payment.", 'usces'); ?></div></td>
 	</tr>
 </table>
 <?php do_action( 'usces_action_amdin_setup' ); ?>

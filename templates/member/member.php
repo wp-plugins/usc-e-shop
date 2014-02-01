@@ -34,11 +34,12 @@ $html_reserve = '<th>&nbsp;</th>
 	<td>&nbsp;</td>';
 $html .= apply_filters( 'usces_filter_memberinfo_page_reserve', $html_reserve, $usces_members['ID'] );
 $html .= '</tr>
-	</table>
-	 <br /> 
-	<a href="#edit">' . __('To member information editing', 'usces') . '</a>
-	<br />'	. usces_loginout('return');
-	
+	</table>'."\n";
+$html .= '<ul class="member_submenu">'."\n";
+$submenu .= '<li class="edit_member"><a href="#edit">' . __('To member information editing', 'usces') . '</a></li>'."\n";
+$html .= apply_filters( 'usces_action_member_submenu_list', $submenu, $usces_members );
+$html .= '<li class="logout_member">' . usces_loginout('return') . '</li>
+	</ul>'."\n";
 
 $html .= '<div class="header_explanation">';
 $header = '';

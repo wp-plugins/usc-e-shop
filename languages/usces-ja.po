@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2013-11-12 15:29+0900\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2013-12-21 11:44+0900\n"
+"Last-Translator: Welcart <info@welcart.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.3\n"
+"X-Generator: Poedit 1.5.5\n"
 
 msgid "This month"
 msgstr "今月"
@@ -3633,3 +3633,38 @@ msgid ""
 msgstr ""
 "このメールにお心当たりが無い場合は、お手数ですがご連絡いただきますようお願い"
 "いたします。"
+
+msgid "Timing point of grant"
+msgstr "ポイント付与のタイミング"
+
+msgid ""
+"The 'immediate', points are given to the shopping upon completion. In the "
+"'payment at the time', bank transfer, or convenience store settlement, "
+"points will not be given to the shopping upon completion, grant the point "
+"when it becomes a pre-payment."
+msgstr ""
+"「即時」では、ポイントはお買い物完了時に付与されます。「入金時」では、銀行振"
+"込、コンビニ決済などで、お買い物完了時にはポイントは付与されず、入金済になっ"
+"たときにポイントを付与します。"
+
+msgid "Tax target"
+msgstr "税計算の対象"
+
+msgid "Only Products"
+msgstr "商品のみ"
+
+msgid "All Amount"
+msgstr "全て"
+
+# 各証書の購入明細のタイトル
+msgid "Tax treatment"
+msgstr "税区分"
+
+msgid "Included"
+msgstr "税込"
+
+msgid "Excluded"
+msgstr "税別"
+
+msgid "Internal tax"
+msgstr "内税額"

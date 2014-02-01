@@ -9,6 +9,101 @@ function usces_guid_tax( $out = '' ){
 	}
 }
 
+function usces_tax_label( $data = array(), $out = '' ){
+	global $usces;
+	if( empty($data) ){
+		$tax_mode = $usces->options['tax_mode'];
+	}else{
+		$condition = maybe_unserialize($data['order_condition']);
+		$tax_mode = $condition['tax_mode'];
+	}
+	if( 'exclude' == $tax_mode ){
+		$label = __('consumption tax', 'usces');
+	}else{
+		if( isset($condition['tax_mode']) ){
+			$materials = array(
+				'total_items_price' => $data['order_item_total_price'],
+				'discount' => $data['order_discount'],
+				'shipping_charge' => $data['order_shipping_charge'],
+				'cod_fee' => $data['order_cod_fee'],
+			);
+			$label = __('Internal tax', 'usces') . '(' . usces_crform( usces_internal_tax( $materials, 'return' ), true, false, 'return') . ')';
+		}else{
+			$label = __('Internal tax', 'usces');
+		}
+	}
+	$label = apply_filters( 'usces_filter_tax_label', $label);
+	
+	if( $out == 'return' ){
+		return $label;
+	}else{
+		echo $label;
+	}
+}
+
+function usces_tax( $usces_entries, $out = '' ){
+	global $usces;
+
+	if( 'exclude' == $usces->options['tax_mode'] ){
+		$tax_str = usces_crform($usces_entries['order']['tax'], true, false,'return');
+	}else{
+		$materials = array(
+			'total_items_price' => $usces_entries['order']['total_items_price'],
+			'discount' => $usces_entries['order']['discount'],
+			'shipping_charge' => $usces_entries['order']['shipping_charge'],
+			'cod_fee' => $usces_entries['order']['cod_fee'],
+		);
+		$tax_str = '(' . usces_crform(usces_internal_tax( $materials, 'return' ), true, false,'return') . ')';
+	}
+	$tax_str = apply_filters( 'usces_filter_tax', $tax_str);
+	
+	if( $out == 'return' ){
+		return $tax_str;
+	}else{
+		echo $tax_str;
+	}
+}
+
+function usces_internal_tax( $materials, $out = '' ){
+	global $usces, $usces_settings;
+
+	if( 'products' == $usces->options['tax_target'] ){
+		$total = $materials['total_items_price'] + $materials['discount'];
+	}else{
+		$total = $materials['total_items_price'] + $materials['discount'] + $materials['shipping_charge'] + $materials['cod_fee'];
+	}
+	$total = apply_filters( 'usces_filter_internal_tax_total', $total, $materials);
+
+	$tax = $total * $usces->options['tax_rate'] / 100;
+	$tax = $total - $total / (1 + ($usces->options['tax_rate'] / 100));
+	$cr = $usces->options['system']['currency'];
+	$decimal = $usces_settings['currency'][$cr][1];
+	$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+	switch( $usces->options['tax_method'] ){
+		case 'cutting':
+			$tax = floor($tax*$decipad)/$decipad;
+			break;
+		case 'bring':
+			$tax = ceil($tax*$decipad)/$decipad;
+			break;
+		case 'rounding':
+			if( 0 < $decimal ){
+				$tax = round($tax, (int)$decimal);
+			}else{
+				$tax = round($tax);
+			}
+			break;
+	}				
+
+	$tax = apply_filters( 'usces_filter_internal_tax', $tax, $materials);
+	
+	if( $out == 'return' ){
+		return $tax;
+	}else{
+		echo $tax;
+	}
+}
+
 function usces_currency_symbol( $out = '' ) {
 	global $usces;
 

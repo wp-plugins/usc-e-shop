@@ -128,8 +128,12 @@ if($order_action == 'new'){
 	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
 	$data = $wpdb->get_row( $query, ARRAY_A );
 
+
+
 	$deli = stripslashes_deep(unserialize($data['order_delivery']));
-	$cart = stripslashes_deep(unserialize($data['order_cart']));
+//	$cart = stripslashes_deep(unserialize($data['order_cart']));
+	$cart = usces_get_ordercartdata( $order_id );
+//usces_p($cart);
 	$condition = stripslashes_deep(unserialize($data['order_condition']));
 	$ordercheck = stripslashes_deep(unserialize($data['order_check']));
 	if( !is_array($ordercheck) ) $ordercheck = array();
@@ -521,11 +525,11 @@ jQuery(function($){
 					$(\"#total_full\").html(addComma(values[4]+''));
 					$(\"#total_full_top\").html(addComma(values[4]+''));
 				} else {
-					alert( 'ERROR' );
+					alert( 'ERROR1' );
 				}
 			};
 			s.error = function(data, dataType) {
-				alert( 'ERROR' );
+				alert( 'ERROR2' );
 			};
 			$.ajax( s );
 			return false;
@@ -1195,15 +1199,14 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( isset($data['order_usedpoint']) && !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
-			<td><?php _e('granted points', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( isset($data['order_getpoint']) && !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
-		</tr>
-		<tr>
 			<td colspan="5" class="aright"><?php echo apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id); ?></td>
 			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( isset($data['order_discount']) && !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="5" class="aright"><?php usces_tax_label($data); ?></td>
+			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( isset($data['order_tax']) && !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
+			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
@@ -1216,9 +1219,10 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( isset($data['order_tax']) && !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
-			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
+			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( isset($data['order_usedpoint']) && !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
+			<td><?php _e('granted points', 'usces'); ?></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( isset($data['order_getpoint']) && !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
 			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>

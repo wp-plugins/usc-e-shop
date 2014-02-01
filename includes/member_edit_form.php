@@ -239,9 +239,12 @@ function addComma(str)
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		$advance = $this->cart->wc_serialize($cart_row['advance']);
-		$itemCode = $this->getItemCode($post_id);
-		$itemName = $this->getItemName($post_id);
-		$cartItemName = $this->getCartItemName($post_id, $sku);
+//		$itemCode = $this->getItemCode($post_id);
+//		$itemName = $this->getItemName($post_id);
+		$itemCode = $cart_row['item_code'];
+		$itemName = $cart_row['item_name'];
+//		$cartItemName = $this->getCartItemName($post_id, $sku);
+		$cartItemName = $this->getCartItemName_byOrder($cart_row);
 		//$skuPrice = $this->getItemPrice($post_id, $sku);
 		$skuPrice = $cart_row['price'];
 		$pictid = (int)$this->get_mainpictid($itemCode);

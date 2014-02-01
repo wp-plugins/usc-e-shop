@@ -148,15 +148,21 @@ function usces_order_confirm_message($order_id) {
 	$meisai .= usces_mail_line( 3, $data['order_email'] );//====================
 	$meisai .= __('total items','usces') . "    : " . usces_crform( $data['order_item_total_price'], true, false, 'return' ) . "\r\n";
 
-	if ( $data['order_usedpoint'] != 0 )
-		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
 	if ( $data['order_discount'] != 0 )
 		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
-	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
+
+	$meisai .= usces_tax_label($data, 'return');
+	if ( !empty($usces->options['order_tax']) )
+		$meisai .= "    : " . usces_crform( $data['order_tax'], true, false, 'return' );
+
+	$meisai .= "\r\n" . __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
+
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
-	if ( !empty($usces->options['tax_rate']) )
-		$meisai .= __('consumption tax','usces') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
+
+	if ( $data['order_usedpoint'] != 0 )
+		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
+
 	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $total_full_price, true, false, 'return' ) . "\r\n";
 	$meisai .= usces_mail_line( 2, $data['order_email'] );//--------------------
@@ -297,20 +303,11 @@ function usces_send_ordermail($order_id) {
 	$msg_body = "\r\n\r\n\r\n" . __('** content of ordered items **','usces') . "\r\n";
 	$msg_body .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	$msg_body .= apply_filters('usces_filter_send_order_mail_first', NULL, $data);
-//20110118ysk start
-	//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_pre', $order_id );
-//20110118ysk end
-	//$msg_body .= __('Buyer','usces') . " : " . sprintf(__('Mr/Mrs %s', 'usces'), usces_localized_name( $entry['customer']['name1'], $entry['customer']['name2'], 'return' )) . "\r\n";
 	$msg_body .= uesces_get_mail_addressform( 'order_mail_customer', $entry, $order_id );
-//20110118ysk start
-	//$msg_body .= usces_mail_custom_field_info( 'customer', 'name_after', $order_id );
-//20110118ysk end
 	$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
 	
 	$meisai = __('Items','usces') . " : \r\n";
-//20131129_kitamu start
 	$msg_body .= __( 'order date','usces' ) . " : " . $data['order_date'] . "\r\n";
-//20131129_kitamu end
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = urldecode($cart_row['sku']);
@@ -333,9 +330,6 @@ function usces_send_ordermail($order_id) {
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
-//20110629ysk start 0000190
-				//if( !empty($key) )
-				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 				if( !empty($key) ) {
 					$key = urldecode($key);
 					if(is_array($value)) {
@@ -350,7 +344,6 @@ function usces_send_ordermail($order_id) {
 						$optstr .= $key . ' : ' . urldecode($value) . "\r\n"; 
 					}
 				}
-//20110629ysk end
 			}
 			$meisai .= apply_filters( 'usces_filter_option_ordermail', $optstr, $options);
 		}
@@ -359,27 +352,27 @@ function usces_send_ordermail($order_id) {
 	$meisai .= usces_mail_line( 3, $entry['customer']['mailaddress1'] );//====================
 	$meisai .= __('total items','usces') . "    : " . usces_crform( $entry['order']['total_items_price'], true, false, 'return' ) . "\r\n";
 
-	if ( $entry['order']['usedpoint'] != 0 )
-		$meisai .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
-//20120308ysk start 0000433
-	//if ( $data['order_discount'] != 0 )
 	if ( $entry['order']['discount'] != 0 )
-//20120308ysk end
 		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
-	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
+
+	$meisai .= usces_tax_label($data, 'return');
+	if ( !empty($entry['order']['tax']) )
+		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, false, 'return' );
+
+	$meisai .= "\r\n" . __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
+
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, false, 'return' ) . "\r\n";
-	if ( !empty($usces->options['tax_rate']) )
-		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
+
+	if ( $entry['order']['usedpoint'] != 0 )
+		$meisai .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
+
 	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
 	$meisai .= __('Payment amount','usces') . "  : " . usces_crform( $entry['order']['total_full_price'], true, false, 'return' ) . "\r\n";
 	$meisai .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
 	$meisai .= "(" . __('Currency', 'usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . ")\r\n\r\n";
 
-//20120308ysk start 0000433
-	//$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data);
 	$msg_body .= apply_filters('usces_filter_send_order_mail_meisai', $meisai, $data, $cart, $entry);
-//20120308ysk end
 
 
 	$msg_shipping = __('** A shipping address **','usces') . "\r\n";
@@ -387,8 +380,6 @@ function usces_send_ordermail($order_id) {
 	
 	$msg_shipping .= uesces_get_mail_addressform( 'order_mail', $entry, $order_id );
 
-//20101208ysk start
-	//$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
 	$deli_meth = (int)$entry['order']['delivery_method'];
 	if( 0 <= $deli_meth ){
 		$deli_index = $usces->get_delivery_method_index($deli_meth);
@@ -396,11 +387,6 @@ function usces_send_ordermail($order_id) {
 	}
 	$msg_shipping .= __('Delivery date','usces') . " : " . $entry['order']['delivery_date'] . "\r\n";
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
-//20101208ysk end
-//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] );//--------------------
-//	$msg_body .= __('** For some region, to deliver the items in the morning is not possible.','usces') . "\r\n";
-//	$msg_body .= " " . __('** WE may not always be able to deliver the items on time which you desire.','usces') . "\r\n";
-//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 	$msg_shipping .= "\r\n";
 	$msg_body .= apply_filters('usces_filter_send_order_mail_shipping', $msg_shipping, $data);
 
@@ -412,7 +398,6 @@ function usces_send_ordermail($order_id) {
 		$transferee .= $usces->options['transferee'] . "\r\n";
 		$msg_payment .= apply_filters('usces_filter_mail_transferee', $transferee, $payment);
 		$msg_payment .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
-//20101018ysk start
 	} elseif($payment['settlement'] == 'acting_jpayment_conv') {
 		$args = maybe_unserialize($usces->get_order_meta_value($payment['settlement'], $order_id));
 		$msg_payment .= __('決済番号', 'usces').' : '.$args['gid']."\r\n";
@@ -437,32 +422,22 @@ function usces_send_ordermail($order_id) {
 		$msg_payment .= __('口座名義','usces').' : '.$bank[6]."\r\n";
 		$msg_payment .= __('支払期限','usces').' : '.substr($args['exp'], 0, 4).'年'.substr($args['exp'], 4, 2).'月'.substr($args['exp'], 6, 2)."日\r\n";
 		$msg_payment .= "\r\n".usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
-//20101018ysk end
 	}
 	
 	$msg_body .= apply_filters('usces_filter_send_order_mail_payment', $msg_payment, $order_id, $payment, $cart, $entry, $data);
 
-//20100818ysk start
 	$msg_body .= usces_mail_custom_field_info( 'order', '', $order_id );
-//20100818ysk end
 
 	$msg_body .= "\r\n";
 	$msg_body .= __('** Others / a demand **','usces') . "\r\n";
 	$msg_body .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
 	$msg_body .= $entry['order']['note'] . "\r\n\r\n";
-//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
-//	$msg_body .= "\r\n";
-
-//	$msg_body .= __('I will inform it of shipment completion by an email.','usces') . "\r\n";
-//	$msg_body .= __('Please inform it of any questions from [an inquiry].','usces') . "\r\n";
-//	$msg_body .= usces_mail_line( 2, $entry['customer']['mailaddress1'] )."\r\n";//--------------------
 
 	$msg_body .= apply_filters('usces_filter_send_order_mail_body', NULL, $data);
 	$msg_body = apply_filters('usces_filter_send_order_mail_bodyall', $msg_body, $data);
 
 	$subject = apply_filters('usces_filter_send_order_mail_subject_thankyou', $mail_data['title']['thankyou'], $data);
 	$message = do_shortcode($mail_data['header']['thankyou']) . $msg_body . do_shortcode($mail_data['footer']['thankyou']);
-//var_dump($msg_body);exit;
 	$confirm_para = array(
 			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
 			'to_address' => $entry['customer']['mailaddress1'], 
@@ -474,7 +449,6 @@ function usces_send_ordermail($order_id) {
 			);
 	$confirm_para = apply_filters( 'usces_send_ordermail_para_to_customer', $confirm_para, $entry, $data);
 
-	//if ( usces_send_mail( $confirm_para ) ) {
 	usces_send_mail( $confirm_para );
 	
 	$subject = apply_filters('usces_filter_send_order_mail_subject_order', $mail_data['title']['order'], $data);
@@ -497,10 +471,7 @@ function usces_send_ordermail($order_id) {
 	$order_para = apply_filters( 'usces_send_ordermail_para_to_manager', $order_para, $entry, $data);
 	$res = usces_send_mail( $order_para );
 	
-//	}
-	
 	return $res;
-
 }
 
 
@@ -960,6 +931,121 @@ function usces_send_mail_init($phpmailer){
 	do_action('usces_filter_phpmailer_init', array( &$phpmailer ));
 }
 
+function usces_get_ordercartdata( $order_id ){
+	global $usces, $wpdb;
+	
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	
+	$query = $wpdb->prepare("SELECT * FROM $cart_table WHERE order_id=%d", $order_id );
+	$cart = $wpdb->get_results( $query, ARRAY_A );
+	
+	foreach( $cart as $key => $value ){
+		$cart[$key]['sku'] = $value['sku_code'];
+		$query = $wpdb->prepare("SELECT * FROM $cart_meta_table WHERE cart_id=%d", $value['cart_id'] );
+		$results = $wpdb->get_results( $query, ARRAY_A );
+		foreach((array)$results as $value ){
+			switch( $value['meta_type'] ){
+				case 'option':
+					$cart[$key]['options'][$value['meta_key']] = $value['meta_value'];
+					break;
+				case 'advance':
+					$cart[$key]['advance'][$value['meta_key']] = $value['meta_value'];
+					break;
+			}
+		}
+		if( !isset($cart[$key]['options']) )
+			$cart[$key]['options'] = array();
+		if( !isset($cart[$key]['advance']) )
+			$cart[$key]['advance'] = array();
+	}
+	
+	return $cart;
+}
+
+function usces_reg_ordercartdata( $order_id, $cart ){
+	global $usces, $wpdb;
+	
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	foreach( $cart as $row_index => $value ){
+		$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
+		$item_name = get_post_meta( $value['post_id'], '_itemName', true);
+		$skus = $usces->get_skus($value['post_id'], 'code');
+		$sku = $skus[$value['sku']];
+		if( empty($usces->option['tax_rate']) ){
+			$tax = 0;
+		
+		}else{
+			$tax = ($value['price'] * $value['quantity']) * $usces->options['tax_rate'] / 100;
+			$cr = $usces->options['system']['currency'];
+			$decimal = $usces_settings['currency'][$cr][1];
+			$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+			switch( $usces->options['tax_method'] ){
+				case 'cutting':
+					$tax = floor($tax*$decipad)/$decipad;
+					break;
+				case 'bring':
+					$tax = ceil($tax*$decipad)/$decipad;
+					break;
+				case 'rounding':
+					if( 0 < $decimal ){
+						$tax = round($tax, (int)$decimal);
+					}else{
+						$tax = round($tax);
+					}
+					break;
+			}				
+		}
+		$query = $wpdb->prepare("INSERT INTO $cart_table 
+			(
+			order_id, 
+			row_index, 
+			post_id, 
+			item_code, 
+			item_name, 
+			sku_code, 
+			sku_name, 
+			cprice, 
+			price, 
+			quantity, 
+			unit, 
+			tax, 
+			destination_id
+			) VALUES (%d, %d, %d, %s, %s, %s, %s, %d, %d, %d, %s, %d, %d)", 
+			$order_id, 
+			$row_index, 
+			$value['post_id'], 
+			$item_code, 
+			$item_name, 
+			$value['sku'], 
+			$sku['name'], 
+			$sku['cprice'], 
+			$value['price'], 
+			$value['quantity'], 
+			$sku['unit'], 
+			$tax, 
+			NULL
+		);
+		$wpdb->query($query);
+		
+		$cart_id = $wpdb->insert_id ;
+		if($value['options']){
+			foreach((array)$value['options'] as $okey => $ovalue){
+				$okey = urldecode($okey);
+				$ovalue = urldecode($ovalue);
+				$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+					( cart_id, meta_key, meta_value ) VALUES (%d, %s, %s)", 
+					$cart_id, $okey, $ovalue
+				);
+				$wpdb->query($aquery);
+			}
+		}
+		
+		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value);
+	}
+}
+
 function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
 //	$wpdb->show_errors();
@@ -1053,6 +1139,7 @@ function usces_reg_orderdata( $results = array() ) {
 		$order_id = false;
 	}else{
 		$order_id = $wpdb->insert_id;
+		usces_reg_ordercartdata( $order_id, $cart );
 	}
 
 	if ( !$order_id ) :
@@ -4131,13 +4218,13 @@ function usces_mail_line( $type, $email = '' ) {
 
 	switch( $type ) {
 	case 1:
-		$line = "******************************************************************";
+		$line = "******************************************************";
 		break;
 	case 2:
 		$line = "------------------------------------------------------------------";
 		break;
 	case 3:
-		$line = "==================================================================";
+		$line = "=============================================";
 		break;
 	}
 

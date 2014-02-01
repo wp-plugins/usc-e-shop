@@ -96,6 +96,10 @@ jQuery(function($){
 		operation.change_search_field();
 	});
 
+	$("#searchselectsku").change(function () {
+		operation.change_search_sku_field();
+	});
+
 	$("#changeselect").change(function () {
 		operation.change_collective_field();
 	});
@@ -235,6 +239,25 @@ jQuery(function($){
 		
 		}, 
 		
+		change_search_sku_field :function (){
+		
+			var label = '';
+			var html = '';
+			var column = $("#searchselectsku").val();
+			
+			if( column == 'item_code' ) {
+				label = '<?php _e('key words', 'usces'); ?>';
+				html = '<input name="search[skuword][item_code]" type="text" value="<?php echo esc_attr(isset($arr_search['skuword']['item_code']) ? $arr_search['skuword']['item_code'] : ''); ?>" class="searchword" maxlength="50" />';
+			}else if( column == 'item_name' ) {
+				label = '<?php _e('key words', 'usces'); ?>';
+				html = '<input name="search[skuword][item_name]" type="text" value="<?php echo esc_attr(isset($arr_search['skuword']['item_name']) ? $arr_search['skuword']['item_name'] : ''); ?>" class="searchword" maxlength="50" />';
+			}
+			
+			$("#searchlabelsku").html( label );
+			$("#searchfieldsku").html( html );
+		
+		}, 
+		
 		change_collective_field :function (){
 		
 			var label = '';
@@ -305,6 +328,7 @@ jQuery(document).ready(function($){
 	}
 		
 	operation.change_search_field();
+	operation.change_search_sku_field();
 	
 //20100908ysk start
 	$("#dlProductListDialog").dialog({
@@ -422,13 +446,24 @@ jQuery(document).ready(function($){
 ?>
 		    <option value="<?php echo esc_attr($value); ?>"<?php echo $selected ?>><?php echo esc_html($key); ?></option>
 <?php endforeach; ?>
-    	</select></td>
+   	</select></td>
 		<td id="searchlabel"></td>
 		<td id="searchfield"></td>
-		<td><input name="searchIn" type="submit" class="searchbutton" value="<?php _e('Search', 'usces'); ?>" />
+		<td rowspan="2"><input name="searchIn" type="submit" class="searchbutton" value="<?php _e('Search', 'usces'); ?>" />
 		<input name="searchOut" type="submit" class="searchbutton" value="<?php _e('Cancellation', 'usces'); ?>" />
 		<input name="searchSwitchStatus" id="searchSwitchStatus" type="hidden" value="<?php echo esc_attr($DT->searchSwitchStatus); ?>" />
 		</td>
+		</tr>
+		<td><?php _e('search fields', 'usces'); ?></td>
+		<td><select name="search[sku]" class="searchselect" id="searchselectsku">
+		    <option value="none"> </option>
+			<option value="item_code"<?php echo ( 'item_code' == $arr_search['sku'] ? ' selected="selected"' : '') ?>><?php  _e('item code', 'usces'); ?></option>
+			<option value="item_name"<?php echo ( 'item_name' == $arr_search['sku'] ? ' selected="selected"' : '') ?>><?php  _e('item name', 'usces'); ?></option>
+			</select>
+		</td>
+		<td id="searchlabelsku"></td>
+		<td id="searchfieldsku"></td>
+		<tr>
 		</tr>
 		</table>
 		<table id="period_table">

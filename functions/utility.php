@@ -1,6 +1,105 @@
 <?php
 // Utility.php
 
+function usces_upgrade_14(){
+	global $usces;
+	$upgrade = (int)get_option('usces_upgrade2');
+	if( $upgrade & USCES_UP14 )
+		return false;
+
+	global $wpdb;
+	$rets = array();
+	
+	$order_table = $wpdb->prefix . "usces_order";
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	
+	$query = "SELECT ID, order_cart FROM $order_table";
+	$results = $wpdb->get_results( $query );
+	if( $results ){
+		foreach( $results as $order ){
+			$cart = unserialize($order->order_cart);
+			foreach( $cart as $row_index => $value ){
+				$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
+				$item_name = get_post_meta( $value['post_id'], '_itemName', true);
+				$skus = $usces->get_skus($value['post_id'], 'code');
+				$sku = $skus[$value['sku']];
+				if( empty($usces->option['tax_rate']) ){
+					$tax = 0;
+				
+				}else{
+					$tax = ($value['price'] * $value['quantity']) * $usces->options['tax_rate'] / 100;
+					$cr = $usces->options['system']['currency'];
+					$decimal = $usces_settings['currency'][$cr][1];
+					$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+					switch( $usces->options['tax_method'] ){
+						case 'cutting':
+							$tax = floor($tax*$decipad)/$decipad;
+							break;
+						case 'bring':
+							$tax = ceil($tax*$decipad)/$decipad;
+							break;
+						case 'rounding':
+							if( 0 < $decimal ){
+								$tax = round($tax, (int)$decimal);
+							}else{
+								$tax = round($tax);
+							}
+							break;
+					}				
+				}
+				$query = $wpdb->prepare("INSERT INTO $cart_table 
+					(
+					order_id, 
+					row_index, 
+					post_id, 
+					item_code, 
+					item_name, 
+					sku_code, 
+					sku_name, 
+					cprice, 
+					price, 
+					quantity, 
+					unit, 
+					tax, 
+					destination_id
+					) VALUES (%d, %d, %d, %s, %s, %s, %s, %d, %d, %d, %s, %d, %d)", 
+					$order->ID, 
+					$row_index, 
+					$value['post_id'], 
+					$item_code, 
+					$item_name, 
+					$value['sku'], 
+					$sku['name'], 
+					$sku['cprice'], 
+					$value['price'], 
+					$value['quantity'], 
+					$sku['unit'], 
+					$tax, 
+					NULL
+				);
+				$wpdb->query($query);
+				
+				$cart_id = $wpdb->insert_id ;
+				if($value['options']){
+					foreach((array)$value['options'] as $okey => $ovalue){
+						$okey = urldecode($okey);
+						$ovalue = urldecode($ovalue);
+						$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+							( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, 'option', %s, %s)", 
+							$cart_id, $okey, $ovalue
+						);
+						$wpdb->query($aquery);
+					}
+				}
+			}
+		}
+	}
+	usces_log('USCES_UP14 : Completed', 'db');
+	$upgrade += USCES_UP14;
+	update_option('usces_upgrade2', $upgrade);
+}
+
 function usces_upgrade_07(){
 	$upgrade = (int)get_option('usces_upgrade');
 	if( $upgrade & USCES_UP07 ) return false;
@@ -73,7 +172,7 @@ function usces_upgrade_07(){
 	if( $wpdb->query( $mquery ) )
 		$rets[] = 1;
 
-	usces_log('USCES_UP07 : '.print_r($rets,true), 'database_error.log');
+	usces_log('USCES_UP07 : '.print_r($rets,true), 'db');
 	$upgrade += USCES_UP07;
 	update_option('usces_upgrade', $upgrade);
 	return $rets;
@@ -254,25 +353,35 @@ function usces_upgrade_11(){
 		}
 	}
 
-	usces_log('USCES_UP11 : ' . print_r($rets,true), 'database_error.log');
+	usces_log('USCES_UP11 : ' . print_r($rets,true), 'db');
 
-//	$upgrade += USCES_UP11;
-//	update_option('usces_upgrade', $upgrade);
+	$upgrade += USCES_UP11;
+	update_option('usces_upgrade', $upgrade);
 	return $rets;
 }
 
 function usces_log($log, $file){
 	global $usces;
+	
+	if( 'db' == $file ){
 		
-	$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
-	$file_path = USCES_PLUGIN_DIR . '/logs/' . $file;
-	if( is_dir($file_path) )
-		return;
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'usces_log';
+		$query = $wpdb->prepare("INSERT INTO $table_name (datetime, log) VALUES(%s, %s)", current_time('mysql'), $log);
+		$wpdb->query( $query );
+
+	}else{
 		
-	$fp = fopen($file_path, 'a');
-	if( false !== $fp ){
-		fwrite($fp, $log);
-		fclose($fp);
+		$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
+		$file_path = USCES_PLUGIN_DIR . '/logs/' . $file;
+		if( is_dir($file_path) )
+			return;
+			
+		$fp = fopen($file_path, 'a');
+		if( false !== $fp ){
+			fwrite($fp, $log);
+			fclose($fp);
+		}
 	}
 }
 

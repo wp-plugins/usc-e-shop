@@ -16,6 +16,7 @@ class dataList
 	var $arr_period;	//表示データ期間
 	var $arr_search;	//サーチ条件
 	var $searchSql;		//簡易絞込みSQL
+	var $searchSkuSql;	//SKU絞り込み
 	var $searchSwitchStatus;	//サーチ表示スイッチ
 	var $columns;		//データカラム
 	var $sortColumn;	//現在ソート中のフィールド
@@ -102,8 +103,11 @@ class dataList
 	{
 		global $wpdb;
 		$meta_table = $wpdb->prefix.'usces_order_meta';
+		$ordercart_table = $wpdb->prefix.'usces_ordercart';
+		$ordercartmeta_table = $wpdb->prefix.'usces_ordercart_meta';
 		$join_table = array(
-			"LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id'"
+			"LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id'"." \n",
+			"LEFT JOIN {$ordercart_table} AS cart ON ID = cart.order_id"." \n"
 		);
 		$this->joinTableSql = apply_filters( 'usces_filter_order_list_sql_jointable', $join_table, $meta_table, $this );
 	}
@@ -116,13 +120,11 @@ class dataList
 
 			case 'searchIn':
 				$this->SearchIn();
-				//$this->SetSelectedRow();
 				$res = $this->GetRows();
 				break;
 
 			case 'searchOut':
 				$this->SearchOut();
-				//$this->SetSelectedRow();
 				$res = $this->GetRows();
 				break;
 
@@ -179,7 +181,7 @@ class dataList
 		if(isset($_SESSION[$this->table]['arr_search'])){
 			$this->arr_search = $_SESSION[$this->table]['arr_search'];
 		}else{
-			$arr_search = array( 'period'=>'3', 'column'=>'', 'word'=>'' );
+			$arr_search = array( 'period'=>'3', 'column'=>'', 'word'=>'', 'sku'=>'', 'skuword'=>'' );
 			$this->arr_search = apply_filters( 'usces_filter_order_list_arr_search', $arr_search, $this );
 		}
 		if(isset($_SESSION[$this->table]['searchSwitchStatus'])){
@@ -188,6 +190,7 @@ class dataList
 			$this->searchSwitchStatus = 'OFF';
 		}
 		$this->searchSql = '';
+		$this->searchSkuSql = '';
 		$this->sortColumn = 'ID';
 		foreach($this->columns as $value ){
 			$this->sortSwitchs[$value] = 'DESC';
@@ -213,6 +216,7 @@ class dataList
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
 			$this->searchSwitchStatus = $_SESSION[$this->table]['searchSwitchStatus'];
 			$this->searchSql = $_SESSION[$this->table]['searchSql'];
+			$this->searchSkuSql = $_SESSION[$this->table]['searchSkuSql'];
 			$this->arr_search = $_SESSION[$this->table]['arr_search'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
 			$this->selectedRow = $_SESSION[$this->table]['selectedRow'];
@@ -227,6 +231,7 @@ class dataList
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
 			$this->searchSql = $_SESSION[$this->table]['searchSql'];
+			$this->searchSkuSql = $_SESSION[$this->table]['searchSkuSql'];
 			$this->arr_search = $_SESSION[$this->table]['arr_search'];
 			$this->searchSwitchStatus = $_SESSION[$this->table]['searchSwitchStatus'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
@@ -236,7 +241,9 @@ class dataList
 
 			$this->action = 'searchIn';
 			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? $_REQUEST['search']['column'] : '';
+			$this->arr_search['sku'] = isset($_REQUEST['search']['sku']) ? $_REQUEST['search']['sku'] : '';
 			$this->arr_search['word'] = isset($_REQUEST['search']['word']) ? $_REQUEST['search']['word'] : '';
+			$this->arr_search['skuword'] = isset($_REQUEST['search']['skuword']) ? $_REQUEST['search']['skuword'] : '';
 			$this->arr_search['period'] = isset($_REQUEST['search']['period']) ? (int)$_REQUEST['search']['period'] : 0;
 			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
 			$this->currentPage = 1;
@@ -250,6 +257,8 @@ class dataList
 			$this->action = 'searchOut';
 			$this->arr_search['column'] = '';
 			$this->arr_search['word'] = '';
+			$this->arr_search['sku'] = '';
+			$this->arr_search['skuword'] = '';
 			$this->arr_search['period'] = $_SESSION[$this->table]['arr_search']['period'];
 			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
 			$this->currentPage = 1;
@@ -266,6 +275,7 @@ class dataList
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
 			$this->searchSql = $_SESSION[$this->table]['searchSql'];
+			$this->searchSkuSql = $_SESSION[$this->table]['searchSkuSql'];
 			$this->arr_search = $_SESSION[$this->table]['arr_search'];
 			$this->searchSwitchStatus = $_SESSION[$this->table]['searchSwitchStatus'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
@@ -279,6 +289,7 @@ class dataList
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
 			$this->searchSql = $_SESSION[$this->table]['searchSql'];
+			$this->searchSkuSql = $_SESSION[$this->table]['searchSkuSql'];
 			$this->arr_search = $_SESSION[$this->table]['arr_search'];
 			$this->searchSwitchStatus = $_SESSION[$this->table]['searchSwitchStatus'];
 			$this->totalRow = $_SESSION[$this->table]['totalRow'];
@@ -294,61 +305,33 @@ class dataList
 	function GetRows()
 	{
 		global $wpdb;
-		//$meta_table = $wpdb->prefix . 'usces_order_meta';
 		$where = $this->GetWhere();
-		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
+		$order = 'ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
 		$order = apply_filters( 'usces_filter_order_list_get_orderby', $order, $this );
-		//$limit = ' LIMIT ' . $this->startRow . ', ' . $this->maxRow;
 
-/*		$status_sql = '';
-		foreach ($this->management_status as $status_key => $status_name){
-			$status_sql .= " WHEN LOCATE('" . $status_key . "', order_status) > 0 THEN '" . $status_name . "'";
-		}
-
-		$query = $wpdb->prepare("SELECT ID, meta.meta_value AS deco_id, DATE_FORMAT(order_date, %s) AS date, mem_id, 
-					CONCAT(order_name1, ' ', order_name2) AS name, order_pref AS pref, order_delivery_method AS delivery_method, 
-					(order_item_total_price - order_usedpoint + order_discount + order_shipping_charge + order_cod_fee + order_tax) AS total_price, 
-					order_payment_name AS payment_name, 
-					CASE WHEN LOCATE('noreceipt', order_status) > 0 THEN %s 
-						 WHEN LOCATE('receipted', order_status) > 0 THEN %s 
-						 WHEN LOCATE('pending', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS receipt_status, 
-					CASE {$status_sql} 
-						 ELSE %s 
-					END AS order_status, 
-					order_modified 
-					FROM {$this->table} 
-					LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id' ",
-					'%Y-%m-%d %H:%i', __('unpaid', 'usces'), __('payment confirmed', 'usces'), __('Pending', 'usces'), '&nbsp;', __('new order', 'usces'));
-					
-		$query .= $where . $order;// . $limit;
-*/
 		$select = '';
 		foreach( $this->selectSql as $value ) {
 			$select .= $value.", ";
 		}
 		$select = rtrim( $select, ", " );
+		$select .= ", item_name, item_code";
+		$query = apply_filters( 'usces_filter_order_list_select', $select, $this);
 		$join_table = '';
 		foreach( $this->joinTableSql as $value ) {
-			$join_table .= $value." ";
+			$join_table .= $value;
 		}
-		$query = "SELECT ".$select." FROM {$this->table} ".$join_table.$where.$order;
+		$query = "SELECT ".$select." \n"."FROM {$this->table} "."\n".$join_table.$where."\n".$order;
 		$query = apply_filters( 'usces_filter_order_list_get_rows', $query, $this);
-		//var_dump($query);
+//usces_p($query);
 		$wpdb->show_errors();
 
 		$rows = $wpdb->get_results($query, ARRAY_A);
 		$this->selectedRow = count($rows);
-//20101202ysk start
 		if($this->pageLimit == 'off') {
 			$this->rows = (array)$rows;
 		} else {
-//20101202ysk end
-		$this->rows = array_slice((array)$rows, $this->startRow, $this->maxRow);
-//20101202ysk start
+			$this->rows = array_slice((array)$rows, $this->startRow, $this->maxRow);
 		}
-//20101202ysk end
 
 		return $this->rows;
 	}
@@ -362,35 +345,6 @@ class dataList
 		$this->totalRow = $res;
 	}
 
-/*	function SetSelectedRow()
-	{
-		global $wpdb;
-		$where = $this->GetWhere();
-		$query = $wpdb->prepare("SELECT ID, DATE_FORMAT(order_date, %s) AS date, mem_id, 
-					CONCAT(order_name1, ' ', order_name2) AS name, order_pref AS pref, order_delivery_method AS delivery_method, 
-					(order_item_total_price - order_usedpoint + order_discount + order_shipping_charge + order_cod_fee + order_tax) AS total_price, 
-					order_payment_name AS payment_name, 
-					CASE WHEN LOCATE('noreceipt', order_status) > 0 THEN %s 
-						 WHEN LOCATE('receipted', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS receipt_status, 
-					CASE WHEN LOCATE('estimate', order_status) > 0 THEN %s 
-						 WHEN LOCATE('adminorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('duringorder', order_status) > 0 THEN %s 
-						 WHEN LOCATE('cancel', order_status) > 0 THEN %s 
-						 WHEN LOCATE('completion', order_status) > 0 THEN %s 
-						 ELSE %s 
-					END AS order_status, 
-					order_modified 
-					FROM {$this->table}",
-					'%Y-%m-%d %H:%i', '未', '済', '&nbsp;', '見積り', '管理受注', '取り寄せ中', 'キャンセル', '発送済', '新規受付');
-					
-		$query .= $where;
-		$rows = $wpdb->get_results($query, ARRAY_A);
-		$this->selectedRow = count($rows);
-		
-	}*/
-
 	function GetWhere()
 	{
 		$str = '';
@@ -401,30 +355,47 @@ class dataList
 		$last90 = date('Y-m-d 00:00:00', mktime(0, 0, 0, date('m'), date('d')-90, date('Y')));
 		switch ( $this->arr_search['period'] ) {
 			case 0:
-				$str = " WHERE order_date >= '{$thismonth}'";
+				$where = "WHERE order_date >= '{$thismonth}' ";
 				break;
 			case 1:
-				$str = " WHERE order_date >= '{$lastmonth}' AND order_date < '{$thismonth}'";
+				$where = "WHERE order_date >= '{$lastmonth}' AND order_date < '{$thismonth}' ";
 				break;
 			case 2:
-				$str = " WHERE order_date >= '{$lastweek}'";
+				$where = "WHERE order_date >= '{$lastweek}' ";
 				break;
 			case 3:
-				$str = " WHERE order_date >= '{$last30}'";
+				$where = "WHERE order_date >= '{$last30}' ";
 				break;
 			case 4:
-				$str = " WHERE order_date >= '{$last90}'";
+				$where = "WHERE order_date >= '{$last90}' ";
 				break;
 			case 5:
-				$str = "";
+				$where = "";
 				break;
 		}
-		$str = apply_filters( 'usces_filter_order_list_sql_where', $str, $this );
-		if( WCUtils::is_blank($str) && !WCUtils::is_blank($this->searchSql) ){
-			$str = ' HAVING ' . $this->searchSql;
-		}else if($str != '' && $this->searchSql != ''){
-			$str .= ' HAVING ' . $this->searchSql;
+		if( !WCUtils::is_blank($where) ){
+			if( !WCUtils::is_blank($this->searchSkuSql) ){
+				$where .= ' AND ' . $this->searchSkuSql;
+			}
+		}else{
+			if( !WCUtils::is_blank($this->searchSkuSql) ){
+				$where = 'WHERE ' . $this->searchSkuSql;
+			}
 		}
+		$str = apply_filters( 'usces_filter_order_list_sql_where', $where, $this );
+		
+		$str .= " \n" . "GROUP BY `ID` ";
+		
+		$having = '';
+		if( !WCUtils::is_blank($this->searchSql) ){
+			$having = 'HAVING ' . $this->searchSql;
+		}
+		$having = apply_filters( 'usces_filter_order_list_sql_having', $having, $this );
+		
+		if( !WCUtils::is_blank($having) ){
+			$str .= $having;
+		}
+
 		return apply_filters( 'usces_filter_order_list_get_where', $str, $this );
 	}
 
@@ -476,11 +447,22 @@ class dataList
 				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['order_status']) . "'";
 				break;
 		}
+		switch ($this->arr_search['sku']) {
+			case 'item_code':
+				$column = 'item_code';
+				$this->searchSkuSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['skuword']['item_code']) . "%'";
+				break;
+			case 'item_name':
+				$column = 'item_name';
+				$this->searchSkuSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['skuword']['item_name']) . "%'";
+				break;
+		}
 	}
 
 	function SearchOut()
 	{
 		$this->searchSql = '';
+		$this->searchSkuSql = '';
 	}
 
 	function SetNavi()
@@ -559,6 +541,7 @@ class dataList
 		$_SESSION[$this->table]['sortSwitchs'] = $this->sortSwitchs;	//各フィールド毎の昇順降順スイッチ
 		$_SESSION[$this->table]['dataTableNavigation'] = $this->dataTableNavigation;
 		$_SESSION[$this->table]['searchSql'] = $this->searchSql;
+		$_SESSION[$this->table]['searchSkuSql'] = $this->searchSkuSql;
  		$_SESSION[$this->table]['arr_search'] = $this->arr_search;
 		$_SESSION[$this->table]['searchSwitchStatus'] = $this->searchSwitchStatus;
 		do_action( 'usces_action_order_list_set_session', $this );

@@ -3,11 +3,11 @@
 Plugin Name: Welcart e-Commerce
 Plugin URI: http://www.welcart.com/
 Description: Welcart builds the management system with a net shop on Wordpress.
-Version: 1.3.10.2
+Version: 1.4.0-beta
 Author: Collne inc.
 Author URI: http://www.welcart.com/
 */
-define('USCES_VERSION', '1.3.10.2.1312132');
+define('USCES_VERSION', '1.4.0.1312191');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -16,6 +16,7 @@ define('USCES_DB_ORDER_META', '1.2');
 
 define('USCES_UP07', 1);
 define('USCES_UP11', 2);
+define('USCES_UP14', 3);
 
 define('USCES_WP_CONTENT_DIR', ABSPATH . 'wp-content');
 define('USCES_WP_CONTENT_URL', site_url() . '/wp-content');
@@ -55,6 +56,7 @@ if( is_admin() ){
 	require_once(USCES_PLUGIN_DIR."/functions/admin_page.php");
 }
 require_once(USCES_PLUGIN_DIR."/functions/settlement_func.php");
+require_once(USCES_PLUGIN_DIR."/functions/test-1.php");
 
 global $usces;
 $usces = new usc_e_shop();
