@@ -2398,14 +2398,11 @@ class usc_e_shop
 		$this->update_table();
 	
 		
-//		if( 'customer' == $this->page ){
-//			header("Pragma: private");
-//			header("Cache-Control: private");
-//		}else{
-//			header("Pragma: no-cache");
-//			header("Cache-Control: no-cache");
+//		if( ( !isset( $_POST['confirm'] ) && $this->is_cart_page( $_SERVER['REQUEST_URI'] ) ) && !is_admin() ){
+//			header('Expires:-1');
+//			header('Cache-Control:');
+//			header('Pragma:');
 //		}
-		
 		
 		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
@@ -6357,6 +6354,11 @@ class usc_e_shop
 			$cart = $this->cart->get_cart();
 		if( empty($entry) )
 			$entry = $this->cart->get_entry();
+		if( function_exists('dlseller_have_shipped') && !dlseller_have_shipped() ){
+			$charge = 0;
+			$charge = apply_filters('usces_filter_getShippingCharge', $charge, $cart, $entry);
+			return $charge;
+		}
 		
 		//配送方法ID
 		$d_method_id = $entry['order']['delivery_method'];
