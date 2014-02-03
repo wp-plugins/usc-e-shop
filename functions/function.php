@@ -1179,6 +1179,11 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
 		}
 //20130225ysk end
+//20131220ysk start
+		if( isset($_REQUEST['SiteId']) and $usces->options['acting_settings']['anotherlane']['siteid'] == $_REQUEST['SiteId'] and isset($_REQUEST['TransactionId']) ) {
+			$usces->set_order_meta_value( 'TransactionId', $_REQUEST['TransactionId'], $order_id );
+		}
+//20131220ysk end
 		
 		//$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
 		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$set, 'charging_type'=>$charging_type);//20131121ysk
@@ -2432,6 +2437,12 @@ function usces_check_acting_return() {
 			}
 			break;
 //20130225ysk end
+//20131220ysk start
+		case 'anotherlane_card':
+			$results[0] = 1;
+			$results['reg_order'] = false;
+			break;
+//20131220ysk end
 
 		default:
 			do_action( 'usces_action_check_acting_return_default' );
@@ -3223,7 +3234,11 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "\t\t\t: " . $usces_settings['country'][$values['country']] . "\r\n";
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "\t\t\t: " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('Zip/Postal Code','usces') . "\t\t: " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Address','usces') . "\t\t\t: " . $values['pref'] . $values['address1'] . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "\t\t: " . $values['tel'] . "\r\n";
@@ -3252,7 +3267,11 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		//20110118ysk start
 		$formtag .= usces_mail_custom_field_info( $mode, 'name_after', $order_id );
 		//20110118ysk end
-		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
@@ -3287,7 +3306,12 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 		$formtag .= __('Address','usces') . "    : " . $values['address2'] . " " . $values['address3'] . "\r\n";
 		$formtag .= __('City','usces') . "    : " . $values['address1'] . "\r\n";
 		$formtag .= __('State','usces') . "    : " . $values['pref'] . "\r\n";
-		$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+
+		//20131213_kitamu_start
+		if( count( $options['system']['target_market'] ) != 1 ){
+			$formtag .= __('Country','usces') . "    : " . $usces_settings['country'][$values['country']] . "\r\n";
+		}
+		//20131213_kitamu_end
 		$formtag .= __('Zip/Postal Code','usces') . "  : " . $values['zipcode'] . "\r\n";
 		$formtag .= __('Phone number','usces') . "  : " . $values['tel'] . "\r\n";
 		$formtag .= __('FAX number','usces') . "  : " . $values['fax'] . "\r\n";
@@ -4219,6 +4243,7 @@ function usces_is_complete_settlement( $payment_name, $status = '' ) {
 			case 'acting_telecom_card':
 			case 'acting_digitalcheck_card':
 			case 'acting_mizuho_card':
+			case 'acting_anotherlane_card':
 			case 'COD':
 				$complete = true;
 			}
@@ -4354,6 +4379,13 @@ function usces_rand( $digit = 10 ) {
 	$num = str_repeat( "9", $digit );
 	$rand = sprintf( '%0'.$digit.'d', mt_rand( 1, (int)$num ) );
 	return $rand;
+}
+
+function usces_get_cr_symbol() {
+	global $usces, $usces_settings;
+	$cr = $usces->options['system']['currency'];
+	list( $code, $decimal, $point, $seperator, $symbol ) = $usces_settings['currency'][$cr];
+	return $symbol;
 }
 
 ?>

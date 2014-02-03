@@ -67,26 +67,14 @@ jQuery(function($){
 //			$("input[name='quickcharge']").removeAttr("disabled");
 //		}
 //	});
-
-	if( 'on' == $("input[name='set_cartbordercolor']:checked").val() ) {
-		$("#cartbordercolor").css("display", "");
-	} else {
-		$("#cartbordercolor").css("display", "none");
-	}
-	$("input[name='set_cartbordercolor']").click(function() {
-		if( 'on' == $("input[name='set_cartbordercolor']:checked").val() ) {
-			$("#cartbordercolor").css("display", "");
-		} else {
-			$("#cartbordercolor").css("display", "none");
-		}
-	});
 });
+
 function toggleVisibility(id) {
-	var e = document.getElementById(id);
-	if(e.style.display == 'block')
-		e.style.display = 'none';
-	else
-		e.style.display = 'block';
+   var e = document.getElementById(id);
+   if(e.style.display == 'block')
+	  e.style.display = 'none';
+   else
+	  e.style.display = 'block';
 }
 </script>
 <div class="wrap">
@@ -121,11 +109,14 @@ function toggleVisibility(id) {
 		<li><a href="#uscestabs_telecom">テレコムクレジット</a></li>
 <!--20120618ysk end-->
 <!--20121206ysk start-->
-		<li><a href="#uscestabs_digitalcheck">デジタルチェック</a></li>
+		<li><a href="#uscestabs_digitalcheck">ペイデザイン</a></li>
 <!--20121206ysk end-->
 <!--20130225ysk start-->
 		<li><a href="#uscestabs_mizuho">みずほファクター</a></li>
 <!--20130225ysk end-->
+<!--20131220ysk start-->
+		<li><a href="#uscestabs_anotherlane">アナザーレーン</a></li>
+<!--20131220ysk end-->
 	</ul>
 
 	<div id="uscestabs_zeus">
@@ -149,7 +140,7 @@ function toggleVisibility(id) {
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_clid_zeus');"><?php _e('カード決済IPコード', 'usces'); ?></a></th>
 				<td colspan="4"><input name="clientip" type="text" id="clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['clientip']) ? $opts['zeus']['clientip'] : ''); ?>" size="40" /></td>
-				<td colspan="2"><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_clid_zeus" class="explanation"><?php _e('契約時にゼウスから発行されるクレジットカード決済用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_connection_zeus');"><?php _e('接続方式', 'usces'); ?></a></th>
@@ -160,7 +151,7 @@ function toggleVisibility(id) {
 			<tr id="authkey_zeus">
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_authkey_zeus');"><?php _e('認証キー', 'usces'); ?></a></th>
 				<td colspan="4"><input name="authkey" type="text" id="clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['authkey']) ? $opts['zeus']['authkey'] : ''); ?>" size="40" /></td>
-				<td colspan="2"><div id="ex_authkey_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるSecure API用認証キー（半角数字）', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_authkey_zeus" class="explanation"><?php _e('契約時にゼウスから発行されるSecure API用認証キー（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_3dsecur_zeus');"><?php _e('3Dセキュア（※）', 'usces'); ?></a></th>
@@ -197,22 +188,28 @@ function toggleVisibility(id) {
 		</table>
 		<table class="settle_table">
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_zeus');">入金お任せサービス</a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_zeus');">入金おまかせサービス</a></th>
 				<td><input name="bank_activate" type="radio" id="bank_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['bank_activate']) && $opts['zeus']['bank_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="bank_activate_zeus_1">利用する</label></td>
 				<td><input name="bank_activate" type="radio" id="bank_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['bank_activate']) && $opts['zeus']['bank_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="bank_activate_zeus_2">利用しない</label></td>
-				<td><div id="ex_bank_zeus" class="explanation"><?php _e('銀行振り込み支払いの自動照会機能です。振込みが有った場合、自動的に入金済みになり、入金確認メールが自動送信されます。', 'usces'); ?></div></td>
+				<td><div id="ex_bank_zeus" class="explanation"><?php _e('銀行振り込み支払いの自動照会機能です。振込みがあった場合、自動的に入金済みになり、入金確認メールが自動送信されます。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_clid_zeus');"><?php _e('入金お任せIPコード', 'usces'); ?></a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_ope_zeus');">稼働環境</a></th>
+				<td><input name="bank_ope" type="radio" id="bank_ope_zeus_1" value="test"<?php if( isset($opts['zeus']['bank_ope']) && $opts['zeus']['bank_ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="bank_ope_zeus_1">テスト環境</label></td>
+				<td><input name="bank_ope" type="radio" id="bank_ope_zeus_2" value="public"<?php if( isset($opts['zeus']['bank_ope']) && $opts['zeus']['bank_ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="bank_ope_zeus_2">本番環境</label></td>
+				<td><div id="ex_bank_ope_zeus" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_clid_zeus');">入金おまかせIPコード</a></th>
 				<td colspan="4"><input name="clientip_bank" type="text" id="bank_clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['clientip_bank']) ? $opts['zeus']['clientip_bank'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_bank_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行される入金お任せサービス用のIPコード（半角数字）', 'usces'); ?></div></td>
+				<td><div id="ex_bank_clid_zeus" class="explanation"><?php _e('契約時にゼウスから発行される入金おまかせサービス用のIPコード（半角数字）', 'usces'); ?></div></td>
 			</tr>
-<!--			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_testid_zeus');"><?php _e('テストカード番号', 'usces'); ?></a></th>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_bank_testid_zeus');">テストID</a></th>
 				<td colspan="4"><input name="testid_bank" type="text" id="testid_bank_zeus" value="<?php echo esc_html(isset($opts['zeus']['testid_bank']) ? $opts['zeus']['testid_bank'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_bank_testid_zeus" class="explanation"><?php _e('契約時にZEUSから発行される入金お任せサービス接続テストで必要なカード番号です。（半角数字）<br />本稼動の場合は空白にしてください。', 'usces'); ?></div></td>
+				<td><div id="ex_bank_testid_zeus" class="explanation"><?php _e('契約時にゼウスから発行される入金おまかせサービス接続テストで必要なテストID（半角数字）', 'usces'); ?></div></td>
 			</tr>
--->
+
 		</table>
 		<table class="settle_table">
 			<tr>
@@ -220,26 +217,32 @@ function toggleVisibility(id) {
 				<td><input name="conv_activate" type="radio" id="conv_activate_zeus_1" value="on"<?php if( isset($opts['zeus']['conv_activate']) && $opts['zeus']['conv_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_zeus_1">利用する</label></td>
 				<td><input name="conv_activate" type="radio" id="conv_activate_zeus_2" value="off"<?php if( isset($opts['zeus']['conv_activate']) && $opts['zeus']['conv_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_zeus_2">利用しない</label></td>
 				<td colspan="2"></td>
-				<td><div id="ex_conv_zeus" class="explanation"><?php _e('コンビニ支払いができる決済サービスです。払い込みが有った場合、自動的に入金済みになります。', 'usces'); ?></div></td>
+				<td><div id="ex_conv_zeus" class="explanation"><?php _e('コンビニ支払いができる決済サービスです。払い込みがあった場合、自動的に入金済みになります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_clid_zeus');"><?php _e('コンビニ決済IPコード', 'usces'); ?></a></th>
-				<td colspan="6"><input name="clientip_conv" type="text" id="conv_clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['clientip_conv']) ? $opts['zeus']['clientip_conv'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_conv_clid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるコンビニ決済サービス用のIPコード（半角数字）', 'usces'); ?></div></td>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_ope_zeus');">稼働環境</a></th>
+				<td><input name="conv_ope" type="radio" id="conv_ope_zeus_1" value="test"<?php if( isset($opts['zeus']['conv_ope']) && $opts['zeus']['conv_ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_ope_zeus_1">テスト環境</label></td>
+				<td><input name="conv_ope" type="radio" id="conv_ope_zeus_2" value="public"<?php if( isset($opts['zeus']['conv_ope']) && $opts['zeus']['conv_ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_ope_zeus_2">本番環境</label></td>
+				<td colspan="2"></td>
+				<td><div id="ex_conv_ope_zeus" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
 			</tr>
-<!--			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_testid_zeus');"><?php _e('テストカード番号', 'usces'); ?></a></th>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_clid_zeus');">コンビニ決済IPコード</a></th>
+				<td colspan="6"><input name="clientip_conv" type="text" id="conv_clid_zeus" value="<?php echo esc_html(isset($opts['zeus']['clientip_conv']) ? $opts['zeus']['clientip_conv'] : ''); ?>" size="40" /></td>
+				<td><div id="ex_conv_clid_zeus" class="explanation"><?php _e('契約時にゼウスから発行されるコンビニ決済サービス用のIPコード（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_testid_zeus');">テストID</a></th>
 				<td colspan="6"><input name="testid_conv" type="text" id="testid_conv_zeus" value="<?php echo esc_html(isset($opts['zeus']['testid_conv']) ? $opts['zeus']['testid_conv'] : ''); ?>" size="40" /></td>
-				<td><div id="ex_conv_testid_zeus" class="explanation"><?php _e('契約時にZEUSから発行されるコンビニ決済サービス接続テストで必要なカード番号です。（半角数字）<br />本稼動の場合は空白にしてください。', 'usces'); ?></div></td>
+				<td><div id="ex_conv_testid_zeus" class="explanation"><?php _e('契約時にゼウスから発行されるコンビニ決済サービス接続テストで必要なテストID（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_testtype_zeus');">テストタイプ</a></th>
 				<td><input name="test_type" type="radio" id="conv_testtype_zeus_1" value="0"<?php if( isset($opts['zeus']['test_type_conv']) && WCUtils::is_zero($opts['zeus']['test_type_conv']) ) echo ' checked="checked"'; ?> /></td><td><label for="conv_testtype_zeus_1">入金テスト無し</label></td>
 				<td><input name="test_type" type="radio" id="conv_testtype_zeus_2" value="1"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 1 ) echo ' checked="checked"'; ?> /></td><td><label for="conv_testtype_zeus_2">売上確定テスト</label></td>
 				<td><input name="test_type" type="radio" id="conv_testtype_zeus_3" value="2"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 2 ) echo ' checked="checked"'; ?> /></td><td><label for="conv_testtype_zeus_3">売上取消テスト</label></td>
-				<td><div id="ex_conv_testtype_zeus" class="explanation"><?php _e('テスト環境でのテストタイプを指定します。テストカード番号が空白のときはこの項目は無効になります。', 'usces'); ?></div></td>
+				<td><div id="ex_conv_testtype_zeus" class="explanation"><?php _e('テスト環境でのテストタイプを指定します。', 'usces'); ?></div></td>
 			</tr>
--->
 		</table>
 		<input name="conv_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/cvs.cgi" />
 		<input name="bank_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/ebank.cgi" />
@@ -266,11 +269,11 @@ function toggleVisibility(id) {
 		<p>　</p>
 		<p>※ 3Dセキュアとセキュリティーコード </p>
 		<p>3Dセキュアとおよびセキュリティーコードの利用は、決済サービス契約時に決定します。契約内容に従って指定しないと正常に動作しませんのでご注意ください。<br />
-		また、セキュリティーコードを利用した場合はクイックチャージが利用できなくなります。詳しくは<a href="http://www.cardservice.co.jp/" target="_blank">株式会社ゼウス</a>（代表：03-3498-9030）にお問い合わせください。</p>
-		<!--<p><strong>テスト稼動について</strong></p>
-		<p>入金お任せ及びコンビニ決済のテスト稼動を行なう際は、”テストカード番号”の項目にゼウスから発行されるテストカード番号を入力して下さい。<br />
-		これを入力することでWelcart は、名前の後ろにテストカード番号を自動的に付けるなどテストモードで動作します。通常の購入方法でテストができます。<br />
-		また、この項目を空白にすることで本稼動となります。</p>-->
+		詳しくは<a href="http://www.cardservice.co.jp/" target="_blank">株式会社ゼウス</a>（代表：03-3498-9030）にお問い合わせください。</p>
+		<p>　</p>
+		<p><strong>テスト稼動について</strong></p>
+		<p>入金おまかせ及びコンビニ決済のテストを行なう際は、「稼働環境」で「テスト環境」を選択し、「テストID」の項目にゼウスから発行されるテストIDを入力してください。<br />
+		また、本稼働の際には、「本番環境」を選択して更新してください。</p>
 	</div>
 	</div><!--uscestabs_zeus-->
 
@@ -537,7 +540,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_signature_paypal');"><?php _e('Signature', 'usces'); ?></a></th>
-				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="80" /></td>
+				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="50" /></td>
 				<td><div id="ex_signature_paypal" class="explanation"><?php _e('Type in the signature from API credential. Signature will be different in the formal installment of Sandbox.', 'usces'); ?></div></td>
 			</tr>
 <!--20110412ysk start-->
@@ -550,24 +553,6 @@ function toggleVisibility(id) {
 			</tr>
 			<?php endif; ?>
 <!--20110412ysk end-->
-		</table>
-		<table class="settle_table">
-			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_logoimg');"><?php _e('URL for the image of the payment page', 'usces'); ?></a></th>
-				<td colspan="4"><input name="logoimg" type="text" id="logoimg" value="<?php echo esc_html(isset($opts['paypal']['logoimg']) ? $opts['paypal']['logoimg'] : ''); ?>" size="80" /></td>
-				<td><div id="ex_logoimg" class="explanation"><?php _e('a URL to an image of your logo. The image has a maximum size of 190 pixels wide by 60 pixels high. The available file format is jpg, png, gif. PayPal recommends that you provide an image that is stored on a secure (https) server. If you do not specify an image, the business name displays.', 'usces'); ?><br /><?php _e('127 single-byte alphanumeric characters', 'usces'); ?></div></td>
-			</tr>
-			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_cartbordercolor');"><?php _e('The background color for the payment page', 'usces'); ?></a></th>
-				<td><input name="set_cartbordercolor" type="radio" id="set_cartbordercolor_1" value="on"<?php if( isset($opts['paypal']['set_cartbordercolor']) && $opts['paypal']['set_cartbordercolor'] == 'on' ) echo ' checked'; ?> /></td><td><label for="set_cartbordercolor_1"><?php _e('Set', 'usces'); ?></label></td>
-				<td><input name="set_cartbordercolor" type="radio" id="set_cartbordercolor_2" value="off"<?php if( isset($opts['paypal']['set_cartbordercolor']) && $opts['paypal']['set_cartbordercolor'] == 'off' ) echo ' checked'; ?> /></td><td><label for="set_cartbordercolor_2"><?php _e('Not set', 'usces'); ?></label></td>
-				<td><div id="ex_cartbordercolor" class="explanation"><?php _e('Your principal identifying color. PayPal blends your color to white in a gradient fill that borders the cart review area.', 'usces'); ?><br /><?php _e('6-character HTML hexadecimal ASCII color code', 'usces'); ?></div></td>
-			</tr>
-			<tr id="cartbordercolor">
-				<th><?php _e('The background color for the payment page', 'usces'); ?></th>
-				<td colspan="4">#<input name="cartbordercolor" type="text" value="<?php echo esc_html(isset($opts['paypal']['cartbordercolor']) ? $opts['paypal']['cartbordercolor'] : ''); ?>" size="8" class="color" /></td>
-				<td></td>
-			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paypal" />
 		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Settings', 'usces'); ?>" />
@@ -791,7 +776,7 @@ function toggleVisibility(id) {
 
 <!--20121206ysk start-->
 	<div id="uscestabs_digitalcheck">
-	<div class="settlement_service"><span class="service_title">デジタルチェック</span></div>
+	<div class="settlement_service"><span class="service_title">ペイデザイン</span></div>
 	<?php if( isset($_POST['acting']) && 'digitalcheck' == $_POST['acting'] ){ ?>
 		<?php if( isset($opts['digitalcheck']['activate']) && 'on' == $opts['digitalcheck']['activate'] ){ ?>
 		<div class="message">十分にテストを行ってから運用してください。</div>
@@ -810,12 +795,12 @@ function toggleVisibility(id) {
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_ip_digitalcheck');">加盟店コード</a></th>
 				<td colspan="4"><input name="card_ip" type="text" id="card_ip_digitalcheck" value="<?php echo esc_html(isset($opts['digitalcheck']['card_ip']) ? $opts['digitalcheck']['card_ip'] : ''); ?>" size="20" maxlength="10" /></td>
-				<td><div id="ex_card_ip_digitalcheck" class="explanation"><?php _e('契約時にデジタルチェックから発行される加盟店コード（半角英数字）。', 'usces'); ?></div></td>
+				<td><div id="ex_card_ip_digitalcheck" class="explanation"><?php _e('契約時にペイデザインから発行される加盟店コード（半角英数字）。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_pass_digitalcheck');">加盟店パスワード</a></th>
 				<td colspan="4"><input name="card_pass" type="text" id="card_pass_digitalcheck" value="<?php echo esc_html(isset($opts['digitalcheck']['card_pass']) ? $opts['digitalcheck']['card_pass'] : ''); ?>" size="20" maxlength="10" /></td>
-				<td><div id="ex_card_pass_digitalcheck" class="explanation"><?php _e('契約時にデジタルチェックから発行される加盟店パスワード（半角英数字）。<br />ユーザID決済をご利用の場合は、必須となります。', 'usces'); ?></div></td>
+				<td><div id="ex_card_pass_digitalcheck" class="explanation"><?php _e('契約時にペイデザインから発行される加盟店パスワード（半角英数字）。<br />ユーザID決済をご利用の場合は、必須となります。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_kakutei');">決済自動確定</a></th>
@@ -840,7 +825,7 @@ function toggleVisibility(id) {
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_ip_digitalcheck');">加盟店コード</a></th>
 				<td colspan="4"><input name="conv_ip" type="text" id="conv_ip_digitalcheck" value="<?php echo esc_html(isset($opts['digitalcheck']['conv_ip']) ? $opts['digitalcheck']['conv_ip'] : ''); ?>" size="20" maxlength="10" /></td>
-				<td><div id="ex_conv_ip_digitalcheck" class="explanation"><?php _e('契約時にデジタルチェックから発行される加盟店コード（半角英数字）', 'usces'); ?></div></td>
+				<td><div id="ex_conv_ip_digitalcheck" class="explanation"><?php _e('契約時にペイデザインから発行される加盟店コード（半角英数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th rowspan="4"><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_store_digitalcheck');">利用コンビニ</a></th>
@@ -876,11 +861,11 @@ function toggleVisibility(id) {
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="digitalcheck" />
-		<input name="usces_option_update" type="submit" class="button" value="デジタルチェックの設定を更新する" />
+		<input name="usces_option_update" type="submit" class="button" value="ペイデザインの設定を更新する" />
 	</form>
 	<div class="settle_exp">
-		<p><strong>デジタルチェック</strong></p>
-		<a href="http://www.digitalcheck.co.jp/" target="_blank">デジタルチェックの詳細はこちら 》</a>
+		<p><strong>ペイデザイン株式会社</strong></p>
+		<a href="http://www.paydesign.co.jp/" target="_blank">ペイデザインの詳細はこちら 》</a>
 		<p>　</p>
 		<p>この決済は「外部リンク型」の決済システムです。</p>
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
@@ -970,6 +955,56 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_mizuho-->
 <!--20130225ysk end-->
+
+<!--20131220ysk start-->
+	<div id="uscestabs_anotherlane">
+	<div class="settlement_service"><span class="service_title">アナザーレーン</span></div>
+	<?php if( isset($_POST['acting']) && 'anotherlane' == $_POST['acting'] ) : ?>
+		<?php if( isset($opts['anotherlane']['activate']) && 'on' == $opts['anotherlane']['activate'] ) : ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php elseif( '' != $mes ) : ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php endif; ?>
+	<?php endif; ?>
+	<form action="" method="post" name="anotherlane_form" id="anotherlane_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_siteid_anotherlane');">サイトID</a></th>
+				<td colspan="4"><input name="siteid" type="text" id="siteid_anotherlane" value="<?php echo esc_html(isset($opts['anotherlane']['siteid']) ? $opts['anotherlane']['siteid'] : ''); ?>" size="20" maxlength="8" /></td>
+				<td><div id="ex_siteid_anotherlane" class="explanation"><?php _e('契約時にアナザーレーンから発行されるID（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sitepass_anotherlane');">サイトパスワード</a></th>
+				<td colspan="4"><input name="sitepass" type="text" id="sitepass_anotherlane" value="<?php echo esc_html(isset($opts['anotherlane']['sitepass']) ? $opts['anotherlane']['sitepass'] : ''); ?>" size="20" maxlength="8" /></td>
+				<td><div id="ex_sitepass_anotherlane" class="explanation"><?php _e('契約時にアナザーレーンから発行されるパスワード（半角英数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_quickcharge_anotherlane');">クイックチャージ</a></th>
+				<td><input name="quickcharge" type="radio" id="quickcharge_anotherlane_1" value="on"<?php if( isset($opts['anotherlane']['quickcharge']) && $opts['anotherlane']['quickcharge'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="quickcharge_anotherlane_1">利用する</label></td>
+				<td><input name="quickcharge" type="radio" id="quickcharge_anotherlane_2" value="off"<?php if( isset($opts['anotherlane']['quickcharge']) && $opts['anotherlane']['quickcharge'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="quickcharge_anotherlane_2">利用しない</label></td>
+				<td><div id="ex_quickcharge_anotherlane" class="explanation"><?php _e('ログインして一度購入したメンバーは、次の購入時にはカード番号を入力する必要がなくなります。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>クレジットカード決済</th>
+				<td><input name="card_activate" type="radio" id="card_activate_anotherlane_1" value="on"<?php if( isset($opts['anotherlane']['card_activate']) && $opts['anotherlane']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_anotherlane_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_anotherlane_2" value="off"<?php if( isset($opts['anotherlane']['card_activate']) && $opts['anotherlane']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_anotherlane_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+		<input name="acting" type="hidden" value="anotherlane" />
+		<input name="usces_option_update" type="submit" class="button" value="アナザーレーンの設定を更新する" />
+	</form>
+	<div class="settle_exp">
+		<p><strong>アナザーレーン</strong></p>
+		<a href="http://www.alij.ne.jp/" target="_blank">アナザーレーンの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+	</div>
+	</div><!--uscestabs_anotherlane-->
+<!--20131220ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

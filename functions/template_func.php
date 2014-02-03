@@ -1787,7 +1787,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 			'order_number',
 			'res_tracking_id', 'res_payment_date', 'res_payinfo_key',
 			'SID', 'DATE', 'TIME', 'CVS', 'SHNO', 'FURL', 'settltment_status', 'settltment_errmsg', 
-			'stran', 'mbtran', 'bktrans', 'tranid'
+			'stran', 'mbtran', 'bktrans', 'tranid', 'TransactionId'
 		);
 		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
 		if( !in_array($key, $keys) ) {
@@ -2795,9 +2795,13 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= apply_filters( 'usces_filter_furigana_confirm_customer', $furigana_customer, $type, $values );
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
 			$customer_country = (!empty($usces_settings['country'][$values['customer']['country']])) ? $usces_settings['country'][$values['customer']['country']] : '';
+			$formtag .= '<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>';
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) != 1 ){
+				$formtag .= '<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($customer_country) . '</td></tr>';
+			}
+//20131213_kitamura_end
 			$formtag .= '
-			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($customer_country) . '</td></tr>
 			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
 			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
@@ -2813,9 +2817,13 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$shipping_address_info .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
 			$shipping_address_info .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
 			$shipping_country = (!empty($usces_settings['country'][$values['delivery']['country']])) ? $usces_settings['country'][$values['delivery']['country']] : '';
+			$shipping_address_info .= '<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>';
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) != 1 ){
+				$shipping_address_info .= '<tr><th>'.__('Country', 'usces').'</th><td>' .  esc_html($shipping_country) . '</td></tr>';
+			}
+//20131213_kitamura_end
 			$shipping_address_info .= '
-			<tr><th>'.__('Zip/Postal Code', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' .  esc_html($shipping_country) . '</td></tr>
 			<tr><th>'.__('Province', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
 			<tr><th>'.__('numbers', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
@@ -2830,8 +2838,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
 			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['customer']['name1'], $values['customer']['name2'], 'return' )) . '</td></tr>';
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) != 1 ){
+				$formtag .= '<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>';
+			}
+//20131213_kitamura_end
 			$formtag .= '
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['customer']['country']]) . '</td></tr>
 			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
 			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
@@ -2845,8 +2857,12 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
 			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['delivery']['name1'], $values['delivery']['name2'], 'return' )) . '</td></tr>';
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) != 1 ){
+				$shipping_address_info .= '<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>';
+			}
+//20131213_kitamura_end
 			$shipping_address_info .= '
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($usces_settings['country'][$values['delivery']['country']]) . '</td></tr>
 			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
 			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
@@ -2868,8 +2884,14 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['customer']['address2']) . '</td></tr>
 			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['customer']['address3']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['customer']['address1']) . '</td></tr>
-			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($customer_country) . '</td></tr>
+			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['customer']['pref']) . '</td></tr>';
+
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) != 1 ){
+				$formtag .= '<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($customer_country) . '</td></tr>';
+			}
+//20131213_kitamura_end
+			$formtag .= '
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['customer']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['customer']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['customer']['fax']) . '</td></tr>';
@@ -2884,8 +2906,13 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr><th>'.__('Address Line1', 'usces').'</th><td>' . esc_html($values['delivery']['address2']) . '</td></tr>
 			<tr><th>'.__('Address Line2', 'usces').'</th><td>' . esc_html($values['delivery']['address3']) . '</td></tr>
 			<tr><th>'.__('city', 'usces').'</th><td>' . esc_html($values['delivery']['address1']) . '</td></tr>
-			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>
-			<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($shipping_country) . '</td></tr>
+			<tr><th>'.__('State', 'usces').'</th><td>' . esc_html($values['delivery']['pref']) . '</td></tr>';
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) != 1 ){
+				$shipping_address_info .= '<tr><th>'.__('Country', 'usces').'</th><td>' . esc_html($shipping_country) . '</td></tr>';
+			}
+//20131213_kitamura_end
+			$shipping_address_info .= '
 			<tr><th>'.__('Zip', 'usces').'</th><td>' . esc_html($values['delivery']['zipcode']) . '</td></tr>
 			<tr><th>'.__('Phone number', 'usces').'</th><td>' . esc_html($values['delivery']['tel']) . '</td></tr>
 			<tr><th>'.__('FAX number', 'usces').'</th><td>' . esc_html($values['delivery']['fax']) . '</td></tr>';
@@ -2927,12 +2954,18 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			$formtag .= '<tr>
 			<th scope="row">' . usces_get_essential_mark('zipcode', $data).__('Zip/Postal Code', 'usces').'</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" style="ime-mode: inactive" />'.apply_filters('usces_filter_addressform_zipcode', NULL, $type) . apply_filters( 'usces_filter_after_zipcode', '100-1000', $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
-			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
+			</tr>';
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) == 1 ){
+				$formtag .= '<input type="hidden" name="' .$type. '[country]" id="' .$type. '_country" value="' .$options['system']['target_market'][0]. '">';
+			}else{
+				$formtag .= '<tr>
+				<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
+				<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
+				</tr>';
+			}
+//20131213_kitamura_end
+			$formtag .= '<tr>
 			<th scope="row">' . usces_get_essential_mark('states', $data).__('Province', 'usces').'</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
 			</tr>
@@ -2972,12 +3005,17 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			}
 			$formtag .= '</tr>';
 			$formtag .= usces_custom_field_input($data, $type, 'name_after', 'return');
-			$formtag .= '
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
-			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) == 1 ){
+				$formtag .= '<input type="hidden" name="' .$type. '[country]" id="' .$type. '_country" value="' .$options['system']['target_market'][0]. '">';
+			}else{
+				$formtag .= '<tr>
+				<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
+				<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
+				</tr>';
+			}
+//20131213_kitamura_end
+			$formtag .= '<tr>
 			<th scope="row">' . usces_get_essential_mark('states', $data) . __('State', 'usces') . '</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
 			</tr>
@@ -3038,12 +3076,18 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			<tr>
 			<th scope="row">' . usces_get_essential_mark('states', $data) . __('State', 'usces') . '</th>
 			<td colspan="2">' . usces_pref_select( $type, $values ) . apply_filters( 'usces_filter_after_states', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
-			<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
-			<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
-			</tr>
-			<tr>
+			</tr>';
+//20131213_kitamura_start
+			if( count( $options['system']['target_market'] ) == 1 ){
+				$formtag .= '<input type="hidden" name="' .$type. '[country]" id="' .$type. '_country" value="' .$options['system']['target_market'][0]. '">';
+			}else{
+				$formtag .= '<tr>
+				<th scope="row">' . usces_get_essential_mark('country', $data) . __('Country', 'usces') . '</th>
+				<td colspan="2">' . uesces_get_target_market_form( $type, $values['country'] ) . apply_filters( 'usces_filter_after_country', NULL, $applyform ) . '</td>
+				</tr>';
+			}
+//20131213_kitamura_end
+			$formtag .= '<tr>
 			<th scope="row">' . usces_get_essential_mark('zipcode', $data) . __('Zip', 'usces') . '</th>
 			<td colspan="2"><input name="' . $type . '[zipcode]" id="zipcode" type="text" value="' . esc_attr($values['zipcode']) . '" onKeyDown="if (event.keyCode == 13) {return false;}"  />' . apply_filters( 'usces_filter_after_zipcode', NULL, $applyform ) . '</td>
 			</tr>
@@ -3149,7 +3193,8 @@ function usces_point_inform_zeus() {
 
 	case 'acting_zeus_conv':
 		if( isset($_POST['pay_cvs']) ) {
-			$html = '<input type="hidden" name="pay_cvs" value="'.$_POST['pay_cvs'].'">';
+			$html .= '<input type="hidden" name="pay_cvs" value="'.$_POST['pay_cvs'].'">';
+			$html .= '<input type="hidden" name="username" value="'.$_POST['username'].'">';
 		}
 		break;
 	}
