@@ -4375,6 +4375,12 @@ function usces_itempage_admin_bar() {
 	}
 }
 
+function usces_rand( $digit = 10 ) {
+	$num = str_repeat( "9", $digit );
+	$rand = apply_filters( 'usces_filter_rand_value', sprintf( '%0'.$digit.'d', mt_rand( 1, (int)$num ) ), $num );
+	return $rand;
+}
+
 function usces_get_cr_symbol() {
 	global $usces, $usces_settings;
 	$cr = $usces->options['system']['currency'];
