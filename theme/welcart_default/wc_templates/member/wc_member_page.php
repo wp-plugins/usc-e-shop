@@ -47,11 +47,10 @@ get_header();
 			<?php echo apply_filters( 'usces_filter_memberinfo_page_reserve', $html_reserve, usces_memberinfo( 'ID', 'return' ) ); ?>
 		</tr>
 	</table>
-	<ul class="member_submenu">
-		<li class="edit_member"><a href="#edit"><?php _e('To member information editing', 'usces'); ?></a></li>
-		<?php do_action( 'usces_action_member_submenu_list' ); ?>
-		<li class="logout_member"><?php usces_loginout(); ?></li>
-	</ul>
+	<br /> 
+	<a href="#edit"><?php _e('To member information editing', 'usces'); ?></a>
+	<br /> 
+	<?php usces_loginout(); ?>
 	
 	<div class="header_explanation">
 	<?php do_action('usces_action_memberinfo_page_header'); ?>

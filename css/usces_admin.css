@@ -1066,6 +1066,7 @@ table#mainDataTable td {
 	empty-cells:show;
 }
 
+table#mainDataTable td.item,
 table#mainDataTable td.sku,
 table#mainDataTable td.zaikonum,
 table#mainDataTable td.zaiko,
