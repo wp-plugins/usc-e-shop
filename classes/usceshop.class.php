@@ -5982,7 +5982,7 @@ class usc_e_shop
 
 			$nvpstr  = $query;
 			$nvpstr .= '&CURRENCYCODE='.$this->get_currency_code();
-			//$nvpstr .= '&ADDROVERRIDE=1';
+			$nvpstr .= '&ADDROVERRIDE=1';
 			$nvpstr .= '&PAYMENTACTION=' . apply_filters('usces_filter_paypal_ec_paymentaction', 'Sale');
 
 			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.
