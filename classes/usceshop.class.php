@@ -5996,7 +5996,6 @@ class usc_e_shop
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['conv_url']);
 
-
 			$vars .= 'clientip=' . $acting_opts['clientip_conv'];
 			$vars .= '&act=' . $_POST['act'];
 			$vars .= '&money=' . $_POST['money'];
@@ -6006,11 +6005,10 @@ class usc_e_shop
 			$vars .= '&pay_cvs=' . $_POST['pay_cvs'];
 			$vars .= '&sendid=' . $_POST['sendid'];
 			$vars .= '&sendpoint=' . $_POST['sendpoint'];
-			if( !WCUtils::is_blank($acting_opts['testid_conv']) ){
+			if( isset($acting_opts['conv_ope']) && 'test' == $acting_opts['conv_ope'] ) {
 				$vars .= '&testid=' . $acting_opts['testid_conv'];
 				$vars .= '&test_type=' . $acting_opts['test_type_conv'];
 			}
-
 
 			$header = "POST " . $interface['path'] . " HTTP/1.1\r\n";
 			$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
