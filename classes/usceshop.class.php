@@ -6062,10 +6062,17 @@ class usc_e_shop
 //20110208ysk start
 		}else if($acting_flg == 'acting_paypal_ec') {
 			$acting_opts = $this->options['acting_settings']['paypal'];
+			$currency_code = $this->get_currency_code();
+			$addroverride = '1';
+			if( isset( $_POST['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] ) ) {
+				if( 'US' == $_POST['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] or 'CA' == $_POST['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] ) $addroverride = '0';
+			} else {
+				$addroverride = '0';
+			}
 
 			$nvpstr  = $query;
-			$nvpstr .= '&CURRENCYCODE='.$this->get_currency_code();
-			$nvpstr .= '&ADDROVERRIDE=1';
+			$nvpstr .= '&CURRENCYCODE='.$currency_code;
+			$nvpstr .= '&ADDROVERRIDE='.$addroverride;
 			$nvpstr .= '&PAYMENTACTION=' . apply_filters('usces_filter_paypal_ec_paymentaction', 'Sale');
 
 			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.

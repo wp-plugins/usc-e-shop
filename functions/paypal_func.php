@@ -268,8 +268,11 @@ function usces_paypal_confirm_form() {
 function usces_paypal_shipping_form() {
 	global $usces;
 
-	$usces_entries = $usces->cart->get_entry();
-	$html = '
+	$html = '';
+	$cart = $usces->cart->get_cart();
+	if( 'shipped' == $usces->getItemDivision( $cart[0]['post_id'] ) ) {
+		$usces_entries = $usces->cart->get_entry();
+		$html = '
 			<div class="error_message" id="paypal_error_message_delivery_method"></div>
 			<table>
 			<tr>
@@ -285,6 +288,7 @@ function usces_paypal_shipping_form() {
 				<td>'.usces_the_delivery_time( $usces_entries['order']['delivery_time'], 'return' ).'</td>
 			</tr>
 			</table>';
+	}
 	return $html;
 }
 
