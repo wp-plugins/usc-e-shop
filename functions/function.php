@@ -3804,14 +3804,16 @@ function usces_paypal_doecp( &$results ) {
 //20131121ysk start 0000771
 		if( 'shipped' == $usces->getItemDivision( $post_id ) ) {
 			$country = ( !empty($entry['delivery']['country']) ) ? $entry['delivery']['country'] : usces_get_base_country();
-			$nvpstr .= '&SHIPTONAME='.$entry['delivery']['name2'].' '.$entry['delivery']['name1'].
-			'&SHIPTOSTREET='.$entry['delivery']['address2'].
-			'&SHIPTOSTREET2='.$entry['delivery']['address3'].
-			'&SHIPTOCITY='.$entry['delivery']['address1'].
-			'&SHIPTOSTATE='.$entry['delivery']['pref'].
-			'&SHIPTOZIP='.$entry['delivery']['zipcode'].
-			'&SHIPTOCOUNTRYCODE='.$country.
-			'&SHIPTOPHONENUM='.ltrim( str_replace( '-', '', $entry['delivery']['tel'] ), '0' );
+			if( 'US' != $country and 'CA' != $country ) {//20140207ysk 0000771
+				$nvpstr .= '&SHIPTONAME='.$entry['delivery']['name2'].' '.$entry['delivery']['name1'].
+				'&SHIPTOSTREET='.$entry['delivery']['address2'].
+				'&SHIPTOSTREET2='.$entry['delivery']['address3'].
+				'&SHIPTOCITY='.$entry['delivery']['address1'].
+				'&SHIPTOSTATE='.$entry['delivery']['pref'].
+				'&SHIPTOZIP='.$entry['delivery']['zipcode'].
+				'&SHIPTOCOUNTRYCODE='.$country.
+				'&SHIPTOPHONENUM='.ltrim( str_replace( '-', '', $entry['delivery']['tel'] ), '0' );
+			}
 		}
 //20131121ysk end
 		$usces->paypal->setMethod('DoExpressCheckoutPayment');

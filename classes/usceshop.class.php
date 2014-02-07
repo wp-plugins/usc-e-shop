@@ -5266,7 +5266,7 @@ class usc_e_shop
 //20140131ysk start
 		$update_acting_settings_sbps = false;
 		if( isset($this->options['acting_settings']['sbps']['card_activate']) and 'on' == $this->options['acting_settings']['sbps']['card_activate'] ) {
-			if( empty($this->options['acting_settings']['sbps']['send_url']) ) {
+			if( empty($this->options['acting_settings']['sbps']['send_url']) or 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do' != $this->options['acting_settings']['sbps']['send_url'] ) {
 				$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
 				$update_acting_settings_sbps = true;
 			}
