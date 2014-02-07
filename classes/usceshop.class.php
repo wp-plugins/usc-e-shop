@@ -1362,7 +1362,7 @@ class usc_e_shop
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['sbps']['activate'] = 'on';
 						if( isset($_POST['ope']) && 'public' == $_POST['ope'] ) {
-							$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
+							$options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
 						}
 						if( 'on' == $options['acting_settings']['sbps']['card_activate'] ){
 							$this->payment_structure['acting_sbps_card'] = 'カード決済（ソフトバンク・ペイメント）';
