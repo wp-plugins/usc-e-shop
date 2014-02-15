@@ -231,6 +231,12 @@ function usces_is_skus() {
 	}
 }
 
+function usces_reset_skus() {
+	global $usces;
+	
+	reset($usces->itemskus);
+}
+
 function usces_have_skus() {
 	global $usces;
 	
@@ -1857,7 +1863,7 @@ function usces_get_item_custom( $post_id, $type = 'list', $out = '' ){
 			}
 			break;
 	}
-	$html = apply_filters( 'usces_filter_item_custom', $html, $post_id);
+	$html = apply_filters( 'usces_filter_item_custom', $html, $post_id, $type );
 	
 	if( 'return' == $out){
 		return $html;

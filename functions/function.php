@@ -2400,7 +2400,8 @@ function usces_check_acting_return() {
 			$results = $_GET;
 
 			//Build a second API request to PayPal, using the token as the ID to get the details on the payment authorization
-		    $nvpstr = "&TOKEN=".urlencode($_REQUEST['token']);
+		    $req_token = isset($_REQUEST['token']) ? $_REQUEST['token'] : '0';
+			$nvpstr = "&TOKEN=".urlencode($req_token);
 
 			$usces->paypal->setMethod('GetExpressCheckoutDetails');
 			$usces->paypal->setData($nvpstr);
@@ -3891,14 +3892,16 @@ function usces_paypal_doecp( &$results ) {
 //20131121ysk start 0000771
 		if( 'shipped' == $usces->getItemDivision( $post_id ) ) {
 			$country = ( !empty($entry['delivery']['country']) ) ? $entry['delivery']['country'] : usces_get_base_country();
-			$nvpstr .= '&SHIPTONAME='.$entry['delivery']['name2'].' '.$entry['delivery']['name1'].
-			'&SHIPTOSTREET='.$entry['delivery']['address2'].
-			'&SHIPTOSTREET2='.$entry['delivery']['address3'].
-			'&SHIPTOCITY='.$entry['delivery']['address1'].
-			'&SHIPTOSTATE='.$entry['delivery']['pref'].
-			'&SHIPTOZIP='.$entry['delivery']['zipcode'].
-			'&SHIPTOCOUNTRYCODE='.$country.
-			'&SHIPTOPHONENUM='.ltrim( str_replace( '-', '', $entry['delivery']['tel'] ), '0' );
+			if( 'US' != $country and 'CA' != $country ) {//20140207ysk 0000771
+				$nvpstr .= '&SHIPTONAME='.$entry['delivery']['name2'].' '.$entry['delivery']['name1'].
+				'&SHIPTOSTREET='.$entry['delivery']['address2'].
+				'&SHIPTOSTREET2='.$entry['delivery']['address3'].
+				'&SHIPTOCITY='.$entry['delivery']['address1'].
+				'&SHIPTOSTATE='.$entry['delivery']['pref'].
+				'&SHIPTOZIP='.$entry['delivery']['zipcode'].
+				'&SHIPTOCOUNTRYCODE='.$country.
+				'&SHIPTOPHONENUM='.ltrim( str_replace( '-', '', $entry['delivery']['tel'] ), '0' );
+			}
 		}
 //20131121ysk end
 		$usces->paypal->setMethod('DoExpressCheckoutPayment');
@@ -4460,6 +4463,12 @@ function usces_itempage_admin_bar() {
 			'href' => site_url() . '/wp-admin/admin.php?page=usces_itemedit&action=edit&post=' . $post->ID . '&usces_referer=' . $ref
 		) );
 	}
+}
+
+function usces_rand( $digit = 10 ) {
+	$num = str_repeat( "9", $digit );
+	$rand = apply_filters( 'usces_filter_rand_value', sprintf( '%0'.$digit.'d', mt_rand( 1, (int)$num ) ), $num );
+	return $rand;
 }
 
 function usces_get_cr_symbol() {

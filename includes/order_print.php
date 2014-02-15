@@ -277,7 +277,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 //	$pdf->Rect(14, 24, 152, 61, 'F');//Label field of customer
 //	$pdf->Rect(14, 93, 153, 105, 'F');//Body field
 	$pdf->SetLineWidth(0.4);
-	$pdf->Line(65, 23, 110, 23);
+	$pdf->Line(57, 23, 116, 23);
 	$pdf->SetLineWidth(0.1);
 	$pdf->Line(124, 19, 167, 19);
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
@@ -288,8 +288,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	// Title
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(15);
 	$pdf->SetFont(GOTHIC, '', $fontsize);
-	$pdf->SetXY(64, 17);
-	$pdf->MultiCell(45.5, $lineheight, usces_conv_euc($title), $border, 'C');
+	$pdf->SetXY(58, 17);
+	$pdf->MultiCell(58, $lineheight, usces_conv_euc($title), $border, 'C');
 
 	// Date
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);

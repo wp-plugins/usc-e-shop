@@ -15,7 +15,7 @@ get_sidebar( 'home' );
 	<?php /* Section of Recommended Products *******************************/ ?>
 	<div class="title"><?php _e('Items recommended','usces') ?></div>
 	<div class="clearfix">
-	<?php query_posts( array('category_name'=>'itemreco', 'posts_per_page'=>8) ); ?>
+	<?php query_posts( array('category_name'=>'itemreco', 'posts_per_page'=>8, 'post_status'=>'publish') ); ?>
 	<?php if (have_posts()) : ?>
 	<?php while (have_posts()) : the_post(); usces_the_item(); ?>
 	<div class="thumbnail_box">

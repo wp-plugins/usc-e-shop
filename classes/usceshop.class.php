@@ -1368,7 +1368,7 @@ class usc_e_shop
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['sbps']['activate'] = 'on';
 						if( isset($_POST['ope']) && 'public' == $_POST['ope'] ) {
-							$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
+							$options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
 						}
 						if( 'on' == $options['acting_settings']['sbps']['card_activate'] ){
 							$this->payment_structure['acting_sbps_card'] = 'カード決済（ソフトバンク・ペイメント）';
@@ -3189,19 +3189,21 @@ class usc_e_shop
 		$entry = $this->cart->get_entry();
 		$this->error_message = $this->zaiko_check();
 		if( WCUtils::is_blank($this->error_message) && 0 < $this->cart->num_row()){
-			$actinc_status = '';
+			$acting_status = '';
 			$payments = $this->getPayments( $entry['order']['payment_name'] );
 			if( substr($payments['settlement'], 0, 6) == 'acting' && $entry['order']['total_full_price'] > 0 ){
 				$acting_flg = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
-				$query = '';
-				foreach($_POST as $key => $value){
-					if($key != 'purchase')
-						$query .= '&' . $key . '=' . urlencode(maybe_serialize($value));
-				}
-				$actinc_status = $this->acting_processing($acting_flg, $query);
+				//$query = '';
+				//foreach($_POST as $key => $value){
+				//	if($key != 'purchase')
+				//		$query .= '&' . $key . '=' . urlencode(maybe_serialize($value));
+				//}
+				unset( $_POST['purchase'] );
+				$query = '&'.http_build_query( $_POST );
+				$acting_status = $this->acting_processing($acting_flg, $query);
 			}
 			
-			if($actinc_status == 'error'){
+			if($acting_status == 'error'){
 				$this->page = 'error';
 				add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_error');
 			}else{
@@ -4711,7 +4713,7 @@ class usc_e_shop
 				}
 			}
 		}
-		$mes = apply_filters('usces_filter_point_check', $mes);
+		$mes = apply_filters('usces_filter_point_check_last', $mes);
 		return $mes;
 	}
 
@@ -5280,7 +5282,7 @@ class usc_e_shop
 //20140131ysk start
 		$update_acting_settings_sbps = false;
 		if( isset($this->options['acting_settings']['sbps']['card_activate']) and 'on' == $this->options['acting_settings']['sbps']['card_activate'] ) {
-			if( empty($this->options['acting_settings']['sbps']['send_url']) ) {
+			if( empty($this->options['acting_settings']['sbps']['send_url']) or 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do' != $this->options['acting_settings']['sbps']['send_url'] ) {
 				$this->options['acting_settings']['sbps']['send_url'] = 'https://fep.sps-system.com/f01/FepBuyInfoReceive.do';
 				$update_acting_settings_sbps = true;
 			}
@@ -6018,7 +6020,6 @@ class usc_e_shop
 			$acting_opts = $this->options['acting_settings']['zeus'];
 			$interface = parse_url($acting_opts['conv_url']);
 
-
 			$vars .= 'clientip=' . $acting_opts['clientip_conv'];
 			$vars .= '&act=' . $_POST['act'];
 			$vars .= '&money=' . $_POST['money'];
@@ -6028,11 +6029,10 @@ class usc_e_shop
 			$vars .= '&pay_cvs=' . $_POST['pay_cvs'];
 			$vars .= '&sendid=' . $_POST['sendid'];
 			$vars .= '&sendpoint=' . $_POST['sendpoint'];
-			if( !WCUtils::is_blank($acting_opts['testid_conv']) ){
+			if( isset($acting_opts['conv_ope']) && 'test' == $acting_opts['conv_ope'] ) {
 				$vars .= '&testid=' . $acting_opts['testid_conv'];
 				$vars .= '&test_type=' . $acting_opts['test_type_conv'];
 			}
-
 
 			$header = "POST " . $interface['path'] . " HTTP/1.1\r\n";
 			$header .= "Host: " . $_SERVER['HTTP_HOST'] . "\r\n";
@@ -6086,17 +6086,24 @@ class usc_e_shop
 //20110208ysk start
 		}else if($acting_flg == 'acting_paypal_ec') {
 			$acting_opts = $this->options['acting_settings']['paypal'];
+			$currency_code = $this->get_currency_code();
+			$addroverride = '1';
+			if( isset( $_POST['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] ) ) {
+				if( 'US' == $_POST['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] or 'CA' == $_POST['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] ) $addroverride = '0';
+			} else {
+				$addroverride = '0';
+			}
 
 			$nvpstr  = $query;
-			$nvpstr .= '&CURRENCYCODE='.$this->get_currency_code();
-			//$nvpstr .= '&ADDROVERRIDE=1';
+			$nvpstr .= '&CURRENCYCODE='.$currency_code;
+			$nvpstr .= '&ADDROVERRIDE='.$addroverride;
 			$nvpstr .= '&PAYMENTACTION=' . apply_filters('usces_filter_paypal_ec_paymentaction', 'Sale');
 
 			//The returnURL is the location where buyers return to when a payment has been succesfully authorized.
 			$nvpstr .= '&RETURNURL='.urlencode(USCES_CART_URL.$delim.'acting=paypal_ec&acting_return=1');
 
 			//The cancelURL is the location buyers are sent to when they hit the cancel button during authorization of payment during the PayPal flow
-			$nvpstr .= '&CANCELURL='.urlencode(USCES_CART_URL.$delim.'confirm=1');
+			$nvpstr .= '&CANCELURL='.apply_filters( 'usces_filter_paypal_ec_cancelurl', urlencode(USCES_CART_URL.$delim.'confirm=1'), $query );
 
 			$nvpstr .= '&NOTIFYURL='.urlencode(USCES_PAYPAL_NOTIFY_URL);
 
