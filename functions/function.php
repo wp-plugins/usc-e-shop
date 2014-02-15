@@ -2313,7 +2313,8 @@ function usces_check_acting_return() {
 			$results = $_GET;
 
 			//Build a second API request to PayPal, using the token as the ID to get the details on the payment authorization
-		    $nvpstr = "&TOKEN=".urlencode($_REQUEST['token']);
+		    $req_token = isset($_REQUEST['token']) ? $_REQUEST['token'] : '0';
+			$nvpstr = "&TOKEN=".urlencode($req_token);
 
 			$usces->paypal->setMethod('GetExpressCheckoutDetails');
 			$usces->paypal->setData($nvpstr);

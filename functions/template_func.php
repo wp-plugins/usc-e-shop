@@ -136,6 +136,12 @@ function usces_is_skus() {
 	}
 }
 
+function usces_reset_skus() {
+	global $usces;
+	
+	reset($usces->itemskus);
+}
+
 function usces_have_skus() {
 	global $usces;
 	
