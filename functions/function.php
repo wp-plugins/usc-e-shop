@@ -1035,8 +1035,8 @@ function usces_reg_ordercartdata( $order_id, $cart ){
 				$okey = urldecode($okey);
 				$ovalue = urldecode($ovalue);
 				$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
-					( cart_id, meta_key, meta_value ) VALUES (%d, %s, %s)", 
-					$cart_id, $okey, $ovalue
+					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 
+					$cart_id, 'option', $okey, $ovalue
 				);
 				$wpdb->query($aquery);
 			}

@@ -1,4 +1,5 @@
 <?php
+
 function usces_filter_get_post_metadata( $null, $object_id, $meta_key, $single){
 	global $wpdb;
 	$query = $wpdb->prepare("SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = %s", $object_id, $meta_key);
@@ -132,5 +133,3 @@ die();
 		}
 	}
 }
-
-?>

@@ -1931,7 +1931,7 @@ class usc_e_shop
 		</script>
 		<script type='text/javascript' src='<?php echo $javascript_url; ?>'></script>
 		<?php endif; ?>
-		<?php //if( !is_home() && !is_front_page() && $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || ('item' == $item->post_mime_type)) ) : ?>
+		<?php ob_start(); ?>
 		<?php if( $this->use_js && (is_page(USCES_CART_NUMBER) || $this->is_cart_page($_SERVER['REQUEST_URI']) || (is_singular() && 'item' == $item->post_mime_type)) ) : ?>
 		<script type='text/javascript'>
 		(function($) {
@@ -2186,6 +2186,10 @@ class usc_e_shop
 		<?php endif; ?>
 <?php
 		usces_states_form_js();
+		$js = apply_filters( 'usces_filter_shop_foot_js', ob_get_contents() );
+		ob_end_clean();
+		echo $js;
+
 	}
 	
 	function admin_head() {
@@ -4839,7 +4843,7 @@ class usc_e_shop
 		
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		
-		if($wpdb->get_var("show tables like '$member_table'") != $member_table) {
+		if($wpdb->get_var("show tables like '$access_table'") != $access_table) {
 		
 			$sql = "CREATE TABLE " . $access_table . " (
 				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
