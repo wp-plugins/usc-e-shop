@@ -1,28 +1,39 @@
 <?php
 global $usces;
-require_once(USCES_PLUGIN_DIR.'/classes/fpdf/mbfpdi.php');
-require_once(USCES_PLUGIN_DIR.'/classes/orderData.class.php');
+//20140107_kitamu_start
+require_once(USCES_PLUGIN_DIR.'/pdf/tcpdf/config/lang/jpn.php');
+require_once(USCES_PLUGIN_DIR.'/pdf/tcpdf/tcpdf.php');
+require_once(USCES_PLUGIN_DIR.'/pdf/fpdi/fpdi.php');
+require_once( USCES_PLUGIN_DIR.'/classes/orderData.class.php');
+
+//ob_start();
 
 //用紙サイズ(B5)
-// MBfpdiクラスのインスタンス生成
+// FPDIクラスのインスタンス生成
 if(isset($usces->options['print_size']) && $usces->options['print_size'] == 'A4')
-	$pdf = new MBfpdi('P', 'mm', array(210, 297));
+	$pdf = new FPDI('P', 'mm', 'A4', true, array(210, 297),'UTF-8');
 else
-	$pdf = new MBfpdi('P', 'mm', array(182, 257));
+	$pdf = new FPDI('P', 'mm', 'B5', true, array(182, 257),'UTF-8');
+//20140107_kitamu_end
 
 $usces_pdfo = new orderDataObject($_REQUEST['order_id']);
-
 usces_pdf_out($pdf, $usces_pdfo);
 die();
 
 function usces_conv_euc($str){
+/*
 	$str = str_replace(mb_convert_encoding('&yen;','UTF-8','HTML-ENTITIES'),'\\',$str);
 	$str = mb_convert_encoding($str, 'EUC-JP', 'UTF-8');
+	*/	
 	return $str;
 }
 
 function usces_pdf_out(&$pdf, $data){
 	global $usces;
+
+//kitamu 上下の線を除去
+	$pdf->setPrintHeader( false );
+	$pdf->setPrintFooter( false );
 
 	//PDF出力基本設定
 	//******************************************************
@@ -39,13 +50,23 @@ function usces_pdf_out(&$pdf, $data){
 		$tplfile = USCES_PLUGIN_DIR."/images/orderform_B5.pdf";
 
 	$pagecount = $pdf->setSourceFile($tplfile);
-	$tplidx = $pdf->ImportPage(1);
+	$tplidx = $pdf->importPage(1);	//kitamu ImportPage(1) -> importPage(1)に変更
 	$pdf->SetLeftMargin(0);
 	$pdf->SetTopMargin(0);
 	$pdf->addPage();
 	//$pdf->useTemplate($tplidx);
+/*
 	$pdf->AddMBFont(GOTHIC, 'EUC-JP');
 	$pdf->AddMBFont(MINCHO, 'EUC-JP');
+*/
+//20140107_kitamu_start fontの追加
+	$font_p_gothic = $pdf->addTTFfont( USCES_PLUGIN_DIR . '/pdf/fonts/ipagp.ttf');		//Pゴシック
+
+	//$font_gothic = $pdf->addTTFfont( USCES_PLUGIN_DIR . '/pdf/fonts/ipag.ttf');		//ゴシック
+	//$font_mincho = $pdf->addTTFfont( USCES_PLUGIN_DIR . '/pdf/fonts/ipam.ttf');		//明朝
+	//$font_p_mincho = $pdf->addTTFfont( USCES_PLUGIN_DIR . '/pdf/fonts/ipamp.ttf');	//P明朝
+	
+//20140107_kitamu end
 
 	// 文書情報設定
 	$pdf->SetCreator('Welcart');
@@ -78,7 +99,9 @@ function usces_pdf_out(&$pdf, $data){
 	// 総ページ数のエイリアスを定義する。
 	// エイリアスはドキュメントをクローズするときに置換する。
 	// '{nb}' で総ページ数が得られる
-	$pdf->AliasNbPages();
+
+	//$pdf->AliasNbPages();		//20140107_kitamu getAliasNbPages()へ
+	$pdf->getAliasNbPages();
 
 	//自動改ページモード
 	$pdf->SetAutoPageBreak(true , 5);
@@ -149,15 +172,15 @@ function usces_pdf_out(&$pdf, $data){
 
 		$line_y[$index] = $next_y;
 
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
-		$pdf->SetXY($x-0.2, $line_y[$index]);
-		$pdf->MultiCell(3.6, $lineheight, '*', $border, 'C');
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);	//10->8
+		$pdf->SetFont( $font_p_gothic, '', $fontsize);
+		$pdf->SetXY($x-0.2, $line_y[$index]+0.8);		//kitamu +0.8
+		$pdf->MultiCell(4, $lineheight, '*', $border, 'C');		//kitamu 3.6から4へ
 		$pdf->SetXY($x+3.0, $line_y[$index]);
 		$pdf->MultiCell(84.6, $lineheight, usces_conv_euc($cartItemName), $border, 'L');
 		if( 'receipt' != $_REQUEST['type'] ){
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
-			$pdf->SetFont(GOTHIC, '', $fontsize);
+			$pdf->SetFont($font_p_gothic, '', $fontsize);
 			$pdf->SetXY($x+6.0, $pdf->GetY()+$linetop);
 			$pdf->MultiCell(81.6, $lineheight-0.2, usces_conv_euc($optstr), $border, 'L');
 		}
@@ -166,21 +189,21 @@ function usces_pdf_out(&$pdf, $data){
 		do_action( 'usces_action_order_print_cart_row', $pdf, $data, $pdf_args );
 
 		$next_y = $pdf->GetY()+2;
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);	//kitamu 10->7
+		$pdf->SetFont( $font_p_gothic, '', $fontsize);
 		$pdf->SetXY($x+88.0, $line_y[$index]);
 		$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($cart_row['quantity']), $border, 'R');
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);	//kitamu 10->7
+		$pdf->SetFont( $font_p_gothic, '', $fontsize);
 		$pdf->SetXY($x+99.6, $line_y[$index]);
 		$pdf->MultiCell(11.5, $lineheight, usces_conv_euc($usces->getItemSkuUnit($post_id, urldecode($cart_row['sku']))), $border, 'C');
 		$pdf->SetXY($x+111.5, $line_y[$index]);
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);	//kitamu 7->7
+		$pdf->SetFont( $font_p_gothic, '', $fontsize);
 		$pdf->MultiCell(15.2, $lineheight, usces_conv_euc($usces->get_currency($cart_row['price'])), $border, 'R');
 		$pdf->SetXY($x+126.9, $line_y[$index]);
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(7);	//kitamu 9->7
+		$pdf->SetFont( $font_p_gothic, '', $fontsize);
 		$pdf->MultiCell(22.8, $lineheight, apply_filters( 'usces_filter_cart_row_price_pdf', usces_conv_euc($usces->get_currency($cart_row['price']*$cart_row['quantity'])), $cart_row), $border, 'R');
 
 		if( $onep < $next_y && 0 < $index ){
@@ -198,15 +221,16 @@ function usces_pdf_out(&$pdf, $data){
 
 	usces_pdfSetLine($pdf);
 	usces_pdfSetFooter($pdf, $data);
-
-	@ob_end_clean();
+//	$error = ob_get_contents();
+//	die($error);
+//	@ob_end_clean();	//error表示を取り除く
 
 	// Output
 	//*****************************************************************
-	header('Pragma:');
-	header('Cache-Control: application/octet-stream');
-	header("Content-type: application/pdf");
-	header('Content-Length: '.strlen($pdf->buffer));
+//	header('Pragma:');
+//	header('Cache-Control: application/octet-stream');
+//	header("Content-type: application/pdf");
+//	header('Content-Length: '.strlen($pdf->buffer));
 	$pdf->Output($filename, 'I');
 }
 
@@ -214,6 +238,9 @@ function usces_pdf_out(&$pdf, $data){
 function usces_pdfSetHeader($pdf, $data, $page) {
 	global $usces;
 	$border = 0;//border of cells
+
+	//20140107_kitamu_start fontの追加
+	$font_p_gothic = $pdf->addTTFfont( USCES_PLUGIN_DIR . '/pdf/fonts/ipagp.ttf');		//Pゴシック
 
 	switch ( $_REQUEST['type'] ){
 		case  'mitumori':
@@ -277,36 +304,38 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 //	$pdf->Rect(14, 24, 152, 61, 'F');//Label field of customer
 //	$pdf->Rect(14, 93, 153, 105, 'F');//Body field
 	$pdf->SetLineWidth(0.4);
-	$pdf->Line(57, 23, 116, 23);
+	$pdf->Line(65, 23, 110, 23);
 	$pdf->SetLineWidth(0.1);
 	$pdf->Line(124, 19, 167, 19);
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 	$pdf->SetXY(125, 15.0);
 	$pdf->Write(5, 'No.');
 
 	// Title
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(15);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
-	$pdf->SetXY(58, 17);
-	$pdf->MultiCell(58, $lineheight, usces_conv_euc($title), $border, 'C');
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
+	$pdf->SetXY(64, 16);
+	$pdf->MultiCell(45.5, $lineheight, usces_conv_euc($title), $border, 'C');
 
 	// Date
-	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 	$pdf->SetXY(64, 24.2);
 	$pdf->MultiCell(45.5, $lineheight, usces_conv_euc($effective_date), $border, 'C');
 
 	// Order No.
-	$pdf->SetXY(131, 15.4);
+	$pdf->SetXY(131, 15);
 	$pdf->MultiCell(36, $lineheight,  usces_get_deco_order_id( $data->order['ID'] ), $border, 'R');
 
 	// Page No.
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(13);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 	$pdf->SetXY(15.5, 15.4);
-	$pdf->MultiCell(20, 7, $page.'/{nb}', 1, 'C');
-
+//20140107 kitamu_start 0000571 TCPDFでは総ページ取得 = getAliasNbPages()
+	//$pdf->MultiCell(20, 7, $page.'/{nb}', 1, 'C');
+	$pdf->Cell( 20, 7, ' ' . $page . '/ ' . $pdf->getAliasNbPages(), 1);
+//20140107 kitamura_end
 	$width = 80;
 	$leftside = 15;
 	$pdf->SetLeftMargin($leftside);
@@ -318,11 +347,14 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	if( 'receipt' == $_REQUEST['type'] ){
 		$top = 40;
 		// Name of customer
+		//20140225 kitamu_start 0000803  カスタム・カスタマーフィールドの値を取得
+		$meta = usces_has_custom_field_meta('customer');
 		$company = $usces->get_order_meta_value('cscs_company', $data->order['ID']);
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(15);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(12);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
 		$pdf->SetXY($leftside, $top);
-		if( empty($company) ){
+		//20140225 kitamu_start 0000803 追記 !isset( $meta['company'] )
+		if( empty( $company ) || !isset( $meta['company'] ) ){
 			$pdf->MultiCell($width, $lineheight, usces_conv_euc(usces_get_pdf_name( $data )), $border, 'L');
 			$x = $leftside + $width;
 			$y = $pdf->GetY() - $lineheight;
@@ -342,31 +374,207 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		//Total
 		$y = $pdf->GetY() + $lineheight + 7;
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(20);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
 		$pdf->SetXY($leftside+2, $y);
 		$pdf->MultiCell($width, $lineheight+2, usces_conv_euc($usces->get_currency($data->order['total_full_price'], true, false) . apply_filters( 'usces_filters_pdf_currency_post', $currency_post)), 1, 'C');
 
 		// Message
 		$y = $pdf->GetY() + $lineheight;
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell($width+70, $lineheight, usces_conv_euc($message), $border, 'L');
 
 		// Label
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
-		$y = 89.7;
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
+		$y = 89;
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell(75, $lineheight, usces_conv_euc(__('Statement', 'usces')), $border, 'L');
+
+//20140225 kitamu_start 0000571 納品書の記載方法
+	}elseif( 'nohin' == $_REQUEST['type'] ){
+		//「配送先を宛名とする」
+		if( $usces->options['system']['pdf_delivery'] == 1 ){
+			$top = 30;
+			// Name of customer
+			//0000803 カスタム・カスタマーフィールドの値を取得
+			$meta = usces_has_custom_field_meta('delivery');
+			$deliveri_company = $usces->get_order_meta_value('csde_company', $data->order['ID']);
+			list($fontsize, $lineheight, $linetop) = usces_set_font_size(12);
+			$pdf->SetFont($font_p_gothic, '', $fontsize);
+			$pdf->SetXY($leftside, $top);
+			//0000803 !isset( $meta['company'] )
+			if( empty( $deliveri_company ) || !isset( $meta['company'] ) ){
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc(usces_get_pdf_shipping_name( $data )), $border, 'L');
+				$x = $leftside + $width;
+				$y = $pdf->GetY() - $lineheight;
+				$pdf->SetXY($x, $y);
+				$pdf->Write($lineheight, usces_conv_euc( apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ));
+				$y = $pdf->GetY() + $lineheight + $linetop + 2;
+			}else{
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc($deliveri_company), $border, 'L');
+				$x = $leftside + $width;
+				$y = $pdf->GetY() - $lineheight;
+				$pdf->SetXY($x, $y);
+				$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor) ));
+				$y = $pdf->GetY() + $lineheight + $linetop;
+				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+				$pdf->SetFont($font_p_gothic, '', $fontsize);
+				$pdf->SetXY($leftside, $y);
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_shipping_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+				$y = $pdf->GetY() + $linetop + 2;
+			}
+			// Address
+			list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+			$pdf->SetFont($font_p_gothic, '', $fontsize);
+
+			usces_get_pdf_shipping_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
+
+			$pdf->MultiCell($width, $lineheight, usces_conv_euc('TEL ' . $data->deliveri['tel']), $border, 'L');
+
+			if( !empty($data->deliveri['fax']) ){
+				$y = $pdf->GetY() + $linetop;
+				$pdf->SetXY($leftside, $y);
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc('FAX ' . $data->deliveri['fax']), $border, 'L');
+			}
+		//「購入者情報を宛名とする」
+		}else{
+			$top = 30;
+			// Name of customer
+			//0000803 カスタム・カスタマーフィールドの値を取得
+			$meta = usces_has_custom_field_meta('customer');
+			$company = $usces->get_order_meta_value('cscs_company', $data->order['ID']);
+			list($fontsize, $lineheight, $linetop) = usces_set_font_size(12);
+			$pdf->SetFont($font_p_gothic, '', $fontsize);
+			$pdf->SetXY($leftside, $top);
+			//0000803 追記 !isset( $meta['company'] )
+			if( empty( $company ) || !isset( $meta['company'] ) ){
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc(usces_get_pdf_name( $data )), $border, 'L');
+				$x = $leftside + $width;
+				$y = $pdf->GetY() - $lineheight;
+				$pdf->SetXY($x, $y);
+				$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ));
+				$y = $pdf->GetY() + $lineheight + $linetop + 2;
+			}else{
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc($company), $border, 'L');
+				$x = $leftside + $width;
+				$y = $pdf->GetY() - $lineheight;
+				$pdf->SetXY($x, $y);
+				$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor) ));
+				$y = $pdf->GetY() + $lineheight + $linetop;
+				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+				$pdf->SetFont($font_p_gothic, '', $fontsize);
+				$pdf->SetXY($leftside, $y);
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+				$y = $pdf->GetY() + $linetop + 2;
+			}
+			// Address
+			list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+			$pdf->SetFont($font_p_gothic, '', $fontsize);
+
+			usces_get_pdf_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
+
+			$pdf->MultiCell($width, $lineheight, usces_conv_euc('TEL ' . $data->customer['tel']), $border, 'L');
+
+			if( !empty($data->customer['fax']) ){
+				$y = $pdf->GetY() + $linetop;
+				$pdf->SetXY($leftside, $y);
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc('FAX ' . $data->customer['fax']), $border, 'L');
+			}
+			//配送先情報
+			$customer_name = trim( $data->customer['name1'] ) . trim( $data->customer['name2'] );
+			$deliveri_name = trim( $data->deliveri['name1'] ) . trim( $data->deliveri['name2'] );
+			$customer_zip = trim( $data->customer['zip'] );
+			$deliveri_zip = trim( $data->deliveri['zipcode'] );
+			$customer_address = trim( $data->customer['address1'] ) . trim( $data->customer['address2']) . trim( $data->customer['address3'] );
+			$deliveri_address = trim( $data->deliveri['address1'] ) . trim( $data->deliveri['address2']) . trim( $data->deliveri['address3'] );
+
+			//購入者と発送先情報が異なるとき
+			if( $customer_name != $deliveri_name or $customer_zip != $deliveri_zip or $customer_address != $deliveri_address){
+				// Line	
+				$y = $pdf->GetY() + $linetop;
+				$pdf->SetLineWidth(0.1);
+				$pdf->Line( $leftside, $y, $leftside+$width+5, $y );
+
+				//【配送先】タイトル
+				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);	//kitamu 10->8
+				$y = $pdf->GetY() + $linetop + 1;
+				$pdf->SetFont($font_p_gothic, '', $fontsize);
+				$pdf->SetXY($leftside, $y);
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc( __( "** A shipping address **", 'usces' ) ), $border, 'L');
+				
+				//配送先の宛名
+				$meta = usces_has_custom_field_meta('delivery');
+				$deliveri_company = $usces->get_order_meta_value( 'csde_company', $data->order['ID'] );
+				list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
+				$y = $pdf->GetY() + $linetop;
+				$pdf->SetFont($font_p_gothic, '', $fontsize);
+				$pdf->SetXY($leftside, $y);
+				if( empty( $deliveri_company ) || !isset( $meta['company'] ) ){
+					$pdf->MultiCell($width, $lineheight, usces_conv_euc( usces_get_pdf_shipping_name( $data ) ), $border, 'L');
+					$x = $leftside + $width;
+					$y = $pdf->GetY() - $lineheight - $linetop;
+					$pdf->SetXY($x, $y);
+					$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_person_honor', $person_honor ) ));	//様
+					$y = $pdf->GetY() + $lineheight + $linetop;
+				}else{
+					$pdf->MultiCell($width, $lineheight, usces_conv_euc($deliveri_company), $border, 'L');
+					$x = $leftside + $width;
+					$y = $pdf->GetY() - $lineheight;
+					$pdf->SetXY($x, $y);
+					$pdf->Write($lineheight, usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor ) ));	//御中
+					$y = $pdf->GetY() + $lineheight + $linetop;
+					list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
+					$pdf->SetFont($font_p_gothic, '', $fontsize);
+					$pdf->SetXY($leftside, $y);
+					$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_shipping_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+					$y = $pdf->GetY() + $linetop;
+				}
+				//配送先の住所
+				list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
+				$pdf->SetFont($font_p_gothic, '', $fontsize);
+				usces_get_pdf_shipping_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
+				
+				//配送先の電話番号
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc('TEL ' . $data->deliveri['tel']), $border, 'L');
+			}
+		}
+		$y = $pdf->GetY() + $linetop + 0.5;
+
+		$pdf->SetLineWidth(0.1);
+		$pdf->Line($leftside, $y, $leftside+$width+5, $y);
+
+		// Message
+		$y = 84;
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
+		$pdf->SetXY($leftside, $y);
+		$pdf->MultiCell($width+70, $lineheight, usces_conv_euc($message), $border, 'L');
+
+		// Order date
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
+		$y = 89;
+		$pdf->SetXY($leftside, $y);
+		$pdf->MultiCell(75, $lineheight, usces_conv_euc($juchubi), $border, 'L');
+
+		// Payment method
+		$pdf->SetXY($leftside+76, $y);
+		$pdf->MultiCell(75, $lineheight, usces_conv_euc($siharai), $border, 'L');
+//0000571_kitamu_end
+
 	}else{
-		$top = 35;
+		$top = 30;
 		// Name of customer
+		//kitamu 0000803 カスタム・カスタマーフィールドの値を取得
+		$meta = usces_has_custom_field_meta('customer');
 		$company = $usces->get_order_meta_value('cscs_company', $data->order['ID']);
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(15);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(12);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
 		$pdf->SetXY($leftside, $top);
-		if( empty($company) ){
+		//kitamu 0000803  追記 !isset( $meta['company'] )
+		if( empty( $company ) || !isset( $meta['company'] ) ){
 			$pdf->MultiCell($width, $lineheight, usces_conv_euc(usces_get_pdf_name( $data )), $border, 'L');
 			$x = $leftside + $width;
 			$y = $pdf->GetY() - $lineheight;
@@ -380,16 +588,15 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$pdf->SetXY($x, $y);
 			$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor) ));
 			$y = $pdf->GetY() + $lineheight + $linetop;
-			list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-			$pdf->SetFont(GOTHIC, '', $fontsize);
+			list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+			$pdf->SetFont($font_p_gothic, '', $fontsize);
 			$pdf->SetXY($leftside, $y);
 			$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
 			$y = $pdf->GetY() + $linetop + 2;
 		}
-
 		// Address
-		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
 
 		usces_get_pdf_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
 
@@ -400,22 +607,22 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$pdf->SetXY($leftside, $y);
 			$pdf->MultiCell($width, $lineheight, usces_conv_euc('FAX ' . $data->customer['fax']), $border, 'L');
 		}
+				$y = $pdf->GetY() + $linetop + 0.5;
 
-		$y = $pdf->GetY() + $linetop;
 		$pdf->SetLineWidth(0.1);
 		$pdf->Line($leftside, $y, $leftside+$width+5, $y);
 
 		// Message
-		$y = 77;
+		$y = 84;
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell($width+70, $lineheight, usces_conv_euc($message), $border, 'L');
 
 		// Order date
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-		$pdf->SetFont(GOTHIC, '', $fontsize);
-		$y = 89.7;
+		$pdf->SetFont($font_p_gothic, '', $fontsize);
+		$y = 89;
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell(75, $lineheight, usces_conv_euc($juchubi), $border, 'L');
 
@@ -432,12 +639,12 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	$x = 110;
 	$y = 45;
 	$pdf->SetLeftMargin($x);
-	list($fontsize, $lineheight, $linetop) = usces_set_font_size(11);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 	$pdf->SetXY($x, $y);
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc(apply_filters('usces_filter_publisher', get_option('blogname'))), 0, 'L');
-	list($fontsize, $lineheight, $linetop) = usces_set_font_size(10);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc(apply_filters('usces_filter_pdf_mycompany', $usces->options['company_name'])), 0, 'L');
 	usces_get_pdf_myaddress($pdf, $lineheight );
 	$pdf->MultiCell(60, $lineheight, usces_conv_euc('TEL：'.$usces->options['tel_number']), 0, 'L');
@@ -447,10 +654,13 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 //Footer
 function usces_pdfSetFooter($pdf, $data) {
 	global $usces;
-	$border = 0;
 
+	//20140107_kitamu_start fontの追加
+	$font_p_gothic = $pdf->addTTFfont( USCES_PLUGIN_DIR . '/pdf/fonts/ipagp.ttf');		//Pゴシック
+	//20140107_kitamu end
+	$border = 0;
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 
 	// Body label
 	$pdf->SetXY(15.5, 94.9);
@@ -481,12 +691,12 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->MultiCell(37.77, $lineheight, usces_conv_euc(__('Total Amount', 'usces')), $border, 'C');
 
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 	// Footer value
 	$pdf->SetXY(16.1, 198.8);
 	$pdf->MultiCell(86.6, $lineheight, usces_conv_euc( apply_filters('usces_filter_pdf_note', $data->order['note'], $data, $_REQUEST['type'])), $border, 'J');
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
-	$pdf->SetFont(GOTHIC, '', $fontsize);
+	$pdf->SetFont($font_p_gothic, '', $fontsize);
 	$pdf->SetXY(142.9, 198.8);
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['item_total_price'])), $border, 'R');
 	$pdf->SetXY(142.9, 204.8);
@@ -573,6 +783,25 @@ function usces_get_pdf_name( $data ){
 	return $name;
 }
 
+//20140107_kitamu_start 配送先の名前を取得
+function usces_get_pdf_shipping_name( $data ){
+	global $usces, $usces_settings;
+	$options = get_option('usces');
+	$applyform = usces_get_apply_addressform($options['system']['addressform']);
+	$name = '';
+	switch ($applyform){
+	case 'JP': 
+		$name = $data->deliveri['name1'] . ' ' . $data->deliveri['name2'];
+		break;
+	case 'US':
+	default:
+		$name = $data->deliveri['name2'] . ' ' . $data->deliveri['name1'];
+	}
+
+	return $name;
+}
+//20140107_kitamu_end
+
 function usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $lineheight){
 	$options = get_option('usces');
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
@@ -607,6 +836,45 @@ function usces_get_pdf_address(&$pdf, $data, $y, $linetop, $leftside, $width, $l
 		break;
 	}
 }
+
+//20140107_kitamu_start 配送先が異なる場合の表示
+function usces_get_pdf_shipping_address(&$pdf, $data, $y, $linetop, $leftside, $width, $lineheight){
+	$options = get_option('usces');
+	$applyform = usces_get_apply_addressform($options['system']['addressform']);
+	$name = '';
+	$border = '';
+	$pref = ( __( '-- Select --','usces') == $data->deliveri['pref'] ) ? '' : $data->deliveri['pref'];
+
+	switch ($applyform){
+	case 'JP': 
+		$pdf->SetXY($leftside, $y);
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("zip code", 'usces') . ' ' . $data->deliveri['zipcode']), $border, 'L');
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($pref . $data->deliveri['address1'] . $data->deliveri['address2']), $border, 'L');
+
+		if( !empty($data->deliveri['address3']) ){
+			$y = $pdf->GetY() + $linetop;
+			$pdf->SetXY($leftside, $y);
+			$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->deliveri['address3']), $border, 'L');
+		}
+		break;
+
+	case 'US':
+	default:
+		$pdf->SetXY($leftside, $y);
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->deliveri['address2'] . ' ' . $data->deliveri['address3']), $border, 'L');
+
+		$y = $pdf->GetY() + $linetop;
+		$pdf->SetXY($leftside, $y);
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->deliveri['address1'] . ' ' . $pref . ' ' . $data->deliveri['country']), $border, 'L');
+
+		$y = $pdf->GetY() + $linetop;
+		$pdf->SetXY($leftside, $y);
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("zip code", 'usces') . ' ' . $data->deliveri['zipcode']), $border, 'L');
+		break;
+	}
+}
+
+//20140107_kitamu_end 
 
 function usces_get_pdf_myaddress(&$pdf, $lineheight){
 	global $usces;

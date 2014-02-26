@@ -415,7 +415,7 @@ item_option_meta_form();
 <div class="postbox">
 <?php if ( post_type_supports($post_type, 'title') ) { ?>
 <div class="inside">
-<div class="itempagetitle">商品詳細ページタイトル</div>
+<div class="itempagetitle"><?php _e("The product details page title", "usces"); ?></div>
 <div id="titlediv">
 	<div id="titlewrap">
 		<label class="hide-if-no-js" style="visibility:hidden" id="title-prompt-text" for="title"><?php _e('Enter title here') ?></label>
@@ -443,7 +443,7 @@ wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false );
 ?>
 <?php } ?>
 <?php if ( post_type_supports($post_type, 'editor') ) { ?>
-<div class="itempagetitle">商品詳細本文</div>
+<div class="itempagetitle"><?php _e("Full product details", "usces"); ?></div>
 <div id="<?php echo user_can_richedit() ? 'postdivrich' : 'postdiv'; ?>" class="postarea">
 
 <style type="text/css">

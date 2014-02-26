@@ -113,7 +113,9 @@ class usc_e_shop
 		if(!isset($this->options['system']['dec_orderID_prefix'])) $this->options['system']['dec_orderID_prefix'] = '';
 		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
 		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 0;
-
+		if(!isset($this->options['system']['pdf_delivery'])) $this->options['system']['pdf_delivery'] = 0;
+		if(!isset($this->options['system']['member_pass_rule_min']) || empty($this->options['system']['member_pass_rule_min'])) $this->options['system']['member_pass_rule_min'] = 1;
+		if(!isset($this->options['system']['member_pass_rule_max']) || empty($this->options['system']['member_pass_rule_max']) ) $this->options['system']['member_pass_rule_max'] = '';
 		if(!isset($this->options['acting_settings']['zeus'])) $this->options['acting_settings']['zeus'] = array('activate'=>'','card_activate'=>'','clientip'=>'','authkey'=>'','connection'=>'','3dsecure'=>'','security'=>'','quickcharge'=>'', 'howpay'=>'','bank_activate'=>'','clientip_bank'=>'','testid_bank'=>'','conv_activate'=>'','clientip_conv'=>'','testid_conv'=>'','test_type_conv'=>'');
 		if(!isset($this->options['acting_settings']['zeus']['connection'])) $this->options['acting_settings']['zeus']['connection'] = '1';
 		if(!isset($this->options['acting_settings']['zeus']['3dsecur'])) $this->options['acting_settings']['zeus']['3dsecur'] = '2';
@@ -961,6 +963,9 @@ class usc_e_shop
 			$this->options['system']['no_cart_css'] = isset($_POST['no_cart_css']) ? 1 : 0;
 			$this->options['system']['dec_orderID_flag'] = isset($_POST['dec_orderID_flag']) ? (int)$_POST['dec_orderID_flag'] : 0;
 			$this->options['system']['dec_orderID_prefix'] = isset($_POST['dec_orderID_prefix']) ? esc_html(rtrim($_POST['dec_orderID_prefix'])) : '';
+			$this->options['system']['pdf_delivery'] = isset($_POST['pdf_delivery']) ? (int)$_POST['pdf_delivery'] : 0;
+			$this->options['system']['member_pass_rule_min'] = isset($_POST['member_pass_rule_min']) && !empty($_POST['member_pass_rule_min']) ? (int)$_POST['member_pass_rule_min'] : 1;
+			$this->options['system']['member_pass_rule_max'] = isset($_POST['member_pass_rule_max']) && !empty($_POST['member_pass_rule_max']) ? (int)$_POST['member_pass_rule_max'] : '';
 			if( isset($_POST['dec_orderID_digit']) ){
 				$dec_orderID_digit = (int)rtrim($_POST['dec_orderID_digit']);
 				if( 6 > $dec_orderID_digit ){
@@ -4452,6 +4457,13 @@ class usc_e_shop
 		foreach ( $_POST['member'] as $key => $vlue ) {
 			$_SESSION['usces_member'][$key] = trim($vlue);
 		}
+		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
+		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
+		if( !empty( $member_pass_rule_max ) ) {
+			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) && strlen( trim( $_POST['member']['password1'] ) ) <= $member_pass_rule_max ) ? 0 : 1;
+		}else{
+			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) ) ? 0 : 1;
+		}
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
 			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
@@ -4777,9 +4789,7 @@ class usc_e_shop
 			}
 		}
 		update_option('usces', $options);
-//20131206_kitamu_start
 		$this->options = get_option('usces');
-//20131206_kitamu_end
 		$_SESSION['usces_checked_business_days'] = '';
 	}
 	 

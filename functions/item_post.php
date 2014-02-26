@@ -1200,12 +1200,12 @@ function item_save_metadata( $post_id, $post ) {
 	}
 	if( empty($itemCode) ){
 		$itemCode  = '';
-		$message .= __('商品コードが入力されていません。', 'usces') . "<br />";
+		$message .= __('Product code has not been entered.', 'usces') . "<br />";
 	}elseif( $res = usces_is_same_itemcode($post->ID, $itemCode)) {
 		$message .= 'post_ID ';
 		foreach( $res as $postid )
 			$message .= $postid . ', ';
-		$message .= 'に同じ商品コードが登録されています。' . "<br />";
+		$message .= 'Same product code is registered here.' . "<br />";
 		$usces->set_action_status('error', 'ERROR : '.$message);
 	}
 	update_post_meta($post_id, '_itemCode', $itemCode);
@@ -1380,13 +1380,13 @@ function item_save_metadata( $post_id, $post ) {
 		
 		
 		if( $uniq_name ){
-			$message .= 'オプション名が重複している商品オプションが存在します。' . "<br />";
+			$message .= __("Commodity option option name duplicates exist.", "usces") . "<br />";
 		}
 		if( $irreg_name ){
-			$message .= 'オプション名が未入力の商品オプションが存在します。' . "<br />";
+			$message .= __("Commodity option not entered there is the option name.", "usces") . "<br />";
 		}
 		if( $irreg_value ){
-			$message .= '商品オプションで「シングルセレクト」、「マルチセレクト」を選択した場合は、セレクト値を入力してください。' . "<br />";
+			$message .= __("If you select 'single select' and 'multi-select' the trade option, please enter the select value.", "usces") . "<br />";
 		}
 	}
 	
