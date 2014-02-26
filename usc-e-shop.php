@@ -13,6 +13,8 @@ define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
 define('USCES_DB_ORDER', '1.9');
 define('USCES_DB_ORDER_META', '1.2');
+define('USCES_DB_ORDERCART', '1.0');
+define('USCES_DB_ORDERCART_META', '1.0');
 
 define('USCES_UP07', 1);
 define('USCES_UP11', 2);

@@ -931,121 +931,6 @@ function usces_send_mail_init($phpmailer){
 	do_action('usces_filter_phpmailer_init', array( &$phpmailer ));
 }
 
-function usces_get_ordercartdata( $order_id ){
-	global $usces, $wpdb;
-	
-	$cart_table = $wpdb->prefix . "usces_ordercart";
-	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
-	
-	$query = $wpdb->prepare("SELECT * FROM $cart_table WHERE order_id=%d", $order_id );
-	$cart = $wpdb->get_results( $query, ARRAY_A );
-	
-	foreach( $cart as $key => $value ){
-		$cart[$key]['sku'] = $value['sku_code'];
-		$query = $wpdb->prepare("SELECT * FROM $cart_meta_table WHERE cart_id=%d", $value['cart_id'] );
-		$results = $wpdb->get_results( $query, ARRAY_A );
-		foreach((array)$results as $value ){
-			switch( $value['meta_type'] ){
-				case 'option':
-					$cart[$key]['options'][$value['meta_key']] = $value['meta_value'];
-					break;
-				case 'advance':
-					$cart[$key]['advance'][$value['meta_key']] = $value['meta_value'];
-					break;
-			}
-		}
-		if( !isset($cart[$key]['options']) )
-			$cart[$key]['options'] = array();
-		if( !isset($cart[$key]['advance']) )
-			$cart[$key]['advance'] = array();
-	}
-	
-	return $cart;
-}
-
-function usces_reg_ordercartdata( $order_id, $cart ){
-	global $usces, $wpdb;
-	
-	$cart_table = $wpdb->prefix . "usces_ordercart";
-	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
-	foreach( $cart as $row_index => $value ){
-		$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
-		$item_name = get_post_meta( $value['post_id'], '_itemName', true);
-		$skus = $usces->get_skus($value['post_id'], 'code');
-		$sku = $skus[$value['sku']];
-		if( empty($usces->option['tax_rate']) ){
-			$tax = 0;
-		
-		}else{
-			$tax = ($value['price'] * $value['quantity']) * $usces->options['tax_rate'] / 100;
-			$cr = $usces->options['system']['currency'];
-			$decimal = $usces_settings['currency'][$cr][1];
-			$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
-			switch( $usces->options['tax_method'] ){
-				case 'cutting':
-					$tax = floor($tax*$decipad)/$decipad;
-					break;
-				case 'bring':
-					$tax = ceil($tax*$decipad)/$decipad;
-					break;
-				case 'rounding':
-					if( 0 < $decimal ){
-						$tax = round($tax, (int)$decimal);
-					}else{
-						$tax = round($tax);
-					}
-					break;
-			}				
-		}
-		$query = $wpdb->prepare("INSERT INTO $cart_table 
-			(
-			order_id, 
-			row_index, 
-			post_id, 
-			item_code, 
-			item_name, 
-			sku_code, 
-			sku_name, 
-			cprice, 
-			price, 
-			quantity, 
-			unit, 
-			tax, 
-			destination_id
-			) VALUES (%d, %d, %d, %s, %s, %s, %s, %d, %d, %d, %s, %d, %d)", 
-			$order_id, 
-			$row_index, 
-			$value['post_id'], 
-			$item_code, 
-			$item_name, 
-			$value['sku'], 
-			$sku['name'], 
-			$sku['cprice'], 
-			$value['price'], 
-			$value['quantity'], 
-			$sku['unit'], 
-			$tax, 
-			NULL
-		);
-		$wpdb->query($query);
-		
-		$cart_id = $wpdb->insert_id ;
-		if($value['options']){
-			foreach((array)$value['options'] as $okey => $ovalue){
-				$okey = urldecode($okey);
-				$ovalue = urldecode($ovalue);
-				$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
-					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 
-					$cart_id, 'option', $okey, $ovalue
-				);
-				$wpdb->query($aquery);
-			}
-		}
-		
-		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value);
-	}
-}
-
 function usces_reg_orderdata( $results = array() ) {
 	global $wpdb, $usces;
 //	$wpdb->show_errors();
@@ -1139,7 +1024,6 @@ function usces_reg_orderdata( $results = array() ) {
 		$order_id = false;
 	}else{
 		$order_id = $wpdb->insert_id;
-		usces_reg_ordercartdata( $order_id, $cart );
 	}
 
 	if ( !$order_id ) :
@@ -1527,6 +1411,8 @@ function usces_delete_orderdata() {
 	if(!isset($_REQUEST['order_id']) || WCUtils::is_blank($_REQUEST['order_id']) ) return 0;
 	$order_table = $wpdb->prefix . "usces_order";
 	$order_meta_table = $wpdb->prefix . "usces_order_meta";
+	$order_meta_table = $wpdb->prefix . "usces_order_meta";
+	$order_meta_table = $wpdb->prefix . "usces_order_meta";
 	$ID = $_REQUEST['order_id'];
 
 	$del = usces_delete_order_check( $ID );
@@ -1534,28 +1420,18 @@ function usces_delete_orderdata() {
 
 	$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $ID);
 	$order_data = $wpdb->get_row( $query, OBJECT );
-//20130625ysk start 0000721
-//20120306ysk start 0000324
-	//$order_res = $wpdb->get_row( $query, ARRAY_A );
-	//$restore_point = false;
 	$point = 0;
 	if( 'activate' == $usces->options['membersystem_state'] && 'activate' == $usces->options['membersystem_point'] && !empty($order_data->mem_id) && !$usces->is_status('cancel', $order_data->order_status) ) {
 		if( 0 < $order_data->order_getpoint ) {
-			//if( $usces->is_status('completion', $order_data->order_status) ) {
-			//	//$restore_point = true;
-			//	$point += $order_data->order_getpoint;
-			//} else {
-				if( usces_is_complete_settlement( $order_data->order_payment_name, $order_data->order_status ) || $usces->is_status('receipted', $order_data->order_status) ) {
-					//$restore_point = true;
-					$point += $order_data->order_getpoint;
-				}
-			//}
+			if( usces_is_complete_settlement( $order_data->order_payment_name, $order_data->order_status ) || $usces->is_status('receipted', $order_data->order_status) ) {
+				//$restore_point = true;
+				$point += $order_data->order_getpoint;
+			}
 		}
 		if( 0 < $order_data->order_usedpoint ) {
 			$point -= $order_data->order_usedpoint;
 		}
 	}
-//20120306ysk end
 
 	$query = $wpdb->prepare("DELETE FROM $order_table WHERE ID = %d", $ID);
 	$res = $wpdb->query( $query );
@@ -1569,11 +1445,9 @@ function usces_delete_orderdata() {
 		$query = $wpdb->prepare("DELETE FROM $order_meta_table WHERE order_id = %d", $ID);
 		$wpdb->query( $query );
 		
-//20120306ysk start 0000324
-		//if( $restore_point ) usces_restore_point( $order_res['mem_id'], $order_res['order_getpoint'] );
+		usces_delete_ordercartdata( NULL, $ID );
+		
 		if( 0 != $point ) usces_restore_point( $order_data->mem_id, $point );
-//20120306ysk end
-//20130625ysk end
 	}
 
 	} else {
@@ -1583,36 +1457,174 @@ function usces_delete_orderdata() {
 	return $res;
 }
 
-function usces_update_ordercart() {
+function usces_update_serialized_cart(){
 	global $wpdb, $usces;
 	if(!isset($_REQUEST['order_id']) || WCUtils::is_blank($_REQUEST['order_id']) ) return 0;
+	
 	$order_table_name = $wpdb->prefix . "usces_order";
 	$ID = $_REQUEST['order_id'];
 	$usces->cart->crear_cart();
 	$usces->cart->upCart();
 	$cart = $usces->cart->get_cart();
-//20120613ysk start 0000500
 	$idx = count($cart)-1;
 	$post_id = $cart[$idx]['post_id'];
 	$sku = $cart[$idx]['sku'];
 	$sku_code = esc_attr(urldecode($sku));
 	$cartItemName = $usces->getCartItemName($post_id, $sku_code);
 	$skuPrice = $cart[$idx]['price'];
-//20120613ysk end
 
 	$query = $wpdb->prepare("UPDATE $order_table_name SET `order_cart`=%s WHERE ID = %d", serialize($cart), $ID);
 	$res = $wpdb->query( $query );
 	
-	$usces->cart->crear_cart();
-//20120613ysk start 0000500
+	$usces->cart->crear_cart();	
+}
+
+function usces_delete_serialized_cart(){
+	global $wpdb, $usces;
+	if(!isset($_REQUEST['order_id']) || WCUtils::is_blank($_REQUEST['order_id']) ) return 0;
+
+		$indexs = array_keys($_POST['delButton']);
+		$index = $indexs[0];
+		$ids = array_keys($_POST['delButton'][$index]);
+		$post_id = $ids[0];
+		$skus = array_keys($_POST['delButton'][$index][$post_id]);
+		$sku = $skus[0];
+		
+		$usces->up_serialize($index, $post_id, $sku);
+		do_action('usces_cart_del_row', $index);
+		
+		if(isset($_SESSION['usces_cart'][$usces->serial]))
+			unset($_SESSION['usces_cart'][$usces->serial]);
+			
+		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
+}
+
+function usces_update_ordercart() {
+	$ordercart_table_name = $wpdb->prefix . "usces_ordercart";
+	foreach( $_POST['skuPrice'] as $cart_id => $price ){
+		$quantity = $_POST['quant'][$cart_id];
+		$query = $wpdb->prepare("
+			UPDATE $ordercart_table_name SET price = %f, quantity = %d WHERE cart_id = %d 
+			", $price, $quantity, $cart_id );
+		$wpdb->query( $query );
+	}
+	
+	$ordercart_meta_table_name = $wpdb->prefix . "usces_ordercart_meta";
+	foreach( $_POST['itemOption'] as $cartmeta_id => $value ){
+		if(is_array($value)) {
+			foreach($value as $v){
+				$opval[$v] = $v;
+			}
+			$value = serialize($opval);
+		}
+		$query = $wpdb->prepare("
+			UPDATE $ordercart_meta_table_name SET meta_value = %s WHERE cartmeta_id = %d 
+			", $value, $cartmeta_id );
+		$wpdb->query( $query );
+	}
 	if( $res === false ) {
 		$res = "-1#usces#";
 	} else {
 		$res = $skuPrice."#usces#".$cartItemName;
 	}
-//20120613ysk end
-	return $res;
+	//return $res;
 }
+
+function usces_update_ordercartdata( $order_id ) {
+	global $wpdb, $usces;
+
+	$ordercart_table_name = $wpdb->prefix . "usces_ordercart";
+	foreach( $_POST['skuPrice'] as $cart_id => $price ){
+		$quantity = $_POST['quant'][$cart_id];
+		$query = $wpdb->prepare("
+			UPDATE $ordercart_table_name SET price = %f, quantity = %d WHERE cart_id = %d 
+			", $price, $quantity, $cart_id );
+		$wpdb->query( $query );
+	}
+	
+	$ordercart_meta_table_name = $wpdb->prefix . "usces_ordercart_meta";
+	foreach( $_POST['itemOption'] as $cartmeta_id => $value ){
+		if(is_array($value)) {
+			$opval =array();
+			foreach($value as $v){
+				$opval[$v] = urldecode($v);
+			}
+			$value = serialize($opval);
+		}
+		$query = $wpdb->prepare("
+			UPDATE $ordercart_meta_table_name SET meta_value = %s WHERE cartmeta_id = %d 
+			", $value, $cartmeta_id );
+		$wpdb->query( $query );
+	}
+}
+
+function usces_delete_ordercartdata( $cart_id, $order_id = NULL ){
+	global $wpdb, $usces;
+	
+//	if( NULL == $cart_id && NULL == $order_id )
+//		return;
+		
+	$ordercart_table_name = $wpdb->prefix . "usces_ordercart";
+	$ordercart_meta_table_name = $wpdb->prefix . "usces_ordercart_meta";
+	
+	if( NULL != $cart_id ){
+		
+		$query = $wpdb->prepare("DELETE FROM $ordercart_table_name WHERE cart_id = %d", $cart_id );
+		$wpdb->query( $query );
+		
+		$mquery = $wpdb->prepare("
+			DELETE FROM $ordercart_meta_table_name WHERE cart_id = %d", $cart_id );
+		$wpdb->query( $mquery );
+		
+	}elseif( NULL != $order_id ){
+		
+		$query = $wpdb->prepare("SELECT cart_id FROM $ordercart_table_name WHERE order_id = %d", $order_id );
+		$cat_ids = $wpdb->get_col( $query );
+		
+		$query = $wpdb->prepare("DELETE FROM $ordercart_table_name WHERE order_id = %d", $order_id );
+		$wpdb->query( $query );
+		
+		foreach($cat_ids as $id){
+			$mquery = $wpdb->prepare("
+				DELETE FROM $ordercart_meta_table_name WHERE cart_id = %d", $id );
+			$wpdb->query( $mquery );
+		}
+		
+	}
+}
+
+function usces_get_ordercartdata( $order_id ){
+	global $usces, $wpdb;
+	
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	
+	$query = $wpdb->prepare("SELECT * FROM $cart_table WHERE order_id=%d ORDER BY cart_id", $order_id );
+	$cart = $wpdb->get_results( $query, ARRAY_A );
+	
+	foreach( $cart as $key => $value ){
+		$cart[$key]['sku'] = $value['sku_code'];
+		$query = $wpdb->prepare("SELECT * FROM $cart_meta_table WHERE cart_id=%d", $value['cart_id'] );
+		$results = $wpdb->get_results( $query, ARRAY_A );
+		foreach((array)$results as $value ){
+			switch( $value['meta_type'] ){
+				case 'option':
+					$cart[$key]['options'][$value['meta_key']] = $value['meta_value'];
+					break;
+				case 'advance':
+					$cart[$key]['advance'][$value['meta_key']] = $value['meta_value'];
+					break;
+			}
+		}
+		if( !isset($cart[$key]['options']) )
+			$cart[$key]['options'] = array();
+		if( !isset($cart[$key]['advance']) )
+			$cart[$key]['advance'] = array();
+	}
+	
+	return $cart;
+}
+
 
 function usces_update_ordercheck() {
 	global $wpdb, $usces;
@@ -1649,19 +1661,20 @@ function usces_update_orderdata() {
 	$old_orderdata = $wpdb->get_row( $query );
 	$old_status = $old_orderdata->order_status;
 	
-	$usces->cart->crear_cart();
-	$usces->cart->upCart();
-	if(isset($_POST['delButton'])) {
-		$usces->cart->del_row();
-		$indexs = array_keys($_POST['delButton']);
-		$index = $indexs[0];
-		do_action('usces_admin_delete_orderrow', $ID, $index );
+	if(isset($_POST['delButtonAdmin'])) {
+		foreach( $_POST['delButtonAdmin'] as $del_cart_id => $delvalue ){
+			usces_delete_ordercartdata( $del_cart_id, NULL );
+			do_action('usces_admin_delete_orderrow', $del_cart_id, $ID );
+		}
+	}else{
+		usces_update_ordercartdata( $ID );
 	}
-	$cart = $usces->cart->get_cart();
+	$cart = usces_get_ordercartdata( $ID );
 	$usces->cart->entry();
 	$entry = $usces->cart->get_entry();
 
 	$item_total_price = $usces->get_total_price( $cart );
+//	$item_total_price = $usces->get_total_price_ordercart( $cart );
 	//$set = $usces->getPayments( $entry['order']['payment_name'] );
 	$taio = isset($entry['order']['taio']) ? $entry['order']['taio'] : '';
 	$receipt = isset($entry['order']['receipt']) ? $entry['order']['receipt'] : '';
@@ -1706,7 +1719,7 @@ function usces_update_orderdata() {
 //20131101ysk end
 
 		do_action('usces_action_update_orderdata', $new_orderdata, $old_status, $old_orderdata);
-		$usces->cart->crear_cart();
+//		$usces->cart->crear_cart();
 
 		return 1;
 	}
@@ -1717,7 +1730,7 @@ function usces_update_orderdata() {
 				"UPDATE $order_table_name SET 
 					`mem_id`=%d, `order_email`=%s, `order_name1`=%s, `order_name2`=%s, `order_name3`=%s, `order_name4`=%s, 
 					`order_zip`=%s, `order_pref`=%s, `order_address1`=%s, `order_address2`=%s, `order_address3`=%s, 
-					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_cart`=%s, `order_note`=%s, 
+					`order_tel`=%s, `order_fax`=%s, `order_delivery`=%s, `order_note`=%s, 
 					`order_delivery_method`=%d, `order_delivery_date`=%s, `order_delivery_time`=%s, `order_payment_name`=%s, `order_item_total_price`=%f, `order_getpoint`=%d, `order_usedpoint`=%d, 
 					`order_discount`=%f, `order_shipping_charge`=%f, `order_cod_fee`=%f, `order_tax`=%f, `order_modified`=%s, 
 					`order_status`=%s, `order_delidue_date`=%s, `order_check`=%s 
@@ -1736,7 +1749,6 @@ function usces_update_orderdata() {
 					$_POST['customer']['tel'], 
 					$_POST['customer']['fax'], 
 					serialize($_POST['delivery']), 
-					serialize($cart), 
 					$_POST['offer']['note'], 
 					$_POST['offer']['delivery_method'], 
 					$_POST['offer']['delivery_date'], 
@@ -1894,45 +1906,7 @@ function usces_update_orderdata() {
 //20120612ysk end
 	$usces->cart->crear_cart();
 	
-return $result;
-		
-//	else :
-//	
-//		if ( $member['ID'] ) {
-//		
-//			$mquery = $wpdb->prepare(
-//						"UPDATE $member_table_name SET mem_point = (mem_point + %d - %d) WHERE ID = %d", 
-//						$entry['order']['getpoint'], $entry['order']['usedpoint'], $member['ID']);
-//		
-//			$wpdb->query( $mquery );
-//			$mquery = $wpdb->prepare("SELECT mem_point FROM $member_table_name WHERE ID = %d", $member['ID']);
-//			$point = $wpdb->get_var( $mquery );
-//			$_SESSION['usces_member']['point'] = $point;
-//		}
-//	
-//		if ( !empty($entry['reserve']) ) {
-//			foreach ( $entry['reserve'] as $key => $value ) {
-//				if ( is_array($value) )
-//					 $value = serialize($value);
-//				$mquery = $wpdb->prepare("INSERT INTO $order_table_meta_name ( order_id, meta_key, meta_value ) 
-//											VALUES (%d, %s, %s, %s)", $order_id, $key, $value);
-//				$wpdb->query( $mquery );
-//			}
-//		}
-//	
-//	endif;
-//	
-//	//zaiko
-//	foreach($cart as $cartrow){
-//		$zaikonum = $usces->getItemZaikoNum( $cartrow['post_id'], $cartrow['sku'] );
-//		if($zaikonum == '') continue;
-//		$zaikonum = $zaikonum - $cartrow['quantity'];
-//		$usces->updateItemZaikoNum( $cartrow['post_id'], $cartrow['sku'], $zaikonum );
-//		if($zaikonum <= 0) $usces->updateItemZaiko( $cartrow['post_id'], $cartrow['sku'], 2 );
-//	}
-//	
-//	return $order_id;
-	
+	return $result;
 }
 
 
@@ -2269,6 +2243,8 @@ function usces_all_delete_order_data(&$obj){
 			if( 0 != $point ) usces_restore_point( $order_res['mem_id'], $point );
 
 			do_action('usces_action_collective_order_delete_each', $id, $order_res);
+			
+			usces_delete_ordercartdata( NULL, $id );
 			
 			$metaquery = $wpdb->prepare("DELETE FROM $tableMetaName WHERE order_id = %d", $id);//0000427
 			$metares = $wpdb->query( $metaquery );
@@ -4478,4 +4454,167 @@ function usces_get_cr_symbol() {
 	return $symbol;
 }
 
+function usces_make_option_field( $cart_row ){
+	$options = usces_get_ordercart_meta( 'option', $cart_row['cart_id'] );
+	$post_id = $cart_row['post_id'];
+	
+	$field = '<div>' . "\n";
+	$field .= '<ul>' . "\n";
+	foreach((array)$options as $opt_value){
+		
+		$field .= '<li>' . usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) . '</li>' . "\n";
+	}
+	$field .= '</ul>' . "\n";
+	$field .= '</div>' . "\n";
+
+	echo apply_filters( 'usces_action_make_option_field', $field, $options, $post_id );
+}
+
+function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
+	global $usces;
+
+	$cartmeta_id = $opt_value['cartmeta_id'];
+	$name = $opt_value['meta_key'];
+	$value = $opt_value['meta_value'];
+	
+	if($label == '#default#')
+		$label = $name;
+
+	$opts = usces_get_opts($post_id, 'name');
+	if(!$opts)
+		return false;
+	
+	$opt = $opts[$name];
+	$means = (int)$opt['means'];
+	$essential = (int)$opt['essential'];
+
+	$html = '';
+	$name = esc_attr($name);
+	$label = esc_attr($label);
+	$html .= '<label for="itemOption[' . $cartmeta_id . ']" class="iopt_label">' . $label . '</label>' . "\n";
+	switch($means) {
+		case 0://Single-select
+			$selects = explode("\n", $opt['value']);
+			$html .= '<select name="itemOption[' . $cartmeta_id . ']" id="itemOption[' . $cartmeta_id . ']" class="iopt_select" onKeyDown="if (event.keyCode == 13) {return false;}">' . "\n";
+			if($essential == 1){
+				if(  '#NONE#' == $value || NULL == $value ) 
+					$selected = ' selected="selected"';
+				else
+					$selected = '';
+				$html .= '<option value="#NONE#"' . $selected . '>' . __('Choose','usces') . '</option>' . "\n";
+			}
+			$i=0;
+			foreach($selects as $v) {
+				$v = trim($v);
+				if( ($i == 0 && $essential == 0 && NULL == $value) || esc_attr($v) == esc_attr($value) ) 
+					$selected = ' selected="selected"';
+				else
+					$selected = '';
+				$html .= '<option value="' . esc_attr($v) . '"' . $selected . '>' . esc_attr($v) . '</option>' . "\n";
+				$i++;
+			}
+			$html .= '</select>' . "\n";
+			break;
+		case 1://Multi-select
+			$selects = explode("\n", $opt['value']);
+			$html .= '<select name="itemOption[' . $cartmeta_id . '][]" id="itemOption[' . $cartmeta_id . ']" class="iopt_select" multiple onKeyDown="if (event.keyCode == 13) {return false;}">' . "\n";
+			if($essential == 1){
+				if(  '#NONE#' == $value || NULL == $value ) 
+					$selected = ' selected="selected"';
+				else
+					$selected = '';
+				$html .= '<option value="#NONE#"' . $selected . '>' . __('Choose','usces') . '</option>' . "\n";
+			}
+			$i=0;
+			
+			$value_arr = unserialize($value);
+			foreach($selects as $v) {
+				$v = trim($v);
+				$opval = urlencode($v);
+				$val_str = isset($value_arr[$opval]) ? $value_arr[$opval] : '';
+				if( $v == $val_str ) 
+					$selected = ' selected="selected"';
+				else
+					$selected = '';
+				$html .= '<option value="' . esc_attr($opval) . '"' . $selected . '>' . esc_attr($v) . '</option>' . "\n";
+				$i++;
+			}
+			$html .= '</select>' . "\n";
+			break;
+		case 2://Text
+			$html .= '<input name="itemOption[' . $cartmeta_id . ']" type="text" id="itemOption[' . $cartmeta_id . ']" class="iopt_text" onKeyDown="if (event.keyCode == 13) {return false;}" value="' . esc_attr($value) . '" />' . "\n";
+			break;
+		case 5://Text-area
+			$html .= '<textarea name="itemOption[' . $cartmeta_id . ']" id="itemOption[' . $cartmeta_id . ']" class="iopt_textarea">' . esc_attr($value) . '</textarea>' . "\n";
+			break;
+	}
+	
+	$html = apply_filters('usces_filter_get_itemOption', $html, $opt_value, $post_id );
+	
+	return $html;
+}
+
+function usces_get_ordercart_meta( $type, $cart_id ){
+	global $usces, $wpdb;
+	
+	if( !$cart_id )
+		return;
+	
+	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	
+	$query = $wpdb->prepare( "
+		SELECT cartmeta_id, meta_key, meta_value 
+		FROM $ordercart_meta_table 
+		WHERE cart_id = %d AND meta_type = %s 
+		", $cart_id, $type );
+	$res = $wpdb->get_results($query, ARRAY_A);
+	return $res;
+}
+
+function usces_get_ordercart_row( $order_id, $cart = array() ){
+	global $usces;
+	
+	if( empty( $cart ) )
+		$cart = usces_get_ordercartdata( $order_id );
+	
+	ob_start();
+	foreach( $cart as $i => $cart_row ) { 
+		$ordercart_id = $cart_row['cart_id'];
+		$post_id = $cart_row['post_id'];
+		//$post = get_post($post_id);
+		//$sku = $cart_row['sku'];
+		$sku_code = $cart_row['sku_code'];
+		$quantity = $cart_row['quantity'];
+		$options = $cart_row['options'];
+		//$options = usces_get_ordercart_meta( 'option', $ordercart_id );
+		//$advance = $usces->cart->wc_serialize($cart_row['advance']);
+		$itemCode = $cart_row['item_code'];
+		$itemName = $cart_row['item_name'];
+		$cartItemName = $usces->getCartItemName($post_id, $sku_code);
+		$skuPrice = $cart_row['price'];
+		$stock = $usces->getItemZaiko($post_id, $sku_code);
+		$red = (in_array($stock, array(__('sellout', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
+		$pictid = (int)$usces->get_mainpictid($itemCode);
 ?>
+	<tr>
+		<td><?php echo $i + 1; ?></td>
+		<td><?php echo wp_get_attachment_image( $pictid, array(80, 80), true ); ?></td>
+		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?>
+		<?php usces_make_option_field( $cart_row ); ?>
+		</td>
+		<td><input name="skuPrice[<?php echo $ordercart_id; ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
+		<td><input name="quant[<?php echo $ordercart_id; ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
+		<td id="sub_total[<?php echo $ordercart_id; ?>]" class="aright">&nbsp;</td>
+		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
+		<td>
+		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
+		<input name="delButtonAdmin[<?php echo $ordercart_id; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
+		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
+		</td>
+	</tr>
+<?php 
+	}
+	$r = apply_filters( 'usces_filter_get_ordercart_row', ob_get_contents(), $order_id, $cart );
+	ob_end_clean();
+	return $r;
+}

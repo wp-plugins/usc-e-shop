@@ -255,6 +255,7 @@ function addComma(str)
 			//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 			if( !empty($key) ) {
 				$key = urldecode($key);
+				$value = maybe_unserialize($value);
 				if(is_array($value)) {
 					$c = '';
 					$optstr .= esc_html($key) . ' : '; 

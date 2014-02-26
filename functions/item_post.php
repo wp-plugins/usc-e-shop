@@ -825,13 +825,17 @@ function order_item2cart_ajax(){
 	if( $_POST['action'] != 'order_item2cart_ajax' ) die(0);
 	
 	$_POST = $usces->stripslashes_deep_post($_POST);
-	$res = order_item2cart();
-	
-	//if( $res === false )  die(0);//20120613ysk 0000500
+	$order_id = usces_add_ordercartdata();
+	if( !$order_id )
+		die( 0 );
 		
-	//REGEX BUG: but it'll return info
-	// Compose JavaScript for return
-	die( $res );
+	$cart = usces_get_ordercartdata( $order_id );
+	$return = usces_get_ordercart_row( $order_id, $cart );
+	/*
+	REGEX BUG: but it'll return info
+	 Compose JavaScript for return
+	 */
+	die( $return );
 } 
 
 function order_item_ajax(){
@@ -858,6 +862,9 @@ function order_item_ajax(){
 		case 'get_order_item':
 			$res = get_order_item( $_POST['itemcode'] );
 			break;
+		case 'get_item_select_option':
+			$res = usces_get_item_select_option( $_POST['cat_id'] );
+			break;
 		case 'ordercheckpost':
 			$res = usces_update_ordercheck();
 			break;
@@ -876,7 +883,20 @@ function order_item_ajax(){
 	//REGEX BUG: but it'll return info
 	// Compose JavaScript for return
 	die( $res );
-} 
+}
+
+function usces_get_item_select_option( $cat_id ){
+	global $usces;
+	$args = array( 'category' => $cat_id );
+	$items = get_posts( $args );
+	$option = '<option value="-1">商品を選択して下さい</option>' . "\n";
+	foreach( $items as $item ){
+		$ItemName = get_post_meta($item->ID, '_itemName', true);
+		$ItemCode = get_post_meta($item->ID, '_itemCode', true);
+		$option .= '<option value="' . urlencode($ItemCode) . '">' . $ItemName . '(' . $ItemCode . ')' . '</option>' . "\n";
+	}
+	return $option;
+}
 
 /**
  * order Item html
@@ -930,20 +950,118 @@ function usces_get_member_neworder() {
 	die( $res );
 }
 
-function order_item2cart() {
-	global $usces;
+//function order_item2cart() {
+//	global $usces;
+//
+//	if( $_POST['action'] != 'order_item2cart_ajax' ) die(0);
+//
+//	usces_add_ordercartdata();
+//	//$res = usces_update_ordercart();
+////20120613ysk start 0000500
+//	//if( $res === false )  die(0);
+//	//if( $res === 0 )  die('nodata');
+//		
+//	//die( $res );
+//	return $res;
+////20120613ysk end
+//}
 
-	if( $_POST['action'] != 'order_item2cart_ajax' ) die(0);
+function usces_add_ordercartdata(){
+	global $usces, $wpdb;
+	$res = 0;
+	
+	$order_id = (int)$_POST['order_id'];
+	if( !$order_id )
+		return $res;
 
-	$res = usces_update_ordercart();
+	$post_id = (int)$_POST['post_id'];
+	$sku_code = $_POST['sku'];
+	$quantity = 1;
+	
+	$current_cart = usces_get_ordercartdata( $order_id );
+	$temp_arr = array();
+	foreach( $current_cart as $cv ){
+		$temp_arr[] = $cv['row_index'];
+	}
+	$row_index = max($temp_arr) + 1;
+	
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
 
-//20120613ysk start 0000500
-	//if( $res === false )  die(0);
-	//if( $res === 0 )  die('nodata');
-		
-	//die( $res );
-	return $res;
-//20120613ysk end
+	$item_code = get_post_meta( $post_id, '_itemCode', true);
+	$item_name = get_post_meta( $post_id, '_itemName', true);
+	$skus = $usces->get_skus($post_id, 'code');
+	$sku = $skus[$sku_code];
+	if( empty($usces->option['tax_rate']) ){
+		$tax = 0;
+	
+	}else{
+		$tax = ($sku['price'] * $quantity) * $usces->options['tax_rate'] / 100;
+		$cr = $usces->options['system']['currency'];
+		$decimal = $usces_settings['currency'][$cr][1];
+		$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+		switch( $usces->options['tax_method'] ){
+			case 'cutting':
+				$tax = floor($tax*$decipad)/$decipad;
+				break;
+			case 'bring':
+				$tax = ceil($tax*$decipad)/$decipad;
+				break;
+			case 'rounding':
+				if( 0 < $decimal ){
+					$tax = round($tax, (int)$decimal);
+				}else{
+					$tax = round($tax);
+				}
+				break;
+		}				
+	}
+	$query = $wpdb->prepare("INSERT INTO $cart_table 
+		(
+		order_id, row_index, post_id, item_code, item_name, 
+		sku_code, sku_name, cprice, price, quantity, 
+		unit, tax, destination_id, cart_serial 
+		) VALUES (
+		%d, %d, %d, %s, %s, 
+		%s, %s, %f, %f, %d, 
+		%s, %d, %d, %s 
+		)", 
+		$order_id, $row_index, $post_id, $item_code, $item_name, 
+		$sku_code, $sku['name'], $sku['cprice'], $sku['price'], $quantity, 
+		$sku['unit'], $tax, NULL, NULL
+	);
+	$res = $wpdb->query($query);
+	
+	$cart_id = NULL;
+	if( false !== $res ){
+		$cart_id = $wpdb->insert_id ;
+		if( isset($_POST['itemOption']) ){
+			foreach((array)$_POST['itemOption'] as $okey => $ovalue){
+				$okey = urldecode($okey);
+				if(is_array($ovalue)) {
+					$temp = array();
+					foreach( $ovalue as $k => $v ){
+						$temp[urlencode($k)] = $v;
+					}
+					$ovalue = serialize($temp);
+				} else {
+					$ovalue = urldecode($ovalue);
+				}
+				$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 
+					$cart_id, 'option', $okey, $ovalue
+				);
+				$wpdb->query($aquery);
+			}
+		}
+	}
+	
+	$res = apply_filters( 'usces_filter_add_ordercart', $res, $order_id, $cart_id );
+
+	if( $res )
+		return $order_id;
+	else
+		return $res;
 }
 
 function get_order_item( $item_code ) {

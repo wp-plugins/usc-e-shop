@@ -133,3 +133,89 @@ die();
 		}
 	}
 }
+
+
+function usces_reg_ordercartdata( $args ){
+	global $usces, $wpdb;
+	/*
+	$args = array(
+	'cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 
+	'payments'=>$set, 'charging_type'=>$charging_type);
+	*/
+	extract($args);
+	
+	if( !$order_id )
+		return;
+	
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	foreach( $cart as $row_index => $value ){
+		$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
+		$item_name = get_post_meta( $value['post_id'], '_itemName', true);
+		$skus = $usces->get_skus($value['post_id'], 'code');
+		$sku = $skus[$value['sku']];
+		if( empty($usces->option['tax_rate']) ){
+			$tax = 0;
+		
+		}else{
+			$tax = ($value['price'] * $value['quantity']) * $usces->options['tax_rate'] / 100;
+			$cr = $usces->options['system']['currency'];
+			$decimal = $usces_settings['currency'][$cr][1];
+			$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+			switch( $usces->options['tax_method'] ){
+				case 'cutting':
+					$tax = floor($tax*$decipad)/$decipad;
+					break;
+				case 'bring':
+					$tax = ceil($tax*$decipad)/$decipad;
+					break;
+				case 'rounding':
+					if( 0 < $decimal ){
+						$tax = round($tax, (int)$decimal);
+					}else{
+						$tax = round($tax);
+					}
+					break;
+			}				
+		}
+		$query = $wpdb->prepare("INSERT INTO $cart_table 
+			(
+			order_id, row_index, post_id, item_code, item_name, 
+			sku_code, sku_name, cprice, price, quantity, 
+			unit, tax, destination_id, cart_serial 
+			) VALUES (
+			%d, %d, %d, %s, %s, 
+			%s, %s, %f, %f, %d, 
+			%s, %d, %d, %s 
+			)", 
+			$order_id, $row_index, $value['post_id'], $item_code, $item_name, 
+			$value['sku'], $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], 
+			$sku['unit'], $tax, NULL, $value['serial']
+		);
+		$wpdb->query($query);
+		
+		$cart_id = $wpdb->insert_id ;
+		if($value['options']){
+			foreach((array)$value['options'] as $okey => $ovalue){
+				$okey = urldecode($okey);
+				if(is_array($ovalue)) {
+					$temp = array();
+					foreach( $ovalue as $k => $v ){
+						$temp[$k] = urldecode($v);
+					}
+					$ovalue = serialize($temp);
+				} else {
+					$ovalue = urldecode($ovalue);
+				}
+				$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 
+					$cart_id, 'option', $okey, $ovalue
+				);
+				$wpdb->query($aquery);
+			}
+		}
+		
+		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value, $args);
+	}
+}
+

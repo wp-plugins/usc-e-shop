@@ -503,32 +503,9 @@ function usces_all_delete_itemdata(&$obj){
 	$ids = $_POST['listcheck'];
 	$status = true;
 	foreach ( (array)$ids as $post_id ){
-		if ( !wp_delete_post($post_id, true) )
+		if ( !wp_delete_post($post_id, true) ){
 			$status = false;
-//		$query = $wpdb->prepare("DELETE FROM $wpdb->posts WHERE ID = %d", $post_id);
-//		$res = $wpdb->query( $query );
-//		if( $res !== false ) {
-//			$query = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d", $post_id);
-//			$res = $wpdb->query( $query );
-//			if( $res === false ) {
-//				$status = false;
-//			}
-//			$query = $wpdb->prepare("DELETE FROM $wpdb->term_relationships WHERE object_id = %d", $post_id);
-//			$res = $wpdb->query( $query );
-//			if( $res === false ) {
-//				$status = false;
-//			}
-//			$query = "SELECT term_taxonomy_id, COUNT(*) AS ct FROM $wpdb->term_relationships 
-//					GROUP BY term_taxonomy_id";
-//			$relation_data = $wpdb->get_results( $query, ARRAY_A);
-//			foreach((array)$relation_data as $rows){
-//				
-//				$term_ids['term_taxonomy_id'] = $rows['term_taxonomy_id'];
-//				$updatas['count'] = $rows['ct'];
-//				$wpdb->update( $wpdb->term_taxonomy, $updatas, $term_ids );
-//			}
-//		}
-
+		}
 	}
 	if ( true === $status ) {
 		$obj->set_action_status('success', __('I completed collective operation.','usces'));

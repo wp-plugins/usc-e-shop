@@ -50,46 +50,62 @@ function usces_upgrade_14(){
 				}
 				$query = $wpdb->prepare("INSERT INTO $cart_table 
 					(
-					order_id, 
-					row_index, 
-					post_id, 
-					item_code, 
-					item_name, 
-					sku_code, 
-					sku_name, 
-					cprice, 
-					price, 
-					quantity, 
-					unit, 
-					tax, 
-					destination_id
-					) VALUES (%d, %d, %d, %s, %s, %s, %s, %d, %d, %d, %s, %d, %d)", 
-					$order->ID, 
-					$row_index, 
-					$value['post_id'], 
-					$item_code, 
-					$item_name, 
-					$value['sku'], 
-					$sku['name'], 
-					$sku['cprice'], 
-					$value['price'], 
-					$value['quantity'], 
-					$sku['unit'], 
-					$tax, 
-					NULL
+					order_id, group_id, row_index, 
+					post_id, item_code, item_name, 
+					sku_code, sku_name, cprice, price, quantity, unit, 
+					tax, destination_id, cart_serial 
+					) VALUES (
+					%d, %d, %d, 
+					%d, %s, %s, 
+					%s, %s, %f, %f, %d, %s, 
+					%f, %d, %s 
+					)", 
+					$order->ID, 0, $row_index, 
+					$value['post_id'], $item_code, $item_name, 
+					$value['sku'], $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], $sku['unit'], 
+					$tax, NULL, $value['serial']
 				);
 				$wpdb->query($query);
 				
 				$cart_id = $wpdb->insert_id ;
-				if($value['options']){
-					foreach((array)$value['options'] as $okey => $ovalue){
-						$okey = urldecode($okey);
-						$ovalue = urldecode($ovalue);
-						$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
-							( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, 'option', %s, %s)", 
-							$cart_id, $okey, $ovalue
-						);
-						$wpdb->query($aquery);
+				if( $cart_id ){
+					if($value['options']){
+						foreach((array)$value['options'] as $okey => $ovalue){
+							$okey = urldecode($okey);
+							if( is_array($ovalue) ){
+								$ovalue = serialize($ovalue);
+							}else{
+								$ovalue = urldecode($ovalue);
+							}
+							$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+								( 
+								cart_id, meta_type, meta_key, meta_value 
+								) VALUES (
+								%d, 'option', %s, %s
+								)", 
+								$cart_id, $okey, $ovalue
+							);
+							$wpdb->query($aquery);
+						}
+					}
+					if($value['advance']){
+						foreach((array)$value['advance'] as $okey => $ovalue){
+							$okey = urldecode($okey);
+							if( is_array($ovalue) ){
+								$ovalue = serialize($ovalue);
+							}else{
+								$ovalue = urldecode($ovalue);
+							}
+							$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+								( 
+								cart_id, meta_type, meta_key, meta_value 
+								) VALUES (
+								%d, 'advance', %s, %s
+								)", 
+								$cart_id, $okey, $ovalue
+							);
+							$wpdb->query($aquery);
+						}
 					}
 				}
 			}

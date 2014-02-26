@@ -2549,11 +2549,9 @@ function usces_member_history( $out = '' ){
 			if( is_array($options) && count($options) > 0 ){
 				$optstr = '';
 				foreach($options as $key => $value){
-//20110629ysk start 0000190
-					//f( !empty($key) )
-					//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 					if( !empty($key) ) {
 						$key = urldecode($key);
+						$value = maybe_unserialize($value);
 						if(is_array($value)) {
 							$c = '';
 							$optstr .= esc_html($key) . ' : '; 
@@ -2566,7 +2564,6 @@ function usces_member_history( $out = '' ){
 							$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 						}
 					}
-//20110629ysk end
 				}
 				$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 			}

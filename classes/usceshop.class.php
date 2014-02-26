@@ -2395,7 +2395,7 @@ class usc_e_shop
 //		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_wp_http_referer) ){
 //			$_POST = $this->stripslashes_deep_post($_POST);
 //		}
-		
+		usces_upgrade_14();
 		if( !is_admin() ){
 			$this->usces_cookie();
 		}
@@ -4820,7 +4820,7 @@ class usc_e_shop
 		
 		$rets07 = usces_upgrade_07();
 		$rets11 = usces_upgrade_11();
-		$rets14 = usces_upgrade_14();
+		//$rets14 = usces_upgrade_14();
 		$this->set_default_theme();
 		$this->set_default_page();
 		$this->set_default_categories();
@@ -4842,6 +4842,8 @@ class usc_e_shop
 		$member_meta_table = $wpdb->prefix . "usces_member_meta";
 		$order_table = $wpdb->prefix . "usces_order";
 		$order_meta_table = $wpdb->prefix . "usces_order_meta";
+		$ordercart_table = $wpdb->prefix . "usces_ordercart";
+		$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
 		
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		
@@ -4978,6 +4980,55 @@ class usc_e_shop
 			add_option("usces_db_order_meta", USCES_DB_ORDER_META);
 		}
 
+		if($wpdb->get_var("show tables like '$ordercart_table'") != $ordercart_table) {
+		
+			$sql = "CREATE TABLE " . $ordercart_table . " (
+				`cart_id` bigint( 20  )  unsigned NOT  NULL  AUTO_INCREMENT ,
+				`order_id` bigint( 20  )  NOT  NULL ,
+				`group_id` int( 3  )  NOT  NULL DEFAULT  '0',
+				`row_index` int( 3  )  NOT  NULL ,
+				`post_id` bigint( 20  )  NOT  NULL ,
+				`item_code` varchar( 100  )  NOT  NULL ,
+				`item_name` varchar( 250  )  NOT  NULL ,
+				`cprice` decimal( 12, 0  )  DEFAULT NULL ,
+				`sku_code` varchar( 100  )  NOT  NULL ,
+				`sku_name` varchar( 250  )  DEFAULT NULL ,
+				`price` decimal( 12, 0  )  NOT  NULL ,
+				`quantity` float NOT  NULL ,
+				`unit` varchar( 50  )  DEFAULT NULL ,
+				`tax` decimal( 10, 0  )  DEFAULT NULL ,
+				`destination_id` int( 10  )  DEFAULT NULL ,
+				`cart_serial` text,
+				PRIMARY  KEY (  `cart_id`  ) ,
+				UNIQUE  KEY  `row` (  `row_index` ,  `destination_id` ,  `order_id`  ) ,
+				KEY  `order_id` (  `order_id`  ) ,
+				KEY  `post_id` (  `post_id`  ) ,
+				KEY  `item_code` (  `item_code`  ) ,
+				KEY  `item_name` (  `item_name`  ) ,
+				KEY  `sku_code` (  `sku_code`  ) ,
+				KEY  `sku_name` (  `sku_name`  ) 
+				) ENGINE = MYISAM AUTO_INCREMENT=1000 $charset_collate;";
+		
+			dbDelta($sql);
+			add_option("usces_db_ordercart", USCES_DB_ORDERCART);
+		}
+		if($wpdb->get_var("show tables like '$ordercart_meta_table'") != $ordercart_meta_table) {
+		
+			$sql = "CREATE TABLE " . $ordercart_meta_table . " (
+				`cartmeta_id` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
+				`cart_id` bigint( 20  )  NOT  NULL DEFAULT  '0',
+				`meta_type` varchar( 100  )  NOT  NULL ,
+				`meta_key` varchar( 255  )  DEFAULT NULL ,
+				`meta_value` longtext,
+				PRIMARY  KEY (  `cartmeta_id`  ) ,
+				KEY  `cart_id` (  `cart_id`  ) ,
+				KEY  `meta_key` (  `meta_key`  ) 
+				) ENGINE = MYISAM $charset_collate;";
+		
+			dbDelta($sql);
+			add_option("usces_db_ordercart_meta", USCES_DB_ORDERCART_META);
+		}
+
 	}
 	
 	function update_table()
@@ -4988,12 +5039,16 @@ class usc_e_shop
 		$member_meta_table = $wpdb->prefix . "usces_member_meta";
 		$order_table = $wpdb->prefix . "usces_order";
 		$order_meta_table = $wpdb->prefix . "usces_order_meta";
+		$ordercart_table = $wpdb->prefix . "usces_ordercart";
+		$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
 		
 		$access_ver = get_option( "usces_db_access" );
 		$member_ver = get_option( "usces_db_member" );
 		$member_meta_ver = get_option( "usces_db_member_meta" );
 		$order_ver = get_option( "usces_db_order" );
 		$order_meta_ver = get_option( "usces_db_order_meta" );
+		$ordercart_ver = get_option( "usces_db_ordercart" );
+		$ordercart_meta_ver = get_option( "usces_db_ordercart_meta" );
 		
 		if( $access_ver != USCES_DB_ACCESS ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -5126,6 +5181,54 @@ class usc_e_shop
 		
 			dbDelta($sql);
 			update_option("usces_db_order_meta", USCES_DB_ORDER_META);
+		}
+		if( $ordercart_ver != USCES_DB_ORDERCART ) {
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			$sql = "CREATE TABLE " . $ordercart_table . " (
+				`cart_id` bigint( 20  )  unsigned NOT  NULL  AUTO_INCREMENT ,
+				`order_id` bigint( 20  )  NOT  NULL ,
+				`group_id` int( 3  )  NOT  NULL DEFAULT  '0',
+				`row_index` int( 3  )  NOT  NULL ,
+				`post_id` bigint( 20  )  NOT  NULL ,
+				`item_code` varchar( 100  )  NOT  NULL ,
+				`item_name` varchar( 250  )  NOT  NULL ,
+				`cprice` decimal( 12, 0  )  DEFAULT NULL ,
+				`sku_code` varchar( 100  )  NOT  NULL ,
+				`sku_name` varchar( 250  )  DEFAULT NULL ,
+				`price` decimal( 12, 0  )  NOT  NULL ,
+				`quantity` float NOT  NULL ,
+				`unit` varchar( 50  )  DEFAULT NULL ,
+				`tax` decimal( 10, 0  )  DEFAULT NULL ,
+				`destination_id` int( 10  )  DEFAULT NULL ,
+				`cart_serial` text,
+				PRIMARY  KEY (  `cart_id`  ) ,
+				UNIQUE  KEY  `row` (  `row_index` ,  `destination_id` ,  `order_id`  ) ,
+				KEY  `order_id` (  `order_id`  ) ,
+				KEY  `post_id` (  `post_id`  ) ,
+				KEY  `item_code` (  `item_code`  ) ,
+				KEY  `item_name` (  `item_name`  ) ,
+				KEY  `sku_code` (  `sku_code`  ) ,
+				KEY  `sku_name` (  `sku_name`  ) 
+				) ENGINE = MYISAM;";
+		
+			dbDelta($sql);
+			update_option("usces_db_ordercart", USCES_DB_ORDERCART);
+		}
+		if( $ordercart_meta_ver != USCES_DB_ORDERCART_META ) {
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			$sql = "CREATE TABLE " . $ordercart_meta_table . " (
+				`cartmeta_id` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
+				`cart_id` bigint( 20  )  NOT  NULL DEFAULT  '0',
+				`meta_type` varchar( 100  )  NOT  NULL ,
+				`meta_key` varchar( 255  )  DEFAULT NULL ,
+				`meta_value` longtext,
+				PRIMARY  KEY (  `cartmeta_id`  ) ,
+				KEY  `cart_id` (  `cart_id`  ) ,
+				KEY  `meta_key` (  `meta_key`  ) 
+				) ENGINE = MYISAM;";
+		
+			dbDelta($sql);
+			update_option("usces_db_ordercart_meta", USCES_DB_ORDERCART_META);
 		}
 	}
 	
@@ -6242,6 +6345,8 @@ class usc_e_shop
 		if ( $this->page == 'ordercompletion' )
 			$this->cart->crear_cart();
 			
+		do_action( 'usces_action_lastprocessing' );
+			
 		unset($_SESSION['usces_singleitem']);
 
 	}
@@ -6617,9 +6722,11 @@ class usc_e_shop
 	
 		$i=0;
 		$res = array();
-		foreach ( $results as $value ) {
-			if(strpos($value->order_status, 'cancel') === false && strpos($value->order_status, 'estimate') === false){
 		
+		if( is_user_logged_in() && is_admin() ){
+
+			foreach ( $results as $value ) {
+				
 				$res[] = array(
 							'ID' => $value->ID,
 //							'cart' => unserialize($value->order_cart),
@@ -6637,6 +6744,31 @@ class usc_e_shop
 							'order_date' => $value->order_date
 							);
 				$i++;
+			}
+			
+		}elseif( !is_admin() ){
+		
+			foreach ( $results as $value ) {
+				
+				if( strpos($value->order_status, 'cancel') === false && strpos($value->order_status, 'estimate') === false ){
+					$res[] = array(
+								'ID' => $value->ID,
+	//							'cart' => unserialize($value->order_cart),
+								'cart' => usces_get_ordercartdata( $value->ID ),
+								'condition' => unserialize($value->order_condition),
+								'getpoint' => $value->order_getpoint,
+								'usedpoint' => $value->order_usedpoint,
+								'discount' => $value->order_discount,
+								'shipping_charge' => $value->order_shipping_charge,
+								'payment_name' => $value->order_payment_name,
+								'cod_fee' => $value->order_cod_fee,
+								'tax' => $value->order_tax,
+								'order_status' => $value->order_status,
+								'date' => mysql2date(__('Y/m/d'), $value->order_date),
+								'order_date' => $value->order_date
+								);
+					$i++;
+				}
 			
 			}
 		}
