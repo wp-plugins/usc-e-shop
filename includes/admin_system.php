@@ -30,7 +30,7 @@ $subimage_rule = isset($this->options['system']['subimage_rule']) ? $this->optio
 $pdf_delivery = isset($this->options['system']['pdf_delivery']) ? $this->options['system']['pdf_delivery']	: 0;
 //20140107 kitamu_end
 //20140122 kitamu_start 0000526
-$member_pass_rule_min = isset($this->options['system']['member_pass_rule_min']) ? $this->options['system']['member_pass_rule_min']	: '';
+$member_pass_rule_min = isset($this->options['system']['member_pass_rule_min']) ? $this->options['system']['member_pass_rule_min']	: 6;
 $member_pass_rule_max = isset($this->options['system']['member_pass_rule_max']) && !empty( $this->options['system']['member_pass_rule_max'] ) ? $this->options['system']['member_pass_rule_max'] : '';
 //20140122 kitamu_end
 $csv_encode_type = isset( $this->options['system']['csv_encode_type'] ) ? $this->options['system']['csv_encode_type'] : 0;
@@ -182,7 +182,7 @@ jQuery(function($){
 			});
 		}
 //20140122_kitamu_start 0000526
-		if( !checkNum( $("#member_pass_rule_min").val() ) ) {
+		if( !checkNum( $("#member_pass_rule_min").val() ) || $("#member_pass_rule_min").val() == false ){
 			error++;
 			operation.error_bg_color("#member_pass_rule_min");
 		}
@@ -190,12 +190,10 @@ jQuery(function($){
 			error++;
 			operation.error_bg_color("#member_pass_rule_max");
 		}
-		if( $("#member_pass_rule_max").val() ){
-			if( parseInt($("#member_pass_rule_min").val()) > parseInt($("#member_pass_rule_max").val()) ) {
-				error++;
-				operation.error_bg_color("#member_pass_rule_min");
-				operation.error_bg_color("#member_pass_rule_max");
-			}
+		if( parseInt($("#member_pass_rule_min").val()) > parseInt($("#member_pass_rule_max").val()) ) {
+			error++;
+			operation.error_bg_color("#member_pass_rule_min");
+			operation.error_bg_color("#member_pass_rule_max");
 		}
 //20140122 kitamu_end
 		var target = [];
