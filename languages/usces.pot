@@ -3457,4 +3457,10 @@ msgid "characters or less"
 msgstr "文字以下"
 
 msgid "[Numeric(one or more)]&nbsp;I can limit the length of the password of the member.<br />It will be no upper limit When you register with a space the upper limit of the number of characters."
-msgstr "【数値(1以上)】&nbsp;会員のパスワードの長さを制限できます。<br />文字数の上限値は空白で登録すると上限なしとなります。"
+msgstr "【数値】&nbsp;会員のパスワードの長さを制限できます。<br />文字数の上限値は空白で登録すると上限なしとなります。"
+
+msgid "Character code in the CSV file"
+msgstr "CSVファイルの文字コード"
+
+msgid "If you want to perform product registration by uploading a CSV file, please upload a CSV file of character code selected here."
+msgstr "CSVファイルをアップロードして商品登録を行う場合は、ここで選択した文字コードのCSVファイルをアップロードしてください。"

@@ -33,7 +33,7 @@ $pdf_delivery = isset($this->options['system']['pdf_delivery']) ? $this->options
 $member_pass_rule_min = isset($this->options['system']['member_pass_rule_min']) ? $this->options['system']['member_pass_rule_min']	: '';
 $member_pass_rule_max = isset($this->options['system']['member_pass_rule_max']) && !empty( $this->options['system']['member_pass_rule_max'] ) ? $this->options['system']['member_pass_rule_max'] : '';
 //20140122 kitamu_end
-
+$csv_encode_type = isset( $this->options['system']['csv_encode_type'] ) ? $this->options['system']['csv_encode_type'] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -444,7 +444,7 @@ jQuery(document).ready(function($) {
 		<td rowspan="2"><div id="ex_pdf_delivery" class="explanation"><?php _e("If you select the 'to address the purchaser information', delivery will be described below address of (purchaser information) when the shipping address is different from the information of the purchaser.<br />Only the information of the destination as you want it to appear on your address if you choose to 'address and the destination.'", "usces"); ?></div></td>
 	</tr>
 	<tr height="30">
-		<td width="10"><input name="pdf_delivery" id="pdf_delivery1" type="radio" value="1"<?php if($pdf_delivery === 1) echo 'checked="checked"'; ?> /></td><td width="300"><label for="pdf_delivery1"><?php _e('To address the destination', 'usces'); ?></label></td>
+		<td width="10"><input name="pdf_delivery" id="pdf_delivery1" type="radio" value="1"<?php if($pdf_delivery === 1) echo 'checked="checked"'; ?> /></td><td width="300"><label for="pdf_delivery1"><?php _e('To address the shipping information', 'usces'); ?></label></td>
 	</tr>
 </table>
 <hr />
@@ -460,6 +460,17 @@ jQuery(document).ready(function($) {
 </table>
 <hr />
 <!--20140122 kitamu_end-->
+<table class="form_table">
+	<tr height="30">
+	    <th class="system_th" rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_csv_encode_type');"><?php _e('Character code in the CSV file', 'usces'); ?></a></th>
+	    <td width="10"><input name="csv_encode_type" id="csv_encode_type0" type="radio" value="0"<?php if($csv_encode_type === 0) echo 'checked="checked"'; ?> /></td><td width="300"><label for="csv_encode_type0"><?php _e('Sift-JIS', 'usces'); ?></label></td>
+		<td rowspan="2"><div id="ex_csv_encode_type" class="explanation"><?php _e('If you want to perform product registration by uploading a CSV file, please upload a CSV file of character code selected here.', "usces"); ?></div></td>
+	</tr>
+	<tr height="30">
+		<td width="10"><input name="csv_encode_type" id="csv_encode_type1" type="radio" value="1"<?php if($csv_encode_type === 1) echo 'checked="checked"'; ?> /></td><td width="300"><label for="csv_encode_type1"><?php _e('UTF-8', 'usces'); ?></label></td>
+	</tr>
+</table>
+<hr />
 <!--20120309ysk start 0000430-->
 <table class="form_table">
 	<tr height="35">

@@ -116,6 +116,7 @@ class usc_e_shop
 		if(!isset($this->options['system']['pdf_delivery'])) $this->options['system']['pdf_delivery'] = 0;
 		if(!isset($this->options['system']['member_pass_rule_min']) || empty($this->options['system']['member_pass_rule_min'])) $this->options['system']['member_pass_rule_min'] = 1;
 		if(!isset($this->options['system']['member_pass_rule_max']) || empty($this->options['system']['member_pass_rule_max']) ) $this->options['system']['member_pass_rule_max'] = '';
+		if(!isset($this->options['system']['csv_encode_type'])) $this->options['system']['csv_encode_type'] = 0;
 		if(!isset($this->options['acting_settings']['zeus'])) $this->options['acting_settings']['zeus'] = array('activate'=>'','card_activate'=>'','clientip'=>'','authkey'=>'','connection'=>'','3dsecure'=>'','security'=>'','quickcharge'=>'', 'howpay'=>'','bank_activate'=>'','clientip_bank'=>'','testid_bank'=>'','conv_activate'=>'','clientip_conv'=>'','testid_conv'=>'','test_type_conv'=>'');
 		if(!isset($this->options['acting_settings']['zeus']['connection'])) $this->options['acting_settings']['zeus']['connection'] = '1';
 		if(!isset($this->options['acting_settings']['zeus']['3dsecur'])) $this->options['acting_settings']['zeus']['3dsecur'] = '2';
@@ -966,6 +967,8 @@ class usc_e_shop
 			$this->options['system']['pdf_delivery'] = isset($_POST['pdf_delivery']) ? (int)$_POST['pdf_delivery'] : 0;
 			$this->options['system']['member_pass_rule_min'] = isset($_POST['member_pass_rule_min']) && !empty($_POST['member_pass_rule_min']) ? (int)$_POST['member_pass_rule_min'] : 1;
 			$this->options['system']['member_pass_rule_max'] = isset($_POST['member_pass_rule_max']) && !empty($_POST['member_pass_rule_max']) ? (int)$_POST['member_pass_rule_max'] : '';
+			$this->options['system']['csv_encode_type'] = isset($_POST['csv_encode_type']) ? (int)$_POST['csv_encode_type'] : 0;
+
 			if( isset($_POST['dec_orderID_digit']) ){
 				$dec_orderID_digit = (int)rtrim($_POST['dec_orderID_digit']);
 				if( 6 > $dec_orderID_digit ){
