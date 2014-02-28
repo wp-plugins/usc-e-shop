@@ -284,8 +284,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	// Title
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(15);
 	$pdf->SetFont($font, '', $fontsize);
-	$pdf->SetXY(64, 16);
-	$pdf->MultiCell(45.5, $lineheight, usces_conv_euc($title), $border, 'C');
+	$pdf->SetXY(63, 16);
+	$pdf->MultiCell(50, $lineheight, usces_conv_euc($title), $border, 'C');
 
 	// Date
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
@@ -511,7 +511,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		$pdf->Line($leftside, $y, $leftside+$width+5, $y);
 
 		// Message
-		$y = 84;
+		$y = 80;
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 		$pdf->SetFont($font, '', $fontsize);
 		$pdf->SetXY($leftside, $y);
@@ -770,27 +770,18 @@ function usces_get_pdf_address($pdf, $data, $y, $linetop, $leftside, $width, $li
 	$name = '';
 	$border = '';
 	$pref = ( __( '-- Select --','usces') == $data->customer['pref'] ) ? '' : $data->customer['pref'];
+
 	switch ($applyform){
 	case 'JP': 
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("zip code", 'usces') . ' ' . $data->customer['zip']), $border, 'L');
-		$pdf->MultiCell($width, $lineheight, usces_conv_euc($pref . $data->customer['address1'] . $data->customer['address2']), $border, 'L');
-
-		if( !empty($data->customer['address3']) ){
-			$y = $pdf->GetY() + $linetop;
-			$pdf->SetXY($leftside, $y);
-			$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->customer['address3']), $border, 'L');
-		}
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($pref . $data->customer['address1'] . $data->customer['address2']) .' '. $data->customer['address3'], $border, 'L');
 		break;
 
 	case 'US':
 	default:
 		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->customer['address2'] . ' ' . $data->customer['address3']), $border, 'L');
-
-		$y = $pdf->GetY() + $linetop;
-		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->customer['address1'] . ' ' . $pref . ' ' . $data->customer['country']), $border, 'L');
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->customer['address2'] . ' ' . $data->customer['address3'] . ' ' . $data->customer['address1'] . ' ' . $pref . ' ' . $data->customer['country']), $border, 'L');
 
 		$y = $pdf->GetY() + $linetop;
 		$pdf->SetXY($leftside, $y);
@@ -811,23 +802,14 @@ function usces_get_pdf_shipping_address($pdf, $data, $y, $linetop, $leftside, $w
 	case 'JP': 
 		$pdf->SetXY($leftside, $y);
 		$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("zip code", 'usces') . ' ' . $data->deliveri['zipcode']), $border, 'L');
-		$pdf->MultiCell($width, $lineheight, usces_conv_euc($pref . $data->deliveri['address1'] . $data->deliveri['address2']), $border, 'L');
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($pref . $data->deliveri['address1'] . $data->deliveri['address2'] .' '. $data->deliveri['address3']), $border, 'L');
 
-		if( !empty($data->deliveri['address3']) ){
-			$y = $pdf->GetY() + $linetop;
-			$pdf->SetXY($leftside, $y);
-			$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->deliveri['address3']), $border, 'L');
-		}
 		break;
 
 	case 'US':
 	default:
 		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->deliveri['address2'] . ' ' . $data->deliveri['address3']), $border, 'L');
-
-		$y = $pdf->GetY() + $linetop;
-		$pdf->SetXY($leftside, $y);
-		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->deliveri['address1'] . ' ' . $pref . ' ' . $data->deliveri['country']), $border, 'L');
+		$pdf->MultiCell($width, $lineheight, usces_conv_euc($data->deliveri['address2'] . ' ' . $data->deliveri['address3'] . ' ' .  $data->deliveri['address1'] . ' ' . $pref . ' ' . $data->deliveri['country']), $border, 'L');
 
 		$y = $pdf->GetY() + $linetop;
 		$pdf->SetXY($leftside, $y);
