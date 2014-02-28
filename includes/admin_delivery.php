@@ -794,7 +794,7 @@ jQuery(function($){
 			}
 //20120710ysk end
 			if( 0 < error ) {
-				alert("データに不備があります。");
+				alert("<?php _e("There is incomplete data.","usces"); ?>");
 				return false;
 			}
 			
@@ -907,7 +907,7 @@ jQuery(function($){
 			}
 //20120710ysk end
 			if( 0 < error ) {
-				alert("データに不備があります。");
+				alert("<?php _e("There is incomplete data.","usces"); ?>");
 				return false;
 			}
 			
@@ -1159,7 +1159,7 @@ jQuery(function($){
 			}
 //20120710ysk end
 			if( 0 < error ) {
-				alert("データに不備があります。");
+				alert("<?php _e("There is incomplete data.","usces"); ?>");
 				return false;
 			}
 			
@@ -1272,7 +1272,7 @@ jQuery(function($){
 			}
 //20120710ysk end
 			if( 0 < error ) {
-				alert("データに不備があります。");
+				alert("<?php _e("There is incomplete data.","usces"); ?>");
 				return false;
 			}
 			

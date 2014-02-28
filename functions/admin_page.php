@@ -26,10 +26,10 @@ function admin_prodauct_footer(){
  		var itemDivision = $("input[name='item_division']:checked").val();
        if (submit_event) {
 			if ( 0 == DeliveryMethod.length && (!itemDivision || 'shipped' == itemDivision) ) {
-				mes += '配送方法が選択できません。商品登録を行う前に「配送設定」より配送方法の登録を済ませてください。<br />';
+				mes += "<?php _e("You can not choose the delivery method. Please complete the registration of shipping method than 'delivery setting' before product registration.", "usces"); ?><br />";
 			}
 			if ( "" == itemCode ) {
-				mes += '商品コードが入力されていません。<br />';
+				mes += '<?php _e("Product code has not been entered.", "usces"); ?><br />';
 				$("#itemCode").css({'background-color': '#FFA'}).click(function(){
 					$(this).css({'background-color': '#FFF'});
 				});
@@ -41,13 +41,13 @@ function admin_prodauct_footer(){
 //				});
 //			}
 			if ( "" == itemName ) {
-				mes += '商品名が入力されていません。<br />';
+				mes += '<?php _e("Brand name has not been entered.", "usces"); ?><br />';
 				$("#itemName").css({'background-color': '#FFA'}).click(function(){
 					$(this).css({'background-color': '#FFF'});
 				});
 			}
 			if ( 0 == itemsku.length ) {
-				mes += 'SKUが登録されていません。<br />';
+				mes += '<?php _e("SKU is not registered.", "usces"); ?><br />';
 				$("#newskuname").css({'background-color': '#FFA'}).click(function(){
 					$(this).css({'background-color': '#FFF'});
 				});

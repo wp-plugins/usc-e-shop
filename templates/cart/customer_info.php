@@ -62,7 +62,13 @@ if(usces_is_membersystem_state()){
 	$html .= __('password', 'usces').'</th>
 	<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="' . esc_attr($usces_entries['customer']['password1']) . '" />';
 	if( $member_regmode != 'editmemberfromcart' ){
-		$html .= __('When you enroll newly, please fill it out.', 'usces');
+		//0000526
+		if( !empty( $this->options['system']['member_pass_rule_max'] ) ){
+			$html .= __('When you enroll newly, please fill it out.', 'usces'). '&nbsp;&nbsp;&nbsp;
+					【' . __( $this->options['system']['member_pass_rule_min']) .'&nbsp;'. __( 'or more characters', 'usces' ) .'&nbsp;' . __( $this->options['system']['member_pass_rule_max'] ) .'&nbsp;'. __( 'characters or less', 'usces' ) . '】';
+		}else{
+			$html .= __('When you enroll newly, please fill it out.', 'usces'). '&nbsp;&nbsp;&nbsp;【' . __( $this->options['system']['member_pass_rule_min']) .'&nbsp;'. __( 'or more characters', 'usces' ) . '】';			
+		}
 	}
 	$html .= '</td></tr>';
 	$html .= '<tr><th scope="row">';

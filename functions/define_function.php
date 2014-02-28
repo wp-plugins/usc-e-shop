@@ -298,7 +298,8 @@ function usces_item_uploadcsv(){
 		/*////////////////////////////////////////*/
 		//data check loop
 		foreach($datas as $key => $data){
-			$data = trim(mb_convert_encoding($data, 'UTF-8', 'SJIS'));
+			$data = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($data, 'UTF-8', 'SJIS')) :  trim($data);
+usces_log( print_r( $data, true ), 'data.log' );
 			switch($key){
 				case USCES_COL_ITEM_CODE:
 					if( 0 == strlen($data) ){
@@ -669,19 +670,18 @@ function usces_item_uploadcsv(){
 				if ( mysql2date('U', $cdatas['post_modified'], false) <= mysql2date('U', $now, false) )
 					$datas[USCES_COL_POST_STATUS] = 'publish';
 			}
-
 			$cdatas['ID'] = $post_id;
 			$cdatas['post_author'] = ( !WCUtils::is_blank($datas[USCES_COL_POST_AUTHOR]) ) ? $datas[USCES_COL_POST_AUTHOR] : 1;
-			$cdatas['post_content'] = trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS'));
-			$cdatas['post_title'] = trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS'));
-			$cdatas['post_excerpt'] = trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS'));
+			$cdatas['post_content'] = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[USCES_COL_POST_CONTENT], 'UTF-8', 'SJIS')) : trim($datas[USCES_COL_POST_CONTENT]);
+			$cdatas['post_title'] = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[USCES_COL_POST_TITLE], 'UTF-8', 'SJIS')) : trim($datas[USCES_COL_POST_TITLE]);
+			$cdatas['post_excerpt'] = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[USCES_COL_POST_EXCERPT], 'UTF-8', 'SJIS')) : trim($datas[USCES_COL_POST_EXCERPT]);
 			$cdatas['post_status'] = $datas[USCES_COL_POST_STATUS];
 			$cdatas['comment_status'] = ( !WCUtils::is_blank($datas[USCES_COL_POST_COMMENT_STATUS]) ) ? $datas[USCES_COL_POST_COMMENT_STATUS] : 'close';
 			$cdatas['ping_status'] = 'close';
 			$cdatas['post_password'] = ( 'private' == $cdatas['post_status'] ) ? '' : $datas[USCES_COL_POST_PASSWORD];
 			$cdatas['post_type'] = 'post';
 			$cdatas['post_parent'] = 0;
-			$spname = sanitize_title(trim(mb_convert_encoding($datas[USCES_COL_POST_NAME], 'UTF-8', 'SJIS')));
+			$spname = ( $usces->options['system']['csv_encode_type'] == 0 ) ? sanitize_title(trim(mb_convert_encoding($datas[USCES_COL_POST_NAME], 'UTF-8', 'SJIS'))) : sanitize_title( trim($datas[USCES_COL_POST_NAME]) );
 			$cdatas['post_name'] = 	wp_unique_post_slug($spname, $cdatas['ID'], $cdatas['post_status'], $cdatas['post_type'], $cdatas['post_parent']);
 			$cdatas['to_ping'] = '';
 			$cdatas['pinged'] = '';
@@ -737,7 +737,7 @@ function usces_item_uploadcsv(){
 				//delete all metas of Item
 //20130723ysk start 0000734
 				$meta_key_table = array( '_itemCode', '_itemName', '_itemRestriction', '_itemPointrate', '_itemGpNum1', '_itemGpDis1', '_itemGpNum2', '_itemGpDis2', '_itemGpNum3', '_itemGpDis3', '_itemShipping', '_itemDeliveryMethod', '_itemShippingCharge', '_itemIndividualSCharge', '_iopt_', '_isku_' );
-				$cfrows = explode( ';', trim(mb_convert_encoding($datas[USCES_COL_CUSTOM_FIELD], 'UTF-8', 'SJIS')) );
+				$cfrows = ( $usces->options['system']['csv_encode_type'] == 0 ) ? explode( ';', trim(mb_convert_encoding($datas[USCES_COL_CUSTOM_FIELD], 'UTF-8', 'SJIS')) ) : explode(';', trim($datas[USCES_COL_CUSTOM_FIELD]));
 				if( !(1 === count($cfrows) && '' == reset($cfrows)) ) {
 					foreach( $cfrows as $row ) {
 						list( $meta_key, $meta_value ) = explode( '=', $row, 2 );
@@ -807,8 +807,16 @@ function usces_item_uploadcsv(){
 			/*////////////////////////////////////////*/
 			//add postmeta
 			$itemDeliveryMethod = explode(';', $datas[USCES_COL_ITEM_DELIVERYMETHOD]);
-			$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS'))) . "'),";
-			$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_NAME], 'UTF-8', 'SJIS'))) . "'),";
+			if( $usces->options['system']['csv_encode_type'] == 0 ){
+				$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS'))) . "'),";
+			}else{
+				$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim($datas[USCES_COL_ITEM_CODE])) . "'),";
+			}
+			if( $usces->options['system']['csv_encode_type'] == 0 ){
+				$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_NAME], 'UTF-8', 'SJIS'))) . "'),";
+			}else{
+				$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim($datas[USCES_COL_ITEM_NAME])) . "'),";
+			}
 			$valstr .= '(' . $post_id . ", '_itemRestriction','" . $datas[USCES_COL_ITEM_RESTRICTION] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemPointrate','" . $datas[USCES_COL_ITEM_POINTRATE] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemGpNum1','" . $datas[USCES_COL_ITEM_GPNUM1] . "'),";
@@ -857,7 +865,7 @@ function usces_item_uploadcsv(){
 				$dbres = $wpdb->query($query);
 			}
 			//tag
-			$tags = explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS')));
+			$tags = ( $usces->options['system']['csv_encode_type'] == 0 ) ? explode(';', trim(mb_convert_encoding($datas[USCES_COL_POST_TAG], 'UTF-8', 'SJIS'))) : explode(';', trim($datas[USCES_COL_POST_TAG]));
 //			wp_set_object_terms($post_id, (array)$tags, 'post_tag');
 			foreach((array)$tags as $tag){
 				$tag = trim($tag, " \n\t\r\0\x0B,");
@@ -908,7 +916,7 @@ function usces_item_uploadcsv(){
 			/*////////////////////////////////////////*/
 			// Add Custom Field 
 			/*////////////////////////////////////////*/
-			$cfrows = explode(';', trim(mb_convert_encoding($datas[USCES_COL_CUSTOM_FIELD], 'UTF-8', 'SJIS')));
+			$cfrows = ( $usces->options['system']['csv_encode_type'] == 0 ) ? explode(';', trim(mb_convert_encoding($datas[USCES_COL_CUSTOM_FIELD], 'UTF-8', 'SJIS'))) : explode(';', trim($datas[USCES_COL_CUSTOM_FIELD]));
 			if( !(1 === count($cfrows) && '' == reset($cfrows)) ){
 				$valstr = '';
 				foreach( $cfrows as $row ){
@@ -943,7 +951,7 @@ function usces_item_uploadcsv(){
 					}
 					switch($o){
 						case 1:
-							$optvalue['name'] = trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'));
+							$optvalue['name'] = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS')) : trim($datas[$key]);
 							break;
 						case 2:
 							$optvalue['means'] = (int)$datas[$key];
@@ -953,7 +961,7 @@ function usces_item_uploadcsv(){
 							break;
 						case 4:
 							if( !empty($datas[$key]) ) {
-								$optvalue['value'] = str_replace(';', "\n", trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS')));
+								$optvalue['value'] = ( $usces->options['system']['csv_encode_type'] == 0 ) ? str_replace(';', "\n", trim(mb_convert_encoding($datas[$key], 'UTF-8', 'SJIS'))) : str_replace(';', "\n", trim($datas[$key]));
 							}else{
 								$optvalue['value'] = "";
 							}
@@ -979,12 +987,12 @@ function usces_item_uploadcsv(){
 		// addSku 
 		/*////////////////////////////////////////*/
 		// Add Item SKU
-		$sku_code = trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS'));
+		$sku_code = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[USCES_COL_SKU_CODE], 'UTF-8', 'SJIS')) : trim($datas[USCES_COL_SKU_CODE]);
 		$skuvalue['code'] = $sku_code;
-		$skuvalue['name'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS'));
+		$skuvalue['name'] = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[USCES_COL_SKU_NAME], 'UTF-8', 'SJIS')) : trim($datas[USCES_COL_SKU_NAME]);
 		$skuvalue['cprice'] = $datas[USCES_COL_SKU_CPRICE];
 		$skuvalue['price'] = $datas[USCES_COL_SKU_PRICE];
-		$skuvalue['unit'] = trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS'));
+		$skuvalue['unit'] = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[USCES_COL_SKU_UNIT], 'UTF-8', 'SJIS')) : trim($datas[USCES_COL_SKU_UNIT]);
 		$skuvalue['stocknum'] = $datas[USCES_COL_SKU_ZAIKONUM];
 		$skuvalue['stock'] = $datas[USCES_COL_SKU_ZAIKO];
 		$skuvalue['gp'] = $datas[USCES_COL_SKU_GPTEKIYO];

@@ -73,7 +73,14 @@ get_header();
 		<tr>
 			<th scope="row"><?php _e('password', 'usces'); ?></th>
 			<td colspan="2"><input name="member[password1]" id="password1" type="password" value="<?php usces_memberinfo('password1'); ?>" />
-			<?php _e('Leave it blank in case of no change.', 'usces'); ?></td>
+<!--20140123 kitamu_start 0000526-->
+			<?php if( !empty($this->options['system']['member_pass_rule_max']) ) : ?>
+				<?php _e('Leave it blank in case of no change.', 'usces'); ?>&nbsp;&nbsp;&nbsp;【<?php _e( $this->options['system']['member_pass_rule_min']); ?>&nbsp;<?php _e( 'or more characters', 'usces' ); ?>&nbsp;
+				<?php _e( $this->options['system']['member_pass_rule_max'] ); ?>&nbsp;<?php _e( 'characters or less', 'usces' ); ?>】</td>
+			<?php else : ?>
+				<?php _e('Leave it blank in case of no change.', 'usces'); ?>&nbsp;&nbsp;&nbsp;【<?php _e( $this->options['system']['member_pass_rule_min']); ?>&nbsp;<?php _e( 'or more characters', 'usces' ); ?>】</td>
+			<?php endif; ?>
+<!--20140123 kitamu_end-->
 		</tr>
 		<tr>
 			<th scope="row"><?php _e('Password (confirm)', 'usces'); ?></th>
