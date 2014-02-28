@@ -5,6 +5,8 @@ require_once(USCES_PLUGIN_DIR.'/pdf/tcpdf/tcpdf.php');
 require_once(USCES_PLUGIN_DIR.'/pdf/fpdi/fpdi.php');
 require_once( USCES_PLUGIN_DIR.'/classes/orderData.class.php');
 
+define ( 'GOTHIC', 'msgothic' );
+
 //用紙サイズ(B5)
 // FPDIクラスのインスタンス生成
 if(isset($usces->options['print_size']) && $usces->options['print_size'] == 'A4')
