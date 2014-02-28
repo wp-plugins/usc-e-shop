@@ -745,12 +745,12 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 		$html = wp_get_attachment_image( $pictid, array($width, $height), false );
 		if( 'item' == $media ){
 			$alt = 'alt="'.esc_attr($code[0]).'"';
-			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
+			$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid, $width, $height);
 			$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
 			$title = 'title="'.esc_attr($name[0]).'"';
-			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
+			$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid, $width, $height);
 			$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
-			$html = apply_filters( 'usces_filter_main_img', $html, $post_id, $pictid);
+			$html = apply_filters( 'usces_filter_main_img', $html, $post_id, $pictid, $width, $height);
 		}
 
 	}else{
@@ -766,12 +766,12 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 			$html = wp_get_attachment_image( $pictid, array($width, $height), true );//'<img src="#" height="60" width="60" alt="" />';
 			if( 'item' == $media ){
 				$alt = 'alt="'.esc_attr($code).'"';
-				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
+				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid, $width, $height);
 				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
 				$title = 'title="'.esc_attr($name).'"';
-				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
+				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid, $width, $height);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
-				$html = apply_filters( 'usces_filter_main_img', $html, $post_id, $pictid);
+				$html = apply_filters( 'usces_filter_main_img', $html, $post_id, $pictid, $width, $height);
 			}
 		}else{
 			$pictids = $usces->get_pictids($code);
@@ -780,12 +780,12 @@ function usces_the_itemImage($number = 0, $width = 60, $height = 60, $post = '',
 			$html = wp_get_attachment_image( $pictid, array($width, $height), false );//'<img src="#" height="60" width="60" alt="" />';
 			if( 'item' == $media ){
 				$alt = 'alt="'.esc_attr($code).'"';
-				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid);
+				$alt = apply_filters('usces_filter_img_alt', $alt, $post_id, $pictid, $width, $height);
 				$html = preg_replace('/alt=\"[^\"]*\"/', $alt, $html);
 				$title = 'title="'.esc_attr($name).'"';
-				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid);
+				$title = apply_filters('usces_filter_img_title', $title, $post_id, $pictid, $width, $height);
 				$html = preg_replace('/title=\"[^\"]+\"/', $title, $html);
-				$html = apply_filters( 'usces_filter_sub_img', $html, $post_id, $pictid);
+				$html = apply_filters( 'usces_filter_sub_img', $html, $post_id, $pictid, $width, $height);
 			}
 		}
 	}

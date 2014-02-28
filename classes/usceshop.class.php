@@ -115,7 +115,10 @@ class usc_e_shop
 		if(!isset($this->options['system']['dec_orderID_prefix'])) $this->options['system']['dec_orderID_prefix'] = '';
 		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
 		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 0;
-
+		if(!isset($this->options['system']['pdf_delivery'])) $this->options['system']['pdf_delivery'] = 0;
+		if(!isset($this->options['system']['member_pass_rule_min']) || empty($this->options['system']['member_pass_rule_min'])) $this->options['system']['member_pass_rule_min'] = 6;
+		if(!isset($this->options['system']['member_pass_rule_max']) || empty($this->options['system']['member_pass_rule_max'])) $this->options['system']['member_pass_rule_max'] = '';
+		if(!isset($this->options['system']['csv_encode_type'])) $this->options['system']['csv_encode_type'] = 0;
 		if(!isset($this->options['acting_settings']['zeus'])) $this->options['acting_settings']['zeus'] = array('activate'=>'','card_activate'=>'','clientip'=>'','authkey'=>'','connection'=>'','3dsecure'=>'','security'=>'','quickcharge'=>'', 'howpay'=>'','bank_activate'=>'','clientip_bank'=>'','testid_bank'=>'','conv_activate'=>'','clientip_conv'=>'','testid_conv'=>'','test_type_conv'=>'');
 		if(!isset($this->options['acting_settings']['zeus']['connection'])) $this->options['acting_settings']['zeus']['connection'] = '1';
 		if(!isset($this->options['acting_settings']['zeus']['3dsecur'])) $this->options['acting_settings']['zeus']['3dsecur'] = '2';
@@ -967,6 +970,11 @@ class usc_e_shop
 			$this->options['system']['no_cart_css'] = isset($_POST['no_cart_css']) ? 1 : 0;
 			$this->options['system']['dec_orderID_flag'] = isset($_POST['dec_orderID_flag']) ? (int)$_POST['dec_orderID_flag'] : 0;
 			$this->options['system']['dec_orderID_prefix'] = isset($_POST['dec_orderID_prefix']) ? esc_html(rtrim($_POST['dec_orderID_prefix'])) : '';
+			$this->options['system']['pdf_delivery'] = isset($_POST['pdf_delivery']) ? (int)$_POST['pdf_delivery'] : 0;
+			$this->options['system']['member_pass_rule_min'] = isset($_POST['member_pass_rule_min']) ? (int)$_POST['member_pass_rule_min'] : 6;
+			$this->options['system']['member_pass_rule_max'] = isset($_POST['member_pass_rule_max']) && !empty($_POST['member_pass_rule_max']) ? (int)$_POST['member_pass_rule_max'] : '';
+			$this->options['system']['csv_encode_type'] = isset($_POST['csv_encode_type']) ? (int)$_POST['csv_encode_type'] : 0;
+
 			if( isset($_POST['dec_orderID_digit']) ){
 				$dec_orderID_digit = (int)rtrim($_POST['dec_orderID_digit']);
 				if( 6 > $dec_orderID_digit ){
@@ -2434,8 +2442,8 @@ class usc_e_shop
 			exit;
 		}
 //20110208ysk start
-		if('on' == $this->options['acting_settings']['paypal']['ec_activate']) {
-			require_once(USCES_PLUGIN_DIR . '/classes/paymentPaypal.class.php');
+		if( isset($this->options['acting_settings']['paypal']) and 'on' == $this->options['acting_settings']['paypal']['ec_activate'] ) {
+			require_once( USCES_PLUGIN_DIR.'/classes/paymentPaypal.class.php' );
 			$this->paypal = new usces_paypal();
 		}
 //20110208ysk end
@@ -2550,29 +2558,23 @@ class usc_e_shop
 					wp_enqueue_script('usces_initial.js', $js, array('jquery-ui-dialog', 'jquery-ui-sortable'));
 					//wp_enqueue_script('jquery-ui-sortable');
 					break;
-					
 				case 'usces_settlement':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					$jquery_colorUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/color/jscolor.js';
 					wp_enqueue_script( 'jquery-jscolor', $jquery_colorUrl, array('jquery-color') );
 					break;
-//20100809ysk start
 				case 'usces_cart':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20100809ysk end
-//20100818ysk start
 				case 'usces_member':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20100818ysk end
-//20100908ysk start
 				case 'usces_orderlist':
 				case 'usces_ordernew':
 					wp_enqueue_script('jquery-ui-dialog');
@@ -2580,8 +2582,6 @@ class usc_e_shop
 				case 'usces_memberlist':
 					wp_enqueue_script('jquery-ui-dialog');
 					break;
-//20100908ysk end
-//20101111ysk start
 				case 'usces_itemnew':
 					wp_enqueue_script('jquery-ui-sortable');
 					break;
@@ -2594,21 +2594,16 @@ class usc_e_shop
 						wp_enqueue_script('jquery-ui-dialog');
 					}
 					break;
-//20101111ysk end
-//20101208ysk start
 				case 'usces_delivery':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20101208ysk end
-//20110331ysk start
 				case 'usces_system':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20110331ysk end
 			}
 		}
 
@@ -4456,20 +4451,31 @@ class usc_e_shop
 		$mes = apply_filters('usces_filter_zaiko_check', $mes, $cart);
 		return $mes;	
 	}
-	
+
 	function member_check() {
 		$mes = '';
 		foreach ( $_POST['member'] as $key => $vlue ) {
 			$_SESSION['usces_member'][$key] = trim($vlue);
 		}
+		//0000526
+		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
+		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
+		if( empty( $_POST['member']['password1'] ) && empty( $_POST['member']['password2'] ) ){
+			$member_pass_rule_error = 0;
+		}elseif( !empty( $member_pass_rule_max ) ) {
+			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) && strlen( trim( $_POST['member']['password1'] ) ) <= $member_pass_rule_max ) ? 0 : 1;
+		}else{
+			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) ) ? 0 : 1;
+		}
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
-			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
+			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) || $member_pass_rule_error === 1 )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
+
 			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 				
 		} else {
-			if ( WCUtils::is_blank($_POST['member']['password1']) || WCUtils::is_blank($_POST['member']['password2']) || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
+			if ( WCUtils::is_blank($_POST['member']['password1']) || WCUtils::is_blank($_POST['member']['password2']) || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) || $member_pass_rule_error === 1 )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
 			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress2']) || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
@@ -4499,7 +4505,17 @@ class usc_e_shop
 
 	function member_check_fromcart() {
 		$mes = '';
-		if ( WCUtils::is_blank($_POST['customer']['password1']) || WCUtils::is_blank($_POST['customer']['password2']) || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
+		//0000526
+		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
+		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
+		if( empty( $_POST['customer']['password1'] ) && empty( $_POST['customer']['password2'] ) ){
+			$member_pass_rule_error = 0;
+		}elseif( !empty( $member_pass_rule_max ) ) {
+			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['customer']['password1'] ) ) && strlen( trim( $_POST['customer']['password1'] ) ) <= $member_pass_rule_max ) ? 0 : 1;
+		}else{
+			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['customer']['password1'] ) ) ) ? 0 : 1;
+		}
+		if ( WCUtils::is_blank($_POST['customer']['password1']) || WCUtils::is_blank($_POST['customer']['password2']) || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) || $member_pass_rule_error === 1 )
 			$mes .= __('Password is not correct.', 'usces') . "<br />";
 		if ( !is_email($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress2']) || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
@@ -4794,9 +4810,7 @@ class usc_e_shop
 			}
 		}
 		update_option('usces', $options);
-//20131206_kitamu_start
 		$this->options = get_option('usces');
-//20131206_kitamu_end
 		$_SESSION['usces_checked_business_days'] = '';
 	}
 	 
@@ -6198,6 +6212,7 @@ class usc_e_shop
 			}
 
 			$nvpstr  = $query;
+			$nvpstr .= '&SESSION_ID='.$currency_code;
 			$nvpstr .= '&CURRENCYCODE='.$currency_code;
 			$nvpstr .= '&ADDROVERRIDE='.$addroverride;
 			$nvpstr .= '&PAYMENTACTION=' . apply_filters('usces_filter_paypal_ec_paymentaction', 'Sale');

@@ -24,12 +24,21 @@ jQuery(function($){
 	});
 
 	//20100818ysk start
-	var $tabs = $('#uscestabs_member').tabs({
-		cookie: {
-			// store cookie for a day, without, it would be a session cookie
-			expires: 1
-		}
-	});
+	if( $.fn.jquery < "1.10" ) {
+		var $tabs = $('#uscestabs_member').tabs({
+			cookie: {
+				// store cookie for a day, without, it would be a session cookie
+				expires: 1
+			}
+		});
+	} else {
+		$( "#uscestabs_member" ).tabs({
+			active: ($.cookie("uscestabs_member")) ? $.cookie("uscestabs_member") : 0
+			, activate: function( event, ui ){
+				$.cookie("uscestabs_member", $(this).tabs("option", "active"));
+			}
+		});
+	}
 
 	customField = {
 		settings: {

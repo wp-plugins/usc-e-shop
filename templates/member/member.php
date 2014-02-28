@@ -60,21 +60,27 @@ $html .= uesces_addressform( 'member', $usces_members );
 $html .= '<tr>
 	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
 	<td colspan="2"><input name="member[mailaddress1]" id="mailaddress1" type="text" value="' . esc_attr($usces_members['mailaddress1']) . '" /></td>
-	</tr>
-	<tr>
-	<th scope="row">' . __('password', 'usces') . '</th>
-	<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" />
-	' . __('Leave it blank in case of no change.', 'usces') . '</td>
-	</tr>
-	<tr>
-	<th scope="row">' . __('Password (confirm)', 'usces') . '</th>
-	<td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . esc_attr($usces_members['password2']) . '" />
-	' . __('Leave it blank in case of no change.', 'usces') . '</td>
 	</tr>';
-	
-	
-	
-	
+//20140123 kitamu_start 0000526
+if( !empty( $this->options['system']['member_pass_rule_max'] ) ){
+	$html .='<tr>
+		<th scope="row">' . __('password', 'usces') . '</th>
+		<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" />
+		' . __('Leave it blank in case of no change.', 'usces') . '&nbsp;&nbsp;&nbsp;【' . __( $this->options['system']['member_pass_rule_min']) .'&nbsp;'. __( 'or more characters', 'usces' ) .'&nbsp;' . __( $this->options['system']['member_pass_rule_max'] ) .'&nbsp;'. __( 'characters or less', 'usces' ) . '】</td>
+		</tr>';
+}else{
+	$html .='<tr>
+		<th scope="row">' . __('password', 'usces') . '</th>
+		<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" />
+		' . __('Leave it blank in case of no change.', 'usces') . '&nbsp;&nbsp;&nbsp;【' . __( $this->options['system']['member_pass_rule_min']) .'&nbsp;'. __( 'or more characters', 'usces' ) . '】</td>
+		</tr>';
+}
+//20140123 kitamu_end
+$html .='<tr>
+		<th scope="row">' . __('Password (confirm)', 'usces') . '</th>
+		<td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . esc_attr($usces_members['password2']) . '" />
+		' . __('Leave it blank in case of no change.', 'usces') . '</td>
+		</tr>';	
 $html .= '</table>
 	<input name="member_regmode" type="hidden" value="editmemberform" />
 	<input name="member_id" type="hidden" value="' . $usces_members['ID'] . '" />

@@ -421,7 +421,7 @@ jQuery(function($){
 				//if(!checkNum(obj.val())) {
 				if(!checkNumMinus(obj.val())) {
 //20120606ysk end
-					alert('数値で入力して下さい。');
+					alert('<?php _e("Please enter a numeric value.", "usces"); ?>');
 					obj.focus();
 					return false;
 				}
@@ -485,7 +485,7 @@ jQuery(function($){
 						}
 					}
 				}else if( 'none' == values[0]){
-					alert( '該当する会員情報は存在しません。' );
+					alert( '<?php _e("Membership information in question does not exist.", "usces"); ?>' );
 				}else{
 					alert( 'ERROR' );
 				}
@@ -794,7 +794,7 @@ jQuery(document).ready(function($){
 	$("#order_tax").live("change", function(){ orderfunc.sumPrice($("#order_tax")); });
 	$("input[name*='upButton']").click(function(){
 		if( ('completion' == $("#order_taio option:selected").val() || 'continuation' == $("#order_taio option:selected").val()) && '<?php echo substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10); ?>' != $('#modified').val() ){
-			if( confirm("<?php _e("更新日を今日の日付に変更しますか？", 'usces'); ?>\n<?php _e("更新日を変更せずに更新する場合はキャンセルを押してください。", 'usces'); ?>") ){
+			if( confirm("<?php _e("Are you sure you want to change to today's date Date of renovation?", "usces"); ?>\n<?php _e("Please press the cancel If you want to update without changing the modified date.", "usces"); ?>") ){
 				$('#up_modified').val('update');
 			}else{
 				$('#up_modified').val('');
@@ -822,8 +822,8 @@ jQuery(document).ready(function($){
 		}
 		if( '' != $("input[name='customer[name1]']").val() || '' != $("input[name='delivery[name1]']").val() ){
 //20120914ysk start 0000567
-			//if( confirm('顧客情報、発送先情報を上書きします。よろしいですか？') ){
-			if( !confirm('顧客情報、発送先情報を上書きします。よろしいですか？') ){
+			//if( confirm('<?php _e("I will overwrite customer information, and shipping information. Would you like?", "usces"); ?>') ){
+			if( !confirm("<?php _e("I will overwrite the ship-to address the customer's address. Would you like?", "usces"); ?>") ){
 				//orderfunc.getMember($("input[name='customer[mailaddress]']").val());
 				return;
 			}
@@ -843,7 +843,7 @@ jQuery(document).ready(function($){
 			'' != $("input[name='delivery[address3]']").val() || 
 			'' != $("input[name='delivery[tel]']").val() || 
 			'' != $("input[name='delivery[fax]']").val() ) {
-			if( !confirm('顧客住所を発送先住所に上書きします。よろしいですか？') ) 
+			if( !confirm("<?php _e("I will overwrite the ship-to address the customer's address. Would you like?", "usces"); ?>") ) 
 				return;
 		}
 		$("input[name='delivery[name1]']").val($("input[name='customer[name1]']").val());
@@ -919,14 +919,14 @@ jQuery(document).ready(function($){
 	<table border="0" cellspacing="0" class="cus_info">
     <tr>
         <td class="label">e-mail</td>
-        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr(isset($data['order_email']) ? $data['order_email'] : ''); ?>" /><input name="get_member" type="button" id="get_member" value="会員情報取込" /></td>
+        <td class="col2"><input name="customer[mailaddress]" type="text" class="text long" value="<?php echo esc_attr(isset($data['order_email']) ? $data['order_email'] : ''); ?>" /><input name="get_member" type="button" id="get_member" value="<?php _e('Membership information acquisition', 'usces'); ?>" /></td>
     </tr>
 	
 <?php echo uesces_get_admin_addressform( 'customer', $data, $cscs_meta ); ?>
 	
 </table></td>
 <?php if($order_action == 'new') ://20120319ysk start 0000441 ?>
-<td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?><input type="button" id="costomercopy" value="発送先同じ"></td>
+<td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?><input type="button" id="costomercopy" value="<?php _e("Same shipping address", "usces"); ?>"></td>
 <?php else : ?>
 <td colspan="2" class="midasi1"><?php _e('shipping address', 'usces'); ?></td>
 <?php endif;//20120319ysk end ?>
@@ -1157,7 +1157,7 @@ ob_start();
 		<tr>
 			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
 			<th id="total_full" class="aright">&nbsp;</th>
-			<th colspan="2"><input name="recalc" id="recalc" class="addCartButton" type="button" value="<?php _e('再計算', 'usces'); ?>" /></th>
+			<th colspan="2"><input name="recalc" id="recalc" class="addCartButton" type="button" value="<?php _e('Recalculation', 'usces'); ?>" /></th>
 		</tr>
 		</tfoot>
 </table>

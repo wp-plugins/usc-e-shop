@@ -3,14 +3,13 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2014-02-01 11:19+0900\n"
-"Last-Translator: Welcart <info@welcart.com>\n"
+"PO-Revision-Date: 2014-02-27 11:54+0900\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.5.7\n"
 
 msgid "This month"
 msgstr "今月"
@@ -3635,41 +3634,6 @@ msgstr ""
 "このメールにお心当たりが無い場合は、お手数ですがご連絡いただきますようお願い"
 "いたします。"
 
-msgid "Timing point of grant"
-msgstr "ポイント付与のタイミング"
-
-msgid ""
-"The 'immediate', points are given to the shopping upon completion. In the "
-"'payment at the time', bank transfer, or convenience store settlement, "
-"points will not be given to the shopping upon completion, grant the point "
-"when it becomes a pre-payment."
-msgstr ""
-"「即時」では、ポイントはお買い物完了時に付与されます。「入金時」では、銀行振"
-"込、コンビニ決済などで、お買い物完了時にはポイントは付与されず、入金済になっ"
-"たときにポイントを付与します。"
-
-msgid "Tax target"
-msgstr "税計算の対象"
-
-msgid "Only Products"
-msgstr "商品のみ"
-
-msgid "All Amount"
-msgstr "全て"
-
-# 各証書の購入明細のタイトル
-msgid "Tax treatment"
-msgstr "税区分"
-
-msgid "Included"
-msgstr "税込"
-
-msgid "Excluded"
-msgstr "税別"
-
-msgid "Internal tax"
-msgstr "内税額"
-
 msgid "The safer, easier way to pay."
 msgstr "安全・簡単にお支払い"
 
@@ -3708,3 +3672,157 @@ msgstr "設定する"
 
 msgid "Not set"
 msgstr "設定しない"
+
+msgid "Described method of invoice"
+msgstr "納品書の記載方法"
+
+msgid "To address the purchaser information"
+msgstr "購入者情報を宛名とする"
+
+msgid "To address the shipping information"
+msgstr "配送先情報を宛名とする"
+
+msgid ""
+"If you select the 'to address the purchaser information', delivery will be "
+"described below address of (purchaser information) when the shipping address "
+"is different from the information of the purchaser.<br />Only the "
+"information of the destination as you want it to appear on your address if "
+"you choose to 'address and the destination.'"
+msgstr ""
+"「購入者情報を宛名とする」を選択した場合、配送先が購入者の情報と異なるときは"
+"配送先が宛名（購入者情報）の下に記載されます。<br />「配送先を宛名とする」を"
+"選択した場合は配送先の情報のみが宛名として記載されます"
+
+msgid ""
+"You can not choose the delivery method. Please complete the registration of "
+"shipping method than 'delivery setting' before product registration."
+msgstr ""
+"配送方法が選択できません。商品登録を行う前に「配送設定」より配送方法の登録を"
+"済ませてください。"
+
+msgid "Product code has not been entered."
+msgstr "商品コードが入力されていません。"
+
+msgid "Brand name has not been entered."
+msgstr "商品名が入力されていません。"
+
+msgid "SKU is not registered."
+msgstr "SKUが登録されていません。"
+
+msgid "There is incomplete data."
+msgstr "データに不備があります。"
+
+msgid "Has been saved."
+msgstr "保存しました。"
+
+msgid "I failed to save."
+msgstr "保存に失敗しました。"
+
+msgid "I failed to restore."
+msgstr "復元に失敗しました。"
+
+msgid "I will restore the option value. Would you like?"
+msgstr "オプション値を復元します。よろしいですか？"
+
+msgid "Please enter a numeric value."
+msgstr "数値で入力して下さい。"
+
+msgid "Membership information in question does not exist."
+msgstr "該当する会員情報は存在しません。"
+
+msgid "Are you sure you want to change to today's date Date of renovation?"
+msgstr "更新日を今日の日付に変更しますか？"
+
+msgid ""
+"Please press the cancel If you want to update without changing the modified "
+"date."
+msgstr "更新日を変更せずに更新する場合はキャンセルを押してください。"
+
+msgid "Enter the e-mail."
+msgstr "e-mail を入力して下さい。"
+
+msgid ""
+"I will overwrite customer information, and shipping information. Would you "
+"like?"
+msgstr "顧客情報、発送先情報を上書きします。よろしいですか？"
+
+msgid ""
+"I will overwrite the ship-to address the customer's address. Would you like?"
+msgstr "顧客住所を発送先住所に上書きします。よろしいですか？"
+
+msgid "Same product code is registered here."
+msgstr "に同じ商品コードが登録されています。"
+
+msgid "Commodity option option name duplicates exist."
+msgstr "オプション名が重複している商品オプションが存在します。"
+
+msgid "Commodity option not entered there is the option name."
+msgstr "オプション名が未入力の商品オプションが存在します。"
+
+msgid ""
+"If you select 'single select' and 'multi-select' the trade option, please "
+"enter the select value."
+msgstr ""
+"商品オプションで「シングルセレクト」、「マルチセレクト」を選択した場合は、セ"
+"レクト値を入力してください。"
+
+msgid "The product details page title"
+msgstr "商品詳細ページタイトル"
+
+msgid "Full product details"
+msgstr "商品詳細本文"
+
+msgid "Timing point of grant"
+msgstr "ポイント付与のタイミング"
+
+msgid "Payment at the time"
+msgstr "入金時"
+
+msgid "Immediately"
+msgstr "即時"
+
+msgid ""
+"The 'immediate', points are given to the shopping upon completion. In the "
+"'payment at the time', bank transfer, or convenience store settlement, "
+"points will not be given to the shopping upon completion, grant the point "
+"when it becomes a pre-payment."
+msgstr ""
+"「即時」では、ポイントはお買い物完了時に付与されます。「入金時」では、銀行振"
+"込、コンビニ決済などで、お買い物完了時にはポイントは付与されず、入金済になっ"
+"たときにポイントを付与します。"
+
+msgid "Membership information acquisition"
+msgstr "会員情報取込"
+
+msgid "Same shipping address"
+msgstr "発送先同じ"
+
+msgid "Recalculation"
+msgstr "再計算"
+
+msgid "Character limit for membership password"
+msgstr "会員パスワードの文字数制限"
+
+msgid "or more characters"
+msgstr "文字以上"
+
+msgid "characters or less"
+msgstr "文字以下"
+
+msgid ""
+"[Numeric(one or more)]&nbsp;I can limit the length of the password of the "
+"member.<br />It will be no upper limit When you register with a space the "
+"upper limit of the number of characters."
+msgstr ""
+"【数値】&nbsp;会員のパスワードの長さを制限できます。<br />文字数の上限値は空"
+"白で登録すると上限なしとなります。"
+
+msgid "Character code in the CSV file"
+msgstr "CSVファイルの文字コード"
+
+msgid ""
+"If you want to perform product registration by uploading a CSV file, please "
+"upload a CSV file of character code selected here."
+msgstr ""
+"CSVファイルをアップロードして商品登録を行う場合は、ここで選択した文字コードの"
+"CSVファイルをアップロードしてください。"

@@ -26,6 +26,14 @@ $dec_orderID_flag = isset($this->options['system']['dec_orderID_flag']) ? $this-
 $dec_orderID_prefix = isset($this->options['system']['dec_orderID_prefix']) ? $this->options['system']['dec_orderID_prefix'] : '';
 $dec_orderID_digit = isset($this->options['system']['dec_orderID_digit']) ? $this->options['system']['dec_orderID_digit'] : '';
 $subimage_rule = isset($this->options['system']['subimage_rule']) ? $this->options['system']['subimage_rule'] : 0;
+//20140107 kitamu_start 0000571
+$pdf_delivery = isset($this->options['system']['pdf_delivery']) ? $this->options['system']['pdf_delivery']	: 0;
+//20140107 kitamu_end
+//20140122 kitamu_start 0000526
+$member_pass_rule_min = isset($this->options['system']['member_pass_rule_min']) ? $this->options['system']['member_pass_rule_min']	: 6;
+$member_pass_rule_max = isset($this->options['system']['member_pass_rule_max']) && !empty( $this->options['system']['member_pass_rule_max'] ) ? $this->options['system']['member_pass_rule_max'] : '';
+//20140122 kitamu_end
+$csv_encode_type = isset( $this->options['system']['csv_encode_type'] ) ? $this->options['system']['csv_encode_type'] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -115,15 +123,15 @@ jQuery(function($){
 			s.data = "action=usces_admin_ajax&mode=options_backup";
 			s.success = function(data, dataType) {
 				if(data) {
-					alert("保存しました。");
+					alert("<?php _e("Has been saved.", "usces"); ?>");
 					$("#options_restore").removeAttr("disabled");
 					$("#options_backup_date").html(data);
 				} else {
-					alert("保存に失敗しました。");
+					alert("<?php _e("I failed to save.", "usces"); ?>");
 				}
 			};
 			s.error = function(msg) {
-				alert("保存に失敗しました。");
+				alert("<?php _e("I failed to save.", "usces"); ?>");
 			};
 			$.ajax( s );
 			return false;
@@ -135,16 +143,24 @@ jQuery(function($){
 				if(data) {
 					location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_system";
 				} else {
-					alert("復元に失敗しました。");
+					alert("<?php _e("I failed to restore.", "usces"); ?>");
 				}
 			};
 			s.error = function(msg) {
-				alert("復元に失敗しました。");
+				alert("<?php _e("I failed to restore.", "usces"); ?>");
 			};
 			$.ajax( s );
 			return false;
 //20120309ysk end
+		},
+//20140123 kitamu_start 0000526
+		error_bg_color : function(id) {
+			$(id).css({'background-color': '#FFA'}).click(function() {
+				$(id).css({'background-color': '#FFF'});
+			});
+
 		}
+//20140123 kitamu_end
 	};
 
 	$('form').submit(function() {
@@ -165,7 +181,21 @@ jQuery(function($){
 				$(this).css({'background-color': '#FFF'});
 			});
 		}
-
+//20140122_kitamu_start 0000526
+		if( !checkNum( $("#member_pass_rule_min").val() ) || $("#member_pass_rule_min").val() == false ){
+			error++;
+			operation.error_bg_color("#member_pass_rule_min");
+		}
+		if( !checkNum( $("#member_pass_rule_max").val() ) ) {
+			error++;
+			operation.error_bg_color("#member_pass_rule_max");
+		}
+		if( parseInt($("#member_pass_rule_min").val()) > parseInt($("#member_pass_rule_max").val()) ) {
+			error++;
+			operation.error_bg_color("#member_pass_rule_min");
+			operation.error_bg_color("#member_pass_rule_max");
+		}
+//20140122 kitamu_end
 		var target = [];
 		$("#target_market option:selected").each(function() {
 			target.push($(this).val());
@@ -223,12 +253,21 @@ function toggleVisibility(id) {
 jQuery(document).ready(function($) {
 	operation.set_target_market();
 
-	var $tabs = $('#uscestabs_system').tabs({
-		cookie: {
-			// store cookie for a day, without, it would be a session cookie
-			expires: 1
-		}
-	});
+	if( $.fn.jquery < "1.10" ) {
+		var $tabs = $('#uscestabs_system').tabs({
+			cookie: {
+				// store cookie for a day, without, it would be a session cookie
+				expires: 1
+			}
+		});
+	} else {
+		$( "#uscestabs_system" ).tabs({
+			active: ($.cookie("uscestabs_system")) ? $.cookie("uscestabs_system") : 0
+			, activate: function( event, ui ){
+				$.cookie("uscestabs_system", $(this).tabs("option", "active"));
+			}
+		});
+	}
 //20120309ysk start 0000430
 <?php
 	$options_backup = get_option('usces_backup');
@@ -244,7 +283,7 @@ jQuery(document).ready(function($) {
 	});
 	$('#options_restore').click(function() {
 		//$('#backup_dialog').dialog('open');
-		if( !confirm("オプション値を復元します。よろしいですか？") ) return;
+		if( !confirm("<?php _e("I will restore the option value. Would you like?", "usces"); ?>") ) return;
 		operation.restore();
 	});
 //20120309ysk end
@@ -400,6 +439,42 @@ jQuery(document).ready(function($) {
 	</tr>
 	<tr height="30">
 	    <td width="10"><input name="subimage_rule" id="subimage_rule1" type="radio" value="1"<?php if($subimage_rule === 1) echo 'checked="checked"'; ?> /></td><td width="400"><label for="subimage_rule1"><?php _e('apply the new rule<br />(Tow hyphens between the Product Code and serial number)', 'usces'); ?></label></td>
+	</tr>
+</table>
+<hr />
+
+<!--20140107 kitamu_start 0000571-->
+<table class="form_table">
+	<tr height="30">
+	    <th class="system_th" rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_pdf_delivery');"><?php _e('Described method of invoice', 'usces'); ?></a></th>
+	    <td width="10"><input name="pdf_delivery" id="pdf_delivery0" type="radio" value="0"<?php if($pdf_delivery === 0) echo 'checked="checked"'; ?> /></td><td width="300"><label for="pdf_delivery0"><?php _e('To address the purchaser information', 'usces'); ?></label></td>
+		<td rowspan="2"><div id="ex_pdf_delivery" class="explanation"><?php _e("If you select the 'to address the purchaser information', delivery will be described below address of (purchaser information) when the shipping address is different from the information of the purchaser.<br />Only the information of the destination as you want it to appear on your address if you choose to 'address and the destination.'", "usces"); ?></div></td>
+	</tr>
+	<tr height="30">
+		<td width="10"><input name="pdf_delivery" id="pdf_delivery1" type="radio" value="1"<?php if($pdf_delivery === 1) echo 'checked="checked"'; ?> /></td><td width="300"><label for="pdf_delivery1"><?php _e('To address the shipping information', 'usces'); ?></label></td>
+	</tr>
+</table>
+<hr />
+<!--20140107 kitamu_end-->
+<!--20140122 kitamu_start 0000526-->
+<table class="form_table">
+	<tr height="30">
+	    <th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_member_pass_rule');"><?php _e('Character limit for membership password', 'usces'); ?></a></th>
+	    <td><input name="member_pass_rule_min" type="text" id="member_pass_rule_min" value="<?php echo esc_attr($member_pass_rule_min); ?>" size="3" />&nbsp;<?php _e('or more characters', 'usces'); ?>&nbsp;&nbsp;</td>
+		<td><input name="member_pass_rule_max" type="text" id="member_pass_rule_max" value="<?php echo esc_attr($member_pass_rule_max); ?>" size="3" />&nbsp;<?php _e('characters or less', 'usces'); ?></td>
+	    <td><div id="ex_member_pass_rule" class="explanation"><?php _e('[Numeric(one or more)]&nbsp;I can limit the length of the password of the member.<br />It will be no upper limit When you register with a space the upper limit of the number of characters.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<hr />
+<!--20140122 kitamu_end-->
+<table class="form_table">
+	<tr height="30">
+	    <th class="system_th" rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_csv_encode_type');"><?php _e('Character code in the CSV file', 'usces'); ?></a></th>
+	    <td width="10"><input name="csv_encode_type" id="csv_encode_type0" type="radio" value="0"<?php if($csv_encode_type === 0) echo 'checked="checked"'; ?> /></td><td width="300"><label for="csv_encode_type0"><?php _e('Sift-JIS', 'usces'); ?></label></td>
+		<td rowspan="2"><div id="ex_csv_encode_type" class="explanation"><?php _e('If you want to perform product registration by uploading a CSV file, please upload a CSV file of character code selected here.', "usces"); ?></div></td>
+	</tr>
+	<tr height="30">
+		<td width="10"><input name="csv_encode_type" id="csv_encode_type1" type="radio" value="1"<?php if($csv_encode_type === 1) echo 'checked="checked"'; ?> /></td><td width="300"><label for="csv_encode_type1"><?php _e('UTF-8', 'usces'); ?></label></td>
 	</tr>
 </table>
 <hr />

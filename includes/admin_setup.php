@@ -262,9 +262,9 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 		<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_point_assign');"><?php _e('Timing point of grant', 'usces'); ?></a></th>
-		<td width="10"><input name="point_assign" id="point_assign_receipt" type="radio" value="1"<?php if($this->options['point_assign'] == 1) echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_receipt"><?php _e('入金時', 'usces'); ?></label></td>
-		<td width="10"><input name="point_assign" id="point_assign_immediately" type="radio" value="0"<?php if( WCUtils::is_zero($this->options['point_assign']) ) echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_immediately"><?php _e('即時', 'usces'); ?></label></td>
-		<td><div id="ex_point_assign" class="explanation"><?php _e("The 'immediate', points are given to the shopping upon completion. In the 'payment at the time', bank transfer, or convenience store settlement, points will not be given to the shopping upon completion, grant the point when it becomes a pre-payment.", 'usces'); ?></div></td>
+		<td width="10"><input name="point_assign" id="point_assign_receipt" type="radio" value="1"<?php if($this->options['point_assign'] == 1) echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_receipt"><?php _e('Payment at the time', 'usces'); ?></label></td>
+		<td width="10"><input name="point_assign" id="point_assign_immediately" type="radio" value="0"<?php if( WCUtils::is_zero($this->options['point_assign']) ) echo 'checked="checked"'; ?> /></td><td width="60"><label for="point_assign_immediately"><?php _e('Immediately', 'usces'); ?></label></td>
+		<td><div id="ex_point_assign" class="explanation"><?php _e("The 'immediate', points are given to the shopping upon completion. In the 'payment at the time', bank transfer, or convenience store settlement, points will not be given to the shopping upon completion, grant the point when it becomes a pre-payment.", "usces"); ?></div></td>
 	</tr>
 </table>
 <?php do_action( 'usces_action_amdin_setup' ); ?>

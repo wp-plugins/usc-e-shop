@@ -685,7 +685,7 @@ div.explanation  {
 }
 /* tr */
 .metastuffrow,
-.ui-state-highlight {
+td.ui-state-highlight {
 	height: 100px;
 }
 /* th td */

@@ -20,12 +20,21 @@ jQuery(function($){
 			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 
-	$('#uscestabs').tabs({
-		cookie: {
-			// store cookie for a day, without, it would be a session cookie
-			expires: 1
-		}
-	});
+	if( $.fn.jquery < "1.10" ) {
+		$('#uscestabs').tabs({
+			cookie: {
+				// store cookie for a day, without, it would be a session cookie
+				expires: 1
+			}
+		});
+	} else {
+		$( "#uscestabs" ).tabs({
+			active: ($.cookie("uscestabs_settlement")) ? $.cookie("uscestabs_settlement") : 0
+			, activate: function( event, ui ){
+				$.cookie("uscestabs_settlement", $(this).tabs("option", "active"));
+			}
+		});
+	}
 
 	if( '2' == $("input[name='connection']:checked").val() ){
 		$("#authkey_zeus").css("display", "");
