@@ -253,12 +253,21 @@ function toggleVisibility(id) {
 jQuery(document).ready(function($) {
 	operation.set_target_market();
 
-	var $tabs = $('#uscestabs_system').tabs({
-		cookie: {
-			// store cookie for a day, without, it would be a session cookie
-			expires: 1
-		}
-	});
+	if( $.fn.jquery < "1.10" ) {
+		var $tabs = $('#uscestabs_system').tabs({
+			cookie: {
+				// store cookie for a day, without, it would be a session cookie
+				expires: 1
+			}
+		});
+	} else {
+		$( "#uscestabs_system" ).tabs({
+			active: ($.cookie("uscestabs_system")) ? $.cookie("uscestabs_system") : 0
+			, activate: function( event, ui ){
+				$.cookie("uscestabs_system", $(this).tabs("option", "active"));
+			}
+		});
+	}
 //20120309ysk start 0000430
 <?php
 	$options_backup = get_option('usces_backup');

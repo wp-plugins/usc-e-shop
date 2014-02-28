@@ -1494,12 +1494,21 @@ jQuery(document).ready(function($){
 //20101208ysk start
 	operation.disp_delivery_days(-1);
 
-	var $tabs = $('#uscestabs_delivery').tabs({
-		cookie: {
-			// store cookie for a day, without, it would be a session cookie
-			expires: 1
-		}
-	});
+	if( $.fn.jquery < "1.10" ) {
+		var $tabs = $('#uscestabs_delivery').tabs({
+			cookie: {
+				// store cookie for a day, without, it would be a session cookie
+				expires: 1
+			}
+		});
+	} else {
+		$( "#uscestabs_delivery" ).tabs({
+			active: ($.cookie("uscestabs_delivery")) ? $.cookie("uscestabs_delivery") : 0
+			, activate: function( event, ui ){
+				$.cookie("uscestabs_delivery", $(this).tabs("option", "active"));
+			}
+		});
+	}
 //20101208ysk end
 });
 </script>

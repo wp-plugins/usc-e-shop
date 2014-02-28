@@ -33,12 +33,21 @@ jQuery(function($){
 
 	//20100818ysk start
 	//20100809ysk start
-	var $tabs = $('#uscestabs_cart').tabs({
-		cookie: {
-			// store cookie for a day, without, it would be a session cookie
-			expires: 1
-		}
-	});
+	if( $.fn.jquery < "1.10" ) {
+		var $tabs = $('#uscestabs_cart').tabs({
+			cookie: {
+				// store cookie for a day, without, it would be a session cookie
+				expires: 1
+			}
+		});
+	} else {
+		$( "#uscestabs_cart" ).tabs({
+			active: ($.cookie("uscestabs_cart")) ? $.cookie("uscestabs_cart") : 0
+			, activate: function( event, ui ){
+				$.cookie("uscestabs_cart", $(this).tabs("option", "active"));
+			}
+		});
+	}
 
 	//customOrder = {
 	customField = {

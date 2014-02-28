@@ -2447,7 +2447,7 @@ function usces_check_acting_return() {
 
 		default:
 			do_action( 'usces_action_check_acting_return_default' );
-			$results = $_GET;
+			$results = $_REQUEST;//20140227ysk
 			if( $_REQUEST['result'] ){
 				usces_log($acting.' entry data : '.print_r($entry, true), 'acting_transaction.log');
 				$results[0] = 1;
@@ -2459,6 +2459,7 @@ function usces_check_acting_return() {
 			//$results['reg_order'] = false;
 			$results['reg_order'] = true;
 //20110310ysk end
+			$results = apply_filters( 'usces_filter_check_acting_return_results', $results );//20140227ysk
 			break;
 	}
 	

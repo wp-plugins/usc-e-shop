@@ -2432,8 +2432,8 @@ class usc_e_shop
 			exit;
 		}
 //20110208ysk start
-		if('on' == $this->options['acting_settings']['paypal']['ec_activate']) {
-			require_once(USCES_PLUGIN_DIR . '/classes/paymentPaypal.class.php');
+		if( isset($this->options['acting_settings']['paypal']) and 'on' == $this->options['acting_settings']['paypal']['ec_activate'] ) {
+			require_once( USCES_PLUGIN_DIR.'/classes/paymentPaypal.class.php' );
 			$this->paypal = new usces_paypal();
 		}
 //20110208ysk end
@@ -2548,29 +2548,23 @@ class usc_e_shop
 					wp_enqueue_script('usces_initial.js', $js, array('jquery-ui-dialog', 'jquery-ui-sortable'));
 					//wp_enqueue_script('jquery-ui-sortable');
 					break;
-					
 				case 'usces_settlement':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0' );
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					$jquery_colorUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/color/jscolor.js';
 					wp_enqueue_script( 'jquery-jscolor', $jquery_colorUrl, array('jquery-color') );
 					break;
-//20100809ysk start
 				case 'usces_cart':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20100809ysk end
-//20100818ysk start
 				case 'usces_member':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20100818ysk end
-//20100908ysk start
 				case 'usces_orderlist':
 				case 'usces_ordernew':
 					wp_enqueue_script('jquery-ui-dialog');
@@ -2578,8 +2572,6 @@ class usc_e_shop
 				case 'usces_memberlist':
 					wp_enqueue_script('jquery-ui-dialog');
 					break;
-//20100908ysk end
-//20101111ysk start
 				case 'usces_itemnew':
 					wp_enqueue_script('jquery-ui-sortable');
 					break;
@@ -2592,21 +2584,16 @@ class usc_e_shop
 						wp_enqueue_script('jquery-ui-dialog');
 					}
 					break;
-//20101111ysk end
-//20101208ysk start
 				case 'usces_delivery':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20101208ysk end
-//20110331ysk start
 				case 'usces_system':
 					wp_enqueue_script('jquery-ui-tabs', array('jquery-ui-core'));
-					//$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery.cookie.js';
-					//wp_enqueue_script('jquery-cookie', $jquery_cookieUrl, array('jquery'), '1.0');
+					$jquery_cookieUrl = USCES_FRONT_PLUGIN_URL.'/js/jquery/jquery.cookie.js';
+					wp_enqueue_script( 'jquery-cookie', $jquery_cookieUrl, array('jquery') );
 					break;
-//20110331ysk end
 			}
 		}
 
@@ -6098,6 +6085,7 @@ class usc_e_shop
 			}
 
 			$nvpstr  = $query;
+			$nvpstr .= '&SESSION_ID='.$currency_code;
 			$nvpstr .= '&CURRENCYCODE='.$currency_code;
 			$nvpstr .= '&ADDROVERRIDE='.$addroverride;
 			$nvpstr .= '&PAYMENTACTION=' . apply_filters('usces_filter_paypal_ec_paymentaction', 'Sale');
