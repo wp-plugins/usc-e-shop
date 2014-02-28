@@ -20,7 +20,7 @@ function usces_tax_label( $data = array(), $out = '' ){
 	if( 'exclude' == $tax_mode ){
 		$label = __('consumption tax', 'usces');
 	}else{
-		if( isset($condition['tax_mode']) ){
+		if( isset($condition['tax_mode']) && !empty($data['ID']) ){
 			$materials = array(
 				'total_items_price' => $data['order_item_total_price'],
 				'discount' => $data['order_discount'],

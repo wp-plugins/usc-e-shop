@@ -66,11 +66,13 @@ get_header();
 				<td>&nbsp;</td>
 			</tr>
 <?php endif; ?>
+<?php if( 0.00 < (float)$usces_entries['order']['tax'] ) : ?>
 			<tr>
 				<td colspan="5" class="aright"><?php usces_tax_label(); ?></td>
 				<td class="aright"><?php usces_tax($usces_entries) ?></td>
 				<td>&nbsp;</td>
 			</tr>
+<?php endif; ?>
 			<tr>
 				<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
 				<td class="aright"><?php usces_crform($usces_entries['order']['shipping_charge'], true, false); ?></td>

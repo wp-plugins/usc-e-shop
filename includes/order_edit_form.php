@@ -69,6 +69,7 @@ if($order_action == 'new'){
 		}
 	}
 
+	$condition = $this->get_condition();
 	$data = array(
 		'mem_name1' => '', 
 		'mem_name2' => '', 
@@ -95,6 +96,7 @@ if($order_action == 'new'){
 		'order_country' => '',
 		'order_pref' => '',
 		'ID' => '',
+		'order_condition' => $condition,
 		'order_date' => current_time('mysql'),
 		'order_delivery_date' => '',
 	 );
@@ -112,7 +114,6 @@ if($order_action == 'new'){
 		'country' => '',
 		'pref' => ''
 	 );
-	$condition = $this->get_condition();
 	$cart = array();
 
 
@@ -1194,9 +1195,6 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 		<?php } ?>
 		</select><br />
 		<label>追加する商品　</label><select name="newitemcode" id="newitemcode"></select><br />
-		<!--<label for="name"><?php _e('item code', 'usces'); ?></label>-->
-		<!--<input type="text" name="newitemcode" id="newitemcode" class="text" />
-		<input name="getitem" type="button" value="<?php _e('Obtain', 'usces'); ?>" onclick="if( jQuery('#newitemcode').val() == '' ) return; orderItem.getitem();" />-->
 		<div id="loading"></div>
 		</div>
 		<div id="newitemform"></div>
@@ -1232,6 +1230,6 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 		<div id="new_pdf"></div>
 	</fieldset>
 </div>
-
+<?php do_action( 'usces_action_endof_order_edit_form', $data ); ?>
 </div><!--usces_admin-->
 </div><!--wrap-->

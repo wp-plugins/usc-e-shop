@@ -151,11 +151,10 @@ function usces_order_confirm_message($order_id) {
 	if ( $data['order_discount'] != 0 )
 		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
 
-	$meisai .= usces_tax_label($data, 'return');
-	if ( !empty($usces->options['order_tax']) )
-		$meisai .= "    : " . usces_crform( $data['order_tax'], true, false, 'return' );
+	if ( 0.00 < (float)$data['order_tax'] )
+		$meisai .= usces_tax_label($data, 'return') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
 
-	$meisai .= "\r\n" . __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
+	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
 
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
@@ -305,9 +304,9 @@ function usces_send_ordermail($order_id) {
 	$msg_body .= apply_filters('usces_filter_send_order_mail_first', NULL, $data);
 	$msg_body .= uesces_get_mail_addressform( 'order_mail_customer', $entry, $order_id );
 	$msg_body .= __('Order number','usces') . " : " . usces_get_deco_order_id( $order_id ) . "\r\n";
+	$msg_body .= __( 'order date','usces' ) . " : " . $data['order_date'] . "\r\n";
 	
 	$meisai = __('Items','usces') . " : \r\n";
-	$msg_body .= __( 'order date','usces' ) . " : " . $data['order_date'] . "\r\n";
 	foreach ( $cart as $cart_row ) {
 		$post_id = $cart_row['post_id'];
 		$sku = urldecode($cart_row['sku']);
@@ -355,9 +354,8 @@ function usces_send_ordermail($order_id) {
 	if ( $entry['order']['discount'] != 0 )
 		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
 
-	$meisai .= usces_tax_label($data, 'return');
-	if ( !empty($entry['order']['tax']) )
-		$meisai .= __('consumption tax','usces') . "     : " . usces_crform( $entry['order']['tax'], true, false, 'return' );
+	if ( 0.00 < (float)$entry['order']['tax'] )
+		$meisai .= usces_tax_label($data, 'return') . "    : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
 
 	$meisai .= "\r\n" . __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
 
@@ -388,7 +386,7 @@ function usces_send_ordermail($order_id) {
 	$msg_shipping .= __('Delivery date','usces') . " : " . $entry['order']['delivery_date'] . "\r\n";
 	$msg_shipping .= __('Delivery Time','usces') . " : " . $entry['order']['delivery_time'] . "\r\n";
 	$msg_shipping .= "\r\n";
-	$msg_body .= apply_filters('usces_filter_send_order_mail_shipping', $msg_shipping, $data);
+	$msg_body .= apply_filters('usces_filter_send_order_mail_shipping', $msg_shipping, $data, $entry );
 
 	$msg_payment = __('** Payment method **','usces') . "\r\n";
 	$msg_payment .= usces_mail_line( 1, $entry['customer']['mailaddress1'] );//********************
@@ -1499,6 +1497,49 @@ function usces_delete_serialized_cart(){
 		unset( $_SESSION['usces_entry']['order']['usedpoint'] );
 }
 
+function usces_get_serialized_cart($order_id){
+	global $wpdb, $usces;
+
+	$order_table_name = $wpdb->prefix . "usces_order";
+	$query = $wpdb->prepare("SELECT order_cart FROM $order_table_name WHERE ID = %d", $order_id);
+	$order_cart = $wpdb->get_var( $query );
+	$cart = unserialize($order_cart);
+	foreach( $cart as $cart_index => $cart_row ){	
+		$options = array();
+		if( !empty( $cart_row['options'] ) ){
+			foreach( $cart_row['options'] as $key => $value ){
+				$key = urldecode($key);
+				if( is_array($value) ){
+					foreach( $value as $vk => $vv ){
+						$value[$vk] = urldecode($vv);
+					}
+					$options[$key] = $value;
+				}else{
+					$options[$key] = urldecode($value);
+				}
+			}
+			$cart_row['options'] = $options;
+		}
+		$advance = array();
+		if( !empty( $cart_row['advance'] ) ){
+			foreach( $cart_row['advance'] as $key => $value ){
+				$key = urldecode($key);
+				if( is_array($value) ){
+					foreach( $value as $vk => $vv ){
+						$value[$vk] = urldecode($vv);
+					}
+					$advance[$key] = $value;
+				}else{
+					$advance[$key] = urldecode($value);
+				}
+			}
+			$cart_row['advance'] = $advance;
+		}
+		$cart[$cart_index] = $cart_row;
+	}
+	return $cart;
+}
+
 function usces_update_ordercart() {
 	$ordercart_table_name = $wpdb->prefix . "usces_ordercart";
 	foreach( $_POST['skuPrice'] as $cart_id => $price ){
@@ -1533,8 +1574,11 @@ function usces_update_ordercart() {
 function usces_update_ordercartdata( $order_id ) {
 	global $wpdb, $usces;
 
+	if( !isset($_POST['skuPrice']) )
+		return;
+		
 	$ordercart_table_name = $wpdb->prefix . "usces_ordercart";
-	foreach( $_POST['skuPrice'] as $cart_id => $price ){
+	foreach( (array)$_POST['skuPrice'] as $cart_id => $price ){
 		$quantity = $_POST['quant'][$cart_id];
 		$query = $wpdb->prepare("
 			UPDATE $ordercart_table_name SET price = %f, quantity = %d WHERE cart_id = %d 
@@ -1542,8 +1586,11 @@ function usces_update_ordercartdata( $order_id ) {
 		$wpdb->query( $query );
 	}
 	
+	if( !isset($_POST['itemOption']) )
+		return;
+
 	$ordercart_meta_table_name = $wpdb->prefix . "usces_ordercart_meta";
-	foreach( $_POST['itemOption'] as $cartmeta_id => $value ){
+	foreach( (array)$_POST['itemOption'] as $cartmeta_id => $value ){
 		if(is_array($value)) {
 			$opval =array();
 			foreach($value as $v){
@@ -4456,6 +4503,7 @@ function usces_get_cr_symbol() {
 
 function usces_make_option_field( $cart_row ){
 	$options = usces_get_ordercart_meta( 'option', $cart_row['cart_id'] );
+	//$options = $cart_row['options'];
 	$post_id = $cart_row['post_id'];
 	
 	$field = '<div>' . "\n";
@@ -4476,6 +4524,7 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 	$cartmeta_id = $opt_value['cartmeta_id'];
 	$name = $opt_value['meta_key'];
 	$value = $opt_value['meta_value'];
+//usces_p($opt_value);
 	
 	if($label == '#default#')
 		$label = $name;
@@ -4517,6 +4566,7 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 			break;
 		case 1://Multi-select
 			$selects = explode("\n", $opt['value']);
+			$value = maybe_unserialize($value);
 			$html .= '<select name="itemOption[' . $cartmeta_id . '][]" id="itemOption[' . $cartmeta_id . ']" class="iopt_select" multiple onKeyDown="if (event.keyCode == 13) {return false;}">' . "\n";
 			if($essential == 1){
 				if(  '#NONE#' == $value || NULL == $value ) 
@@ -4527,7 +4577,8 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 			}
 			$i=0;
 			
-			$value_arr = unserialize($value);
+			$value_arr = maybe_unserialize($value);
+
 			foreach($selects as $v) {
 				$v = trim($v);
 				$opval = urlencode($v);
@@ -4614,7 +4665,8 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 	</tr>
 <?php 
 	}
-	$r = apply_filters( 'usces_filter_get_ordercart_row', ob_get_contents(), $order_id, $cart );
+	$row = ob_get_contents();
 	ob_end_clean();
-	return $r;
+	
+	return apply_filters( 'usces_filter_get_ordercart_row', $row, $order_id, $cart );
 }

@@ -1093,7 +1093,7 @@ function get_order_item( $item_code ) {
 	$r .= "<th>" . apply_filters('usces_filter_listprice_label', $usces_listprice, __('List price', 'usces'), usces_guid_tax('return')) . "</th>\n";
 	$usces_sellingprice = __('Sale price','usces') . usces_guid_tax('return');
 	$r .= "<th>" . apply_filters('usces_filter_sellingprice_label', $usces_sellingprice, __('Sale price', 'usces'), usces_guid_tax('return')) . "</th>\n";
-	$r .= "<th>" . __('stock','usces') . "</th>\n";
+	$r .= "<th>" . __('stock status','usces') . "</th>\n";
 	$r .= "<th>" . __('stock','usces') . "</th>\n";
 	$r .= "<th>" . __('unit','usces') . "</th>\n";
 	$r .= "<th>&nbsp;</th>\n";
