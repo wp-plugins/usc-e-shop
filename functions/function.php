@@ -1770,6 +1770,12 @@ function usces_update_orderdata() {
 
 		return 1;
 	}
+	
+	$old_deli = unserialize($old_orderdata->order_delivery);
+	foreach($_POST['delivery'] as $dk => $dv ){
+		$old_deli[$dk] = $dv;
+	}
+	$delivery = serialize($old_deli);
 
 //$wpdb->show_errors();
 //20101208ysk start
@@ -1795,7 +1801,7 @@ function usces_update_orderdata() {
 					$_POST['customer']['address3'], 
 					$_POST['customer']['tel'], 
 					$_POST['customer']['fax'], 
-					serialize($_POST['delivery']), 
+					$delivery, 
 					$_POST['offer']['note'], 
 					$_POST['offer']['delivery_method'], 
 					$_POST['offer']['delivery_date'], 

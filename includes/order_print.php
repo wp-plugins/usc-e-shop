@@ -654,7 +654,7 @@ function usces_pdfSetFooter($pdf, $data) {
 		'order_shipping_charge' => $data->order['shipping_charge'],
 		'order_cod_fee' => $data->order['cod_fee'],
 	);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_label', usces_tax_label( $labeldata, 'return' ))), $border, 'C');
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_enc(apply_filters('usces_filter_tax_label', usces_tax_label( $labeldata, 'return' ))), $border, 'C');
 	$pdf->SetXY(104.3, 235.8);
 	$pdf->MultiCell(37.77, $lineheight, usces_conv_enc(__('Total Amount', 'usces')), $border, 'C');
 
