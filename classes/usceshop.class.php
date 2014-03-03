@@ -111,8 +111,8 @@ class usc_e_shop
 		if(!isset($this->options['system']['no_cart_css'])) $this->options['system']['no_cart_css'] = 0;
 		if(!isset($this->options['system']['dec_orderID_flag'])) $this->options['system']['dec_orderID_flag'] = 0;
 		if(!isset($this->options['system']['dec_orderID_prefix'])) $this->options['system']['dec_orderID_prefix'] = '';
-		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
-		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 0;
+		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 8;
+		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 1;
 		if(!isset($this->options['system']['pdf_delivery'])) $this->options['system']['pdf_delivery'] = 0;
 		if(!isset($this->options['system']['member_pass_rule_min']) || empty($this->options['system']['member_pass_rule_min'])) $this->options['system']['member_pass_rule_min'] = 6;
 		if(!isset($this->options['system']['member_pass_rule_max']) || empty($this->options['system']['member_pass_rule_max'])) $this->options['system']['member_pass_rule_max'] = '';
@@ -704,7 +704,7 @@ class usc_e_shop
 			$this->options['error_mail'] = isset($_POST['error_mail']) ? trim($_POST['error_mail']) : '';
 			$this->options['postage_privilege'] = isset($_POST['postage_privilege']) ? trim($_POST['postage_privilege']) : '';
 			$this->options['purchase_limit'] = isset($_POST['purchase_limit']) ? trim($_POST['purchase_limit']) : '';
-			$this->options['point_rate'] = isset($_POST['point_rate']) ? (int)$_POST['point_rate'] : '';
+			$this->options['point_rate'] = isset($_POST['point_rate']) ? (int)$_POST['point_rate'] : 1;
 			$this->options['start_point'] = isset($_POST['start_point']) ? (int)$_POST['start_point'] : '';
 			$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? trim($_POST['shipping_rule']) : '';
 			$this->options['tax_rate'] = isset($_POST['tax_rate']) ? (int)$_POST['tax_rate'] : '';
@@ -2489,6 +2489,9 @@ class usc_e_shop
 							$post_type_object = get_post_type_object($post->post_type);
 							if ( $post_type_object ) {
 								$post_type = $post->post_type;
+								if( !isset($current_screen) ){
+									$current_screen = new stdClass();
+								}
 								$current_screen->post_type = $post->post_type;
 								$current_screen->id = $current_screen->post_type;
 							}

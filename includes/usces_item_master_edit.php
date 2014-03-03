@@ -174,6 +174,9 @@ case 'edit':
 			$post_type_object = get_post_type_object($post->post_type);
 			if ( $post_type_object ) {
 				$post_type = $post->post_type;
+				if( !isset($current_screen) ){
+					$current_screen = new stdClass();
+				}
 				$current_screen->post_type = $post->post_type;
 				$current_screen->id = $current_screen->post_type;
 			}
@@ -250,6 +253,9 @@ case 'editpost':
 			$post_type_object = get_post_type_object($post->post_type);
 			if ( $post_type_object ) {
 				$post_type = $post->post_type;
+				if( !isset($current_screen) ){
+					$current_screen = new stdClass();
+				}
 				$current_screen->post_type = $post->post_type;
 				$current_screen->id = $current_screen->post_type;
 			}

@@ -1,7 +1,7 @@
 <?php
 class WCUtils
 {
-	function is_blank($val, $strict=false){
+	static function is_blank($val, $strict=false){
 		
 		if ( !is_scalar($val) && NULL != $val ){
 			trigger_error("Value is not a scalar", E_USER_NOTICE);
@@ -18,7 +18,7 @@ class WCUtils
 			return true; 
 	}
 	
-	function is_zero($val){
+	static function is_zero($val){
 		
 		if ( !is_scalar($val) && NULL != $val ){
 			trigger_error("Value is not a scalar", E_USER_NOTICE);
