@@ -65,16 +65,7 @@ get_header();
 <?php if( usces_is_membersystem_state() ) : ?>
 		<tr>
 			<th scope="row"><?php if( $member_regmode == 'editmemberfromcart' ) : ?><em><?php _e('*', 'usces'); ?></em><?php endif; ?><?php _e('password', 'usces'); ?></th>
-			<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="<?php echo esc_attr($usces_entries['customer']['password1']); ?>" />
-		<?php if( $member_regmode != 'editmemberfromcart' ) : ?>
-			<?php if( !empty($this->options['system']['member_pass_rule_max']) ) : ?>
-            	<?php _e('When you enroll newly, please fill it out.', 'usces'); ?>&nbsp;&nbsp;&nbsp;【<?php _e( $this->options['system']['member_pass_rule_min']); ?>&nbsp;<?php _e( 'or more characters', 'usces' ); ?>&nbsp;
-				<?php _e( $this->options['system']['member_pass_rule_max'] ); ?>&nbsp;<?php _e( 'characters or less', 'usces' ); ?>】	
-            <?php else : ?>
-            	<?php _e('When you enroll newly, please fill it out.', 'usces'); ?>&nbsp;&nbsp;&nbsp;【<?php _e( $this->options['system']['member_pass_rule_min']); ?>&nbsp;<?php _e( 'or more characters', 'usces' ); ?>】
-			<?php endif; ?>
-		<?php endif; ?>
-			</td>
+			<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="<?php echo esc_attr($usces_entries['customer']['password1']); ?>" /><?php if( $member_regmode != 'editmemberfromcart' ) _e('When you enroll newly, please fill it out.', 'usces'); ?>	</td>
 		</tr>
 		<tr>
 			<th scope="row"><?php if( $member_regmode == 'editmemberfromcart' ) : ?><em><?php _e('*', 'usces'); ?></em><?php endif; ?><?php _e('Password (confirm)', 'usces'); ?></th>

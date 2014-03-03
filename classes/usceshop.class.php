@@ -4450,22 +4450,27 @@ class usc_e_shop
 		//0000526
 		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
 		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
-		if( empty( $_POST['member']['password1'] ) && empty( $_POST['member']['password2'] ) ){
-			$member_pass_rule_error = 0;
-		}elseif( !empty( $member_pass_rule_max ) ) {
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) && strlen( trim( $_POST['member']['password1'] ) ) <= $member_pass_rule_max ) ? 0 : 1;
-		}else{
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) ) ? 0 : 1;
+
+		if ( !WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ){
+			if( !empty( $member_pass_rule_max ) ){
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password1']) ) || strlen( trim($_POST['member']['password1']) ) > $member_pass_rule_max ){
+					$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
+				}
+			}else{
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password1']) ) ){
+					$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
+				}
+			}
 		}
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
-			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) || $member_pass_rule_error === 1 )
+			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
 
 			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 				
 		} else {
-			if ( WCUtils::is_blank($_POST['member']['password1']) || WCUtils::is_blank($_POST['member']['password2']) || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) || $member_pass_rule_error === 1 )
+			if ( WCUtils::is_blank($_POST['member']['password1']) || WCUtils::is_blank($_POST['member']['password2']) || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
 			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress2']) || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
@@ -4498,14 +4503,17 @@ class usc_e_shop
 		//0000526
 		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
 		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
-		if( empty( $_POST['customer']['password1'] ) && empty( $_POST['customer']['password2'] ) ){
-			$member_pass_rule_error = 0;
-		}elseif( !empty( $member_pass_rule_max ) ) {
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['customer']['password1'] ) ) && strlen( trim( $_POST['customer']['password1'] ) ) <= $member_pass_rule_max ) ? 0 : 1;
-		}else{
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['customer']['password1'] ) ) ) ? 0 : 1;
+
+		if ( !WCUtils::is_blank($_POST['customer']['password1']) || !WCUtils::is_blank($_POST['customer']['password2']) ){
+			if( !empty( $member_pass_rule_max ) ){
+				if( $member_pass_rule_min > strlen( trim($_POST['customer']['password1']) ) || strlen( trim($_POST['customer']['password1']) ) > $member_pass_rule_max )
+					$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
+			}else{
+				if( $member_pass_rule_min > strlen( trim($_POST['customer']['password1']) ) )
+					$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
+			}
 		}
-		if ( WCUtils::is_blank($_POST['customer']['password1']) || WCUtils::is_blank($_POST['customer']['password2']) || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) || $member_pass_rule_error === 1 )
+		if ( WCUtils::is_blank($_POST['customer']['password1']) || WCUtils::is_blank($_POST['customer']['password2']) || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
 			$mes .= __('Password is not correct.', 'usces') . "<br />";
 		if ( !is_email($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress2']) || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
