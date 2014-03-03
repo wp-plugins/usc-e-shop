@@ -3464,3 +3464,9 @@ msgstr "CSVファイルの文字コード"
 
 msgid "If you want to perform product registration by uploading a CSV file, please upload a CSV file of character code selected here."
 msgstr "CSVファイルをアップロードして商品登録を行う場合は、ここで選択した文字コードのCSVファイルをアップロードしてください。"
+
+msgid "Please enter %2$s characters a minimum of %1$s characters and a maximum password."
+msgstr "パスワードは%1$s文字以上%2$s文字以下で入力して下さい。"
+
+msgid "Please enter at least %s characters password."
+msgstr "パスワードは%s文字以上で入力して下さい。"

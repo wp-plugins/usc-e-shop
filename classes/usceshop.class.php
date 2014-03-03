@@ -113,8 +113,8 @@ class usc_e_shop
 		if(!isset($this->options['system']['no_cart_css'])) $this->options['system']['no_cart_css'] = 0;
 		if(!isset($this->options['system']['dec_orderID_flag'])) $this->options['system']['dec_orderID_flag'] = 0;
 		if(!isset($this->options['system']['dec_orderID_prefix'])) $this->options['system']['dec_orderID_prefix'] = '';
-		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 6;
-		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 0;
+		if(!isset($this->options['system']['dec_orderID_digit'])) $this->options['system']['dec_orderID_digit'] = 8;
+		if(!isset($this->options['system']['subimage_rule'])) $this->options['system']['subimage_rule'] = 1;
 		if(!isset($this->options['system']['pdf_delivery'])) $this->options['system']['pdf_delivery'] = 0;
 		if(!isset($this->options['system']['member_pass_rule_min']) || empty($this->options['system']['member_pass_rule_min'])) $this->options['system']['member_pass_rule_min'] = 6;
 		if(!isset($this->options['system']['member_pass_rule_max']) || empty($this->options['system']['member_pass_rule_max'])) $this->options['system']['member_pass_rule_max'] = '';
@@ -708,7 +708,7 @@ class usc_e_shop
 			$this->options['error_mail'] = isset($_POST['error_mail']) ? trim($_POST['error_mail']) : '';
 			$this->options['postage_privilege'] = isset($_POST['postage_privilege']) ? trim($_POST['postage_privilege']) : '';
 			$this->options['purchase_limit'] = isset($_POST['purchase_limit']) ? trim($_POST['purchase_limit']) : '';
-			$this->options['point_rate'] = isset($_POST['point_rate']) ? (int)$_POST['point_rate'] : '';
+			$this->options['point_rate'] = isset($_POST['point_rate']) ? (int)$_POST['point_rate'] : 1;
 			$this->options['start_point'] = isset($_POST['start_point']) ? (int)$_POST['start_point'] : '';
 			$this->options['shipping_rule'] = isset($_POST['shipping_rule']) ? trim($_POST['shipping_rule']) : '';
 			$this->options['tax_mode'] = isset($_POST['tax_mode']) ? trim($_POST['tax_mode']) : 'include';
@@ -2499,6 +2499,9 @@ class usc_e_shop
 							$post_type_object = get_post_type_object($post->post_type);
 							if ( $post_type_object ) {
 								$post_type = $post->post_type;
+								if( !isset($current_screen) ){
+									$current_screen = new stdClass();
+								}
 								$current_screen->post_type = $post->post_type;
 								$current_screen->id = $current_screen->post_type;
 							}
@@ -4460,22 +4463,27 @@ class usc_e_shop
 		//0000526
 		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
 		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
-		if( empty( $_POST['member']['password1'] ) && empty( $_POST['member']['password2'] ) ){
-			$member_pass_rule_error = 0;
-		}elseif( !empty( $member_pass_rule_max ) ) {
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) && strlen( trim( $_POST['member']['password1'] ) ) <= $member_pass_rule_max ) ? 0 : 1;
-		}else{
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['member']['password1'] ) ) ) ? 0 : 1;
+
+		if ( !WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ){
+			if( !empty( $member_pass_rule_max ) ){
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password1']) ) || strlen( trim($_POST['member']['password1']) ) > $member_pass_rule_max ){
+					$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
+				}
+			}else{
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password1']) ) ){
+					$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
+				}
+			}
 		}
 		if ( $_POST['member_regmode'] == 'editmemberform' ) {
-			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) || $member_pass_rule_error === 1 )
+			if ( (!WCUtils::is_blank($_POST['member']['password1']) || !WCUtils::is_blank($_POST['member']['password2']) ) && trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
 
 			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 				
 		} else {
-			if ( WCUtils::is_blank($_POST['member']['password1']) || WCUtils::is_blank($_POST['member']['password2']) || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) || $member_pass_rule_error === 1 )
+			if ( WCUtils::is_blank($_POST['member']['password1']) || WCUtils::is_blank($_POST['member']['password2']) || trim($_POST['member']['password1']) != trim($_POST['member']['password2']) )
 				$mes .= __('Password is not correct.', 'usces') . "<br />";
 			if ( !is_email($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress1']) || WCUtils::is_blank($_POST['member']['mailaddress2']) || trim($_POST['member']['mailaddress1']) != trim($_POST['member']['mailaddress2']) )
 				$mes .= __('e-mail address is not correct', 'usces') . "<br />";
@@ -4508,14 +4516,17 @@ class usc_e_shop
 		//0000526
 		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
 		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
-		if( empty( $_POST['customer']['password1'] ) && empty( $_POST['customer']['password2'] ) ){
-			$member_pass_rule_error = 0;
-		}elseif( !empty( $member_pass_rule_max ) ) {
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['customer']['password1'] ) ) && strlen( trim( $_POST['customer']['password1'] ) ) <= $member_pass_rule_max ) ? 0 : 1;
-		}else{
-			$member_pass_rule_error = ( $member_pass_rule_min <= strlen( trim( $_POST['customer']['password1'] ) ) ) ? 0 : 1;
+
+		if ( !WCUtils::is_blank($_POST['customer']['password1']) || !WCUtils::is_blank($_POST['customer']['password2']) ){
+			if( !empty( $member_pass_rule_max ) ){
+				if( $member_pass_rule_min > strlen( trim($_POST['customer']['password1']) ) || strlen( trim($_POST['customer']['password1']) ) > $member_pass_rule_max )
+					$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
+			}else{
+				if( $member_pass_rule_min > strlen( trim($_POST['customer']['password1']) ) )
+					$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
+			}
 		}
-		if ( WCUtils::is_blank($_POST['customer']['password1']) || WCUtils::is_blank($_POST['customer']['password2']) || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) || $member_pass_rule_error === 1 )
+		if ( WCUtils::is_blank($_POST['customer']['password1']) || WCUtils::is_blank($_POST['customer']['password2']) || trim($_POST['customer']['password1']) != trim($_POST['customer']['password2']) )
 			$mes .= __('Password is not correct.', 'usces') . "<br />";
 		if ( !is_email($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress1']) || WCUtils::is_blank($_POST['customer']['mailaddress2']) || trim($_POST['customer']['mailaddress1']) != trim($_POST['customer']['mailaddress2']) )
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";

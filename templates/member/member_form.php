@@ -27,26 +27,16 @@ $html .= '<tr>
 <tr>
 <th scope="row"><em>' . __('*', 'usces') . '</em>' . __('E-mail address (for verification)', 'usces') . '</th>
 <td colspan="2"><input name="member[mailaddress2]" id="mailaddress2" type="text" value="' . esc_attr($usces_members['mailaddress2']) . '" /></td>
-</tr>';
-//20140123 kitamu_start 0000526
-if( !empty( $this->options['system']['member_pass_rule_max'] ) ){
-	$html .= '<tr>
-		<th scope="row"><em>' . __('*', 'usces') . '</em>' . __('password', 'usces') . '</th>
-		<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" />
-		&nbsp;&nbsp;&nbsp;【' . __( $this->options['system']['member_pass_rule_min']) .'&nbsp;'. __( 'or more characters', 'usces' ) .'&nbsp;' . __( $this->options['system']['member_pass_rule_max'] ) .'&nbsp;'. __( 'characters or less', 'usces' ) . '】</td>
-		</tr>';
-}else{
-	$html .= '<tr>
-		<th scope="row"><em>' . __('*', 'usces') . '</em>' . __('password', 'usces') . '</th>
-		<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" />
-		&nbsp;&nbsp;&nbsp;【' . __( $this->options['system']['member_pass_rule_min']) .'&nbsp;'. __( 'or more characters', 'usces' ) . '】</td>
-		</tr>';
-}
-//20140123 kitamu_end
-$html .='<tr>
+</tr>
+<tr>
+<th scope="row"><em>' . __('*', 'usces') . '</em>' . __('password', 'usces') . '</th>
+<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" /></td>
+</tr>
+<tr>
 <th scope="row"><em>' . __('*', 'usces') . '</em>' . __('Password (confirm)', 'usces') . '</th>
 <td colspan="2"><input name="member[password2]" id="password2" type="password" value="' . esc_attr($usces_members['password2']) . '" /></td>
 </tr>';
+
 $html .= uesces_addressform( 'member', $usces_members );
 
 $html .= '</table>
