@@ -7,9 +7,9 @@ $acting_flag = '';
 $rand = sprintf('%010d', mt_rand(1, 9999999999));
 $cart = $usces->cart->get_cart();
 
-//20120914ysk start 0000566
-$purchase_disabled = ( '' != $usces->error_message ) ? ' disabled="true"' : '';
-//20120914ysk end
+//$purchase_disabled = ( '' != $usces->error_message ) ? ' disabled="true"' : '';
+$purchase_disabled = '';
+
 if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['order']['total_full_price'] ){
 	$html .= '<form id="purchase_form" action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 		<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.apply_filters('usces_filter_confirm_prebutton_value', __('Back to payment method page.', 'usces')).'"' . apply_filters('usces_filter_confirm_prebutton', NULL) . ' />

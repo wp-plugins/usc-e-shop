@@ -3179,28 +3179,28 @@ function usces_point_inform_zeus() {
 
 	switch( $acting_flag ) {
 	case 'acting_zeus_card':
-		$html .= '<input type="hidden" name="cnum1" value="'.$_POST['cnum1'].'">';
+		$html .= '<input type="hidden" name="cnum1" value="'.esc_attr($_POST['cnum1']).'">';
 		if( isset($_POST['securecode']) ) {
-			$html .= '<input type="hidden" name="securecode" value="'.$_POST['securecode'].'">';
+			$html .= '<input type="hidden" name="securecode" value="'.esc_attr($_POST['securecode']).'">';
 		}
-		$html .= '<input type="hidden" name="expyy" value="'.$_POST['expyy'].'">';
-		$html .= '<input type="hidden" name="expmm" value="'.$_POST['expmm'].'">';
-		$html .= '<input type="hidden" name="username" value="'.$_POST['username'].'">';
+		$html .= '<input type="hidden" name="expyy" value="'.esc_attr($_POST['expyy']).'">';
+		$html .= '<input type="hidden" name="expmm" value="'.esc_attr($_POST['expmm']).'">';
+		$html .= '<input type="hidden" name="username" value="'.esc_attr($_POST['username']).'">';
 		if( isset($_POST['howpay']) ) {
-			$html .= '<input type="hidden" name="howpay" value="'.$_POST['howpay'].'">';
+			$html .= '<input type="hidden" name="howpay" value="'.esc_attr($_POST['howpay']).'">';
 		}
 		if( isset($_POST['cbrand']) ) {
-			$html .= '<input type="hidden" name="cbrand" value="'.$_POST['cbrand'].'">';
-			$html .= '<input type="hidden" name="div_1" value="'.$_POST['div_1'].'">';
-			$html .= '<input type="hidden" name="div_2" value="'.$_POST['div_2'].'">';
-			$html .= '<input type="hidden" name="div_3" value="'.$_POST['div_3'].'">';
+			$html .= '<input type="hidden" name="cbrand" value="'.esc_attr($_POST['cbrand']).'">';
+			$html .= '<input type="hidden" name="div_1" value="'.esc_attr($_POST['div_1']).'">';
+			$html .= '<input type="hidden" name="div_2" value="'.esc_attr($_POST['div_2']).'">';
+			$html .= '<input type="hidden" name="div_3" value="'.esc_attr($_POST['div_3']).'">';
 		}
 		break;
 
 	case 'acting_zeus_conv':
 		if( isset($_POST['pay_cvs']) ) {
-			$html .= '<input type="hidden" name="pay_cvs" value="'.$_POST['pay_cvs'].'">';
-			$html .= '<input type="hidden" name="username" value="'.$_POST['username'].'">';
+			$html .= '<input type="hidden" name="pay_cvs" value="'.esc_attr($_POST['pay_cvs']).'">';
+			$html .= '<input type="hidden" name="username" value="'.esc_attr($_POST['username']).'">';
 		}
 		break;
 	}

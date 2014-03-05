@@ -3125,7 +3125,6 @@ class usc_e_shop
 		if( WCUtils::is_blank($this->error_message) ){
 //20120919ysk start 0000573
 			if( usces_is_member_system() && usces_is_member_system_point() && $this->is_member_logged_in() ) {
-				unset( $_SESSION['usces_entry']['order']['usedpoint'] );//20120914ysk 0000566
 				$member_table = $wpdb->prefix."usces_member";
 				$query = $wpdb->prepare("SELECT mem_point FROM $member_table WHERE ID = %d", $_SESSION['usces_member']['ID']);
 				$mem_point = $wpdb->get_var( $query );
@@ -3144,8 +3143,9 @@ class usc_e_shop
 	
 	function use_point(){
 		global $wp_query;
-		$this->cart->entry();
 		$this->error_message = $this->point_check( $this->cart->get_entry() );
+		if( empty($this->error_message) )
+			$this->cart->entry();
 		$this->page = 'confirm';
 		add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_confirm');
 		add_action('the_post', array($this, 'action_cartFilter'));
@@ -6497,7 +6497,7 @@ class usc_e_shop
 		return $tax;
 	}
 	
-	function set_cart_fees( $member, &$entries ) {
+	function set_cart_fees( $member, $entries ) {
 		$carts = $this->cart->get_cart();
 		$total_items_price = $this->get_total_price();
 		if ( empty($this->options['postage_privilege']) || $total_items_price < $this->options['postage_privilege'] ) {
