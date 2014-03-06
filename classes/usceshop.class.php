@@ -497,9 +497,6 @@ class usc_e_shop
 		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 'level_6', 'usces_orderlist', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 'level_6', 'usces_ordernew', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 'level_6', 'usces_memberlist', array($this, 'member_list_page'));
-		$test_List = add_submenu_page('usces_orderlist', 'test List', 'test List', 'level_6', 'wc2_test_list_page', 'wc2_test_list_page');
-		add_action( 'load-' . $test_List, 'wc2_load_test_List_action' );
-		//add_submenu_page('usces_orderlist', __('New Member','usces'), __('New Member','usces'), 'level_6', 'usces_membernew', array($this, 'member_list_page'));
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -2230,6 +2227,7 @@ class usc_e_shop
 		<script type='text/javascript'>
 		/* <![CDATA[ */
 			uscesL10n = {
+				<?php echo apply_filters('usces_filter_admin_uscesL10n', NULL ); ?>
 				'requestFile': "<?php echo site_url(); ?>/wp-admin/admin-ajax.php",
 				'USCES_PLUGIN_URL': "<?php echo USCES_PLUGIN_URL; ?>",
 				'version': "<?php echo USCES_VERSION; ?>", 

@@ -3300,6 +3300,7 @@ function uesces_get_mail_addressform( $type, $data, $order_id, $out = 'return' )
 	global $wpdb, $usces, $usces_settings;
 	$options = get_option('usces');
 	$applyform = usces_get_apply_addressform($options['system']['addressform']);
+
 	$formtag = '';
 	switch( $type ){
 	case 'admin_mail_customer':
@@ -4645,7 +4646,7 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 		$quantity = $cart_row['quantity'];
 		$options = $cart_row['options'];
 		//$options = usces_get_ordercart_meta( 'option', $ordercart_id );
-		//$advance = $usces->cart->wc_serialize($cart_row['advance']);
+		$advance = $usces->cart->wc_serialize($cart_row['advance']);
 		$itemCode = $cart_row['item_code'];
 		$itemName = $cart_row['item_name'];
 		$cartItemName = $usces->getCartItemName($post_id, $sku_code);
@@ -4665,7 +4666,7 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 		<td id="sub_total[<?php echo $ordercart_id; ?>]" class="aright">&nbsp;</td>
 		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
 		<td>
-		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
+		<input name="advance[<?php echo $ordercart_id; ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
 		<input name="delButtonAdmin[<?php echo $ordercart_id; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
 		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
 		</td>
