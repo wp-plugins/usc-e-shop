@@ -218,4 +218,3 @@ function usces_reg_ordercartdata( $args ){
 		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value, $args);
 	}
 }
-

@@ -4678,3 +4678,97 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 	
 	return apply_filters( 'usces_filter_get_ordercart_row', $row, $order_id, $cart );
 }
+
+function usces_add_role(){
+	
+	if ( ! get_role( 'wc_author' ) ) {
+		$capabilities = array(
+			'moderate_comments' => 1, 
+			'manage_categories' => 1, 
+			'manage_links' => 1, 
+			'upload_files' => 1, 
+			'unfiltered_html' => 1, 
+			'edit_posts' => 1, 
+			'edit_others_posts' => 1, 
+			'edit_published_posts' => 1, 
+			'publish_posts' => 1, 
+			'edit_pages' => 1, 
+			'read' => 1, 
+			'level_4' => 1, 
+			'level_3' => 1, 
+			'level_2' => 1, 
+			'level_1' => 1, 
+			'level_0' => 1, 
+			'edit_others_pages' => 1, 
+			'edit_published_pages' => 1, 
+			'publish_pages' => 1, 
+			'delete_pages' => 1, 
+			'delete_others_pages' => 1, 
+			'delete_published_pages' => 1, 
+			'delete_posts' => 1, 
+			'delete_others_posts' => 1, 
+			'delete_published_posts' => 1, 
+			'delete_private_posts' => 1, 
+			'edit_private_posts' => 1, 
+			'read_private_posts' => 1, 
+			'delete_private_pages' => 1, 
+			'edit_private_pages' => 1, 
+			'read_private_pages' => 1
+		);
+		add_role( 'wc_author', '編集者（マネジメント権限無し）', $capabilities );
+	}
+
+	if ( ! get_role( 'wc_management' ) ) {
+		$capabilities = array(
+			'moderate_comments' => 1, 
+			'manage_categories' => 1, 
+			'manage_links' => 1, 
+			'upload_files' => 1, 
+			'unfiltered_html' => 1, 
+			'edit_posts' => 1, 
+			'edit_others_posts' => 1, 
+			'edit_published_posts' => 1, 
+			'publish_posts' => 1, 
+			'edit_pages' => 1, 
+			'read' => 1, 
+			'level_5' => 1, 
+			'level_4' => 1, 
+			'level_3' => 1, 
+			'level_2' => 1, 
+			'level_1' => 1, 
+			'level_0' => 1, 
+			'edit_others_pages' => 1, 
+			'edit_published_pages' => 1, 
+			'publish_pages' => 1, 
+			'delete_pages' => 1, 
+			'delete_others_pages' => 1, 
+			'delete_published_pages' => 1, 
+			'delete_posts' => 1, 
+			'delete_others_posts' => 1, 
+			'delete_published_posts' => 1, 
+			'delete_private_posts' => 1, 
+			'edit_private_posts' => 1, 
+			'read_private_posts' => 1, 
+			'delete_private_pages' => 1, 
+			'edit_private_pages' => 1, 
+			'read_private_pages' => 1
+		);
+		add_role( 'wc_management', '編集者（設定権限無し）', $capabilities );
+	}
+		
+	remove_role( 'wpsc_anonymous' );
+}
+
+function usces_get_admin_user_level(){
+	global $current_user;
+	get_currentuserinfo();
+	$levels = array();
+	foreach($current_user->allcaps as $key => $value){
+		$parts = explode( '_', $key );
+		if( 'level' == $parts[0] )
+			$levels[] = $parts[1];
+	}
+	rsort($levels);
+
+	return $levels[0];
+}
