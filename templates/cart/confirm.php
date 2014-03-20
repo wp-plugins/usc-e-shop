@@ -104,10 +104,10 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 		<td colspan="2"><input name="use_point" type="submit" class="use_point_button" value="'.__('Use the points', 'usces').'" /></td>
 		</tr>
 	</table>';
-	$html = apply_filters('usces_filter_confirm_point_inform', $html);
+	$html = apply_filters('usces_filter_confirm_after_form', $html);
 	$html .= '</form>';
 }
- 
+$html = apply_filters('usces_filter_confirm_point_inform', $html);
 $html .= '</div>
 	<table id="confirm_table">
 	<tr class="ttl">

@@ -66,10 +66,12 @@ class usc_e_shop
 		if(!isset($this->options['copyright'])) $this->options['copyright'] = '';
 		if(!isset($this->options['postage_privilege'])) $this->options['postage_privilege'] = '';
 		if(!isset($this->options['shipping_rule'])) $this->options['shipping_rule'] = '';
-		if(!isset($this->options['tax_mode'])) $this->options['tax_mode'] = 'include';
-		if(!isset($this->options['tax_target'])) $this->options['tax_target'] = 'products';
-		if(!isset($this->options['tax_rate'])) $this->options['tax_rate'] = '';
-		if(!isset($this->options['tax_method'])) $this->options['tax_method'] = 'cutting';
+		if(!isset($this->options['tax_rate'])){
+			$this->options['tax_rate'] = '';
+			$this->options['tax_method'] = 'cutting';
+			$this->options['tax_mode'] = 'include';
+			$this->options['tax_target'] = 'products';
+		}
 		if(!isset($this->options['transferee'])) $this->options['transferee'] = '';
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = '';

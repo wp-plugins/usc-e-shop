@@ -10,6 +10,17 @@ function usces_upgrade_14(){
 	global $wpdb;
 	$rets = array();
 	
+	$options = get_option('usces');
+	if(empty($options['tax_rate'])){
+		$options['tax_mode'] = 'include';
+	}else{
+		$options['tax_mode'] = 'exclude';
+	}
+	$options['tax_target'] = 'all';
+	update_option('usces', $options);
+
+		
+
 	$order_table = $wpdb->prefix . "usces_order";
 	$cart_table = $wpdb->prefix . "usces_ordercart";
 	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
@@ -18,21 +29,33 @@ function usces_upgrade_14(){
 	$results = $wpdb->get_results( $query );
 	if( $results ){
 		foreach( $results as $order ){
+			$condition = maybe_unserialize($order->order_condition);
+			if( !isset($condition['tax_mode']) ){
+				$condition['tax_mode'] = $options['tax_mode'];
+			}
+			if( !isset($condition['tax_rate']) ){
+				$condition['tax_rate'] = (int)$options['tax_rate'];
+			}
+			if( !isset($condition['tax_target']) ){
+				$condition['tax_target'] = $options['tax_target'];
+			}
+			
+
 			$cart = unserialize($order->order_cart);
-			foreach( $cart as $row_index => $value ){
+			foreach( (array)$cart as $row_index => $value ){
 				$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
 				$item_name = get_post_meta( $value['post_id'], '_itemName', true);
 				$skus = $usces->get_skus($value['post_id'], 'code');
-				$sku = $skus[$value['sku']];
-				if( empty($usces->option['tax_rate']) ){
+				$sku = isset($skus[$value['sku']]) ? $skus[$value['sku']] : array('name'=>'notfound', 'cprice'=>0, 'unit'=>'');
+				if( empty($condition['tax_rate']) ){
 					$tax = 0;
 				
 				}else{
-					$tax = ($value['price'] * $value['quantity']) * $usces->options['tax_rate'] / 100;
+					$tax = ($value['price'] * $value['quantity']) * $condition['tax_rate'] / 100;
 					$cr = $usces->options['system']['currency'];
 					$decimal = $usces_settings['currency'][$cr][1];
 					$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
-					switch( $usces->options['tax_method'] ){
+					switch( $options['tax_method'] ){
 						case 'cutting':
 							$tax = floor($tax*$decipad)/$decipad;
 							break;
@@ -109,6 +132,11 @@ function usces_upgrade_14(){
 					}
 				}
 			}
+			
+			$upquery = $wpdb->prepare("UPDATE $order_table SET order_condition = $s WHERE ID = %d", 
+				serialize($condition), $order->ID 
+			);
+			$wpdb->query($upquery);
 		}
 	}
 	usces_log('USCES_UP14 : Completed', 'db');

@@ -3470,3 +3470,30 @@ msgstr "パスワードは%1$s文字以上%2$s文字以下で入力して下さ�
 
 msgid "Please enter at least %s characters password."
 msgstr "パスワードは%s文字以上で入力して下さい。"
+
+msgid "Internal tax"
+msgstr "内消費税"
+
+msgid "Tax treatment"
+msgstr "消費税区分"
+
+msgid "Tax target"
+msgstr "消費税対象"
+
+msgid "Included"
+msgstr "税込"
+
+msgid "Excluded"
+msgstr "税別"
+
+msgid "Only Products"
+msgstr "商品代金のみ"
+
+msgid "All Amount"
+msgstr "総合計金額"
+
+msgid "You can choose consumption tax is whether it is included in the product price."
+msgstr "商品価格に消費税が含まれているかどうかを選択します。"
+
+msgid "You can select the subject of the consumption tax. One is only the product price, and the other contains all the commission."
+msgstr "消費税の対象を、商品代金のみにするか手数料等もすべて含めるかを選択します。"

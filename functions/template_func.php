@@ -15,7 +15,7 @@ function usces_tax_label( $data = array(), $out = '' ){
 		$tax_mode = $usces->options['tax_mode'];
 	}else{
 		$condition = maybe_unserialize($data['order_condition']);
-		$tax_mode = $condition['tax_mode'];
+		$tax_mode = isset($condition['tax_mode']) ? $condition['tax_mode'] : $usces->options['tax_mode'];
 	}
 	if( 'exclude' == $tax_mode ){
 		$label = __('consumption tax', 'usces');

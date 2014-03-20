@@ -3,13 +3,14 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2014-03-03 14:39+0900\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2014-03-20 11:31+0900\n"
+"Last-Translator: Welcart <info@welcart.com>\n"
 "Language-Team: \n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.3\n"
 
 msgid "This month"
 msgstr "今月"
@@ -3834,3 +3835,36 @@ msgstr "パスワードは%1$s文字以上%2$s文字以下で入力して下さ�
 
 msgid "Please enter at least %s characters password."
 msgstr "パスワードは%s文字以上で入力して下さい。"
+
+msgid "Internal tax"
+msgstr "内消費税"
+
+# 各証書の購入明細のタイトル
+msgid "Tax treatment"
+msgstr "消費税区分"
+
+msgid "Tax target"
+msgstr "消費税対象"
+
+msgid "Included"
+msgstr "税込"
+
+msgid "Excluded"
+msgstr "税別"
+
+msgid "Only Products"
+msgstr "商品代金のみ"
+
+msgid "All Amount"
+msgstr "総合計金額"
+
+msgid ""
+"You can choose consumption tax is whether it is included in the product "
+"price."
+msgstr "商品価格に消費税が含まれているかどうかを選択します。"
+
+msgid ""
+"You can select the subject of the consumption tax. One is only the product "
+"price, and the other contains all the commission."
+msgstr ""
+"消費税の対象を、商品代金のみにするか手数料等もすべて含めるかを選択します。"
