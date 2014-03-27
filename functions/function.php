@@ -56,7 +56,9 @@ function usces_order_confirm_message($order_id) {
 	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
 	$data = $wpdb->get_row( $query, ARRAY_A );
 	$deli = unserialize($data['order_delivery']);
-	$cart = unserialize($data['order_cart']);
+	//$cart = unserialize($data['order_cart']);
+	$cart = usces_get_ordercartdata($order_id);
+	
 	$country = $usces->get_order_meta_value('customer_country', $order_id);
 	$customer = array(
 					'name1' => $data['order_name1'],

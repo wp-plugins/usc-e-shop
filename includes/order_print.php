@@ -106,8 +106,10 @@ function usces_pdf_out($pdf, $data){
 	$pdf->SetXY($x, $y);
 	$next_y = $y;
 	$line_x = array();
-	for ( $index = 0; $index < count($data->cart); $index++ ) {
-		 $cart_row = $data->cart[$index];
+	$cart = usces_get_ordercartdata($data->order['ID']);
+
+	for ( $index = 0; $index < count($cart); $index++ ) {
+		 $cart_row = $cart[$index];
 		//if ($cnt > $pageRec-1) {//ページが変わるときの処理
 		if ( $onep < $next_y ) {//ページが変わるときの処理
 

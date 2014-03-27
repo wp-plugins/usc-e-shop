@@ -1188,7 +1188,7 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 		<option value="-1">カテゴリーを選択して下さい</option>
 		<?php 
 		$idObj = get_category_by_slug('item'); 
-		$selcat_ob = get_categories( array( 'parent' => $idObj->term_id ) );
+		$selcat_ob = get_categories( array( 'child_of' => $idObj->term_id ) );
 		foreach( $selcat_ob as $selcat ){
 		?>
 		<option value="<?php echo $selcat->term_id ?>"><?php esc_html_e($selcat->name) ?></option>
@@ -1196,6 +1196,9 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 		</select><br />
 		<label>追加する商品　</label><select name="newitemcode" id="newitemcode"></select><br />
 		<div id="loading"></div>
+		<label for="name"><?php _e('item code', 'usces'); ?></label>
+		<input type="text" name="newitemcode" id="newitemcode" class="text" />
+		<input name="getitem" type="button" value="<?php _e('Obtain', 'usces'); ?>" onclick="if( jQuery('#newitemcode').val() == '' ) return; orderItem.getitem();" />
 		</div>
 		<div id="newitemform"></div>
 	</div>

@@ -3294,7 +3294,7 @@ class usc_e_shop
 	}
 	
 	function inquiry_button(){
-		if( isset($_POST['inq_name']) && !WCUtils::is_blank($_POST['inq_name']) && isset($_POST['inq_mailaddress']) && is_email( trim($_POST['inq_mailaddress']) ) && !WCUtils::is_blank($_POST['inq_contents']) ){
+		if( (isset($_POST['kakuninyou']) && empty($_POST['kakuninyou'])) && isset($_POST['inq_name']) && !WCUtils::is_blank($_POST['inq_name']) && isset($_POST['inq_mailaddress']) && is_email( trim($_POST['inq_mailaddress']) ) && !WCUtils::is_blank($_POST['inq_contents']) ){
 			$res = $this->inquiry_processing();
 		}else{
 			$res = 'deficiency';

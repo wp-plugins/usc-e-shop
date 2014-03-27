@@ -1417,6 +1417,7 @@ function usces_the_inquiry_form() {
 <div class="error_message"><?php echo $error_message; ?></div>
 <?php endif; ?>
 <form name="inquiry_form" action="<?php //echo USCES_CART_URL; ?>" method="post">
+<input type="hidden" name="kakuninyou" />
 <table border="0" cellpadding="0" cellspacing="0" class="inquiry_table">
 <tr>
 <th scope="row"><?php _e('Full name','usces') ?></th>
