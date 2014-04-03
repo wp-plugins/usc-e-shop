@@ -299,7 +299,6 @@ function usces_item_uploadcsv(){
 		//data check loop
 		foreach($datas as $key => $data){
 			$data = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($data, 'UTF-8', 'SJIS')) :  trim($data);
-usces_log( print_r( $data, true ), 'data.log' );
 			switch($key){
 				case USCES_COL_ITEM_CODE:
 					if( 0 == strlen($data) ){
