@@ -527,8 +527,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		$pdf->MultiCell(75, $lineheight, usces_conv_euc($juchubi), $border, 'L');
 
 		// Payment method
-		$pdf->SetXY($leftside+76, $y);
-		$pdf->MultiCell(75, $lineheight, usces_conv_euc($siharai), $border, 'L');
+		$pdf->SetXY($leftside+68, $y);
+		$pdf->Cell(75, $lineheight, usces_conv_euc($siharai), $border, 1, 'L');
 
 	}else{
 		$top = 30;
