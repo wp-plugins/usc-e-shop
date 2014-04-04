@@ -2536,10 +2536,12 @@ function usces_member_history( $out = '' ){
 				
 		for($i=0; $i<count($cart); $i++) { 
 			$cart_row = $cart[$i];
+			$ordercart_id = $cart_row['cart_id'];
 			$post_id = $cart_row['post_id'];
 			$sku = urldecode($cart_row['sku']);
 			$quantity = $cart_row['quantity'];
-			$options = $cart_row['options'];
+			//$options = $cart_row['options'];
+			$options = usces_get_ordercart_meta_value( 'option', $ordercart_id );
 			$itemCode = $usces->getItemCode($post_id);
 			$itemName = $usces->getItemName($post_id);
 			$cartItemName = $usces->getCartItemName($post_id, $sku);

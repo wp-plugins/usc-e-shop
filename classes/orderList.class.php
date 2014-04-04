@@ -106,8 +106,8 @@ class dataList
 		$ordercart_table = $wpdb->prefix.'usces_ordercart';
 		$ordercartmeta_table = $wpdb->prefix.'usces_ordercart_meta';
 		$join_table = array(
-			"LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id'"." \n",
-			"LEFT JOIN {$ordercart_table} AS cart ON ID = cart.order_id"." \n"
+			" LEFT JOIN {$meta_table} AS meta ON ID = meta.order_id AND meta.meta_key = 'dec_order_id'"." \n",
+			" LEFT JOIN {$ordercart_table} AS cart ON ID = cart.order_id"." \n"
 		);
 		$this->joinTableSql = apply_filters( 'usces_filter_order_list_sql_jointable', $join_table, $meta_table, $this );
 	}
@@ -306,7 +306,7 @@ class dataList
 	{
 		global $wpdb;
 		$where = $this->GetWhere();
-		$order = 'ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
+		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
 		$order = apply_filters( 'usces_filter_order_list_get_orderby', $order, $this );
 
 		$select = '';
@@ -355,19 +355,19 @@ class dataList
 		$last90 = date('Y-m-d 00:00:00', mktime(0, 0, 0, date('m'), date('d')-90, date('Y')));
 		switch ( $this->arr_search['period'] ) {
 			case 0:
-				$where = "WHERE order_date >= '{$thismonth}' ";
+				$where = " WHERE order_date >= '{$thismonth}' ";
 				break;
 			case 1:
-				$where = "WHERE order_date >= '{$lastmonth}' AND order_date < '{$thismonth}' ";
+				$where = " WHERE order_date >= '{$lastmonth}' AND order_date < '{$thismonth}' ";
 				break;
 			case 2:
-				$where = "WHERE order_date >= '{$lastweek}' ";
+				$where = " WHERE order_date >= '{$lastweek}' ";
 				break;
 			case 3:
-				$where = "WHERE order_date >= '{$last30}' ";
+				$where = " WHERE order_date >= '{$last30}' ";
 				break;
 			case 4:
-				$where = "WHERE order_date >= '{$last90}' ";
+				$where = " WHERE order_date >= '{$last90}' ";
 				break;
 			case 5:
 				$where = "";
@@ -379,16 +379,16 @@ class dataList
 			}
 		}else{
 			if( !WCUtils::is_blank($this->searchSkuSql) ){
-				$where = 'WHERE ' . $this->searchSkuSql;
+				$where = ' WHERE ' . $this->searchSkuSql;
 			}
 		}
 		$str = apply_filters( 'usces_filter_order_list_sql_where', $where, $this );
 		
-		$str .= " \n" . "GROUP BY `ID` ";
+		$str .= " \n" . " GROUP BY `ID` ";
 		
 		$having = '';
 		if( !WCUtils::is_blank($this->searchSql) ){
-			$having = 'HAVING ' . $this->searchSql;
+			$having = ' HAVING ' . $this->searchSql;
 		}
 		$having = apply_filters( 'usces_filter_order_list_sql_having', $having, $this );
 		

@@ -234,11 +234,14 @@ function addComma(str)
 	<?php
 	for($i=0; $i<count($cart); $i++) { 
 		$cart_row = $cart[$i];
+		$ordercart_id = $cart_row['cart_id'];
 		$post_id = $cart_row['post_id'];
 		$sku = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
-		$options = $cart_row['options'];
-		$advance = $this->cart->wc_serialize($cart_row['advance']);
+		//$options = $cart_row['options'];
+		$options = usces_get_ordercart_meta_value( 'option', $ordercart_id );
+		//$advance = $this->cart->wc_serialize($cart_row['advance']);
+		$advance = usces_get_ordercart_meta_value( 'advance', $ordercart_id );
 //		$itemCode = $this->getItemCode($post_id);
 //		$itemName = $this->getItemName($post_id);
 		$itemCode = $cart_row['item_code'];

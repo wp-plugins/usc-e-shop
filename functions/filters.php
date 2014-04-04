@@ -134,7 +134,6 @@ die();
 	}
 }
 
-
 function usces_reg_ordercartdata( $args ){
 	global $usces, $wpdb;
 	/*
@@ -176,7 +175,7 @@ function usces_reg_ordercartdata( $args ){
 						$tax = round($tax);
 					}
 					break;
-			}				
+			}
 		}
 		$query = $wpdb->prepare("INSERT INTO $cart_table 
 			(
@@ -207,14 +206,21 @@ function usces_reg_ordercartdata( $args ){
 				} else {
 					$ovalue = urldecode($ovalue);
 				}
-				$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+				$oquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
 					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 
 					$cart_id, 'option', $okey, $ovalue
 				);
-				$wpdb->query($aquery);
+				$wpdb->query($oquery);
 			}
 		}
-		
-		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value, $args);
+		if( $value['advance'] ) {
+			$aquery = $wpdb->prepare( "INSERT INTO $cart_meta_table 
+				( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, %s, %s, %s )", 
+				$cart_id, 'advance', 'advance', serialize($value['advance'])
+			);
+			$wpdb->query( $aquery );
+		}
+
+		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value, $args );
 	}
 }

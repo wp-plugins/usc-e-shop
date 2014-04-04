@@ -5762,7 +5762,11 @@ class usc_e_shop
 					if( empty($cart['advance']) ) {
 						$type = 'once';
 					} else {
-						$advance = $this->cart->wc_unserialize( $cart['advance'] );
+						if( isset($cart['cart_id']) ) {
+							$advance = $this->cart->wc_unserialize( unserialize( $cart['advance'] ) );
+						} else {
+							$advance = $this->cart->wc_unserialize( $cart['advance'] );
+						}
 						$sku = urldecode( $cart['sku'] );
 						$regular = $advance[$post_id][$sku]['regular'];
 						$unit = isset( $regular['unit'] ) ? $regular['unit'] : '';

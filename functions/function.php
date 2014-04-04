@@ -1506,7 +1506,7 @@ function usces_get_serialized_cart($order_id){
 	$query = $wpdb->prepare("SELECT order_cart FROM $order_table_name WHERE ID = %d", $order_id);
 	$order_cart = $wpdb->get_var( $query );
 	$cart = unserialize($order_cart);
-	foreach( $cart as $cart_index => $cart_row ){	
+	foreach( $cart as $cart_index => $cart_row ){
 		$options = array();
 		if( !empty( $cart_row['options'] ) ){
 			foreach( $cart_row['options'] as $key => $value ){
@@ -1522,7 +1522,7 @@ function usces_get_serialized_cart($order_id){
 			}
 			$cart_row['options'] = $options;
 		}
-		$advance = array();
+		/*$advance = array();
 		if( !empty( $cart_row['advance'] ) ){
 			foreach( $cart_row['advance'] as $key => $value ){
 				$key = urldecode($key);
@@ -1536,7 +1536,7 @@ function usces_get_serialized_cart($order_id){
 				}
 			}
 			$cart_row['advance'] = $advance;
-		}
+		}*/
 		$cart[$cart_index] = $cart_row;
 	}
 	return $cart;
@@ -1648,12 +1648,12 @@ function usces_get_ordercartdata( $order_id ){
 	$cart_table = $wpdb->prefix . "usces_ordercart";
 	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
 	
-	$query = $wpdb->prepare("SELECT * FROM $cart_table WHERE order_id=%d ORDER BY cart_id", $order_id );
+	$query = $wpdb->prepare("SELECT * FROM $cart_table WHERE order_id = %d ORDER BY cart_id", $order_id );
 	$cart = $wpdb->get_results( $query, ARRAY_A );
 	
 	foreach( $cart as $key => $value ){
 		$cart[$key]['sku'] = $value['sku_code'];
-		$query = $wpdb->prepare("SELECT * FROM $cart_meta_table WHERE cart_id=%d", $value['cart_id'] );
+		$query = $wpdb->prepare("SELECT * FROM $cart_meta_table WHERE cart_id = %d", $value['cart_id'] );
 		$results = $wpdb->get_results( $query, ARRAY_A );
 		foreach((array)$results as $value ){
 			switch( $value['meta_type'] ){
@@ -1661,7 +1661,8 @@ function usces_get_ordercartdata( $order_id ){
 					$cart[$key]['options'][$value['meta_key']] = $value['meta_value'];
 					break;
 				case 'advance':
-					$cart[$key]['advance'][$value['meta_key']] = $value['meta_value'];
+					//$cart[$key]['advance'][$value['meta_key']] = $value['meta_value'];
+					$cart[$key]['advance'] = $value['meta_value'];
 					break;
 			}
 		}
@@ -1688,7 +1689,7 @@ function usces_update_ordercheck() {
 	$checkfield = unserialize($res);
 	if( !isset($checkfield[$checked]) ) $checkfield[$checked] = $checked;
 	//$checkfield = 'OK';
-	$query = $wpdb->prepare("UPDATE $tableName SET `order_check`=%s WHERE ID = %d", serialize($checkfield), $order_id);
+	$query = $wpdb->prepare("UPDATE $tableName SET `order_check` = %s WHERE ID = %d", serialize($checkfield), $order_id);
 	$res = $wpdb->query( $query );
 	
 	if($res)
@@ -1744,7 +1745,7 @@ function usces_update_orderdata() {
 
 	if( 'cancel' == $taio ){
 		$query = $wpdb->prepare(
-				"UPDATE $order_table_name SET `order_modified`=%s, `order_status`=%s WHERE ID = %d", 
+				"UPDATE $order_table_name SET `order_modified` = %s, `order_status` = %s WHERE ID = %d", 
 					$order_modified, $status, $ID
 				);
 		$res[0] = $wpdb->query( $query );
@@ -4511,10 +4512,11 @@ function usces_get_cr_symbol() {
 	return $symbol;
 }
 
-function usces_make_option_field( $cart_row ){
-	$options = usces_get_ordercart_meta( 'option', $cart_row['cart_id'] );
+function usces_make_option_field( $materials, $cart ){
+	//$options = usces_get_ordercart_meta( 'option', $cart_row['cart_id'] );
 	//$options = $cart_row['options'];
-	$post_id = $cart_row['post_id'];
+	//$post_id = $cart_row['post_id'];
+	extract( $materials );
 	
 	$field = '<div>' . "\n";
 	$field .= '<ul>' . "\n";
@@ -4525,7 +4527,8 @@ function usces_make_option_field( $cart_row ){
 	$field .= '</ul>' . "\n";
 	$field .= '</div>' . "\n";
 
-	echo apply_filters( 'usces_action_make_option_field', $field, $options, $post_id );
+	//echo apply_filters( 'usces_action_make_option_field', $field, $options, $post_id );
+	echo apply_filters( 'usces_filter_order_edit_form_row', $field, $cart, $materials );
 }
 
 function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
@@ -4541,7 +4544,7 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 
 	$opts = usces_get_opts($post_id, 'name');
 	if(!$opts)
-		return false;
+		return '';
 	
 	$opt = $opts[$name];
 	$means = (int)$opt['means'];
@@ -4616,7 +4619,7 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 }
 
 function usces_get_ordercart_meta( $type, $cart_id ){
-	global $usces, $wpdb;
+	global $wpdb;
 	
 	if( !$cart_id )
 		return;
@@ -4632,6 +4635,23 @@ function usces_get_ordercart_meta( $type, $cart_id ){
 	return $res;
 }
 
+function usces_get_ordercart_meta_value( $type, $cart_id ){
+	global $wpdb;
+
+	if( !$cart_id )
+		return;
+
+	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+
+	$query = $wpdb->prepare( "
+		SELECT meta_value 
+		FROM $ordercart_meta_table 
+		WHERE cart_id = %d AND meta_type = %s 
+		", $cart_id, $type );
+	$res = $wpdb->get_var( $query );
+	return $res;
+}
+
 function usces_get_ordercart_row( $order_id, $cart = array() ){
 	global $usces;
 	
@@ -4643,12 +4663,12 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 		$ordercart_id = $cart_row['cart_id'];
 		$post_id = $cart_row['post_id'];
 		//$post = get_post($post_id);
-		//$sku = $cart_row['sku'];
+		$sku = $cart_row['sku'];
 		$sku_code = $cart_row['sku_code'];
 		$quantity = $cart_row['quantity'];
-		$options = $cart_row['options'];
-		//$options = usces_get_ordercart_meta( 'option', $ordercart_id );
-		$advance = $usces->cart->wc_serialize($cart_row['advance']);
+		//$options = $cart_row['options'];
+		$options = usces_get_ordercart_meta( 'option', $ordercart_id );
+		$advance = usces_get_ordercart_meta_value( 'advance', $ordercart_id );
 		$itemCode = $cart_row['item_code'];
 		$itemName = $cart_row['item_name'];
 		$cartItemName = $usces->getCartItemName($post_id, $sku_code);
@@ -4656,12 +4676,14 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 		$stock = $usces->getItemZaiko($post_id, $sku_code);
 		$red = (in_array($stock, array(__('sellout', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
 		$pictid = (int)$usces->get_mainpictid($itemCode);
+		$materials = compact( 'i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
+			'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'stock', 'red', 'pictid', 'order_id' );
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictid, array(80, 80), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?>
-		<?php usces_make_option_field( $cart_row ); ?>
+		<?php usces_make_option_field( $materials, $cart ); ?>
 		</td>
 		<td><input name="skuPrice[<?php echo $ordercart_id; ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
 		<td><input name="quant[<?php echo $ordercart_id; ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
