@@ -48,8 +48,8 @@ function usces_pdf_out($pdf, $data){
 	$pdf->SetTopMargin(0);
 	$pdf->addPage();
 
-	//$pdf->addTTFfont( USCES_PLUGIN_DIR . '/pdf/fonts/ipagp.ttf')
-	$font = apply_filters( 'usces_filter_pdf_cfont', 'msgothic' );
+//	$font = $pdf->addTTFfont( USCES_PLUGIN_DIR .'/pdf/tcpdf/fonts/add_font_name.php');
+	$font = apply_filters( 'usces_filter_pdf_cfont', 'msgothic', $pdf );
 
 	// 文書情報設定
 	$pdf->SetCreator('Welcart');
@@ -216,7 +216,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 	global $usces;
 	$border = 0;//border of cells
 
-	$font = apply_filters( 'usces_filter_pdf_cfont', 'msgothic' );
+//	$font = $pdf->addTTFfont( USCES_PLUGIN_DIR .'/pdf/tcpdf/fonts/add_font_name.php');
+	$font = apply_filters( 'usces_filter_pdf_cfont', 'msgothic', $pdf );
 
 	switch ( $_REQUEST['type'] ){
 		case  'mitumori':
@@ -620,7 +621,8 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 function usces_pdfSetFooter($pdf, $data) {
 	global $usces;
 
-	$font = apply_filters( 'usces_filter_pdf_cfont', 'msgothic' );
+//	$font = $pdf->addTTFfont( USCES_PLUGIN_DIR .'/pdf/tcpdf/fonts/add_font_name.php');
+	$font = apply_filters( 'usces_filter_pdf_cfont', 'msgothic', $pdf );
 
 	$border = 0;
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
