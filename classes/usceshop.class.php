@@ -4871,6 +4871,7 @@ class usc_e_shop
 		$order_meta_table = $wpdb->prefix . "usces_order_meta";
 		$ordercart_table = $wpdb->prefix . "usces_ordercart";
 		$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+		$log_table = $wpdb->prefix . "usces_log";
 		
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		
@@ -5055,6 +5056,19 @@ class usc_e_shop
 			dbDelta($sql);
 			add_option("usces_db_ordercart_meta", USCES_DB_ORDERCART_META);
 		}
+		if($wpdb->get_var("show tables like '$log_table'") != $log_table) {
+		
+			$sql = "CREATE TABLE " . $log_table . " (
+				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
+				`daetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				`log`  LONGTEXT NULL ,
+				PRIMARY  KEY (  `ID`  ) ,
+				KEY  `daetime` (  `daetime`  )  
+				) ENGINE = MYISAM $charset_collate;";
+		
+			dbDelta($sql);
+			add_option("usces_db_log", USCES_DB_LOG);
+		}
 
 	}
 	
@@ -5068,6 +5082,7 @@ class usc_e_shop
 		$order_meta_table = $wpdb->prefix . "usces_order_meta";
 		$ordercart_table = $wpdb->prefix . "usces_ordercart";
 		$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+		$log_table = $wpdb->prefix . "usces_log";
 		
 		$access_ver = get_option( "usces_db_access" );
 		$member_ver = get_option( "usces_db_member" );
@@ -5076,6 +5091,7 @@ class usc_e_shop
 		$order_meta_ver = get_option( "usces_db_order_meta" );
 		$ordercart_ver = get_option( "usces_db_ordercart" );
 		$ordercart_meta_ver = get_option( "usces_db_ordercart_meta" );
+		$log_ver = get_option( "usces_db_log" );
 		
 		if( $access_ver != USCES_DB_ACCESS ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -5256,6 +5272,19 @@ class usc_e_shop
 		
 			dbDelta($sql);
 			update_option("usces_db_ordercart_meta", USCES_DB_ORDERCART_META);
+		}
+		if( $log_ver != USCES_DB_LOG ) {
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			$sql = "CREATE TABLE " . $log_table . " (
+				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
+				`daetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				`log`  LONGTEXT NULL ,
+				PRIMARY  KEY (  `ID`  ) ,
+				KEY  `daetime` (  `daetime`  )  
+				) ENGINE = MYISAM;";
+		
+			dbDelta($sql);
+			update_option("usces_db_log", USCES_DB_LOG);
 		}
 	}
 	

@@ -144,7 +144,7 @@ if($order_action == 'new'){
 		$data = stripslashes_deep($data);
 	}
 	foreach ($management_status as $status_key => $status_name){
-		if( in_array($status_key, array('noreceipt','receipted','pending', 'estimate', 'adminorder')) )
+		if( in_array($status_key, array('noreceipt','receipted','pending','estimate', 'adminorder')) )
 			continue;
 			
 		if($this->is_status($status_key, $data['order_status'])){
@@ -170,7 +170,6 @@ if($order_action == 'new'){
 		$receipt = 'pending';
 	else
 		$receipt = '';
-		
 //20100818ysk start
 	$csod_meta = usces_has_custom_field_meta('order');
 	if(is_array($csod_meta)) {
@@ -246,6 +245,7 @@ jQuery(function($){
 			html += "</select>\n";
 			$("#receiptlabel").html(label);
 			$("#receiptbox").html(html);
+		<?php do_action( 'usces_change_payment_terms_js', $management_status, $data ); ?>	
 		}else{
 			$("#receiptlabel").html('');
 			$("#receiptbox").html('');
