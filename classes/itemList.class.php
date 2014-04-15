@@ -423,31 +423,31 @@ class dataList
 		switch ($this->arr_search['column']) {
 			case 'item_code':
 				$column = 'mc.meta_value';
-				$this->searchSql =  $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['item_code']) . "%'";
+				$this->searchSql =  $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['item_code']) . "%'";
 				break;
 			case 'item_name':
 				$column = 'mn.meta_value';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['item_name']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['item_name']) . "%'";
 				break;
 			case 'post_title':
 				$column = 'post.post_title';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['post_title']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['post_title']) . "%'";
 				break;
 			case 'zaiko_num':
 				$column = 'meta.meta_value';
-				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('"stocknum";i:0') . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('"stocknum";s:1:"0"')."%')";
+				$this->searchSql = '(' . $column . ' LIKE '."'%" . esc_sql('"stocknum";i:0') . "%' OR " . $column . ' LIKE '."'%" . esc_sql('"stocknum";s:1:"0"')."%')";
 				break;
 			case 'zaiko':
 				$column = 'meta.meta_value';
-				$this->searchSql = '(' . $column . ' LIKE '."'%" . mysql_real_escape_string('stock";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . mysql_real_escape_string('stock";s:1:"'.$this->arr_search['word']['zaiko']) . "%')";
+				$this->searchSql = '(' . $column . ' LIKE '."'%" . esc_sql('stock";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . esc_sql('stock";s:1:"'.$this->arr_search['word']['zaiko']) . "%')";
 				break;
 			case 'category':
 				$column = 'tt.term_id';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['category']) . "'";
+				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['category']) . "'";
 				break;
 			case 'display_status':
 				$column = 'post_status';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['display_status']) . "'";
+				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['display_status']) . "'";
 				break;
 //			case 'post_status':
 //				$column = 'post.post_status';
@@ -457,7 +457,7 @@ class dataList
 //		if($this->arr_search['column'] == 'none' || $this->arr_search['column'] == '' || $this->arr_search['word'] == '')
 //			return;//$this->searchSql = $sql;
 //		else
-//			$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']) . "%'";
+//			$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']) . "%'";
 	}
 
 	function SearchOut()

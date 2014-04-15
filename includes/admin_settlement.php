@@ -138,6 +138,9 @@ function toggleVisibility(id) {
 <!--20131220ysk start-->
 		<li><a href="#uscestabs_anotherlane">アナザーレーン</a></li>
 <!--20131220ysk end-->
+<!--20140206ysk start--
+		<li><a href="#uscestabs_veritrans">ベリトランス</a></li>
+<!--20140206ysk end-->
 	</ul>
 
 	<div id="uscestabs_zeus">
@@ -725,10 +728,10 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 			<tr>
-				<th>S!まとめて支払い</th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_mobile_softbank_sbps');">S!まとめて支払い</a></th>
 				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank_sbps_1">利用する</label></td>
 				<td><input name="mobile_softbank" type="radio" id="mobile_softbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_softbank']) && $opts['sbps']['mobile_softbank'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank_sbps_2">利用しない</label></td>
-				<td></td>
+				<td><div id="ex_mobile_softbank_sbps" class="explanation">Softbank携帯端末（3G対応携帯端末）にて決済を行うサービスです。</div></td>
 			</tr>
 			<tr>
 				<th>auかんたん決済</th>
@@ -737,10 +740,16 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 			<tr>
-				<th>ソフトバンク<br />まとめて支払い</th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_mobile_mysoftbank_sbps');">ソフトバンク<br />まとめて支払い(A)</a></th>
 				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_mysoftbank_sbps_1">利用する</label></td>
 				<td><input name="mobile_mysoftbank" type="radio" id="mobile_mysoftbank_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_mysoftbank']) && $opts['sbps']['mobile_mysoftbank'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_mysoftbank_sbps_2">利用しない</label></td>
-				<td></td>
+				<td><div id="ex_mobile_mysoftbank_sbps" class="explanation">スマートフォン専用のデジタルコンテンツの決済に利用できるサービスです。物販では利用不可となります。</div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_mobile_softbank2_sbps');">ソフトバンク<br />まとめて支払い(B)</a></th>
+				<td><input name="mobile_softbank2" type="radio" id="mobile_softbank2_sbps_1" value="on"<?php if( isset($opts['sbps']['mobile_softbank2']) && $opts['sbps']['mobile_softbank2'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank2_sbps_1">利用する</label></td>
+				<td><input name="mobile_softbank2" type="radio" id="mobile_softbank2_sbps_2" value="off"<?php if( isset($opts['sbps']['mobile_softbank2']) && $opts['sbps']['mobile_softbank2'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mobile_softbank2_sbps_2">利用しない</label></td>
+				<td><div id="ex_mobile_softbank2_sbps" class="explanation">物販サイト等で購入した商品の代金の支払いに利用できる決済手段です。</div></td>
 			</tr>
 		</table>
 		<input name="send_url_check" type="hidden" value="https://stbfep.sps-system.com/Extra/BuyRequestAction.do" />
@@ -1044,6 +1053,70 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_anotherlane-->
 <!--20131220ysk end-->
+
+<!--20140206ysk start--
+	<div id="uscestabs_veritrans">
+	<div class="settlement_service"><span class="service_title">ベリトランス Air-Web</span></div>
+	<?php if( isset($_POST['acting']) && 'veritrans' == $_POST['acting'] ) : ?>
+		<?php if( isset($opts['veritrans']['activate']) && 'on' == $opts['veritrans']['activate'] ) : ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php elseif( '' != $mes ) : ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php endif; ?>
+	<?php endif; ?>
+	<form action="" method="post" name="veritrans_form" id="veritrans_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_merchant_id_veritrans');">マーチャントID</a></th>
+				<td colspan="4"><input name="merchant_id" type="text" id="merchant_id_veritrans" value="<?php echo esc_html(isset($opts['veritrans']['merchant_id']) ? $opts['veritrans']['merchant_id'] : ''); ?>" size="50" maxlength="22" /></td>
+				<td><div id="ex_merchant_id_veritrans" class="explanation"><?php _e('契約時にベリトランスから発行されるマーチャントID（半角英数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_merchanthash_veritrans');">マーチャントハッシュキー</a></th>
+				<td colspan="4"><input name="merchanthash" type="text" id="merchanthash_veritrans" value="<?php echo esc_html(isset($opts['veritrans']['merchanthash']) ? $opts['veritrans']['merchanthash'] : ''); ?>" size="80" /></td>
+				<td><div id="ex_merchanthash_veritrans" class="explanation"><?php _e('契約時にベリトランスから発行されるマーチャントハッシュキー（半角英数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_veritrans');">稼働環境</a></th>
+				<td><input name="ope" type="radio" id="ope_veritrans_1" value="test"<?php if( isset($opts['veritrans']['ope']) && $opts['veritrans']['ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_veritrans_1">テスト環境</label></td>
+				<td><input name="ope" type="radio" id="ope_veritrans_2" value="public"<?php if( isset($opts['veritrans']['ope']) && $opts['veritrans']['ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_veritrans_2">本番環境</label></td>
+				<td><div id="ex_ope_veritrans" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>クレジットカード決済</th>
+				<td><input name="card_activate" type="radio" id="card_activate_veritrans_1" value="on"<?php if( isset($opts['veritrans']['card_activate']) && $opts['veritrans']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_veritrans_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_veritrans_2" value="off"<?php if( isset($opts['veritrans']['card_activate']) && $opts['veritrans']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_veritrans_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_capture_flag_veritrans');">カード売上フラグ</a></th>
+				<td><input name="card_capture_flag" type="radio" id="card_capture_flag_veritrans_0" value="auhtorize"<?php if( isset($opts['veritrans']['card_capture_flag']) && $opts['veritrans']['card_capture_flag'] == 'auhtorize' ) echo ' checked'; ?> /></td><td><label for="card_capture_flag_veritrans_0">与信</label></td>
+				<td><input name="card_capture_flag" type="radio" id="card_capture_flag_veritrans_1" value="capture"<?php if( isset($opts['veritrans']['card_capture_flag']) && $opts['veritrans']['card_capture_flag'] == 'capture' ) echo ' checked'; ?> /></td><td><label for="card_capture_flag_veritrans_1">与信同時売上</label></td>
+				<td><div id="ex_card_capture_flag_veritrans" class="explanation"><?php _e('決済の処理方式を指定します', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>コンビニ決済</th>
+				<td><input name="conv_activate" type="radio" id="conv_activate_veritrans_1" value="on"<?php if( isset($opts['veritrans']['conv_activate']) && $opts['veritrans']['conv_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_veritrans_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_veritrans_2" value="off"<?php if( isset($opts['veritrans']['conv_activate']) && $opts['veritrans']['conv_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_veritrans_2">利用しない</label></td>
+				<td></td>
+			</tr>
+		</table>
+		<input name="acting" type="hidden" value="veritrans" />
+		<input name="usces_option_update" type="submit" class="button" value="ベリトランスの設定を更新する" />
+	</form>
+	<div class="settle_exp">
+		<p><strong>ベリトランス</strong></p>
+		<a href="http://www.veritrans.co.jp/" target="_blank">ベリトランスの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+	</div>
+	</div><!--uscestabs_veritrans-->
+<!--20140206ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

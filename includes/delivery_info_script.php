@@ -111,6 +111,7 @@ foreach((array)$default_deli as $key => $id) {
 						foreach( (array)$prefs[$tm] as $pref) {
 							$pref = esc_js($pref);
 							$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"]["'.$pref.'"] = [];';
+							if( isset($delivery_days[$i][$tm][$pref]) )
 							$html_days .= 'delivery_days_value['.$days.']["'.$tm.'"]["'.$pref.'"].push("'.(int)$delivery_days[$i][$tm][$pref].'");';
 						}
 					}

@@ -1160,7 +1160,7 @@ function usces_download_item_list() {
 	set_time_limit(3600);
 	header("Content-Type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=usces_item_list.".$ext);
-	ob_end_flush();
+	@ob_end_flush();
 	flush();
 
 	foreach((array)$rows as $array) {

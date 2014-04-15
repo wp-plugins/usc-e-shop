@@ -29,37 +29,44 @@ function usces_action_acting_construct(){
 			usces_log('zeus construct : '.$_REQUEST['sendpoint'], 'acting_transaction.log');
 		}
 
-	} elseif( isset($_POST['res_result']) && isset($_POST['res_pay_method']) ) {//SoftBankPayment
+	} elseif( isset($_POST['res_result']) && isset($_POST['res_pay_method']) && isset($_POST['order_id']) ) {//SoftBankPayment
 
-		$rand = $_REQUEST['order_id'];
-		$datas = usces_get_order_acting_data($rand);
+		$datas = usces_get_order_acting_data( $_POST['order_id'] );
 		$_GET['uscesid'] = $datas['sesid'];
 		if( empty($datas['sesid']) ) {
 			usces_log('SoftBankPayment construct : error1', 'acting_transaction.log');
 		} else {
-			usces_log('SoftBankPayment construct : '.$_REQUEST['order_id'], 'acting_transaction.log');
+			usces_log('SoftBankPayment construct : '.$_POST['order_id'], 'acting_transaction.log');
 		}
 
 	} elseif( isset($_POST['SID']) && isset($_POST['FUKA']) && isset($_POST['CVS']) ) {//digitalcheck_conv
 
-		$rand = $_REQUEST['SID'];
-		$datas = usces_get_order_acting_data($rand);
+		$datas = usces_get_order_acting_data( $_POST['SID'] );
 		$_GET['uscesid'] = $datas['sesid'];
 		if( empty($datas['sesid']) ) {
 			usces_log('digitalcheck construct : error1', 'acting_transaction.log');
 		} else {
-			usces_log('digitalcheck construct : '.$_REQUEST['SID'], 'acting_transaction.log');
+			usces_log('digitalcheck construct : '.$_POST['SID'], 'acting_transaction.log');
 		}
 
 	} elseif( isset($_REQUEST['SiteId']) && isset($_REQUEST['rand']) ) {//AnotherLane
 
-		$rand = $_REQUEST['rand'];
-		$datas = usces_get_order_acting_data( $rand );
+		$datas = usces_get_order_acting_data( $_REQUEST['rand'] );
 		$_GET['uscesid'] = $datas['sesid'];
 		if( empty($datas['sesid']) ) {
 			usces_log('anotherlane construct : error1', 'acting_transaction.log');
 		} else {
 			usces_log('anotherlane construct : '.$_REQUEST['rand'], 'acting_transaction.log');
+		}
+
+	} elseif( isset($_POST['orderId']) and isset($_POST['merchantEncryptionKey']) ) {//Veritrans
+
+		$datas = usces_get_order_acting_data( $_POST['orderId'] );
+		$_GET['uscesid'] = $datas['sesid'];
+		if( empty($datas['sesid']) ) {
+			usces_log('Veritrans construct : error1', 'acting_transaction.log');
+		} else {
+			usces_log('Veritrans construct : '.$_POST['orderId'], 'acting_transaction.log');
 		}
 	}
 }
@@ -990,6 +997,103 @@ function usces_action_acting_transaction(){
 			exit;
 		}
 //20131220ysk end
+//20140206ysk start
+	//*** Veritrans card ***//
+	} elseif( isset($_GET['acting']) and 'veritrans_card' == $_GET['acting'] and isset($_POST['orderId']) and isset($_POST['merchantEncryptionKey']) ) {
+		if( isset($_POST['mStatus']) and 'success' == $_POST['mStatus'] ) {
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'orderId', $_POST['orderId'] );
+			$order_id = $wpdb->get_var( $query );
+			if( !$order_id ) {
+				$res = $usces->order_processing();
+				if( 'ordercompletion' == $res ) {
+					$usces->cart->crear_cart();
+					usces_log( 'Veritrans [OK] transaction : '.$_POST['orderId'], 'acting_transaction.log' );
+				} else {
+					usces_log( 'Veritrans order processing error : '.print_r( $_POST, true ), 'acting_transaction.log' );
+				}
+			}
+		}
+		exit;
+
+	//*** Veritrans conv ***//
+	} elseif( isset($_GET['acting']) and 'veritrans_conv' == $_GET['acting'] and isset($_POST['orderId']) and isset($_POST['merchantEncryptionKey']) ) {
+		//決済結果通知
+		if( isset($_POST['mStatus']) and 'success' == $_POST['mStatus'] ) {
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'orderId', $_POST['orderId'] );
+			$order_id = $wpdb->get_var( $query );
+			if( !$order_id ) {
+				$res = $usces->order_processing();
+				if( 'ordercompletion' == $res ) {
+					$usces->cart->crear_cart();
+					usces_log( 'Veritrans [OK] transaction : '.$_POST['orderId'], 'acting_transaction.log' );
+				} else {
+					usces_log( 'Veritrans order processing error : '.print_r( $_POST, true ), 'acting_transaction.log' );
+				}
+			}
+		}
+		exit;
+
+	} elseif( isset($_REQUEST['numberOfNotify']) and isset($_REQUEST['pushTime']) and isset($_REQUEST['pushId']) ) {
+		//支払通知
+		$data = array();
+		foreach( $_REQUEST as $key => $value ) {
+			$num = substr( $key, -4 );
+			if( preg_match( "/^[0-9]+$/", $num ) ) {
+				$nkey = substr( $key, 0, strpos( $key, $num ) );
+				$data[$nkey][(int)$num] = $value;
+			} else {
+				$data[$key] = $value;
+			}
+		}
+
+		$count = count( $data['orderId'] );
+		if( 0 < $count ) {
+			$table_name = $wpdb->prefix."usces_order";
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+
+			for( $i = 0; $i < $count; $i++ ) {
+				if( isset( $data['orderId'][$i] ) ) {
+					$sdata = array();
+					$sdata['acting'] = 'veritrans_conv';
+					$sdata['orderId'] = $data['orderId'][$i];
+					$sdata['cvsType'] = isset( $data['cvsType'][$i] ) ? $data['cvsType'][$i] : '';
+					$sdata['receiptNo'] = isset( $data['receiptNo'][$i] ) ? $data['receiptNo'][$i] : '';
+					$sdata['receiptDate'] = isset( $data['receiptDate'][$i] ) ? $data['receiptDate'][$i] : '';
+					$sdata['rcvAmount'] = isset( $data['rcvAmount'][$i] ) ? $data['rcvAmount'][$i] : '';
+					$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'orderId', $sdata['orderId'] );
+					$order_id = $wpdb->get_var( $query );
+					if( $order_id == NULL ) {
+						usces_log( 'Veritrans conv error1 : '.print_r( $sdata, true ), 'acting_transaction.log' );
+
+					} else {
+						$mquery = $wpdb->prepare("
+							UPDATE $table_name SET order_status = 
+							CASE 
+								WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+								WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+								ELSE CONCAT('receipted,', order_status ) 
+							END 
+							WHERE ID = %d", $order_id );
+						$res = $wpdb->query( $mquery );
+						if( $res === false ) {
+							usces_log( 'Veritrans conv error2 : '.print_r( $sdata, true ), 'acting_transaction.log' );
+
+						} else {
+							usces_action_acting_getpoint( $order_id );
+
+							$usces->set_order_meta_value( 'acting_veritrans_conv', serialize( $sdata ), $order_id );
+
+							$dquery = $wpdb->prepare( "DELETE FROM $table_meta_name WHERE meta_key = %s", $sdata['orderId'] );
+							$res = $wpdb->query( $dquery );
+						}
+					}
+				}
+			}
+		}
+		exit;
+//20140206ysk end
 	}
 }
 ?>

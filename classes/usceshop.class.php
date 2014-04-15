@@ -1355,6 +1355,7 @@ class usc_e_shop
 					$options['acting_settings']['sbps']['mobile_softbank'] = isset($_POST['mobile_softbank']) ? $_POST['mobile_softbank'] : '';
 					$options['acting_settings']['sbps']['mobile_auone'] = isset($_POST['mobile_auone']) ? $_POST['mobile_auone'] : '';
 					$options['acting_settings']['sbps']['mobile_mysoftbank'] = isset($_POST['mobile_mysoftbank']) ? $_POST['mobile_mysoftbank'] : '';
+					$options['acting_settings']['sbps']['mobile_softbank2'] = isset($_POST['mobile_softbank2']) ? $_POST['mobile_softbank2'] : '';
 
 					if( WCUtils::is_blank($_POST['merchant_id']) )
 						$mes .= '※マーチャントIDを入力して下さい<br />';
@@ -1404,7 +1405,8 @@ class usc_e_shop
 						if( ( 'on' == $options['acting_settings']['sbps']['mobile_docomo'] ) || 
 							( 'on' == $options['acting_settings']['sbps']['mobile_softbank'] ) || 
 							( 'on' == $options['acting_settings']['sbps']['mobile_auone'] ) || 
-							( 'on' == $options['acting_settings']['sbps']['mobile_mysoftbank'] ) ) {
+							( 'on' == $options['acting_settings']['sbps']['mobile_mysoftbank'] ) || 
+							( 'on' == $options['acting_settings']['sbps']['mobile_softbank2'] ) ) {
 							$options['acting_settings']['sbps']['mobile_activate'] = 'on';
 						} else {
 							$options['acting_settings']['sbps']['mobile_activate'] = 'off';
@@ -1632,6 +1634,55 @@ class usc_e_shop
 					update_option( 'usces_payment_structure', $this->payment_structure );
 					break;
 //20131220ysk end
+//20140206ysk start
+				case 'veritrans':
+					unset( $options['acting_settings']['veritrans'] );
+					$options['acting_settings']['veritrans']['merchant_id'] = isset($_POST['merchant_id']) ? $_POST['merchant_id'] : '';
+					$options['acting_settings']['veritrans']['merchanthash'] = isset($_POST['merchanthash']) ? $_POST['merchanthash'] : '';
+					$options['acting_settings']['veritrans']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
+					$options['acting_settings']['veritrans']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['veritrans']['card_capture_flag'] = isset($_POST['card_capture_flag']) ? $_POST['card_capture_flag'] : '';
+					$options['acting_settings']['veritrans']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
+
+					if( WCUtils::is_blank($_POST['merchant_id']) )
+						$mes .= '※マーチャントIDを入力して下さい<br />';
+					if( WCUtils::is_blank($_POST['merchanthash']) )
+						$mes .= '※マーチャントハッシュキーを入力して下さい<br />';
+					if( WCUtils::is_blank($_POST['ope']) )
+						$mes .= '※稼働環境を選択して下さい<br />';
+					if( 'on' == $options['acting_settings']['veritrans']['card_activate'] ) {
+						if( WCUtils::is_blank($_POST['card_capture_flag']) )
+							$mes .= '※カード売上フラグを選択して下さい<br />';
+					}
+
+					if( WCUtils::is_blank($mes) ) {
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['veritrans']['activate'] = 'on';
+						$options['acting_settings']['veritrans']['regist_url'] = "https://air.veritrans.co.jp/web/commodityRegist.action";
+						$options['acting_settings']['veritrans']['payment_url'] = "https://air.veritrans.co.jp/web/paymentStart.action";
+						if( 'on' == $options['acting_settings']['veritrans']['card_activate'] ) {
+							$this->payment_structure['acting_veritrans_card'] = 'カード決済（ベリトランス）';
+						} else {
+							unset($this->payment_structure['acting_veritrans_card']);
+						}
+						if( 'on' == $options['acting_settings']['veritrans']['conv_activate'] ) {
+							$this->payment_structure['acting_veritrans_conv'] = 'コンビニ決済（ベリトランス）';
+						} else {
+							unset($this->payment_structure['acting_veritrans_conv']);
+						}
+						update_option('usces', $options);
+					} else {
+						$this->action_status = 'error';
+						$this->action_message = __('Data have deficiency.','usces');
+						$options['acting_settings']['veritrans']['activate'] = 'off';
+						unset($this->payment_structure['acting_veritrans_card']);
+						unset($this->payment_structure['acting_veritrans_conv']);
+					}
+					ksort($this->payment_structure);
+					update_option('usces_payment_structure', $this->payment_structure);
+					break;
+//20140206ysk end
 			}
 
 		}
@@ -6225,8 +6276,168 @@ class usc_e_shop
 				exit;
 			}
 //20121206ysk end
+//20140206ysk start
+		} else if( $acting_flg == 'acting_veritrans_card' or $acting_flg == 'acting_veritrans_conv' ) {
+			$acting_opts = $this->options['acting_settings']['veritrans'];
+			$acting = substr( $acting_flg, 7 );
+			$dummy_payment_flag = ( 'public' == $acting_opts['ope'] ) ? '0' : '1';
+			$order_id = isset( $_POST['ORDER_ID'] ) ? $_POST['ORDER_ID'] : '';
+			$url = parse_url( $acting_opts['regist_url'] );
+			$path = empty($url['path']) ? '/' : $url['path'];
+
+			$postdata = $query;
+			if( 'acting_veritrans_card' == $acting_flg ) {
+				$card_capture_flag = ( 'capture' == $acting_opts['card_capture_flag'] ) ? '1' : '0';
+				$postdata .= '&CARD_CAPTURE_FLAG='.$card_capture_flag;
+			}
+			if( 'acting_veritrans_conv' == $acting_flg ) {
+				$postdata .= '&NAME1='.urlencode( mb_substr( mb_convert_kana( $entry['customer']['name1'], 'ASKV', 'UTF-8' ), 0, 10 ) );
+				$postdata .= '&NAME2='.urlencode( mb_substr( mb_convert_kana( $entry['customer']['name2'], 'ASKV', 'UTF-8' ), 0, 10 ) );
+				if( empty($entry['customer']['name3']) ) {
+					$kana1 = mb_substr( mb_convert_kana( $entry['customer']['name3'], 'ASKV', 'UTF-8' ), 0, 10 );
+					if( mb_ereg("^[ア-ン゛゜ァ-ォャ-ョー]+$", $kana1) ) 
+						$postdata .= '&KANA1='.urlencode( $kana1 );
+				}
+				if( empty($entry['customer']['name4']) ) {
+					$kana2 = mb_substr( mb_convert_kana( $entry['customer']['name4'], 'ASKV', 'UTF-8' ), 0, 10 );
+					if( mb_ereg("^[ア-ン゛゜ァ-ォャ-ョー]+$", $kana2) ) 
+						$postdata .= '&KANA2='.urlencode( $kana2 );
+				}
+				$postdata .= '&TELEPHONE_NO='.str_replace( '-', '', $entry['customer']['tel'] );
+			}
+			$postdata .= '&MERCHANT_ID='.$acting_opts['merchant_id'];
+			$postdata .= '&SESSION_ID='.session_id();
+			$postdata .= '&FINISH_PAYMENT_RETURN_URL='.urlencode( USCES_CART_URL.$delim.'acting='.$acting.'&acting_return=1&result=1' );
+			$postdata .= '&UNFINISH_PAYMENT_RETURN_URL='.urlencode( USCES_CART_URL.$delim.'acting='.$acting.'&confirm=1' );
+			$postdata .= '&ERROR_PAYMENT_RETURN_URL='.urlencode( USCES_CART_URL.$delim.'acting='.$acting.'&acting_return=0' );
+			$postdata .= '&FINISH_PAYMENT_ACCESS_URL='.urlencode( USCES_CART_URL.$delim.'acting='.$acting );
+			$postdata .= '&DUMMY_PAYMENT_FLAG='.$dummy_payment_flag;
+
+			$postlength = strlen( $postdata );
+
+			$request  = "POST ".$path." HTTP/1.1"."\r\n";
+			$request .= "Host: ".$url['host']."\r\n";
+			$request .= "User-Agent: HttpRequest Powered by ".phpversion()."\r\n";
+			$request .= "Connection: close"."\r\n";
+			$request .= "Accept-Language: ja"."\r\n";
+			$request .= "Content-Type: application/x-www-form-urlencoded"."\r\n";
+			$request .= "Content-Length: ".$postlength."\r\n\r\n";
+			$request .= $postdata;
+
+			$code = 0;
+			$resBody = "";
+			$con = @fsockopen( 'ssl://'.$url['host'], 443 );
+
+			if( $con ) {
+				$ret = fwrite( $con, $request );
+				if( $ret == strlen($request) ) {
+					$res = $this->readResponse( $con );
+//usces_log( print_r($res,true), "veritrans.log" );
+					$code = $res['Code'];
+					$resBody = $res['Body'];
+
+				} else {
+					usces_log( 'Veritrans Write NG: Sent:'.strlen($request).' Send:'.$ret, "acting_transaction.log" );
+				}
+				fclose( $con );
+
+			} else {
+				usces_log( "Veritrans Connect NG: ".$url['host'], "acting_transaction.log" );
+				header( "location: ".USCES_CART_URL.$delim.'acting='.$acting_flg.'&acting_return=0' );
+				exit;
+			}
+
+			// 正常終了（200 OK）が返ったか
+			if( intval($code) == 200 ) {
+				$merchantKey = null;
+				$browserKey = null;
+				$scd = null;
+				$error_message = null;
+
+				// レスポンスデータからマーチャントキー、ブラウザキーを取得
+				$bodyLine = explode( "\n", $resBody );
+				foreach( $bodyLine as $line ) {
+					if( preg_match( '/^MERCHANT_ENCRYPTION_KEY=(.+)/', $line, $match ) ) {
+						$merchantKey = $match[1];
+					} elseif( preg_match( '/^BROWSER_ENCRYPTION_KEY=(.+)/', $line, $match ) ) {
+						$browserKey = $match[1];
+					} elseif( preg_match('/^SCD=(.+)/', $line, $match ) ) {
+						$scd = $match[1];
+					} elseif( preg_match( '/^ERROR_MESSAGE=(.+)/', $line, $match ) ) {
+						$error_message = $match[1];
+					}
+				}
+
+				// 両方取れたらOK。SCDはカードでセキュリティコードが入力された場合のみ
+				if( !is_null($merchantKey) && !is_null($browserKey) ) {
+					$getdata  = '?MERCHANT_ID='.$acting_opts['merchant_id'];
+					$getdata .= '&ORDER_ID='.$order_id;
+					$getdata .= '&BROWSER_ENCRYPTION_KEY='.urlencode($browserKey);
+					header( "location: ".$acting_opts['payment_url'].$getdata );
+
+				} else {
+					if( !is_null($error_message) ) 
+						usces_log( "Veritrans AWeb:".$error_message, "acting_transaction.log" );
+					header( "location: ".USCES_CART_URL.$delim.'acting='.$acting_flg.'&acting_return=0' );
+				}
+
+			} else {
+				usces_log( "Veritrans Response NG: ".$resBody, "acting_transaction.log" );
+				header( "location: ".USCES_CART_URL.$delim.'acting='.$acting_flg.'&acting_return=0' );
+			}
+			exit;
+//20140206ysk end
 		}
 		do_action('usces_action_acting_processing', $acting_flg, $query);
+	}
+
+	private function readResponse( $fp ) {
+		$res = array( 'Status'=>'', 'Version'=>'', 'Code'=>0, 'Message'=>'', 'Headers'=>array(), 'Body'=>'' );
+
+		// HTTPステータスの読み込み
+		$line = $this->readLine( $fp );
+		if( preg_match( '/^(HTTP\/1\.[0-9x]+)\s+([0-9]+)\s+(.+)/i', $line, $match ) == 0 ) {
+			return $res;
+		}
+		$res['Status'] = $line;
+		$res['Version'] = $match[1];
+		$res['Code'] = $match[2];
+		$res['Message'] = $match[3];
+
+		// レスポンスヘッダの読み込み
+		while( !feof($fp) ) {
+			$line = $this->readLine( $fp );
+			if( $line != '' ) {
+				list( $hname, $hvalue ) = explode( ':', $line, 2 );
+				$res['Headers'][strtolower($hname)] = ltrim($hvalue);
+			} else {
+				break;
+			}
+		}
+		// レスポンスデータの読み込み
+		while( !feof($fp) ) {
+			$data = $this->readLine( $fp )."\n";
+			if( '' == $data ) {
+				break;
+			}
+			$res['Body'] .= $data;
+		}
+		return $res;
+	}
+
+	private function readLine( $fp ) {
+		if( !$fp ) {
+			return '';
+		}
+		// レスポンスデータを受信
+		$line = null;
+		while( !feof($fp) ) {
+			$line .= @fgets( $fp, 4096 );
+			if( substr($line, -1) == "\n" ) {
+				return rtrim( $line, "\r\n" );
+			}
+		}
+		return $line;
 	}
 
 	function inquiry_processing() {

@@ -437,11 +437,11 @@ class dataList
 				break;
 			case 'deco_id':
 				$column = 'deco_id';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['deco_id']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['deco_id']) . "%'";
 				break;
 			case 'date':
 				$column = 'date';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['date']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['date']) . "%'";
 				break;
 			case 'mem_id':
 				$column = 'mem_id';
@@ -449,31 +449,31 @@ class dataList
 				break;
 			case 'name':
 				$column = 'name';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['name']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['name']) . "%'";
 				break;
 			case 'order_modified':
 				$column = 'order_modified';
-				$this->searchSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']['order_modified']) . "%'";
+				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['order_modified']) . "%'";
 				break;
 			case 'pref':
 				$column = 'pref';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['pref']) . "'";
+				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['pref']) . "'";
 				break;
 			case 'delivery_method':
 				$column = 'delivery_method';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['delivery_method']) . "'";
+				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['delivery_method']) . "'";
 				break;
 			case 'payment_name':
 				$column = 'payment_name';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['payment_name']) . "'";
+				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['payment_name']) . "'";
 				break;
 			case 'receipt_status':
 				$column = 'receipt_status';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['receipt_status']) . "'";
+				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['receipt_status']) . "'";
 				break;
 			case 'order_status':
 				$column = 'order_status';
-				$this->searchSql = $column . " = '" . mysql_real_escape_string($this->arr_search['word']['order_status']) . "'";
+				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['order_status']) . "'";
 				break;
 		}
 	}

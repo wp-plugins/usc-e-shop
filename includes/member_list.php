@@ -319,6 +319,7 @@ jQuery(document).ready(function($){
 		<label for="chk_mem[date]"><input type="checkbox" class="check_member" id="chk_mem[date]" value="date"<?php usces_checked($chk_mem, 'date'); ?> /><?php _e('Strated date','usces'); ?></label>
 		<label for="chk_mem[point]"><input type="checkbox" class="check_member" id="chk_mem[point]" value="point"<?php usces_checked($chk_mem, 'point'); ?> /><?php _e('current point','usces'); ?></label>
 		<label for="chk_mem[rank]"><input type="checkbox" class="check_member" id="chk_mem[rank]" value="rank"<?php usces_checked($chk_mem, 'rank'); ?> /><?php _e('Rank', 'usces'); ?></label>
+		<?php do_action( 'usces_action_chk_mem', $chk_mem ); ?>
 	</fieldset>
 </div>
 <!--20100908ysk end-->

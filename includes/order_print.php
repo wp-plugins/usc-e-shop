@@ -223,7 +223,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$message = sprintf(__("Thank you for choosing '%s' we send you following estimate. ", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
 			$message = apply_filters('usces_filter_pdf_estimate_message', $message, $data);
-			$juchubi = __('Valid:7days', 'usces');
+			$juchubi = apply_filters( 'usces_filter_pdf_estimate_validdays', __('Valid:7days', 'usces'), $data );
 			$siharai = ' ';
 			$sign_image = apply_filters('usces_filter_pdf_estimate_sign', NULL);
 			$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['date']));
