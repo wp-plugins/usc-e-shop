@@ -18,7 +18,7 @@ class usc_e_shop
 	{
 //20110331ysk start
 		//global $post, $usces_settings;
-		global $post, $usces_settings, $usces_states;
+		global $wpdb, $post, $usces_settings, $usces_states;
 //20110331ysk end
 		do_action('usces_construct');
 		add_action('after_setup_theme', array(&$this, 'usces_session_start'));
@@ -206,7 +206,7 @@ class usc_e_shop
 		$this->member_status = get_option('usces_customer_status');
 		$this->payment_structure = get_option('usces_payment_structure');
 		$this->display_mode = get_option('usces_display_mode');
-		define('USCES_MYSQL_VERSION', (int)substr(mysql_get_server_info(), 0, 1));
+		define('USCES_MYSQL_VERSION', $wpdb->db_version());
 		define('USCES_JP', ('ja' === get_locale() ? true : false));
 		
 	}

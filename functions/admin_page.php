@@ -483,7 +483,7 @@ function usces_item_duplicate($post_id){
 	}
 	$valstr = rtrim($valstr, ',');
 	$query = $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr", $post_id);
-	$res = mysql_query($query);
+	$res = $wpdb->query($query);
 	if(!$res ) return;
 	
 	do_action('usces_action_item_dupricate', $post_id, $newpost_id);

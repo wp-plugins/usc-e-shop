@@ -1145,7 +1145,7 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value('settlement_id', $_GET['cod'], $order_id);
 			foreach($_GET as $key => $value) {
 				if( 'purchase_jpayment' != $key)
-					$data[$key] = mysql_real_escape_string($value);
+					$data[$key] = esc_sql($value);
 			}
 			$usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 		}
@@ -1159,7 +1159,7 @@ function usces_reg_orderdata( $results = array() ) {
 //20121206ysk start
 		if( isset($_REQUEST['SID']) && isset($_REQUEST['FUKA']) ) {
 			if( substr($_REQUEST['FUKA'], 0, 24) == 'acting_digitalcheck_card' ) {
-				$data['SID'] = mysql_real_escape_string($_REQUEST['SID']);
+				$data['SID'] = esc_sql($_REQUEST['SID']);
 				$usces->set_order_meta_value( $_REQUEST['FUKA'], serialize($data), $order_id );
 			}
 			$usces->set_order_meta_value( 'SID', $_REQUEST['SID'], $order_id );
@@ -1167,14 +1167,14 @@ function usces_reg_orderdata( $results = array() ) {
 //20121206ysk end
 //20130225ysk start
 		if( isset($_REQUEST['acting']) && 'mizuho_card' == $_REQUEST['acting'] ) {
-			$data['stran'] = mysql_real_escape_string($_REQUEST['stran']);
-			$data['mbtran'] = mysql_real_escape_string($_REQUEST['mbtran']);
+			$data['stran'] = esc_sql($_REQUEST['stran']);
+			$data['mbtran'] = esc_sql($_REQUEST['mbtran']);
 			$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
 		} elseif( isset($_REQUEST['acting']) && 'mizuho_conv' == $_REQUEST['acting'] ) {
-			$data['stran'] = mysql_real_escape_string($_REQUEST['stran']);
-			$data['mbtran'] = mysql_real_escape_string($_REQUEST['mbtran']);
-			$data['bktrans'] = mysql_real_escape_string($_REQUEST['bktrans']);
-			$data['tranid'] = mysql_real_escape_string($_REQUEST['tranid']);
+			$data['stran'] = esc_sql($_REQUEST['stran']);
+			$data['mbtran'] = esc_sql($_REQUEST['mbtran']);
+			$data['bktrans'] = esc_sql($_REQUEST['bktrans']);
+			$data['tranid'] = esc_sql($_REQUEST['tranid']);
 			$usces->set_order_meta_value( 'stran', $data['stran'], $order_id );
 			$usces->set_order_meta_value( 'acting_'.$_REQUEST['acting'], serialize($data), $order_id );
 		}
@@ -3695,7 +3695,7 @@ function usces_post_reg_orderdata($order_id, $results){
 				}else{
 					$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
 					//foreach($_GET as $key => $value) {
-					//	$data[$key] = mysql_real_escape_string($value);
+					//	$data[$key] = esc_sql($value);
 					//}
 					//$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
 					if( !empty($_REQUEST['order_number']) ) {

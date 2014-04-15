@@ -1,6 +1,6 @@
 <script type="text/javascript">jQuery(function($){uscesInformation.getinfo2();});</script>
 <?php
-
+global $wpdb;
 $display_mode = $this->options['display_mode'];
 $stocs = usces_get_stocs();
 $items_num = $this->get_items_num();
@@ -106,7 +106,7 @@ unset($non_stoc_skus);
 <td><?php _e('Server', 'usces'); ?></td><td colspan="2"><?php echo $_SERVER['SERVER_SOFTWARE']; ?></td>
 </tr>
 <tr>
-<td>MySQL</td><td colspan="2"><?php echo mysql_get_server_info(); ?></td>
+<td>MySQL</td><td colspan="2"><?php echo $wpdb->db_version(); ?></td>
 </tr>
 <tr>
 <?php

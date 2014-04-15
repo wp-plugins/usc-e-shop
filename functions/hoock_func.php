@@ -425,7 +425,7 @@ function usces_action_acting_transaction(){
 			}
 
 			foreach($_GET as $key => $value) {
-				$data[$key] = mysql_real_escape_string($value);
+				$data[$key] = esc_sql($value);
 			}
 			$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 			if($res === false) {
@@ -465,7 +465,7 @@ function usces_action_acting_transaction(){
 			}
 
 			foreach($_GET as $key => $value) {
-				$data[$key] = mysql_real_escape_string($value);
+				$data[$key] = esc_sql($value);
 			}
 			$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 			if($res === false) {
@@ -522,7 +522,7 @@ function usces_action_acting_transaction(){
 				}
 
 				foreach($_GET as $key => $value) {
-					$data[$key] = mysql_real_escape_string($value);
+					$data[$key] = esc_sql($value);
 				}
 				$res = $usces->set_order_meta_value('acting_'.$_REQUEST['acting'], serialize($data), $order_id);
 				if($res === false) {
