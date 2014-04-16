@@ -164,6 +164,7 @@ function usces_zeus_3dsecure_enrol(){
 	$EnrolReq .= usces_assoc2xml($data); 
 	$EnrolReq .= '</request>';
 
+	usces_log('EnrolReq : ' . print_r($EnrolRes, true), 'acting_transaction.log');
 
 	$xml = usces_get_xml($acting_opts['card_secureurl'], $EnrolReq);
 	if ( empty($xml) ){
@@ -184,7 +185,7 @@ function usces_zeus_3dsecure_enrol(){
 		$data['xid'] = $EnrolRes['response']['xid'];//$_REQUEST['MD'];
 		$PayReq = '<?xml version="1.0" encoding="utf-8" ?>';
 		$PayReq .= '<request service="secure_link_3d" action="payment">';
-		$PayReq .= usces_assoc2xml($data); 
+		$PayReq .= usces_assoc2xml($data);
 		$PayReq .= '</request>';
 	
 	//usces_log('zeus : PayReq1'.print_r($PayReq, true), 'acting_transaction.log');
@@ -312,7 +313,11 @@ function usces_zeus_secure_payreq(){
 	if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
-		$data['card']['history_action_send_email']['key'] = $_POST['sendid'];
+		$data['card']['history']['key'] = 'sendid';
+		$data['card']['history']['action'] = 'send_email';
+		if( 1 == $acting_opts['security'] ){
+			$data['card']['cvv'] = $_POST['securecode'];
+		}
 		$data['payment']['amount'] = $_POST['money'];
 		if( isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){	
 			$data['payment']['count'] = $_POST['div'];
