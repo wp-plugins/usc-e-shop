@@ -306,7 +306,7 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( WCUtils::is_blank($_POST["expmm"]) )
 				$mes .= __('カードの有効月を選択してください', 'usces') . "<br />";
 				
-			if ( WCUtils::is_blank($_POST["username"]) )
+			if ( WCUtils::is_blank($_POST["username_card"]) )
 				$mes .= __('カード名義を入力してください', 'usces') . "<br />";
 				
 			if ( isset($_POST["howpay"]) && 0 == $_POST["howpay"] && WCUtils::is_blank($_POST["cbrand"]) )

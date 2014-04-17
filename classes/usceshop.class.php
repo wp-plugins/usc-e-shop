@@ -4688,9 +4688,9 @@ class usc_e_shop
 					$mes .= sprintf(__('A total products amount of money surpasses the upper limit(%s) that I can purchase in C.O.D.', 'usces'), usces_crform($this->options['cod_limit_amount'], true, false, 'return')) . "<br />";
 
 			} elseif( 'acting_zeus_conv' == $payments['settlement'] ) {
-				if( WCUtils::is_blank($_POST['username']) ) {
+				if( WCUtils::is_blank($_POST['username_conv']) ) {
 					$mes .= "お名前を入力してください。<br />";
-				} elseif( !preg_match( "/^[ァ-ヶー]+$/u", $_POST['username'] ) ) {
+				} elseif( !preg_match( "/^[ァ-ヶー]+$/u", $_POST['username_conv'] ) ) {
 					$mes .= "お名前は全角カタカナで入力してください。<br />";
 				}
 			}

@@ -22,7 +22,7 @@ foreach ( (array)$payments as $id => $array ) {
 				$securecode = isset( $_POST['securecode'] ) ? esc_html($_POST['securecode']) : '';
 				$expyy = isset( $_POST['expyy'] ) ? esc_html($_POST['expyy']) : '';
 				$expmm = isset( $_POST['expmm'] ) ? esc_html($_POST['expmm']) : '';
-				$username = isset( $_POST['username'] ) ? esc_html($_POST['username']) : '';
+				$username = isset( $_POST['username_card'] ) ? esc_html($_POST['username_card']) : '';
 				$howpay = isset( $_POST['howpay'] ) ? esc_html($_POST['howpay']) : '1';
 				$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
@@ -95,7 +95,7 @@ foreach ( (array)$payments as $id => $array ) {
 						</tr>
 						<tr>
 						<th scope="row">'.__('カード名義', 'usces').'</th>
-						<td colspan="2"><input name="username" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
+						<td colspan="2"><input name="username_card" id="username_card" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
 						</tr>';
 				}
 
@@ -162,7 +162,7 @@ foreach ( (array)$payments as $id => $array ) {
 
 				$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : 'D001';
 				$entry = $usces->cart->get_entry();
-				$username = isset( $_POST['username'] ) ? esc_html($_POST['username']) : $entry['customer']['name3'].$entry['customer']['name4'];
+				$username = isset( $_POST['username_conv'] ) ? esc_html($_POST['username_conv']) : $entry['customer']['name3'].$entry['customer']['name4'];
 
 				$html .= '
 				<table class="customer_form" id="' . $paymod_id . '_conv">
@@ -180,7 +180,7 @@ foreach ( (array)$payments as $id => $array ) {
 					</tr>
 					<tr>
 					<th scope="row"><em>＊</em>'.__('お名前', 'usces').'</th>
-					<td colspan="2"><input name="username" type="text" size="30" value="'.esc_attr($username).'" />(全角カナ)</td>
+					<td colspan="2"><input name="username_conv" id="username_conv" type="text" size="30" value="'.esc_attr($username).'" />(全角カナ)</td>
 					</tr>
 				</table>';
 				break;
