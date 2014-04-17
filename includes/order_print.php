@@ -225,7 +225,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$message = sprintf(__("Thank you for choosing '%s' we send you following estimate. ", 'usces'),
 							apply_filters('usces_filter_publisher', get_option('blogname')));
 			$message = apply_filters('usces_filter_pdf_estimate_message', $message, $data);
-			$juchubi = __('Valid:7days', 'usces');
+			$juchubi = apply_filters( 'usces_filter_pdf_estimate_validdays', __('Valid:7days', 'usces'), $data );
 			$siharai = ' ';
 			$sign_image = apply_filters('usces_filter_pdf_estimate_sign', NULL);
 			$effective_date = date(__('M j, Y', 'usces'), strtotime($data->order['date']));
@@ -458,54 +458,57 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			$customer_address = trim( $data->customer['address1'] ) . trim( $data->customer['address2']) . trim( $data->customer['address3'] );
 			$deliveri_address = trim( $data->deliveri['address1'] ) . trim( $data->deliveri['address2']) . trim( $data->deliveri['address3'] );
 
-			//購入者と発送先情報が異なるとき
-			if( $customer_name != $deliveri_name or $customer_zip != $deliveri_zip or $customer_address != $deliveri_address){
-				// Line	
-				$y = $pdf->GetY() + $linetop;
-				$pdf->SetLineWidth(0.1);
-				$pdf->Line( $leftside, $y, $leftside+$width+5, $y );
+			//発送先が入力されているとき
+			if( !empty($deliveri_address) ){
+				//購入者と発送先情報が異なるとき
+				if( $customer_name != $deliveri_name || $customer_zip != $deliveri_zip || $customer_address != $deliveri_address){
+					// Line	
+					$y = $pdf->GetY() + $linetop;
+					$pdf->SetLineWidth(0.1);
+					$pdf->Line( $leftside, $y, $leftside+$width+5, $y );
 
-				//【配送先】タイトル
-				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);	//kitamu 10->8
-				$y = $pdf->GetY() + $linetop + 1;
-				$pdf->SetFont($font, '', $fontsize);
-				$pdf->SetXY($leftside, $y);
-				$pdf->MultiCell($width, $lineheight, usces_conv_euc( __( "** A shipping address **", 'usces' ) ), $border, 'L');
-				
-				//配送先の宛名
-				$meta = usces_has_custom_field_meta('delivery');
-				$deliveri_company = $usces->get_order_meta_value( 'csde_company', $data->order['ID'] );
-				list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
-				$y = $pdf->GetY() + $linetop;
-				$pdf->SetFont($font, '', $fontsize);
-				$pdf->SetXY($leftside, $y);
-				if( empty( $deliveri_company ) || !isset( $meta['company'] ) ){
-					$pdf->MultiCell($width, $lineheight, usces_conv_euc( usces_get_pdf_shipping_name( $data ) ), $border, 'L');
-					$x = $leftside + $width;
-					$y = $pdf->GetY() - $lineheight - $linetop;
-					$pdf->SetXY($x, $y);
-					$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_person_honor', $person_honor ) ));	//様
-					$y = $pdf->GetY() + $lineheight + $linetop;
-				}else{
-					$pdf->MultiCell($width, $lineheight, usces_conv_euc($deliveri_company), $border, 'L');
-					$x = $leftside + $width;
-					$y = $pdf->GetY() - $lineheight;
-					$pdf->SetXY($x, $y);
-					$pdf->Write($lineheight, usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor ) ));	//御中
-					$y = $pdf->GetY() + $lineheight + $linetop;
-					list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
+					//【配送先】タイトル
+					list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);	// 10->8
+					$y = $pdf->GetY() + $linetop + 1;
 					$pdf->SetFont($font, '', $fontsize);
 					$pdf->SetXY($leftside, $y);
-					$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_shipping_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+					$pdf->MultiCell($width, $lineheight, usces_conv_euc( __( "** A shipping address **", 'usces' ) ), $border, 'L');
+					
+					//配送先宛名
+					$meta = usces_has_custom_field_meta('delivery');
+					$deliveri_company = $usces->get_order_meta_value( 'csde_company', $data->order['ID'] );
+					list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
 					$y = $pdf->GetY() + $linetop;
+					$pdf->SetFont($font, '', $fontsize);
+					$pdf->SetXY($leftside, $y);
+					if( empty( $deliveri_company ) || !isset( $meta['company'] ) ){
+						$pdf->MultiCell($width, $lineheight, usces_conv_euc( usces_get_pdf_shipping_name( $data ) ), $border, 'L');
+						$x = $leftside + $width;
+						$y = $pdf->GetY() - $lineheight - $linetop;
+						$pdf->SetXY($x, $y);
+						$pdf->Write($lineheight ,usces_conv_euc( apply_filters( 'usces_filters_pdf_person_honor', $person_honor ) ));	//様
+						$y = $pdf->GetY() + $lineheight + $linetop;
+					}else{
+						$pdf->MultiCell($width, $lineheight, usces_conv_euc($deliveri_company), $border, 'L');
+						$x = $leftside + $width;
+						$y = $pdf->GetY() - $lineheight;
+						$pdf->SetXY($x, $y);
+						$pdf->Write($lineheight, usces_conv_euc( apply_filters( 'usces_filters_pdf_company_honor', $company_honor ) ));	//御中
+						$y = $pdf->GetY() + $lineheight + $linetop;
+						list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
+						$pdf->SetFont($font, '', $fontsize);
+						$pdf->SetXY($leftside, $y);
+						$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_shipping_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+						$y = $pdf->GetY() + $linetop;
+					}
+					//配送先住所
+					list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
+					$pdf->SetFont($font, '', $fontsize);
+					usces_get_pdf_shipping_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
+					
+					//配送先電話番号
+					$pdf->MultiCell($width, $lineheight, usces_conv_euc('TEL ' . $data->deliveri['tel']), $border, 'L');
 				}
-				//配送先の住所
-				list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
-				$pdf->SetFont($font, '', $fontsize);
-				usces_get_pdf_shipping_address($pdf, $data, $y, $linetop, $leftside, $width, $lineheight);
-				
-				//配送先の電話番号
-				$pdf->MultiCell($width, $lineheight, usces_conv_euc('TEL ' . $data->deliveri['tel']), $border, 'L');
 			}
 		}
 		$y = $pdf->GetY() + $linetop + 0.5;
@@ -579,7 +582,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 		$pdf->Line($leftside, $y, $leftside+$width+5, $y);
 
 		// Message
-		$y = 84;
+		$y = 80;
 		list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 		$pdf->SetFont($font, '', $fontsize);
 		$pdf->SetXY($leftside, $y);

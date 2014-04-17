@@ -948,7 +948,7 @@ function usces_download_member_list() {
 	$chk_mem['date'] = (isset($_REQUEST['check']['date'])) ? 1 : 0;
 	$chk_mem['point'] = (isset($_REQUEST['check']['point'])) ? 1 : 0;
 	$chk_mem['rank'] = (isset($_REQUEST['check']['rank'])) ? 1 : 0;
-	$usces_opt_member['chk_mem'] = $chk_mem;
+	$usces_opt_member['chk_mem'] = apply_filters( 'usces_filter_chk_mem', $chk_mem );
 	update_option('usces_opt_member', $usces_opt_member);
 	//==========================================================================
 
@@ -1044,6 +1044,7 @@ function usces_download_member_list() {
 	if(isset($_REQUEST['check']['date'])) $line .= $th_h.__('Strated date', 'usces').$th_f;
 	if(isset($_REQUEST['check']['point'])) $line .= $th_h.__('current point', 'usces').$th_f;
 	if(isset($_REQUEST['check']['rank'])) $line .= $th_h.__('Rank', 'usces').$th_f;
+	$line .= apply_filters( 'usces_filter_chk_mem_label', NULL, $usces_opt_member, $rows );
 	$line .= $tr_f.$lf;
 	//==========================================================================
 	foreach((array)$rows as $array) {
@@ -1184,6 +1185,7 @@ function usces_download_member_list() {
 			}
 			$line .= $td_h.$rank.$td_f;
 		}
+		$line .= apply_filters( 'usces_filter_chk_mem_data', NULL, $usces_opt_member, $member_id, $data );
 		$line .= $tr_f.$lf;
 	}
 	$line .= $table_f.$lf;

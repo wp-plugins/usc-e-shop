@@ -618,6 +618,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				if( 'on' == $acting_opts['mobile_softbank'] ) $pay_method .= ",softbank";
 				if( 'on' == $acting_opts['mobile_auone'] ) $pay_method .= ",auone";
 				if( 'on' == $acting_opts['mobile_mysoftbank'] ) $pay_method .= ",mysoftbank";
+				if( 'on' == $acting_opts['mobile_softbank2'] ) $pay_method .= ",softbank2";
 				$pay_method = ltrim( $pay_method, "," );
 				$acting = "sbps_mobile";
 				$free_csv = "";
@@ -960,6 +961,33 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$html .= '</form>';
 			break;
 //20131220ysk end
+//20140206ysk start
+		case 'acting_veritrans_card'://カード決済(ベリトランス)
+		case 'acting_veritrans_conv'://コンビニ決済(ベリトランス)
+			$acting_opts = $usces->options['acting_settings']['veritrans'];
+			$usces->save_order_acting_data( $rand );
+			$settlement_type = ( 'acting_veritrans_card' == $acting_flag ) ? '01' : '02';
+			$amount = apply_filters( 'usces_filter_acting_amount', usces_crform( $usces_entries['order']['total_full_price'], false, false, 'return', false), $acting_flag );
+			$ctx = hash_init( 'sha512' );
+			$str = $acting_opts['merchanthash'].",".$acting_opts['merchant_id'].",".$settlement_type.",".$rand.",".$amount;
+			hash_update( $ctx, $str );
+			$hash = hash_final( $ctx, true );
+			$merchanthash = bin2hex( $hash );
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="MERCHANTHASH" value="'.esc_attr( $merchanthash ).'">
+				<input type="hidden" name="SETTLEMENT_TYPE" value="'.esc_attr( $settlement_type ).'">
+				<input type="hidden" name="ORDER_ID" value="'.esc_attr( $rand ).'">
+				<input type="hidden" name="AMOUNT" value="'.esc_attr( $amount ).'">
+				';
+			$html .= '<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', '').$purchase_disabled.' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled );
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform_back', $html );
+			$html .= '</form>';
+			break;
+//20140206ysk end
 
 		default:
 			$html .= '<form id="purchase_form" action="' . apply_filters('usces_filter_acting_url', USCES_CART_URL) . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

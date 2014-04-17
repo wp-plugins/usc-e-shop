@@ -807,14 +807,14 @@ function usces_item_uploadcsv(){
 			//add postmeta
 			$itemDeliveryMethod = explode(';', $datas[USCES_COL_ITEM_DELIVERYMETHOD]);
 			if( $usces->options['system']['csv_encode_type'] == 0 ){
-				$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS'))) . "'),";
+				$valstr .= '(' . $post_id . ", '_itemCode','" . esc_sql(trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS'))) . "'),";
 			}else{
-				$valstr .= '(' . $post_id . ", '_itemCode','" . mysql_real_escape_string(trim($datas[USCES_COL_ITEM_CODE])) . "'),";
+				$valstr .= '(' . $post_id . ", '_itemCode','" . esc_sql(trim($datas[USCES_COL_ITEM_CODE])) . "'),";
 			}
 			if( $usces->options['system']['csv_encode_type'] == 0 ){
-				$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim(mb_convert_encoding($datas[USCES_COL_ITEM_NAME], 'UTF-8', 'SJIS'))) . "'),";
+				$valstr .= '(' . $post_id . ", '_itemName','" . esc_sql(trim(mb_convert_encoding($datas[USCES_COL_ITEM_NAME], 'UTF-8', 'SJIS'))) . "'),";
 			}else{
-				$valstr .= '(' . $post_id . ", '_itemName','" . mysql_real_escape_string(trim($datas[USCES_COL_ITEM_NAME])) . "'),";
+				$valstr .= '(' . $post_id . ", '_itemName','" . esc_sql(trim($datas[USCES_COL_ITEM_NAME])) . "'),";
 			}
 			$valstr .= '(' . $post_id . ", '_itemRestriction','" . $datas[USCES_COL_ITEM_RESTRICTION] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemPointrate','" . $datas[USCES_COL_ITEM_POINTRATE] . "'),";
@@ -825,16 +825,16 @@ function usces_item_uploadcsv(){
 			$valstr .= '(' . $post_id . ", '_itemGpNum3','" . $datas[USCES_COL_ITEM_GPNUM3] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemGpDis3','" . $datas[USCES_COL_ITEM_GPDIS3] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemShipping','" . $datas[USCES_COL_ITEM_SHIPPING] . "'),";
-			$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . mysql_real_escape_string(serialize($itemDeliveryMethod)) . "'),";
+			$valstr .= '(' . $post_id . ", '_itemDeliveryMethod','" . esc_sql(serialize($itemDeliveryMethod)) . "'),";
 			$valstr .= '(' . $post_id . ", '_itemShippingCharge','" . $datas[USCES_COL_ITEM_SHIPPINGCHARGE] . "'),";
 			$valstr .= '(' . $post_id . ", '_itemIndividualSCharge','" . $datas[USCES_COL_ITEM_INDIVIDUALSCHARGE] . "'),";
 
-			//$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($meta_key)."', '" . mysql_real_escape_string(serialize($sku)) . "'),";
+			//$valstr .= '(' . $post_id . ", '".esc_sql($meta_key)."', '" . esc_sql(serialize($sku)) . "'),";
 
 //			print_r($valstr);
 			$valstr = rtrim($valstr, ',');
 			$dbres = $wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr");
-//			$dbres = mysql_query($query) or die(mysql_error());
+//			$dbres = $wpdb->query($query);
 
 			//add term_relationships, edit term_taxonomy
 			//category
@@ -972,7 +972,7 @@ function usces_item_uploadcsv(){
 					$optvalue['sort'] = $i;
 					$resopt = usces_add_opt($post_id, $optvalue, false);
 				}
-					//$valstr .= '(' . $post_id . ", '".mysql_real_escape_string($ometa_key)."', '" . mysql_real_escape_string(maybe_serialize($opt)) . "'),";
+					//$valstr .= '(' . $post_id . ", '".esc_sql($ometa_key)."', '" . esc_sql(maybe_serialize($opt)) . "'),";
 			}
 
 		}else{
@@ -1096,27 +1096,15 @@ function usces_download_item_list() {
 	//==========================================================================
 
 	$tableName = $wpdb->posts;
-	if( USCES_MYSQL_VERSION >= 5 ) {
-		$arr_column = array(
-					__('item code', 'usces') => 'item_code', 
-					__('item name', 'usces') => 'item_name', 
-					__('SKU code', 'usces') => 'sku_key', 
-					__('selling price', 'usces') => 'price', 
-					__('stock', 'usces') => 'zaiko_num', 
-					__('stock status', 'usces') => 'zaiko', 
-					__('Categories', 'usces') => 'category', 
-					__('display status', 'usces') => 'display_status');
-	} else {
-		$arr_column = array(
-					__('item code', 'usces') => 'item_code', 
-					__('page title', 'usces') => 'post_title', 
-					__('SKU code', 'usces') => 'sku_key', 
-					__('selling price', 'usces') => 'price', 
-					__('stock', 'usces') => 'zaiko_num', 
-					__('stock status', 'usces') => 'zaiko', 
-					__('Categories', 'usces') => 'category', 
-					__('display status', 'usces') => 'display_status');
-	}
+	$arr_column = array(
+				__('item code', 'usces') => 'item_code', 
+				__('item name', 'usces') => 'item_name', 
+				__('SKU code', 'usces') => 'sku_key', 
+				__('selling price', 'usces') => 'price', 
+				__('stock', 'usces') => 'zaiko_num', 
+				__('stock status', 'usces') => 'zaiko', 
+				__('Categories', 'usces') => 'category', 
+				__('display status', 'usces') => 'display_status');
 
 	$_REQUEST['searchIn'] = "searchIn"; 
 	$DT = new dataList($tableName, $arr_column);
@@ -1172,7 +1160,7 @@ function usces_download_item_list() {
 	set_time_limit(3600);
 	header("Content-Type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=usces_item_list.".$ext);
-	ob_end_flush();
+	@ob_end_flush();
 	flush();
 
 	foreach((array)$rows as $array) {

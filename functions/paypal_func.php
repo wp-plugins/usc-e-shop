@@ -7,10 +7,11 @@ foreach( (array)$payments as $id => $payment ) {
 if( $usces_payment ) {
 	add_action( 'init', 'usces_paypal_add_stylesheet' );
 	add_action( 'usces_after_main', 'usces_paypal_add_script' );
-	add_action( 'usces_action_cart_page_footer', 'usces_paypal_action_cart_page_footer' );
 	add_action( 'usces_front_ajax', 'usces_paypal_front_ajax' );
 	add_filter( 'usces_filter_uscesL10n', 'usces_paypal_filter_uscesL10n' );
 	add_filter( 'usces_filter_paypal_ec_cancelurl', 'usces_paypal_filter_paypal_ec_cancelurl', 10, 2 );
+	add_action( 'usces_action_cart_page_footer', 'usces_paypal_action_cart_page_footer' );
+	add_filter( 'usces_filter_cart_page_footer', 'usces_paypal_filter_cart_page_footer' );
 }
 
 function usces_paypal_add_stylesheet() {
@@ -40,16 +41,26 @@ function usces_paypal_filter_uscesL10n() {
 }
 
 function usces_paypal_action_cart_page_footer() {
+	$footer = usces_paypal_cart_page_footer();
+	echo $footer;
+}
+
+function usces_paypal_filter_cart_page_footer( $html ) {
+	$footer = usces_paypal_cart_page_footer( false );
+	return $html.$footer;
+}
+
+function usces_paypal_cart_page_footer( $include = true ) {
 	global $usces;
+	$html = '';
 
 	$member = $usces->get_member();
-	if( !usces_paypal_set_session( $member['ID'] ) ) return;
-	if( false === $usces->cart->num_row() ) return;
+	if( !usces_paypal_set_session( $member['ID'] ) ) return $html;
+	if( false === $usces->cart->num_row() ) return $html;
 
 	$usces_entries = $usces->cart->get_entry();
 
-	$html = '';
-	include( USCES_PLUGIN_DIR."/includes/delivery_info_script.php" );
+	if( $include ) include( USCES_PLUGIN_DIR."/includes/delivery_info_script.php" );
 	$usces->set_cart_fees( $member, $usces_entries );
 	$usces_entries = $usces->cart->get_entry();
 	$total_price = $usces_entries['order']['total_items_price'] + $usces_entries['order']['discount'] + $usces_entries['order']['shipping_charge'] + $usces_entries['order']['cod_fee'];
@@ -161,7 +172,7 @@ function usces_paypal_action_cart_page_footer() {
 		<div class="send"><input name="paypal_close" type="button" id="paypal_close" class="back_to_delivery_button" value="'.__('Cancel', 'usces').'" /></div>
 	</div>';
 
-	echo $html;
+	return $html;
 }
 
 function usces_paypal_set_session( $member_id, $uscesid = NULL ) {

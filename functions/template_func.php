@@ -1889,7 +1889,8 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 			'order_number',
 			'res_tracking_id', 'res_payment_date', 'res_payinfo_key',
 			'SID', 'DATE', 'TIME', 'CVS', 'SHNO', 'FURL', 'settltment_status', 'settltment_errmsg', 
-			'stran', 'mbtran', 'bktrans', 'tranid', 'TransactionId'
+			'stran', 'mbtran', 'bktrans', 'tranid', 'TransactionId', 
+			'mStatus', 'vResultCode', 'orderId', 'cvsType', 'receiptNo', 'receiptDate', 'rcvAmount' 
 		);
 		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
 		if( !in_array($key, $keys) ) {
@@ -2031,6 +2032,29 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 				}
 				break;
 //20101018ysk end
+//20140206ysk start
+			case 'veritrans_conv':
+				if( 'cvsType' == $key ) {
+					switch( $value ) {
+					case 'sej':
+						$value = 'セブン－イレブン';
+						break;
+					case 'econ-lw':
+						$value = 'ローソン';
+						break;
+					case 'econ-fm':
+						$value = 'ファミリーマート';
+						break;
+					case 'econ-mini':
+						$value = 'ミニストップ';
+						break;
+					case 'econ-other':
+						$value = 'セイコーマート';
+						break;
+					}
+				}
+				break;
+//20140206ysk end
 		}
 		$value = apply_filters( 'usces_filter_settle_info_field_value', $value, $key, $acting );
 		switch($type){
