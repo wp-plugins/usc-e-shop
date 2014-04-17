@@ -3,12 +3,29 @@
 add_action( 'usces_action_memberinfo_page_header', 'usces_action_settlement_memberinfo_page_header' );
 add_filter( 'usces_filter_template_redirect', 'usces_filter_settlement_template_redirect' );
 add_filter( 'usces_filter_delivery_secure_form_howpay', 'usces_filter_update_settlement_form_howpay' );
+add_filter( 'usces_filter_available_payment_method', 'usces_filter_settlement_available_payment_method' );
 
 function usces_filter_update_settlement_form_howpay( $html ) {
 	if( isset($_GET['page'] ) and 'member_update_settlement' == $_GET['page'] ) {
 		$html = '';
 	}
 	return $html;
+}
+
+function usces_filter_settlement_available_payment_method( $payments ) {
+	global $usces;
+
+	if( $usces->is_member_page($_SERVER['REQUEST_URI']) ) {
+		$payment_method = array();
+		foreach( (array)$payments as $id => $payment ) {
+			if( 'acting_zeus_card' == $payment['settlement'] ) {
+				$payment_method[$id] = $payments[$id];
+				break;
+			}
+		}
+		if( !empty($payment_method) ) $payments = $payment_method;
+	}
+	return $payments;
 }
 
 function usces_action_settlement_memberinfo_page_header() {
