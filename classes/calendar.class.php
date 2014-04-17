@@ -70,13 +70,13 @@ class calendarData {
 				$this->_datetext[4][$d] = $day;
 			}
 		}
-		if ($d <= 6) {
+		if ( 0 < $d && $d <= 6) {
 			while ($d <= 6) {
 				$this->_date[4][$d] = "";
 				$this->_datetext[4][$d] = "";
 				$d++;
 			}
-		} else {
+		} elseif( $d !== 0 ) {
 			// 6週目
 			for ($d = 0; $d <= 6; $d++) {
 				if ($lastday == $day) {
