@@ -31,24 +31,26 @@ foreach ( (array)$payments as $id => $array ) {
 				$html .= '<table class="customer_form" id="' . $paymod_id . '">'."\n";
 
 				$pcid = NULL;
+				$partofcard = NULL;
 				if( $usces->is_member_logged_in() ){
 					$member = $usces->get_member();
 					if( !isset($_GET['re-enter']) ) {
 						$pcid = $usces->get_member_meta_value( 'zeus_pcid', $member['ID'] );
+						$partofcard = $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] );
 					}
 				}
 				//if( 2 == $usces->options['acting_settings'][$paymod_id]['security'] && 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
-				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL ){
+				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL && $partofcard != NULL ){
 					$html .= '<input name="cnum1" type="hidden" value="8888888888888888" />
 					<input name="expyy" type="hidden" value="2010" />
 					<input name="expmm" type="hidden" value="01" />
 					<input name="username" type="hidden" value="QUICKCHARGE" />';
+					$html .= '<tr>
+					<th scope="row">'.__('ご登録のカード番号下4桁', 'usces').'</th>
+					<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ) . '（<a href="' . add_query_arg( array('page'=>'member_update_settlement', 're-enter'=>1), USCES_MEMBER_URL ) . '">カード情報の変更はこちら</a>）</p></td>
+					</tr>';
 					if( 1 == $usces->options['acting_settings'][$paymod_id]['security'] ){
-						$html .= '<tr>
-						<th scope="row">'.__('ご登録のカード番号下4桁', 'usces').'</th>
-						<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ) . '（<a href="' . add_query_arg( array('page'=>'member_update_settlement', 're-enter'=>1), USCES_MEMBER_URL ) . '">カード情報の変更はこちら</a>）</p></td>
-						</tr>
-						<th scope="row">'.__('セキュリティコード', 'usces').'</th>
+						$html .= '<th scope="row">'.__('セキュリティコード', 'usces').'</th>
 						<td colspan="2"><input name="securecode" type="text" size="6" value="' . esc_attr($securecode) . '" />(半角数字のみ)</td>
 						</tr>';
 					}
