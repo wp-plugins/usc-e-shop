@@ -117,7 +117,7 @@ foreach ( (array)$payments as $id => $array ) {
 						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>VISA</option>
 						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>MASTER</option>
 						<option value="2"' . (('2' === $cbrand) ? ' selected="selected"' : '') . '>DINERS</option>
-						<option value="3"' . (('3' === $cbrand) ? ' selected="selected"' : '') . '>AMEX</option>
+						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>AMEX</option>
 					</select>
 					</td>
 					</tr>
