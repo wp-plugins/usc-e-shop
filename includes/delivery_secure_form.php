@@ -43,7 +43,8 @@ foreach ( (array)$payments as $id => $array ) {
 				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL && $partofcard != NULL ){
 					$html .= '<input name="cnum1" type="hidden" value="8888888888888888" />
 					<input name="expyy" type="hidden" value="2010" />
-					<input name="expmm" type="hidden" value="01" />';
+					<input name="expmm" type="hidden" value="01" />
+					<input name="username_card" type="hidden" value="QUICKCHARGE" />';
 					$html .= '<tr>
 					<th scope="row">'.__('ご登録のカード番号下4桁', 'usces').'</th>
 					<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ) . '（<a href="' . add_query_arg( array('page'=>'member_update_settlement', 're-enter'=>1), USCES_MEMBER_URL ) . '">カード情報の変更はこちら</a>）</p></td>
