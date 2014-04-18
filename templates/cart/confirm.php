@@ -107,7 +107,7 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 	$html = apply_filters('usces_filter_confirm_point_inform', $html);
 	$html .= '</form>';
 }
- 
+$html .= apply_filters('usces_filter_confirm_after_form', NULL);
 $html .= '</div>
 	<table id="confirm_table">
 	<tr class="ttl">
