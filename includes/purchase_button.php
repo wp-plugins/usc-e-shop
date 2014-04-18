@@ -131,14 +131,14 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
 				<input type="hidden" name="printord" value="yes">';
-			if( isset($_POST['cbrand']) && isset($_POST['howpay']) && WCUtils::is_zero($_POST['howpay']) ){
-				$html .= '<input type="hidden" name="howpay" value="' . $_POST['howpay'] . '">';
-				$html .= '<input type="hidden" name="cbrand" value="' . $_POST['cbrand'] . '">';
-				$div_name = 'div_' . $_POST['cbrand'];
-				$html .= '<input type="hidden" name="div" value="' . $_POST[$div_name] . '">';
-				$html .= '<input type="hidden" name="div_1" value="' . $_POST['div_1'] . '">';
-				$html .= '<input type="hidden" name="div_2" value="' . $_POST['div_2'] . '">';
-				$html .= '<input type="hidden" name="div_3" value="' . $_POST['div_3'] . '">';
+			if( isset($usces_entries['order']['cbrand']) && isset($usces_entries['order']['howpay']) && WCUtils::is_zero($usces_entries['order']['howpay']) ){
+				$html .= '<input type="hidden" name="howpay" value="' . $usces_entries['order']['howpay'] . '">';
+				$html .= '<input type="hidden" name="cbrand" value="' . $usces_entries['order']['cbrand'] . '">';
+				$div_name = 'div_' . $usces_entries['order']['cbrand'];
+				$html .= '<input type="hidden" name="div" value="' . $usces_entries['order'][$div_name] . '">';
+				$html .= '<input type="hidden" name="div_1" value="' . $usces_entries['order']['div_1'] . '">';
+				$html .= '<input type="hidden" name="div_2" value="' . $usces_entries['order']['div_2'] . '">';
+				$html .= '<input type="hidden" name="div_3" value="' . $usces_entries['order']['div_3'] . '">';
 			}
 			$html .= '
 				<input type="hidden" name="cnum1" value="' . esc_attr($_POST['cnum1']) . '">
@@ -159,7 +159,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				<input type="hidden" name="username" value="' . esc_attr($_POST['username_conv']) . '">
 				<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
-				<input type="hidden" name="pay_cvs" value="' . $_POST['pay_cvs'] . '">
+				<input type="hidden" name="pay_cvs" value="' . $usces_entries['order']['pay_cvs'] . '">
 				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">';
 			$html .= '
@@ -229,9 +229,9 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 				if( $pcid != NULL )
 					$html .= '<input type="hidden" name="PAYQUICKID" value="' . $pcid . '">';
 			}
-			if( 'on' == $acting_opts['howpay'] && isset($_POST['div']) && '0' !== $_POST['div'] && 'continue' != $charging_type ){
-				$html .= '<input type="hidden" name="div" value="' . $_POST['div'] . '">';
-				switch( $_POST['div'] ){
+			if( 'on' == $acting_opts['howpay'] && isset($usces_entries['order']['div']) && '0' !== $usces_entries['order']['div'] && 'continue' != $charging_type ){
+				$html .= '<input type="hidden" name="div" value="' . $usces_entries['order']['div'] . '">';
+				switch( $usces_entries['order']['div'] ){
 					case '1':
 						$html .= '<input type="hidden" name="METHOD" value="61">';
 						$html .= '<input type="hidden" name="PTIMES" value="2">';

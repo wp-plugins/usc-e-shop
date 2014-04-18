@@ -43,8 +43,7 @@ foreach ( (array)$payments as $id => $array ) {
 				if( 'on' == $usces->options['acting_settings'][$paymod_id]['quickcharge'] && $pcid != NULL && $partofcard != NULL ){
 					$html .= '<input name="cnum1" type="hidden" value="8888888888888888" />
 					<input name="expyy" type="hidden" value="2010" />
-					<input name="expmm" type="hidden" value="01" />
-					<input name="username" type="hidden" value="QUICKCHARGE" />';
+					<input name="expmm" type="hidden" value="01" />';
 					$html .= '<tr>
 					<th scope="row">'.__('ご登録のカード番号下4桁', 'usces').'</th>
 					<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ) . '（<a href="' . add_query_arg( array('page'=>'member_update_settlement', 're-enter'=>1), USCES_MEMBER_URL ) . '">カード情報の変更はこちら</a>）</p></td>
@@ -105,13 +104,13 @@ foreach ( (array)$payments as $id => $array ) {
 				$html_howpay .= '
 					<tr>
 					<th scope="row">'.__('支払方法', 'usces').'</th>
-					<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' === $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
-					<td><input name="howpay" type="radio" value="0" id="howdiv2"' . (('0' === $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
+					<td><input name="offer[howpay]" type="radio" value="1" id="howdiv1"' . (('1' === $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
+					<td><input name="offer[howpay]" type="radio" value="0" id="howdiv2"' . (('0' === $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
 					</tr>
 					<tr id="cbrand_zeus">
 					<th scope="row">'.__('カードブランド', 'usces').'</th>
 					<td colspan="2">
-					<select name="cbrand">
+					<select name="offer[cbrand]">
 						<option value=""' . ((WCUtils::is_blank($cbrand)) ? ' selected="selected"' : '') . '>--------</option>
 						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>JCB</option>
 						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>VISA</option>
@@ -124,7 +123,7 @@ foreach ( (array)$payments as $id => $array ) {
 					<tr id="div_zeus">
 					<th scope="row">'.__('分割回数', 'usces').'</th>
 					<td colspan="2">
-					<select name="div_1" id="brand1">
+					<select name="offer[div_1]" id="brand1">
 						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
 						<option value="99"' . (('99' === $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 						<option value="03"' . (('03' === $cbrand) ? ' selected="selected"' : '') . '>3回</option>
@@ -137,11 +136,11 @@ foreach ( (array)$payments as $id => $array ) {
 						<option value="20"' . (('20' === $cbrand) ? ' selected="selected"' : '') . '>20回</option>
 						<option value="24"' . (('24' === $cbrand) ? ' selected="selected"' : '') . '>24回</option>
 					</select>
-					<select name="div_2" id="brand2">
+					<select name="offer[div_2]" id="brand2">
 						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
 						<option value="99"' . (('99' === $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 					</select>
-					<select name="div_3" id="brand3">
+					<select name="offer[div_3]" id="brand3">
 						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
 					</select>
 					</td>
@@ -169,7 +168,7 @@ foreach ( (array)$payments as $id => $array ) {
 					<tr>
 					<th scope="row">'.__('お支払いに利用するコンビニ', 'usces').'</th>
 					<td colspan="2">
-					<select name="pay_cvs" id="pay_cvs_zeus">
+					<select name="offer[pay_cvs]" id="pay_cvs_zeus">
 						<option value="D001"' . (('D001' == $pay_cvs) ? ' selected="selected"' : '') . '>セブンイレブン</option>
 						<option value="D002"' . (('D002' == $pay_cvs) ? ' selected="selected"' : '') . '>ローソン</option>
 						<option value="D030"' . (('D030' == $pay_cvs) ? ' selected="selected"' : '') . '>ファミリーマート</option>
@@ -203,7 +202,7 @@ foreach ( (array)$payments as $id => $array ) {
 					<tr>
 					<th scope="row">'.__('支払方法', 'usces').'</th>
 					<td colspan="2">
-					<select name="div" id="div_remise">
+					<select name="offer[div]" id="div_remise">
 						<option value="0"' . (('0' === $div) ? ' selected="selected"' : '') . '>　一括払い</option>
 						<option value="1"' . (('1' === $div) ? ' selected="selected"' : '') . '>　2回払い</option>
 						<option value="2"' . (('2' === $div) ? ' selected="selected"' : '') . '>　リボ払い</option>

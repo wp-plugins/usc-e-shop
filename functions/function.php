@@ -3669,7 +3669,6 @@ function usces_page_name( $out = '') {
 
 function usces_post_reg_orderdata($order_id, $results){
 	global $usces, $wpdb;
-	//$entry = $usces->cart->get_entry();//20110621ysk 0000184
 	$acting = isset($_GET['acting']) ? $_GET['acting'] : '';
 	$data = array();
 
@@ -3699,8 +3698,10 @@ function usces_post_reg_orderdata($order_id, $results){
 			case 'zeus_card':
 				$acting_opts = $usces->options['acting_settings']['zeus'];
 				if( isset($_GET['zeussuffix']) ){
+					$entry = $usces->cart->get_entry();//20110621ysk 0000184
 					$data['acting'] = 'zeus_card Secure API';
 					$data['order_number'] = $_GET['zeusordd'];
+					$data['howpay'] = $entry['order']['howpay'];
 					
 					$usces->set_order_meta_value('acting_'.$acting, serialize($data), $order_id);
 					if( $usces->is_member_logged_in() ){

@@ -3209,22 +3209,22 @@ function usces_point_inform_zeus() {
 		}
 		$html .= '<input type="hidden" name="expyy" value="'.esc_attr($_POST['expyy']).'">';
 		$html .= '<input type="hidden" name="expmm" value="'.esc_attr($_POST['expmm']).'">';
-		$html .= '<input type="hidden" name="username" value="'.esc_attr($_POST['username']).'">';
-		if( isset($_POST['howpay']) ) {
-			$html .= '<input type="hidden" name="howpay" value="'.esc_attr($_POST['howpay']).'">';
+		$html .= '<input type="hidden" name="username_card" value="'.esc_attr($_POST['username_card']).'">';
+		if( isset($usces_entries['order']['howpay']) ) {
+			$html .= '<input type="hidden" name="offer[howpay]" value="'.esc_attr($usces_entries['order']['howpay']).'">';
 		}
-		if( isset($_POST['cbrand']) ) {
-			$html .= '<input type="hidden" name="cbrand" value="'.esc_attr($_POST['cbrand']).'">';
-			$html .= '<input type="hidden" name="div_1" value="'.esc_attr($_POST['div_1']).'">';
-			$html .= '<input type="hidden" name="div_2" value="'.esc_attr($_POST['div_2']).'">';
-			$html .= '<input type="hidden" name="div_3" value="'.esc_attr($_POST['div_3']).'">';
+		if( isset($usces_entries['order']['cbrand']) ) {
+			$html .= '<input type="hidden" name="offer[cbrand]" value="'.esc_attr($usces_entries['order']['cbrand']).'">';
+			$html .= '<input type="hidden" name="offer[div_1]" value="'.esc_attr($usces_entries['order']['div_1']).'">';
+			$html .= '<input type="hidden" name="offer[div_2]" value="'.esc_attr($usces_entries['order']['div_2']).'">';
+			$html .= '<input type="hidden" name="offer[div_3]" value="'.esc_attr($usces_entries['order']['div_3']).'">';
 		}
 		break;
 
 	case 'acting_zeus_conv':
 		if( isset($_POST['pay_cvs']) ) {
-			$html .= '<input type="hidden" name="pay_cvs" value="'.esc_attr($_POST['pay_cvs']).'">';
-			$html .= '<input type="hidden" name="username" value="'.esc_attr($_POST['username']).'">';
+			$html .= '<input type="hidden" name="offer[pay_cvs]" value="'.esc_attr($usces_entries['order']['pay_cvs']).'">';
+			$html .= '<input type="hidden" name="username_conv" value="'.esc_attr($_POST['username_conv']).'">';
 		}
 		break;
 	}
