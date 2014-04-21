@@ -12,6 +12,7 @@ if( $usces_payment ) {
 	add_filter( 'usces_filter_paypal_ec_cancelurl', 'usces_paypal_filter_paypal_ec_cancelurl', 10, 2 );
 	add_action( 'usces_action_cart_page_footer', 'usces_paypal_action_cart_page_footer' );
 	add_filter( 'usces_filter_cart_page_footer', 'usces_paypal_filter_cart_page_footer' );
+	add_action( 'usces_action_customerinfo', 'usces_paypal_action_customerinfo' );
 }
 
 function usces_paypal_add_stylesheet() {
@@ -353,7 +354,7 @@ function usces_paypal_purchase_form() {
 	$payment_paypal = array();
 	foreach( (array)$payments as $id => $payment ) {
 		if( 'acting_paypal_ec' == $payment['settlement'] ) {
-			//$usces->cart->set_order_entry( array( 'payment_name' => $payment['name'] ) );
+			$usces->cart->set_order_entry( array( 'payment_name' => $payment['name'] ) );
 			$payment_paypal = $payment;
 			break;
 		}
@@ -523,6 +524,13 @@ function usces_paypal_delivery_time_select( $selected ) {
 	global $usces;
 	$usces->cart->set_order_entry( array( 'delivery_time' => $selected ) );
 	die( "ok" );
+}
+
+function usces_paypal_action_customerinfo() {
+	global $usces;
+	if( $usces->is_member_logged_in() ) {
+		$usces->cart->set_order_entry( array( 'payment_name' => '' ) );
+	}
 }
 
 ?>
