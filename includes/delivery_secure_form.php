@@ -175,6 +175,8 @@ foreach ( (array)$payments as $id => $array ) {
 						<option value="D030"' . (('D030' == $pay_cvs) ? ' selected="selected"' : '') . '>ファミリーマート</option>
 						<option value="D040"' . (('D040' == $pay_cvs) ? ' selected="selected"' : '') . '>サークルKサンクス</option>
 						<option value="D015"' . (('D015' == $pay_cvs) ? ' selected="selected"' : '') . '>セイコーマート</option>
+						<option value="D050"' . (('D050' == $pay_cvs) ? ' selected="selected"' : '') . '>ミニストップ</option>
+						<option value="D060"' . (('D060' == $pay_cvs) ? ' selected="selected"' : '') . '>デイリーヤマザキ</option>
 					</select>
 					</td>
 					</tr>

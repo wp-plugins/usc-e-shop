@@ -346,9 +346,11 @@ function usces_get_conv_name($code){
 			break;
 		case 'D005':
 		case '080'://20101018ysk
+		case 'D050':
 			$name = 'ミニストップ';
 			break;
 		case 'D010':
+		case 'D060':
 			$name = 'デイリーヤマザキ';
 			break;
 		case 'D011':

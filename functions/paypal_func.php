@@ -207,10 +207,24 @@ function usces_paypal_set_session( $member_id, $uscesid = NULL ) {
 	$usces->set_session_custom_member( $member['ID'] );
 
 	foreach( $_SESSION['usces_member'] as $key => $value ) {
-		if( 'country' == $key and empty( $value ) ) {
-			$_SESSION['usces_entry']['customer'][$key] = usces_get_base_country();
+		if( 'custom_member' == $key ) {
+			foreach( $_SESSION['usces_member']['custom_member'] as $mbkey => $mbvalue ) {
+				//if( empty($_SESSION['usces_entry']['custom_customer'][$mbkey]) ) {
+					if( is_array($mbvalue) ) {
+						foreach( $mbvalue as $k => $v ) {
+							$_SESSION['usces_entry']['custom_customer'][$mbkey][$v] = $v;
+						}
+					} else {
+						$_SESSION['usces_entry']['custom_customer'][$mbkey] = $mbvalue;
+					}
+				//}
+			}
 		} else {
-			$_SESSION['usces_entry']['customer'][$key] = trim( $value );
+			if( 'country' == $key and empty( $value ) ) {
+				$_SESSION['usces_entry']['customer'][$key] = usces_get_base_country();
+			} else {
+				$_SESSION['usces_entry']['customer'][$key] = trim( $value );
+			}
 		}
 	}
 	foreach( $_SESSION['usces_entry']['customer'] as $key => $value ) {
@@ -339,7 +353,7 @@ function usces_paypal_purchase_form() {
 	$payment_paypal = array();
 	foreach( (array)$payments as $id => $payment ) {
 		if( 'acting_paypal_ec' == $payment['settlement'] ) {
-			$usces->cart->set_order_entry( array( 'payment_name' => $payment['name'] ) );
+			//$usces->cart->set_order_entry( array( 'payment_name' => $payment['name'] ) );
 			$payment_paypal = $payment;
 			break;
 		}
@@ -426,7 +440,7 @@ function usces_paypal_purchase_form() {
 			$html .= '<input type="hidden" name="purchase" value="acting_paypal_ec">';
 			$html .= '<input type="hidden" name="paypal_from_cart" value="1">';
 			$html .= '<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_xpressCheckout.gif" border="0" name="submit" value="submit" alt="PayPal"'.apply_filters( 'usces_filter_confirm_nextbutton', NULL ).$purchase_disabled.' /></div>';
-			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payment, $acting_flag, $rand, $purchase_disabled );
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payment_paypal, $acting_flag, $rand, $purchase_disabled );
 			$html .= '</form>';
 	return $html;
 }

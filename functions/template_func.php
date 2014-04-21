@@ -1835,6 +1835,10 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 						$value = 'サークルKサンクス';
 					}elseif( 'D015' === $value ){
 						$value = 'セイコーマート';
+					}elseif( 'D050' === $value ){
+						$value = 'ミニストップ';
+					}elseif( 'D060' === $value ){
+						$value = 'デイリーヤマザキ';
 					}
 				}elseif( 'status' == $key){
 					if( '01' === $value ){
