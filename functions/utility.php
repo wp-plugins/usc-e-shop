@@ -459,7 +459,7 @@ function usces_filter_delivery_secure_check( $mes ){
 			if ( WCUtils::is_blank($_POST["expmm"]) )
 				$mes .= __('カードの有効月を選択してください', 'usces') . "<br />";
 				
-			if ( WCUtils::is_blank($_POST["username"]) )
+			if ( WCUtils::is_blank($_POST["username_card"]) )
 				$mes .= __('カード名義を入力してください', 'usces') . "<br />";
 				
 			if ( isset($_POST["howpay"]) && 0 == $_POST["howpay"] && WCUtils::is_blank($_POST["cbrand"]) )
@@ -499,9 +499,11 @@ function usces_get_conv_name($code){
 			break;
 		case 'D005':
 		case '080'://20101018ysk
+		case 'D050':
 			$name = 'ミニストップ';
 			break;
 		case 'D010':
+		case 'D060':
 			$name = 'デイリーヤマザキ';
 			break;
 		case 'D011':
@@ -603,11 +605,11 @@ function usces_payment_detail($usces_entries){
 			break;
 		
 		case 'acting_zeus_card':
-			if( !isset($_REQUEST['cbrand']) || (isset($_REQUEST['howpay']) && '1' === $_REQUEST['howpay']) ){
+			if( !isset($usces_entries['order']['cbrand']) || (isset($usces_entries['order']['howpay']) && '1' === $usces_entries['order']['howpay']) ){
 				$str = '　一括払い';
 			}else{
-				$div_name = 'div_' . $_REQUEST['cbrand'];
-				switch($_REQUEST[$div_name]){
+				$div_name = 'div_' . $usces_entries['order']['cbrand'];
+				switch($usces_entries['order'][$div_name]){
 					case '01':
 						$str = '　一括払い';
 						break;
@@ -649,8 +651,8 @@ function usces_payment_detail($usces_entries){
 			break;
 		
 		case 'acting_remise_card':
-			if( isset( $_POST['div'] ) ){
-				switch($_POST['div']){
+			if( isset( $usces_entries['order']['div'] ) ){
+				switch($usces_entries['order']['div']){
 					case '0':
 						$str = '　一括払い';
 						break;

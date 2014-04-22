@@ -118,7 +118,7 @@ get_header();
 	<?php do_action('usces_action_confirm_page_point_inform'); ?>
 	</form>
 <?php endif; ?>
- 
+ 	<?php do_action('usces_action_confirm_after_form'); ?>
 	</div>
 	<table id="confirm_table">
 		<tr class="ttl">

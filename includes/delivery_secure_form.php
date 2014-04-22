@@ -22,7 +22,7 @@ foreach ( (array)$payments as $id => $array ) {
 				$securecode = isset( $_POST['securecode'] ) ? esc_html($_POST['securecode']) : '';
 				$expyy = isset( $_POST['expyy'] ) ? esc_html($_POST['expyy']) : '';
 				$expmm = isset( $_POST['expmm'] ) ? esc_html($_POST['expmm']) : '';
-				$username = isset( $_POST['username'] ) ? esc_html($_POST['username']) : '';
+				$username = isset( $_POST['username_card'] ) ? esc_html($_POST['username_card']) : '';
 				$howpay = isset( $_POST['howpay'] ) ? esc_html($_POST['howpay']) : '1';
 				$cbrand = isset( $_POST['cbrand'] ) ? esc_html($_POST['cbrand']) : '';
 				$div = isset( $_POST['div'] ) ? esc_html($_POST['div']) : '';
@@ -44,7 +44,7 @@ foreach ( (array)$payments as $id => $array ) {
 					$html .= '<input name="cnum1" type="hidden" value="8888888888888888" />
 					<input name="expyy" type="hidden" value="2010" />
 					<input name="expmm" type="hidden" value="01" />
-					<input name="username" type="hidden" value="QUICKCHARGE" />';
+					<input name="username_card" type="hidden" value="QUICKCHARGE" />';
 					$html .= '<tr>
 					<th scope="row">'.__('ご登録のカード番号下4桁', 'usces').'</th>
 					<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ) . '（<a href="' . add_query_arg( array('page'=>'member_update_settlement', 're-enter'=>1), USCES_MEMBER_URL ) . '">カード情報の変更はこちら</a>）</p></td>
@@ -95,7 +95,7 @@ foreach ( (array)$payments as $id => $array ) {
 						</tr>
 						<tr>
 						<th scope="row">'.__('カード名義', 'usces').'</th>
-						<td colspan="2"><input name="username" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
+						<td colspan="2"><input name="username_card" id="username_card" type="text" size="30" value="' . esc_attr($username) . '" />(半角英字)</td>
 						</tr>';
 				}
 
@@ -105,26 +105,26 @@ foreach ( (array)$payments as $id => $array ) {
 				$html_howpay .= '
 					<tr>
 					<th scope="row">'.__('支払方法', 'usces').'</th>
-					<td><input name="howpay" type="radio" value="1" id="howdiv1"' . (('1' === $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
-					<td><input name="howpay" type="radio" value="0" id="howdiv2"' . (('0' === $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
+					<td><input name="offer[howpay]" type="radio" value="1" id="howdiv1"' . (('1' === $howpay) ? ' checked' : '') . ' /><label for="howdiv1">一括払い</label></td>
+					<td><input name="offer[howpay]" type="radio" value="0" id="howdiv2"' . (('0' === $howpay) ? ' checked' : '') . ' /><label for="howdiv2">分割払い</label></td>
 					</tr>
 					<tr id="cbrand_zeus">
 					<th scope="row">'.__('カードブランド', 'usces').'</th>
 					<td colspan="2">
-					<select name="cbrand">
+					<select name="offer[cbrand]">
 						<option value=""' . ((WCUtils::is_blank($cbrand)) ? ' selected="selected"' : '') . '>--------</option>
 						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>JCB</option>
 						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>VISA</option>
 						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>MASTER</option>
 						<option value="2"' . (('2' === $cbrand) ? ' selected="selected"' : '') . '>DINERS</option>
-						<option value="3"' . (('3' === $cbrand) ? ' selected="selected"' : '') . '>AMEX</option>
+						<option value="1"' . (('1' === $cbrand) ? ' selected="selected"' : '') . '>AMEX</option>
 					</select>
 					</td>
 					</tr>
 					<tr id="div_zeus">
 					<th scope="row">'.__('分割回数', 'usces').'</th>
 					<td colspan="2">
-					<select name="div_1" id="brand1">
+					<select name="offer[div_1]" id="brand1">
 						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
 						<option value="99"' . (('99' === $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 						<option value="03"' . (('03' === $cbrand) ? ' selected="selected"' : '') . '>3回</option>
@@ -137,11 +137,11 @@ foreach ( (array)$payments as $id => $array ) {
 						<option value="20"' . (('20' === $cbrand) ? ' selected="selected"' : '') . '>20回</option>
 						<option value="24"' . (('24' === $cbrand) ? ' selected="selected"' : '') . '>24回</option>
 					</select>
-					<select name="div_2" id="brand2">
+					<select name="offer[div_2]" id="brand2">
 						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払い</option>
 						<option value="99"' . (('99' === $cbrand) ? ' selected="selected"' : '') . '>リボ払い</option>
 					</select>
-					<select name="div_3" id="brand3">
+					<select name="offer[div_3]" id="brand3">
 						<option value="01"' . (('01' === $cbrand) ? ' selected="selected"' : '') . '>一括払いのみ</option>
 					</select>
 					</td>
@@ -162,25 +162,27 @@ foreach ( (array)$payments as $id => $array ) {
 
 				$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : 'D001';
 				$entry = $usces->cart->get_entry();
-				$username = isset( $_POST['username'] ) ? esc_html($_POST['username']) : $entry['customer']['name3'].$entry['customer']['name4'];
+				$username = isset( $_POST['username_conv'] ) ? esc_html($_POST['username_conv']) : $entry['customer']['name3'].$entry['customer']['name4'];
 
 				$html .= '
 				<table class="customer_form" id="' . $paymod_id . '_conv">
 					<tr>
 					<th scope="row">'.__('お支払いに利用するコンビニ', 'usces').'</th>
 					<td colspan="2">
-					<select name="pay_cvs" id="pay_cvs_zeus">
+					<select name="offer[pay_cvs]" id="pay_cvs_zeus">
 						<option value="D001"' . (('D001' == $pay_cvs) ? ' selected="selected"' : '') . '>セブンイレブン</option>
 						<option value="D002"' . (('D002' == $pay_cvs) ? ' selected="selected"' : '') . '>ローソン</option>
 						<option value="D030"' . (('D030' == $pay_cvs) ? ' selected="selected"' : '') . '>ファミリーマート</option>
 						<option value="D040"' . (('D040' == $pay_cvs) ? ' selected="selected"' : '') . '>サークルKサンクス</option>
 						<option value="D015"' . (('D015' == $pay_cvs) ? ' selected="selected"' : '') . '>セイコーマート</option>
+						<option value="D050"' . (('D050' == $pay_cvs) ? ' selected="selected"' : '') . '>ミニストップ</option>
+						<option value="D060"' . (('D060' == $pay_cvs) ? ' selected="selected"' : '') . '>デイリーヤマザキ</option>
 					</select>
 					</td>
 					</tr>
 					<tr>
 					<th scope="row"><em>＊</em>'.__('お名前', 'usces').'</th>
-					<td colspan="2"><input name="username" type="text" size="30" value="'.esc_attr($username).'" />(全角カナ)</td>
+					<td colspan="2"><input name="username_conv" id="username_conv" type="text" size="30" value="'.esc_attr($username).'" />(全角カナ)</td>
 					</tr>
 				</table>';
 				break;
@@ -203,7 +205,7 @@ foreach ( (array)$payments as $id => $array ) {
 					<tr>
 					<th scope="row">'.__('支払方法', 'usces').'</th>
 					<td colspan="2">
-					<select name="div" id="div_remise">
+					<select name="offer[div]" id="div_remise">
 						<option value="0"' . (('0' === $div) ? ' selected="selected"' : '') . '>　一括払い</option>
 						<option value="1"' . (('1' === $div) ? ' selected="selected"' : '') . '>　2回払い</option>
 						<option value="2"' . (('2' === $div) ? ' selected="selected"' : '') . '>　リボ払い</option>

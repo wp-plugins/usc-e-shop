@@ -279,6 +279,8 @@ function toggleVisibility(id) {
 		<input name="pay_cvs[D030]" type="hidden" value="ファミリーマート" />
 		<input name="pay_cvs[D040]" type="hidden" value="サークルKサンクス" />
 		<input name="pay_cvs[D015]" type="hidden" value="セイコーマート" />
+		<input name="pay_cvs[D050]" type="hidden" value="ミニストップ" />
+		<input name="pay_cvs[D060]" type="hidden" value="デイリーヤマザキ" />
 		<input name="acting" type="hidden" value="zeus" />
 		<input name="usces_option_update" type="submit" class="button" value="ゼウスの設定を更新する" />
 	</form>

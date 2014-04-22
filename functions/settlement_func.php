@@ -82,7 +82,7 @@ function usces_member_update_settlement_form() {
 		$vars .= '&telno='.str_replace( '-', '', $member['tel'] );
 		$vars .= '&email='.$member['mailaddress1'];
 		$vars .= '&sendid='.$member['ID'];
-		$vars .= '&username='.$_POST['username'];
+		$vars .= '&username='.$_POST['username_card'];
 		$vars .= '&money=0';
 		$vars .= '&sendpoint='.$rand;
 		$vars .= '&printord=';
