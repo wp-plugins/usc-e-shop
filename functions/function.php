@@ -3045,7 +3045,7 @@ function usces_trackPageview_ordercompletion($push){
 		$cats = $usces->get_item_cat_genre_ids( $post_id );
 		if( is_array($cats) )
 			sort($cats);
-		$category = get_cat_name( $cats[0] );
+		$category = ( isset($cats[0]) ) ? get_cat_name($cats[0]): '';
 		$push[] = "'_addItem', '" . $order_id . "', '" . $sku . "', '" . $itemName . "', '" . $category . "', '" . $skuPrice . "', '" . $quantity . "'";
 	}
 	$push[] = "'_trackTrans'";
