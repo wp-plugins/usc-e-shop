@@ -213,12 +213,42 @@ function usces_reg_ordercartdata( $args ){
 				$wpdb->query($oquery);
 			}
 		}
+
 		if( $value['advance'] ) {
-			$aquery = $wpdb->prepare( "INSERT INTO $cart_meta_table 
-				( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, %s, %s, %s )", 
-				$cart_id, 'advance', 'advance', serialize($value['advance'])
-			);
-			$wpdb->query( $aquery );
+			foreach( (array)$value['advance'] as $akey => $avalue ) {
+				$advance = maybe_unserialize( $avalue );
+				if( is_array($advance) ) {
+					$post_id = $value['post_id'];
+					$sku = $value['sku'];
+					if( is_array( $advance[$post_id][$sku] ) ) {
+						$akeys = array_keys( $advance[$post_id][$sku] );
+						foreach( (array)$akeys as $akey ) {
+							$avalue = serialize( $advance[$post_id][$sku][$akey] );
+							$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+								( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', %s, %s )", 
+								$cart_id, $akey, $avalue
+							);
+							$wpdb->query( $aquery );
+						}
+					} else {
+						$akeys = array_keys( $advance );
+						$akey = ( empty($akeys[0]) ) ? 'advance' : $akeys[0];
+						$avalue = serialize( $advance );
+						$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+							( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', %s, %s )", 
+							$cart_id, $akey, $avalue
+						);
+						$wpdb->query( $aquery );
+					}
+				} else {
+					$avalue = urldecode( $avalue );
+					$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+						( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', 'advance', %s )", 
+						$cart_id, $avalue
+					);
+					$wpdb->query( $aquery );
+				}
+			}
 		}
 
 		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value, $args );

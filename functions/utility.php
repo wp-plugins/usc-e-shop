@@ -153,7 +153,7 @@ function usces_upgrade_14(){
 									) VALUES (
 									%d, 'advance', 'advance', %s
 									)", 
-									$cart_id, $akey, $avalue
+									$cart_id, $avalue
 								);
 								$wpdb->query( $aquery );
 							}
