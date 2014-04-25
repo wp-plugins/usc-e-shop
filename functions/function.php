@@ -1673,8 +1673,7 @@ function usces_get_ordercartdata( $order_id ){
 					$cart[$key]['options'][$value['meta_key']] = $value['meta_value'];
 					break;
 				case 'advance':
-					//$cart[$key]['advance'][$value['meta_key']] = $value['meta_value'];
-					$cart[$key]['advance'] = $value['meta_value'];
+					$cart[$key]['advance'][$value['meta_key']] = $value['meta_value'];
 					break;
 			}
 		}
@@ -4638,24 +4637,32 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 	return $html;
 }
 
-function usces_get_ordercart_meta( $type, $cart_id ){
+function usces_get_ordercart_meta( $type, $cart_id, $key = '' ){
 	global $wpdb;
 	
 	if( !$cart_id )
 		return;
 	
 	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
-	
-	$query = $wpdb->prepare( "
-		SELECT cartmeta_id, meta_key, meta_value 
-		FROM $ordercart_meta_table 
-		WHERE cart_id = %d AND meta_type = %s 
-		", $cart_id, $type );
+
+	if( '' != $key ) {
+		$query = $wpdb->prepare( "
+			SELECT cartmeta_id, meta_key, meta_value 
+			FROM $ordercart_meta_table 
+			WHERE cart_id = %d AND meta_type = %s AND meta_key = %s 
+			", $cart_id, $type, $key );
+	} else {
+		$query = $wpdb->prepare( "
+			SELECT cartmeta_id, meta_key, meta_value 
+			FROM $ordercart_meta_table 
+			WHERE cart_id = %d AND meta_type = %s 
+			", $cart_id, $type );
+	}
 	$res = $wpdb->get_results($query, ARRAY_A);
 	return $res;
 }
 
-function usces_get_ordercart_meta_value( $type, $cart_id ){
+function usces_get_ordercart_meta_value( $type, $cart_id, $key = '' ){
 	global $wpdb;
 
 	if( !$cart_id )
@@ -4663,11 +4670,19 @@ function usces_get_ordercart_meta_value( $type, $cart_id ){
 
 	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
 
-	$query = $wpdb->prepare( "
-		SELECT meta_value 
-		FROM $ordercart_meta_table 
-		WHERE cart_id = %d AND meta_type = %s 
-		", $cart_id, $type );
+	if( '' != $key ) {
+		$query = $wpdb->prepare( "
+			SELECT meta_value 
+			FROM $ordercart_meta_table 
+			WHERE cart_id = %d AND meta_type = %s AND meta_key = %s 
+			", $cart_id, $type, $key );
+	} else {
+		$query = $wpdb->prepare( "
+			SELECT meta_value 
+			FROM $ordercart_meta_table 
+			WHERE cart_id = %d AND meta_type = %s 
+			", $cart_id, $type );
+	}
 	$res = $wpdb->get_var( $query );
 	return $res;
 }
@@ -4688,7 +4703,7 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 		$quantity = $cart_row['quantity'];
 		//$options = $cart_row['options'];
 		$options = usces_get_ordercart_meta( 'option', $ordercart_id );
-		$advance = usces_get_ordercart_meta_value( 'advance', $ordercart_id );
+		$advance = usces_get_ordercart_meta( 'advance', $ordercart_id );
 		$itemCode = $cart_row['item_code'];
 		$itemName = $cart_row['item_name'];
 		$cartItemName = $usces->getCartItemName($post_id, $sku_code);

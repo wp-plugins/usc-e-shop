@@ -239,9 +239,10 @@ function addComma(str)
 		$sku = urldecode($cart_row['sku']);
 		$quantity = $cart_row['quantity'];
 		//$options = $cart_row['options'];
-		$options = usces_get_ordercart_meta_value( 'option', $ordercart_id );
+		//$options = usces_get_ordercart_meta_value( 'option', $ordercart_id );
+		$options = usces_get_ordercart_meta( 'option', $ordercart_id );
 		//$advance = $this->cart->wc_serialize($cart_row['advance']);
-		$advance = usces_get_ordercart_meta_value( 'advance', $ordercart_id );
+		$advance = usces_get_ordercart_meta( 'advance', $ordercart_id );
 //		$itemCode = $this->getItemCode($post_id);
 //		$itemName = $this->getItemName($post_id);
 		$itemCode = $cart_row['item_code'];

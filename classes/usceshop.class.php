@@ -5111,10 +5111,10 @@ class usc_e_shop
 		
 			$sql = "CREATE TABLE " . $log_table . " (
 				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
-				`datetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				`daetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				`log`  LONGTEXT NULL ,
 				PRIMARY  KEY (  `ID`  ) ,
-				KEY  `datetime` (  `datetime`  )  
+				KEY  `daetime` (  `daetime`  )  
 				) ENGINE = MYISAM $charset_collate;";
 		
 			dbDelta($sql);
@@ -5328,10 +5328,10 @@ class usc_e_shop
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $log_table . " (
 				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
-				`datetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				`daetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				`log`  LONGTEXT NULL ,
 				PRIMARY  KEY (  `ID`  ) ,
-				KEY  `datetime` (  `datetime`  )  
+				KEY  `daetime` (  `daetime`  )  
 				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
@@ -5842,13 +5842,13 @@ class usc_e_shop
 					if( empty($cart['advance']) ) {
 						$type = 'once';
 					} else {
-						if( isset($cart['cart_id']) ) {
-							$advance = $this->cart->wc_unserialize( unserialize( $cart['advance'] ) );
+						if( isset($cart['advance']['regular']) ) {
+							$regular = maybe_unserialize( $cart['advance']['regular'] );
 						} else {
 							$advance = $this->cart->wc_unserialize( $cart['advance'] );
+							$sku = urldecode( $cart['sku'] );
+							$regular = $advance[$post_id][$sku]['regular'];
 						}
-						$sku = urldecode( $cart['sku'] );
-						$regular = $advance[$post_id][$sku]['regular'];
 						$unit = isset( $regular['unit'] ) ? $regular['unit'] : '';
 						$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
 						if( empty($unit) or 1 > $interval ) //通常課金扱い
