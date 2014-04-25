@@ -2509,7 +2509,8 @@ function usces_member_history( $out = '' ){
 	$usces_member_history = $usces->get_member_history($usces_members['ID']);
 	$colspan = usces_is_membersystem_point() ? 9 : 7;
 
-	$html = '<table>';
+	$html = '<div class="history-area">
+	<table>';
 	if ( !count($usces_member_history) ) {
 		$html .= '<tr>
 		<td>' . __('There is no purchase history for this moment.', 'usces') . '</td>
@@ -2620,7 +2621,8 @@ function usces_member_history( $out = '' ){
 			</tr>';
 	}
 	
-	$html .= '</table>';
+	$html .= '</table>
+	</div>';
 
 	if($out == 'return'){
 		return $html;

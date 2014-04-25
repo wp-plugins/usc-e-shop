@@ -1093,6 +1093,10 @@ div.usccart_navi li.usccart_confirm {
 	padding-bottom: 0px;
 	padding-left: 12px;
 }
+#memberinfo .history-area {
+	overflow: auto;
+	height: 700px;
+}
 #memberinfo table {
 	margin: 0px;
 	padding: 0px;
