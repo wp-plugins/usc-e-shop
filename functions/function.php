@@ -4268,6 +4268,7 @@ function usces_is_complete_settlement( $payment_name, $status = '' ) {
 			case 'acting_digitalcheck_card':
 			case 'acting_mizuho_card':
 			case 'acting_anotherlane_card':
+			case 'acting_veritrans_card':
 			case 'COD':
 				$complete = true;
 			}
