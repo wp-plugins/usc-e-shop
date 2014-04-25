@@ -983,7 +983,7 @@ function usces_add_ordercartdata(){
 	foreach( $current_cart as $cv ){
 		$temp_arr[] = $cv['row_index'];
 	}
-	$row_index = max($temp_arr) + 1;
+	$row_index = ( 0 < count($temp_arr) ) ? max($temp_arr) + 1 : 0;
 	
 	$cart_table = $wpdb->prefix . "usces_ordercart";
 	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
@@ -1014,7 +1014,7 @@ function usces_add_ordercartdata(){
 					$tax = round($tax);
 				}
 				break;
-		}				
+		}
 	}
 	$query = $wpdb->prepare("INSERT INTO $cart_table 
 		(
