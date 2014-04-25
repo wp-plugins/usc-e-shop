@@ -19,13 +19,13 @@ function usces_upgrade_14(){
 	$options['tax_target'] = 'all';
 	update_option('usces', $options);
 
-		
+
 
 	$order_table = $wpdb->prefix . "usces_order";
 	$cart_table = $wpdb->prefix . "usces_ordercart";
 	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
-	
-	$query = "SELECT ID, order_cart FROM $order_table";
+
+	$query = "SELECT ID, order_cart, order_condition FROM $order_table";
 	$results = $wpdb->get_results( $query );
 	if( $results ){
 		foreach( $results as $order ){
@@ -39,7 +39,7 @@ function usces_upgrade_14(){
 			if( !isset($condition['tax_target']) ){
 				$condition['tax_target'] = $options['tax_target'];
 			}
-			
+
 
 			$cart = unserialize($order->order_cart);
 			foreach( (array)$cart as $row_index => $value ){
@@ -69,7 +69,7 @@ function usces_upgrade_14(){
 								$tax = round($tax);
 							}
 							break;
-					}				
+					}
 				}
 				$query = $wpdb->prepare("INSERT INTO $cart_table 
 					(
@@ -133,7 +133,7 @@ function usces_upgrade_14(){
 				}
 			}
 			
-			$upquery = $wpdb->prepare("UPDATE $order_table SET order_condition = $s WHERE ID = %d", 
+			$upquery = $wpdb->prepare("UPDATE $order_table SET order_condition = %s WHERE ID = %d", 
 				serialize($condition), $order->ID 
 			);
 			$wpdb->query($upquery);
