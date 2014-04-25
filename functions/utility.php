@@ -100,7 +100,7 @@ function usces_upgrade_14(){
 							}else{
 								$ovalue = urldecode($ovalue);
 							}
-							$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+							$oquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
 								( 
 								cart_id, meta_type, meta_key, meta_value 
 								) VALUES (
@@ -108,16 +108,26 @@ function usces_upgrade_14(){
 								)", 
 								$cart_id, $okey, $ovalue
 							);
-							$wpdb->query($aquery);
+							$wpdb->query($oquery);
 						}
 					}
-					if($value['advance']){
-						foreach((array)$value['advance'] as $okey => $ovalue){
-							$okey = urldecode($okey);
-							if( is_array($ovalue) ){
-								$ovalue = serialize($ovalue);
-							}else{
-								$ovalue = urldecode($ovalue);
+					if( $value['advance'] ) {
+						foreach((array)$value['advance'] as $akey => $avalue){
+							$advance = maybe_unserialize( $avalue );
+							if( is_array($advance) ) {
+								$post_id = $value['post_id'];
+								$sku = $value['sku'];
+								if( is_array( $advance[$post_id][$sku] ) ) {
+									$akeys = array_keys( $advance[$post_id][$sku] );
+									$akey = ( empty($akeys[0]) ) ? 'advance' : $akeys[0];
+									$avalue = serialize( $advance[$post_id][$sku][$akey] );
+								} else {
+									$akey = 'advance';
+									$avalue = serialize( $advance );
+								}
+							} else {
+								$akey = 'advance';
+								$avalue = urldecode( $avalue );
 							}
 							$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
 								( 
@@ -125,9 +135,9 @@ function usces_upgrade_14(){
 								) VALUES (
 								%d, 'advance', %s, %s
 								)", 
-								$cart_id, $okey, $ovalue
+								$cart_id, $akey, $avalue
 							);
-							$wpdb->query($aquery);
+							$wpdb->query( $aquery );
 						}
 					}
 				}
