@@ -5111,10 +5111,10 @@ class usc_e_shop
 		
 			$sql = "CREATE TABLE " . $log_table . " (
 				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
-				`daetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				`datetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				`log`  LONGTEXT NULL ,
 				PRIMARY  KEY (  `ID`  ) ,
-				KEY  `daetime` (  `daetime`  )  
+				KEY  `datetime` (  `datetime`  )  
 				) ENGINE = MYISAM $charset_collate;";
 		
 			dbDelta($sql);
@@ -5328,10 +5328,10 @@ class usc_e_shop
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $log_table . " (
 				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
-				`daetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				`datetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				`log`  LONGTEXT NULL ,
 				PRIMARY  KEY (  `ID`  ) ,
-				KEY  `daetime` (  `daetime`  )  
+				KEY  `datetime` (  `datetime`  )  
 				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
