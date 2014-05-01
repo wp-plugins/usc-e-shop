@@ -314,7 +314,15 @@ function usces_filter_delivery_secure_check( $mes ){
 				
 			if ( 'zeus' != $_POST['acting'] )
 				$mes .= __('カード決済データが不正です！', 'usces');
-			 
+			
+			break;
+
+		case 'acting_zeus_conv':
+			if( WCUtils::is_blank($_POST['username_conv']) ) {
+				$mes .= "お名前を入力してください。<br />";
+			} elseif( !preg_match( "/^[ァ-ヶー]+$/u", $_POST['username_conv'] ) ) {
+				$mes .= "お名前は全角カタカナで入力してください。<br />";
+			}
 			break;
 	}
 	

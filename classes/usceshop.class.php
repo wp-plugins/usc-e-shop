@@ -4686,13 +4686,6 @@ class usc_e_shop
 				$cod_limit_amount = ( isset($this->options['cod_limit_amount']) && 0 < (int)$this->options['cod_limit_amount'] ) ? $this->options['cod_limit_amount'] : 0;
 				if( 0 < $cod_limit_amount && $total_items_price > $cod_limit_amount )
 					$mes .= sprintf(__('A total products amount of money surpasses the upper limit(%s) that I can purchase in C.O.D.', 'usces'), usces_crform($this->options['cod_limit_amount'], true, false, 'return')) . "<br />";
-
-			} elseif( 'acting_zeus_conv' == $payments['settlement'] ) {
-				if( WCUtils::is_blank($_POST['username_conv']) ) {
-					$mes .= "お名前を入力してください。<br />";
-				} elseif( !preg_match( "/^[ァ-ヶー]+$/u", $_POST['username_conv'] ) ) {
-					$mes .= "お名前は全角カタカナで入力してください。<br />";
-				}
 			}
 		}
 //20101119ysk start
@@ -7527,7 +7520,7 @@ class usc_e_shop
 			}elseif( 'TransactionId' == $value['meta_key'] ){
 				$fields['TransactionId'] = $value['meta_value'];
 			}elseif( 'acting_' == substr($value['meta_key'], 0, 7) ){
-				$meta_values = unserialize($value['meta_value']);
+				$meta_values = maybe_unserialize($value['meta_value']);
 				if(is_array($meta_values)){
 					foreach( $meta_values as $key => $meta_value ){
 						$fields[$key] = $meta_value;
