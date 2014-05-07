@@ -2997,6 +2997,15 @@ function usces_trackPageview_deletemember($push){
 	return $push;
 }
 
+function usces_trackPageview_search_item($push){
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_search_item'";
+	}else{
+		$push[] = "'_trackPageview','/wc_search_item'";
+	}
+	return $push;
+}
+
 function usces_get_essential_mark( $fielde, $data = NULL ){
 	global $usces_essential_mark;
 	do_action('usces_action_essential_mark', $data, $fielde);

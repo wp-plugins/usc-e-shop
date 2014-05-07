@@ -3470,3 +3470,18 @@ msgstr "パスワードは%1$s文字以上%2$s文字以下で入力して下さ�
 
 msgid "Please enter at least %s characters password."
 msgstr "パスワードは%s文字以上で入力して下さい。"
+
+msgid "Order Complete"
+msgstr "注文完了"
+
+msgid "New enrollment complete"
+msgstr "新規入会完了"
+
+msgid "Membership information change is completed"
+msgstr "会員情報変更完了"
+
+msgid "New password procedures for obtaining complete"
+msgstr "新パスワード取得手続き完了"
+
+msgid "Password change is completed"
+msgstr "パスワード変更完了"

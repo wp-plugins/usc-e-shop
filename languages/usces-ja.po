@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2014-03-03 14:39+0900\n"
+"PO-Revision-Date: 2014-05-07 10:42+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -3834,3 +3834,18 @@ msgstr "パスワードは%1$s文字以上%2$s文字以下で入力して下さ�
 
 msgid "Please enter at least %s characters password."
 msgstr "パスワードは%s文字以上で入力して下さい。"
+
+msgid "Order Complete"
+msgstr "注文完了"
+
+msgid "New enrollment complete"
+msgstr "新規入会完了"
+
+msgid "Membership information change is completed"
+msgstr "会員情報変更完了"
+
+msgid "New password procedures for obtaining complete"
+msgstr "新パスワード取得手続き完了"
+
+msgid "Password change is completed"
+msgstr "パスワード変更完了"

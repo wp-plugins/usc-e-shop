@@ -133,4 +133,305 @@ die();
 	}
 }
 
+function fiter_mainTitle($title, $sep){
+	global $usces;
+	
+	if( empty($title) ){
+		$newtitle = $title;
+	}else{
+		$title = trim( str_replace( $sep, '', $title ) );
+		switch($usces->page){
+			case 'cart':
+				$newtitle = apply_filters('usces_filter_title_cart', __('In the cart', 'usces'));
+				break;
+
+			case 'customer':
+				$newtitle = apply_filters('usces_filter_title_customer', __('Customer Information', 'usces'));
+				break;
+
+			case 'delivery':
+				$newtitle = apply_filters('usces_filter_title_delivery', __('Shipping / Payment options', 'usces'));
+				break;
+
+			case 'confirm':
+				$newtitle = apply_filters('usces_filter_title_confirm', __('Confirmation', 'usces'));
+				break;
+
+			case 'ordercompletion':
+				$newtitle = apply_filters('usces_filter_title_ordercompletion', __('Order Complete', 'usces'));
+				break;
+
+			case 'error':
+				$newtitle = apply_filters('usces_filter_title_error', __('Error', 'usces')); //new fitler name
+				break;
+
+			case 'search_item':
+				$newtitle = apply_filters('usces_filter_title_search_item', __("'AND' search by categories", 'usces'));
+				break;
+
+			case 'maintenance':
+				$newtitle = apply_filters('usces_filter_title_maintenance', __('Under Maintenance', 'usces'));
+				break;
+
+			case 'login':
+				$newtitle = apply_filters('usces_filter_title_login', __('Log-in for members', 'usces'));
+				break;
+
+			case 'member':
+				$newtitle = apply_filters('usces_filter_title_member', __('Membership information', 'usces'));
+				break;
+
+			case 'newmemberform':
+				$newtitle = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces'));
+				break;
+
+			case 'newcompletion':
+				$newtitle = apply_filters('usces_filter_title_newcompletion', __('New enrollment complete', 'usces'));//new fitler name
+				break;
+
+			case 'editmemberform':
+				$newtitle = apply_filters('usces_filter_title_editmemberform', __('Member information editing', 'usces'));//new fitler name
+				break;
+
+			case 'editcompletion':
+				$newtitle = apply_filters('usces_filter_title_editcompletion', __('Membership information change is completed', 'usces'));//new fitler name
+				break;
+
+			case 'lostmemberpassword':
+				$newtitle = apply_filters('usces_filter_title_lostmemberpassword', __('The new password acquisition', 'usces'));
+				break;
+
+			case 'lostcompletion':
+				$newtitle = apply_filters('usces_filter_title_lostcompletion', __('New password procedures for obtaining complete', 'usces'));//new fitler name
+				break;
+
+			case 'changepassword':
+				$newtitle = apply_filters('usces_filter_title_changepassword', __('Change password', 'usces'));
+				break;
+
+			case 'changepasscompletion':
+				$newtitle = apply_filters('usces_filter_title_changepasscompletion', __('Password change is completed', 'usces'));
+				break;
+
+			default:
+				$newtitle = apply_filters('usces_filter_title_main_default', $title);//new fitler name
+		}
+		$newtitle = $newtitle .' '.$sep.' ';
+	}
+	return $newtitle;
+}
+
+//Univarsal Analytics
+function usces_Universal_trackPageview(){
+	global $usces;
+
+	switch($usces->page){
+		case 'cart':
+			$push = array();
+			$push[] = "'page' : '/wc_cart'";
+			break;
+
+		case 'customer':
+			$push = array();
+			$push[] = "'page' : '/wc_customer'";
+			break;
+
+		case 'delivery':
+			$push = array();
+			$push[] = "'page' : '/wc_delivery'";
+			break;
+
+		case 'confirm':
+			$push = array();
+			$push[] = "'page' : '/wc_confirm'";
+			break;
+
+		case 'ordercompletion':
+			$sesdata =  $usces->cart->get_entry();
+			$order_id = $sesdata['order']['ID'];
+			$data = $usces->get_order_data($order_id, 'direct');
+			$cart = unserialize($data['order_cart']);
+			$total_price = $usces->get_total_price( $cart ) + $data['order_discount'] - $data['order_usedpoint'];
+			$push =array();
+			$push[] = "'page' : '/wc_ordercompletion'";
+			$push[] = "'require', 'ecommerce', 'ecommerce.js'";
+			$push[] = "'ecommerce:addTransaction', { 
+						id: '". $order_id ."', 
+						affiliation: '". get_option('blogname') ."',
+						revenue: '". $total_price ."',
+						shipping: '". $data['order_shipping_charge'] ."',
+						tax: '". $data['order_tax'] ."' }";
+			for( $i=0; $i<count($cart); $i++ ){
+				$cart_row = $cart[$i];
+				$post_id  = $cart_row['post_id'];
+				$sku = urldecode($cart_row['sku']);
+				$quantity = $cart_row['quantity'];
+				$itemName = $usces->getItemName($post_id);
+				$skuPrice = $cart_row['price'];
+				$cats = $usces->get_item_cat_genre_ids( $post_id );
+				if( is_array($cats) )
+					sort($cats);
+				$category = ( isset($cats[0]) ) ? get_cat_name($cats[0]): '';
+				
+				$push[] = "'ecommerce:addItem', {
+							id: '". $order_id ."',
+							sku: '". $sku ."',
+							name: '". $itemName."',
+							category: '". $category."',
+							price: '". $skuPrice."',
+							quantity: '". $quantity."' }";
+			}
+			$push[] = "'ecommerce:send'";
+			break;
+
+		case 'error':
+			$push = array();
+			$push[] = "'page' : '/wc_error'";
+			break;
+
+		case 'search_item':
+			$push = array();
+			$push[] = "'page' : '/wc_search_item'";
+			break;
+
+		case 'maintenance':
+			$push = array();
+			$push[] = "'page' : '/wc_maintenance'";
+			break;
+
+		case 'login':
+			$push = array();
+			$push[] = "'page' : '/wc_login'";
+			break;
+
+		case 'member':
+			$push = array();
+			$push[] = "'page' : '/wc_member'";
+			break;
+
+		case 'newmemberform':
+			$push = array();
+			$push[] = "'page' : '/wc_newmemberform'";
+			break;
+
+		case 'newcompletion':
+			$push = array();
+			$push[] = "'page' : '/wc_newcompletion'";
+			break;
+
+		case 'editmemberform':
+			$push = array();
+			$push[] = "'page' : '/wc_editmemberform'";
+			break;
+
+		case 'editcompletion':
+			$push = array();
+			$push[] = "'page' : '/wc_editcompletion'";
+			break;
+
+		case 'lostmemberpassword':
+			$push = array();
+			$push[] = "'page' : '/wc_lostmemberpassword'";
+			break;
+
+		case 'lostcompletion':
+			$push = array();
+			$push[] = "'page' : '/wc_lostcompletion'";
+			break;
+
+		case 'changepassword':
+			$push = array();
+			$push[] = "'page' : '/wc_changepassword'";
+			break;
+
+		case 'changepasscompletion':
+			$push = array();
+			$push[] = "'page' : '/wc_changepasscompletion'";
+			break;
+
+		default:
+			$push = array();
+			break;
+	}
+	return $push;
+}
+
+//Classic Analytics
+function usces_Classic_trackPageview(){
+	global $usces;
+
+	switch($usces->page){
+		case 'cart':
+			$push = array();
+			$push = usces_trackPageview_cart($push);
+			break;
+
+		case 'customer':
+			$push = array();
+			$push = usces_trackPageview_customer($push);
+			break;
+
+		case 'delivery':
+			$push = array();
+			$push = usces_trackPageview_delivery($push);
+			break;
+
+		case 'confirm':
+			$push = array();
+			$push = usces_trackPageview_confirm($push);
+			break;
+
+		case 'ordercompletion':
+			$push =array();
+			$push = usces_trackPageview_ordercompletion($push);
+			break;
+
+		case 'error':
+			$push = array();
+			$push = usces_trackPageview_error($push);
+			break;
+
+		case 'login':
+			$push = array();
+			$push = usces_trackPageview_login($push);
+			break;
+
+		case 'member':
+			$push = array();
+			$push = usces_trackPageview_member($push);
+			break;
+
+		case 'newmemberform':
+			$push = array();
+			$push = usces_trackPageview_newmemberform($push);
+			break;
+
+		case 'newcompletion':
+			$push = array();
+			$push = usces_trackPageview_newcompletion($push);
+			break;
+
+		case 'editmemberform':
+			$push = array();
+			$push = usces_trackPageview_editmemberform($push);
+			break;
+
+		case 'search_item':
+			$push = array();
+			$push = usces_trackPageview_search_item($push);
+			break;
+
+		case 'maintenance':
+		case 'editcompletion':
+		case 'lostmemberpassword':
+		case 'lostcompletion':
+		case 'changepassword':
+		case 'changepasscompletion':
+		default:
+			$push = array();
+			break;
+	}
+	return $push;
+}
+
 ?>
