@@ -581,7 +581,7 @@ class dataList
 		if($this->arr_search['column'] == 'none' || WCUtils::is_blank($this->arr_search['column']) || WCUtils::is_blank($this->arr_search['word']) )
 			return;//$this->searchSql = $sql;
 		else
-			$this->searchSql = '`' .  $this->arr_search['column'] . '` LIKE '."'%" . mysql_real_escape_string($this->arr_search['word']) . "%'";
+			$this->searchSql = '`' .  $this->arr_search['column'] . '` LIKE '."'%" . esc_sql($this->arr_search['word']) . "%'";
 	}
 
 	function SearchOut()

@@ -450,11 +450,11 @@ class dataList
 		switch ($this->arr_search['sku']) {
 			case 'item_code':
 				$column = 'item_code';
-				$this->searchSkuSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['skuword']['item_code']) . "%'";
+				$this->searchSkuSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['skuword']['item_code']) . "%'";
 				break;
 			case 'item_name':
 				$column = 'item_name';
-				$this->searchSkuSql = $column . ' LIKE '."'%" . mysql_real_escape_string($this->arr_search['skuword']['item_name']) . "%'";
+				$this->searchSkuSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['skuword']['item_name']) . "%'";
 				break;
 		}
 	}
