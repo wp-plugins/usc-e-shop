@@ -273,7 +273,7 @@ jQuery(function($){
 				html += '</select>';
 			}else if( column == 'order_status' ) {
 				label = '';
-				html = '<select name="change[word][order_status]" class="searchselect">';
+				html = '<select name="change[word][order_status]" class="ksearchselect">';
 		<?php foreach((array)$order_status as $oskey => $osvalue){ ?>
 				html += '<option value="<?php echo esc_attr($oskey); ?>"><?php echo esc_html($osvalue); ?></option>';
 		<?php } ?>
@@ -348,13 +348,15 @@ jQuery(document).ready(function($){
 	});
 	$('#dl_pro').click(function() {
 //20120123ysk start 0000385
-		//var args = "&search[column]="+$(':input[name="search[column]"]').val()
+		//var args = "&searchf[column]="+$(':input[name="search[column]"]').val()
 		//	+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
 		//	+"&search[period]="+$(':input[name="search[period]"]').val()
 		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 		//	+"&ftype="+$(':input[name="ftype_pro[]"]:checked').val();
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
+			+"&search[sku]="+$(':input[name="search[sku]"]').val()
 			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+			+"&search[skuword]["+$("#searchselectsku").val()+"]="+$(':input[name="search[skuword]['+$("#searchselectsku").val()+']"]').val()
 			+"&search[period]="+$(':input[name="search[period]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype=csv";
@@ -393,7 +395,9 @@ jQuery(document).ready(function($){
 		//	+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 		//	+"&ftype="+$(':input[name="ftype_ord[]"]:checked').val();
 		var args = "&search[column]="+$(':input[name="search[column]"]').val()
+			+"&search[sku]="+$(':input[name="search[sku]"]').val()
 			+"&search[word]["+$("#searchselect").val()+"]="+$(':input[name="search[word]['+$("#searchselect").val()+']"]').val()
+			+"&search[skuword]["+$("#searchselectsku").val()+"]="+$(':input[name="search[skuword]['+$("#searchselectsku").val()+']"]').val()
 			+"&search[period]="+$(':input[name="search[period]"]').val()
 			+"&searchSwitchStatus="+$(':input[name="searchSwitchStatus"]').val()
 			+"&ftype=csv";
