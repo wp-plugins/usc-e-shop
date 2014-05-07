@@ -265,6 +265,7 @@ jQuery(function($){
 			}
 		},
 		close: function() {
+			$("#newitemcategory").val( "-1" );
 			$("#newitemform").html( "" );
 			$('#newitemcode').val('');
 		}

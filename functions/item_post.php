@@ -975,7 +975,7 @@ function usces_add_ordercartdata(){
 		return $res;
 
 	$post_id = (int)$_POST['post_id'];
-	$sku_code = $_POST['sku'];
+	$sku_code = urldecode($_POST['sku']);
 	$quantity = 1;
 	
 	$current_cart = usces_get_ordercartdata( $order_id );
@@ -1110,7 +1110,7 @@ function get_order_item( $item_code ) {
 	//	$unit = esc_attr($skus['unit'][$i]);
 	//	$gptekiyo = $skus['gp'][$i];
 	foreach($skus as $sku) :
-		$key = esc_attr($sku['code']);
+		$key = urlencode($sku['code']);
 		$cprice = esc_attr($sku['cprice']);
 		$price = esc_attr($sku['price']);
 		$zaiko = esc_attr($usces->zaiko_status[$sku['stock']]);
@@ -1148,7 +1148,7 @@ function get_order_item( $item_code ) {
 			foreach($optkeys as $optkey => $optvalue) :
 				$r .= "<div>\n";
 				$name = esc_attr($optvalue);
-				$optcode = esc_attr(urlencode($name));
+				$optcode = urlencode($name);
 				$opts = usces_get_opts($post_id, 'name');
 				$opt = $opts[$optvalue];
 //20110715ysk start 0000202
@@ -1167,6 +1167,8 @@ function get_order_item( $item_code ) {
 						$r .= "\t<option value='#NONE#' selected='selected'>" . __('Choose','usces') . "</option>\n";
 					$s=0;
 					foreach($selects as $v) {
+						$v = trim($v);
+						//$optvalue = urlencode($v);
 						if($s == 0 && $essential == 0) 
 							$selected = ' selected="selected"';
 						else
