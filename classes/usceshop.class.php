@@ -6455,13 +6455,15 @@ class usc_e_shop
 			if( 'acting_veritrans_conv' == $acting_flg ) {
 				$postdata .= '&NAME1='.urlencode( mb_substr( mb_convert_kana( $entry['customer']['name1'], 'ASKV', 'UTF-8' ), 0, 10 ) );
 				$postdata .= '&NAME2='.urlencode( mb_substr( mb_convert_kana( $entry['customer']['name2'], 'ASKV', 'UTF-8' ), 0, 10 ) );
-				if( empty($entry['customer']['name3']) ) {
+				if( !empty($entry['customer']['name3']) ) {
 					$kana1 = mb_substr( mb_convert_kana( $entry['customer']['name3'], 'ASKV', 'UTF-8' ), 0, 10 );
+					mb_regex_encoding( 'UTF-8' );
 					if( mb_ereg("^[ア-ン゛゜ァ-ォャ-ョー]+$", $kana1) ) 
 						$postdata .= '&KANA1='.urlencode( $kana1 );
 				}
-				if( empty($entry['customer']['name4']) ) {
+				if( !empty($entry['customer']['name4']) ) {
 					$kana2 = mb_substr( mb_convert_kana( $entry['customer']['name4'], 'ASKV', 'UTF-8' ), 0, 10 );
+					mb_regex_encoding( 'UTF-8' );
 					if( mb_ereg("^[ア-ン゛゜ァ-ォャ-ョー]+$", $kana2) ) 
 						$postdata .= '&KANA2='.urlencode( $kana2 );
 				}
