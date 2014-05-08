@@ -2906,7 +2906,7 @@ function usces_trackPageview_ordercompletion($push){
 	$order_id = $sesdata['order']['ID'];
 	$data = $usces->get_order_data($order_id, 'direct');
 	$cart = unserialize($data['order_cart']);
-	$total_price = $usces->get_total_price( $cart ) - $data['order_discount'];
+	$total_price = $usces->get_total_price( $cart ) + $data['order_discount'] - $data['order_usedpoint'];
 	
 	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
 		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_ordercompletion'";
