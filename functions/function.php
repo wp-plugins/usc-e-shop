@@ -1374,6 +1374,8 @@ function usces_update_memberdata() {
 //20100818ysk end
 
 	$ID = (int)$_REQUEST['member_id'];
+	$name3 = ( isset( $_POST['member']['name3'] ) ) ? $_POST['member']['name3'] : '';
+	$name4 = ( isset( $_POST['member']['name4'] ) ) ? $_POST['member']['name4'] : '';
 
 //$wpdb->show_errors();
 	$query = $wpdb->prepare(
@@ -1387,8 +1389,8 @@ function usces_update_memberdata() {
 					$_POST['member']['point'], 
 					$_POST['member']['name1'], 
 					$_POST['member']['name2'], 
-					$_POST['member']['name3'], 
-					$_POST['member']['name4'], 
+					$name3, 
+					$name4, 
 					$_POST['member']['zipcode'], 
 					$_POST['member']['pref'], 
 					$_POST['member']['address1'], 
