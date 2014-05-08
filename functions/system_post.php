@@ -84,7 +84,8 @@ function usces_get_system_option( $option_name, $keyflag = 'sort' ) {
 									'explanation' => $value['explanation'],
 									'settlement' => $value['settlement'],
 									'module' => $value['module'],
-									'sort' => $value['sort']
+									'sort' => $value['sort'],
+									'use' => isset( $value['use'] ) ? $value['use'] : 'activate'
 								);
 			break;
 		}
@@ -196,6 +197,7 @@ function _payment_list_row( $value ) {
 	$settlement = $value['settlement'];
 	$module = esc_attr($value['module']);
 	$sort = (int) $value['sort'];
+	$use = ( isset($value['use']) ) ? $value['use'] : 'activate';
 
 	ob_start();
 	?>
@@ -204,7 +206,11 @@ function _payment_list_row( $value ) {
 		<table id='payment-<?php echo $id; ?>' class='metastufftable'>
 			<tr>
 				<th class='handlb' rowspan='2'>　</th>
-				<td class='paymentname'><div><input name='payment[<?php echo $id; ?>][name]' id='payment[<?php echo $id; ?>][name]' class='metaboxfield' type='text' value='<?php echo $name; ?>' /></div></td>
+				<td class='paymentname'>
+					<div><input name='payment[<?php echo $id; ?>][name]' id='payment[<?php echo $id; ?>][name]' class='metaboxfield' type='text' value='<?php echo $name; ?>' /></div>
+					<div><input name='payment[<?php echo $id; ?>][use]' id='payment[<?php echo $id; ?>][use_activate]' type="radio" value="activate"<?php if($use != 'deactivate') echo ' checked="checked"'; ?> /><label for='payment[<?php echo $id; ?>][use_activate]'><?php _e('Activate','usces'); ?></label>　
+					<input name='payment[<?php echo $id; ?>][use]' id='payment[<?php echo $id; ?>][use_deactivate]' type="radio" value="deactivate"<?php if($use == 'deactivate') echo ' checked="checked"'; ?> /><label for='payment[<?php echo $id; ?>][use_deactivate]'><?php _e('Deactivate','usces'); ?></label></div>
+				</td>
 				<td class='paymentexplanation'><textarea name='payment[<?php echo $id; ?>][explanation]' id='payment[<?php echo $id; ?>][explanation]' class='metaboxfield'><?php echo $explanation; ?></textarea></td>
 				<td class='paymentsettlement'>
 					<select name='payment[<?php echo $id; ?>][settlement]' id='payment[<?php echo $id; ?>][settlement]' class='metaboxfield'>
@@ -349,6 +355,7 @@ function up_payment_method() {
 	$value['settlement'] = isset($_POST['settlement']) ? $_POST['settlement'] : '';
 	$value['module'] = isset($_POST['module']) ? trim( $_POST['module'] ) : '';
 	$value['sort'] = isset($_POST['sort']) ?(int)$_POST['sort'] : 0;
+	$value['use'] = isset($_POST['use']) ? $_POST['use'] : 'activate';
 
 	if ( !empty( $value['name'] ) && !WCUtils::is_blank($id) ) {
 

@@ -258,7 +258,7 @@ function toggleVisibility(id) {
 </div><!--postbox-->
 
 <div class="postbox">
-<h3 class="hndle"><span><?php _e('payment method', 'usces'); ?></span></h3>
+<h3 class="hndle"><span><?php _e('payment method', 'usces'); ?></span><a style="cursor:pointer;" onclick="toggleVisibility('payment_setting');"> (<?php _e('explanation', 'usces'); ?>) </a></h3>
 <div class="inside">
 	<div id="postpayment"><div id="payment-response"></div>
 <?php
@@ -268,6 +268,7 @@ function toggleVisibility(id) {
 ?>
 <hr size="1" color="#CCCCCC" />
 <div id="Commonoption" class="explanation"><?php _e('<em>[Required]</em>possible payment method', 'usces'); ?></div>
+<div id="payment_setting" class="explanation"><?php _e("If you 'Deactivate', it does not appear in the payment method of site.", 'usces'); ?></div>
 </div>
 </div>
 </div><!--postbox-->

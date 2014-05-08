@@ -1140,7 +1140,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			}
 //20110412ysk end
 		}
-		if( $payment['name'] != '' ) {
+		if( $payment['name'] != '' and $payment['use'] != 'deactivate' ) {
 			$module = trim($payment['module']);
 			if( !WCUtils::is_blank($value) ){
 				$checked = ($payment['name'] == $value) ? ' checked' : '';

@@ -3485,3 +3485,12 @@ msgstr "新パスワード取得手続き完了"
 
 msgid "Password change is completed"
 msgstr "パスワード変更完了"
+
+msgid "Activate"
+msgstr "使用"
+
+msgid "Deactivate"
+msgstr "停止"
+
+msgid "If you 'Deactivate', it does not appear in the payment method of site."
+msgstr "「停止」にすると、サイトで選択できる支払方法に表示されなくなります。"
