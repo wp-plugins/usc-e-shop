@@ -110,7 +110,7 @@ jQuery(function($){
 	<?php foreach( (array)$prefs[$tm] as $pref ) { ?>
 //20110317ysk end
 		<?php if( isset($shipping_charge[$i][$tm][$pref]) ) : ?>
-	shipping_charge[<?php echo $i; ?>]["<?php echo $tm; ?>"]["<?php echo $pref; ?>"] = "<?php echo (int)$shipping_charge[$i][$tm][$pref]; ?>";
+	shipping_charge[<?php echo $i; ?>]["<?php echo $tm; ?>"]["<?php echo $pref; ?>"] = "<?php echo (float)$shipping_charge[$i][$tm][$pref]; ?>";
 		<?php else : ?>
 	shipping_charge[<?php echo $i; ?>]["<?php echo $tm; ?>"]["<?php echo $pref; ?>"] = "0";
 		<?php endif; ?>
