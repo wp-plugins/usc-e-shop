@@ -35,19 +35,20 @@ $html = '
 		return(newdate);
 	}
 
-	jQuery(function($){
-		';
+	jQuery(function($){';
 
 //選択可能な配送方法
 $default_deli = array_values(apply_filters('usces_filter_get_available_delivery_method', $usces->get_available_delivery_method()));
-if(empty($usces_entries['order']['delivery_method'])){
+if( !isset($usces_entries['order']['delivery_method']) || '' == $usces_entries['order']['delivery_method'] ){
 	$selected_delivery_method = $default_deli[0];
 }else{
 	$selected_delivery_method = $usces_entries['order']['delivery_method'];
 }
-$html .= 'selected_delivery_method = \'' . $selected_delivery_method . '\';';
+$html .= '
+		selected_delivery_method = \'' . $selected_delivery_method . '\';';
 if(isset($usces_entries['order']['delivery_date'])) {
-	$html .= 'selected_delivery_date = \''.$usces_entries['order']['delivery_date'].'\';';
+	$html .= '
+		selected_delivery_date = \''.$usces_entries['order']['delivery_date'].'\';';
 }
 
 //カートに入っている商品の発送日目安
@@ -63,24 +64,32 @@ for($i = 0; $i < count($cart); $i++) {
 	}
 	if($shipping < $itemShipping) $shipping = $itemShipping;
 }
-$html .= 'var shipping = '.$shipping.';';
+$html .= '
+		var shipping = '.$shipping.';';
 //配送業務締時間
 $hour = (!empty($usces->options['delivery_time_limit']['hour'])) ? $usces->options['delivery_time_limit']['hour'] : '00';
 $min = (!empty($usces->options['delivery_time_limit']['min'])) ? $usces->options['delivery_time_limit']['min'] : '00';
-$html .= 'var delivery_time_limit_hour = "'.$hour.'";';
-$html .= 'var delivery_time_limit_min = "'.$min.'";';
+$html .= '
+		var delivery_time_limit_hour = "'.$hour.'";';
+$html .= '
+		var delivery_time_limit_min = "'.$min.'";';
 //最短宅配時間帯
-$html .= 'var shortest_delivery_time = '.(int)$usces->options['shortest_delivery_time'].';';
+$html .= '
+		var shortest_delivery_time = '.(int)$usces->options['shortest_delivery_time'].';';
 //配送希望日を何日後まで表示するか
 $delivery_after_days = (!empty($usces->options['delivery_after_days'])) ? (int)$usces->options['delivery_after_days'] : 15;
-$html .= 'var delivery_after_days = '.$delivery_after_days.';';
+$html .= '
+		var delivery_after_days = '.$delivery_after_days.';';
 //配送先県(customer)
-$html .= 'var customer_pref = "'.esc_js($usces_entries['customer']['pref']).'";';
+$html .= '
+		var customer_pref = "'.esc_js($usces_entries['customer']['pref']).'";';
 //配送先県(customer/delivery)
 $delivery_pref = (isset($usces_entries['delivery']['pref']) && !empty($usces_entries['delivery']['pref'])) ? $usces_entries['delivery']['pref'] : $usces_entries['customer']['pref'];
-$html .= 'var delivery_pref = "'.esc_js($delivery_pref).'";';
+$html .= '
+		var delivery_pref = "'.esc_js($delivery_pref).'";';
 $delivery_country = (isset($usces_entries['delivery']['country']) && !empty($usces_entries['delivery']['country'])) ? $usces_entries['delivery']['country'] : $usces_entries['customer']['country'];
-$html .= 'var delivery_country = "'.esc_js($delivery_country).'";';
+$html .= '
+		var delivery_country = "'.esc_js($delivery_country).'";';
 //選択可能な配送方法に設定されている配達日数
 $html_days = 'var delivery_days = [];';
 foreach((array)$default_deli as $id) {

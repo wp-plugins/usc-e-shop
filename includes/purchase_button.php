@@ -153,13 +153,14 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			$member = $usces->get_member();
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			$usces->save_order_acting_data($rand);
+			$pay_cvs = ( isset($usces_entries['order']['pay_cvs']) ) ? $usces_entries['order']['pay_cvs'] : '';
 			$html .= '<form id="purchase_form" action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
 				<input type="hidden" name="act" value="secure_order">
 				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="username" value="' . esc_attr($_POST['username_conv']) . '">
 				<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
-				<input type="hidden" name="pay_cvs" value="' . $usces_entries['order']['pay_cvs'] . '">
+				<input type="hidden" name="pay_cvs" value="' . $pay_cvs . '">
 				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">';
 			$html .= '

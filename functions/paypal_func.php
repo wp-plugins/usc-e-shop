@@ -11,7 +11,8 @@ if( $usces_payment ) {
 	add_filter( 'usces_filter_uscesL10n', 'usces_paypal_filter_uscesL10n' );
 	add_filter( 'usces_filter_paypal_ec_cancelurl', 'usces_paypal_filter_paypal_ec_cancelurl', 10, 2 );
 	add_action( 'usces_action_cart_page_footer', 'usces_paypal_action_cart_page_footer' );
-	add_filter( 'usces_filter_cart_page_footer', 'usces_paypal_filter_cart_page_footer' );
+	//add_filter( 'usces_filter_cart_page_footer', 'usces_paypal_filter_cart_page_footer' );
+	add_filter( 'usces_filter_cartContent', 'usces_paypal_filter_cart_page_footer' );
 	add_action( 'usces_action_customerinfo', 'usces_paypal_action_customerinfo' );
 }
 
@@ -47,7 +48,8 @@ function usces_paypal_action_cart_page_footer() {
 }
 
 function usces_paypal_filter_cart_page_footer( $html ) {
-	$footer = usces_paypal_cart_page_footer( false );
+	global $usces;
+	$footer = ( 'cart' == $usces->page ) ? usces_paypal_cart_page_footer( false ) : '';
 	return $html.$footer;
 }
 
@@ -61,12 +63,19 @@ function usces_paypal_cart_page_footer( $include = true ) {
 	if( defined('WCEX_AUTO_DELIVERY') and wcad_have_regular_order() ) return $html;
 
 	$usces_entries = $usces->cart->get_entry();
-
-	if( $include ) include( USCES_PLUGIN_DIR."/includes/delivery_info_script.php" );
 	$usces->set_cart_fees( $member, $usces_entries );
+
 	$usces_entries = $usces->cart->get_entry();
 	$total_price = $usces_entries['order']['total_items_price'] + $usces_entries['order']['discount'] + $usces_entries['order']['shipping_charge'] + $usces_entries['order']['cod_fee'];
 	$item_price = $usces_entries['order']['total_items_price'] + $usces_entries['order']['discount'];
+
+	if( $include ) {
+		include( USCES_PLUGIN_DIR."/includes/delivery_info_script.php" );
+	} else {
+		ob_start();
+		include( USCES_PLUGIN_DIR."/includes/delivery_info_script.php" );
+		$html .= ob_get_clean();
+	}
 
 	$html .= '
 	<script type="text/javascript">

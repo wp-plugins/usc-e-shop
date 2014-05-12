@@ -251,7 +251,6 @@ function _list_item_option_meta_row( $opt ) {
 
 //	$opt['meta_value'] = unserialize( $opt['meta_value'] );
 	
-	$readonly = " readonly='true'";
 	$name = esc_attr($opt['name']);
 	$meansoption = '';
 	foreach($means as $meankey => $meanvalue){
@@ -283,7 +282,7 @@ function _list_item_option_meta_row( $opt ) {
 			<tr>
 				<th class='handlb' rowspan='2'>　</th>
 				<td class='item-opt-key'>
-					<div><input name='itemopt[<?php echo $id; ?>][name]' id='itemopt[<?php echo $id; ?>][name]' class='metaboxfield' type='text' size='20' value='<?php echo $name; ?>'{$readonly} /></div>
+					<div><input name='itemopt[<?php echo $id; ?>][name]' id='itemopt[<?php echo $id; ?>][name]' class='metaboxfield' type='text' size='20' value='<?php echo $name; ?>' /></div>
 					<div class='optcheck'>
 						<select name='itemopt[<?php echo $id; ?>][means]' id='itemopt[<?php echo $id; ?>][means]'><?php echo $meansoption; ?></select>
 						<label for='itemopt[<?php echo $id; ?>][essential]'><input name='itemopt[<?php echo $id; ?>][essential]' id='itemopt[<?php echo $id; ?>][essential]' type='checkbox' value='1'<?php echo $essential; ?> class='metaboxcheckfield' /><?php _e('Required','usces'); ?></label>
@@ -318,7 +317,6 @@ function _list_item_sku_meta_row( $sku ) {
 	$r = '';
 	$style = '';
 
-	$readonly = "";
 	$key = esc_attr($sku['code']);
 	$cprice = $sku['cprice'];
 	$price = $sku['price'];
@@ -338,7 +336,7 @@ function _list_item_sku_meta_row( $sku ) {
 		<table id='itemsku-<?php echo $id; ?>' class='metastufftable'>
 			<tr>
 				<th class='handlb' rowspan='<?php echo apply_filters( 'usces_filter_sku_meta_rowspan', '3' ); ?>'>　</th>
-				<td class='item-sku-key'><input name='itemsku[<?php echo $id; ?>][key]' id='itemsku[<?php echo $id; ?>][key]' class='skuname metaboxfield' type='text' value='<?php echo $key; ?>'{$readonly} /></td>
+				<td class='item-sku-key'><input name='itemsku[<?php echo $id; ?>][key]' id='itemsku[<?php echo $id; ?>][key]' class='skuname metaboxfield' type='text' value='<?php echo $key; ?>' /></td>
 				<td class='item-sku-cprice'><input name='itemsku[<?php echo $id; ?>][cprice]' id='itemsku[<?php echo $id; ?>][cprice]' class='skuprice metaboxfield' type='text' value='<?php echo $cprice; ?>' /></td>
 				<td class='item-sku-price'><input name='itemsku[<?php echo $id; ?>][price]' id='itemsku[<?php echo $id; ?>][price]' class='skuprice metaboxfield' type='text' value='<?php echo $price; ?>' /></td>
 				<td class='item-sku-zaikonum'><input name='itemsku[<?php echo $id; ?>][zaikonum]' id='itemsku[<?php echo $id; ?>][zaikonum]' class='skuzaikonum metaboxfield' type='text' value='<?php echo $zaikonum; ?>' /></td>

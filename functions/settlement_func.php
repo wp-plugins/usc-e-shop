@@ -31,6 +31,11 @@ function usces_filter_settlement_available_payment_method( $payments ) {
 function usces_action_settlement_memberinfo_page_header() {
 	global $usces;
 
+	if( defined('WCEX_MOBILE') ) {
+		global $wcmb;
+		if( DOCOMO === $wcmb['device_div'] || SOFTBANK === $wcmb['device_div'] || KDDI === $wcmb['device_div'] ) return;
+	}
+
 	$html = '';
 	$member = $usces->get_member();
 	$pcid = $usces->get_member_meta_value( 'zeus_pcid', $member['ID'] );

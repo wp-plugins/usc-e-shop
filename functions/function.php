@@ -1345,6 +1345,8 @@ function usces_update_memberdata() {
 //20100818ysk end
 
 	$ID = (int)$_REQUEST['member_id'];
+	$name3 = ( isset( $_POST['member']['name3'] ) ) ? $_POST['member']['name3'] : '';
+	$name4 = ( isset( $_POST['member']['name4'] ) ) ? $_POST['member']['name4'] : '';
 
 //$wpdb->show_errors();
 	$query = $wpdb->prepare(
@@ -1358,8 +1360,8 @@ function usces_update_memberdata() {
 					$_POST['member']['point'], 
 					$_POST['member']['name1'], 
 					$_POST['member']['name2'], 
-					$_POST['member']['name3'], 
-					$_POST['member']['name4'], 
+					$name3, 
+					$name4, 
 					$_POST['member']['zipcode'], 
 					$_POST['member']['pref'], 
 					$_POST['member']['address1'], 
@@ -1405,8 +1407,7 @@ function usces_update_memberdata() {
 	}
 	
 
-	//$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
-	$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'remise_pcid', 'digitalcheck_ip_user_id'" );
+	$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
 	$query = $wpdb->prepare("DELETE FROM $member_table_meta_name WHERE member_id = %d AND meta_key IN( $meta_keys )", 
 			$_POST['member_id'] 
 			);
@@ -3022,7 +3023,7 @@ function usces_trackPageview_ordercompletion($push){
 	$order_id = $sesdata['order']['ID'];
 	$data = $usces->get_order_data($order_id, 'direct');
 	$cart = unserialize($data['order_cart']);
-	$total_price = $usces->get_total_price( $cart ) - $data['order_discount'];
+	$total_price = $usces->get_total_price( $cart ) + $data['order_discount'] - $data['order_usedpoint'];
 	
 	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
 		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_ordercompletion'";
@@ -3111,6 +3112,15 @@ function usces_trackPageview_deletemember($push){
 		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_deletemember'";
 	}else{
 		$push[] = "'_trackPageview','/wc_deletemember'";
+	}
+	return $push;
+}
+
+function usces_trackPageview_search_item($push){
+	if(defined('USCES_KEY') && defined('USCES_MULTI') && true == USCES_MULTI){
+		$push[] = "'_trackPageview','/" . USCES_KEY . "wc_search_item'";
+	}else{
+		$push[] = "'_trackPageview','/wc_search_item'";
 	}
 	return $push;
 }
@@ -4387,6 +4397,7 @@ function usces_is_complete_settlement( $payment_name, $status = '' ) {
 			case 'acting_digitalcheck_card':
 			case 'acting_mizuho_card':
 			case 'acting_anotherlane_card':
+			case 'acting_veritrans_card':
 			case 'COD':
 				$complete = true;
 			}

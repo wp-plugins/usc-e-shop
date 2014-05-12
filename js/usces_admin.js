@@ -615,8 +615,9 @@
 			var settlement = $(vs).val();
 			var module = $(vm).val();
 			var sortid = $(so).val();
+			var use = $("input[name='payment[" + id + "][use]']:checked").val();
 			var s = payment.settings;
-			
+
 			var mes = '';
 			if( '' == name ){
 				mes += '<p>支払方法名の値を入力してください。</p>';
@@ -636,7 +637,7 @@
 			
 			$("#payment_loading-" + id).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
-			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + encodeURIComponent(name) + "&explanation=" + encodeURIComponent(explanation) + "&settlement=" + encodeURIComponent(settlement) + "&module=" + encodeURIComponent(module) + "&sort=" + sortid;
+			s.data = "action=payment_ajax&update=1&id=" + id + "&name=" + encodeURIComponent(name) + "&explanation=" + encodeURIComponent(explanation) + "&settlement=" + encodeURIComponent(settlement) + "&module=" + encodeURIComponent(module) + "&sort=" + sortid + "&use=" + use;
 			s.success = function(data, dataType){
 				$("#payment_loading-" + id).html('');
 				$("#payment_ajax-response").html("");

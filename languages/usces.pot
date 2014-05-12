@@ -3497,3 +3497,27 @@ msgstr "商品価格に消費税が含まれているかどうかを選択しま
 
 msgid "You can select the subject of the consumption tax. One is only the product price, and the other contains all the commission."
 msgstr "消費税の対象を、商品代金のみにするか手数料等もすべて含めるかを選択します。"
+
+msgid "Order Complete"
+msgstr "注文完了"
+
+msgid "New enrollment complete"
+msgstr "新規入会完了"
+
+msgid "Membership information change is completed"
+msgstr "会員情報変更完了"
+
+msgid "New password procedures for obtaining complete"
+msgstr "新パスワード取得手続き完了"
+
+msgid "Password change is completed"
+msgstr "パスワード変更完了"
+
+msgid "Activate"
+msgstr "使用"
+
+msgid "Deactivate"
+msgstr "停止"
+
+msgid "If you 'Deactivate', it does not appear in the payment method of site."
+msgstr "「停止」にすると、サイトで選択できる支払方法に表示されなくなります。"

@@ -176,4 +176,8 @@ add_filter('usces_filter_member_check_fromcart', 'usces_filter_customer_check_cu
 add_action('usces_action_confirm_page_point_inform', 'usces_action_confirm_page_point_inform_zeus', 9);
 add_filter('usces_filter_confirm_point_inform', 'usces_filter_confirm_point_inform_zeus', 9);
 
+add_filter('wp_title', 'fiter_mainTitle', 10, 2);
+add_filter('universal_ga_ecommerce_tracking', 'usces_Universal_trackPageview');
+add_filter('classic_ga_ecommerce_tracking', 'usces_Classic_trackPageview');
+
 ?>

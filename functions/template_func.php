@@ -581,59 +581,54 @@ function usces_the_itemGpExp( $out = '' ) {
 	if(!empty($GpN1) && !empty($GpD1)) {
 		if(empty($GpN2) || empty($GpD2)) {
 			$html .= "<li>";
-			$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
-						number_format(round($price * (100 - $GpD1) / 100)), 
+			$html .= sprintf( __('<span class=%5$s>%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
+						$usces->get_currency(round($price * (100 - $GpD1) / 100), true, false ), 
 						$usces->getGuidTax(),
 						esc_html($unit),
 						$GpN1, 
-						__('$', 'usces'), 
 						"'price'"
 					);
 			$html .= "</li>\n";
 		} else {
 
 			$html .= "<li>";
-			$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
-						number_format(round($price * (100 - $GpD1) / 100)), 
+			$html .= sprintf( __('<span class=%6$s>%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
+						$usces->get_currency(round($price * (100 - $GpD1) / 100), true, false ), 
 						$usces->getGuidTax(),
 						esc_html($unit),
 						$GpN1, 
 						$GpN2-1, 
-						__('$', 'usces'), 
 						"'price'"
 					);
 			$html .= "</li>\n";
 			if(empty($GpN3) || empty($GpD3)) {
 				//$html .=  "<li>" . $GpN2 . $unit . __('for more than ','usces') . "1" . $unit . __('par','usces') . "<span class='price'>" . __('$', 'usces') . number_format(round($price * (100 - $GpD2) / 100)) . $usces->getGuidTax() . "</span></li>\n";
 				$html .= "<li>";
-				$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
-							number_format(round($price * (100 - $GpD2) / 100)), 
+				$html .= sprintf( __('<span class=%5$s>%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
+							$usces->get_currency(round($price * (100 - $GpD2) / 100), true, false ), 
 							$usces->getGuidTax(),
 							esc_html($unit),
 							$GpN2, 
-							__('$', 'usces'), 
 							"'price'"
 						);
 				$html .= "</li>\n";
 			} else {
 				$html .= "<li>";
-				$html .= sprintf( __('<span class=%7$s>%6$s%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
-							number_format(round($price * (100 - $GpD2) / 100)), 
+				$html .= sprintf( __('<span class=%6$s>%1$s</span>%2$s par 1%3$s for %4$s-%5$s%3$s', 'usces'),
+							$usces->get_currency(round($price * (100 - $GpD2) / 100), true, false ), 
 							$usces->getGuidTax(),
 							esc_html($unit),
 							$GpN2, 
 							$GpN3-1, 
-							__('$', 'usces'), 
 							"'price'"
 						);
 				$html .= "</li>\n";
 				$html .= "<li>";
-				$html .= sprintf( __('<span class=%6$s>%5$s%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
-							number_format(round($price * (100 - $GpD3) / 100)), 
+				$html .= sprintf( __('<span class=%5$s>%1$s</span>%2$s par 1%3$s for more than %4$s%3$s', 'usces'),
+							$usces->get_currency(round($price * (100 - $GpD3) / 100), true, false ), 
 							$usces->getGuidTax(),
 							esc_html($unit),
 							$GpN3, 
-							__('$', 'usces'), 
 							"'price'"
 						);
 				$html .= "</li>\n";
@@ -1240,7 +1235,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			}
 //20110412ysk end
 		}
-		if( $payment['name'] != '' ) {
+		if( $payment['name'] != '' and $payment['use'] != 'deactivate' ) {
 			$module = trim($payment['module']);
 			if( !WCUtils::is_blank($value) ){
 				$checked = ($payment['name'] == $value) ? ' checked' : '';
@@ -3367,5 +3362,6 @@ function usces_get_custom_field_value( $field, $key, $id, $out = '' ) {
 		echo $value;
 	}
 }
+
 
 ?>
