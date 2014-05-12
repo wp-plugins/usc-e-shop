@@ -621,7 +621,7 @@ function usces_action_acting_transaction(){
 
 				$res = $usces->order_processing();
 				if( 'ordercompletion' == $res ){
-					$usces->cart->crear_cart();
+					//$usces->cart->crear_cart();
 				} else {
 					usces_log('SoftBankPayment '.$data['res_pay_method'].' order processing error : '.print_r($data, true), 'acting_transaction.log');
 					die('NG,order processing error');
