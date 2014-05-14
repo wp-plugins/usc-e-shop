@@ -885,7 +885,8 @@ function order_item_ajax(){
 
 function usces_get_item_select_option( $cat_id ){
 	global $usces;
-	$args = array( 'category' => $cat_id );
+	$number = apply_filters( 'usces_filter_item_select_numberposts', 50, $cat_id );
+	$args = array( 'category' => $cat_id, 'numberposts' => $number );
 	$items = get_posts( $args );
 	$option = '<option value="-1">商品を選択して下さい</option>' . "\n";
 	foreach( $items as $item ){
