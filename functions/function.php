@@ -4698,6 +4698,17 @@ function usces_get_ordercart_meta_value( $type, $cart_id, $key = '' ){
 	return $res;
 }
 
+function usces_make_advance_value( $advance, $cart_row ) {
+	$value = '';
+	$advance_value = array();
+
+	foreach( $advance as $row ) {
+		$advance_value[] = array( $row['meta_key'] => $row['meta_value'] );
+	}
+	$value = apply_filters( 'usces_filter_order_edit_form_row_advance_value', serialize($advance_value), $advance, $cart_row );
+	return $value;
+}
+
 function usces_get_ordercart_row( $order_id, $cart = array() ){
 	global $usces;
 	
@@ -4724,19 +4735,19 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 		$pictid = (int)$usces->get_mainpictid($itemCode);
 		$materials = compact( 'i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
 			'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'stock', 'red', 'pictid', 'order_id' );
+		$advance_value = usces_make_advance_value( $advance, $cart_row );
 ?>
 	<tr>
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictid, array(80, 80), true ); ?></td>
-		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?>
-		<?php usces_make_option_field( $materials, $cart ); ?>
-		</td>
+		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><?php usces_make_option_field( $materials, $cart ); ?></td>
 		<td><input name="skuPrice[<?php echo $ordercart_id; ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
 		<td><input name="quant[<?php echo $ordercart_id; ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $ordercart_id; ?>]" class="aright">&nbsp;</td>
 		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
 		<td>
-		<input name="advance[<?php echo $ordercart_id; ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
+		<input name="postId[<?php echo $ordercart_id; ?>]" type="hidden" value="<?php echo esc_attr($post_id); ?>" />
+		<input name="advance[<?php echo $ordercart_id; ?>]" type="hidden" value="<?php echo esc_attr($advance_value); ?>" />
 		<input name="delButtonAdmin[<?php echo $ordercart_id; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
 		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
 		</td>

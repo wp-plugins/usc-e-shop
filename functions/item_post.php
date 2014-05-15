@@ -2092,13 +2092,14 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 //usces_log('condition : '.print_r($condition,true), 'acting_transaction.log');
 
 	$post_id = explode("#usces#", $post_ids);
-	$sku = explode("#usces#", $skus);
+	//$sku = explode("#usces#", $skus);
 	$price = explode("#usces#", $prices);
 	$quant = explode("#usces#", $quants);
 	$cart = array();
 	for( $i = 0; $i < count($post_id); $i++ ) {
 		if( $post_id[$i] ) 
-			$cart[] = array( "post_id"=>$post_id[$i], "sku"=>$sku[$i], "price"=>$price[$i], "quantity"=>$quant[$i] );
+			//$cart[] = array( "post_id"=>$post_id[$i], "sku"=>$sku[$i], "price"=>$price[$i], "quantity"=>$quant[$i] );
+			$cart[] = array( "post_id"=>$post_id[$i], "price"=>$price[$i], "quantity"=>$quant[$i] );
 	}
 
 	$total_items_price = 0;

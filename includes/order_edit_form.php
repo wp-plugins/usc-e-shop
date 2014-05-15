@@ -501,15 +501,13 @@ jQuery(function($){
 			<?php $script = "
 			var p = $(\"input[name*='skuPrice']\");
 			var q = $(\"input[name*='quant']\");
+			var pi = $(\"input[name*='postId']\");
 			var post_ids = '';
 			var skus = '';
 			var prices = '';
 			var quants = '';
 			for( var i = 0; i < p.length; i++) {
-				name = $(p[i]).attr(\"name\");
-				strs = name.split('[');
-				post_ids += strs[2].replace(/[\]]+$/g, '')+'#usces#';
-				skus += strs[3].replace(/[\]]+$/g, '')+'#usces#';
+				post_ids += $(pi[i]).val()+'#usces#';
 				prices += parseFloat($(p[i]).val())+'#usces#';
 				quants += $(q[i]).val()+'#usces#';
 			}
