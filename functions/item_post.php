@@ -1640,7 +1640,7 @@ function custom_field_ajax() {
 		}
 
 		if(!array_key_exists($newkey, $meta)) {
-			if(($newmeans >= 2 || WCUtils::is_zero($newvalue) || !empty($newvalue)) && !empty($newkey) && !empty($newname)) {
+			if((!empty($newvalue)) && !empty($newkey) && !empty($newname)) {
 				$meta[$newkey]['name'] = $newname;
 				$meta[$newkey]['means'] = $newmeans;
 				$meta[$newkey]['essential'] = $newessential;
@@ -1666,12 +1666,12 @@ function custom_field_ajax() {
 		} else {
 			$value = isset($_POST['value']) ? explode('\n', trim($_POST['value'])) : '';
 			foreach((array)$value as $v) {
-				if( !WCUtils::is_blank($v) ) 
+				if( !WCUtils::is_blank($v) )
 					$nv[] = trim($v);
 			}
 		}
 
-		if($means >= 2 || WCUtils::is_zero($value) || !empty($value)) {
+		if( !empty($value) && !empty($key) && !empty($name) ) {
 			$meta[$key]['name'] = $name;
 			$meta[$key]['means'] = $means;
 			$meta[$key]['essential'] = $essential;
