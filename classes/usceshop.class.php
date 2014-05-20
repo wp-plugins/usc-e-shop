@@ -5238,7 +5238,7 @@ class usc_e_shop
 				order_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				order_modified VARCHAR( 20 ) NULL ,
 				order_status VARCHAR( 255 ) NULL ,
-				order_check VARCHAR( 255 ) NULL ,
+				order_check TEXT NULL ,
 				order_delidue_date VARCHAR( 30 ) NULL ,
 				order_delivery_method INT( 10 ) NOT NULL DEFAULT -1,
 				order_delivery_date VARCHAR( 100 ) NULL,
