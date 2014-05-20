@@ -5835,7 +5835,7 @@ class usc_e_shop
 					if( empty($cart['advance']) ) {
 						$type = 'once';
 					} else {
-						if( isset($cart['advance']['regular']) ) {
+						if( is_array($cart['advance']) and array_key_exists( 'regular', $cart['advance'] ) ) {
 							$regular = maybe_unserialize( $cart['advance']['regular'] );
 						} else {
 							$advance = $this->cart->wc_unserialize( $cart['advance'] );
