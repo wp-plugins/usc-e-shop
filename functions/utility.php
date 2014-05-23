@@ -46,7 +46,9 @@ function usces_upgrade_14(){
 				$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
 				$item_name = get_post_meta( $value['post_id'], '_itemName', true);
 				$skus = $usces->get_skus($value['post_id'], 'code');
-				$sku = isset($skus[$value['sku']]) ? $skus[$value['sku']] : array('name'=>'notfound', 'cprice'=>0, 'unit'=>'');
+				$sku_code = urldecode($value['sku']);
+				$sku_encoded = $value['sku'];
+				$sku = isset($skus[$sku_code]) ? $skus[$sku_code] : array('name'=>'notfound', 'cprice'=>0, 'unit'=>'');
 				if( empty($condition['tax_rate']) ){
 					$tax = 0;
 				
@@ -85,7 +87,7 @@ function usces_upgrade_14(){
 					)", 
 					$order->ID, 0, $row_index, 
 					$value['post_id'], $item_code, $item_name, 
-					$value['sku'], $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], $sku['unit'], 
+					$sku_code, $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], $sku['unit'], 
 					$tax, NULL, $value['serial']
 				);
 				$wpdb->query($query);
@@ -116,11 +118,10 @@ function usces_upgrade_14(){
 							$advance = maybe_unserialize( $avalue );
 							if( is_array($advance) ) {
 								$post_id = $value['post_id'];
-								$sku = $value['sku'];
-								if( is_array( $advance[$post_id][$sku] ) ) {
-									$akeys = array_keys( $advance[$post_id][$sku] );
+								if( is_array( $advance[$post_id][$sku_encoded] ) ) {
+									$akeys = array_keys( $advance[$post_id][$sku_encoded] );
 									foreach( (array)$akeys as $akey ) {
-										$avalue = serialize( $advance[$post_id][$sku][$akey] );
+										$avalue = serialize( $advance[$post_id][$sku_encoded][$akey] );
 										$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
 											( 
 											cart_id, meta_type, meta_key, meta_value 

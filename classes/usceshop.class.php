@@ -5840,7 +5840,8 @@ class usc_e_shop
 						} else {
 							$advance = $this->cart->wc_unserialize( $cart['advance'] );
 							$sku = urldecode( $cart['sku'] );
-							$regular = $advance[$post_id][$sku]['regular'];
+							$sku_encoded = $cart['sku'];
+							$regular = $advance[$post_id][$sku_encoded]['regular'];
 						}
 						$unit = isset( $regular['unit'] ) ? $regular['unit'] : '';
 						$interval = isset( $regular['interval'] ) ? (int)$regular['interval'] : 0;
