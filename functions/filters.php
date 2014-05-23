@@ -152,7 +152,9 @@ function usces_reg_ordercartdata( $args ){
 		$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
 		$item_name = get_post_meta( $value['post_id'], '_itemName', true);
 		$skus = $usces->get_skus($value['post_id'], 'code');
-		$sku = $skus[$value['sku']];
+		$sku_encoded = $value['sku'];
+		$skucode = urldecode($value['sku']);
+		$sku = $skus[$skucode];
 		if( empty($usces->option['tax_rate']) ){
 			$tax = 0;
 		
@@ -188,7 +190,7 @@ function usces_reg_ordercartdata( $args ){
 			%s, %d, %d, %s 
 			)", 
 			$order_id, $row_index, $value['post_id'], $item_code, $item_name, 
-			$value['sku'], $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], 
+			$skucode, $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], 
 			$sku['unit'], $tax, NULL, $value['serial']
 		);
 		$wpdb->query($query);
@@ -219,11 +221,10 @@ function usces_reg_ordercartdata( $args ){
 				$advance = maybe_unserialize( $avalue );
 				if( is_array($advance) ) {
 					$post_id = $value['post_id'];
-					$sku = $value['sku'];
-					if( is_array( $advance[$post_id][$sku] ) ) {
-						$akeys = array_keys( $advance[$post_id][$sku] );
+					if( is_array( $advance[$post_id][$sku_encoded] ) ) {
+						$akeys = array_keys( $advance[$post_id][$sku_encoded] );
 						foreach( (array)$akeys as $akey ) {
-							$avalue = serialize( $advance[$post_id][$sku][$akey] );
+							$avalue = serialize( $advance[$post_id][$sku_encoded][$akey] );
 							$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
 								( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', %s, %s )", 
 								$cart_id, $akey, $avalue
