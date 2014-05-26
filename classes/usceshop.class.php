@@ -1649,14 +1649,14 @@ class usc_e_shop
 					$options['acting_settings']['veritrans']['card_capture_flag'] = isset($_POST['card_capture_flag']) ? $_POST['card_capture_flag'] : '';
 					$options['acting_settings']['veritrans']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
 
-					if( WCUtils::is_blank($_POST['merchant_id']) )
+					if( WCUtils::is_blank($options['acting_settings']['veritrans']['merchant_id']) )
 						$mes .= '※マーチャントIDを入力して下さい<br />';
-					if( WCUtils::is_blank($_POST['merchanthash']) )
+					if( WCUtils::is_blank($options['acting_settings']['veritrans']['merchanthash']) )
 						$mes .= '※マーチャントハッシュキーを入力して下さい<br />';
-					if( WCUtils::is_blank($_POST['ope']) )
+					if( WCUtils::is_blank($options['acting_settings']['veritrans']['ope']) )
 						$mes .= '※稼働環境を選択して下さい<br />';
 					if( 'on' == $options['acting_settings']['veritrans']['card_activate'] ) {
-						if( WCUtils::is_blank($_POST['card_capture_flag']) )
+						if( WCUtils::is_blank($options['acting_settings']['veritrans']['card_capture_flag']) )
 							$mes .= '※カード売上フラグを選択して下さい<br />';
 					}
 
