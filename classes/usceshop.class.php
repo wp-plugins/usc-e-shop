@@ -499,6 +499,7 @@ class usc_e_shop
 		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 'level_5', 'usces_orderlist', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 'level_5', 'usces_ordernew', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 'level_5', 'usces_memberlist', array($this, 'member_list_page'));
+		add_submenu_page('usces_orderlist', __('新規会員登録','usces'), __('新規会員登録','usces'), 'level_5', 'usces_membernew', array($this, 'member_list_page'));
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -623,8 +624,17 @@ class usc_e_shop
 			$this->action_status = 'none';
 			$this->action_message = '';
 		}
-		$member_action = isset($_REQUEST['member_action']) ? $_REQUEST['member_action'] : '';
+		if( $_REQUEST['page'] == 'usces_membernew' && !isset($_REQUEST['member_action']) ){
+			$member_action = 'new';
+		}elseif( $_REQUEST['page'] == 'usces_membernew' && isset($_REQUEST['member_action']) ){
+			$member_action = 'newpost';
+		}else{
+			$member_action = isset($_REQUEST['member_action']) ? $_REQUEST['member_action'] : '';
+		}
 		switch ($member_action) {
+//			case 'upmemberlist':
+//				usces_upload_member_list();
+//				break;
 //20100908ysk start
 			case 'dlmemberlist':
 				usces_download_member_list();
@@ -644,6 +654,23 @@ class usc_e_shop
 				}
 				require_once($member_edit_form);	
 				break;
+			case 'newpost':
+				$this->error_message = $this->admin_new_member_check();
+				if( WCUtils::is_blank($this->error_message) ){
+					$res = usces_new_memberdata();
+					if ( 1 === $res ) {
+						$this->set_action_status('success', __('新規会員登録が完了しました', 'usces'));
+						$_REQUEST['member_action'] = 'edit';
+						$member_action = $_REQUEST['member_action'];
+					} elseif ( 0 === $res ) {
+						$this->set_action_status('none', '');
+					} else {
+						$this->set_action_status('error', 'ERROR : '.__('登録できませんでした','usces'));
+					}
+				}
+				require_once($member_edit_form);
+				break;
+
 			case 'new':
 			case 'edit':
 				require_once($member_edit_form);	
@@ -2493,6 +2520,12 @@ class usc_e_shop
 			$url = USCES_ADMIN_URL . '?page=usces_itemedit&usces_status=none&usces_message=&action=upload_register&regfile='.$filename;
 			wp_redirect($url);
 			exit;
+		//member_up
+//		}else if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_memberlist' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'membercsv'){
+//			$filename = usces_upload_member_list();
+//			$url = USCES_ADMIN_URL . '?page=usces_memberlist&usces_status=none&usces_message=&member_action=upload_register&regfile='.$filename;
+//			wp_redirect($url);
+//			exit;
 		}
 //20110208ysk start
 		if( isset($this->options['acting_settings']['paypal']) and 'on' == $this->options['acting_settings']['paypal']['ec_activate'] ) {
@@ -4663,6 +4696,57 @@ class usc_e_shop
 			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
 	
 		$mes = apply_filters('usces_filter_customer_check', $mes);
+
+		return $mes;
+	}
+
+	function admin_new_member_check() {
+		global $wpdb;
+
+		$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
+		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
+		$mes = '';
+
+		if ( !WCUtils::is_blank( $_POST['member']['password'] ) ){
+			if( !empty( $member_pass_rule_max ) ){
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password']) ) || strlen( trim($_POST['member']['password']) ) > $member_pass_rule_max ){
+					$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
+				}
+			}else{
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password']) ) ){
+					$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
+				}
+			}
+		}
+		if ( !is_email( trim($_POST['member']["email"]) ) ){
+			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
+		}else{
+			$member_table = $wpdb->prefix . "usces_member";
+			$mem_email = $wpdb->get_var( $wpdb->prepare("SELECT mem_email FROM $member_table WHERE ID = %d LIMIT 1", trim($_POST['member_id'])) );
+			if( trim($_POST['member']["email"]) != $mem_email ){
+				$mem_ID = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s LIMIT 1", trim($_POST['member']["email"])) );
+				if( !empty($mem_ID) )
+					$mes .= __('This e-mail address has been already registered.', 'usces') . "<br />";
+			}
+		}
+		if ( WCUtils::is_blank($_POST['member']["name1"]) )
+			$mes .= __('Name is not correct', 'usces') . "<br />";
+//		if ( trim($_POST["mem_name3"]) == "" && USCES_JP )
+//			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
+//		if ( trim($_POST['member']["zipcode"]) == "" )
+//			$mes .= __('postal code is not correct', 'usces') . "<br />";
+//		if ( $_POST['member']["pref"] == __('-- Select --', 'usces') )
+//			$mes .= __('enter the prefecture', 'usces') . "<br />";
+//		if ( trim($_POST['member']["address1"]) == "" )
+//			$mes .= __('enter the city name', 'usces') . "<br />";
+//		if ( trim($_POST['member']["address2"]) == "" )
+//			$mes .= __('enter house numbers', 'usces') . "<br />";
+//		if ( trim($_POST['member']["tel"]) == "" )
+//			$mes .= __('enter phone numbers', 'usces') . "<br />";
+		if( !WCUtils::is_blank($_POST['member']["tel"]) && preg_match("/[^\d-]/", trim($_POST["member"]["tel"])) )
+			$mes .= __('Please input a phone number with a half size number.', 'usces') . "<br />";
+
+		$mes = apply_filters('usces_filter_admin_member_check', $mes);
 
 		return $mes;
 	}

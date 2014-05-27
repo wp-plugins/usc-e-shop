@@ -1307,6 +1307,74 @@ function usces_new_orderdata() {
 	
 }
 
+function usces_new_memberdata(){
+	global $wpdb, $usces;
+	$_POST = $usces->stripslashes_deep_post($_POST);
+	$pass = md5(trim($_POST['member']['password']));
+	$member_table_name = $wpdb->prefix . "usces_member";
+	$member_table_meta_name = $wpdb->prefix . "usces_member_meta";
+   	$query = $wpdb->prepare("INSERT INTO $member_table_name
+			(`mem_email`, `mem_pass`, `mem_status`, `mem_cookie`, `mem_point`, 
+			`mem_name1`, `mem_name2`, `mem_name3`, `mem_name4`, `mem_zip`, `mem_pref`, 
+			`mem_address1`, `mem_address2`, `mem_address3`, `mem_tel`, `mem_fax`, 
+			`mem_delivery_flag`, `mem_delivery`, `mem_registered`, `mem_nicename`) 
+			VALUES (%s, %s, %d, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s)", 
+			trim($_POST['member']['email']),
+			$pass, 
+			trim($_POST['member']['status']),
+			"",
+			trim($_POST['member']['point']),
+			trim($_POST['member']['name1']),
+			trim($_POST['member']['name2']),
+			trim($_POST['member']['name3']),
+			trim($_POST['member']['name4']),
+			trim($_POST['member']['zipcode']),
+			trim($_POST['member']['pref']),
+			trim($_POST['member']['address1']),
+			trim($_POST['member']['address2']),
+			trim($_POST['member']['address3']),
+			trim($_POST['member']['tel']),
+			trim($_POST['member']['fax']),
+			'',
+			'',
+			get_date_from_gmt(gmdate('Y-m-d H:i:s', time())),
+			'');
+	$res[0] = $wpdb->query( $query );
+	
+	if(false === $res[0]) 
+		return false;
+	
+	$member_id = $wpdb->insert_id;
+	$_REQUEST['member_id'] = $wpdb->insert_id;
+	if( !$member_id ){
+		return false;
+	}else{
+		$usces->set_member_meta_value('customer_country', $_POST['member']['country'], $member_id);
+		$csmb_meta = usces_has_custom_field_meta( 'member' );
+		if( is_array($csmb_meta) ) {
+			foreach( $csmb_meta as $key => $entry ) {
+				if( '4' == $entry['means'] ) {
+					$usces->del_member_meta( 'csmb_'.$key, $member_id);
+				}
+			}
+		}
+		$i = 1;
+		if( !empty($_POST['custom_member']) ) {
+			foreach( $_POST['custom_member'] as $key => $value ) {
+				$csmb_key = 'csmb_'.$key;
+				if( is_array($value) ) 
+					 $value = serialize($value);
+				$res[$i] = $usces->set_member_meta_value($csmb_key, $value, $member_id);
+				if(false === $res[$i]) 
+					return false;
+				$i++;
+			}
+		}
+		$result = ( 0 < array_sum($res) ) ? 1 : 0;
+		return $result;
+	}
+}
+
 function usces_delete_memberdata( $ID = 0 ) {
 	global $wpdb, $usces;
 	
