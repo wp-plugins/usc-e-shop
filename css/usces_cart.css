@@ -1267,6 +1267,10 @@ table.retail td,
 	word-break:break-all;
 }
 
+.hidden {
+	display: none;
+}
+
 /* End USCES Member page style */
 /*********************************************************************/
 /* USCES Search page style */

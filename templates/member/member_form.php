@@ -30,7 +30,7 @@ $html .= '<tr>
 </tr>
 <tr>
 <th scope="row"><em>' . __('*', 'usces') . '</em>' . __('password', 'usces') . '</th>
-<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" /></td>
+<td colspan="2"><input class="hidden" value=" " /><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" autocomplete="off" /></td>
 </tr>
 <tr>
 <th scope="row"><em>' . __('*', 'usces') . '</em>' . __('Password (confirm)', 'usces') . '</th>

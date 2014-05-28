@@ -72,7 +72,7 @@ get_header();
 		</tr>
 		<tr>
 			<th scope="row"><?php _e('password', 'usces'); ?></th>
-			<td colspan="2"><input name="member[password1]" id="password1" type="password" value="<?php usces_memberinfo('password1'); ?>" />
+			<td colspan="2"><input class="hidden" value=" " /><input name="member[password1]" id="password1" type="password" value="<?php usces_memberinfo('password1'); ?>" autocomplete="off" />
 			<?php _e('Leave it blank in case of no change.', 'usces'); ?></td>
 		</tr>
 		<tr>

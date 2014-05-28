@@ -64,7 +64,8 @@ $html .= '<tr>
 	</tr>
 	<tr>
 	<th scope="row">' . __('password', 'usces') . '</th>
-	<td colspan="2"><input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" />
+	<td colspan="2"><input class="hidden" value=" " />
+	<input name="member[password1]" id="password1" type="password" value="' . esc_attr($usces_members['password1']) . '" autocomplete="off" />
 	' . __('Leave it blank in case of no change.', 'usces') . '</td>
 	</tr>
 	<tr>

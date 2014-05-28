@@ -19,7 +19,8 @@ $html .= '<div class="loginbox">
 </p>
 <p>
 <label>' . __('password', 'usces') . '<br />
-<input type="password" name="loginpass" id="loginpass" class="loginpass" size="20" /></label>
+<input class="hidden" value=" " />
+<input type="password" name="loginpass" id="loginpass" class="loginpass" size="20" autocomplete="off" /></label>
 </p>
 <p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever" /> ' . __('memorize login information', 'usces') . '</label></p>
 <p class="submit">';
