@@ -43,7 +43,7 @@ get_header();
 		</tr>
 		<tr>
 			<th scope="row"><?php _e('password', 'usces'); ?></th>
-			<td><input name="loginpass" id="mailaddress1" type="password" value="" /></td>
+			<td><input class="hidden" value=" " /><input name="loginpass" id="mailaddress1" type="password" value="" autocomplete="off" /></td>
 		</tr>
 	</table>
 	<div class="send"><input name="customerlogin" type="submit" value="<?php _e(' Next ', 'usces'); ?>" /></div>
@@ -65,7 +65,7 @@ get_header();
 <?php if( usces_is_membersystem_state() ) : ?>
 		<tr>
 			<th scope="row"><?php if( $member_regmode == 'editmemberfromcart' ) : ?><em><?php _e('*', 'usces'); ?></em><?php endif; ?><?php _e('password', 'usces'); ?></th>
-			<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="<?php echo esc_attr($usces_entries['customer']['password1']); ?>" /><?php if( $member_regmode != 'editmemberfromcart' ) _e('When you enroll newly, please fill it out.', 'usces'); ?>	</td>
+			<td colspan="2"><input class="hidden" value=" " /><input name="customer[password1]" style="width:100px" type="password" value="<?php echo esc_attr($usces_entries['customer']['password1']); ?>" autocomplete="off" /><?php if( $member_regmode != 'editmemberfromcart' ) _e('When you enroll newly, please fill it out.', 'usces'); ?>	</td>
 		</tr>
 		<tr>
 			<th scope="row"><?php if( $member_regmode == 'editmemberfromcart' ) : ?><em><?php _e('*', 'usces'); ?></em><?php endif; ?><?php _e('Password (confirm)', 'usces'); ?></th>

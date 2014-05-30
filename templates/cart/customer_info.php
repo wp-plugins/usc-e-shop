@@ -34,7 +34,7 @@ if(usces_is_membersystem_state()){
 	</tr>
 	<tr>
 	<th scope="row">'.__('password', 'usces').'</th>
-	<td><input name="loginpass" id="mailaddress1" type="password" value="" /></td>
+	<td><input class="hidden" value=" " /><input name="loginpass" id="mailaddress1" type="password" value="" autocomplete="off" /></td>
 	</tr>
 	</table>
 	<div class="send"><input name="customerlogin" type="submit" value="'.__(' Next ', 'usces').'" /></div>
@@ -60,7 +60,7 @@ if(usces_is_membersystem_state()){
 		$html .= '<em>' . __('*', 'usces') . '</em>';
 	}
 	$html .= __('password', 'usces').'</th>
-	<td colspan="2"><input name="customer[password1]" style="width:100px" type="password" value="' . esc_attr($usces_entries['customer']['password1']) . '" />';
+	<td colspan="2"><input class="hidden" value=" " /><input name="customer[password1]" style="width:100px" type="password" value="' . esc_attr($usces_entries['customer']['password1']) . '" autocomplete="off" />';
 	if( $member_regmode != 'editmemberfromcart' ){
 		$html .= __('When you enroll newly, please fill it out.', 'usces');
 	}
