@@ -69,6 +69,7 @@ if($order_action == 'new'){
 		}
 	}
 
+	$condition = $this->get_condition();
 	$data = array(
 		'mem_name1' => '', 
 		'mem_name2' => '', 
@@ -95,6 +96,7 @@ if($order_action == 'new'){
 		'order_country' => '',
 		'order_pref' => '',
 		'ID' => '',
+		'order_condition' => $condition,
 		'order_date' => current_time('mysql'),
 		'order_delivery_date' => '',
 	 );
@@ -112,7 +114,6 @@ if($order_action == 'new'){
 		'country' => '',
 		'pref' => ''
 	 );
-	$condition = $this->get_condition();
 	$cart = array();
 
 
@@ -128,8 +129,12 @@ if($order_action == 'new'){
 	$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
 	$data = $wpdb->get_row( $query, ARRAY_A );
 
+
+
 	$deli = stripslashes_deep(unserialize($data['order_delivery']));
-	$cart = stripslashes_deep(unserialize($data['order_cart']));
+	$seriarized_cart = stripslashes_deep(unserialize($data['order_cart']));
+	$cart = usces_get_ordercartdata( $order_id );
+//usces_p($cart);
 	$condition = stripslashes_deep(unserialize($data['order_condition']));
 	$ordercheck = stripslashes_deep(unserialize($data['order_check']));
 	if( !is_array($ordercheck) ) $ordercheck = array();
@@ -139,7 +144,7 @@ if($order_action == 'new'){
 		$data = stripslashes_deep($data);
 	}
 	foreach ($management_status as $status_key => $status_name){
-		if( in_array($status_key, array('noreceipt','receipted','pending', 'estimate', 'adminorder')) )
+		if( in_array($status_key, array('noreceipt','receipted','pending','estimate', 'adminorder')) )
 			continue;
 			
 		if($this->is_status($status_key, $data['order_status'])){
@@ -165,7 +170,6 @@ if($order_action == 'new'){
 		$receipt = 'pending';
 	else
 		$receipt = '';
-		
 //20100818ysk start
 	$csod_meta = usces_has_custom_field_meta('order');
 	if(is_array($csod_meta)) {
@@ -193,6 +197,7 @@ if($order_action == 'new'){
 	}
 //20100818ysk end
 }
+$filter_args = compact( 'order_action', 'order_id', 'data', 'cart' ); 
 $delivery_after_days = apply_filters( 'usces_filter_delivery_after_days', ( !empty($usces->options['delivery_after_days']) ? (int)$usces->options['delivery_after_days'] : 100 ) );//20130527ysk 0000710
 ?>
 <script type="text/javascript">
@@ -240,6 +245,7 @@ jQuery(function($){
 			html += "</select>\n";
 			$("#receiptlabel").html(label);
 			$("#receiptbox").html(html);
+		<?php do_action( 'usces_change_payment_terms_js', $management_status, $data ); ?>	
 		}else{
 			$("#receiptlabel").html('');
 			$("#receiptbox").html('');
@@ -259,6 +265,7 @@ jQuery(function($){
 			}
 		},
 		close: function() {
+			$("#newitemcategory").val( "-1" );
 			$("#newitemform").html( "" );
 			$('#newitemcode').val('');
 		}
@@ -494,15 +501,13 @@ jQuery(function($){
 			<?php $script = "
 			var p = $(\"input[name*='skuPrice']\");
 			var q = $(\"input[name*='quant']\");
+			var pi = $(\"input[name*='postId']\");
 			var post_ids = '';
 			var skus = '';
 			var prices = '';
 			var quants = '';
 			for( var i = 0; i < p.length; i++) {
-				name = $(p[i]).attr(\"name\");
-				strs = name.split('[');
-				post_ids += strs[2].replace(/[\]]+$/g, '')+'#usces#';
-				skus += strs[3].replace(/[\]]+$/g, '')+'#usces#';
+				post_ids += $(pi[i]).val()+'#usces#';
 				prices += parseFloat($(p[i]).val())+'#usces#';
 				quants += $(q[i]).val()+'#usces#';
 			}
@@ -521,11 +526,11 @@ jQuery(function($){
 					$(\"#total_full\").html(addComma(values[4]+''));
 					$(\"#total_full_top\").html(addComma(values[4]+''));
 				} else {
-					alert( 'ERROR' );
+					alert( 'ERROR1' );
 				}
 			};
 			s.error = function(data, dataType) {
-				alert( 'ERROR' );
+				alert( 'ERROR2' );
 			};
 			$.ajax( s );
 			return false;
@@ -773,19 +778,19 @@ jQuery(document).ready(function($){
 	orderfunc.sumPrice(null);
 	
 //	for( var i = 0; i < p.length; i++) {
-//		$(p[i]).bind("change", function(){ orderfunc.sumPrice($(p[i])); });
-//		$(q[i]).bind("change", function(){ orderfunc.sumPrice($(q[i])); });
-//		$(db[i]).bind("click", function(){ return delConfirm($(db[i])); });
+//		$(p[i]).live("change", function(){ orderfunc.sumPrice($(p[i])); });
+//		$(q[i]).live("change", function(){ orderfunc.sumPrice($(q[i])); });
+//		$(db[i]).live("click", function(){ return delConfirm($(db[i])); });
 //	}
-	$("input[name*='skuPrice']").bind("change", function(){ orderfunc.sumPrice($(this)); });
-	$("input[name*='quant']").bind("change", function(){ orderfunc.sumPrice($(this)); });
-	$("input[name*='delButton']").bind("click", function(){ orderfunc.sumPrice(null); });
+	$("input[name*='skuPrice']").live("change", function(){ orderfunc.sumPrice($(this)); });
+	$("input[name*='quant']").live("change", function(){ orderfunc.sumPrice($(this)); });
+	$("input[name*='delButton']").live("click", function(){ orderfunc.sumPrice(null); });
 //20120528ysk end
-	$("#order_usedpoint").bind("change", function(){ orderfunc.sumPrice($("#order_usedpoint")); });
-	$("#order_discount").bind("change", function(){ orderfunc.sumPrice($("#order_discount")); });
-	$("#order_shipping_charge").bind("change", function(){ orderfunc.sumPrice($("#order_shipping_charge")); });
-	$("#order_cod_fee").bind("change", function(){ orderfunc.sumPrice($("#order_cod_fee")); });
-	$("#order_tax").bind("change", function(){ orderfunc.sumPrice($("#order_tax")); });
+	$("#order_usedpoint").live("change", function(){ orderfunc.sumPrice($("#order_usedpoint")); });
+	$("#order_discount").live("change", function(){ orderfunc.sumPrice($("#order_discount")); });
+	$("#order_shipping_charge").live("change", function(){ orderfunc.sumPrice($("#order_shipping_charge")); });
+	$("#order_cod_fee").live("change", function(){ orderfunc.sumPrice($("#order_cod_fee")); });
+	$("#order_tax").live("change", function(){ orderfunc.sumPrice($("#order_tax")); });
 	$("input[name*='upButton']").click(function(){
 		if( ('completion' == $("#order_taio option:selected").val() || 'continuation' == $("#order_taio option:selected").val()) && '<?php echo substr(get_date_from_gmt(gmdate('Y-m-d H:i:s', time())), 0, 10); ?>' != $('#modified').val() ){
 			if( confirm("<?php _e("Are you sure you want to change to today's date Date of renovation?", "usces"); ?>\n<?php _e("Please press the cancel If you want to update without changing the modified date.", "usces"); ?>") ){
@@ -1092,6 +1097,9 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 </div>
 <?php //endif; ?>
 <div id="cart">
+<?php
+ob_start();
+?>
 <table cellspacing="0" id="cart_table">
 	<thead>
 		<tr>
@@ -1111,82 +1119,7 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 	</tr>
 	</thead>
 	<tbody id="orderitemlist">
-<?php
-	global $post;
-	for($i=0; $i<count($cart); $i++) { 
-		$cart_row = $cart[$i];
-		$post_id = $cart_row['post_id'];
-		$post = get_post($post_id);
-		$sku = $cart_row['sku'];
-		$sku_code = esc_attr(urldecode($cart_row['sku']));
-		$quantity = $cart_row['quantity'];
-		$options = $cart_row['options'];
-		$advance = $this->cart->wc_serialize($cart_row['advance']);
-		$itemCode = $this->getItemCode($post_id);
-		$itemName = $this->getItemName($post_id);
-		$cartItemName = $this->getCartItemName($post_id, $sku_code);
-		$skuPrice = $cart_row['price'];
-		$stock = $this->getItemZaiko($post_id, $sku_code);
-		$red = (in_array($stock, array(__('sellout', 'usces'), __('Out Of Stock', 'usces'), __('Out of print', 'usces')))) ? 'class="signal_red"' : '';
-		$pictid = (int)$this->get_mainpictid($itemCode);
-		if( empty($options) ) {
-			$optstr = '';
-			$options = array();
-		}
-		if( is_array($options) && count($options) > 0 ){
-			$optstr = '';
-			foreach($options as $key => $value){
-//20110629ysk start 0000190
-				//if( !empty($key) )
-				//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-				if( !empty($key) ) {
-					$key = urldecode($key);
-					if(is_array($value)) {
-						$c = '';
-						$optstr .= esc_html($key) . ' : '; 
-						foreach($value as $v) {
-							$optstr .= $c.nl2br(esc_html(urldecode($v)));
-							$c = ', ';
-						}
-						$optstr .= "<br />\n"; 
-					} else {
-						$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
-					}
-				}
-//20110629ysk end
-			}
-		}
-		$materials = compact( 'i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 'options', 'advance', 
-						'itemCode', 'itemName', 'cartItemName', 'skuPrice', 'stock', 'red', 'pictid', 'order_id' );
-		$optstr = apply_filters( 'usces_filter_order_edit_form_row', $optstr, $cart, $materials );
-?>
-	<tr>
-		<td><?php echo $i + 1; ?></td>
-		<td><?php echo wp_get_attachment_image( $pictid, array(150, 150), true ); ?></td>
-		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><br /><?php echo $optstr; ?></td>
-		<td><input name="skuPrice[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text price" type="text" value="<?php echo esc_attr( $skuPrice ); ?>" /></td>
-		<td><input name="quant[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
-		<td id="sub_total[<?php echo $i; ?>]" class="aright">&nbsp;</td>
-		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
-		<td>
-		<?php foreach((array)$options as $key => $value){ ?>
-		<input name="optName[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo esc_attr($key); ?>" />
-			<?php if(is_array($value)): //20110715ysk 0000202 ?>
-				<?php foreach($value as $v): ?>
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>][<?php echo $v; ?>]" type="hidden" value="<?php echo $v; ?>" />
-				<?php endforeach; ?>
-			<?php else: ?>
-		<input name="itemOption[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>][<?php echo $key; ?>]" type="hidden" value="<?php echo $value; ?>" />
-			<?php endif; ?>
-		<?php } ?>
-		<input name="advance[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" type="hidden" value="<?php echo esc_attr($advance); ?>" />
-		<input name="delButton[<?php echo $i; ?>][<?php echo $post_id; ?>][<?php echo $sku; ?>]" class="delCartButton" type="submit" value="<?php _e('Delete', 'usces'); ?>" />
-		<?php do_action('usces_admin_order_cart_button', $order_id, $i); ?>
-		</td>
-	</tr>
-<?php 
-	}
-?>
+<?php echo usces_get_ordercart_row( $order_id, $cart ); ?>
 	</tbody>
 		<tfoot>
 		<tr>
@@ -1195,15 +1128,14 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( isset($data['order_usedpoint']) && !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
-			<td><?php _e('granted points', 'usces'); ?></td>
-			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( isset($data['order_getpoint']) && !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
-		</tr>
-		<tr>
 			<td colspan="5" class="aright"><?php echo apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id); ?></td>
 			<td class="aright" style="color:#FF0000"><input name="offer[discount]" id="order_discount" class="text price" type="text" value="<?php if( isset($data['order_discount']) && !empty($data['order_discount']) ) { usces_crform( $data['order_discount'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
 			<td colspan="2"><?php _e('Discounted amount should be shown by -(Minus)', 'usces'); ?>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="5" class="aright"><?php usces_tax_label($data); ?></td>
+			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( isset($data['order_tax']) && !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
+			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="5" class="aright"><?php _e('Shipping', 'usces'); ?></td>
@@ -1216,9 +1148,10 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="5" class="aright"><?php _e('consumption tax', 'usces'); ?></td>
-			<td class="aright"><input name="offer[tax]" id="order_tax" type="text" class="text price" value="<?php if( isset($data['order_tax']) && !empty($data['order_tax']) ) { usces_crform( $data['order_tax'], false, false, '', false ); } else { echo '0'; } ?>" /></td>
-			<td colspan="2"><?php _e('It will be not caluculated automatically.', 'usces'); ?>&nbsp;</td>
+			<td colspan="5" class="aright"><?php _e('Used points','usces'); ?></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[usedpoint]" id="order_usedpoint" class="text price red" type="text" value="<?php if( isset($data['order_usedpoint']) && !empty($data['order_usedpoint']) ) {echo esc_attr($data['order_usedpoint']); } else { echo '0'; } ?>" /></td>
+			<td><?php _e('granted points', 'usces'); ?></td>
+			<td class="aright" style="color:#FF0000"><input name="offer[getpoint]" id="order_getpoint" class="text price" type="text" value="<?php if( isset($data['order_getpoint']) && !empty($data['order_getpoint']) ) {echo esc_attr($data['order_getpoint']); } else { echo '0'; } ?>" /></td>
 		</tr>
 		<tr>
 			<th colspan="5" class="aright"><?php _e('Total Amount','usces'); ?></th>
@@ -1227,6 +1160,11 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		</tr>
 		</tfoot>
 </table>
+<?php
+$cart_table = ob_get_contents();
+ob_end_clean();
+echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter_args );
+?>
 </div>
 <div class="ordernavi"><input name="upButton2" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 
@@ -1245,7 +1183,15 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 	<fieldset>
 	<div class="clearfix">
 		<div class="dialogsearch">
-		<p><?php _e("Enter the item code, then press 'Obtain'", 'usces'); ?></p>
+		<label>商品カテゴリー　</label>
+	<?php
+		$idObj = get_category_by_slug('item');
+		$dropdown_options = array( 'show_option_none' => 'カテゴリーを選択して下さい', 'name' => 'newitemcategory', 'id' => 'newitemcategory', 'hide_empty' => 1, 'hierarchical' => 1, 'orderby' => 'name', 'child_of' => $idObj->term_id);
+		wp_dropdown_categories($dropdown_options);
+	?>
+		<br />
+		<label>追加する商品　</label><select name="newitemcode" id="newitemcode"></select><br />
+		<div id="loading"></div>
 		<label for="name"><?php _e('item code', 'usces'); ?></label>
 		<input type="text" name="newitemcode" id="newitemcode" class="text" />
 		<input name="getitem" type="button" value="<?php _e('Obtain', 'usces'); ?>" onclick="if( jQuery('#newitemcode').val() == '' ) return; orderItem.getitem();" />
@@ -1283,6 +1229,6 @@ usces_admin_custom_field_input($csod_meta, 'order', '');
 		<div id="new_pdf"></div>
 	</fieldset>
 </div>
-
+<?php do_action( 'usces_action_endof_order_edit_form', $data ); ?>
 </div><!--usces_admin-->
 </div><!--wrap-->

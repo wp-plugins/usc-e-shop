@@ -718,6 +718,70 @@
 		
 		add2cart : function(newid, newsku) {
 			var ID = $("input[name='order_id']").val();
+			var optob;
+			var optvalue = '';
+			var query = 'action=order_item2cart_ajax&order_id='+ID+'&post_id='+newid+'&sku='+newsku;
+			
+			var newoptob = $("input[name*='optNEWCode\[" + newid + "\]\[" + newsku + "\]']");
+			var newoptvalue = '';
+			var mes = '';
+			for( var n = 0; n < newoptob.length; n++) {
+				newoptvalue = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
+				var newoptclass = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").attr("class");
+				var essential = $(":input[name='optNEWEssential\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']").val();
+				switch(newoptclass) {
+				case 'iopt_select_multiple':
+					var sel = 0;
+					if( essential == 1 ) {
+						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]'] option:selected").each(function(idx, obj) {
+							if( '#NONE#' != $(this).val()) {
+								sel++;
+							}
+						});
+						if( sel == 0 ) {
+							mes += decodeURIComponent($(newoptob[n]).val())+'を選択してください'+"\n";
+						}
+					}
+					$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]'] option:selected").each(function(idx, obj) {
+						if( '#NONE#' != $(this).val()) {
+							query += "&itemOption[" + $(newoptob[n]).val() + "][" + encodeURIComponent($(this).val()) + "]="+encodeURIComponent($(this).val());
+						}
+					});
+					break;
+				case 'iopt_select':
+					if( essential == 1 && newoptvalue == '#NONE#' ) {
+						mes += decodeURIComponent($(newoptob[n]).val())+'を選択してください'+"\n";
+					} else {
+						query += "&itemOption[" + $(newoptob[n]).val() + "]="+encodeURIComponent(newoptvalue);
+					}
+					break;
+				case 'iopt_text':
+				case 'iopt_textarea':
+					if( essential == 1 && newoptvalue == '' ) {
+						mes += decodeURIComponent($(newoptob[n]).val())+'を入力してください'+"\n";
+					} else {
+						query += "&itemOption[" + $(newoptob[n]).val() + "]="+encodeURIComponent(newoptvalue);
+					}
+					break;
+				}
+			}
+			if( mes != '' ) {
+				alert(mes);
+				return;
+			}
+
+			var s = orderItem.settings;
+			s.data = query;
+			s.success = function(data, dataType){
+				$("#orderitemlist").html(data);
+				orderfunc.sumPrice(null);
+			};
+			$.ajax( s );
+			return false;
+		},
+		
+		add2cart_old : function(newid, newsku) {
+			var ID = $("input[name='order_id']").val();
 			var cnum = $("#orderitemlist").children().length;
 			var priceob = $("input[name*='skuPrice']");
 			var quantob = $("input[name*='quant']");
@@ -913,14 +977,33 @@
 			return false;
 		}, 
 		
-		getitem : function() {
-			if($("#newitemcode").val() == '') return;
-			
-			var itemcode = $("#newitemcode").val();
+		getSelitem : function( cat_id ) {
+			if(cat_id == '-1'){
+				$("#newitemcode").html('');
+				return false;
+			}
+			$("#loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
+			var s = orderItem.settings;
+			s.data = "action=order_item_ajax&mode=get_item_select_option&cat_id=" + encodeURIComponent(cat_id);
+			s.success = function(data, dataType){
+				$("#loading").html('');
+				$("#newitemcode").html( data );
+			};
+			$.ajax( s );
+			return false;
+		},
+
+		getitem : function(itemcode) {
+			if(itemcode == '-1'){
+				$("#newitemform").html('');
+				return false;
+			}
+			$("#loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 			var s = orderItem.settings;
 			s.data = "action=order_item_ajax&mode=get_order_item&itemcode=" + encodeURIComponent(itemcode);
 			s.success = function(data, dataType){
-					$("#newitemform").html( data );
+				$("#loading").html('');
+				$("#newitemform").html( data );
 			};
 			$.ajax( s );
 			return false;
@@ -1007,6 +1090,15 @@
 		}
 		
 	};
+	
+	$("#newitemcategory").live( 'change', function(){
+		orderItem.getSelitem( $(this).val() );
+	});
+	
+	$("#newitemcode").live( 'change', function(){
+		orderItem.getitem( $(this).val() );
+	});
+	
 	
 })(jQuery);
 

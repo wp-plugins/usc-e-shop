@@ -138,7 +138,7 @@ function toggleVisibility(id) {
 <!--20131220ysk start-->
 		<li><a href="#uscestabs_anotherlane">アナザーレーン</a></li>
 <!--20131220ysk end-->
-<!--20140206ysk start--
+<!--20140206ysk start-->
 		<li><a href="#uscestabs_veritrans">ベリトランス</a></li>
 <!--20140206ysk end-->
 	</ul>
@@ -1056,7 +1056,7 @@ function toggleVisibility(id) {
 	</div><!--uscestabs_anotherlane-->
 <!--20131220ysk end-->
 
-<!--20140206ysk start--
+<!--20140206ysk start-->
 	<div id="uscestabs_veritrans">
 	<div class="settlement_service"><span class="service_title">ベリトランス Air-Web</span></div>
 	<?php if( isset($_POST['acting']) && 'veritrans' == $_POST['acting'] ) : ?>

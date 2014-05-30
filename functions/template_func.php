@@ -9,6 +9,101 @@ function usces_guid_tax( $out = '' ){
 	}
 }
 
+function usces_tax_label( $data = array(), $out = '' ){
+	global $usces;
+	if( empty($data) ){
+		$tax_mode = $usces->options['tax_mode'];
+	}else{
+		$condition = maybe_unserialize($data['order_condition']);
+		$tax_mode = isset($condition['tax_mode']) ? $condition['tax_mode'] : $usces->options['tax_mode'];
+	}
+	if( 'exclude' == $tax_mode ){
+		$label = __('consumption tax', 'usces');
+	}else{
+		if( isset($condition['tax_mode']) && !empty($data['ID']) ){
+			$materials = array(
+				'total_items_price' => $data['order_item_total_price'],
+				'discount' => $data['order_discount'],
+				'shipping_charge' => $data['order_shipping_charge'],
+				'cod_fee' => $data['order_cod_fee'],
+			);
+			$label = __('Internal tax', 'usces') . '(' . usces_crform( usces_internal_tax( $materials, 'return' ), true, false, 'return') . ')';
+		}else{
+			$label = __('Internal tax', 'usces');
+		}
+	}
+	$label = apply_filters( 'usces_filter_tax_label', $label);
+	
+	if( $out == 'return' ){
+		return $label;
+	}else{
+		echo $label;
+	}
+}
+
+function usces_tax( $usces_entries, $out = '' ){
+	global $usces;
+
+	if( 'exclude' == $usces->options['tax_mode'] ){
+		$tax_str = usces_crform($usces_entries['order']['tax'], true, false,'return');
+	}else{
+		$materials = array(
+			'total_items_price' => $usces_entries['order']['total_items_price'],
+			'discount' => $usces_entries['order']['discount'],
+			'shipping_charge' => $usces_entries['order']['shipping_charge'],
+			'cod_fee' => $usces_entries['order']['cod_fee'],
+		);
+		$tax_str = '(' . usces_crform(usces_internal_tax( $materials, 'return' ), true, false,'return') . ')';
+	}
+	$tax_str = apply_filters( 'usces_filter_tax', $tax_str);
+	
+	if( $out == 'return' ){
+		return $tax_str;
+	}else{
+		echo $tax_str;
+	}
+}
+
+function usces_internal_tax( $materials, $out = '' ){
+	global $usces, $usces_settings;
+
+	if( 'products' == $usces->options['tax_target'] ){
+		$total = $materials['total_items_price'] + $materials['discount'];
+	}else{
+		$total = $materials['total_items_price'] + $materials['discount'] + $materials['shipping_charge'] + $materials['cod_fee'];
+	}
+	$total = apply_filters( 'usces_filter_internal_tax_total', $total, $materials);
+
+	$tax = $total * $usces->options['tax_rate'] / 100;
+	$tax = $total - $total / (1 + ($usces->options['tax_rate'] / 100));
+	$cr = $usces->options['system']['currency'];
+	$decimal = $usces_settings['currency'][$cr][1];
+	$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+	switch( $usces->options['tax_method'] ){
+		case 'cutting':
+			$tax = floor($tax*$decipad)/$decipad;
+			break;
+		case 'bring':
+			$tax = ceil($tax*$decipad)/$decipad;
+			break;
+		case 'rounding':
+			if( 0 < $decimal ){
+				$tax = round($tax, (int)$decimal);
+			}else{
+				$tax = round($tax);
+			}
+			break;
+	}				
+
+	$tax = apply_filters( 'usces_filter_internal_tax', $tax, $materials);
+	
+	if( $out == 'return' ){
+		return $tax;
+	}else{
+		echo $tax;
+	}
+}
+
 function usces_currency_symbol( $out = '' ) {
 	global $usces;
 
@@ -1317,6 +1412,7 @@ function usces_the_inquiry_form() {
 <div class="error_message"><?php echo $error_message; ?></div>
 <?php endif; ?>
 <form name="inquiry_form" action="<?php //echo USCES_CART_URL; ?>" method="post">
+<input type="hidden" name="kakuninyou" />
 <table border="0" cellpadding="0" cellspacing="0" class="inquiry_table">
 <tr>
 <th scope="row"><?php _e('Full name','usces') ?></th>
@@ -2408,7 +2504,8 @@ function usces_member_history( $out = '' ){
 	$usces_member_history = $usces->get_member_history($usces_members['ID']);
 	$colspan = usces_is_membersystem_point() ? 9 : 7;
 
-	$html = '<table>';
+	$html = '<div class="history-area">
+	<table>';
 	if ( !count($usces_member_history) ) {
 		$html .= '<tr>
 		<td>' . __('There is no purchase history for this moment.', 'usces') . '</td>
@@ -2463,10 +2560,13 @@ function usces_member_history( $out = '' ){
 				
 		for($i=0; $i<count($cart); $i++) { 
 			$cart_row = $cart[$i];
+			$ordercart_id = $cart_row['cart_id'];
 			$post_id = $cart_row['post_id'];
 			$sku = urldecode($cart_row['sku']);
 			$quantity = $cart_row['quantity'];
 			$options = $cart_row['options'];
+			//$options = usces_get_ordercart_meta_value( 'option', $ordercart_id );
+			//$options = usces_get_ordercart_meta( 'option', $ordercart_id );
 			$itemCode = $usces->getItemCode($post_id);
 			$itemName = $usces->getItemName($post_id);
 			$cartItemName = $usces->getCartItemName($post_id, $sku);
@@ -2477,11 +2577,9 @@ function usces_member_history( $out = '' ){
 			if( is_array($options) && count($options) > 0 ){
 				$optstr = '';
 				foreach($options as $key => $value){
-//20110629ysk start 0000190
-					//f( !empty($key) )
-					//	$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 					if( !empty($key) ) {
 						$key = urldecode($key);
+						$value = maybe_unserialize($value);
 						if(is_array($value)) {
 							$c = '';
 							$optstr .= esc_html($key) . ' : '; 
@@ -2494,7 +2592,6 @@ function usces_member_history( $out = '' ){
 							$optstr .= esc_html($key) . ' : ' . nl2br(esc_html(urldecode($value))) . "<br />\n"; 
 						}
 					}
-//20110629ysk end
 				}
 				$optstr = apply_filters( 'usces_filter_option_history', $optstr, $options);
 			}
@@ -2519,7 +2616,8 @@ function usces_member_history( $out = '' ){
 			</tr>';
 	}
 	
-	$html .= '</table>';
+	$html .= '</table>
+	</div>';
 
 	if($out == 'return'){
 		return $html;
@@ -3264,5 +3362,6 @@ function usces_get_custom_field_value( $field, $key, $id, $out = '' ) {
 		echo $value;
 	}
 }
+
 
 ?>

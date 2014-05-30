@@ -180,6 +180,22 @@ function toggleVisibility(id) {
 </select></td>
 		<td><div id="ex_shipping_rule" class="explanation"><?php _e('initial value at registration of items. Do not chose this if it does not apply to you.', 'usces'); ?></div></td>
 	</tr>
+</table>
+<table class="form_table">
+	<tr>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_mode');"><?php _e('Tax treatment', 'usces'); ?></a></th>
+	    <td width="10"><input name="tax_mode" id="tax_mode_include" type="radio" value="include"<?php if($this->options['tax_mode'] == 'include') echo 'checked="checked"'; ?> /></td><td width="100"><label for="tax_mode_include"><?php _e('Included', 'usces'); ?></label></td>
+	    <td width="10"><input name="tax_mode" id="tax_mode_exclude" type="radio" value="exclude"<?php if($this->options['tax_mode'] == 'exclude') echo 'checked="checked"'; ?> /></td><td width="100"><label for="tax_mode_exclude"><?php _e('Excluded', 'usces'); ?></label></td>
+		<td><div id="ex_tax_mode" class="explanation"><?php _e('You can choose consumption tax is whether it is included in the product price.', 'usces'); ?></div></td>
+	</tr>
+	<tr>
+	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_target');"><?php _e('Tax target', 'usces'); ?></a></th>
+	    <td width="10"><input name="tax_target" id="tax_mode_products" type="radio" value="products"<?php if($this->options['tax_target'] == 'products') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_include"><?php _e('Only Products', 'usces'); ?></label></td>
+	    <td width="10"><input name="tax_target" id="tax_mode_all" type="radio" value="all"<?php if($this->options['tax_target'] == 'all') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_exclude"><?php _e('All Amount', 'usces'); ?></label></td>
+		<td><div id="ex_tax_target" class="explanation"><?php _e('You can select the subject of the consumption tax. One is only the product price, and the other contains all the commission.', 'usces'); ?></div></td>
+	</tr>
+</table>
+<table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_rate');"><?php _e('Percentage of Consumption tax', 'usces'); ?></a></th>
 	    <td><input name="tax_rate" type="text" class="short_str num" value="<?php echo esc_attr($this->options['tax_rate']); ?>" />%</td>

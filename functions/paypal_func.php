@@ -60,6 +60,7 @@ function usces_paypal_cart_page_footer( $include = true ) {
 	$member = $usces->get_member();
 	if( !usces_paypal_set_session( $member['ID'] ) ) return $html;
 	if( false === $usces->cart->num_row() ) return $html;
+	if( defined('WCEX_AUTO_DELIVERY') and wcad_have_regular_order() ) return $html;
 
 	$usces_entries = $usces->cart->get_entry();
 	$usces->set_cart_fees( $member, $usces_entries );

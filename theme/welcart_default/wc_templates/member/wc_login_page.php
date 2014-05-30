@@ -33,7 +33,8 @@ get_header();
 	</p>
 	<p>
 	<label><?php _e('password', 'usces'); ?><br />
-	<input type="password" name="loginpass" id="loginpass" class="loginpass" size="20" /></label>
+	<input class="hidden" value=" " />
+	<input type="password" name="loginpass" id="loginpass" class="loginpass" size="20" autocomplete="off" /></label>
 	</p>
 	<p class="forgetmenot">
 	<label><input name="rememberme" type="checkbox" id="rememberme" value="forever" /> <?php _e('memorize login information', 'usces'); ?></label>

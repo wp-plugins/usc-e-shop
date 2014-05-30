@@ -23,7 +23,7 @@ $items_num = $this->get_items_num();
 <?php endif; ?>
 </div>
 
-<?php if( !(defined('USCES_ADMIN_INFO') && !USCES_ADMIN_INFO) ) : ?>
+<?php if( !(defined('USCES_ADMIN_INFO') && !USCES_ADMIN_INFO) && 7 < $this->user_level ) : ?>
 <div id= "wc_information" class="chui"></div>
 <?php endif; ?>
 <?php do_action( 'usces_action_admin_top_sidebar' ); ?>
@@ -31,6 +31,8 @@ $items_num = $this->get_items_num();
 </div><!--usces_admin_right-->
 
 <div class="usces_admin_left">
+
+<?php if( 4 < $this->user_level ): ?>
 <h4><?php _e('number & amount of order', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">
@@ -48,7 +50,7 @@ $items_num = $this->get_items_num();
 </tr>
 </table>
 </div>
-
+<?php endif; ?>
 <?php do_action( 'usces_action_admintop_box1' ); ?>
 
 <h4><?php _e('information for registration of items', 'usces'); ?></h4>
@@ -96,6 +98,7 @@ unset($non_stoc_skus);
 
 <?php do_action( 'usces_action_admintop_box2' ); ?>
 
+<?php if( 2 < $this->user_level ): ?>
 <h4><?php _e('Your environment', 'usces'); ?></h4>
 <div class="usces_box">
 <table class="dashboard">
@@ -129,6 +132,7 @@ foreach($essential_extentions as $key => $esext){
 </tr>
 </table>
 </div>
+<?php endif; ?>
 </div>
 <!--usces_admin_left-->
 </div><!--usces_admin-->

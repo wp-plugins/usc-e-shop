@@ -75,7 +75,10 @@ class usces_cart {
 		$_POST = $usces->stripslashes_deep_post($_POST);
 
 		foreach($_POST['quant'] as $index => $vs){
-
+			
+			if( !is_array($vs) )
+				break;
+				
 			$ids = array_keys($vs);
 			$post_id = $ids[0];
 			

@@ -106,8 +106,10 @@ function usces_pdf_out($pdf, $data){
 	$pdf->SetXY($x, $y);
 	$next_y = $y;
 	$line_x = array();
-	for ( $index = 0; $index < count($data->cart); $index++ ) {
-		 $cart_row = $data->cart[$index];
+	$cart = usces_get_ordercartdata($data->order['ID']);
+
+	for ( $index = 0; $index < count($cart); $index++ ) {
+		 $cart_row = $cart[$index];
 		//if ($cnt > $pageRec-1) {//ページが変わるときの処理
 		if ( $onep < $next_y ) {//ページが変わるときの処理
 
@@ -653,7 +655,15 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(104.3, 222.7);
 	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_label', __('COD fee', 'usces'))), $border, 'C');
 	$pdf->SetXY(104.3, 228.6);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_label', __('consumption tax', 'usces'))), $border, 'C');
+
+	$labeldata = array(
+		'order_condition' => $data->condition,
+		'order_item_total_price' => $data->order['item_total_price'],
+		'order_discount' => $data->order['discount'],
+		'order_shipping_charge' => $data->order['shipping_charge'],
+		'order_cod_fee' => $data->order['cod_fee'],
+	);
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_label', usces_tax_label( $labeldata, 'return' ))), $border, 'C');
 	$pdf->SetXY(104.3, 235.8);
 	$pdf->MultiCell(37.77, $lineheight, usces_conv_euc(__('Total Amount', 'usces')), $border, 'C');
 
@@ -675,8 +685,14 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(142.9, 222.7);
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_vlue', $usces->get_currency($data->order['cod_fee']))), $border, 'R');
 
-	if( empty($usces->options['tax_rate']) ){
-		$tax = '('.__('In tax', 'usces').')'.$usces->get_currency($data->order['tax']);
+	$materials = array(
+		'total_items_price' => $data->order['item_total_price'],
+		'discount' => $data->order['discount'],
+		'shipping_charge' => $data->order['shipping_charge'],
+		'cod_fee' => $data->order['cod_fee'],
+	);
+	if( 'include' == $usces->options['tax_mode'] ){
+		$tax = '('.usces_internal_tax( $materials, 'return' ).')';
 	}else{
 		$tax = $usces->get_currency($data->order['tax']);
 	}

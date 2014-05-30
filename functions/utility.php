@@ -1,6 +1,179 @@
 <?php
 // Utility.php
 
+function usces_upgrade_14(){
+	global $usces;
+	$upgrade = (int)get_option('usces_upgrade2');
+	if( $upgrade & USCES_UP14 )
+		return false;
+
+	global $wpdb;
+	$rets = array();
+	
+	$options = get_option('usces');
+	if(empty($options['tax_rate'])){
+		$options['tax_mode'] = 'include';
+	}else{
+		$options['tax_mode'] = 'exclude';
+	}
+	$options['tax_target'] = 'all';
+	update_option('usces', $options);
+
+
+
+	$order_table = $wpdb->prefix . "usces_order";
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+
+	$query = "SELECT ID, order_cart, order_condition FROM $order_table";
+	$results = $wpdb->get_results( $query );
+	if( $results ){
+		foreach( $results as $order ){
+			$condition = maybe_unserialize($order->order_condition);
+			if( !isset($condition['tax_mode']) ){
+				$condition['tax_mode'] = $options['tax_mode'];
+			}
+			if( !isset($condition['tax_rate']) ){
+				$condition['tax_rate'] = (int)$options['tax_rate'];
+			}
+			if( !isset($condition['tax_target']) ){
+				$condition['tax_target'] = $options['tax_target'];
+			}
+
+
+			$cart = unserialize($order->order_cart);
+			foreach( (array)$cart as $row_index => $value ){
+				$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
+				$item_name = get_post_meta( $value['post_id'], '_itemName', true);
+				$skus = $usces->get_skus($value['post_id'], 'code');
+				$sku_code = urldecode($value['sku']);
+				$sku_encoded = $value['sku'];
+				$sku = isset($skus[$sku_code]) ? $skus[$sku_code] : array('name'=>'notfound', 'cprice'=>0, 'unit'=>'');
+				if( empty($condition['tax_rate']) ){
+					$tax = 0;
+				
+				}else{
+					$tax = ($value['price'] * $value['quantity']) * $condition['tax_rate'] / 100;
+					$cr = $usces->options['system']['currency'];
+					$decimal = $usces_settings['currency'][$cr][1];
+					$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+					switch( $options['tax_method'] ){
+						case 'cutting':
+							$tax = floor($tax*$decipad)/$decipad;
+							break;
+						case 'bring':
+							$tax = ceil($tax*$decipad)/$decipad;
+							break;
+						case 'rounding':
+							if( 0 < $decimal ){
+								$tax = round($tax, (int)$decimal);
+							}else{
+								$tax = round($tax);
+							}
+							break;
+					}
+				}
+				$query = $wpdb->prepare("INSERT INTO $cart_table 
+					(
+					order_id, group_id, row_index, 
+					post_id, item_code, item_name, 
+					sku_code, sku_name, cprice, price, quantity, unit, 
+					tax, destination_id, cart_serial 
+					) VALUES (
+					%d, %d, %d, 
+					%d, %s, %s, 
+					%s, %s, %f, %f, %d, %s, 
+					%f, %d, %s 
+					)", 
+					$order->ID, 0, $row_index, 
+					$value['post_id'], $item_code, $item_name, 
+					$sku_code, $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], $sku['unit'], 
+					$tax, NULL, $value['serial']
+				);
+				$wpdb->query($query);
+				
+				$cart_id = $wpdb->insert_id ;
+				if( $cart_id ){
+					if($value['options']){
+						foreach((array)$value['options'] as $okey => $ovalue){
+							$okey = urldecode($okey);
+							if( is_array($ovalue) ){
+								$ovalue = serialize($ovalue);
+							}else{
+								$ovalue = urldecode($ovalue);
+							}
+							$oquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+								( 
+								cart_id, meta_type, meta_key, meta_value 
+								) VALUES (
+								%d, 'option', %s, %s
+								)", 
+								$cart_id, $okey, $ovalue
+							);
+							$wpdb->query($oquery);
+						}
+					}
+					if( $value['advance'] ) {
+						foreach( (array)$value['advance'] as $akey => $avalue ) {
+							$advance = maybe_unserialize( $avalue );
+							if( is_array($advance) ) {
+								$post_id = $value['post_id'];
+								if( is_array( $advance[$post_id][$sku_encoded] ) ) {
+									$akeys = array_keys( $advance[$post_id][$sku_encoded] );
+									foreach( (array)$akeys as $akey ) {
+										$avalue = serialize( $advance[$post_id][$sku_encoded][$akey] );
+										$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+											( 
+											cart_id, meta_type, meta_key, meta_value 
+											) VALUES (
+											%d, 'advance', %s, %s
+											)", 
+											$cart_id, $akey, $avalue
+										);
+										$wpdb->query( $aquery );
+									}
+								} else {
+									$akeys = array_keys( $advance );
+									$akey = ( empty($akeys[0]) ) ? 'advance' : $akeys[0];
+									$avalue = serialize( $advance );
+									$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+										( 
+										cart_id, meta_type, meta_key, meta_value 
+										) VALUES (
+										%d, 'advance', %s, %s
+										)", 
+										$cart_id, $akey, $avalue
+									);
+									$wpdb->query( $aquery );
+								}
+							} else {
+								$avalue = urldecode( $avalue );
+								$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+									( 
+									cart_id, meta_type, meta_key, meta_value 
+									) VALUES (
+									%d, 'advance', 'advance', %s
+									)", 
+									$cart_id, $avalue
+								);
+								$wpdb->query( $aquery );
+							}
+						}
+					}
+				}
+			}
+			
+			$upquery = $wpdb->prepare("UPDATE $order_table SET order_condition = %s WHERE ID = %d", 
+				serialize($condition), $order->ID 
+			);
+			$wpdb->query($upquery);
+		}
+	}
+	usces_log('USCES_UP14 : Completed', 'db');
+	$upgrade += USCES_UP14;
+	update_option('usces_upgrade2', $upgrade);
+}
+
 function usces_upgrade_07(){
 	$upgrade = (int)get_option('usces_upgrade');
 	if( $upgrade & USCES_UP07 ) return false;
@@ -73,7 +246,7 @@ function usces_upgrade_07(){
 	if( $wpdb->query( $mquery ) )
 		$rets[] = 1;
 
-	usces_log('USCES_UP07 : '.print_r($rets,true), 'database_error.log');
+	usces_log('USCES_UP07 : '.print_r($rets,true), 'db');
 	$upgrade += USCES_UP07;
 	update_option('usces_upgrade', $upgrade);
 	return $rets;
@@ -254,25 +427,35 @@ function usces_upgrade_11(){
 		}
 	}
 
-	usces_log('USCES_UP11 : ' . print_r($rets,true), 'database_error.log');
+	usces_log('USCES_UP11 : ' . print_r($rets,true), 'db');
 
-//	$upgrade += USCES_UP11;
-//	update_option('usces_upgrade', $upgrade);
+	$upgrade += USCES_UP11;
+	update_option('usces_upgrade', $upgrade);
 	return $rets;
 }
 
 function usces_log($log, $file){
 	global $usces;
+	
+	if( 'db' == $file ){
 		
-	$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
-	$file_path = USCES_PLUGIN_DIR . '/logs/' . $file;
-	if( is_dir($file_path) )
-		return;
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'usces_log';
+		$query = $wpdb->prepare("INSERT INTO $table_name (datetime, log) VALUES(%s, %s)", current_time('mysql'), $log);
+		$wpdb->query( $query );
+
+	}else{
 		
-	$fp = fopen($file_path, 'a');
-	if( false !== $fp ){
-		fwrite($fp, $log);
-		fclose($fp);
+		$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
+		$file_path = USCES_PLUGIN_DIR . '/logs/' . $file;
+		if( is_dir($file_path) )
+			return;
+			
+		$fp = fopen($file_path, 'a');
+		if( false !== $fp ){
+			fwrite($fp, $log);
+			fclose($fp);
+		}
 	}
 }
 

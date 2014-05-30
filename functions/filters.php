@@ -1,4 +1,5 @@
 <?php
+
 function usces_filter_get_post_metadata( $null, $object_id, $meta_key, $single){
 	global $wpdb;
 	$query = $wpdb->prepare("SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = %s", $object_id, $meta_key);
@@ -133,6 +134,127 @@ die();
 	}
 }
 
+function usces_reg_ordercartdata( $args ){
+	global $usces, $wpdb;
+	/*
+	$args = array(
+	'cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 
+	'payments'=>$set, 'charging_type'=>$charging_type);
+	*/
+	extract($args);
+	
+	if( !$order_id )
+		return;
+	
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	$cart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	foreach( $cart as $row_index => $value ){
+		$item_code = get_post_meta( $value['post_id'], '_itemCode', true);
+		$item_name = get_post_meta( $value['post_id'], '_itemName', true);
+		$skus = $usces->get_skus($value['post_id'], 'code');
+		$sku_encoded = $value['sku'];
+		$skucode = urldecode($value['sku']);
+		$sku = $skus[$skucode];
+		if( empty($usces->option['tax_rate']) ){
+			$tax = 0;
+		
+		}else{
+			$tax = ($value['price'] * $value['quantity']) * $usces->options['tax_rate'] / 100;
+			$cr = $usces->options['system']['currency'];
+			$decimal = $usces_settings['currency'][$cr][1];
+			$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
+			switch( $usces->options['tax_method'] ){
+				case 'cutting':
+					$tax = floor($tax*$decipad)/$decipad;
+					break;
+				case 'bring':
+					$tax = ceil($tax*$decipad)/$decipad;
+					break;
+				case 'rounding':
+					if( 0 < $decimal ){
+						$tax = round($tax, (int)$decimal);
+					}else{
+						$tax = round($tax);
+					}
+					break;
+			}
+		}
+		$query = $wpdb->prepare("INSERT INTO $cart_table 
+			(
+			order_id, row_index, post_id, item_code, item_name, 
+			sku_code, sku_name, cprice, price, quantity, 
+			unit, tax, destination_id, cart_serial 
+			) VALUES (
+			%d, %d, %d, %s, %s, 
+			%s, %s, %f, %f, %d, 
+			%s, %d, %d, %s 
+			)", 
+			$order_id, $row_index, $value['post_id'], $item_code, $item_name, 
+			$skucode, $sku['name'], $sku['cprice'], $value['price'], $value['quantity'], 
+			$sku['unit'], $tax, NULL, $value['serial']
+		);
+		$wpdb->query($query);
+		
+		$cart_id = $wpdb->insert_id ;
+		if($value['options']){
+			foreach((array)$value['options'] as $okey => $ovalue){
+				$okey = urldecode($okey);
+				if(is_array($ovalue)) {
+					$temp = array();
+					foreach( $ovalue as $k => $v ){
+						$temp[$k] = urldecode($v);
+					}
+					$ovalue = serialize($temp);
+				} else {
+					$ovalue = urldecode($ovalue);
+				}
+				$oquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 
+					$cart_id, 'option', $okey, $ovalue
+				);
+				$wpdb->query($oquery);
+			}
+		}
+
+		if( $value['advance'] ) {
+			foreach( (array)$value['advance'] as $akey => $avalue ) {
+				$advance = maybe_unserialize( $avalue );
+				if( is_array($advance) ) {
+					$post_id = $value['post_id'];
+					if( is_array( $advance[$post_id][$sku_encoded] ) ) {
+						$akeys = array_keys( $advance[$post_id][$sku_encoded] );
+						foreach( (array)$akeys as $akey ) {
+							$avalue = serialize( $advance[$post_id][$sku_encoded][$akey] );
+							$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+								( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', %s, %s )", 
+								$cart_id, $akey, $avalue
+							);
+							$wpdb->query( $aquery );
+						}
+					} else {
+						$akeys = array_keys( $advance );
+						$akey = ( empty($akeys[0]) ) ? 'advance' : $akeys[0];
+						$avalue = serialize( $advance );
+						$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+							( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', %s, %s )", 
+							$cart_id, $akey, $avalue
+						);
+						$wpdb->query( $aquery );
+					}
+				} else {
+					$avalue = urldecode( $avalue );
+					$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+						( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', 'advance', %s )", 
+						$cart_id, $avalue
+					);
+					$wpdb->query( $aquery );
+				}
+			}
+		}
+
+		do_action( 'usces_action_reg_ordercart_row', $cart_id, $row_index, $value, $args );
+	}
+}
 function fiter_mainTitle($title, $sep){
 	global $usces;
 	

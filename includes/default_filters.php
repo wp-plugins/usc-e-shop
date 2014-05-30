@@ -25,6 +25,7 @@ add_action( 'admin_footer-post.php', 'admin_post_footer');
 add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 add_action( 'wp_before_admin_bar_render', 'usces_itempage_admin_bar' );
 
+
 //add_action( 'admin_head', 'wc_mkdir');
 
 
@@ -155,6 +156,7 @@ if( $usces->options['itemimg_anchor_rel'] )
 add_action('pre_get_posts', array(&$usces, 'filter_divide_item'));
 add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata', 10, 2);
 add_action('usces_action_reg_orderdata', 'usces_action_reg_orderdata');
+add_action('usces_action_reg_orderdata', 'usces_reg_ordercartdata');
 add_action('usces_action_reg_orderdata', 'usces_action_reg_orderdata_stocks');
 
 

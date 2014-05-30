@@ -304,7 +304,7 @@ $cart_delivery_script .= "
 		};
 	";
 
-if($usces_entries['delivery']['delivery_flag'] == 0) {
+if($usces_entries['delivery']['delivery_flag'] != 1) {
 	$cart_delivery_script .= "
 		$(\"#delivery_table\").css({display: \"none\"});\n";
 }
