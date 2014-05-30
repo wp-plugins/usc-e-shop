@@ -1,9 +1,9 @@
 === Plugin Name ===
-Contributors: USconsort
+Contributors: Collne Inc.
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
-Requires at least: 3.2
+Requires at least: 3.6
 Tested up to: 3.9
-Stable tag: 1.3.17
+Stable tag: 1.4.0
 
 Welcart assists you to build online shop system.
 It is developed in Japan.
@@ -55,6 +55,16 @@ Please see [Welcart Forum](http://wordpress.org/tags/usc-e-shop).
 3. An attached default theme
 
 == Changelog ==
+
+= V1.4 =
+30 May 2014
+-----------
+* PHP5.4 formal correspondence
+* The changes to the database structure of orders related
+* Change the specifications so as to enable the trade name search by an order list 
+* Change the specifications so that the registration of Welcart member can be from the management screen
+* Equipped with a standard transformer Berri settlement 
+* Added a user rights only Welcart
 
 = V1.3 =
 15 Mar 2013
