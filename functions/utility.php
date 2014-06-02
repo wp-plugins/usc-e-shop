@@ -1,10 +1,9 @@
 <?php
 // Utility.php
-
 function usces_upgrade_141(){
 	global $usces;
 	$upgrade = (int)get_option('usces_upgrade2');
-	if( false === ($upgrade & USCES_UP14) || $upgrade & USCES_UP141 )
+	if( 3 > $upgrade || 8 == $upgrade )
 		return false;
 
 	global $wpdb;
