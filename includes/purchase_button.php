@@ -283,12 +283,14 @@ if( 'acting' != substr($payments['settlement'], 0, 6)  || 0 == $usces_entries['o
 			if( !empty($kana1) ) {
 				$kana1 = str_replace( "・", "", str_replace( "　", "", mb_convert_kana( $kana1, "KVC" ) ) );
 				$kana1 = mb_substr( $kana1, 0, 20 );
+				mb_regex_encoding( 'UTF-8' );
 				if( !mb_ereg( "^[ァ-ヶー]+$", $kana1 ) ) $kana1 = '';
 			}
 			$kana2 = ( !empty($usces_entries['customer']['name4']) ) ? $usces_entries['customer']['name4'] : '';
 			if( !empty($kana2) ) {
 				$kana2 = str_replace( "・", "", str_replace( "　", "", mb_convert_kana( $kana2, "KVC" ) ) );
 				$kana2 = mb_substr( $kana2, 0, 20 );
+				mb_regex_encoding( 'UTF-8' );
 				if( !mb_ereg( "^[ァ-ヶー]+$", $kana2 ) ) $kana2 = '';
 			}
 			$html .= '<form id="purchase_form" name="purchase_form" action="' . $send_url . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
