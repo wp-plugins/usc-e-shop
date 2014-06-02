@@ -92,7 +92,7 @@ if (isset($_REQUEST['usces_search'])) :
 <?php //******* End Result ************** ?>
 
 <?php //******* Start Form ************** ?>
-	<form name="searchindetail" action="<?php echo USCES_CART_URL . $this->delim; ?>page=search_item" method="post">
+	<form name="searchindetail" action="<?php echo USCES_CART_URL . $usces->delim; ?>page=search_item" method="post">
 	<div class="field">
 		<label class="outlabel"><?php _e('Categories: AND Search', 'usces'); ?></label><?php echo usces_categories_checkbox('return'); ?>
 	</div>
