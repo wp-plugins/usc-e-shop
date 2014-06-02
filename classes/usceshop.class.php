@@ -2477,11 +2477,6 @@ class usc_e_shop
 		update_option('usces_shipping_rule', apply_filters('usces_filter_shipping_rule', get_option('usces_shipping_rule')));
 		$this->shipping_rule = get_option('usces_shipping_rule');
 
-//		$_wp_http_referer = isset($_POST['_wp_http_referer']) ? $_POST['_wp_http_referer'] : 'a';
-//		if( isset($_POST) && 1 !== preg_match('/(?:plugin|theme)-editor\.php/', $_wp_http_referer) ){
-//			$_POST = $this->stripslashes_deep_post($_POST);
-//		}
-		usces_upgrade_14();
 		if( !is_admin() ){
 			$this->usces_cookie();
 		}else{
@@ -2489,20 +2484,11 @@ class usc_e_shop
 		}
 		$this->make_url();
 
-//usces_log('HTTP_REFERER : '.$_SERVER['HTTP_REFERER'], 'acting_transaction.log');
-//usces_log('REQUEST_URI : '.$_SERVER['REQUEST_URI'], 'acting_transaction.log');
 
 		do_action('usces_main');
 		$this->update_table();
 	
 		
-//		if( ( !isset( $_POST['confirm'] ) && $this->is_cart_page( $_SERVER['REQUEST_URI'] ) ) && !is_admin() ){
-//			header('Expires:-1');
-//			header('Cache-Control:');
-//			header('Pragma:');
-//		}
-		
-		//var_dump($_REQUEST);
 		require_once(USCES_PLUGIN_DIR . '/classes/cart.class.php');
 		$this->cart = new usces_cart();
 		
@@ -4975,12 +4961,13 @@ class usc_e_shop
 		
 		$rets07 = usces_upgrade_07();
 		$rets11 = usces_upgrade_11();
-		//$rets14 = usces_upgrade_14();
 		$this->set_default_theme();
 		$this->set_default_page();
 		$this->set_default_categories();
 		$this->create_table();
 		$this->update_table();
+		$rets14 = usces_upgrade_14();
+		$rets141 = usces_upgrade_141();
 		$this->update_options();//20120710ysk 0000472
 	}
 	
