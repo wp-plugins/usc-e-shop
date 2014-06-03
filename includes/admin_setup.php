@@ -190,8 +190,8 @@ function toggleVisibility(id) {
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tax_target');"><?php _e('Tax target', 'usces'); ?></a></th>
-	    <td width="10"><input name="tax_target" id="tax_mode_products" type="radio" value="products"<?php if($this->options['tax_target'] == 'products') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_include"><?php _e('Only Products', 'usces'); ?></label></td>
-	    <td width="10"><input name="tax_target" id="tax_mode_all" type="radio" value="all"<?php if($this->options['tax_target'] == 'all') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_exclude"><?php _e('All Amount', 'usces'); ?></label></td>
+	    <td width="10"><input name="tax_target" id="tax_mode_products" type="radio" value="products"<?php if($this->options['tax_target'] == 'products') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_products"><?php _e('Only Products', 'usces'); ?></label></td>
+	    <td width="10"><input name="tax_target" id="tax_mode_all" type="radio" value="all"<?php if($this->options['tax_target'] == 'all') echo 'checked="checked"'; ?> /></td><td width="60"><label for="tax_mode_all"><?php _e('All Amount', 'usces'); ?></label></td>
 		<td><div id="ex_tax_target" class="explanation"><?php _e('You can select the subject of the consumption tax. One is only the product price, and the other contains all the commission.', 'usces'); ?></div></td>
 	</tr>
 </table>
