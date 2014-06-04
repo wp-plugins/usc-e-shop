@@ -1112,7 +1112,7 @@ function toggleVisibility(id) {
 	</form>
 	<div class="settle_exp">
 		<p><strong>ベリトランス</strong></p>
-		<a href="http://www.veritrans.co.jp/" target="_blank">ベリトランスの詳細はこちら 》</a>
+		<a href="https://www.veritrans.co.jp/air/" target="_blank">ベリトランスの詳細はこちら 》</a>
 		<p>　</p>
 		<p>この決済は「外部リンク型」の決済システムです。</p>
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
