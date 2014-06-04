@@ -4959,13 +4959,13 @@ class usc_e_shop
 
 	function set_initial() {
 		
-		$rets07 = usces_upgrade_07();
-		$rets11 = usces_upgrade_11();
 		$this->set_default_theme();
 		$this->set_default_page();
 		$this->set_default_categories();
 		$this->create_table();
 		$this->update_table();
+		$rets07 = usces_upgrade_07();
+		$rets11 = usces_upgrade_11();
 		$rets14 = usces_upgrade_14();
 		$rets141 = usces_upgrade_141();
 		$this->update_options();//20120710ysk 0000472
