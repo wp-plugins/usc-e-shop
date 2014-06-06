@@ -1749,8 +1749,10 @@ function custom_field_ajax() {
 		$newposition = isset($_POST['newposition']) ? trim($_POST['newposition']) : '';
 
 		if($newmeans == 2) {//Text
-			$newvalue = isset($_POST['newvalue']) ? trim($_POST['newvalue']) : '';
+			$newvalue = '';
 			$nv = $newvalue;
+			$required_entry = ( !empty( $newkey ) && !empty( $newname ) ) ? true : false;
+
 
 		} else {
 			$newvalue = isset($_POST['newvalue']) ? explode('\n', trim($_POST['newvalue'])) : '';
@@ -1758,10 +1760,11 @@ function custom_field_ajax() {
 				if( !WCUtils::is_blank($v) ) 
 					$nv[] = trim($v);
 			}
+			$required_entry = ( ( !empty( $newvalue ) ) && !empty( $newkey ) && !empty( $newname ) ) ? true : false;
 		}
 
 		if(!array_key_exists($newkey, $meta)) {
-			if((!empty($newvalue)) && !empty($newkey) && !empty($newname)) {
+			if( $required_entry ) {
 				$meta[$newkey]['name'] = $newname;
 				$meta[$newkey]['means'] = $newmeans;
 				$meta[$newkey]['essential'] = $newessential;
@@ -1781,8 +1784,9 @@ function custom_field_ajax() {
 		$position = isset($_POST['position']) ? trim($_POST['position']) : '';
 
 		if($means == 2) {//Text
-			$value = isset($_POST['value']) ? trim($_POST['value']) : '';
+			$value = '';
 			$nv = $value;
+			$required_entry = ( !empty( $key ) && !empty( $name ) ) ? true : false;
 
 		} else {
 			$value = isset($_POST['value']) ? explode('\n', trim($_POST['value'])) : '';
@@ -1790,9 +1794,10 @@ function custom_field_ajax() {
 				if( !WCUtils::is_blank($v) )
 					$nv[] = trim($v);
 			}
+			$required_entry = ( ( !empty( $value ) ) && !empty( $key ) && !empty( $name ) ) ? true : false;
 		}
 
-		if( !empty($value) && !empty($key) && !empty($name) ) {
+		if( $required_entry ) {
 			$meta[$key]['name'] = $name;
 			$meta[$key]['means'] = $means;
 			$meta[$key]['essential'] = $essential;
