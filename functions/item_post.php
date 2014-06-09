@@ -1754,8 +1754,6 @@ function custom_field_ajax() {
 			$newvalue = '';
 			$nv = $newvalue;
 			$required_entry = ( !empty( $newkey ) && !empty( $newname ) ) ? true : false;
-
-
 		} else {
 			$newvalue = isset($_POST['newvalue']) ? explode('\n', trim($_POST['newvalue'])) : '';
 			foreach((array)$newvalue as $v) {
@@ -1765,8 +1763,9 @@ function custom_field_ajax() {
 			$required_entry = ( ( !empty( $newvalue ) ) && !empty( $newkey ) && !empty( $newname ) ) ? true : false;
 		}
 
+
 		if(!array_key_exists($newkey, $meta)) {
-			if( $required_entry ) {
+			if( $required_entry ) {	
 				$meta[$newkey]['name'] = $newname;
 				$meta[$newkey]['means'] = $newmeans;
 				$meta[$newkey]['essential'] = $newessential;
@@ -1789,7 +1788,7 @@ function custom_field_ajax() {
 			$value = '';
 			$nv = $value;
 			$required_entry = ( !empty( $key ) && !empty( $name ) ) ? true : false;
-
+			
 		} else {
 			$value = isset($_POST['value']) ? explode('\n', trim($_POST['value'])) : '';
 			foreach((array)$value as $v) {

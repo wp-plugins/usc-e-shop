@@ -3,7 +3,8 @@
 function usces_upgrade_141(){
 	global $usces;
 	$upgrade = (int)get_option('usces_upgrade2');
-	if( 3 > $upgrade || 8 == $upgrade )
+
+	if( 3 > $upgrade || 8 <= $upgrade )
 		return false;
 
 	global $wpdb;
