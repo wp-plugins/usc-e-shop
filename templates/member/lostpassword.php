@@ -20,8 +20,9 @@ $html .= '<div class="loginbox">
 </p>
 <p class="submit">
 <input type="submit" name="lostpassword" id="member_login" value="' . __('Obtain new password', 'usces') . '" />
-</p>
-</form>
+</p>';
+$html .= wp_nonce_field( 'post_member', 'wc_nonce', true, false );
+$html .= '</form>
 <div>' . __('Change your password by following the instruction in this mail.', 'usces') . '</div>
 <p id="nav">';
 

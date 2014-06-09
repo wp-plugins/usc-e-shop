@@ -45,6 +45,8 @@ $newmemberbutton = '<input name="regmember" type="submit" value="' . __('transmi
 $html .= apply_filters('usces_filter_newmember_button', $newmemberbutton);
 $html .= '</div>';
 $html = apply_filters('usces_filter_newmember_inform', $html);
+$html .= wp_nonce_field( 'post_member', 'wc_nonce', true, false );
+
 $html .= '</form>';
 
 $html .= '<div class="footer_explanation">';

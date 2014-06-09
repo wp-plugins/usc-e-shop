@@ -641,6 +641,8 @@ class usc_e_shop
 				break;
 //20100908ysk end
 			case 'editpost':
+				check_admin_referer( 'post_member', 'wc_nonce');
+
 				$this->error_message = $this->admin_member_check();
 				if( WCUtils::is_blank($this->error_message) ){
 					$res = usces_update_memberdata();
@@ -655,6 +657,8 @@ class usc_e_shop
 				require_once($member_edit_form);	
 				break;
 			case 'newpost':
+				check_admin_referer( 'post_member', 'wc_nonce');
+
 				$this->error_message = $this->admin_new_member_check();
 				if( WCUtils::is_blank($this->error_message) ){
 					$res = usces_new_memberdata();
@@ -676,6 +680,8 @@ class usc_e_shop
 				require_once($member_edit_form);	
 				break;
 			case 'delete':
+				check_admin_referer( 'delete_member', 'wc_nonce');
+					
 				$res = usces_delete_memberdata();
 				if ( 1 === $res ) {
 					$this->set_action_status('success', __('The member data is deleted','usces'));
@@ -3225,6 +3231,9 @@ class usc_e_shop
 	
 	function use_point(){
 		global $wp_query;
+		if( !isset($_REQUEST['wc_nonce']) || !wp_verify_nonce($_REQUEST['wc_nonce'], 'use_point') )
+			die('Security check');
+			
 		$this->error_message = $this->point_check( $this->cart->get_entry() );
 		if( empty($this->error_message) )
 			$this->cart->entry();
@@ -3389,6 +3398,10 @@ class usc_e_shop
 	}
 	
 	function regmember(){
+		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
+		if( !wp_verify_nonce( $nonce, 'post_member' ) )
+			die('Security check');
+			
 		global $wp_query;
 		$res = $this->regist_member();
 		if( 'editmemberform' == $res ){
@@ -3405,6 +3418,10 @@ class usc_e_shop
 	}
 	
 	function editmember(){
+		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
+		if( !wp_verify_nonce( $nonce, 'post_member' ) )
+			die('Security check');
+			
 		global $wp_query;
 		$res = $this->regist_member();
 		if( 'editmemberform' == $res ){
@@ -3421,6 +3438,10 @@ class usc_e_shop
 	}
 	
 	function deletemember(){
+		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
+		if( !wp_verify_nonce( $nonce, 'post_member' ) )
+			die('Security check');
+			
 		$res = $this->delete_member();
 		if( $res ){
 			add_filter('yoast-ga-push-after-pageview', 'usces_trackPageview_deletemember');
@@ -3447,6 +3468,10 @@ class usc_e_shop
 	}
 	
 	function lostpassword(){
+		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
+		if( !wp_verify_nonce( $nonce, 'post_member' ) )
+			die('Security check');
+			
 		global $wp_query;
 		$this->error_message = $this->lostpass_mailaddcheck();
 		if ( $this->error_message != '' ) {
@@ -3467,6 +3492,10 @@ class usc_e_shop
 	}
 	
 	function changepassword_page(){
+		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
+		if( !wp_verify_nonce( $nonce, 'post_member' ) )
+			die('Security check');
+			
 		global $wp_query;
 		$this->error_message = $this->changepass_check();
 		if ( $this->error_message != '' ) {

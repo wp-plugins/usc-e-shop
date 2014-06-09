@@ -22,8 +22,9 @@ $html .= '<div class="loginbox">
 	</p>
 	<p class="submit">
 		<input type="submit" name="changepassword" id="member_login" value="' . __('Register', 'usces') . '" />
-	</p>
-</form>
+	</p>';
+$html .= wp_nonce_field( 'post_member', 'wc_nonce', true, false );
+$html .= '</form>
 </div>';
 
 $html .= '<div class="footer_explanation">';

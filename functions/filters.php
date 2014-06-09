@@ -556,4 +556,11 @@ function usces_Classic_trackPageview(){
 	return $push;
 }
 
-?>
+function usces_use_point_nonce(){
+	wp_nonce_field( 'use_point', 'wc_nonce');
+}
+
+function usces_post_member_nonce(){
+	wp_nonce_field( 'post_member', 'wc_nonce');
+}
+

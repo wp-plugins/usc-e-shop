@@ -436,7 +436,7 @@ function addComma(str)
 	<fieldset>
 	</fieldset>
 </div>
-
+<?php wp_nonce_field( 'post_member', 'wc_nonce' ); ?>
 </form>
 
 </div><!--usces_admin-->

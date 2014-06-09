@@ -83,8 +83,9 @@ $html .= '</table>
 	<div class="send">
 	<input name="top" type="button" value="' . __('Back to the top page.', 'usces') . '" onclick="location.href=\'' . get_option('home') . '\'" />
 	<input name="editmember" type="submit" value="' . __('update it', 'usces') . '" />
-	<input name="deletemember" type="submit" value="' . __('delete it', 'usces') . '" onclick="return confirm(\'' . __('All information about the member is deleted. Are you all right?', 'usces') . '\');" /></div>
-	</form>';
+	<input name="deletemember" type="submit" value="' . __('delete it', 'usces') . '" onclick="return confirm(\'' . __('All information about the member is deleted. Are you all right?', 'usces') . '\');" /></div>';
+$html .= wp_nonce_field( 'post_member', 'wc_nonce', true, false );
+$html .= '</form>';
 	
 
 $html .= '<div class="footer_explanation">';

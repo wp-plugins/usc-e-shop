@@ -118,7 +118,7 @@ jQuery(document).ready(function($){
 				args += '&check['+$(this).val()+']=on';
 			}
 		});
-		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_memberlist&member_action=dlmemberlist&noheader=true"+args;
+		location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_memberlist&member_action=dlmemberlist&noheader=true"+args+"&wc_nonce=<?php echo wp_create_nonce( 'dlmemberlist' ); ?>";
 	});
 	$('#dl_memberlist').click(function() {
 		$('#dlMemberListDialog').dialog('open');
@@ -210,7 +210,7 @@ jQuery(document).ready(function($){
 		<td><?php esc_html_e($value); ?></td>
 		<?php endif; ?>
 <?php endforeach; ?>
-	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=delete&member_id=' . $array['ID']; ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;"><?php _e('Delete', 'usces'); ?></span></a></td>
+	<td><a href="<?php echo USCES_ADMIN_URL.'?page=usces_memberlist&member_action=delete&member_id=' . $array['ID'] . '&wc_nonce=' . wp_create_nonce( 'delete_member' ); ?>" onclick="return deleteconfirm('<?php echo $array['ID']; ?>');"><span style="color:#FF0000; font-size:9px;"><?php _e('Delete', 'usces'); ?></span></a></td>
 	</tr>
 <?php endforeach; ?>
 </table>

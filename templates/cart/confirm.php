@@ -105,6 +105,7 @@ if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membe
 		</tr>
 	</table>';
 	$html = apply_filters('usces_filter_confirm_point_inform', $html);
+	$html .= wp_nonce_field( 'use_point', 'wc_nonce', true, false );
 	$html .= '</form>';
 }
 $html .= apply_filters('usces_filter_confirm_after_form', NULL);

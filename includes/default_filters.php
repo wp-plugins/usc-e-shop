@@ -158,6 +158,12 @@ add_action('usces_post_reg_orderdata', 'usces_post_reg_orderdata', 10, 2);
 add_action('usces_action_reg_orderdata', 'usces_action_reg_orderdata');
 add_action('usces_action_reg_orderdata', 'usces_reg_ordercartdata');
 add_action('usces_action_reg_orderdata', 'usces_action_reg_orderdata_stocks');
+add_action('usces_action_confirm_page_point_inform', 'usces_use_point_nonce' );
+add_action('usces_action_newmember_page_inform', 'usces_post_member_nonce' );
+add_action('usces_action_memberinfo_page_inform', 'usces_post_member_nonce' );
+add_action('usces_action_newpass_page_inform', 'usces_post_member_nonce' );
+add_action('usces_action_changepass_page_inform', 'usces_post_member_nonce' );
+add_action('usces_action_customer_page_inform', 'usces_post_member_nonce' );
 
 
 //20100818ysk start
