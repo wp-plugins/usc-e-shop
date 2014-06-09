@@ -721,9 +721,10 @@ class usc_e_shop
 	function admin_setup_page() {
 		$this->options = get_option('usces');
 		//$this->options = array();
-		
 
 		if(isset($_POST['usces_option_update'])) {
+
+			check_admin_referer('admin_setup', 'wc_nonce');
 
 			$_POST = $this->stripslashes_deep_post($_POST);
 			$this->options['display_mode'] = isset($_POST['display_mode']) ? trim($_POST['display_mode']) : '';

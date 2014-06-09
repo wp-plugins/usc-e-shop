@@ -362,7 +362,7 @@ if( 'change' == $this->options['cod_type'] ) {
 	</fieldset>
 </div> 
 
-
+<?php wp_nonce_field('admin_setup', 'wc_nonce'); ?>
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->
