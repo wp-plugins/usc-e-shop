@@ -372,6 +372,7 @@ function toggleVisibility(id) {
 
 </div><!--poststuff-->
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
+<?php wp_nonce_field( 'admin_mail', 'wc_nonce' ); ?>
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->

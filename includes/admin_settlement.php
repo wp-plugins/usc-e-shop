@@ -283,6 +283,7 @@ function toggleVisibility(id) {
 		<input name="pay_cvs[D060]" type="hidden" value="デイリーヤマザキ" />
 		<input name="acting" type="hidden" value="zeus" />
 		<input name="usces_option_update" type="submit" class="button" value="ゼウスの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('ZEUS Japanese Settlement', 'usces'); ?></strong></p>
@@ -428,6 +429,7 @@ function toggleVisibility(id) {
 		<input name="REMARKS3" type="hidden" value="A0000875" />
 		<input name="acting" type="hidden" value="remise" />
 		<input name="usces_option_update" type="submit" class="button" value="ルミーズの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('Remise Japanese Settlement', 'usces'); ?></strong></p>
@@ -519,6 +521,7 @@ function toggleVisibility(id) {
 		<input name="send_url" type="hidden" value="https://credit.j-payment.co.jp/gateway/payform.aspx" />
 		<input name="acting" type="hidden" value="jpayment" />
 		<input name="usces_option_update" type="submit" class="button" value="J-Paymentの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('J-Payment Japanese Settlement', 'usces'); ?></strong></p>
@@ -600,6 +603,7 @@ function toggleVisibility(id) {
 		</table>
 		<input name="acting" type="hidden" value="paypal" />
 		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Settings', 'usces'); ?>" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('PayPal Express Checkout', 'usces'); ?></strong></p>
@@ -758,6 +762,7 @@ function toggleVisibility(id) {
 		<input name="send_url_test" type="hidden" value="https://stbfep.sps-system.com/f01/FepBuyInfoReceive.do" />
 		<input name="acting" type="hidden" value="sbps" />
 		<input name="usces_option_update" type="submit" class="button" value="ソフトバンク・ペイメントの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong>ソフトバンク・ペイメント・サービス</strong></p>
@@ -813,6 +818,7 @@ function toggleVisibility(id) {
 -->
 		<input name="acting" type="hidden" value="telecom" />
 		<input name="usces_option_update" type="submit" class="button" value="テレコムクレジットの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong>テレコムクレジット</strong></p>
@@ -912,6 +918,7 @@ function toggleVisibility(id) {
 		</table>
 		<input name="acting" type="hidden" value="digitalcheck" />
 		<input name="usces_option_update" type="submit" class="button" value="ペイデザインの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong>ペイデザイン株式会社</strong></p>
@@ -995,6 +1002,7 @@ function toggleVisibility(id) {
 -->
 		<input name="acting" type="hidden" value="mizuho" />
 		<input name="usces_option_update" type="submit" class="button" value="みずほファクターの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong>みずほファクター</strong></p>
@@ -1045,6 +1053,7 @@ function toggleVisibility(id) {
 		</table>
 		<input name="acting" type="hidden" value="anotherlane" />
 		<input name="usces_option_update" type="submit" class="button" value="アナザーレーンの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong>アナザーレーン</strong></p>
@@ -1109,6 +1118,7 @@ function toggleVisibility(id) {
 		</table>
 		<input name="acting" type="hidden" value="veritrans" />
 		<input name="usces_option_update" type="submit" class="button" value="ベリトランスの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong>ベリトランス</strong></p>

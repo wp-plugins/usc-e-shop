@@ -137,16 +137,19 @@ class dataList
 				break;
 
 			case 'collective_order_reciept':
+				check_admin_referer( 'order_list', 'wc_nonce' );
 				usces_all_change_order_reciept($this);
 				$res = $this->GetRows();
 				break;
 
 			case 'collective_order_status':
+				check_admin_referer( 'order_list', 'wc_nonce' );
 				usces_all_change_order_status($this);
 				$res = $this->GetRows();
 				break;
 
 			case 'collective_delete':
+				check_admin_referer( 'order_list', 'wc_nonce' );
 				usces_all_delete_order_data($this);
 				$this->SetTotalRow();
 				$res = $this->GetRows();

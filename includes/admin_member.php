@@ -73,7 +73,7 @@ jQuery(function($){
 			$("#newcsmb_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=member&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position;
+			s.data = "action=custom_field_ajax&field=member&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csmb").html('');
 				$("#newcsmb_loading").html('');
@@ -122,7 +122,7 @@ jQuery(function($){
 			$("#csmb_loading-" + key).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=member&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position;
+			s.data = "action=custom_field_ajax&field=member&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csmb").html('');
 				$("#csmb_loading-" + key).html('');
@@ -144,7 +144,7 @@ jQuery(function($){
 			$("#csmb-" + key).css({'background-color': '#F00'});
 			$("#csmb-" + key).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=member&delete=1&key="+key;
+			s.data = "action=custom_field_ajax&field=member&delete=1&key="+key+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csmb").html('');
 				var strs = data.split('#usces#');
@@ -397,6 +397,7 @@ function toggleVisibility(id) {
 
 </div><!--poststuff-->
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
+<?php wp_nonce_field( 'admin_member', 'wc_nonce' ); ?>
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->

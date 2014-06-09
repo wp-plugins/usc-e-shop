@@ -565,9 +565,10 @@ class usc_e_shop
 				break;
 //20100908ysk end
 //			case 'printpdf':
-//				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');	
+//				require_once(USCES_PLUGIN_DIR . '/includes/order_print.php');
 //				break;
 			case 'editpost':
+				check_admin_referer( 'order_edit', 'wc_nonce' );
 				do_action('usces_pre_update_orderdata', $_REQUEST['order_id']);
 				$res = usces_update_orderdata();
 				if ( 1 === $res ) {
@@ -581,6 +582,7 @@ class usc_e_shop
 				require_once($order_edit_form);	
 				break;
 			case 'newpost':
+				check_admin_referer( 'order_edit', 'wc_nonce' );
 				do_action('usces_pre_new_orderdata');
 				$res = usces_new_orderdata();
 				if ( 1 === $res ) {
@@ -597,9 +599,10 @@ class usc_e_shop
 				break;
 			case 'new':
 			case 'edit':
-				require_once($order_edit_form);	
+				require_once($order_edit_form);
 				break;
 			case 'delete':
+				check_admin_referer( 'order_list', 'wc_nonce' );
 				do_action('usces_pre_delete_orderdata', $_REQUEST['order_id']);
 				$res = usces_delete_orderdata();
 				if ( 1 === $res ) {
@@ -611,7 +614,7 @@ class usc_e_shop
 				}
 				do_action('usces_after_delete_orderdata', $_REQUEST['order_id'], $res);
 			default:
-				require_once($order_list);	
+				require_once($order_list);
 		}
 	}
 	
@@ -777,6 +780,9 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+
+			check_admin_referer( 'admin_schedule', 'wc_nonce' );
+
 			$_POST = $this->stripslashes_deep_post($_POST);
 
 			$this->options['campaign_schedule'] = isset($_POST['campaign_schedule']) ? $_POST['campaign_schedule'] : '0';
@@ -804,6 +810,9 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+
+			check_admin_referer( 'admin_delivery', 'wc_nonce' );
+
 			$_POST = $this->stripslashes_deep_post($_POST);
 
 //20101208ysk start
@@ -832,6 +841,9 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+
+			check_admin_referer( 'admin_mail', 'wc_nonce' );
+
 			$_POST = $this->stripslashes_deep_post($_POST);
 		
 			$this->options['smtp_hostname'] = trim($_POST['smtp_hostname']);
@@ -901,6 +913,9 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+
+			check_admin_referer( 'admin_cart', 'wc_nonce' );
+
 			$_POST = $this->stripslashes_deep_post($_POST);
 
 			foreach ( $this->options['indi_item_name'] as $key => $value ) {
@@ -938,6 +953,9 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+
+			check_admin_referer( 'admin_member', 'wc_nonce' );
+
 			$_POST = $this->stripslashes_deep_post($_POST);
 
 			foreach ( $_POST['header'] as $key => $value ) {
@@ -974,8 +992,11 @@ class usc_e_shop
 		$this->options = get_option('usces');
 
 		if(isset($_POST['usces_option_update'])) {
+
+			check_admin_referer( 'admin_system', 'wc_nonce' );
+
 			$_POST = $this->stripslashes_deep_post($_POST);
-		
+
 			$this->options['divide_item'] = isset($_POST['divide_item']) ? 1 : 0;
 			$this->options['itemimg_anchor_rel'] = isset($_POST['itemimg_anchor_rel']) ? trim($_POST['itemimg_anchor_rel']) : '';
 			$this->options['fukugo_category_orderby'] = isset($_POST['fukugo_category_orderby']) ? $_POST['fukugo_category_orderby'] : '';
@@ -1085,6 +1106,9 @@ class usc_e_shop
 		$options = get_option('usces');
 
 		if( isset($_POST['usces_option_update']) ) {
+
+			check_admin_referer( 'admin_settlement', 'wc_nonce' );
+
 			$_POST = $this->stripslashes_deep_post($_POST);
 			$mes = '';
 
@@ -6961,26 +6985,37 @@ class usc_e_shop
 		$fee = apply_filters('usces_filter_getCODFee', $fee, $payment_name, $amount_by_cod);
 		return $fee;
 	}
-	
-	function getTax( $total, $materials ) {
+
+	function getTax( $total, $materials = array() ) {
 		global $usces_settings;
-		
-		if( 'include' == $this->options['tax_mode'] )
-			return 0;
-		
+
 		if( empty($this->options['tax_rate']) )
 			return 0;
-			
-		extract($materials);//need( 'total_items_price', 'shipping_charge', 'discount', 'cod_fee', 'use_point' ) 
-		
-		if( 'products' == $this->options['tax_target'] ){
-			$total = $total_items_price + $discount;
-		}else{
-			$total = $total_items_price + $discount + $shipping_charge + $cod_fee;
-		}
-		$total = apply_filters( 'usces_filter_getTax_total', $total, $materials);
 
-		$tax = $total * $this->options['tax_rate'] / 100;
+		if( empty($materials) ) {
+
+			if( 'include' == $this->options['tax_mode'] ) {
+				$tax = $total * $this->options['tax_rate'] / ( 100 + $this->options['tax_rate'] );
+			} else {
+				$tax = $total * $this->options['tax_rate'] / 100;
+			}
+
+		} else {
+			if( 'include' == $this->options['tax_mode'] )
+				return 0;
+
+			extract($materials);//need( 'total_items_price', 'shipping_charge', 'discount', 'cod_fee', 'use_point' ) 
+
+			if( 'products' == $this->options['tax_target'] ){
+				$total = $total_items_price + $discount;
+			}else{
+				$total = $total_items_price + $discount + $shipping_charge + $cod_fee;
+			}
+			$total = apply_filters( 'usces_filter_getTax_total', $total, $materials);
+
+			$tax = $total * $this->options['tax_rate'] / 100;
+		}
+
 		$cr = $this->options['system']['currency'];
 		$decimal = $usces_settings['currency'][$cr][1];
 		$decipad = (int)str_pad( '1', $decimal+1, '0', STR_PAD_RIGHT );
@@ -6998,10 +7033,11 @@ class usc_e_shop
 					$tax = round($tax);
 				}
 				break;
-		}				
+		}
+
 		return $tax;
 	}
-	
+
 	function set_cart_fees( $member, $entries ) {
 		$carts = $this->cart->get_cart();
 		$total_items_price = $this->get_total_price();

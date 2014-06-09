@@ -1587,6 +1587,7 @@ jQuery(document).ready(function($){
 		</td>
 	</tr>
 </table>
+<?php wp_nonce_field( 'admin_delivery', 'wc_nonce' ); ?>
 </form>
 </div>
 </div><!--postbox-->

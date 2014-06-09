@@ -537,7 +537,7 @@ jQuery(document).ready(function($){
 		foreach( (array)$array as $key => $value ) {
 			if( WCUtils::is_blank($value) ) $value = '&nbsp;';
 			if( $key === 'ID' || $key === 'deco_id' ) {
-				$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.$curent_url.'">'.esc_html($value).'</a></td>';
+				$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.$curent_url.'&wc_nonce='.wp_create_nonce( 'order_list' ).'">'.esc_html($value).'</a></td>';
 			} elseif( $key === 'date' ) {
 				$list_detail .= '<td>'.esc_html($value).'</td>';
 			} elseif( $key === 'mem_id' ) {
@@ -595,7 +595,7 @@ jQuery(document).ready(function($){
 				$list_detail .= '<td>'.esc_html($value).'</td>';
 			}
 		}
-		$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=delete&order_id='.$array['ID'].'" onclick="return deleteconfirm(\''.$array['ID'].'\');"><span style="color:#FF0000; font-size:9px;">'.__('Delete', 'usces').'</span></a></td>';
+		$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=delete&order_id='.$array['ID'].'&wc_nonce='.wp_create_nonce( 'order_list' ).'" onclick="return deleteconfirm(\''.$array['ID'].'\');"><span style="color:#FF0000; font-size:9px;">'.__('Delete', 'usces').'</span></a></td>';
 //20120612ysk end
 ?>
 	<tr<?php echo apply_filters('usces_filter_order_list_detail_trclass', '', $array); ?>>
@@ -879,6 +879,7 @@ jQuery(document).ready(function($){
 <p>その他のステイタスには銀行振り込みの場合の「入金」ステイタス、発送完了した場合の「完了」、注文の「キャンセル」などがあり、各業務の終了後にステイタスを変更することを習慣付ければ、複数の担当者での業務もスムーズに行うことができます。</p>
 </div>
 -->
+<?php wp_nonce_field( 'order_list', 'wc_nonce' ); ?>
 </form>
 <?php do_action( 'usces_action_order_list_footer' ); ?>
 </div><!--usces_admin-->

@@ -77,7 +77,7 @@ jQuery(function($){
 			$("#target_market_province").html(name_select);
 			$("#target_market_loading").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
 			var s = operation.settings;
-			s.data = "action=target_market_ajax&target="+target_args;
+			s.data = "action=target_market_ajax&target="+target_args+"&wc_nonce=<?php echo wp_create_nonce( 'target_market_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$('#province_ajax').empty();
 				var province = data.split('#usces#');
@@ -120,7 +120,7 @@ jQuery(function($){
 		},
 		backup : function() {
 			var s = operation.settings;
-			s.data = "action=usces_admin_ajax&mode=options_backup";
+			s.data = "action=usces_admin_ajax&mode=options_backup&wc_nonce=<?php echo wp_create_nonce( 'options_backup' ); ?>";
 			s.success = function(data, dataType) {
 				if(data) {
 					alert("<?php _e("Has been saved.", "usces"); ?>");
@@ -138,7 +138,7 @@ jQuery(function($){
 		},
 		restore : function() {
 			var s = operation.settings;
-			s.data = "action=usces_admin_ajax&mode=options_restore";
+			s.data = "action=usces_admin_ajax&mode=options_restore&wc_nonce=<?php echo wp_create_nonce( 'options_restore' ); ?>";
 			s.success = function(data, dataType) {
 				if(data) {
 					location.href = "<?php echo USCES_ADMIN_URL; ?>?page=usces_system";
@@ -569,6 +569,7 @@ jQuery(document).ready(function($) {
 
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <input type="hidden" id="post_ID" name="post_ID" value="<?php echo USCES_CART_NUMBER ?>" />
+<?php wp_nonce_field( 'admin_system', 'wc_nonce' ); ?>
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->

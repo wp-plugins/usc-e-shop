@@ -1718,6 +1718,8 @@ function usces_getinfo_ajax(){
  */
 function custom_field_ajax() {
 	global $usces;
+
+	check_admin_referer( 'custom_field_ajax', 'wc_nonce' );
 	$_POST = $usces->stripslashes_deep_post($_POST);
 
 	if($_POST['action'] != 'custom_field_ajax') die(0);
@@ -2031,6 +2033,7 @@ function get_usces_states($country) {
 
 function target_market_ajax() {
 	global $usces;
+
 	$_POST = $usces->stripslashes_deep_post($_POST);
 	$res = "";
 	$target = explode(",", $_POST['target']);
@@ -2058,6 +2061,7 @@ function target_market_ajax() {
 function usces_admin_ajax() {
 	switch($_POST['mode']) {
 	case 'options_backup':
+		check_admin_referer( 'options_backup', 'wc_nonce' );
 		$options = get_option('usces');
 		$res = true;
 		if( is_array($options) ) {
@@ -2071,6 +2075,7 @@ function usces_admin_ajax() {
 		die($res);
 		break;
 	case 'options_restore':
+		check_admin_referer( 'options_restore', 'wc_nonce' );
 		$options = get_option('usces_backup');
 		$res = true;
 		if( is_array($options) ) {

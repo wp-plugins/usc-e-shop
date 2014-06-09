@@ -92,7 +92,7 @@ jQuery(function($){
 			//var s = customOrder.settings;
 			var s = customField.settings;
 			//s.data = "action=custom_order_ajax&add=1&newcsodkey="+key+"&newcsodname="+name+"&newcsodvalue="+value+"&newcsodmeans="+means+"&newcsodessential="+essential;
-			s.data = "action=custom_field_ajax&field=order&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential;
+			s.data = "action=custom_field_ajax&field=order&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csod").html('');
 				$("#newcsod_loading").html('');
@@ -143,7 +143,7 @@ jQuery(function($){
 			//var s = customOrder.settings;
 			var s = customField.settings;
 			//s.data = "action=custom_order_ajax&update=1&csodkey="+key+"&csodname="+name+"&csodvalue="+value+"&csodmeans="+means+"&csodessential="+essential;
-			s.data = "action=custom_field_ajax&field=order&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential;
+			s.data = "action=custom_field_ajax&field=order&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csod").html('');
 				$("#csod_loading-" + key).html('');
@@ -168,7 +168,7 @@ jQuery(function($){
 			//var s = customOrder.settings;
 			var s = customField.settings;
 			//s.data = "action=custom_order_ajax&delete=1&csodkey="+key;
-			s.data = "action=custom_field_ajax&field=order&delete=1&key="+key;
+			s.data = "action=custom_field_ajax&field=order&delete=1&key="+key+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csod").html('');
 				var strs = data.split('#usces#');
@@ -209,7 +209,7 @@ jQuery(function($){
 			$("#newcscs_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=customer&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position;
+			s.data = "action=custom_field_ajax&field=customer&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-cscs").html('');
 				$("#newcscs_loading").html('');
@@ -258,7 +258,7 @@ jQuery(function($){
 			$("#cscs_loading-" + key).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=customer&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position;
+			s.data = "action=custom_field_ajax&field=customer&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-cscs").html('');
 				$("#cscs_loading-" + key).html('');
@@ -280,7 +280,7 @@ jQuery(function($){
 			$("#cscs-" + key).css({'background-color': '#F00'});
 			$("#cscs-" + key).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=customer&delete=1&key="+key;
+			s.data = "action=custom_field_ajax&field=customer&delete=1&key="+key+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-cscs").html('');
 				var strs = data.split('#usces#');
@@ -321,7 +321,7 @@ jQuery(function($){
 			$("#newcsde_loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=delivery&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position;
+			s.data = "action=custom_field_ajax&field=delivery&add=1&newkey="+key+"&newname="+name+"&newvalue="+value+"&newmeans="+means+"&newessential="+essential+"&newposition="+position+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csde").html('');
 				$("#newcsde_loading").html('');
@@ -370,7 +370,7 @@ jQuery(function($){
 			$("#csde_loading-" + key).html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=delivery&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position;
+			s.data = "action=custom_field_ajax&field=delivery&update=1&key="+key+"&name="+name+"&value="+value+"&means="+means+"&essential="+essential+"&position="+position+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-cscs").html('');
 				$("#cscs_loading-" + key).html('');
@@ -392,7 +392,7 @@ jQuery(function($){
 			$("#csde-" + key).css({'background-color': '#F00'});
 			$("#csde-" + key).animate({ 'background-color': '#FFFFEE' }, 1000 );
 			var s = customField.settings;
-			s.data = "action=custom_field_ajax&field=delivery&delete=1&key="+key;
+			s.data = "action=custom_field_ajax&field=delivery&delete=1&key="+key+"&wc_nonce=<?php echo wp_create_nonce( 'custom_field_ajax' ); ?>";
 			s.success = function(data, dataType) {
 				$("#ajax-response-csde").html('');
 				var strs = data.split('#usces#');
@@ -824,6 +824,7 @@ function toggleVisibility(id) {
 
 </div><!--poststuff-->
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
+<?php wp_nonce_field( 'admin_cart', 'wc_nonce' ); ?>
 </form>
 </div><!--usces_admin-->
 </div><!--wrap-->

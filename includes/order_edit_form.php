@@ -1221,6 +1221,7 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 	</fieldset>
 </div>
 <input name="usces_referer" type="hidden" id="usces_referer" value="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>" />
+<?php wp_nonce_field( 'order_edit', 'wc_nonce' ); ?>
 </form>
 
 <div id="PDFDialog" title="">
