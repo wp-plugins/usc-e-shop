@@ -150,12 +150,12 @@ jQuery(function($){
 			}else if( column == 'display_status' ) {
 				label = '';
 				html = '<select name="search[word][display_status]" class="searchselect">';
-				html += '<option value="publish"<?php if(isset($arr_search['word']['display_status']) && __('Published', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
-				html += '<option value="future"<?php if(isset($arr_search['word']['display_status']) && __('Scheduled', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
-				html += '<option value="draft"<?php if(isset($arr_search['word']['display_status']) && __('Draft', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
-				html += '<option value="pending"<?php if(isset($arr_search['word']['display_status']) && __('Pending Review', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
-				html += '<option value="private"<?php if(isset($arr_search['word']['display_status']) && __('Closed', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
-				html += '<option value="trash"<?php if(isset($arr_search['word']['display_status']) && __('Trash', 'usces') == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
+				html += '<option value="publish"<?php if(isset($arr_search['word']['display_status']) && 'publish' == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Published', 'usces'); ?></option>';
+				html += '<option value="future"<?php if(isset($arr_search['word']['display_status']) && 'future' == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Scheduled', 'usces'); ?></option>';
+				html += '<option value="draft"<?php if(isset($arr_search['word']['display_status']) && 'draft' == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Draft', 'usces'); ?></option>';
+				html += '<option value="pending"<?php if(isset($arr_search['word']['display_status']) && 'pending' == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Pending Review', 'usces'); ?></option>';
+				html += '<option value="private"<?php if(isset($arr_search['word']['display_status']) && 'private' == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Closed', 'usces'); ?></option>';
+				html += '<option value="trash"<?php if(isset($arr_search['word']['display_status']) && 'trash' == $arr_search['word']['display_status']) echo ' selected="selected"'; ?>><?php _e('Trash', 'usces'); ?></option>';
 				html += '</select>';
 			} 
 			
