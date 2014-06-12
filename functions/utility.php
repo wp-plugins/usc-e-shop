@@ -1508,6 +1508,9 @@ function usces_download_product_list() {
 
 	$_REQUEST['searchIn'] = "searchIn";
 	$tableName = $wpdb->prefix."usces_order";
+	$tableName2 = $wpdb->prefix."usces_ordercart";
+	$tableName3 = $wpdb->prefix."usces_ordercart_meta";
+
 	$arr_column = array(
 				__('ID', 'usces') => 'ID', 
 				__('Order number', 'usces') => 'deco_id', 
@@ -1552,31 +1555,31 @@ function usces_download_product_list() {
 	//==========================================================================
 	foreach((array)$rows as $array) {
 		$order_id = $array['ID'];
-		$query = $wpdb->prepare("SELECT * FROM $tableName WHERE ID = %d", $order_id);
-		$data = $wpdb->get_row( $query, ARRAY_A );
+		$query = $wpdb->prepare("SELECT * FROM $tableName2 WHERE order_id = %d", $order_id);
+		$cart = $wpdb->get_results( $query, ARRAY_A );
 		//$cart = stripslashes_deep(unserialize($data['order_cart']));
-		$cart = unserialize($data['order_cart']);
+		//$cart = unserialize($data['order_cart']);
 		//if(!empty($data)) {
 		//	$data = stripslashes_deep($data);
 		//}
 		for($i = 0; $i < count($cart); $i++) {
 			$cart_row = $cart[$i];
-			$post_id = $cart_row['post_id'];
-			$sku = urldecode($cart_row['sku']);
-
+//			$post_id = $cart_row['post_id'];
+//			$sku = urldecode($cart_row['sku']);
 			$line .= $tr_h;
 			$line .= $td_h1.$order_id.$td_f;
 			$line .= $td_h.$array['deco_id'].$td_f;
+
 			if(isset($_REQUEST['check']['date'])) $line .= $td_h.$array['date'].$td_f;
 			if(isset($_REQUEST['check']['mem_id'])) $line .= $td_h.$array['mem_id'].$td_f;
-			if(isset($_REQUEST['check']['name'])) $line .= $td_h.usces_entity_decode($data['order_name1'].$data['order_name2'], $ext).$td_f;
+			if(isset($_REQUEST['check']['name'])) $line .= $td_h.usces_entity_decode($array['name'], $ext).$td_f;
 			if(isset($_REQUEST['check']['delivery_method'])) {
 				$delivery_method = '';
-				if(strtoupper($data['order_delivery_method']) == '#NONE#') {
+				if(strtoupper($array['delivery_method']) == '0') {
 					$delivery_method = __('No preference', 'usces');
 				} else {
 					foreach((array)$usces->options['delivery_method'] as $dkey => $delivery) {
-						if($delivery['id'] == $data['order_delivery_method']) {
+						if($delivery['id'] == $array['delivery_method']) {
 							$delivery_method = $delivery['name'];
 							break;
 						}
@@ -1584,30 +1587,21 @@ function usces_download_product_list() {
 				}
 				$line .= $td_h.$delivery_method.$td_f;
 			}
-			if(isset($_REQUEST['check']['shipping_date'])) $line .= $td_h.$data['order_modified'].$td_f;
-			$line .= apply_filters( 'usces_filter_chk_pro_data_head', NULL, $usces_opt_order, $data, $cart_row);
+			if(isset($_REQUEST['check']['shipping_date'])) $line .= $td_h.$array['order_modified'].$td_f;
+			$line .= apply_filters( 'usces_filter_chk_pro_data_head', NULL, $usces_opt_order, $array, $cart_row);
 
-			$line .= $td_h.$usces->getItemCode($post_id).$td_f;
-			$line .= $td_h.$sku.$td_f;
-			if(isset($_REQUEST['check']['item_name'])) $line .= $td_h.usces_entity_decode($usces->getItemName($post_id), $ext).$td_f;
-			if(isset($_REQUEST['check']['sku_name'])) $line .= $td_h.usces_entity_decode($usces->getItemSkuDisp($post_id, $sku), $ext).$td_f;
+			$line .= $td_h.$cart_row['item_code'].$td_f;
+			$line .= $td_h.$cart_row['sku_code'].$td_f;
+			if(isset($_REQUEST['check']['item_name'])) $line .= $td_h.usces_entity_decode($cart_row['item_name'], $ext).$td_f;
+			if(isset($_REQUEST['check']['sku_name'])) $line .= $td_h.usces_entity_decode($cart_row['sku_name'], $ext).$td_f;
 			if(isset($_REQUEST['check']['options'])) {
-				$options = $cart_row['options'];
+				$query = $wpdb->prepare("SELECT * FROM $tableName3 WHERE cart_id = %d AND meta_type = %s", $cart_row['cart_id'], 'option' );
+				$options = $wpdb->get_results( $query, ARRAY_A );
 				$optstr = '';
 				if(is_array($options) && count($options) > 0) {
 					foreach((array)$options as $key => $value) {
-						if(!empty($key)) {
-							if(is_array($value)) {
-								foreach($value as $v) {
-									$optstr .= usces_entity_decode(urldecode($key), $ext).$sp;
-									foreach($value as $v) {
-										$optstr .= usces_entity_decode(urldecode($v), $ext).$nb;
-									}
-								}
-							} else {
-								//$optstr .= usces_entity_decode($key, $ext).$sp.usces_entity_decode($value, $ext).$nb;
-								$optstr .= usces_entity_decode(urldecode($key).$sp.urldecode($value), $ext).$nb;
-							}
+						if(!empty($value['meta_key'])) {
+							$optstr .= usces_entity_decode(urldecode($value['meta_key']).$sp.urldecode($value['meta_value']), $ext).$nb;
 						}
 					}
 				}
@@ -1615,8 +1609,8 @@ function usces_download_product_list() {
 			}
 			$line .= $td_h.$cart_row['quantity'].$td_f;
 			$line .= $td_h.usces_crform($cart_row['price'], false, false, 'return', false).$td_f;
-			if(isset($_REQUEST['check']['unit'])) $line .= $td_h.usces_entity_decode($usces->getItemSkuUnit($post_id, $sku), $ext).$td_f;
-			$line .= apply_filters( 'usces_filter_chk_pro_data_detail', NULL, $usces_opt_order, $data, $cart_row);
+			if(isset($_REQUEST['check']['unit'])) $line .= $td_h.usces_entity_decode($cart_row['unit'], $ext).$td_f;
+			$line .= apply_filters( 'usces_filter_chk_pro_data_detail', NULL, $usces_opt_order, $array, $cart_row);
 			$line .= $tr_f.$lf;
 		}
 	}
