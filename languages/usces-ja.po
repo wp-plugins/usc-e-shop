@@ -3,14 +3,13 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2014-05-30 14:04+0900\n"
-"Last-Translator: Welcart <info@welcart.com>\n"
+"PO-Revision-Date: 2014-06-16 13:35+0900\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.5.7\n"
 
 msgid "This month"
 msgstr "今月"
@@ -3845,7 +3844,6 @@ msgstr "パスワードは%s文字以上で入力して下さい。"
 msgid "Internal tax"
 msgstr "内消費税"
 
-# 各証書の購入明細のタイトル
 msgid "Tax treatment"
 msgstr "消費税区分"
 
@@ -3898,3 +3896,12 @@ msgstr "停止"
 
 msgid "If you 'Deactivate', it does not appear in the payment method of site."
 msgstr "「停止」にすると、サイトで選択できる支払方法に表示されなくなります。"
+
+msgid "New Membership Registration"
+msgstr "新規会員登録"
+
+msgid "New member registration is complete."
+msgstr "新規会員登録が完了しました。"
+
+msgid "Failed to new member registration."
+msgstr "新規会員登録に失敗しました。"

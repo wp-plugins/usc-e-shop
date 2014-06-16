@@ -251,7 +251,7 @@ function addComma(str)
 <div class="usces_admin">
 <form action="<?php echo USCES_ADMIN_URL.'?page=' . $page . '&member_action='.$oa; ?>" method="post" name="editpost" />
 <?php if( $member_action == 'new' || $member_action == 'newpost' ) : ?>
-	<h2>Welcart Management <?php _e('新規会員登録','usces'); ?></h2>
+	<h2>Welcart Management <?php _e('New Membership Registration','usces'); ?></h2>
 <?php else : ?>
 	<h2>Welcart Management <?php _e('Edit membership data','usces'); ?></h2>
 <?php endif;?>

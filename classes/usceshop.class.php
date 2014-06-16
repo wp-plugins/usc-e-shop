@@ -499,7 +499,7 @@ class usc_e_shop
 		add_submenu_page('usces_orderlist', __('Order List','usces'), __('Order List','usces'), 'level_5', 'usces_orderlist', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('New Order or Estimate','usces'), __('New Order or Estimate','usces'), 'level_5', 'usces_ordernew', array($this, 'order_list_page'));
 		add_submenu_page('usces_orderlist', __('List of Members','usces'), __('List of Members','usces'), 'level_5', 'usces_memberlist', array($this, 'member_list_page'));
-		add_submenu_page('usces_orderlist', __('新規会員登録','usces'), __('新規会員登録','usces'), 'level_5', 'usces_membernew', array($this, 'member_list_page'));
+		add_submenu_page('usces_orderlist', __('New Membership Registration','usces'), __('New Membership Registration','usces'), 'level_5', 'usces_membernew', array($this, 'member_list_page'));
 		do_action('usces_action_management_admin_menue');
 	}
 
@@ -666,13 +666,13 @@ class usc_e_shop
 				if( WCUtils::is_blank($this->error_message) ){
 					$res = usces_new_memberdata();
 					if ( 1 === $res ) {
-						$this->set_action_status('success', __('新規会員登録が完了しました', 'usces'));
+						$this->set_action_status('success', __('New member registration is complete.', 'usces'));
 						$_REQUEST['member_action'] = 'edit';
 						$member_action = $_REQUEST['member_action'];
 					} elseif ( 0 === $res ) {
 						$this->set_action_status('none', '');
 					} else {
-						$this->set_action_status('error', 'ERROR : '.__('登録できませんでした','usces'));
+						$this->set_action_status('error', 'ERROR : '.__('Failed to new member registration.','usces'));
 					}
 				}
 				require_once($member_edit_form);

@@ -3527,3 +3527,12 @@ msgstr "停止"
 
 msgid "If you 'Deactivate', it does not appear in the payment method of site."
 msgstr "「停止」にすると、サイトで選択できる支払方法に表示されなくなります。"
+
+msgid "New Membership Registration"
+msgstr "新規会員登録"
+
+msgid "New member registration is complete."
+msgstr "新規会員登録が完了しました。"
+
+msgid "Failed to new member registration."
+msgstr "新規会員登録に失敗しました。"
