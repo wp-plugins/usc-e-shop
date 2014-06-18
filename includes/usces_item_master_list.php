@@ -470,7 +470,7 @@ jQuery(document).ready(function($){
 			</td>
 			<td class="zaikonum">
 			<?php $i=0; foreach((array)$value as $key => $sv) { $bgc = ($i%2 == 1) ? ' bgc1' : ' bgc2'; $i++; ?>
-				<div class="priceline<?php echo $bgc; ?>"><?php echo (( WCUtils::is_blank($sv['stocknum']) || '0' != $sv['stocknum'] ) ? esc_html($sv['stocknum']) : "&nbsp;"); ?></div>
+				<div class="priceline<?php echo $bgc; ?>"><?php if( !WCUtils::is_blank($sv['stocknum']) ) esc_html_e($sv['stocknum']); ?></div>
 			<?php } echo $no_sku; ?>
 			</td>
 			<td class="zaiko">
