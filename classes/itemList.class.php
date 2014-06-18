@@ -439,7 +439,7 @@ class dataList
 				break;
 			case 'zaiko':
 				$column = 'meta.meta_value';
-				$this->searchSql = '(' . $column . ' LIKE '."'%" . esc_sql('stock";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . esc_sql('stock";s:1:"'.$this->arr_search['word']['zaiko']) . "%')";
+				$this->searchSql = '(' . $column . ' LIKE '."'%" . esc_sql('"stock";i:'.$this->arr_search['word']['zaiko']) . "%' OR " . $column . ' LIKE '."'%" . esc_sql('"stock";s:1:"'.$this->arr_search['word']['zaiko'].'"') . "%')";
 				break;
 			case 'category':
 				$column = 'tt.term_id';
