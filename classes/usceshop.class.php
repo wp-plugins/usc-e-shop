@@ -6753,10 +6753,13 @@ class usc_e_shop
 			&& false !== $status_num 
 			&& 2 > $status_num 
 		){
-			return true;
+			$res = true;
 		}else{
-			return false;
+			$res = false;
 		}
+	
+		return apply_filters( 'usces_is_item_zaiko', $res, $post_id, $sku, $status_num, $zaiko_num );
+
 	}
 
 	// function for the cart ***********************************************************

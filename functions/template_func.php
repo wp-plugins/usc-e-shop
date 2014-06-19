@@ -554,7 +554,7 @@ function usces_have_zaiko_anyone( $post_id = NULL ){
 			break;
 		}
 	}
-	return $status;
+	return apply_filters( 'usces_have_zaiko_anyone', $status, $post_id, $skus );
 }
 
 function usces_is_gptekiyo( $post_id, $sku, $quant ){
