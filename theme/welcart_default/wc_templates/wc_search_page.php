@@ -5,6 +5,7 @@
  * @subpackage Welcart Default Theme
  */
 get_header();
+global $usces;
 ?>
 
 <div id="content" class="two-column">
