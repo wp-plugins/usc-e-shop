@@ -7,7 +7,7 @@ Version: 1.4.2
 Author: Collne Inc.
 Author URI: http://www.collne.com/
 */
-define('USCES_VERSION', '1.4.2.1406192');
+define('USCES_VERSION', '1.4.2.1406271');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -21,6 +21,7 @@ define('USCES_UP07', 1);
 define('USCES_UP11', 2);
 define('USCES_UP14', 3);
 define('USCES_UP141', 5);
+define('USCES_UP143', 1);
 
 define('USCES_WP_CONTENT_DIR', ABSPATH . 'wp-content');
 define('USCES_WP_CONTENT_URL', site_url() . '/wp-content');

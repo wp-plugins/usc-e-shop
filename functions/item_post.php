@@ -870,7 +870,7 @@ function order_item_ajax(){
 			$res = usces_get_member_neworder();
 			break;
 		case 'recalculation':
-			$res = usces_order_recalculation( $_POST['order_id'], $_POST['mem_id'], $_POST['post_ids'], $_POST['skus'], $_POST['prices'], $_POST['quants'], $_POST['use_point'], $_POST['shipping_charge'], $_POST['cod_fee'] );
+			$res = usces_order_recalculation( $_POST['order_id'], $_POST['mem_id'], $_POST['post_ids'], $_POST['skus'], $_POST['prices'], $_POST['quants'], $_POST['upoint'], $_POST['shipping_charge'], $_POST['cod_fee'] );
 			break;
 	}
 

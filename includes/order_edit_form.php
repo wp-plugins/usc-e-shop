@@ -516,7 +516,7 @@ jQuery(function($){
 			var order_cod_fee = parseFloat($(\"#order_cod_fee\").val());
 			var s = orderfunc.settings;
 			s.url = uscesL10n.requestFile;
-			s.data = 'action=order_item_ajax&mode=recalculation&order_id='+$('#order_id').val()+'&mem_id='+$('#member_id_label').html()+'&post_ids='+post_ids+'&skus='+skus+'&prices='+prices+'&quants='+quants+'&use_point='+order_usedpoint+'&shipping_charge='+order_shipping_charge+'&cod_fee='+order_cod_fee;
+			s.data = 'action=order_item_ajax&mode=recalculation&order_id='+$('#order_id').val()+'&mem_id='+$('#member_id_label').html()+'&post_ids='+post_ids+'&skus='+skus+'&prices='+prices+'&quants='+quants+'&upoint='+order_usedpoint+'&shipping_charge='+order_shipping_charge+'&cod_fee='+order_cod_fee;
 			s.success = function(data, dataType) {
 				var values = data.split('#usces#');
 				if( 'ok' == values[0] ) {

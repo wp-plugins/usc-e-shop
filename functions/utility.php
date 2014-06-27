@@ -1,5 +1,20 @@
 <?php
 // Utility.php
+function usces_upgrade_143(){
+	global $wpdb, $usces;
+	$upgrade = (int)get_option('usces_upgrade3');
+	if( USCES_UP143 === $upgrade & USCES_UP143 )
+		return false;
+	
+	$table = $wpdb->prefix . 'usces_ordercart';
+	$wpdb->query( "ALTER TABLE $table CHANGE  `cprice`  `cprice` DECIMAL( 15, 2 ) NULL DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table CHANGE  `price`  `price` DECIMAL( 15, 2 ) NULL DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table CHANGE  `tax`  `tax` DECIMAL( 13, 2 ) NULL DEFAULT NULL" );
+
+	$upgrade += USCES_UP143;
+	update_option('usces_upgrade3', $upgrade);
+}
+
 function usces_upgrade_141(){
 	global $usces;
 	$upgrade = (int)get_option('usces_upgrade2');

@@ -2056,7 +2056,7 @@ class usc_e_shop
 				
 				var zaikonum = document.getElementById("zaikonum["+post_id+"]["+sku+"]").value;
 				var zaiko = document.getElementById("zaiko["+post_id+"]["+sku+"]").value;
-				if( (zaiko != '0' && zaiko != '1') ||  parseInt(zaikonum) == 0 ){
+				if( <?php echo apply_filters( 'usces_intoCart_zaiko_check_js', "(zaiko != '0' && zaiko != '1') ||  parseInt(zaikonum) == 0" ); ?> ){
 					alert('<?php _e('temporaly out of stock now', 'usces'); ?>');
 					return false;
 				}
@@ -3257,7 +3257,7 @@ class usc_e_shop
 	function use_point(){
 		global $wp_query;
 		if( !isset($_REQUEST['wc_nonce']) || !wp_verify_nonce($_REQUEST['wc_nonce'], 'use_point') )
-			die('Security check');
+			die('Security check1');
 			
 		$this->error_message = $this->point_check( $this->cart->get_entry() );
 		if( empty($this->error_message) )
@@ -3425,7 +3425,7 @@ class usc_e_shop
 	function regmember(){
 		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
 		if( !wp_verify_nonce( $nonce, 'post_member' ) )
-			die('Security check');
+			die('Security check2');
 			
 		global $wp_query;
 		$res = $this->regist_member();
@@ -3445,7 +3445,7 @@ class usc_e_shop
 	function editmember(){
 		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
 		if( !wp_verify_nonce( $nonce, 'post_member' ) )
-			die('Security check');
+			die('Security check3');
 			
 		global $wp_query;
 		$res = $this->regist_member();
@@ -3465,7 +3465,7 @@ class usc_e_shop
 	function deletemember(){
 		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
 		if( !wp_verify_nonce( $nonce, 'post_member' ) )
-			die('Security check');
+			die('Security check4');
 			
 		$res = $this->delete_member();
 		if( $res ){
@@ -3495,7 +3495,7 @@ class usc_e_shop
 	function lostpassword(){
 		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
 		if( !wp_verify_nonce( $nonce, 'post_member' ) )
-			die('Security check');
+			die('Security check5');
 			
 		global $wp_query;
 		$this->error_message = $this->lostpass_mailaddcheck();
@@ -3519,7 +3519,7 @@ class usc_e_shop
 	function changepassword_page(){
 		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
 		if( !wp_verify_nonce( $nonce, 'post_member' ) )
-			die('Security check');
+			die('Security check6');
 			
 		global $wp_query;
 		$this->error_message = $this->changepass_check();
@@ -5022,6 +5022,7 @@ class usc_e_shop
 		$rets11 = usces_upgrade_11();
 		$rets14 = usces_upgrade_14();
 		$rets141 = usces_upgrade_141();
+		$rets143 = usces_upgrade_143();
 		$this->update_options();//20120710ysk 0000472
 	}
 	
