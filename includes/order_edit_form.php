@@ -1193,8 +1193,8 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 		<label>追加する商品　</label><select name="newitemcode" id="newitemcode"></select><br />
 		<div id="loading"></div>
 		<label for="name"><?php _e('item code', 'usces'); ?></label>
-		<input type="text" name="newitemcode" id="newitemcode" class="text" />
-		<input name="getitem" type="button" value="<?php _e('Obtain', 'usces'); ?>" onclick="if( jQuery('#newitemcode').val() == '' ) return; orderItem.getitem();" />
+		<input type="text" name="newitemcodein" id="newitemcodein" class="text" />
+		<input name="getitem" id="getitembutton" type="button" value="<?php _e('Obtain', 'usces'); ?>" onclick="if( jQuery('#newitemcodein').val() == '' ) return; orderItem.getitem(encodeURIComponent(jQuery('#newitemcodein').val()));" />
 		</div>
 		<div id="newitemform"></div>
 	</div>

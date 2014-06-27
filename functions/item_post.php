@@ -1119,7 +1119,7 @@ function get_order_item( $item_code ) {
 		$gptekiyo = $sku['gp'];
 		$sort = (int)$sku['sort'];
 		$r .= "<tr>\n";
-		$r .= "<td rowspan='2'>" . $key . "</td>\n";
+		$r .= "<td rowspan='2'>" . esc_js($sku['code']) . "</td>\n";
 		$r .= "<td>" . $disp . "</td>\n";
 		$r .= "<td><span class='cprice'>" . ( ( !empty($cprice) ) ? usces_crform( $cprice, true, false, 'return' ) : '' ) . "</span></td>\n";
 		$r .= "<td><span class='price'>" . usces_crform( $price, true, false, 'return' ) . "</span></td>\n";

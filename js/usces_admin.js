@@ -984,7 +984,7 @@
 			}
 			$("#loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 			var s = orderItem.settings;
-			s.data = "action=order_item_ajax&mode=get_item_select_option&cat_id=" + encodeURIComponent(cat_id);
+			s.data = "action=order_item_ajax&mode=get_item_select_option&cat_id=" + cat_id;
 			s.success = function(data, dataType){
 				$("#loading").html('');
 				$("#newitemcode").html( data );
@@ -1000,7 +1000,7 @@
 			}
 			$("#loading").html('<img src="' + uscesL10n.USCES_PLUGIN_URL + '/images/loading.gif" />');
 			var s = orderItem.settings;
-			s.data = "action=order_item_ajax&mode=get_order_item&itemcode=" + encodeURIComponent(itemcode);
+			s.data = "action=order_item_ajax&mode=get_order_item&itemcode=" + itemcode;
 			s.success = function(data, dataType){
 				$("#loading").html('');
 				$("#newitemform").html( data );
@@ -1097,6 +1097,10 @@
 	
 	$("#newitemcode").live( 'change', function(){
 		orderItem.getitem( $(this).val() );
+	});
+	
+	$("#getitembutton").click( function(){
+		orderItem.getitem( encodeURIComponent($("#newitemcodein").val()) );
 	});
 	
 	
