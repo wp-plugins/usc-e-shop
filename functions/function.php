@@ -153,13 +153,16 @@ function usces_order_confirm_message($order_id) {
 	if ( $data['order_discount'] != 0 )
 		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $data['order_discount'], true, false, 'return' ) . "\r\n";
 
-	if ( 0.00 < (float)$data['order_tax'] )
+	if ( 0.00 < (float)$data['order_tax'] && 'products' == usces_get_tax_target() )
 		$meisai .= usces_tax_label($data, 'return') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
 
 	$meisai .= __('Shipping','usces') . "     : " . usces_crform( $data['order_shipping_charge'], true, false, 'return' ) . "\r\n";
 
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $data['order_cod_fee'], true, false, 'return' ) . "\r\n";
+
+	if ( 0.00 < (float)$data['order_tax'] && 'all' == usces_get_tax_target() )
+		$meisai .= usces_tax_label($data, 'return') . "    : " . usces_crform( $data['order_tax'], true, false, 'return' ) . "\r\n";
 
 	if ( $data['order_usedpoint'] != 0 )
 		$meisai .= __('use of points','usces') . " : " . number_format($data['order_usedpoint']) . __('Points','usces') . "\r\n";
@@ -356,13 +359,16 @@ function usces_send_ordermail($order_id) {
 	if ( $entry['order']['discount'] != 0 )
 		$meisai .= apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces'), $order_id) . "    : " . usces_crform( $entry['order']['discount'], true, false, 'return' ) . "\r\n";
 
-	if ( 0.00 < (float)$entry['order']['tax'] )
+	if ( 0.00 < (float)$entry['order']['tax'] && 'products' == usces_get_tax_target() )
 		$meisai .= usces_tax_label($data, 'return') . "    : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
 
 	$meisai .= "\r\n" . __('Shipping','usces') . "     : " . usces_crform( $entry['order']['shipping_charge'], true, false, 'return' ) . "\r\n";
 
 	if ( $payment['settlement'] == 'COD' )
 		$meisai .= apply_filters('usces_filter_cod_label', __('COD fee', 'usces')) . "  : " . usces_crform( $entry['order']['cod_fee'], true, false, 'return' ) . "\r\n";
+
+	if ( 0.00 < (float)$entry['order']['tax'] && 'all' == usces_get_tax_target() )
+		$meisai .= usces_tax_label($data, 'return') . "    : " . usces_crform( $entry['order']['tax'], true, false, 'return' ) . "\r\n";
 
 	if ( $entry['order']['usedpoint'] != 0 )
 		$meisai .= __('use of points','usces') . " : " . number_format($entry['order']['usedpoint']) . __('Points','usces') . "\r\n";
@@ -3598,6 +3604,16 @@ function usces_pref_select( $type, $values, $out = 'return' ){
 	}else{
 		echo $html;
 	}
+}
+
+function usces_get_tax_mode(){
+	global $usces;
+	return $usces->options['tax_mode'];
+}
+
+function usces_get_tax_target(){
+	global $usces;
+	return $usces->options['tax_target'];
 }
 
 function usces_is_member_system(){

@@ -644,18 +644,6 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->MultiCell(22.4, $lineheight, usces_conv_euc(__('Amount','usces').'('.__(usces_crcode( 'return' ), 'usces').')'), $border, 'C');
 
 	// Footer label
-	$pdf->SetXY(104.3, 198.8);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(__('total items', 'usces')), $border, 'C');
-	$pdf->SetXY(104.3, 204.8);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_point_label', __('Used points', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 210.8);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_label', __('Campaign disnount', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 216.7);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_shipping_label', __('Shipping', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 222.7);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_label', __('COD fee', 'usces'))), $border, 'C');
-	$pdf->SetXY(104.3, 228.6);
-
 	$labeldata = array(
 		'order_condition' => $data->condition,
 		'order_item_total_price' => $data->order['item_total_price'],
@@ -663,7 +651,29 @@ function usces_pdfSetFooter($pdf, $data) {
 		'order_shipping_charge' => $data->order['shipping_charge'],
 		'order_cod_fee' => $data->order['cod_fee'],
 	);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_label', usces_tax_label( $labeldata, 'return' ))), $border, 'C');
+	$pdf->SetXY(104.3, 198.8);
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(__('total items', 'usces')), $border, 'C');
+	$pdf->SetXY(104.3, 204.8);
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_label', __('Campaign disnount', 'usces'))), $border, 'C');
+	
+	if( 'products' == usces_get_tax_target() ){
+		$data_1 = apply_filters('usces_filter_tax_label', usces_tax_label( $labeldata, 'return' ));
+		$data_2 = apply_filters('usces_filter_shipping_label', __('Shipping', 'usces'));
+		$data_3 = apply_filters('usces_filter_cod_label', __('COD fee', 'usces'));
+	}else{
+		$data_1 = apply_filters('usces_filter_shipping_label', __('Shipping', 'usces'));
+		$data_2 = apply_filters('usces_filter_cod_label', __('COD fee', 'usces'));
+		$data_3 = apply_filters('usces_filter_tax_label', usces_tax_label( $labeldata, 'return' ));
+	}
+	
+	$pdf->SetXY(104.3, 210.8);
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc($data_1), $border, 'C');
+	$pdf->SetXY(104.3, 216.7);
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc($data_2), $border, 'C');
+	$pdf->SetXY(104.3, 222.7);
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc($data_3), $border, 'C');
+	$pdf->SetXY(104.3, 228.6);
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_point_label', __('Used points', 'usces'))), $border, 'C');
 	$pdf->SetXY(104.3, 235.8);
 	$pdf->MultiCell(37.77, $lineheight, usces_conv_euc(__('Total Amount', 'usces')), $border, 'C');
 
@@ -676,14 +686,6 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetFont($font, '', $fontsize);
 	$pdf->SetXY(142.9, 198.8);
 	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($usces->get_currency($data->order['item_total_price'])), $border, 'R');
-	$pdf->SetXY(142.9, 204.8);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_point_vlue', $usces->get_currency($data->order['usedpoint']))), $border, 'R');
-	$pdf->SetXY(142.9, 210.8);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_vlue', $usces->get_currency($data->order['discount']))), $border, 'R');
-	$pdf->SetXY(142.9, 216.7);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_shipping_vlue', $usces->get_currency($data->order['shipping_charge']))), $border, 'R');
-	$pdf->SetXY(142.9, 222.7);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_cod_vlue', $usces->get_currency($data->order['cod_fee']))), $border, 'R');
 
 	$materials = array(
 		'total_items_price' => $data->order['item_total_price'],
@@ -696,8 +698,26 @@ function usces_pdfSetFooter($pdf, $data) {
 	}else{
 		$tax = $usces->get_currency($data->order['tax']);
 	}
+	if( 'products' == usces_get_tax_target() ){
+		$datav_1 = apply_filters('usces_filter_tax_vlue', $tax, $data);
+		$datav_2 = apply_filters('usces_filter_shipping_vlue', $usces->get_currency($data->order['shipping_charge']));
+		$datav_3 = apply_filters('usces_filter_cod_vlue', $usces->get_currency($data->order['cod_fee']));
+	}else{
+		$datav_1 = apply_filters('usces_filter_shipping_vlue', $usces->get_currency($data->order['shipping_charge']));
+		$datav_2 = apply_filters('usces_filter_cod_vlue', $usces->get_currency($data->order['cod_fee']));
+		$datav_3 = apply_filters('usces_filter_tax_vlue', $tax, $data);
+	}
+
+	$pdf->SetXY(142.9, 204.8);
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_vlue', $usces->get_currency($data->order['discount']))), $border, 'R');
+	$pdf->SetXY(142.9, 210.8);
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($datav_1), $border, 'R');
+	$pdf->SetXY(142.9, 216.7);
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($datav_2), $border, 'R');
+	$pdf->SetXY(142.9, 222.7);
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc($datav_3), $border, 'R');
 	$pdf->SetXY(142.9, 228.6);
-	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_tax_vlue', $tax, $data)), $border, 'R');
+	$pdf->MultiCell(22.6, $lineheight, usces_conv_euc(apply_filters('usces_filter_point_vlue', $usces->get_currency($data->order['usedpoint']))), $border, 'R');
 	$pdf->SetXY(142.9, 235.8);
 	$pdf->MultiCell(22.67, $lineheight, usces_conv_euc($usces->get_currency($data->order['total_full_price'])), $border, 'R');
 

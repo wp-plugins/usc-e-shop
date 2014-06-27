@@ -66,7 +66,7 @@ get_header();
 				<td>&nbsp;</td>
 			</tr>
 <?php endif; ?>
-<?php if( 0.00 < (float)$usces_entries['order']['tax'] ) : ?>
+<?php if( 0.00 < (float)$usces_entries['order']['tax'] && 'products' == usces_get_tax_target() ) : ?>
 			<tr>
 				<td colspan="5" class="aright"><?php usces_tax_label(); ?></td>
 				<td class="aright"><?php usces_tax($usces_entries) ?></td>
@@ -82,6 +82,13 @@ get_header();
 			<tr>
 				<td colspan="5" class="aright"><?php echo apply_filters('usces_filter_cod_label', __('COD fee', 'usces')); ?></td>
 				<td class="aright"><?php usces_crform($usces_entries['order']['cod_fee'], true, false); ?></td>
+				<td>&nbsp;</td>
+			</tr>
+<?php endif; ?>
+<?php if( 0.00 < (float)$usces_entries['order']['tax'] && 'all' == usces_get_tax_target() ) : ?>
+			<tr>
+				<td colspan="5" class="aright"><?php usces_tax_label(); ?></td>
+				<td class="aright"><?php usces_tax($usces_entries) ?></td>
 				<td>&nbsp;</td>
 			</tr>
 <?php endif; ?>

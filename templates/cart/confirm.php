@@ -61,6 +61,13 @@ if( !empty($usces_entries['order']['discount']) ) {
 		<td>&nbsp;</td>
 	</tr>';
 }
+if( !empty($usces_entries['order']['tax']) && 'products' == usces_get_tax_target() ) {
+	$html .= '<tr>
+		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
+		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
+		<td>&nbsp;</td>
+	</tr>';
+}
 $html .= '<tr>
 	<td colspan="5" class="aright">'.__('Shipping', 'usces').'</td>
 	<td class="aright">' . usces_crform($usces_entries['order']['shipping_charge'], true, false, 'return') . '</td>
@@ -73,7 +80,7 @@ if( !empty($usces_entries['order']['cod_fee']) ) {
 		<td>&nbsp;</td>
 	</tr>';
 }
-if( !empty($usces_entries['order']['tax']) ) {
+if( !empty($usces_entries['order']['tax']) && 'all' == usces_get_tax_target() ) {
 	$html .= '<tr>
 		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
 		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
