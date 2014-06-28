@@ -4825,7 +4825,7 @@ function usces_get_ordercart_row( $order_id, $cart = array() ){
 		<td><?php echo $i + 1; ?></td>
 		<td><?php echo wp_get_attachment_image( $pictid, array(80, 80), true ); ?></td>
 		<td class="aleft"><?php echo esc_html($cartItemName); ?><?php do_action('usces_admin_order_item_name', $order_id, $i); ?><?php usces_make_option_field( $materials, $cart ); ?></td>
-		<td><input name="skuPrice[<?php echo $ordercart_id; ?>]" class="text price" type="text" value="<?php echo esc_attr( usces_crform($skuPrice, false, false) ); ?>" /></td>
+		<td><input name="skuPrice[<?php echo $ordercart_id; ?>]" class="text price" type="text" value="<?php echo esc_attr( usces_crform($skuPrice, false, false, 'return', false) ); ?>" /></td>
 		<td><input name="quant[<?php echo $ordercart_id; ?>]" class="text quantity" type="text" value="<?php echo esc_attr($cart_row['quantity']); ?>" /></td>
 		<td id="sub_total[<?php echo $ordercart_id; ?>]" class="aright">&nbsp;</td>
 		<td <?php echo $red ?>><?php echo esc_html($stock); ?></td>
