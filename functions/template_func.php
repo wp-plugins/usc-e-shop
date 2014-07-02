@@ -1244,6 +1244,7 @@ function usces_the_payment_method( $value = '', $out = '' ){
 			}else{
 				$checked = '';
 			}
+			$checked = apply_filters( 'usces_fiter_the_payment_method_checked', $checked, $payment, $value );
 			if( (empty($module) || !file_exists($usces->options['settlement_path'] . $module)) && $payment['settlement'] == 'acting' ) {
 				$checked = '';
 				$list .= "\t".'<dt class="payment_'.$id.'"><label for="payment_name_' . $id . '"><input name="offer[payment_name]" id="payment_name_' . $id . '" type="radio" value="'.esc_attr($payment['name']).'"' . $checked . ' disabled onKeyDown="if (event.keyCode == 13) {return false;}" />'.esc_attr($payment['name'])."</label> <b> (" . __('cannot use this payment method now.','usces') . ") </b></dt>\n";
