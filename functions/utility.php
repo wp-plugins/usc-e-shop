@@ -197,7 +197,7 @@ function usces_upgrade_141(){
 function usces_upgrade_14(){
 	global $usces;
 	$upgrade = (int)get_option('usces_upgrade2');
-	if( $upgrade & USCES_UP14 )
+	if( $upgrade & USCES_UP14 && 3 <= $upgrade )
 		return false;
 
 	global $wpdb;
