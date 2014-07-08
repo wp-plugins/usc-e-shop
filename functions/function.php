@@ -1173,6 +1173,9 @@ function usces_reg_orderdata( $results = array() ) {
 			$usces->set_order_meta_value( 'acting_'.$_GET['acting'], serialize($data), $order_id );
 		}
 //20140206ysk end
+		if( $set['settlement'] == 'acting_zeus_conv' and !empty($results['wctid']) ) {
+			$usces->set_order_meta_value( 'acting_'.$results['wctid'], serialize( $results ), $order_id );
+		}
 		
 		//$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
 		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$set, 'charging_type'=>$charging_type);//20131121ysk
@@ -2456,7 +2459,8 @@ function usces_check_acting_return() {
 			}else{
 				$results[0] = 0;
 			}
-			$results['reg_order'] = false;
+			//$results['reg_order'] = false;
+			$results['reg_order'] = true;
 			break;
 			
 		case 'remise_card':
@@ -3818,37 +3822,67 @@ function usces_get_member_regmode(){
 function uesces_get_error_settlement( $out = '' ) {
 	$res = '';
 	if( isset($_REQUEST['acting']) && ('zeus_conv' == $_REQUEST['acting'] || 'zeus_card' == $_REQUEST['acting'] || 'zeus_bank' == $_REQUEST['acting'] ) ){ //ZEUS
-		$res .= '<div class="support_box">';
-		if( isset($_GET['code']) ){
-			$res .= '　<br />エラーコード：' . esc_html($_GET['code']);
-			if( in_array($_GET['code'], array('02130514', '02130517', '02130619', '02130620', '02130621', '02130640')) ){
-				$res .= '<br />カード番号が正しくないようです。';
-			}elseif( in_array($_GET['code'], array('02130714', '02130717', '02130725', '02130814', '02130817', '02130825')) ){
-				$res .= '<br />カードの有効期限が正しくないようです。';
-			}elseif( in_array($_GET['code'], array('02130922')) ){
-				$res .= '<br />カードの有効期限が切れているようです。';
-			}elseif( in_array($_GET['code'], array('02131117', '02131123', '02131124')) ){
-				$res .= '<br />カードの名義が正しくないようです。';
-			}elseif( in_array($_GET['code'], array('02131414', '02131417', '02131437')) ){
-				$res .= '<br />お客様情報の電話番号が正しくないようです。';
-			}elseif( in_array($_GET['code'], array('02131527', '02131528', '02131529', '02131537')) ){
-				$res .= '<br />お客様情報のEメールアドレスが正しくないようです。';
+		if( 'zeus_card' == $_REQUEST['acting'] ) {
+			$res .= '<div class="support_box">';
+			if( isset($_GET['code']) ){
+				$res .= '<br />エラーコード：' . esc_html($_GET['code']);
+				if( in_array($_GET['code'], array('02130514', '02130517', '02130619', '02130620', '02130621', '02130640')) ){
+					$res .= '<br />カード番号が正しくないようです。';
+				}elseif( in_array($_GET['code'], array('02130714', '02130717', '02130725', '02130814', '02130817', '02130825')) ){
+					$res .= '<br />カードの有効期限が正しくないようです。';
+				}elseif( in_array($_GET['code'], array('02130922')) ){
+					$res .= '<br />カードの有効期限が切れているようです。';
+				}elseif( in_array($_GET['code'], array('02131117', '02131123', '02131124')) ){
+					$res .= '<br />カードの名義が正しくないようです。';
+				}elseif( in_array($_GET['code'], array('02131414', '02131417', '02131437')) ){
+					$res .= '<br />お客様情報の電話番号が正しくないようです。';
+				}elseif( in_array($_GET['code'], array('02131527', '02131528', '02131529', '02131537')) ){
+					$res .= '<br />お客様情報のEメールアドレスが正しくないようです。';
+				}
+				$res .= '<br />
+				<br />
+				<a href="' . USCES_CUSTOMER_URL . '">もう一度決済を行う＞＞</a><br />';
+			}else{
+				$res .= '<br />エラーコード：' . esc_html($_GET['err_code']);
+				$res .= '<br />
+				カード番号を再入力する場合はこちらをクリックしてください。<br />
+				<br />
+				<a href="' . USCES_CUSTOMER_URL . '&re-enter=1">カード番号の再入力＞＞</a><br />';
 			}
-			$res .= '　<br />
-			　<br />
+			$res .= '<br />
+			株式会社ゼウス カスタマーサポート　（24時間365日対応）<br />
+			電話番号：0570-02-3939　（つながらないときは 03-4334-0500）<br />
+			E-mail:support@cardservice.co.jp
+			</div>'."\n";
+			break;
+
+		} else {
+			$res .= '<div class="support_box">';
+			if( isset($_GET['error_code']) ) {
+				$res .= '<br />エラーコード：' . esc_html($_GET['code']);
+				if( in_array($_GET['code'], array('800002', '0013')) ){
+					$res .= '<br />このコンビニはお取り扱いできません。詳細に関してはカスタマーサポートまでお問い合わせください。';
+				}elseif( in_array($_GET['code'], array('900000', '0011')) ){
+					$res .= '<br />お申し込み情報が正しく入力されていないか、通信時にエラーが発生している可能性がございます。入力情報を再度ご確認いただいた上でお申し込みをいただくか、カスタマーサポートまでお問い合わせください。';
+				}elseif( in_array($_GET['code'], array('0008')) ){
+					$res .= '<br />このコンビニはお取り扱いできません。別のコンビニをご選択いただき、再度お申し込みをいただくか、カスタマーサポートまでお問い合わせください。';
+				}
+			} else {
+				if( 'zeus_conv' == $_REQUEST['acting'] ) {
+					$res .= '<br />このコンビニはお取り扱いできません。詳細に関してはカスタマーサポートまでお問い合わせください。';
+				} else {
+					$res .= '<br />詳細に関してはカスタマーサポートまでお問い合わせください。';
+				}
+			}
+			$res .= '<br />
+			<br />
 			<a href="' . USCES_CUSTOMER_URL . '">もう一度決済を行う＞＞</a><br />';
-		}else{
-			$res .= '　<br />エラーコード：' . esc_html($_GET['err_code']);
-			$res .= '　<br />
-			カード番号を再入力する場合はこちらをクリックしてください。<br />
-			　<br />
-			<a href="' . USCES_CUSTOMER_URL . '&re-enter=1">カード番号の再入力＞＞</a><br />';
+			$res .= '<br />
+			株式会社ゼウス カスタマーサポート　（24時間365日対応）<br />
+			電話番号：0570-08-3000　（つながらないときは 03-3498-9888）<br />
+			E-mail:support@cardservice.co.jp
+			</div>'."\n";
 		}
-		$res .= '　<br />
-		ゼウス・カスタマーサポート(24時間365日)<br />
-		電話番号：0570-02-3939(つながらないときは 03-4334-0500)<br />
-		E-mail:support@cardservice.co.jp
-		</div>'."\n";
 	}
 	$res = apply_filters( 'usces_filter_get_error_settlement', $res );
 	
@@ -3948,7 +3982,7 @@ function usces_post_reg_orderdata($order_id, $results){
 				break;
 			case 'zeus_conv':
 				$trans_id = isset($_REQUEST['order_no']) ? $_REQUEST['sendpoint'] : '';
-				$zeus_convs = array(
+/*				$zeus_convs = array(
 									'acting' => 'zeus_conv',
 									'pay_cvs' => isset($_REQUEST['pay_cvs']) ? $_REQUEST['pay_cvs'] : '',
 									'order_no' => isset($_REQUEST['order_no']) ? $_REQUEST['order_no'] : '',
@@ -3960,7 +3994,7 @@ function usces_post_reg_orderdata($order_id, $results){
 									'error_code' => isset($_REQUEST['error_code']) ? $_REQUEST['error_code'] : ''
 									);
 				$usces->set_order_meta_value('acting_'.(isset($_REQUEST['sendpoint']) ? $_REQUEST['sendpoint'] : ''), serialize($zeus_convs), $order_id);
-				break;
+*/				break;
 			case 'zeus_bank':
 				$trans_id = isset($_REQUEST['order_no']) ? $_REQUEST['order_no'] : '';
 				break;

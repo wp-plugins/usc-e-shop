@@ -78,7 +78,8 @@ function usces_member_update_settlement_form() {
 
 		$vars = 'send=mall';
 		$vars .= '&clientip='.$acting_opts['clientip'];
-		$vars .= '&cardnumber='.$_POST['cnum1'];
+		$cardnumber = ( empty($_POST['cnum1']) ) ? $usces->get_member_meta_value( 'zeus_pcid', $member['ID'] ) : $_POST['cnum1'];
+		$vars .= '&cardnumber='.$cardnumber;
 		if( 1 == $usces->options['acting_settings']['zeus']['security'] ) {
 			$vars .= '&seccode='.$_POST['securecode'];
 		}
@@ -87,7 +88,9 @@ function usces_member_update_settlement_form() {
 		$vars .= '&telno='.str_replace( '-', '', $member['tel'] );
 		$vars .= '&email='.$member['mailaddress1'];
 		$vars .= '&sendid='.$member['ID'];
-		$vars .= '&username='.$_POST['username_card'];
+		if( !empty($_POST['username_card']) ) {
+			$vars .= '&username='.$_POST['username_card'];
+		}
 		$vars .= '&money=0';
 		$vars .= '&sendpoint='.$rand;
 		$vars .= '&printord=';
@@ -122,10 +125,12 @@ function usces_member_update_settlement_form() {
 				//$usces->error_message = __( 'The update was completed.', 'usces' );
 				$usces->error_message = '';
 				$message = __( 'The update was completed.', 'usces' );
-				$partofcard = substr( $_POST['cnum1'], -4 );
-				$limitofcard = $_POST['expmm'].'/'.substr( $_POST['expyy'], -2 );
-				$usces->set_member_meta_value( 'zeus_partofcard', $partofcard );
-				$usces->set_member_meta_value( 'zeus_limitofcard', $limitofcard );
+				if( !empty($_POST['cnum1']) ) {
+					$partofcard = substr( $_POST['cnum1'], -4 );
+					$usces->set_member_meta_value( 'zeus_partofcard', $partofcard );
+				}
+				//$limitofcard = $_POST['expmm'].'/'.substr( $_POST['expyy'], -2 );
+				$usces->set_member_meta_value( 'zeus_limitofcard', $_POST['expyy'].'/'.$_POST['expmm'] );
 				usces_send_update_settlement_mail();
 			} else {
 				$err_code = usces_get_err_code( $page );
@@ -139,7 +144,11 @@ function usces_member_update_settlement_form() {
 	}
 
 	$partofcard = $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] );
-	if( 4 == strlen($partofcard) ) $_POST['cnum1'] = '************'.$partofcard;
+	//if( 4 == strlen($partofcard) ) $_POST['cnum1'] = '************'.$partofcard;
+	$limitofcard = $usces->get_member_meta_value( 'zeus_limitofcard', $member['ID'] );
+	list( $expyy, $expmm ) = explode( '/', $limitofcard );
+	if( is_numeric($expyy) ) $_POST['expyy'] = $expyy;
+	if( is_numeric($expmm) ) $_POST['expmm'] = $expmm;
 
 	$update_settlement_url = add_query_arg( array( 'page' => 'member_update_settlement', 'settlement' => 1, 're-enter' => 1 ), USCES_MEMBER_URL );
 /*
@@ -238,6 +247,7 @@ function usces_member_update_settlement_form() {
 	<div class="header_explanation">
 	<?php do_action( 'usces_action_member_update_settlement_page_header' ); ?>
 	</div>
+	<p>※有効期限のみ変更する場合は、カード番号は空白にして更新してください。</p>
 
 	<h3><?php _e('Credit card information', 'usces'); ?></h3>
 

@@ -318,7 +318,7 @@ function usces_action_acting_transaction(){
 		if( $values == NULL ){
 			
 //20110203ysk start
-			$res = $usces->order_processing();
+/*			$res = $usces->order_processing();
 			
 			if( 'error' == $res ){
 				usces_log('zeus conv error1 : '.print_r($data, true), 'acting_transaction.log');
@@ -329,7 +329,7 @@ function usces_action_acting_transaction(){
 				$query = $wpdb->prepare("INSERT INTO $table_meta_name (order_id, meta_key, meta_value) VALUES (%d, %s, %s)", $order_id, 'acting_'.$_REQUEST['sendpoint'], $value);
 				$res = $wpdb->query( $query );
 				usces_log('zeus conv ordered : OK', 'acting_transaction.log');
-			}
+			}*/
 //20110203ysk end
 
 		}else{

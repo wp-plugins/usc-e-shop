@@ -47,7 +47,7 @@ foreach ( (array)$payments as $id => $array ) {
 					<input name="username_card" type="hidden" value="QUICKCHARGE" />';
 					$html .= '<tr>
 					<th scope="row">'.__('ご登録のカード番号下4桁', 'usces').'</th>
-					<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ) . '（<a href="' . add_query_arg( array('page'=>'member_update_settlement', 're-enter'=>1), USCES_MEMBER_URL ) . '">カード情報の変更はこちら</a>）</p></td>
+					<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ) . '　（<a href="' . add_query_arg( array('page'=>'member_update_settlement', 're-enter'=>1), USCES_MEMBER_URL ) . '">カード情報の変更はこちら</a>）</p></td>
 					</tr>';
 					if( 1 == $usces->options['acting_settings'][$paymod_id]['security'] ){
 						$html .= '<th scope="row">'.__('セキュリティコード', 'usces').'</th>
@@ -56,8 +56,17 @@ foreach ( (array)$payments as $id => $array ) {
 					}
 
 				}else{
+					if( isset($_GET['page'] ) and 'member_update_settlement' == $_GET['page'] ) {
+						$html .= '<tr>
+						<th scope="row">'.__('ご登録のカード番号下4桁', 'usces').'</th>
+						<td colspan="2"><p>' . $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] ). '</p></td>
+						</tr>';
+						$label = __('変更後のカード番号', 'usces').'<div style="font-size: 0.7em;color: inherit;font-weight: normal;">(変更しない場合は空白にしてください)</div>';
+					} else {
+						$label = __('カード番号', 'usces');
+					}
 					$html .= '<tr>
-						<th scope="row">'.__('カード番号', 'usces').'<input name="acting" type="hidden" value="zeus" /></th>
+						<th scope="row">'.$label.'<input name="acting" type="hidden" value="zeus" /></th>
 						<td colspan="2"><input name="cnum1" type="text" size="16" value="' . esc_attr($cnum1) . '" />(半角数字のみ)</td>
 						</tr>';
 					if( 1 == $usces->options['acting_settings'][$paymod_id]['security'] ){
@@ -160,7 +169,7 @@ foreach ( (array)$payments as $id => $array ) {
 					|| 'on' != $usces->options['acting_settings'][$paymod_id]['activate'] )
 					continue;
 
-				$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : 'D001';
+				$pay_cvs = isset( $_POST['pay_cvs'] ) ? esc_html($_POST['pay_cvs']) : '';
 				$entry = $usces->cart->get_entry();
 				$username = isset( $_POST['username_conv'] ) ? esc_html($_POST['username_conv']) : $entry['customer']['name3'].$entry['customer']['name4'];
 
@@ -169,14 +178,13 @@ foreach ( (array)$payments as $id => $array ) {
 					<tr>
 					<th scope="row">'.__('お支払いに利用するコンビニ', 'usces').'</th>
 					<td colspan="2">
-					<select name="offer[pay_cvs]" id="pay_cvs_zeus">
-						<option value="D001"' . (('D001' == $pay_cvs) ? ' selected="selected"' : '') . '>セブンイレブン</option>
-						<option value="D002"' . (('D002' == $pay_cvs) ? ' selected="selected"' : '') . '>ローソン</option>
-						<option value="D030"' . (('D030' == $pay_cvs) ? ' selected="selected"' : '') . '>ファミリーマート</option>
-						<option value="D040"' . (('D040' == $pay_cvs) ? ' selected="selected"' : '') . '>サークルKサンクス</option>
-						<option value="D015"' . (('D015' == $pay_cvs) ? ' selected="selected"' : '') . '>セイコーマート</option>
-						<option value="D050"' . (('D050' == $pay_cvs) ? ' selected="selected"' : '') . '>ミニストップ</option>
-						<option value="D060"' . (('D060' == $pay_cvs) ? ' selected="selected"' : '') . '>デイリーヤマザキ</option>
+					<select name="offer[pay_cvs]" id="pay_cvs_zeus">';
+				foreach( (array)$usces->options['acting_settings'][$paymod_id]['pay_cvs'] as $pay_cvs_code ) {
+					$selected = ( $pay_cvs_code == $pay_cvs ) ? ' selected="selected"' : '';
+					$html .= '
+					<option value="'.$pay_cvs_code.'"'.$selected.'>'.usces_get_conv_name( $pay_cvs_code ).'</option>';
+				}
+				$html .= '
 					</select>
 					</td>
 					</tr>

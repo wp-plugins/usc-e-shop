@@ -147,10 +147,10 @@ function toggleVisibility(id) {
 	<div class="settlement_service"><span class="service_title"><?php _e('ZEUS Japanese Settlement', 'usces'); ?></span></a></div>
 
 	<?php if( isset($_POST['acting']) && 'zeus' == $_POST['acting'] ){ ?>
-		<?php if( isset($opts['zeus']['activate']) && 'on' == $opts['zeus']['activate'] ){ ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php }else if( '' != $mes ){ ?>
+		<?php if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php }else if( isset($opts['zeus']['activate']) && 'on' == $opts['zeus']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php } ?>
 	<?php } ?>
 	<form action="" method="post" name="zeus_form" id="zeus_form">
@@ -267,6 +267,29 @@ function toggleVisibility(id) {
 				<td><input name="test_type" type="radio" id="conv_testtype_zeus_3" value="2"<?php if( isset($opts['zeus']['test_type_conv']) && $opts['zeus']['test_type_conv'] == 2 ) echo ' checked="checked"'; ?> /></td><td><label for="conv_testtype_zeus_3">売上取消テスト</label></td>
 				<td><div id="ex_conv_testtype_zeus" class="explanation"><?php _e('テスト環境でのテストタイプを指定します。', 'usces'); ?></div></td>
 			</tr>
+			<tr>
+				<th rowspan="7"><a style="cursor:pointer;" onclick="toggleVisibility('ex_pay_cvs_zeus');">コンビニ種類</a></th>
+				<td><input name="pay_cvs[]" type="checkbox" id="pay_cvs_D001" value="D001"<?php if( isset($opts['zeus']['pay_cvs']) && in_array( 'D001', $opts['zeus']['pay_cvs'] ) ) echo ' checked'; ?> /></td><td colspan="5"><label for="pay_cvs_D001">セブン-イレブン</label></td>
+				<td rowspan="7"><div id="ex_pay_cvs_zeus" class="explanation"><?php _e('契約時にご利用のお申込みをいただいたコンビニを選択します。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<td><input name="pay_cvs[]" type="checkbox" id="pay_cvs_D002" value="D002"<?php if( isset($opts['zeus']['pay_cvs']) && in_array( 'D002', $opts['zeus']['pay_cvs'] ) ) echo ' checked'; ?> /></td><td colspan="5"><label for="pay_cvs_D002">ローソン</label></td>
+			</tr>
+			<tr>
+				<td><input name="pay_cvs[]" type="checkbox" id="pay_cvs_D030" value="D030"<?php if( isset($opts['zeus']['pay_cvs']) && in_array( 'D030', $opts['zeus']['pay_cvs'] ) ) echo ' checked'; ?> /></td><td colspan="5"><label for="pay_cvs_D030">ファミリーマート</label></td>
+			</tr>
+			<tr>
+				<td><input name="pay_cvs[]" type="checkbox" id="pay_cvs_D040" value="D040"<?php if( isset($opts['zeus']['pay_cvs']) && in_array( 'D040', $opts['zeus']['pay_cvs'] ) ) echo ' checked'; ?> /></td><td colspan="5"><label for="pay_cvs_D040">サークルKサンクス</label></td>
+			</tr>
+			<tr>
+				<td><input name="pay_cvs[]" type="checkbox" id="pay_cvs_D015" value="D015"<?php if( isset($opts['zeus']['pay_cvs']) && in_array( 'D015', $opts['zeus']['pay_cvs'] ) ) echo ' checked'; ?> /></td><td colspan="5"><label for="pay_cvs_D015">セイコーマート</label></td>
+			</tr>
+			<tr>
+				<td><input name="pay_cvs[]" type="checkbox" id="pay_cvs_D050" value="D050"<?php if( isset($opts['zeus']['pay_cvs']) && in_array( 'D050', $opts['zeus']['pay_cvs'] ) ) echo ' checked'; ?> /></td><td colspan="5"><label for="pay_cvs_D050">ミニストップ</label></td>
+			</tr>
+			<tr>
+				<td><input name="pay_cvs[]" type="checkbox" id="pay_cvs_D060" value="D060"<?php if( isset($opts['zeus']['pay_cvs']) && in_array( 'D060', $opts['zeus']['pay_cvs'] ) ) echo ' checked'; ?> /></td><td colspan="5"><label for="pay_cvs_D060">デイリーヤマザキ</label></td>
+			</tr>
 		</table>
 		<input name="conv_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/cvs.cgi" />
 		<input name="bank_url" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/ebank.cgi" />
@@ -274,13 +297,6 @@ function toggleVisibility(id) {
 		<input name="card_secureurl" type="hidden" value="https://linkpt.cardservice.co.jp/cgi-bin/secure/api.cgi" />
 		<input name="ipaddrs[]" type="hidden" value="210.164.6.67" />
 		<input name="ipaddrs[]" type="hidden" value="202.221.139.50" />
-		<input name="pay_cvs[D001]" type="hidden" value="セブンイレブン" />
-		<input name="pay_cvs[D002]" type="hidden" value="ローソン" />
-		<input name="pay_cvs[D030]" type="hidden" value="ファミリーマート" />
-		<input name="pay_cvs[D040]" type="hidden" value="サークルKサンクス" />
-		<input name="pay_cvs[D015]" type="hidden" value="セイコーマート" />
-		<input name="pay_cvs[D050]" type="hidden" value="ミニストップ" />
-		<input name="pay_cvs[D060]" type="hidden" value="デイリーヤマザキ" />
 		<input name="acting" type="hidden" value="zeus" />
 		<input name="usces_option_update" type="submit" class="button" value="ゼウスの設定を更新する" />
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
@@ -308,10 +324,10 @@ function toggleVisibility(id) {
 	<div class="settlement_service"><span class="service_title"><?php _e('Remise Japanese Settlement', 'usces'); ?></span></div>
 
 	<?php if( isset($_POST['acting']) && 'remise' == $_POST['acting'] ){ ?>
-		<?php if( isset($opts['remise']['activate']) && 'on' == $opts['remise']['activate'] ){ ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php }else if( '' != $mes ){ ?>
+		<?php if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php }else if( isset($opts['remise']['activate']) && 'on' == $opts['remise']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php } ?>
 	<?php } ?>
 	<form action="" method="post" name="remise_form" id="remise_form">
@@ -446,10 +462,10 @@ function toggleVisibility(id) {
 	<div class="settlement_service"><span class="service_title"><?php _e('J-Payment Japanese Settlement', 'usces'); ?></span></div>
 
 	<?php if( isset($_POST['acting']) && 'jpayment' == $_POST['acting'] ){ ?>
-		<?php if( isset($opts['jpayment']['activate']) && 'on' == $opts['jpayment']['activate'] ){ ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php }else if( '' != $mes ){ ?>
+		<?php if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php }else if( isset($opts['jpayment']['activate']) && 'on' == $opts['jpayment']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php } ?>
 	<?php } ?>
 	<form action="" method="post" name="jpayment_form" id="jpayment_form">
@@ -537,10 +553,10 @@ function toggleVisibility(id) {
 	<div class="settlement_service"><span class="service_title"><?php _e('PayPal Express Checkout', 'usces'); ?></span></div>
 
 	<?php if( isset($_POST['acting']) && 'paypal' == $_POST['acting'] ){ ?>
-		<?php if( isset($opts['paypal']['activate']) && 'on' == $opts['paypal']['activate'] ){ ?>
-		<div class="message"><?php _e('Test thoroughly before use.', 'usces'); ?></div>
-		<?php }else if( '' != $mes ){ ?>
+		<?php if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php }else if( isset($opts['paypal']['activate']) && 'on' == $opts['paypal']['activate'] ){ ?>
+		<div class="message"><?php _e('Test thoroughly before use.', 'usces'); ?></div>
 		<?php } ?>
 	<?php } ?>
 	<form action="" method="post" name="paypal_form" id="paypal_form">
@@ -619,10 +635,10 @@ function toggleVisibility(id) {
 	<div class="settlement_service"><span class="service_title">ソフトバンク・ペイメント・サービス</span></div>
 
 	<?php if( isset($_POST['acting']) && 'sbps' == $_POST['acting'] ){ ?>
-		<?php if( isset($opts['sbps']['activate']) && 'on' == $opts['sbps']['activate'] ){ ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php }else if( '' != $mes ){ ?>
+		<?php if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php }else if( isset($opts['sbps']['activate']) && 'on' == $opts['sbps']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php } ?>
 	<?php } ?>
 	<form action="" method="post" name="sbps_form" id="sbps_form">
@@ -779,10 +795,10 @@ function toggleVisibility(id) {
 	<div id="uscestabs_telecom">
 	<div class="settlement_service"><span class="service_title">テレコムクレジット</span></div>
 	<?php if( isset($_POST['acting']) && 'telecom' == $_POST['acting'] ){ ?>
-		<?php if( isset($opts['telecom']['activate']) && 'on' == $opts['telecom']['activate'] ){ ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php }else if( '' != $mes ){ ?>
+		<?php if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php }else if( isset($opts['telecom']['activate']) && 'on' == $opts['telecom']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php } ?>
 	<?php } ?>
 	<form action="" method="post" name="telecom_form" id="telecom_form">
@@ -834,10 +850,10 @@ function toggleVisibility(id) {
 	<div id="uscestabs_digitalcheck">
 	<div class="settlement_service"><span class="service_title">ペイデザイン</span></div>
 	<?php if( isset($_POST['acting']) && 'digitalcheck' == $_POST['acting'] ){ ?>
-		<?php if( isset($opts['digitalcheck']['activate']) && 'on' == $opts['digitalcheck']['activate'] ){ ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php }else if( '' != $mes ){ ?>
+		<?php if( '' != $mes ){ ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php }else if( isset($opts['digitalcheck']['activate']) && 'on' == $opts['digitalcheck']['activate'] ){ ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php } ?>
 	<?php } ?>
 	<form action="" method="post" name="digitalcheck_form" id="digitalcheck_form">
@@ -934,10 +950,10 @@ function toggleVisibility(id) {
 	<div id="uscestabs_mizuho">
 	<div class="settlement_service"><span class="service_title">みずほファクター</span></div>
 	<?php if( isset($_POST['acting']) && 'mizuho' == $_POST['acting'] ) : ?>
-		<?php if( isset($opts['mizuho']['activate']) && 'on' == $opts['mizuho']['activate'] ) : ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php elseif( '' != $mes ) : ?>
+		<?php if( '' != $mes ) : ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php elseif( isset($opts['mizuho']['activate']) && 'on' == $opts['mizuho']['activate'] ) : ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php endif; ?>
 	<?php endif; ?>
 	<form action="" method="post" name="mizuho_form" id="mizuho_form">
@@ -1018,10 +1034,10 @@ function toggleVisibility(id) {
 	<div id="uscestabs_anotherlane">
 	<div class="settlement_service"><span class="service_title">アナザーレーン</span></div>
 	<?php if( isset($_POST['acting']) && 'anotherlane' == $_POST['acting'] ) : ?>
-		<?php if( isset($opts['anotherlane']['activate']) && 'on' == $opts['anotherlane']['activate'] ) : ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php elseif( '' != $mes ) : ?>
+		<?php if( '' != $mes ) : ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php elseif( isset($opts['anotherlane']['activate']) && 'on' == $opts['anotherlane']['activate'] ) : ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php endif; ?>
 	<?php endif; ?>
 	<form action="" method="post" name="anotherlane_form" id="anotherlane_form">
@@ -1069,10 +1085,10 @@ function toggleVisibility(id) {
 	<div id="uscestabs_veritrans">
 	<div class="settlement_service"><span class="service_title">ベリトランス Air-Web</span></div>
 	<?php if( isset($_POST['acting']) && 'veritrans' == $_POST['acting'] ) : ?>
-		<?php if( isset($opts['veritrans']['activate']) && 'on' == $opts['veritrans']['activate'] ) : ?>
-		<div class="message">十分にテストを行ってから運用してください。</div>
-		<?php elseif( '' != $mes ) : ?>
+		<?php if( '' != $mes ) : ?>
 		<div class="error_message"><?php echo $mes; ?></div>
+		<?php elseif( isset($opts['veritrans']['activate']) && 'on' == $opts['veritrans']['activate'] ) : ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
 		<?php endif; ?>
 	<?php endif; ?>
 	<form action="" method="post" name="veritrans_form" id="veritrans_form">

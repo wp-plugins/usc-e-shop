@@ -1122,7 +1122,7 @@ class usc_e_shop
 					$options['acting_settings']['zeus']['card_url'] = isset($_POST['card_url']) ? $_POST['card_url'] : '';
 					$options['acting_settings']['zeus']['card_secureurl'] = isset($_POST['card_secureurl']) ? $_POST['card_secureurl'] : '';
 					$options['acting_settings']['zeus']['ipaddrs'] = isset($_POST['ipaddrs']) ? $_POST['ipaddrs'] : '';
-					$options['acting_settings']['zeus']['pay_cvs'] = isset($_POST['pay_cvs']) ? $_POST['pay_cvs'] : '';
+					$options['acting_settings']['zeus']['pay_cvs'] = isset($_POST['pay_cvs']) ? $_POST['pay_cvs'] : array();
 					$options['acting_settings']['zeus']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 					$options['acting_settings']['zeus']['connection'] = isset($_POST['connection']) ? $_POST['connection'] : 1;
 					$options['acting_settings']['zeus']['3dsecur'] = isset($_POST['3dsecur']) ? $_POST['3dsecur'] : 2;
@@ -1158,10 +1158,14 @@ class usc_e_shop
 						$mes .= '※入金お任せIPコードを入力して下さい<br />';
 					if( WCUtils::is_blank($_POST['testid_bank']) && isset($_POST['bank_ope']) && 'test' == $_POST['bank_ope'] )
 						$mes .= '※入金お任せテストIDを入力して下さい<br />';
-					if( WCUtils::is_blank($_POST['clientip_conv']) && isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] )
-						$mes .= '※コンビニ決済IPコードを入力して下さい<br />';
-					if( WCUtils::is_blank($_POST['testid_conv']) && isset($_POST['conv_ope']) && 'test' == $_POST['conv_ope'] )
-						$mes .= '※コンビニ決済テストIDを入力して下さい<br />';
+					if( isset($_POST['conv_activate']) && 'on' == $_POST['conv_activate'] ) {
+						if( WCUtils::is_blank($_POST['clientip_conv']) )
+							$mes .= '※コンビニ決済IPコードを入力して下さい<br />';
+						if( WCUtils::is_blank($_POST['testid_conv']) && isset($_POST['conv_ope']) && 'test' == $_POST['conv_ope'] )
+							$mes .= '※コンビニ決済テストIDを入力して下さい<br />';
+						if( empty($_POST['pay_cvs']) )
+							$mes .= '※コンビニ種類を選択して下さい<br />';
+					}
 					if( isset($_POST['batch']) && 'on' == $_POST['batch'] ) {
 						if( isset($_POST['quickcharge']) && 'on' == $_POST['quickcharge'] ) {
 						} else {
@@ -4400,7 +4404,7 @@ class usc_e_shop
 	}
 	
 	function get_order_data($order_id, $mode = '' ) {
-		global $wpdb, $usces;
+		global $wpdb;
 		$order_table = $wpdb->prefix . "usces_order";
 	
 		$query = $wpdb->prepare("SELECT * FROM $order_table WHERE ID = %d", $order_id);
@@ -6100,12 +6104,12 @@ class usc_e_shop
 	}
 
 	function get_pictids($item_code) {
-		global $wpdb, $usces;
+		global $wpdb;
 		
 		if( empty($item_code) )
 			return false;
 		
-		if( !$usces->options['system']['subimage_rule'] ){
+		if( !$this->options['system']['subimage_rule'] ){
 			$codestr = $item_code.'%';
 			$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title LIKE %s AND post_title <> %s AND post_type = 'attachment' ORDER BY post_title", $codestr, $item_code);
 		}else{

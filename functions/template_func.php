@@ -1917,21 +1917,7 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 				break;
 			case 'zeus_conv':
 				if( 'pay_cvs' == $key){
-					if( 'D001' === $value ){
-						$value = 'セブンイレブン';
-					}elseif( 'D002' === $value ){
-						$value = 'ローソン';
-					}elseif( 'D030' === $value ){
-						$value = 'ファミリーマート';
-					}elseif( 'D040' === $value ){
-						$value = 'サークルKサンクス';
-					}elseif( 'D015' === $value ){
-						$value = 'セイコーマート';
-					}elseif( 'D050' === $value ){
-						$value = 'ミニストップ';
-					}elseif( 'D060' === $value ){
-						$value = 'デイリーヤマザキ';
-					}
+					$value = esc_html(usces_get_conv_name($value));
 				}elseif( 'status' == $key){
 					if( '01' === $value ){
 						$value = '未入金';

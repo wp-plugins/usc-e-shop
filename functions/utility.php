@@ -708,6 +708,8 @@ function usces_filter_delivery_secure_check( $mes ){
 function usces_get_conv_name($code){
 	switch($code){
 		case 'D001':
+			$name = 'セブン-イレブン';
+			break;
 		case '010'://20101018ysk
 			$name = 'セブンイレブン';
 			break;
@@ -727,6 +729,9 @@ function usces_get_conv_name($code){
 			break;
 		case 'D004':
 			$name = 'サークルK';
+			break;
+		case 'D040':
+			$name = 'サークルKサンクス';
 			break;
 		case 'D005':
 		case '080'://20101018ysk
@@ -879,6 +884,13 @@ function usces_payment_detail($usces_entries){
 			break;
 		
 		case 'acting_zeus_bank':
+			break;
+		
+		case 'acting_zeus_conv':
+			if( isset($usces_entries['order']['pay_cvs']) ) {
+				$conv_name = usces_get_conv_name( $usces_entries['order']['pay_cvs'] );
+				$str = ( '' != $conv_name ) ? '　（'.$conv_name.'）' : '';
+			}
 			break;
 		
 		case 'acting_remise_card':
