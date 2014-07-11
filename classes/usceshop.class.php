@@ -4628,7 +4628,7 @@ class usc_e_shop
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["member"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["member"]["pref"] == __('-- Select --', 'usces') )
+		if ( $_POST["member"]["pref"] == __('-- Select --', 'usces') || $_POST["member"]["pref"] == '-- Select --' )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["member"]["address1"]) )
 			$mes .= __('enter the city name', 'usces') . "<br />";
@@ -4669,7 +4669,7 @@ class usc_e_shop
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["customer"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') )
+		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') || $_POST["member"]["pref"] == '-- Select --' )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["customer"]["address1"]) )
 			$mes .= __('enter the city name', 'usces') . "<br />";
@@ -4731,7 +4731,7 @@ class usc_e_shop
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["customer"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') )
+		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') || $_POST["customer"]["pref"] == '-- Select --' )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["customer"]["address1"]) )
 			$mes .= __('enter the city name', 'usces') . "<br />";
@@ -4807,7 +4807,7 @@ class usc_e_shop
 //				$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 			if ( WCUtils::is_blank($_POST["delivery"]["zipcode"]) )
 				$mes .= __('postal code is not correct', 'usces') . "<br />";
-			if ( $_POST["delivery"]["pref"] == __('-- Select --', 'usces') )
+			if ( $_POST["delivery"]["pref"] == __('-- Select --', 'usces') || $_POST["delivery"]["pref"] == '-- Select --' )
 				$mes .= __('enter the prefecture', 'usces') . "<br />";
 			if ( WCUtils::is_blank($_POST["delivery"]["address1"]) )
 				$mes .= __('enter the city name', 'usces') . "<br />";
