@@ -4669,7 +4669,7 @@ class usc_e_shop
 //			$mes .= __('Invalid CANNAT pretend.', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["customer"]["zipcode"]) )
 			$mes .= __('postal code is not correct', 'usces') . "<br />";
-		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') || $_POST["member"]["pref"] == '-- Select --' )
+		if ( $_POST["customer"]["pref"] == __('-- Select --', 'usces') || $_POST["customer"]["pref"] == '-- Select --' )
 			$mes .= __('enter the prefecture', 'usces') . "<br />";
 		if ( WCUtils::is_blank($_POST["customer"]["address1"]) )
 			$mes .= __('enter the city name', 'usces') . "<br />";
