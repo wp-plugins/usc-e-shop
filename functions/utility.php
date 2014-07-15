@@ -1602,7 +1602,7 @@ function usces_download_product_list() {
 			if(isset($_REQUEST['check']['name'])) $line .= $td_h.usces_entity_decode($array['name'], $ext).$td_f;
 			if(isset($_REQUEST['check']['delivery_method'])) {
 				$delivery_method = '';
-				if(strtoupper($array['delivery_method']) == '0') {
+				if(strtoupper($array['delivery_method']) == '#NONE#') {
 					$delivery_method = __('No preference', 'usces');
 				} else {
 					foreach((array)$usces->options['delivery_method'] as $dkey => $delivery) {
