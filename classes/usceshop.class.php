@@ -71,10 +71,10 @@ class usc_e_shop
 			$this->options['tax_method'] = 'cutting';
 			$this->options['tax_mode'] = 'include';
 			$this->options['tax_target'] = 'products';
+		}else{
+			$this->options['tax_mode'] = empty($this->options['tax_rate']) ? 'include' : 'exclude';
+			$this->options['tax_target'] = 'all';
 		}
-		if(!isset($this->options['tax_mode'])) $this->options['tax_mode'] = 'exclude';
-		if(!isset($this->options['tax_target'])) $this->options['tax_target'] = 'all';
-
 		if(!isset($this->options['transferee'])) $this->options['transferee'] = '';
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
 		if(!isset($this->options['membersystem_point'])) $this->options['membersystem_point'] = '';
@@ -1961,6 +1961,10 @@ class usc_e_shop
 		$this->item = $post;
 		$no_cart_css = isset($this->options['system']['no_cart_css']) ? $this->options['system']['no_cart_css'] : 0;
 		
+		if( !is_admin() ){
+			$default_css = USCES_FRONT_PLUGIN_URL . '/css/usces_default.css';
+			echo '<link href="' . $default_css . '" rel="stylesheet" type="text/css" />';
+		}
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
 		}else{
@@ -2517,7 +2521,7 @@ class usc_e_shop
 
 		if( !is_admin() ){
 			$this->usces_cookie();
-		}elseif(is_user_logged_in()){
+		}else{
 			$this->user_level = usces_get_admin_user_level();
 		}
 		$this->make_url();
@@ -5825,7 +5829,7 @@ class usc_e_shop
 		$array = array();
 		$skus = $this->get_skus($post_id, 'code');
 		foreach((array)$skus as $key => $sku){
-			$array[$key] = (float)str_replace(',', '', $sku['price']);
+			$array[$key] = (float)str_replace('.', '', $sku['price']);
 		}
 		if(!$array) return false;
 		if($skukey == ''){
