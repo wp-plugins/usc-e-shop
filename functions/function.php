@@ -2539,7 +2539,9 @@ function usces_check_acting_return() {
 					$results[0] = 1;
 				} else {
 //20121225ysk end
-					if( (float)$resArray["AMT"] != (float)$entry['order']['total_full_price'] ) {
+					$amt = floor( $resArray["AMT"] * 100 );
+					$total_full_price = floor( $entry['order']['total_full_price'] * 100 );
+					if( $amt != $total_full_price ) {
 						usces_log('PayPal : AMT Error. AMT='.$resArray["AMT"].', total_full_price='.$entry['order']['total_full_price'], 'acting_transaction.log');
 						$results[0] = 0;
 					} else {
