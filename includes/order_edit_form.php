@@ -907,6 +907,7 @@ jQuery(document).ready(function($){
 <tr>
 <td colspan="6" class="midasi0"><?php _e('order details', 'usces'); ?></td>
 </tr>
+<?php do_action( 'usces_action_order_edit_form_detail_top', $data, $csod_meta ); ?>
 <tr>
 <td class="label border"><?php _e('Order number', 'usces'); ?><br />(<?php esc_html_e(isset($data['ID']) ? $data['ID'] : ''); ?>)</td><td class="col1 border"><div class="rod"><?php esc_html_e(isset($data['ID']) ? usces_get_deco_order_id( $data['ID'] ) : ''); ?></div></td>
 <td class="col3 label border"><?php _e('order date', 'usces'); ?></td><td class="col2 border"><div class="rod long"><?php esc_html_e(isset($data['order_date']) ? $data['order_date'] : ''); ?></div></td>

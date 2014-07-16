@@ -1336,6 +1336,14 @@ tr.rowSelection_selected td {
 	background-color: #EDF3F3;
 }
 
+.info_head td.memo {
+	padding-top: 5px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+	background-color: #EDF3F3;
+}
+
 .info_head td.midasi0 {
 	text-align: center;
 	color: #FFFFFF;
@@ -1395,6 +1403,8 @@ tr.rowSelection_selected td {
 	font-size: 11px;
 	color: #666666;
 }
+
+
 .info_head .order_custom_wrap td.label,
 .info_head .settle_info_wrap td.label{
 	width: 120px;
@@ -1451,6 +1461,16 @@ tr.rowSelection_selected td {
 	width: 500px;
 	line-height: 1em;
 }
+
+.info_head td textarea.order_memo {
+	padding: 5px;
+	margin: 0px;
+	height: 2em;
+	width: 80%;
+	line-height: 1em;
+
+}
+
 * html .info_head td input.text {
 	height: 22px;
 	line-height: 22px;

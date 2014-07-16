@@ -3536,3 +3536,7 @@ msgstr "新規会員登録が完了しました。"
 
 msgid "Failed to new member registration."
 msgstr "新規会員登録に失敗しました。"
+
+msgid "Administrator Note"
+msgstr "管理者メモ"
+

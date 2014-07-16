@@ -564,3 +564,25 @@ function usces_post_member_nonce(){
 	wp_nonce_field( 'post_member', 'wc_nonce');
 }
 
+function usces_order_memo_form_detail_top( $data, $csod_meta ){
+	global $usces;
+
+	$order_memo = '';
+	if( !empty($data['ID']) ){
+		$order_memo = $usces->get_order_meta_value('order_memo', $data['ID']);
+	}
+	$res = '<tr>
+				<td class="label border">'. __('Administrator Note', 'usces') .'</td>
+				<td colspan="5" class="col1 border memo">
+					<textarea name="order_memo" class="order_memo">'.esc_html($order_memo).'</textarea>
+				</td>
+			</tr>';
+	echo $res;
+}
+
+function usces_update_order_memo($new_orderdata){
+	global $usces;
+
+	$usces->set_order_meta_value('order_memo', $_POST['order_memo'], $new_orderdata->ID);
+}
+
