@@ -72,8 +72,8 @@ class usc_e_shop
 			$this->options['tax_mode'] = 'include';
 			$this->options['tax_target'] = 'products';
 		}else{
-			$this->options['tax_mode'] = empty($this->options['tax_rate']) ? 'include' : 'exclude';
-			$this->options['tax_target'] = 'all';
+			if(!isset($this->options['tax_mode'])) $this->options['tax_mode'] = empty($this->options['tax_rate']) ? 'include' : 'exclude';
+			if(!isset($this->options['tax_target'])) $this->options['tax_target'] = 'all';
 		}
 		if(!isset($this->options['transferee'])) $this->options['transferee'] = '';
 		if(!isset($this->options['membersystem_state'])) $this->options['membersystem_state'] = 'activate';
