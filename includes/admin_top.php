@@ -116,7 +116,7 @@ unset($non_stoc_skus);
 $get_ini = ini_get_all();
 $essential_extentions = array('simplexml', 'curl', 'gd', 'json', 'mbstring', 'mysql', 'openssl');
 ?>
-<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "(".__('Safe mode', 'usces').")"; ?> memoly[global]:<?php echo $get_ini['memory_limit']['global_value']; ?> [locale]:<?php echo $get_ini['memory_limit']['local_value']; ?> [usage]:<?php echo (int)(memory_get_peak_usage()/1048576); ?>M<br />
+<td>PHP</td><td colspan="2"><?php echo phpversion(); ?><?php if(ini_get('safe_mode')) echo "(".__('Safe mode', 'usces').")"; ?> memory[global]:<?php echo $get_ini['memory_limit']['global_value']; ?> [locale]:<?php echo $get_ini['memory_limit']['local_value']; ?> [usage]:<?php echo (int)(memory_get_peak_usage()/1048576); ?>M<br />
 <?php
 foreach($essential_extentions as $key => $esext){
 	if (extension_loaded($esext)) {
