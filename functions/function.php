@@ -4969,9 +4969,12 @@ function usces_get_admin_user_level(){
 		if( 'level' == $parts[0] )
 			$levels[] = $parts[1];
 	}
-	rsort($levels);
-
-	return $levels[0];
+	if( empty($levels) ){
+		return 0;
+	}else{
+		rsort($levels);
+		return $levels[0];
+	}
 }
 
 
