@@ -3856,7 +3856,6 @@ function uesces_get_error_settlement( $out = '' ) {
 			電話番号：0570-02-3939　（つながらないときは 03-4334-0500）<br />
 			E-mail:support@cardservice.co.jp
 			</div>'."\n";
-			break;
 
 		} else {
 			$res .= '<div class="support_box">';
