@@ -106,7 +106,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			$usces->save_order_acting_data($rand);
 			$html .= '<form id="purchase_form" action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
-			$member = $usces->get_member();
+/*			$member = $usces->get_member();
 			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
 			$securecode = isset($_POST['securecode']) ? $_POST['securecode'] : '';
 			//if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
@@ -123,10 +123,30 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 				}
 				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
 					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
+			}*/
+			$mem_id = '';
+			$pcid = NULL;
+			$partofcard = NULL;
+			if( $usces->is_member_logged_in() ){
+				$member = $usces->get_member();
+				$mem_id = $member['ID'];
+				$pcid = $usces->get_member_meta_value( 'zeus_pcid', $member['ID'] );
+				$partofcard = $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] );
 			}
+			if( 'on' == $acting_opts['quickcharge'] && $pcid != NULL && $partofcard != NULL ){
+				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
+			}else{
+				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . '">';
+			}
+			if( 1 == $acting_opts['security'] ){
+				$securecode = isset($_POST['securecode']) ? $_POST['securecode'] : '';
+				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
+			}
+			$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
+				<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
 			$html .= '<input type="hidden" name="telno" value="' . esc_attr(str_replace('-', '', $usces_entries['customer']['tel'])) . '">
 				<input type="hidden" name="email" value="' . esc_attr($usces_entries['customer']['mailaddress1']) . '">
-				<input type="hidden" name="sendid" value="' . $member['ID'] . '">
+				<input type="hidden" name="sendid" value="' . $mem_id . '">
 				<input type="hidden" name="username" value="' . esc_attr($_POST['username_card']) . '">
 				<input type="hidden" name="money" value="' . usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false) . '">
 				<input type="hidden" name="sendpoint" value="' . $rand . '">
@@ -697,8 +717,13 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 		case 'acting_telecom_card'://テレコムクレジット
 			$acting_opts = $usces->options['acting_settings']['telecom'];
 			$member = $usces->get_member();
-			$memid = empty($member['ID']) ? 99999999 : $member['ID'];
-			$send_url = $acting_opts['send_url'];
+			if( empty($member['ID']) ) {
+				$memid = 99999999;
+				$send_url = $acting_opts['send_url'];
+			} else {
+				$memid = $member['ID'];
+				$send_url = ( 'on' == $acting_opts['oneclick'] ) ? $acting_opts['oneclick_send_url'] : $acting_opts['send_url'];
+			}
 			$money  = ( '$' == usces_get_cr_symbol() ) ? '$' : '';
 			$money .= usces_crform( $usces_entries['order']['total_full_price'], false, false, 'return', false );
 			$tel = str_replace('-', '', $usces_entries['customer']['tel']);

@@ -1506,6 +1506,7 @@ class usc_e_shop
 					$options['acting_settings']['telecom']['clientip'] = isset($_POST['clientip']) ? $_POST['clientip'] : '';
 					$options['acting_settings']['telecom']['stype'] = isset($_POST['stype']) ? $_POST['stype'] : '';
 					$options['acting_settings']['telecom']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['telecom']['oneclick'] = isset($_POST['oneclick']) ? $_POST['oneclick'] : '';
 					$options['acting_settings']['telecom']['edy_activate'] = isset($_POST['edy_activate']) ? $_POST['edy_activate'] : '';
 
 					if( WCUtils::is_blank($_POST['clientip']) )
@@ -1522,6 +1523,9 @@ class usc_e_shop
 								$options['acting_settings']['telecom']['send_url'] = "https://www.credit-cgiserver.com/inetcredit/secure/order.pl";
 							} else {
 								$options['acting_settings']['telecom']['send_url'] = "https://secure.telecomcredit.co.jp/inetcredit/secure/order.pl";
+							}
+							if( 'on' == $options['acting_settings']['telecom']['oneclick'] ){
+								$options['acting_settings']['telecom']['oneclick_send_url'] = "https://secure.telecomcredit.co.jp/inetcredit/secure/one-click-order.pl";
 							}
 							$this->payment_structure['acting_telecom_card'] = 'カード決済（テレコムクレジット）';
 						}else{

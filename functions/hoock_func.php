@@ -200,10 +200,16 @@ function usces_action_acting_transaction(){
 		if( 'OK' == $_REQUEST['result'] ){
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			if( $usces->is_member_logged_in() ) {
-				if( 'on' == $acting_opts['quickcharge'] ) {
-					$usces->set_member_meta_value( 'zeus_pcid', '8888888888888888' );
+				//if( 'on' == $acting_opts['quickcharge'] ) {
+				//	$usces->set_member_meta_value( 'zeus_pcid', '8888888888888888' );
+				//}
+				//if( isset($_GET['cardnumber']) ) $usces->set_member_meta_value( 'zeus_partofcard', $_GET['cardnumber'] );
+				if( isset($_GET['cardnumber']) ) {
+					$usces->set_member_meta_value( 'zeus_partofcard', $_GET['cardnumber'] );
+					if( 'on' == $acting_opts['quickcharge'] ) {
+						$usces->set_member_meta_value( 'zeus_pcid', '8888888888888888' );
+					}
 				}
-				if( isset($_GET['cardnumber']) ) $usces->set_member_meta_value( 'zeus_partofcard', $_GET['cardnumber'] );
 			}
 
 			header("HTTP/1.0 200 OK");

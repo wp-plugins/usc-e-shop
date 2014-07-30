@@ -821,6 +821,12 @@ function toggleVisibility(id) {
 				<td><input name="card_activate" type="radio" id="card_activate_telecom_2" value="off"<?php if( isset($opts['telecom']['card_activate']) && $opts['telecom']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_telecom_2">利用しない</label></td>
 				<td></td>
 			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_oneclick_telecom');">スピード決済</a></th>
+				<td><input name="oneclick" type="radio" id="oneclick_telecom_1" value="on"<?php if( isset($opts['telecom']['oneclick']) && $opts['telecom']['oneclick'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="oneclick_telecom_1">利用する</label></td>
+				<td><input name="oneclick" type="radio" id="oneclick_telecom_2" value="off"<?php if( isset($opts['telecom']['oneclick']) && $opts['telecom']['oneclick'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="oneclick_telecom_2">利用しない</label></td>
+				<td><div id="ex_oneclick_telecom" class="explanation"><?php _e('2回目以降の利用はカード番号を入力しなくても決済可能となります。', 'usces'); ?></div></td>
+			</tr>
 		</table>
 <!--
 		<table class="settle_table">

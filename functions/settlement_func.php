@@ -39,7 +39,8 @@ function usces_action_settlement_memberinfo_page_header() {
 	$html = '';
 	$member = $usces->get_member();
 	$pcid = $usces->get_member_meta_value( 'zeus_pcid', $member['ID'] );
-	if( $pcid ) {
+	$partofcard = $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] );
+	if( !empty($pcid) && !empty($partofcard) ) {
 		$update_settlement_url = add_query_arg( array( 'page' => 'member_update_settlement', 're-enter' => 1 ), USCES_MEMBER_URL );
 		$html .= '
 		<div class="gotoedit">

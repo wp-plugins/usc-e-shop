@@ -3965,7 +3965,7 @@ function usces_post_reg_orderdata($order_id, $results){
 						$usces->set_member_meta_value('zeus_limitofcard', ($_GET['zeusyear'].'/'.$_GET['zeusmonth']));
 					}
 				}else{
-					$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
+					//$trans_id = isset($_REQUEST['ordd']) ? $_REQUEST['ordd'] : '';
 					//foreach($_GET as $key => $value) {
 					//	$data[$key] = esc_sql($value);
 					//}
@@ -3973,11 +3973,11 @@ function usces_post_reg_orderdata($order_id, $results){
 					if( !empty($_REQUEST['order_number']) ) {
 						$usces->set_order_meta_value( 'order_number', $_REQUEST['order_number'], $order_id );
 					}
-					if( $usces->is_member_logged_in() ) {
-						if( 'on' == $acting_opts['quickcharge'] ) {
-							$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
-						}
-					}
+					//if( $usces->is_member_logged_in() ) {
+					//	if( 'on' == $acting_opts['quickcharge'] ) {
+					//		$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
+					//	}
+					//}
 				}
 				if(empty($usces)){
 					usces_log('zeus card transaction : No Session', 'acting_transaction.log');
