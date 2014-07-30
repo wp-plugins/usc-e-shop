@@ -122,6 +122,8 @@ add_filter('usces_filter_memberinfo_page_footer', array(&$usces, 'filter_memberi
 add_filter('usces_filter_membercompletion_page_header', array(&$usces, 'filter_membercompletion_page_header'));
 add_filter('usces_filter_membercompletion_page_footer', array(&$usces, 'filter_membercompletion_page_footer'));
 add_filter('usces_filter_confirm_inform', 'wc_purchase_nonce', 20, 5 );
+add_filter('usces_filter_changepassword_inform', 'usces_filter_lostmail_inform' );
+
 add_filter('usces_purchase_check', 'wc_purchase_nonce_check', 1 );
 
 add_action('usces_action_cart_page_header', array(&$usces, 'action_cart_page_header'));
@@ -162,6 +164,7 @@ add_action('usces_action_confirm_page_point_inform', 'usces_use_point_nonce' );
 add_action('usces_action_newmember_page_inform', 'usces_post_member_nonce' );
 add_action('usces_action_memberinfo_page_inform', 'usces_post_member_nonce' );
 add_action('usces_action_newpass_page_inform', 'usces_post_member_nonce' );
+add_action('usces_action_changepass_page_inform', 'usces_action_lostmail_inform' );
 add_action('usces_action_changepass_page_inform', 'usces_post_member_nonce' );
 add_action('usces_action_customer_page_inform', 'usces_post_member_nonce' );
 

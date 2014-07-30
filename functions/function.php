@@ -662,30 +662,34 @@ function usces_send_delmembermail( $user ) {
 function usces_lostmail($url) {
 	global $usces;
 	$res = false;
-
-	$mail_data = $usces->options['mail_data'];
-	$subject = apply_filters( 'usces_filter_lostmail_subject', __('Change password','usces') );
-	$message = __('Please, click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
-			. $url . "\n\r\n\r\n\r"
-			. "-----------------------------------------------------\n\r"
-			. __('If you have not requested this email please kindly ignore and delete it.','usces') . "\n\r"
-			. "-----------------------------------------------------\n\r\n\r\n\r";
-	$message = apply_filters( 'usces_filter_lostmail_message', $message, $url );
-	$message .= apply_filters( 'usces_filter_lostmail_footer', $mail_data['footer']['othermail'] );
-			
-
-	$para1 = array(
-			'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $_SESSION["usces_lostmail"]),
-			'to_address' => $_SESSION["usces_lostmail"], 
-			'from_name' => get_option('blogname'),
-			'from_address' => $usces->options['sender_mail'],
-			'return_path' => $usces->options['sender_mail'],
-			'subject' => $subject,
-			'message' => do_shortcode($message),
-			);
-
-	$para1 = apply_filters( 'usces_filter_send_lostmail_para1', $para1 );
-	$res = usces_send_mail( $para1 );
+	
+	if( isset($_REQUEST['loginmail']) && !empty($_REQUEST['loginmail']) ){
+		
+		$usces_lostmail = $_REQUEST['loginmail'];
+		$mail_data = $usces->options['mail_data'];
+		$subject = apply_filters( 'usces_filter_lostmail_subject', __('Change password','usces') );
+		$message = __('Please, click the following URL, and please change a password.','usces') . "\n\r\n\r\n\r"
+				. $url . "\n\r\n\r\n\r"
+				. "-----------------------------------------------------\n\r"
+				. __('If you have not requested this email please kindly ignore and delete it.','usces') . "\n\r"
+				. "-----------------------------------------------------\n\r\n\r\n\r";
+		$message = apply_filters( 'usces_filter_lostmail_message', $message, $url );
+		$message .= apply_filters( 'usces_filter_lostmail_footer', $mail_data['footer']['othermail'] );
+				
+	
+		$para1 = array(
+				'to_name' => sprintf(__('Mr/Mrs %s', 'usces'), $usces_lostmail),
+				'to_address' => $usces_lostmail, 
+				'from_name' => get_option('blogname'),
+				'from_address' => $usces->options['sender_mail'],
+				'return_path' => $usces->options['sender_mail'],
+				'subject' => $subject,
+				'message' => do_shortcode($message),
+				);
+	
+		$para1 = apply_filters( 'usces_filter_send_lostmail_para1', $para1 );
+		$res = usces_send_mail( $para1 );
+	}
 	
 	if($res === false) {
 		$usces->error_message = __('Error: I was not able to transmit an email.','usces');
@@ -4976,4 +4980,31 @@ function usces_get_admin_user_level(){
 	}
 }
 
+function usces_make_lost_key(){
+	return uniqid ("wc" , true );
+}
 
+function usces_store_lostmail_key( $lost_mail, $lost_key ){
+	global $wpdb;
+	$date = substr(current_time('mysql'), 0, 10);
+	$table = $wpdb->prefix . 'usces_access';
+	$query = $wpdb->prepare("INSERT INTO {$table} (acc_key, acc_type, acc_value, acc_date)  VALUES (%s, %s, %s, %s)", $lost_mail, 'lostkey', $lost_key, $date );
+	$res = $wpdb->query($query);
+	return $res;
+}
+
+function usces_remove_lostmail_key( $lost_mail, $lost_key ){
+	global $wpdb;
+	$table = $wpdb->prefix . 'usces_access';
+	$query = $wpdb->prepare("DELETE FROM {$table} WHERE acc_key = %s AND acc_type = %s AND acc_value = %s", $lost_mail, 'lostkey', $lost_key );
+	$res = $wpdb->query($query);
+	return $res;
+}
+
+function usces_check_lostkey($lost_mail, $lost_key){
+	global $wpdb;
+	$table = $wpdb->prefix . 'usces_access';
+	$query = $wpdb->prepare("SELECT ID FROM {$table} WHERE acc_key = %s AND acc_type = %s AND acc_value = %s", $lost_mail, 'lostkey', $lost_key );
+	$res = $wpdb->get_col($query);
+	return $res;
+}

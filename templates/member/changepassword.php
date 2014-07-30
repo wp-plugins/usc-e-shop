@@ -23,6 +23,7 @@ $html .= '<div class="loginbox">
 	<p class="submit">
 		<input type="submit" name="changepassword" id="member_login" value="' . __('Register', 'usces') . '" />
 	</p>';
+$html = apply_filters( 'usces_filter_changepassword_inform', $html);
 $html .= wp_nonce_field( 'post_member', 'wc_nonce', true, false );
 $html .= '</form>
 </div>';

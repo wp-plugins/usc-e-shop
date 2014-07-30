@@ -586,3 +586,19 @@ function usces_update_order_memo($new_orderdata){
 	$usces->set_order_meta_value('order_memo', $_POST['order_memo'], $new_orderdata->ID);
 }
 
+function usces_action_lostmail_inform(){
+	$mem_mail = urldecode($_REQUEST['mem']);
+	$lostkey = urldecode($_REQUEST['key']);
+	$html = '
+	<input type="hidden" name="lostmail" value="' . esc_attr($mem_mail) . '" />
+	<input type="hidden" name="lostkey" value="' . esc_attr($lostkey) . '" />' . "\n";
+	echo $html;
+}
+function usces_filter_lostmail_inform($html){
+	$mem_mail = urldecode($_REQUEST['mem']);
+	$lostkey = urldecode($_REQUEST['key']);
+	$html .= '
+	<input type="hidden" name="lostmail" value="' . esc_attr($mem_mail) . '" />
+	<input type="hidden" name="lostkey" value="' . esc_attr($lostkey) . '" />' . "\n";
+	return $html;
+}

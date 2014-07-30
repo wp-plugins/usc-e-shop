@@ -724,7 +724,6 @@ class usc_e_shop
 	function admin_setup_page() {
 		$this->options = get_option('usces');
 		//$this->options = array();
-
 		if(isset($_POST['usces_option_update'])) {
 
 			check_admin_referer('admin_setup', 'wc_nonce');
@@ -3522,6 +3521,17 @@ class usc_e_shop
 	
 	function uscesmode_changepassword(){
 		global $wp_query;
+		
+		if( !isset( $_REQUEST['mem']) || !isset( $_REQUEST['key']) )
+			die('Invalid request 1');
+			
+		$mem_mail = urldecode($_REQUEST['mem']);
+		$lostkey = urldecode($_REQUEST['key']);
+		$res = usces_check_lostkey($mem_mail, $lostkey);
+		if( empty($res) )
+			die('Invalid request 2');
+		
+		
 		$this->page = 'changepassword';
 		add_action('the_post', array($this, 'action_memberFilter'));
 		add_action('template_redirect', array($this, 'template_redirect'));
@@ -3760,34 +3770,35 @@ class usc_e_shop
 	function changepassword() {
 		global $wpdb;
 
-		if ( !isset($_SESSION['usces_lostmail']) ) :
-			$this->error_message = __('Failed in update due to time-out', 'usces');
-			return 'login';
-		else :
+		$lostmail = $_POST['lostmail'];
+		$lost_key = $_POST['lostkey'];
 		
-			$member_table = $wpdb->prefix . "usces_member";
-			
-			$query = $wpdb->prepare("UPDATE $member_table SET mem_pass = %s WHERE mem_email = %s", 
-							md5(trim($_POST['loginpass1'])), $_SESSION['usces_lostmail']);
-			$res = $wpdb->query( $query );
-			//$res = $wpdb->last_results;
+		$member_table = $wpdb->prefix . "usces_member";
+		
+		$query = $wpdb->prepare("UPDATE $member_table SET mem_pass = %s WHERE mem_email = %s", 
+						md5(trim($_POST['loginpass1'])), $lostmail);
+		$res = $wpdb->query( $query );
+		//$res = $wpdb->last_results;
 
-			if ( $res === false ) :
-				$this->error_message = __('Error: failure in updating password', 'usces');
-				return 'login';
-			else :
-				return 'changepasscompletion';
-			endif;
+		if ( $res === false ) {
+			$this->error_message = __('Error: failure in updating password', 'usces');
+			return 'login';
+		}else {
+			usces_remove_lostmail_key( $lostmail, $lost_key );
+			return 'changepasscompletion';
+		}
 
-		endif;
 	}
 	
 	function lostmail() {
 		$delim = apply_filters( 'usces_filter_delim', $this->delim );
 	
-		$_SESSION['usces_lostmail'] = trim($_POST['loginmail']);
-		$id = session_id();
-		$uri = USCES_MEMBER_URL . $delim . 'uscesmode=changepassword';
+		$lostmail = trim($_POST['loginmail']);
+		$lost_key = usces_make_lost_key();
+		usces_store_lostmail_key( $lostmail, $lost_key );
+		
+		$uri = USCES_MEMBER_URL . $delim . 'uscesmode=changepassword&mem=' . urlencode($lostmail) . '&key=' . urlencode($lost_key);
+		
 		$res = usces_lostmail($uri);
 		return $res;
 	
