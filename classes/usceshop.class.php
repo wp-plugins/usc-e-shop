@@ -5050,6 +5050,11 @@ class usc_e_shop
 		$rets141 = usces_upgrade_141();
 		$rets143 = usces_upgrade_143();
 		$this->update_options();//20120710ysk 0000472
+		usces_schedule_event();
+	}
+
+	function deactivate() {
+		wp_clear_scheduled_hook('wc_cron');
 	}
 	
 	function create_table() {

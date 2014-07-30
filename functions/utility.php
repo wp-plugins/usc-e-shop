@@ -2445,4 +2445,17 @@ function usces_get_key( $digit ){
 	}
 	return $str;
 }
-?>
+
+function usces_schedule_event(){
+	
+	$gmt_offset = get_option('gmt_offset');
+	$now = current_time('timestamp', 0);
+	$timestamp = mktime(3, 0, 0, date('n',$now), date('j',$now), date('Y',$now)) - ($gmt_offset * 3600);
+	wp_schedule_event($timestamp, 'daily', 'wc_cron');
+
+}
+
+function usces_cron_do(){
+	usces_clearup_lostkey();
+	usces_clearup_acting_data();
+}

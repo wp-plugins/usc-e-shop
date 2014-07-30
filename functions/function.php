@@ -5008,3 +5008,22 @@ function usces_check_lostkey($lost_mail, $lost_key){
 	$res = $wpdb->get_col($query);
 	return $res;
 }
+
+function usces_clearup_lostkey(){
+	global $wpdb;
+	$table = $wpdb->prefix . 'usces_access';
+	$date = date( 'Y-m-d', current_time('timestamp') );
+	$query = $wpdb->prepare("DELETE FROM {$table} WHERE acc_type = %s AND acc_date < %s", 'lostkey', $date );
+	$res = $wpdb->query($query);
+	return $res;
+}
+
+function usces_clearup_acting_data(){
+	global $wpdb;
+	$table = $wpdb->prefix . 'usces_access';
+	$date = date( 'Y-m-d', (current_time('timestamp') - 86400 * 30) );
+	$query = $wpdb->prepare("DELETE FROM {$table} WHERE acc_type = %s AND acc_date < %s", 'acting_data', $date );
+	$res = $wpdb->query($query);
+	return $res;
+}
+
