@@ -1628,7 +1628,16 @@ function usces_download_product_list() {
 				if(is_array($options) && count($options) > 0) {
 					foreach((array)$options as $key => $value) {
 						if(!empty($value['meta_key'])) {
-							$optstr .= usces_entity_decode(urldecode($value['meta_key']).$sp.urldecode($value['meta_value']), $ext).$nb;
+							$meta_value = maybe_unserialize($value['meta_value']);
+							if(is_array($meta_value)){
+								$meta_vals = '';
+								foreach($meta_value as $array_val){
+									$meta_vals .= $nb.urldecode($array_val);
+								}
+								$optstr .= usces_entity_decode(urldecode($value['meta_key']).$sp.$meta_vals, $ext).$nb;
+							}else{
+								$optstr .= usces_entity_decode(urldecode($value['meta_key']).$sp.urldecode($value['meta_value']), $ext).$nb;
+							}
 						}
 					}
 				}
