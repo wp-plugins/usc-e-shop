@@ -1989,6 +1989,7 @@ class usc_e_shop
 		global $current_user;
 		$item = $this->item;
 		if( empty($item) ){
+			$item = new stdClass;
 			$item->ID = 0;
 			$item->post_mime_type = '';
 		}
