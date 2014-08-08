@@ -132,9 +132,9 @@ function usces_pdf_out($pdf, $data){
 		$optstr =  '';
 		if( is_array($cart_row['options']) && count($cart_row['options']) > 0 ){
 			foreach($cart_row['options'] as $key => $value){
-
 				if( !empty($key) ) {
 					$key = urldecode($key);
+					$value = maybe_unserialize($value);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= esc_html($key) . ' = ';

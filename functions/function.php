@@ -128,6 +128,7 @@ function usces_order_confirm_message($order_id) {
 				//	$meisai .= $key . ' : ' . urldecode($value) . "\r\n"; 
 				if( !empty($key) ) {
 					$key = urldecode($key);
+					$value = maybe_unserialize($value);
 					if(is_array($value)) {
 						$c = '';
 						$optstr .= $key . ' : ';
