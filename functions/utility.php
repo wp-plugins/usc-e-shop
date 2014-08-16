@@ -16,7 +16,7 @@ function usces_upgrade_143(){
 }
 
 function usces_upgrade_141(){
-	global $usces;
+	global $usces, $usces_settings;
 	$upgrade = (int)get_option('usces_upgrade2');
 
 	if( 3 > $upgrade || 8 <= $upgrade )
@@ -195,7 +195,7 @@ function usces_upgrade_141(){
 }
 
 function usces_upgrade_14(){
-	global $usces;
+	global $usces, $usces_settings;
 	$upgrade = (int)get_option('usces_upgrade2');
 	if( $upgrade & USCES_UP14 && 3 <= $upgrade )
 		return false;
