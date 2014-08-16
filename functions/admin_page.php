@@ -463,26 +463,23 @@ function usces_item_duplicate($post_id){
 					$value = $data->meta_value;
 			}
 			$key = $data->meta_key;
-			//$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
-			$valstr .= '(' . $newpost_id . ", '" . esc_sql($key) . "','" . esc_sql($value) . "'),";
+			$valstr .= $wpdb->prepare("(%d, %s, %s),", $newpost_id, $key, $value);
 		}else if( $prefix == '_isku' || $prefix == '_iopt' ){
 		
 			$value = $data->meta_value;
 			$key = $data->meta_key;
-			//$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
-			$valstr .= '(' . $newpost_id . ", '" . esc_sql($key) . "','" . esc_sql($value) . "'),";
+			$valstr .= $wpdb->prepare("(%d, %s, %s),", $newpost_id, $key, $value);
 		}
 		if( $prefix1 != '_' ){
 		
 			$value = $data->meta_value;
 			$key = $data->meta_key;
-			//$valstr .= '(' . $newpost_id . ", '" . $wpdb->escape($key) . "','" . $wpdb->escape($value) . "'),";
-			$valstr .= '(' . $newpost_id . ", '" . esc_sql($key) . "','" . esc_sql($value) . "'),";
+			$valstr .= $wpdb->prepare("(%d, %s, %s),", $newpost_id, $key, $value);
 		}
 
 	}
 	$valstr = rtrim($valstr, ',');
-	$query = $wpdb->prepare("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr", $post_id);
+	$query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $valstr";
 	$res = $wpdb->query($query);
 	if(!$res ) return;
 	
