@@ -1385,6 +1385,9 @@ function usces_new_memberdata(){
 			}
 		}
 		$result = ( 0 < array_sum($res) ) ? 1 : 0;
+		
+		do_action('usces_action_post_new_memberdata', $member_id, $res[0] );
+
 		return $result;
 	}
 }
