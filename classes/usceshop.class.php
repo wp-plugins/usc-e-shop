@@ -3940,9 +3940,9 @@ class usc_e_shop
 					$res = $this->reg_custom_member($user['ID']);
 //20100818ysk end
 //20110714ysk end
-					$mser = usces_send_regmembermail($user);
-
 					do_action('usces_action_member_registered', $_POST['member'], $user['ID']);
+
+					$mser = usces_send_regmembermail($user);
 
 					return 'newcompletion';
 
@@ -6915,16 +6915,19 @@ class usc_e_shop
 	}
 
 	function getShippingCharge( $pref, $cart = array(), $entry = array() ) {
+
 		if( empty($cart) )
 			$cart = $this->cart->get_cart();
+			
 		if( empty($entry) )
 			$entry = $this->cart->get_entry();
+			
 		if( function_exists('dlseller_have_shipped') && !dlseller_have_shipped() ){
 			$charge = 0;
 			$charge = apply_filters('usces_filter_getShippingCharge', $charge, $cart, $entry);
 			return $charge;
 		}
-		
+
 		//配送方法ID
 		$d_method_id = $entry['order']['delivery_method'];
 		//配送方法index
@@ -6975,7 +6978,7 @@ class usc_e_shop
 		}
 		
 		$charge = apply_filters('usces_filter_getShippingCharge', $charge, $cart, $entry);
-		
+
 		return $charge;
 	}
 	
@@ -7076,27 +7079,39 @@ class usc_e_shop
 	}
 
 	function set_cart_fees( $member, $entries ) {
+		global $usces_entries;
+		
 		$carts = $this->cart->get_cart();
+		$entries = $this->cart->get_entry();
 		$total_items_price = $this->get_total_price();
+		$entries['order']['total_items_price'] = $total_items_price;
+		
 		if ( empty($this->options['postage_privilege']) || $total_items_price < $this->options['postage_privilege'] ) {
-			$shipping_charge = $this->getShippingCharge( $entries['delivery']['pref'] );
+			$shipping_charge = $this->getShippingCharge( $entries['delivery']['pref'], $carts, $entries );
 		} else {
 			$shipping_charge = 0;
 		}
 		$shipping_charge = apply_filters('usces_filter_set_cart_fees_shipping_charge', $shipping_charge, $carts, $entries);
+		$entries['order']['shipping_charge'] = $shipping_charge;
+
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
-		$discount = $this->get_order_discount();
+		$discount = $this->get_order_discount( NULL, $carts );
 		$use_point = $entries['order']['usedpoint'];
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$amount_by_cod = apply_filters('usces_filter_set_cart_fees_amount_by_cod', $amount_by_cod, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$cod_fee = apply_filters('usces_filter_set_cart_fees_cod', $cod_fee, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
+		$entries['order']['cod_fee'] = $cod_fee;
+
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
+
 		$materials = compact( 'member', 'entries', 'carts', 'total_items_price', 'shipping_charge', 'payments', 'discount', 'cod_fee', 'use_point', 'discount' );
 		$tax = $this->getTax( $total_price, $materials );
 		$total_full_price = $total_price + ( 'exclude' == $this->options['tax_mode'] ? $tax : 0 );
 		$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
+		$entries['order']['total_full_price'] = $total_full_price;
+
 		$get_point = $this->get_order_point( $member['ID'] );
 //20130425ysk start 0000699
 		//if(0 < (int)$use_point){
@@ -7118,8 +7133,7 @@ class usc_e_shop
 				'tax' => $tax
 				);
 		$this->cart->set_order_entry( $array );
-		//$entries = $this->cart->get_entry();
-//var_dump($entries);
+		$usces_entries = $this->cart->get_entry();
 	}
 	
 	function getPayments( $payment_name ) {

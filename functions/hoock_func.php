@@ -1010,6 +1010,7 @@ function usces_action_acting_transaction(){
 			if( !$order_id ) {
 				$res = $usces->order_processing();
 				if( 'ordercompletion' == $res ) {
+					do_action( 'usces_action_veritrans_card_completion' );
 					$usces->cart->crear_cart();
 					usces_log( 'Veritrans [OK] transaction : '.$_POST['orderId'], 'acting_transaction.log' );
 				} else {
@@ -1029,6 +1030,7 @@ function usces_action_acting_transaction(){
 			if( !$order_id ) {
 				$res = $usces->order_processing();
 				if( 'ordercompletion' == $res ) {
+					do_action( 'usces_action_veritrans_conv_completion' );
 					$usces->cart->crear_cart();
 					usces_log( 'Veritrans [OK] transaction : '.$_POST['orderId'], 'acting_transaction.log' );
 				} else {

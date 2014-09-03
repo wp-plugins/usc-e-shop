@@ -2801,7 +2801,7 @@ function usces_get_confirm_rows( $out = '' ) {
 //	$usces_entries = $usces->cart->get_entry();
 	$usces->set_cart_fees( $usces_members, $usces_entries );
 	$usces_entries = $usces->cart->get_entry();
-	
+
 	$cart = $usces->cart->get_cart();
 	$res = '';
 	for($i=0; $i<count($cart); $i++) { 
