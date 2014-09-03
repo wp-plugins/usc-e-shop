@@ -1490,14 +1490,17 @@ function usces_update_memberdata() {
 			$i++;
 		}
 	}
-	
 
-	$meta_keys = apply_filters( 'usces_filter_delete_member_pcid', "'zeus_pcid', 'remise_pcid', 'digitalcheck_ip_user_id'" );
-	$query = $wpdb->prepare("DELETE FROM $member_table_meta_name WHERE member_id = %d AND meta_key IN( $meta_keys )", 
-			$_POST['member_id'] 
-			);
-	$res[$i] = $wpdb->query( $query );
-	
+	if( isset($_POST['zeus_pcid']) and $_POST['zeus_pcid'] == 'delete' ) {
+		$res[$i] = $usces->del_member_meta( 'zeus_pcid', $ID );
+	}
+	if( isset($_POST['remise_pcid']) and $_POST['remise_pcid'] == 'delete' ) {
+		$res[$i] = $usces->del_member_meta( 'remise_pcid', $ID );
+	}
+	if( isset($_POST['digitalcheck_ip_user_id']) and $_POST['digitalcheck_ip_user_id'] == 'delete' ) {
+		$res[$i] = $usces->del_member_meta( 'digitalcheck_ip_user_id', $ID );
+	}
+
 	$result = ( 0 < array_sum($res) ) ? 1 : 0;
 	//return $res;
 	return $result;
@@ -1509,8 +1512,8 @@ function usces_delete_orderdata() {
 	if(!isset($_REQUEST['order_id']) || WCUtils::is_blank($_REQUEST['order_id']) ) return 0;
 	$order_table = $wpdb->prefix . "usces_order";
 	$order_meta_table = $wpdb->prefix . "usces_order_meta";
-	$order_meta_table = $wpdb->prefix . "usces_order_meta";
-	$order_meta_table = $wpdb->prefix . "usces_order_meta";
+	//$order_meta_table = $wpdb->prefix . "usces_order_meta";
+	//$order_meta_table = $wpdb->prefix . "usces_order_meta";
 	$ID = $_REQUEST['order_id'];
 
 	$del = usces_delete_order_check( $ID );

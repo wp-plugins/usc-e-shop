@@ -115,34 +115,6 @@ if( usces_is_member_system() ){
 	$colspan = 6;
 }
 
-//$deli = unserialize($data['order_delivery']);
-//$cart = unserialize($data['order_cart']);
-//$condition = unserialize($data['order_condition']);
-//$ordercheck = unserialize($data['order_check']);
-//if( !is_array($ordercheck) ) $ordercheck = array();
-//
-//if($this->is_status('duringorder', $data['order_status']))
-//	$taio = 'duringorder';
-//else if($this->is_status('cancel', $data['order_status']))
-//	$taio = 'cancel';
-//else if($this->is_status('completion', $data['order_status']))
-//	$taio = 'completion';
-//else
-//	$taio = 'new';
-//	
-//if($this->is_status('estimate', $data['order_status']))
-//	$admin = 'estimate';
-//else if($this->is_status('adminorder', $data['order_status']))
-//	$admin = 'adminorder';
-//else
-//	$admin = '';
-//
-//if($this->is_status('noreceipt', $data['order_status']))
-//	$receipt = 'noreceipt';
-//else if($this->is_status('receipted', $data['order_status']))
-//	$receipt = 'receipted';
-//else
-//	$receipt = '';
 $curent_url = urlencode( USCES_ADMIN_URL.'?'.$_SERVER['QUERY_STRING'] );
 ?>
 <script type="text/javascript">
@@ -272,8 +244,8 @@ function addComma(str)
 <td colspan="2" rowspan="5" class="mem_col2">
 <table class="mem_info">
 		<tr>
-				<td class="label">e-mail</td>
-				<td><input name="member[email]" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
+			<td class="label">e-mail</td>
+			<td><input name="member[email]" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
 		</tr>
 <?php if( $member_action == 'new' || $member_action == 'newpost' ) : ?>
 		<tr>
@@ -286,34 +258,104 @@ function addComma(str)
 </td>
 <td colspan="2" rowspan="5" class="mem_col3">
 <table class="mem_info">
-<?php 
-	foreach($member_metas as $value){ 
-		if( in_array($value['meta_key'], array('partofcard','limitofcard','remise_memid',)) ){
-?>
+<?php
+	if( 0 < count($member_metas) ) :
+		$cardinfo = array( 'zeus'=>array(), 'remise'=>array(), 'digitalcheck'=>array() );
+		foreach( $member_metas as $value ) {
+			if( in_array( $value['meta_key'], array( 'zeus_pcid', 'zeus_partofcard', 'zeus_limitofcard' ) ) ) {
+				$cardinfo['zeus'][$value['meta_key']] = $value['meta_value'];
+			} elseif( in_array( $value['meta_key'], array( 'remise_pcid', 'partofcard', 'limitofcard', 'remise_memid' ) ) ) {
+				$cardinfo['remise'][$value['meta_key']] = $value['meta_value'];
+			} elseif( in_array( $value['meta_key'], array( 'digitalcheck_ip_user_id' ) ) ) {
+				$cardinfo['digitalcheck'][$value['meta_key']] = $value['meta_value'];
+			}
+		}
+		if( 0 < count($cardinfo['zeus']) ) :
+			foreach( $cardinfo['zeus'] as $key => $value ) :
+				if( $key != 'zeus_pcid' ) :
+					if( $key == 'zeus_partofcard' ) $label = __('下4桁','usces');
+					elseif( $key == 'zeus_limitofcard' ) $label = __('有効期限','usces');
+					else $label = $key; ?>
 		<tr>
-				<td class="label"><?php echo esc_html($value['meta_key']); ?></td>
-				<td><div class="rod_left"><?php echo esc_html($value['meta_value']); ?></div></td>
+			<td class="label"><?php echo esc_html($label); ?></td>
+			<td><div class="rod_left shortm"><?php echo esc_html($value); ?></div></td>
 		</tr>
-<?php }} ?>
+<?php			endif;
+			endforeach;
+			if( array_key_exists( 'zeus_pcid', $cardinfo['zeus'] ) ) : ?>
+		<tr>
+			<td class="label">クイックチャージ</td>
+			<td><div class="rod_left shortm"><?php _e('登録あり','usces'); ?></div></td>
+		</tr>
+<?php			if( defined('WCEX_AUTO_DELIVERY') and !wcad_have_member_regular_order( $ID ) ) : ?>
+		<tr>
+			<td class="label"><input type="checkbox" name="zeus_pcid" value="delete"></td>
+			<td>クイックチャージを解除する</td>
+		</tr>
+<?php			endif;
+			endif;
+		endif;
+		if( 0 < count($cardinfo['remise']) ) :
+			foreach( $cardinfo['remise'] as $key => $value ) :
+				if( $key != 'remise_pcid' ) :
+					if( $key == 'partofcard' ) $label = __('下4桁','usces');
+					elseif( $key == 'limitofcard' ) $label = __('有効期限','usces');
+					elseif( $key == 'remise_memid' ) $label = __('メンバーID','usces');
+					else $label = $key; ?>
+		<tr>
+			<td class="label"><?php echo esc_html($label); ?></td>
+			<td><div class="rod_left shortm"><?php echo esc_html($value); ?></div></td>
+		</tr>
+<?php			endif;
+			endforeach;
+			if( array_key_exists( 'remise_pcid', $cardinfo['remise'] ) ) : ?>
+		<tr>
+			<td class="label">ペイクイック</td>
+			<td><div class="rod_left shortm"><?php _e('登録あり','usces'); ?></div></td>
+		</tr>
+		<tr>
+			<td class="label"><input type="checkbox" name="remise_pcid" value="delete"></td>
+			<td>ペイクイックを解除する</td>
+		</tr>
+<?php		endif;
+		endif;
+		if( 0 < count($cardinfo['digitalcheck']) ) :
+			foreach( $cardinfo['digitalcheck'] as $key => $value ) :
+				if( $key != 'digitalcheck_ip_user_id' ) : ?>
+		<tr>
+			<td class="label"><?php echo esc_html($key); ?></td>
+			<td><div class="rod_left shortm"><?php echo esc_html($value); ?></div></td>
+		</tr>
+<?php			endif;
+			endforeach;
+			if( array_key_exists( 'digitalcheck_ip_user_id', $cardinfo['digitalcheck'] ) ) : ?>
+		<tr>
+			<td class="label">ユーザID決済</td>
+			<td><div class="rod_left shortm"><?php _e('登録あり','usces'); ?></div></td>
+		</tr>
+		<tr>
+			<td class="label"><input type="checkbox" name="digitalcheck_ip_user_id" value="delete"></td>
+			<td>ユーザID決済を解除する</td>
+		</tr>
+<?php		endif;
+		endif;
+	endif;
+?>
 </table>
 
 
 </td>
-		</tr>
+	</tr>
 <tr>
 <td class="label"><?php _e('Rank', 'usces'); ?></td><td class="col1"><select name="member[status]">
-<?php 
-	foreach ((array)$this->member_status as $rk => $rv) {
-		$selected = ($rk == $data['mem_status']) ? ' selected="selected"' : '';
-?>
+<?php foreach ((array)$this->member_status as $rk => $rv) :
+		$selected = ($rk == $data['mem_status']) ? ' selected="selected"' : ''; ?>
     <option value="<?php echo esc_attr($rk); ?>"<?php echo $selected; ?>><?php echo esc_html($rv); ?></option>
-<?php } ?>
+<?php endforeach; ?>
 </select></td>
 </tr>
 <tr>
 <td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short num" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
-<?php if( USCES_JP ): ?>
-<?php endif; ?>
 </tr>
 <tr>
 <td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo esc_html(sprintf(__('%2$s %3$s, %1$s', 'usces'),substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2))); ?></div></td>
