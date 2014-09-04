@@ -770,8 +770,7 @@ function usces_action_acting_transaction(){
 			$ip_user_id = substr($data['FUKA'], 24);
 //usces_log('ip_user_id : '.$ip_user_id, 'digitalcheck.log');
 			if( 'on' == $acting_opts['card_user_id'] and !empty($ip_user_id) ) {
-				$member = $usces->get_member();
-				$usces->set_member_meta_value( 'digitalcheck_ip_user_id', $ip_user_id, $member['ID'] );
+				$usces->set_member_meta_value('digitalcheck_ip_user_id', $ip_user_id, $ip_user_id);
 			}
 
 			$res = $usces->order_processing();
