@@ -1713,9 +1713,11 @@ class usc_e_shop
 					$options['acting_settings']['veritrans']['merchant_id'] = isset($_POST['merchant_id']) ? $_POST['merchant_id'] : '';
 					$options['acting_settings']['veritrans']['merchanthash'] = isset($_POST['merchanthash']) ? $_POST['merchanthash'] : '';
 					$options['acting_settings']['veritrans']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
+					$options['acting_settings']['veritrans']['mailaddress'] = isset($_POST['mailaddress']) ? $_POST['mailaddress'] : 'off';
 					$options['acting_settings']['veritrans']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 					$options['acting_settings']['veritrans']['card_capture_flag'] = isset($_POST['card_capture_flag']) ? $_POST['card_capture_flag'] : '';
 					$options['acting_settings']['veritrans']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
+					$options['acting_settings']['veritrans']['conv_timelimit'] = isset($_POST['conv_timelimit']) ? $_POST['conv_timelimit'] : '60';
 
 					if( WCUtils::is_blank($options['acting_settings']['veritrans']['merchant_id']) )
 						$mes .= '※マーチャントIDを入力して下さい<br />';
@@ -6620,6 +6622,13 @@ class usc_e_shop
 						$postdata .= '&KANA2='.urlencode( $kana2 );
 				}
 				$postdata .= '&TELEPHONE_NO='.str_replace( '-', '', $entry['customer']['tel'] );
+				if( 1 < (int)$acting_opts['conv_timelimit'] and (int)$acting_opts['conv_timelimit'] <= 60 ) {
+					$timelimit = date( 'Ymd', strtotime('+'.$acting_opts['conv_timelimit'].' days') );
+					$postdata .= '&TIMELIMIT_OF_PAYMENT='.$timelimit;
+				}
+			}
+			if( 'on' == $acting_opts['mailaddress'] ) {
+				$postdata .= '&MAILADDRESS='.$entry['customer']['mailaddress1'];
 			}
 			$postdata .= '&MERCHANT_ID='.$acting_opts['merchant_id'];
 			$postdata .= '&SESSION_ID='.session_id();

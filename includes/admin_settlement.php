@@ -1113,7 +1113,13 @@ function toggleVisibility(id) {
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_veritrans');">稼働環境</a></th>
 				<td><input name="ope" type="radio" id="ope_veritrans_1" value="test"<?php if( isset($opts['veritrans']['ope']) && $opts['veritrans']['ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_veritrans_1">テスト環境</label></td>
 				<td><input name="ope" type="radio" id="ope_veritrans_2" value="public"<?php if( isset($opts['veritrans']['ope']) && $opts['veritrans']['ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_veritrans_2">本番環境</label></td>
-				<td><div id="ex_ope_veritrans" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
+				<td><div id="ex_ope_veritrans" class="explanation"><?php _e('動作環境を切り替えます。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_mailaddress_veritrans');">決済完了通知</a></th>
+				<td><input name="mailaddress" type="radio" id="mailaddress_veritrans_1" value="on"<?php if( isset($opts['veritrans']['mailaddress']) && $opts['veritrans']['mailaddress'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="mailaddress_veritrans_1">送信する</label></td>
+				<td><input name="mailaddress" type="radio" id="mailaddress_veritrans_2" value="off"<?php if( isset($opts['veritrans']['mailaddress']) && $opts['veritrans']['mailaddress'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="mailaddress_veritrans_2">送信しない</label></td>
+				<td><div id="ex_mailaddress_veritrans" class="explanation"><?php _e('購入者にベリトランスからメール通知を行います。', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<table class="settle_table">
@@ -1127,7 +1133,7 @@ function toggleVisibility(id) {
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_card_capture_flag_veritrans');">カード売上フラグ</a></th>
 				<td><input name="card_capture_flag" type="radio" id="card_capture_flag_veritrans_0" value="auhtorize"<?php if( isset($opts['veritrans']['card_capture_flag']) && $opts['veritrans']['card_capture_flag'] == 'auhtorize' ) echo ' checked'; ?> /></td><td><label for="card_capture_flag_veritrans_0">与信</label></td>
 				<td><input name="card_capture_flag" type="radio" id="card_capture_flag_veritrans_1" value="capture"<?php if( isset($opts['veritrans']['card_capture_flag']) && $opts['veritrans']['card_capture_flag'] == 'capture' ) echo ' checked'; ?> /></td><td><label for="card_capture_flag_veritrans_1">与信同時売上</label></td>
-				<td><div id="ex_card_capture_flag_veritrans" class="explanation"><?php _e('決済の処理方式を指定します', 'usces'); ?></div></td>
+				<td><div id="ex_card_capture_flag_veritrans" class="explanation"><?php _e('決済の処理方式を指定します。', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<table class="settle_table">
@@ -1136,6 +1142,24 @@ function toggleVisibility(id) {
 				<td><input name="conv_activate" type="radio" id="conv_activate_veritrans_1" value="on"<?php if( isset($opts['veritrans']['conv_activate']) && $opts['veritrans']['conv_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_veritrans_1">利用する</label></td>
 				<td><input name="conv_activate" type="radio" id="conv_activate_veritrans_2" value="off"<?php if( isset($opts['veritrans']['conv_activate']) && $opts['veritrans']['conv_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_veritrans_2">利用しない</label></td>
 				<td></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_timelimit_veritrans');">支払期限</a></th>
+				<td colspan="4">
+				<?php
+					$selected = array_fill( 1, 60, '' );
+					if( isset($opts['veritrans']['conv_timelimit']) ) {
+						$selected[$opts['veritrans']['conv_timelimit']] = ' selected';
+					} else {
+						$selected[60] = ' selected';
+					}
+				?>
+				<select name="conv_timelimit" id="conv_timelimit">
+				<?php for( $i = 1; $i <= 60; $i++ ): ?>
+					<option value="<?php echo esc_html($i); ?>"<?php echo esc_html($selected[$i]); ?>><?php echo esc_html($i); ?></option>
+				<?php endfor; ?>
+				</select>（日数）</td>
+				<td><div id="ex_conv_timelimit_veritrans" class="explanation"><?php _e('コンビニ店頭でお支払いいただける期限となります。', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="veritrans" />
