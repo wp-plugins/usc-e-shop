@@ -61,6 +61,7 @@ $item_option_select = array(
 					'0' => __('Single-select', 'usces'),
 					'1' => __('Multi-select', 'usces'),
 					'2' => __('Text', 'usces'),
+					//'4' => __('Check-box', 'usces'),
 					'5' => __('Text-area', 'usces')
 					);
 //20100914ysk end

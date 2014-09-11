@@ -497,9 +497,10 @@ function usces_paypal_use_point( $usepoint, $total_price, $item_price ) {
 	} else {
 		if( $usepoint > (int)$member['point'] ) {
 			$mes = __('You have exceeded the maximum available.', 'usces')."max".(int)$member['point']."pt";
-		} elseif( $usces->options['point_coverage'] && $usepoint > $total_price ) {
-			$mes = __('You have exceeded the maximum available.', 'usces')."max".$total_price."pt";
-		} elseif( !$usces->options['point_coverage'] && $usepoint > $item_price ) {
+//		} elseif( $usces->options['point_coverage'] && $usepoint > $total_price ) {
+//			$mes = __('You have exceeded the maximum available.', 'usces')."max".$total_price."pt";
+//		} elseif( !$usces->options['point_coverage'] && $usepoint > $item_price ) {
+		} elseif( $usepoint > $item_price ) {
 			$mes = __('You have exceeded the maximum available.', 'usces')."max".$item_price."pt";
 		}
 	}

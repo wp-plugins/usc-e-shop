@@ -602,3 +602,14 @@ function usces_filter_lostmail_inform($html){
 	<input type="hidden" name="lostkey" value="' . esc_attr($lostkey) . '" />' . "\n";
 	return $html;
 }
+
+function usces_admin_enqueue_scripts( $hook_suffix ){
+	if( false !== strpos($hook_suffix, 'usc-e-shop') 
+		|| false !== strpos($hook_suffix, 'welcart') 
+		|| false !== strpos($hook_suffix, 'usces') 
+	){
+		$style_jqueryuiUrl = USCES_FRONT_PLUGIN_URL.'/css/jquery/jquery-ui-1.10.3.custom.min.css';
+		wp_enqueue_style( 'jquery-ui-welcart', $style_jqueryuiUrl, array(), '1.10.3', 'all' );
+	}
+		
+}

@@ -24,6 +24,7 @@ add_action( 'admin_footer-welcart-shop_page_usces_cart', 'admin_prodauct_footer'
 add_action( 'admin_footer-post.php', 'admin_post_footer');
 add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 add_action( 'wp_before_admin_bar_render', 'usces_itempage_admin_bar' );
+add_action( 'admin_enqueue_scripts', 'usces_admin_enqueue_scripts' );
 
 //add_action( 'usces_action_admintop_box1', 'admin_amount_of_order', 8 );
 

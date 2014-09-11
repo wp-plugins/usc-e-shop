@@ -1713,9 +1713,11 @@ class usc_e_shop
 					$options['acting_settings']['veritrans']['merchant_id'] = isset($_POST['merchant_id']) ? $_POST['merchant_id'] : '';
 					$options['acting_settings']['veritrans']['merchanthash'] = isset($_POST['merchanthash']) ? $_POST['merchanthash'] : '';
 					$options['acting_settings']['veritrans']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
+					$options['acting_settings']['veritrans']['mailaddress'] = isset($_POST['mailaddress']) ? $_POST['mailaddress'] : 'off';
 					$options['acting_settings']['veritrans']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 					$options['acting_settings']['veritrans']['card_capture_flag'] = isset($_POST['card_capture_flag']) ? $_POST['card_capture_flag'] : '';
 					$options['acting_settings']['veritrans']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
+					$options['acting_settings']['veritrans']['conv_timelimit'] = isset($_POST['conv_timelimit']) ? $_POST['conv_timelimit'] : '60';
 
 					if( WCUtils::is_blank($options['acting_settings']['veritrans']['merchant_id']) )
 						$mes .= '※マーチャントIDを入力して下さい<br />';
@@ -3940,9 +3942,9 @@ class usc_e_shop
 					$res = $this->reg_custom_member($user['ID']);
 //20100818ysk end
 //20110714ysk end
-					$mser = usces_send_regmembermail($user);
-
 					do_action('usces_action_member_registered', $_POST['member'], $user['ID']);
+
+					$mser = usces_send_regmembermail($user);
 
 					return 'newcompletion';
 
@@ -4551,7 +4553,7 @@ class usc_e_shop
 		}
 
 		if( !empty($mes) ){
-			if( isset($_POST['itemOption']) ) $_SESSION['usces_singleitem']['itemOption'] = $_POST['itemOption'];
+			$_SESSION['usces_singleitem']['itemOption'] = $_POST['itemOption'];
 			$_SESSION['usces_singleitem']['quant'] = $_POST['quant'];
 			$_SESSION['usces_singleitem']['error_message'] = $mes;
 			if( false === strpos($_POST['usces_referer'], 'http') ){
@@ -4893,8 +4895,9 @@ class usc_e_shop
 	function point_check( $entries ) {
 		$member = $this->get_member();
 		$this->set_cart_fees( $member, $entries );
-		
-		
+		$target_item_price = $entries['order']['total_items_price'] + $entries['order']['discount'];
+		$target_full_price = $entries['order']['total_items_price'] + $entries['order']['discount'] + $entries['order']['shipping_charge'] + $entries['order']['cod_fee'] + $entries['order']['tax'];
+	
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
 		$mes = '';
 		if( isset($_POST['offer']["usedpoint"]) ) {
@@ -4911,18 +4914,18 @@ class usc_e_shop
 				
 				} elseif( 'acting_paypal_ec' == $payments['settlement'] ) {
 				
-					if( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount']) ){
+					if( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > $target_item_price ){
 						
-						$mes .= __('You have exceeded the maximum available.', 'usces').__('In the case of settlement method you select,', 'usces')." max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
+						$mes .= __('You have exceeded the maximum available.', 'usces').__('In the case of settlement method you select,', 'usces')." max".$target_item_price."pt<br />";
 					}
 				
-				} elseif( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > $entries['order']['total_full_price'] ) {
+				} elseif( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > $target_full_price ) {
 					
-					$mes .= __('You have exceeded the maximum available.', 'usces')."max".$entries['order']['total_full_price']."pt<br />";
+					$mes .= __('You have exceeded the maximum available.', 'usces')."max".$target_full_price."pt<br />";
 				
-				} elseif( !$this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > ($entries['order']['total_items_price'] + $entries['order']['discount']) ) {
+				} elseif( !$this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > $target_item_price ) {
 					
-					$mes .= __('You have exceeded the maximum available.', 'usces')."max".($entries['order']['total_items_price'] + $entries['order']['discount'])."pt<br />";
+					$mes .= __('You have exceeded the maximum available.', 'usces')."max".$target_item_price."pt<br />";
 				
 				}
 				$mes = apply_filters( 'usces_filter_point_check', $mes );
@@ -6618,6 +6621,13 @@ class usc_e_shop
 						$postdata .= '&KANA2='.urlencode( $kana2 );
 				}
 				$postdata .= '&TELEPHONE_NO='.str_replace( '-', '', $entry['customer']['tel'] );
+				if( 1 < (int)$acting_opts['conv_timelimit'] and (int)$acting_opts['conv_timelimit'] <= 60 ) {
+					$timelimit = date( 'Ymd', strtotime('+'.$acting_opts['conv_timelimit'].' days') );
+					$postdata .= '&TIMELIMIT_OF_PAYMENT='.$timelimit;
+				}
+			}
+			if( 'on' == $acting_opts['mailaddress'] ) {
+				$postdata .= '&MAILADDRESS='.$entry['customer']['mailaddress1'];
 			}
 			$postdata .= '&MERCHANT_ID='.$acting_opts['merchant_id'];
 			$postdata .= '&SESSION_ID='.session_id();
@@ -6913,16 +6923,19 @@ class usc_e_shop
 	}
 
 	function getShippingCharge( $pref, $cart = array(), $entry = array() ) {
+
 		if( empty($cart) )
 			$cart = $this->cart->get_cart();
+			
 		if( empty($entry) )
 			$entry = $this->cart->get_entry();
+			
 		if( function_exists('dlseller_have_shipped') && !dlseller_have_shipped() ){
 			$charge = 0;
 			$charge = apply_filters('usces_filter_getShippingCharge', $charge, $cart, $entry);
 			return $charge;
 		}
-		
+
 		//配送方法ID
 		$d_method_id = $entry['order']['delivery_method'];
 		//配送方法index
@@ -6973,7 +6986,7 @@ class usc_e_shop
 		}
 		
 		$charge = apply_filters('usces_filter_getShippingCharge', $charge, $cart, $entry);
-		
+
 		return $charge;
 	}
 	
@@ -7074,27 +7087,39 @@ class usc_e_shop
 	}
 
 	function set_cart_fees( $member, $entries ) {
+		global $usces_entries;
+		
 		$carts = $this->cart->get_cart();
+		$entries = $this->cart->get_entry();
 		$total_items_price = $this->get_total_price();
+		$entries['order']['total_items_price'] = $total_items_price;
+		
 		if ( empty($this->options['postage_privilege']) || $total_items_price < $this->options['postage_privilege'] ) {
-			$shipping_charge = $this->getShippingCharge( $entries['delivery']['pref'] );
+			$shipping_charge = $this->getShippingCharge( $entries['delivery']['pref'], $carts, $entries );
 		} else {
 			$shipping_charge = 0;
 		}
 		$shipping_charge = apply_filters('usces_filter_set_cart_fees_shipping_charge', $shipping_charge, $carts, $entries);
+		$entries['order']['shipping_charge'] = $shipping_charge;
+
 		$payments = $this->getPayments( $entries['order']['payment_name'] );
-		$discount = $this->get_order_discount();
+		$discount = $this->get_order_discount( NULL, $carts );
 		$use_point = $entries['order']['usedpoint'];
 		$amount_by_cod = $total_items_price - $use_point + $discount + $shipping_charge;
 		$amount_by_cod = apply_filters('usces_filter_set_cart_fees_amount_by_cod', $amount_by_cod, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
 		$cod_fee = $this->getCODFee($entries['order']['payment_name'], $amount_by_cod);
 		$cod_fee = apply_filters('usces_filter_set_cart_fees_cod', $cod_fee, $entries, $total_items_price, $use_point, $discount, $shipping_charge);
+		$entries['order']['cod_fee'] = $cod_fee;
+
 		$total_price = $total_items_price - $use_point + $discount + $shipping_charge + $cod_fee;
 		$total_price = apply_filters('usces_filter_set_cart_fees_total_price', $total_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
+
 		$materials = compact( 'member', 'entries', 'carts', 'total_items_price', 'shipping_charge', 'payments', 'discount', 'cod_fee', 'use_point', 'discount' );
 		$tax = $this->getTax( $total_price, $materials );
 		$total_full_price = $total_price + ( 'exclude' == $this->options['tax_mode'] ? $tax : 0 );
 		$total_full_price = apply_filters('usces_filter_set_cart_fees_total_full_price', $total_full_price, $total_items_price, $use_point, $discount, $shipping_charge, $cod_fee);
+		$entries['order']['total_full_price'] = $total_full_price;
+
 		$get_point = $this->get_order_point( $member['ID'] );
 //20130425ysk start 0000699
 		//if(0 < (int)$use_point){
@@ -7116,8 +7141,7 @@ class usc_e_shop
 				'tax' => $tax
 				);
 		$this->cart->set_order_entry( $array );
-		//$entries = $this->cart->get_entry();
-//var_dump($entries);
+		$usces_entries = $this->cart->get_entry();
 	}
 	
 	function getPayments( $payment_name ) {
