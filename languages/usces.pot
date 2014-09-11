@@ -3540,3 +3540,6 @@ msgstr "新規会員登録に失敗しました。"
 msgid "Administrator Note"
 msgstr "管理者メモ"
 
+msgid "In the case of settlement method you select,"
+msgstr "お選びの決済方法の場合"
+
