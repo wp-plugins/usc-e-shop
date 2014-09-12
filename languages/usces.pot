@@ -3543,3 +3543,6 @@ msgstr "管理者メモ"
 msgid "In the case of settlement method you select,"
 msgstr "お選びの決済方法の場合"
 
+msgid "In the case of settlement method you choose, the upper limit of the point you'll find that will change. If you became a settlement error, please reduce the point that you want to use."
+msgstr "ご使用されますポイントは、商品合計よりも少なくなるようにして下さい。<br>また、お選びの決済方法の場合、ご利用いただけるポイントの上限が変動いたします。決済エラーになった場合は、使用するポイントを少なくして下さい。"
+

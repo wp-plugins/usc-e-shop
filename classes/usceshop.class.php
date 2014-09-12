@@ -4914,9 +4914,9 @@ class usc_e_shop
 				
 				} elseif( 'acting_paypal_ec' == $payments['settlement'] ) {
 				
-					if( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > $target_item_price ){
+					if( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) >= $target_item_price ){
 						
-						$mes .= __('You have exceeded the maximum available.', 'usces').__('In the case of settlement method you select,', 'usces')." max".$target_item_price."pt<br />";
+						$mes .= __("In the case of settlement method you choose, the upper limit of the point you'll find that will change. If you became a settlement error, please reduce the point that you want to use.", 'usces')."<br />";
 					}
 				
 				} elseif( $this->options['point_coverage'] && trim($_POST['offer']["usedpoint"]) > $target_full_price ) {

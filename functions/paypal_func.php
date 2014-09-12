@@ -500,8 +500,8 @@ function usces_paypal_use_point( $usepoint, $total_price, $item_price ) {
 //		} elseif( $usces->options['point_coverage'] && $usepoint > $total_price ) {
 //			$mes = __('You have exceeded the maximum available.', 'usces')."max".$total_price."pt";
 //		} elseif( !$usces->options['point_coverage'] && $usepoint > $item_price ) {
-		} elseif( $usepoint > $item_price ) {
-			$mes = __('You have exceeded the maximum available.', 'usces')."max".$item_price."pt";
+		} elseif( $usepoint >= $item_price ) {
+			$mes = __("In the case of settlement method you choose, the upper limit of the point you'll find that will change. If you became a settlement error, please reduce the point that you want to use.", 'usces');
 		}
 	}
 	if( '' != $mes ) {
