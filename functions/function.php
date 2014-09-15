@@ -4834,7 +4834,7 @@ function usces_get_itemOption( $field_data, $materials, $label = '#default#' ) {
 					$checked = ' checked="checked"';
 				else
 					$checked = '';
-				$html .= '<br /><input name="itemOption[' . $cartmeta_id . ']" id="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_radio" type="radio" value="' . urlencode($v) . '"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}"><label for="itemOption[' . $cartmeta_id . ']'.$i.'">' . esc_html($v) . "</label>\n";
+				$html .= '<label for="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_radio_label"><input name="itemOption[' . $cartmeta_id . ']" id="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_radio" type="radio" value="' . urlencode($v) . '"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}">' . esc_html($v) . "</label>\n";
 				$i++;
 			}
 			break;
@@ -4850,7 +4850,7 @@ function usces_get_itemOption( $field_data, $materials, $label = '#default#' ) {
 					$checked = ' checked="checked"';
 				else
 					$checked = '';
-				$html .= '<br /><input name="itemOption[' . $cartmeta_id . '][]" id="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_checkbox" type="checkbox" value="' . urlencode($v) . '"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}"><label for="itemOption[' . $cartmeta_id . ']'.$i.'">' . esc_html($v) . "</label>\n";
+				$html .= '<label for="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_checkbox_label"><input name="itemOption[' . $cartmeta_id . '][]" id="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_checkbox" type="checkbox" value="' . urlencode($v) . '"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}">' . esc_html($v) . "</label>\n";
 				$i++;
 			}
 			break;

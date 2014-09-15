@@ -1993,3 +1993,11 @@ div.optcheck {
 	height: auto;
 	line-height: 1.5em;
 }
+
+#cart_table .iopt_radio_label {
+	display: block;
+}
+
+table.skumulti .iopt_radio_label {
+	display: block;
+}

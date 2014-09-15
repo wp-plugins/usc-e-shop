@@ -1210,7 +1210,7 @@ function get_order_item( $item_code ) {
 			
 					$i=0;
 					foreach($selects as $v) {
-						$r .= '<br /><input name="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']" type="radio" id="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_radio" value="' . urlencode($v) . '"><label for="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '">' . esc_html($v) . "</label>\n";
+						$r .= '<label for="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_radio_label"><input name="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']" type="radio" id="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_radio" value="' . urlencode($v) . '">' . esc_html($v) . "</label>\n";
 						$i++;
 					}
 					break;
@@ -1219,7 +1219,7 @@ function get_order_item( $item_code ) {
 			
 					$i=0;
 					foreach($selects as $v) {
-						$r .= '<br /><input name="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']" type="checkbox" id="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_checkbox" value="' . urlencode($v) . '"><label for="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '">' . esc_html($v) . "</label>\n";
+						$r .= '<label for="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_checkbox_label"><input name="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']" type="checkbox" id="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_checkbox" value="' . urlencode($v) . '">' . esc_html($v) . "</label>\n";
 						$i++;
 					}
 					break;

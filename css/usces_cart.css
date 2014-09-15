@@ -520,6 +520,10 @@ dl.itemGpExp li {
 	text-align: left;
 }
 
+#itempage .iopt_radio_label {
+	display: block;
+}
+
 /* End USCES Item single page style */
 /*********************************************************************/
 /* USCES cart page style */

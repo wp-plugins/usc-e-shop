@@ -1031,7 +1031,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 				$checked = ' checked="checked"';
 			else
 				$checked = '';
-			$html .= "\t<input name='itemOption[{$post_id}][{$sku}][{$optcode}]' id='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_radio' type='radio' value='" . urlencode($v) . "'{$checked}><label for='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}'>" . esc_html($v) . "</label><br />\n";
+			$html .= "\t<label for='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_radio_label'><input name='itemOption[{$post_id}][{$sku}][{$optcode}]' id='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_radio' type='radio' value='" . urlencode($v) . "'{$checked}>" . esc_html($v) . "</label>\n";
 			$i++;
 		}
 		break;
@@ -1045,7 +1045,7 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 				$checked = ' checked="checked"';
 			else
 				$checked = '';
-			$html .= "\t<input name='itemOption[{$post_id}][{$sku}][{$optcode}][]' id='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_checkbox' type='checkbox' value='" . urlencode($v) . "'{$checked}><label for='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}'>" . esc_html($v) . "</label><br />\n";
+			$html .= "\t<label for='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_checkbox_label'><input name='itemOption[{$post_id}][{$sku}][{$optcode}][]' id='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_checkbox' type='checkbox' value='" . urlencode($v) . "'{$checked}>" . esc_html($v) . "</label><br />\n";
 			$i++;
 		}
 		break;
