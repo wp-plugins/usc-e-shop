@@ -1021,6 +1021,34 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 		$html .= "\n<input name='itemOption[{$post_id}][{$sku}][{$optcode}]' type='text' id='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"" . esc_attr($session_value) . "\" />\n";
 //20100914ysk start
 		break;
+	case 3://Radio-button
+		$selects = explode("\n", $opt['value']);
+
+		$i=0;
+		foreach($selects as $v) {
+			$v = trim($v);
+			if( $v == $session_value ) 
+				$checked = ' checked="checked"';
+			else
+				$checked = '';
+			$html .= "\t<input name='itemOption[{$post_id}][{$sku}][{$optcode}]' id='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_radio' type='radio' value='" . urlencode($v) . "'{$checked}><label for='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}'>" . esc_html($v) . "</label><br />\n";
+			$i++;
+		}
+		break;
+	case 4://Check-box
+		$selects = explode("\n", $opt['value']);
+
+		$i=0;
+		foreach($selects as $v) {
+			$v = trim($v);
+			if( $v == $session_value ) 
+				$checked = ' checked="checked"';
+			else
+				$checked = '';
+			$html .= "\t<input name='itemOption[{$post_id}][{$sku}][{$optcode}][]' id='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}' class='iopt_checkbox' type='checkbox' value='" . urlencode($v) . "'{$checked}><label for='itemOption[{$post_id}][{$sku}][{$optcode}]{$i}'>" . esc_html($v) . "</label><br />\n";
+			$i++;
+		}
+		break;
 	case 5://Text-area
 		$html .= "\n<textarea name='itemOption[{$post_id}][{$sku}][{$optcode}]' id='itemOption[{$post_id}][{$sku}][{$optcode}]' class='iopt_textarea'>" . esc_attr($session_value) . "</textarea>\n";
 		break;
@@ -2763,10 +2791,10 @@ function usces_get_cart_rows( $out = '' ) {
 			//$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
 			if(is_array($value)) {
 				foreach($value as $v) {
-					$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />';
+					$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . '][' . $v . ']" type="hidden" value="' . $v . '" />'."\n";
 				}
 			} else {
-				$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />';
+				$row .= '<input name="itemOption[' . $i . '][' . $post_id . '][' . $sku . '][' . $key . ']" type="hidden" value="' . $value . '" />'."\n";
 			}
 //20110629ysk end
 		}

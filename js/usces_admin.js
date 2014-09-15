@@ -744,7 +744,7 @@
 					}
 					$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]'] option:selected").each(function(idx, obj) {
 						if( '#NONE#' != $(this).val()) {
-							query += "&itemOption[" + $(newoptob[n]).val() + "][" + encodeURIComponent($(this).val()) + "]="+encodeURIComponent($(this).val());
+							query += "&itemOption[" + $(newoptob[n]).val() + "][" + encodeURIComponent($(this).val()) + "][]="+encodeURIComponent($(this).val());
 						}
 					});
 					break;
@@ -754,6 +754,36 @@
 					} else {
 						query += "&itemOption[" + $(newoptob[n]).val() + "]="+encodeURIComponent(newoptvalue);
 					}
+					break;
+				case 'iopt_radio':
+					var sel = 0;
+					var ra = '';
+					if( $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']:checked").val() ) {
+						sel++;
+						ra = $(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']:checked").val();
+					}
+					if( essential == 1 && sel == 0 ) {
+						mes += decodeURIComponent($(newoptob[n]).val())+'を選択してください'+"\n";
+					}
+					query += "&itemOption[" + $(newoptob[n]).val() + "]=" + ra;
+					break;
+				case 'iopt_checkbox':
+					var sel = 0;
+					if( essential == 1 ) {
+						$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']:checked").each(function(idx, obj) {
+							if( '' != $(this).val()) {
+								sel++;
+							}
+						});
+						if( sel == 0 ) {
+							mes += decodeURIComponent($(newoptob[n]).val())+'を選択してください'+"\n";
+						}
+					}
+					$(":input[name='itemNEWOption\[" + newid + "\]\[" + newsku + "\]\[" + $(newoptob[n]).val() + "\]']:checked").each(function(idx, obj) {
+						if( $(this).val()) {
+							query += "&itemOption[" + $(newoptob[n]).val() + "][" + $(this).val() + "]=" + $(this).val();
+						}
+					});
 					break;
 				case 'iopt_text':
 				case 'iopt_textarea':

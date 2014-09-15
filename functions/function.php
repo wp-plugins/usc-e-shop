@@ -1681,12 +1681,33 @@ function usces_update_ordercartdata( $order_id ) {
 		return;
 		
 	$ordercart_table_name = $wpdb->prefix . "usces_ordercart";
+	$ordercart_meta_table_name = $wpdb->prefix . "usces_ordercart_meta";
 	foreach( (array)$_POST['skuPrice'] as $cart_id => $price ){
 		$quantity = $_POST['quant'][$cart_id];
 		$query = $wpdb->prepare("
 			UPDATE $ordercart_table_name SET price = %f, quantity = %d WHERE cart_id = %d 
 			", $price, $quantity, $cart_id );
 		$wpdb->query( $query );
+		
+		//itemOptionチェックボックスとラジオのチェック
+		$cart = usces_get_ordercartdata_row( $cart_id );
+		$item_opts = usces_get_opts( $cart['post_id'], 'name' );
+		foreach( $item_opts as $key => $iopts ){
+			if( 3 == $iopts['means'] || 4 == $iopts['means'] ){
+				$cart_meta = usces_get_ordercart_meta( 'option', $cart_id, $iopts['name'] );
+				$cart_meta_id = $cart_meta[0]['cartmeta_id'];
+				//usces_p($iopts['essential']);
+				//usces_p($_POST['itemOption']);
+				//POSTが無ければmeta_valueをNULLに変更
+				//必須の場合は変更せず
+				if( !isset($_POST['itemOption'][$cart_meta_id]) && 0 == $iopts['essential'] ){
+					$query = $wpdb->prepare(
+						"UPDATE $ordercart_meta_table_name SET meta_value = %s WHERE cartmeta_id = %d"
+						, NULL, $cart_meta_id );
+					$wpdb->query( $query );
+				}
+			}
+		}
 	}
 	
 	if( !isset($_POST['itemOption']) )
@@ -1694,12 +1715,26 @@ function usces_update_ordercartdata( $order_id ) {
 
 	$ordercart_meta_table_name = $wpdb->prefix . "usces_ordercart_meta";
 	foreach( (array)$_POST['itemOption'] as $cartmeta_id => $value ){
+		$post_id = usces_get_post_id_by_cartmeta_id( $cartmeta_id );
+		$option_fields = usces_get_opts( $post_id, 'name' );
+		$ordercart_metas = usces_get_ordercart_meta_by_id( $cartmeta_id ); 
+		$means = $option_fields[$ordercart_metas['meta_key']]['means'];
 		if(is_array($value)) {
 			$opval =array();
-			foreach($value as $v){
-				$opval[$v] = urldecode($v);
+			if( 4 == $means ){
+				foreach($value as $v){
+					$opval[] = urldecode($v);
+				}
+			}else{
+				foreach($value as $v){
+					$opval[$v] = urldecode($v);
+				}
 			}
 			$value = serialize($opval);
+		}else{
+			if( 3 == $means ){
+				$value = urldecode($value);
+			}
 		}
 		$query = $wpdb->prepare("
 			UPDATE $ordercart_meta_table_name SET meta_value = %s WHERE cartmeta_id = %d 
@@ -1741,6 +1776,15 @@ function usces_delete_ordercartdata( $cart_id, $order_id = NULL ){
 		}
 		
 	}
+}
+function usces_get_ordercartdata_row( $cart_id ){
+	global $usces, $wpdb;
+	
+	$cart_table = $wpdb->prefix . "usces_ordercart";
+	
+	$query = $wpdb->prepare("SELECT * FROM $cart_table WHERE cart_id = %d", $cart_id );
+	$cart = $wpdb->get_row( $query, ARRAY_A );
+	return $cart;
 }
 
 function usces_get_ordercartdata( $order_id ){
@@ -4673,17 +4717,25 @@ function usces_get_cr_symbol() {
 }
 
 function usces_make_option_field( $materials, $cart ){
-	//$options = usces_get_ordercart_meta( 'option', $cart_row['cart_id'] );
-	//$options = $cart_row['options'];
-	//$post_id = $cart_row['post_id'];
 	extract( $materials );
-	
+	/*	$materials = compact( 'i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 
+					'options', 'advance', 'itemCode', 'itemName', 'cartItemName', 
+					'skuPrice', 'stock', 'red', 'pictid', 'order_id' );
+	*/
+	$option_fields = usces_get_opts( $post_id, 'sort' );
 	$field = '<div>' . "\n";
 	$field .= '<ul>' . "\n";
-	foreach((array)$options as $opt_value){
+	
+	foreach((array)$option_fields as $field_data){
 		
-		$field .= '<li>' . usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) . '</li>' . "\n";
+		$field .= '<li>' . usces_get_itemOption( $field_data, $materials, $label = '#default#' ) . '</li>' . "\n";
 	}
+	
+//	usces_p($options);
+//	foreach((array)$options as $opt_value){
+//		
+//		$field .= '<li>' . usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) . '</li>' . "\n";
+//	}
 	$field .= '</ul>' . "\n";
 	$field .= '</div>' . "\n";
 
@@ -4691,24 +4743,29 @@ function usces_make_option_field( $materials, $cart ){
 	echo apply_filters( 'usces_filter_order_edit_form_row', $field, $cart, $materials );
 }
 
-function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
+function usces_get_itemOption( $field_data, $materials, $label = '#default#' ) {
 	global $usces;
-
-	$cartmeta_id = $opt_value['cartmeta_id'];
-	$name = $opt_value['meta_key'];
-	$value = $opt_value['meta_value'];
-//usces_p($opt_value);
+	extract( $materials );
+	/*	$materials = compact( 'i', 'cart_row', 'post_id', 'sku', 'sku_code', 'quantity', 
+					'options', 'advance', 'itemCode', 'itemName', 'cartItemName', 
+					'skuPrice', 'stock', 'red', 'pictid', 'order_id' );
+	*/
+	$opt_value = array();
+	foreach( $options as $opt_value ){
+		if( $field_data['name'] == $opt_value['meta_key'] ){
+			$cartmeta_id = $opt_value['cartmeta_id'];
+			$name = $opt_value['meta_key'];
+			$value = $opt_value['meta_value'];
+			$means = (int)$field_data['means'];
+			$essential = (int)$field_data['essential'];
+			break;
+		}
+	}
+	if(!$opt_value)
+		return '';
 	
 	if($label == '#default#')
 		$label = $name;
-
-	$opts = usces_get_opts($post_id, 'name');
-	if(!$opts)
-		return '';
-	
-	$opt = $opts[$name];
-	$means = (int)$opt['means'];
-	$essential = (int)$opt['essential'];
 
 	$html = '';
 	$name = esc_attr($name);
@@ -4716,7 +4773,7 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 	$html .= '<label for="itemOption[' . $cartmeta_id . ']" class="iopt_label">' . $label . '</label>' . "\n";
 	switch($means) {
 		case 0://Single-select
-			$selects = explode("\n", $opt['value']);
+			$selects = explode("\n", $field_data['value']);
 			$html .= '<select name="itemOption[' . $cartmeta_id . ']" id="itemOption[' . $cartmeta_id . ']" class="iopt_select" onKeyDown="if (event.keyCode == 13) {return false;}">' . "\n";
 			if($essential == 1){
 				if(  '#NONE#' == $value || NULL == $value ) 
@@ -4738,7 +4795,7 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 			$html .= '</select>' . "\n";
 			break;
 		case 1://Multi-select
-			$selects = explode("\n", $opt['value']);
+			$selects = explode("\n", $field_data['value']);
 			$value = maybe_unserialize($value);
 			$html .= '<select name="itemOption[' . $cartmeta_id . '][]" id="itemOption[' . $cartmeta_id . ']" class="iopt_select" multiple onKeyDown="if (event.keyCode == 13) {return false;}">' . "\n";
 			if($essential == 1){
@@ -4767,6 +4824,35 @@ function usces_get_itemOption( $opt_value, $post_id, $label = '#default#' ) {
 			break;
 		case 2://Text
 			$html .= '<input name="itemOption[' . $cartmeta_id . ']" type="text" id="itemOption[' . $cartmeta_id . ']" class="iopt_text" onKeyDown="if (event.keyCode == 13) {return false;}" value="' . esc_attr($value) . '" />' . "\n";
+			break;
+		case 3://Radio-button
+			$selects = explode("\n", $field_data['value']);
+			$i=0;
+			foreach($selects as $v) {
+				$v = trim($v);
+				if( $v == $value ) 
+					$checked = ' checked="checked"';
+				else
+					$checked = '';
+				$html .= '<br /><input name="itemOption[' . $cartmeta_id . ']" id="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_radio" type="radio" value="' . urlencode($v) . '"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}"><label for="itemOption[' . $cartmeta_id . ']'.$i.'">' . esc_html($v) . "</label>\n";
+				$i++;
+			}
+			break;
+		case 4://Check-box
+			$selects = explode("\n", $field_data['value']);
+			$value = maybe_unserialize($value);
+			$i=0;
+			foreach($selects as $v) {
+				$v = trim($v);
+				$opval = urlencode($v);
+				$val_str = isset($value_arr[$opval]) ? $value_arr[$opval] : '';
+				if( in_array($v, (array)$value) ) 
+					$checked = ' checked="checked"';
+				else
+					$checked = '';
+				$html .= '<br /><input name="itemOption[' . $cartmeta_id . '][]" id="itemOption[' . $cartmeta_id . ']'.$i.'" class="iopt_checkbox" type="checkbox" value="' . urlencode($v) . '"' . $checked . ' onKeyDown="if (event.keyCode == 13) {return false;}"><label for="itemOption[' . $cartmeta_id . ']'.$i.'">' . esc_html($v) . "</label>\n";
+				$i++;
+			}
 			break;
 		case 5://Text-area
 			$html .= '<textarea name="itemOption[' . $cartmeta_id . ']" id="itemOption[' . $cartmeta_id . ']" class="iopt_textarea">' . esc_attr($value) . '</textarea>' . "\n";
@@ -4825,6 +4911,52 @@ function usces_get_ordercart_meta_value( $type, $cart_id, $key = '' ){
 			", $cart_id, $type );
 	}
 	$res = $wpdb->get_var( $query );
+	return $res;
+}
+
+function usces_get_ordercart_meta_by_id( $cartmeta_id ){
+	global $wpdb;
+	
+	if( !$cartmeta_id )
+		return;
+	
+	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+
+	$query = $wpdb->prepare( "SELECT * FROM $ordercart_meta_table WHERE cartmeta_id = %d", $cartmeta_id );
+	$res = $wpdb->get_row($query, ARRAY_A);
+	return $res;
+}
+
+function usces_get_post_id_by_cartmeta_id( $cartmeta_id ){
+	global $wpdb;
+	
+	if( !$cartmeta_id )
+		return 0;
+	
+	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+	$ordercart_table = $wpdb->prefix . "usces_ordercart";
+
+	$query = $wpdb->prepare( "SELECT cart_id FROM $ordercart_meta_table WHERE cartmeta_id = %d", $cartmeta_id );
+	$cart_id = $wpdb->get_var($query);
+	if( !$cartmeta_id )
+		return 0;
+
+	$query = $wpdb->prepare( "SELECT post_id FROM $ordercart_table WHERE cart_id = %d", $cart_id );
+	$post_id = $wpdb->get_var($query);
+
+	return $post_id;
+}
+
+function usces_delete_ordercart_meta_by_id( $cartmeta_id ){
+	global $wpdb;
+	
+	if( !$cartmeta_id )
+		return;
+	
+	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+
+	$query = $wpdb->prepare( "DELETE FROM $ordercart_meta_table WHERE cartmeta_id = %d", $cartmeta_id );
+	$res = $wpdb->query( $query );
 	return $res;
 }
 

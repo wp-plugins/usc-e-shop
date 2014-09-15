@@ -1030,26 +1030,51 @@ function usces_add_ordercartdata(){
 		$sku['unit'], $tax, NULL, NULL
 	);
 	$res = $wpdb->query($query);
-	
 	$cart_id = NULL;
 	if( false !== $res ){
 		$cart_id = $wpdb->insert_id ;
+
+		$item_opts = usces_get_opts( $post_id, 'name' );
+		foreach( $item_opts as $key => $iopts ){
+			if( 3 == $iopts['means'] || 4 == $iopts['means'] ){
+				//POSTが無ければNULLで追加
+				if( !isset($_POST['itemOption'][$key]) ){
+					$query = $wpdb->prepare(
+						"INSERT INTO $cart_meta_table 
+						( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, %s, %s, %s )", 
+						$cart_id, 'option', $iopts['name'], NULL );
+					$wpdb->query( $query );
+				}
+			}
+		}
+
 		if( isset($_POST['itemOption']) ){
 			foreach((array)$_POST['itemOption'] as $okey => $ovalue){
-				$okey = urldecode($okey);
+				//$okey = urldecode($okey);
+				$means = $item_opts[$okey]['means'];
+				
 				if(is_array($ovalue)) {
 					$temp = array();
-					foreach( $ovalue as $k => $v ){
-						$temp[urlencode($k)] = $v;
+					if( 4 == $means ){
+						foreach( $ovalue as $k => $v ){
+							//$temp[] = urldecode($v);
+							$temp[] = $v;
+						}
+					}else{
+						foreach( $ovalue as $k => $v ){
+							//$temp[urlencode($k)] = $v;
+							$temp[urlencode($k)] = $v;
+						}
 					}
 					$ovalue = serialize($temp);
 				} else {
-					$ovalue = urldecode($ovalue);
+					//$ovalue = urldecode($ovalue);
+					$ovalue = $ovalue;
 				}
-				$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
+				$aquery = $wpdb->prepare(
+					"INSERT INTO $cart_meta_table 
 					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 
-					$cart_id, 'option', $okey, $ovalue
-				);
+					$cart_id, 'option', $okey, $ovalue );
 				$wpdb->query($aquery);
 			}
 		}
@@ -1179,6 +1204,24 @@ function get_order_item( $item_code ) {
 					break;
 				case 2://Text
 					$r .= "\n<input name='itemNEWOption[{$post_id}][{$key}][{$optcode}]' type='text' id='itemNEWOption[{$post_id}][{$key}][{$optcode}]' class='iopt_text' onKeyDown=\"if (event.keyCode == 13) {return false;}\" value=\"\" />\n";
+					break;
+				case 3://Radio-button
+					$selects = explode("\n", $opt['value']);
+			
+					$i=0;
+					foreach($selects as $v) {
+						$r .= '<br /><input name="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']" type="radio" id="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_radio" value="' . urlencode($v) . '"><label for="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '">' . esc_html($v) . "</label>\n";
+						$i++;
+					}
+					break;
+				case 4://Check-box
+					$selects = explode("\n", $opt['value']);
+			
+					$i=0;
+					foreach($selects as $v) {
+						$r .= '<br /><input name="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']" type="checkbox" id="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '" class="iopt_checkbox" value="' . urlencode($v) . '"><label for="itemNEWOption[' . $post_id . '][' . $key . '][' . $optcode . ']' . $i . '">' . esc_html($v) . "</label>\n";
+						$i++;
+					}
 					break;
 				case 5://Text-area
 					$r .= "\n<textarea name='itemNEWOption[{$post_id}][{$key}][{$optcode}]' id='itemNEWOption[{$post_id}][{$key}][{$optcode}]' class='iopt_textarea'></textarea>\n";

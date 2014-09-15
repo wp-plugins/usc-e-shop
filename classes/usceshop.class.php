@@ -2110,13 +2110,34 @@ class usc_e_shop
 					}
 				}
 				for(i=0; i<uscesL10n.key_opts.length; i++){
-					var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]");
-					if( uscesL10n.opt_esse[i] == '1' && null != skuob ){
+					if( uscesL10n.opt_esse[i] == '1' ){
+						var skuob = document.getElementById("itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]");
+						var itemOption = "itemOption["+post_id+"]["+sku+"]["+uscesL10n.key_opts[i]+"]";
+						var opt_obj_radio = $(":radio[name*='"+itemOption+"']");
+						var opt_obj_checkbox = $(":checkbox[name*='"+itemOption+"']:checked");
+				
+						if( uscesL10n.opt_means[i] == '3' ){
+							
+							if( !opt_obj_radio.is(':checked') ){
+								mes += uscesL10n.mes_opts[i]+"\n";
+							}
 						
-						if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
-							mes += uscesL10n.mes_opts[i]+"\n";
-						}else if( uscesL10n.opt_means[i] >= 2 && skuob.value == '' ){
-							mes += uscesL10n.mes_opts[i]+"\n";
+						}else if( uscesL10n.opt_means[i] == '4' ){
+							
+							if( !opt_obj_checkbox.length ){
+								mes += uscesL10n.mes_opts[i]+"\n";
+							}
+						
+						}else{
+							
+							if( null != skuob ){
+								
+								if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
+									mes += uscesL10n.mes_opts[i]+"\n";
+								}else if( uscesL10n.opt_means[i] >= 2 && skuob.value == '' ){
+									mes += uscesL10n.mes_opts[i]+"\n";
+								}
+							}
 						}
 					}
 				}
@@ -4533,6 +4554,13 @@ class usc_e_shop
 							if(!empty($mvalue) and '#NONE#' != $mvalue) $mselect++;
 						}
 						if( $mselect == 0 ){
+							$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), urldecode($value)) . "<br />";
+						}
+					}
+				}elseif( in_array( $optValues['means'], array( 3, 4 ) ) ){ //case of radio & checkbox
+					if( $optValues['essential'] ){
+				
+						if( !isset( $_POST['itemOption'][$post_id][$sku][$value] ) ){
 							$mes[$post_id][$sku] .= sprintf(__("Chose the %s", 'usces'), urldecode($value)) . "<br />";
 						}
 					}

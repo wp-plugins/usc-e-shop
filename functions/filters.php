@@ -196,17 +196,54 @@ function usces_reg_ordercartdata( $args ){
 		$wpdb->query($query);
 		
 		$cart_id = $wpdb->insert_id ;
+		$opt_fields = usces_get_opts($value['post_id'], 'name');
 		if($value['options']){
+			
 			foreach((array)$value['options'] as $okey => $ovalue){
+				
 				$okey = urldecode($okey);
-				if(is_array($ovalue)) {
-					$temp = array();
-					foreach( $ovalue as $k => $v ){
-						$temp[$k] = urldecode($v);
+				$means = $opt_fields[$okey]['means'];
+				
+				if( 3 == $means ){
+					
+					if( '' == $ovalue ) {
+						$ovalue = $ovalue;
+					} else {
+						$ovalue = urldecode($ovalue);
 					}
-					$ovalue = serialize($temp);
-				} else {
-					$ovalue = urldecode($ovalue);
+					
+				}elseif( 4 == $means ){
+					
+					if(is_array($ovalue)) {
+						
+						$temp = array();
+						foreach( $ovalue as $v ){
+							$temp[] = urldecode($v);
+						}
+						$ovalue = serialize($temp);
+						
+					} elseif( '' == $ovalue ) {
+						
+						$ovalue = $ovalue;
+						
+					} else {
+						
+						$ovalue = urldecode($ovalue);
+						
+					}
+					
+				}else{
+					
+					if(is_array($ovalue)) {
+						$temp = array();
+						foreach( $ovalue as $k => $v ){
+							$temp[$k] = urldecode($v);
+						}
+						$ovalue = serialize($temp);
+					} else {
+						$ovalue = urldecode($ovalue);
+					}
+					
 				}
 				$oquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
 					( cart_id, meta_type, meta_key, meta_value ) VALUES (%d, %s, %s, %s)", 

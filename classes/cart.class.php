@@ -12,13 +12,11 @@ class usces_cart {
 			$_SESSION['usces_cart'] = array();
 			$_SESSION['usces_entry'] = array();
 		}
-		
 	}
 	// into Cart ***************************************************************
 	function inCart() {
 		global $usces;
 		$_POST = $usces->stripslashes_deep_post($_POST);
-		
 		if( $_SERVER['HTTP_REFERER'] ){
 			$_SESSION['usces_previous_url'] = $_SERVER['HTTP_REFERER'];
 		}else{
@@ -155,7 +153,7 @@ class usces_cart {
 		
 		$this->up_serialize($index, $post_id, $sku);
 		do_action('usces_cart_del_row', $index);
-		
+
 		if(isset($_SESSION['usces_cart'][$this->serial]))
 			unset($_SESSION['usces_cart'][$this->serial]);
 			
@@ -204,23 +202,45 @@ class usces_cart {
 	
 	// insert serialize **************************************************************
 	function in_serialize($id, $sku){
-	
 		global $usces;
 		$_POST = $usces->stripslashes_deep_post($_POST);
-
+		$pots = array();
+		$option_field = usces_get_opts($id, 'name');
+		
+		foreach( $option_field as $opkey => $opval){
+			if( !isset($_POST['itemOption'][$id][$sku][urlencode($opkey)])){
+				if( 3 == $opval['means'] || 4 == $opval['means'] ){
+	
+					$pots[urlencode($opkey)] = '';
+					
+				}
+			}
+		}
+		
 		if(isset($_POST['itemOption'])){
 			foreach( $_POST['itemOption'][$id][$sku] as $key => $value ){
-//20110629ysk start 0000190
-				//$pots[$key] = urlencode($value);
-				if( is_array($value) ) {
-					foreach( $value as $k => $v ) {
-						$pots[$key][urlencode(trim($v))] = urlencode(trim($v));
+				$option = $option_field[urldecode($key)];
+				if( 3 == $option['means'] || 4 == $option['means'] ){
+	
+					if( is_array($value) ) {
+						foreach( $value as $k => $v ) {
+							$pots[$key][trim($v)] = trim($v);
+						}
+					} else {
+						$pots[$key] = $value;
 					}
-				} else {
-					$pots[$key] = urlencode($value);
+					
+				}else{
+					if( is_array($value) ) {
+						foreach( $value as $k => $v ) {
+							$pots[$key][urlencode(trim($v))] = urlencode(trim($v));
+						}
+					} else {
+						$pots[$key] = urlencode($value);
+					}
 				}
-//20110629ysk end
 			}
+			ksort($pots);
 			$sels[$id][$sku] = $pots;
 		}else{
 			$sels[$id][$sku] = 0;
@@ -234,11 +254,11 @@ class usces_cart {
 	
 		global $usces;
 		$_POST = $usces->stripslashes_deep_post($_POST);
-
+		$pots = array();
+		$option_field = usces_get_opts($id, 'name');
+		
 		if(isset($_POST['itemOption'][$index])){
 			foreach( $_POST['itemOption'][$index][$id][$sku] as $key => $value ){
-//20110629ysk start 0000190
-				//$pots[$key] = $value;
 				if( is_array($value) ) {
 					foreach( $value as $k => $v ) {
 						$pots[$key][$v] = $v;
@@ -246,8 +266,8 @@ class usces_cart {
 				} else {
 					$pots[$key] = $value;
 				}
-//20110629ysk end
 			}
+			ksort($pots);
 			$sels[$id][$sku] = $pots;
 		}else{
 			$sels[$id][$sku] = 0;
@@ -266,7 +286,14 @@ class usces_cart {
 		$row['serial'] = $serial;
 		$row['post_id'] = $ids[0];
 		$row['sku'] = $skus[0];
-		$row['options'] = apply_filters('usces_filter_key_unserialize_options', $array[$ids[0]][$skus[0]], $ids[0], $skus[0]);
+		$options = $array[$ids[0]][$skus[0]];
+		$opt_fields = usces_get_opts($row['post_id'], 'sort');
+		$new_opt = array();
+		foreach( $opt_fields as $key => $field ){
+			$name = urlencode($field['name']);
+			$new_opt[$name] = $options[$name];
+		}
+		$row['options'] = apply_filters('usces_filter_key_unserialize_options', $new_opt, $ids[0], $skus[0]);
 		$row['price'] = isset($_SESSION['usces_cart'][$serial]['price']) ? $_SESSION['usces_cart'][$serial]['price'] : 0;
 		$row['quantity'] = $_SESSION['usces_cart'][$serial]['quant'];
 		$row['advance'] = isset($_SESSION['usces_cart'][$serial]['advance']) ? $_SESSION['usces_cart'][$serial]['advance'] : array();
