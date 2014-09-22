@@ -3023,22 +3023,19 @@ function usces_get_local_language(){
 
 function usces_get_base_country(){
 	global $usces_settings;
-//	$locale = get_locale();
-	$wplang = defined('WPLANG') ? WPLANG : '';
+	$wplang = defined('WPLANG') ? WPLANG : get_locale();
 	$locale = empty( $wplang ) ? 'en' : $wplang;
-	if( array_key_exists($locale, $usces_settings['lungage2country']) )
-		return $usces_settings['lungage2country'][$locale];
-	else
-		return 'US';
+	$base_country = ( array_key_exists($locale, $usces_settings['lungage2country']) ) ? $usces_settings['lungage2country'][$locale] : 'US';
+	$base_country = apply_filters( 'usces_filter_base_country', $base_country );
+	return $base_country;
 }
 
 function usces_get_local_addressform(){
 	global $usces_settings;
 	$base = usces_get_base_country();
-	if( array_key_exists($base, $usces_settings['addressform']) )
-		return $usces_settings['addressform'][$base];
-	else
-		return 'US';
+	$addressform = ( array_key_exists($base, $usces_settings['addressform']) ) ? $usces_settings['addressform'][$base] : 'US';
+	$addressform = apply_filters( 'usces_filter_addressform', $addressform );
+	return $addressform;
 }
 
 function usces_get_local_target_market(){
