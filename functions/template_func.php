@@ -574,6 +574,7 @@ function usces_the_itemGpExp( $out = '' ) {
 	$unit = $usces->getItemSkuUnit($post_id, $sku);
 	$price = $usces->getItemPrice($post_id, $sku);
 
+
 	if( ($usces->itemsku['gp'] == 0) || empty($GpN1) || empty($GpD1) ){
 		return;
 	}
@@ -2686,7 +2687,7 @@ function usces_assistance_item($post_id, $title ){
 					</div>
 					<div class="assist_price">
 				<?php if (usces_is_skus()) : ?>
-					<?php _e('$', 'usces'); ?><?php usces_the_firstPrice(); ?>
+					<?php usces_crform( usces_the_firstPrice('return'), true, false ); ?>
 				<?php endif; ?>
 					</div>
 				</div>

@@ -508,6 +508,7 @@ jQuery(document).ready(function($){
 		<table id="dl_list_table">
 		<tr>
 		<?php echo apply_filters('usces_filter_dl_list_table', ''); ?>
+		<?php do_action( 'usces_action_dl_list_table' ); ?>
 		<td><input type="button" id="dl_productlist" class="searchbutton" value="<?php _e('Download Product List', 'usces'); ?>" /></td>
 		<td><input type="button" id="dl_orderlist" class="searchbutton" value="<?php _e('Download Order List', 'usces'); ?>" /></td>
 		</tr>
@@ -871,14 +872,8 @@ jQuery(document).ready(function($){
 </div>
 <!--20100908ysk end-->
 <?php echo apply_filters('usces_filter_order_list_footer', '');//20120612ysk 0000501 ?>
+<?php do_action( 'usces_action_order_list_footer', $rows ); ?>
 
-<!--<div class="chui">
-<h3>受注詳細画面（作成中）について</h3>
-<p>各行の受注番号をクリックすると受注詳細画面が表示されます。受注詳細画面では注文商品の追加、修正、削除など受注に関する全ての情報を編集することができま、問い合わせや電話での変更依頼に対応します。</p>
-<p>「見積り」ステイタスを利用することで見積りをメール送信できます。見積書印刷でFAX対応も可能です。注文をいただいた場合は「受注」ステイタスに変更することで、見積りの内容がそのまま受注データとなります。</p>
-<p>その他のステイタスには銀行振り込みの場合の「入金」ステイタス、発送完了した場合の「完了」、注文の「キャンセル」などがあり、各業務の終了後にステイタスを変更することを習慣付ければ、複数の担当者での業務もスムーズに行うことができます。</p>
-</div>
--->
 <?php wp_nonce_field( 'order_list', 'wc_nonce' ); ?>
 </form>
 <?php do_action( 'usces_action_order_list_footer' ); ?>

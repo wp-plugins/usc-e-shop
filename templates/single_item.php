@@ -165,7 +165,7 @@ if (usces_get_assistance_id_list($post->ID)) {
 			$html .= $post->post_excerpt;
 			$html .= '<p>'."\n";
 			if (usces_is_skus()) {
-				$html .= __('$', 'usces') . usces_the_firstPrice('return');
+				$html .= usces_crform( usces_the_firstPrice('return'), true, false, 'return' );
 			}
 			$html .= '<br />'."\n";
 			$html .= '&raquo; <a href="' . get_permalink($post->ID) . '" rel="bookmark" title="' . esc_attr($post->post_title) . '">'.__('see the details', 'usces').'</a></p>'."\n";
