@@ -11,7 +11,8 @@ function usces_guid_tax( $out = '' ){
 
 function usces_tax_label( $data = array(), $out = '' ){
 	global $usces;
-	if( empty($data) ){
+
+	if( empty($data) || !array_key_exists('order_condition', $data) ){
 		$tax_mode = $usces->options['tax_mode'];
 	}else{
 		$condition = maybe_unserialize($data['order_condition']);
