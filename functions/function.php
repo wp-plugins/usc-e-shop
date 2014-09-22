@@ -2266,6 +2266,7 @@ function usces_all_change_order_status(&$obj){
 				if(strpos($statusstr, 'adminorder') !== false) {
 					$statusstr = str_replace('adminorder', 'estimate', $statusstr);
 				}else if(strpos($statusstr, 'estimate') === false) {
+					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'estimate,';
 				}
 				break;
@@ -2273,6 +2274,7 @@ function usces_all_change_order_status(&$obj){
 				if(strpos($statusstr, 'estimate') !== false) {
 					$statusstr = str_replace('estimate', 'adminorder', $statusstr);
 				}else if(strpos($statusstr, 'adminorder') === false) {
+					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'adminorder,';
 				}
 				break;
@@ -2297,6 +2299,7 @@ function usces_all_change_order_status(&$obj){
 				}else if(strpos($statusstr, 'new') !== false) {
 					$statusstr = str_replace('new', 'duringorder', $statusstr);
 				}else if(strpos($statusstr, 'duringorder') === false) {
+					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'duringorder,';
 				}
 				break;
@@ -2312,6 +2315,7 @@ function usces_all_change_order_status(&$obj){
 				}else if(strpos($statusstr, 'duringorder') !== false) {
 					$statusstr = str_replace('duringorder', 'cancel', $statusstr);
 				}else if(strpos($statusstr, 'cancel') === false) {
+					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'cancel,';
 				}
 //20120919ysk start 0000573
@@ -2341,6 +2345,7 @@ function usces_all_change_order_status(&$obj){
 					}
 //20120919ysk end
 				}else if(strpos($statusstr, 'completion') === false) {
+					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'completion,';
 				}
 //20120306ysk start 0000324
