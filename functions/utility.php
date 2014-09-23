@@ -1651,6 +1651,7 @@ function usces_download_product_list() {
 		}
 	}
 	$line .= $table_f.$lf;
+	$line = apply_filters( 'wc_filter_chk_pro_data_order', $line );
 	//==========================================================================
 
 	if($ext == 'xls') {
