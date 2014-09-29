@@ -654,7 +654,7 @@ function usces_pdfSetFooter($pdf, $data) {
 	$pdf->SetXY(104.3, 198.8);
 	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(__('total items', 'usces')), $border, 'C');
 	$pdf->SetXY(104.3, 204.8);
-	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_label', __('Campaign disnount', 'usces'))), $border, 'C');
+	$pdf->MultiCell(37.7, $lineheight, usces_conv_euc(apply_filters('usces_filter_disnount_label', __('Campaign disnount', 'usces'))), $border, 'C', $data );
 	
 	if( 'products' == usces_get_tax_target() ){
 		$data_1 = apply_filters('usces_filter_tax_label', usces_tax_label( $labeldata, 'return' ));
