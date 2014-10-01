@@ -3000,11 +3000,20 @@ msgstr "商品の合計重量を元に送料に料金を加算します。"
 msgid "PayPal Express Checkout"
 msgstr "PayPalエクスプレスチェックアウト決済サービス"
 
+msgid "PayPal Web Payment Plus"
+msgstr "PayPalウェブペイメントプラス決済サービス"
+
 msgid "Test thoroughly before use."
 msgstr "十分にテストを行ってから運用してください。"
 
 msgid "PayPal Settlement"
 msgstr "PayPal決済"
+
+msgid "PayPal<br />Express Checkout"
+msgstr "PayPal<br />エクスプレスチェックアウト"
+
+msgid "PayPal<br />Web Payment Plus"
+msgstr "PayPal<br />ウェブペイメントプラス"
 
 msgid "Use"
 msgstr "利用する"
@@ -3012,8 +3021,11 @@ msgstr "利用する"
 msgid "Do not Use"
 msgstr "利用しない"
 
-msgid "Choose if to use PayPal settlement."
-msgstr "PayPal決済を利用するかどうかを選択します。"
+msgid "Choose if to use PayPal Express Checkout."
+msgstr "PayPalエクスプレスチェックアウトを利用するかどうかを選択します。"
+
+msgid "Choose if to use PayPal Web Payment Plus."
+msgstr "PayPalウェブペイメントプラスを利用するかどうかを選択します。"
 
 msgid "Operation Environment"
 msgstr "動作環境"
@@ -3051,14 +3063,23 @@ msgstr "定期支払い"
 msgid "It is a function that enables the automation of tedious payment settlement such as monthly membership fee that occurs regularly. <br /> For details, contact PayPal."
 msgstr "定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機能です。<br />詳しくは「PayPal」にお問合せください。"
 
-msgid "Update PayPal Settings"
-msgstr "PayPalの設定を更新する"
+msgid "Update PayPal Express Checkout settings"
+msgstr "PayPalエクスプレスチェックアウトの設定を更新する"
 
-msgid "For the details on PayPal settlement service, click here >>"
-msgstr "PayPal決済サービスの詳細はこちら 》"
+msgid "Update PayPal Web Payment Plus settings"
+msgstr "PayPalウェブペイメントプラスの設定を更新する"
+
+msgid "For the details on PayPal Express Checkout, click here >>"
+msgstr "PayPalエクスプレスチェックアウトの詳細はこちら 》"
+
+msgid "For the details on PayPal Web Payment Plus, click here >>"
+msgstr "PayPalウェブペイメントプラスの詳細はこちら 》"
 
 msgid "This settlement uses 'Express Checkout'."
 msgstr "この決済は、「エクスプレスチェックアウト」を使用しています。"
+
+msgid "This settlement uses 'Web Payment Plus'."
+msgstr "この決済は、「ウェブペイメントプラス」を使用しています。"
 
 msgid "If the 'OpenSSL' module is not installed in the server you're using, you cannot settle payments by 'ExpressCheckout'."
 msgstr "ご利用のサーバーに「OpenSSL」モジュールがインストールされていない場合、「エクスプレスチェックアウト」での決済はできません。"

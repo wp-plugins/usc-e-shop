@@ -121,8 +121,11 @@ function toggleVisibility(id) {
 		<li><a href="#uscestabs_jpayment">J-Payment</a></li>
 <!--20101018ysk end-->
 <!--20110208ysk start-->
-		<li><a href="#uscestabs_paypal">PayPal</a></li>
+		<li><a href="#uscestabs_paypal_ec">PayPal(EC)</a></li>
 <!--20110208ysk end-->
+<!--20140908ysk start-->
+		<li><a href="#uscestabs_paypal_wpp">PayPal(WPP)</a></li>
+<!--20140908ysk end-->
 <!--20120413ysk start-->
 		<li><a href="#uscestabs_sbps">ソフトバンク・ペイメント</a></li>
 <!--20120413ysk end-->
@@ -549,7 +552,7 @@ function toggleVisibility(id) {
 	</div><!--uscestabs_jpayment-->
 <!--20101018ysk end-->
 <!--20110208ysk start-->
-	<div id="uscestabs_paypal">
+	<div id="uscestabs_paypal_ec">
 	<div class="settlement_service"><span class="service_title"><?php _e('PayPal Express Checkout', 'usces'); ?></span></div>
 
 	<?php if( isset($_POST['acting']) && 'paypal' == $_POST['acting'] ){ ?>
@@ -562,10 +565,10 @@ function toggleVisibility(id) {
 	<form action="" method="post" name="paypal_form" id="paypal_form">
 		<table class="settle_table">
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ec_activate_paypal');"><?php _e('PayPal Settlement', 'usces'); ?></a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ec_activate_paypal');"><?php _e('PayPal<br />Express Checkout', 'usces'); ?></a></th>
 				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_1" value="on"<?php if( isset($opts['paypal']['ec_activate']) && $opts['paypal']['ec_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="ec_activate_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
 				<td><input name="ec_activate" type="radio" id="ec_activate_paypal_2" value="off"<?php if( isset($opts['paypal']['ec_activate']) && $opts['paypal']['ec_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="ec_activate_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
-				<td><div id="ex_ec_activate_paypal" class="explanation"><?php _e('Choose if to use PayPal settlement.', 'usces'); ?></div></td>
+				<td><div id="ex_ec_activate_paypal" class="explanation"><?php _e('Choose if to use PayPal Express Checkout.', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sandbox_paypal');"><?php _e('Operation Environment', 'usces'); ?></a></th>
@@ -618,18 +621,60 @@ function toggleVisibility(id) {
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paypal" />
-		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Settings', 'usces'); ?>" />
+		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Express Checkout settings', 'usces'); ?>" />
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('PayPal Express Checkout', 'usces'); ?></strong></p>
-		<a href="https://www.paypal.com/" target="_blank"><?php _e('For the details on PayPal settlement service, click here >>', 'usces'); ?></a>
+		<a href="https://www.paypal.jp/jp/contents/service/express-checkout/" target="_blank"><?php _e('For the details on PayPal Express Checkout, click here >>', 'usces'); ?></a>
 		<p>　</p>
 		<p><?php _e("This settlement uses 'Express Checkout'.", 'usces'); ?></p>
 		<p><?php _e("If the 'OpenSSL' module is not installed in the server you're using, you cannot settle payments by 'ExpressCheckout'.", 'usces'); ?></p>
 	</div>
-	</div><!--uscestabs_paypal-->
+	</div><!--uscestabs_paypal_ec-->
 <!--20110208ysk end-->
+<!--20140908ysk start-->
+	<div id="uscestabs_paypal_wpp">
+	<div class="settlement_service"><span class="service_title"><?php _e('PayPal Web Payment Plus', 'usces'); ?></span></div>
+	<?php if( isset($_POST['acting']) && 'paypal_wpp' == $_POST['acting'] ) : ?>
+		<?php if( '' != $mes ) : ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php elseif( isset($opts['paypal_wpp']['activate']) && 'on' == $opts['paypal_wpp']['activate'] ) : ?>
+		<div class="message"><?php _e('Test thoroughly before use.', 'usces'); ?></div>
+		<?php endif; ?>
+	<?php endif; ?>
+	<form action="" method="post" name="paypal_wpp_form" id="paypal_wpp_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_wpp_activate_paypal');"><?php _e('PayPal<br />Web Payment Plus', 'usces'); ?></a></th>
+				<td><input name="wpp_activate" type="radio" id="wpp_activate_paypal_1" value="on"<?php if( isset($opts['paypal_wpp']['wpp_activate']) && $opts['paypal_wpp']['wpp_activate'] == 'on' ) echo ' checked'; ?> /></td><td><label for="wpp_activate_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
+				<td><input name="wpp_activate" type="radio" id="wpp_activate_paypal_2" value="off"<?php if( isset($opts['paypal_wpp']['wpp_activate']) && $opts['paypal_wpp']['wpp_activate'] == 'off' ) echo ' checked'; ?> /></td><td><label for="wpp_activate_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
+				<td><div id="ex_wpp_activate_paypal" class="explanation"><?php _e('Choose if to use PayPal Web Payment Plus.', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sandbox_paypal_wpp');"><?php _e('Operation Environment', 'usces'); ?></a></th>
+				<td><input name="sandbox" type="radio" id="sandbox_paypal_wpp_1" value="1"<?php if( isset($opts['paypal_wpp']['sandbox']) && $opts['paypal_wpp']['sandbox'] == 1 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_wpp_1"><?php _e('Test (Sandbox)', 'usces'); ?></label></td>
+				<td><input name="sandbox" type="radio" id="sandbox_paypal_wpp_2" value="2"<?php if( isset($opts['paypal_wpp']['sandbox']) && $opts['paypal_wpp']['sandbox'] == 2 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_wpp_2"><?php _e('Formal Installment', 'usces'); ?></label></td>
+				<td><div id="ex_sandbox_paypal_wpp" class="explanation"><?php _e("Choose 'Test (Sandbox)' when testing payment settlement by Sandbox.", 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_id_paypal_wpp');"><?php _e('PayPal ID', 'usces'); ?></a></th>
+				<td colspan="4"><input name="paypal_id" type="text" id="id_paypal_wpp" value="<?php echo esc_html(isset($opts['paypal_wpp']['paypal_id']) ? $opts['paypal_wpp']['paypal_id'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_id_paypal_wpp" class="explanation"><?php _e('セキュアなマーチャントID(個人設定ページに表示)またはPayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<input name="acting" type="hidden" value="paypal_wpp" />
+		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Web Payment Plus settings', 'usces'); ?>" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
+	</form>
+	<div class="settle_exp">
+		<p><strong><?php _e('PayPal Web Payment Plus', 'usces'); ?></strong></p>
+		<a href="https://www.paypal.jp/jp/contents/service/web-payment-plus/" target="_blank"><?php _e('For the details on PayPal Web Payment Plus, click here >>', 'usces'); ?></a>
+		<p>　</p>
+		<p><?php _e("This settlement uses 'Web Payment Plus'.", 'usces'); ?></p>
+	</div>
+	</div><!--uscestabs_paypal_wpp-->
+<!--20140908ysk end-->
 <!--20120413ysk start-->
 	<div id="uscestabs_sbps">
 	<div class="settlement_service"><span class="service_title">ソフトバンク・ペイメント・サービス</span></div>

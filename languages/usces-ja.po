@@ -3,14 +3,13 @@ msgstr ""
 "Project-Id-Version: Welcart eCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-20 00:00+0900\n"
-"PO-Revision-Date: 2014-09-12 15:45+0900\n"
-"Last-Translator: Welcart <info@welcart.com>\n"
+"PO-Revision-Date: 2014-09-29 13:29+0900\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.5.3\n"
 
 msgid "This month"
 msgstr "今月"
@@ -3250,11 +3249,20 @@ msgstr "商品の合計重量を元に送料に料金を加算します。"
 msgid "PayPal Express Checkout"
 msgstr "PayPalエクスプレスチェックアウト決済サービス"
 
+msgid "PayPal Web Payment Plus"
+msgstr "PayPalウェブペイメントプラス決済サービス"
+
 msgid "Test thoroughly before use."
 msgstr "十分にテストを行ってから運用してください。"
 
 msgid "PayPal Settlement"
 msgstr "PayPal決済"
+
+msgid "PayPal<br />Express Checkout"
+msgstr "PayPal<br />エクスプレスチェックアウト"
+
+msgid "PayPal<br />Web Payment Plus"
+msgstr "PayPal<br />ウェブペイメントプラス"
 
 msgid "Use"
 msgstr "利用する"
@@ -3262,8 +3270,11 @@ msgstr "利用する"
 msgid "Do not Use"
 msgstr "利用しない"
 
-msgid "Choose if to use PayPal settlement."
-msgstr "PayPal決済を利用するかどうかを選択します。"
+msgid "Choose if to use PayPal Express Checkout."
+msgstr "PayPalエクスプレスチェックアウトを利用するかどうかを選択します。"
+
+msgid "Choose if to use PayPal Web Payment Plus."
+msgstr "PayPalウェブペイメントプラスを利用するかどうかを選択します。"
 
 msgid "Operation Environment"
 msgstr "動作環境"
@@ -3318,14 +3329,23 @@ msgstr ""
 "定期的に発生する月会費などの煩わしい課金処理を完全に自動化することができる機"
 "能です。<br />詳しくは「PayPal」にお問合せください。"
 
-msgid "Update PayPal Settings"
-msgstr "PayPalの設定を更新する"
+msgid "Update PayPal Express Checkout settings"
+msgstr "PayPalエクスプレスチェックアウトの設定を更新する"
 
-msgid "For the details on PayPal settlement service, click here >>"
-msgstr "PayPal決済サービスの詳細はこちら 》"
+msgid "Update PayPal Web Payment Plus settings"
+msgstr "PayPalウェブペイメントプラスの設定を更新する"
+
+msgid "For the details on PayPal Express Checkout, click here >>"
+msgstr "PayPalエクスプレスチェックアウトの詳細はこちら 》"
+
+msgid "For the details on PayPal Web Payment Plus, click here >>"
+msgstr "PayPalウェブペイメントプラスの詳細はこちら 》"
 
 msgid "This settlement uses 'Express Checkout'."
 msgstr "この決済は、「エクスプレスチェックアウト」を使用しています。"
+
+msgid "This settlement uses 'Web Payment Plus'."
+msgstr "この決済は、「ウェブペイメントプラス」を使用しています。"
 
 msgid ""
 "If the 'OpenSSL' module is not installed in the server you're using, you "

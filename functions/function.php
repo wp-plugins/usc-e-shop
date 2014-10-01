@@ -1162,7 +1162,13 @@ function usces_reg_orderdata( $results = array() ) {
 		if( $set['settlement'] == 'acting_zeus_conv' and !empty($results['wctid']) ) {
 			$usces->set_order_meta_value( 'acting_'.$results['wctid'], serialize( $results ), $order_id );
 		}
-		
+//20140908ysk start
+		if( isset($_POST['txn_type']) && 'pro_hosted' == $_POST['txn_type'] ) {
+			$data['txn_id'] = esc_sql( $_POST['txn_id'] );
+			$usces->set_order_meta_value( 'acting_paypal_wpp', serialize($data), $order_id );
+		}
+//20140908ysk end
+
 		//$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
 		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$set, 'charging_type'=>$charging_type);//20131121ysk
 		do_action('usces_action_reg_orderdata', $args);
@@ -2703,6 +2709,12 @@ function usces_check_acting_return() {
 			$results['reg_order'] = false;
 			break;
 //20140206ysk end
+//20140908ysk start
+		case 'paypal_wpp':
+			$results[0] = 1;
+			$results['reg_order'] = false;
+			break;
+//20140908ysk end
 
 		default:
 			do_action( 'usces_action_check_acting_return_default' );
@@ -5149,3 +5161,33 @@ function usces_clearup_acting_data(){
 	return $res;
 }
 
+function usces_save_order_acting_data( $acc_key ) {
+	global $usces, $wpdb;
+	$data = array();
+	$data['usces_cart'] = $_SESSION['usces_cart'];
+	$data['usces_entry'] = $_SESSION['usces_entry'];
+	$data['usces_member'] = $_SESSION['usces_member'];
+	$table_name = $wpdb->prefix."usces_access";
+	$query = $wpdb->prepare( "INSERT INTO  $table_name ( acc_key, acc_type, acc_value, acc_date, acc_str1 ) 
+		VALUES( %s, %s, %s, now(), %s )", 
+		$acc_key, 
+		'acting_data', 
+		serialize( $data ), 
+		$usces->get_uscesid( false )
+	);
+	$res = $wpdb->query( $query );
+	return $res;
+}
+
+function usces_restore_order_acting_data( $acc_key ) {
+	global $wpdb;
+	$table_name = $wpdb->prefix."usces_access";
+	$query = $wpdb->prepare( "SELECT acc_value FROM $table_name WHERE acc_key = %s AND acc_type = %s", $acc_key, 'acting_data' );
+	$data = $wpdb->get_var( $query );
+	if( $data ) {
+		$order_data = unserialize( $data );
+		$_SESSION['usces_cart'] = $order_data['usces_cart'];
+		$_SESSION['usces_entry'] = $order_data['usces_entry'];
+		$_SESSION['usces_member'] = $order_data['usces_member'];
+	}
+}

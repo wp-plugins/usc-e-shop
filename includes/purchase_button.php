@@ -584,6 +584,59 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			$html .= '</form>';
 			break;
 //20110208ysk end
+//20140908ysk start
+		case 'acting_paypal_wpp'://PayPal(ウェブペイメントプラス)
+			usces_save_order_acting_data( $rand );
+			$acting_opts = $usces->options['acting_settings']['paypal_wpp'];
+			$currency_code = $usces->get_currency_code();
+			$name1 = esc_attr( $usces_entries['customer']['name1'] );
+			$name2 = esc_attr( $usces_entries['customer']['name2'] );
+			$address2 = esc_attr( $usces_entries['customer']['address2'] );
+			$address3 = esc_attr( $usces_entries['customer']['address3'] );
+			$address1 = esc_attr( $usces_entries['customer']['address1'] );
+			$pref = esc_attr( $usces_entries['customer']['pref'] );
+			$country = ( !empty($usces_entries['customer']['country']) ) ? $usces_entries['customer']['country'] : usces_get_base_country();
+			$zip = str_replace( '-', '', $usces_entries['customer']['zipcode'] );
+			$tel = ltrim( str_replace( '-', '', $usces_entries['customer']['tel'] ), '0' );
+			$amount = usces_crform( $usces_entries['order']['total_full_price'], false, false, 'return', false );
+			$return_url = USCES_CART_URL.$usces->delim.'acting=paypal_wpp&acting_return=1&order_id='.$rand;
+			$cancel_url = USCES_CART_URL.$usces->delim.'confirm=1';
+			$iframe_width = apply_filters( 'usces_filter_paypal_wpp_iframe_width', '560' );
+			$iframe_height = apply_filters( 'usces_filter_paypal_wpp_iframe_height', '400' );
+			$html .= '<div id="paypal_wpp_iframe" style="width:'.$iframe_width.'px; margin: 0 auto;">
+				<iframe name="hss_iframe" width="100%" height="'.$iframe_height.'px"></iframe>
+				<form style="display:none" target="hss_iframe" name="form_iframe" method="post" action="'.$acting_opts['paypal_url'].'">
+				<input type="hidden" name="cmd" value="_hosted-payment">
+				<input type="hidden" name="subtotal" value="'.$amount.'">
+				<input type="hidden" name="business" value="'.$acting_opts['paypal_id'].'">
+				<input type="hidden" name="paymentaction" value="sale">
+				<input type="hidden" name="template" value="templateD">
+				<input type="hidden" name="billing_address1" value="'.$address2.'">
+				<input type="hidden" name="billing_address2" value="'.$address3.'">
+				<input type="hidden" name="billing_city" value="'.$address1.'">
+				<input type="hidden" name="billing_country" value="'.$country.'">
+				<input type="hidden" name="billing_first_name" value="'.$name1.'">
+				<input type="hidden" name="billing_last_name" value="'.$name2.'">
+				<input type="hidden" name="billing_state" value="'.$pref.'">
+				<input type="hidden" name="billing_zip" value="'.$zip.'">
+				<input type="hidden" name="address_override" value="true">
+				<input type="hidden" name="currency_code" value="'.$currency_code.'">
+				<input type="hidden" name="return" value="'.$return_url.'">
+				<input type="hidden" name="cancel_url" value="'.$cancel_url.'">
+				<input type="hidden" name="showHostedThankyouPage" value="false">
+				<input type="hidden" name="custom" value="'.$rand.'">
+				<input type="hidden" name="bn" value="uscons_cart_WPS_JP">
+				</form>
+				<script type="text/javascript">
+					document.form_iframe.submit();
+				</script></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled );
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform_back', $html );
+			$html .= '</form>';
+			break;
+//20140908ysk end
 //20120413ysk start
 		case 'acting_sbps_card':
 		case 'acting_sbps_conv':

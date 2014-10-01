@@ -1384,7 +1384,7 @@ class usc_e_shop
 						}
 						$options['acting_settings']['paypal']['activate'] = 'on';
 						if( 'on' == $options['acting_settings']['paypal']['ec_activate'] ){
-							$this->payment_structure['acting_paypal_ec'] = 'PayPal決済';
+							$this->payment_structure['acting_paypal_ec'] = 'PayPal決済(EC)';
 						}else{
 							unset($this->payment_structure['acting_paypal_ec']);
 						}
@@ -1399,6 +1399,45 @@ class usc_e_shop
 					update_option('usces_payment_structure', $this->payment_structure);
 					break;
 //20110208ysk end
+//20140908ysk start
+				case 'paypal_wpp':
+					unset( $options['acting_settings']['paypal_wpp'] );
+					$options['acting_settings']['paypal_wpp']['wpp_activate'] = isset($_POST['wpp_activate']) ? $_POST['wpp_activate'] : '';
+					$options['acting_settings']['paypal_wpp']['sandbox'] = isset($_POST['sandbox']) ? $_POST['sandbox'] : '';
+					$options['acting_settings']['paypal_wpp']['paypal_id'] = isset($_POST['paypal_id']) ? $_POST['paypal_id'] : '';
+
+					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
+						$mes .= '※動作環境が不正です<br />';
+					if( WCUtils::is_blank($_POST['paypal_id']) )
+						$mes .= '※PayPal ID を入力して下さい<br />';
+
+					if( WCUtils::is_blank($mes) ) {
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						if( $options['acting_settings']['paypal_wpp']['sandbox'] == 1 ) {
+							$options['acting_settings']['paypal_wpp']['host_url'] = 'www.sandbox.paypal.com';
+							$options['acting_settings']['paypal_wpp']['paypal_url'] = 'https://securepayments.sandbox.paypal.com/cgi-bin/acquiringweb';
+						} else {
+							$options['acting_settings']['paypal_wpp']['host_url'] = 'www.paypal.com';
+							$options['acting_settings']['paypal_wpp']['paypal_url'] = 'https://securepayments.paypal.com/cgi-bin/acquiringweb';
+						}
+						$options['acting_settings']['paypal_wpp']['activate'] = 'on';
+						if( 'on' == $options['acting_settings']['paypal_wpp']['wpp_activate'] ) {
+							$this->payment_structure['acting_paypal_wpp'] = 'PayPal決済(WPP)';
+						} else {
+							unset( $this->payment_structure['acting_paypal_wpp'] );
+						}
+						update_option('usces', $options);
+					} else {
+						$this->action_status = 'error';
+						$this->action_message = __('Data have deficiency.', 'usces');
+						$options['acting_settings']['paypal_wpp']['activate'] = 'off';
+						unset( $this->payment_structure['acting_paypal_wpp'] );
+					}
+					ksort( $this->payment_structure );
+					update_option( 'usces_payment_structure', $this->payment_structure );
+					break;
+//20140908ysk end
 //20120413ysk start
 				case 'sbps':
 					unset( $options['acting_settings']['sbps'] );

@@ -544,4 +544,64 @@ function usces_paypal_action_customerinfo() {
 	}
 }
 
+function usces_paypal_ipn_check( $usces_paypal_url ) {
+
+	// read the post from PayPal system and add 'cmd'
+	$req = 'cmd=_notify-validate';
+
+	foreach( $_POST as $key => $value ) {
+		$value = urlencode( stripslashes($value) );
+		$req .= '&'.$key.'='.$value;
+	}
+
+	// post back to PayPal system to validate
+	$header  = "POST /cgi-bin/webscr HTTP/1.1\r\n";
+	$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+	$header .= "Host: ".$usces_paypal_url."\r\n";
+	$header .= "Content-Length: ".strlen($req)."\r\n";
+	$header .= "Connection: close\r\n\r\n";
+	$fp = fsockopen( 'ssl://'.$usces_paypal_url, 443, $errno, $errstr, 30 );
+
+	$order_id = isset( $_POST['custom'] ) ? $_POST['custom'] : '';
+	$txn_id = isset( $_POST['txn_id'] ) ? $_POST['txn_id'] : '';
+
+	$results = array();
+	if( !$fp ) {
+		$results[0] = false;
+		usces_log( __('IPN Connection Error', 'usces'), 'acting_transaction.log' );
+
+	} else {
+		fputs( $fp, $header.$req );
+		// read the body data
+		$res = '';
+		$headerdone = false;
+		while( !feof($fp) ) {
+			$line = fgets( $fp, 1024 );
+			if( strcmp( $line, "\r\n" ) == 0 ) {
+				// read the header
+				$headerdone = true;
+			} elseif( $headerdone ) {
+				// header has been read. now read the contents
+				$res .= $line;
+			}
+		}
+
+		// parse the data
+		$lines = explode( "\n", $res );
+		if( preg_match( "/VERIFIED/mi", $res ) == 1 ) {
+			$results[0] = true;
+			$results['order_id'] = $order_id;
+			$results['txn_id'] = $txn_id;
+			usces_log( 'IPN [SUCCESS]', 'acting_transaction.log' );
+
+		} else {
+			$results[0] = false;
+			//usces_log( __('IPN Refusal', 'usces')."\n\t\t\t".__("PayPal gives back 'FAIL'. Please confirm setting.", 'usces'), 'acting_transaction.log' );
+		}
+
+		fclose( $fp );
+	}
+	return $results;
+}
+
 ?>
