@@ -5329,11 +5329,15 @@ class usc_e_shop
 		if($wpdb->get_var("show tables like '$log_table'") != $log_table) {
 		
 			$sql = "CREATE TABLE " . $log_table . " (
-				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
-				`datetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-				`log`  LONGTEXT NULL ,
-				PRIMARY  KEY (  `ID`  ) ,
-				KEY  `datetime` (  `datetime`  )  
+				ID BIGINT( 20 ) NOT NULL AUTO_INCREMENT,
+				datetime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				log LONGTEXT NULL,
+				log_type VARCHAR( 100 ) DEFAULT NULL,
+				log_key VARCHAR( 255 ) DEFAULT NULL,
+				PRIMARY KEY ( ID ) ,
+				KEY datetime ( datetime ),
+				KEY log_type ( log_type ),
+				KEY log_key ( log_key )
 				) ENGINE = MYISAM $charset_collate;";
 		
 			dbDelta($sql);
@@ -5366,20 +5370,20 @@ class usc_e_shop
 		if( $access_ver != USCES_DB_ACCESS ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $access_table . " (
-				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				acc_key VARCHAR( 50 ) NOT NULL ,
-				acc_type VARCHAR( 50 ) NULL ,
+				ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				acc_key VARCHAR(50) NOT NULL ,
+				acc_type VARCHAR(50) NULL ,
 				acc_value LONGTEXT NULL ,
 				acc_date DATE NOT NULL DEFAULT '0000-00-00',
-				acc_num1 INT( 11 ) NOT NULL DEFAULT 0,
-				acc_num2 INT( 11 ) NOT NULL DEFAULT 0,
-				acc_str1 VARCHAR( 200 ) NULL ,
-				acc_str2 VARCHAR( 200 ) NULL ,
-				KEY acc_key ( acc_key ),  
-				KEY acc_type ( acc_type ),  
-				KEY acc_date ( acc_date ), 
-				KEY acc_num1 ( acc_num1 ), 
-				KEY acc_num2 ( acc_num2 )  
+				acc_num1 INT(11) NOT NULL DEFAULT 0,
+				acc_num2 INT(11) NOT NULL DEFAULT 0,
+				acc_str1 VARCHAR(200) NULL ,
+				acc_str2 VARCHAR(200) NULL ,
+				KEY acc_key (acc_key),  
+				KEY acc_type (acc_type),  
+				KEY acc_date (acc_date), 
+				KEY acc_num1 (acc_num1), 
+				KEY acc_num2 (acc_num2)  
 				) ENGINE = MYISAM;";
 			
 			dbDelta($sql);
@@ -5388,29 +5392,29 @@ class usc_e_shop
 		if( $member_ver != USCES_DB_MEMBER ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $member_table . " (
-				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				mem_email VARCHAR( 100 ) NOT NULL ,
-				mem_pass VARCHAR( 64 ) NOT NULL ,
-				mem_status INT( 11 ) NOT NULL DEFAULT '0',
-				mem_cookie VARCHAR( 13 ) NULL ,
-				mem_point INT( 11 ) NOT NULL DEFAULT '0',
-				mem_name1 VARCHAR( 100 ) NOT NULL ,
-				mem_name2 VARCHAR( 100 ) NULL ,
-				mem_name3 VARCHAR( 100 ) NULL ,
-				mem_name4 VARCHAR( 100 ) NULL ,
-				mem_zip VARCHAR( 50 ) NULL ,
-				mem_pref VARCHAR( 100 ) NOT NULL ,
-				mem_address1 VARCHAR( 100 ) NOT NULL ,
-				mem_address2 VARCHAR( 100 ) NULL ,
-				mem_address3 VARCHAR( 100 ) NULL ,
-				mem_tel VARCHAR( 100 ) NOT NULL ,
-				mem_fax VARCHAR( 100 ) NULL ,
-				mem_delivery_flag TINYINT ( 1 ) NULL ,
+				ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				mem_email VARCHAR(100) NOT NULL ,
+				mem_pass VARCHAR(64) NOT NULL ,
+				mem_status INT(11) NOT NULL DEFAULT '0',
+				mem_cookie VARCHAR(13) NULL ,
+				mem_point INT(11) NOT NULL DEFAULT '0',
+				mem_name1 VARCHAR(100) NOT NULL ,
+				mem_name2 VARCHAR(100) NULL ,
+				mem_name3 VARCHAR(100) NULL ,
+				mem_name4 VARCHAR(100) NULL ,
+				mem_zip VARCHAR(50) NULL ,
+				mem_pref VARCHAR(100) NOT NULL ,
+				mem_address1 VARCHAR(100) NOT NULL ,
+				mem_address2 VARCHAR(100) NULL ,
+				mem_address3 VARCHAR(100) NULL ,
+				mem_tel VARCHAR(100) NOT NULL ,
+				mem_fax VARCHAR(100) NULL ,
+				mem_delivery_flag TINYINT (1) NULL ,
 				mem_delivery LONGTEXT,
 				mem_registered DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-				mem_nicename VARCHAR( 50 ) NULL ,
-				KEY mem_email ( mem_email ) ,  
-				KEY mem_pass ( mem_pass )  
+				mem_nicename VARCHAR(50) NULL ,
+				KEY mem_email (mem_email) ,  
+				KEY mem_pass (mem_pass)  
 				) ENGINE = MYISAM;";
 			
 			dbDelta($sql);
@@ -5419,11 +5423,10 @@ class usc_e_shop
 		if( $member_meta_ver != USCES_DB_MEMBER_META ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $member_meta_table . " (
-				mmeta_id bigint(20) NOT NULL auto_increment,
+				mmeta_id bigint(20) NOT NULL auto_increment PRIMARY KEY,
 				member_id bigint(20) NOT NULL default '0',
 				meta_key varchar(255) default NULL,
 				meta_value longtext,
-				PRIMARY KEY  (mmeta_id),
 				KEY order_id (member_id),
 				KEY meta_key (meta_key)
 				) ENGINE = MYISAM;";
@@ -5434,47 +5437,47 @@ class usc_e_shop
 		if( $order_ver != USCES_DB_ORDER ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $order_table . " (
-				ID BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				mem_id BIGINT( 20 ) UNSIGNED NULL ,
-				order_email VARCHAR( 100 ) NOT NULL ,
-				order_name1 VARCHAR( 100 ) NOT NULL ,
-				order_name2 VARCHAR( 100 ) NULL ,
-				order_name3 VARCHAR( 100 ) NULL ,
-				order_name4 VARCHAR( 100 ) NULL ,
-				order_zip VARCHAR( 50 ) NULL ,
-				order_pref VARCHAR( 100 ) NOT NULL ,
-				order_address1 VARCHAR( 100 ) NOT NULL ,
-				order_address2 VARCHAR( 100 ) NULL ,
-				order_address3 VARCHAR( 100 ) NULL ,
-				order_tel VARCHAR( 100 ) NOT NULL ,
-				order_fax VARCHAR( 100 ) NULL ,
+				ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				mem_id BIGINT(20) UNSIGNED NULL ,
+				order_email VARCHAR(100) NOT NULL ,
+				order_name1 VARCHAR(100) NOT NULL ,
+				order_name2 VARCHAR(100) NULL ,
+				order_name3 VARCHAR(100) NULL ,
+				order_name4 VARCHAR(100) NULL ,
+				order_zip VARCHAR(50) NULL ,
+				order_pref VARCHAR(100) NOT NULL ,
+				order_address1 VARCHAR(100) NOT NULL ,
+				order_address2 VARCHAR(100) NULL ,
+				order_address3 VARCHAR(100) NULL ,
+				order_tel VARCHAR(100) NOT NULL ,
+				order_fax VARCHAR(100) NULL ,
 				order_delivery LONGTEXT,
 				order_cart LONGTEXT,
 				order_note TEXT,
-				order_delivery_time VARCHAR( 100 ) NOT NULL ,
-				order_payment_name VARCHAR( 100 ) NOT NULL ,
+				order_delivery_time VARCHAR(100) NOT NULL ,
+				order_payment_name VARCHAR(100) NOT NULL ,
 				order_condition TEXT,
-				order_item_total_price DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
-				order_getpoint INT( 10 ) NOT NULL DEFAULT '0',
-				order_usedpoint INT( 10 ) NOT NULL DEFAULT '0',
-				order_discount DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
-				order_shipping_charge DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
-				order_cod_fee DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
-				order_tax DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+				order_item_total_price DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+				order_getpoint INT(10) NOT NULL DEFAULT '0',
+				order_usedpoint INT(10) NOT NULL DEFAULT '0',
+				order_discount DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+				order_shipping_charge DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+				order_cod_fee DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+				order_tax DECIMAL(10,2) NOT NULL DEFAULT '0.00',
 				order_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-				order_modified VARCHAR( 20 ) NULL ,
-				order_status VARCHAR( 255 ) NULL ,
+				order_modified VARCHAR(20) NULL ,
+				order_status VARCHAR(255) NULL ,
 				order_check TEXT NULL ,
-				order_delidue_date VARCHAR( 30 ) NULL ,
-				order_delivery_method INT( 10 ) NOT NULL DEFAULT -1,
-				order_delivery_date VARCHAR( 100 ) NULL,
-				KEY order_email ( order_email ) ,  
-				KEY order_name1 ( order_name1 ) ,  
-				KEY order_name2 ( order_name2 ) ,  
-				KEY order_pref ( order_pref ) ,  
-				KEY order_address1 ( order_address1 ) ,  
-				KEY order_tel ( order_tel ) ,  
-				KEY order_date ( order_date ) 
+				order_delidue_date VARCHAR(30) NULL ,
+				order_delivery_method INT(10) NOT NULL DEFAULT -1,
+				order_delivery_date VARCHAR(100) NULL,
+				KEY order_email (order_email) ,  
+				KEY order_name1 (order_name1) ,  
+				KEY order_name2 (order_name2) ,  
+				KEY order_pref (order_pref) ,  
+				KEY order_address1 (order_address1) ,  
+				KEY order_tel (order_tel) ,  
+				KEY order_date (order_date) 
 				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
@@ -5483,11 +5486,10 @@ class usc_e_shop
 		if( $order_meta_ver != USCES_DB_ORDER_META ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $order_meta_table . " (
-				ometa_id bigint(20) NOT NULL auto_increment,
+				ometa_id bigint(20) NOT NULL auto_increment PRIMARY KEY,
 				order_id bigint(20) NOT NULL default '0',
 				meta_key varchar(255) default NULL,
 				meta_value longtext,
-				PRIMARY KEY  (ometa_id),
 				KEY order_id (order_id),
 				KEY meta_key (meta_key)
 				) ENGINE = MYISAM;";
@@ -5498,30 +5500,29 @@ class usc_e_shop
 		if( $ordercart_ver != USCES_DB_ORDERCART ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $ordercart_table . " (
-				`cart_id` bigint( 20  )  unsigned NOT  NULL  AUTO_INCREMENT ,
-				`order_id` bigint( 20  )  NOT  NULL ,
-				`group_id` int( 3  )  NOT  NULL DEFAULT  '0',
-				`row_index` int( 3  )  NOT  NULL ,
-				`post_id` bigint( 20  )  NOT  NULL ,
-				`item_code` varchar( 100  )  NOT  NULL ,
-				`item_name` varchar( 250  )  NOT  NULL ,
-				`cprice` decimal( 12, 0  )  DEFAULT NULL ,
-				`sku_code` varchar( 100  )  NOT  NULL ,
-				`sku_name` varchar( 250  )  DEFAULT NULL ,
-				`price` decimal( 12, 0  )  NOT  NULL ,
-				`quantity` float NOT  NULL ,
-				`unit` varchar( 50  )  DEFAULT NULL ,
-				`tax` decimal( 10, 0  )  DEFAULT NULL ,
-				`destination_id` int( 10  )  DEFAULT NULL ,
-				`cart_serial` text,
-				PRIMARY  KEY (  `cart_id`  ) ,
-				UNIQUE  KEY  `row` (  `row_index` ,  `destination_id` ,  `order_id`  ) ,
-				KEY  `order_id` (  `order_id`  ) ,
-				KEY  `post_id` (  `post_id`  ) ,
-				KEY  `item_code` (  `item_code`  ) ,
-				KEY  `item_name` (  `item_name`  ) ,
-				KEY  `sku_code` (  `sku_code`  ) ,
-				KEY  `sku_name` (  `sku_name`  ) 
+				cart_id bigint(20)  unsigned NOT  NULL  AUTO_INCREMENT PRIMARY KEY ,
+				order_id bigint(20)  NOT  NULL ,
+				group_id int(3)  NOT  NULL DEFAULT  '0',
+				row_index int(3)  NOT  NULL ,
+				post_id bigint(20)  NOT  NULL ,
+				item_code varchar(100)  NOT  NULL ,
+				item_name varchar(250)  NOT  NULL ,
+				cprice decimal(12,0)  DEFAULT NULL ,
+				sku_code varchar(100)  NOT  NULL ,
+				sku_name varchar(250)  DEFAULT NULL ,
+				price decimal(12,0)  NOT  NULL ,
+				quantity float NOT  NULL ,
+				unit varchar(50)  DEFAULT NULL ,
+				tax decimal(10,0)  DEFAULT NULL ,
+				destination_id int(10)  DEFAULT NULL ,
+				cart_serial text,
+				UNIQUE  KEY  row (row_index,destination_id,order_id) ,
+				KEY  order_id (order_id) ,
+				KEY  post_id (post_id) ,
+				KEY  item_code (item_code) ,
+				KEY  item_name (item_name) ,
+				KEY  sku_code (sku_code) ,
+				KEY  sku_name (sku_name) 
 				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
@@ -5530,14 +5531,13 @@ class usc_e_shop
 		if( $ordercart_meta_ver != USCES_DB_ORDERCART_META ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $ordercart_meta_table . " (
-				`cartmeta_id` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
-				`cart_id` bigint( 20  )  NOT  NULL DEFAULT  '0',
-				`meta_type` varchar( 100  )  NOT  NULL ,
-				`meta_key` varchar( 255  )  DEFAULT NULL ,
-				`meta_value` longtext,
-				PRIMARY  KEY (  `cartmeta_id`  ) ,
-				KEY  `cart_id` (  `cart_id`  ) ,
-				KEY  `meta_key` (  `meta_key`  ) 
+				cartmeta_id bigint(20)  NOT  NULL  AUTO_INCREMENT PRIMARY KEY ,
+				cart_id bigint(20)  NOT  NULL DEFAULT '0',
+				meta_type varchar(100)  NOT  NULL ,
+				meta_key varchar(255)  DEFAULT NULL ,
+				meta_value longtext,
+				KEY  cart_id (cart_id) ,
+				KEY  meta_key (meta_key) 
 				) ENGINE = MYISAM;";
 		
 			dbDelta($sql);
@@ -5546,13 +5546,16 @@ class usc_e_shop
 		if( $log_ver != USCES_DB_LOG ) {
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			$sql = "CREATE TABLE " . $log_table . " (
-				`ID` bigint( 20  )  NOT  NULL  AUTO_INCREMENT ,
-				`datetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-				`log`  LONGTEXT NULL ,
-				PRIMARY  KEY (  `ID`  ) ,
-				KEY  `datetime` (  `datetime`  )  
+				ID bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				datetime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				log LONGTEXT NULL,
+				log_type VARCHAR(100) DEFAULT NULL,
+				log_key VARCHAR(255) DEFAULT NULL,
+				KEY datetime (datetime),
+				KEY log_type (log_type),
+				KEY log_key (log_key)
 				) ENGINE = MYISAM;";
-		
+
 			dbDelta($sql);
 			update_option("usces_db_log", USCES_DB_LOG);
 		}

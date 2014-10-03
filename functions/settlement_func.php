@@ -75,7 +75,7 @@ function usces_member_update_settlement_form() {
 
 	if( isset($_POST['update']) ) {
 		$interface = parse_url( $acting_opts['card_url'] );
-		$rand = sprintf( '%010d', mt_rand(1, 9999999999) );
+		$rand = usces_rand();
 
 		$vars = 'send=mall';
 		$vars .= '&clientip='.$acting_opts['clientip'];

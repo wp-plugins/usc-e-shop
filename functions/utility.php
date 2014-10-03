@@ -627,23 +627,23 @@ function usces_upgrade_11(){
 	return $rets;
 }
 
-function usces_log($log, $file){
+function usces_log( $log, $file, $type = '', $key = '' ) {
 	global $usces;
-	
-	if( 'db' == $file ){
-		
+
+	if( 'db' == $file ) {
+
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'usces_log';
-		$query = $wpdb->prepare("INSERT INTO $table_name (datetime, log) VALUES(%s, %s)", current_time('mysql'), $log);
+		$query = $wpdb->prepare( "INSERT INTO $table_name ( datetime, log, log_type, log_key ) VALUES( %s, %s, %s, %s )", current_time('mysql'), $log, $type, $key );
 		$wpdb->query( $query );
 
-	}else{
-		
+	} else {
+
 		$log = date('[Y-m-d H:i:s]', current_time('timestamp')) . "\t" . $log . "\n";
 		$file_path = USCES_PLUGIN_DIR . '/logs/' . $file;
 		if( is_dir($file_path) )
 			return;
-			
+
 		$fp = fopen($file_path, 'a');
 		if( false !== $fp ){
 			fwrite($fp, $log);

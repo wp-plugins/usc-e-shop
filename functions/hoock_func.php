@@ -587,6 +587,8 @@ function usces_action_acting_transaction(){
 		//*** PayPal Webpayment Plus ***//
 		if( isset($_POST['txn_type']) && 'pro_hosted' == $_POST['txn_type'] ) {
 			$acting_opts = $usces->options['acting_settings']['paypal_wpp'];
+			$key = isset( $_POST['custom'] ) ? $_POST['custom'] : '';
+			usces_log( serialize($data), 'db', 'paypal_ipn', $key );
 			$ipn_res = usces_paypal_ipn_check( $acting_opts['host_url'] );
 			if( $ipn_res[0] === true ) {
 				$order_id = $ipn_res['order_id'];

@@ -4,7 +4,7 @@ if(isset($this))
 
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 $acting_flag = '';
-$rand = sprintf('%010d', mt_rand(1, 9999999999));
+$rand = usces_rand();
 $cart = $usces->cart->get_cart();
 
 //$purchase_disabled = ( '' != $usces->error_message ) ? ' disabled="true"' : '';

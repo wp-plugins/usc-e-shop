@@ -5161,28 +5161,27 @@ function usces_clearup_acting_data(){
 	return $res;
 }
 
-function usces_save_order_acting_data( $acc_key ) {
+function usces_save_order_acting_data( $key ) {
 	global $usces, $wpdb;
 	$data = array();
 	$data['usces_cart'] = $_SESSION['usces_cart'];
 	$data['usces_entry'] = $_SESSION['usces_entry'];
 	$data['usces_member'] = $_SESSION['usces_member'];
-	$table_name = $wpdb->prefix."usces_access";
-	$query = $wpdb->prepare( "INSERT INTO  $table_name ( acc_key, acc_type, acc_value, acc_date, acc_str1 ) 
-		VALUES( %s, %s, %s, now(), %s )", 
-		$acc_key, 
-		'acting_data', 
-		serialize( $data ), 
-		$usces->get_uscesid( false )
+	$table_name = $wpdb->prefix."usces_log";
+	$query = $wpdb->prepare( "INSERT INTO  $table_name ( `datetime`, `log`, `log_type`, `log_key` ) VALUES ( %s, %s, %s, %s )",
+		current_time('mysql'),
+		serialize( $data ),
+		'acting_data',
+		$key
 	);
 	$res = $wpdb->query( $query );
 	return $res;
 }
 
-function usces_restore_order_acting_data( $acc_key ) {
+function usces_restore_order_acting_data( $key ) {
 	global $wpdb;
-	$table_name = $wpdb->prefix."usces_access";
-	$query = $wpdb->prepare( "SELECT acc_value FROM $table_name WHERE acc_key = %s AND acc_type = %s", $acc_key, 'acting_data' );
+	$table_name = $wpdb->prefix."usces_log";
+	$query = $wpdb->prepare( "SELECT `log` FROM $table_name WHERE `log_type` = %s AND `log_key` = %s", 'acting_data', $key );
 	$data = $wpdb->get_var( $query );
 	if( $data ) {
 		$order_data = unserialize( $data );

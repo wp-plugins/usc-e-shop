@@ -626,7 +626,7 @@ function toggleVisibility(id) {
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('PayPal Express Checkout', 'usces'); ?></strong></p>
-		<a href="https://www.paypal.jp/jp/contents/service/express-checkout/" target="_blank"><?php _e('For the details on PayPal Express Checkout, click here >>', 'usces'); ?></a>
+		<a href="http://www.welcart.com/wc-settlement/paypal_guide/" target="_blank"><?php _e('For the details on PayPal Express Checkout, click here >>', 'usces'); ?></a>
 		<p>　</p>
 		<p><?php _e("This settlement uses 'Express Checkout'.", 'usces'); ?></p>
 		<p><?php _e("If the 'OpenSSL' module is not installed in the server you're using, you cannot settle payments by 'ExpressCheckout'.", 'usces'); ?></p>
