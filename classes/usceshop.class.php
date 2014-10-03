@@ -6193,8 +6193,14 @@ class usc_e_shop
 	
 	function get_postIDbyCode( $itemcode ) {
 		global $wpdb;
-		
-		$query = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s LIMIT 1", '_itemCode', $itemcode);
+
+		//$query = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s LIMIT 1", '_itemCode', $itemcode);
+		$query = $wpdb->prepare( "SELECT post.ID FROM $wpdb->posts AS post 
+			LEFT JOIN $wpdb->postmeta AS pm ON post.ID = pm.post_id AND pm.meta_key = %s 
+			WHERE pm.meta_value = %s 
+			AND post.post_status = %s 
+			LIMIT 1", 
+			'_itemCode', $itemcode, 'publish' );
 		$res = $wpdb->get_var( $query );
 		return $res;
 	}

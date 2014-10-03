@@ -59,7 +59,8 @@ class Welcart_bestseller extends WP_Widget {
 			<?php if($list === 1): ?>
 			<?php usces_list_bestseller($rows_num); ?>
 			<?php else: ?>
-			<?php  
+			<?php 
+					$htm = '';
 					for($i=0; $i<$rows_num; $i++) { 
 						$cname = 'code' . ($i+1);
 						$code = esc_html(trim($instance[$cname]));
