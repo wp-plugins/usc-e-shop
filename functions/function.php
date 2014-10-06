@@ -886,6 +886,19 @@ function _usces_send_mail( $para ) {
 
 function usces_send_mail( $para ) {
 	global $usces;
+	
+	$from_name = $para['from_name'];
+	$from_address = $para['from_address'];
+	if (strpos($para['from_address'], '..') !== false || strpos($para['from_address'], '.@') !== false) {
+		$fname = str_replace(strstr($para['from_address'], '@'), '', $para['from_address']);
+		if( '"' != substr($fname, 0, 1) && '"' != substr($fname, -1) ){
+			$para['from_address'] = str_replace($fname, '"RFC_violation"', $para['from_address']);
+			$from_name = $para['from_name'] . '(' . $from_address . ')';
+		}
+	}
+	$from_name = mb_encode_mimeheader($from_name);
+	$from = htmlspecialchars(html_entity_decode($from_name, ENT_QUOTES)) . " <{$para['from_address']}>";
+	$para['from_name'] = $from;
 
 	$usces->mail_para = $para;
 	add_action('phpmailer_init','usces_send_mail_init', 11);
