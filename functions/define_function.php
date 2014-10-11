@@ -267,8 +267,9 @@ function usces_item_uploadcsv(){
 			echo $mes.$br.$yn;
 			continue;
 		}
+		$item_code = ( $usces->options['system']['csv_encode_type'] == 0 ) ? trim(mb_convert_encoding($datas[USCES_COL_ITEM_CODE], 'UTF-8', 'SJIS')) :  trim($datas[USCES_COL_ITEM_CODE]);
 
-		if( $pre_code == $datas[USCES_COL_ITEM_CODE] && WCUtils::is_blank($datas[USCES_COL_POST_ID]) ){
+		if( $pre_code == $item_code && WCUtils::is_blank($datas[USCES_COL_POST_ID]) ){
 			$mode = 'add';
 
 		}else{
@@ -587,7 +588,7 @@ function usces_item_uploadcsv(){
 						$val['name'] = $value;
 						break;
 					case 2:
-						if( $value != NULL && ((0 != (int)$value) and (1 != (int)$value) and (2 != (int)$value) and (5 != (int)$value)) ){
+						if( $value != NULL && (( 0 > (int)$value) || (5 < (int)$value)) ){
 							$oplogtemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces').$yn;
 							$opmestemp .= "No." . ($rows_num+1) . "\t" . __(sprintf('Option-entry-field of No.%s option is abnormal.', ($i+1)), 'usces').$br.$yn;
 						}
@@ -634,8 +635,9 @@ function usces_item_uploadcsv(){
 		$sku = array();
 		$opt = array();
 		$valstr = '';
+		
 
-		if( $pre_code != $datas[USCES_COL_ITEM_CODE] ){
+		if( $pre_code != $item_code ){
 			$sku_index = 0;
 
 			$cdatas['ID'] = $post_id;
@@ -701,7 +703,7 @@ function usces_item_uploadcsv(){
 					$mes = "No." . ($rows_num+1) . "\t".__('This data was not registered in the database.', 'usces');
 					$log .= $mes.$yn;
 					echo $mes.$br.$yn;
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
+					$pre_code = $item_code;
 					continue;
 				}
 				$post_id = $wpdb->insert_id;
@@ -720,7 +722,7 @@ function usces_item_uploadcsv(){
 					$mes = "No." . ($rows_num+1) . "\t".__('The data were not registered with a database.', 'usces');
 					$log .= $mes.$yn;
 					echo $mes.$br.$yn;
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
+					$pre_code = $item_code;
 					continue;
 				}
 
@@ -755,7 +757,7 @@ function usces_item_uploadcsv(){
 					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete postmeta', 'usces');
 					$log .= $mes.$yn;
 					echo $mes.$br.$yn;
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
+					$pre_code = $item_code;
 					continue;
 				}
 				// delete Item revisions
@@ -766,7 +768,7 @@ function usces_item_uploadcsv(){
 					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete revisions', 'usces');
 					$log .= $mes.$yn;
 					echo $mes.$br.$yn;
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
+					$pre_code = $item_code;
 					continue;
 				}
 				// delete relationships of category 
@@ -777,7 +779,7 @@ function usces_item_uploadcsv(){
 					$mes = "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(category)', 'usces');
 					$log .= $mes.$yn;
 					echo $mes.$br.$yn;
-					$pre_code = $datas[USCES_COL_ITEM_CODE];
+					$pre_code = $item_code;
 					continue;
 				}
 				// delete relationships of tag 
@@ -792,7 +794,7 @@ function usces_item_uploadcsv(){
 						$mes = "No." . ($rows_num+1) . "\t".__('Error : delete term_relationships(tag)', 'usces');
 						$log .= $mes.$yn;
 						echo $mes.$br.$yn;
-						$pre_code = $datas[USCES_COL_ITEM_CODE];
+						$pre_code = $item_code;
 						continue;
 					}
 				}
@@ -1001,7 +1003,7 @@ function usces_item_uploadcsv(){
 
 //		usces_log('skuvalue : '.$post_id.print_r($skuvalue,true), 'acting_transaction.log');
 		$comp_num++;
-		$pre_code = $datas[USCES_COL_ITEM_CODE];
+		$pre_code = $item_code;
 		clean_post_cache($post_id);
 		wp_cache_delete($post_id, 'posts');
 		wp_cache_delete($post_id, 'post_meta');

@@ -4269,6 +4269,7 @@ function usces_get_send_out_date(){
 		if($shipping < $itemShipping) $shipping = $itemShipping;
 	}
 	$indication_incart = ( $indication_flag ) ? $shipping_indication[$shipping] : false;
+	$indication_incart = apply_filters( 'usces_filter_indication_incart', $indication_incart, $shipping_indication, $shipping, $cart );
 	// get the send out date
 	$sendout_num = 0;
 	if( $today_bus_flag ){

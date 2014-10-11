@@ -258,7 +258,7 @@ function usces_reg_ordercartdata( $args ){
 				$advance = maybe_unserialize( $avalue );
 				if( is_array($advance) ) {
 					$post_id = $value['post_id'];
-					if( is_array( $advance[$post_id][$sku_encoded] ) ) {
+					if( isset($advance[$post_id][$sku_encoded]) && is_array( $advance[$post_id][$sku_encoded] ) ) {
 						$akeys = array_keys( $advance[$post_id][$sku_encoded] );
 						foreach( (array)$akeys as $akey ) {
 							$avalue = serialize( $advance[$post_id][$sku_encoded][$akey] );
