@@ -6205,6 +6205,17 @@ class usc_e_shop
 		return $res;
 	}
 
+	function get_itemByCode( $itemcode ) {
+		global $wpdb;
+
+		$query = $wpdb->prepare( "SELECT * FROM $wpdb->posts AS post 
+			LEFT JOIN $wpdb->postmeta AS pm ON post.ID = pm.post_id AND pm.meta_key = %s 
+			WHERE pm.meta_value = %s AND post.post_status NOT IN(%s, %s, %s) ", 
+			'_itemCode', $itemcode, 'trash', 'inherit', 'auto-draft' );
+		$res = $wpdb->get_results( $query );
+		return $res;
+	}
+
 	function get_pictids($item_code) {
 		global $wpdb;
 		
@@ -6224,6 +6235,10 @@ class usc_e_shop
 	
 	function get_mainpictid($item_code) {
 		global $wpdb;
+		$items = $this->get_itemByCode($item_code);
+		if( empty($items) )
+			return 0;
+			
 		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'attachment' LIMIT 1", $item_code);
 		$id = $wpdb->get_var( $query );
 		$id = apply_filters( 'usces_filter_get_mainpictid', $id, $item_code );
