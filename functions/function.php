@@ -897,7 +897,7 @@ function usces_send_mail( $para ) {
 		}
 	}
 	$from_name = mb_encode_mimeheader($from_name);
-	$from = htmlspecialchars(html_entity_decode($from_name, ENT_QUOTES)) . " <{$para['from_address']}>";
+	$from = htmlspecialchars(html_entity_decode($from_name, ENT_QUOTES));
 	$para['from_name'] = $from;
 
 	$usces->mail_para = $para;

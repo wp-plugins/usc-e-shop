@@ -22,7 +22,7 @@ class usces_cart {
 		}else{
 			$_SESSION['usces_previous_url'] = str_replace('https://', 'http://', get_home_url()).'/';
 		}
-			
+		
 		$ids = array_keys($_POST['inCart']);
 		$post_id = $ids[0];
 		
