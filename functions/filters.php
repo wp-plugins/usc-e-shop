@@ -380,7 +380,7 @@ function fiter_mainTitle($title, $sep){
 	return $newtitle;
 }
 
-//Univarsal Analytics
+//Univarsal Analytics( Dashboard )
 function usces_Universal_trackPageview(){
 	global $usces;
 
@@ -515,7 +515,7 @@ function usces_Universal_trackPageview(){
 	return $push;
 }
 
-//Classic Analytics
+//Classic Analytics ( Dashboard )
 function usces_Classic_trackPageview(){
 	global $usces;
 
@@ -592,6 +592,245 @@ function usces_Classic_trackPageview(){
 	}
 	return $push;
 }
+
+//Univarsal Analytics( Yoast )
+function usces_Universal_trackPageview_by_Yoast($push){
+	global $usces;
+
+	foreach($push as $p_key => $p_val){
+		$pos1 = strpos($p_val, "'send'");
+		$pos2 = strpos($p_val, "'pageview'");
+		if( $pos1 !== false && $pos2 !== false ){
+			unset($push[$p_key]);
+		}
+	}
+	switch($usces->page){
+		case 'cart':
+			$push[] = "'send', 'pageview', {'page' : '/wc_cart'}";
+			break;
+
+		case 'customer':
+			$push[] = "'send', 'pageview', {'page' : '/wc_customer'}";
+			break;
+
+		case 'delivery':
+			$push[] = "'send', 'pageview', {'page' : '/wc_delivery'}";
+			break;
+
+		case 'confirm':
+			$push[] = "'send', 'pageview', {'page' : '/wc_confirm'}";
+			break;
+
+		case 'ordercompletion':
+			$sesdata =  $usces->cart->get_entry();
+			$order_id = $sesdata['order']['ID'];
+			$data = $usces->get_order_data($order_id, 'direct');
+			$cart = unserialize($data['order_cart']);
+			$total_price = $usces->get_total_price( $cart ) + $data['order_discount'] - $data['order_usedpoint'];
+			$push[] = "'send', 'pageview', {'page' : '/wc_ordercompletion'}";
+			$push[] = "'require', 'ecommerce', 'ecommerce.js'";
+			$push[] = "'ecommerce:addTransaction', { 
+							id: '". $order_id ."', 
+							affiliation: '". get_option('blogname') ."',
+							revenue: '". $total_price ."',
+							shipping: '". $data['order_shipping_charge'] ."',
+							tax: '". $data['order_tax'] ."'
+						}";
+			for( $i=0; $i<count($cart); $i++ ){
+				$cart_row = $cart[$i];
+				$post_id  = $cart_row['post_id'];
+				$sku = urldecode($cart_row['sku']);
+				$quantity = $cart_row['quantity'];
+				$itemName = $usces->getItemName($post_id);
+				$skuPrice = $cart_row['price'];
+				$cats = $usces->get_item_cat_genre_ids( $post_id );
+				if( is_array($cats) )
+					sort($cats);
+				$category = ( isset($cats[0]) ) ? get_cat_name($cats[0]): '';
+				
+				$push[] = "'ecommerce:addItem', {
+								id: '". $order_id ."',
+								sku: '". $sku ."',
+								name: '". $itemName."',
+								category: '". $category."',
+								price: '". $skuPrice."',
+								quantity: '". $quantity."'
+							}";
+			}
+			$push[] = "'ecommerce:send'";
+			break;
+
+		case 'error':
+			$push[] = "'send', 'pageview', {'page' : '/wc_error'}";
+			break;
+
+		case 'search_item':
+			$push[] = "'send', 'pageview', {'page' : '/wc_search_item'}";
+			break;
+
+		case 'maintenance':
+			$push[] = "'send', 'pageview', {'page' : '/wc_maintenance'}";
+			break;
+
+		case 'login':
+			$push[] = "'send', 'pageview', {'page' : '/wc_login'}";
+			break;
+
+		case 'member':
+			$push[] = "'send', 'pageview', {'page' : '/wc_member'}";
+			break;
+
+		case 'newmemberform':
+			$push[] = "'send', 'pageview', {'page' : '/wc_newmemberform'}";
+			break;
+
+		case 'newcompletion':
+			$push[] = "'send', 'pageview', {'page' : '/wc_newcompletion'}";
+			break;
+
+		case 'editmemberform':
+			$push[] = "'send', 'pageview', {'page' : '/wc_editmemberform'}";
+			break;
+
+		case 'editcompletion':
+			$push[] = "'send', 'pageview', {'page' : '/wc_editcompletion'}";
+			break;
+
+		case 'lostmemberpassword':
+			$push[] = "'send', 'pageview', {'page' : '/wc_lostmemberpassword'}";
+			break;
+
+		case 'lostcompletion':
+			$push[] = "'send', 'pageview', {'page' : '/wc_lostcompletion'}";
+			break;
+
+		case 'changepassword':
+			$push[] = "'send', 'pageview', {'page' : '/wc_changepassword'}";
+			break;
+
+		case 'changepasscompletion':
+			$push[] = "'send', 'pageview', {'page' : '/wc_changepasscompletion'}";
+			break;
+
+		default:
+			$push[] = "'send', 'pageview'";
+			break;
+	}
+	return $push;
+}
+
+//Classic Analytics ( Yoast )
+function usces_Classic_trackPageview_by_Yoast($push){
+	global $usces;
+
+	foreach($push as $p_key => $p_val){
+		$pos1 = strpos($p_val, "'_trackPageview");
+		if( $pos1 !== false ){
+			unset($push[$p_key]);
+		}
+	}
+	switch($usces->page){
+		case 'cart':
+			$push[] = "'_trackPageview', '/wc_cart'";
+			break;
+
+		case 'customer':
+			$push[] = "'_trackPageview', '/wc_customer'";
+			break;
+
+		case 'delivery':
+			$push[] = "'_trackPageview', '/wc_delivery'";
+			break;
+
+		case 'confirm':
+			$push[] = "'_trackPageview', '/wc_confirm'";
+			break;
+
+		case 'ordercompletion':
+			global $usces;
+			$sesdata = $usces->cart->get_entry();
+			$order_id = $sesdata['order']['ID'];
+			$data = $usces->get_order_data($order_id, 'direct');
+			$cart = unserialize($data['order_cart']);
+			$total_price = $usces->get_total_price( $cart ) + $data['order_discount'] - $data['order_usedpoint'];
+			
+			$push[] = "'_trackPageview','/wc_ordercompletion'";
+			$push[] = "'_addTrans', '" . $order_id . "', '" . get_option('blogname') . "', '" . $total_price . "', '" . $data['order_tax'] . "', '" . $data['order_shipping_charge'] . "', '" . $data['order_address1'].$data['order_address2'] . "', '" . $data['order_pref'] . "', '" . get_locale() . "'";
+			for($i=0; $i<count($cart); $i++) { 
+				$cart_row = $cart[$i];
+				$post_id = $cart_row['post_id'];
+				$sku = urldecode($cart_row['sku']);
+				$quantity = $cart_row['quantity'];
+				$itemName = $usces->getItemName($post_id);
+				$skuPrice = $cart_row['price'];
+				$cats = $usces->get_item_cat_genre_ids( $post_id );
+				if( is_array($cats) )
+					sort($cats);
+				$category = ( isset($cats[0]) ) ? get_cat_name($cats[0]): '';
+				$push[] = "'_addItem', '" . $order_id . "', '" . $sku . "', '" . $itemName . "', '" . $category . "', '" . $skuPrice . "', '" . $quantity . "'";
+			}
+			$push[] = "'_trackTrans'";
+			break;
+
+		case 'error':
+			$push[] = "'_trackPageview', '/wc_error'";
+			break;
+
+		case 'login':
+			$push[] = "'_trackPageview', '/wc_login'";
+			break;
+
+		case 'member':
+			$push[] = "'_trackPageview', '/wc_member'";
+			break;
+
+		case 'newmemberform':
+			$push[] = "'_trackPageview', '/wc_newmemberform'";
+			break;
+
+		case 'newcompletion':
+			$push[] = "'_trackPageview', '/wc_newcompletion'";
+			break;
+
+		case 'editmemberform':
+			$push[] = "'_trackPageview', '/wc_editmemberform'";
+			break;
+
+		case 'search_item':
+			$push[] = "'_trackPageview', '/wc_search_item'";
+			break;
+
+		case 'maintenance':
+			$push[] = "'_trackPageview', '/wc_maintenance'";
+			break;
+
+		case 'editcompletion':
+			$push[] = "'_trackPageview', '/wc_editcompletion'";
+			break;
+
+		case 'lostmemberpassword':
+			$push[] = "'_trackPageview', '/wc_lostmemberpassword'";
+			break;
+
+		case 'lostcompletion':
+			$push[] = "'_trackPageview', '/wc_lostcompletion'";
+			break;
+
+		case 'changepassword':
+			$push[] = "'_trackPageview', '/wc_changepassword'";
+			break;
+
+		case 'changepasscompletion':
+			$push[] = "'_trackPageview', '/wc_changepasscompletion'";
+			break;
+
+		default:
+			$push[] = "'_trackPageview'";
+			break;
+	}
+	return $push;
+}
+
 
 function usces_use_point_nonce(){
 	wp_nonce_field( 'use_point', 'wc_nonce');

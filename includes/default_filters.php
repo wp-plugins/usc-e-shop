@@ -191,6 +191,9 @@ add_filter('wp_title', 'fiter_mainTitle', 10, 2);
 add_filter('universal_ga_ecommerce_tracking', 'usces_Universal_trackPageview');
 add_filter('classic_ga_ecommerce_tracking', 'usces_Classic_trackPageview');
 
+add_filter('yoast-ga-push-array-universal', 'usces_Universal_trackPageview_by_Yoast');
+add_filter('yoast-ga-push-array-ga-js', 'usces_Classic_trackPageview_by_Yoast');
+
 add_action('usces_action_order_edit_form_detail_top', 'usces_order_memo_form_detail_top', 10, 2 );
 add_action('usces_action_update_orderdata', 'usces_update_order_memo');
 
