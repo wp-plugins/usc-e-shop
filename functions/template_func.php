@@ -1916,7 +1916,8 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 			'res_tracking_id', 'res_payment_date', 'res_payinfo_key',
 			'SID', 'DATE', 'TIME', 'CVS', 'SHNO', 'FURL', 'settltment_status', 'settltment_errmsg', 
 			'stran', 'mbtran', 'bktrans', 'tranid', 'TransactionId', 
-			'mStatus', 'vResultCode', 'orderId', 'cvsType', 'receiptNo', 'receiptDate', 'rcvAmount' 
+			'mStatus', 'vResultCode', 'orderId', 'cvsType', 'receiptNo', 'receiptDate', 'rcvAmount', 
+			'trading_id', 'payment_type', 'seq_payment_id' 
 		);
 		$keys = apply_filters( 'usces_filter_settle_info_field_keys', $keys );
 		if( !in_array($key, $keys) ) {

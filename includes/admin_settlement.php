@@ -144,6 +144,9 @@ function toggleVisibility(id) {
 <!--20140206ysk start-->
 		<li><a href="#uscestabs_veritrans">ベリトランス</a></li>
 <!--20140206ysk end-->
+<!--20140725ysk start-->
+		<li><a href="#uscestabs_paygent">ペイジェント</a></li>
+<!--20140725ysk end-->
 	</ul>
 
 	<div id="uscestabs_zeus">
@@ -1220,6 +1223,99 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_veritrans-->
 <!--20140206ysk end-->
+
+<!--20140725ysk start-->
+	<div id="uscestabs_paygent">
+	<div class="settlement_service"><span class="service_title">ペイジェント</span></div>
+	<?php if( isset($_POST['acting']) && 'paygent' == $_POST['acting'] ) : ?>
+		<?php if( '' != $mes ) : ?>
+		<div class="error_message"><?php echo $mes; ?></div>
+		<?php elseif( isset($opts['paygent']['activate']) && 'on' == $opts['paygent']['activate'] ) : ?>
+		<div class="message">十分にテストを行ってから運用してください。</div>
+		<?php endif; ?>
+	<?php endif; ?>
+	<form action="" method="post" name="paygent_form" id="paygent_form">
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_seq_merchant_id_paygent');">マーチャントID</a></th>
+				<td colspan="6"><input name="seq_merchant_id" type="text" id="seq_merchant_id_paygent" value="<?php echo esc_html(isset($opts['paygent']['seq_merchant_id']) ? $opts['paygent']['seq_merchant_id'] : ''); ?>" size="20" maxlength="9" /></td>
+				<td><div id="ex_seq_merchant_id_paygent" class="explanation"><?php _e('契約時にペイジェントから割り当てられるマーチャントID（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_hc_paygent');">ハッシュ値生成キー</a></th>
+				<td colspan="6"><input name="hc" type="text" id="hc_paygent" value="<?php echo esc_html(isset($opts['paygent']['hc']) ? $opts['paygent']['hc'] : ''); ?>" size="20" maxlength="24" /></td>
+				<td><div id="ex_hc_paygent" class="explanation"><?php _e('契約時にペイジェントから発行されるハッシュ値生成キー（半角英数字）', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>クレジットカード決済</th>
+				<td><input name="card_activate" type="radio" id="card_activate_paygent_1" value="on"<?php if( isset($opts['paygent']['card_activate']) && $opts['paygent']['card_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_paygent_1">利用する</label></td>
+				<td><input name="card_activate" type="radio" id="card_activate_paygent_2" value="off"<?php if( isset($opts['paygent']['card_activate']) && $opts['paygent']['card_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="card_activate_paygent_2">利用しない</label></td>
+				<td colspan="2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_payment_class_paygent');">支払区分</a></th>
+				<td><input name="payment_class" type="radio" id="payment_class_paygent_1" value="0"<?php if( isset($opts['paygent']['payment_class']) && $opts['paygent']['payment_class'] == '0' ) echo ' checked="checked"'; ?> /></td><td><label for="payment_class_paygent_0">1回払いのみ</label></td>
+				<td><input name="payment_class" type="radio" id="payment_class_paygent_2" value="1"<?php if( isset($opts['paygent']['payment_class']) && $opts['paygent']['payment_class'] == '1' ) echo ' checked="checked"'; ?> /></td><td><label for="payment_class_paygent_1">全て</label></td>
+				<td><input name="payment_class" type="radio" id="payment_class_paygent_2" value="2"<?php if( isset($opts['paygent']['payment_class']) && $opts['paygent']['payment_class'] == '2' ) echo ' checked="checked"'; ?> /></td><td><label for="payment_class_paygent_2">ボーナス一括以外全て</label></td>
+				<td><div id="ex_payment_class_paygent" class="explanation"><?php _e('ユーザに支払を許可するカード支払方法の区分です。加盟店審査を経て加盟店様ごとに設定された支払可能回数から、購入者に提示する支払回数をさらに絞り込みたい場合に使用してください。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_card_conf_number_paygent');">カード確認番号利用フラグ</a></th>
+				<td><input name="use_card_conf_number" type="radio" id="use_card_conf_number_paygent_1" value="on"<?php if( isset($opts['paygent']['use_card_conf_number']) && $opts['paygent']['use_card_conf_number'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="use_card_conf_number_paygent_1">利用する</label></td>
+				<td><input name="use_card_conf_number" type="radio" id="use_card_conf_number_paygent_2" value="off"<?php if( isset($opts['paygent']['use_card_conf_number']) && $opts['paygent']['use_card_conf_number'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="use_card_conf_number_paygent_2">利用しない</label></td>
+				<td colspan="2"></td>
+				<td><div id="ex_use_card_conf_number_paygent" class="explanation"><?php _e('確認番号の入力を必須とするかどうかを指定します。確認番号が実際に使用されるかどうかは、カードを発行したイシュアーに依存します。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th>カード情報お預りモード</th>
+				<td><input name="stock_card_mode" type="radio" id="stock_card_mode_paygent_1" value="on"<?php if( isset($opts['paygent']['stock_card_mode']) && $opts['paygent']['stock_card_mode'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="stock_card_mode_paygent_1">利用する</label></td>
+				<td><input name="stock_card_mode" type="radio" id="stock_card_mode_paygent_2" value="off"<?php if( isset($opts['paygent']['stock_card_mode']) && $opts['paygent']['stock_card_mode'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="stock_card_mode_paygent_2">利用しない</label></td>
+				<td colspan="2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>3Dセキュア</th>
+				<td><input name="threedsecure_ryaku" type="radio" id="threedsecure_ryaku_paygent_1" value="on"<?php if( isset($opts['paygent']['threedsecure_ryaku']) && $opts['paygent']['threedsecure_ryaku'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="threedsecure_ryaku_paygent_1">契約</label></td>
+				<td><input name="threedsecure_ryaku" type="radio" id="threedsecure_ryaku_paygent_2" value="off"<?php if( isset($opts['paygent']['threedsecure_ryaku']) && $opts['paygent']['threedsecure_ryaku'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="threedsecure_ryaku_paygent_2">未契約</label></td>
+				<td colspan="2"></td>
+				<td></td>
+			</tr>
+		</table>
+		<table class="settle_table">
+			<tr>
+				<th>コンビニ決済</th>
+				<td><input name="conv_activate" type="radio" id="conv_activate_paygent_1" value="on"<?php if( isset($opts['paygent']['conv_activate']) && $opts['paygent']['conv_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_paygent_1">利用する</label></td>
+				<td><input name="conv_activate" type="radio" id="conv_activate_paygent_2" value="off"<?php if( isset($opts['paygent']['conv_activate']) && $opts['paygent']['conv_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv_activate_paygent_2">利用しない</label></td>
+				<td colspan="2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_payment_term_day_paygent');">支払期間（日指定）</a></th>
+				<td colspan="6"><input name="payment_term_day" type="text" id="payment_term_day_paygent" value="<?php echo esc_html(isset($opts['paygent']['payment_term_day']) ? $opts['paygent']['payment_term_day'] : '5'); ?>" size="6" maxlength="2" /></td>
+				<td><div id="ex_payment_term_day_paygent" class="explanation"><?php _e('支払うことのできる期限を日で指定します。指定できる範囲は2以上60以下です。（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_payment_term_min_paygent');">支払期間（分指定）</a></th>
+				<td colspan="6"><input name="payment_term_min" type="text" id="payment_term_min_paygent" value="<?php echo esc_html(isset($opts['paygent']['payment_term_min']) ? $opts['paygent']['payment_term_min'] : ''); ?>" size="6" maxlength="4" /></td>
+				<td><div id="ex_payment_term_min_paygent" class="explanation"><?php _e('支払うことのできる期限を分で指定します。指定できる範囲は5以上2880以下です。（半角数字）', 'usces'); ?></div></td>
+			</tr>
+		</table>
+		<input name="acting" type="hidden" value="paygent" />
+		<input name="usces_option_update" type="submit" class="button" value="ペイジェントの設定を更新する" />
+		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
+	</form>
+	<div class="settle_exp">
+		<p><strong>ペイジェント</strong></p>
+		<a href="http://www.paygent.co.jp/" target="_blank">ペイジェントの詳細はこちら 》</a>
+		<p>　</p>
+		<p>この決済は「外部リンク型」の決済システムです。</p>
+		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
+	</div>
+	</div><!--uscestabs_paygent-->
+<!--20140725ysk end-->
 
 </div><!--uscestabs-->
 </div><!--inside-->

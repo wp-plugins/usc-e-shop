@@ -370,7 +370,7 @@ function usces_paypal_purchase_form() {
 		}
 	}
 	$acting_flag = 'acting_paypal_ec';
-	$rand = usces_rand();
+	$rand = usces_acting_key();
 	//$purchase_disabled = ( '' != $usces->error_message ) ? ' disabled="true"' : '';
 	$purchase_disabled = '';
 

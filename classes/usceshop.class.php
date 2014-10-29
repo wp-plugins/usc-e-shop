@@ -1797,6 +1797,78 @@ class usc_e_shop
 					update_option('usces_payment_structure', $this->payment_structure);
 					break;
 //20140206ysk end
+//20140725ysk start
+				case 'paygent':
+					unset( $options['acting_settings']['paygent'] );
+					$options['acting_settings']['paygent']['seq_merchant_id'] = isset($_POST['seq_merchant_id']) ? $_POST['seq_merchant_id'] : '';
+					$options['acting_settings']['paygent']['hc'] = isset($_POST['hc']) ? $_POST['hc'] : '';
+					$options['acting_settings']['paygent']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
+					$options['acting_settings']['paygent']['payment_class'] = isset($_POST['payment_class']) ? $_POST['payment_class'] : '';
+					$options['acting_settings']['paygent']['use_card_conf_number'] = isset($_POST['use_card_conf_number']) ? $_POST['use_card_conf_number'] : '';
+					$options['acting_settings']['paygent']['stock_card_mode'] = isset($_POST['stock_card_mode']) ? $_POST['stock_card_mode'] : '';
+					$options['acting_settings']['paygent']['threedsecure_ryaku'] = isset($_POST['threedsecure_ryaku']) ? $_POST['threedsecure_ryaku'] : '';
+					$options['acting_settings']['paygent']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
+					$options['acting_settings']['paygent']['conv_hc'] = isset($_POST['conv_hc']) ? $_POST['conv_hc'] : '';
+					$options['acting_settings']['paygent']['payment_term_day'] = isset($_POST['payment_term_day']) ? $_POST['payment_term_day'] : '';
+					$options['acting_settings']['paygent']['payment_term_min'] = isset($_POST['payment_term_min']) ? $_POST['payment_term_min'] : '';
+
+					if( WCUtils::is_blank($_POST['seq_merchant_id']) )
+						$mes .= '※マーチャントIDを入力して下さい<br />';
+					//if( '' == $options['acting_settings']['paygent']['ope'] )
+					//	$mes .= '※稼働環境を選択して下さい<br />';
+					if( '' == $options['acting_settings']['paygent']['hc'] )
+						$mes .= '※ハッシュ値生成キーを入力して下さい<br />';
+					if( 'on' == $options['acting_settings']['paygent']['conv_activate'] ) {
+						if( '' == $options['acting_settings']['paygent']['payment_term_day'] and '' == $options['acting_settings']['paygent']['payment_term_min'] ) {
+						} elseif( '' != $options['acting_settings']['paygent']['payment_term_day'] and '' != $options['acting_settings']['paygent']['payment_term_min'] ) {
+							$mes .= '※「支払期間（日指定）」と「支払期間（分指定）」の両方を指定することはできません<br />';
+						} elseif( '' != $options['acting_settings']['paygent']['payment_term_day'] ) {
+							$term_day = (int)$options['acting_settings']['paygent']['payment_term_day'];
+							if( $term_day < 2 or 60 < $term_day ) {
+								$mes .= '※「支払期間（日指定）」が指定できる範囲を超えています<br />';
+							}
+						} elseif( '' != $options['acting_settings']['paygent']['payment_term_min'] ) {
+							$term_min = (int)$options['acting_settings']['paygent']['payment_term_min'];
+							if( $term_min < 5 or 2880 < $term_min ) {
+								$mes .= '※「支払期間（分指定）」が指定できる範囲を超えています<br />';
+							}
+						}
+					}
+
+					if( WCUtils::is_blank($mes) ) {
+						$this->action_status = 'success';
+						$this->action_message = __('options are updated','usces');
+						$options['acting_settings']['paygent']['activate'] = 'on';
+						$options['acting_settings']['paygent']['send_url'] = "https://mdev.paygent.co.jp/v/u/request";
+						if( 'on' == $options['acting_settings']['paygent']['card_activate'] ) {
+							$this->payment_structure['acting_paygent_card'] = 'カード決済（ペイジェント）';
+							if( '' == $options['acting_settings']['paygent']['payment_class'] ) $options['acting_settings']['paygent']['payment_class'] = '0';
+							if( '' == $options['acting_settings']['paygent']['use_card_conf_number'] ) $options['acting_settings']['paygent']['use_card_conf_number'] = 'off';
+							if( '' == $options['acting_settings']['paygent']['stock_card_mode'] ) $options['acting_settings']['paygent']['stock_card_mode'] = 'off';
+							if( '' == $options['acting_settings']['paygent']['threedsecure_ryaku'] ) $options['acting_settings']['paygent']['threedsecure_ryaku'] = 'off';
+						} else {
+							unset( $this->payment_structure['acting_paygent_card'] );
+						}
+						if( 'on' == $options['acting_settings']['paygent']['conv_activate'] ) {
+							$this->payment_structure['acting_paygent_conv'] = 'コンビニ決済（ペイジェント）';
+							if( '' == $options['acting_settings']['paygent']['payment_term_day'] and '' == $options['acting_settings']['paygent']['payment_term_min'] ) {
+								$options['acting_settings']['paygent']['payment_term_day'] = 5;
+							}
+						} else {
+							unset( $this->payment_structure['acting_paygent_conv'] );
+						}
+						update_option( 'usces', $options );
+					} else {
+						$this->action_status = 'error';
+						$this->action_message = __('Data have deficiency.','usces');
+						$options['acting_settings']['paygent']['activate'] = 'off';
+						unset( $this->payment_structure['acting_paygent_card'] );
+						unset( $this->payment_structure['acting_paygent_conv'] );
+					}
+					ksort( $this->payment_structure );
+					update_option( 'usces_payment_structure', $this->payment_structure );
+					break;
+//20140725ysk end
 			}
 
 		}
@@ -6802,6 +6874,173 @@ class usc_e_shop
 			}
 			exit;
 //20140206ysk end
+//20140725ysk start
+		} else if( $acting_flg == 'acting_paygent_card' or $acting_flg == 'acting_paygent_conv' ) {
+			//parse_str( $query, $output );
+			$acting_opts = $this->options['acting_settings']['paygent'];
+			$acting = substr( $acting_flg, 7 );
+			$member = $this->get_member();
+			$trading_id = ( isset($_POST['trading_id']) ) ? $_POST['trading_id'] : '';
+			usces_save_order_acting_data( $trading_id );
+			if( $acting_flg == 'acting_paygent_card' ) {
+				$payment_type = "02";
+			} elseif( $acting_flg == 'acting_paygent_conv' ) {
+				$payment_type = "03";
+			}
+			$hash_key = $acting_opts['hc'];
+			$fix_params = "";
+			$id = $entry['order']['total_full_price'];
+			$inform_url = USCES_CART_URL;
+			$seq_merchant_id = $acting_opts['seq_merchant_id'];
+			$payment_term_day = $acting_opts['payment_term_day'];
+			$payment_term_min = $acting_opts['payment_term_min'];
+			$payment_class = $acting_opts['payment_class'];
+			$use_card_conf_number = ( 'on' == $acting_opts['use_card_conf_number'] ) ? "1" : "0";
+			if( 'on' == $acting_opts['stock_card_mode'] and !empty($member['ID']) ) {
+				$stock_card_mode = "1";
+				$customer_id = $member['ID'];
+			} else {
+				$stock_card_mode = "";
+				$customer_id = "";
+			}
+			$threedsecure_ryaku = ( 'on' == $acting_opts['threedsecure_ryaku'] ) ? "0" : "1";
+
+			$merchant_name = mb_convert_kana( $this->options['company_name'], "RNASKV" );
+			$banner_url = "";
+			$return_url = USCES_CART_URL.$delim.'acting='.$acting.'&acting_return=1';
+			$stop_return_url = USCES_CART_URL.$delim.'acting='.$acting.'&confirm=1';
+			$customer_family_name = $entry['customer']['name1'];
+			$customer_name = $entry['customer']['name2'];
+			$customer_family_name_kana = mb_convert_kana( $entry['customer']['name3'], 'askh', 'UTF-8' );
+			$customer_name_kana = mb_convert_kana( $entry['customer']['name4'], 'askh', 'UTF-8' );
+
+			// create hash hex string
+			$org_str = 
+				$trading_id .
+				$payment_type .
+				$fix_params .
+				$id .
+				$inform_url .
+				$seq_merchant_id .
+				$payment_term_day .
+				$payment_term_min .
+				$payment_class .
+				$use_card_conf_number .
+				$customer_id .
+				$threedsecure_ryaku .
+				$hash_key;
+			$hash_str = hash( "sha256", $org_str );
+
+			$url = $acting_opts['send_url'];
+			$send_data = array(
+				'trading_id' => $trading_id,
+				'payment_type' => $payment_type,
+				'fix_params' => $fix_params,
+				'id' => $id,
+				'inform_url' => $inform_url,
+				'seq_merchant_id' => $seq_merchant_id,
+				'merchant_name' => $merchant_name,
+				'payment_term_day' => $payment_term_day,
+				'payment_term_min' => $payment_term_min,
+				'banner_url' => $banner_url,
+				'return_url' => $return_url,
+				'stop_return_url' => $stop_return_url,
+				'customer_family_name' => $customer_family_name,
+				'customer_name' => $customer_name,
+				'customer_family_name_kana' => $customer_family_name_kana,
+				'customer_name_kana' => $customer_name_kana,
+				'payment_class' => $payment_class,
+				'use_card_conf_number' => $use_card_conf_number,
+				'stock_card_mode' => $stock_card_mode,
+				'customer_id' => $customer_id,
+				'threedsecure_ryaku' => $threedsecure_ryaku,
+				'hc' => $hash_str,
+
+				// btob mode ON
+				'isbtob' => '1'
+			);
+
+			$interface = parse_url( $url );
+			$vars = http_build_query( $send_data );
+
+			$header  = "POST ".$interface['path']." HTTP/1.1\r\n";
+			$header .= "Host: ".$_SERVER['HTTP_HOST']."\r\n";
+			$header .= "User-Agent: PHP Script\r\n";
+			$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+			$header .= "Content-Length: ".strlen( $vars )."\r\n";
+			$header .= "Connection: close\r\n\r\n";
+			$header .= $vars;
+			$fp = fsockopen( 'ssl://'.$interface['host'], 443 );
+			if( $fp ) {
+				$data = array();
+				fwrite( $fp, $header );
+				while( !feof($fp) ) {
+					$line = fgets( $fp, 1024 );
+					if( false !== strpos( $line, 'result' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['result'] = $item[1];
+					}
+					if( false !== strpos( $line, 'response_code' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['response_code'] = $item[1];
+					}
+					if( false !== strpos( $line, 'response_detail' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['response_detail'] = $item[1];
+					}
+					if( false !== strpos( $line, 'url' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['url'] = $item[1];
+					}
+					if( false !== strpos( $line, 'trading_id' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['trading_id'] = $item[1];
+					}
+					if( false !== strpos( $line, 'payment_type' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['payment_type'] = $item[1];
+					}
+					if( false !== strpos( $line, 'limit_date' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['limit_date'] = $item[1];
+					}
+					if( false !== strpos( $line, 'trade_generation_date' ) ) {
+						$item = split( "=", $line, 2 );
+						$data['trade_generation_date'] = $item[1];
+					}
+				}
+				fclose( $fp );
+				usces_log( serialize($data), 'db', $acting, $trading_id );
+				if( $data['result'] == 0 and !empty($data['url']) ) {
+					if( $payment_type == "02" ) {
+						header( "location: ".$data['url'] );
+
+					} elseif( $payment_type == "03" ) {
+						$res = $this->order_processing();
+						if( 'ordercompletion' == $res ) {
+							$order_id = $this->cart->get_order_entry('ID');
+							$this->set_order_meta_value( 'trading_id', $trading_id, $order_id );
+							$this->set_order_meta_value( $acting_flg, serialize( $data ), $order_id );
+							$this->cart->crear_cart();
+							header( "location: ".$data['url'] );
+						} else {
+							usces_log( $acting.'order error : '.print_r( $data, true ), 'acting_transaction.log' );
+							header( "location: ".USCES_CART_URL.$delim.'acting='.$acting.'&acting_return=0' );
+						}
+					}
+
+				} else {
+					usces_log( $acting.' data error : '.print_r( $data, true ), 'acting_transaction.log' );
+					header( "location: ".USCES_CART_URL.$delim.'acting='.$acting.'&acting_return=0' );
+				}
+				exit;
+
+			} else {
+				usces_log( $acting.' : socket error', 'acting_transaction.log' );
+				header( "location: ".USCES_CART_URL.$delim.'acting='.$acting.'&acting_return=0' );
+				exit;
+			}
+//20140725ysk end
 		}
 		do_action('usces_action_acting_processing', $acting_flg, $query);
 	}

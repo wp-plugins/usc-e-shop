@@ -68,6 +68,19 @@ function usces_action_acting_construct(){
 		} else {
 			usces_log('Veritrans construct : '.$_POST['orderId'], 'acting_transaction.log');
 		}
+
+	} elseif( isset($_POST['trading_id']) and isset($_POST['payment_status']) and !isset($_POST['purchase']) ) {//Paygent
+
+		if( $_POST['payment_status'] == '10' ) {
+			$datas = usces_get_order_acting_data( $_POST['trading_id'] );
+			$_GET['uscesid'] = $datas['sesid'];
+			if( empty($datas['sesid']) ) {
+				usces_log('Paygent construct : error1', 'acting_transaction.log');
+			} else {
+				usces_log('Paygent construct : '.$_POST['trading_id'], 'acting_transaction.log');
+			}
+		}
+
 	}
 }
 
@@ -1120,6 +1133,59 @@ function usces_action_acting_transaction(){
 		}
 		exit;
 //20140206ysk end
+//20140725ysk start
+	//} else if( array_key_exists( 'seq_payment_id', $_REQUEST ) and array_key_exists( 'trading_id', $_REQUEST ) and array_key_exists( 'payment_type', $_REQUEST ) ) {
+	} else if( isset($_POST['trading_id']) and isset($_POST['payment_status']) and !isset($_POST['purchase']) ) {
+		foreach( $_POST as $key => $value ) {
+			$data[$key] = $value;
+		}
+
+		$payment_type = ( array_key_exists( 'payment_type', $_POST ) ) ? $_POST['payment_type'] : '';
+		switch( $payment_type ) {
+		case '02':
+			if( $_POST['payment_status'] == '10' ) {
+				usces_restore_order_acting_data( $_POST['trading_id'] );
+				usces_log( serialize($data), 'db', 'paygent_card', $_POST['trading_id'] );
+				$res = $usces->order_processing();
+				if( 'ordercompletion' == $res ) {
+					$order_id = $usces->cart->get_order_entry('ID');
+					$usces->set_order_meta_value( 'acting_paygent_card', serialize($data), $order_id );
+					$usces->cart->crear_cart();
+				} else {
+					usces_log( 'Paygent card error : '.print_r( $data, true ), 'acting_transaction.log' );
+				}
+			}
+			break;
+
+		case '03':
+			usces_log( serialize($data), 'db', 'paygent_conv', $_POST['trading_id'] );
+			$table_meta_name = $wpdb->prefix."usces_order_meta";
+			$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'trading_id', $_POST['trading_id'] );
+			$order_id = $wpdb->get_var( $query );
+			if( $order_id ) {
+				$table_name = $wpdb->prefix."usces_order";
+				$query = $wpdb->prepare( "
+					UPDATE $table_name SET order_status = 
+					CASE 
+						WHEN LOCATE( 'noreceipt', order_status ) > 0 THEN REPLACE( order_status, 'noreceipt', 'receipted' ) 
+						WHEN LOCATE( 'receipted', order_status ) > 0 THEN order_status 
+						ELSE CONCAT( 'receipted,', order_status ) 
+					END 
+					WHERE ID = %d", $order_id );
+				$res = $wpdb->query( $query );
+				if( $res === false ) {
+					usces_log( 'Paygent conv error : '.print_r( $data, true ), 'acting_transaction.log' );
+
+				} else {
+					usces_action_acting_getpoint( $order_id );
+					$usces->set_order_meta_value( 'acting_paygent_conv', serialize( $data ), $order_id );
+					$usces->cart->crear_cart();
+				}
+			}
+			break;
+		}
+		die( 'result=0' );
+//20140725ysk end
 	}
 }
 ?>

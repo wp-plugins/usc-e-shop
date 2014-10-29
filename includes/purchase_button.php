@@ -4,11 +4,12 @@ if(isset($this))
 
 $payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 $acting_flag = '';
-$rand = usces_rand();
+$rand = usces_acting_key();
 $cart = $usces->cart->get_cart();
 
 //$purchase_disabled = ( '' != $usces->error_message ) ? ' disabled="true"' : '';
 $purchase_disabled = '';
+$purchase_html = '';
 
 if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['order']['total_full_price'] ){
 	$purchase_html = '<form id="purchase_form" action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
@@ -1071,6 +1072,22 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			$html .= '</form>';
 			break;
 //20140206ysk end
+//2014725ysk start
+		case 'acting_paygent_card'://カード決済(ペイジェント)
+		case 'acting_paygent_conv'://コンビニ決済(ペイジェント)
+			$acting_opts = $usces->options['acting_settings']['paygent'];
+			$usces->save_order_acting_data( $rand );
+			$html .= '<form id="purchase_form" name="purchase_form" action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<input type="hidden" name="trading_id" value="'.$rand.'">
+				<div class="send"><input name="purchase" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', '').$purchase_disabled.' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled );
+			$html .= '</form>';
+			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">
+				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
+			$html = apply_filters( 'usces_filter_confirm_inform_back', $html );
+			$html .= '</form>';
+			break;
+//2014725ysk end
 
 		default:
 			$html .= '<form id="purchase_form" action="' . apply_filters('usces_filter_acting_url', USCES_CART_URL) . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

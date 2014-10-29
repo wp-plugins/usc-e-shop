@@ -622,4 +622,7 @@ $usces_essential_mark = array(
 					);
 					
 unset($uop_init);
+
+$usces_noreceipt_status = apply_filters( 'usces_filter_noreceipt_status', array( 'transferAdvance', 'transferDeferred', 'acting_remise_conv', 'acting_zeus_bank', 'acting_zeus_conv', 'acting_jpayment_conv', 'acting_jpayment_bank', 'acting_sbps_conv', 'acting_sbps_payeasy', 'acting_digitalcheck_conv', 'acting_mizuho_conv1', 'acting_mizuho_conv2', 'acting_veritrans_conv', 'acting_paygent_conv' ) );
+update_option( 'usces_noreceipt_status', $usces_noreceipt_status );
 ?>

@@ -199,6 +199,7 @@ if($order_action == 'new'){
 }
 $filter_args = compact( 'order_action', 'order_id', 'data', 'cart' ); 
 $delivery_after_days = apply_filters( 'usces_filter_delivery_after_days', ( !empty($usces->options['delivery_after_days']) ? (int)$usces->options['delivery_after_days'] : 100 ) );//20130527ysk 0000710
+$noreceipt_status = get_option( 'usces_noreceipt_status' );
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -228,16 +229,8 @@ jQuery(function($){
 
 	$("#order_payment_name").change(function () {
 		var pay_name = $("select[name='offer\[payment_name\]'] option:selected").val();
-//20101018ysk start
-		//if( uscesPayments[pay_name] == 'transferAdvance' || uscesPayments[pay_name] == 'transferDeferred'){
-		if( uscesPayments[pay_name] == 'transferAdvance' 
-			|| uscesPayments[pay_name] == 'transferDeferred' 
-			|| uscesPayments[pay_name] == 'acting_remise_conv' 
-			|| uscesPayments[pay_name] == 'acting_zeus_bank' 
-			|| uscesPayments[pay_name] == 'acting_zeus_conv' 
-			|| uscesPayments[pay_name] == 'acting_jpayment_conv' 
-			|| uscesPayments[pay_name] == 'acting_jpayment_bank'){
-//20101018ysk end
+		var noreceipt_status = [ '<?php echo implode( "','", $noreceipt_status ); ?>' ];
+		if( $.inArray( uscesPayments[pay_name], noreceipt_status ) >= 0 ) {
 			var label = '<?php _e('transfer statement', 'usces'); ?>';
 			var html = "<select name='offer[receipt]'>\n";
 			html += "<option value='noreceipt'><?php echo $management_status['noreceipt']; ?></option>\n";
@@ -245,7 +238,7 @@ jQuery(function($){
 			html += "</select>\n";
 			$("#receiptlabel").html(label);
 			$("#receiptbox").html(html);
-		<?php do_action( 'usces_change_payment_terms_js', $management_status, $data ); ?>	
+		<?php do_action( 'usces_change_payment_terms_js', $management_status, $data ); ?>
 		}else{
 			$("#receiptlabel").html('');
 			$("#receiptbox").html('');
@@ -533,8 +526,7 @@ jQuery(function($){
 				alert( 'ERROR2' );
 			};
 			$.ajax( s );
-			return false;
-			";
+			return false;";
 			echo apply_filters( 'order_edit_form_recalculation',$script, $data);
 			?>
 		},
@@ -1027,19 +1019,24 @@ for($i = 0; $i < $delivery_after_days; $i++) {//20130527ysk 0000710
 ?>
 </select></td>
 </tr>
-<tr>
-<td class="label status" id="receiptlabel"><?php if($receipt != ''){echo __('transfer statement', 'usces');}else{echo '&nbsp';} ?></td>
-<td class="col1 status" id="receiptbox">
-<?php if($receipt != '') : ?>
+<?php
+	$receiptlabel = '&nbsp;';
+	$receiptbox = '&nbsp;';
+	if( $receipt != '' ) {
+		$receiptlabel = __('transfer statement', 'usces');
+		$selected = array( 'noreceipt'=>'', 'receipted'=>'', 'pending'=>'' );
+		if( array_key_exists( $receipt, $selected ) ) $selected[$receipt] = ' selected="selected"';
+		$receiptbox = '
 <select name="offer[receipt]">
-	<option value='noreceipt'<?php if($receipt == 'noreceipt'){ echo ' selected="selected"';} ?>><?php echo $management_status['noreceipt']; ?></option>
-	<option value='receipted'<?php if($receipt == 'receipted'){ echo ' selected="selected"';} ?>><?php echo $management_status['receipted']; ?></option>
-	<option value='pending'<?php if($receipt == 'pending'){ echo ' selected="selected"';} ?>><?php echo $management_status['pending']; ?></option>
-</select>
-<?php else : ?>
-&nbsp
-<?php endif; ?>
-</td>
+	<option value="noreceipt"'.$selected['noreceipt'].'>'.$management_status['noreceipt'].'</option>
+	<option value="receipted"'.$selected['receipted'].'>'.$management_status['receipted'].'</option>
+	<option value="pending"'.$selected['pending'].'>'.$management_status['pending'].'</option>
+</select>';
+	}
+?>
+<tr>
+<td class="label status" id="receiptlabel"><?php echo( $receiptlabel ); ?></td>
+<td class="col1 status" id="receiptbox"><?php echo( $receiptbox ); ?></td>
 </tr>
 <tr>
 <td class="label status"><?php if($admin != ''){echo __('estimate order', 'usces');}else{echo '&nbsp';} ?></td>
@@ -1050,7 +1047,7 @@ for($i = 0; $i < $delivery_after_days; $i++) {//20130527ysk 0000710
 	<option value='estimate'<?php if($admin == 'estimate'){ echo 'selected="selected"';} ?>><?php echo $management_status['estimate']; ?></option>
 </select>
 <?php else : ?>
-&nbsp
+&nbsp;
 <?php endif; ?></td>
 </tr>
 <tr>

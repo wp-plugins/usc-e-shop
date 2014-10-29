@@ -963,7 +963,8 @@ function usces_reg_orderdata( $results = array() ) {
 	}else{
 //20131121ysk start
 		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' || $set['settlement'] == 'acting_mizuho_conv1' || $set['settlement'] == 'acting_mizuho_conv2' ) ? 'noreceipt' : '';
-		$noreceipt_status_table = apply_filters( 'usces_filter_noreceipt_status', array( 'transferAdvance', 'transferDeferred', 'acting_remise_conv', 'acting_zeus_bank', 'acting_zeus_conv', 'acting_jpayment_conv', 'acting_jpayment_bank', 'acting_sbps_conv', 'acting_sbps_payeasy', 'acting_digitalcheck_conv', 'acting_mizuho_conv1', 'acting_mizuho_conv2', 'acting_veritrans_conv' ) );
+		//$noreceipt_status_table = apply_filters( 'usces_filter_noreceipt_status', array( 'transferAdvance', 'transferDeferred', 'acting_remise_conv', 'acting_zeus_bank', 'acting_zeus_conv', 'acting_jpayment_conv', 'acting_jpayment_bank', 'acting_sbps_conv', 'acting_sbps_payeasy', 'acting_digitalcheck_conv', 'acting_mizuho_conv1', 'acting_mizuho_conv2', 'acting_veritrans_conv' ) );
+		$noreceipt_status_table = get_option( 'usces_noreceipt_status' );
 		$status = ( in_array( $set['settlement'], $noreceipt_status_table ) ) ? 'noreceipt' : '';
 		$order_modified = NULL;
 	}
@@ -1210,7 +1211,8 @@ function usces_new_orderdata() {
 	} else {
 //20131121ysk start
 		//$status = ( $set['settlement'] == 'transferAdvance' || $set['settlement'] == 'transferDeferred' || $set['settlement'] == 'acting_remise_conv' || $set['settlement'] == 'acting_zeus_bank' || $set['settlement'] == 'acting_zeus_conv' || $set['settlement'] == 'acting_jpayment_conv' || $set['settlement'] == 'acting_jpayment_bank' || $set['settlement'] == 'acting_sbps_conv' || $set['settlement'] == 'acting_sbps_payeasy' || $set['settlement'] == 'acting_digitalcheck_conv' ) ? 'noreceipt' : '';
-		$noreceipt_status_table = apply_filters( 'usces_filter_noreceipt_status', array( 'transferAdvance', 'transferDeferred', 'acting_remise_conv', 'acting_zeus_bank', 'acting_zeus_conv', 'acting_jpayment_conv', 'acting_jpayment_bank', 'acting_sbps_conv', 'acting_sbps_payeasy', 'acting_digitalcheck_conv', 'acting_mizuho_conv1', 'acting_mizuho_conv2' ) );
+		//$noreceipt_status_table = apply_filters( 'usces_filter_noreceipt_status', array( 'transferAdvance', 'transferDeferred', 'acting_remise_conv', 'acting_zeus_bank', 'acting_zeus_conv', 'acting_jpayment_conv', 'acting_jpayment_bank', 'acting_sbps_conv', 'acting_sbps_payeasy', 'acting_digitalcheck_conv', 'acting_mizuho_conv1', 'acting_mizuho_conv2' ) );
+		$noreceipt_status_table = get_option( 'usces_noreceipt_status' );
 		$status = ( in_array( $set['settlement'], $noreceipt_status_table ) ) ? 'noreceipt' : '';
 //20131121ysk end
 	}
@@ -2728,6 +2730,13 @@ function usces_check_acting_return() {
 			$results['reg_order'] = false;
 			break;
 //20140908ysk end
+//20140725ysk start
+		case 'paygent_card':
+		case 'paygent_conv':
+			$results[0] = $_REQUEST['acting_return'];
+			$results['reg_order'] = false;
+			break;
+//20140725ysk end
 
 		default:
 			do_action( 'usces_action_check_acting_return_default' );
@@ -5177,17 +5186,29 @@ function usces_clearup_acting_data(){
 
 function usces_save_order_acting_data( $key ) {
 	global $usces, $wpdb;
+	$table_name = $wpdb->prefix."usces_log";
 	$data = array();
 	$data['usces_cart'] = $_SESSION['usces_cart'];
 	$data['usces_entry'] = $_SESSION['usces_entry'];
 	$data['usces_member'] = $_SESSION['usces_member'];
-	$table_name = $wpdb->prefix."usces_log";
-	$query = $wpdb->prepare( "INSERT INTO  $table_name ( `datetime`, `log`, `log_type`, `log_key` ) VALUES ( %s, %s, %s, %s )",
-		current_time('mysql'),
-		serialize( $data ),
-		'acting_data',
-		$key
-	);
+
+	$query = $wpdb->prepare( "SELECT `log` FROM $table_name WHERE `log_type` = %s AND `log_key` = %s", 'acting_data', $key );
+	$log = $wpdb->get_var( $query );
+	if( $log ) {
+		$query = $wpdb->prepare( "UPDATE $table_name SET `datetime` = %s,`log` = %s WHERE `log_type` = %s AND `log_key` = %s",
+			current_time('mysql'),
+			serialize( $data ),
+			'acting_data', 
+			$key
+		);
+	} else {
+		$query = $wpdb->prepare( "INSERT INTO $table_name ( `datetime`, `log`, `log_type`, `log_key` ) VALUES ( %s, %s, %s, %s )",
+			current_time('mysql'),
+			serialize( $data ),
+			'acting_data',
+			$key
+		);
+	}
 	$res = $wpdb->query( $query );
 	return $res;
 }
@@ -5204,3 +5225,15 @@ function usces_restore_order_acting_data( $key ) {
 		$_SESSION['usces_member'] = $order_data['usces_member'];
 	}
 }
+
+function usces_acting_key() {
+	global $usces;
+
+	//$acting_key = $usces->cart->get_order_entry( 'acting_key' );
+	//if( !$acting_key ) {
+		$acting_key = usces_rand();
+	//	$usces->cart->set_order_entry( array( 'acting_key' => $acting_key ) );
+	//}
+	return $acting_key;
+}
+

@@ -331,7 +331,11 @@ class usces_cart {
 //20110203ysk start
 	// get entry information ***************************************************************
 	function get_order_entry( $key ) {
-		return $_SESSION['usces_entry']['order'][$key];
+		//return $_SESSION['usces_entry']['order'][$key];
+		if( isset($_SESSION['usces_entry']['order'][$key]) )
+			return $_SESSION['usces_entry']['order'][$key];
+		else
+			return NULL;
 	}
 //20110203ysk end
 	// entry information ***************************************************************
