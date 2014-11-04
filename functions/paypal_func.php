@@ -62,6 +62,9 @@ function usces_paypal_cart_page_footer( $include = true ) {
 	if( false === $usces->cart->num_row() ) return $html;
 	if( defined('WCEX_AUTO_DELIVERY') and wcad_have_regular_order() ) return $html;
 
+	$cart = $usces->cart->get_cart();
+	if( 'shipped' != $usces->getItemDivision( $cart[0]['post_id'] ) ) return $html;
+
 	$usces_entries = $usces->cart->get_entry();
 	$usces->set_cart_fees( $member, $usces_entries );
 
