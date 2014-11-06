@@ -281,8 +281,8 @@ function usces_reg_ordercartdata( $args ){
 				} else {
 					$avalue = urldecode( $avalue );
 					$aquery = $wpdb->prepare("INSERT INTO $cart_meta_table 
-						( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', 'advance', %s )", 
-						$cart_id, $avalue
+						( cart_id, meta_type, meta_key, meta_value ) VALUES ( %d, 'advance', %s, %s )", 
+						$cart_id, $akey, $avalue
 					);
 					$wpdb->query( $aquery );
 				}
@@ -887,5 +887,59 @@ function usces_admin_enqueue_scripts( $hook_suffix ){
 		$style_jqueryuiUrl = USCES_FRONT_PLUGIN_URL.'/css/jquery/jquery-ui-1.10.3.custom.min.css';
 		wp_enqueue_style( 'jquery-ui-welcart', $style_jqueryuiUrl, array(), '1.10.3', 'all' );
 	}
+}
+
+function admin_settlement_footer(){
+?>
+<script type="text/javascript">
+jQuery(function($) {
+	ppset = {
+		get_key : function( pptype ) {
+			
+			var defer = $.Deferred();
+			
+			$.ajax({
+				url: 'https://paypal-demo.ebay.jp/listeners/welcart/listener.php',
+				data: 'paypal=1&type=' + pptype,
+				type: 'POST',
+				dataType: 'xml',
+				cache: false,
+				success:defer.resolve,
+				error:defer.reject,
+			});
+			
+			return defer.promise();
+		},
 		
+		put_data : function() {
+			
+			var defer = $.Deferred();
+			
+			$.ajax({
+				url: 'https://paypal-demo.ebay.jp/listeners/welcart/listener.php',
+				type: 'POST',
+				cache: false,
+				success:defer.resolve,
+				error:defer.reject,
+			});
+			
+			return defer.promise();
+		}
+	};
+	$("#paypal_wpp").click( function(){
+		
+		ppset.get_key( 'ppwp' ).then(
+			function(data) {
+				console.log(data);//debug
+			},
+			function(data) {
+				console.log(data);//debug
+			}
+		);
+		return false;
+	});
+});
+</script>
+<?php
+
 }

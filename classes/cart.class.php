@@ -291,9 +291,9 @@ class usces_cart {
 		$new_opt = array();
 		foreach( $opt_fields as $key => $field ){
 			$name = urlencode($field['name']);
-			$new_opt[$name] = $options[$name];
+			$new_opt[$name] = isset($options[$name]) ? $options[$name] : '';
 		}
-		$row['options'] = apply_filters('usces_filter_key_unserialize_options', $new_opt, $ids[0], $skus[0]);
+		$row['options'] = apply_filters('usces_filter_key_unserialize_options', $new_opt, $ids[0], $skus[0], $serial );
 		$row['price'] = isset($_SESSION['usces_cart'][$serial]['price']) ? $_SESSION['usces_cart'][$serial]['price'] : 0;
 		$row['quantity'] = $_SESSION['usces_cart'][$serial]['quant'];
 		$row['advance'] = isset($_SESSION['usces_cart'][$serial]['advance']) ? $_SESSION['usces_cart'][$serial]['advance'] : array();

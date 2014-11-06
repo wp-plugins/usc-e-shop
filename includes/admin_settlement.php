@@ -624,7 +624,7 @@ function toggleVisibility(id) {
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paypal" />
-		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Express Checkout settings', 'usces'); ?>" />
+		<input name="usces_option_update" id="paypal_ec" type="submit" class="button" value="<?php _e('Update PayPal Express Checkout settings', 'usces'); ?>" />
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
@@ -667,7 +667,7 @@ function toggleVisibility(id) {
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paypal_wpp" />
-		<input name="usces_option_update" type="submit" class="button" value="<?php _e('Update PayPal Web Payment Plus settings', 'usces'); ?>" />
+		<input name="usces_option_update" id="paypal_wpp" type="submit" class="button" value="<?php _e('Update PayPal Web Payment Plus settings', 'usces'); ?>" />
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
