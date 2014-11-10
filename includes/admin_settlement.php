@@ -575,8 +575,8 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sandbox_paypal');"><?php _e('Operation Environment', 'usces'); ?></a></th>
-				<td><input name="sandbox" type="radio" id="sandbox_paypal_1" value="1"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 1 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_1"><?php _e('Test (Sandbox)', 'usces'); ?></label></td>
-				<td><input name="sandbox" type="radio" id="sandbox_paypal_2" value="2"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 2 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_2"><?php _e('Formal Installment', 'usces'); ?></label></td>
+				<td><input name="sandbox" class="ec_sandbox" type="radio" id="sandbox_paypal_1" value="1"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 1 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_1"><?php _e('Test (Sandbox)', 'usces'); ?></label></td>
+				<td><input name="sandbox" class="ec_sandbox" type="radio" id="sandbox_paypal_2" value="2"<?php if( isset($opts['paypal']['sandbox']) && $opts['paypal']['sandbox'] == 2 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_2"><?php _e('Formal Installment', 'usces'); ?></label></td>
 				<td><div id="ex_sandbox_paypal" class="explanation"><?php _e("Choose 'Test (Sandbox)' when testing payment settlement by Sandbox.", 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -591,8 +591,13 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_signature_paypal');"><?php _e('Signature', 'usces'); ?></a></th>
-				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="80" /></td>
+				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="80" /><span id="get_paypal_signature"></span></td>
 				<td><div id="ex_signature_paypal" class="explanation"><?php _e('Type in the signature from API credential. Signature will be different in the formal installment of Sandbox.', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_paypal_acount');"><?php _e('PayPal Acount Email address', 'usces'); ?></a></th>
+				<td colspan="4"><input name="paypal_acount" type="text" id="acount_paypal" value="<?php echo esc_html(isset($opts['paypal']['paypal_acount']) ? $opts['paypal']['paypal_acount'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_paypal_acount" class="explanation"><?php _e('PayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
 			</tr>
 <!--20110412ysk start-->
 			<?php if( defined('WCEX_DLSELLER') ): ?>
@@ -625,14 +630,25 @@ function toggleVisibility(id) {
 		</table>
 		<input name="acting" type="hidden" value="paypal" />
 		<input name="usces_option_update" id="paypal_ec" type="submit" class="button" value="<?php _e('Update PayPal Express Checkout settings', 'usces'); ?>" />
+		<input name="agree_paypal_ec" id="agree_paypal_ec" type="checkbox" value="agree"<?php if( isset($opts['paypal']['agree']) && 'agree' == $opts['paypal']['agree'] ) echo ' checked="checked"'; ?> /><label for="agree_paypal_ec">下記ご利用条件に同意する</label>
+		<p class="agree_paypal_exp">お申込みの際に送信いただいたお客様の情報は、提携会社であるPayPal Pte. Ltd.に提供され、同社のサービス評価、改善、向上およびマーケティング目的のため使用されること、また、同社からお客様に対してマーケティング及びキャンペーンの目的のご案内（Ｅメール等の送信を含みます）が行われる場合があることにご同意頂きます。</p>
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('PayPal Express Checkout', 'usces'); ?></strong></p>
 		<a href="http://www.welcart.com/wc-settlement/paypal_guide/" target="_blank"><?php _e('For the details on PayPal Express Checkout, click here >>', 'usces'); ?></a>
-		<p>　</p>
-		<p><?php _e("This settlement uses 'Express Checkout'.", 'usces'); ?></p>
+		<p>PayPalエクスプレスチェックアウト決済サービスの利用には、ペイパルビジネスアカウントが必要です。ビジネスアカウントの開設は<a href="https://www.paypal.com/jp/cgi-bin/webscr?cmd=_registration-run" target="_blank">こちら</a>から行えます。</p>
+		<p>ビジネスアカウントの開設手順は<a href="https://www.paypal.jp/jp/contents/start/account-business/" target="_blank">こちら</a>をご覧ください。</p>
+		<p><a href="https://www.paypal.jp/jp/contents/support/faq/faq-008/" target="_blank">ビジネスアカウントの本人確認書類の提出について</a></p>
+		<p><a href="http://www.welcart.com/documents/manual-2/%E3%82%AF%E3%83%AC%E3%82%B8%E3%83%83%E3%83%88%E6%B1%BA%E6%B8%88%E8%A8%AD%E5%AE%9A#paypal_ec" target="_blank">オンラインマニュアル</a></p>
 		<p><?php _e("If the 'OpenSSL' module is not installed in the server you're using, you cannot settle payments by 'ExpressCheckout'.", 'usces'); ?></p>
+		<p>問い合わせ先<br />
+新規お申込み・導入に関するお問い合わせ（営業窓口）<br />
+Tel：03-6739-7135 平日 9:30 - 18:00（土・日・祝祭日は除く）※通話料がかかります<br />
+E-mail：wpp@paypal.com</p>
+<p>すでにペイパルアカウントをお持ちの方（カスタマーサービス）<br />
+Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこちら ※通話料がかかります）<br />
+9:00～20:00（年中無休）</p>
 	</div>
 	</div><!--uscestabs_paypal_ec-->
 <!--20110208ysk end-->
@@ -656,25 +672,34 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_sandbox_paypal_wpp');"><?php _e('Operation Environment', 'usces'); ?></a></th>
-				<td><input name="sandbox" type="radio" id="sandbox_paypal_wpp_1" value="1"<?php if( isset($opts['paypal_wpp']['sandbox']) && $opts['paypal_wpp']['sandbox'] == 1 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_wpp_1"><?php _e('Test (Sandbox)', 'usces'); ?></label></td>
-				<td><input name="sandbox" type="radio" id="sandbox_paypal_wpp_2" value="2"<?php if( isset($opts['paypal_wpp']['sandbox']) && $opts['paypal_wpp']['sandbox'] == 2 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_wpp_2"><?php _e('Formal Installment', 'usces'); ?></label></td>
+				<td><input name="sandbox" class="wp_sandbox" type="radio" id="sandbox_paypal_wpp_1" value="1"<?php if( isset($opts['paypal_wpp']['sandbox']) && $opts['paypal_wpp']['sandbox'] == 1 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_wpp_1"><?php _e('Test (Sandbox)', 'usces'); ?></label></td>
+				<td><input name="sandbox" class="wp_sandbox" type="radio" id="sandbox_paypal_wpp_2" value="2"<?php if( isset($opts['paypal_wpp']['sandbox']) && $opts['paypal_wpp']['sandbox'] == 2 ) echo ' checked'; ?> /></td><td><label for="sandbox_paypal_wpp_2"><?php _e('Formal Installment', 'usces'); ?></label></td>
 				<td><div id="ex_sandbox_paypal_wpp" class="explanation"><?php _e("Choose 'Test (Sandbox)' when testing payment settlement by Sandbox.", 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_id_paypal_wpp');"><?php _e('PayPal ID', 'usces'); ?></a></th>
 				<td colspan="4"><input name="paypal_id" type="text" id="id_paypal_wpp" value="<?php echo esc_html(isset($opts['paypal_wpp']['paypal_id']) ? $opts['paypal_wpp']['paypal_id'] : ''); ?>" size="50" /></td>
-				<td><div id="ex_id_paypal_wpp" class="explanation"><?php _e('セキュアなマーチャントID(個人設定ページに表示)またはPayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
+				<td><div id="ex_id_paypal_wpp" class="explanation"><?php _e('セキュアなマーチャントID(個人設定ページに表示)、またはPayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paypal_wpp" />
 		<input name="usces_option_update" id="paypal_wpp" type="submit" class="button" value="<?php _e('Update PayPal Web Payment Plus settings', 'usces'); ?>" />
+		<input name="agree_paypal_wpp" id="agree_paypal_wpp" type="checkbox" value="agree"<?php if( isset($opts['paypal_wpp']['agree']) && 'agree' == $opts['paypal_wpp']['agree'] ) echo ' checked="checked"'; ?> /><label for="agree_paypal_wpp">下記ご利用条件に同意する</label>
+		<p class="agree_paypal_exp">お申込みの際に送信いただいたお客様の情報は、提携会社であるPayPal Pte. Ltd.に提供され、同社のサービス評価、改善、向上およびマーケティング目的のため使用されること、また、同社からお客様に対してマーケティング及びキャンペーンの目的のご案内（Ｅメール等の送信を含みます）が行われる場合があることにご同意頂きます。</p>
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
 		<p><strong><?php _e('PayPal Web Payment Plus', 'usces'); ?></strong></p>
 		<a href="https://www.paypal.jp/jp/contents/service/web-payment-plus/" target="_blank"><?php _e('For the details on PayPal Web Payment Plus, click here >>', 'usces'); ?></a>
-		<p>　</p>
-		<p><?php _e("This settlement uses 'Web Payment Plus'.", 'usces'); ?></p>
+		<p>ウェブペイメントプラスのご利用には審査が必要です。審査については<a href="https://www.paypal.jp/jp/contents/support/introduction/web-payment-plus/" target="_blank">こちら</a></p>
+		<p><a href="http://www.welcart.com/documents/manual-2/%E3%82%AF%E3%83%AC%E3%82%B8%E3%83%83%E3%83%88%E6%B1%BA%E6%B8%88%E8%A8%AD%E5%AE%9A#paypal_wpp" target="_blank">オンラインマニュアル</a></p>
+		<p>問い合わせ先<br />
+新規お申込み・導入に関するお問い合わせ（営業窓口）<br />
+Tel：03-6739-7135 平日 9:30 - 18:00（土・日・祝祭日は除く）※通話料がかかります<br />
+E-mail：wpp@paypal.com</p>
+<p>すでにペイパルアカウントをお持ちの方（カスタマーサービス）<br />
+Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこちら ※通話料がかかります）<br />
+9:00～20:00（年中無休）</p>
 	</div>
 	</div><!--uscestabs_paypal_wpp-->
 <!--20140908ysk end-->

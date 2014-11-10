@@ -1354,12 +1354,15 @@ class usc_e_shop
 					$options['acting_settings']['paypal']['user'] = isset($_POST['user']) ? $_POST['user'] : '';
 					$options['acting_settings']['paypal']['pwd'] = isset($_POST['pwd']) ? $_POST['pwd'] : '';
 					$options['acting_settings']['paypal']['signature'] = isset($_POST['signature']) ? $_POST['signature'] : '';
+					$options['acting_settings']['paypal']['paypal_acount'] = isset($_POST['paypal_acount']) ? $_POST['paypal_acount'] : '';
 //20110412ysk start
 					$options['acting_settings']['paypal']['continuation'] = isset($_POST['continuation']) ? $_POST['continuation'] : '';
 //20110412ysk end
 					$options['acting_settings']['paypal']['logoimg'] = isset($_POST['logoimg']) ? $_POST['logoimg'] : '';
 					$options['acting_settings']['paypal']['set_cartbordercolor'] = isset($_POST['set_cartbordercolor']) ? $_POST['set_cartbordercolor'] : 'off';
 					$options['acting_settings']['paypal']['cartbordercolor'] = ( 'on' == $options['acting_settings']['paypal']['set_cartbordercolor'] ) ? $_POST['cartbordercolor'] : '';
+
+					$options['acting_settings']['paypal']['agree'] = isset($_POST['agree_paypal_ec']) ? $_POST['agree_paypal_ec'] : '';
 
 					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
 						$mes .= '※動作環境が不正です<br />';
@@ -1369,6 +1372,10 @@ class usc_e_shop
 						$mes .= '※APIパスワードを入力して下さい<br />';
 					if( WCUtils::is_blank($_POST['signature']) )
 						$mes .= '※署名を入力して下さい<br />';
+					if( WCUtils::is_blank($_POST['paypal_acount']) )
+						$mes .= '※PayPalアカウント（メールアドレス）を入力して下さい<br />';
+					if( !isset($_POST['agree_paypal_ec']) )
+						$mes .= '※ご利用条件の同意がありません<br />';
 
 					if( WCUtils::is_blank($mes) ){
 						$this->action_status = 'success';
@@ -1392,8 +1399,11 @@ class usc_e_shop
 					}else{
 						$this->action_status = 'error';
 						$this->action_message = __('Data have deficiency.', 'usces');
-						$options['acting_settings']['paypal']['activate'] = 'off';
 						unset($this->payment_structure['acting_paypal_ec']);
+						$options = get_option('usces');
+						$options['acting_settings']['paypal']['activate'] = 'off';
+						$options['acting_settings']['paypal']['agree'] = isset($_POST['agree_paypal_ec']) ? $_POST['agree_paypal_ec'] : '';
+						update_option('usces', $options);
 					}
 					ksort($this->payment_structure);
 					update_option('usces_payment_structure', $this->payment_structure);
@@ -1406,10 +1416,14 @@ class usc_e_shop
 					$options['acting_settings']['paypal_wpp']['sandbox'] = isset($_POST['sandbox']) ? $_POST['sandbox'] : '';
 					$options['acting_settings']['paypal_wpp']['paypal_id'] = isset($_POST['paypal_id']) ? $_POST['paypal_id'] : '';
 
+					$options['acting_settings']['paypal_wpp']['agree'] = isset($_POST['agree_paypal_wpp']) ? $_POST['agree_paypal_wpp'] : '';
+
 					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
 						$mes .= '※動作環境が不正です<br />';
 					if( WCUtils::is_blank($_POST['paypal_id']) )
 						$mes .= '※PayPal ID を入力して下さい<br />';
+					if( !isset($_POST['agree_paypal_wpp']) )
+						$mes .= '※ご利用条件の同意がありません<br />';
 
 					if( WCUtils::is_blank($mes) ) {
 						$this->action_status = 'success';
@@ -1431,7 +1445,10 @@ class usc_e_shop
 					} else {
 						$this->action_status = 'error';
 						$this->action_message = __('Data have deficiency.', 'usces');
+						$options = get_option('usces');
 						$options['acting_settings']['paypal_wpp']['activate'] = 'off';
+						$options['acting_settings']['paypal_wpp']['agree'] = isset($_POST['agree_paypal_wpp']) ? $_POST['agree_paypal_wpp'] : '';
+						update_option('usces', $options);
 						unset( $this->payment_structure['acting_paypal_wpp'] );
 					}
 					ksort( $this->payment_structure );
@@ -5192,10 +5209,12 @@ class usc_e_shop
 		$rets143 = usces_upgrade_143();
 		$this->update_options();//20120710ysk 0000472
 		usces_schedule_event();
+		usces_wcsite_activate();
 	}
 
 	function deactivate() {
 		wp_clear_scheduled_hook('wc_cron');
+		usces_wcsite_deactivate();
 	}
 	
 	function create_table() {

@@ -688,7 +688,8 @@ function usces_the_itemSkuButton($value, $type=0, $out = '') {
 		$html .= "<a name=\"cart_button\"></a><input name=\"inCart[{$post_id}][{$sku}]\" type=\"{$type}\" id=\"inCart[{$post_id}][{$sku}]\" class=\"skubutton\" value=\"{$value}\" />";
 	}
 	$html .= "<input name=\"usces_referer\" type=\"hidden\" value=\"" . $_SERVER['REQUEST_URI'] . "\" />\n";
-
+	$html = apply_filters( 'usces_filter_item_sku_button', $html, $value, $type );
+	
 	if( $out == 'return' ){
 		return $html;
 	}else{

@@ -911,18 +911,49 @@ jQuery(function($) {
 			return defer.promise();
 		},
 		
-		put_data : function() {
+		put_data : function(pptype, key_value) {
 			
 			var defer = $.Deferred();
 			
+			if( 'ppwp' == pptype ){
+				var activate = $("input[name='wpp_activate']:checked").val();
+				if( "2" == $(".wp_sandbox:checked").val() ){
+					var operating = 'production';
+				}else{
+					var operating = 'sandbox';
+				}
+				var id = $("#id_paypal_wpp").val();
+				var query = 'key=' + key_value + '&type=' + pptype + '&activate=' + activate + '&operating=' + operating + '&id=' + id;
+				if( !id ){
+					return;
+				}
+			}else if( 'ppec' == pptype ){
+				var agree_paypal_ec = $("#agree_paypal_ec:checked").val();
+				var activate = $("input[name='ec_activate']:checked").val();
+				if( "2" == $(".ec_sandbox:checked").val() ){
+					var operating = 'production';
+				}else{
+					var operating = 'sandbox';
+				}
+				var user = $("#user_paypal").val();
+				var pwd = $("#pwd_paypal").val();
+				var signature = $("#signature_paypal").val();
+				var acount = $("#acount_paypal").val();
+				var query = 'key=' + key_value + '&type=' + pptype + '&activate=' + activate + '&operating=' + operating + '&user=' + user + '&pwd=' + pwd + '&signature=' + signature + '&acount=' + acount;
+				if( !user || !pwd || !signature || !acount || !user || !agree_paypal_ec ){
+					return;
+				}
+			}else{
+				return;
+			}
 			$.ajax({
 				url: 'https://paypal-demo.ebay.jp/listeners/welcart/listener.php',
+				data: query,
 				type: 'POST',
 				cache: false,
 				success:defer.resolve,
 				error:defer.reject,
 			});
-			
 			return defer.promise();
 		}
 	};
@@ -931,15 +962,77 @@ jQuery(function($) {
 		ppset.get_key( 'ppwp' ).then(
 			function(data) {
 				console.log(data);//debug
+				var key_value = $(data).find('key').text();
+				var type_value = $(data).find('type').text();
+				ppset.put_data( type_value, key_value );
 			},
 			function(data) {
 				console.log(data);//debug
 			}
 		);
-		return false;
+		return true;
 	});
+	$("#paypal_ec").click( function(){
+		
+		ppset.get_key( 'ppec' ).then(
+			function(data) {
+				console.log(data);//debug
+				var key_value = $(data).find('key').text();
+				var type_value = $(data).find('type').text();
+				ppset.put_data( type_value, key_value );
+			},
+			function(data) {
+				console.log(data);//debug
+			}
+		);
+		return true;
+	});
+	$(".ec_sandbox").click( function(){
+		if( 1 == $(this).val() ){
+			$("#get_paypal_signature").html('<br />テスト環境（Sandbox）用API署名の情報は<a target="_blank" href="https://www.sandbox.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
+		}else{
+			$("#get_paypal_signature").html('<br />本番環境用API署名の情報は<a target="_blank" href="https://www.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
+		}
+	});
+	if( 1 == $(".ec_sandbox:checked").val() ){
+		$("#get_paypal_signature").html('<br />テスト環境（Sandbox）用API署名の情報は<a target="_blank" href="https://www.sandbox.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
+	}else{
+		$("#get_paypal_signature").html('<br />本番環境用API署署名の情報は<a target="_blank" href="https://www.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
+	}
 });
 </script>
+
 <?php
 
+}
+
+function usces_responce_wcsite() {
+	$my_wcid = get_option('usces_wcid');
+	if( isset($_POST['sname']) && isset($_POST['wcid']) && $my_wcid == $_POST['wcid']){
+		$data['usces'] = get_option('usces');
+		$res = json_encode($data);
+		header( 'Content-Type: application/json' );
+		echo $res;
+		exit;
+	}
+}
+
+function usces_wcsite_activate(){
+	$params = array(
+		'wcid' => get_option('usces_wcid'),
+		'wchost' => $_SERVER['SERVER_NAME'],
+		'refer' => get_home_url(),
+		'act' => 1,
+	);
+	usces_wcsite_connection($params);
+}
+
+function usces_wcsite_deactivate(){
+	$params = array(
+		'wcid' => get_option('usces_wcid'),
+		'wchost' => $_SERVER['SERVER_NAME'],
+		'refer' => get_home_url(),
+		'act' => 0,
+	);
+	usces_wcsite_connection($params);
 }

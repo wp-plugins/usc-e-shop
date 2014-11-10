@@ -5,8 +5,7 @@ add_action( 'init', array(&$usces, 'main'), 10);
 add_action( 'admin_init', 'usces_redirect', 10);
 add_action( 'admin_init', 'usces_typenow');
 add_action( 'admin_notices', 'usces_admin_notices');
-
-//add_action( 'admin_init', 'admin_prodauct_meta_box');
+add_action( 'plugins_loaded', 'usces_responce_wcsite');
 add_action( 'admin_menu', array(&$usces, 'add_pages'));
 add_action( 'admin_head', array(&$usces, 'admin_head'));
 add_action( 'admin_head-welcart-shop_page_usces_itemnew', 'admin_new_prodauct_header');
