@@ -1011,7 +1011,7 @@ function usces_action_acting_transaction(){
 			if( !$order_id ) {
 				$res = $usces->order_processing();
 				if( 'ordercompletion' == $res ) {
-					$usces->cart->crear_cart();
+					//$usces->cart->crear_cart();
 					usces_log( 'AnotherLane [OK] transaction : '.$data['TransactionId'], 'acting_transaction.log' );
 				} else {
 					usces_log( 'AnotherLane order processing error : '.print_r($data, true), 'acting_transaction.log' );
