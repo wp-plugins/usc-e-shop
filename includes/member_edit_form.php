@@ -13,61 +13,22 @@ if($member_action == 'new'){
 	$member_metas = array();
 	$data = array(
 			'ID' =>'',
-			'mem_email' => '',
-			'mem_pass' => '',
-			'mem_status' => '',
+			'mem_email' => ( isset($_POST['member']['email']) ) ? $_POST['member']['email'] : '',
+			'mem_pass' => ( isset($_POST['member']['password']) ) ? $_POST['member']['password'] : '',
+			'mem_status' => ( isset($_POST['member']['status']) ) ? $_POST['member']['status'] : 0,
 			'mem_cookie' => '',
-			'mem_point' => '0',
-			'mem_name1' => '',
-			'mem_name2' => '',
-			'mem_name3' => '',
-			'mem_name4' => '',
-			'mem_zip' => '',
-			'mem_pref' => '',
-			'mem_address1' => '',
-			'mem_address2' => '',
-			'mem_address3' => '',
-			'mem_tel' => '',
-			'mem_fax' => '',
-			'mem_delivery_flag' => '',
-			'mem_delivery' => '',
-			'mem_registered' => '',
-			'mem_nicename' => ''
-			);
-
-	$usces_member_history = array();
-
-	$csmb_meta = usces_has_custom_field_meta('member');
-	if(is_array($csmb_meta)) {
-		$keys = array_keys($csmb_meta);
-		foreach($keys as $key) {
-			$csmb_key = 'csmb_'.$key;
-			$csmb_meta[$key]['data'] = NULL;
-		}
-	}
-}elseif($member_action == 'newpost'){
-	$page = 'usces_membernew';
-	$oa = 'newpost';
-	$ID = NULL;
-	$member_metas = array();
-	$data = array(
-			'ID' =>'',
-			'mem_email' => $_POST['member']['email'],
-			'mem_pass' => $_POST['member']['password'],
-			'mem_status' => $_POST['member']['status'],
-			'mem_cookie' => '',
-			'mem_point' => $_POST['member']['point'],
-			'mem_name1' => $_POST['member']['name1'],
-			'mem_name2' => $_POST['member']['name2'],
-			'mem_name3' => $_POST['member']['name3'],
-			'mem_name4' => $_POST['member']['name4'],
-			'mem_zip' => $_POST['member']['zipcode'],
-			'mem_pref' => $_POST['member']['pref'],
-			'mem_address1' => $_POST['member']['address1'],
-			'mem_address2' => $_POST['member']['address2'],
-			'mem_address3' => $_POST['member']['address3'],
-			'mem_tel' => $_POST['member']['tel'],
-			'mem_fax' => $_POST['member']['fax'],
+			'mem_point' => ( isset($_POST['member']['point']) ) ? $_POST['member']['point'] : 0,
+			'mem_name1' => ( isset($_POST['member']['name1']) ) ? $_POST['member']['name1'] : '',
+			'mem_name2' => ( isset($_POST['member']['name2']) ) ? $_POST['member']['name2'] : '',
+			'mem_name3' => ( isset($_POST['member']['name3']) ) ? $_POST['member']['name3'] : '',
+			'mem_name4' => ( isset($_POST['member']['name4']) ) ? $_POST['member']['name4'] : '',
+			'mem_zip' => ( isset($_POST['member']['zipcode']) ) ? $_POST['member']['zipcode'] : '',
+			'mem_pref' => ( isset($_POST['member']['pref']) ) ? $_POST['member']['pref'] : '',
+			'mem_address1' => ( isset($_POST['member']['address1']) ) ? $_POST['member']['address1'] : '',
+			'mem_address2' => ( isset($_POST['member']['address2']) ) ? $_POST['member']['address2'] : '',
+			'mem_address3' => ( isset($_POST['member']['address3']) ) ? $_POST['member']['address3'] : '',
+			'mem_tel' => ( isset($_POST['member']['tel']) ) ? $_POST['member']['tel'] : '',
+			'mem_fax' => ( isset($_POST['member']['fax']) ) ? $_POST['member']['fax'] : '',
 			'mem_delivery_flag' => '',
 			'mem_delivery' => '',
 			'mem_registered' => '',
@@ -115,95 +76,21 @@ if( usces_is_member_system() ){
 	$colspan = 6;
 }
 
+$mem_registered = ( !empty($data['mem_registered']) ) ? sprintf(__('%2$s %3$s, %1$s', 'usces'),substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2)) : '';
+
 $curent_url = urlencode( USCES_ADMIN_URL.'?'.$_SERVER['QUERY_STRING'] );
 ?>
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
-			$("#anibox").animate({ backgroundColor: "#ECFFFF" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#ECFFFF" }, 2000);
 <?php }else if($status == 'caution'){ ?>
-			$("#anibox").animate({ backgroundColor: "#FFF5CE" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#FFF5CE" }, 2000);
 <?php }else if($status == 'error'){ ?>
-			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 	var default_pre = '<?php _e('-- Select --', 'usces'); ?>';
 	$(".num").bind("change", function(){ usces_check_num($(this)); });
-
-	$('form').submit(function() {
-		var error = 0;
-
-		if( "" == $("input[name='member\[email\]']").val() ) {
-			error++;
-			$("input[name='member\[email\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( "" == $("input[name='member\[password\]']").val() ) {
-			error++;
-			$("input[name='member\[password\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( "" == $("input[name='member\[name1\]']").val() ) {
-			error++;
-			$("input[name='member\[name1\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( "" == $("input[name='member\[name2\]']").val() ) {
-			error++;
-			$("input[name='member\[name2\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( "" == $("input[name='member\[zipcode\]']").val() ) {
-			error++;
-			$("input[name='member\[zipcode\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( default_pre == $("select[name='member\[pref\]']").val() || "" == $("select[name='member\[pref\]']").val() ) {
-			error++;
-			$("select[name='member\[pref\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( "" == $("input[name='member\[address1\]']").val() ) {
-			error++;
-			$("input[name='member\[address1\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( "" == $("input[name='member\[address2\]']").val() ) {
-			error++;
-			$("input[name='member\[address2\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( "" == $("input[name='member\[tel\]']").val() ) {
-			error++;
-			$("input[name='member\[tel\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-		if( !checkNum( $("input[name='member\[point\]']").val() ) ) {
-			error++;
-			$("input[name='member\[point\]']").css({'background-color': '#FFA'}).click(function() {
-				$(this).css({'background-color': '#FFF'});
-			});
-		}
-
-		if( 0 < error ) {
-			$("#aniboxStatus").removeClass("none");
-			$("#aniboxStatus").addClass("error");
-			$("#info_image").attr("src", "<?php echo USCES_PLUGIN_URL; ?>/images/list_message_error.gif");
-			$("#info_massage").html("データに不備があります");
-			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
-			return false;
-		} else {
-			return true;
-		}
-	});
 });
 
 function addComma(str)
@@ -221,8 +108,8 @@ function addComma(str)
 </script>
 <div class="wrap">
 <div class="usces_admin">
-<form action="<?php echo USCES_ADMIN_URL.'?page=' . $page . '&member_action='.$oa; ?>" method="post" name="editpost" />
-<?php if( $member_action == 'new' || $member_action == 'newpost' ) : ?>
+<form action="<?php echo USCES_ADMIN_URL.'?page='.$page.'&member_action='.$oa; ?>" method="post" name="editpost">
+<?php if( $member_action == 'new' ) : ?>
 	<h2>Welcart Management <?php _e('New Membership Registration','usces'); ?></h2>
 <?php else : ?>
 	<h2>Welcart Management <?php _e('Edit membership data','usces'); ?></h2>
@@ -237,7 +124,6 @@ function addComma(str)
 </div>
 <div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 <div class="info_head">
-<div class="error_message"><?php echo $this->error_message; ?></div>
 <table class="mem_wrap">
 <tr>
 <td class="label"><?php _e('membership number', 'usces'); ?></td><td class="col1"><div class="rod large short"><?php echo esc_html($data['ID']); ?></div></td>
@@ -247,7 +133,7 @@ function addComma(str)
 			<td class="label">e-mail</td>
 			<td><input name="member[email]" type="text" class="text long" value="<?php echo esc_attr($data['mem_email']); ?>" /></td>
 		</tr>
-<?php if( $member_action == 'new' || $member_action == 'newpost' ) : ?>
+<?php if( $member_action == 'new' ) : ?>
 		<tr>
 			<td class="label"><?php _e('password', 'usces'); ?></td>
 			<td><input name="member[password]" type="text" class="text" value="<?php echo esc_attr($data['mem_pass']); ?>" autocomplete="off" /></td>
@@ -358,7 +244,7 @@ function addComma(str)
 <td class="label"><?php _e('current point', 'usces'); ?></td><td class="col1"><input name="member[point]" type="text" class="text right short num" value="<?php echo esc_html($data['mem_point']); ?>" /></td>
 </tr>
 <tr>
-<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo esc_html(sprintf(__('%2$s %3$s, %1$s', 'usces'),substr($data['mem_registered'],0,4),substr($data['mem_registered'],5,2),substr($data['mem_registered'],8,2))); ?></div></td>
+<td class="label"><?php _e('Strated date', 'usces'); ?></td><td class="col1"><div class="rod shortm"><?php echo esc_html($mem_registered); ?></div></td>
 </tr>
 <tr>
 <td colspan="2"><?php do_action( 'usces_action_member_edit_form_left_blank', $ID ); ?></td>

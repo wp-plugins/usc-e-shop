@@ -582,7 +582,7 @@ class usc_e_shop
 					$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 				}
 				do_action('usces_after_update_orderdata', $_REQUEST['order_id'], $res);
-				require_once($order_edit_form);	
+				require_once($order_edit_form);
 				break;
 			case 'newpost':
 				check_admin_referer( 'order_edit', 'wc_nonce' );
@@ -598,7 +598,7 @@ class usc_e_shop
 				do_action('usces_after_new_orderdata', $res);
 				$_REQUEST['order_action'] = 'edit';
 				$order_action = $_REQUEST['order_action'];
-				require_once($order_edit_form);	
+				require_once($order_edit_form);
 				break;
 			case 'new':
 			case 'edit':
@@ -630,10 +630,8 @@ class usc_e_shop
 			$this->action_status = 'none';
 			$this->action_message = '';
 		}
-		if( $_REQUEST['page'] == 'usces_membernew' && !isset($_REQUEST['member_action']) ){
-			$member_action = 'new';
-		}elseif( $_REQUEST['page'] == 'usces_membernew' && isset($_REQUEST['member_action']) ){
-			$member_action = 'newpost';
+		if( $_REQUEST['page'] == 'usces_membernew' ){
+			$member_action = isset($_REQUEST['member_action']) ? $_REQUEST['member_action'] : 'new';
 		}else{
 			$member_action = isset($_REQUEST['member_action']) ? $_REQUEST['member_action'] : '';
 		}
@@ -648,7 +646,6 @@ class usc_e_shop
 //20100908ysk end
 			case 'editpost':
 				check_admin_referer( 'post_member', 'wc_nonce');
-
 				$this->error_message = $this->admin_member_check();
 				if( WCUtils::is_blank($this->error_message) ){
 					$res = usces_update_memberdata();
@@ -660,11 +657,10 @@ class usc_e_shop
 						$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 					}
 				}
-				require_once($member_edit_form);	
+				require_once($member_edit_form);
 				break;
 			case 'newpost':
 				check_admin_referer( 'post_member', 'wc_nonce');
-
 				$this->error_message = $this->admin_new_member_check();
 				if( WCUtils::is_blank($this->error_message) ){
 					$res = usces_new_memberdata();
@@ -677,17 +673,18 @@ class usc_e_shop
 					} else {
 						$this->set_action_status('error', 'ERROR : '.__('Failed to new member registration.','usces'));
 					}
+				} else {
+					$this->set_action_status('error', $this->error_message);
+					$member_action = 'new';
 				}
 				require_once($member_edit_form);
 				break;
-
 			case 'new':
 			case 'edit':
-				require_once($member_edit_form);	
+				require_once($member_edit_form);
 				break;
 			case 'delete':
 				check_admin_referer( 'delete_member', 'wc_nonce');
-					
 				$res = usces_delete_memberdata();
 				if ( 1 === $res ) {
 					$this->set_action_status('success', __('The member data is deleted','usces'));
@@ -697,7 +694,7 @@ class usc_e_shop
 					$this->set_action_status('error', 'ERROR : '.__('failure in delete','usces'));
 				}
 			default:
-				require_once($member_list);	
+				require_once($member_list);
 		}
 
 	}
@@ -4932,17 +4929,6 @@ class usc_e_shop
 		$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
 		$mes = '';
 
-		if ( !WCUtils::is_blank( $_POST['member']['password'] ) ){
-			if( !empty( $member_pass_rule_max ) ){
-				if( $member_pass_rule_min > strlen( trim($_POST['member']['password']) ) || strlen( trim($_POST['member']['password']) ) > $member_pass_rule_max ){
-					$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
-				}
-			}else{
-				if( $member_pass_rule_min > strlen( trim($_POST['member']['password']) ) ){
-					$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
-				}
-			}
-		}
 		if ( !is_email( trim($_POST['member']["email"]) ) ){
 			$mes .= __('e-mail address is not correct', 'usces') . "<br />";
 		}else{
@@ -4952,6 +4938,19 @@ class usc_e_shop
 				$mem_ID = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM $member_table WHERE mem_email = %s LIMIT 1", trim($_POST['member']["email"])) );
 				if( !empty($mem_ID) )
 					$mes .= __('This e-mail address has been already registered.', 'usces') . "<br />";
+			}
+		}
+		if ( WCUtils::is_blank( $_POST['member']['password'] ) ){
+			$mes .= __('Password is not correct.', 'usces') . "<br />";
+		} else {
+			if( !empty( $member_pass_rule_max ) ){
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password']) ) || strlen( trim($_POST['member']['password']) ) > $member_pass_rule_max ){
+					$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
+				}
+			}else{
+				if( $member_pass_rule_min > strlen( trim($_POST['member']['password']) ) ){
+					$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
+				}
 			}
 		}
 		if ( WCUtils::is_blank($_POST['member']["name1"]) )
