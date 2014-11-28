@@ -252,6 +252,7 @@ jQuery(function($){
 		width: 700,
 		resizable: true,
 		modal: true,
+		appendTo: "#dialog_parent",
 		buttons: {
 			'<?php _e('close', 'usces'); ?>': function() {
 				$(this).dialog('close');
@@ -286,6 +287,7 @@ jQuery(function($){
 				$(this).dialog('close');
 			}
 		},
+		appendTo:"#dialog_parent",
 		close: function() {
 			$("#sendmailmessage").html( "" );
 			$('#sendmailaddress').val('');
@@ -1184,7 +1186,7 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 
 
 
-
+<div id="dialog_parent" style="position:relative"></div>
 <div id="addItemDialog" title="<?php _e('Add item', 'usces'); ?>">
 	<div id="order-response"></div>
 	<fieldset>
