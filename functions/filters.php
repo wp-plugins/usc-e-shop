@@ -866,16 +866,16 @@ function usces_action_lostmail_inform(){
 	$mem_mail = urldecode($_REQUEST['mem']);
 	$lostkey = urldecode($_REQUEST['key']);
 	$html = '
-	<input type="hidden" name="lostmail" value="' . esc_attr($mem_mail) . '" />
-	<input type="hidden" name="lostkey" value="' . esc_attr($lostkey) . '" />' . "\n";
+	<input type="hidden" name="mem" value="' . esc_attr($mem_mail) . '" />
+	<input type="hidden" name="key" value="' . esc_attr($lostkey) . '" />' . "\n";
 	echo $html;
 }
 function usces_filter_lostmail_inform($html){
 	$mem_mail = urldecode($_REQUEST['mem']);
 	$lostkey = urldecode($_REQUEST['key']);
 	$html .= '
-	<input type="hidden" name="lostmail" value="' . esc_attr($mem_mail) . '" />
-	<input type="hidden" name="lostkey" value="' . esc_attr($lostkey) . '" />' . "\n";
+	<input type="hidden" name="mem" value="' . esc_attr($mem_mail) . '" />
+	<input type="hidden" name="key" value="' . esc_attr($lostkey) . '" />' . "\n";
 	return $html;
 }
 

@@ -3684,7 +3684,6 @@ class usc_e_shop
 		if( empty($res) )
 			die('Invalid request 2');
 		
-		
 		$this->page = 'changepassword';
 		add_action('the_post', array($this, 'action_memberFilter'));
 		add_action('template_redirect', array($this, 'template_redirect'));
@@ -3694,7 +3693,13 @@ class usc_e_shop
 		$nonce = isset( $_REQUEST['wc_nonce'] ) ? $_REQUEST['wc_nonce'] : '';
 		if( !wp_verify_nonce( $nonce, 'post_member' ) )
 			die('Security check6');
-			
+		
+		$lostmail = $_POST['mem'];
+		$lostkey = $_POST['key'];
+		$res = usces_check_lostkey($lostmail, $lostkey);
+		if( empty($res) )
+			die('Invalid request 7');
+
 		global $wp_query;
 		$this->error_message = $this->changepass_check();
 		if ( $this->error_message != '' ) {
@@ -3923,8 +3928,8 @@ class usc_e_shop
 	function changepassword() {
 		global $wpdb;
 
-		$lostmail = $_POST['lostmail'];
-		$lost_key = $_POST['lostkey'];
+		$lostmail = $_POST['mem'];
+		$lost_key = $_POST['key'];
 		
 		$member_table = $wpdb->prefix . "usces_member";
 		
@@ -5110,9 +5115,24 @@ class usc_e_shop
 
 	function changepass_check() {
 		$mes = '';
-		if ( WCUtils::is_blank($_POST['loginpass1']) || WCUtils::is_blank($_POST['loginpass2']) || (trim($_POST['loginpass1']) != trim($_POST['loginpass2'])))
-			$mes .= __('Password is not correct.', 'usces') . "<br />";
 
+		if ( WCUtils::is_blank($_POST['loginpass1']) || WCUtils::is_blank($_POST['loginpass2']) || trim($_POST['loginpass1']) != trim($_POST['loginpass2']) ){
+			$mes .= __('Password is not correct.', 'usces') . "<br />";
+		}else{
+			$member_pass_rule_min = $this->options['system']['member_pass_rule_min'];
+			$member_pass_rule_max = $this->options['system']['member_pass_rule_max'];
+			if ( !WCUtils::is_blank($_POST['loginpass1']) || !WCUtils::is_blank($_POST['loginpass2']) ){
+				if( !empty( $member_pass_rule_max ) ){
+					if( $member_pass_rule_min > strlen( trim($_POST['loginpass1']) ) || strlen( trim($_POST['loginpass1']) ) > $member_pass_rule_max ){
+						$mes .= sprintf(__('Please enter %2$s characters a minimum of %1$s characters and a maximum password.', 'usces'), $member_pass_rule_min, $member_pass_rule_max ) . "<br />";
+					}
+				}else{
+					if( $member_pass_rule_min > strlen( trim($_POST['loginpass1']) ) ){
+						$mes .= sprintf(__('Please enter at least %s characters password.', 'usces'), $member_pass_rule_min) . "<br />";
+					}
+				}
+			}
+		}
 		return $mes;
 	}
 
