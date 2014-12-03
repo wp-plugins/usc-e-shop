@@ -680,8 +680,17 @@ function usces_pdfSetFooter($pdf, $data) {
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
 	$pdf->SetFont($font, '', $fontsize);
 	// Footer value
+	$payment = $usces->getPayments($data->order['payment_name']);
+	$transfers = apply_filters( 'usces_filter_pdf_transfer', array( 'transferAdvance', 'transferDeferred'), $data );
+	if( 'bill' == $_REQUEST['type'] && in_array( $payment['settlement'], $transfers ) ){
+		$transferee = __('Transfer','usces') . " : \r\n";
+		$transferee .= $usces->options['transferee'] . "\r\n";
+		$note_text = apply_filters( 'usces_filter_mail_transferee', $transferee, $payment );
+	}else{
+		$note_text = $data->order['note'];
+	}
 	$pdf->SetXY(16.1, 198.8);
-	$pdf->MultiCell(86.6, $lineheight, usces_conv_euc( apply_filters('usces_filter_pdf_note', $data->order['note'], $data, $_REQUEST['type'])), $border, 'J');
+	$pdf->MultiCell(86.6, $lineheight, usces_conv_euc( apply_filters('usces_filter_pdf_note', $note_text, $data, $_REQUEST['type'])), $border, 'J');
 	list($fontsize, $lineheight, $linetop) = usces_set_font_size(9);
 	$pdf->SetFont($font, '', $fontsize);
 	$pdf->SetXY(142.9, 198.8);

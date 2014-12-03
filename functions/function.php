@@ -901,7 +901,7 @@ function usces_send_mail( $para ) {
 	$para['from_name'] = $from;
 
 	$usces->mail_para = $para;
-	add_action('phpmailer_init','usces_send_mail_init', 11);
+	add_action('phpmailer_init','usces_send_mail_init', 5);
 
 	$subject = html_entity_decode($para['subject'], ENT_QUOTES);
 	$message = $para['message'];
@@ -919,7 +919,7 @@ function usces_send_mail( $para ) {
 		$res = false;
 	}
 	
-	remove_action('phpmailer_init','usces_send_mail_init', 11);
+	remove_action('phpmailer_init','usces_send_mail_init', 5);
 	$usces->mail_para = array();
 	return $res;
 

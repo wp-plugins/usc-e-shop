@@ -677,9 +677,9 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 				<td><div id="ex_sandbox_paypal_wpp" class="explanation"><?php _e("Choose 'Test (Sandbox)' when testing payment settlement by Sandbox.", 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_id_paypal_wpp');"><?php _e('PayPal ID', 'usces'); ?></a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_id_paypal_wpp');"><?php _e('PayPal Acount Email address', 'usces'); ?></a></th>
 				<td colspan="4"><input name="paypal_id" type="text" id="id_paypal_wpp" value="<?php echo esc_html(isset($opts['paypal_wpp']['paypal_id']) ? $opts['paypal_wpp']['paypal_id'] : ''); ?>" size="50" /></td>
-				<td><div id="ex_id_paypal_wpp" class="explanation"><?php _e('セキュアなマーチャントID(個人設定ページに表示)、またはPayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
+				<td><div id="ex_id_paypal_wpp" class="explanation"><?php _e('PayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paypal_wpp" />
@@ -691,6 +691,9 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 	<div class="settle_exp">
 		<p><strong><?php _e('PayPal Web Payment Plus', 'usces'); ?></strong></p>
 		<a href="https://www.paypal.jp/jp/contents/service/web-payment-plus/" target="_blank"><?php _e('For the details on PayPal Web Payment Plus, click here >>', 'usces'); ?></a>
+		<p>PayPalウェブペイメントプラス決済サービスの利用には、ペイパルビジネスアカウントが必要です。ビジネスアカウントの開設は<a href="https://www.paypal.com/jp/cgi-bin/webscr?cmd=_registration-run" target="_blank">こちら</a></p>
+		<p>ビジネスアカウントの開設手順は<a href="https://www.paypal.jp/jp/contents/start/account-business/" target="_blank">こちら</a>をご覧ください。</p>
+		<p><a href="https://www.paypal.jp/jp/contents/support/faq/faq-008/" target="_blank">ビジネスアカウントの本人確認書類の提出について</a></p>
 		<p>ウェブペイメントプラスのご利用には審査が必要です。審査については<a href="https://www.paypal.jp/jp/contents/support/introduction/web-payment-plus/" target="_blank">こちら</a></p>
 		<p><a href="http://www.welcart.com/documents/manual-2/%E3%82%AF%E3%83%AC%E3%82%B8%E3%83%83%E3%83%88%E6%B1%BA%E6%B8%88%E8%A8%AD%E5%AE%9A#paypal_wpp" target="_blank">オンラインマニュアル</a></p>
 		<p>問い合わせ先<br />

@@ -186,4 +186,6 @@ $html .= '</form>'."\n";
 $html .= apply_filters('usces_filter_single_item_outform', NULL);
 
 $html .= '</div><!-- end of itemspage -->'."\n";
+$html = apply_filters('usces_filter_single_item', $html, $post, $content );
+
 ?>

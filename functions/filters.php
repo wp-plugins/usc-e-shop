@@ -887,123 +887,66 @@ function usces_admin_enqueue_scripts( $hook_suffix ){
 		$style_jqueryuiUrl = USCES_FRONT_PLUGIN_URL.'/css/jquery/jquery-ui-1.10.3.custom.min.css';
 		wp_enqueue_style( 'jquery-ui-welcart', $style_jqueryuiUrl, array(), '1.10.3', 'all' );
 	}
+	if( 'welcart-shop_page_usces_settlement' == $hook_suffix ){
+		$shop_page_usces_settlement = USCES_FRONT_PLUGIN_URL.'/js/usces_admin_settlement.js';
+		wp_enqueue_script( 'shop_page_usces_settlement', $shop_page_usces_settlement, array(), '1.4.11', true );
+	}
 }
 
-function admin_settlement_footer(){
-?>
-<script type="text/javascript">
-jQuery(function($) {
-	ppset = {
-		get_key : function( pptype ) {
-			
-			var defer = $.Deferred();
-			
-			$.ajax({
-				url: 'https://paypal-demo.ebay.jp/listeners/welcart/listener.php',
-				data: 'paypal=1&type=' + pptype,
-				type: 'POST',
-				dataType: 'xml',
-				cache: false,
-				success:defer.resolve,
-				error:defer.reject,
-			});
-			
-			return defer.promise();
-		},
-		
-		put_data : function(pptype, key_value) {
-			
-			var defer = $.Deferred();
-			
-			if( 'ppwp' == pptype ){
-				var activate = $("input[name='wpp_activate']:checked").val();
-				if( "2" == $(".wp_sandbox:checked").val() ){
-					var operating = 'production';
-				}else{
-					var operating = 'sandbox';
-				}
-				var id = $("#id_paypal_wpp").val();
-				var query = 'key=' + key_value + '&type=' + pptype + '&activate=' + activate + '&operating=' + operating + '&id=' + id;
-				if( !id ){
-					return;
-				}
-			}else if( 'ppec' == pptype ){
-				var agree_paypal_ec = $("#agree_paypal_ec:checked").val();
-				var activate = $("input[name='ec_activate']:checked").val();
-				if( "2" == $(".ec_sandbox:checked").val() ){
-					var operating = 'production';
-				}else{
-					var operating = 'sandbox';
-				}
-				var user = $("#user_paypal").val();
-				var pwd = $("#pwd_paypal").val();
-				var signature = $("#signature_paypal").val();
-				var acount = $("#acount_paypal").val();
-				var query = 'key=' + key_value + '&type=' + pptype + '&activate=' + activate + '&operating=' + operating + '&user=' + user + '&pwd=' + pwd + '&signature=' + signature + '&acount=' + acount;
-				if( !user || !pwd || !signature || !acount || !user || !agree_paypal_ec ){
-					return;
-				}
-			}else{
-				return;
-			}
-			$.ajax({
-				url: 'https://paypal-demo.ebay.jp/listeners/welcart/listener.php',
-				data: query,
-				type: 'POST',
-				cache: false,
-				success:defer.resolve,
-				error:defer.reject,
-			});
-			return defer.promise();
-		}
-	};
-	$("#paypal_wpp").click( function(){
-		
-		ppset.get_key( 'ppwp' ).then(
-			function(data) {
-				console.log(data);//debug
-				var key_value = $(data).find('key').text();
-				var type_value = $(data).find('type').text();
-				ppset.put_data( type_value, key_value );
-			},
-			function(data) {
-				console.log(data);//debug
-			}
-		);
-		return true;
-	});
-	$("#paypal_ec").click( function(){
-		
-		ppset.get_key( 'ppec' ).then(
-			function(data) {
-				console.log(data);//debug
-				var key_value = $(data).find('key').text();
-				var type_value = $(data).find('type').text();
-				ppset.put_data( type_value, key_value );
-			},
-			function(data) {
-				console.log(data);//debug
-			}
-		);
-		return true;
-	});
-	$(".ec_sandbox").click( function(){
-		if( 1 == $(this).val() ){
-			$("#get_paypal_signature").html('<br />テスト環境（Sandbox）用API署名の情報は<a target="_blank" href="https://www.sandbox.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
-		}else{
-			$("#get_paypal_signature").html('<br />本番環境用API署名の情報は<a target="_blank" href="https://www.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
-		}
-	});
-	if( 1 == $(".ec_sandbox:checked").val() ){
-		$("#get_paypal_signature").html('<br />テスト環境（Sandbox）用API署名の情報は<a target="_blank" href="https://www.sandbox.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
-	}else{
-		$("#get_paypal_signature").html('<br />本番環境用API署署名の情報は<a target="_blank" href="https://www.paypal.com/jp/ja/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true">こちら</a>から取得可能です。');
+function admin_settlement_option_update( $mes ){
+	if ( ('paypal' != $_POST['acting'] && 'paypal_wpp' != $_POST['acting']) || !WCUtils::is_blank($mes) )
+		return;
+
+	if ( 'paypal' == $_POST['acting'] ){
+		$para = "paypal=1&type=ppec";
+	}elseif( 'paypal_wpp' == $_POST['acting'] ){
+		$para = "paypal=1&type=ppwp";
 	}
-});
-</script>
+	
+	if(extension_loaded('curl')) {
+	
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, 'https://paypal-demo.ebay.jp/listeners/welcart/listener.php');
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $para);
+		$response = curl_exec($ch);
 
-<?php
+		if( !curl_errno($ch)) {
+			$res = usces_xml2assoc($response);
+			$operating = ( 2 == $_POST['sandbox'] ) ? 'operating' : 'sandbox';
 
+			if ( 'ppec' == $res['response']['type'] ){
+			
+				$para = 'key=' . $res['response']['key']
+				 . '&type=' . $res['response']['type']
+				 . '&activate=' . $_POST['ec_activate'] 
+				 . '&operating=' . $operating
+				 . '&user=' . trim($_POST['user']) 
+				 . '&acount=' . trim($_POST['paypal_acount'])
+				 . '&logoimg=' . trim($_POST['logoimg'])
+				 . '&bgcolor=' . trim($_POST['set_cartbordercolor'])
+				 . '&home=' . get_option('home');
+			
+			}elseif( 'ppwp' == $res['response']['type'] ){
+
+				$para = 'key=' . $res['response']['key']
+				 . '&type=' . $res['response']['type']
+				 . '&activate=' . $_POST['wpp_activate'] 
+				 . '&operating=' . $operating
+				 . '&id=' . trim($_POST['paypal_id'])
+				 . '&home=' . get_option('home');
+
+			}
+
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $para);
+			$response = curl_exec($ch);
+		}
+		curl_close($ch);
+	}
 }
 
 function usces_responce_wcsite() {
@@ -1021,7 +964,7 @@ function usces_wcsite_activate(){
 	$params = array(
 		'wcid' => get_option('usces_wcid'),
 		'wchost' => $_SERVER['SERVER_NAME'],
-		'refer' => get_home_url(),
+		'refer' => get_option('home'),
 		'act' => 1,
 	);
 	usces_wcsite_connection($params);
@@ -1031,7 +974,7 @@ function usces_wcsite_deactivate(){
 	$params = array(
 		'wcid' => get_option('usces_wcid'),
 		'wchost' => $_SERVER['SERVER_NAME'],
-		'refer' => get_home_url(),
+		'refer' => get_option('home'),
 		'act' => 0,
 	);
 	usces_wcsite_connection($params);

@@ -20,7 +20,7 @@ $html .= apply_filters('usces_filter_confirm_page_header', $header);
 $html .= '</div>';
 $html .= '<div class="error_message">' . $this->error_message . '</div>';
 
-$html .= '<div id="cart">
+$confirm_table_head = '<div id="cart">
 <div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>
 <table cellspacing="0" id="cart_table">
 		<thead>
@@ -35,12 +35,13 @@ $html .= '<div id="cart">
 		</tr>
 		</thead>
 		<tbody>';
+$html .= apply_filters( 'usces_filter_confirm_table_head', $confirm_table_head );
 
 $member = $this->get_member();
 
 $html .= usces_get_confirm_rows('return');
 
-$html .= '</tbody>
+$confirm_table_footer = '</tbody>
 	<tfoot>
 	<tr>
 		<th colspan="5" class="aright">'.__('total items', 'usces').'</th>
@@ -48,52 +49,53 @@ $html .= '</tbody>
 		<th>&nbsp;</th>
 	</tr>';
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($usces_entries['order']['usedpoint']) ) {
-	$html .= '<tr>
+	$confirm_table_footer .= '<tr>
 		<td colspan="5" class="aright">'.__('Used points', 'usces').'</td>
 		<td class="aright" style="color:#FF0000">' . number_format($usces_entries['order']['usedpoint']) . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['discount']) ) {
-	$html .= '<tr>
+	$confirm_table_footer .= '<tr>
 		<td colspan="5" class="aright">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</td>
 		<td class="aright" style="color:#FF0000">' . usces_crform($usces_entries['order']['discount'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) && 'products' == usces_get_tax_target() ) {
-	$html .= '<tr>
+	$confirm_table_footer .= '<tr>
 		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
 		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
-$html .= '<tr>
+$confirm_table_footer .= '<tr>
 	<td colspan="5" class="aright">'.__('Shipping', 'usces').'</td>
 	<td class="aright">' . usces_crform($usces_entries['order']['shipping_charge'], true, false, 'return') . '</td>
 	<td>&nbsp;</td>
 	</tr>';
 if( !empty($usces_entries['order']['cod_fee']) ) {
-	$html .= '<tr>
+	$confirm_table_footer .= '<tr>
 		<td colspan="5" class="aright">'.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).'</td>
 		<td class="aright">' . usces_crform($usces_entries['order']['cod_fee'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) && 'all' == usces_get_tax_target() ) {
-	$html .= '<tr>
+	$confirm_table_footer .= '<tr>
 		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
 		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
 		<td>&nbsp;</td>
 	</tr>';
 }
-$html .= '<tr>
+$confirm_table_footer .= '<tr>
 	<th colspan="5" class="aright">'.__('Total Amount', 'usces').'</th>
 	<th class="aright">' . usces_crform($usces_entries['order']['total_full_price'], true, false, 'return') . '</th>
 	<th>&nbsp;</th>
 	</tr>
 	</tfoot>
 	</table>';
+$html .= apply_filters( 'usces_filter_confirm_table_footer', $confirm_table_footer );
 	
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' &&  $this->is_member_logged_in() ) {
 	$html .= '<form action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">

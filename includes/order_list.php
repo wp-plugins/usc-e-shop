@@ -872,7 +872,7 @@ jQuery(document).ready(function($){
 </div>
 <!--20100908ysk end-->
 <?php echo apply_filters('usces_filter_order_list_footer', '');//20120612ysk 0000501 ?>
-<?php do_action( 'usces_action_order_list_footer', $rows ); ?>
+<?php //do_action( 'usces_action_order_list_footer', $rows ); ?>
 
 <?php wp_nonce_field( 'order_list', 'wc_nonce' ); ?>
 </form>

@@ -28,7 +28,7 @@ if( usces_is_cart() ) {
 	$button = '<div class="upbutton">' . __('Press the `update` button when you change the amount of items.','usces') . '<input name="upButton" type="submit" value="' . __('Quantity renewal','usces') . '" onclick="return uscesCart.upCart()"  /></div>';
 	$html .= apply_filters('usces_filter_cart_upbutton', $button);
 	
-	$html .= '<table cellspacing="0" id="cart_table">
+	$cart_table_head = '<table cellspacing="0" id="cart_table">
 		<thead>
 		<tr>
 			<th scope="row" class="num">No.</th>
@@ -43,9 +43,10 @@ if( usces_is_cart() ) {
 		</thead>
 		<tbody>';
 		
+	$html .= apply_filters( 'usces_filter_cart_table_head', $cart_table_head );
 	$html .= usces_get_cart_rows('return');
 		
-	$html .= '</tbody>
+	$cart_table_footer = '</tbody>
 		<tfoot>
 		<tr>
 			<th colspan="5" scope="row" class="aright">' . __('total items','usces') . usces_guid_tax('return') . '</th>
@@ -53,13 +54,16 @@ if( usces_is_cart() ) {
 			<th colspan="2">&nbsp;</th>
 		</tr>
 		</tfoot>
-	</table>
-	<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>';
+	</table>';
+	$html .= apply_filters( 'usces_filter_cart_table_footer', $cart_table_footer );
+
+	$after_table = '<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>';
 	if( isset($usces_gp) && $usces_gp ) {
 		$Business_pack_discount = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
 		$html .= apply_filters('usces_filter_itemGpExp_cart_message', $Business_pack_discount);
 	}
-	$html .= '</div>';
+	$after_table .= '</div>';
+	$html .= apply_filters( 'usces_filter_after_cart_table', $after_table );
 
 } else {
 	$html .= '<div class="no_cart">' . __('There are no items in your cart.','usces') . '</div>';

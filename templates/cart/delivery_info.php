@@ -46,8 +46,9 @@ if($usces_entries['delivery']['delivery_flag'] == 1) {
 }
 $html .= ' onKeyDown="if (event.keyCode == 13) {return false;}" /> <label for="delivery_flag2">'.__('Chose another shipping address.', 'usces').'</label></td>
 	</tr>
-	</table>
-	<table class="customer_form" id="delivery_table">';
+	</table>';
+$html = apply_filters( 'usces_filter_delivery_flag', $html );
+$html .= '<table class="customer_form" id="delivery_table">';
 
 $html .= uesces_addressform( 'delivery', $usces_entries );
 

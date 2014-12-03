@@ -1371,6 +1371,8 @@ class usc_e_shop
 						$mes .= '※署名を入力して下さい<br />';
 					if( WCUtils::is_blank($_POST['paypal_acount']) )
 						$mes .= '※PayPalアカウント（メールアドレス）を入力して下さい<br />';
+					if( !is_email($_POST['paypal_acount']) )
+						$mes .= '※PayPalアカウント（メールアドレス）を正しく入力して下さい<br />';
 					if( !isset($_POST['agree_paypal_ec']) )
 						$mes .= '※ご利用条件の同意がありません<br />';
 
@@ -1418,7 +1420,9 @@ class usc_e_shop
 					if( !isset($_POST['sandbox']) || empty($_POST['sandbox']) )
 						$mes .= '※動作環境が不正です<br />';
 					if( WCUtils::is_blank($_POST['paypal_id']) )
-						$mes .= '※PayPal ID を入力して下さい<br />';
+						$mes .= '※PayPalアカウント（メールアドレス）を入力して下さい<br />';
+					if( !is_email($_POST['paypal_id']) )
+						$mes .= '※PayPalアカウント（メールアドレス）を正しく入力して下さい<br />';
 					if( !isset($_POST['agree_paypal_wpp']) )
 						$mes .= '※ご利用条件の同意がありません<br />';
 
@@ -1884,6 +1888,8 @@ class usc_e_shop
 					break;
 //20140725ysk end
 			}
+			
+			do_action( 'usces_action_admin_settlement_update', $mes );
 
 		}
 
