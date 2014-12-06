@@ -6361,6 +6361,17 @@ class usc_e_shop
 		return $id;
 	}
 	
+	function get_subpictid( $sku_code ) {
+		global $wpdb;
+		if( empty($sku_code) )
+			return 0;
+			
+		$query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'attachment' LIMIT 1", $sku_code);
+		$id = $wpdb->get_var( $query );
+		$id = apply_filters( 'usces_filter_get_subpictid', $id, $sku_code );
+		return $id;
+	}
+	
 	function get_skus( $post_id, $keyflag = 'sort' ) {
 		if( !$post_id )
 			return array();
