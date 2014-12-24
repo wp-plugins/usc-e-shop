@@ -20,7 +20,6 @@ add_action( 'admin_footer-welcart-shop_page_usces_itemnew', 'admin_prodauct_foot
 add_action( 'admin_footer-welcart-shop_page_usces_itemedit', 'admin_prodauct_footer');
 add_action( 'admin_footer-welcart-shop_page_usces_initial', 'admin_prodauct_footer');
 add_action( 'admin_footer-welcart-shop_page_usces_cart', 'admin_prodauct_footer');
-add_action( 'admin_footer-welcart-shop_page_usces_settlement', 'admin_settlement_footer');
 add_action( 'admin_footer-post.php', 'admin_post_footer');
 add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 add_action( 'wp_before_admin_bar_render', 'usces_itempage_admin_bar' );

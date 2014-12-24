@@ -2458,6 +2458,9 @@ function usces_get_key( $digit ){
 }
 
 function usces_wcsite_connection($params){
+	if(function_exists( 'curl_init' ))
+		return;
+		
 	$conn = curl_init();
 	//curl_setopt($conn, CURLOPT_SSL_VERIFYPEER, true);
 	//curl_setopt($conn, CURLOPT_SSL_VERIFYHOST, true);

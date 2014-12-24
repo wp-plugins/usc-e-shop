@@ -40,7 +40,8 @@ class orderDataObject
 
 		$this->deliveri = (array)unserialize($data['order_delivery']);
 
-		$this->cart = (array)unserialize($data['order_cart']);
+		$this->cart = usces_get_ordercartdata($order_id);
+
 
 		$this->condition = (array)unserialize($data['order_condition']);
 
