@@ -2458,24 +2458,23 @@ function usces_get_key( $digit ){
 }
 
 function usces_wcsite_connection($params){
-	if(function_exists( 'curl_init' ))
-		return;
-		
-	$conn = curl_init();
-	//curl_setopt($conn, CURLOPT_SSL_VERIFYPEER, true);
-	//curl_setopt($conn, CURLOPT_SSL_VERIFYHOST, true);
-	curl_setopt($conn, CURLOPT_CONNECTTIMEOUT, 2);
-	curl_setopt($conn, CURLOPT_FOLLOWLOCATION, 1);
-	curl_setopt($conn, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($conn, CURLOPT_HEADER, true);
-	$user_agent = 'Welcart ' . USCES_VERSION;
-	curl_setopt($conn, CURLOPT_USERAGENT, $user_agent);
-	$url = 'http://endpoint.welcart.org/point1/';
-	curl_setopt($conn, CURLOPT_URL, $url);
-	curl_setopt($conn, CURLOPT_POST, true);
-	curl_setopt($conn, CURLOPT_POSTFIELDS, $params);
-	$response = curl_exec($conn);
-	curl_close($conn);
+	if( extension_loaded('curl') ) {
+		$conn = curl_init();
+		//curl_setopt($conn, CURLOPT_SSL_VERIFYPEER, true);
+		//curl_setopt($conn, CURLOPT_SSL_VERIFYHOST, true);
+		curl_setopt($conn, CURLOPT_CONNECTTIMEOUT, 2);
+		curl_setopt($conn, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($conn, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($conn, CURLOPT_HEADER, true);
+		$user_agent = 'Welcart ' . USCES_VERSION;
+		curl_setopt($conn, CURLOPT_USERAGENT, $user_agent);
+		$url = 'http://endpoint.welcart.org/point1/';
+		curl_setopt($conn, CURLOPT_URL, $url);
+		curl_setopt($conn, CURLOPT_POST, true);
+		curl_setopt($conn, CURLOPT_POSTFIELDS, $params);
+		$response = curl_exec($conn);
+		curl_close($conn);
+	}
 }
 
 function usces_schedule_event(){
