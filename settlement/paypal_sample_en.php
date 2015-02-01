@@ -87,6 +87,7 @@ function paypal_check($usces_paypal_url) {
 		}
 	
 		// parse the data
+		$res = usces_change_line_break( $res );
 		$lines = explode("\n", $res);
 		$keyarray = array();
 		if (strcmp ($lines[0], "SUCCESS") == 0) {

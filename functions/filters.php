@@ -979,3 +979,11 @@ function usces_wcsite_deactivate(){
 	);
 	usces_wcsite_connection($params);
 }
+
+function usces_session_cache_limiter(){
+	global $usces;
+	
+	if( $usces->is_cart_page($_SERVER['REQUEST_URI']) && isset( $_REQUEST['page'] ) && 'search_item' == $_REQUEST['page'] ){
+		session_cache_limiter('private_no_expire');
+	}
+}

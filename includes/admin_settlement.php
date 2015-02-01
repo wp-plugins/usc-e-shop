@@ -147,6 +147,8 @@ function toggleVisibility(id) {
 <!--20140725ysk start-->
 		<li><a href="#uscestabs_paygent">ペイジェント</a></li>
 <!--20140725ysk end-->
+
+	<?php do_action( 'usces_action_settlement_tab_title'); ?>
 	</ul>
 
 	<div id="uscestabs_zeus">
@@ -1344,6 +1346,9 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 	</div>
 	</div><!--uscestabs_paygent-->
 <!--20140725ysk end-->
+
+	<?php do_action( 'usces_action_settlement_tab_body' ); ?>
+
 
 </div><!--uscestabs-->
 </div><!--inside-->

@@ -546,6 +546,7 @@ jQuery(document).ready(function($){
 	</fieldset>
 </div>
 <!--20101111ysk end-->
+<?php do_action( 'usces_action_item_list_footer' ); ?>
 
 </div><!--usces_admin-->
 </div><!--wrap-->

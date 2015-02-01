@@ -406,7 +406,8 @@ function post_trackback_meta_box($post) {
 	$form_trackback = '<input type="text" name="trackback_url" id="trackback_url" class="code" tabindex="7" value="'. esc_attr( str_replace("\n", ' ', $post->to_ping) ) .'" />';
 	if ('' != $post->pinged) {
 		$pings = '<p>'. __('Already pinged:') . '</p><ul>';
-		$already_pinged = explode("\n", trim($post->pinged));
+		$post->pinged = usces_change_line_break( $post->pinged );
+		$already_pinged = explode("\n", $post->pinged);
 		foreach ($already_pinged as $pinged_url) {
 			$pings .= "\n\t<li>" . esc_html($pinged_url) . "</li>";
 		}

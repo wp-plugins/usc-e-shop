@@ -971,7 +971,9 @@ function usces_the_itemOption( $name, $label = '#default#', $out = '' ) {
 	if(!$opts)
 		return false;
 	
+	
 	$opt = $opts[$name];
+	$opt['value'] = usces_change_line_break( $opt['value'] );
 	$means = (int)$opt['means'];
 	$essential = (int)$opt['essential'];
 
@@ -2135,7 +2137,7 @@ function usces_custom_field_input( $data, $custom_field, $position, $out = '' ) 
 						$value .= $v."\n";
 					}
 				}
-				$value = trim($value);
+				$value = usces_change_line_break( $value );
 
 				$e = ($essential == 1) ? '<em>' . __('*', 'usces') . '</em>' : '';
 				$html .= '
@@ -2310,7 +2312,7 @@ function usces_admin_custom_field_input( $meta, $custom_field, $position, $out =
 						$value .= $v."\n";
 					}
 				}
-				$value = trim($value);
+				$value = usces_change_line_break( $value );
 				$data = $entry['data'];
 
 				$html .= '

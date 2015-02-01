@@ -1241,6 +1241,7 @@ function usces_download_item_list() {
 			$value = '';
 			if(is_array($option_value['value'])) {
 				foreach($option_value['value'] as $k => $v) {
+					$v = usces_change_line_break( $v );
 					$values = explode("\n", $v);
 					foreach($values as $val) {
 						$value .= $val.$sp;

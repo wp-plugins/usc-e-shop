@@ -24,6 +24,7 @@ add_action( 'admin_footer-post.php', 'admin_post_footer');
 add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 add_action( 'wp_before_admin_bar_render', 'usces_itempage_admin_bar' );
 add_action( 'admin_enqueue_scripts', 'usces_admin_enqueue_scripts' );
+add_action( 'wc_cron', 'usces_cron_do');
 
 //add_action( 'usces_action_admintop_box1', 'admin_amount_of_order', 8 );
 
@@ -196,5 +197,5 @@ add_filter('yoast-ga-push-array-ga-js', 'usces_Classic_trackPageview_by_Yoast');
 add_action('usces_action_order_edit_form_detail_top', 'usces_order_memo_form_detail_top', 10, 2 );
 add_action('usces_action_update_orderdata', 'usces_update_order_memo');
 add_action('usces_action_admin_settlement_update', 'admin_settlement_option_update' );
-add_action('wc_cron', 'usces_cron_do');
+add_action('usces_action_session_start', 'usces_session_cache_limiter' );
 

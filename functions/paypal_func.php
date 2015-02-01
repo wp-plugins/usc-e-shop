@@ -248,7 +248,9 @@ function usces_paypal_set_session( $member_id, $uscesid = NULL ) {
 			$_SESSION['usces_entry']['delivery'][$key] = trim( $value );
 		}
 	}
-
+	
+	do_action( 'usces_action_paypal_set_session' );
+	
 	return true;
 }
 

@@ -2491,3 +2491,9 @@ function usces_cron_do(){
 	usces_clearup_acting_data();
 }
 
+function usces_change_line_break( $value ){
+	$cr = array("\r\n", "\r");
+	$value = trim($value);
+	$value = str_replace($cr, "\n", $value);
+	return $value;
+}

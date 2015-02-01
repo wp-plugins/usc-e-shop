@@ -683,7 +683,14 @@ function usces_action_acting_transaction(){
 				usces_log('SoftBankPayment '.$data['res_pay_method'].' [PY] error1 : '.print_r($data, true), 'acting_transaction.log');
 				die('NG,order_id error');
 			}
-
+			
+			$query = $wpdb->prepare("SELECT order_status FROM $table_name WHERE ID = %d", $order_id);
+			$order_status = $wpdb->get_var($query);
+			if( $usces->is_status( 'receipted', $order_status) ){
+				usces_log('SoftBankPayment '.$data['res_pay_method'].' [PY] second transaction : '.$order_id, 'acting_transaction.log');
+				die('OK,');
+			}
+			
 			$query = $wpdb->prepare("
 				UPDATE $table_name SET order_status = 
 				CASE 

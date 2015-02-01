@@ -1045,7 +1045,8 @@ class usc_e_shop
 			foreach((array)$this->options['system']['target_market'] as $target_market) {
 				$province = array();
 				if(!empty($_POST['province_'.$target_market])) {
-					$temp_pref = explode("\n", $_POST['province_'.$target_market]);
+					$_province = usces_change_line_break( $_POST['province_'.$target_market] );
+					$temp_pref = explode("\n", $_province);
 //20120123ysk start 0000386
 					//$province[] = __('-- Select --', 'usces');
 					$province[] = '-- Select --';
@@ -1931,6 +1932,8 @@ class usc_e_shop
 			session_id($sessid);
 		}
 		
+		do_action( 'usces_action_session_start' );
+		
 		@session_start();
 		
 //20111222ysk start 0000367
@@ -2262,7 +2265,6 @@ class usc_e_shop
 						}else{
 							
 							if( null != skuob ){
-								
 								if( uscesL10n.opt_means[i] < 2 && skuob.value == '#NONE#' ){
 									mes += uscesL10n.mes_opts[i]+"\n";
 								}else if( uscesL10n.opt_means[i] >= 2 && skuob.value == '' ){
@@ -8543,7 +8545,8 @@ class usc_e_shop
 			'quant' => 0,
 			'opt' => 1,
 		), $atts));
-	
+		
+		
 		$post_id = $this->get_ID_byItemName($item);
 		$datas = $this->get_skus( $post_id, 'code' );
 		$zaikonum = $datas[$sku]['stocknum'];
@@ -8551,6 +8554,7 @@ class usc_e_shop
 		$gptekiyo = $datas[$sku]['gp'];
 		$skuPrice = $datas[$sku]['price'];
 		$sku_enc = urlencode($sku);
+		$options = usces_get_opts($post_id, 'sort');
 		$mats = compact('item','sku','value','force','quant','post_id','datas','zaikonum','zaiko','gptekiyo','skuPrice','sku_enc');
 		if( ! $this->is_item_zaiko( $post_id, $sku ) ){
 			return '<div class="button_status">' . esc_html($this->zaiko_status[$zaiko]) . '</div>';

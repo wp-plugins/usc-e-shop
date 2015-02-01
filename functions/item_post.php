@@ -1094,7 +1094,6 @@ function get_order_item( $item_code ) {
 	$post_id = $usces->get_postIDbyCode( $item_code );
 	if( $post_id == NULL ) return false;
 	$post = get_post($post_id);
-	
 	$pict_id = $usces->get_mainpictid( $item_code );
 	$pict_link = wp_get_attachment_image($pict_id, array(150, 150), true);
 	preg_match("/^\<a .+\>(\<img .+\/\>)\<\/a\>$/", $pict_link, $match);
@@ -1175,6 +1174,7 @@ function get_order_item( $item_code ) {
 				$optcode = urlencode($name);
 				$opts = usces_get_opts($post_id, 'name');
 				$opt = $opts[$optvalue];
+				$opt['value'] = usces_change_line_break( $opt['value'] );
 //20110715ysk start 0000202
 				$means = (int)$opt['means'];
 				$essential = (int)$opt['essential'];

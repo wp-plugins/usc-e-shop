@@ -4663,6 +4663,7 @@ function usces_get_itemopt_filed($post_id, $sku, $opt){
 	$means = (int)$opt['means'];
 	$essential = (int)$opt['essential'];
 	$session_value = isset( $_SESSION['usces_singleitem']['itemOption'][$post_id][$sku][$optcode] ) ? $_SESSION['usces_singleitem']['itemOption'][$post_id][$sku][$optcode] : NULL;
+	$opt['value'] = usces_change_line_break( $opt['value'] );
 
 	$html = '';
 	switch($means) {
@@ -4784,6 +4785,8 @@ function usces_get_itemOption( $field_data, $materials, $label = '#default#' ) {
 	
 	if($label == '#default#')
 		$label = $name;
+
+	$field_data['value'] = usces_change_line_break( $field_data['value'] );
 
 	$html = '';
 	$name = esc_attr($name);

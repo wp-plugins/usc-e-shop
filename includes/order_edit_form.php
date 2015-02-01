@@ -214,6 +214,7 @@ jQuery(function($){
 	var delivery_time = [];
 <?php
 	foreach((array)$this->options['delivery_method'] as $dmid => $dm){
+		$dm['time'] = usces_change_line_break( $dm['time'] );
 		$lines = explode("\n", $dm['time']);
 ?>
 		delivery_time[<?php echo $dm['id']; ?>] = [];

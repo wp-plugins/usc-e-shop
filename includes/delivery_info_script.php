@@ -144,6 +144,7 @@ $html .= 'selected_delivery_time = \'' . esc_js($usces_entries['order']['deliver
 		var delivery_time = [];delivery_time[0] = [];';
 
 foreach((array)$usces->options['delivery_method'] as $dmid => $dm){
+	$dm['time'] = usces_change_line_break( $dm['time'] );
 	$lines = explode("\n", $dm['time']);
 	$html .= 'delivery_time[' . $dm['id'] . '] = [];';
 	foreach((array)$lines as $line){

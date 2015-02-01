@@ -437,7 +437,8 @@ function post_trackback_meta_box($post) {
 	$form_trackback = '<input type="text" name="trackback_url" id="trackback_url" tabindex="7" value="'. attribute_escape( str_replace("\n", ' ', $post->to_ping) ) .'" />';
 	if ('' != $post->pinged) {
 		$pings = '<p>'. __('Already pinged:') . '</p><ul>';
-		$already_pinged = explode("\n", trim($post->pinged));
+		$pinged = usces_change_line_break( $post->pinged );
+		$already_pinged = explode("\n", $pinged);
 		foreach ($already_pinged as $pinged_url) {
 			$pings .= "\n\t<li>" . esc_html($pinged_url) . "</li>";
 		}
@@ -802,7 +803,7 @@ item_option_meta_form();
 <div class="inside">
 <div id="postoptcustomstuff">
 <?php 
-	apply_filters('usces_ex_plugin_options', &$usces_expo, $post->ID, 'A', 'B');
+	apply_filters('usces_ex_plugin_options', $usces_expo, $post->ID, 'A', 'B');
 	echo $usces_expo;
 ?>
 </div>
