@@ -364,6 +364,7 @@ jQuery(function($){
 		height: 200,
 		width: 200,
 		resizable: false,
+		appendTo: "#mailSendDialog",
 		modal: false
 	});
 	$("#sendmail").click(function() {
