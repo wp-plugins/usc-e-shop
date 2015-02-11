@@ -6041,6 +6041,7 @@ class usc_e_shop
 		foreach((array)$skus as $key => $sku){
 			$array[$key] = (float)str_replace(',', '', $sku['price']);
 		}
+		$array = apply_filters( 'usces_filter_get_item_price', $array, $post_id, $skukey, $skus );
 		if(!$array) return false;
 		if($skukey == ''){
 			return $array;

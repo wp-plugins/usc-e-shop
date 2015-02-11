@@ -298,84 +298,85 @@ function fiter_mainTitle($title, $sep){
 	if( empty($title) ){
 		$newtitle = $title;
 	}else{
-		$title = trim( str_replace( $sep, '', $title ) );
+		//$title = trim( str_replace( $sep, '', $title ) );
 		switch($usces->page){
 			case 'cart':
-				$newtitle = apply_filters('usces_filter_title_cart', __('In the cart', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_cart', __('In the cart', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'customer':
-				$newtitle = apply_filters('usces_filter_title_customer', __('Customer Information', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_customer', __('Customer Information', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'delivery':
-				$newtitle = apply_filters('usces_filter_title_delivery', __('Shipping / Payment options', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_delivery', __('Shipping / Payment options', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'confirm':
-				$newtitle = apply_filters('usces_filter_title_confirm', __('Confirmation', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_confirm', __('Confirmation', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'ordercompletion':
-				$newtitle = apply_filters('usces_filter_title_ordercompletion', __('Order Complete', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_ordercompletion', __('Order Complete', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'error':
-				$newtitle = apply_filters('usces_filter_title_error', __('Error', 'usces')); //new fitler name
+				$newtitle = apply_filters('usces_filter_title_error', __('Error', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name'); //new fitler name
 				break;
 
 			case 'search_item':
-				$newtitle = apply_filters('usces_filter_title_search_item', __("'AND' search by categories", 'usces'));
+				$newtitle = apply_filters('usces_filter_title_search_item', __("'AND' search by categories", 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'maintenance':
-				$newtitle = apply_filters('usces_filter_title_maintenance', __('Under Maintenance', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_maintenance', __('Under Maintenance', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'login':
-				$newtitle = apply_filters('usces_filter_title_login', __('Log-in for members', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_login', __('Log-in for members', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'member':
-				$newtitle = apply_filters('usces_filter_title_member', __('Membership information', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_member', __('Membership information', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'newmemberform':
-				$newtitle = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_newmemberform', __('New enrollment form', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'newcompletion':
-				$newtitle = apply_filters('usces_filter_title_newcompletion', __('New enrollment complete', 'usces'));//new fitler name
+				$newtitle = apply_filters('usces_filter_title_newcompletion', __('New enrollment complete', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');//new fitler name
 				break;
 
 			case 'editmemberform':
-				$newtitle = apply_filters('usces_filter_title_editmemberform', __('Member information editing', 'usces'));//new fitler name
+				$newtitle = apply_filters('usces_filter_title_editmemberform', __('Member information editing', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');//new fitler name
 				break;
 
 			case 'editcompletion':
-				$newtitle = apply_filters('usces_filter_title_editcompletion', __('Membership information change is completed', 'usces'));//new fitler name
+				$newtitle = apply_filters('usces_filter_title_editcompletion', __('Membership information change is completed', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');//new fitler name
 				break;
 
 			case 'lostmemberpassword':
-				$newtitle = apply_filters('usces_filter_title_lostmemberpassword', __('The new password acquisition', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_lostmemberpassword', __('The new password acquisition', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'lostcompletion':
-				$newtitle = apply_filters('usces_filter_title_lostcompletion', __('New password procedures for obtaining complete', 'usces'));//new fitler name
+				$newtitle = apply_filters('usces_filter_title_lostcompletion', __('New password procedures for obtaining complete', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');//new fitler name
 				break;
 
 			case 'changepassword':
-				$newtitle = apply_filters('usces_filter_title_changepassword', __('Change password', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_changepassword', __('Change password', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			case 'changepasscompletion':
-				$newtitle = apply_filters('usces_filter_title_changepasscompletion', __('Password change is completed', 'usces'));
+				$newtitle = apply_filters('usces_filter_title_changepasscompletion', __('Password change is completed', 'usces')) . ' ' . $sep . ' ' . get_bloginfo('name');
 				break;
 
 			default:
-				$newtitle = apply_filters('usces_filter_title_main_default', $title);//new fitler name
+				//$newtitle = apply_filters('usces_filter_title_main_default', $title);//new fitler name
+				$newtitle = $title;
 		}
-		$newtitle = $newtitle .' '.$sep.' ';
+		//$newtitle = $newtitle .' '.$sep.' ';
 	}
 	return $newtitle;
 }

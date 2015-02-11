@@ -281,7 +281,7 @@ function usces_the_itemCprice($out = '') {
 function usces_the_itemPriceCr($out = '') {
 	global $usces;
 	$res = esc_html($usces->get_currency($usces->itemsku['price'], true, false ));
-
+	$res = apply_filters( 'usces_filter_the_item_price_cr', $res, $usces->itemsku['price'], $out );
 	if($out == 'return'){
 		return $res;
 	}else{
@@ -424,11 +424,11 @@ function usces_the_firstPrice( $out = '', $post = NULL ) {
 	$post_id = $post->ID;
 	
 	$skus = $usces->get_skus( $post_id );
-	
+	$price = apply_filters( 'usces_filter_the_first_price', $skus[0]['price'], $post_id, $skus, $out );
 	if($out == 'return'){
-		return $skus[0]['price'];
+		return $price;
 	}else{
-		echo number_format($skus[0]['price']);
+		echo number_format($price);
 	}
 }
 
@@ -455,11 +455,12 @@ function usces_the_firstPriceCr( $out = '', $post = NULL ) {
 	
 	$skus = $usces->get_skus( $post_id );
 	$res = esc_html($usces->get_currency($skus[0]['price'], true, false ));
+	$price = apply_filters( 'usces_filter_the_first_price_cr', $res, $skus[0]['price'], $post_id, $skus, $out );
 
 	if($out == 'return'){
-		return $res;
+		return $price;
 	}else{
-		echo $res;
+		echo $price;
 	}
 }
 
