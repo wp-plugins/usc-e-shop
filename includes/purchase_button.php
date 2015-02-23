@@ -604,6 +604,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			$cancel_url = USCES_CART_URL.$usces->delim.'confirm=1';
 			$iframe_width = apply_filters( 'usces_filter_paypal_wpp_iframe_width', '560' );
 			$iframe_height = apply_filters( 'usces_filter_paypal_wpp_iframe_height', '400' );
+			$template = apply_filters( 'usces_filter_paypal_wpp_template', 'templateD' );
 			$html .= '<div id="paypal_wpp_iframe" style="width:'.$iframe_width.'px; margin: 0 auto;">
 				<iframe name="hss_iframe" width="100%" height="'.$iframe_height.'px"></iframe>
 				<form style="display:none" target="hss_iframe" name="form_iframe" method="post" action="'.$acting_opts['paypal_url'].'">
@@ -611,7 +612,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 				<input type="hidden" name="subtotal" value="'.$amount.'">
 				<input type="hidden" name="business" value="'.$acting_opts['paypal_id'].'">
 				<input type="hidden" name="paymentaction" value="sale">
-				<input type="hidden" name="template" value="templateD">
+				<input type="hidden" name="template" value="'.$template.'">
 				<input type="hidden" name="billing_address1" value="'.$address2.'">
 				<input type="hidden" name="billing_address2" value="'.$address3.'">
 				<input type="hidden" name="billing_city" value="'.$address1.'">
@@ -620,14 +621,36 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 				<input type="hidden" name="billing_last_name" value="'.$name2.'">
 				<input type="hidden" name="billing_state" value="'.$pref.'">
 				<input type="hidden" name="billing_zip" value="'.$zip.'">
-				<input type="hidden" name="address_override" value="true">
 				<input type="hidden" name="currency_code" value="'.$currency_code.'">
 				<input type="hidden" name="return" value="'.$return_url.'">
-				<input type="hidden" name="cancel_url" value="'.$cancel_url.'">
+				<input type="hidden" name="cancel_return" value="'.$cancel_url.'">
+				<input type="hidden" name="notify_url" value="' . USCES_PAYPAL_NOTIFY_URL . '">
 				<input type="hidden" name="showHostedThankyouPage" value="false">
 				<input type="hidden" name="custom" value="'.$rand.'">
-				<input type="hidden" name="bn" value="uscons_cart_WPS_JP">
-				</form>
+				<input type="hidden" name="bn" value="uscons_cart_WPS_JP">';
+			if( 'shipped' == $usces->getItemDivision( $cart[0]['post_id'] ) ) {
+				$delivery_name1 = apply_filters( 'usces_filter_paypal_wpp_first_name', $usces_entries['delivery']['name1'] );
+				$delivery_name2 = apply_filters( 'usces_filter_paypal_wpp_last_name', $usces_entries['delivery']['name2'] );
+				$delivery_address2 = apply_filters( 'usces_filter_paypal_wpp_address1', $usces_entries['delivery']['address2'] );
+				$delivery_address3 = apply_filters( 'usces_filter_paypal_wpp_address2', $usces_entries['delivery']['address3'] );
+				$delivery_address1 = apply_filters( 'usces_filter_paypal_wpp_city', $usces_entries['delivery']['address1'] );
+				$delivery_pref = apply_filters( 'usces_filter_paypal_wpp_state', $usces_entries['delivery']['pref'] );
+				$delivery_country = ( !empty($usces_entries['delivery']['country']) ) ? $usces_entries['delivery']['country'] : usces_get_base_country();
+				$delivery_country_code = apply_filters( 'usces_filter_paypal_wpp_country', $delivery_country );
+				$delivery_zip = apply_filters( 'usces_filter_paypal_wpp_zip', str_replace( '-', '', $usces_entries['delivery']['zipcode'] ) );
+				$html .= '<input type="hidden" name="address_override" value="true">
+				<input type="hidden" name="address1" value="'.$delivery_address2.'">
+				<input type="hidden" name="address2" value="'.$delivery_address3.'">
+				<input type="hidden" name="city" value="'.$delivery_address1.'">
+				<input type="hidden" name="country" value="'.$delivery_country_code.'">
+				<input type="hidden" name="first_name" value="'.$delivery_name1.'">
+				<input type="hidden" name="last_name" value="'.$delivery_name2.'">
+				<input type="hidden" name="state" value="'.$delivery_pref.'">
+				<input type="hidden" name="zip" value="'.$delivery_zip.'">';
+			} else {
+				$html .= '<input type="hidden" name="address_override" value="false">';
+			}
+			$html .= '</form>
 				<script type="text/javascript">
 					document.form_iframe.submit();
 				</script></div>';
