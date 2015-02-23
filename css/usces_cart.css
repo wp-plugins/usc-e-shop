@@ -1459,3 +1459,10 @@ ul.ucart_featured_body .thumtitle a,
 	color: #000000;
 	font-weight: bold;
 }
+/************************************************************************************/
+/* liwpp */
+.liwpp_area {
+	width: 100%;
+	text-align: center;
+	padding-bottom: 20px;
+}

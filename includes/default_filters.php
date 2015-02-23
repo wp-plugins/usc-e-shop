@@ -25,6 +25,7 @@ add_action( 'admin_footer-post-new.php', 'admin_post_footer');
 add_action( 'wp_before_admin_bar_render', 'usces_itempage_admin_bar' );
 add_action( 'admin_enqueue_scripts', 'usces_admin_enqueue_scripts' );
 add_action( 'wc_cron', 'usces_cron_do');
+//add_action( 'wp', 'usces_login_width_paypal');
 
 //add_action( 'usces_action_admintop_box1', 'admin_amount_of_order', 8 );
 
@@ -169,7 +170,8 @@ add_action('usces_action_newpass_page_inform', 'usces_post_member_nonce' );
 add_action('usces_action_changepass_page_inform', 'usces_action_lostmail_inform' );
 add_action('usces_action_changepass_page_inform', 'usces_post_member_nonce' );
 add_action('usces_action_customer_page_inform', 'usces_post_member_nonce' );
-
+//add_action('usces_action_login_page_footer', 'usces_action_login_page_liwpp', 8 );
+//add_filter('usces_filter_login_page_footer', 'usces_filter_login_page_liwpp', 8);
 
 //20100818ysk start
 add_filter('usces_filter_customer_check', 'usces_filter_customer_check_custom_customer', 10);

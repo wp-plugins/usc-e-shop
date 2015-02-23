@@ -946,10 +946,10 @@ function usces_filter_delivery_check_custom_order( $mes ) {
 			$means = $entry['means'];
 			if($means == 2) {//Text
 				if( WCUtils::is_blank($_POST['custom_order'][$key]) )
-					$mes .= __($name.'を入力してください。', 'usces')."<br />";
+					$mes .= sprintf( __("Input the %s", 'usces'), $name )."<br />";
 			} else {
 				if(!isset($_POST['custom_order'][$key]) or $_POST['custom_order'][$key] == "#NONE#")
-					$mes .= __($name.'を選択してください。', 'usces')."<br />";
+					$mes .= sprintf( __("Chose the %s", 'usces'), $name )."<br />";
 			}
 		}
 	}
@@ -968,10 +968,10 @@ function usces_filter_customer_check_custom_customer( $mes ) {
 			$means = $entry['means'];
 			if($means == 2) {//Text
 				if( WCUtils::is_blank($_POST['custom_customer'][$key]) )
-					$mes .= __($name.'を入力してください。', 'usces')."<br />";
+					$mes .= sprintf( __("Input the %s", 'usces'), $name )."<br />";
 			} else {
 				if(!isset($_POST['custom_customer'][$key]) or $_POST['custom_customer'][$key] == "#NONE#")
-					$mes .= __($name.'を選択してください。', 'usces')."<br />";
+					$mes .= sprintf( __("Chose the %s", 'usces'), $name )."<br />";
 			}
 		}
 	}
@@ -991,10 +991,10 @@ function usces_filter_delivery_check_custom_delivery( $mes ) {
 				$means = $entry['means'];
 				if($means == 2) {//Text
 					if( WCUtils::is_blank($_POST['custom_delivery'][$key]) )
-						$mes .= __($name.'を入力してください。', 'usces')."<br />";
+						$mes .= sprintf( __("Input the %s", 'usces'), $name )."<br />";
 				} else {
 					if(!isset($_POST['custom_delivery'][$key]) or $_POST['custom_delivery'][$key] == "#NONE#")
-						$mes .= __($name.'を選択してください。', 'usces')."<br />";
+						$mes .= sprintf( __("Chose the %s", 'usces'), $name )."<br />";
 				}
 			}
 		}
@@ -1025,10 +1025,10 @@ function usces_filter_member_check_custom_member( $mes ) {
 			$means = $entry['means'];
 			if($means == 2) {//Text
 				if( WCUtils::is_blank($_POST['custom_member'][$key]) )
-					$mes .= __($name.'を入力してください。', 'usces')."<br />";
+					$mes .= sprintf( __("Input the %s", 'usces'), $name )."<br />";
 			} else {
 				if(!isset($_POST['custom_member'][$key]) or $_POST['custom_member'][$key] == "#NONE#")
-					$mes .= __($name.'を選択してください。', 'usces')."<br />";
+					$mes .= sprintf( __("Chose the %s", 'usces'), $name )."<br />";
 			}
 		}
 	}

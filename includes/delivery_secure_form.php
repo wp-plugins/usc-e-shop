@@ -223,6 +223,7 @@ foreach ( (array)$payments as $id => $array ) {
 				</table>';
 				break;
 		}
+		$html .= apply_filters( 'usces_filter_delivery_secure_form_loop', '', $array );
 	}
 }
-?>
+$html = apply_filters( 'usces_filter_delivery_secure_form', $html, $array );

@@ -17,18 +17,20 @@ function usces_ajax_send_mail() {
 	$order_para = apply_filters( 'usces_ajax_send_mail_para_to_customer', $order_para);
 	$res = usces_send_mail( $order_para );
 	if($res){
-		$tableName = $wpdb->prefix . "usces_order";
-		$order_id = $_POST['order_id'];
-		$checked = $_POST['checked'];
+		if( isset($_POST['order_id']) && $_POST['order_id'] != '' ) {
+			$tableName = $wpdb->prefix . "usces_order";
+			$order_id = $_POST['order_id'];
+			$checked = $_POST['checked'];
 
-		$query = $wpdb->prepare("SELECT `order_check` FROM $tableName WHERE ID = %d", $order_id);
-		$res = $wpdb->get_var( $query );
+			$query = $wpdb->prepare("SELECT `order_check` FROM $tableName WHERE ID = %d", $order_id);
+			$res = $wpdb->get_var( $query );
 
-		$checkfield = unserialize($res);
-		if( !isset($checkfield[$checked]) ) $checkfield[$checked] = $checked;
-		//$checkfield = 'OK';
-		$query = $wpdb->prepare("UPDATE $tableName SET `order_check`=%s WHERE ID = %d", serialize($checkfield), $order_id);
-		$wpdb->query( $query );
+			$checkfield = unserialize($res);
+			if( !isset($checkfield[$checked]) ) $checkfield[$checked] = $checked;
+			//$checkfield = 'OK';
+			$query = $wpdb->prepare("UPDATE $tableName SET `order_check`=%s WHERE ID = %d", serialize($checkfield), $order_id);
+			$wpdb->query( $query );
+		}
 
 		$bcc_para = array(
 				'to_name' => 'Shop Admin',

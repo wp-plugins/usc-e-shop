@@ -593,7 +593,7 @@ function toggleVisibility(id) {
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_signature_paypal');"><?php _e('Signature', 'usces'); ?></a></th>
-				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="80" /><span id="get_paypal_signature"></span></td>
+				<td colspan="4"><input name="signature" type="text" id="signature_paypal" value="<?php echo esc_html(isset($opts['paypal']['signature']) ? $opts['paypal']['signature'] : ''); ?>" size="50" /><span id="get_paypal_signature"></span></td>
 				<td><div id="ex_signature_paypal" class="explanation"><?php _e('Type in the signature from API credential. Signature will be different in the formal installment of Sandbox.', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -601,21 +601,19 @@ function toggleVisibility(id) {
 				<td colspan="4"><input name="paypal_acount" type="text" id="acount_paypal" value="<?php echo esc_html(isset($opts['paypal']['paypal_acount']) ? $opts['paypal']['paypal_acount'] : ''); ?>" size="50" /></td>
 				<td><div id="ex_paypal_acount" class="explanation"><?php _e('PayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
 			</tr>
-<!--20110412ysk start-->
-			<?php if( defined('WCEX_DLSELLER') ): ?>
+			<?php if( defined('WCEX_DLSELLER') ): //20110412ysk start ?>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_paypal');"><?php _e('Recurring Payment', 'usces'); ?></a></th>
 				<td><input name="continuation" type="radio" id="continuation_paypal_1" value="on"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'on' ) echo ' checked'; ?> /></td><td><label for="continuation_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
 				<td><input name="continuation" type="radio" id="continuation_paypal_2" value="off"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'off' ) echo ' checked'; ?> /></td><td><label for="continuation_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
 				<td><div id="ex_continuation_paypal" class="explanation"><?php _e('It is a function that enables the automation of tedious payment settlement such as monthly membership fee that occurs regularly. <br /> For details, contact PayPal.', 'usces'); ?></div></td>
 			</tr>
-			<?php endif; ?>
-<!--20110412ysk end-->
+			<?php endif; //20110412ysk end ?>
 		</table>
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_logoimg');"><?php _e('URL for the image of the payment page', 'usces'); ?></a></th>
-				<td colspan="4"><input name="logoimg" type="text" id="logoimg" value="<?php echo esc_html(isset($opts['paypal']['logoimg']) ? $opts['paypal']['logoimg'] : ''); ?>" size="80" /></td>
+				<td colspan="4"><input name="logoimg" type="text" id="logoimg" value="<?php echo esc_html(isset($opts['paypal']['logoimg']) ? $opts['paypal']['logoimg'] : ''); ?>" size="50" /></td>
 				<td><div id="ex_logoimg" class="explanation"><?php _e('a URL to an image of your logo. The image has a maximum size of 190 pixels wide by 60 pixels high. The available file format is jpg, png, gif. PayPal recommends that you provide an image that is stored on a secure (https) server. If you do not specify an image, the business name displays.', 'usces'); ?><br /><?php _e('127 single-byte alphanumeric characters', 'usces'); ?></div></td>
 			</tr>
 			<tr>
@@ -630,6 +628,16 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 		</table>
+<!--
+		<table class="settle_table">
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_loginwithpaypal');"><?php _e('Log In with PayPal', 'usces'); ?></a></th>
+				<td><input name="set_liwp" type="radio" id="set_liwp_1" value="on"<?php if( isset($opts['paypal']['set_liwp']) && $opts['paypal']['set_liwp'] == 'on' ) echo ' checked'; ?> /></td><td><label for="set_liwp_1"><?php _e('Use', 'usces'); ?></label></td>
+				<td><input name="set_liwp" type="radio" id="set_liwp_2" value="off"<?php if( isset($opts['paypal']['set_liwp']) && $opts['paypal']['set_liwp'] == 'off' ) echo ' checked'; ?> /></td><td><label for="set_liwp_2"><?php _e('Do not Use', 'usces'); ?></label></td>
+				<td><div id="ex_loginwithpaypal" class="explanation"><?php _e('Your principal identifying color. PayPal blends your color to white in a gradient fill that borders the cart review area.', 'usces'); ?><br /><?php _e('Paypal のログインと Welcart のログインを連携させます。', 'usces'); ?></div></td>
+			</tr>
+		</table>
+-->
 		<input name="acting" type="hidden" value="paypal" />
 		<input name="usces_option_update" id="paypal_ec" type="submit" class="button" value="<?php _e('Update PayPal Express Checkout settings', 'usces'); ?>" />
 		<input name="agree_paypal_ec" id="agree_paypal_ec" type="checkbox" value="agree"<?php if( isset($opts['paypal']['agree']) && 'agree' == $opts['paypal']['agree'] ) echo ' checked="checked"'; ?> /><label for="agree_paypal_ec">下記ご利用条件に同意する</label>

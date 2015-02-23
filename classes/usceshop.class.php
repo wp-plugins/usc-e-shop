@@ -49,7 +49,7 @@ class usc_e_shop
 		if(!isset($this->options['campaign_category'])) $this->options['campaign_category'] = 0;
 		if(!isset($this->options['campaign_schedule']['start'])) $this->options['campaign_schedule']['start'] = array();
 		if(!isset($this->options['campaign_schedule']['end'])) $this->options['campaign_schedule']['end'] = array();
-		if(!isset($this->options['acting_settings']['paypal']['ec_activate'])) $this->options['acting_settings']['paypal']['ec_activate'] = '';
+//		if(!isset($this->options['acting_settings']['paypal']['ec_activate'])) $this->options['acting_settings']['paypal']['ec_activate'] = '';
 		if(!isset($this->options['purchase_limit'])) $this->options['purchase_limit'] = '';
 		if(!isset($this->options['point_rate'])) $this->options['point_rate'] = '';
 		if(!isset($this->options['shipping_rule'])) $this->options['shipping_rule'] = '';
@@ -1359,6 +1359,8 @@ class usc_e_shop
 					$options['acting_settings']['paypal']['logoimg'] = isset($_POST['logoimg']) ? $_POST['logoimg'] : '';
 					$options['acting_settings']['paypal']['set_cartbordercolor'] = isset($_POST['set_cartbordercolor']) ? $_POST['set_cartbordercolor'] : 'off';
 					$options['acting_settings']['paypal']['cartbordercolor'] = ( 'on' == $options['acting_settings']['paypal']['set_cartbordercolor'] ) ? $_POST['cartbordercolor'] : '';
+
+					$options['acting_settings']['paypal']['set_liwp'] = isset($_POST['set_liwp']) ? $_POST['set_liwp'] : 'off';
 
 					$options['acting_settings']['paypal']['agree'] = isset($_POST['agree_paypal_ec']) ? $_POST['agree_paypal_ec'] : '';
 
@@ -3261,6 +3263,7 @@ class usc_e_shop
 		$this->cart->entry();
 		$this->error_message = $this->zaiko_check();
 		$this->error_message = apply_filters( 'usces_filter_cart_check', $this->error_message );
+			
 		if( WCUtils::is_blank($this->error_message) ){
 			if($this->is_member_logged_in()){
 //20100818ysk start
@@ -5461,7 +5464,7 @@ class usc_e_shop
 			dbDelta($sql);
 			add_option("usces_db_log", USCES_DB_LOG);
 		}
-
+		do_action( 'usces_action_create_table' );
 	}
 	
 	function update_table()
@@ -5677,6 +5680,8 @@ class usc_e_shop
 			dbDelta($sql);
 			update_option("usces_db_log", USCES_DB_LOG);
 		}
+		
+		do_action( 'usces_action_update_table' );
 	}
 	
 	function set_default_theme()
@@ -8446,7 +8451,8 @@ class usc_e_shop
 			
 		if( $symbol_post )
 			$price = $price . __($code, 'usces');
-			
+		
+		$price = apply_filters( 'usces_filter_get_currency', $price, $amount, $symbol_pre, $symbol_post, $seperator_flag );
 		return $price;
 	}
 	
