@@ -602,6 +602,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			$amount = usces_crform( $usces_entries['order']['total_full_price'], false, false, 'return', false );
 			$return_url = USCES_CART_URL.$usces->delim.'acting=paypal_wpp&acting_return=1&order_id='.$rand;
 			$cancel_url = USCES_CART_URL.$usces->delim.'confirm=1';
+			$notify_url = USCES_CART_URL.$usces->delim.'acting=paypal_wpp&acting_return=1';
 			$iframe_width = apply_filters( 'usces_filter_paypal_wpp_iframe_width', '560' );
 			$iframe_height = apply_filters( 'usces_filter_paypal_wpp_iframe_height', '400' );
 			$template = apply_filters( 'usces_filter_paypal_wpp_template', 'templateD' );
@@ -624,7 +625,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 				<input type="hidden" name="currency_code" value="'.$currency_code.'">
 				<input type="hidden" name="return" value="'.$return_url.'">
 				<input type="hidden" name="cancel_return" value="'.$cancel_url.'">
-				<input type="hidden" name="notify_url" value="' . USCES_PAYPAL_NOTIFY_URL . '">
+				<input type="hidden" name="notify_url" value="'.$notify_url.'">
 				<input type="hidden" name="showHostedThankyouPage" value="false">
 				<input type="hidden" name="custom" value="'.$rand.'">
 				<input type="hidden" name="bn" value="uscons_cart_WPS_JP">';
