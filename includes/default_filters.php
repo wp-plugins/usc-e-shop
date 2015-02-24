@@ -49,15 +49,9 @@ add_action( 'wp_ajax_shop_options_ajax', 'shop_options_ajax' );
 add_action( 'wp_ajax_setup_cod_ajax', 'usces_setup_cod_ajax' );
 add_action( 'wp_ajax_change_states_ajax', 'change_states_ajax' );
 add_action( 'wp_ajax_getinfo_ajax', 'usces_getinfo_ajax' );
-//20100809ysk start
 add_action( 'wp_ajax_custom_field_ajax', 'custom_field_ajax' );
-//20100809ysk end
-//20110331ysk start
 add_action( 'wp_ajax_target_market_ajax', 'target_market_ajax' );
-//20110331ysk end
-//20120309ysk start 0000430
 add_action( 'wp_ajax_usces_admin_ajax', 'usces_admin_ajax' );
-//20120309ysk end
 
 //add_action('template_redirect', array(&$usces, 'maintenance_mode'));
 add_shortcode('company_name', array(&$usces, 'sc_company_name'));
@@ -173,18 +167,12 @@ add_action('usces_action_customer_page_inform', 'usces_post_member_nonce' );
 //add_action('usces_action_login_page_footer', 'usces_action_login_page_liwpp', 8 );
 //add_filter('usces_filter_login_page_footer', 'usces_filter_login_page_liwpp', 8);
 
-//20100818ysk start
 add_filter('usces_filter_customer_check', 'usces_filter_customer_check_custom_customer', 10);
 add_filter('usces_filter_delivery_check', 'usces_filter_delivery_check_custom_delivery', 10);
-//20100818ysk end
 add_filter('usces_filter_delivery_check', 'usces_filter_delivery_secure_check', 9);
-//20100809ysk start
 add_filter('usces_filter_delivery_check', 'usces_filter_delivery_check_custom_order', 10);
-//20100809ysk end
-//20100818ysk start
 add_filter('usces_filter_member_check', 'usces_filter_member_check_custom_member', 10);
 add_filter('usces_filter_member_check_fromcart', 'usces_filter_customer_check_custom_customer', 10);
-//20100818ysk end
 
 add_action('usces_action_confirm_page_point_inform', 'usces_action_confirm_page_point_inform_zeus', 9);
 add_filter('usces_filter_confirm_point_inform', 'usces_filter_confirm_point_inform_zeus', 9);

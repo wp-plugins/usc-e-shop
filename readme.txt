@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: Collne Inc.
 Tags: Welcart, e-Commerce, shopping, cart, eShop, store, admin, calendar, manage, plugin, shortcode, widgets, membership
-Requires at least: 3.8
-Tested up to: 4.0
-Stable tag: 1.4.12
+Requires at least: 4.0
+Tested up to: 4.1
+Stable tag: 1.4.13
 
 Welcart assists you to build online shop system.
 It is developed in Japan.

@@ -50,6 +50,16 @@ Apache 2.4
 
 
 【更新履歴】
+Welcart 1.4.13 2015/2/24
+　・PayPalウェブペイメントプラスで、PayPalアカウントでの支払いができない不具合を修正
+　・usces_filter_delivery_check_custom_order で翻訳もれを修正
+　・add_theme_support('title-tag') を利用するとタイトルが正常に出力されない不具合を修正
+　・WP4.0以降、新規商品追加画面からプレビューができない不具合を修正
+　・管理メール送信後、送信済みアラートが後ろに隠れてしまって見えない不具合を修正
+　・複合検索時の　session_cache_limiterをprivate_no_expireに仕様を変更
+　・SBPSのコンビニ決済で、2重にポイントが付与される不具合を修正
+　・curl が無い環境で、有効化の際にエラーが出る不具合を修正
+
 Welcart 1.4.12 2014/12/3
 　・請求書PDFに振込先を表示するよう仕様を変更
 　・PayPalクレジットの設定仕様を変更

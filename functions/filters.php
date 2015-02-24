@@ -1018,12 +1018,19 @@ function usces_filter_login_page_liwpp( $html ){
 }
 
 function usces_login_width_paypal(){
+	global $usces;
+	
 	if( !isset($_REQUEST['liwppact']) || !wp_verify_nonce( $_REQUEST['nonce'], 'liwpp' ) ){
 		return;
 	}
 	
 	require_once( USCES_PLUGIN_DIR . "/functions/paypal_login_width.php");
-	$CALLBACK_URL = home_url('/?liwppact=liwpp');
+	
+//	if( $usces->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
+//		$CALLBACK_URL = add_query_arg( array( 'liwppact'=>'liwpp' ), USCES_MEMBER_URL );
+//	}else{
+		$CALLBACK_URL = add_query_arg( array( 'liwppact'=>'liwpp', 'nonce'=>wp_create_nonce('liwpp') ), home_url() );
+//	}
 	$action = $_REQUEST['liwppact'];
 	
 	switch( $action ){
@@ -1042,34 +1049,34 @@ function usces_login_width_paypal(){
 			$code = $_GET["code"];
 			usces_log('code : '.$code, 'acting_transaction.log');
 			if( !$code && isset($_SESSION['liwpp'])){
-				wp_redirect(home_url('/wc-settlement/paypal_guide/?wcact=error'));
+				wp_redirect(home_url('/?liwppact=error'));
 				exit;
 			}
 			
 			//construct POST object for access token fetch request
 			$postvals = sprintf("client_id=%s&client_secret=%s&grant_type=authorization_code&code=%s&redirect_uri=%s", KEY, SECRET, $code, urlencode($CALLBACK_URL));
-			usces_log('postvals : '.print_r($postvals, true), 'acting_transaction.log');
+			usces_log('liwpp_postvals : '.print_r($postvals, true), 'acting_transaction.log');
 			
 			//get JSON access token object (with refresh_token parameter)
 			$token = json_decode(run_curl(ACCESS_TOKEN_ENDPOINT, 'POST', $postvals));
-			usces_log('token : '.print_r($token, true), 'acting_transaction.log');
+			usces_log('liwpp_liwppact_token : '.print_r($token, true), 'acting_transaction.log');
 			
 			//construct URI to fetch profile information for current user
 			$profile_url = sprintf("%s?schema=openid&oauth_token=%s", PROFILE_ENDPOINT, $token->access_token);
-			usces_log('profile_url : '.print_r($profile_url, true), 'acting_transaction.log');
+			usces_log('liwpp_profile_url : '.print_r($profile_url, true), 'acting_transaction.log');
 			
 			//fetch profile of current user
 			$profile = run_curl($profile_url);
-			usces_log('profile : '.print_r($profile, true), 'acting_transaction.log');
+			usces_log('liwpp_profile : '.print_r($profile, true), 'acting_transaction.log');
 			$EnrolRes = json_decode($profile); 
 			
 			if( !$EnrolRes->email ){
-				wp_redirect(home_url('/wc-settlement/paypal_guide/?wcact=error'));
+				wp_redirect(home_url('/?wcact=error'));
 				exit;
 			}
 			$_SESSION['liwpp'] = array( 'token'=>$token->access_token, 'email'=>$EnrolRes->email, 'phone'=>$EnrolRes->phone_number);
 	//usces_log('_SESSION : '.print_r($_SESSION,true), 'acting_transaction.log');
-			wp_redirect(home_url('/wc-settlement/paypal_guide/#paypal_download'));
+			wp_redirect(home_url('/#paypal_download'));
 			//wp_redirect(home_url('/wc-settlement/paypal_guide/?wcact=liwppdl&my_id=2879&my_sku=paypal_vermilion&_nonce=' . wp_create_nonce('dl-nonce')));
 			//var_dump($EnrolRes->email);
 			//my_dlseller_download($post_id, $sku);

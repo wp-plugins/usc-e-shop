@@ -1,8 +1,6 @@
 <?php
-define('KEY', 'AVIdnRBMZkMKrUGEOEUFTmpmDjiklzAj-Dy9JtSSkoX1o1hhTUg9Q2171Qp4');
-define('SECRET', 'EDrDeRCwX4uCfU6b6Z_GEUHliVCwl4XkDagHEprwqhesRspiWMePwWQ9Bd00');
-//define('KEY', 'AT7kJxBgWrFdAafFcrLivKdmzqJGG5fD7rtMPn8GPv1fSkFnVjVVZ7sQq8-5');
-//define('SECRET', 'EH4ysBDypQb7WmQcMFpLQaUQYvOHBr7JvkNdque4gr5BxPlmsPl0KL7REcBg');
+define('KEY', 'ATXrxTX5F0GTiX8qPgmM6n9X92Svnms-JRgvKIAXPvtm9KcMcEtbYINg3iGi0_Clg7hP9m18pWG_cIqH');
+define('SECRET', 'ECgFfOD475DVTD34ykawnFf6UEFJkURvgN2CM5wMYdAhBAutJ6c3n4aTDTp2o1KKkE5jiwwYQ7Y1_Aor');
 
 //define('CALLBACK_URL', 'http://www.welcart.com/wc-settlement/paypal_guide/?wcact=liwpp');
 define('AUTHORIZATION_ENDPOINT', 'https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize');
