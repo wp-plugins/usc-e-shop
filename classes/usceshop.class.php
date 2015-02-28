@@ -1361,6 +1361,10 @@ class usc_e_shop
 					$options['acting_settings']['paypal']['cartbordercolor'] = ( 'on' == $options['acting_settings']['paypal']['set_cartbordercolor'] ) ? $_POST['cartbordercolor'] : '';
 
 					$options['acting_settings']['paypal']['set_liwp'] = isset($_POST['set_liwp']) ? $_POST['set_liwp'] : 'off';
+					$options['acting_settings']['paypal']['liwp_client_id'] = isset($_POST['liwp_client_id']) ? $_POST['liwp_client_id'] : '';
+					$options['acting_settings']['paypal']['liwp_secret'] = isset($_POST['liwp_secret']) ? $_POST['liwp_secret'] : '';
+					$options['acting_settings']['paypal']['liwp_client_id_sand'] = isset($_POST['liwp_client_id_sand']) ? $_POST['liwp_client_id_sand'] : '';
+					$options['acting_settings']['paypal']['liwp_secret_sand'] = isset($_POST['liwp_secret_sand']) ? $_POST['liwp_secret_sand'] : '';
 
 					$options['acting_settings']['paypal']['agree'] = isset($_POST['agree_paypal_ec']) ? $_POST['agree_paypal_ec'] : '';
 
@@ -1376,6 +1380,13 @@ class usc_e_shop
 						$mes .= '※PayPalアカウント（メールアドレス）を入力して下さい<br />';
 					if( !is_email($_POST['paypal_acount']) )
 						$mes .= '※PayPalアカウント（メールアドレス）を正しく入力して下さい<br />';
+
+					if( isset($_POST['set_liwp']) && 'on' == $_POST['set_liwp'] && isset($_POST['liwp_client_id']) && empty($_POST['liwp_client_id']) )
+						$mes .= '※Client ID を入力して下さい<br />';
+					if( isset($_POST['set_liwp']) && 'on' == $_POST['set_liwp'] && isset($_POST['liwp_secret']) && empty($_POST['liwp_secret']) )
+						$mes .= '※Secret を入力して下さい<br />';
+
+
 					if( !isset($_POST['agree_paypal_ec']) )
 						$mes .= '※ご利用条件の同意がありません<br />';
 
@@ -1386,10 +1397,16 @@ class usc_e_shop
 							$options['acting_settings']['paypal']['api_host'] = 'api-3t.sandbox.paypal.com';
 							$options['acting_settings']['paypal']['api_endpoint'] = 'https://api-3t.sandbox.paypal.com/nvp';
 							$options['acting_settings']['paypal']['paypal_url'] = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+							$options['acting_settings']['paypal']['liwp_authorize'] = 'https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize';
+							$options['acting_settings']['paypal']['liwp_tokenservice'] = 'https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/tokenservice';
+							$options['acting_settings']['paypal']['liwp_userinfo'] = 'https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/userinfo';
 						} else {
 							$options['acting_settings']['paypal']['api_host'] = 'api-3t.paypal.com';
 							$options['acting_settings']['paypal']['api_endpoint'] = 'https://api-3t.paypal.com/nvp';
 							$options['acting_settings']['paypal']['paypal_url'] = 'https://www.paypal.com/cgi-bin/webscr';
+							$options['acting_settings']['paypal']['liwp_authorize'] = 'https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize';
+							$options['acting_settings']['paypal']['liwp_tokenservice'] = 'https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/tokenservice';
+							$options['acting_settings']['paypal']['liwp_userinfo'] = 'https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/userinfo';
 						}
 						$options['acting_settings']['paypal']['activate'] = 'on';
 						if( 'on' == $options['acting_settings']['paypal']['ec_activate'] ){
@@ -6700,6 +6717,12 @@ class usc_e_shop
 			$nvpstr .= '&CANCELURL='.apply_filters( 'usces_filter_paypal_ec_cancelurl', urlencode(USCES_CART_URL.$delim.'confirm=1'), $query );
 
 			$nvpstr .= '&NOTIFYURL='.urlencode(USCES_PAYPAL_NOTIFY_URL);
+
+			//Seamless checkout 
+			if(isset($_SESSION['liwpp']['token']) && !empty($_SESSION['liwpp']['token']))
+				$nvpstr .= '&IDENTITYACCESSTOKEN='.$_SESSION['liwpp']['token'];
+			
+			
 
 			$this->paypal->setMethod('SetExpressCheckout');
 			$this->paypal->setData($nvpstr);

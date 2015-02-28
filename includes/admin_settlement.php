@@ -628,16 +628,37 @@ function toggleVisibility(id) {
 				<td></td>
 			</tr>
 		</table>
-<!--
 		<table class="settle_table">
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_loginwithpaypal');"><?php _e('Log In with PayPal', 'usces'); ?></a></th>
 				<td><input name="set_liwp" type="radio" id="set_liwp_1" value="on"<?php if( isset($opts['paypal']['set_liwp']) && $opts['paypal']['set_liwp'] == 'on' ) echo ' checked'; ?> /></td><td><label for="set_liwp_1"><?php _e('Use', 'usces'); ?></label></td>
 				<td><input name="set_liwp" type="radio" id="set_liwp_2" value="off"<?php if( isset($opts['paypal']['set_liwp']) && $opts['paypal']['set_liwp'] == 'off' ) echo ' checked'; ?> /></td><td><label for="set_liwp_2"><?php _e('Do not Use', 'usces'); ?></label></td>
-				<td><div id="ex_loginwithpaypal" class="explanation"><?php _e('Your principal identifying color. PayPal blends your color to white in a gradient fill that borders the cart review area.', 'usces'); ?><br /><?php _e('Paypal のログインと Welcart のログインを連携させます。', 'usces'); ?></div></td>
+				<td colspan="2"><div id="ex_loginwithpaypal" class="explanation"><?php _e('Paypal のログインと Welcart のログインを連携させます。', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_liwp_client_id');"><?php _e('Live Client ID', 'usces'); ?></a></th>
+				<td colspan="4"><input name="liwp_client_id" type="text" id="liwp_client_id" value="<?php echo esc_html(isset($opts['paypal']['liwp_client_id']) ? $opts['paypal']['liwp_client_id'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_liwp_client_id" class="explanation"><?php _e('REST API apps の Client ID', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_liwp_secret');"><?php _e('Live Secret', 'usces'); ?></a></th>
+				<td colspan="4"><input name="liwp_secret" type="text" id="liwp_secret" value="<?php echo esc_html(isset($opts['paypal']['liwp_secret']) ? $opts['paypal']['liwp_secret'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_liwp_secret" class="explanation"><?php _e('REST API apps の Secret', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_liwp_client_id_sand');"><?php _e('SandBox Client ID', 'usces'); ?></a></th>
+				<td colspan="4"><input name="liwp_client_id_sand" type="text" id="liwp_client_id_sand" value="<?php echo esc_html(isset($opts['paypal']['liwp_client_id_sand']) ? $opts['paypal']['liwp_client_id_sand'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_liwp_client_id_sand" class="explanation"><?php _e('REST API apps の SandBox用 Client ID', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_liwp_secret_sand');"><?php _e('SandBox Secret', 'usces'); ?></a></th>
+				<td colspan="4"><input name="liwp_secret_sand" type="text" id="liwp_secret_sand" value="<?php echo esc_html(isset($opts['paypal']['liwp_secret_sand']) ? $opts['paypal']['liwp_secret_sand'] : ''); ?>" size="50" /></td>
+				<td><div id="ex_liwp_secret_sand" class="explanation"><?php _e('REST API apps の SandBox用 Secret', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th> </th><td colspan="5">REST API apps の登録は<a href="https://developer.paypal.com/developer" target="_blank">こちら</a>から行えます。</td>
 			</tr>
 		</table>
--->
 		<input name="acting" type="hidden" value="paypal" />
 		<input name="usces_option_update" id="paypal_ec" type="submit" class="button" value="<?php _e('Update PayPal Express Checkout settings', 'usces'); ?>" />
 		<input name="agree_paypal_ec" id="agree_paypal_ec" type="checkbox" value="agree"<?php if( isset($opts['paypal']['agree']) && 'agree' == $opts['paypal']['agree'] ) echo ' checked="checked"'; ?> /><label for="agree_paypal_ec">下記ご利用条件に同意する</label>

@@ -37,8 +37,9 @@ if(usces_is_membersystem_state()){
 	<td><input class="hidden" value=" " /><input name="loginpass" id="mailaddress1" type="password" value="" autocomplete="off" /></td>
 	</tr>
 	</table>
-	<div class="send"><input name="customerlogin" type="submit" value="'.__(' Next ', 'usces').'" /></div>
-	</form>
+	<div class="send"><input name="customerlogin" type="submit" value="'.__(' Next ', 'usces').'" /></div>';
+	$html = apply_filters( 'usces_filter_customer_page_member_inform', $html, $usces_entries );
+	$html .= '</form>
 	<h5>' . __('The nonmember please enter at here.','usces') . '</h5>';
 }
 

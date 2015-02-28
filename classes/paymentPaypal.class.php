@@ -21,7 +21,8 @@ class usces_paypal {
 		$this->API_Password = urlencode($this->options['acting_settings']['paypal']['pwd']);
 		$this->API_Signature = urlencode($this->options['acting_settings']['paypal']['signature']);
 		$this->sBNCode = urlencode("uscons_cart_EC_JP");
-		$this->version = urlencode("66.0");//20110412ysk
+//		$this->version = urlencode("66.0");//20110412ysk
+		$this->version = urlencode("87.0");
 		$this->method = '';
 		$this->data = '';
 		$this->nvpreq = '';

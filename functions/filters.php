@@ -997,7 +997,7 @@ function usces_action_login_page_liwpp(){
 	){ return; }
 
 	$html = '<div class="liwpp_area">';
-	$html .= '<a href="' . home_url('/?liwppact=request&nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= '<a href="' . home_url('/?liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
 	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
 
 	echo $html;
@@ -1011,7 +1011,47 @@ function usces_filter_login_page_liwpp( $html ){
 	){ return $html; }
 
 	$html .= '<div class="liwpp_area">';
-	$html .= '<a href="' . home_url('/?liwppact=request&nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= '<a href="' . home_url('/?liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
+
+	return $html;
+}
+
+function usces_action_customer_page_liwpp(){
+	$options = get_option('usces');
+	if( !isset($options['acting_settings']['paypal']['set_liwp']) 
+	|| 'off' == $options['acting_settings']['paypal']['set_liwp'] 
+	|| usces_is_login() 
+	){ return; }
+
+	$html = '<div class="liwpp_area">';
+	$html .= '<a href="' . home_url('/?usces_cart=1&liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
+
+	echo $html;
+}
+
+function usces_filter_customer_page_liwpp( $html ){
+	$options = get_option('usces');
+	if( !isset($options['acting_settings']['paypal']['set_liwp']) 
+	|| 'off' == $options['acting_settings']['paypal']['set_liwp'] 
+	|| usces_is_login() 
+	){ return $html; }
+	$html .= '<div class="liwpp_area">';
+	$html .= '<a href="' . home_url('/?usces_cart=1&liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
+
+	return $html;
+}
+
+function usces_filter_login_widget_liwpp( $html ){
+	$options = get_option('usces');
+	if( !isset($options['acting_settings']['paypal']['set_liwp']) 
+	|| 'off' == $options['acting_settings']['paypal']['set_liwp'] 
+	|| usces_is_login() 
+	){ return $html; }
+	$html .= '<div class="liwpp_area">';
+	$html .= '<a href="' . home_url('/?liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
 	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
 
 	return $html;
@@ -1019,76 +1059,108 @@ function usces_filter_login_page_liwpp( $html ){
 
 function usces_login_width_paypal(){
 	global $usces;
+	$options = get_option('usces');
 	
-	if( !isset($_REQUEST['liwppact']) || !wp_verify_nonce( $_REQUEST['nonce'], 'liwpp' ) ){
+	if( !isset($_GET['liwppact']) ){
+		return;
+	}
+	if( !isset($_REQUEST['liwpp_nonce']) || !wp_verify_nonce( $_REQUEST['liwpp_nonce'], 'liwpp' ) ){
 		return;
 	}
 	
 	require_once( USCES_PLUGIN_DIR . "/functions/paypal_login_width.php");
 	
-//	if( $usces->is_cart_or_member_page($_SERVER['REQUEST_URI']) ){
-//		$CALLBACK_URL = add_query_arg( array( 'liwppact'=>'liwpp' ), USCES_MEMBER_URL );
-//	}else{
-		$CALLBACK_URL = add_query_arg( array( 'liwppact'=>'liwpp', 'nonce'=>wp_create_nonce('liwpp') ), home_url() );
-//	}
-	$action = $_REQUEST['liwppact'];
+	if( isset( $_REQUEST['usces_cart']) ){
+		$CALLBACK_URL = add_query_arg( 
+			array( 'liwppact'=>'liwpp', 'liwpp_nonce'=>wp_create_nonce('liwpp'), 'usces_cart'=>1 ), home_url('/')
+		 );
+	}else{
+		$CALLBACK_URL = add_query_arg( 
+			array( 'liwppact'=>'liwpp', 'liwpp_nonce'=>wp_create_nonce('liwpp') ), home_url('/')
+		 );
+	}
+	
+	if($options['acting_settings']['paypal']['sandbox'] == 1){
+		$liwp_client_id = $options['acting_settings']['paypal']['liwp_client_id_sand'];
+		$liwp_secret = $options['acting_settings']['paypal']['liwp_secret_sand'];
+	}else{
+		$liwp_client_id = $options['acting_settings']['paypal']['liwp_client_id'];
+		$liwp_secret = $options['acting_settings']['paypal']['liwp_secret'];
+	}
+
+	$action = $_GET['liwppact'];
 	
 	switch( $action ){
-		case 'request':
-			$auth_url = sprintf("%s?scope=%s&response_type=code&redirect_uri=%s&client_id=%s",
-								AUTHORIZATION_ENDPOINT,
-								'openid email profile address phone',
-								urlencode($CALLBACK_URL),
-								KEY);
-//			usces_log('Location : '.print_r($auth_url, true), 'acting_transaction.log');
-			header("Location: $auth_url");
+	
+	case 'request':
+		$auth_url = sprintf("%s?scope=%s&response_type=code&redirect_uri=%s&client_id=%s&nonce=%s",
+					$options['acting_settings']['paypal']['liwp_authorize'],
+					'profile+email+address+phone+https%3A%2F%2Furi.paypal.com%2Fservices%2Fpaypalattributes+'.urlencode('https://uri.paypal.com/services/expresscheckout'),
+					urlencode($CALLBACK_URL),
+					$liwp_client_id,
+					time().base64_encode ( mt_rand() )
+					);
+		header("Location: $auth_url");
+		exit;
+		break;
+		
+	case 'liwpp':
+		//capture code from auth
+		$code = $_GET["code"];
+//usces_log('code : '.$code, 'acting_transaction.log');
+		if( !$code ){
+			wp_redirect(add_query_arg( array('liwppact'=>'error1'), USCES_LOGIN_URL));
 			exit;
-			break;	
-		case 'liwpp':
-			//capture code from auth
-			$code = $_GET["code"];
-			usces_log('code : '.$code, 'acting_transaction.log');
-			if( !$code && isset($_SESSION['liwpp'])){
-				wp_redirect(home_url('/?liwppact=error'));
+		}
+		
+		//construct POST object for access token fetch request
+		$postvals = sprintf("client_id=%s&client_secret=%s&grant_type=authorization_code&code=%s&redirect_uri=%s", 
+					$liwp_client_id, $liwp_secret, $code, urlencode($CALLBACK_URL));
+//usces_log('liwpp_postvals : '.print_r($postvals, true), 'acting_transaction.log');
+		
+		//get JSON access token object (with refresh_token parameter)
+		$token = json_decode(usces_run_curl($options['acting_settings']['paypal']['liwp_tokenservice'], 'POST', $postvals));
+		usces_log('liwpp_liwppact_token : '.print_r($token, true), 'acting_transaction.log');
+		
+		//construct URI to fetch profile information for current user
+		$profile_url = sprintf("%s?schema=openid&oauth_token=%s", $options['acting_settings']['paypal']['liwp_userinfo'], $token->access_token);
+//usces_log('liwpp_profile_url : '.print_r($profile_url, true), 'acting_transaction.log');
+		
+		//fetch profile of current user
+		$profile = usces_run_curl($profile_url);
+		$profile = json_decode($profile); 
+		usces_log('liwpp_profile : '.print_r($profile, true), 'acting_transaction.log');
+		
+		if( !$profile->email ){
+			wp_redirect(add_query_arg( array('liwppact'=>'error2'), USCES_LOGIN_URL));
+			exit;
+		}
+		
+		$_SESSION['liwpp'] = array( 'token'=>$token->access_token, 'profile'=>$profile);
+		$_SESSION['usces_member']['mailaddress1'] = $profile->email;
+		$_SESSION['usces_member']['mailaddress2'] = $profile->email;
+		$_SESSION['usces_member']['name1'] = $profile->family_name;
+		$_SESSION['usces_member']['name2'] = $profile->name;
+		$_SESSION['usces_member']['zipcode'] = $profile->address->postal_code;
+		$_SESSION['usces_member']['pref'] = $profile->address->region;
+		$_SESSION['usces_member']['address1'] = $profile->address->locality;
+		$_SESSION['usces_member']['address2'] = $profile->address->street_address;
+		$_SESSION['usces_member']['tel'] = $profile->phone_number;
+		$_SESSION['usces_member']['country'] = $profile->address->country;
+
+		if( usces_login_with_openid($profile->email) ){
+			if( isset( $_REQUEST['usces_cart']) ){
+				wp_redirect(USCES_CUSTOMER_URL);
+				exit;
+			}else{
+				wp_redirect(USCES_MEMBER_URL);
 				exit;
 			}
-			
-			//construct POST object for access token fetch request
-			$postvals = sprintf("client_id=%s&client_secret=%s&grant_type=authorization_code&code=%s&redirect_uri=%s", KEY, SECRET, $code, urlencode($CALLBACK_URL));
-			usces_log('liwpp_postvals : '.print_r($postvals, true), 'acting_transaction.log');
-			
-			//get JSON access token object (with refresh_token parameter)
-			$token = json_decode(run_curl(ACCESS_TOKEN_ENDPOINT, 'POST', $postvals));
-			usces_log('liwpp_liwppact_token : '.print_r($token, true), 'acting_transaction.log');
-			
-			//construct URI to fetch profile information for current user
-			$profile_url = sprintf("%s?schema=openid&oauth_token=%s", PROFILE_ENDPOINT, $token->access_token);
-			usces_log('liwpp_profile_url : '.print_r($profile_url, true), 'acting_transaction.log');
-			
-			//fetch profile of current user
-			$profile = run_curl($profile_url);
-			usces_log('liwpp_profile : '.print_r($profile, true), 'acting_transaction.log');
-			$EnrolRes = json_decode($profile); 
-			
-			if( !$EnrolRes->email ){
-				wp_redirect(home_url('/?wcact=error'));
-				exit;
-			}
-			$_SESSION['liwpp'] = array( 'token'=>$token->access_token, 'email'=>$EnrolRes->email, 'phone'=>$EnrolRes->phone_number);
-	//usces_log('_SESSION : '.print_r($_SESSION,true), 'acting_transaction.log');
-			wp_redirect(home_url('/#paypal_download'));
-			//wp_redirect(home_url('/wc-settlement/paypal_guide/?wcact=liwppdl&my_id=2879&my_sku=paypal_vermilion&_nonce=' . wp_create_nonce('dl-nonce')));
-			//var_dump($EnrolRes->email);
-			//my_dlseller_download($post_id, $sku);
+		
+		}else{
+			wp_redirect(USCES_NEWMEMBER_URL);
 			exit;
-			break;
-		case 'liwppdl':
-			if( !isset($_SESSION['liwpp']) )
-				die('no permission');
-			$post_id = (int)$_REQUEST['my_id'];
-			$sku = urldecode($_REQUEST['my_sku']);
-			my_dlseller_download2($post_id, $sku);
-			die('completion');
-			break;	
+		}
+		break;
 	}
 }
