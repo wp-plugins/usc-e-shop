@@ -4029,7 +4029,7 @@ function usces_post_reg_orderdata($order_id, $results){
 					if( $usces->is_member_logged_in() ){
 						//if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge']){
 						if( 'on' == $acting_opts['quickcharge']){
-							$usces->set_member_meta_value('zeus_pcid', '8888888888888888');
+							$usces->set_member_meta_value('zeus_pcid', '8888888888888882');
 						}
 						$usces->set_member_meta_value('zeus_partofcard', $_GET['zeussuffix']);
 						$usces->set_member_meta_value('zeus_limitofcard', ($_GET['zeusyear'].'/'.$_GET['zeusmonth']));

@@ -124,6 +124,7 @@ jQuery(document).ready(function($){
 		$('#dlMemberListDialog').dialog('open');
 	});
 //20100908ysk end
+	<?php do_action('usces_action_member_list_page_js'); ?>
 });
 </script>
 <div class="wrap">
@@ -170,6 +171,7 @@ jQuery(document).ready(function($){
 <!--20100908ysk start-->
 		<table id="dl_list_table">
 		<tr>
+		<?php do_action( 'usces_action_dl_member_list_table' ); ?>
 		<td><input type="button" id="dl_memberlist" class="searchbutton" value="<?php _e('Download Member List', 'usces'); ?>" /></td>
 		</tr>
 		</table>
@@ -323,6 +325,7 @@ jQuery(document).ready(function($){
 	</fieldset>
 </div>
 <!--20100908ysk end-->
+<?php do_action( 'usces_action_member_list_footer' ); ?>
 </div><!--usces_admin-->
 </div><!--wrap-->
 <script type="text/javascript">

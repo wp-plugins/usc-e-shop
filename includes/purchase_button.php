@@ -107,24 +107,6 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			$acting_opts = $usces->options['acting_settings']['zeus'];
 			$usces->save_order_acting_data($rand);
 			$html .= '<form id="purchase_form" action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
-/*			$member = $usces->get_member();
-			$pcid = $usces->get_member_meta_value('zeus_pcid', $member['ID']);
-			$securecode = isset($_POST['securecode']) ? $_POST['securecode'] : '';
-			//if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
-			if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
-				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
-				//$html .= '<input type="hidden" name="securecode" value="' . esc_attr($_POST['securecode']) . '">';//20121119ysk 0000620
-				$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
-				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
-					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
-			}else{
-				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . '">';
-				if( 1 == $acting_opts['security'] ){
-					$html .= '<input type="hidden" name="securecode" value="' . esc_attr($securecode) . '">';
-				}
-				$html .= '<input type="hidden" name="expyy" value="' . esc_attr($_POST['expyy']) . '">
-					<input type="hidden" name="expmm" value="' . esc_attr($_POST['expmm']) . '">';
-			}*/
 			$mem_id = '';
 			$pcid = NULL;
 			$partofcard = NULL;
@@ -135,7 +117,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 				$partofcard = $usces->get_member_meta_value( 'zeus_partofcard', $member['ID'] );
 			}
 			if( 'on' == $acting_opts['quickcharge'] && $pcid != NULL && $partofcard != NULL ){
-				$html .= '<input type="hidden" name="cardnumber" value="8888888888888888">';
+				$html .= '<input type="hidden" name="cardnumber" value="8888888888888882">';
 			}else{
 				$html .= '<input type="hidden" name="cardnumber" value="' . esc_attr($_POST['cnum1']) . '">';
 			}

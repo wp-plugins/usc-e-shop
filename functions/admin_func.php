@@ -120,7 +120,7 @@ function usces_zeus_3dsecure_enrol(){
 	$data = array();
 
 	//if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
-	if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+	if( 'on' == $acting_opts['quickcharge'] && ($pcid == '8888888888888882' || $pcid == '8888888888888888') && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['history']['key'] = 'sendid';
@@ -310,7 +310,7 @@ function usces_zeus_secure_payreq(){
 	$data = array();
 
 	//if( 2 == $acting_opts['security'] && 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
-	if( 'on' == $acting_opts['quickcharge'] && $pcid == '8888888888888888' && $usces->is_member_logged_in() ){
+	if( 'on' == $acting_opts['quickcharge'] && ($pcid == '8888888888888882' || $pcid == '8888888888888888') && $usces->is_member_logged_in() ){
 		$data['authentication']['clientip'] = $acting_opts['clientip'];
 		$data['authentication']['key'] = $acting_opts['authkey'];
 		$data['card']['history']['key'] = 'sendid';

@@ -216,7 +216,7 @@ function usces_action_acting_transaction(){
 				if( isset($_GET['cardnumber']) ) {
 					$usces->set_member_meta_value( 'zeus_partofcard', $_GET['cardnumber'] );
 					if( 'on' == $acting_opts['quickcharge'] ) {
-						$usces->set_member_meta_value( 'zeus_pcid', '8888888888888888' );
+						$usces->set_member_meta_value( 'zeus_pcid', '8888888888888882' );
 					}
 				}
 			}
