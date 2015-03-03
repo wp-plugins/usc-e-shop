@@ -2053,7 +2053,6 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 				}
 				break;
 //20101018ysk end
-//20140206ysk start
 			case 'veritrans_conv':
 				if( 'cvsType' == $key ) {
 					switch( $value ) {
@@ -2072,10 +2071,15 @@ function usces_settle_info_field( $order_id, $type='nl', $out='echo' ){
 					case 'econ-other':
 						$value = 'セイコーマート';
 						break;
+					case 'econ-sn':
+						$value = 'サンクス';
+						break;
+					case 'econ-ck':
+						$value = 'サークルK';
+						break;
 					}
 				}
 				break;
-//20140206ysk end
 		}
 		$value = apply_filters( 'usces_filter_settle_info_field_value', $value, $key, $acting );
 		switch($type){
