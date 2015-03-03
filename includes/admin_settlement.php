@@ -1322,7 +1322,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 				<td><div id="ex_payment_class_paygent" class="explanation"><?php _e('ユーザに支払を許可するカード支払方法の区分です。加盟店審査を経て加盟店様ごとに設定された支払可能回数から、購入者に提示する支払回数をさらに絞り込みたい場合に使用してください。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
-				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_card_conf_number_paygent');">カード確認番号利用フラグ</a></th>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_use_card_conf_number_paygent');">カード確認番号<br />利用フラグ</a></th>
 				<td><input name="use_card_conf_number" type="radio" id="use_card_conf_number_paygent_1" value="on"<?php if( isset($opts['paygent']['use_card_conf_number']) && $opts['paygent']['use_card_conf_number'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="use_card_conf_number_paygent_1">利用する</label></td>
 				<td><input name="use_card_conf_number" type="radio" id="use_card_conf_number_paygent_2" value="off"<?php if( isset($opts['paygent']['use_card_conf_number']) && $opts['paygent']['use_card_conf_number'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="use_card_conf_number_paygent_2">利用しない</label></td>
 				<td colspan="2"></td>
@@ -1360,6 +1360,11 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_payment_term_min_paygent');">支払期間（分指定）</a></th>
 				<td colspan="6"><input name="payment_term_min" type="text" id="payment_term_min_paygent" value="<?php echo esc_html(isset($opts['paygent']['payment_term_min']) ? $opts['paygent']['payment_term_min'] : ''); ?>" size="6" maxlength="4" /></td>
 				<td><div id="ex_payment_term_min_paygent" class="explanation"><?php _e('支払うことのできる期限を分で指定します。指定できる範囲は5以上2880以下です。（半角数字）', 'usces'); ?></div></td>
+			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv_hc_paygent');">差分通知<br />ハッシュ値生成キー</a></th>
+				<td colspan="6"><input name="conv_hc" type="text" id="conv_hc_paygent" value="<?php echo esc_html(isset($opts['paygent']['conv_hc']) ? $opts['paygent']['conv_hc'] : ''); ?>" size="20" maxlength="24" /></td>
+				<td><div id="ex_conv_hc_paygent" class="explanation"><?php _e('契約時にペイジェントから発行される差分通知ハッシュ値生成キー（半角英数字）', 'usces'); ?></div></td>
 			</tr>
 		</table>
 		<input name="acting" type="hidden" value="paygent" />
