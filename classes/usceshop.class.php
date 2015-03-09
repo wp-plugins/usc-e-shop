@@ -1840,6 +1840,7 @@ class usc_e_shop
 					unset( $options['acting_settings']['paygent'] );
 					$options['acting_settings']['paygent']['seq_merchant_id'] = isset($_POST['seq_merchant_id']) ? $_POST['seq_merchant_id'] : '';
 					$options['acting_settings']['paygent']['hc'] = isset($_POST['hc']) ? $_POST['hc'] : '';
+					$options['acting_settings']['paygent']['ope'] = isset($_POST['ope']) ? $_POST['ope'] : '';
 					$options['acting_settings']['paygent']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 					$options['acting_settings']['paygent']['payment_class'] = isset($_POST['payment_class']) ? $_POST['payment_class'] : '';
 					$options['acting_settings']['paygent']['use_card_conf_number'] = isset($_POST['use_card_conf_number']) ? $_POST['use_card_conf_number'] : '';
@@ -1856,6 +1857,8 @@ class usc_e_shop
 					//	$mes .= '※稼働環境を選択して下さい<br />';
 					if( '' == $options['acting_settings']['paygent']['hc'] )
 						$mes .= '※ハッシュ値生成キーを入力して下さい<br />';
+					if( WCUtils::is_blank($options['acting_settings']['paygent']['ope']) )
+						$mes .= '※稼働環境を選択して下さい<br />';
 					if( 'on' == $options['acting_settings']['paygent']['conv_activate'] ) {
 						if( '' == $options['acting_settings']['paygent']['payment_term_day'] and '' == $options['acting_settings']['paygent']['payment_term_min'] ) {
 						} elseif( '' != $options['acting_settings']['paygent']['payment_term_day'] and '' != $options['acting_settings']['paygent']['payment_term_min'] ) {
@@ -1877,7 +1880,11 @@ class usc_e_shop
 						$this->action_status = 'success';
 						$this->action_message = __('options are updated','usces');
 						$options['acting_settings']['paygent']['activate'] = 'on';
-						$options['acting_settings']['paygent']['send_url'] = "https://mdev.paygent.co.jp/v/u/request";
+						if( 'public' == $options['acting_settings']['paygent']['ope'] ) {
+							$options['acting_settings']['paygent']['send_url'] = 'https://link.paygent.co.jp/v/u/request';
+						} else {
+							$options['acting_settings']['paygent']['send_url'] = "https://mdev.paygent.co.jp/v/u/request";
+						}
 						if( 'on' == $options['acting_settings']['paygent']['card_activate'] ) {
 							$this->payment_structure['acting_paygent_card'] = 'カード決済（ペイジェント）';
 							if( '' == $options['acting_settings']['paygent']['payment_class'] ) $options['acting_settings']['paygent']['payment_class'] = '0';

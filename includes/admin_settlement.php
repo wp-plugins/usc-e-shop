@@ -1305,6 +1305,12 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 				<td colspan="6"><input name="hc" type="text" id="hc_paygent" value="<?php echo esc_html(isset($opts['paygent']['hc']) ? $opts['paygent']['hc'] : ''); ?>" size="20" maxlength="24" /></td>
 				<td><div id="ex_hc_paygent" class="explanation"><?php _e('契約時にペイジェントから発行されるハッシュ値生成キー（半角英数字）', 'usces'); ?></div></td>
 			</tr>
+			<tr>
+				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_paygent');">稼働環境</a></th>
+				<td><input name="ope" type="radio" id="ope_paygent_1" value="test"<?php if( isset($opts['paygent']['ope']) && $opts['paygent']['ope'] == 'test' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_paygent_1">テスト環境</label></td>
+				<td><input name="ope" type="radio" id="ope_paygent_2" value="public"<?php if( isset($opts['paygent']['ope']) && $opts['paygent']['ope'] == 'public' ) echo ' checked="checked"'; ?> /></td><td><label for="ope_paygent_2">本番環境</label></td>
+				<td><div id="ex_ope_paygent" class="explanation"><?php _e('動作環境を切り替えます', 'usces'); ?></div></td>
+			</tr>
 		</table>
 		<table class="settle_table">
 			<tr>
