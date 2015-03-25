@@ -81,7 +81,8 @@ class DSK_SETTLEMENT
 	* @return array
 	***********************************************/
 	public function acting_return( $results ){
-		if( !in_array( $results['acting'], $this->pay_method) )
+	
+		if( !in_array( 'acting_'.$results['acting'], $this->pay_method) )
 			return $results;
 		
 		if( isset($_REQUEST['cancel']) ) {
