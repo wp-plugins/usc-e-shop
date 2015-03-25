@@ -4165,7 +4165,7 @@ function usces_paypal_doecp( &$results ) {
 		$res = $usces->paypal->doExpressCheckout();
 		$resArray = $usces->paypal->getResponse();
 		$ack = strtoupper($resArray["ACK"]);
-		usces_log('PayPal : DoExpressCheckout:'.print_r($resArray,true), 'acting_transaction.log');
+		//usces_log('PayPal : DoExpressCheckout:'.print_r($pre_request,true), 'acting_transaction.log');
 		if( $ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING" ) {
 			$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
 			//$usces->set_order_meta_value('settlement_id', $transactionId, $order_id);
@@ -4181,7 +4181,10 @@ function usces_paypal_doecp( &$results ) {
 			$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
 			usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
 			if( '10486' == $ErrorCode ){
-				$payPalURL = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='.$token;
+				$options = get_option('usces');
+				$acting_opts = $options['acting_settings']['paypal'];
+				$query = http_build_query($_REQUEST);
+				$payPalURL = $acting_opts['paypal_url'] . '?cmd=_express-checkout&'.$query;
 				header("Location: ".$payPalURL);
 				exit;
 			}
