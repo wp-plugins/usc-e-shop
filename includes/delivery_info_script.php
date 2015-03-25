@@ -288,6 +288,8 @@ foreach ( (array)$payments as $array ) {
 			}
 			break;
 	}
+	$payments_str = apply_filters( 'usces_filter_payments_str', $payments_str, $array );
+	$payments_arr = apply_filters( 'usces_filter_payments_arr', $payments_arr, $array );
 }
 $payments_str = rtrim($payments_str, ', ');
 
@@ -311,68 +313,70 @@ foreach($payments_arr as $pn => $pm ){
 	case 'zeus':
 		if('on' == $usces->options['acting_settings'][$pm]['howpay']){
 			
-				$html .= "\n\t"."$(\"input[name='offer\[howpay\]']\").change(function() {
-		if( '' != $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
-			$(\"#div_" . $pm . "\").css({\"display\": \"\"});
-		}
-		if( '1' == $(\"input[name='offer\[howpay\]']:checked\").val() ){
-			$(\"#cbrand_" . $pm . "\").css({\"display\": \"none\"});
-			$(\"#div_" . $pm . "\").css({\"display\": \"none\"});
-		}else{
-			$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
-		}
-	});
+			$howpay = "\n\t"."$(\"input[name='offer\[howpay\]']\").change(function() {
+			if( '' != $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
+				$(\"#div_" . $pm . "\").css({\"display\": \"\"});
+			}
+			if( '1' == $(\"input[name='offer\[howpay\]']:checked\").val() ){
+					$(\"#cbrand_" . $pm . "\").css({\"display\": \"none\"});
+					$(\"#div_" . $pm . "\").css({\"display\": \"none\"});
+				}else{
+					$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
+				}
+			});
 
-	$(\"select[name='offer\[cbrand\]']\").change(function() {
-		$(\"#div_" . $pm . "\").css({\"display\": \"\"});
-		if( '1' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
-			$(\"#brand1\").css({\"display\": \"\"});
-			$(\"#brand2\").css({\"display\": \"none\"});
-			$(\"#brand3\").css({\"display\": \"none\"});
-		}else if( '2' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
-			$(\"#brand1\").css({\"display\": \"none\"});
-			$(\"#brand2\").css({\"display\": \"\"});
-			$(\"#brand3\").css({\"display\": \"none\"});
-		}else if( '3' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
-			$(\"#brand1\").css({\"display\": \"none\"});
-			$(\"#brand2\").css({\"display\": \"none\"});
-			$(\"#brand3\").css({\"display\": \"\"});
-		}else{
-			$(\"#brand1\").css({\"display\": \"none\"});
-			$(\"#brand2\").css({\"display\": \"none\"});
-			$(\"#brand3\").css({\"display\": \"none\"});
-		}
-	});
+			$(\"select[name='offer\[cbrand\]']\").change(function() {
+				$(\"#div_" . $pm . "\").css({\"display\": \"\"});
+				if( '1' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
+					$(\"#brand1\").css({\"display\": \"\"});
+					$(\"#brand2\").css({\"display\": \"none\"});
+					$(\"#brand3\").css({\"display\": \"none\"});
+				}else if( '2' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
+					$(\"#brand1\").css({\"display\": \"none\"});
+					$(\"#brand2\").css({\"display\": \"\"});
+					$(\"#brand3\").css({\"display\": \"none\"});
+				}else if( '3' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
+					$(\"#brand1\").css({\"display\": \"none\"});
+					$(\"#brand2\").css({\"display\": \"none\"});
+					$(\"#brand3\").css({\"display\": \"\"});
+				}else{
+					$(\"#brand1\").css({\"display\": \"none\"});
+					$(\"#brand2\").css({\"display\": \"none\"});
+					$(\"#brand3\").css({\"display\": \"none\"});
+				}
+			});
 
-	if( '1' == $(\"input[name='offer\[howpay\]']:checked\").val() ){
-		$(\"#cbrand_" . $pm . "\").css({\"display\": \"none\"});
-		$(\"#div_" . $pm . "\").css({\"display\": \"none\"});
-	}else{
-		$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
-		$(\"#div_" . $pm . "\").css({\"display\": \"\"});
-	}
+			if( '1' == $(\"input[name='offer\[howpay\]']:checked\").val() ){
+				$(\"#cbrand_" . $pm . "\").css({\"display\": \"none\"});
+				$(\"#div_" . $pm . "\").css({\"display\": \"none\"});
+			}else{
+				$(\"#cbrand_" . $pm . "\").css({\"display\": \"\"});
+				$(\"#div_" . $pm . "\").css({\"display\": \"\"});
+			}
 
-	if( '1' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
-		$(\"#brand1\").css({\"display\": \"\"});
-		$(\"#brand2\").css({\"display\": \"none\"});
-		$(\"#brand3\").css({\"display\": \"none\"});
-	}else if( '2' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
-		$(\"#brand1\").css({\"display\": \"none\"});
-		$(\"#brand2\").css({\"display\": \"\"});
-		$(\"#brand3\").css({\"display\": \"none\"});
-	}else if( '3' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
-		$(\"#brand1\").css({\"display\": \"none\"});
-		$(\"#brand2\").css({\"display\": \"none\"});
-		$(\"#brand3\").css({\"display\": \"\"});
-	}else{
-		$(\"#brand1\").css({\"display\": \"none\"});
-		$(\"#brand2\").css({\"display\": \"none\"});
-		$(\"#brand3\").css({\"display\": \"none\"});
-	}";
+			if( '1' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
+				$(\"#brand1\").css({\"display\": \"\"});
+				$(\"#brand2\").css({\"display\": \"none\"});
+				$(\"#brand3\").css({\"display\": \"none\"});
+			}else if( '2' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
+				$(\"#brand1\").css({\"display\": \"none\"});
+				$(\"#brand2\").css({\"display\": \"\"});
+				$(\"#brand3\").css({\"display\": \"none\"});
+			}else if( '3' == $(\"select[name='offer\[cbrand\]'] option:selected\").val() ){
+				$(\"#brand1\").css({\"display\": \"none\"});
+				$(\"#brand2\").css({\"display\": \"none\"});
+				$(\"#brand3\").css({\"display\": \"\"});
+			}else{
+				$(\"#brand1\").css({\"display\": \"none\"});
+				$(\"#brand2\").css({\"display\": \"none\"});
+				$(\"#brand3\").css({\"display\": \"none\"});
+			}
+			";
 	
 		}
 		break;
 	}
+	$html .= apply_filters( 'usces_filter_howpay', $howpay, $pm, $payments_arr );
 }
 
 $html .= "\n\t"."ch_pay = $(\"input[name='offer\\[payment_name\\]']:checked\").val();

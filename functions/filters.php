@@ -995,9 +995,13 @@ function usces_action_login_page_liwpp(){
 	|| 'off' == $options['acting_settings']['paypal']['set_liwp'] 
 	|| usces_is_login() 
 	){ return; }
+	
+	$ulr = add_query_arg( 
+		array( 'state'=>urlencode('liwppact=request&liwppref=login&liwpp_nonce='.wp_create_nonce('liwpp') ) ), home_url('/')
+	 );
 
 	$html = '<div class="liwpp_area">';
-	$html .= '<a href="' . home_url('/?liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= '<a href="' . $ulr . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
 	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
 
 	echo $html;
@@ -1010,8 +1014,12 @@ function usces_filter_login_page_liwpp( $html ){
 	|| usces_is_login() 
 	){ return $html; }
 
+	$ulr = add_query_arg( 
+		array( 'state'=>urlencode('liwppact=request&liwppref=login&liwpp_nonce='.wp_create_nonce('liwpp') ) ), home_url('/')
+	 );
+
 	$html .= '<div class="liwpp_area">';
-	$html .= '<a href="' . home_url('/?liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= '<a href="' . $ulr . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
 	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
 
 	return $html;
@@ -1024,8 +1032,12 @@ function usces_action_customer_page_liwpp(){
 	|| usces_is_login() 
 	){ return; }
 
+	$ulr = add_query_arg( 
+		array( 'state'=>urlencode('liwppact=request&liwppref=usces_cart&liwpp_nonce='.wp_create_nonce('liwpp') ) ), home_url('/')
+	 );
+
 	$html = '<div class="liwpp_area">';
-	$html .= '<a href="' . home_url('/?usces_cart=1&liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= '<a href="' . $ulr . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
 	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
 
 	echo $html;
@@ -1037,8 +1049,13 @@ function usces_filter_customer_page_liwpp( $html ){
 	|| 'off' == $options['acting_settings']['paypal']['set_liwp'] 
 	|| usces_is_login() 
 	){ return $html; }
+
+	$ulr = add_query_arg( 
+		array( 'state'=>urlencode('liwppact=request&liwppref=usces_cart&liwpp_nonce='.wp_create_nonce('liwpp') ) ), home_url('/')
+	 );
+
 	$html .= '<div class="liwpp_area">';
-	$html .= '<a href="' . home_url('/?usces_cart=1&liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= '<a href="' . $ulr . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
 	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
 
 	return $html;
@@ -1050,8 +1067,13 @@ function usces_filter_login_widget_liwpp( $html ){
 	|| 'off' == $options['acting_settings']['paypal']['set_liwp'] 
 	|| usces_is_login() 
 	){ return $html; }
+
+	$ulr = add_query_arg( 
+		array( 'state'=>urlencode('liwppact=request&liwppref=login&liwpp_nonce='.wp_create_nonce('liwpp') ) ), home_url('/')
+	 );
+
 	$html .= '<div class="liwpp_area">';
-	$html .= '<a href="' . home_url('/?liwppact=request&liwpp_nonce=' . wp_create_nonce('liwpp')) . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
+	$html .= '<a href="' . $ulr . '" title="' . __('PayPalアカウントでログイン', 'usces') . '" class="liwpp_button"><img src="' . USCES_PLUGIN_URL . '/images/loginwithpaypalbutton.png" /></a>' . "<br />";
 	$html .= __('PayPalアカウントでログインできます', 'usces') . "</div>\n";
 
 	return $html;
@@ -1061,25 +1083,35 @@ function usces_login_width_paypal(){
 	global $usces;
 	$options = get_option('usces');
 	
-	if( !isset($_GET['liwppact']) ){
+	
+	if( !isset($_GET['state']) ){
 		return;
 	}
-	if( !isset($_REQUEST['liwpp_nonce']) || !wp_verify_nonce( $_REQUEST['liwpp_nonce'], 'liwpp' ) ){
+	
+	$state = urldecode($_GET['state']);
+	parse_str($state, $parts);
+	
+	if( !isset($parts['liwppact']) ){
+		return;
+	}
+	if( !isset($parts['liwpp_nonce']) || !wp_verify_nonce( $parts['liwpp_nonce'], 'liwpp' ) ){
 		return;
 	}
 	
 	require_once( USCES_PLUGIN_DIR . "/functions/paypal_login_width.php");
 	
-	if( isset( $_REQUEST['usces_cart']) ){
+	if( isset( $parts['liwppref']) && 'usces_cart' == $parts['liwppref'] ){
 		$CALLBACK_URL = add_query_arg( 
-			array( 'liwppact'=>'liwpp', 'liwpp_nonce'=>wp_create_nonce('liwpp'), 'usces_cart'=>1 ), home_url('/')
+//			array( 'liwppact'=>'liwpp', 'liwpp_nonce'=>wp_create_nonce('liwpp'), 'usces_cart'=>1 ), home_url('/')
+			array( 'state'=>urlencode('liwppact=liwpp&liwppref=usces_cart&liwpp_nonce='.wp_create_nonce('liwpp') ) ), home_url('/')
 		 );
 	}else{
 		$CALLBACK_URL = add_query_arg( 
-			array( 'liwppact'=>'liwpp', 'liwpp_nonce'=>wp_create_nonce('liwpp') ), home_url('/')
+//			array( 'liwppact'=>'liwpp', 'liwpp_nonce'=>wp_create_nonce('liwpp') ), home_url('/')
+			array( 'state'=>urlencode('liwppact=liwpp&liwppref=login&liwpp_nonce='.wp_create_nonce('liwpp') ) ), home_url('/')
 		 );
 	}
-	
+
 	if($options['acting_settings']['paypal']['sandbox'] == 1){
 		$liwp_client_id = $options['acting_settings']['paypal']['liwp_client_id_sand'];
 		$liwp_secret = $options['acting_settings']['paypal']['liwp_secret_sand'];
@@ -1088,7 +1120,7 @@ function usces_login_width_paypal(){
 		$liwp_secret = $options['acting_settings']['paypal']['liwp_secret'];
 	}
 
-	$action = $_GET['liwppact'];
+	$action = $parts['liwppact'];
 	
 	switch( $action ){
 	
@@ -1120,7 +1152,7 @@ function usces_login_width_paypal(){
 		
 		//get JSON access token object (with refresh_token parameter)
 		$token = json_decode(usces_run_curl($options['acting_settings']['paypal']['liwp_tokenservice'], 'POST', $postvals));
-		usces_log('liwpp_liwppact_token : '.print_r($token, true), 'acting_transaction.log');
+//		usces_log('liwpp_liwppact_token : '.print_r($token, true), 'acting_transaction.log');
 		
 		//construct URI to fetch profile information for current user
 		$profile_url = sprintf("%s?schema=openid&oauth_token=%s", $options['acting_settings']['paypal']['liwp_userinfo'], $token->access_token);
@@ -1129,7 +1161,7 @@ function usces_login_width_paypal(){
 		//fetch profile of current user
 		$profile = usces_run_curl($profile_url);
 		$profile = json_decode($profile); 
-		usces_log('liwpp_profile : '.print_r($profile, true), 'acting_transaction.log');
+//		usces_log('liwpp_profile : '.print_r($profile, true), 'acting_transaction.log');
 		
 		if( !$profile->email ){
 			wp_redirect(add_query_arg( array('liwppact'=>'error2'), USCES_LOGIN_URL));
@@ -1140,7 +1172,7 @@ function usces_login_width_paypal(){
 		$_SESSION['usces_member']['mailaddress1'] = $profile->email;
 		$_SESSION['usces_member']['mailaddress2'] = $profile->email;
 		$_SESSION['usces_member']['name1'] = $profile->family_name;
-		$_SESSION['usces_member']['name2'] = $profile->name;
+		$_SESSION['usces_member']['name2'] = $profile->given_name;
 		$_SESSION['usces_member']['zipcode'] = $profile->address->postal_code;
 		$_SESSION['usces_member']['pref'] = $profile->address->region;
 		$_SESSION['usces_member']['address1'] = $profile->address->locality;
@@ -1149,7 +1181,7 @@ function usces_login_width_paypal(){
 		$_SESSION['usces_member']['country'] = $profile->address->country;
 
 		if( usces_login_with_openid($profile->email) ){
-			if( isset( $_REQUEST['usces_cart']) ){
+			if( isset( $parts['liwppref']) && 'usces_cart' == $parts['liwppref'] ){
 				wp_redirect(USCES_CUSTOMER_URL);
 				exit;
 			}else{
@@ -1163,4 +1195,8 @@ function usces_login_width_paypal(){
 		}
 		break;
 	}
+}
+
+function usces_instance_dsk_settle(){
+	$dsk_settle = new DSK_SETTLEMENT();
 }

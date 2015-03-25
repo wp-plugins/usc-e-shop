@@ -643,7 +643,8 @@ function usces_action_acting_transaction(){
 //20120413ysk start
 	//*** SoftBankPayment ***//
 	} elseif( !isset($_GET['acting_return']) && isset($_POST['res_result']) && isset($_POST['res_pay_method']) ) {
-		//usces_log('SoftBankPayment : '.print_r($_REQUEST, true), 'acting_transaction.log');
+
+		usces_log('SoftBankPayment transaction: '.print_r($_REQUEST, true), 'acting_transaction.log');
 		foreach( $_POST as $key => $value ) {
 			$data[$key] = mb_convert_encoding($value, 'UTF-8', 'SJIS');
 		}

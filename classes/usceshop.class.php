@@ -3112,7 +3112,7 @@ class usc_e_shop
 		usces_register_action('customerlogin', 'post', 'customerlogin', NULL, 'customerlogin');
 		usces_register_action('reganddeliveryinfo', 'post', 'reganddeliveryinfo', NULL, 'reganddeliveryinfo');
 		usces_register_action('deliveryinfo', 'post', 'deliveryinfo', NULL, 'deliveryinfo');
-		usces_register_action('backDelivery', 'post', 'backDelivery', NULL, 'backDelivery');
+		usces_register_action('backDelivery', 'request', 'backDelivery', NULL, 'backDelivery');
 		usces_register_action('confirm', 'request', 'confirm', NULL, 'confirm');
 		usces_register_action('use_point', 'post', 'use_point', NULL, 'use_point');
 		usces_register_action('backConfirm', 'post', 'backConfirm', NULL, 'backConfirm');

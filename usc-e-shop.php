@@ -7,7 +7,7 @@ Version: 1.4.13
 Author: Collne Inc.
 Author URI: http://www.collne.com/
 */
-define('USCES_VERSION', '1.4.13.1503091');
+define('USCES_VERSION', '1.4.13.1503251');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -62,6 +62,7 @@ if( is_admin() ){
 }
 require_once(USCES_PLUGIN_DIR."/functions/settlement_func.php");
 require_once(USCES_PLUGIN_DIR."/functions/paypal_func.php");
+require_once(USCES_PLUGIN_DIR."/classes/PaymentDSK.class.php");
 
 global $usces;
 $usces = new usc_e_shop();

@@ -391,7 +391,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
 				$pdf->SetFont($font, '', $fontsize);
 				$pdf->SetXY($leftside, $y);
-				$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_shipping_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_conv_euc(usces_get_pdf_shipping_name( $data )) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
 				$y = $pdf->GetY() + $linetop + 2;
 			}
 			// Address
@@ -434,7 +434,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 				list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
 				$pdf->SetFont($font, '', $fontsize);
 				$pdf->SetXY($leftside, $y);
-				$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+				$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_conv_euc(usces_get_pdf_name( $data )) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
 				$y = $pdf->GetY() + $linetop + 2;
 			}
 			// Address
@@ -498,7 +498,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 						list($fontsize, $lineheight, $linetop) = usces_set_font_size(6);
 						$pdf->SetFont($font, '', $fontsize);
 						$pdf->SetXY($leftside, $y);
-						$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_shipping_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+						$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_conv_euc(usces_get_pdf_shipping_name( $data )) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
 						$y = $pdf->GetY() + $linetop;
 					}
 					//配送先住所
@@ -560,7 +560,7 @@ function usces_pdfSetHeader($pdf, $data, $page) {
 			list($fontsize, $lineheight, $linetop) = usces_set_font_size(8);
 			$pdf->SetFont($font, '', $fontsize);
 			$pdf->SetXY($leftside, $y);
-			$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_get_pdf_name( $data ) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
+			$pdf->MultiCell($width, $lineheight, usces_conv_euc(__("Attn", 'usces') . ' : ' . usces_conv_euc(usces_get_pdf_name( $data )) . apply_filters( 'usces_filters_pdf_person_honor', $person_honor) ), $border, 'L');
 			$y = $pdf->GetY() + $linetop + 2;
 		}
 		// Address

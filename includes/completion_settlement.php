@@ -95,4 +95,5 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= "</div>\n";
 //20120413ysk end
 }
-?>
+
+$html = apply_filters( 'usces_filter_completion_settlement_message', $html, $usces_entries );

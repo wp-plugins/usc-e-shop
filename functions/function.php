@@ -1186,7 +1186,7 @@ function usces_reg_orderdata( $results = array() ) {
 //20140908ysk end
 
 		//$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$payments, 'charging_type'=>$charging_type);
-		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$set, 'charging_type'=>$charging_type);//20131121ysk
+		$args = array('cart'=>$cart, 'entry'=>$entry, 'order_id'=>$order_id, 'member_id'=>$member['ID'], 'payments'=>$set, 'charging_type'=>$charging_type, 'results'=>$results);//20131121ysk
 		do_action('usces_action_reg_orderdata', $args);
 	
 	endif;
@@ -2829,7 +2829,7 @@ function usces_check_acting_return_duplicate( $results = array() ) {
 		break;
 //20130225ysk end
 	default:
-		$trans_id = '';
+		$trans_id = apply_filters( 'usces_filter_check_acting_return_duplicate', '', $results );
 	}
 	$table_meta_name = $wpdb->prefix.'usces_order_meta';
 	$query = $wpdb->prepare("SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'trans_id', $trans_id);
@@ -4165,6 +4165,7 @@ function usces_paypal_doecp( &$results ) {
 		$res = $usces->paypal->doExpressCheckout();
 		$resArray = $usces->paypal->getResponse();
 		$ack = strtoupper($resArray["ACK"]);
+		usces_log('PayPal : DoExpressCheckout:'.print_r($resArray,true), 'acting_transaction.log');
 		if( $ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING" ) {
 			$transactionId = $resArray["TRANSACTIONID"]; // ' Unique transaction ID of the payment. Note:  If the PaymentAction of the request was Authorization or Order, this value is your AuthorizationID for use with the Authorization & Capture APIs. 
 			//$usces->set_order_meta_value('settlement_id', $transactionId, $order_id);
@@ -4179,6 +4180,11 @@ function usces_paypal_doecp( &$results ) {
 			$ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
 			$ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
 			usces_log('PayPal : DoExpressCheckoutPayment API call failed. Error Code:['.$ErrorCode.'] Error Severity Code:['.$ErrorSeverityCode.'] Short Error Message:'.$ErrorShortMsg.' Detailed Error Message:'.$ErrorLongMsg, 'acting_transaction.log');
+			if( '10486' == $ErrorCode ){
+				$payPalURL = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='.$token;
+				header("Location: ".$payPalURL);
+				exit;
+			}
 			return false;
 		}
 
@@ -5242,3 +5248,35 @@ function usces_acting_key() {
 	return $acting_key;
 }
 
+function usces_change_order_receipt( $order_id, $flag ){
+	global $wpdb;
+	
+	$table_name = $wpdb->prefix . 'usces_order';
+	
+	if( 'receipted' == $flag ){
+	
+		$mquery = $wpdb->prepare("
+		UPDATE $table_name SET order_status = 
+		CASE 
+			WHEN LOCATE('noreceipt', order_status) > 0 THEN REPLACE(order_status, 'noreceipt', 'receipted') 
+			WHEN LOCATE('receipted', order_status) > 0 THEN order_status 
+			ELSE CONCAT('receipted,', order_status ) 
+		END 
+		WHERE ID = %d", $order_id);
+		$res = $wpdb->query( $mquery );
+		
+	}elseif( 'noreceipt' == $flag ){
+	
+		$mquery = $wpdb->prepare("
+		UPDATE $table_name SET order_status = 
+		CASE 
+			WHEN LOCATE('receipted', order_status) > 0 THEN REPLACE(order_status, 'receipted', 'noreceipt') 
+			WHEN LOCATE('noreceipt', order_status) > 0 THEN order_status 
+			ELSE CONCAT('noreceipt,', order_status ) 
+		END 
+		WHERE ID = %d", $order_id);
+		$res = $wpdb->query( $mquery );
+		
+	}
+	return $res;
+}
