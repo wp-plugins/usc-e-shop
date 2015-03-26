@@ -162,7 +162,7 @@ class DSK_SETTLEMENT
 		$item_name = $usces->getItemName($cart[0]['post_id']);
 		if(1 < count($cart)) $item_name .= ' '.__('Others', 'usces');
 		if(36 < mb_strlen($item_name)) $item_name = mb_substr($item_name, 0, 30).'...';
-		$item_name = esc_attr( $item_name );
+//		$item_name = mb_convert_encoding($item_name, 'SJIS', 'UTF-8');
 		$amount = usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false);
 		$pay_type = "0";
 		$auto_charge_type = "";
@@ -180,7 +180,12 @@ class DSK_SETTLEMENT
 		$limit_second = "600";
 		$sps_hashcode = $pay_method.$acting_opts['merchant_id'].$acting_opts['service_id'].$cust_code.$dsk_cust_no.$dsk_payment_no.$rand.$item_id.$item_name.$amount.$pay_type.$auto_charge_type.$service_type.$div_settle.$last_charge_month.$camp_type.$terminal_type.$success_url.$cancel_url.$error_url.$pagecon_url.$free1.$free_csv.$request_date.$limit_second.$acting_opts['hash_key'];
 		$sps_hashcode = sha1( $sps_hashcode );
-		$html .= '<form id="purchase_form" name="purchase_form" action="'.$send_url.'" method="post" onKeyDown="if (event.keyCode == 13) {return false;}" accept-charset="Shift_JIS">
+		$html .= '<HTML>
+			<HEAD>
+			<META http-equiv="Content-Type" content="text/html; charset=shift_jis">
+			</HEAD>
+			<BODY>
+			<form id="purchase_form" name="purchase_form" action="'.$send_url.'" method="post" accept-charset="Shift_JIS">
 			<input type="hidden" name="pay_method" value="'.$pay_method.'" />
 			<input type="hidden" name="merchant_id" value="'.$acting_opts['merchant_id'].'" />
 			<input type="hidden" name="service_id" value="'.$acting_opts['service_id'].'" />
@@ -190,7 +195,7 @@ class DSK_SETTLEMENT
 			<input type="hidden" name="order_id" value="'.$rand.'" />
 			<input type="hidden" name="item_id" value="'.$item_id.'" />
 			<input type="hidden" name="pay_item_id" value="" />
-			<input type="hidden" name="item_name" value="'.$item_name.'" />
+			<input type="hidden" name="item_name" value="'.mb_convert_encoding($item_name, 'SJIS', 'UTF-8').'" />
 			<input type="hidden" name="tax" value="" />
 			<input type="hidden" name="amount" value="'.$amount.'" />
 			<input type="hidden" name="pay_type" value="'.$pay_type.'" />
@@ -215,7 +220,9 @@ class DSK_SETTLEMENT
 			</form>
 			<script type="text/javascript">
 				document.purchase_form.submit();
-			</script>';
+			</script>
+			</BODY>
+			</HTML>';
 
 		echo $html;
 
