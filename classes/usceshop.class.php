@@ -2127,8 +2127,8 @@ class usc_e_shop
 		$no_cart_css = isset($this->options['system']['no_cart_css']) ? $this->options['system']['no_cart_css'] : 0;
 		
 		if( !is_admin() ){
-			$default_css = USCES_FRONT_PLUGIN_URL . '/css/usces_default.css';
-			echo '<link href="' . $default_css . '" rel="stylesheet" type="text/css" />';
+			$default_css = '<link href="' . USCES_FRONT_PLUGIN_URL . '/css/usces_default.css" rel="stylesheet" type="text/css" />';
+			echo apply_filters( 'usces_filter_default_css', $default_css );
 		}
 		if( $this->is_cart_or_member_page($_SERVER['REQUEST_URI']) || $this->is_inquiry_page($_SERVER['REQUEST_URI']) ){
 			$css_url = USCES_FRONT_PLUGIN_URL . '/css/usces_cart.css';
