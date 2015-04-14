@@ -51,6 +51,9 @@ class ESCOTT_SETTLEMENT
 	public function delivery_check( $mes ){
 		global $usces;
 		
+		if( !isset($_POST['offer']['payment_name']) )
+			return $mes;
+
 		$payments = $usces->getPayments($_POST['offer']['payment_name']);
 		if( 'acting_escott_card' == $payments['settlement'] ){
 			$total_items_price = $usces->get_total_price();

@@ -256,6 +256,7 @@ $cart_delivery_script .= "\n\t"."orderfunc.make_delivery_time(selected_delivery_
 $html .= apply_filters( 'usces_filter_cart_delivery_script', $cart_delivery_script, $usces_entries, $sendout );
 
 /* Payment Script ********************************************************/
+$howpay = '';
 $payments_str = '';
 $payments_arr = array();
 $payments = usces_get_system_option( 'usces_payment_method', 'sort' );
