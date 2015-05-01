@@ -364,12 +364,14 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			}
 			$desc = $itemName.' '.__('Quantity','usces').':'.$quantity;
 //20120823ysk end
+			$tx = ( 'exclude' == $usces->options['tax_mode'] ) ? $usces_entries['order']['tax'] : 0;
+			$am = $usces_entries['order']['total_full_price'] - $tx;
 			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="'.$acting_opts['card_jb'].'" />
-				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'" />
-				<input type="hidden" name="tx" value="0" />
+				<input type="hidden" name="am" value="'.$am.'" />
+				<input type="hidden" name="tx" value="'.$tx.'" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="1" />
 				<input type="hidden" name="inm" value="'.esc_attr($desc).'" />
@@ -401,12 +403,14 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			}
 			$desc = $itemName.' '.__('Quantity','usces').':'.$quantity;
 //20120823ysk end
+			$tx = ( 'exclude' == $usces->options['tax_mode'] ) ? $usces_entries['order']['tax'] : 0;
+			$am = $usces_entries['order']['total_full_price'] - $tx;
 			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="CAPTURE" />
-				<input type="hidden" name="am" value="'.usces_crform($usces_entries['order']['total_full_price'], false, false, 'return', false).'" />
-				<input type="hidden" name="tx" value="0" />
+				<input type="hidden" name="am" value="'.$am.'" />
+				<input type="hidden" name="tx" value="'.$tx.'" />
 				<input type="hidden" name="sf" value="0" />
 				<input type="hidden" name="pt" value="2" />
 				<input type="hidden" name="inm" value="'.esc_attr($desc).'" />
