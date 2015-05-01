@@ -4896,6 +4896,20 @@ function usces_get_itemOption( $field_data, $materials, $label = '#default#' ) {
 	return $html;
 }
 
+function usces_update_ordercart_meta_value( $cartmeta_id, $value ){
+	global $wpdb;
+	
+	if( !$cartmeta_id )
+		return;
+	
+	$ordercart_meta_table = $wpdb->prefix . "usces_ordercart_meta";
+
+	$query = $wpdb->prepare( "
+			UPDATE $ordercart_meta_table SET meta_value = %s WHERE cartmeta_id = %d", $value, $cartmeta_id );
+	$res = $wpdb->query($query);
+	return $res;
+}
+
 function usces_get_ordercart_meta( $type, $cart_id, $key = '' ){
 	global $wpdb;
 	

@@ -276,6 +276,8 @@ class ESCOTT_SETTLEMENT
 		if( 'acting_escott_card' != $acting_flag && 'acting_escott_conv' != $acting_flag )
 			return;
 		
+		$usces->set_order_meta_value('trans_id', $results['MerchantFree1'], $order_id);
+
 		$meta_value = serialize($results);
 		$usces->set_order_meta_value( $acting_flag, $meta_value, $order_id );
 		if( 'acting_escott_conv' == $acting_flag ){
@@ -348,10 +350,11 @@ class ESCOTT_SETTLEMENT
 		global $usces;
 		
 		$paymod_id = 'escott';
-		$acting_opts = $usces->options['acting_settings'][$paymod_id];
 		$html = '';
 		switch( $payment['settlement'] ){
 		case 'acting_escott_card':
+		
+			$acting_opts = $usces->options['acting_settings'][$paymod_id];
 
 			if( 'on' != $acting_opts['card_activate'] 
 				|| 'on' != $acting_opts['activate'] )
@@ -972,7 +975,7 @@ class ESCOTT_SETTLEMENT
 		$opts = $usces->options['acting_settings'];
 ?>
 	<div id="uscestabs_escott">
-	<div class="settlement_service"><span class="service_title">e-SCOTT Smart　ソニーペイメント</span></div>
+	<div class="settlement_service"><span class="service_title">e-SCOTT Smart　ソニーペイメントサービス</span></div>
 
 	<?php if( isset($_POST['acting']) && 'escott' == $_POST['acting'] ){ ?>
 		<?php if( '' != $this->error_mes ){ ?>
@@ -1044,8 +1047,8 @@ class ESCOTT_SETTLEMENT
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
 	</form>
 	<div class="settle_exp">
-		<p><strong>e-SCOTT Smart　ソニーペイメント</strong></p>
-		<a href="http://www.welcart.com/wc-settlement/escott_guide/" target="_blank">e-SCOTT Smartの詳細はこちら 》</a>
+		<p><strong>e-SCOTT Smart　ソニーペイメントサービス</strong></p>
+		<a href="http://www.sonypaymentservices.jp/intro/" target="_blank">e-SCOTT Smartの詳細はこちら 》</a>
 		<p>　</p>
 		<p>この決済は「埋め込み型」の決済システムです。</p>
 		<p>「埋め込み型」とは、決済会社のページへは遷移せず、Welcart のページのみで完結する決済システムです。<br />

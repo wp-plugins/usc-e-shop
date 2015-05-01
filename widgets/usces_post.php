@@ -43,12 +43,13 @@ class Welcart_post extends WP_Widget {
 		$wid = ('welcart_post-__i__' != $this->id) ? str_replace('-', '_', $this->id) : '';
         $title = ( !isset($instance['title']) || WCUtils::is_blank($instance['title'])) ? 'Welcart '.__('Post', 'usces') : esc_attr($instance['title']);
         $rows_num = ( !isset($instance['rows_num']) || WCUtils::is_blank($instance['rows_num'])) ? 3 : esc_attr($instance['rows_num']);
+        $category = ( !isset($instance['category']) || WCUtils::is_blank($instance['category'])) ? '' : esc_attr($instance['category']);
 		$icon = ( !isset($instance['icon']) || WCUtils::is_blank($instance['icon'])) ? 1 : (int)$instance['icon'];
         ?>
             <p>ID : <?php echo $wid; ?></p>
             <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
             <p><label for="<?php echo $this->get_field_id('icon'); ?>"><?php _e('display of icon', 'usces'); ?>: <select class="widefat" id="<?php echo $this->get_field_id('icon'); ?>" name="<?php echo $this->get_field_name('icon'); ?>"><option value="1"<?php if($icon == 1){echo ' selected="selected"';} ?>><?php _e('Indication', 'usces'); ?></option><option value="2"<?php if($icon == 2){echo ' selected="selected"';} ?>><?php _e('Non-indication', 'usces'); ?></option></select></label></p>
-            <p><label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('category slug', 'usces'); ?> <input class="widefat" id="<?php echo $this->get_field_id('rows_num'); ?>" name="<?php echo $this->get_field_name('category'); ?>" type="text" value="<?php echo $instance['category']; ?>" /></label></p>
+            <p><label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('category slug', 'usces'); ?> <input class="widefat" id="<?php echo $this->get_field_id('category'); ?>" name="<?php echo $this->get_field_name('category'); ?>" type="text" value="<?php echo $category; ?>" /></label></p>
             <p><label for="<?php echo $this->get_field_id('rows_num'); ?>"><?php _e('number of indication', 'usces'); ?> <input class="widefat" id="<?php echo $this->get_field_id('rows_num'); ?>" name="<?php echo $this->get_field_name('rows_num'); ?>" type="text" value="<?php echo $rows_num; ?>" /></label></p>
         <?php 
     }

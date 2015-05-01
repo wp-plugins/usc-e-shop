@@ -1777,8 +1777,8 @@ function usces_search_categories(){
 function usces_delivery_method_name( $id, $out = '' ){
 	global $usces;
 	
+	$id =$usces->get_delivery_method_index($id);
 	if($id > -1){
-		$id =$usces->get_delivery_method_index($id);
 		$name = $usces->options['delivery_method'][$id]['name'];
 	}else{		
 		$name = __('No preference','usces');
