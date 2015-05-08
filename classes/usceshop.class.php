@@ -656,6 +656,8 @@ class usc_e_shop
 					} else {
 						$this->set_action_status('error', 'ERROR : '.__('failure in update','usces'));
 					}
+				}else{
+						$this->set_action_status('error', 'ERROR : '.$this->error_message);
 				}
 				require_once($member_edit_form);
 				break;

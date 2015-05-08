@@ -34,7 +34,7 @@ class dataList
 		$this->columns = $arr_column;
 		$this->rows = array();
 
-		$this->maxRow = 30;
+		$this->maxRow = apply_filters( 'usces_filter_memberlist_maxrow', 30 );
 		$this->naviMaxButton = 11;
 		$this->firstPage = 1;
 //20101202ysk start

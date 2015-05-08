@@ -38,7 +38,7 @@ class dataList
 		$this->columns = $arr_column;
 		$this->rows = array();
 
-		$this->maxRow = 30;
+		$this->maxRow = apply_filters( 'usces_filter_orderlist_maxrow', 30 );
 		$this->naviMaxButton = 11;
 		$this->firstPage = 1;
 		$this->action_status = 'none';
@@ -351,6 +351,7 @@ class dataList
 	function GetWhere()
 	{
 		$str = '';
+		$where = "";
 		$thismonth = date('Y-m-01 00:00:00');
 		$lastmonth = date('Y-m-01 00:00:00', mktime(0, 0, 0, date('m')-1, 1, date('Y')));
 		$lastweek = date('Y-m-d 00:00:00', mktime(0, 0, 0, date('m'), date('d')-7, date('Y')));

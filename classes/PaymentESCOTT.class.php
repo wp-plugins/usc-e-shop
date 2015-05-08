@@ -127,37 +127,55 @@ class ESCOTT_SETTLEMENT
 	* @return str $keys
 	***********************************************/
 	public function error_page_mesage( $res ){
-		if( !isset($_REQUEST['MerchantFree2']) || 'acting_escott_card' != $_REQUEST['MerchantFree2'] )
-			return $res;
-			
-		switch($_REQUEST['ResponseCd']){
-		case 'C13':
-			$res .= '<div class="error_page_mesage">
-			<p>カードの有効期限が切れています。もう一度ご入力される場合は、下記の「カード番号再入力」をクリックしてください。</p>
-			<p><a href="' . add_query_arg(array('backDelivery'=>'escott_card_C13'), USCES_CART_URL) . '">「カード番号再入力」</a></p>
-			</div>';
-			break;
-		case 'G55':
-			$res .= '<div class="error_page_mesage">
-			<p>ご利用限度額を超えています。</p>
-			</div>';
-			break;
-		case 'G44':
-		case 'G45':
-		case 'G65':
-			$res .= '<div class="error_page_mesage">
-			<p>カード番号が違っています。もう一度ご入力される場合は、下記の「カード番号再入力」をクリックしてください。</p>
-			<p><a href="' . add_query_arg(array('backDelivery'=>'escott_card_G65'), USCES_CART_URL) . '">「カード番号再入力」</a></p>
-			</div>';
-			break;
-		default:
-			$res .= '<div class="error_page_mesage">
-			<p>エラーコード：' . $_REQUEST['ResponseCd'] . '</p>
-			<p>エラー内容：' . $this->response_message($_REQUEST['ResponseCd']) . '</p>
-			
-			<p><a href="' . add_query_arg(array('backDelivery'=>'escott_card'), USCES_CART_URL) . '">「カード番号再入力」</a></p>
-			</div>';
+		$emes = '';
+		if( isset($_REQUEST['MerchantFree2']) && 'acting_escott_card' == $_REQUEST['MerchantFree2'] ){
+				
+			switch($_REQUEST['ResponseCd']){
+			case 'C13':
+				$res .= '<div class="error_page_mesage">
+				<p>カードの有効期限が切れています。もう一度ご入力される場合は、下記の「カード番号再入力」をクリックしてください。</p>
+				<p><a href="' . add_query_arg(array('backDelivery'=>'escott_card_C13'), USCES_CART_URL) . '">「カード番号再入力」</a></p>
+				</div>';
+				break;
+			case 'G55':
+				$res .= '<div class="error_page_mesage">
+				<p>ご利用限度額を超えています。</p>
+				</div>';
+				break;
+			case 'G44':
+			case 'G45':
+			case 'G65':
+				$res .= '<div class="error_page_mesage">
+				<p>カード番号が違っています。もう一度ご入力される場合は、下記の「カード番号再入力」をクリックしてください。</p>
+				<p><a href="' . add_query_arg(array('backDelivery'=>'escott_card_G65'), USCES_CART_URL) . '">「カード番号再入力」</a></p>
+				</div>';
+				break;
+			default:
+				$res .= '<div class="error_page_mesage">
+				<p>エラーコード：' . $_REQUEST['ResponseCd'] . '</p>';
+				$emes = $this->response_message($_REQUEST['ResponseCd']);
+				if( !empty($emes) ){
+					$res .= '<p>エラー内容：' . $emes . '</p>';
+				}
+				$res .= '
+				<p class="return_settlement"><a href="' . add_query_arg(array('backDelivery'=>'escott_card'), USCES_CART_URL) . '">「カード番号再入力」</a></p>
+				</div>';
+			}
+		}elseif( isset($_REQUEST['MerchantFree2']) && 'acting_escott_conv' == $_REQUEST['MerchantFree2'] ){
+			switch($_REQUEST['ResponseCd']){
+			default:
+				$res .= '<div class="error_page_mesage">
+				<p>エラーコード：' . $_REQUEST['ResponseCd'] . '</p>';
+				$emes = $this->response_message($_REQUEST['ResponseCd']);
+				if( !empty($emes) ){
+					$res .= '<p>エラー内容：' . $emes . '</p>';
+				}
+				$res .= '
+				<p class="return_settlement"><a href="' . add_query_arg(array('backDelivery'=>'escott_card'), USCES_CART_URL) . '">「支払方法ページへ」</a></p>
+				</div>';
+			}
 		}
+
 
 		return $res;
 	}
@@ -793,6 +811,7 @@ class ESCOTT_SETTLEMENT
 			$param_list['NameKana'] = !empty($usces_entries['customer']['name2']) ? urlencode( $usces_entries['customer']['name2'].$usces_entries['customer']['name3'] ) : $param_list['NameKanji']; 
 			$param_list['TelNo'] = urlencode( $usces_entries['customer']['tel'] ); 
 			$param_list['ShouhinName'] = urlencode( $item_name );
+			$param_list['Comment'] = urlencode( 'ご利用ありがとうございました。' );
 
 			$params['send_url'] = $acting_opts['send_url_conv'];
 			$params['param_list'] = $param_list;

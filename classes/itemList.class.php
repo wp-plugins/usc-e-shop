@@ -36,7 +36,7 @@ class dataList
 		//$this->parent_term = $parent_term;
 		$this->rows = array();
 
-		$this->maxRow = 30;
+		$this->maxRow = apply_filters( 'usces_filter_itemlist_maxrow', 30 );
 		$this->naviMaxButton = 11;
 		$this->firstPage = 1;
 		$this->action_status = 'none';
