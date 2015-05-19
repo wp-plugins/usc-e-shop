@@ -288,7 +288,7 @@ jQuery(function($){
 		
 		}
 	};
-<?php echo apply_filters('usces_filter_order_list_page_js', ''); ?>
+<?php echo apply_filters('usces_filter_order_list_page_js', '', $DT ); ?>
 });
 
 function toggleVisibility(id) {
@@ -412,7 +412,7 @@ jQuery(document).ready(function($){
 	$('#dl_orderlist').click(function() {
 		$('#dlOrderListDialog').dialog('open');
 	});
-<?php do_action('usces_action_order_list_document_ready_js'); ?>
+<?php do_action('usces_action_order_list_document_ready_js', $DT); ?>
 //20100908ysk end
 });
 </script>

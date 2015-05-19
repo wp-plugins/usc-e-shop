@@ -6351,6 +6351,7 @@ class usc_e_shop
 			AND post.post_status = %s 
 			LIMIT 1", 
 			'_itemCode', $itemcode, 'publish' );
+		$query = apply_filters( 'usces_filter_get_postIDbyCode_query', $query, $itemcode );
 		$res = $wpdb->get_var( $query );
 		return $res;
 	}

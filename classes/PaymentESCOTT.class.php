@@ -293,6 +293,9 @@ class ESCOTT_SETTLEMENT
 		$acting_flag = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
 		if( 'acting_escott_card' != $acting_flag && 'acting_escott_conv' != $acting_flag )
 			return;
+			
+		if( !$entry['order']['total_full_price'] )
+			return;
 		
 		$usces->set_order_meta_value('trans_id', $results['MerchantFree1'], $order_id);
 
@@ -310,10 +313,15 @@ class ESCOTT_SETTLEMENT
 	* @return str RandId
 	***********************************************/
 	public function check_acting_return_duplicate( $tid, $results ){
-		if( !isset($results['acting']) || ('escott_card' != $results['acting'] && 'escott_conv' != $results['acting']) )
+		global $usces;
+		$entry = $usces->cart->get_entry();
+		if( !$entry['order']['total_full_price'] ){	
+			return 'not_credit';
+		}elseif( !isset($results['acting']) || ('escott_card' != $results['acting'] && 'escott_conv' != $results['acting']) ){
 			return $tid;
-		else	
+		}else{	
 			return $results['MerchantFree1'];
+		}
 	}
 
 	/**********************************************
@@ -480,8 +488,9 @@ class ESCOTT_SETTLEMENT
 			<th scope="row">'.__('支払方法', 'usces').'</th>
 			<td colspan="2">
 			<select name="offer[paytype]">
-				<option value="01"' . (('01' == $paytype) ? ' selected="selected"' : '') . '>1回払い</option>
-				<option value="02"' . (('02' == $paytype) ? ' selected="selected"' : '') . '>2回払い</option>
+				<option value="01"' . (('01' == $paytype) ? ' selected="selected"' : '') . '>1回払い</option>';
+			if( 2 == $acting_opts['howtopay'] ){
+				$html_paytype .= '<option value="02"' . (('02' == $paytype) ? ' selected="selected"' : '') . '>2回払い</option>
 				<option value="03"' . (('03' == $paytype) ? ' selected="selected"' : '') . '>3回払い</option>
 				<option value="04"' . (('04' == $paytype) ? ' selected="selected"' : '') . '>4回払い</option>
 				<option value="05"' . (('05' == $paytype) ? ' selected="selected"' : '') . '>5回払い</option>
@@ -502,9 +511,12 @@ class ESCOTT_SETTLEMENT
 				<option value="54"' . (('54' == $paytype) ? ' selected="selected"' : '') . '>54回払い</option>
 				<option value="72"' . (('72' == $paytype) ? ' selected="selected"' : '') . '>72回払い</option>
 				<option value="84"' . (('84' == $paytype) ? ' selected="selected"' : '') . '>84回払い</option>
-				<option value="80"' . (('80' == $paytype) ? ' selected="selected"' : '') . '>ボーナス一括払い</option>
-				<option value="88"' . (('88' == $paytype) ? ' selected="selected"' : '') . '>リボルビング払い</option>
-			</select>
+				<option value="88"' . (('88' == $paytype) ? ' selected="selected"' : '') . '>リボルビング払い</option>';
+			}
+			if( 3 == $acting_opts['howtopay'] ){
+				$html_paytype .= '<option value="80"' . (('80' == $paytype) ? ' selected="selected"' : '') . '>ボーナス一括払い</option>';
+			}
+			$html_paytype .= '</select>
 			</td>
 			</tr>
 			';
@@ -701,7 +713,11 @@ class ESCOTT_SETTLEMENT
 			
 		$payments = usces_get_payments_by_name($usces_entries['order']['payment_name']);
 		$acting_flag = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
+		
 		if( 'acting_escott_card' != $acting_flag && 'acting_escott_conv' != $acting_flag )
+			return true;
+
+		if( !$usces_entries['order']['total_full_price'] )
 			return true;
 
 		if( !wp_verify_nonce( $_REQUEST['_nonce'], $acting_flag ) )
@@ -862,6 +878,11 @@ class ESCOTT_SETTLEMENT
 			return $html;
 
 		$usces_entries = $usces->cart->get_entry();
+		
+		if( !$usces_entries['order']['total_full_price'] )
+			return $html;
+		
+		
 		$acting_opts = $usces->options['acting_settings']['escott'];
 		$usces->save_order_acting_data($rand);
 		$html = '<form id="purchase_form" action="' . USCES_CART_URL . '" method="post" onKeyDown="if (event.keyCode == 13) {return false;}">';
@@ -920,7 +941,8 @@ class ESCOTT_SETTLEMENT
 		$options['acting_settings']['escott']['card_activate'] = isset($_POST['card_activate']) ? $_POST['card_activate'] : '';
 		$options['acting_settings']['escott']['operateid'] = isset($_POST['operateid']) ? $_POST['operateid'] : '1Auth';
 		$options['acting_settings']['escott']['quickpay'] = isset($_POST['quickpay']) ? $_POST['quickpay'] : '';
-		$options['acting_settings']['escott']['paytype'] = isset($_POST['paytype']) ? $_POST['paytype'] : '';
+		$options['acting_settings']['escott']['howtopay'] = isset($_POST['howtopay']) ? $_POST['howtopay'] : '';
+//		$options['acting_settings']['escott']['paytype'] = isset($_POST['paytype']) ? $_POST['paytype'] : '';
 //		$options['acting_settings']['escott']['continuation'] = isset($_POST['continuation']) ? $_POST['continuation'] : '';
 		$options['acting_settings']['escott']['conv_activate'] = isset($_POST['conv_activate']) ? $_POST['conv_activate'] : '';
 		$options['acting_settings']['escott']['conv_limit'] = !empty($_POST['conv_limit']) ? $_POST['conv_limit'] : '7';
@@ -1044,6 +1066,13 @@ class ESCOTT_SETTLEMENT
 				<th>クイック決済</th>
 				<td><input name="quickpay" type="radio" id="quickpay_escott_1" value="on"<?php if( isset($opts['escott']['quickpay']) && $opts['escott']['quickpay'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="quickpay_escott_1">利用する</label></td>
 				<td><input name="quickpay" type="radio" id="quickpay_escott_2" value="off"<?php if( isset($opts['escott']['quickpay']) && $opts['escott']['quickpay'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="quickpay_escott_2">利用しない</label></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>支払方法</th>
+				<td><input name="howtopay" type="radio" id="howtopay_escott_1" value="1"<?php if( isset($opts['escott']['howtopay']) && $opts['escott']['howtopay'] == '1' ) echo ' checked="checked"'; ?> /></td><td><label for="howtopay_escott_1">一括払いのみ</label></td>
+				<td><input name="howtopay" type="radio" id="howtopay_escott_2" value="2"<?php if( isset($opts['escott']['howtopay']) && $opts['escott']['howtopay'] == '2' ) echo ' checked="checked"'; ?> /></td><td><label for="howtopay_escott_2">分割払いを有効にする</label></td>
+				<td><input name="howtopay" type="radio" id="howtopay_escott_3" value="3"<?php if( isset($opts['escott']['howtopay']) && $opts['escott']['howtopay'] == '3' ) echo ' checked="checked"'; ?> /></td><td><label for="howtopay_escott_3">分割払いとボーナス払いを有効にする</label></td>
 				<td></td>
 			</tr>
 		</table>
