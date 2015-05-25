@@ -2254,16 +2254,12 @@ function usces_all_change_order_status(&$obj){
 	$ids = $_POST['listcheck'];
 	foreach ( (array)$ids as $id ):
 		$status = true;
-//20120306ysk start 0000324
-		//$query = $wpdb->prepare("SELECT order_status FROM $tableName WHERE ID = %d", $id);
-		//$statusstr = $wpdb->get_var( $query );
 		$query = $wpdb->prepare("SELECT order_status, mem_id, order_getpoint, order_usedpoint, order_payment_name FROM $tableName WHERE ID = %d", $id);
 		$order_res = $wpdb->get_row( $query, ARRAY_A );
 		$statusstr = $order_res['order_status'];
 		$restore_point = false;
 		$getpoint = $order_res['order_getpoint'];
 		$usedpoint = $order_res['order_usedpoint'];
-//20120306ysk end
 		$old_status = $statusstr;//20120612ysk 0000501
 		switch ($_REQUEST['change']['word']['order_status']) {
 			case 'estimate':
@@ -2273,6 +2269,7 @@ function usces_all_change_order_status(&$obj){
 					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'estimate,';
 				}
+				$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s WHERE ID = %d", $statusstr, $id);
 				break;
 			case 'adminorder':
 				if(strpos($statusstr, 'estimate') !== false) {
@@ -2281,11 +2278,11 @@ function usces_all_change_order_status(&$obj){
 					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'adminorder,';
 				}
+				$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s WHERE ID = %d", $statusstr, $id);
 				break;
 			case 'duringorder':
 				if(strpos($statusstr, 'cancel') !== false) {
 					$statusstr = str_replace('cancel', 'duringorder', $statusstr);
-//20120919ysk start 0000573
 					if( usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) ) {
 						$restore_point = true;
 						$getpoint = $getpoint * -1;//add point
@@ -2293,27 +2290,19 @@ function usces_all_change_order_status(&$obj){
 						$restore_point = true;
 						$getpoint = $getpoint * -1;//add point
 					}
-//20120919ysk end
 				}else if(strpos($statusstr, 'completion') !== false) {
 					$statusstr = str_replace('completion', 'duringorder', $statusstr);
-//20120306ysk start 0000324
-					//if( !usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) && !$usces->is_status('receipted', $order_res['order_status']) ) 
-					//	$restore_point = true;
-//20120306ysk end
 				}else if(strpos($statusstr, 'new') !== false) {
 					$statusstr = str_replace('new', 'duringorder', $statusstr);
 				}else if(strpos($statusstr, 'duringorder') === false) {
 					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'duringorder,';
 				}
+				$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s WHERE ID = %d", $statusstr, $id);
 				break;
 			case 'cancel':
 				if(strpos($statusstr, 'completion') !== false) {
 					$statusstr = str_replace('completion', 'cancel', $statusstr);
-//20120306ysk start 0000324
-					//if( !usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) && !$usces->is_status('receipted', $order_res['order_status']) ) 
-					//	$restore_point = true;
-//20120306ysk end
 				}else if(strpos($statusstr, 'new') !== false) {
 					$statusstr = str_replace('new', 'cancel', $statusstr);
 				}else if(strpos($statusstr, 'duringorder') !== false) {
@@ -2322,7 +2311,6 @@ function usces_all_change_order_status(&$obj){
 					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'cancel,';
 				}
-//20120919ysk start 0000573
 				if( usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) ) {
 					$restore_point = true;
 					$usedpoint = $usedpoint * -1;//add point
@@ -2330,7 +2318,7 @@ function usces_all_change_order_status(&$obj){
 					$restore_point = true;
 					$usedpoint = $usedpoint * -1;//add point
 				}
-//20120919ysk end
+				$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s WHERE ID = %d", $statusstr, $id);
 				break;
 			case 'completion':
 				if(strpos($statusstr, 'new') !== false) {
@@ -2339,7 +2327,6 @@ function usces_all_change_order_status(&$obj){
 					$statusstr = str_replace('duringorder', 'completion', $statusstr);
 				}else if(strpos($statusstr, 'cancel') !== false) {
 					$statusstr = str_replace('cancel', 'completion', $statusstr);
-//20120919ysk start 0000573
 					if( usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) ) {
 						$restore_point = true;
 						$getpoint = $getpoint * -1;//add point
@@ -2347,30 +2334,19 @@ function usces_all_change_order_status(&$obj){
 						$restore_point = true;
 						$getpoint = $getpoint * -1;//add point
 					}
-//20120919ysk end
 				}else if(strpos($statusstr, 'completion') === false) {
 					if( ',' !== substr( $statusstr, -1 ) ) $statusstr .= ',';
 					$statusstr .= 'completion,';
 				}
-//20120306ysk start 0000324
-				//if( !usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) && !$usces->is_status('receipted', $order_res['order_status']) ) {
-				//	$restore_point = true;
-				//	$getpoint = $getpoint * -1;//add point
-				//}
-//20120306ysk end
+				$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s, order_modified = %s WHERE ID = %d", $statusstr, substr(current_time('mysql'), 0, 10), $id);
 				break;
 			case 'new':
 				if(strpos($statusstr, 'duringorder') !== false) {
 					$statusstr = str_replace('duringorder,', '', $statusstr);
 				}else if(strpos($statusstr, 'completion') !== false) {
 					$statusstr = str_replace('completion,', '', $statusstr);
-//20120306ysk start 0000324
-					//if( !usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) && !$usces->is_status('receipted', $order_res['order_status']) ) 
-					//	$restore_point = true;
-//20120306ysk end
 				}else if(strpos($statusstr, 'cancel') !== false) {
 					$statusstr = str_replace('cancel,', '', $statusstr);
-//20120919ysk start 0000573
 					if( usces_is_complete_settlement( $order_res['order_payment_name'], $order_res['order_status'] ) ) {
 						$restore_point = true;
 						$getpoint = $getpoint * -1;//add point
@@ -2378,11 +2354,10 @@ function usces_all_change_order_status(&$obj){
 						$restore_point = true;
 						$getpoint = $getpoint * -1;//add point
 					}
-//20120919ysk end
 				}
+				$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s WHERE ID = %d", $statusstr, $id);
 				break;
 		}
-		$query = $wpdb->prepare("UPDATE $tableName SET order_status = %s WHERE ID = %d", $statusstr, $id);
 		$res = $wpdb->query( $query );
 		if( $res === false ) {
 			$status = false;
