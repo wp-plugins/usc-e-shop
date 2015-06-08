@@ -523,7 +523,7 @@ class ESCOTT_SETTLEMENT
 
 			$html .= apply_filters( 'usces_filter_escott_secure_form_paytype', $html_paytype );
 			$html .= '
-			</table>';
+			</table><table>';
 			break;
 		}
 		return $html;
@@ -1040,7 +1040,7 @@ class ESCOTT_SETTLEMENT
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_tenant_id_escott');">店舗コード</a></th>
 				<td colspan="6"><input name="tenant_id" type="text" id="tenant_id_escott" value="<?php echo esc_html(isset($opts['escott']['tenant_id']) ? $opts['escott']['tenant_id'] : ''); ?>" size="20"  /></td>
-				<td><div id="ex_tenant_id_escott" class="explanation"><?php _e('契約時にスマートリンクネットワークから発行される店舗コード', 'usces'); ?></div></td>
+				<td><div id="ex_tenant_id_escott" class="explanation"><?php _e('契約時にスマートリンクネットワークから発行される店舗コード。<br/>契約するショップが1つだけの場合は、0001 と入力してください。', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_ope_escott');"><?php _e('Operation Environment', 'usces'); ?></a></th>
@@ -1104,6 +1104,7 @@ class ESCOTT_SETTLEMENT
 		<p>カード番号はe-SCOTT Smart のシステムに送信されるだけで、Welcart に記録は残しません。</p>
 		<!--<p>「簡易継続課金」を利用するには「DL Seller」拡張プラグインのインストールが必要です。</p>-->
 		<p>尚、本番環境では、正規SSL証明書のみでのSSL通信となりますのでご注意ください。</p>
+		<p>テスト環境で利用したWelcart会員アカウントは、本番環境で利用できない場合があります。<br/>テスト環境と本番環境で別の会員登録を行うか、テスト環境で利用した会員を一旦削除してから、本番環境で改めて会員登録してください。</p>
 	</div>
 	</div><!--uscestabs_escott-->
 <?php
