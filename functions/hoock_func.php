@@ -1166,29 +1166,35 @@ function usces_action_acting_transaction(){
 			break;
 
 		case '03':
-			usces_log( serialize($data), 'db', 'paygent_conv', $_POST['trading_id'] );
-			$table_meta_name = $wpdb->prefix."usces_order_meta";
-			$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'trading_id', $_POST['trading_id'] );
-			$order_id = $wpdb->get_var( $query );
-			if( $order_id ) {
-				$table_name = $wpdb->prefix."usces_order";
-				$query = $wpdb->prepare( "
-					UPDATE $table_name SET order_status = 
-					CASE 
-						WHEN LOCATE( 'noreceipt', order_status ) > 0 THEN REPLACE( order_status, 'noreceipt', 'receipted' ) 
-						WHEN LOCATE( 'receipted', order_status ) > 0 THEN order_status 
-						ELSE CONCAT( 'receipted,', order_status ) 
-					END 
-					WHERE ID = %d", $order_id );
-				$res = $wpdb->query( $query );
-				if( $res === false ) {
-					usces_log( 'Paygent conv error : '.print_r( $data, true ), 'acting_transaction.log' );
+			if( ( $_POST['payment_status'] == '40' ) or ( $_POST['payment_status'] == '43' ) ) {
+				usces_log( serialize($data), 'db', 'paygent_conv', $_POST['trading_id'] );
+				$table_meta_name = $wpdb->prefix."usces_order_meta";
+				$query = $wpdb->prepare( "SELECT order_id FROM $table_meta_name WHERE meta_key = %s AND meta_value = %s", 'trading_id', $_POST['trading_id'] );
+				$order_id = $wpdb->get_var( $query );
+				if( $order_id ) {
+					$table_name = $wpdb->prefix."usces_order";
+					$query = $wpdb->prepare( "SELECT LOCATE( 'receipted', order_status ) FROM $table_name WHERE ID = %d", $order_id );
+					$order_status = $wpdb->get_var( $query );
+					if( $order_status == 0 ) {
+						$query = $wpdb->prepare( "
+							UPDATE $table_name SET order_status = 
+							CASE 
+								WHEN LOCATE( 'noreceipt', order_status ) > 0 THEN REPLACE( order_status, 'noreceipt', 'receipted' ) 
+								ELSE CONCAT( 'receipted,', order_status ) 
+							END 
+							WHERE ID = %d", $order_id );
+						$res = $wpdb->query( $query );
+						if( $res === false ) {
+							usces_log( 'Paygent conv error : '.print_r( $data, true ), 'acting_transaction.log' );
 
-				} else {
-					usces_action_acting_getpoint( $order_id );
-					$usces->set_order_meta_value( 'acting_paygent_conv', serialize( $data ), $order_id );
-					$usces->cart->crear_cart();
+						} else {
+							usces_action_acting_getpoint( $order_id );
+							$usces->set_order_meta_value( 'acting_paygent_conv', serialize( $data ), $order_id );
+							$usces->cart->crear_cart();
+						}
+					}
 				}
+			} elseif( $_POST['payment_status'] == '61' ) {
 			}
 			break;
 		}

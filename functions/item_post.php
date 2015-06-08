@@ -872,6 +872,21 @@ function order_item_ajax(){
 		case 'recalculation':
 			$res = usces_order_recalculation( $_POST['order_id'], $_POST['mem_id'], $_POST['post_ids'], $_POST['skus'], $_POST['prices'], $_POST['quants'], $_POST['upoint'], $_POST['shipping_charge'], $_POST['cod_fee'] );
 			break;
+		case 'get_order_log':
+			$res = usces_get_order_log();
+			break;
+		case 'get_order_log_detail':
+			$res = usces_get_order_log_detail( $_POST['log_key'] );
+			break;
+		case 'delete_order_log':
+			$res = usces_delete_order_log( $_POST['log_key'] );
+			break;
+		case 'delete_order_log_all':
+			$res = usces_delete_order_log();
+			break;
+		case 'revival_order_data':
+			$res = usces_revival_order_data( $_POST['log_key'] );
+			break;
 	}
 
 	$res = apply_filters( 'usces_filter_order_item_ajax', $res );
@@ -2230,4 +2245,130 @@ function usces_order_recalculation( $order_id, $mem_id, $post_ids, $skus, $price
 
 	return $res."#usces#".$discount."#usces#".usces_crform( $tax, false, false, 'return', false )."#usces#".$point."#usces#".usces_crform( $total_full_price, false, false, 'return', false );
 }
+
+function usces_get_order_log() {
+	global $usces, $wpdb;
+	$table_name = $wpdb->prefix."usces_log";
+	$res = '';
+	$query = "SELECT * FROM {$table_name} WHERE `log_type` = 'acting_data' ORDER BY datetime DESC";
+	$log_data = $wpdb->get_results( $query, ARRAY_A );
+	foreach( (array)$log_data as $data ) {
+		$log = unserialize( $data['log'] );
+		$name = $log['usces_entry']['customer']['name1'].$log['usces_entry']['customer']['name2'];
+		$payment_name = $log['usces_entry']['order']['payment_name'];
+		$res .= '<tr><td>'.$data['datetime'].'</td><td>'.$data['log_key'].'</td><td>'.$name.'</td><td>'.$payment_name.'</td><td><input type="button" class="log-detail button" id="'.$data['log_key'].'" value="'.__('Detail','usces').'"></td></tr>';
+	}
+	if( $res == '' ) $res = '<tr><td>'.__('There are no log data.','usces').'</td></tr>';
+	return 'OK#usces#'.$res;
+}
+
+function usces_get_order_log_detail( $log_key ) {
+	global $usces;
+	$order_data = usces_get_acting_data( $log_key );
+	$usces_entries = $order_data['usces_entry'];
+
+	$html = '';
+	$html .= '<tr><th>'.__('Register date','usces').'</th><td>'.$order_data['datetime'].'<label><input type="checkbox" id="register_date" value="1" /><span>'.__('to order date.','usces').'</span></label></td></tr>';
+	$html .= '<tr><th>'.__('Transaction key','usces').'</th><td>'.$order_data['key'].'</td></tr>';
+
+	$html .= '<tr class="ttl"><td colspan="2"><h3>'.__('Customer Information','usces').'</h3></td></tr>';
+	$html .= '<tr><th>'.__('e-mail adress', 'usces').'</th><td>'.esc_html($usces_entries['customer']['mailaddress1']).'</td></tr>';
+	$html .= uesces_addressform('confirm', $usces_entries);
+
+	$html .= '<tr class="ttl"><td colspan="2"><h3>'.__('Others','usces').'</h3></td></tr>';
+	$html .= '<tr><th>'.__('shipping option','usces').'</th><td>'.esc_html(usces_delivery_method_name($usces_entries['order']['delivery_method'], 'return')).'</td></tr>';
+	$html .= '<tr><th>'.__('Delivery date','usces').'</th><td>'.esc_html($usces_entries['order']['delivery_date']).'</td></tr>';
+	$html .= '<tr><th>'.__('Delivery Time','usces').'</th><td>'.esc_html($usces_entries['order']['delivery_time']).'</td></tr>';
+	$html .= '<tr><th>'.__('payment method','usces').'</th><td>'.esc_html($usces_entries['order']['payment_name'].usces_payment_detail($usces_entries)).'</td></tr>';
+	$html .= usces_custom_field_info($usces_entries, 'order', '', 'return');
+	$html .= '<tr><th>'.__('Notes','usces').'</th><td>'.esc_html($usces_entries['order']['note']).'</td></tr>';
+
+	$html .= '<tr class="ttl"><td colspan="2"><h3>'.__('Cart','usces').'</h3></td></tr>';
+	$html .= '<tr><td colspan="2">
+	<table><tr><th>No</th><th>'.__('Items','usces').'</th><th>'.__('Quantity','usces').'</th><th>'.__('Unit price','usces').'</th></tr>';
+	$num = 1;
+	foreach( $order_data['usces_cart'] as $serial => $row ) {
+		$array = unserialize($serial);
+		$ids = array_keys($array);
+		$skus = array_keys($array[$ids[0]]);
+		$post_id = $ids[0];
+		$sku = $skus[0];
+		$options = $array[$ids[0]][$skus[0]];
+		$opt_fields = usces_get_opts($post_id, 'sort');
+		$optstr =  '';
+		foreach( $opt_fields as $key => $field ) {
+			$name = urlencode($field['name']);
+			$options[$name] = ( isset($options[$name]) ) ? $options[$name] : '';
+			if( !empty($name) ) {
+				$key = urldecode($name);
+				$value = maybe_unserialize($options[$name]);
+				if( is_array($value) ) {
+					$c = '';
+					$optstr .= esc_html($key).' : ';
+					foreach( $value as $v ) {
+						$optstr .= $c.nl2br(esc_html(urldecode($v)));
+						$c = ', ';
+					}
+					$optstr .= '<br />';
+				} else {
+					$optstr .= esc_html($key).' : '.nl2br(esc_html(urldecode($value))).'<br />';
+				}
+			}
+		}
+		$quantity = ( isset($row['quant']) ) ? $row['quant'] : 0;
+		$price = ( isset($row['price']) ) ? $row['price'] : 0;
+		$advance = ( isset($row['advance']) ) ? $row['advance'] : array();
+		$cart_item_name = $usces->getCartItemName($post_id, $sku);
+
+		$html .= '<tr>';
+		$html .= '<td>'.$num.'</td>';
+		$html .= '<td>'.esc_html($cart_item_name).'<br />'.$optstr.'</td>';
+		$html .= '<td>'.$quantity.'</td>';
+		$html .= '<td>'.usces_crform($price, true, false, 'return').'</td>';
+		$html .= '</tr>';
+		$num++;
+	}
+	$html .= '<tr><th colspan="3">'.__('total items','usces').'</th><td>'.usces_crform($usces_entries['order']['total_items_price'], true, false, 'return').'</td></tr>';
+	if( !empty($usces_entries['order']['discount']) ) {
+		$html .= '<tr><th colspan="3">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</th><td>'.usces_crform($usces_entries['order']['discount'], true, false, 'return').'</td></tr>';
+	}
+	if( 0.00 < (float)$usces_entries['order']['tax'] && 'products' == usces_get_tax_target() ) {
+		$html .= '<tr><th colspan="3">'.usces_tax_label(array(), 'return').'</th><td>'.usces_crform($usces_entries['order']['tax'], true, false, 'return').'</td></tr>';
+	}
+	$html .= '<tr><th colspan="3">'.__('Shipping','usces').'</th><td>'.usces_crform($usces_entries['order']['shipping_charge'], true, false, 'return').'</td></tr>';
+	$payment = usces_get_payments_by_name($usces_entries['order']['payment_name']);
+	if( $payment['settlement'] == 'COD' ) {
+		$html .= '<tr><th colspan="3">'.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).'</th><td>'.usces_crform($usces_entries['order']['cod_fee'], true, false, 'return').'</td></tr>';
+	}
+	if( 0.00 < (float)$usces_entries['order']['tax'] && 'all' == usces_get_tax_target() ) {
+		$html .= '<tr><th colspan="3">'.usces_tax_label(array(), 'return').'</th><td>'.usces_crform($usces_entries['order']['tax'], true, false, 'return').'</td></tr>';
+	}
+	if( usces_is_member_system() && usces_is_member_system_point() && !empty($usces_entries['order']['usedpoint']) ) {
+		$html .= '<tr><th colspan="3">'.__('Used points', 'usces').'</th><td>'.number_format($usces_entries['order']['usedpoint']).'</td></tr>';
+	}
+	$html .= '<tr><th colspan="3">'.__('Payment amount','usces').'</th><td>'.usces_crform($usces_entries['order']['total_full_price'], true, false, 'return').'</td></tr>';
+	$html .= '</table><input type="hidden" id="log_key" value="'.$order_data['key'].'" /></td></tr>';
+	return 'OK#usces#'.$html;
+}
+
+function usces_delete_order_log( $log_key = '' ) {
+	global $usces, $wpdb;
+	$table_name = $wpdb->prefix."usces_log";
+	$res = '';
+	$query = "DELETE FROM {$table_name} WHERE `log_type` = 'acting_data'";
+	$res = $wpdb->query( $query );
+	return $res;
+}
+
+function usces_revival_order_data( $log_key ) {
+	global $usces;
+	$res = '';
+	usces_restore_order_acting_data( $log_key );
+	//do_action( 'usces_pre_reg_orderdata' );
+	$results = array();
+	$order_id = usces_reg_orderdata( $results );
+	//do_action( 'usces_post_reg_orderdata', $order_id, $results );
+	return 'OK#usces#'.$order_id;
+}
+
 ?>

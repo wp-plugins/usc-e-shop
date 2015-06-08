@@ -5195,20 +5195,19 @@ function usces_save_order_acting_data( $key ) {
 	$data['usces_entry'] = $_SESSION['usces_entry'];
 	$data['usces_member'] = $_SESSION['usces_member'];
 
-	$query = $wpdb->prepare( "SELECT `log` FROM $table_name WHERE `log_type` = %s AND `log_key` = %s", 'acting_data', $key );
-	$log = $wpdb->get_var( $query );
-	if( $log ) {
-		$query = $wpdb->prepare( "UPDATE $table_name SET `datetime` = %s,`log` = %s WHERE `log_type` = %s AND `log_key` = %s",
-			current_time('mysql'),
-			serialize( $data ),
-			'acting_data', 
-			$key
-		);
-	} else {
+	$order_data = usces_get_acting_data( $key );
+	if( empty($order_data['datetime']) ) {
 		$query = $wpdb->prepare( "INSERT INTO $table_name ( `datetime`, `log`, `log_type`, `log_key` ) VALUES ( %s, %s, %s, %s )",
 			current_time('mysql'),
 			serialize( $data ),
 			'acting_data',
+			$key
+		);
+	} else {
+		$query = $wpdb->prepare( "UPDATE $table_name SET `datetime` = %s,`log` = %s WHERE `log_type` = %s AND `log_key` = %s",
+			current_time('mysql'),
+			serialize( $data ),
+			'acting_data', 
 			$key
 		);
 	}
@@ -5216,17 +5215,26 @@ function usces_save_order_acting_data( $key ) {
 	return $res;
 }
 
-function usces_restore_order_acting_data( $key ) {
+function usces_get_acting_data( $key ) {
 	global $wpdb;
 	$table_name = $wpdb->prefix."usces_log";
-	$query = $wpdb->prepare( "SELECT `log` FROM $table_name WHERE `log_type` = %s AND `log_key` = %s", 'acting_data', $key );
-	$data = $wpdb->get_var( $query );
+	$query = $wpdb->prepare( "SELECT * FROM $table_name WHERE `log_type` = %s AND `log_key` = %s", 'acting_data', $key );
+	$data = $wpdb->get_row( $query, ARRAY_A );
 	if( $data ) {
-		$order_data = unserialize( $data );
-		$_SESSION['usces_cart'] = $order_data['usces_cart'];
-		$_SESSION['usces_entry'] = $order_data['usces_entry'];
-		$_SESSION['usces_member'] = $order_data['usces_member'];
+		$order_data = unserialize( $data['log'] );
+		$order_data['key'] = $data['log_key'];
+		$order_data['datetime'] = $data['datetime'];
+	} else {
+		$order_data = array( 'usces_cart' => array(), 'usces_entry' => array(), 'usces_member' => array(), 'key' => $key, 'datetime' => '' );
 	}
+	return $order_data;
+}
+
+function usces_restore_order_acting_data( $key ) {
+	$order_data = usces_get_acting_data( $key );
+	$_SESSION['usces_cart'] = $order_data['usces_cart'];
+	$_SESSION['usces_entry'] = $order_data['usces_entry'];
+	$_SESSION['usces_member'] = $order_data['usces_member'];
 }
 
 function usces_acting_key() {

@@ -286,8 +286,133 @@ jQuery(function($){
 			$("#changelabel").html( label );
 			$("#changefield").html( html );
 		
+		},
+
+		get_order_log: function() {
+			$("#order-log-response").html('<img src="<?php echo USCES_PLUGIN_URL; ?>/images/loading-publish.gif" />');
+			$.ajax({
+				url: ajaxurl,
+				type: "POST",
+				data: {
+					action: "order_item_ajax",
+					mode: "get_order_log"
+				}
+			}).done(function( retVal, dataType ) {
+				$("#order-log-response").html("");
+				var data = retVal.split("#usces#");
+				if( data[0] == "OK" ) {
+					$("#order-log-list tbody").html(data[1]);
+				}
+			}).fail(function( retVal ) {
+				$("#order-log-response").html("");
+			});
+			return false;
+		},
+
+		get_order_log_detail: function( log_key ) {
+			$.ajax({
+				url: ajaxurl,
+				type: "POST",
+				data: {
+					action: "order_item_ajax",
+					mode: "get_order_log_detail",
+					log_key: log_key
+				}
+			}).done(function( retVal, dataType ) {
+				var data = retVal.split("#usces#");
+				if( data[0] == "OK" ) {
+					$("#order-log-detail tbody").html(data[1]);
+				}
+			}).fail(function( retVal ) {
+			});
+			return false;
+		},
+
+		delete_order_log: function() {
+		},
+
+		delete_order_log_all: function() {
+		},
+
+		revival_order_data: function( log_key ) {
+			$.ajax({
+				url: ajaxurl,
+				type: "POST",
+				data: {
+					action: "order_item_ajax",
+					mode: "revival_order_data",
+					log_key: log_key
+				}
+			}).done(function( retVal, dataType ) {
+				var data = retVal.split("#usces#");
+				if( data[0] == "OK" ) {
+					alert("<?php _e('order date is updated', 'usces'); ?>");
+					$("#orderLogDetailDialog").dialog("close");
+					$("#orderLogDialog").dialog("close");
+					location.reload();
+				}
+			}).fail(function( retVal ) {
+			});
+			return false;
 		}
 	};
+
+	$("#orderLogDialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 700,
+		resizable: true,
+		modal: true,
+		buttons: {
+			"<?php _e('Clear log', 'usces'); ?>": function() {
+				if( confirm("<?php _e('Are you sure you want to delete all log ?', 'usces'); ?>") ) {
+					$("#order-log-list tbody").html("");
+				}
+			},
+			"<?php _e('Close'); ?>": function() {
+				$(this).dialog("close");
+			}
+		},
+		close: function() {
+		},
+		open: function() {
+			$("#order-log-list tbody").html("");
+			operation.get_order_log();
+		}
+	});
+
+	$("#orderlog").click(function() {
+		$("#orderLogDialog").dialog("open");
+	});
+
+	$("#orderLogDetailDialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 600,
+		width: 700,
+		resizable: true,
+		modal: true,
+		buttons: {
+			"<?php _e('Create order data', 'usces'); ?>": function() {
+				if( confirm("<?php _e('Are you sure you want to create the order data ?', 'usces'); ?>") ) {
+					operation.revival_order_data( $("#log_key").val() );
+				}
+			},
+			"<?php _e('Close'); ?>": function() {
+				$(this).dialog("close");
+			}
+		},
+		close: function() {
+		}
+	});
+
+	$(document).on( "click", ".log-detail", function() {
+		var key = $(this).attr("id");
+		$("#order-log-detail tbody").html("");
+		operation.get_order_log_detail( key );
+		$("#orderLogDetailDialog").dialog("open");
+	});
 <?php echo apply_filters('usces_filter_order_list_page_js', '', $DT ); ?>
 });
 
@@ -876,6 +1001,24 @@ jQuery(document).ready(function($){
 
 <?php wp_nonce_field( 'order_list', 'wc_nonce' ); ?>
 </form>
+
+<div id="orderLogDialog" title="<?php _e('Order Log List', 'usces'); ?>">
+	<div id="order-log-response"></div>
+	<fieldset>
+		<table id="order-log-list">
+		<tbody>
+		</tbody>
+		</table>
+	</fieldset>
+</div>
+<div id="orderLogDetailDialog" title="<?php _e('Order Log Detail', 'usces'); ?>">
+	<fieldset>
+		<table id="order-log-detail">
+		<tbody>
+		</tbody>
+		</table>
+	</fieldset>
+</div>
 <?php do_action( 'usces_action_order_list_footer' ); ?>
 </div><!--usces_admin-->
 </div><!--wrap-->
