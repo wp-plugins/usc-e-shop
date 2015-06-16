@@ -93,6 +93,9 @@ function toggleVisibility(id) {
 	    <td><input name="cat_privilege" type="radio" id="privilege_discount" value="discount"<?php if($this->options['campaign_privilege'] == 'discount') echo 'checked="checked"'; ?> /></td><td><label for="privilege_discount"><?php _e('Disnount', 'usces'); ?></label></td><td><input name="discount_num" type="text" class="short_str num" value="<?php echo esc_attr($this->options['privilege_discount']); ?>" />%</td>
 	</tr>
 </table>
+
+<?php do_action( 'usces_action_amdin_setup_first_box' ); ?>
+
 <hr size="1" color="#CCCCCC" />
 <div id="business_setting" class="explanation"><?php _e('Configuration of management and display mode of shop.', 'usces'); ?></div>
 </div>

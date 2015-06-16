@@ -33,8 +33,8 @@ if( usces_is_cart() ) {
 		<tr>
 			<th scope="row" class="num">No.</th>
 			<th class="thumbnail"> </th>
-			<th>' . __('item name','usces') . '</th>
-			<th class="quantity">' . __('Unit price','usces') . '</th>
+			<th class="productname">' . __('item name','usces') . '</th>
+			<th class="unitprice">' . __('Unit price','usces') . '</th>
 			<th class="quantity">' . __('Quantity','usces') . '</th>
 			<th class="subtotal">' . __('Amount','usces') . usces_guid_tax('return') . '</th>
 			<th class="stock">' . __('stock status','usces') . '</th>
@@ -58,12 +58,12 @@ if( usces_is_cart() ) {
 	$html .= apply_filters( 'usces_filter_cart_table_footer', $cart_table_footer );
 
 	$after_table = '<div class="currency_code">' . __('Currency','usces') . ' : ' . __(usces_crcode( 'return' ), 'usces') . '</div>';
+	$html .= apply_filters( 'usces_filter_after_cart_table', $after_table );
 	if( isset($usces_gp) && $usces_gp ) {
-		$Business_pack_discount = '<img src="' . get_template_directory_uri() . '/images/gp.gif" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces');
+		$gp_src = file_exists(get_template_directory() . '/images/gp.gif') ? get_template_directory_uri() . '/images/gp.gif' : USCES_PLUGIN_URL . '/images/gp.gif';
+		$Business_pack_discount = '<div class="gp_exp"><img src="' . $gp_src . '" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces') . '</div>';
 		$html .= apply_filters('usces_filter_itemGpExp_cart_message', $Business_pack_discount);
 	}
-	$after_table .= '</div>';
-	$html .= apply_filters( 'usces_filter_after_cart_table', $after_table );
 
 } else {
 	$html .= '<div class="no_cart">' . __('There are no items in your cart.','usces') . '</div>';
