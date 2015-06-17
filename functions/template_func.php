@@ -2900,7 +2900,7 @@ function usces_get_confirm_rows( $out = '' ) {
 			<td class="unitprice">' . usces_crform($skuPrice, true, false, 'return') . '</td>
 			<td class="quantity">' . $cart_row['quantity'] . '</td>
 			<td class="subtotal">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
-			<td>';
+			<td class="action">';
 		$res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $sku_code));
 		$row .= '</td>
 		</tr>';

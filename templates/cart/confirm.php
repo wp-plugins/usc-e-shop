@@ -44,54 +44,70 @@ $html .= usces_get_confirm_rows('return');
 $confirm_table_footer = '</tbody>
 	<tfoot>
 	<tr class="total_items_price">
-		<th colspan="5" class="aright">'.__('total items', 'usces').'</th>
+		<th class="num">&nbsp;</th>
+		<th class="thumbnail">&nbsp;</th>
+		<th colspan="3" class="aright">'.__('total items', 'usces').'</th>
 		<th class="aright">' . usces_crform($usces_entries['order']['total_items_price'], true, false, 'return') . '</th>
-		<th>&nbsp;</th>
+		<th class="action">&nbsp;</th>
 	</tr>';
 if( $this->options['membersystem_state'] == 'activate' &&  $this->options['membersystem_point'] == 'activate' && !empty($usces_entries['order']['usedpoint']) ) {
 	$confirm_table_footer .= '<tr class="usedpoint">
-		<td colspan="5" class="aright">'.__('Used points', 'usces').'</td>
+		<td class="num">&nbsp;</td>
+		<td class="thumbnail">&nbsp;</td>
+		<td colspan="3" class="aright">'.__('Used points', 'usces').'</td>
 		<td class="aright" style="color:#FF0000">' . number_format($usces_entries['order']['usedpoint']) . '</td>
-		<td>&nbsp;</td>
+		<td class="action">&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['discount']) ) {
 	$confirm_table_footer .= '<tr class="discount">
-		<td colspan="5" class="aright">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</td>
+		<td class="num">&nbsp;</td>
+		<td class="thumbnail">&nbsp;</td>
+		<td colspan="3" class="aright">'.apply_filters('usces_confirm_discount_label', __('Campaign disnount', 'usces')).'</td>
 		<td class="aright" style="color:#FF0000">' . usces_crform($usces_entries['order']['discount'], true, false, 'return') . '</td>
-		<td>&nbsp;</td>
+		<td class="action">&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) && 'products' == usces_get_tax_target() ) {
 	$confirm_table_footer .= '<tr class="tax">
-		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
+		<td class="num">&nbsp;</td>
+		<td class="thumbnail">&nbsp;</td>
+		<td colspan="3" class="aright">'.__('consumption tax', 'usces').'</td>
 		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
-		<td>&nbsp;</td>
+		<td class="action">&nbsp;</td>
 	</tr>';
 }
 $confirm_table_footer .= '<tr class="shipping_charge">
-	<td colspan="5" class="aright">'.__('Shipping', 'usces').'</td>
+	<td class="num">&nbsp;</td>
+	<td class="thumbnail">&nbsp;</td>
+	<td colspan="3" class="aright">'.__('Shipping', 'usces').'</td>
 	<td class="aright">' . usces_crform($usces_entries['order']['shipping_charge'], true, false, 'return') . '</td>
-	<td>&nbsp;</td>
+	<td class="action">&nbsp;</td>
 	</tr>';
 if( !empty($usces_entries['order']['cod_fee']) ) {
 	$confirm_table_footer .= '<tr class="cod_fee">
-		<td colspan="5" class="aright">'.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).'</td>
+		<td class="num">&nbsp;</td>
+		<td class="thumbnail">&nbsp;</td>
+		<td colspan="3" class="aright">'.apply_filters('usces_filter_cod_label', __('COD fee', 'usces')).'</td>
 		<td class="aright">' . usces_crform($usces_entries['order']['cod_fee'], true, false, 'return') . '</td>
-		<td>&nbsp;</td>
+		<td class="action">&nbsp;</td>
 	</tr>';
 }
 if( !empty($usces_entries['order']['tax']) && 'all' == usces_get_tax_target() ) {
 	$confirm_table_footer .= '<tr class="tax">
-		<td colspan="5" class="aright">'.__('consumption tax', 'usces').'</td>
+		<td class="num">&nbsp;</td>
+		<td class="thumbnail">&nbsp;</td>
+		<td colspan="3" class="aright">'.__('consumption tax', 'usces').'</td>
 		<td class="aright">' . usces_crform($usces_entries['order']['tax'], true, false, 'return') . '</td>
-		<td>&nbsp;</td>
+		<td class="action">&nbsp;</td>
 	</tr>';
 }
 $confirm_table_footer .= '<tr class="total_full_price">
-	<th colspan="5" class="aright">'.__('Total Amount', 'usces').'</th>
+	<th class="num">&nbsp;</th>
+	<th class="thumbnail">&nbsp;</th>
+	<th colspan="3" class="aright">'.__('Total Amount', 'usces').'</th>
 	<th class="aright">' . usces_crform($usces_entries['order']['total_full_price'], true, false, 'return') . '</th>
-	<th>&nbsp;</th>
+	<th class="action">&nbsp;</th>
 	</tr>
 	</tfoot>
 	</table>';
