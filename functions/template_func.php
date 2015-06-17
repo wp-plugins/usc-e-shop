@@ -2530,16 +2530,16 @@ function usces_member_history( $out = '' ){
 	$usces_member_history = $usces->get_member_history($usces_members['ID']);
 	$colspan = usces_is_membersystem_point() ? 9 : 7;
 
-	$html = '<div class="history-area">
-	<table>';
+	$html = '<div class="history-area">';
 	if ( !count($usces_member_history) ) {
-		$html .= '<tr>
+		$html .= '<table id="history_head"><tr>
 		<td>' . __('There is no purchase history for this moment.', 'usces') . '</td>
-		</tr>';
+		</tr></table>';
 	}
 	foreach ( $usces_member_history as $umhs ) {
 		$cart = $umhs['cart'];
-		$history_member_head = '<tr class="order_head_label">
+		$history_member_head = '<table id="history_head"><thead>
+			<tr class="order_head_label">
 			<th class="historyrow order_number">' . __('Order number', 'usces') . '</th>
 			<th class="historyrow purchase_date">' . __('Purchase date', 'usces') . '</th>
 			<th class="historyrow purchase_price">' . __('Purchase price', 'usces') . '</th>';
@@ -2553,7 +2553,8 @@ function usces_member_history( $out = '' ){
 		if( usces_is_membersystem_point() ){
 			$history_member_head .= '<th class="historyrow get_point">' . __('Acquired points', 'usces') . '</th>';
 		}
-		$history_member_head .= '</tr>
+		$history_member_head .= '</tr></thead>
+			<tbody>
 			<tr class="order_head_value">
 			<td class="order_number">' . usces_get_deco_order_id($umhs['ID']) . '</td>
 			<td class="date purchase_date">' . $umhs['date'] . '</td>
@@ -2571,17 +2572,19 @@ function usces_member_history( $out = '' ){
 		$history_member_head .= '</tr>';
 		$html .= apply_filters( 'usces_filter_history_member_head', $history_member_head, $umhs );
 		$html .= apply_filters('usces_filter_member_history_header', NULL, $umhs);
-		$html .= '<tr>
-			<td class="retail" colspan="' . $colspan . '">
+//		$html .= '<tr>
+//			<td class="retail" colspan="' . $colspan . '">
+//				<table id="retail_table_' . $umhs['ID'] . '" class="retail">';
+		$html .= '</tbody></table>
 				<table id="retail_table_' . $umhs['ID'] . '" class="retail">';
-		$history_cart_head = '<tr>
+		$history_cart_head = '<thead><tr>
 				<th scope="row" class="cartrownum">No.</th>
 				<th class="thumbnail">&nbsp;</th>
 				<th class="productname">' . __('Items', 'usces') . '</th>
 				<th class="price">' . __('Unit price', 'usces') . '</th>
 				<th class="quantity">' . __('Quantity', 'usces') . '</th>
 				<th class="subtotal">' . __('Amount', 'usces') . '</th>
-				</tr>';
+				</tr></thead><tbody>';
 		$html .= apply_filters('usces_filter_history_cart_head', $history_cart_head, $umhs);
 				
 		for($i=0; $i<count($cart); $i++) { 
@@ -2637,13 +2640,10 @@ function usces_member_history( $out = '' ){
 			$materials = compact( 'cart_thumbnail', 'post_id', 'pictid', 'cartItemName', 'optstr' );
 			$html .= apply_filters( 'usces_filter_history_cart_row', $history_cart_row, $umhs, $cart_row, $i, $materials );
 		}
-		$html .= '</table>
-			</td>
-			</tr>';
+		$html .= '</tbody></table>';
 	}
 	
-	$html .= '</table>
-	</div>';
+	$html .= '</div>';
 
 	if($out == 'return'){
 		return $html;

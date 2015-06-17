@@ -7,7 +7,7 @@ $html = '<div id="memberpages">
 
 <div class="whitebox">
 <div id="memberinfo">
-<table>
+<table id="memberdetail">
 <tr>
 <th scope="row">' . __('member number', 'usces') . '</th>
 <td class="num">' . $usces_members['ID'] . '</td>
@@ -30,8 +30,8 @@ $html .= '</tr>
 	<tr>
 	<th scope="row">' . __('e-mail adress', 'usces') . '</th>
 	<td>' . esc_html($usces_members['mailaddress1']) . '</td>';
-$html_reserve = '<th>&nbsp;</th>
-	<td>&nbsp;</td>';
+$html_reserve = '<th class="blank">&nbsp;</th>
+	<td class="blank">&nbsp;</td>';
 $html .= apply_filters( 'usces_filter_memberinfo_page_reserve', $html_reserve, $usces_members['ID'] );
 $html .= '</tr>
 	</table>'."\n";
