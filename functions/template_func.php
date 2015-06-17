@@ -2539,7 +2539,7 @@ function usces_member_history( $out = '' ){
 	}
 	foreach ( $usces_member_history as $umhs ) {
 		$cart = $umhs['cart'];
-		$history_member_head = '<tr>
+		$history_member_head = '<tr class="order_head_label">
 			<th class="historyrow order_number">' . __('Order number', 'usces') . '</th>
 			<th class="historyrow purchase_date">' . __('Purchase date', 'usces') . '</th>
 			<th class="historyrow purchase_price">' . __('Purchase price', 'usces') . '</th>';
@@ -2554,7 +2554,7 @@ function usces_member_history( $out = '' ){
 			$history_member_head .= '<th class="historyrow get_point">' . __('Acquired points', 'usces') . '</th>';
 		}
 		$history_member_head .= '</tr>
-			<tr>
+			<tr class="order_head_value">
 			<td class="order_number">' . usces_get_deco_order_id($umhs['ID']) . '</td>
 			<td class="date purchase_date">' . $umhs['date'] . '</td>
 			<td class="rightnum purchase_price">' . usces_crform(($usces->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
@@ -2866,11 +2866,11 @@ function usces_get_confirm_rows( $out = '' ) {
 		}
 	
 		$row .= '<tr>
-			<td>' . ($i + 1) . '</td>
-			<td>';
+			<td class="num">' . ($i + 1) . '</td>
+			<td class="thumbnail">';
 		$cart_thumbnail = wp_get_attachment_image( $pictid, array(60, 60), true );
 		$row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
-		$row .= '</td><td class="aleft">' . $cartItemName . '<br />';
+		$row .= '</td><td class="productname">' . $cartItemName . '<br />';
 		if( is_array($options) && count($options) > 0 ){
 			$optstr = '';
 			foreach($options as $key => $value){
@@ -2897,9 +2897,9 @@ function usces_get_confirm_rows( $out = '' ) {
 		}
 		$row .= apply_filters( 'usces_filter_option_info_confirm', '', $cart_row, $args );
 		$row .= '</td>
-			<td class="aright">' . usces_crform($skuPrice, true, false, 'return') . '</td>
-			<td>' . $cart_row['quantity'] . '</td>
-			<td class="aright">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
+			<td class="unitprice">' . usces_crform($skuPrice, true, false, 'return') . '</td>
+			<td class="quantity">' . $cart_row['quantity'] . '</td>
+			<td class="subtotal">' . usces_crform(($skuPrice * $cart_row['quantity']), true, false, 'return') . '</td>
 			<td>';
 		$res = apply_filters('usces_additional_confirm',  $res, array($i, $post_id, $sku_code));
 		$row .= '</td>
