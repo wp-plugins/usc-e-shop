@@ -49,9 +49,12 @@ if( usces_is_cart() ) {
 	$cart_table_footer = '</tbody>
 		<tfoot>
 		<tr>
-			<th colspan="5" scope="row" class="aright">' . __('total items','usces') . usces_guid_tax('return') . '</th>
-			<th class="aright">' . usces_crform($this->get_total_price(), true, false, 'return') . '</th>
-			<th colspan="2">&nbsp;</th>
+			<th class="num">&nbsp;</th>
+			<th class="thumbnail">&nbsp;</th>
+			<th colspan="3" scope="row" class="aright">' . __('total items','usces') . usces_guid_tax('return') . '</th>
+			<th class="aright subtotal">' . usces_crform($this->get_total_price(), true, false, 'return') . '</th>
+			<th class="stock">&nbsp;</th>
+			<th class="action">&nbsp;</th>
 		</tr>
 		</tfoot>
 	</table>';

@@ -11,7 +11,7 @@ $html = '<div id="memberpages">
 <tr>
 <th scope="row">' . __('member number', 'usces') . '</th>
 <td class="num">' . $usces_members['ID'] . '</td>
-<td rowspan="3">&nbsp;</td>
+<td rowspan="3" class="blank_cell">&nbsp;</td>
 <th>' . __('Strated date', 'usces') . '</th>
 <td>' . mysql2date(__('Y/m/d'), $usces_members['registered']) . '</td>
 </tr>

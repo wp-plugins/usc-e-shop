@@ -2540,33 +2540,33 @@ function usces_member_history( $out = '' ){
 	foreach ( $usces_member_history as $umhs ) {
 		$cart = $umhs['cart'];
 		$history_member_head = '<tr>
-			<th class="historyrow">' . __('Order number', 'usces') . '</th>
-			<th class="historyrow">' . __('Purchase date', 'usces') . '</th>
-			<th class="historyrow">' . __('Purchase price', 'usces') . '</th>';
+			<th class="historyrow order_number">' . __('Order number', 'usces') . '</th>
+			<th class="historyrow purchase_date">' . __('Purchase date', 'usces') . '</th>
+			<th class="historyrow purchase_price">' . __('Purchase price', 'usces') . '</th>';
 		if( usces_is_membersystem_point() ){
-			$history_member_head .= '<th class="historyrow">' . __('Used points', 'usces') . '</th>';
+			$history_member_head .= '<th class="historyrow used_point">' . __('Used points', 'usces') . '</th>';
 		}
-		$history_member_head .= '<th class="historyrow">' . apply_filters( 'usces_member_discount_label', __('Special Price', 'usces'), $umhs['ID'] ) . '</th>
-			<th class="historyrow">' . __('Shipping', 'usces') . '</th>
-			<th class="historyrow">' . __('C.O.D', 'usces') . '</th>
-			<th class="historyrow">' . __('consumption tax', 'usces') . '</th>';
+		$history_member_head .= '<th class="historyrow discount">' . apply_filters( 'usces_member_discount_label', __('Special Price', 'usces'), $umhs['ID'] ) . '</th>
+			<th class="historyrow shipping">' . __('Shipping', 'usces') . '</th>
+			<th class="historyrow cod">' . __('C.O.D', 'usces') . '</th>
+			<th class="historyrow tax">' . __('consumption tax', 'usces') . '</th>';
 		if( usces_is_membersystem_point() ){
-			$history_member_head .= '<th class="historyrow">' . __('Acquired points', 'usces') . '</th>';
+			$history_member_head .= '<th class="historyrow get_point">' . __('Acquired points', 'usces') . '</th>';
 		}
 		$history_member_head .= '</tr>
 			<tr>
-			<td class="rightnum">' . usces_get_deco_order_id($umhs['ID']) . '</td>
-			<td class="date">' . $umhs['date'] . '</td>
-			<td class="rightnum">' . usces_crform(($usces->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
+			<td class="order_number">' . usces_get_deco_order_id($umhs['ID']) . '</td>
+			<td class="date purchase_date">' . $umhs['date'] . '</td>
+			<td class="rightnum purchase_price">' . usces_crform(($usces->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax']), true, false, 'return') . '</td>';
 		if( usces_is_membersystem_point() ){
-			$history_member_head .= '<td class="rightnum">' . number_format($umhs['usedpoint']) . '</td>';
+			$history_member_head .= '<td class="rightnum used_point">' . number_format($umhs['usedpoint']) . '</td>';
 		}
-		$history_member_head .= '<td class="rightnum">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
-			<td class="rightnum">' . usces_crform($umhs['shipping_charge'], true, false, 'return') . '</td>
-			<td class="rightnum">' . usces_crform($umhs['cod_fee'], true, false, 'return') . '</td>
-			<td class="rightnum">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>';
+		$history_member_head .= '<td class="rightnum discount">' . usces_crform($umhs['discount'], true, false, 'return') . '</td>
+			<td class="rightnum shipping">' . usces_crform($umhs['shipping_charge'], true, false, 'return') . '</td>
+			<td class="rightnum cod">' . usces_crform($umhs['cod_fee'], true, false, 'return') . '</td>
+			<td class="rightnum tax">' . usces_crform($umhs['tax'], true, false, 'return') . '</td>';
 		if( usces_is_membersystem_point() ){
-			$history_member_head .= '<td class="rightnum">' . number_format($umhs['getpoint']) . '</td>';
+			$history_member_head .= '<td class="rightnum get_point">' . number_format($umhs['getpoint']) . '</td>';
 		}
 		$history_member_head .= '</tr>';
 		$html .= apply_filters( 'usces_filter_history_member_head', $history_member_head, $umhs );
@@ -2575,10 +2575,10 @@ function usces_member_history( $out = '' ){
 			<td class="retail" colspan="' . $colspan . '">
 				<table id="retail_table_' . $umhs['ID'] . '" class="retail">';
 		$history_cart_head = '<tr>
-				<th scope="row" class="num">No.</th>
+				<th scope="row" class="cartrownum">No.</th>
 				<th class="thumbnail">&nbsp;</th>
-				<th>' . __('Items', 'usces') . '</th>
-				<th class="price ">' . __('Unit price', 'usces') . '</th>
+				<th class="productname">' . __('Items', 'usces') . '</th>
+				<th class="price">' . __('Unit price', 'usces') . '</th>
 				<th class="quantity">' . __('Quantity', 'usces') . '</th>
 				<th class="subtotal">' . __('Amount', 'usces') . '</th>
 				</tr>';
@@ -2624,15 +2624,15 @@ function usces_member_history( $out = '' ){
 			$optstr = apply_filters( 'usces_filter_option_info_history', $optstr, $umhs, $cart_row, $i );
 			
 			$history_cart_row = '<tr>
-				<td>' . ($i + 1) . '</td>
-				<td>';
+				<td class="cartrownum">' . ($i + 1) . '</td>
+				<td class="thumbnail">';
 			$cart_thumbnail = '<a href="' . get_permalink($post_id) . '">' . wp_get_attachment_image( $pictid, array(60, 60), true ) . '</a>';
 			$history_cart_row .= apply_filters('usces_filter_cart_thumbnail', $cart_thumbnail, $post_id, $pictid, $i, $cart_row);
 			$history_cart_row .= '</td>
-				<td class="aleft"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
-				<td class="rightnum">' . usces_crform($skuPrice, true, false, 'return') . '</td>
-				<td class="rightnum">' . number_format($cart_row['quantity']) . '</td>
-				<td class="rightnum">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
+				<td class="aleft productname"><a href="' . get_permalink($post_id) . '">' . esc_html($cartItemName) . '<br />' . $optstr . '</a>' . apply_filters('usces_filter_history_item_name', NULL, $umhs, $cart_row, $i) . '</td>
+				<td class="rightnum price">' . usces_crform($skuPrice, true, false, 'return') . '</td>
+				<td class="rightnum quantity">' . number_format($cart_row['quantity']) . '</td>
+				<td class="rightnum subtotal">' . usces_crform($skuPrice * $cart_row['quantity'], true, false, 'return') . '</td>
 				</tr>';
 			$materials = compact( 'cart_thumbnail', 'post_id', 'pictid', 'cartItemName', 'optstr' );
 			$html .= apply_filters( 'usces_filter_history_cart_row', $history_cart_row, $umhs, $cart_row, $i, $materials );

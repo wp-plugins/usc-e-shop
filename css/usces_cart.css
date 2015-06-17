@@ -1130,22 +1130,72 @@ div.usccart_navi li.usccart_confirm {
 }
 #memberinfo th {
 	text-align: center;
-	padding: 5px;
-	margin-right: auto;
-	margin-left: auto;
 	border: 1px solid #e6e6e6;
 	background-color: #f8f8f8;
-	font-size: 12px;
+	font-size: 0.6em;
 	line-height: 150%;
-	font-weight: bold;
+	font-weight: normal;
 	color: #4e5020;
 }
 #memberinfo th.historyrow {
 	color: #FFFFFF;
 	background-color: #999999;
+	vertical-align: middle;
+}
+#memberinfo th.cartrownum {
+	font-size: 0.8em;
+	vertical-align: middle;
+	width: 38px;
+}
+#memberinfo th.thumbnail {
+	font-size: 0.8em;
+	vertical-align: middle;
+	width: 60px;
+}
+#memberinfo th.productname {
+	font-size: 0.8em;
+	vertical-align: middle;
+}
+#memberinfo th.price {
+	font-size: 0.8em;
+	vertical-align: middle;
+	width: 100px;
+}
+#memberinfo th.quantity {
+	font-size: 0.8em;
+	vertical-align: middle;
+	width: 60px;
+}
+#memberinfo th.subtotal {
+	font-size: 0.8em;
+	vertical-align: middle;
+	width: 100px;
+}
+#memberinfo td.cartrownum {
+	font-size: 0.8em;
+	vertical-align: middle;
+}
+#memberinfo td.thumbnail {
+	font-size: 0.8em;
+	vertical-align: middle;
+}
+#memberinfo td.productname {
+	font-size: 0.8em;
+	vertical-align: middle;
+}
+#memberinfo td.price {
+	font-size: 0.8em;
+	vertical-align: middle;
+}
+#memberinfo td.quantity {
+	font-size: 0.8em;
+	vertical-align: middle;
+}
+#memberinfo td.subtotal {
+	font-size: 0.8em;
+	vertical-align: middle;
 }
 #memberinfo td {
-	font-size: 12px;
 	line-height: 150%;
 	color: #333333;
 	padding-top: 5px;
@@ -1154,9 +1204,61 @@ div.usccart_navi li.usccart_confirm {
 	padding-left: 10px;
 	border: 1px solid #e6e6e6;
 }
+#memberinfo td.order_number {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+	text-align: center;
+}
+#memberinfo td.purchase_date {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+	text-align: center;
+	overflow: hidden;
+}
+#memberinfo td.purchase_price {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+}
+#memberinfo td.used_point {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+}
+#memberinfo td.discount {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+}
+#memberinfo td.shipping {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+}
+#memberinfo td.cod {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+}
+#memberinfo td.tax {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+}
+#memberinfo td.get_point {
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.8em;
+}
 #memberinfo td.retail {
 	margin: 0px;
 	padding: 0px;
+}
+#memberinfo .blank_cell {
+	width: 3px;
+	padding: 0;
 }
 #memberinfo h3 {
 	font-size: 13px;
