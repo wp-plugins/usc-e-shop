@@ -1225,7 +1225,6 @@ div.usccart_navi li.usccart_confirm {
 	white-space: nowrap;
 	font-size: 0.8em;
 	text-align: center;
-	overflow: hidden;
 }
 #memberinfo td.purchase_price {
 	padding: 0;

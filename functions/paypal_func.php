@@ -56,6 +56,16 @@ function usces_paypal_filter_cart_page_footer( $html ) {
 function usces_paypal_cart_page_footer( $include = true ) {
 	global $usces;
 	$html = '';
+	$payments = usces_get_system_option( 'usces_payment_method', 'sort' );
+	$paypal_flag = false;
+	foreach($payments as $payment){
+		if( 'acting_paypal_ec' == $payment['settlement'] && 'activate' == $payment['use'] ){
+			$paypal_flag = true;
+		}
+	}
+	$payment_structure = get_option('usces_payment_structure');
+	if( !array_key_exists( 'acting_paypal_ec', $payment_structure ) || !$paypal_flag )
+		return $html;
 
 	$member = $usces->get_member();
 	if( !usces_paypal_set_session( $member['ID'] ) ) return $html;
