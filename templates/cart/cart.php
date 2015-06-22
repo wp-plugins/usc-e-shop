@@ -67,6 +67,7 @@ if( usces_is_cart() ) {
 		$Business_pack_discount = '<div class="gp_exp"><img src="' . $gp_src . '" alt="' . __('Business package discount','usces') . '" /><br />' . __('The price with this mark applys to Business pack discount.','usces') . '</div>';
 		$html .= apply_filters('usces_filter_itemGpExp_cart_message', $Business_pack_discount);
 	}
+	$html .= "</div><!-- end of cart -->\n";
 
 } else {
 	$html .= '<div class="no_cart">' . __('There are no items in your cart.','usces') . '</div>';

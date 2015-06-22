@@ -6101,7 +6101,7 @@ class usc_e_shop
 				}
 			}
 	
-			$discount = ceil($discount);
+			$discount = apply_filters( 'usces_filter_getItemDiscount', ceil($discount), $price, $post_id, $sku, $display_mode );
 			$array[$key] = $discount;
 		}
 		if(!$array) return false;
