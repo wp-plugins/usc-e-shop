@@ -14,6 +14,7 @@ if( $usces_payment ) {
 	//add_filter( 'usces_filter_cart_page_footer', 'usces_paypal_filter_cart_page_footer' );
 	add_filter( 'usces_filter_cartContent', 'usces_paypal_filter_cart_page_footer' );
 	add_action( 'usces_action_customerinfo', 'usces_paypal_action_customerinfo' );
+	add_action( 'wp_print_footer_scripts', 'usces_paypal_footer_scripts', 11 );
 }
 
 function usces_paypal_add_stylesheet() {
@@ -68,115 +69,7 @@ function usces_paypal_cart_page_footer( $include = true ) {
 	$usces_entries = $usces->cart->get_entry();
 	$usces->set_cart_fees( $member, $usces_entries );
 
-	$usces_entries = $usces->cart->get_entry();
-	$total_price = $usces_entries['order']['total_items_price'] + $usces_entries['order']['discount'] + $usces_entries['order']['shipping_charge'] + $usces_entries['order']['cod_fee'];
-	$item_price = $usces_entries['order']['total_items_price'] + $usces_entries['order']['discount'];
-
-	if( $include ) {
-		include( USCES_PLUGIN_DIR."/includes/delivery_info_script.php" );
-	} else {
-		ob_start();
-		include( USCES_PLUGIN_DIR."/includes/delivery_info_script.php" );
-		$html .= ob_get_clean();
-	}
-
 	$html .= '
-	<script type="text/javascript">
-	jQuery(function($) {
-		paypalfunc = {
-			settings: {
-				url: uscesL10n.frontAjaxUrl + "/",
-				type: "POST",
-				cache: false,
-				error: function( res, dataType ) {
-					alert( "Ajax error" );
-				}
-			},
-			deliveryMethodSelect: function() {
-				var s = this.settings;
-				s.data = "usces_ajax_action=paypal_delivery_method&selected=" + $("#delivery_method_select option:selected").val() + "&delivery_date=" + $("#delivery_date_select").val() + "&delivery_time=" + $("#delivery_time_select").val();
-				s.success = function( res, dataType ) {
-					var r = res.split( "#usces#" );
-					if( r[0] == "error" ) {
-						$("#paypal_error_message_delivery_method").html( r[1] );
-					} else {
-						$("#paypal_error_message_delivery_method").empty();
-						$("#paypal_confirm").empty();
-						$("#paypal_purchase").empty();
-						$("#paypal_confirm").html( r[1] );
-						$("#paypal_purchase").html( r[2] );
-						$("#delivery_date_select").bind("change", function(){ this.deliveryDateSelect(); });
-						$("#delivery_time_select").bind("change", function(){ this.deliveryTimeSelect(); });
-					}
-				};
-				$.ajax( s );
-				return false;
-			},
-			deliveryDateSelect: function() {
-				var s = this.settings;
-				s.data = "usces_ajax_action=paypal_delivery_date_select&selected=" + $("#delivery_date_select option:selected").val();
-				s.success = function( res, dataType ) {
-				};
-				$.ajax( s );
-				return false;
-			},
-			deliveryTimeSelect: function() {
-				var s = this.settings;
-				s.data = "usces_ajax_action=paypal_delivery_time_select&selected=" + $("#delivery_time_select option:selected").val();
-				s.success = function( res, dataType ) {
-				};
-				$.ajax( s );
-				return false;
-			},
-			usePoint: function() {
-				var s = this.settings;
-				s.data = "usces_ajax_action=paypal_use_point&usepoint=" + $("#set_usedpoint").val() + "&total_price='.$total_price.'&item_price='.$item_price.'";
-				s.success = function( res, dataType ) {
-					var r = res.split( "#usces#" );
-					if( r[0] == "error" ) {
-						$("#paypal_error_message_use_point").html( r[1] );
-					} else {
-						$("#paypal_error_message_use_point").empty();
-						$("#paypal_confirm").empty();
-						$("#paypal_purchase").empty();
-						$("#paypal_confirm").html( r[1] );
-						$("#paypal_purchase").html( r[2] );
-						$("#delivery_date_select").bind("change", function(){ this.deliveryDateSelect(); });
-						$("#delivery_time_select").bind("change", function(){ this.deliveryTimeSelect(); });
-					}
-				};
-				$.ajax( s );
-				return false;
-			}
-		};
-		$("#paypal_dialog").dialog({
-			bgiframe: true,
-			autoOpen: false,
-			height: "auto",
-			width: 400,
-			resizable: true,
-			modal: true,
-			position: ["top",100],
-			open: function( event, ui ) {
-				$(".ui-dialog-titlebar", ui.panel).hide();
-			}
-		});
-		$("#paypal_button").click( function() {
-			$("#paypal_dialog").dialog( "open" );
-		});
-		$("#paypal_close").click( function() {
-			$("#paypal_dialog").dialog( "close" );
-		});
-		if( $("#delivery_method_select option").length > 1 ) {
-			$("#delivery_method_select").bind("change", function(){ paypalfunc.deliveryMethodSelect(); });
-		}
-		$("#delivery_date_select").bind("change", function(){ paypalfunc.deliveryDateSelect(); });
-		$("#delivery_time_select").bind("change", function(){ paypalfunc.deliveryTimeSelect(); });
-		if( $("#paypal_use_point") != undefined ) {
-			$("#paypal_use_point").bind("click", function(){ paypalfunc.usePoint(); });
-		}
-	});
-	</script>
 	<div class="send"><input type="image" src="https://www.paypal.com/'.( USCES_JP ? 'ja_JP/JP' : 'en_US' ).'/i/btn/btn_xpressCheckout.gif" border="0" class="paypal_button" id="paypal_button" alt="PayPal" /></div>
 	<div id="paypal_dialog">
 		<div id="paypal_confirm">'.usces_paypal_confirm_form().'</div>
@@ -185,8 +78,123 @@ function usces_paypal_cart_page_footer( $include = true ) {
 		<div id="paypal_purchase">'.usces_paypal_purchase_form().'</div>
 		<div class="send"><input name="paypal_close" type="button" id="paypal_close" class="back_to_delivery_button" value="'.__('Cancel', 'usces').'" /></div>
 	</div>';
-
 	return $html;
+}
+
+function usces_paypal_footer_scripts() {
+	global $usces;
+
+	$member = $usces->get_member();
+	if( !usces_paypal_set_session( $member['ID'] ) ) return;
+	if( false === $usces->cart->num_row() ) return;
+	if( defined('WCEX_AUTO_DELIVERY') and wcad_have_regular_order() ) return;
+
+	$cart = $usces->cart->get_cart();
+	if( 'shipped' != $usces->getItemDivision( $cart[0]['post_id'] ) ) return;
+
+	$usces_entries = $usces->cart->get_entry();
+	$total_price = $usces_entries['order']['total_items_price'] + $usces_entries['order']['discount'] + $usces_entries['order']['shipping_charge'] + $usces_entries['order']['cod_fee'];
+	$item_price = $usces_entries['order']['total_items_price'] + $usces_entries['order']['discount'];
+
+	usces_delivery_info_script();
+?>
+<script type="text/javascript">
+jQuery(function($) {
+	paypalfunc = {
+		settings: {
+			url: uscesL10n.frontAjaxUrl + "/",
+			type: "POST",
+			cache: false,
+			error: function( res, dataType ) {
+				alert( "Ajax error" );
+			}
+		},
+		deliveryMethodSelect: function() {
+			var s = this.settings;
+			s.data = "usces_ajax_action=paypal_delivery_method&selected=" + $("#delivery_method_select option:selected").val() + "&delivery_date=" + $("#delivery_date_select").val() + "&delivery_time=" + $("#delivery_time_select").val();
+			s.success = function( res, dataType ) {
+				var r = res.split( "#usces#" );
+				if( r[0] == "error" ) {
+					$("#paypal_error_message_delivery_method").html( r[1] );
+				} else {
+					$("#paypal_error_message_delivery_method").empty();
+					$("#paypal_confirm").empty();
+					$("#paypal_purchase").empty();
+					$("#paypal_confirm").html( r[1] );
+					$("#paypal_purchase").html( r[2] );
+					$("#delivery_date_select").bind("change", function(){ this.deliveryDateSelect(); });
+					$("#delivery_time_select").bind("change", function(){ this.deliveryTimeSelect(); });
+				}
+			};
+			$.ajax( s );
+			return false;
+		},
+		deliveryDateSelect: function() {
+			var s = this.settings;
+			s.data = "usces_ajax_action=paypal_delivery_date_select&selected=" + $("#delivery_date_select option:selected").val();
+			s.success = function( res, dataType ) {
+			};
+			$.ajax( s );
+			return false;
+		},
+		deliveryTimeSelect: function() {
+			var s = this.settings;
+			s.data = "usces_ajax_action=paypal_delivery_time_select&selected=" + $("#delivery_time_select option:selected").val();
+			s.success = function( res, dataType ) {
+			};
+			$.ajax( s );
+			return false;
+		},
+		usePoint: function() {
+			var s = this.settings;
+			s.data = "usces_ajax_action=paypal_use_point&usepoint=" + $("#set_usedpoint").val() + "&total_price=<?php esc_html_e($total_price); ?>&item_price=<?php esc_html_e($item_price); ?>";
+			s.success = function( res, dataType ) {
+				var r = res.split( "#usces#" );
+				if( r[0] == "error" ) {
+					$("#paypal_error_message_use_point").html( r[1] );
+				} else {
+					$("#paypal_error_message_use_point").empty();
+					$("#paypal_confirm").empty();
+					$("#paypal_purchase").empty();
+					$("#paypal_confirm").html( r[1] );
+					$("#paypal_purchase").html( r[2] );
+					$("#delivery_date_select").bind("change", function(){ this.deliveryDateSelect(); });
+					$("#delivery_time_select").bind("change", function(){ this.deliveryTimeSelect(); });
+				}
+			};
+			$.ajax( s );
+			return false;
+		}
+	};
+	$("#paypal_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: "auto",
+		width: 400,
+		resizable: true,
+		modal: true,
+		//position: ["top",100],
+		open: function( event, ui ) {
+			$(".ui-dialog-titlebar", ui.panel).hide();
+		}
+	});
+	$("#paypal_button").click( function() {
+		$("#paypal_dialog").dialog( "open" );
+	});
+	$("#paypal_close").click( function() {
+		$("#paypal_dialog").dialog( "close" );
+	});
+	if( $("#delivery_method_select option").length > 1 ) {
+		$("#delivery_method_select").bind("change", function(){ paypalfunc.deliveryMethodSelect(); });
+	}
+	$("#delivery_date_select").bind("change", function(){ paypalfunc.deliveryDateSelect(); });
+	$("#delivery_time_select").bind("change", function(){ paypalfunc.deliveryTimeSelect(); });
+	if( $("#paypal_use_point") != undefined ) {
+		$("#paypal_use_point").bind("click", function(){ paypalfunc.usePoint(); });
+	}
+});
+</script>
+<?php
 }
 
 function usces_paypal_set_session( $member_id, $uscesid = NULL ) {
