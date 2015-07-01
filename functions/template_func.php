@@ -2586,7 +2586,7 @@ function usces_member_history( $out = '' ){
 				<th class="subtotal">' . __('Amount', 'usces') . '</th>
 				</tr></thead><tbody>';
 		$html .= apply_filters('usces_filter_history_cart_head', $history_cart_head, $umhs);
-				
+			
 		for($i=0; $i<count($cart); $i++) { 
 			$cart_row = $cart[$i];
 			$ordercart_id = $cart_row['cart_id'];
@@ -2596,9 +2596,10 @@ function usces_member_history( $out = '' ){
 			$options = $cart_row['options'];
 			//$options = usces_get_ordercart_meta_value( 'option', $ordercart_id );
 			//$options = usces_get_ordercart_meta( 'option', $ordercart_id );
-			$itemCode = $usces->getItemCode($post_id);
-			$itemName = $usces->getItemName($post_id);
-			$cartItemName = $usces->getCartItemName($post_id, $sku);
+			$itemCode = $cart_row['item_code'];
+			$itemName = $cart_row['item_name'];
+	//		$cartItemName = $this->getCartItemName($post_id, $sku);
+			$cartItemName = $usces->getCartItemName_byOrder($cart_row);
 			//$skuPrice = $usces->getItemPrice($post_id, $sku);
 			$skuPrice = $cart_row['price'];
 			$pictid = (int)$usces->get_mainpictid($itemCode);
