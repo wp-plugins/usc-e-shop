@@ -3152,6 +3152,9 @@ class usc_e_shop
 			'regmember', 'editmember', 'deletemember', 'page_login', 'page_logout', 'page_lostmemberpassword', 'lostpassword', 
 			'uscesmode_changepassword', 'changepassword', 'page_newmember', 'usces_export', 'usces_import', 
 			'page_search_item', 'front_ajax');
+
+			$action_array = apply_filters('usces_filter_action_array', $action_array);
+
 			$flg = 0;
 			$res = true;
 			foreach( $usces_action as $handle => $action ){
