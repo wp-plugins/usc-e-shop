@@ -367,7 +367,7 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 			$tx = ( 'exclude' == $usces->options['tax_mode'] ) ? $usces_entries['order']['tax'] : 0;
 			$sf = ( !empty($usces_entries['order']['shipping_charge']) ) ? $usces_entries['order']['shipping_charge'] : 0;
 			$am = $usces_entries['order']['total_full_price'] - $tx - $sf;
-			$html .= '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
+			$purchase_html = '<form id="purchase_form" name="purchase_form" action="'.$acting_opts['send_url'].'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}" >
 				<input type="hidden" name="aid" value="'.$acting_opts['aid'].'" />
 				<input type="hidden" name="cod" value="'.$rand.'" />
 				<input type="hidden" name="jb" value="'.$acting_opts['card_jb'].'" />
@@ -383,12 +383,12 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 				<input type="hidden" name="page_id" value="'.USCES_CART_NUMBER.'" />
 				<input type="hidden" name="uscesid" value="' . $usces->get_uscesid(false) . '">
 				';
-			$html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).$purchase_disabled.' /></div>';
-			$html = apply_filters('usces_filter_confirm_inform', $html, $payments, $acting_flag, $rand, $purchase_disabled);
+			$purchase_html .= '<div class="send"><input name="purchase_jpayment" type="submit" id="purchase_button" class="checkout_button" value="'.__('Checkout', 'usces').'"'.apply_filters('usces_filter_confirm_nextbutton', NULL).$purchase_disabled.' /></div>';
+			$html .= apply_filters('usces_filter_confirm_inform', $purchase_html, $payments, $acting_flag, $rand, $purchase_disabled);
 			$html .= '</form>';
-			$html .= '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
+			$purchase_html = '<form action="'.USCES_CART_URL.'" method="post" onKeyDown="if(event.keyCode == 13) {return false;}">
 				<div class="send"><input name="backDelivery" type="submit" id="back_button" class="back_to_delivery_button" value="'.__('Back', 'usces').'"'.apply_filters('usces_filter_confirm_prebutton', NULL).' /></div>';
-			$html = apply_filters('usces_filter_confirm_inform_back', $html);
+			$html .= apply_filters('usces_filter_confirm_inform_back', $purchase_html);
 			$html .= '</form>'."\n";
 			break;
 		case 'acting_jpayment_conv'://コンビニ・ペーパーレス決済(J-Payment)

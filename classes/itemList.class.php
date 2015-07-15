@@ -160,7 +160,7 @@ class dataList
 		if(isset($_REQUEST['changePage'])){
 		
 			$this->action = 'changePage';
-			$this->currentPage = $_REQUEST['changePage'];
+			$this->currentPage = (int)$_REQUEST['changePage'];
 			
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
@@ -175,9 +175,11 @@ class dataList
 		
 			$this->action = 'changeSort';
 			$this->sortOldColumn = $this->sortColumn;
-			$this->sortColumn = $_REQUEST['changeSort'];
+			$this->sortColumn = str_replace('(', '', $_REQUEST['changeSort']);
+			$this->sortColumn = str_replace(',', '', $this->sortColumn);
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
-			$this->sortSwitchs[$this->sortColumn] = $_REQUEST['switch'];
+			$this->sortSwitchs[$this->sortColumn] = str_replace('(', '', $_REQUEST['switch']);
+			$this->sortSwitchs[$this->sortColumn] = str_replace(',', '', $this->sortSwitchs[$this->sortColumn]);
 			
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
@@ -190,7 +192,7 @@ class dataList
 		} else if(isset($_REQUEST['searchIn'])){
 		
 			$this->action = 'searchIn';
-			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? $_REQUEST['search']['column'] : '';
+			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? str_replace(',', '', $_REQUEST['search']['column']) : '';
 			$this->arr_search['word'] = isset($_REQUEST['search']['word']) ? $_REQUEST['search']['word'] : '';
 			$this->arr_search['period'] = isset($_REQUEST['search']['period']) ? (int)$_REQUEST['search']['period'] : '';
 			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
@@ -207,7 +209,7 @@ class dataList
 			$this->arr_search['column'] = '';
 			$this->arr_search['word'] = '';
 			$this->arr_search['period'] = $_SESSION[$this->table]['arr_search']['period'];
-			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
+			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? str_replace(',', '', $_REQUEST['searchSwitchStatus']) : '';
 			
 			$this->currentPage = 1;
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
@@ -232,7 +234,7 @@ class dataList
 
 		}else if(isset($_REQUEST['collective'])){
 		
-			$this->action = 'collective_' . $_POST['allchange']['column'];
+			$this->action = 'collective_' . str_replace(',', '', $_POST['allchange']['column']);
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];

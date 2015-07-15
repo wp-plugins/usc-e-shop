@@ -575,7 +575,7 @@ class usc_e_shop
 				do_action('usces_pre_update_orderdata', $_REQUEST['order_id']);
 				$res = usces_update_orderdata();
 				if ( 1 === $res ) {
-					$this->set_action_status('success', __('order date is updated','usces').' <a href="'.stripslashes( $_POST['usces_referer'] ).'">'.__('back to the summary','usces').'</a>');
+					$this->set_action_status('success', __('order date is updated','usces').' <a href="'.esc_url(stripslashes( $_POST['usces_referer'] )).'">'.__('back to the summary','usces').'</a>');
 				} elseif ( 0 === $res ) {
 					$this->set_action_status('none', '');
 				} else {
@@ -2727,7 +2727,7 @@ class usc_e_shop
 		if( isset($_REQUEST['page']) && $_REQUEST['page'] == 'usces_itemedit' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'duplicate' ){
 			$post_id = (int)$_GET['post'];
 			$new_id = usces_item_dupricate($post_id);
-			$ref = isset($_REQUEST['usces_referer']) ? urlencode($_REQUEST['usces_referer']) : '';
+			$ref = isset($_REQUEST['usces_referer']) ? urlencode(esc_url($_REQUEST['usces_referer'])) : '';
 			$url = USCES_ADMIN_URL . '?page=usces_itemedit&action=edit&post=' . $new_id . '&usces_referer=' . $ref;
 			wp_redirect($url);
 			exit;
@@ -4756,9 +4756,9 @@ class usc_e_shop
 			$_SESSION['usces_singleitem']['error_message'] = $mes;
 			if( false === strpos($_POST['usces_referer'], 'http') ){
 				$parse_url = parse_url(get_home_url());
-				header('location: ' . $parse_url['scheme'] . '://' . $parse_url['host'] . $_POST['usces_referer'] . '#cart_button');
+				header('location: ' . $parse_url['scheme'] . '://' . $parse_url['host'] . esc_url($_POST['usces_referer']) . '#cart_button');
 			}else{
-				header('location: ' . $_POST['usces_referer'] . '#cart_button');
+				header('location: ' . esc_url($_POST['usces_referer']) . '#cart_button');
 			}
 			exit;
 		}

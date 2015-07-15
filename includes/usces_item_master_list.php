@@ -404,7 +404,7 @@ jQuery(document).ready(function($){
 ?>
 	<tr>
 	<td width="20px" align="center"><input name="listcheck[]" type="checkbox" value="<?php echo (int)$array['ID']; ?>" /></td>
-	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
+	<td width="50px"><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.esc_url($curent_url); ?>" title="<?php echo esc_attr($array['item_name']); ?>"><?php echo wp_get_attachment_image( $pctid, array(50, 50), true ); ?></a></td>
 	<?php foreach ( (array)$array as $key => $value ) : ?>
 		<?php if( $key == 'item_code') : ?>
 			<?php if( USCES_MYSQL_VERSION < 5 ){ $value = get_post_meta($array['ID'], '_itemCode', true); $array['item_code'] = $value; } ?>
@@ -422,7 +422,7 @@ jQuery(document).ready(function($){
 				&nbsp;
 			<?php endif; ?>
 			<ul class="item_list_navi">
-				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>"><?php _e('edit', 'usces'); ?></a></li>
+				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.esc_url($curent_url); ?>"><?php _e('edit', 'usces'); ?></a></li>
 				<li>&nbsp;|&nbsp;</li>
 				<!--<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo esc_attr($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>-->
 <?php
@@ -450,7 +450,7 @@ jQuery(document).ready(function($){
 				&nbsp;
 			<?php endif; ?>
 			<ul class="item_list_navi">
-				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.$curent_url; ?>"><?php _e('edit', 'usces'); ?></a></li>
+				<li><a href="<?php echo USCES_ADMIN_URL.'?page=usces_itemedit&action=edit&post='.$array['ID'].'&usces_referer='.esc_url($curent_url); ?>"><?php _e('edit', 'usces'); ?></a></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li><a href="<?php echo wp_nonce_url("post.php?action=delete&amp;post=".$array['ID'], 'delete-post_' . $array['ID']); ?>" onclick="return deleteconfirm('<?php echo esc_attr($array['item_code']); ?>');"><?php _e('Delete', 'usces'); ?></a></li>
 			</ul>

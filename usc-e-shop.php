@@ -7,7 +7,7 @@ Version: 1.4.17
 Author: Collne Inc.
 Author URI: http://www.collne.com/
 */
-define('USCES_VERSION', '1.4.17.1507151');
+define('USCES_VERSION', '1.4.17.1507152');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');

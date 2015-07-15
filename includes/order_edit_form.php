@@ -876,7 +876,7 @@ jQuery(document).ready(function($){
 	</div>
 </div>
 <div class="mailVisiLink">
-<a style="cursor:pointer;" id="mailVisiLink" onclick="toggleVisibility('mailBox');"><?php _e('show the mail/print field', 'usces'); ?></a><br /><a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>"><?php _e('Back', 'usces'); ?></a>
+<a style="cursor:pointer;" id="mailVisiLink" onclick="toggleVisibility('mailBox');"><?php _e('show the mail/print field', 'usces'); ?></a><br /><a href="<?php if(isset($_REQUEST['usces_referer'])) echo esc_url($_REQUEST['usces_referer']); ?>"><?php _e('Back', 'usces'); ?></a>
 </div>
 <div class="ordernavi"><input name="upButton" class="upButton" type="submit" value="<?php _e('change decision', 'usces'); ?>" /><?php _e("When you change amount, please click 'Edit' before you finish your process.", 'usces'); ?></div>
 <div id="mailBox">
@@ -1235,7 +1235,7 @@ echo apply_filters( 'usces_filter_ordereditform_carttable', $cart_table, $filter
 	<fieldset>
 	</fieldset>
 </div>
-<input name="usces_referer" type="hidden" id="usces_referer" value="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>" />
+<input name="usces_referer" type="hidden" id="usces_referer" value="<?php if(isset($_REQUEST['usces_referer'])) echo esc_url($_REQUEST['usces_referer']); ?>" />
 <?php wp_nonce_field( 'order_edit', 'wc_nonce' ); ?>
 </form>
 

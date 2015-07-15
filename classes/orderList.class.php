@@ -71,9 +71,11 @@ class dataList
 
 	function SetSelects()
 	{
+		global $wpdb;
+		
 		$status_sql = '';
 		foreach( $this->management_status as $status_key => $status_name ) {
-			$status_sql .= " WHEN LOCATE('".$status_key."', order_status) > 0 THEN '".$status_name."'";
+			$status_sql .= $wpdb->prepare(" WHEN LOCATE(%s, order_status) > 0 THEN %s", $status_key, $status_name );
 		}
 
 		$select = array(
@@ -213,7 +215,7 @@ class dataList
 		if(isset($_REQUEST['changePage'])){
 
 			$this->action = 'changePage';
-			$this->currentPage = $_REQUEST['changePage'];
+			$this->currentPage = (int)$_REQUEST['changePage'];
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
@@ -228,9 +230,11 @@ class dataList
 
 			$this->action = 'changeSort';
 			$this->sortOldColumn = $this->sortColumn;
-			$this->sortColumn = $_REQUEST['changeSort'];
+			$this->sortColumn = str_replace('(', '', $_REQUEST['changeSort']);
+			$this->sortColumn = str_replace(',', '', $this->sortColumn);
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
-			$this->sortSwitchs[$this->sortColumn] = $_REQUEST['switch'];
+			$this->sortSwitchs[$this->sortColumn] = str_replace('(', '', $_REQUEST['switch']);
+			$this->sortSwitchs[$this->sortColumn] = str_replace(',', '', $this->sortSwitchs[$this->sortColumn]);
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->userHeaderNames = $_SESSION[$this->table]['userHeaderNames'];
 			$this->searchSql = $_SESSION[$this->table]['searchSql'];
@@ -243,7 +247,7 @@ class dataList
 		} else if(isset($_REQUEST['searchIn'])){
 
 			$this->action = 'searchIn';
-			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? $_REQUEST['search']['column'] : '';
+			$this->arr_search['column'] = isset($_REQUEST['search']['column']) ? str_replace(',', '', $_REQUEST['search']['column']) : '';
 			$this->arr_search['sku'] = isset($_REQUEST['search']['sku']) ? $_REQUEST['search']['sku'] : '';
 			$this->arr_search['word'] = isset($_REQUEST['search']['word']) ? $_REQUEST['search']['word'] : '';
 			$this->arr_search['skuword'] = isset($_REQUEST['search']['skuword']) ? $_REQUEST['search']['skuword'] : '';
@@ -263,7 +267,7 @@ class dataList
 			$this->arr_search['sku'] = '';
 			$this->arr_search['skuword'] = '';
 			$this->arr_search['period'] = $_SESSION[$this->table]['arr_search']['period'];
-			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? $_REQUEST['searchSwitchStatus'] : '';
+			$this->searchSwitchStatus = isset($_REQUEST['searchSwitchStatus']) ? str_replace(',', '', $_REQUEST['searchSwitchStatus']) : '';
 			$this->currentPage = 1;
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
@@ -286,7 +290,7 @@ class dataList
 
 		}else if(isset($_REQUEST['collective'])){
 
-			$this->action = 'collective_' . $_POST['allchange']['column'];
+			$this->action = 'collective_' . str_replace(',', '', $_POST['allchange']['column']);
 			$this->currentPage = $_SESSION[$this->table]['currentPage'];
 			$this->sortColumn = $_SESSION[$this->table]['sortColumn'];
 			$this->sortSwitchs = $_SESSION[$this->table]['sortSwitchs'];
@@ -309,7 +313,7 @@ class dataList
 	{
 		global $wpdb;
 		$where = $this->GetWhere();
-		$order = ' ORDER BY `' . $this->sortColumn . '` ' . $this->sortSwitchs[$this->sortColumn];
+		$order = ' ORDER BY `' . esc_sql($this->sortColumn) . '` ' . esc_sql($this->sortSwitchs[$this->sortColumn]);
 		$order = apply_filters( 'usces_filter_order_list_get_orderby', $order, $this );
 
 		$select = '';
@@ -350,6 +354,7 @@ class dataList
 
 	function GetWhere()
 	{
+		global $wpdb;
 		$str = '';
 		$where = "";
 		$thismonth = date('Y-m-01 00:00:00');
@@ -359,19 +364,19 @@ class dataList
 		$last90 = date('Y-m-d 00:00:00', mktime(0, 0, 0, date('m'), date('d')-90, date('Y')));
 		switch ( $this->arr_search['period'] ) {
 			case 0:
-				$where = " WHERE order_date >= '{$thismonth}' ";
+				$where = $wpdb->prepare(" WHERE order_date >= %s ", $thismonth );
 				break;
 			case 1:
-				$where = " WHERE order_date >= '{$lastmonth}' AND order_date < '{$thismonth}' ";
+				$where = $wpdb->prepare(" WHERE order_date >= %s AND order_date < %s ", $lastmonth, $thismonth );
 				break;
 			case 2:
-				$where = " WHERE order_date >= '{$lastweek}' ";
+				$where = $wpdb->prepare(" WHERE order_date >= %s ", $thismonth );
 				break;
 			case 3:
-				$where = " WHERE order_date >= '{$last30}' ";
+				$where = $wpdb->prepare(" WHERE order_date >= %s ", $thismonth );
 				break;
 			case 4:
-				$where = " WHERE order_date >= '{$last90}' ";
+				$where = $wpdb->prepare(" WHERE order_date >= %s ", $thismonth );
 				break;
 			case 5:
 				$where = "";
@@ -408,57 +413,57 @@ class dataList
 		switch ($this->arr_search['column']) {
 			case 'ID':
 				$column = 'ID';
-				$this->searchSql = $column . ' = ' . (int)$this->arr_search['word']['ID'];
+				$this->searchSql = esc_sql($column) . ' = ' . (int)$this->arr_search['word']['ID'];
 				break;
 			case 'deco_id':
 				$column = 'deco_id';
-				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['deco_id']) . "%'";
+				$this->searchSql = esc_sql($column) . ' LIKE '."'%" . esc_sql($this->arr_search['word']['deco_id']) . "%'";
 				break;
 			case 'date':
 				$column = 'date';
-				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['date']) . "%'";
+				$this->searchSql = esc_sql($column) . ' LIKE '."'%" . esc_sql($this->arr_search['word']['date']) . "%'";
 				break;
 			case 'mem_id':
 				$column = 'mem_id';
-				$this->searchSql = $column . ' = ' . (int)$this->arr_search['word']['mem_id'];
+				$this->searchSql = esc_sql($column) . ' = ' . (int)$this->arr_search['word']['mem_id'];
 				break;
 			case 'name':
 				$column = 'name';
-				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['name']) . "%'";
+				$this->searchSql = esc_sql($column) . ' LIKE '."'%" . esc_sql($this->arr_search['word']['name']) . "%'";
 				break;
 			case 'order_modified':
 				$column = 'order_modified';
-				$this->searchSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['word']['order_modified']) . "%'";
+				$this->searchSql = esc_sql($column) . ' LIKE '."'%" . esc_sql($this->arr_search['word']['order_modified']) . "%'";
 				break;
 			case 'pref':
 				$column = 'pref';
-				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['pref']) . "'";
+				$this->searchSql = esc_sql($column) . " = '" . esc_sql($this->arr_search['word']['pref']) . "'";
 				break;
 			case 'delivery_method':
 				$column = 'delivery_method';
-				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['delivery_method']) . "'";
+				$this->searchSql = esc_sql($column) . " = '" . esc_sql($this->arr_search['word']['delivery_method']) . "'";
 				break;
 			case 'payment_name':
 				$column = 'payment_name';
-				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['payment_name']) . "'";
+				$this->searchSql = esc_sql($column) . " = '" . esc_sql($this->arr_search['word']['payment_name']) . "'";
 				break;
 			case 'receipt_status':
 				$column = 'receipt_status';
-				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['receipt_status']) . "'";
+				$this->searchSql = esc_sql($column) . " = '" . esc_sql($this->arr_search['word']['receipt_status']) . "'";
 				break;
 			case 'order_status':
 				$column = 'order_status';
-				$this->searchSql = $column . " = '" . esc_sql($this->arr_search['word']['order_status']) . "'";
+				$this->searchSql = esc_sql($column) . " = '" . esc_sql($this->arr_search['word']['order_status']) . "'";
 				break;
 		}
 		switch ($this->arr_search['sku']) {
 			case 'item_code':
 				$column = 'item_code';
-				$this->searchSkuSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['skuword']['item_code']) . "%'";
+				$this->searchSkuSql = esc_sql($column) . ' LIKE '."'%" . esc_sql($this->arr_search['skuword']['item_code']) . "%'";
 				break;
 			case 'item_name':
 				$column = 'item_name';
-				$this->searchSkuSql = $column . ' LIKE '."'%" . esc_sql($this->arr_search['skuword']['item_name']) . "%'";
+				$this->searchSkuSql = esc_sql($column) . ' LIKE '."'%" . esc_sql($this->arr_search['skuword']['item_name']) . "%'";
 				break;
 		}
 	}

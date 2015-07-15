@@ -256,7 +256,7 @@ $itemIndividualSCharge = get_post_meta($post_ID, '_itemIndividualSCharge', true)
 
 <input type="hidden" name="post_mime_type" value="item" />
 <input type="hidden" name="page" value="usces_itemedit" />
-<input name="usces_referer" type="hidden" id="usces_referer" value="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>" />
+<input name="usces_referer" type="hidden" id="usces_referer" value="<?php if(isset($_REQUEST['usces_referer'])) echo esc_url($_REQUEST['usces_referer']); ?>" />
 
 <?php
 if ( isset($post->post_status) && 'draft' != $post->post_status )
@@ -269,7 +269,7 @@ wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 ?>
 
-<div id="refbutton"><a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID.'&usces_referer='.(isset($_REQUEST['usces_referer']) ? urlencode($_REQUEST['usces_referer']) : ''); ?>">[<?php _e('make a copy', 'usces'); ?>]</a> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo $_REQUEST['usces_referer']; ?>">[<?php _e('back to item list', 'usces'); ?>]</a></div>
+<div id="refbutton"><a href="<?php echo USCES_ADMIN_URL . '?page=usces_itemedit&amp;action=duplicate&amp;post='.$post->ID.'&usces_referer='.(isset($_REQUEST['usces_referer']) ? urlencode(esc_url($_REQUEST['usces_referer'])) : ''); ?>">[<?php _e('make a copy', 'usces'); ?>]</a> <a href="<?php if(isset($_REQUEST['usces_referer'])) echo esc_url($_REQUEST['usces_referer']); ?>">[<?php _e('back to item list', 'usces'); ?>]</a></div>
 <!--<div id="poststuff" class="metabox-holder has-right-sidebar">-->
 <div id="poststuff">
 <div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">

@@ -273,7 +273,7 @@ function addComma(str)
 </tr>
 <tr>
 <td><?php echo $umhs['date']; ?></td>
-<td><a href="<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=edit&order_id=<?php echo $order_id; ?>&usces_referer=<?php echo $curent_url; ?>"><?php echo usces_get_deco_order_id( $order_id ); ?></a></td>
+<td><a href="<?php echo USCES_ADMIN_URL; ?>?page=usces_orderlist&order_action=edit&order_id=<?php echo $order_id; ?>&usces_referer=<?php echo esc_url($curent_url); ?>"><?php echo usces_get_deco_order_id( $order_id ); ?></a></td>
 <td class="rightnum"><?php usces_crform( $this->get_total_price($cart)-$umhs['usedpoint']+$umhs['discount']+$umhs['shipping_charge']+$umhs['cod_fee']+$umhs['tax'], true, false ); ?></td>
 <td class="rightnum"><?php echo number_format($umhs['usedpoint']); ?></td>
 <td class="rightnum"><?php usces_crform( $umhs['discount'], true, false ); ?></td>
