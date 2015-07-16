@@ -56,7 +56,7 @@ foreach((array)$arr_status as $key => $value){
 	}
 }
 $order_status['new'] = __('new order', 'usces');
-$curent_url = urlencode(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']);
+$curent_url = urlencode(esc_url(USCES_ADMIN_URL . '?' . $_SERVER['QUERY_STRING']));
 
 //20100908ysk start
 $csod_meta = usces_has_custom_field_meta('order');
@@ -663,7 +663,7 @@ jQuery(document).ready(function($){
 		foreach( (array)$array as $key => $value ) {
 			if( WCUtils::is_blank($value) ) $value = '&nbsp;';
 			if( $key === 'ID' || $key === 'deco_id' ) {
-				$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.esc_url($curent_url).'&wc_nonce='.wp_create_nonce( 'order_list' ).'">'.esc_html($value).'</a></td>';
+				$list_detail .= '<td><a href="'.USCES_ADMIN_URL.'?page=usces_orderlist&order_action=edit&order_id='.$array['ID'].'&usces_referer='.$curent_url.'&wc_nonce='.wp_create_nonce( 'order_list' ).'">'.esc_html($value).'</a></td>';
 			} elseif( $key === 'date' ) {
 				$list_detail .= '<td>'.esc_html($value).'</td>';
 			} elseif( $key === 'mem_id' ) {
