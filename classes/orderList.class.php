@@ -370,13 +370,13 @@ class dataList
 				$where = $wpdb->prepare(" WHERE order_date >= %s AND order_date < %s ", $lastmonth, $thismonth );
 				break;
 			case 2:
-				$where = $wpdb->prepare(" WHERE order_date >= %s ", $thismonth );
+				$where = $wpdb->prepare(" WHERE order_date >= %s ", $lastweek );
 				break;
 			case 3:
-				$where = $wpdb->prepare(" WHERE order_date >= %s ", $thismonth );
+				$where = $wpdb->prepare(" WHERE order_date >= %s ", $last30 );
 				break;
 			case 4:
-				$where = $wpdb->prepare(" WHERE order_date >= %s ", $thismonth );
+				$where = $wpdb->prepare(" WHERE order_date >= %s ", $last90 );
 				break;
 			case 5:
 				$where = "";

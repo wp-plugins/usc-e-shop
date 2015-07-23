@@ -93,6 +93,10 @@ div.footer_explanation {
 	text-align: left;
 }
 
+#cart td.productname {
+	text-align: left;
+}
+
 #cart input.quantity {
 	width: 40px;
 	text-align: center;
