@@ -1268,26 +1268,28 @@ function item_option_ajax()
 
 	if( $_POST['action'] != 'item_option_ajax' ) die(0);
 	
+	$post_id = (int)$_POST['ID'];
+	
 	if(isset($_POST['update'])){
-		$id = up_item_option_meta( $_POST['ID'] );
+		$id = up_item_option_meta( $post_id );
 		
 	}else if(isset($_POST['delete'])){
-		$id = del_item_option_meta( $_POST['ID'] );
+		$id = del_item_option_meta( $post_id );
 		
 	}else if(isset($_POST['select'])){
-		$res = select_common_option( $_POST['ID'] );
+		$res = select_common_option( $post_id );
 		die( $res );
 		
 	}else if(isset($_POST['sort'])){
-		$id = usces_sort_post_meta( $_POST['ID'], $_POST['meta'] );
+		$id = usces_sort_post_meta( $post_id, $_POST['meta'] );
 		//die( $res );
 		
 	}else{
-		$id = add_item_option_meta( $_POST['ID'] );
+		$id = add_item_option_meta( $post_id );
 		
 	}
 		
-	$opts = usces_get_opts( $_POST['ID'] );
+	$opts = usces_get_opts( $post_id );
 	
 	$r = '';
 	foreach ( $opts as $opt )
@@ -1305,26 +1307,28 @@ function item_sku_ajax(){
 	$id = '';
 	if( $_POST['action'] != 'item_sku_ajax' ) die(0);
 	
+	$post_id = (int)$_POST['ID'];
+
 	if(isset($_POST['update'])){
-		$id = up_item_sku_meta( $_POST['ID'] );
+		$id = up_item_sku_meta( $post_id );
 		
 	}else if(isset($_POST['delete'])){
-		$id = del_item_sku_meta( $_POST['ID'] );
+		$id = del_item_sku_meta( $post_id );
 		
 	}else if(isset($_POST['select'])){
-		$res = select_item_sku( $_POST['ID'] );
+		$res = select_item_sku( $post_id );
 		die( $res );
 		
 	}else if(isset($_POST['sort'])){
-		$id = usces_sort_post_meta( $_POST['ID'], $_POST['meta'] );
+		$id = usces_sort_post_meta( $post_id, $_POST['meta'] );
 		//die( $res );
 		
 	}else{
-		$id = add_item_sku_meta( $_POST['ID'] );
+		$id = add_item_sku_meta( $post_id );
 		
 	}
 		
-	$skus = $usces->get_skus( $_POST['ID'] );
+	$skus = $usces->get_skus( $post_id );
 	
 	$r = '';
 	

@@ -3795,8 +3795,13 @@ class usc_e_shop
 
 		}else if( $post->ID == USCES_MEMBER_NUMBER ) {
 		
-			$this->page = 'member';
+			if( $this->is_member_logged_in() ) {
+				$this->page = 'member';
+			}else{
+				$this->page = 'login';
+			}
 			add_filter('the_content', array($this, 'filter_memberContent'),20);
+			add_filter('the_title', array($this, 'filter_memberTitle'),20);
 		
 		}else if( !is_singular() ) {
 			$this->page = 'wp_search';
@@ -3890,7 +3895,7 @@ class usc_e_shop
 				}
 			
 			} else {
-			
+
 				switch( $this->page ){
 					case 'login':
 						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php') ){
@@ -3927,6 +3932,7 @@ class usc_e_shop
 						}
 						break;
 					default:
+						$this->page = 'login';
 						if( file_exists(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php') ){
 							include(get_stylesheet_directory() . '/wc_templates/member/wc_login_page.php');
 							exit;
