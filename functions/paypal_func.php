@@ -249,14 +249,15 @@ function usces_paypal_set_session( $member_id, $uscesid = NULL ) {
 			}
 		}
 	}
-	foreach( $_SESSION['usces_entry']['customer'] as $key => $value ) {
-		if( 'country' == $key and empty( $value ) ) {
-			$_SESSION['usces_entry']['delivery'][$key] = usces_get_base_country();
-		} else {
-			$_SESSION['usces_entry']['delivery'][$key] = trim( $value );
+	if( isset($_SESSION['usces_entry']['delivery']['delivery_flag']) && $_SESSION['usces_entry']['delivery']['delivery_flag'] != 1 ) {
+		foreach( $_SESSION['usces_entry']['customer'] as $key => $value ) {
+			if( 'country' == $key and empty( $value ) ) {
+				$_SESSION['usces_entry']['delivery'][$key] = usces_get_base_country();
+			} else {
+				$_SESSION['usces_entry']['delivery'][$key] = trim( $value );
+			}
 		}
 	}
-	
 	do_action( 'usces_action_paypal_set_session' );
 	
 	return true;
