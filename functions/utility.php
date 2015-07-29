@@ -750,7 +750,7 @@ function usces_get_conv_name($code){
 			$name = 'ファミリーマート';
 			break;
 		case 'D401':
-			$name = 'CyberEdy';
+			$name = '楽天Ｅｄｙ';
 			break;
 		case 'D404':
 			$name = '楽天銀行';
@@ -758,11 +758,17 @@ function usces_get_conv_name($code){
 		case 'D406':
 			$name = 'ジャパネット銀行';
 			break;
+		case 'D407':
+			$name = 'Suicaインターネットサービス';
+			break;
 		case 'D451':
 			$name = 'ウェブマネー';
 			break;
 		case 'D452':
 			$name = 'ビットキャッシュ';
+			break;
+		case 'D453':
+			$name = 'JCBプレモカード';
 			break;
 		case 'P901':
 			$name = 'コンビニ払込票';
@@ -814,8 +820,10 @@ function usces_get_remise_conv_return($code){
 		case 'D401': //CyberEdy
 		case 'D404': //楽天銀行
 		case 'D406': //ジャパネット銀行
+		case 'D407': //Suicaインターネットサービス
 		case 'D451': //ウェブマネー
 		case 'D452': //ビットキャッシュ
+		case 'D453': //JCBプレモカード
 			$html = '<tr><th>' . __('受付番号','usces') . '</th><td>' . esc_html($_REQUEST["X-PAY_NO1"]) . "</td></tr>\n";
 			$html .= '<tr><th>'.__('支払手続URL', 'usces').'</th><td><a href="'.esc_html($_REQUEST["X-PAY_NO2"]).'" target="_blank">'.esc_html($_REQUEST["X-PAY_NO2"])."</a></td></tr>\n";
 			break;

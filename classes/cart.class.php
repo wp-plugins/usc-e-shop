@@ -396,7 +396,6 @@ class usces_cart {
 					$_SESSION['usces_entry']['delivery'][$key] = trim($value);
 				}
 		}
-		
 		if(isset($_POST['delivery']['delivery_flag']) && $_POST['delivery']['delivery_flag'] == 0)	{	
 			foreach( $_SESSION['usces_entry']['customer'] as $key => $value )
 				if( 'country' == $key && empty($value) ){

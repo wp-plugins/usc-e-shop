@@ -11,7 +11,7 @@ if( $usces_payment ) {
 	add_filter( 'usces_filter_uscesL10n', 'usces_paypal_filter_uscesL10n' );
 	add_filter( 'usces_filter_paypal_ec_cancelurl', 'usces_paypal_filter_paypal_ec_cancelurl', 10, 2 );
 	add_action( 'usces_action_cart_page_footer', 'usces_paypal_action_cart_page_footer' );
-	//add_filter( 'usces_filter_cart_page_footer', 'usces_paypal_filter_cart_page_footer' );
+//	add_filter( 'usces_filter_cart_page_footer', 'usces_paypal_filter_cart_page_footer' );
 	add_filter( 'usces_filter_cartContent', 'usces_paypal_filter_cart_page_footer' );
 	add_action( 'usces_action_customerinfo', 'usces_paypal_action_customerinfo' );
 	add_action( 'wp_print_footer_scripts', 'usces_paypal_footer_scripts', 11 );

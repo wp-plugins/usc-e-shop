@@ -587,7 +587,7 @@ class ESCOTT_SETTLEMENT
 	* @return $response
 	***********************************************/
 	public function make_kaiin_pass(){
-		$passwd = mt_rand( 100000000000, 999999999999 );
+		$passwd = sprintf( '%012d', mt_rand() );
 		return $passwd;
 		
 	}
@@ -598,7 +598,7 @@ class ESCOTT_SETTLEMENT
 	* @return $response
 	***********************************************/
 	public function make_kaiin_id(){
-		$id = mt_rand( 100000000000, 999999999999 );
+		$id = sprintf( '%012d', mt_rand() );
 		return 'i'.$id;
 		
 	}

@@ -8652,7 +8652,6 @@ class usc_e_shop
 	function filter_cartContent($content) {
 		global $post;
 		$html = '';
-		
 		switch($this->page){
 			case 'cart':
 				$temp_path = apply_filters('usces_template_path_cart', USCES_PLUGIN_DIR . '/templates/cart/cart.php');

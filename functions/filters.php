@@ -1200,4 +1200,5 @@ function usces_login_width_paypal(){
 function usces_instance_settlement(){
 	$dsk_settle = new DSK_SETTLEMENT();
 	$escott_settle = new ESCOTT_SETTLEMENT();
+//	$yahoowallet_settle = new YAHOOWALLET_SETTLEMENT();
 }
