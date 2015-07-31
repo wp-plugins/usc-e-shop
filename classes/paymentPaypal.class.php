@@ -15,7 +15,7 @@ class usces_paypal {
 	var $nvpreq;
 	var $resArray;
 
-	function usces_paypal() {
+	function __construct() {
 		$this->options = get_option('usces');
 		$this->API_UserName = urlencode($this->options['acting_settings']['paypal']['user']);
 		$this->API_Password = urlencode($this->options['acting_settings']['paypal']['pwd']);

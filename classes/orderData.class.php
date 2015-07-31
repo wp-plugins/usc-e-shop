@@ -10,7 +10,7 @@ class orderDataObject
 	var $order;
 	var $reserve;
 
-	function orderDataObject($order_id) {
+	function __construct($order_id) {
 		global $wpdb, $usces_settings;
 
 		$order_table = $wpdb->prefix . "usces_order";

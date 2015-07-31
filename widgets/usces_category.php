@@ -5,8 +5,8 @@
  */
 class Welcart_category extends WP_Widget {
     /** constructor */
-    function Welcart_category() {
-        parent::WP_Widget(false, $name = 'Welcart '.__('Categories', 'usces'));	
+    function __construct() {
+        parent::__construct(false, $name = 'Welcart '.__('Categories', 'usces'));	
     }
 
     /** @see WP_Widget::widget */

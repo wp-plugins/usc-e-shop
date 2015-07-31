@@ -69,6 +69,7 @@ $chk_ord = ( isset($usces_opt_order['chk_ord']) ) ? $usces_opt_order['chk_ord'] 
 //20110411ysk start
 $applyform = usces_get_apply_addressform($this->options['system']['addressform']);
 //20110411ysk end
+$settlement_backup = ( isset($this->options['system']['settlement_backup']) ) ? $this->options['system']['settlement_backup'] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -332,6 +333,17 @@ jQuery(function($){
 		},
 
 		delete_order_log_all: function() {
+			$.ajax({
+				url: ajaxurl,
+				type: "POST",
+				data: {
+					action: "order_item_ajax",
+					mode: "delete_order_log_all"
+				}
+			}).done(function( retVal, dataType ) {
+			}).fail(function( retVal ) {
+			});
+			return false;
 		},
 
 		revival_order_data: function( log_key ) {
@@ -367,6 +379,7 @@ jQuery(function($){
 		buttons: {
 			"<?php _e('Clear log', 'usces'); ?>": function() {
 				if( confirm("<?php _e('Are you sure you want to delete all log ?', 'usces'); ?>") ) {
+					//operation.delete_order_log_all();
 					$("#order-log-list tbody").html("");
 				}
 			},
@@ -636,6 +649,9 @@ jQuery(document).ready(function($){
 		<?php do_action( 'usces_action_dl_list_table' ); ?>
 		<td><input type="button" id="dl_productlist" class="searchbutton" value="<?php _e('Download Product List', 'usces'); ?>" /></td>
 		<td><input type="button" id="dl_orderlist" class="searchbutton" value="<?php _e('Download Order List', 'usces'); ?>" /></td>
+		<?php if( $settlement_backup == 1 ) : ?>
+		<td><input type="button" id="orderlog" class="searchbutton" value="<?php _e('Order Log List', 'usces'); ?>" /></td>
+		<?php endif; ?>
 		</tr>
 		</table>
 <!--20100908ysk end-->

@@ -32,7 +32,7 @@ class dataList
 	var $joinTableSql;
 
 	//Constructor
-	function dataList($tableName, $arr_column)
+	function __construct($tableName, $arr_column)
 	{
 		$this->table = $tableName;
 		$this->columns = $arr_column;

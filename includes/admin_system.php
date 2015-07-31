@@ -34,6 +34,7 @@ $member_pass_rule_min = isset($this->options['system']['member_pass_rule_min']) 
 $member_pass_rule_max = isset($this->options['system']['member_pass_rule_max']) && !empty( $this->options['system']['member_pass_rule_max'] ) ? $this->options['system']['member_pass_rule_max'] : '';
 //20140122 kitamu_end
 $csv_encode_type = isset( $this->options['system']['csv_encode_type'] ) ? $this->options['system']['csv_encode_type'] : 0;
+$settlement_backup = ( isset($this->options['system']['settlement_backup']) ) ? $this->options['system']['settlement_backup'] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function($){
@@ -49,7 +50,6 @@ jQuery(function($){
 		$("#AdditionalURLs").toggle();
 	});
 
-//20110331ysk start
 	var pre_target = '';
 
 	operation = {
@@ -97,12 +97,10 @@ jQuery(function($){
 		onchange_target_market_province: function(index) {
 			if(pre_target != '') $('#province_'+pre_target).val($("#province").val());
 			var target = $("#select_target_market_province option:selected").val();
-//20120725ysk start 000057
 			//$("#province").text('');
 			//$("#province").text($('#province_'+target).val());
 			$("#province").val('');
 			$("#province").val($('#province_'+target).val());
-//20120725ysk end
 			pre_target = target;
 		},
 
@@ -116,7 +114,6 @@ jQuery(function($){
 			error: function(msg) {
 				$("#target_market_loading").html('');
 			}
-//20120309ysk start 0000430
 		},
 		backup : function() {
 			var s = operation.settings;
@@ -151,7 +148,6 @@ jQuery(function($){
 			};
 			$.ajax( s );
 			return false;
-//20120309ysk end
 		},
 //20140123 kitamu_start 0000526
 		error_bg_color : function(id) {
@@ -239,7 +235,6 @@ jQuery(function($){
 			return true;
 		}
 	});
-//20110331ysk end
 });
 
 function toggleVisibility(id) {
@@ -249,7 +244,6 @@ function toggleVisibility(id) {
    else
 	  e.style.display = 'block';
 }
-//20110331ysk start
 jQuery(document).ready(function($) {
 	operation.set_target_market();
 
@@ -268,7 +262,6 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
-//20120309ysk start 0000430
 <?php
 	$options_backup = get_option('usces_backup');
 	$options_backup_date = get_option('usces_backup_date');
@@ -286,9 +279,7 @@ jQuery(document).ready(function($) {
 		if( !confirm("<?php _e("I will restore the option value. Would you like?", "usces"); ?>") ) return;
 		operation.restore();
 	});
-//20120309ysk end
 });
-//20110331ysk end
 </script>
 <div class="wrap">
 <div class="usces_admin">
@@ -303,14 +294,12 @@ jQuery(document).ready(function($) {
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <div id="poststuff" class="metabox-holder">
 
-<!--20110331ysk start-->
 <div class="uscestabs" id="uscestabs_system">
 	<ul>
 		<li><a href="#system_page_setting_1"><?php _e('System Setting','usces'); ?></a></li>
 		<li><a href="#system_page_setting_2"><?php _e('Language Currency Country','usces'); ?></a></li>
 	</ul>
 <div id="system_page_setting_1">
-<!--20110331ysk end-->
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('System Setting','usces'); ?></span></h3>
 <div class="inside">
@@ -478,7 +467,6 @@ jQuery(document).ready(function($) {
 	</tr>
 </table>
 <hr />
-<!--20120309ysk start 0000430-->
 <table class="form_table">
 	<tr height="35">
 		<th class="system_th"><a style="cursor:pointer;" onclick="toggleVisibility('ex_options_backup');"><?php _e('Setup data backup','usces'); ?></a></th>
@@ -488,9 +476,16 @@ jQuery(document).ready(function($) {
 		<td><div id="ex_options_backup" class="explanation"><?php _e('You can take the backup of the Welcart setup data.', 'usces'); ?></div></td>
 	</tr>
 </table>
-<!--20120309ysk end-->
+<!--<hr />
+<table class="form_table">
+	<tr height="30">
+		<th class="system_th" rowspan="2"><a style="cursor:pointer;" onclick="toggleVisibility('ex_settlement_backup');"><?php _e('Settlement data backup', 'usces'); ?></a></th>
+		<td width="10"><input name="settlement_backup" id="settlement_backup_0" type="radio" value="0"<?php if($settlement_backup === 0) echo ' checked="checked"'; ?>/></td><td width="100"><label for="settlement_backup_0"><?php _e('Not save', 'usces'); ?></label></td>
+		<td width="10"><input name="settlement_backup" id="settlement_backup_1" type="radio" value="1"<?php if($settlement_backup === 1) echo ' checked="checked"'; ?>/></td><td width="100"><label for="settlement_backup_1"><?php _e('Save', 'usces'); ?></label></td>
+		<td><div id="ex_settlement_backup" class="explanation"><?php _e('Save a log of the settlement data. From log data, it is possible to make the order data.', 'usces'); ?></div></td>
+	</tr>
+</table>-->
 </div>
-<!--20110331ysk start-->
 </div><!--postbox-->
 </div><!--system_page_setting_1-->
 <div id="system_page_setting_2">
@@ -515,7 +510,7 @@ jQuery(document).ready(function($) {
 		<?php foreach( $usces_settings['country'] as $Ckey => $Cvalue ){ ?>
 		    <option value="<?php echo $Ckey; ?>"<?php echo ($system_currency == $Ckey ? ' selected="selected"' : ''); ?>><?php echo $Cvalue; ?></option>
 		<?php } ?>
-		    <option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>
+		    <!--<option value="manual"<?php echo ($system_currency == 'manual' ? ' selected="selected"' : ''); ?>><?php _e('Manual', 'usces'); ?></option>-->
 		</select></td>
 	    <td><div id="ex_currency" class="explanation"><?php _e('Displays the currency symbol for each country, the amount separator, the decimal digits. This is a common item in both front end and back end.', 'usces'); ?></div></td>
 	</tr>
@@ -560,12 +555,8 @@ jQuery(document).ready(function($) {
 </div><!--postbox-->
 </div><!--system_page_setting_2-->
 </div><!--uscestabs_system-->
-<!--20110331ysk end-->
-
 
 </div><!--poststuff-->
-
-
 
 <input name="usces_option_update" type="submit" class="button" value="<?php _e('change decision','usces'); ?>" />
 <input type="hidden" id="post_ID" name="post_ID" value="<?php echo USCES_CART_NUMBER ?>" />

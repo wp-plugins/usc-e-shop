@@ -27,7 +27,7 @@ class dataList
 //20101202ysk end
 	
 	//Constructor
-	function dataList($tableName, $arr_column)
+	function __construct($tableName, $arr_column)
 	{
 
 		$this->table = $tableName;

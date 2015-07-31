@@ -7,11 +7,11 @@ $this->action_message = '';
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
-			$("#anibox").animate({ backgroundColor: "#ECFFFF" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#ECFFFF" }, 2000);
 <?php }else if($status == 'caution'){ ?>
-			$("#anibox").animate({ backgroundColor: "#FFF5CE" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#FFF5CE" }, 2000);
 <?php }else if($status == 'error'){ ?>
-			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 
 	$("#aAdditionalURLs").click(function () {
@@ -52,7 +52,7 @@ function toggleVisibility(id) {
 	<tr height="50">
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_display_mode');"><?php _e('Display Modes','usces'); ?></a></th>
 <?php 
-		foreach( (array)$this->display_mode as $key => $label ) { 
+		foreach( (array)$this->display_mode as $key => $label ) : 
 			if($key == 'Promotionsale')
 				continue;
 			$checked = $this->options['display_mode'] == $key ? ' checked="checked"' : '';
@@ -60,7 +60,7 @@ function toggleVisibility(id) {
 		<td width="10"><input name="display_mode" type="radio" id="<?php echo $key; ?>" value="<?php echo $key; ?>"<?php echo $checked; ?> /></td>
 		<td width="100"><label for="<?php echo $key; ?>"><?php echo $label; ?></label></td>
 <?php
-		}
+		endforeach;
 ?>
 	    <td><div id="ex_display_mode" class="explanation">
 <?php _e('<strong>Normal operating</strong> -Normal display', 'usces'); ?><br />
@@ -231,14 +231,14 @@ function toggleVisibility(id) {
 <table class="form_table">
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_membersystem_state');"><?php _e('membership syetem', 'usces'); ?></a></th>
-	    <td width="10"><input name="membersystem_state" id="membersystem_state_activate" type="radio" value="activate"<?php if($this->options['membersystem_state'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_state_activate"><?php _e('to use', 'usces'); ?></label></td>
-	    <td width="10"><input name="membersystem_state" id="membersystem_state_deactivate" type="radio" value="deactivate"<?php if($this->options['membersystem_state'] == 'deactivate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_state_deactivate"><?php _e('not to use', 'usces'); ?></label></td>
+	    <td width="10"><input name="membersystem_state" id="membersystem_state_activate" type="radio" value="activate"<?php if($this->options['membersystem_state'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="100"><label for="membersystem_state_activate"><?php _e('to use', 'usces'); ?></label></td>
+	    <td width="10"><input name="membersystem_state" id="membersystem_state_deactivate" type="radio" value="deactivate"<?php if($this->options['membersystem_state'] == 'deactivate') echo 'checked="checked"'; ?> /></td><td width="100"><label for="membersystem_state_deactivate"><?php _e('not to use', 'usces'); ?></label></td>
 		<td><div id="ex_membersystem_state" class="explanation"><?php _e('Would you like to use membership system or not?', 'usces'); ?></div></td>
 	</tr>
 	<tr>
 	    <th><a style="cursor:pointer;" onclick="toggleVisibility('ex_membersystem_point');"><?php _e('membership points', 'usces'); ?></a></th>
-	    <td width="10"><input name="membersystem_point" id="membersystem_point_activate" type="radio" value="activate"<?php if($this->options['membersystem_point'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_point_activate"><?php _e('to grant', 'usces'); ?></label></td>
-	    <td width="10"><input name="membersystem_point" id="membersystem_point_deactivate" type="radio" value="deactivate"<?php if($this->options['membersystem_point'] == 'deactivate') echo 'checked="checked"'; ?> /></td><td width="60"><label for="membersystem_point_deactivate"><?php _e('not to grant', 'usces'); ?></label></td>
+	    <td width="10"><input name="membersystem_point" id="membersystem_point_activate" type="radio" value="activate"<?php if($this->options['membersystem_point'] == 'activate') echo 'checked="checked"'; ?> /></td><td width="100"><label for="membersystem_point_activate"><?php _e('to grant', 'usces'); ?></label></td>
+	    <td width="10"><input name="membersystem_point" id="membersystem_point_deactivate" type="radio" value="deactivate"<?php if($this->options['membersystem_point'] == 'deactivate') echo 'checked="checked"'; ?> /></td><td width="100"><label for="membersystem_point_deactivate"><?php _e('not to grant', 'usces'); ?></label></td>
 		<td><div id="ex_membersystem_point" class="explanation"><?php _e("Would you like to use 'points granting syetem' when you choose to use membership system?", 'usces'); ?></div></td>
 	</tr>
 </table>

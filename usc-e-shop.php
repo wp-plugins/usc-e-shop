@@ -7,7 +7,7 @@ Version: 1.4.19
 Author: Collne Inc.
 Author URI: http://www.collne.com/
 */
-define('USCES_VERSION', '1.4.19.1507311');
+define('USCES_VERSION', '1.4.19.1507312');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');
@@ -65,7 +65,7 @@ require_once(USCES_PLUGIN_DIR."/functions/paypal_func.php");
 require_once(USCES_PLUGIN_DIR."/classes/PaymentDSK.class.php");
 require_once(USCES_PLUGIN_DIR."/classes/PaymentESCOTT.class.php");
 require_once(USCES_PLUGIN_DIR."/classes/PaymentYahooWallet.class.php");
-//require_once(USCES_PLUGIN_DIR."/classes/paymentEpsilon.class.php");
+require_once(USCES_PLUGIN_DIR."/classes/paymentEpsilon.class.php");
 
 global $usces;
 $usces = new usc_e_shop();

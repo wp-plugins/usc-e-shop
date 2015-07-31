@@ -208,9 +208,9 @@ function get_wcblog_calendar($initial = true, $echo = true) {
 
 class Welcart_Blog_Calendar extends WP_Widget {
 
-	function Welcart_Blog_Calendar() {
+	function __construct() {
 		$widget_ops = array('classname' => 'welcart_blog_calendar', 'description' => __( 'A calendar of your site&#8217;s posts').'（商品以外）' );
-		$this->WP_Widget('welcart-blog-calendar', 'Welcart Blog Calendar', $widget_ops);
+		parent::__construct('welcart-blog-calendar', 'Welcart Blog Calendar', $widget_ops);
 	}
 
 	function widget( $args, $instance ) {

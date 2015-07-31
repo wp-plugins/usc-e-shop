@@ -5,8 +5,8 @@
  */
 class Welcart_bestseller extends WP_Widget {
     /** constructor */
-    function Welcart_bestseller() {
-        parent::WP_Widget(false, $name = 'Welcart '.__('best seller', 'usces'));	
+    function __construct() {
+        parent::__construct(false, $name = 'Welcart '.__('best seller', 'usces'));	
     }
 
     /** @see WP_Widget::widget */

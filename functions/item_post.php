@@ -2359,7 +2359,11 @@ function usces_delete_order_log( $log_key = '' ) {
 	global $usces, $wpdb;
 	$table_name = $wpdb->prefix."usces_log";
 	$res = '';
-	$query = "DELETE FROM {$table_name} WHERE `log_type` = 'acting_data'";
+	if( '' != $log_key ) {
+		$query = $wpdb->prepare( "DELETE FROM {$table_name} WHERE `log_type` = 'acting_data' AND `log_key` = %d", $log_key );
+	} else {
+		$query = "DELETE FROM {$table_name} WHERE `log_type` = 'acting_data'";
+	}
 	$res = $wpdb->query( $query );
 	return $res;
 }
@@ -2371,7 +2375,82 @@ function usces_revival_order_data( $log_key ) {
 	//do_action( 'usces_pre_reg_orderdata' );
 	$results = array();
 	$order_id = usces_reg_orderdata( $results );
+
+	$cart = $usces->cart->get_cart();
+	$entry = $usces->cart->get_entry();
+	$payments = $usces->getPayments($entry['order']['payment_name']);
+	$acting = ( 'acting' == $payments['settlement'] ) ? $payments['module'] : $payments['settlement'];
+	switch( $acting ) {
+	case 'paypal.php':
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+		break;
+
+	case 'epsilon.php':
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+		break;
+
+	case 'acting_zeus_card':
+	case 'acting_zeus_conv':
+	case 'acting_zeus_bank':
+		break;
+
+	case 'acting_remise_card':
+	case 'acting_remise_conv':
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+		break;
+
+	case 'acting_jpayment_card':
+	case 'acting_jpayment_conv':
+	case 'acting_jpayment_bank':
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+		break;
+
+	case 'acting_paypal_ec':
+	case 'acting_paypal_wpp':
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+		break;
+
+	case 'acting_sbps_card':
+	case 'acting_sbps_conv':
+	case 'acting_sbps_payeasy':
+	case 'acting_sbps_wallet':
+	case 'acting_sbps_mobile':
+		//$usces->set_order_meta_value( 'res_tracking_id', $log_key, $order_id );
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+
+	case 'acting_telecom_card':
+	case 'acting_telecom_edy':
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+		break;
+
+	case 'acting_digitalcheck_card':
+	case 'acting_digitalcheck_conv':
+		//$usces->set_order_meta_value( 'SID', $log_key, $order_id );
+		$usces->set_order_meta_value( 'settlement_id', $log_key, $order_id );
+		break;
+
+	case 'acting_mizuho_card':
+	case 'acting_mizuho_conv1':
+	case 'acting_mizuho_conv2':
+		$usces->set_order_meta_value( 'stran', $log_key, $order_id );
+
+	case 'acting_anotherlane_card':
+		$usces->set_order_meta_value( 'TransactionId', $log_key, $order_id );
+		break;
+
+	case 'acting_veritrans_card':
+	case 'acting_veritrans_conv':
+		$usces->set_order_meta_value( 'orderId', $log_key, $order_id );
+		break;
+
+	case 'acting_paygent_card':
+	case 'acting_paygent_conv':
+		$usces->set_order_meta_value( 'trading_id', $log_key, $order_id );
+	}
+
 	//do_action( 'usces_post_reg_orderdata', $order_id, $results );
+	do_action( 'usces_action_revival_order_data', $order_id, $log_key, $acting );
+
 	return 'OK#usces#'.$order_id;
 }
 

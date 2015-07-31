@@ -6,7 +6,7 @@ class usces_cart {
 
 	var $serial;
 
-	function usces_cart() {
+	function __construct() {
 	
 		if ( !isset($_SESSION['usces_cart']) ) {
 			$_SESSION['usces_cart'] = array();

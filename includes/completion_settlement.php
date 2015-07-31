@@ -5,7 +5,6 @@ if(isset($this))
 
 if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 
-		
 }elseif( isset($_REQUEST['acting']) && 'remise_conv' == $_REQUEST['acting'] ){ //remise_conv
 
 	$html .= '<div id="status_table"><h5>ルミーズ・コンビニ決済</h5>'."\n";
@@ -18,7 +17,7 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '</table>'."\n";
 	$html .= '<p>「お支払いのご案内」は、' . esc_html($usces_entries['customer']['mailaddress1']) . '　宛にメールさせていただいております。</p>'."\n";
 	$html .= "</div>\n";
-		
+
 }elseif( isset($_REQUEST['acting']) && 'zeus_conv' == $_REQUEST['acting'] ){ //zeus_conv
 
 	$html .= '<div id="status_table"><h5>ゼウス・コンビニ決済</h5>'."\n";
@@ -53,7 +52,7 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '</table>'."\n";
 	$html .= '<p>「お支払いのご案内」は、' . esc_html($usces_entries['customer']['mailaddress1']) . '　宛にメールさせていただいております。</p>'."\n";
 	$html .= "</div>\n";
-		
+
 }elseif( isset($usces->payment_results['mc_gross']) ){ //PayPal
 
 	$html .= '<div id="status_table"><h5>PayPal</h5>'."\n";
@@ -65,16 +64,15 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '<tr><th>'.__('Items','usces').'</th><td>' . esc_html($usces->payment_results['item_name']) . "</td></tr>\n";
 	$html .= '<tr><th>'.__('Payment amount', 'usces').'</th><td>' . esc_html($usces->payment_results['mc_gross']) . "</td></tr>\n";
 	$html .= '</table>';
-	
+
 	if( $usces->payment_results['payment_status'] != 'Completed' ){
 		$html .= __('<p>The settlement is not completed.<br />Please remit the price from the PayPal Maia count page.After receipt of money confirmation, I will prepare for the article shipment.</p>', 'usces') . "\n";
 	}
 	$html .= "</div>\n";
-	
-//20101018ysk start
+
 }elseif( isset($_REQUEST['acting']) && 'jpayment_conv' == $_REQUEST['acting'] ){ //J-Payment
 
-	$html .= '<div id="status_table"><h5>J-Payment・コンビニペーパーレス決済</h5>'."\n";
+	$html .= '<div id="status_table"><h5>Cloud Payment・コンビニペーパーレス決済</h5>'."\n";
 	$html .= '<table>'."\n";
 	$html .= '<tr><th>'.__('決済番号', 'usces').'</th><td>'.esc_html($_GET['gid'])."</td></tr>\n";
 	$html .= '<tr><th>'.__('決済金額', 'usces').'</th><td>'.esc_html($_GET['ta'])."</td></tr>\n";
@@ -86,14 +84,12 @@ if( isset($usces->payment_results['X-TRANID']) ){ //remise_card
 	$html .= '</table>'."\n";
 	$html .= '<p>「お支払いのご案内」は、'.esc_html($usces_entries['customer']['mailaddress1']).'　宛にメールさせていただいております。</p>'."\n";
 	$html .= "</div>\n";
-//20101018ysk end
-//20120413ysk start
+
 }elseif( isset($_REQUEST['acting']) && ( 'sbps_conv' == $_REQUEST['acting'] || 'sbps_payeasy' == $_REQUEST['acting'] ) ){ //SoftBank Payment
 	$title = ( 'sbps_conv' == $_REQUEST['acting'] ) ? 'コンビニ決済' : 'ペイジー決済';
-	$html .= '<div id="status_table"><h5>ソフトバンク・ペイメント・'.$title.'</h5>'."\n";
+	$html .= '<div id="status_table"><h5>ソフトバンク・ペイメント・サービス　'.$title.'</h5>'."\n";
 	$html .= '<p>「お支払いのご案内」は、' . esc_html($usces_entries['customer']['mailaddress1']) . '　宛にメールさせていただいております。</p>'."\n";
 	$html .= "</div>\n";
-//20120413ysk end
 }
 
 $html = apply_filters( 'usces_filter_completion_settlement_message', $html, $usces_entries );

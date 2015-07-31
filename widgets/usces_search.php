@@ -5,8 +5,8 @@
  */
 class Welcart_search extends WP_Widget {
     /** constructor */
-    function Welcart_search() {
-        parent::WP_Widget(false, $name = 'Welcart '.__('keyword search', 'usces'));	
+    function __construct() {
+        parent::__construct(false, $name = 'Welcart '.__('keyword search', 'usces'));	
     }
 
     /** @see WP_Widget::widget */

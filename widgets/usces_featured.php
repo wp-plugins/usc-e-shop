@@ -5,8 +5,8 @@
  */
 class Welcart_featured extends WP_Widget {
     /** constructor */
-    function Welcart_featured() {
-        parent::WP_Widget(false, $name = 'Welcart '.__('Items recommended', 'usces'));	
+    function __construct() {
+        parent::__construct(false, $name = 'Welcart '.__('Items recommended', 'usces'));	
     }
 
     /** @see WP_Widget::widget */

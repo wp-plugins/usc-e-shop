@@ -9,7 +9,7 @@ class calendarData {
 	var $_date;
 	var $_datetext;
 
-	function calendarData() {
+	function __construct() {
 		$this->_row = 0;
 	}
 

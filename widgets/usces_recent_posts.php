@@ -2,9 +2,9 @@
 
 class Welcart_Recent_Posts extends WP_Widget {
 
-	function Welcart_Recent_Posts() {
+	function __construct() {
 		$widget_ops = array('classname' => 'usces_recent_entries', 'description' => (__( "The most recent posts on your site").'（商品以外）') );
-		$this->WP_Widget('usces-recent-posts', __('Welcart Recent Posts'), $widget_ops);
+		parent::__construct('usces-recent-posts', __('Welcart Recent Posts'), $widget_ops);
 		$this->alt_option_name = 'usces_recent_entries';
 
 		add_action( 'save_post', array(&$this, 'flush_widget_cache') );

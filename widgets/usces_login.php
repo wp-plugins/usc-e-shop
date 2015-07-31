@@ -5,8 +5,8 @@
  */
 class Welcart_login extends WP_Widget {
     /** constructor */
-    function Welcart_login() {
-        parent::WP_Widget(false, $name = 'Welcart '.__('Log-in', 'usces'));	
+    function __construct() {
+        parent::__construct(false, $name = 'Welcart '.__('Log-in', 'usces'));	
     }
 
     /** @see WP_Widget::widget */

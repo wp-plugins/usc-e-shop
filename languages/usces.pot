@@ -3570,3 +3570,44 @@ msgstr "ご使用されますポイントは、商品合計よりも少なくな
 msgid "PayPal Acount Email address"
 msgstr "PayPalアカウント （メールアドレス）"
 
+msgid "Settlement data backup"
+msgstr "決済データのバックアップ"
+
+msgid "Not save"
+msgstr "保存しない"
+
+msgid "Save"
+msgstr "保存する"
+
+msgid "Save a log of the settlement data. From log data, it is possible to make the order data."
+msgstr "決済データのログを保存します。ログデータより、受注データを作成することができます。"
+
+msgid "Order Log List"
+msgstr "受注ログ一覧"
+
+msgid "Order Log Detail"
+msgstr "受注ログ詳細"
+
+msgid "Detail"
+msgstr "詳細"
+
+msgid "Register date"
+msgstr "登録日"
+
+msgid "Transaction key"
+msgstr "トランザクションキー"
+
+msgid "to order date."
+msgstr "受注日時に設定"
+
+msgid "Create order data"
+msgstr "受注データ登録"
+
+msgid "Are you sure you want to create the order data ?"
+msgstr "受注データを登録してもよろしいですか？"
+
+msgid "Clear log"
+msgstr "ログデータ削除"
+
+msgid "Are you sure you want to delete all log ?"
+msgstr "全てのログデータを削除してもよろしいですか？"

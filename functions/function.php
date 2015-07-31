@@ -5189,6 +5189,9 @@ function usces_clearup_acting_data(){
 
 function usces_save_order_acting_data( $key ) {
 	global $usces, $wpdb;
+	$settlement_backup = ( isset($usces->options['system']['settlement_backup']) ) ? $usces->options['system']['settlement_backup'] : 0;
+	if( $settlement_backup == 0 ) return;
+
 	$table_name = $wpdb->prefix."usces_log";
 	$data = array();
 	$data['usces_cart'] = $_SESSION['usces_cart'];

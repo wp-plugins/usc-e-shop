@@ -5,8 +5,8 @@
  */
 class Welcart_page extends WP_Widget {
     /** constructor */
-    function Welcart_page() {
-        parent::WP_Widget(false, $name = 'Welcart '.__('Page', 'usces'));	
+    function __construct() {
+        parent::__construct(false, $name = 'Welcart '.__('Page', 'usces'));	
     }
 
     /** @see WP_Widget::widget */

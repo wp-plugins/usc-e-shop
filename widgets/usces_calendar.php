@@ -5,8 +5,8 @@
  */
 class Welcart_calendar extends WP_Widget {
     /** constructor */
-    function Welcart_calendar() {
-        parent::WP_Widget(false, $name = 'Welcart '.__('Calendar', 'usces'));	
+    function __construct() {
+        parent::__construct(false, $name = 'Welcart '.__('Calendar', 'usces'));	
     }
 
     /** @see WP_Widget::widget */

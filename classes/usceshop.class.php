@@ -15,7 +15,7 @@ class usc_e_shop
 	var $payment_results, $log_flg, $delim, $use_js;
 	var $user_level;
 
-	function usc_e_shop()
+	function __construct()
 	{
 		global $wpdb, $post, $usces_settings, $usces_states;
 
@@ -125,6 +125,7 @@ class usc_e_shop
 		if(!isset($this->options['system']['member_pass_rule_min']) || empty($this->options['system']['member_pass_rule_min'])) $this->options['system']['member_pass_rule_min'] = 6;
 		if(!isset($this->options['system']['member_pass_rule_max']) || empty($this->options['system']['member_pass_rule_max'])) $this->options['system']['member_pass_rule_max'] = '';
 		if(!isset($this->options['system']['csv_encode_type'])) $this->options['system']['csv_encode_type'] = 0;
+		if(!isset($this->options['system']['settlement_backup'])) $this->options['system']['settlement_backup'] = 0;
 		if(!isset($this->options['acting_settings']['zeus'])) $this->options['acting_settings']['zeus'] = array('activate'=>'','card_activate'=>'','clientip'=>'','authkey'=>'','connection'=>'','3dsecure'=>'','security'=>'','quickcharge'=>'', 'howpay'=>'','bank_activate'=>'','clientip_bank'=>'','testid_bank'=>'','conv_activate'=>'','clientip_conv'=>'','testid_conv'=>'','test_type_conv'=>'');
 		if(!isset($this->options['acting_settings']['zeus']['connection'])) $this->options['acting_settings']['zeus']['connection'] = '1';
 		if(!isset($this->options['acting_settings']['zeus']['3dsecur'])) $this->options['acting_settings']['zeus']['3dsecur'] = '2';
@@ -1029,6 +1030,7 @@ class usc_e_shop
 			$this->options['system']['member_pass_rule_min'] = isset($_POST['member_pass_rule_min']) ? (int)$_POST['member_pass_rule_min'] : 6;
 			$this->options['system']['member_pass_rule_max'] = isset($_POST['member_pass_rule_max']) && !empty($_POST['member_pass_rule_max']) ? (int)$_POST['member_pass_rule_max'] : '';
 			$this->options['system']['csv_encode_type'] = isset($_POST['csv_encode_type']) ? (int)$_POST['csv_encode_type'] : 0;
+			$this->options['system']['settlement_backup'] = ( isset($_POST['settlement_backup']) ) ? (int)$_POST['settlement_backup'] : 0;
 
 			if( isset($_POST['dec_orderID_digit']) ){
 				$dec_orderID_digit = (int)rtrim($_POST['dec_orderID_digit']);

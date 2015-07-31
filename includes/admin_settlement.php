@@ -5,19 +5,17 @@ $this->action_status = 'none';
 $this->action_message = '';
 
 $opts = $this->options['acting_settings'];
-//20110208ysk start
 $openssl = extension_loaded('openssl');
 $curl = extension_loaded('curl');
-//20110208ysk end
 ?>
 <script type="text/javascript">
 jQuery(function($){
 <?php if($status == 'success'){ ?>
-			$("#anibox").animate({ backgroundColor: "#ECFFFF" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#ECFFFF" }, 2000);
 <?php }else if($status == 'caution'){ ?>
-			$("#anibox").animate({ backgroundColor: "#FFF5CE" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#FFF5CE" }, 2000);
 <?php }else if($status == 'error'){ ?>
-			$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
+	$("#anibox").animate({ backgroundColor: "#FFE6E6" }, 2000);
 <?php } ?>
 
 	if( $.fn.jquery < "1.10" ) {
@@ -89,6 +87,7 @@ jQuery(function($){
 			$("#cartbordercolor").css("display", "none");
 		}
 	});
+<?php do_action( 'usces_action_settlement_script' ); ?>
 });
 function toggleVisibility(id) {
    var e = document.getElementById(id);
@@ -97,6 +96,9 @@ function toggleVisibility(id) {
    else
 	  e.style.display = 'block';
 }
+jQuery(document).ready(function($) {
+	$("#uscestabs").css("display", "block");
+});
 </script>
 <div class="wrap">
 <div class="usces_admin">
@@ -112,42 +114,21 @@ function toggleVisibility(id) {
 <div class="postbox">
 <h3 class="hndle"><span><?php _e('Settlement Setting','usces'); ?></span></h3>
 <div class="inside">
-<div id="uscestabs">
+<div id="uscestabs" style="display:none;">
 
 	<ul>
 		<li><a href="#uscestabs_zeus"><?php _e('ZEUS','usces'); ?></a></li>
 		<li><a href="#uscestabs_remise"><?php _e('Remise','usces'); ?></a></li>
-<!--20101018ysk start-->
 		<li><a href="#uscestabs_jpayment">J-Payment</a></li>
-<!--20101018ysk end-->
-<!--20110208ysk start-->
 		<li><a href="#uscestabs_paypal_ec">PayPal(EC)</a></li>
-<!--20110208ysk end-->
-<!--20140908ysk start-->
 		<li><a href="#uscestabs_paypal_wpp">PayPal(WPP)</a></li>
-<!--20140908ysk end-->
-<!--20120413ysk start-->
 		<li><a href="#uscestabs_sbps">ソフトバンク・ペイメント</a></li>
-<!--20120413ysk end-->
-<!--20120618ysk start-->
 		<li><a href="#uscestabs_telecom">テレコムクレジット</a></li>
-<!--20120618ysk end-->
-<!--20121206ysk start-->
 		<li><a href="#uscestabs_digitalcheck">ペイデザイン</a></li>
-<!--20121206ysk end-->
-<!--20130225ysk start-->
 		<li><a href="#uscestabs_mizuho">みずほファクター</a></li>
-<!--20130225ysk end-->
-<!--20131220ysk start-->
 		<li><a href="#uscestabs_anotherlane">アナザーレーン</a></li>
-<!--20131220ysk end-->
-<!--20140206ysk start-->
 		<li><a href="#uscestabs_veritrans">ベリトランス</a></li>
-<!--20140206ysk end-->
-<!--20140725ysk start-->
 		<li><a href="#uscestabs_paygent">ペイジェント</a></li>
-<!--20140725ysk end-->
-
 	<?php do_action( 'usces_action_settlement_tab_title'); ?>
 	</ul>
 
@@ -465,7 +446,6 @@ function toggleVisibility(id) {
 	</div>
 	</div><!--uscestabs_remise-->
 
-<!--20101018ysk start-->
 	<div id="uscestabs_jpayment">
 	<div class="settlement_service"><span class="service_title"><?php _e('J-Payment Japanese Settlement', 'usces'); ?></span></div>
 
@@ -555,8 +535,7 @@ function toggleVisibility(id) {
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
 	</div>
 	</div><!--uscestabs_jpayment-->
-<!--20101018ysk end-->
-<!--20110208ysk start-->
+
 	<div id="uscestabs_paypal_ec">
 	<div class="settlement_service"><span class="service_title"><?php _e('PayPal Express Checkout', 'usces'); ?></span></div>
 
@@ -601,14 +580,14 @@ function toggleVisibility(id) {
 				<td colspan="4"><input name="paypal_acount" type="text" id="acount_paypal" value="<?php echo esc_html(isset($opts['paypal']['paypal_acount']) ? $opts['paypal']['paypal_acount'] : ''); ?>" size="50" /></td>
 				<td><div id="ex_paypal_acount" class="explanation"><?php _e('PayPalアカウントに関連付けられているメールアドレス。', 'usces'); ?></div></td>
 			</tr>
-			<?php if( defined('WCEX_DLSELLER') ): //20110412ysk start ?>
+			<?php if( defined('WCEX_DLSELLER') ): ?>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_continuation_paypal');"><?php _e('Recurring Payment', 'usces'); ?></a></th>
 				<td><input name="continuation" type="radio" id="continuation_paypal_1" value="on"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'on' ) echo ' checked'; ?> /></td><td><label for="continuation_paypal_1"><?php _e('Use', 'usces'); ?></label></td>
 				<td><input name="continuation" type="radio" id="continuation_paypal_2" value="off"<?php if( isset($opts['paypal']['continuation']) && $opts['paypal']['continuation'] == 'off' ) echo ' checked'; ?> /></td><td><label for="continuation_paypal_2"><?php _e('Do not Use', 'usces'); ?></label></td>
 				<td><div id="ex_continuation_paypal" class="explanation"><?php _e('It is a function that enables the automation of tedious payment settlement such as monthly membership fee that occurs regularly. <br /> For details, contact PayPal.', 'usces'); ?></div></td>
 			</tr>
-			<?php endif; //20110412ysk end ?>
+			<?php endif; ?>
 		</table>
 		<table class="settle_table">
 			<tr>
@@ -682,8 +661,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 9:00～20:00（年中無休）</p>
 	</div>
 	</div><!--uscestabs_paypal_ec-->
-<!--20110208ysk end-->
-<!--20140908ysk start-->
+
 	<div id="uscestabs_paypal_wpp">
 	<div class="settlement_service"><span class="service_title"><?php _e('PayPal Web Payment Plus', 'usces'); ?></span></div>
 	<?php if( isset($_POST['acting']) && 'paypal_wpp' == $_POST['acting'] ) : ?>
@@ -736,8 +714,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 9:00～20:00（年中無休）</p>
 	</div>
 	</div><!--uscestabs_paypal_wpp-->
-<!--20140908ysk end-->
-<!--20120413ysk start-->
+
 	<div id="uscestabs_sbps">
 	<div class="settlement_service"><span class="service_title">ソフトバンク・ペイメント・サービス</span></div>
 
@@ -897,8 +874,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 		<p>尚、本番環境では、正規SSL証明書のみでのSSL通信となりますのでご注意ください。</p>
 	</div>
 	</div><!--uscestabs_sbps-->
-<!--20120413ysk end-->
-<!--20120618ysk start-->
+
 	<div id="uscestabs_telecom">
 	<div class="settlement_service"><span class="service_title">テレコムクレジット</span></div>
 	<?php if( isset($_POST['acting']) && 'telecom' == $_POST['acting'] ){ ?>
@@ -957,9 +933,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
 	</div>
 	</div><!--uscestabs_telecom-->
-<!--20120618ysk end-->
 
-<!--20121206ysk start-->
 	<div id="uscestabs_digitalcheck">
 	<div class="settlement_service"><span class="service_title">ペイデザイン</span></div>
 	<?php if( isset($_POST['acting']) && 'digitalcheck' == $_POST['acting'] ){ ?>
@@ -1057,9 +1031,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
 	</div>
 	</div><!--uscestabs_digitalcheck-->
-<!--20121206ysk end-->
 
-<!--20130225ysk start-->
 	<div id="uscestabs_mizuho">
 	<div class="settlement_service"><span class="service_title">みずほファクター</span></div>
 	<?php if( isset($_POST['acting']) && 'mizuho' == $_POST['acting'] ) : ?>
@@ -1113,8 +1085,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 				<td></td>
 			</tr>
 		</table>
-<!--
-		<table class="settle_table">
+<!--		<table class="settle_table">
 			<tr>
 				<th>コンビニ決済<br><a style="cursor:pointer;" onclick="toggleVisibility('ex_conv1_activate');">ウェルネット決済</a></th>
 				<td><input name="conv1_activate" type="radio" id="conv1_activate_mizuho_1" value="on"<?php if( isset($opts['mizuho']['conv1_activate']) && $opts['mizuho']['conv1_activate'] == 'on' ) echo ' checked="checked"'; ?> /></td><td><label for="conv1_activate_mizuho_1">利用する</label></td>
@@ -1127,8 +1098,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 				<td><input name="conv2_activate" type="radio" id="conv2_activate_mizuho_2" value="off"<?php if( isset($opts['mizuho']['conv2_activate']) && $opts['mizuho']['conv2_activate'] == 'off' ) echo ' checked="checked"'; ?> /></td><td><label for="conv2_activate_mizuho_2">利用しない</label></td>
 				<td><div id="ex_conv2_activate" class="explanation">セブンイレブンでのご利用が可能です。</div></td>
 			</tr>
-		</table>
--->
+		</table>-->
 		<input name="acting" type="hidden" value="mizuho" />
 		<input name="usces_option_update" type="submit" class="button" value="みずほファクターの設定を更新する" />
 		<?php wp_nonce_field( 'admin_settlement', 'wc_nonce' ); ?>
@@ -1141,9 +1111,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
 	</div>
 	</div><!--uscestabs_mizuho-->
-<!--20130225ysk end-->
 
-<!--20131220ysk start-->
 	<div id="uscestabs_anotherlane">
 	<div class="settlement_service"><span class="service_title">アナザーレーン</span></div>
 	<?php if( isset($_POST['acting']) && 'anotherlane' == $_POST['acting'] ) : ?>
@@ -1192,9 +1160,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
 	</div>
 	</div><!--uscestabs_anotherlane-->
-<!--20131220ysk end-->
 
-<!--20140206ysk start-->
 	<div id="uscestabs_veritrans">
 	<div class="settlement_service"><span class="service_title">ベリトランス Air-Web</span></div>
 	<?php if( isset($_POST['acting']) && 'veritrans' == $_POST['acting'] ) : ?>
@@ -1281,9 +1247,7 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
 	</div>
 	</div><!--uscestabs_veritrans-->
-<!--20140206ysk end-->
 
-<!--20140725ysk start-->
 	<div id="uscestabs_paygent">
 	<div class="settlement_service"><span class="service_title">ペイジェント</span></div>
 	<?php if( isset($_POST['acting']) && 'paygent' == $_POST['acting'] ) : ?>
@@ -1385,10 +1349,8 @@ Tel：0120-271-888 または 03-6739-7360（携帯電話と海外からはこち
 		<p>「外部リンク型」とは、決済会社のページへ遷移してカード情報を入力する決済システムです。</p>
 	</div>
 	</div><!--uscestabs_paygent-->
-<!--20140725ysk end-->
 
 	<?php do_action( 'usces_action_settlement_tab_body' ); ?>
-
 
 </div><!--uscestabs-->
 </div><!--inside-->
