@@ -3,11 +3,11 @@
 Plugin Name: Welcart e-Commerce
 Plugin URI: http://www.welcart.com/
 Description: Welcart builds the management system with a net shop on Wordpress.
-Version: 1.4.19
+Version: 1.4.20
 Author: Collne Inc.
 Author URI: http://www.collne.com/
 */
-define('USCES_VERSION', '1.4.19.1507312');
+define('USCES_VERSION', '1.4.20.1507312');
 define('USCES_DB_ACCESS', '1.5');
 define('USCES_DB_MEMBER', '1.1');
 define('USCES_DB_MEMBER_META', '1.1');

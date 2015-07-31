@@ -16,7 +16,7 @@ $html = '<div id="memberpages">
 <td>' . mysql2date(__('Y/m/d'), $usces_members['registered']) . '</td>
 </tr>
 <tr>
-<th scope="row">' . __('Full name', 'usces') . '</th>
+<th scope="row">' . apply_filters( 'usces_filters_memberpage_name_label', __('Full name', 'usces') ) . '</th>
 <td>' . sprintf(__('Mr/Mrs %s', 'usces'), esc_html($usces_members['name1'] . ' ' . $usces_members['name2'])) . '</td>';
 
 if(usces_is_membersystem_point()){

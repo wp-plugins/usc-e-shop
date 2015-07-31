@@ -2928,7 +2928,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		
 		case 'JP':
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name1']) . ' ' . esc_html($values['customer']['name2']) . '</td></tr>';
+			$formtag .= '<tr><th>'.apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ).'</th><td>' . esc_html($values['customer']['name1']) . ' ' . esc_html($values['customer']['name2']) . '</td></tr>';
 			$furigana_customer = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['customer']['name3']) . ' ' . esc_html($values['customer']['name4']) . '</td></tr>';
 			$formtag .= apply_filters( 'usces_filter_furigana_confirm_customer', $furigana_customer, $type, $values );
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
@@ -2950,7 +2950,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			
 			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ).'</th><td>' . esc_html($values['delivery']['name1']) . ' ' . esc_html($values['delivery']['name2']) . '</td></tr>';
 			$furigana_delivery = '<tr><th>'.__('furigana', 'usces').'</th><td>' . esc_html($values['delivery']['name3']) . ' ' . esc_html($values['delivery']['name4']) . '</td></tr>';
 			$shipping_address_info .= apply_filters( 'usces_filter_furigana_confirm_delivery', $furigana_delivery, $type, $values );
 			$shipping_address_info .= usces_custom_field_info($values, 'delivery', 'name_after', 'return');
@@ -2974,7 +2974,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			
 		case 'CN':
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['customer']['name1'], $values['customer']['name2'], 'return' )) . '</td></tr>';
+			$formtag .= '<tr><th>'.apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ).'</th><td>' . esc_html(usces_localized_name( $values['customer']['name1'], $values['customer']['name2'], 'return' )) . '</td></tr>';
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
 //20131213_kitamura_start
 			if( count( $options['system']['target_market'] ) != 1 ){
@@ -2993,7 +2993,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			
 			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html(usces_localized_name( $values['delivery']['name1'], $values['delivery']['name2'], 'return' )) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ).'</th><td>' . esc_html(usces_localized_name( $values['delivery']['name1'], $values['delivery']['name2'], 'return' )) . '</td></tr>';
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
 //20131213_kitamura_start
 			if( count( $options['system']['target_market'] ) != 1 ){
@@ -3015,7 +3015,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		case 'US':
 		default :
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_pre', 'return');
-			$formtag .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name1']) . '</td></tr>';
+			$formtag .= '<tr><th>'.apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ).'</th><td>' . esc_html($values['customer']['name2']) . ' ' . esc_html($values['customer']['name1']) . '</td></tr>';
 			$formtag .= usces_custom_field_info($data, 'customer', 'name_after', 'return');
 			$customer_country = (!empty($usces_settings['country'][$values['customer']['country']])) ? $usces_settings['country'][$values['customer']['country']] : '';
 			$formtag .= '
@@ -3037,7 +3037,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 			
 			$shipping_address_info = '<tr class="ttl"><td colspan="2"><h3>'.__('Shipping address information', 'usces').'</h3></td></tr>';
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_pre', 'return');
-			$shipping_address_info .= '<tr><th>'.__('Full name', 'usces').'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
+			$shipping_address_info .= '<tr><th>'.apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ).'</th><td>' . esc_html($values['delivery']['name2']) . ' ' . esc_html($values['delivery']['name1']) . '</td></tr>';
 			$shipping_address_info .= usces_custom_field_info($data, 'delivery', 'name_after', 'return');
 			$shipping_country = (!empty($usces_settings['country'][$values['delivery']['country']])) ? $usces_settings['country'][$values['delivery']['country']] : '';
 			$shipping_address_info .= '
@@ -3068,7 +3068,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		case 'JP':
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			$formtag .= '<tr class="inp1">
-			<th width="127" scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces').'</th>';
+			<th width="127" scope="row">' . usces_get_essential_mark('name1', $data) . apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ).'</th>';
 			if( $nameform ){
 				$formtag .= '<td class="name_td">'.__('Given name', 'usces').'<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" style="ime-mode: active" /></td>';
 				$formtag .= '<td class="name_td">'.__('Familly name', 'usces').'<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" style="ime-mode: active" /></td>';
@@ -3133,7 +3133,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		case 'CN':
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			$formtag .= '<tr class="inp1">
-			<th scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces') . '</th>';
+			<th scope="row">' . usces_get_essential_mark('name1', $data) . apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ) . '</th>';
 			if( $nameform ){
 				$formtag .= '<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 				$formtag .= '<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
@@ -3188,7 +3188,7 @@ function uesces_addressform( $type, $data, $out = 'return' ){
 		default :
 			$formtag .= usces_custom_field_input($data, $type, 'name_pre', 'return');
 			$formtag .= '<tr class="inp1">
-			<th scope="row">' . usces_get_essential_mark('name1', $data) . __('Full name', 'usces') . '</th>';
+			<th scope="row">' . usces_get_essential_mark('name1', $data) . apply_filters( 'usces_filters_addressform_name_label', __('Full name', 'usces'), $type, $values, $applyform ) . '</th>';
 			if( $nameform ){
 				$formtag .= '<td>' . __('Given name', 'usces') . '<input name="' . $type . '[name2]" id="name2" type="text" value="' . esc_attr($values['name2']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
 				$formtag .= '<td>' . __('Familly name', 'usces') . '<input name="' . $type . '[name1]" id="name1" type="text" value="' . esc_attr($values['name1']) . '" onKeyDown="if (event.keyCode == 13) {return false;}" /></td>';
