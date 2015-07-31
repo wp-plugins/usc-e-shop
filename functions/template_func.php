@@ -2505,24 +2505,6 @@ function usces_memberinfo( $key, $out = '' ){
 	}
 }
 
-function usces_localized_name( $Familly_name, $Given_name, $out = '' ){
-	global $usces_settings, $usces;
-	
-	$options = get_option('usces');
-	$form = $options['system']['addressform'];
-	if( $usces_settings['nameform'][$form] ){
-		$res = $Given_name . ' ' . $Familly_name;
-	}else{
-		$res = $Familly_name . ' ' . $Given_name;
-	}
-	
-	if($out == 'return'){
-		return $res;
-	}else{
-		echo esc_html($res);
-	}
-}
-
 function usces_member_history( $out = '' ){
 	global $usces;
 	

@@ -115,7 +115,7 @@ class YAHOOWALLET_SETTLEMENT
 			//die('NG verify4');
 		}
 		
-		$options = get_option('usces');
+		$usces_opt = get_option('usces');
 		$order = $usces->get_order_data($order_id, 'direct' );
 		if ( !$order )
 			die('NG verify5');
@@ -123,7 +123,7 @@ class YAHOOWALLET_SETTLEMENT
 		$order_done_url = home_url('/?yahoo=done');
 		$date_time = date('Y-m-d\TH:i:s+09:00', current_time('timestamp')+1800);
 		
-		if( 'public' == $options['acting_settings']['yahoo']['ope'] ){
+		if( 'public' == $usces_opt['acting_settings']['yahoo']['ope'] ){
 			$confirmations_url = str_replace( 'http://', 'https://', home_url('/?yahoo=conf') );
 		}else{
 			$confirmations_url = home_url('/?yahoo=conf');
@@ -143,7 +143,7 @@ class YAHOOWALLET_SETTLEMENT
 		</xml_info>
 		<wallet_flow_support>
 		<merchant_wallet_flow_support>
-		<merch_id>' . $options['acting_settings']['yahoo']['merchant_id'] . '</merch_id>
+		<merch_id>' . $usces_opt['acting_settings']['yahoo']['merchant_id'] . '</merch_id>
 		<merch_mgt_id>' . $order_id . '</merch_mgt_id>
 		<ship_fee>' . usces_crform( $shipping_charge, false, false, 'return', false ) . '</ship_fee>
 		<order_done_url>' . $order_done_url . '</order_done_url>
@@ -266,10 +266,10 @@ class YAHOOWALLET_SETTLEMENT
 			usces_p($results['error']['message']);
 			usces_log('redirect_url : '.print_r($results['error']['code'], true), 'yahoo_error.log');
 		}else{
-			if( 'public' == $options['acting_settings']['yahoo']['ope'] ){
-				$url = $results['redirect_order_url'];
+			if( 'public' == $usces_opt['acting_settings']['yahoo']['ope'] ){
+				$url = $results['result']['redirect_order_url'];
 			}else{
-				$url = str_replace( 'https://', 'https://sandbox.', $results['redirect_order_url']);
+				$url = str_replace( 'https://', 'https://sandbox.', $results['result']['redirect_order_url']);
 			}
 				
 			wp_redirect($url);
@@ -470,12 +470,12 @@ class YAHOOWALLET_SETTLEMENT
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_merchant_id_yahoo');">マーチャントID</a></th>
-				<td colspan="6"><input name="merchant_id" type="text" id="merchant_id_yahoo" value="<?php echo esc_html(isset($opts['yahoo']['merchant_id']) ? $opts['yahoo']['merchant_id'] : ''); ?>" size="20" maxlength="5" /></td>
+				<td colspan="6"><input name="merchant_id" type="text" id="merchant_id_yahoo" value="<?php echo esc_html(isset($opts['yahoo']['merchant_id']) ? $opts['yahoo']['merchant_id'] : ''); ?>" size="20" /></td>
 				<td><div id="ex_merchant_id_yahoo" class="explanation"><?php _e('契約時にYahoo! JAPANから発行されるマーチャントID（半角数字）', 'usces'); ?></div></td>
 			</tr>
 			<tr>
 				<th><a style="cursor:pointer;" onclick="toggleVisibility('ex_merchant_key_yahoo');">マーチャントキー</a></th>
-				<td colspan="6"><input name="merchant_key" type="password" id="merchant_key_yahoo" value="<?php echo esc_html(isset($opts['yahoo']['merchant_key']) ? $opts['yahoo']['merchant_key'] : ''); ?>" size="50" maxlength="40" /></td>
+				<td colspan="6"><input name="merchant_key" type="password" id="merchant_key_yahoo" value="<?php echo esc_html(isset($opts['yahoo']['merchant_key']) ? $opts['yahoo']['merchant_key'] : ''); ?>" size="50" /></td>
 				<td><div id="ex_merchant_key_yahoo" class="explanation"><?php _e('契約時にYahoo! JAPANから発行される マーチャントキー（半角英数）', 'usces'); ?></div></td>
 			</tr>
 			<tr>

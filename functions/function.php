@@ -5280,3 +5280,22 @@ function usces_change_order_receipt( $order_id, $flag ){
 	}
 	return $res;
 }
+
+function usces_localized_name( $Familly_name, $Given_name, $out = '' ){
+	global $usces_settings, $usces;
+	
+	$options = get_option('usces');
+	$form = $options['system']['addressform'];
+	if( $usces_settings['nameform'][$form] ){
+		$res = $Given_name . ' ' . $Familly_name;
+	}else{
+		$res = $Familly_name . ' ' . $Given_name;
+	}
+	
+	if($out == 'return'){
+		return $res;
+	}else{
+		echo esc_html($res);
+	}
+}
+
