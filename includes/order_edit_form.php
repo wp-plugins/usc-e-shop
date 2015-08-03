@@ -392,7 +392,7 @@ jQuery(function($){
 //		$('#PDFDialog').dialog('option', 'title', '<?php _e('print out the estimate', 'usces'); ?>');
 //		$('#PDFDialog').dialog('open');
 		uscesMail.ordercheckpost('mitumoriprint');
-		window.open ( "<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=nohin", '_blank');
+		window.open ( "<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=mitumori", '_blank');
 	});
 	$('#nohinprint').click(function() {
 //		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=nohin" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
@@ -406,14 +406,14 @@ jQuery(function($){
 //		$('#PDFDialog').dialog('option', 'title', '<?php _e('Print Receipt', 'usces'); ?>');
 //		$('#PDFDialog').dialog('open');
 		uscesMail.ordercheckpost('receiptprint');
-		window.open ( "<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=nohin", '_blank');
+		window.open ( "<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=receipt", '_blank');
 	});
 	$('#billprint').click(function() {
 //		$('#new_pdf').html('<iframe src="<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=bill" align="center" width="660" height=670" border="1" marginheight="0" marginwidth="0"></iframe>');
 //		$('#PDFDialog').dialog('option', 'title', '<?php _e('Print Invoice', 'usces'); ?>');
 //		$('#PDFDialog').dialog('open');
 		uscesMail.ordercheckpost('billprint');
-		window.open ( "<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=nohin", '_blank');
+		window.open ( "<?php echo USCES_ADMIN_URL.'?page=usces_orderlist&order_action=pdfout&noheader=true&order_id='.$order_id; ?>&type=bill", '_blank');
 	});
 
 	orderfunc = {
