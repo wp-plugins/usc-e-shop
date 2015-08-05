@@ -30,8 +30,22 @@ class DSK_SETTLEMENT
 			add_filter( 'usces_filter_check_acting_return_results', array( $this, 'acting_return') );
 			add_filter( 'usces_filter_check_acting_return_duplicate', array( $this, 'check_acting_return_duplicate'), 10, 2 );
 			add_filter( 'usces_filter_completion_settlement_message', array( $this, 'completion_settlement_message'), 10, 2 );
+			add_filter( 'usces_filter_is_complete_settlement', array( $this, 'is_complete_settlement'), 10, 3 );
 			$this->noreceipt_status();
 		}
+	}
+
+	/**********************************************
+	* usces_filter_is_complete_settlement
+	* @param  $complete, $payment_name, $status
+	* @return boolean $complete
+	***********************************************/
+	public function is_complete_settlement($complete, $payment_name, $status ){
+		$payments = usces_get_system_option( 'usces_payment_method', 'name' );
+		if( isset($payments[$payment_name]['settlement']) && 'acting_dsk_card' == $payments[$payment_name]['settlement'] ) {
+			$complete = true;
+		}
+		return $complete;
 	}
 
 	/**********************************************

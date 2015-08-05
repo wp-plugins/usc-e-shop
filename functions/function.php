@@ -470,9 +470,12 @@ function usces_send_ordermail($order_id) {
 	$order_para = array(
 			'to_name' => __('An order email','usces'),
 			'to_address' => $usces->options['order_mail'], 
-			'from_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
-			'from_address' => $entry['customer']['mailaddress1'],
-			'return_path' => $usces->options['error_mail'],
+//			'from_name' => sprintf(__('Mr/Mrs %s', 'usces'), ($entry["customer"]["name1"] . ' ' . $entry["customer"]["name2"])),
+//			'from_address' => $entry['customer']['mailaddress1'],
+			'from_name' => get_option('blogname'), 
+			'from_address' => $usces->options['sender_mail'], 
+//			'return_path' => $usces->options['error_mail'],
+			'return_path' => $usces->options['sender_mail'],
 			'subject' => $subject,
 			'message' => $message
 			);
