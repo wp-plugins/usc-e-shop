@@ -330,8 +330,8 @@ function add_payment_method() {
 	$newvalue['module'] = isset($_POST['newmodule']) ? trim( $_POST['newmodule'] ) : '';
 	if( 'acting_paypal_ec' == $newvalue['settlement'] ) {
 		$newvalue['explanation'] .= "
-		<div><a href=\"#\" onclick=\"javascript:window.open('https://www.paypal.com/jp/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside','olcwhatispaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=350');\"><img src=\"https://www.paypal.com/ja_JP/JP/i/bnr/horizontal_solution_4_jcb.gif\" border=\"0\" alt=\"ソリューション画像\"></a></div>
-		<div><a href=\"https://www.paypal.com/jp/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside\" target=\"_blank\" >PayPal について</a></div>";
+<div><a href=\"#\" onclick=\"javascript:window.open('https://www.paypal.com/jp/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside','olcwhatispaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=900, height=700');\"><img src=\"https://www.paypal.jp/uploadedImages/wwwpaypaljp/Supporting_Content/jp/contents/popup/logo/SG_mc_vs_am_jcb_JP_203_80.png\" border=\"0\" alt=\"ソリューション画像\"></a></div>
+<div><a href=\"https://www.paypal.com/jp/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside\" target=\"_blank\" >PayPal について</a></div>";
 	}
 	if ( !empty( $newvalue['name'] ) ) {
 		$lid = usces_add_system_option( 'usces_payment_method', $newvalue );

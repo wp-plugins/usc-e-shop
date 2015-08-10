@@ -486,6 +486,11 @@ if( 'acting' != substr($payments['settlement'], 0, 6) || 0 == $usces_entries['or
 				$pref = apply_filters( 'usces_filter_paypalec_shiptostate', esc_attr($usces_entries['delivery']['pref']) );
 				$country = ( !empty($usces_entries['delivery']['country']) ) ? $usces_entries['delivery']['country'] : usces_get_base_country();
 				$country_code = apply_filters( 'usces_filter_paypalec_shiptocountrycode', $country );
+				if( $country_code == 'TW' ) {
+					$city = $address1;
+					$address1 = $pref;
+					$pref = $city;
+				}
 				$zip = apply_filters( 'usces_filter_paypalec_shiptozip', $usces_entries['delivery']['zipcode'] );
 				$tel = apply_filters( 'usces_filter_paypalec_shiptophonenum', ltrim(str_replace('-', '', $usces_entries['delivery']['tel']), '0') );
 				$html .= '

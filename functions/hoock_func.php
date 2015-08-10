@@ -713,6 +713,7 @@ function usces_action_acting_transaction(){
 			}
 
 			usces_action_acting_getpoint( $order_id );
+			do_action( 'usces_action_sbps_payment_completion', $data, $order_id );
 
 			usces_log('SoftBankPayment '.$data['res_pay_method'].' [PY] transaction : '.$order_id, 'acting_transaction.log');
 			die('OK,');
