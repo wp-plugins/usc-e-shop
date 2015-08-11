@@ -40,7 +40,8 @@ jQuery(function($){';
 /* Payment Script ****************************************************************/
 //Selectable delivery method(選択可能な配送方法)
 $default_deli = array_values(apply_filters('usces_filter_get_available_delivery_method', $usces->get_available_delivery_method()));
-if( !isset($usces_entries['order']['delivery_method']) || '' == $usces_entries['order']['delivery_method'] ){
+
+if( !isset($usces_entries['order']['delivery_method']) || '' == $usces_entries['order']['delivery_method'] || !in_array($usces_entries['order']['delivery_method'], $default_deli, true) ){
 	$selected_delivery_method = $default_deli[0];
 }else{
 	$selected_delivery_method = $usces_entries['order']['delivery_method'];
